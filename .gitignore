@@ -1,0 +1,42 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Generated documentation
+doc/generated/
+
+# Generated files in examples and tests
+interactive_tests/*/*.pck
+interactive_tests/*/ResourceDefinitions.hpp
+tests/*.pck
+
+# Vim files
+*.swp
+
+# MacOS files
+*.DS_Store
