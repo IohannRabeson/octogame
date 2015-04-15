@@ -1,0 +1,3 @@
+[submodule "octolib"]
+	path = octolib
+	url = git@github.com:IohannRabeson/octolib.git
