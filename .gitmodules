@@ -1,3 +1,6 @@
 [submodule "octolib"]
 	path = octolib
 	url = git@github.com:IohannRabeson/octolib.git
+[submodule "sfml"]
+	path = sfml
+	url = git@github.com:LaurentGomila/SFML.git
