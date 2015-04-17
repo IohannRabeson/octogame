@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:09:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/17 01:36:37 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/17 18:42:22 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <Interpolations.hpp>
 
 FireflySwarm::Firefly::Firefly() :
-	path(7),
+	path(0),
 	speed(0.f),
 	radius(0.f),
 	pathPosition(0.f),
@@ -48,14 +48,38 @@ void	FireflySwarm::setTarget(sf::Vector2f const& position)
 	m_target = position;
 }
 
-std::size_t		FireflySwarm::create(sf::Vector2f const& position,
+std::size_t		FireflySwarm::create(SpawnMode spawnMode,
+									 sf::Vector2f const& position,
 								   	 sf::Color const& color,
 								   	 float radius,
 								   	 float speed)
 {
 	std::size_t	newId = consumeId();
+	Firefly&	fly = createFirefly(newId, color, radius, speed);
 
-	createFirefly(newId, position, color, radius, speed);
+	switch (spawnMode)
+	{
+		case SpawnMode::Stressed:
+			fly.path.pushBack(position);
+			fly.path.pushBack(position);
+			fly.path.pushBack(m_behavior->getPathPosition(m_target));
+			fly.path.pushBack(m_behavior->getPathPosition(m_target));
+			break;
+		case SpawnMode::Normal:
+			fly.path.pushBack(position);
+			fly.path.pushBack(m_behavior->getPathPosition(position));
+			fly.path.pushBack(m_behavior->getPathPosition(position));
+			fly.path.pushBack(m_behavior->getPathPosition(m_target));
+			break;
+		case SpawnMode::Lazy:
+			fly.path.pushBack(m_behavior->getPathPosition(position));
+			fly.path.pushBack(m_behavior->getPathPosition(position));
+			fly.path.pushBack(m_behavior->getPathPosition(position));
+			fly.path.pushBack(m_behavior->getPathPosition(position));
+			break;
+		default:
+			break;
+	}
 	return (newId);
 }
 
@@ -106,14 +130,12 @@ std::size_t		FireflySwarm::consumeId()
 void	FireflySwarm::updateFirefly(std::size_t id, sf::Time frameTime)
 {
 	Firefly&		fly = m_fireflies[id];
-	int				newIntegerPart = 0;
-	int				oldIntegerPart = 0;
-	sf::Vector2f	newPos;
 
-	oldIntegerPart = static_cast<int>(fly.pathPosition);
+	// Je veux m'assurer que le nombre de point stockes
+	// ne depasse pas 4
+	assert(fly.path.size() < 5);
 	fly.pathPosition += fly.speed * frameTime.asSeconds();
-	newIntegerPart = static_cast<int>(fly.pathPosition);
-	if (newIntegerPart > oldIntegerPart && static_cast<std::size_t>(newIntegerPart + 4) > fly.path.size())
+	if (fly.pathPosition > 1.f)
 	{
 		fly.path.pushBack(m_behavior->getPathPosition(m_target));
 		fly.path.popFront();
@@ -132,10 +154,12 @@ void	FireflySwarm::commitFirefly(std::size_t id)
 	float const					radius = m_fireflies[id].radius;
 	std::size_t	const			Offset = id * 8u;
 
+	// Quad du centre
 	m_vertices[Offset + 0].position = position + TopLeft * radius;
 	m_vertices[Offset + 1].position = position + TopRight * radius;
 	m_vertices[Offset + 2].position = position + BottomRight * radius;
 	m_vertices[Offset + 3].position = position + BottomLeft * radius;
+	// Quad du halo
 	m_vertices[Offset + 4].position = position + TopLeft * radius * 4.f;
 	m_vertices[Offset + 5].position = position + TopRight * radius * 4.f;
 	m_vertices[Offset + 6].position = position + BottomRight * radius * 4.f;
@@ -149,17 +173,20 @@ sf::Vector2f	FireflySwarm::getFireflyPosition(std::size_t id)const
 	return (fly.path.compute(fly.pathPosition));
 }
 
-void	FireflySwarm::createFirefly(std::size_t id, sf::Vector2f const& position,
-						   		 	sf::Color const& color,	float radius, float speed)
+FireflySwarm::Firefly&	FireflySwarm::createFirefly(std::size_t id,
+													sf::Color const& color,
+													float radius,
+													float speed)
 {
 	Firefly&	fly = m_fireflies[id];
 
-	fly.path.pushBack(m_behavior->getPathPosition(position));
+	fly.path.clear();
 	fly.speed = speed;
 	fly.radius = radius;
 	fly.alive = true;
-	fly.pathPosition = 4.f;
+	fly.pathPosition = 0.f;
 	setupQuad(id, color);
+	return (fly);
 }
 
 void	FireflySwarm::setupQuad(std::size_t id, sf::Color const& color)

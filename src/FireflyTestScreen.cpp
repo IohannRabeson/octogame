@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/17 12:46:50 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/17 18:37:59 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,14 @@ FireflyTestScreen::FireflyTestScreen() :
 	octo::Console&	console = octo::Application::getConsole();
 
 //	m_swarm.setPositionBehavior(new FireflySwarm::RectanglePositionBehavior(21212, 128.f, 128.f));
-	m_swarm.setPositionBehavior(new FireflySwarm::CirclePositionBehavior(21212, 800.f));
+	m_swarm.setPositionBehavior(new FireflySwarm::CirclePositionBehavior(21212, 200.f));
 //	m_swarm.setPositionBehavior(new FireflySwarm::RingPositionBehavior(21212, 800.f, 600.f));
 	m_swarm.setTexture(octo::Application::getResourceManager().getTexture(FIREFLY01_PNG));
-	console.addCommand(L"spawn", m_swarm, &FireflySwarm::create);
-	console.addCommand(L"sp", [this](){return m_swarm.create(sf::Vector2f(), sf::Color::Red, 8.f, 1.f);});
+	console.addCommand(L"sp", [this](){return m_swarm.create(FireflySwarm::SpawnMode::Lazy, sf::Vector2f(), sf::Color::Red, 8.f, 1.f);});
 	console.addCommand(L"spN", [this](std::size_t count)
 			{
 				for (std::size_t i = 0; i < count; ++i)
-					m_swarm.create(sf::Vector2f(), sf::Color(233, 213, 61), 8.f, 1.f);
+					m_swarm.create(FireflySwarm::SpawnMode::Stressed, sf::Vector2f(), sf::Color(233, 213, 61), 8.f, 1.f);
 			});
 	console.addCommand(L"kill", m_swarm, &FireflySwarm::killAll);
 	console.addCommand(L"count", m_swarm, &FireflySwarm::getCount);

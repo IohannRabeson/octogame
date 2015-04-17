@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:07:48 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/17 12:45:05 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/17 18:08:35 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,14 @@ class FireflySwarm
 {
 	struct Firefly;
 public:
+	enum class SpawnMode
+	{
+		Stressed,
+		Normal,
+		Lazy,
+		Static
+	};
+
 	class AbstractPositionBehavior;
 	class StrictPositionBehavior;
 	class RectanglePositionBehavior;
@@ -34,33 +42,33 @@ public:
 
 	explicit FireflySwarm(std::size_t capacity);
 
-	void			setTexture(sf::Texture const& texture);
-	void			setPositionBehavior(AbstractPositionBehavior* behavior);
-	void			setTarget(sf::Vector2f const& position);
+	void				setTexture(sf::Texture const& texture);
+	void				setPositionBehavior(AbstractPositionBehavior* behavior);
+	void				setTarget(sf::Vector2f const& position);
 
-	std::size_t		create(sf::Vector2f const& position,
-						   sf::Color const& color,
-						   float radius,
-						   float speed);
+	std::size_t			create(SpawnMode spawnMode,
+							   sf::Vector2f const& position,
+							   sf::Color const& color,
+							   float radius,
+							   float speed);
 	
-	void			killAll(); 
-	void			update(sf::Time frameTime);
-	void			draw(sf::RenderTarget& render)const;
+	void				killAll(); 
+	void				update(sf::Time frameTime);
+	void				draw(sf::RenderTarget& render)const;
 
-	std::size_t		getCount()const;
-	std::size_t		getCapacity()const;
+	std::size_t			getCount()const;
+	std::size_t			getCapacity()const;
 private:
-	std::size_t		consumeId();
-	void			updateFirefly(std::size_t id, sf::Time frameTime);
-	void			commitFirefly(std::size_t id);
-	sf::Vector2f	getFireflyPosition(std::size_t id)const;
-	void			createFirefly(std::size_t id,
-								  sf::Vector2f const& position,
-						   		  sf::Color const& color,
-						   		  float radius,
-						   		  float speed);
-	void			setupQuad(std::size_t id, sf::Color const& color);
-	void			hideQuad(std::size_t id);
+	std::size_t			consumeId();
+	void				updateFirefly(std::size_t id, sf::Time frameTime);
+	void				commitFirefly(std::size_t id);
+	sf::Vector2f		getFireflyPosition(std::size_t id)const;
+	Firefly&			createFirefly(std::size_t id,
+									  sf::Color const& color,
+									  float radius,
+									  float speed);
+	void				setupQuad(std::size_t id, sf::Color const& color);
+	void				hideQuad(std::size_t id);
 private:
 	typedef std::unique_ptr<AbstractPositionBehavior>	PositionBehavior;
 
