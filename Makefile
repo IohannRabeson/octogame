@@ -12,14 +12,15 @@ LIBS = octo sfml-system sfml-window sfml-graphics sfml-audio
 
 # sources
 SRC = $(SRC_STATES)						\
-	  $(SRC_GAME_OBJECTS)				\
+	  $(SRC_FIREFLY)					\
 	  DefaultApplicationListener.cpp	\
 	  main.cpp
 
 SRC_STATES =	StateTest.cpp			\
 				FireflyTestScreen.cpp
 
-SRC_GAME_OBJECTS =	FireflySwarm.cpp
+SRC_FIREFLY =	FireflySwarm.cpp				\
+				FireflyPositionBehaviors.cpp
 
 
 # package files

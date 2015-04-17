@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:57:45 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/16 18:46:08 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/17 23:58:50 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include "PointHandle.hpp"
 
 # include <SFML/Graphics/CircleShape.hpp>
+# include <vector>
 
 class FireflyTestScreen : public octo::AbstractState,
 						  public octo::IMouseListener
@@ -39,9 +40,16 @@ public:
 	virtual void	onReleased(sf::Event::MouseButtonEvent const&);
 	virtual void	onWheel(sf::Event::MouseWheelEvent const&);
 private:
-	FireflySwarm	m_swarm;
-	sf::View		m_view;
-	PointHandle		m_interestPoint;
+	FireflySwarm							m_swarm;
+	sf::View								m_view;
+	std::vector<PointHandle>				m_handles;
+	FireflySwarm::SpawnMode					m_spawnMode;
+	sf::Color								m_color;
+	sf::Vector2f							m_spawn;
+	FireflySwarm::CirclePositionBehavior*	m_behavior;
+	float									m_speed;
+	float									m_radius;
+	float									m_haloRadius;
 };
 
 #endif

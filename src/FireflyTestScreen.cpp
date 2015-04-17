@@ -6,11 +6,12 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/17 18:37:59 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/18 00:00:57 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "FireflyTestScreen.hpp"
+#include "FireflyPositionBehaviors.hpp"
 #include "../ResourceDefinitions.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -19,23 +20,86 @@
 #include <WPrintSFML.hpp>
 
 FireflyTestScreen::FireflyTestScreen() :
-	m_swarm(10000)
+	m_swarm(10000),
+	m_spawnMode(FireflySwarm::SpawnMode::Normal),
+	m_color(233, 213, 61),
+	m_speed(1.f),
+	m_radius(8.f),
+	m_haloRadius(32.f)
 {
 	octo::Console&	console = octo::Application::getConsole();
 
-//	m_swarm.setPositionBehavior(new FireflySwarm::RectanglePositionBehavior(21212, 128.f, 128.f));
-	m_swarm.setPositionBehavior(new FireflySwarm::CirclePositionBehavior(21212, 200.f));
-//	m_swarm.setPositionBehavior(new FireflySwarm::RingPositionBehavior(21212, 800.f, 600.f));
+	// Setup handles
+	m_handles.resize(2);
+	m_handles[0] = PointHandle(sf::Color::Red, 8.f, std::bind(&FireflySwarm::setTarget, &m_swarm, std::placeholders::_1));
+	m_handles[1] = PointHandle(sf::Color::Green, 8.f, [this](sf::Vector2f const& pos){m_spawn = pos;});
+	// Setup swarm
+	m_behavior = new FireflySwarm::CirclePositionBehavior(2345, 200.f);
+	m_swarm.setPositionBehavior(m_behavior);
 	m_swarm.setTexture(octo::Application::getResourceManager().getTexture(FIREFLY01_PNG));
-	console.addCommand(L"sp", [this](){return m_swarm.create(FireflySwarm::SpawnMode::Lazy, sf::Vector2f(), sf::Color::Red, 8.f, 1.f);});
+
+	// Setup console
+	console.addCommand(L"sp", [this]()
+			{
+				return (m_swarm.create(m_spawnMode, m_spawn, m_color, m_radius, m_haloRadius, m_speed));
+			});
+
 	console.addCommand(L"spN", [this](std::size_t count)
 			{
 				for (std::size_t i = 0; i < count; ++i)
-					m_swarm.create(FireflySwarm::SpawnMode::Stressed, sf::Vector2f(), sf::Color(233, 213, 61), 8.f, 1.f);
+					m_swarm.create(m_spawnMode, m_spawn, m_color, m_radius, m_haloRadius, m_speed);
 			});
 	console.addCommand(L"kill", m_swarm, &FireflySwarm::killAll);
 	console.addCommand(L"count", m_swarm, &FireflySwarm::getCount);
 	console.addCommand(L"capacity", m_swarm, &FireflySwarm::getCapacity);
+	console.addCommand(L"setColor", [this](sf::Color const& color){m_color = color;});
+	console.addCommand(L"getColor", [this](){return (m_color);});
+	console.addCommand(L"setSpeed", [this](float value){m_speed = value;});
+	console.addCommand(L"getSpeed", [this](){return (m_speed);});
+	console.addCommand(L"setRadius", [this](float value){m_radius = value;});
+	console.addCommand(L"setHaloRadius", [this](float value){m_haloRadius = value;});
+	console.addCommand(L"getHaloRadius", [this](){return (m_haloRadius);});
+	console.addCommand(L"setBehaviorRadius", m_behavior, &FireflySwarm::CirclePositionBehavior::setRadius);
+	console.addCommand(L"getBehaviorRadius", m_behavior, &FireflySwarm::CirclePositionBehavior::getRadius);
+	console.addCommand(L"setSpawnMode",
+						[this](std::wstring const& value) -> std::wstring 
+						{
+							if (value == L"static")
+								m_spawnMode = FireflySwarm::SpawnMode::Static;
+							else if (value == L"lazy")
+								m_spawnMode = FireflySwarm::SpawnMode::Lazy;
+							else if (value == L"normal")
+								m_spawnMode = FireflySwarm::SpawnMode::Normal;
+							else if (value == L"stressed")
+								m_spawnMode = FireflySwarm::SpawnMode::Stressed;
+							else
+								return (L"invalid spawn mode: " + value);
+							return (L"spawn mode changed");
+						});
+	console.addCommand(L"getSpawnMode",
+						[this]()
+						{
+							std::wstring	result = L"invalid spawn mode";
+
+							switch (m_spawnMode)
+							{
+								case FireflySwarm::SpawnMode::Stressed:
+									result = L"stressed";
+									break;
+								case FireflySwarm::SpawnMode::Normal:
+									result = L"normal";
+									break;
+								case FireflySwarm::SpawnMode::Lazy:
+									result = L"lazy";
+									break;
+								case FireflySwarm::SpawnMode::Static:
+									result = L"static";
+									break;
+								default:
+									break;
+							}
+							return (result);
+						});
 }
 
 void	FireflyTestScreen::start()
@@ -71,7 +135,8 @@ void	FireflyTestScreen::draw(sf::RenderTarget& render)const
 {
 	render.clear();
 	render.setView(m_view);
-	render.draw(m_interestPoint);
+	for (auto it = m_handles.rbegin(); it != m_handles.rend(); ++it)
+		render.draw(*it);
 	m_swarm.draw(render);
 }
 
@@ -80,8 +145,10 @@ void	FireflyTestScreen::onMoved(sf::Event::MouseMoveEvent const& event)
 	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
 	sf::Vector2f		pos = graphics.mapPixelToCoords(sf::Vector2i(event.x, event.y));
 
-	m_interestPoint.setPosition(pos);
-	m_swarm.setTarget(pos);
+	for (PointHandle& handle : m_handles)
+	{
+		handle.setPosition(pos);
+	}
 }
 
 void	FireflyTestScreen::onPressed(sf::Event::MouseButtonEvent const& event)
@@ -92,9 +159,13 @@ void	FireflyTestScreen::onPressed(sf::Event::MouseButtonEvent const& event)
 	switch (event.button)
 	{
 		case sf::Mouse::Left:
-			if (m_interestPoint.hitTest(pos))
+			for (PointHandle& handle : m_handles)
 			{
-				m_interestPoint.setHandled(true);
+				if (handle.hitTest(pos))
+				{
+					handle.setHandled(true);
+					break;
+				}
 			}
 			break;
 		default:
@@ -107,9 +178,9 @@ void	FireflyTestScreen::onReleased(sf::Event::MouseButtonEvent const& event)
 	switch (event.button)
 	{
 		case sf::Mouse::Left:
-			if (m_interestPoint.isHandled())
+			for (PointHandle& handle : m_handles)
 			{
-				m_interestPoint.setHandled(false);
+				handle.setHandled(false);
 			}
 			break;
 		default:
