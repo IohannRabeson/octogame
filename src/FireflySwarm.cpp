@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:09:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/18 13:36:13 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/19 13:39:40 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,17 +106,7 @@ void	FireflySwarm::kill(std::size_t id)
 {
 	Firefly&	fly = getFirefly(id);
 
-	if (fly.alive)
-	{
-		hideQuad(id);
-		fly.alive = false;
-		m_deads.push(id);
-		if (m_deads.size() == m_capacity)
-		{
-			m_count = 0;
-			m_deads.clear();
-		}
-	}
+	killFirefly(id, fly);
 }
 
 void	FireflySwarm::killAll()
@@ -134,14 +124,22 @@ void	FireflySwarm::update(sf::Time frameTime)
 		if (fly.alive)
 		{
 			assert(fly.path.size() < 5);
-			fly.pathPosition += fly.speed * frameTime.asSeconds();
-			if (fly.pathPosition > 1.f)
+			fly.time += frameTime;
+			if (fly.maxTime != sf::Time::Zero && fly.time >= fly.maxTime)
 			{
-				fly.path.pushBack(m_behavior->getPathPosition(m_target));
-				fly.path.popFront();
-				fly.pathPosition -= 1.f;
+				killFirefly(i, fly);
 			}
-			commitFirefly(i, fly);
+			else
+			{
+				fly.pathPosition += fly.speed * frameTime.asSeconds();
+				if (fly.pathPosition > 1.f)
+				{
+					fly.path.pushBack(m_behavior->getPathPosition(m_target));
+					fly.path.popFront();
+					fly.pathPosition -= 1.f;
+				}
+				commitFirefly(i, fly);
+			}
 		}
 	}
 }
@@ -211,14 +209,33 @@ FireflySwarm::Firefly&	FireflySwarm::createFirefly(std::size_t id,
 	Firefly&	fly = getFirefly(id);
 
 	fly.path.clear();
+
 	fly.color = color;
 	fly.speed = speed;
 	fly.radius = radius;
 	fly.haloRadius = haloRadius;
+	fly.maxTime = sf::Time::Zero;
+
 	fly.alive = true;
 	fly.pathPosition = 0.f;
+	fly.time = sf::Time::Zero;
 	setupQuad(id, fly);
 	return (fly);
+}
+
+void	FireflySwarm::killFirefly(std::size_t id, Firefly& fly)
+{
+	if (fly.alive)
+	{
+		hideQuad(id);
+		fly.alive = false;
+		m_deads.push(id);
+		if (m_deads.size() == m_capacity)
+		{
+			m_count = 0;
+			m_deads.clear();
+		}
+	}
 }
 
 FireflySwarm::Firefly&	FireflySwarm::getFirefly(std::size_t id)

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/18 13:12:44 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/18 13:48:59 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <WPrintSFML.hpp>
 
 FireflyTestScreen::FireflyTestScreen() :
-	m_swarm(10),
+	m_swarm(10000),
 	m_spawnMode(FireflySwarm::SpawnMode::Normal),
 	m_color(233, 213, 61),
 	m_speed(1.f),

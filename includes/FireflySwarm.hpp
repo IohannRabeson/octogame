@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:07:48 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/18 13:34:57 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/18 13:44:53 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ private:
 									  float radius,
 									  float haloRadius,
 									  float speed);
+	void				killFirefly(std::size_t id, Firefly& fly);
 	void				setupQuad(std::size_t id, Firefly& fly);
 	void				hideQuad(std::size_t id);
 private:
@@ -93,6 +94,8 @@ struct FireflySwarm::Firefly
 	float		radius;
 	float		haloRadius;
 	float		pathPosition;
+	sf::Time	time;
+	sf::Time	maxTime;
 	bool		alive;
 };
 
