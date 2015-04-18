@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:07:48 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/18 00:28:49 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/18 13:34:57 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ public:
 							   float radius,
 							   float haloRadius,
 							   float speed);
-	
+	void				kill(std::size_t id);	
 	void				killAll(); 
 	void				update(sf::Time frameTime);
 	void				draw(sf::RenderTarget& render)const;
@@ -60,20 +60,22 @@ public:
 	std::size_t			getCapacity()const;
 private:
 	std::size_t			consumeId();
-	void				commitFirefly(std::size_t id);
-	sf::Vector2f		getFireflyPosition(std::size_t id)const;
+	void				commitFirefly(std::size_t id, Firefly const& fly);
+	Firefly&			getFirefly(std::size_t id);
+	Firefly const&		getFirefly(std::size_t id)const;
 	Firefly&			createFirefly(std::size_t id,
 									  sf::Color const& color,
 									  float radius,
 									  float haloRadius,
 									  float speed);
-	void				setupQuad(std::size_t id, sf::Color const& color);
+	void				setupQuad(std::size_t id, Firefly& fly);
 	void				hideQuad(std::size_t id);
 private:
 	typedef std::unique_ptr<AbstractPositionBehavior>	PositionBehavior;
 
 	std::unique_ptr<Firefly[]>			m_fireflies;
 	std::unique_ptr<sf::Vertex[]>		m_vertices;
+	octo::Stack<std::size_t>			m_deads;
 	sf::Vector2f						m_target;
 	std::size_t							m_capacity;
 	std::size_t							m_count;
@@ -86,6 +88,7 @@ struct FireflySwarm::Firefly
 	Firefly();
 
 	BSpline		path;
+	sf::Color	color;
 	float		speed;
 	float		radius;
 	float		haloRadius;

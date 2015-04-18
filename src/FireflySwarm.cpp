@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:09:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/18 12:45:39 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/18 13:36:13 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ FireflySwarm::Firefly::Firefly() :
 FireflySwarm::FireflySwarm(std::size_t capacity) :
 	m_fireflies(new Firefly[capacity]),
 	m_vertices(new sf::Vertex[capacity * 8u]),
+	m_deads(capacity),
 	m_capacity(capacity),
 	m_count(0u),
 	m_texture(nullptr),
@@ -97,13 +98,31 @@ std::size_t		FireflySwarm::create(SpawnMode spawnMode,
 		default:
 			break;
 	}
-	commitFirefly(newId);
+	commitFirefly(newId, fly);
 	return (newId);
+}
+
+void	FireflySwarm::kill(std::size_t id)
+{
+	Firefly&	fly = getFirefly(id);
+
+	if (fly.alive)
+	{
+		hideQuad(id);
+		fly.alive = false;
+		m_deads.push(id);
+		if (m_deads.size() == m_capacity)
+		{
+			m_count = 0;
+			m_deads.clear();
+		}
+	}
 }
 
 void	FireflySwarm::killAll()
 {
 	m_count = 0;
+	m_deads.clear();
 }
 
 void	FireflySwarm::update(sf::Time frameTime)
@@ -122,7 +141,7 @@ void	FireflySwarm::update(sf::Time frameTime)
 				fly.path.popFront();
 				fly.pathPosition -= 1.f;
 			}
-			commitFirefly(i);
+			commitFirefly(i, fly);
 		}
 	}
 }
@@ -132,10 +151,9 @@ void	FireflySwarm::draw(sf::RenderTarget& render)const
 	render.draw(m_vertices.get(), m_count * 8u, sf::Quads, m_texture);
 }
 
-
 std::size_t		FireflySwarm::getCount()const
 {
-	return (m_count);
+	return (m_count - m_deads.size());
 }
 
 std::size_t		FireflySwarm::getCapacity()const
@@ -147,42 +165,41 @@ std::size_t		FireflySwarm::consumeId()
 {
 	std::size_t	newId = m_count;
 
+	if (m_deads.size() > 0)
+	{
+		newId = m_deads.top();
+		m_deads.pop();
+	}
+	else
+	{
+		++m_count;
+	}
 	if (newId >= m_capacity)
 	{
-		std::runtime_error("firefly swarm: not enough firefly reserved");
+		throw std::runtime_error("firefly swarm: not enough firefly reserved");
 	}
-	++m_count;
 	return (newId);
 }
 
-void	FireflySwarm::commitFirefly(std::size_t id)
+void	FireflySwarm::commitFirefly(std::size_t id, Firefly const& fly)
 {
 	static sf::Vector2f const	TopLeft = {-1.f, -1.f};
 	static sf::Vector2f const	TopRight = {1.f, -1.f};
 	static sf::Vector2f const	BottomRight = {1.f, 1.f};
 	static sf::Vector2f const	BottomLeft = {-1.f, 1.f};
-	sf::Vector2f const			position = getFireflyPosition(id);
-	float const					radius = m_fireflies[id].radius;
-	float const					haloRadius = m_fireflies[id].haloRadius;
+	sf::Vector2f const			position = fly.path.compute(fly.pathPosition);
 	std::size_t	const			Offset = id * 8u;
 
 	// Quad du centre
-	m_vertices[Offset + 0].position = position + TopLeft * radius;
-	m_vertices[Offset + 1].position = position + TopRight * radius;
-	m_vertices[Offset + 2].position = position + BottomRight * radius;
-	m_vertices[Offset + 3].position = position + BottomLeft * radius;
+	m_vertices[Offset + 0].position = position + TopLeft * fly.radius;
+	m_vertices[Offset + 1].position = position + TopRight * fly.radius;
+	m_vertices[Offset + 2].position = position + BottomRight * fly.radius;
+	m_vertices[Offset + 3].position = position + BottomLeft * fly.radius;
 	// Quad du halo
-	m_vertices[Offset + 4].position = position + TopLeft * haloRadius;
-	m_vertices[Offset + 5].position = position + TopRight * haloRadius;
-	m_vertices[Offset + 6].position = position + BottomRight * haloRadius;
-	m_vertices[Offset + 7].position = position + BottomLeft * haloRadius;
-}
-
-sf::Vector2f	FireflySwarm::getFireflyPosition(std::size_t id)const
-{
-	Firefly const&	fly = m_fireflies[id];
-
-	return (fly.path.compute(fly.pathPosition));
+	m_vertices[Offset + 4].position = position + TopLeft * fly.haloRadius;
+	m_vertices[Offset + 5].position = position + TopRight * fly.haloRadius;
+	m_vertices[Offset + 6].position = position + BottomRight * fly.haloRadius;
+	m_vertices[Offset + 7].position = position + BottomLeft * fly.haloRadius;
 }
 
 FireflySwarm::Firefly&	FireflySwarm::createFirefly(std::size_t id,
@@ -191,29 +208,43 @@ FireflySwarm::Firefly&	FireflySwarm::createFirefly(std::size_t id,
 													float haloRadius,
 													float speed)
 {
-	Firefly&	fly = m_fireflies[id];
+	Firefly&	fly = getFirefly(id);
 
 	fly.path.clear();
+	fly.color = color;
 	fly.speed = speed;
 	fly.radius = radius;
 	fly.haloRadius = haloRadius;
 	fly.alive = true;
 	fly.pathPosition = 0.f;
-	setupQuad(id, color);
+	setupQuad(id, fly);
 	return (fly);
 }
 
-void	FireflySwarm::setupQuad(std::size_t id, sf::Color const& color)
+FireflySwarm::Firefly&	FireflySwarm::getFirefly(std::size_t id)
+{
+	assert( id < m_count );
+	return (m_fireflies[id]);
+}
+
+FireflySwarm::Firefly const&	FireflySwarm::getFirefly(std::size_t id)const
+{
+	assert( id < m_count );
+	return (m_fireflies[id]);
+}
+
+void	FireflySwarm::setupQuad(std::size_t id, Firefly& fly)
 {
 	std::size_t	const	Offset = id * 8u;
 	sf::Vector2f		texSize(m_texture->getSize());
-	sf::Color			haloColor = color;
+	// TODO: ajouter un truc pour controler la couleur du halo
+	sf::Color			haloColor = fly.color;
 
 	haloColor.a = 100;
-	m_vertices[Offset + 0].color = color;
-	m_vertices[Offset + 1].color = color;
-	m_vertices[Offset + 2].color = color;
-	m_vertices[Offset + 3].color = color;
+	m_vertices[Offset + 0].color = fly.color;
+	m_vertices[Offset + 1].color = fly.color;
+	m_vertices[Offset + 2].color = fly.color;
+	m_vertices[Offset + 3].color = fly.color;
 	m_vertices[Offset + 4].color = haloColor;
 	m_vertices[Offset + 5].color = haloColor;
 	m_vertices[Offset + 6].color = haloColor;

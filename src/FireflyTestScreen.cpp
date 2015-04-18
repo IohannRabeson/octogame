@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/18 00:00:57 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/18 13:12:44 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <WPrintSFML.hpp>
 
 FireflyTestScreen::FireflyTestScreen() :
-	m_swarm(10000),
+	m_swarm(10),
 	m_spawnMode(FireflySwarm::SpawnMode::Normal),
 	m_color(233, 213, 61),
 	m_speed(1.f),
@@ -49,7 +49,8 @@ FireflyTestScreen::FireflyTestScreen() :
 				for (std::size_t i = 0; i < count; ++i)
 					m_swarm.create(m_spawnMode, m_spawn, m_color, m_radius, m_haloRadius, m_speed);
 			});
-	console.addCommand(L"kill", m_swarm, &FireflySwarm::killAll);
+	console.addCommand(L"killAll", m_swarm, &FireflySwarm::killAll);
+	console.addCommand(L"kill", m_swarm, &FireflySwarm::kill);
 	console.addCommand(L"count", m_swarm, &FireflySwarm::getCount);
 	console.addCommand(L"capacity", m_swarm, &FireflySwarm::getCapacity);
 	console.addCommand(L"setColor", [this](sf::Color const& color){m_color = color;});
