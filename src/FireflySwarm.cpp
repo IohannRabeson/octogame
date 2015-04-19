@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:09:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/19 20:15:17 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/19 20:25:18 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,7 @@ void	FireflySwarm::commitFirefly(std::size_t id, Firefly const& fly)
 	static sf::Vector2f const	BottomLeft = {-1.f, 1.f};
 	sf::Vector2f const			position = fly.path.compute(fly.pathPosition);
 	std::size_t	const			Offset = id * 8u;
+	sf::Color					haloColor = fly.color;
 
 	// Quad du centre
 	m_vertices[Offset + 0].position = position + TopLeft * fly.radius;
@@ -216,6 +217,16 @@ void	FireflySwarm::commitFirefly(std::size_t id, Firefly const& fly)
 	m_vertices[Offset + 5].position = position + TopRight * fly.haloRadius;
 	m_vertices[Offset + 6].position = position + BottomRight * fly.haloRadius;
 	m_vertices[Offset + 7].position = position + BottomLeft * fly.haloRadius;
+	// Couleurs
+	haloColor.a = 100;
+	m_vertices[Offset + 0].color = fly.color;
+	m_vertices[Offset + 1].color = fly.color;
+	m_vertices[Offset + 2].color = fly.color;
+	m_vertices[Offset + 3].color = fly.color;
+	m_vertices[Offset + 4].color = haloColor;
+	m_vertices[Offset + 5].color = haloColor;
+	m_vertices[Offset + 6].color = haloColor;
+	m_vertices[Offset + 7].color = haloColor;
 }
 
 FireflySwarm::Firefly&	FireflySwarm::createFirefly(std::size_t id,
