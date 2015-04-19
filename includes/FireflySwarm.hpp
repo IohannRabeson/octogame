@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:07:48 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/18 13:44:53 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/19 20:14:04 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include "BSpline.hpp"
 
 # include <random>
+# include <memory>
 
 class FireflySwarm
 {
@@ -38,6 +39,10 @@ public:
 	class StrictPositionBehavior;
 	class RectanglePositionBehavior;
 	class CirclePositionBehavior;
+	class AbstractPopulation;
+	class UniquePopulation;
+	class UniformPopulation;
+	class NormalPopulation;
 
 	explicit FireflySwarm(std::size_t capacity);
 
@@ -51,6 +56,16 @@ public:
 							   float radius,
 							   float haloRadius,
 							   float speed);
+
+	std::size_t			create(SpawnMode spawnMode,
+							   sf::Vector2f const& position,
+							   AbstractPopulation& population);
+
+	void				create(SpawnMode spawnMode,
+							   sf::Vector2f const& position,
+							   AbstractPopulation& population,
+							   std::size_t count);
+
 	void				kill(std::size_t id);	
 	void				killAll(); 
 	void				update(sf::Time frameTime);
@@ -61,16 +76,23 @@ public:
 private:
 	std::size_t			consumeId();
 	void				commitFirefly(std::size_t id, Firefly const& fly);
-	Firefly&			getFirefly(std::size_t id);
-	Firefly const&		getFirefly(std::size_t id)const;
+	void				spawnFirefly(Firefly& fly,
+									 SpawnMode spawnMode,
+									 sf::Vector2f const& position);
+
 	Firefly&			createFirefly(std::size_t id,
 									  sf::Color const& color,
 									  float radius,
 									  float haloRadius,
 									  float speed);
+
+	Firefly&			createFirefly(std::size_t id, AbstractPopulation& population);
+
 	void				killFirefly(std::size_t id, Firefly& fly);
+	Firefly&			getFirefly(std::size_t id);
+	Firefly const&		getFirefly(std::size_t id)const;
 	void				setupQuad(std::size_t id, Firefly& fly);
-	void				hideQuad(std::size_t id);
+	void				destroyQuad(std::size_t id);
 private:
 	typedef std::unique_ptr<AbstractPositionBehavior>	PositionBehavior;
 

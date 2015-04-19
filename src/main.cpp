@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/16 18:16:25 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/19 15:01:01 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 {
 	try
 	{
-		octo::Application::initialize("Application works!", "default.conf", argc, argv);
+		octo::Application::initialize("Firefly demo 1", "default.conf", argc, argv);
 		octo::StateManager&							states = octo::Application::getStateManager();
 		octo::Console&								console = octo::Application::getConsole();
 		octo::GraphicsManager&						graphics = octo::Application::getGraphicsManager();

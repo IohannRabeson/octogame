@@ -20,6 +20,7 @@ SRC_STATES =	StateTest.cpp			\
 				FireflyTestScreen.cpp
 
 SRC_FIREFLY =	FireflySwarm.cpp				\
+				FireflyPopulation.cpp			\
 				FireflyPositionBehaviors.cpp
 
 

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:57:45 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/17 23:58:50 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/19 14:17:05 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <GraphicsManager.hpp>
 
 # include "FireflySwarm.hpp"
+# include "FireflyPopulation.hpp"
 # include "PointHandle.hpp"
 
 # include <SFML/Graphics/CircleShape.hpp>
@@ -41,6 +42,7 @@ public:
 	virtual void	onWheel(sf::Event::MouseWheelEvent const&);
 private:
 	FireflySwarm							m_swarm;
+	FireflySwarm::UniformPopulation			m_uniformPopulation;
 	sf::View								m_view;
 	std::vector<PointHandle>				m_handles;
 	FireflySwarm::SpawnMode					m_spawnMode;
