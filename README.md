@@ -8,6 +8,11 @@
 
 Des explications à propos des sous modules: [issues 2](http://git-scm.com/book/fr/v1/Utilitaires-Git-Sous-modules)
 
+## Mettre a jour le depot
+
+	$> git pull origin master
+	$> git submodule update
+	$> make complete
 
 ## Compilation, installation, et tout ça
 
@@ -28,3 +33,10 @@ Pour Boost, utilisez brew:
 Pour Doxygen, utilisez brew:
 
     $> brew install doxygen --with-graphviz
+
+## Compiler le projet
+
+Pour compiler la librairie, les tests et les outils:
+
+	$> make complete
+
