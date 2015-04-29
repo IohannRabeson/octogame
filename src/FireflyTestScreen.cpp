@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/19 20:24:26 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/22 04:39:35 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ FireflyTestScreen::FireflyTestScreen() :
 				for (std::size_t i = 0; i < count; ++i)
 					m_swarm.create(m_spawnMode, m_spawn, m_uniformPopulation);
 			});
-
 	console.addCommand(L"killAll", m_swarm, &FireflySwarm::killAll);
 	console.addCommand(L"kill", m_swarm, &FireflySwarm::kill);
 	console.addCommand(L"count", m_swarm, &FireflySwarm::getCount);

@@ -6,71 +6,47 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/19 21:23:07 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/20 22:01:59 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/26 21:23:38 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PaletteDemoScreen.hpp"
+#include "../ResourceDefinitions.hpp"
+
 #include <Hsv.hpp>
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+#include <ResourceManager.hpp>
 
 #include <iostream>
 
-PaletteDemoScreen::PaletteDemoScreen() :
-	m_palette(3, 4),
-	m_grid(m_palette.getColorCount(), m_palette.getVariationCount() + 1)
+PaletteDemoScreen::PaletteDemoScreen()
 {
-	static constexpr float const	SquareSize = 64.f;
-
-	m_palette.set(0u, octo::Hsv(0, 1.f, 1.f));
-	m_palette.set(1u, octo::Hsv(120, 1.f, 1.f));
-	m_palette.set(2u, octo::Hsv(240, 1.f, 1.f));
-	m_palette.set(0u, [](octo::Hsv color)
-			{
-				color.setSaturation(0.5f);
-				return (color);
-			});
-	m_palette.set(1u, [](octo::Hsv color)
-			{
-				color.setSaturation(0.25f);
-				return (color);
-			});
-	m_palette.set(2u, [](octo::Hsv color)
-			{
-				color.setValue(0.5f);
-				return (color);
-			});
-	m_palette.set(3u, [](octo::Hsv color)
-			{
-				color.setHue(color.getHue() + 30);
-				return (color);
-			});
-	for (std::size_t x = 0; x < m_palette.getColorCount(); ++x)
-	{
-		m_grid(x, 0u).setFillColor(m_palette.get(x));	
-	}
-	for (std::size_t y = 0u; y < m_grid.rows(); ++y)
-	{
-		for (std::size_t x = 0u; x < m_grid.columns(); ++x)
-		{
-			sf::RectangleShape	shape(sf::Vector2f(SquareSize, SquareSize));
-
-			shape.setOrigin(sf::Vector2f(SquareSize * 0.5f, SquareSize * 0.5f));
-			shape.setPosition(x * SquareSize, y * SquareSize);
-			if (y == 0u)
-				shape.setFillColor(m_palette.get(x));
-			else
-				shape.setFillColor(m_palette.get(x, y - 1u));
-			m_grid.set(x, y, shape);
-		}
-	}
 }
 
 void	PaletteDemoScreen::start()
 {
+	sf::Vector2f		pos(-200, -200);
+	sf::RectangleShape	rect(sf::Vector2f(32, 32));
+
+	rect.setOrigin(sf::Vector2f(16, 16));
 	m_view = octo::Application::getGraphicsManager().getDefaultView();
 	m_view.setCenter(sf::Vector2f());
+	m_palette = &octo::Application::getResourceManager().getPalette(PALETTE_DEMO_OPA);
+	for (std::size_t i = 0; i < m_palette->getColorCount(); ++i)
+	{
+		if (pos.x > 200.f)
+		{
+			pos.x = -200.f;
+			pos.y += 32.f;
+		}
+		rect.setPosition(pos);
+		rect.setFillColor(m_palette->getColor(i));
+		rect.setOutlineThickness(1.f);
+		rect.setOutlineColor(sf::Color::White);
+		m_rectangles.push_back(rect);
+		pos.x += 32.f;
+	}
 }
 
 void	PaletteDemoScreen::pause()
@@ -93,7 +69,7 @@ void	PaletteDemoScreen::draw(sf::RenderTarget& render)const
 {
 	render.clear();
 	render.setView(m_view);
-	for (sf::RectangleShape const& shape : m_grid)
+	for (sf::RectangleShape const& shape : m_rectangles)
 	{
 		render.draw(shape);
 	}

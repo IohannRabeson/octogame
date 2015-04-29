@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/19 21:23:20 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/20 15:37:53 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/25 21:37:42 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 # define PALETTEDEMOSCREEN_HPP
 # include <AbstractState.hpp>
 # include <Palette.hpp>
-# include <Array2D.hpp>
+
 # include <SFML/Graphics/RectangleShape.hpp>
 # include <SFML/Graphics/View.hpp>
+
+# include <vector>
 
 class PaletteDemoScreen : public octo::AbstractState
 {
@@ -31,8 +33,8 @@ public:
 	virtual void	update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render)const;
 private:
-	octo::Palette						m_palette;
-	octo::Array2D<sf::RectangleShape>	m_grid;
+	octo::Palette const*				m_palette;
+	std::vector<sf::RectangleShape>		m_rectangles;
 	sf::View							m_view;
 };
 
