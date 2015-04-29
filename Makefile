@@ -17,7 +17,8 @@ SRC = $(SRC_STATES)						\
 	  main.cpp
 
 SRC_STATES =	StateTest.cpp			\
-				FireflyTestScreen.cpp
+				FireflyTestScreen.cpp	\
+				PaletteDemoScreen.cpp
 
 SRC_FIREFLY =	FireflySwarm.cpp				\
 				FireflyPopulation.cpp			\
