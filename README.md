@@ -28,4 +28,3 @@ Pour Boost, utilisez brew:
 Pour Doxygen, utilisez brew:
 
     $> brew install doxygen --with-graphviz
-    
