@@ -6,27 +6,34 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/19 15:01:01 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/21 17:19:53 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+#include <StateManager.hpp>
 #include <Console.hpp>
 #include "DefaultApplicationListener.hpp"
 
 // Ecran de jeu
 #include "StateTest.hpp"
 #include "FireflyTestScreen.hpp"
+#include "PaletteDemoScreen.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
 	manager.registerState<StateTest>("test");
 	manager.registerState<FireflyTestScreen>("firefly");
+	manager.registerState<PaletteDemoScreen>("palette_demo_01");
 }
 
 static void	setupConsole(octo::Console& console)
 {
+	console.addCommand(L"changeState", [](std::string const& key)
+										{
+											octo::Application::getStateManager().change(key);
+										});
 	console.addCommand(L"quit", &octo::Application::stop);
 }
 
