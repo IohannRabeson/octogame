@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/21 17:19:53 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/04/30 15:11:16 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,9 @@ static void	setupStateManager(octo::StateManager& manager)
 
 static void	setupConsole(octo::Console& console)
 {
-	console.addCommand(L"changeState", [](std::string const& key)
-										{
-											octo::Application::getStateManager().change(key);
-										});
-	console.addCommand(L"quit", &octo::Application::stop);
+	// Ajoutez ici vos commandes ;)
+
+	static_cast<void>(console);
 }
 
 int main(int argc, char **argv)
