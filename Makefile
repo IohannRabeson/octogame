@@ -29,7 +29,7 @@ SRC_FIREFLY =	FireflySwarm.cpp				\
 PACKAGE_FILE = default.pck
 
 # compiler
-CC = g++
+CC = clang++
 # packager
 PACKAGER = $(CORE_DIR)/tools/packager/packager.app
 # flags used in both mode
