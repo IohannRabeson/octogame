@@ -46,7 +46,7 @@ SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
 CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = debug
+MODE = release
 
 ifeq ($(MODE), debug)
 CFLAGS += $(DEBUG_FLAGS)
@@ -105,5 +105,5 @@ package:
 	$(PACKAGER) $(PACKAGE_FILE) ./resources/*
 
 complete:
-	make complete -C octolib/
+	make complete -C octolib/ MODE=$(MODE)
 	make
