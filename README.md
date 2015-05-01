@@ -52,3 +52,10 @@ Il est possible que les fichiers des librairies dynamique SFML soit introuvable.
 Dans ce cas, il est necessaire d'utiliser ldconfig apres l'installation en regle de la sfml:
 
 	$> ldconfig /usr/local/bin/
+
+## Configuration de l'execution via le fichier default.conf
+
+Le fichier default.conf permet le parametrage du programme.  
+Vous pouvez y modifier differente chose, comme le package de ressource a utiliser, le premier
+etat a lancer, etc...  
+La documentation a ce sujet est dans la classe Application.  

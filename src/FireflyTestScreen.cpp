@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/22 04:39:35 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/01 18:20:17 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,40 +42,40 @@ FireflyTestScreen::FireflyTestScreen() :
 	m_swarm.setTexture(octo::Application::getResourceManager().getTexture(FIREFLY01_PNG));
 
 	// Setup console
-	console.addCommand(L"sp", [this]()
+	console.addCommand(L"demo.sp", [this]()
 			{
 				return (m_swarm.create(m_spawnMode, m_spawn, m_color, m_radius, m_haloRadius, m_speed));
 			});
 
-	console.addCommand(L"spN", [this](std::size_t count)
+	console.addCommand(L"demo.spN", [this](std::size_t count)
 			{
 				for (std::size_t i = 0; i < count; ++i)
 					m_swarm.create(m_spawnMode, m_spawn, m_color, m_radius, m_haloRadius, m_speed);
 			});
 
-	console.addCommand(L"uspN", [this](std::size_t count)
+	console.addCommand(L"demo.uspN", [this](std::size_t count)
 			{
 				for (std::size_t i = 0; i < count; ++i)
 					m_swarm.create(m_spawnMode, m_spawn, m_uniformPopulation);
 			});
-	console.addCommand(L"killAll", m_swarm, &FireflySwarm::killAll);
-	console.addCommand(L"kill", m_swarm, &FireflySwarm::kill);
-	console.addCommand(L"count", m_swarm, &FireflySwarm::getCount);
-	console.addCommand(L"capacity", m_swarm, &FireflySwarm::getCapacity);
-	console.addCommand(L"setColor", [this](sf::Color const& color)
+	console.addCommand(L"demo.killAll", m_swarm, &FireflySwarm::killAll);
+	console.addCommand(L"demo.kill", m_swarm, &FireflySwarm::kill);
+	console.addCommand(L"demo.count", m_swarm, &FireflySwarm::getCount);
+	console.addCommand(L"demo.capacity", m_swarm, &FireflySwarm::getCapacity);
+	console.addCommand(L"demo.setColor", [this](sf::Color const& color)
 			{
 				m_color = color;
 				m_uniformPopulation.setColor(color);
 			});
-	console.addCommand(L"getColor", [this](){return (m_color);});
-	console.addCommand(L"setSpeed", [this](float value){m_speed = value;});
-	console.addCommand(L"getSpeed", [this](){return (m_speed);});
-	console.addCommand(L"setRadius", [this](float value){m_radius = value;});
-	console.addCommand(L"setHaloRadius", [this](float value){m_haloRadius = value;});
-	console.addCommand(L"getHaloRadius", [this](){return (m_haloRadius);});
-	console.addCommand(L"setBehaviorRadius", m_behavior, &FireflySwarm::CirclePositionBehavior::setRadius);
-	console.addCommand(L"getBehaviorRadius", m_behavior, &FireflySwarm::CirclePositionBehavior::getRadius);
-	console.addCommand(L"setSpawnMode",
+	console.addCommand(L"demo.getColor", [this](){return (m_color);});
+	console.addCommand(L"demo.setSpeed", [this](float value){m_speed = value;});
+	console.addCommand(L"demo.getSpeed", [this](){return (m_speed);});
+	console.addCommand(L"demo.setRadius", [this](float value){m_radius = value;});
+	console.addCommand(L"demo.setHaloRadius", [this](float value){m_haloRadius = value;});
+	console.addCommand(L"demo.getHaloRadius", [this](){return (m_haloRadius);});
+	console.addCommand(L"demo.setBehaviorRadius", m_behavior, &FireflySwarm::CirclePositionBehavior::setRadius);
+	console.addCommand(L"demo.getBehaviorRadius", m_behavior, &FireflySwarm::CirclePositionBehavior::getRadius);
+	console.addCommand(L"demo.setSpawnMode",
 						[this](std::wstring const& value) -> std::wstring 
 						{
 							if (value == L"static")
@@ -90,7 +90,7 @@ FireflyTestScreen::FireflyTestScreen() :
 								return (L"invalid spawn mode: " + value);
 							return (L"spawn mode changed");
 						});
-	console.addCommand(L"getSpawnMode",
+	console.addCommand(L"demo.getSpawnMode",
 						[this]()
 						{
 							std::wstring	result = L"invalid spawn mode";
@@ -114,21 +114,24 @@ FireflyTestScreen::FireflyTestScreen() :
 							}
 							return (result);
 						});
-	console.addCommand(L"setMinSpeed", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMinSpeed);
-	console.addCommand(L"setMaxSpeed", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMaxSpeed);
-	console.addCommand(L"setMinRadius", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMinRadius);
-	console.addCommand(L"setMaxRadius", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMaxRadius);
-	console.addCommand(L"setMinHaloRadius", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMinHaloRadius);
-	console.addCommand(L"setMaxHaloRadius", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMaxHaloRadius);
+	console.addCommand(L"demo.setMinSpeed", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMinSpeed);
+	console.addCommand(L"demo.setMaxSpeed", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMaxSpeed);
+	console.addCommand(L"demo.setMinRadius", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMinRadius);
+	console.addCommand(L"demo.setMaxRadius", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMaxRadius);
+	console.addCommand(L"demo.setMinHaloRadius", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMinHaloRadius);
+	console.addCommand(L"demo.setMaxHaloRadius", m_uniformPopulation, &FireflySwarm::UniformPopulation::setMaxHaloRadius);
 }
 
 void	FireflyTestScreen::start()
 {
 	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
+	octo::Console&			console = octo::Application::getConsole();
 
 	m_view = graphics.getDefaultView();
 	m_view.setCenter(sf::Vector2f());
 	graphics.addMouseListener(this);
+	console.print(L" $> console.list_commands()", octo::Console::HelpColor);
+	console.print(L"You can display all available command by typing:", octo::Console::HelpColor);
 }
 
 void	FireflyTestScreen::pause()
