@@ -40,3 +40,15 @@ Pour compiler la librairie, les tests et les outils:
 
 	$> make complete
 
+## Executer le projet
+
+### Sous mac
+
+Pas de soucis pour l'instant, tout devrait se faire normalement.
+
+### Sous linux
+
+Il est possible que les fichiers des librairies dynamique SFML soit introuvable.  
+Dans ce cas, il est necessaire d'utiliser ldconfig apres l'installation en regle de la sfml:
+
+	$> ldconfig /usr/local/bin/
