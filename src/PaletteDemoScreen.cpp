@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/19 21:23:07 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/01 04:26:40 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/01 15:49:54 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,9 @@ void	PaletteDemoScreen::start()
 				console.print(octo::stringToWide(e.what()), octo::Console::ErrorColor);
 			}
 		});
+	console.print(L" $> demo.select_wheel(\"<wheel_file_name>\")", octo::Console::HelpColor);
+	console.print(L" $> demo.select_palette(\"<palette_file_name>\")", octo::Console::HelpColor);
+	console.print(L"Usage:", octo::Console::HelpColor);
 }
 
 void	PaletteDemoScreen::pause()
