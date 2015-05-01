@@ -6,14 +6,14 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/19 21:23:20 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/25 21:37:42 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/01 03:44:59 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PALETTEDEMOSCREEN_HPP
 # define PALETTEDEMOSCREEN_HPP
 # include <AbstractState.hpp>
-# include <Palette.hpp>
+# include <IColorProvider.hpp>
 
 # include <SFML/Graphics/RectangleShape.hpp>
 # include <SFML/Graphics/View.hpp>
@@ -23,7 +23,7 @@
 class PaletteDemoScreen : public octo::AbstractState
 {
 public:
-	PaletteDemoScreen();
+	explicit PaletteDemoScreen(octo::IColorProvider const* colors = nullptr);
 
 	virtual void	start();
 	virtual void	pause();
@@ -32,8 +32,11 @@ public:
 
 	virtual void	update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render)const;
+	void			setColors(octo::IColorProvider const* colors);
 private:
-	octo::Palette const*				m_palette;
+	void			updateColors();
+private:
+	octo::IColorProvider const*			m_colors;
 	std::vector<sf::RectangleShape>		m_rectangles;
 	sf::View							m_view;
 };

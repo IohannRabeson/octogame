@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/30 15:11:16 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/01 03:39:45 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	setupStateManager(octo::StateManager& manager)
 {
 	manager.registerState<StateTest>("test");
 	manager.registerState<FireflyTestScreen>("firefly");
-	manager.registerState<PaletteDemoScreen>("palette_demo_01");
+	manager.registerState<PaletteDemoScreen>("colors");
 }
 
 static void	setupConsole(octo::Console& console)
