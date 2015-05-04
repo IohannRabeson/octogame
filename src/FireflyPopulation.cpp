@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/19 13:32:32 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/19 20:12:28 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/04 02:50:47 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	FireflySwarm::UniquePopulation::setupFirefly(FireflySwarm::Firefly& fly)
 //	Uniform population
 //
 FireflySwarm::UniformPopulation::UniformPopulation(std::size_t seed,
-												  sf::Color const& color,
+												  octo::IColorProvider const* colors,
 												  float minSpeed,
 												  float maxSpeed,
 												  float minRadius,
@@ -46,7 +46,7 @@ FireflySwarm::UniformPopulation::UniformPopulation(std::size_t seed,
 												  sf::Time maxMaxTime) :
 	m_engine(seed),
 	m_distribution(-1.f, 1.f),
-	m_color(color),
+	m_colors(colors),
 	m_minSpeed(minSpeed),
 	m_maxSpeed(maxSpeed),
 	m_minRadius(minRadius),
@@ -60,21 +60,16 @@ FireflySwarm::UniformPopulation::UniformPopulation(std::size_t seed,
 
 void	FireflySwarm::UniformPopulation::setupFirefly(FireflySwarm::Firefly& fly)
 {
-	fly.color = m_color;
+	fly.color = m_colors->getColor(m_engine() % m_colors->getColorCount());
 	fly.speed = getRandom(m_minSpeed, m_maxSpeed);
 	fly.radius = getRandom(m_minRadius, m_maxRadius);
 	fly.haloRadius = getRandom(m_minHaloRadius, m_maxHaloRadius);
 	fly.maxTime = getRandom(m_minMaxTime, m_maxMaxTime);
 }
 
-void	FireflySwarm::UniformPopulation::setColor(sf::Color const& color)
+void	FireflySwarm::UniformPopulation::setColors(octo::IColorProvider const* colors)
 {
-	m_color = color;
-}
-
-sf::Color const&	FireflySwarm::UniformPopulation::getColor()const
-{
-	return (m_color);
+	m_colors = colors;
 }
 
 void				FireflySwarm::UniformPopulation::setMinSpeed(float value)

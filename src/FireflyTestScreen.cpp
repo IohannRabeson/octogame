@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/01 18:20:17 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/04 03:35:19 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,17 @@
 #include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
 #include <Console.hpp>
+#include <Palette.hpp>
 #include <WPrintSFML.hpp>
+#include <StringUtils.hpp>
 
 FireflyTestScreen::FireflyTestScreen() :
 	m_swarm(10000),
-	m_uniformPopulation(1234u, sf::Color(233, 213, 61),
+	m_uniformPopulation(1234u, &octo::Application::getResourceManager().getPalette(FROM_SEA1_OPA),  
 						1.2f, 2.f, 6.f, 10.f, 32.f, 50.f,
 						sf::Time::Zero, sf::Time::Zero),
 	m_spawnMode(FireflySwarm::SpawnMode::Normal),
-	m_color(233, 213, 61),
+	m_colors(&octo::Application::getResourceManager().getPalette(FROM_SEA1_OPA)),
 	m_speed(1.f),
 	m_radius(8.f),
 	m_haloRadius(32.f)
@@ -44,13 +46,13 @@ FireflyTestScreen::FireflyTestScreen() :
 	// Setup console
 	console.addCommand(L"demo.sp", [this]()
 			{
-				return (m_swarm.create(m_spawnMode, m_spawn, m_color, m_radius, m_haloRadius, m_speed));
+				return (m_swarm.create(m_spawnMode, m_spawn, m_colors->getColor(0), m_radius, m_haloRadius, m_speed));
 			});
 
 	console.addCommand(L"demo.spN", [this](std::size_t count)
 			{
 				for (std::size_t i = 0; i < count; ++i)
-					m_swarm.create(m_spawnMode, m_spawn, m_color, m_radius, m_haloRadius, m_speed);
+					m_swarm.create(m_spawnMode, m_spawn, m_colors->getColor(0), m_radius, m_haloRadius, m_speed);
 			});
 
 	console.addCommand(L"demo.uspN", [this](std::size_t count)
@@ -62,12 +64,34 @@ FireflyTestScreen::FireflyTestScreen() :
 	console.addCommand(L"demo.kill", m_swarm, &FireflySwarm::kill);
 	console.addCommand(L"demo.count", m_swarm, &FireflySwarm::getCount);
 	console.addCommand(L"demo.capacity", m_swarm, &FireflySwarm::getCapacity);
-	console.addCommand(L"demo.setColor", [this](sf::Color const& color)
+	console.addCommand(L"demo.setPalette", [this](std::string const& key)
 			{
-				m_color = color;
-				m_uniformPopulation.setColor(color);
+				octo::Console&	console = octo::Application::getConsole();
+
+				try
+				{
+					m_colors = &octo::Application::getResourceManager().getPalette(key);
+					m_uniformPopulation.setColors(m_colors);
+				}
+				catch(std::range_error const& e)
+				{
+					console.print(octo::stringToWide(e.what()), octo::Console::ErrorColor);
+				}
 			});
-	console.addCommand(L"demo.getColor", [this](){return (m_color);});
+	console.addCommand(L"demo.setWheel", [this](std::string const& key)
+			{
+				octo::Console&	console = octo::Application::getConsole();
+
+				try
+				{
+					m_colors = &octo::Application::getResourceManager().getColorWheel(key);
+					m_uniformPopulation.setColors(m_colors);
+				}
+				catch(std::range_error const& e)
+				{
+					console.print(octo::stringToWide(e.what()), octo::Console::ErrorColor);
+				}
+			});
 	console.addCommand(L"demo.setSpeed", [this](float value){m_speed = value;});
 	console.addCommand(L"demo.getSpeed", [this](){return (m_speed);});
 	console.addCommand(L"demo.setRadius", [this](float value){m_radius = value;});

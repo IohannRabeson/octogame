@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:57:45 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/19 14:17:05 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/04 02:55:49 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ private:
 	sf::View								m_view;
 	std::vector<PointHandle>				m_handles;
 	FireflySwarm::SpawnMode					m_spawnMode;
-	sf::Color								m_color;
+	octo::IColorProvider const*				m_colors;
 	sf::Vector2f							m_spawn;
 	FireflySwarm::CirclePositionBehavior*	m_behavior;
 	float									m_speed;

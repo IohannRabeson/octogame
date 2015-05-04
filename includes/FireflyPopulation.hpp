@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/19 13:29:28 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/19 20:12:07 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/04 02:50:02 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FIREFLYPOPULATION_HPP
 # include "FireflySwarm.hpp"
 # include <random>
+# include <IColorProvider.hpp>
 
 class FireflySwarm::AbstractPopulation
 {
@@ -43,7 +44,7 @@ class FireflySwarm::UniformPopulation : public FireflySwarm::AbstractPopulation
 	typedef std::uniform_real_distribution<float>	Distribution;
 public:
 	UniformPopulation(std::size_t seed,
-					  sf::Color const& color,
+					  octo::IColorProvider const* colors,
 					  float minSpeed,
 					  float maxSpeed,
 					  float minRadius,
@@ -55,8 +56,7 @@ public:
 
 	virtual void		setupFirefly(FireflySwarm::Firefly& fly);
 
-	void				setColor(sf::Color const& color);
-	sf::Color const&	getColor()const;
+	void				setColors(octo::IColorProvider const* colors);
 
 	void				setMinSpeed(float value);
 	float				getMinSpeed()const;
@@ -82,17 +82,17 @@ public:
 		return (min + (max - min) * m_distribution(m_engine));
 	}
 private:
-	Engine			m_engine;
-	Distribution	m_distribution;
-	sf::Color		m_color;
-	float			m_minSpeed;
-	float			m_maxSpeed;
-	float			m_minRadius;
-	float			m_maxRadius;
-	float			m_minHaloRadius;
-	float			m_maxHaloRadius;
-	sf::Time		m_minMaxTime;
-	sf::Time		m_maxMaxTime;
+	Engine					m_engine;
+	Distribution			m_distribution;
+	octo::IColorProvider const*	m_colors;
+	float					m_minSpeed;
+	float					m_maxSpeed;
+	float					m_minRadius;
+	float					m_maxRadius;
+	float					m_minHaloRadius;
+	float					m_maxHaloRadius;
+	sf::Time				m_minMaxTime;
+	sf::Time				m_maxMaxTime;
 };
 
 /*!	Cree un ensemble de particules avec des parametres variant
