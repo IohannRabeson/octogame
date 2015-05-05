@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/19 21:23:07 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/01 15:49:54 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/06 01:09:33 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	PaletteDemoScreen::start()
 			}
 			catch(std::range_error const& e)
 			{
-				console.print(octo::stringToWide(e.what()), octo::Console::ErrorColor);
+				console.printError(e);
 			}
 		});
 	console.addCommand(L"demo.select_wheel", [this](std::string const& key)
@@ -90,12 +90,12 @@ void	PaletteDemoScreen::start()
 			}
 			catch(std::range_error const& e)
 			{
-				console.print(octo::stringToWide(e.what()), octo::Console::ErrorColor);
+				console.printError(e);
 			}
 		});
-	console.print(L" $> demo.select_wheel(\"<wheel_file_name>\")", octo::Console::HelpColor);
-	console.print(L" $> demo.select_palette(\"<palette_file_name>\")", octo::Console::HelpColor);
-	console.print(L"Usage:", octo::Console::HelpColor);
+	console.printHelp(L"Usage:\n"
+					  L"\t$> demo.select_wheel(\"<wheel_file_name>\")\n"
+					  L"\t$> demo.select_palette(\"<palette_file_name>\")");
 }
 
 void	PaletteDemoScreen::pause()

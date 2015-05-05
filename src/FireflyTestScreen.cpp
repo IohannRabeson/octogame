@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/04 03:35:19 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/06 01:06:50 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ FireflyTestScreen::FireflyTestScreen() :
 				}
 				catch(std::range_error const& e)
 				{
-					console.print(octo::stringToWide(e.what()), octo::Console::ErrorColor);
+					console.printError(e);
 				}
 			});
 	console.addCommand(L"demo.setWheel", [this](std::string const& key)
@@ -89,7 +89,7 @@ FireflyTestScreen::FireflyTestScreen() :
 				}
 				catch(std::range_error const& e)
 				{
-					console.print(octo::stringToWide(e.what()), octo::Console::ErrorColor);
+					console.printError(e);
 				}
 			});
 	console.addCommand(L"demo.setSpeed", [this](float value){m_speed = value;});
@@ -154,8 +154,8 @@ void	FireflyTestScreen::start()
 	m_view = graphics.getDefaultView();
 	m_view.setCenter(sf::Vector2f());
 	graphics.addMouseListener(this);
-	console.print(L" $> console.list_commands()", octo::Console::HelpColor);
-	console.print(L"You can display all available command by typing:", octo::Console::HelpColor);
+	console.printHelp(L"You can display all available command by typing:\n"
+				  	  L" $> console.list_commands()");
 }
 
 void	FireflyTestScreen::pause()
