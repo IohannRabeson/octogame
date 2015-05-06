@@ -108,3 +108,5 @@ complete:
 	make complete -C octolib/ MODE=$(MODE)
 	make
 
+static-checks:
+	cppcheck --enable=all  -I ./includes/ -I ./octolib/includes ./includes/* ./src/
