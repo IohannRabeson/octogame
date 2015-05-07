@@ -6,28 +6,22 @@ compiler:
  - clang
 
 before_install:
- - echo "deb http://llvm.org/apt/precise/ llvm-toolchain-precise main" | sudo tee -a /etc/apt/sources.list
- - echo "deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.5 main" | sudo tee -a /etc/apt/sources.list
- - echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu precise main" | sudo tee -a /etc/apt/sources.list
- - sudo apt-get update -qq
- - sudo apt-get install -qq --allow-unauthenticated clang-3.5 libpthread-stubs0-dev libx11-dev libgl1-mesa-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libsndfile1-dev libopenal-dev libudev-dev libx11-xcb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-util0-dev libxcb-randr0-dev libboost-all-dev cmake
+ - chmod u=rx ./scripts/linux/*.sh ./scripts/commons/*.sh
 
 install:
- - git clone https://github.com/LaurentGomila/SFML.git sfml-repository
- - cd sfml-repository
- - git pull origin master
- - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=TRUE .
- - make
- - sudo make install
- - cd ..
- - sudo ldconfig /usr/local/lib
+ - sudo ./scripts/linux/install_dependencies.sh
+ - sudo ./scripts/linux/install_cppcheck.sh
+ - sudo ./scripts/commons/install_sfml.sh
 
-script: make complete
+script:
+ - ./scripts/linux/run_static_analysis.sh
+ - make complete
 
 branches:
   only:
       - dev
       - master
+      - travis_experiments
 
 notifications:
   email:
