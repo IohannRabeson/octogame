@@ -16,7 +16,11 @@ Des explications à propos des sous modules: [issues 2](http://git-scm.com/book/
 
 ## Compilation, installation, et tout ça
 
-Pour les dependances, rien n'est fait. Vous devez les installer a la mano
+### Linux
+	TODO: voir scripts travis
+###
+
+Pour les dependances sous MacOS, rien n'est fait. Vous devez les installer a la mano
 pour l'instant.  
 Mais c'est prevu, voir [issues 2](https://github.com/IohannRabeson/octogame/issues/2)
 
