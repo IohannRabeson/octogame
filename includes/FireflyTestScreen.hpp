@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:57:45 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/04 02:55:49 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/08 16:58:08 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FIREFLYTESTSCREEN_HPP
 # include <AbstractState.hpp>
 # include <GraphicsManager.hpp>
+# include <GraphicsListeners.hpp>
 
 # include "FireflySwarm.hpp"
 # include "FireflyPopulation.hpp"
@@ -43,7 +44,6 @@ public:
 private:
 	FireflySwarm							m_swarm;
 	FireflySwarm::UniformPopulation			m_uniformPopulation;
-	sf::View								m_view;
 	std::vector<PointHandle>				m_handles;
 	FireflySwarm::SpawnMode					m_spawnMode;
 	octo::IColorProvider const*				m_colors;
