@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/06 01:06:50 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/08 16:58:26 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "../ResourceDefinitions.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+#include <Camera.hpp>
 #include <ResourceManager.hpp>
 #include <Console.hpp>
 #include <Palette.hpp>
@@ -150,9 +151,9 @@ void	FireflyTestScreen::start()
 {
 	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
 	octo::Console&			console = octo::Application::getConsole();
+	octo::Camera&			camera = octo::Application::getCamera();
 
-	m_view = graphics.getDefaultView();
-	m_view.setCenter(sf::Vector2f());
+	camera.setCenter(sf::Vector2f());
 	graphics.addMouseListener(this);
 	console.printHelp(L"You can display all available command by typing:\n"
 				  	  L" $> console.list_commands()");
@@ -181,7 +182,6 @@ void	FireflyTestScreen::update(sf::Time frameTime)
 void	FireflyTestScreen::draw(sf::RenderTarget& render)const
 {
 	render.clear();
-	render.setView(m_view);
 	for (auto it = m_handles.rbegin(); it != m_handles.rend(); ++it)
 		render.draw(*it);
 	m_swarm.draw(render);
@@ -189,8 +189,8 @@ void	FireflyTestScreen::draw(sf::RenderTarget& render)const
 
 void	FireflyTestScreen::onMoved(sf::Event::MouseMoveEvent const& event)
 {
-	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
-	sf::Vector2f		pos = graphics.mapPixelToCoords(sf::Vector2i(event.x, event.y));
+	octo::Camera&	camera = octo::Application::getCamera();
+	sf::Vector2f	pos = camera.mapPixelToCoords(sf::Vector2i(event.x, event.y));
 
 	for (PointHandle& handle : m_handles)
 	{
@@ -200,8 +200,8 @@ void	FireflyTestScreen::onMoved(sf::Event::MouseMoveEvent const& event)
 
 void	FireflyTestScreen::onPressed(sf::Event::MouseButtonEvent const& event)
 {
-	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
-	sf::Vector2f			pos = graphics.mapPixelToCoords(sf::Vector2i(event.x, event.y));
+	octo::Camera&	camera = octo::Application::getCamera();
+	sf::Vector2f	pos = camera.mapPixelToCoords(sf::Vector2i(event.x, event.y));
 
 	switch (event.button)
 	{

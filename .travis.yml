@@ -9,7 +9,7 @@ before_install:
  - chmod u=rx ./scripts/linux/*.sh ./scripts/commons/*.sh
 
 install:
- - sudo ./scripts/linux/install_dependencies.sh
+ - sudo ./scripts/linux/install_compiler.sh
  - sudo ./scripts/linux/install_cppcheck.sh
  - sudo ./scripts/commons/install_sfml.sh
 

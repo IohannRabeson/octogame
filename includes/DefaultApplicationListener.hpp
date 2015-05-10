@@ -6,13 +6,14 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:47:55 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/15 19:49:33 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/08 18:35:42 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEFAULTAPPLICATIONLISTENER_HPP
 # define DEFAULTAPPLICATIONLISTENER_HPP
 # include <GraphicsManager.hpp>
+# include <GraphicsListeners.hpp>
 
 class DefaultApplicationListener : public octo::IKeyboardListener,
 								   public octo::IWindowListener
