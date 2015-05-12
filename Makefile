@@ -1,7 +1,6 @@
 TARGET = octodyssey.app
 CORE_DIR = ./octolib
-INCLUDE_DIR = ./includes $(CORE_DIR)/includes
-SRC_DIR = ./src
+INCLUDE_DIR = $(CORE_DIR)/includes Main Firefly Screens
 BUILD_DIR = ./builds
 OUTPUT_DIR = .
 # libraries directories (ex: ../libft)
@@ -11,18 +10,18 @@ LIB_DIRS = $(CORE_DIR)
 LIBS = octo sfml-system sfml-window sfml-graphics sfml-audio
 
 # sources
-SRC = $(SRC_STATES)						\
-	  $(SRC_FIREFLY)					\
-	  DefaultApplicationListener.cpp	\
-	  main.cpp
+SRC = $(SRC_STATES)										\
+	  $(SRC_FIREFLY)									\
+	  Main/DefaultApplicationListener.cpp				\
+	  Main/main.cpp
 
-SRC_STATES =	StateTest.cpp			\
-				FireflyTestScreen.cpp	\
-				PaletteDemoScreen.cpp
+SRC_STATES =	Screens/StateTest.cpp					\
+				Screens/FireflyTestScreen.cpp			\
+				Screens/PaletteDemoScreen.cpp
 
-SRC_FIREFLY =	FireflySwarm.cpp				\
-				FireflyPopulation.cpp			\
-				FireflyPositionBehaviors.cpp
+SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
+				Firefly/FireflyPopulation.cpp			\
+				Firefly/FireflyPositionBehaviors.cpp
 
 
 # package files
@@ -42,7 +41,7 @@ DEBUG_FLAGS = -g
 INCLUDE_DIRS = $(addprefix -I, $(INCLUDE_DIR))
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(SRC:.cpp=.o))
-SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
+SRCS = $(SRC)
 CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
@@ -65,8 +64,9 @@ $(COMPLETE_TARGET): $(BUILD_DIR) package core_library $(OBJS)
 	@echo " - $(COLOR_ACTION)building$(COLOR_OFF): $(COLOR_OBJECT)$@$(COLOR_OFF)"
 	@$(CC) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) 
 
-$(addprefix $(BUILD_DIR)/, %.o) : $(addprefix $(SRC_DIR)/, %.cpp)
+$(addprefix $(BUILD_DIR)/, %.o) : $(subst $(BUILD_DIR),, %.cpp)
 	@echo " - $(COLOR_ACTION)compiling$(COLOR_OFF): $(COLOR_OBJECT)$<$(COLOR_OFF)"
+	@mkdir -p $(dir $@)
 	@$(CC) $(INCLUDE_DIRS) $(CFLAGS) -c $< -o $@
 
 re: print_summary fclean $(COMPLETE_TARGET)
