@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/01 04:58:56 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/10 19:16:49 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <GraphicsManager.hpp>
 #include <StateManager.hpp>
 #include <Console.hpp>
+#include <DefaultTransition.hpp>
 #include "DefaultApplicationListener.hpp"
 
 // Ecran de jeu
@@ -26,6 +27,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<StateTest>("test");
 	manager.registerState<FireflyTestScreen>("firefly");
 	manager.registerState<PaletteDemoScreen>("colors");
+	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
 static void	setupConsole(octo::Console& console)
