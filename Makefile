@@ -1,7 +1,7 @@
 TARGET = octodyssey.app
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes Main Firefly Screens
-BUILD_DIR = ./builds
+BUILD_DIR = ./builds/game/
 OUTPUT_DIR = .
 # libraries directories (ex: ../libft)
 LIB_DIRS = $(CORE_DIR)
