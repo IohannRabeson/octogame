@@ -1,6 +1,6 @@
 TARGET = octodyssey.app
 CORE_DIR = ./octolib
-INCLUDE_DIR = $(CORE_DIR)/includes Main Firefly Screens
+INCLUDE_DIR = $(CORE_DIR)/includes Main Firefly Screens Map Managers Octo Decors Physics
 BUILD_DIR = ./builds/game/
 OUTPUT_DIR = .
 # libraries directories (ex: ../libft)
@@ -12,17 +12,48 @@ LIBS = octo sfml-system sfml-window sfml-graphics sfml-audio
 # sources
 SRC = $(SRC_STATES)										\
 	  $(SRC_FIREFLY)									\
+	  $(SRC_MAP)										\
+	  $(SRC_MANAGERS)									\
+	  $(SRC_OCTO)										\
+	  $(SRC_DECORS)										\
+	  $(SRC_PHYSICS)									\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp
 
 SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/FireflyTestScreen.cpp			\
-				Screens/PaletteDemoScreen.cpp
+				Screens/PaletteDemoScreen.cpp			\
+				Screens/StateGame.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
 				Firefly/FireflyPositionBehaviors.cpp
 
+SRC_MAP =		Map/FactoryMap.cpp						\
+				Map/Map.cpp								\
+				Map/MapClassic.cpp						\
+				Map/MapHigh.cpp							\
+				Map/MapInstance.cpp
+
+SRC_MANAGERS =	Managers/CollisionManager.cpp			\
+				Managers/DecorManager.cpp				\
+				Managers/MapManager.cpp					\
+				Managers/TransitionManager.cpp
+
+SRC_OCTO =		Octo/OctoNoise.cpp
+
+SRC_DECORS =	Decors/Crystal.cpp						\
+				Decors/Decor.cpp						\
+				Decors/GameObject.cpp					\
+				Decors/Rock.cpp							\
+				Decors/Star.cpp							\
+				Decors/StaticTileObject.cpp				\
+				Decors/Tile.cpp							\
+				Decors/Tree.cpp
+
+SRC_PHYSICS =	Physics/DynamicPolygon.cpp				\
+				Physics/Player.cpp						\
+				Physics/Polygon.cpp
 
 # package files
 PACKAGE_FILE = default.pck

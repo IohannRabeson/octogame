@@ -21,12 +21,14 @@
 #include "StateTest.hpp"
 #include "FireflyTestScreen.hpp"
 #include "PaletteDemoScreen.hpp"
+#include "StateGame.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
 	manager.registerState<StateTest>("test");
 	manager.registerState<FireflyTestScreen>("firefly");
 	manager.registerState<PaletteDemoScreen>("colors");
+	manager.registerState<StateGame>("game");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
