@@ -15,10 +15,37 @@ void MapInstance::initBiome(void)
 	m_biome->mn_width = 512u;
 	m_biome->mf_transitionTimerMax = 0.5f;
 	m_biome->mn_nbDecor = 15u;
-	m_biome->mn_temperature = -1;
+	m_biome->mn_temperature = 1;
 	m_instance = new StaticTileObject(140u, 40u, 5u);
 	m_instance->load();
 	mn_totalWidth = m_biome->mn_width + m_instance->getWidth();
+
+	// Decors values
+	m_biome->m_tree.mn_nbDecor = 10;
+	m_biome->m_tree.mn_minSizeX = 20;
+	m_biome->m_tree.mn_maxSizeX = 50;
+	m_biome->m_tree.mn_minSizeY = 80;
+	m_biome->m_tree.mn_maxSizeY = 100;
+	m_biome->m_tree.mn_minAngle = 15;
+	m_biome->m_tree.mn_maxAngle = 75;
+	m_biome->m_tree.mn_minLive = 10;
+	m_biome->m_tree.mn_maxLive = 15;
+
+	m_biome->m_crystal.mn_nbDecor = 10;
+	m_biome->m_crystal.mn_minSizeX = 10;
+	m_biome->m_crystal.mn_maxSizeX = 50;
+	m_biome->m_crystal.mn_minSizeY = 70;
+	m_biome->m_crystal.mn_maxSizeY = 200;
+	m_biome->m_crystal.mn_maxElement = 2;
+	m_biome->m_crystal.mn_maxElement = 5;
+
+	m_biome->m_rock.mn_nbDecor = 10;
+	m_biome->m_rock.mn_minSizeX = 10;
+	m_biome->m_rock.mn_maxSizeX = 20;
+	m_biome->m_rock.mn_minSizeY = 150;
+	m_biome->m_rock.mn_maxSizeY = 400;
+	m_biome->m_rock.mn_minElement = 4;
+	m_biome->m_rock.mn_maxElement = 15;
 }
 
 #include <iostream>

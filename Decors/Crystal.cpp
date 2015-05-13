@@ -1,16 +1,9 @@
 #include "Crystal.hpp"
+#include "Map.hpp"
 
 Crystal::Crystal() :
 	Decor()
 {
-	mn_countCrystal = randomRange(2, 6);
-	mn_maxTriangle = 8 * mn_countCrystal;
-
-	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u]);
-	m_refAngle.resize(mn_countCrystal);
-	m_refSize.resize(mn_countCrystal);
-	m_refColor.resize(mn_countCrystal);
-
 }
 
 Crystal::~Crystal()
@@ -88,8 +81,17 @@ void Crystal::createCrystal(void)
 void Crystal::randomDecor(void)
 {
 	Decor::randomDecor();
+
+	mn_countCrystal = randomRange(m_biome->m_crystal.mn_minElement, m_biome->m_crystal.mn_maxElement);
+	mn_maxTriangle = 8 * mn_countCrystal;
+
+	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u]);
+	m_refAngle.resize(mn_countCrystal);
+	m_refSize.resize(mn_countCrystal);
+	m_refColor.resize(mn_countCrystal);
+
 	m_color = sf::Color(5.f, 103.f, 155.f);
-	m_size = sf::Vector2f(randomRange(minX, maxX), randomRange(minY, maxY));
+	m_size = sf::Vector2f(randomRange(m_biome->m_crystal.mn_minSizeX, m_biome->m_crystal.mn_maxSizeX), randomRange(m_biome->m_crystal.mn_minSizeY, m_biome->m_crystal.mn_maxSizeY));
 
 	for (int i = 0; i < mn_countCrystal; i++)
 	{

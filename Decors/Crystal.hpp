@@ -8,11 +8,6 @@
 class Crystal : public Decor
 {
 private:
-	static constexpr int		minX = 10;
-	static constexpr int		maxX = 50;
-	static constexpr int		minY = 70;
-	static constexpr int		maxY = 200;
-
 	int							mn_maxTriangle;
 	int							mn_countCrystal;
 	std::vector<sf::Vector2f>	m_refSize;

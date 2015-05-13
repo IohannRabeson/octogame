@@ -8,11 +8,6 @@
 # define DEPTH 8
 # define SIZE_SCREEN_Y 16 * 68
 
-# define MIN_A 15
-# define MAX_A 75
-# define MIN_LIVE 10
-# define MAX_LIVE 15
-
 class Tree : public Decor
 {
 private:

@@ -1,4 +1,5 @@
 #include "Rock.hpp"
+#include "Map.hpp"
 
 Rock::Rock() :
 	Decor()
@@ -65,10 +66,10 @@ void Rock::randomDecor(void)
 {
 	Decor::randomDecor();
 	m_color = sf::Color(122.f, 108.f, 135.f);
-	m_size = sf::Vector2f(randomRange(minX, maxX), randomRange(minY, maxY));
+	m_size = sf::Vector2f(randomRange(m_biome->m_rock.mn_minSizeX, m_biome->m_rock.mn_maxSizeX), randomRange(m_biome->m_rock.mn_minSizeY, m_biome->m_rock.mn_maxSizeY));
 
 	// Init containers
-	mn_countRock = randomRange(4, 20);
+	mn_countRock = randomRange(m_biome->m_rock.mn_minElement, m_biome->m_rock.mn_maxElement);
 	mn_maxTriangle = 10 * mn_countRock + 1; // +1 for root triangle
 	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u]);
 	mn_countTriangle = 0u;
@@ -89,7 +90,7 @@ void Rock::randomDecor(void)
 	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
 	while (i < mn_countRock / 2)
 	{
-		size.x = randomRange(minX, maxX);
+		size.x = randomRange(m_biome->m_rock.mn_minSizeX, m_biome->m_rock.mn_maxSizeX);
 		totalX += size.x;
 		size.y -= totalX;
 		origin.x += randomRange(static_cast<int>(-totalX), 0.f);
@@ -112,7 +113,7 @@ void Rock::randomDecor(void)
 	origin = sf::Vector2f(0.f + m_size.x, 0.f);
 	while (i < mn_countRock)
 	{
-		size.x = randomRange(minX, maxX);
+		size.x = randomRange(m_biome->m_rock.mn_minSizeX, m_biome->m_rock.mn_maxSizeX);
 		totalX += size.x;
 		size.y -= totalX;
 		origin.x += randomRange(0.0f, static_cast<int>(totalX));

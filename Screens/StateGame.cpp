@@ -11,9 +11,13 @@
 /* ************************************************************************** */
 
 #include "StateGame.hpp"
+#include <Application.hpp>
+#include <Camera.hpp>
 
 void	StateGame::start()
 {
+	octo::Application::getCamera().setZoom(0.75);
+	octo::Application::getCamera().move(-310, -200);
 	m_mapManager.init(Map::e_map_instance);
 }
 
