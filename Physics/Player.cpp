@@ -23,7 +23,7 @@ Player::~Player(void)
 	
 }
 
-void Player::updateVelocity(float pf_deltatime)
+void Player::update(float pf_deltatime)
 {
 	float speed = 300.f;
 

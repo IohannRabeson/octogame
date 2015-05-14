@@ -9,7 +9,7 @@ public:
 	Player(void);
 	virtual ~Player(void);
 
-	virtual void updateVelocity(float pf_deltatime);
+	virtual void update(float pf_deltatime);
 
 };
 

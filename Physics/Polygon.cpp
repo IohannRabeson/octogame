@@ -43,16 +43,6 @@ void Polygon::computeCenter(void)
 	m_center.y /= m_verticesCount;
 }
 
-void Polygon::setVertex(std::size_t index, sf::Vector2f const & vector)
-{
-	m_vertices[index].position = vector;
-}
-
-void Polygon::setVertex(std::size_t index, sf::Vertex const & vertex)
-{
-	m_vertices[index] = vertex;
-}
-
 sf::Vector2f const & Polygon::getVertex(std::size_t index) const
 {
 	return m_vertices[index].position;
@@ -74,9 +64,4 @@ sf::Vector2f const & Polygon::getNormal(std::size_t index)
 {
 	computeEdges();
 	return m_normals[index];
-}
-
-std::size_t Polygon::getVerticeCount(void) const
-{
-	return m_verticesCount;
 }

@@ -12,7 +12,7 @@ public:
 	CollisionManager(void);
 	virtual ~CollisionManager(void);
 
-	Player & getPlayer(void) const;
+	inline Player & getPlayer(void) const { return *m_player; }
 	void init(MapManager * m_mapManager);
 	void update(float pf_deltatime);
 
@@ -28,7 +28,6 @@ private:
 		bool contains(Projection const & projection);
 	};
 
-	//TODO: std::pair
 	struct Pair
 	{
 		DynamicPolygon *	m_polygonA;
@@ -36,12 +35,15 @@ private:
 	};
 
 	// Owner
+	MapManager *			m_mapManager;
+
+	// Contains the player
 	std::vector<DynamicPolygon *>	m_dynamicPolygons;
 	Player *			m_player;
 
 	std::vector<Pair>		m_pairs;
 	std::size_t			m_pairCount;
-	MapManager *			m_mapManager;
+
 	Projection			m_projectionA;
 	Projection			m_projectionB;
 	sf::Vector2f			m_axis;

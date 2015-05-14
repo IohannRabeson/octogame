@@ -61,7 +61,7 @@ sf::Rect<float> const & DynamicPolygon::getGlobalBounds(void)
 	return m_globalBounds;
 }
 
-void DynamicPolygon::update(float)
+void DynamicPolygon::applyTransform(void)
 {
 	move(m_velocity);
 	m_velocity.x = 0.f;

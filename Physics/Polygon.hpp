@@ -10,12 +10,12 @@ public:
 	Polygon(std::size_t p_verticesCount);
 	virtual ~Polygon(void);
 
-	void setVertex(std::size_t index, sf::Vector2f const & vector);
-	void setVertex(std::size_t index, sf::Vertex const & vertex);
 	sf::Vector2f const & getCenter(void);
 	sf::Vector2f const & getEdge(std::size_t index);
 	sf::Vector2f const & getNormal(std::size_t index);
-	std::size_t getVerticeCount(void) const;
+	inline void setVertex(std::size_t index, sf::Vector2f const & vector) { m_vertices[index].position = vector; }
+	inline void setVertex(std::size_t index, sf::Vertex const & vertex) { m_vertices[index] = vertex; }
+	inline std::size_t getVerticeCount(void) const { return m_verticesCount; }
 
 	virtual sf::Vector2f const & getVertex(std::size_t index) const;
 
