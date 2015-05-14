@@ -1,20 +1,20 @@
-#ifndef PLAYER_HPP
-# define PLAYER_HPP
+#ifndef NPC_HPP
+# define NPC_HPP
 
 # include "DynamicPolygon.hpp"
 # include "Tile.hpp"
 
-class Player : public DynamicPolygon
+class NPC : public DynamicPolygon
 {
 public:
-	Player(void);
-	virtual ~Player(void);
+	NPC(void);
+	virtual ~NPC(void);
 
 	virtual void update(float pf_deltatime);
 	virtual void onCollision(Polygon * p_polygon);
 
 private:
-	enum PlayerState
+	enum NPCState
 	{
 		e_waiting,
 		e_walking,
@@ -22,7 +22,7 @@ private:
 		e_falling
 	};
 
-	PlayerState	m_state;
+	NPCState	m_state;
 	float		m_speed;
 	float		m_timerAcceleration;
 	float		m_timerMaxAcceleration;

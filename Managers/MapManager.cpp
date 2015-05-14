@@ -62,6 +62,7 @@ void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 	*/
 	states.texture = m_texture;
 	render.draw(&m_collisionManager.getPlayer().m_vertices[0], 4, sf::Quads, states);
+	m_collisionManager.debugDraw(render);
 }
 
 TransitionManager & MapManager::getTransitionManager(void)
