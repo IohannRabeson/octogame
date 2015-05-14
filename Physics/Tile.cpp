@@ -41,6 +41,17 @@ void Tile::copy(Tile const & p_tile, float p_offsetX, float p_offsetY)
 	}
 }
 
+int getIndex(int i)
+{
+	if (i == 1)
+		return 4;
+	else if (i == 2)
+		return 5;
+	else if (i == 3)
+		return 2;
+	return i;
+}
+
 void Tile::computeEdges(void)
 {
 	if (!m_recompute)
@@ -48,8 +59,8 @@ void Tile::computeEdges(void)
 	m_recompute = false;
 	for (std::size_t i = 0u; i < 4u; i++)
 	{
-		m_edges[i].x = mp_upLeft[i].position.x - mp_upLeft[(i + 1u) % 4u].position.x;
-		m_edges[i].y = mp_upLeft[i].position.y - mp_upLeft[(i + 1u) % 4u].position.y;
+		m_edges[i].x = mp_upLeft[getIndex(i)].position.x - mp_upLeft[getIndex((i + 1u) % 4u)].position.x;
+		m_edges[i].y = mp_upLeft[getIndex(i)].position.y - mp_upLeft[getIndex((i + 1u) % 4u)].position.y;
 		m_normals[i].x = -m_edges[i].y;
 		m_normals[i].y = m_edges[i].x;
 	}
@@ -65,10 +76,10 @@ void Tile::computeCenter(void)
 	std::size_t nbVertice = 0u;
 	for (std::size_t i = 0u; i < 4u; i++)
 	{
-		if (mp_upLeft[i].position == mp_upLeft[(i + 1u) % 4u].position)
+		if (mp_upLeft[i].position == mp_upLeft[getIndex((i + 1u) % 4u)].position)
 			continue;
-		m_center.x += mp_upLeft[i].position.x;
-		m_center.y += mp_upLeft[i].position.y;
+		m_center.x += mp_upLeft[getIndex(i)].position.x;
+		m_center.y += mp_upLeft[getIndex(i)].position.y;
 		nbVertice += 1u;
 	}
 	m_center.x /= nbVertice;
@@ -77,5 +88,5 @@ void Tile::computeCenter(void)
 
 sf::Vector2f const & Tile::getVertex(std::size_t index) const
 {
-	return mp_upLeft[index].position;
+	return mp_upLeft[getIndex(index)].position;
 }
