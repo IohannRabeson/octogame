@@ -37,7 +37,7 @@ void TransitionManager::init(MapManager * p_mapManager, Biome * p_biome, Map::EM
 	// Get a map from the factory
 	m_tiles = m_factoryMap.getMap(p_mapType);
 	m_tilesPrev = m_factoryMap.getMap(p_mapType);
-	m_vertices.reset(new sf::Vertex[m_tiles->getRows() * m_tiles->getColumns() * 4u]);
+	m_vertices.reset(new sf::Vertex[m_tiles->getRows() * m_tiles->getColumns() * 6u]);
 
 	// Init maps
 	m_tiles->init(p_biome);
@@ -238,6 +238,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_none)
 				continue;
 			m_tiles->get(x, y).setUpLeft(&m_vertices[mn_verticesCount]);
+			int index = mn_verticesCount;
 			for (unsigned int i = 0; i < 4; i++)
 			{
 				// compute interpolation
@@ -251,6 +252,18 @@ void TransitionManager::updateTransition(float pf_deltatime)
 				m_vertices[mn_verticesCount].color = res;
 				mn_verticesCount++;
 			}
+			//TODO: find a better way to did it
+			sf::Vertex p = m_vertices[index + 1];
+			sf::Vertex p2 = m_vertices[index + 2];
+			m_vertices[index + 1] = m_vertices[index + 2];
+			m_vertices[index + 2] = m_vertices[index + 3];
+			m_vertices[index + 3] = m_vertices[index];
+			m_vertices[index + 4] = p;
+			m_vertices[index + 5] = p2;
+			m_vertices[index + 3].color.g += 25;
+			m_vertices[index + 4].color.g += 25;
+			m_vertices[index + 5].color.g += 25;
+			mn_verticesCount += 2;
 		}
 	}
 
@@ -381,6 +394,6 @@ void TransitionManager::update(float pf_deltatime)
 
 void TransitionManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	render.draw(m_vertices.get(), mn_verticesCount, sf::Quads, states);
+	render.draw(m_vertices.get(), mn_verticesCount, sf::Triangles, states);
 }
 
