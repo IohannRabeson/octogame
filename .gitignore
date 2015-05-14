@@ -39,3 +39,6 @@ doc/generated/
 
 # MacOS files
 *.DS_Store
+
+# log file
+log
