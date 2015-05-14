@@ -40,6 +40,6 @@ void Player::updateVelocity(float pf_deltatime)
 
 	// Gravity
 	//m_velocity.x += speed / 2.f;
-	m_velocity.y += speed / 2.f;
+	m_velocity.y += speed * 2.f;
 	m_velocity *= pf_deltatime;
 }

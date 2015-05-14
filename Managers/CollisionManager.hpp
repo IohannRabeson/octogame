@@ -25,6 +25,7 @@ private:
 		void project(sf::Vector2f const & axis, Polygon * polygon);
 		bool overlap(Projection const & projection);
 		float getOverlap(Projection const & projection);
+		bool contains(Projection const & projection);
 	};
 
 	//TODO: std::pair
