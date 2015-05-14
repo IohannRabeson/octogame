@@ -52,6 +52,7 @@ SRC_DECORS =	Decors/Crystal.cpp						\
 
 SRC_PHYSICS =	Physics/DynamicPolygon.cpp				\
 				Physics/Player.cpp						\
+				Physics/NPC.cpp						\
 				Physics/Polygon.cpp						\
 				Physics/Tile.cpp
 
@@ -292,15 +293,16 @@ static-checks:
 ./builds/game/Map/MapInstance.o: Decors/StaticTileObject.hpp
 ./builds/game/Map/MapInstance.o: Decors/GameObject.hpp Octo/OctoNoise.hpp
 ./builds/game/Managers/CollisionManager.o: Managers/CollisionManager.hpp
-./builds/game/Managers/CollisionManager.o: Physics/Player.hpp
-./builds/game/Managers/CollisionManager.o: Physics/DynamicPolygon.hpp
-./builds/game/Managers/CollisionManager.o: Physics/Polygon.hpp
-./builds/game/Managers/CollisionManager.o: Physics/Tile.hpp
 ./builds/game/Managers/CollisionManager.o: Managers/MapManager.hpp
 ./builds/game/Managers/CollisionManager.o: Managers/TransitionManager.hpp
 ./builds/game/Managers/CollisionManager.o: Map/FactoryMap.hpp Map/Map.hpp
 ./builds/game/Managers/CollisionManager.o: Octo/Matrix.hpp Octo/Matrix.hxx
+./builds/game/Managers/CollisionManager.o: Physics/Tile.hpp
+./builds/game/Managers/CollisionManager.o: Physics/Polygon.hpp
 ./builds/game/Managers/CollisionManager.o: Managers/DecorManager.hpp
+./builds/game/Managers/CollisionManager.o: Physics/Player.hpp
+./builds/game/Managers/CollisionManager.o: Physics/DynamicPolygon.hpp
+./builds/game/Managers/CollisionManager.o: Physics/NPC.hpp
 ./builds/game/Managers/DecorManager.o: Managers/DecorManager.hpp
 ./builds/game/Managers/DecorManager.o: Managers/MapManager.hpp
 ./builds/game/Managers/DecorManager.o: Managers/TransitionManager.hpp
@@ -391,6 +393,8 @@ static-checks:
 ./builds/game/Physics/DynamicPolygon.o: Physics/Polygon.hpp
 ./builds/game/Physics/Player.o: Physics/Player.hpp Physics/DynamicPolygon.hpp
 ./builds/game/Physics/Player.o: Physics/Polygon.hpp Physics/Tile.hpp
+./builds/game/Physics/NPC.o: Physics/NPC.hpp Physics/DynamicPolygon.hpp
+./builds/game/Physics/NPC.o: Physics/Polygon.hpp Physics/Tile.hpp
 ./builds/game/Physics/Polygon.o: Physics/Polygon.hpp
 ./builds/game/Physics/Tile.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Main/DefaultApplicationListener.o: Main/DefaultApplicationListener.hpp

@@ -7,6 +7,13 @@
 class Polygon
 {
 public:
+	enum CollideType
+	{
+		e_tile = 1,
+		e_player = 2,
+		e_pnj = 4
+	};
+
 	virtual ~Polygon(void);
 
 	sf::Vector2f const & getCenter(void);
@@ -24,12 +31,6 @@ public:
 	std::vector<sf::Vertex>		m_vertices;
 
 protected:
-	enum CollideType
-	{
-		e_tile = 1,
-		e_player = 2,
-		e_pnj = 4
-	};
 	Polygon(std::size_t p_verticesCount, CollideType p_collideType);
 
 	std::vector<sf::Vector2f>	m_edges;

@@ -1,5 +1,7 @@
 #include "CollisionManager.hpp"
 #include "MapManager.hpp"
+#include "Player.hpp"
+#include "NPC.hpp"
 #include <complex>
 
 CollisionManager::CollisionManager(void) :
@@ -25,6 +27,7 @@ void CollisionManager::init(MapManager * p_mapManager)
 	m_player = new Player();
 	m_pairs.resize(1000u);
 	m_dynamicPolygons.push_back(m_player);
+	m_dynamicPolygons.push_back(new NPC());
 }
 
 void CollisionManager::update(float pf_deltatime)
@@ -91,6 +94,18 @@ void CollisionManager::broadPhase(void)
 			}
 		}
 	}
+	for (std::size_t k = 0u; k < m_dynamicPolygons.size(); k++)
+	{
+		for (std::size_t i = 0u; i < m_dynamicPolygons.size(); i++)
+		{
+			if (m_dynamicPolygons[i] != m_dynamicPolygons[k])
+			{
+				m_pairs[m_pairCount].m_polygonA = m_dynamicPolygons[i];
+				m_pairs[m_pairCount].m_polygonB = m_dynamicPolygons[k];
+				m_pairCount++;
+			}
+		}
+	}
 }
 
 void CollisionManager::narrowPhase(void)
@@ -99,22 +114,26 @@ void CollisionManager::narrowPhase(void)
 	{
 		if (computeCollision(m_pairs[i].m_polygonA, m_pairs[i].m_polygonB))
 		{
-			//TODO: Block vertical tile
-			/*if (m_pairs[i].m_polygonA->getVelocity().x > 0 &&  m_pairs[i].m_polygonB->getVertex(0).y != m_pairs[i].m_polygonB->getVertex(3).y
+			// Collision with tiles to replace DynamicsPolygon
+			if (m_pairs[i].m_polygonB->getCollideType() & Polygon::CollideType::e_tile)
+			{
+				//TODO: Block vertical tile
+				/*if (m_pairs[i].m_polygonA->getVelocity().x > 0 &&  m_pairs[i].m_polygonB->getVertex(0).y != m_pairs[i].m_polygonB->getVertex(3).y
 					&& m_pairs[i].m_polygonA->getVertex(1).x < m_pairs[i].m_polygonB->getVertex(0).x)
-			{
-				//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Green);
-				m_pairs[i].m_polygonA->addVelocity(-m_mtv);
-			}*/
-			if ((m_mtv.y <= -0.00000001f || m_mtv.y >= 0.00000001f) && (m_mtv.x <= -0.00000001f || m_mtv.x >= 0.00000001f))
-			{
-				static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
-				m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
-			}
-			else
-			{
-				m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y);
-				//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Red);
+				{
+					//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Green);
+					m_pairs[i].m_polygonA->addVelocity(-m_mtv);
+				}*/
+				if ((m_mtv.y <= -0.00000001f || m_mtv.y >= 0.00000001f) && (m_mtv.x <= -0.00000001f || m_mtv.x >= 0.00000001f))
+				{
+					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
+					m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
+				}
+				else
+				{
+					m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y);
+					//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Red);
+				}
 			}
 			m_pairs[i].m_polygonA->onCollision(m_pairs[i].m_polygonB);
 		}
@@ -222,9 +241,7 @@ void CollisionManager::debugDraw(sf::RenderTarget & render) const
 		sf::ConvexShape shape;
 		shape.setPointCount(m_dynamicPolygons[i]->getVerticeCount());
 		for (std::size_t j = 0; j < m_dynamicPolygons[i]->getVerticeCount(); j++)
-		{
 			shape.setPoint(j, m_dynamicPolygons[i]->getVertex(j));
-		}
 		shape.setFillColor(sf::Color::Transparent);
 		shape.setOutlineColor(sf::Color::Red);
 		shape.setOutlineThickness(2);

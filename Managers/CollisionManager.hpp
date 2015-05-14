@@ -2,9 +2,11 @@
 # define COLLISIONMANAGER_HPP
 
 # include <SFML/Graphics.hpp>
-# include "Player.hpp"
 
 class MapManager;
+class Player;
+class Polygon;
+class DynamicPolygon;
 
 class CollisionManager
 {
