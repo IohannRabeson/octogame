@@ -60,6 +60,16 @@ void Rock::createRock(void)
 		createOneRock(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement), m_refOrigin[i] + m_origin, m_color,
 						m_refSizeLeft[i], m_refSizeRight[i], m_refSizeRec[i] * mf_mouvement);
 	createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, m_color);
+	/*
+	sf::Color iceColor(5, 103, 155, 60);
+	if (me_currentState == e_state_sleep)
+	{
+		for (int i = 0; i < mn_countRock; i++)
+			createOneRock(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement * 1.1f), m_refOrigin[i] + m_origin, iceColor,
+							m_refSizeLeft[i] * 1.2f, m_refSizeRight[i] * 1.2f, m_refSizeRec[i] * mf_mouvement * 1.2f);
+		createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, iceColor);
+	}
+	*/
 }
 
 void Rock::randomDecor(void)
@@ -70,7 +80,7 @@ void Rock::randomDecor(void)
 
 	// Init containers
 	mn_countRock = randomRange(m_biome->m_rock.mn_minElement, m_biome->m_rock.mn_maxElement);
-	mn_maxTriangle = 10 * mn_countRock + 1; // +1 for root triangle
+	mn_maxTriangle = (10 * mn_countRock + 1) * 2; // +1 for root triangle
 	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u]);
 	mn_countTriangle = 0u;
 
@@ -141,6 +151,7 @@ void Rock::init(Biome * p_biome)
 void Rock::update(float pf_deltatime)
 {
 	Decor::update(pf_deltatime);
+	Decor::putOnMap();
 	m_origin.y += m_size.x * 4;
 
 	createRock();

@@ -26,8 +26,8 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 	float x;
 	int max = m_biome->mn_width;
 	int min = 0;
-	size_t i = 0;
-	while (i < m_biome->mn_nbDecor)
+	int i = 0;
+	while (i < m_biome->m_rock.mn_nb)
 	{
 		m_decors.push_back(new Rock());
 		m_decors[i]->init(p_biome);
@@ -35,7 +35,7 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 		m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
 		i++;
 	}
-	while (i < m_biome->mn_nbDecor * 2)
+	while (i < m_biome->m_tree.mn_nb + m_biome->m_rock.mn_nb)
 	{
 		m_decors.push_back(new Tree());
 		m_decors[i]->init(p_biome);
@@ -45,7 +45,7 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 		min += m_biome->mn_width / m_biome->mn_nbDecor / 2.0f;
 		i++;
 	}
-	while (i < m_biome->mn_nbDecor * 3)
+	while (i < m_biome->m_crystal.mn_nb + m_biome->m_tree.mn_nb + m_biome->m_rock.mn_nb)
 	{
 		m_decors.push_back(new Crystal());
 		m_decors[i]->init(p_biome);
@@ -53,8 +53,8 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 		m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
 		i++;
 	}
-	m_decors.push_back(new Star());
-	m_decors[i]->init(p_biome);
+	//m_decors.push_back(new Star());
+	//m_decors[i]->init(p_biome);
 	//m_decors[i]->setPosition(sf::Vector2f(x, m_mapManager->getTransitionManager().getHeight(x)->position.y));
 	setPosition();
 	m_mapManager->getTransitionManager().computeDecor();

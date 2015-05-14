@@ -15,7 +15,6 @@ private:
 	sf::Color						m_leafColor;
 
 	int								mn_maxRectangle;
-	int								mn_maxTriangle;
 	int								mn_maxLeaf;
 	int								mn_countLeaf;
 	int								mn_countAngle;

@@ -8,7 +8,6 @@
 class Rock : public Decor
 {
 private:
-	int							mn_maxTriangle;
 	int							mn_countRock;
 	std::vector<sf::Vector2f>	m_refSize;
 	std::vector<sf::Vector2f>	m_refOrigin;

@@ -5,12 +5,15 @@
 Decor::Decor(void) :
 	GameObject(),
 	mn_countTriangle(0u),
+	mn_maxTriangle(0u),
 	me_currentState(e_state_sleep),
 	m_size(50.f, 50.f),
 	m_color(sf::Color(0, 0, 0)),
 	mf_dieTimer(0.f),
 	mf_liveTime(0.f),
-	mf_mouvement(0.f)
+	mf_mouvement(0.f),
+	mf_growSpeed(0.25f),
+	mf_dieSpeed(0.125f)
 {
 	mf_timer = randomRange(0, 100) / 100.f;
 	//TODO: put it somewhere else
@@ -34,13 +37,6 @@ float Decor::randomRange(int pn_min, int pn_max)
 	if (pn_max - pn_min == 0)
 		return pn_max;
 	return static_cast<float>(random() % (pn_max - pn_min) + pn_min);
-}
-
-float Decor::randomRangeTile(int pn_min, int pn_max)
-{
-	int tmp = randomRange(pn_min, pn_max);
-	tmp -= tmp % 16;
-	return static_cast<float>(tmp);
 }
 
 void Decor::createVertex(sf::Vector2f p_pos, sf::Color const & p_color, int * pn_count)
@@ -69,14 +65,14 @@ void Decor::computeStates(float pf_deltatime)
 	{
 		case e_state_grow:
 		{
-			mf_mouvement += pf_deltatime / 4;
+			mf_mouvement += pf_deltatime * mf_growSpeed;
 			if (mf_mouvement >= 1.0f)
 				me_currentState = e_state_sleep;
 			break;
 		}
 		case e_state_die:
 		{
-			mf_mouvement -= pf_deltatime / 8;
+			mf_mouvement -= pf_deltatime * mf_dieSpeed;
 			if (mf_mouvement <= 0.0f)
 				randomDecor();
 			mf_dieTimer = 0.f;
@@ -96,19 +92,11 @@ void Decor::computeStates(float pf_deltatime)
 			mf_mouvement -= pf_deltatime / (20 + mf_timer * 10);
 			break;
 		}
+		case e_state_stop:
+			mf_mouvement = 0.f;
 		default:
 			break;
 	}
-}
-
-sf::Vertex * Decor::getTriangle(void)
-{
-	return m_triangle.get();
-}
-
-int Decor::getCount(void)
-{
-	return mn_countTriangle;
 }
 
 void Decor::randomDecor(void)
@@ -122,14 +110,18 @@ void Decor::init(Biome * p_biome)
 	m_biome = p_biome;
 }
 
+void Decor::putOnMap(void)
+{
+	m_color = m_vertexPosition->color;
+	m_origin.x = m_vertexPosition->position.x;
+	m_origin.y = m_vertexPosition->position.y;
+}
+
 void Decor::update(float pf_deltatime)
 {
 	computeStates(pf_deltatime);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
 		randomDecor();
-	m_color = m_vertexPosition->color;
-	m_origin.x = m_vertexPosition->position.x;
-	m_origin.y = m_vertexPosition->position.y;
 }
 
 void Decor::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const

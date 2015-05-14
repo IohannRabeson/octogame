@@ -7,7 +7,7 @@
 
 struct DecorValues
 {
-	int					mn_nbDecor;
+	int					mn_nb;
 	int					mn_minSizeX;
 	int					mn_minSizeY;
 	int					mn_maxSizeX;
@@ -33,6 +33,7 @@ struct Biome
 	DecorValues			m_tree;
 	DecorValues			m_crystal;
 	DecorValues			m_rock;
+	DecorValues			m_star;
 };
 
 class Map

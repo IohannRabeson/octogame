@@ -174,6 +174,7 @@ void Tree::init(Biome * p_biome)
 void Tree::update(float pf_deltatime)
 {
 	Decor::update(pf_deltatime);
+	Decor::putOnMap();
 	//m_origin.x -= m_size.x / 2.0f;
 	m_origin.y -= m_size.y / 2.0f;
 

@@ -26,7 +26,8 @@ public:
 	virtual void	draw(sf::RenderTarget& render)const;
 
 private:
-	MapManager		m_mapManager;
+	MapManager			m_mapManager;
+	sf::RectangleShape	m_back;
 };
 
 #endif
