@@ -1,13 +1,14 @@
 #include "Tile.hpp"
 
 Tile::Tile(void) :
-	Polygon(4u),
+	Polygon(4u, CollideType::e_tile),
 	mf_noiseValue(0.f),
 	mb_isEmpty(true),
 	me_transition(e_transition_none),
 	mp_upLeft(nullptr),
 	m_startColor(sf::Color::White)
-{}
+{
+}
 
 Tile::~Tile(void) {}
 

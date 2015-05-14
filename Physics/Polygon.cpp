@@ -1,10 +1,11 @@
 #include "Polygon.hpp"
 
-Polygon::Polygon(std::size_t p_verticesCount) :
+Polygon::Polygon(std::size_t p_verticesCount, CollideType p_collideType) :
 	m_recompute(true),
 	m_recomputeCenter(true),
 	m_center(0.f, 0.f),
-	m_verticesCount(p_verticesCount)
+	m_verticesCount(p_verticesCount),
+	m_collideType(p_collideType)
 {
 	m_vertices.resize(p_verticesCount);
 	m_edges.resize(p_verticesCount);

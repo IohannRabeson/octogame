@@ -392,6 +392,7 @@ static-checks:
 ./builds/game/Physics/DynamicPolygon.o: Physics/Polygon.hpp
 ./builds/game/Physics/Player.o: Physics/Player.hpp Physics/DynamicPolygon.hpp
 ./builds/game/Physics/Player.o: Physics/Polygon.hpp
+./builds/game/Physics/Player.o: ./octolib/includes/Interpolations.hpp
 ./builds/game/Physics/Polygon.o: Physics/Polygon.hpp
 ./builds/game/Main/DefaultApplicationListener.o: Main/DefaultApplicationListener.hpp
 ./builds/game/Main/DefaultApplicationListener.o: ./octolib/includes/GraphicsManager.hpp
