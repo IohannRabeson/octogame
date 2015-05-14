@@ -48,12 +48,12 @@ SRC_DECORS =	Decors/Crystal.cpp						\
 				Decors/Rock.cpp							\
 				Decors/Star.cpp							\
 				Decors/StaticTileObject.cpp				\
-				Decors/Tile.cpp							\
 				Decors/Tree.cpp
 
 SRC_PHYSICS =	Physics/DynamicPolygon.cpp				\
 				Physics/Player.cpp						\
-				Physics/Polygon.cpp
+				Physics/Polygon.cpp						\
+				Physics/Tile.cpp
 
 # package files
 PACKAGE_FILE = default.pck
@@ -241,7 +241,7 @@ static-checks:
 ./builds/game/Screens/StateGame.o: Managers/TransitionManager.hpp
 ./builds/game/Screens/StateGame.o: Map/FactoryMap.hpp Map/Map.hpp
 ./builds/game/Screens/StateGame.o: Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Screens/StateGame.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Screens/StateGame.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Screens/StateGame.o: Managers/DecorManager.hpp
 ./builds/game/Screens/StateGame.o: Managers/CollisionManager.hpp
 ./builds/game/Screens/StateGame.o: Physics/Player.hpp
@@ -272,41 +272,41 @@ static-checks:
 ./builds/game/Firefly/FireflyPositionBehaviors.o: ./octolib/includes/Interpolations.hpp
 ./builds/game/Map/FactoryMap.o: Map/FactoryMap.hpp Map/Map.hpp
 ./builds/game/Map/FactoryMap.o: Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Map/FactoryMap.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Map/FactoryMap.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Map/FactoryMap.o: Map/MapHigh.hpp Map/MapClassic.hpp
 ./builds/game/Map/FactoryMap.o: Map/MapInstance.hpp
 ./builds/game/Map/FactoryMap.o: Decors/StaticTileObject.hpp
 ./builds/game/Map/FactoryMap.o: Decors/GameObject.hpp
 ./builds/game/Map/Map.o: Map/Map.hpp Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Map/Map.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Map/Map.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Map/MapClassic.o: Map/MapClassic.hpp Map/Map.hpp
 ./builds/game/Map/MapClassic.o: Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Map/MapClassic.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Map/MapClassic.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Map/MapClassic.o: Octo/OctoNoise.hpp
 ./builds/game/Map/MapHigh.o: Map/MapHigh.hpp Map/Map.hpp Octo/Matrix.hpp
-./builds/game/Map/MapHigh.o: Octo/Matrix.hxx Decors/Tile.hpp
+./builds/game/Map/MapHigh.o: Octo/Matrix.hxx Physics/Tile.hpp
 ./builds/game/Map/MapHigh.o: Physics/Polygon.hpp Octo/OctoNoise.hpp
 ./builds/game/Map/MapInstance.o: Map/MapInstance.hpp Map/Map.hpp
 ./builds/game/Map/MapInstance.o: Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Map/MapInstance.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Map/MapInstance.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Map/MapInstance.o: Decors/StaticTileObject.hpp
 ./builds/game/Map/MapInstance.o: Decors/GameObject.hpp Octo/OctoNoise.hpp
 ./builds/game/Managers/CollisionManager.o: Managers/CollisionManager.hpp
 ./builds/game/Managers/CollisionManager.o: Physics/Player.hpp
 ./builds/game/Managers/CollisionManager.o: Physics/DynamicPolygon.hpp
 ./builds/game/Managers/CollisionManager.o: Physics/Polygon.hpp
+./builds/game/Managers/CollisionManager.o: Physics/Tile.hpp
 ./builds/game/Managers/CollisionManager.o: Managers/MapManager.hpp
 ./builds/game/Managers/CollisionManager.o: Managers/TransitionManager.hpp
 ./builds/game/Managers/CollisionManager.o: Map/FactoryMap.hpp Map/Map.hpp
 ./builds/game/Managers/CollisionManager.o: Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Managers/CollisionManager.o: Decors/Tile.hpp
 ./builds/game/Managers/CollisionManager.o: Managers/DecorManager.hpp
 ./builds/game/Managers/DecorManager.o: Managers/DecorManager.hpp
 ./builds/game/Managers/DecorManager.o: Managers/MapManager.hpp
 ./builds/game/Managers/DecorManager.o: Managers/TransitionManager.hpp
 ./builds/game/Managers/DecorManager.o: Map/FactoryMap.hpp Map/Map.hpp
 ./builds/game/Managers/DecorManager.o: Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Managers/DecorManager.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Managers/DecorManager.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Managers/DecorManager.o: Managers/CollisionManager.hpp
 ./builds/game/Managers/DecorManager.o: Physics/Player.hpp
 ./builds/game/Managers/DecorManager.o: Physics/DynamicPolygon.hpp
@@ -318,7 +318,7 @@ static-checks:
 ./builds/game/Managers/MapManager.o: Managers/TransitionManager.hpp
 ./builds/game/Managers/MapManager.o: Map/FactoryMap.hpp Map/Map.hpp
 ./builds/game/Managers/MapManager.o: Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Managers/MapManager.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Managers/MapManager.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Managers/MapManager.o: Managers/DecorManager.hpp
 ./builds/game/Managers/MapManager.o: Managers/CollisionManager.hpp
 ./builds/game/Managers/MapManager.o: Physics/Player.hpp
@@ -344,7 +344,7 @@ static-checks:
 ./builds/game/Managers/TransitionManager.o: Managers/TransitionManager.hpp
 ./builds/game/Managers/TransitionManager.o: Map/FactoryMap.hpp Map/Map.hpp
 ./builds/game/Managers/TransitionManager.o: Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Managers/TransitionManager.o: Decors/Tile.hpp
+./builds/game/Managers/TransitionManager.o: Physics/Tile.hpp
 ./builds/game/Managers/TransitionManager.o: Physics/Polygon.hpp
 ./builds/game/Managers/TransitionManager.o: Managers/MapManager.hpp
 ./builds/game/Managers/TransitionManager.o: Managers/DecorManager.hpp
@@ -356,7 +356,7 @@ static-checks:
 ./builds/game/Decors/Crystal.o: Decors/GameObject.hpp
 ./builds/game/Decors/Decor.o: Decors/Decor.hpp Decors/GameObject.hpp
 ./builds/game/Decors/Decor.o: Map/Map.hpp Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Decors/Decor.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Decors/Decor.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Decors/GameObject.o: Decors/GameObject.hpp
 ./builds/game/Decors/Rock.o: Decors/Rock.hpp Decors/Decor.hpp
 ./builds/game/Decors/Rock.o: Decors/GameObject.hpp
@@ -382,18 +382,17 @@ static-checks:
 ./builds/game/Decors/StaticTileObject.o: Decors/StaticTileObject.hpp
 ./builds/game/Decors/StaticTileObject.o: Decors/GameObject.hpp Map/Map.hpp
 ./builds/game/Decors/StaticTileObject.o: Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Decors/StaticTileObject.o: Decors/Tile.hpp Physics/Polygon.hpp
-./builds/game/Decors/Tile.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Decors/StaticTileObject.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Decors/Tree.o: Decors/Tree.hpp Decors/Decor.hpp
 ./builds/game/Decors/Tree.o: Decors/GameObject.hpp Map/Map.hpp
-./builds/game/Decors/Tree.o: Octo/Matrix.hpp Octo/Matrix.hxx Decors/Tile.hpp
+./builds/game/Decors/Tree.o: Octo/Matrix.hpp Octo/Matrix.hxx Physics/Tile.hpp
 ./builds/game/Decors/Tree.o: Physics/Polygon.hpp
 ./builds/game/Physics/DynamicPolygon.o: Physics/DynamicPolygon.hpp
 ./builds/game/Physics/DynamicPolygon.o: Physics/Polygon.hpp
 ./builds/game/Physics/Player.o: Physics/Player.hpp Physics/DynamicPolygon.hpp
-./builds/game/Physics/Player.o: Physics/Polygon.hpp
-./builds/game/Physics/Player.o: ./octolib/includes/Interpolations.hpp
+./builds/game/Physics/Player.o: Physics/Polygon.hpp Physics/Tile.hpp
 ./builds/game/Physics/Polygon.o: Physics/Polygon.hpp
+./builds/game/Physics/Tile.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Main/DefaultApplicationListener.o: Main/DefaultApplicationListener.hpp
 ./builds/game/Main/DefaultApplicationListener.o: ./octolib/includes/GraphicsManager.hpp
 ./builds/game/Main/DefaultApplicationListener.o: ./octolib/includes/ListenerHelpers.hpp
@@ -454,7 +453,7 @@ static-checks:
 ./builds/game/Main/main.o: Screens/StateGame.hpp Managers/MapManager.hpp
 ./builds/game/Main/main.o: Managers/TransitionManager.hpp Map/FactoryMap.hpp
 ./builds/game/Main/main.o: Map/Map.hpp Octo/Matrix.hpp Octo/Matrix.hxx
-./builds/game/Main/main.o: Decors/Tile.hpp Physics/Polygon.hpp
+./builds/game/Main/main.o: Physics/Tile.hpp Physics/Polygon.hpp
 ./builds/game/Main/main.o: Managers/DecorManager.hpp
 ./builds/game/Main/main.o: Managers/CollisionManager.hpp Physics/Player.hpp
 ./builds/game/Main/main.o: Physics/DynamicPolygon.hpp
