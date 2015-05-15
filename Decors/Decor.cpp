@@ -88,12 +88,15 @@ void Decor::computeStates(float pf_deltatime)
 				me_currentState = e_state_die;
 			else if (mf_timer > 2.0f)
 				mf_mouvement += pf_deltatime / (20 + (mf_timer - 2.0f) * 10);
-				else
-			mf_mouvement -= pf_deltatime / (20 + mf_timer * 10);
+			else
+				mf_mouvement -= pf_deltatime / (20 + mf_timer * 10);
 			break;
 		}
 		case e_state_stop:
+		{
 			mf_mouvement = 0.f;
+			break;
+		}
 		default:
 			break;
 	}
@@ -120,8 +123,6 @@ void Decor::putOnMap(void)
 void Decor::update(float pf_deltatime)
 {
 	computeStates(pf_deltatime);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-		randomDecor();
 }
 
 void Decor::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const

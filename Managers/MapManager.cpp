@@ -2,14 +2,19 @@
 #include "../ResourceDefinitions.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <GraphicsManager.hpp>
 
 MapManager::MapManager(void) :
 	m_texture(nullptr)
 {
+	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
+	graphics.addKeyboardListener(&m_decorManager);
 }
 
 MapManager::~MapManager(void)
 {
+	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(&m_decorManager);
 }
 
 void MapManager::init(Map::EMapType p_mapType)

@@ -77,3 +77,13 @@ void DecorManager::draw(sf::RenderTarget& render, sf::RenderStates) const
 	for (size_t i = 0; i < m_decors.size(); i++)
 		render.draw(*m_decors[i]);
 }
+
+bool DecorManager::onPressed (sf::Event::KeyEvent const &event)
+{
+	if (event.code == sf::Keyboard::P)
+	{
+		for (size_t i = 0; i < m_decors.size(); i++)
+			m_decors[i]->randomDecor();
+	}
+	return true;
+}

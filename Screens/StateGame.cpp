@@ -18,12 +18,10 @@
 
 void	StateGame::start()
 {
-	octo::Application::getCamera().setZoom(0.75);
-	octo::Application::getCamera().move(-310, -200);
 	m_mapManager.init(Map::e_map_instance);
 
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
-	m_back.setSize(sf::Vector2f(2000, 1300));
+	m_back.setSize(sf::Vector2f(1900, 1080));
 	m_back.setTexture(&resources.getTexture(BACKGROUND_PNG));
 }
 

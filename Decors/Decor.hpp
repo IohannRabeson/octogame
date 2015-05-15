@@ -18,6 +18,7 @@ public:
 	virtual void init(Biome * p_biome);
 	virtual void update(float pf_deltatime);
 	virtual void draw(sf::RenderTarget & p_target, sf::RenderStates p_states) const;
+	virtual void randomDecor(void);
 
 protected:
 	enum EState
@@ -53,9 +54,6 @@ protected:
 	void  computeStates(float pf_deltatime);
 	void  putOnMap(void);
 
-	virtual void randomDecor(void);
-
-private:
 };
 
 #endif
