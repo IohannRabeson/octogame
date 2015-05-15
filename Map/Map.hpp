@@ -2,7 +2,7 @@
 # define MAP_HPP
 
 # include <map>
-# include "Matrix.hpp"
+# include <Array2D.hpp>
 # include "Tile.hpp"
 
 struct DecorValues
@@ -48,20 +48,21 @@ public:
 		e_map_instance
 	};
 
-	typedef Matrix<Tile*> TileMap;
+	typedef octo::Array2D<Tile*> TileMap;
 
 	Map(unsigned int pn_width, unsigned int pn_height);
 	virtual ~Map(void);
 
 	sf::Vertex * getHeight(int x);
-	unsigned int getColumns(void) const;
-	unsigned int getRows(void) const;
-	int getOffsetX(void) const;
 	int getOffsetXDecor(int p_decorOffsetX) const;
-	int getOffsetY(void) const;
-	Tile & get(unsigned int column, unsigned int row);
-	Tile const & get(unsigned int column, unsigned int row) const;
-	Decors & getDecors(void);
+
+	inline unsigned int getColumns(void) const { return m_tiles.columns(); }
+	inline unsigned int getRows(void) const { return m_tiles.rows(); }
+	inline int getOffsetX(void) const { return mn_offsetX; }
+	inline int getOffsetY(void) const { return mn_offsetY; }
+	inline Tile & get(unsigned int column, unsigned int row) { return *m_tiles(column, row); }
+	inline Tile const & get(unsigned int column, unsigned int row) const { return *m_tiles(column, row); }
+	inline Decors & getDecors(void) { return m_decors; }
 
 	void init(Biome * p_biome);
 	void computeMap(void);

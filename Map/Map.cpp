@@ -18,7 +18,7 @@ Map::Map(unsigned int pn_width, unsigned int pn_height) :
 	{
 		for (unsigned int y = 0; y < m_tiles.rows(); y++)
 		{
-			m_tiles(x, y) = new Tile();
+			m_tiles.get(x, y) = new Tile();
 			initQuad(x, y);
 		}
 	}
@@ -29,7 +29,7 @@ Map::~Map(void)
 	for (unsigned int x = 0; x < m_tiles.columns(); x++)
 	{
 		for (unsigned int y = 0; y < m_tiles.rows(); y++)
-			delete m_tiles(x, y);
+			delete m_tiles.get(x, y);
 	}
 }
 
@@ -44,19 +44,19 @@ void Map::initQuad(int x, int y)
 	sf::Vertex ver;
 	ver.position = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
 	ver.color = sf::Color(128.f, 0.f, 128.f);
-	m_tiles(x, y)->m_startTransition[0] = ver.position;
+	m_tiles.get(x, y)->m_startTransition[0] = ver.position;
 
 	ver.position = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
 	ver.color = sf::Color(128.f, 0.f, 128.f);
-	m_tiles(x, y)->m_startTransition[1] = ver.position;
+	m_tiles.get(x, y)->m_startTransition[1] = ver.position;
 
 	ver.position = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
 	ver.color = sf::Color(128.f, 0.f, 128.f);
-	m_tiles(x, y)->m_startTransition[2] = ver.position;
+	m_tiles.get(x, y)->m_startTransition[2] = ver.position;
 
 	ver.position = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
 	ver.color = sf::Color(128.f, 0.f, 128.f);
-	m_tiles(x, y)->m_startTransition[3] = ver.position;
+	m_tiles.get(x, y)->m_startTransition[3] = ver.position;
 }
 
 void Map::computeMap(void)
@@ -95,12 +95,12 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 			vec[1] = static_cast<float>(y + mn_offsetY);
 			vec[2] = mf_depth;
 			// secondCurve return a value between -1 & 1
-			m_tiles(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
-			m_tiles(x, y)->mb_isEmpty = false;
-			setColor(*m_tiles(x, y));
+			m_tiles.get(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
+			m_tiles.get(x, y)->mb_isEmpty = false;
+			setColor(*m_tiles.get(x, y));
 		}
 		for (int y = p_startY; y < height; y++)
-			m_tiles(x, y)->mb_isEmpty = true;
+			m_tiles.get(x, y)->mb_isEmpty = true;
 	}
 }
 
@@ -138,7 +138,7 @@ void Map::addOffsetX(int p_offsetX)
 		for (unsigned int x = 0; x < m_tiles.columns() - 1; x++)
 		{
 			for (unsigned int y = 0; y < m_tiles.rows(); y++)
-				m_tiles(x, y)->copy(*m_tiles(x + 1, y), -Tile::TileSize, 0.f);
+				m_tiles.get(x, y)->copy(*m_tiles.get(x + 1, y), -Tile::TileSize, 0.f);
 		}
 	}
 	else if (p_offsetX < 0)
@@ -146,7 +146,7 @@ void Map::addOffsetX(int p_offsetX)
 		for (int x = m_tiles.columns() - 1; x > 0; x--)
 		{
 			for (unsigned int y = 0; y < m_tiles.rows(); y++)
-				m_tiles(x, y)->copy(*m_tiles(x - 1, y), Tile::TileSize, 0.f);
+				m_tiles.get(x, y)->copy(*m_tiles.get(x - 1, y), Tile::TileSize, 0.f);
 		}
 	}
 }
@@ -160,7 +160,7 @@ void Map::addOffsetY(int p_offsetY)
 		for (unsigned int x = 0; x < m_tiles.columns(); x++)
 		{
 			for (unsigned int y = 0; y < m_tiles.rows() - 1; y++)
-				m_tiles(x, y)->copy(*m_tiles(x, y + 1), 0.f, -Tile::TileSize);
+				m_tiles.get(x, y)->copy(*m_tiles.get(x, y + 1), 0.f, -Tile::TileSize);
 		}
 	}
 	else if (p_offsetY < 0)
@@ -168,7 +168,7 @@ void Map::addOffsetY(int p_offsetY)
 		for (unsigned int x = 0; x < m_tiles.columns(); x++)
 		{
 			for (int y = m_tiles.rows() - 1; y > 0; y--)
-				m_tiles(x, y)->copy(*m_tiles(x, y - 1), 0.f, Tile::TileSize);
+				m_tiles.get(x, y)->copy(*m_tiles.get(x, y - 1), 0.f, Tile::TileSize);
 		}
 	}
 }
@@ -197,21 +197,6 @@ void Map::registerDepth(void)
 	mf_oldDepth = mf_depth;
 }
 
-Map::Decors & Map::getDecors(void)
-{
-	return m_decors;
-}
-
-unsigned int Map::getColumns(void) const
-{
-	return m_tiles.columns();
-}
-
-unsigned int Map::getRows(void) const
-{
-	return m_tiles.rows();
-}
-
 // TODO: care if decors are larger than 20*TileSize
 int Map::getOffsetXDecor(int p_decorOffsetX) const
 {
@@ -220,24 +205,3 @@ int Map::getOffsetXDecor(int p_decorOffsetX) const
 		return i + mn_totalWidth;
 	return i;
 }
-
-int Map::getOffsetX(void) const
-{
-	return mn_offsetX;
-}
-
-int Map::getOffsetY(void) const
-{
-	return mn_offsetY;
-}
-
-Tile & Map::get(unsigned int column, unsigned int row)
-{
-	return *m_tiles(column, row);
-}
-
-Tile const & Map::get(unsigned int column, unsigned int row) const
-{
-	return *m_tiles(column, row);
-}
-

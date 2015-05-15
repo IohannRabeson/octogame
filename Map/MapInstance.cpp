@@ -61,17 +61,17 @@ void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_
 		{
 			float yy = y - offsetInstance;
 			if (inInstance && yy >= 0 && yy < m_instance->getHeight())
-				m_tiles(x, y)->mb_isEmpty = m_instance->get(offset - m_biome->mn_width, yy).mb_isEmpty;
+				m_tiles.get(x, y)->mb_isEmpty = m_instance->get(offset - m_biome->mn_width, yy).mb_isEmpty;
 			else
-				m_tiles(x, y)->mb_isEmpty = false;
+				m_tiles.get(x, y)->mb_isEmpty = false;
 			vec[0] = static_cast<float>(offset);
 			vec[1] = static_cast<float>(y + mn_offsetY);
 			vec[2] = mf_depth;
-			m_tiles(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
-			setColor(*m_tiles(x, y));
+			m_tiles.get(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
+			setColor(*m_tiles.get(x, y));
 		}
 		for (int y = p_startY; y < height; y++)
-			m_tiles(x, y)->mb_isEmpty = true;
+			m_tiles.get(x, y)->mb_isEmpty = true;
 	}
 }
 

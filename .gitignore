@@ -42,3 +42,6 @@ doc/generated/
 
 # log file
 log
+
+# vallgrind
+callgrind.*
