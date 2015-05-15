@@ -23,8 +23,8 @@ public:
 private:
 	Biome *					m_biome;
 	// Owner
-	MapManager *				m_mapManager;
-	std::vector<Decor *>		m_decors;
+	MapManager *			m_mapManager;
+	std::vector<Decor *>	m_decors;
 
 };
 

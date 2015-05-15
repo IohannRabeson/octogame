@@ -124,7 +124,8 @@ void Tree::pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_a
 	// Create leaf
 	if (pn_depth == DEPTH - 1 && mb_isLeaf)
 	{
-		float size = (m_size.y * refAngle / (MAX_A - MIN_A)) * mf_mouvement;
+		float size = (m_size.y * refAngle / (m_biome->m_tree.mn_minAngle - m_biome->m_tree.mn_maxAngle)) * mf_mouvement;
+		m_leafColor = m_color;
 		createRectangle(rightCenter, sf::Vector2f(size, size), m_leafColor, 5, &mn_countLeaf, cosRight, sinRight);
 		createRectangle(leftCenter, sf::Vector2f(size, size), m_leafColor, 5, &mn_countLeaf, cosLeft, sinLeft);
 	}
@@ -149,19 +150,18 @@ void Tree::pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_a
 void Tree::randomDecor(void)
 {
 	Decor::randomDecor();
-	mf_liveTime = randomRange(MIN_LIVE, MAX_LIVE);
+	mf_liveTime = randomRange(m_biome->m_tree.mn_minLive, m_biome->m_tree.mn_maxLive);
 	mb_growSide = static_cast<bool>(rand() % 2);
 	mb_isLeaf = m_biome->mn_temperature >= 0 ? true : false;
 
-	//m_color = sf::Color(randomRange(20, 200), randomRange(20, 200), randomRange(20, 200));
 	m_color = sf::Color(180.f, 33.f, 85.f);
-	m_leafColor = sf::Color(212.f, 185.f, 39.f);
-	float tmpX = randomRange(static_cast<int>(10000.f / m_biome->mn_height), static_cast<int>(13000.f / m_biome->mn_height));
-	float tmpY = randomRange(m_biome->mn_height / 2.0f, m_biome->mn_height);
+	//m_leafColor = sf::Color(212.f, 185.f, 39.f);
+	float tmpX = randomRange(m_biome->m_tree.mn_minSizeX, m_biome->m_tree.mn_maxSizeX);
+	float tmpY = randomRange(m_biome->m_tree.mn_minSizeY, m_biome->m_tree.mn_maxSizeY);
 	m_size = sf::Vector2f(tmpX, tmpY);
 
 	for (int i = 0; i < mn_maxRectangle; i++)
-		m_refAngle[i] = randomRange(MIN_A, MAX_A);
+		m_refAngle[i] = randomRange(m_biome->m_tree.mn_minAngle, m_biome->m_tree.mn_maxAngle);
 	pythagorasTree(m_origin, m_size);
 }
 
@@ -174,7 +174,8 @@ void Tree::init(Biome * p_biome)
 void Tree::update(float pf_deltatime)
 {
 	Decor::update(pf_deltatime);
-	m_origin.x -= m_size.x / 2.0f;
+	Decor::putOnMap();
+	//m_origin.x -= m_size.x / 2.0f;
 	m_origin.y -= m_size.y / 2.0f;
 
 	float delta = (m_size.y - m_size.y * mf_mouvement) / 2;

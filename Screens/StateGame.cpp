@@ -11,10 +11,20 @@
 /* ************************************************************************** */
 
 #include "StateGame.hpp"
+#include "../ResourceDefinitions.hpp"
+#include <Application.hpp>
+#include <Camera.hpp>
+#include <ResourceManager.hpp>
 
 void	StateGame::start()
 {
+	octo::Application::getCamera().setZoom(0.75);
+	octo::Application::getCamera().move(-310, -200);
 	m_mapManager.init(Map::e_map_instance);
+
+	octo::ResourceManager&	resources = octo::Application::getResourceManager();
+	m_back.setSize(sf::Vector2f(2000, 1300));
+	m_back.setTexture(&resources.getTexture(BACKGROUND_PNG));
 }
 
 void	StateGame::pause()
@@ -37,5 +47,6 @@ void	StateGame::update(sf::Time p_deltatime)
 void	StateGame::draw(sf::RenderTarget& render) const
 {
 	render.clear(sf::Color::Black);
+	render.draw(m_back);
 	render.draw(m_mapManager);
 }
