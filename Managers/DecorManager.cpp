@@ -4,6 +4,7 @@
 #include "Crystal.hpp"
 #include "Rock.hpp"
 #include "Star.hpp"
+#include "Sun.hpp"
 
 #include <iostream>
 
@@ -27,6 +28,9 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 	int max = m_biome->mn_width;
 	int min = 0;
 	int i = 0;
+	m_decors.push_back(new Sun());
+	m_decors[i]->init(p_biome);
+	i++;
 	while (i < m_biome->m_rock.mn_nb)
 	{
 		m_decors.push_back(new Rock());
@@ -53,8 +57,6 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 		m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
 		i++;
 	}
-	//m_decors.push_back(new Star());
-	//m_decors[i]->init(p_biome);
 	//m_decors[i]->setPosition(sf::Vector2f(x, m_mapManager->getTransitionManager().getHeight(x)->position.y));
 	setPosition();
 	m_mapManager->getTransitionManager().computeDecor();

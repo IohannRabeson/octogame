@@ -53,6 +53,11 @@ void MapInstance::initBiome(void)
 	m_biome->m_star.mn_minSizeY = 70;
 	m_biome->m_star.mn_maxSizeY = 100;
 
+	m_biome->m_sun.mn_nb = 3;
+	m_biome->m_sun.mn_minSizeX = 70;
+	m_biome->m_sun.mn_maxSizeX = 100;
+	m_biome->m_sun.mn_minSizeY = 70;
+	m_biome->m_sun.mn_maxSizeY = 100;
 }
 
 #include <iostream>

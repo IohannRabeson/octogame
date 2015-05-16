@@ -48,7 +48,8 @@ SRC_DECORS =	Decors/Crystal.cpp						\
 				Decors/Rock.cpp							\
 				Decors/Star.cpp							\
 				Decors/StaticTileObject.cpp				\
-				Decors/Tree.cpp
+				Decors/Tree.cpp							\
+				Decors/Sun.cpp
 
 SRC_PHYSICS =	Physics/DynamicPolygon.cpp				\
 				Physics/Player.cpp						\
