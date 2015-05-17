@@ -15,6 +15,8 @@ public:
 	Decor(void);
 	virtual ~Decor(void);
 
+	float getOriginX(void) const;
+	void  updateOrigin(void);
 	virtual void init(Biome * p_biome);
 	virtual void update(float pf_deltatime);
 	virtual void draw(sf::RenderTarget & p_target, sf::RenderStates p_states) const;

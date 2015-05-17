@@ -59,6 +59,11 @@ void Decor::createRectangle(sf::Vector2f const & p_a, sf::Vector2f const & p_b, 
 	createTriangle(p_c, p_d, p_a, p_origin, p_color);
 }
 
+float Decor::getOriginX(void) const
+{
+	return m_origin.x;
+}
+
 void Decor::computeStates(float pf_deltatime)
 {
 	switch (me_currentState)
@@ -118,6 +123,11 @@ void Decor::putOnMap(void)
 	m_color = m_vertexPosition->color;
 	m_origin.x = m_vertexPosition->position.x;
 	m_origin.y = m_vertexPosition->position.y;
+}
+
+void Decor::updateOrigin(void)
+{
+	putOnMap();
 }
 
 void Decor::update(float pf_deltatime)

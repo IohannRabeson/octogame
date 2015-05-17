@@ -18,6 +18,7 @@ public:
 	float getOffsetY(void) const;
 	std::size_t getMapWidth(void) const;
 	std::size_t getMapHeight(void) const;
+	int getMapOffsetX(void) const;
 	// Only used by StaticObjectManager to compute initial position
 	void computeDecor(void);
 	void update(float pf_deltatime);

@@ -27,6 +27,7 @@ private:
 	// Owner
 	MapManager *			m_mapManager;
 	std::vector<Decor *>	m_decors;
+	int						m_offsetX;
 
 };
 

@@ -213,6 +213,11 @@ std::size_t TransitionManager::getMapHeight(void) const
 	return m_tiles->getRows();
 }
 
+int TransitionManager::getMapOffsetX(void) const
+{
+	return m_tiles->getOffsetXDecor(m_tiles->getOffsetX());
+}
+
 // TODO: to be deleted
 void lerpColor(sf::Color & p_result, sf::Color & p_start, sf::Color & p_end, float p_transition)
 {

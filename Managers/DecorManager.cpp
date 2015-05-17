@@ -70,14 +70,27 @@ void DecorManager::setPosition(void)
 
 void DecorManager::update(float pf_deltatime)
 {
+	m_offsetX = m_mapManager->getTransitionManager().getMapOffsetX() * 8;
+	int delta = 500;
 	for (size_t i = 0; i < m_decors.size(); i++)
-		m_decors[i]->update(pf_deltatime);
+	{
+		int originX = m_decors[i]->getOriginX();
+		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1900 + delta)
+			m_decors[i]->update(pf_deltatime);
+		else
+			m_decors[i]->updateOrigin();
+	}
 }
 
 void DecorManager::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
+	int delta = 500;
 	for (size_t i = 0; i < m_decors.size(); i++)
-		render.draw(*m_decors[i]);
+	{
+		int originX = m_decors[i]->getOriginX();
+		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1900 + delta)
+			render.draw(*m_decors[i]);
+	}
 }
 
 bool DecorManager::onPressed (sf::Event::KeyEvent const &event)
