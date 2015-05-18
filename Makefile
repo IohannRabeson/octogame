@@ -38,7 +38,8 @@ SRC_MAP =		Map/FactoryMap.cpp						\
 SRC_MANAGERS =	Managers/CollisionManager.cpp			\
 				Managers/DecorManager.cpp				\
 				Managers/MapManager.cpp					\
-				Managers/TransitionManager.cpp
+				Managers/TransitionManager.cpp				\
+				Managers/CameraManager.cpp
 
 SRC_OCTO =		Octo/OctoNoise.cpp
 

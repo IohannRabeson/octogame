@@ -1,5 +1,4 @@
 #include "Map.hpp"
-#include <iostream>
 
 Map::Map(std::size_t pn_width, std::size_t pn_height) :
 	mf_depth(0.f),

@@ -65,6 +65,7 @@ public:
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
 	inline Decors & getDecors(void) { return m_decors; }
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
+	inline void setOffset(int p_offsetX, int p_offsetY) { mn_offsetX = p_offsetX; mn_offsetY = p_offsetY; }
 
 	void init(Biome * p_biome);
 	void computeDecor(void);

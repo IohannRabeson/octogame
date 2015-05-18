@@ -3,9 +3,10 @@
 
 DynamicPolygon::DynamicPolygon(std::size_t p_verticesCount, CollideType p_collideType, bool p_applyGravity) :
 	Polygon(p_verticesCount, p_collideType),
-	m_velocity(0.f, 0.f),
+	m_velocity(),
 	m_applyGravity(p_applyGravity),
-	m_collideMask(0)
+	m_collideMask(0u),
+	m_oldVelocity()
 {}
 
 DynamicPolygon::~DynamicPolygon(void) { }
@@ -65,6 +66,8 @@ sf::Rect<float> const & DynamicPolygon::getGlobalBounds(void)
 
 void DynamicPolygon::applyTransform(void)
 {
+	m_oldVelocity = m_velocity;
+	m_velocity.x = 0.f;
 	move(m_velocity);
 	m_velocity.x = 0.f;
 	m_velocity.y = 0.f;

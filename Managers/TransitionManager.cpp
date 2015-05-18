@@ -36,6 +36,8 @@ void TransitionManager::init(MapManager * p_mapManager, Biome * p_biome, Map::EM
 	// Init maps
 	m_tiles->init(p_biome);
 	m_tilesPrev->init(p_biome);
+	m_tiles->setOffset(p_biome->mn_startOffsetX - 60, 0);
+	m_tilesPrev->setOffset(p_biome->mn_startOffsetX - 60, 0);
 
 	mf_transitionTimerMax = p_biome->mf_transitionTimerMax;
 
@@ -150,6 +152,7 @@ void TransitionManager::defineTransitionRange(int p_startX, int p_endX, int p_st
 	}
 }
 
+// TODO: use octo::linearInterpolation
 void TransitionManager::lerp(sf::Vector2f & p_result, sf::Vector2f & p_start, sf::Vector2f & p_end, float p_transition)
 {
 	p_result = p_start * (1.f - p_transition) + p_end * p_transition;
@@ -248,11 +251,19 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 	defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
 }
 
-void TransitionManager::updateOffset(float pf_deltatime)
+void TransitionManager::updateOffset(float)
 {
 	float speedbysecond = 400.f;
-	float speed = speedbysecond * pf_deltatime;
+	//float speed = speedbysecond * pf_deltatime;
+	static sf::Vector2f oldPos = m_mapManager->getCameraManager().getCenter();
 
+	sf::Vector2f const & current = m_mapManager->getCameraManager().getCenter();
+
+	mf_offsetX += oldPos.x - current.x;
+	mf_offsetY += oldPos.y - current.y;
+	oldPos = current;
+
+/*
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		mf_offsetX += speed;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -261,7 +272,7 @@ void TransitionManager::updateOffset(float pf_deltatime)
 		mf_offsetY += speed;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		mf_offsetY -= speed;
-
+*/
 	if (mf_offsetX >= 16.f)
 	{
 		mf_offsetX -= 16.f;

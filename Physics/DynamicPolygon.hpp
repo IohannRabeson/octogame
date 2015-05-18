@@ -15,8 +15,10 @@ public:
 	inline void addVelocity(sf::Vector2f const & v) { m_velocity += v; }
 	inline void addVelocity(float x, float y) { m_velocity.x += x; m_velocity.y += y; }
 	inline sf::Vector2f const & getVelocity(void) const { return m_velocity; }
+	inline sf::Vector2f const & getOldVelocity(void) const { return m_oldVelocity; }
 	inline bool applyGravity(void) const { return m_applyGravity; }
 	inline int getCollideMask(void) const { return m_collideMask; }
+	inline void setPosition(sf::Vector2f const & position) { move(position - getCenter()); }
 
 	// Compute the desire transformation
 	virtual void update(float pf_deltatime) = 0;
@@ -31,7 +33,9 @@ protected:
 	sf::Rect<float>		m_globalBounds;
 	sf::Vector2f		m_velocity;
 	bool			m_applyGravity;
-	int			m_collideMask;
+	//TODO: uint64
+	std::size_t		m_collideMask;
+	sf::Vector2f	m_oldVelocity;
 
 private:
 	DynamicPolygon(void) = delete;

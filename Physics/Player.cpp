@@ -1,5 +1,7 @@
 #include "Player.hpp"
 #include "NPC.hpp"
+#include <Application.hpp>
+#include <GraphicsManager.hpp>
 
 Player::Player(void) :
 	DynamicPolygon(4u, CollideType::e_player, true),
@@ -25,6 +27,7 @@ Player::Player(void) :
 	ver.position = sf::Vector2f(300.f, 450.f);
 	ver.texCoords = sf::Vector2f(20.f, 785.f);
 	setVertex(3, ver);
+	setPosition(sf::Vector2f(octo::Application::getGraphicsManager().getVideoMode().width / 2, 0.f));
 }
 
 Player::~Player(void)
@@ -48,10 +51,6 @@ void Player::update(float pf_deltatime)
 		m_timerJump = m_timerJumpMax;
 		m_state = e_jumping;
 	}
-
-	// Rotation
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		rotate(3.14f * pf_deltatime);
 
 	if (m_state == e_jumping)
 	{

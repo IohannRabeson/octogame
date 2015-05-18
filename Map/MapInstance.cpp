@@ -13,6 +13,7 @@ void MapInstance::initBiome(void)
 {
 	m_biome->mn_height = 128u;
 	m_biome->mn_width = 512u;
+	m_biome->mn_startOffsetX = 0u;
 	m_biome->mf_transitionTimerMax = 0.5f;
 	m_biome->mn_nbDecor = 15u;
 	m_biome->mn_temperature = 1;
