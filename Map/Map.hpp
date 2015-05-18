@@ -22,12 +22,12 @@ struct DecorValues
 
 struct Biome
 {
-	unsigned int		mn_height;
-	unsigned int		mn_width;
+	std::size_t		mn_height;
+	std::size_t		mn_width;
 	int					mn_temperature;
-	unsigned int		mn_nbDecor;
+	std::size_t		mn_nbDecor;
 	// between 0 and mn_width, it will be use to set the player at first appartition
-	unsigned int		mn_startOffsetX;
+	std::size_t		mn_startOffsetX;
 	float				mf_transitionTimerMax;
 	// Pattern to put the decor on the map
 	DecorValues			m_tree;
@@ -51,22 +51,22 @@ public:
 
 	typedef octo::Array2D<Tile*> TileMap;
 
-	Map(unsigned int pn_width, unsigned int pn_height);
+	Map(std::size_t pn_width, std::size_t pn_height);
 	virtual ~Map(void);
 
 	sf::Vertex * getHeight(int x);
 	int getOffsetXDecor(int p_decorOffsetX) const;
 
-	inline unsigned int getColumns(void) const { return m_tiles.columns(); }
-	inline unsigned int getRows(void) const { return m_tiles.rows(); }
+	inline std::size_t getColumns(void) const { return m_tiles.columns(); }
+	inline std::size_t getRows(void) const { return m_tiles.rows(); }
 	inline int getOffsetX(void) const { return mn_offsetX; }
 	inline int getOffsetY(void) const { return mn_offsetY; }
-	inline Tile & get(unsigned int column, unsigned int row) { return *m_tiles(column, row); }
-	inline Tile const & get(unsigned int column, unsigned int row) const { return *m_tiles(column, row); }
+	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles(column, row); }
+	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
 	inline Decors & getDecors(void) { return m_decors; }
+	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
 
 	void init(Biome * p_biome);
-	void computeMap(void);
 	void computeDecor(void);
 	void addOffsetX(int p_offsetX);
 	void addOffsetY(int p_offsetY);
@@ -82,9 +82,10 @@ protected:
 	float			mf_oldDepth;
 	Biome *			m_biome;
 	TileMap			m_tiles;
-	unsigned int		mn_totalWidth;
+	std::size_t		mn_totalWidth;
 	int			mn_offsetX;
 	int			mn_offsetY;
+	int			mn_colorOffsetX;
 
 	virtual void initBiome(void) = 0;
 	// first and second curve must return a value between -1 and 1
@@ -96,11 +97,11 @@ private:
 	Map(void) = delete;
 	void initQuad(int x, int y);
 
-	static constexpr unsigned int MaxDecor = 200u;
+	static constexpr std::size_t MaxDecor = 200u;
 
 	Tile						m_reserveTile[MaxDecor];
 	Decors						m_decors;
-	unsigned int					mn_decorTileCount;
+	std::size_t					mn_decorTileCount;
 	std::unique_ptr<sf::Vertex[]>			m_vertices;
 
 };

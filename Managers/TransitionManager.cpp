@@ -1,27 +1,21 @@
 #include "TransitionManager.hpp"
 #include "MapManager.hpp"
 
-sf::Vector2f ** TransitionManager::ms_baseValue = nullptr;
-
 TransitionManager::TransitionManager(void) :
+	m_mapManager(nullptr),
 	m_tiles(nullptr),
 	m_tilesPrev(nullptr),
+	m_factoryMap(),
 	mf_transitionTimer(1.f),
 	mf_transitionTimerMax(0.4f),
 	mf_offsetX(0.f),
 	mf_offsetY(0.f),
-	mb_isInit(false)
+	m_vertices(nullptr),
+	mn_verticesCount(0u)
 {}
 
 TransitionManager::~TransitionManager(void)
 {
-	if (ms_baseValue)
-	{
-		for (unsigned int i = 0; i < m_tiles->getColumns(); i++)
-			delete ms_baseValue[i];
-		delete ms_baseValue;
-		ms_baseValue = nullptr;
-	}
 	delete m_tiles;
 	delete m_tilesPrev;
 }
@@ -45,21 +39,16 @@ void TransitionManager::init(MapManager * p_mapManager, Biome * p_biome, Map::EM
 
 	mf_transitionTimerMax = p_biome->mf_transitionTimerMax;
 
-	if (!mb_isInit)
+	m_baseValue.resize(m_tiles->getColumns(), m_tiles->getRows() * 4u, sf::Vector2f(0.f, 0.f));
+	// Init base values
+	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
-		mb_isInit = true;
-		// Init base values
-		ms_baseValue = new sf::Vector2f*[m_tiles->getColumns()];
-		for (unsigned int x = 0u; x < m_tiles->getColumns(); x++)
+		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
-			ms_baseValue[x] = new sf::Vector2f[m_tiles->getRows() * 4u];
-			for (unsigned int y = 0u; y < m_tiles->getRows(); y++)
-			{
-				ms_baseValue[x][y * 4u + 0u] = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize);
-				ms_baseValue[x][y * 4u + 1u] = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize);
-				ms_baseValue[x][y * 4u + 2u] = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
-				ms_baseValue[x][y * 4u + 3u] = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
-			}
+			m_baseValue.get(x, y * 4u + 0u) = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize);
+			m_baseValue.get(x, y * 4u + 1u) = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize);
+			m_baseValue.get(x, y * 4u + 2u) = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
+			m_baseValue.get(x, y * 4u + 3u) = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
 		}
 	}
 }
@@ -69,7 +58,7 @@ void TransitionManager::setTransitionAppear(int x, int y)
 	int i = 0;
 	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).me_transition == Tile::e_transition_appear)
 		i++;
-	for (int j = 0; j < 4; j++)
+	for (std::size_t j = 0u; j < 4u; j++)
 		m_tilesPrev->get(x, y).m_startTransition[j].y = m_tilesPrev->get(x, y + i).m_startTransition[j].y;
 	setTransitionModify(x, y);
 	m_tilesPrev->get(x, y).m_startColor = m_tiles->get(x, y).m_startColor;
@@ -80,7 +69,7 @@ void TransitionManager::setTransitionDisappear(int x, int y)
 	int i = 0;
 	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).me_transition == Tile::e_transition_disappear)
 		i++;
-	for (int j = 0; j < 4; j++)
+	for (std::size_t j = 0u; j < 4u; j++)
 		m_tiles->get(x, y).m_startTransition[j].y = m_tiles->get(x, y + i).m_startTransition[j].y;
 }
 
@@ -101,10 +90,10 @@ void TransitionManager::setTransitionFull(Map * tiles, int x, int y)
 {
 	sf::Vector2f * ver = tiles->get(x, y).m_startTransition;
 
-	ver[0] = ms_baseValue[x][y * 4u];
-	ver[1] = ms_baseValue[x][y * 4u + 1u];
-	ver[2] = ms_baseValue[x][y * 4u + 2u];
-	ver[3] = ms_baseValue[x][y * 4u + 3u];
+	ver[0] = m_baseValue.get(x, y * 4u);
+	ver[1] = m_baseValue.get(x, y * 4u + 1u);
+	ver[2] = m_baseValue.get(x, y * 4u + 2u);
+	ver[3] = m_baseValue.get(x, y * 4u + 3u);
 }
 
 void TransitionManager::defineTransition(int x, int y)
@@ -177,42 +166,6 @@ void TransitionManager::swapMap(void)
 	m_mapManager->getDecorManager().setPosition();
 }
 
-void TransitionManager::computeDecor(void)
-{
-	m_tiles->computeDecor();
-}
-
-sf::Vertex * TransitionManager::getHeight(int x)
-{
-	m_tiles->getHeight(x);
-	return m_tilesPrev->getHeight(x);
-}
-
-Tile & TransitionManager::getTile(int x, int y) const
-{
-	return m_tiles->get(x, y);
-}
-
-float TransitionManager::getOffsetX(void) const
-{
-	return mf_offsetX;
-}
-
-float TransitionManager::getOffsetY(void) const
-{
-	return mf_offsetY;
-}
-
-std::size_t TransitionManager::getMapWidth(void) const
-{
-	return m_tiles->getColumns();
-}
-
-std::size_t TransitionManager::getMapHeight(void) const
-{
-	return m_tiles->getRows();
-}
-
 // TODO: to be deleted
 void lerpColor(sf::Color & p_result, sf::Color & p_start, sf::Color & p_end, float p_transition)
 {
@@ -229,17 +182,17 @@ void TransitionManager::updateTransition(float pf_deltatime)
 		mf_transitionTimer = mf_transitionTimerMax;
 	}
 	float transition = mf_transitionTimer / mf_transitionTimerMax;
-	sf::Color res;
 	mn_verticesCount = 0u;
-	for (unsigned int x = 0; x < m_tiles->getColumns(); x++)
+	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
-		for (unsigned int y = 0; y < m_tiles->getRows(); y++)
+		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_none)
 				continue;
+			// Update the vertex for the CollisionManager
 			m_tiles->get(x, y).setUpLeft(&m_vertices[mn_verticesCount]);
-			int index = mn_verticesCount;
-			for (unsigned int i = 0; i < 4; i++)
+			std::size_t index = mn_verticesCount;
+			for (std::size_t i = 0u; i < 4u; i++)
 			{
 				// compute interpolation
 				lerp(m_vertices[mn_verticesCount].position, m_tilesPrev->get(x, y).m_startTransition[i], m_tiles->get(x, y).m_startTransition[i], transition);
@@ -247,9 +200,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 				m_vertices[mn_verticesCount].position.x += mf_offsetX - Tile::DoubleTileSize;
 				m_vertices[mn_verticesCount].position.y += mf_offsetY - Tile::DoubleTileSize;
 				// compute interpolation for colors
-				//TODO: Avoid res copy
-				lerpColor(res, m_tilesPrev->get(x, y).m_startColor, m_tiles->get(x, y).m_startColor, transition);
-				m_vertices[mn_verticesCount].color = res;
+				lerpColor(m_vertices[mn_verticesCount].color, m_tilesPrev->get(x, y).m_startColor, m_tiles->get(x, y).m_startColor, transition);
 				mn_verticesCount++;
 			}
 			//TODO: find a better way to did it
@@ -269,16 +220,12 @@ void TransitionManager::updateTransition(float pf_deltatime)
 
 	auto tiles = m_tiles->getDecors();
 	auto tilesPrev = m_tilesPrev->getDecors();
-	auto itPrev = tilesPrev.begin();
-	for (auto it = tiles.begin(); it != tiles.end(); it++)
+	for (auto it = tiles.begin(), itPrev = tilesPrev.begin(); it != tiles.end(); it++, itPrev++)
 	{
 		lerp(itPrev->second->mp_upLeft->position, itPrev->second->m_startTransition[0], it->second->m_startTransition[0], transition);
 		itPrev->second->mp_upLeft->position.x = mf_offsetX + m_tilesPrev->getOffsetXDecor(it->first) * Tile::TileSize - Tile::DoubleTileSize;
 		itPrev->second->mp_upLeft->position.y += mf_offsetY - Tile::DoubleTileSize - m_tilesPrev->getOffsetY() * Tile::TileSize;
-		lerpColor(res, itPrev->second->m_startColor, it->second->m_startColor, transition);
-
-		itPrev->second->mp_upLeft->color = res;
-		itPrev++;
+		lerpColor(itPrev->second->mp_upLeft->color, itPrev->second->m_startColor, it->second->m_startColor, transition);
 	}
 }
 

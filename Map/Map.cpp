@@ -1,12 +1,13 @@
 #include "Map.hpp"
 #include <iostream>
 
-Map::Map(unsigned int pn_width, unsigned int pn_height) :
+Map::Map(std::size_t pn_width, std::size_t pn_height) :
 	mf_depth(0.f),
 	mf_oldDepth(0.f),
 	mn_totalWidth(0),
 	mn_offsetX(0),
 	mn_offsetY(0),
+	mn_colorOffsetX(0),
 	mn_decorTileCount(0u)
 {
 	pn_width += 3;
@@ -14,9 +15,9 @@ Map::Map(unsigned int pn_width, unsigned int pn_height) :
 	m_tiles.resize(pn_width, pn_height, nullptr);
 
 	m_vertices.reset(new sf::Vertex[MaxDecor]);
-	for (unsigned int x = 0; x < m_tiles.columns(); x++)
+	for (std::size_t x = 0; x < m_tiles.columns(); x++)
 	{
-		for (unsigned int y = 0; y < m_tiles.rows(); y++)
+		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 		{
 			m_tiles.get(x, y) = new Tile();
 			initQuad(x, y);
@@ -26,9 +27,9 @@ Map::Map(unsigned int pn_width, unsigned int pn_height) :
 
 Map::~Map(void)
 {
-	for (unsigned int x = 0; x < m_tiles.columns(); x++)
+	for (std::size_t x = 0; x < m_tiles.columns(); x++)
 	{
-		for (unsigned int y = 0; y < m_tiles.rows(); y++)
+		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			delete m_tiles.get(x, y);
 	}
 }
@@ -59,16 +60,11 @@ void Map::initQuad(int x, int y)
 	m_tiles.get(x, y)->m_startTransition[3] = ver.position;
 }
 
-void Map::computeMap(void)
-{
-	computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows());
-}
-
 void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 {
 	float vec[3];
 	int height;
-	unsigned int offset;
+	std::size_t offset;
 	float v;
 	// Init perlin value
 	for (int x = p_startX; x < p_endX; x++)
@@ -91,7 +87,7 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 			height = m_tiles.rows();
 		for (int y = height; y < p_endY; y++)
 		{
-			vec[0] = static_cast<float>(offset);
+			vec[0] = static_cast<float>(x + mn_colorOffsetX);
 			vec[1] = static_cast<float>(y + mn_offsetY);
 			vec[2] = mf_depth;
 			// secondCurve return a value between -1 & 1
@@ -128,6 +124,7 @@ void Map::computeDecor(void)
 void Map::addOffsetX(int p_offsetX)
 {
 	mn_offsetX += p_offsetX;
+	mn_colorOffsetX += p_offsetX;
 	if (mn_offsetX < 0)
 		mn_offsetX += mn_totalWidth;
 	else if (mn_offsetX >= static_cast<int>(mn_totalWidth))
@@ -135,9 +132,9 @@ void Map::addOffsetX(int p_offsetX)
 
 	if (p_offsetX > 0)
 	{
-		for (unsigned int x = 0; x < m_tiles.columns() - 1; x++)
+		for (std::size_t x = 0; x < m_tiles.columns() - 1; x++)
 		{
-			for (unsigned int y = 0; y < m_tiles.rows(); y++)
+			for (std::size_t y = 0; y < m_tiles.rows(); y++)
 				m_tiles.get(x, y)->copy(*m_tiles.get(x + 1, y), -Tile::TileSize, 0.f);
 		}
 	}
@@ -145,7 +142,7 @@ void Map::addOffsetX(int p_offsetX)
 	{
 		for (int x = m_tiles.columns() - 1; x > 0; x--)
 		{
-			for (unsigned int y = 0; y < m_tiles.rows(); y++)
+			for (std::size_t y = 0; y < m_tiles.rows(); y++)
 				m_tiles.get(x, y)->copy(*m_tiles.get(x - 1, y), Tile::TileSize, 0.f);
 		}
 	}
@@ -157,15 +154,15 @@ void Map::addOffsetY(int p_offsetY)
 
 	if (p_offsetY > 0)
 	{
-		for (unsigned int x = 0; x < m_tiles.columns(); x++)
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 		{
-			for (unsigned int y = 0; y < m_tiles.rows() - 1; y++)
+			for (std::size_t y = 0; y < m_tiles.rows() - 1; y++)
 				m_tiles.get(x, y)->copy(*m_tiles.get(x, y + 1), 0.f, -Tile::TileSize);
 		}
 	}
 	else if (p_offsetY < 0)
 	{
-		for (unsigned int x = 0; x < m_tiles.columns(); x++)
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 		{
 			for (int y = m_tiles.rows() - 1; y > 0; y--)
 				m_tiles.get(x, y)->copy(*m_tiles.get(x, y - 1), 0.f, Tile::TileSize);
