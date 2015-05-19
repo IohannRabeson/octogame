@@ -106,7 +106,7 @@ package:
 
 complete:
 	make complete -C octolib/ MODE=$(MODE)
-	make
+	make re
 
 static-checks:
 	cppcheck --enable=all  -I ./includes/ -I ./octolib/includes ./includes/* ./src/
