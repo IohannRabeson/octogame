@@ -65,6 +65,8 @@ public:
 	inline Decors & getDecors(void) { return m_decors; }
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
 	inline void setOffset(sf::Vector2f const & offset) { m_offset = offset; }
+	void addOffsetX(int p_offsetX);
+	void addOffsetY(int p_offsetY);
 
 	void init(Biome * p_biome);
 	void computeDecor(void);

@@ -45,6 +45,10 @@ void Map::init(Biome * p_biome)
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 		{
 			m_tiles.get(x, y) = new Tile();
+			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize);
+			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize);
+			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
+			m_tiles.get(x, y)->m_startTransition[3] = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
 		}
 	}
 }
@@ -53,20 +57,20 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 {
 	float vec[3];
 	int height;
-	float offset;
-	float offsetY;
-	float offsetPosX;
+	int offset;
+	int offsetY;
+	int offsetPosX;
 	float v;
 	// Init perlin value
 	for (int x = p_startX; x < p_endX; x++)
 	{
-		offset = x + m_offset.x / Tile::TileSize;
+		offset = x + static_cast<int>(m_offset.x / Tile::TileSize);
 		offsetPosX = offset;
 		while (offset < 0)
 			offset += m_biome->mn_width;
-		while (offset >= m_biome->mn_width)
+		while (static_cast<std::size_t>(offset) >= m_biome->mn_width)
 			offset -= m_biome->mn_width;
-		vec[0] = static_cast<int>(offset);
+		vec[0] = static_cast<float>(offset);
 		vec[1] = mf_depth;
 		// firstCurve return a value b/tween -1 & 1
 		// we normalize it betwen 0 & max_height
@@ -75,6 +79,10 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 		for (int y = p_startY; y < p_endY; y++)
 		{
 			offsetY = y + m_offset.y / Tile::TileSize;
+			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize);
+			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize);
+			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
+			m_tiles.get(x, y)->m_startTransition[3] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
 			if (offsetY < height || offsetY < 0)
 			{
 				m_tiles.get(x, y)->mb_isEmpty = true;
@@ -84,10 +92,7 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 			vec[1] = static_cast<float>(offsetY);
 			vec[2] = mf_depth;
 			// secondCurve return a value between -1 & 1
-			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f(static_cast<int>(offsetPosX) * Tile::TileSize, static_cast<int>(offsetY) * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f(static_cast<int>(offsetPosX+1) * Tile::TileSize, static_cast<int>(offsetY) * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f(static_cast<int>(offsetPosX+1) * Tile::TileSize, static_cast<int>(offsetY+1) * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[3] = sf::Vector2f(static_cast<int>(offsetPosX) * Tile::TileSize, static_cast<int>(offsetY+1) * Tile::TileSize);
+			// TODO: keep pointer to vector to avoid copy
 			m_tiles.get(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
 			m_tiles.get(x, y)->mb_isEmpty = false;
 			setColor(*m_tiles.get(x, y));
@@ -138,4 +143,52 @@ void Map::swapDepth(void)
 void Map::registerDepth(void)
 {
 	mf_oldDepth = mf_depth;
+}
+
+void Map::addOffsetX(int p_offsetX)
+{
+	mn_offsetX += p_offsetX;
+	if (mn_offsetX < 0)
+		mn_offsetX += mn_totalWidth;
+	else if (mn_offsetX >= static_cast<int>(mn_totalWidth))
+		mn_offsetX -= mn_totalWidth;
+
+	if (p_offsetX > 0)
+	{
+		for (std::size_t x = 0; x < m_tiles.columns() - 1; x++)
+		{
+			for (std::size_t y = 0; y < m_tiles.rows(); y++)
+				m_tiles(x, y)->copy(*m_tiles(x + 1, y), -Tile::TileSize, 0.f);
+		}
+	}
+	else if (p_offsetX < 0)
+	{
+		for (std::size_t x = m_tiles.columns() - 1; x > 0; x--)
+		{
+			for (std::size_t y = 0; y < m_tiles.rows(); y++)
+				m_tiles(x, y)->copy(*m_tiles(x - 1, y), Tile::TileSize, 0.f);
+		}
+	}
+}
+
+void Map::addOffsetY(int p_offsetY)
+{
+	mn_offsetY += p_offsetY;
+
+	if (p_offsetY > 0)
+	{
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+		{
+			for (std::size_t y = 0; y < m_tiles.rows() - 1; y++)
+				m_tiles(x, y)->copy(*m_tiles(x, y + 1), 0.f, -Tile::TileSize);
+		}
+	}
+	else if (p_offsetY < 0)
+	{
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+		{
+			for (std::size_t y = m_tiles.rows() - 1; y > 0; y--)
+				m_tiles(x, y)->copy(*m_tiles(x, y - 1), 0.f, Tile::TileSize);
+		}
+	}
 }
