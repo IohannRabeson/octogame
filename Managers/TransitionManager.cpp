@@ -1,15 +1,17 @@
 #include "TransitionManager.hpp"
 #include "MapManager.hpp"
+#include "MapInstance.hpp"
+#include "MapHigh.hpp"
 
 TransitionManager::TransitionManager(void) :
 	m_mapManager(nullptr),
 	m_tiles(nullptr),
 	m_tilesPrev(nullptr),
-	m_factoryMap(),
 	mf_transitionTimer(1.f),
 	mf_transitionTimerMax(0.4f),
-	mf_offsetX(0.f),
-	mf_offsetY(0.f),
+	m_offsetX(0.f),
+	m_offsetY(0.f),
+	m_offset(),
 	m_vertices(nullptr),
 	mn_verticesCount(0u)
 {}
@@ -20,28 +22,25 @@ TransitionManager::~TransitionManager(void)
 	delete m_tilesPrev;
 }
 
-void TransitionManager::init(MapManager * p_mapManager, Biome * p_biome, Map::EMapType p_mapType)
+void TransitionManager::init(MapManager * p_mapManager, Biome * p_biome)
 {
 	m_mapManager = p_mapManager;
 
-	// TODO: get the right size from VideoMode or something like that
-	// Init the factory
-	m_factoryMap.init(120u, 68u);
-
-	// Get a map from the factory
-	m_tiles = m_factoryMap.getMap(p_mapType);
-	m_tilesPrev = m_factoryMap.getMap(p_mapType);
-	m_vertices.reset(new sf::Vertex[m_tiles->getRows() * m_tiles->getColumns() * 6u]);
+	m_tiles = new MapHigh();
+	m_tilesPrev = new MapHigh();
 
 	// Init maps
 	m_tiles->init(p_biome);
 	m_tilesPrev->init(p_biome);
-	m_tiles->setOffset(p_biome->mn_startOffsetX - 60, 0);
-	m_tilesPrev->setOffset(p_biome->mn_startOffsetX - 60, 0);
+
+	m_vertices.reset(new sf::Vertex[m_tiles->getRows() * m_tiles->getColumns() * 6u]);
+
+	//m_tiles->setOffset(p_biome->mn_startOffsetX - 60, 0);
+	//m_tilesPrev->setOffset(p_biome->mn_startOffsetX - 60, 0);
 
 	mf_transitionTimerMax = p_biome->mf_transitionTimerMax;
 
-	m_baseValue.resize(m_tiles->getColumns(), m_tiles->getRows() * 4u, sf::Vector2f(0.f, 0.f));
+	m_baseValue.resize(m_tiles->getColumns(), m_tiles->getRows() * 4u, sf::Vector2f());
 	// Init base values
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
@@ -63,6 +62,7 @@ void TransitionManager::setTransitionAppear(int x, int y)
 	for (std::size_t j = 0u; j < 4u; j++)
 		m_tilesPrev->get(x, y).m_startTransition[j].y = m_tilesPrev->get(x, y + i).m_startTransition[j].y;
 	setTransitionModify(x, y);
+	// TODO: store color in pointer to avoid copy
 	m_tilesPrev->get(x, y).m_startColor = m_tiles->get(x, y).m_startColor;
 }
 
@@ -96,7 +96,11 @@ void TransitionManager::setTransitionFull(Map * tiles, int x, int y)
 	ver[1] = m_baseValue.get(x, y * 4u + 1u);
 	ver[2] = m_baseValue.get(x, y * 4u + 2u);
 	ver[3] = m_baseValue.get(x, y * 4u + 3u);
-}
+	/*ver[0] = sf::Vector2f((x + static_cast<int>(m_offset.x)) * Tile::TileSize, (y + static_cast<int>(m_offset.y)) * Tile::TileSize);
+	ver[1] = sf::Vector2f((x + static_cast<int>(m_offset.x)) * Tile::TileSize + Tile::TileSize, (y + static_cast<int>(m_offset.y)) * Tile::TileSize);
+	ver[2] = sf::Vector2f((x + static_cast<int>(m_offset.x)) * Tile::TileSize + Tile::TileSize, (y + static_cast<int>(m_offset.y)) * Tile::TileSize + Tile::TileSize);
+	ver[3] = sf::Vector2f((x + static_cast<int>(m_offset.x)) * Tile::TileSize, (y + static_cast<int>(m_offset.y)) * Tile::TileSize + Tile::TileSize);
+*/}
 
 void TransitionManager::defineTransition(int x, int y)
 {
@@ -200,8 +204,8 @@ void TransitionManager::updateTransition(float pf_deltatime)
 				// compute interpolation
 				lerp(m_vertices[mn_verticesCount].position, m_tilesPrev->get(x, y).m_startTransition[i], m_tiles->get(x, y).m_startTransition[i], transition);
 				// add offset to hide border transitions
-				m_vertices[mn_verticesCount].position.x += mf_offsetX - Tile::DoubleTileSize;
-				m_vertices[mn_verticesCount].position.y += mf_offsetY - Tile::DoubleTileSize;
+				m_vertices[mn_verticesCount].position.x += m_offsetX + m_offset.x - Tile::DoubleTileSize;
+				m_vertices[mn_verticesCount].position.y += m_offsetY + m_offset.y - Tile::DoubleTileSize;
 				// compute interpolation for colors
 				lerpColor(m_vertices[mn_verticesCount].color, m_tilesPrev->get(x, y).m_startColor, m_tiles->get(x, y).m_startColor, transition);
 				mn_verticesCount++;
@@ -220,7 +224,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 			mn_verticesCount += 2;
 		}
 	}
-
+/*
 	auto tiles = m_tiles->getDecors();
 	auto tilesPrev = m_tilesPrev->getDecors();
 	for (auto it = tiles.begin(), itPrev = tilesPrev.begin(); it != tiles.end(); it++, itPrev++)
@@ -229,7 +233,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 		itPrev->second->mp_upLeft->position.x = mf_offsetX + m_tilesPrev->getOffsetXDecor(it->first) * Tile::TileSize - Tile::DoubleTileSize;
 		itPrev->second->mp_upLeft->position.y += mf_offsetY - Tile::DoubleTileSize - m_tilesPrev->getOffsetY() * Tile::TileSize;
 		lerpColor(itPrev->second->mp_upLeft->color, itPrev->second->m_startColor, it->second->m_startColor, transition);
-	}
+	}*/
 }
 
 void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY)
@@ -251,79 +255,74 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 	defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
 }
 
+#include <iostream>
 void TransitionManager::updateOffset(float)
 {
-	float speedbysecond = 400.f;
 	//float speed = speedbysecond * pf_deltatime;
-	static sf::Vector2f oldPos = m_mapManager->getCameraManager().getCenter();
+	static sf::Vector2f old = m_mapManager->getCameraManager().getUpLeft();
 
-	sf::Vector2f const & current = m_mapManager->getCameraManager().getCenter();
+	sf::Vector2f const & current = m_mapManager->getCameraManager().getUpLeft();
+	m_offsetX += old.x - current.x;
+	m_offsetY += old.y - current.y;
+	old = current;
 
-	mf_offsetX += oldPos.x - current.x;
-	mf_offsetY += oldPos.y - current.y;
-	oldPos = current;
-
-/*
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		mf_offsetX += speed;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		mf_offsetX -= speed;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		mf_offsetY += speed;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		mf_offsetY -= speed;
-*/
-	if (mf_offsetX >= 16.f)
+	if (m_offsetX >= 16.f)
 	{
-		mf_offsetX -= 16.f;
-		m_tilesPrev->swapDepth();
-		m_tiles->addOffsetX(-1);
-		m_tilesPrev->addOffsetX(-1);
-		m_tiles->computeMapRange(0, 1, 0, m_tiles->getRows());
-		m_tilesPrev->computeMapRange(0, 1, 0, m_tiles->getRows());
-		defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows());
-		m_tilesPrev->swapDepth();
+		m_offsetX -= 16.f;
+		swapMap();
 	}
-	else if (mf_offsetX <= -16.f)
+	else if (m_offsetX <= -16.f)
 	{
-		mf_offsetX += 16.f;
-		m_tilesPrev->swapDepth();
-		m_tiles->addOffsetX(1);
-		m_tilesPrev->addOffsetX(1);
-		m_tiles->computeMapRange(m_tiles->getColumns() - 1, m_tiles->getColumns(), 0, m_tiles->getRows());
-		m_tilesPrev->computeMapRange(m_tiles->getColumns() - 1, m_tiles->getColumns(), 0, m_tiles->getRows());
-		defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows());
-		m_tilesPrev->swapDepth();
+		m_offsetX += 16.f;
+		swapMap();
 	}
-	if (mf_offsetY >= 16.f)
+	if (m_offsetY >= 16.f)
 	{
-		mf_offsetY -= 16.f;
-		m_tilesPrev->swapDepth();
-		m_tiles->addOffsetY(-1);
-		m_tilesPrev->addOffsetY(-1);
-		m_tiles->computeMapRange(0, m_tiles->getColumns(), 0, 1);
-		m_tilesPrev->computeMapRange(0, m_tiles->getColumns(), 0, 1);
-		defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
-		m_tilesPrev->swapDepth();
+		m_offsetY -= 16.f;
+		swapMap();
 	}
-	else if (mf_offsetY <= -16.f)
+	else if (m_offsetY <= -16.f)
 	{
-		mf_offsetY += 16.f;
-		m_tilesPrev->swapDepth();
-		m_tiles->addOffsetY(1);
-		m_tilesPrev->addOffsetY(1);
-		m_tiles->computeMapRange(0, m_tiles->getColumns(), m_tiles->getRows() - 1, m_tiles->getRows());
-		m_tilesPrev->computeMapRange(0, m_tiles->getColumns(), m_tiles->getRows() - 1, m_tiles->getRows());
-		defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - (speedbysecond / Tile::TileSize), m_tiles->getRows());
-		m_tilesPrev->swapDepth();
+		m_offsetY += 16.f;
+		swapMap();
 	}
 }
 
 void TransitionManager::update(float pf_deltatime)
 {
-	bool compute = false;
+	//bool compute = false;
 	mf_transitionTimer += pf_deltatime;
-
+	m_offset = m_mapManager->getCameraManager().getUpLeft();
+	m_tiles->setOffset(m_offset);
+	m_tilesPrev->setOffset(m_offset);
+	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		m_tiles->computeMap();
+	{
+		mn_verticesCount = 0u;
+		for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
+		{
+			for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
+			{
+				std::size_t index = mn_verticesCount;
+				if (!m_tiles->get(x, y).mb_isEmpty)
+				{
+					for (std::size_t i = 0u; i < 4u; i++)
+						m_vertices[mn_verticesCount++] = m_tiles->get(x, y).m_startTransition[i];
+				}
+				else continue;
+				sf::Vertex p = m_vertices[index + 1];
+				sf::Vertex p2 = m_vertices[index + 2];
+				m_vertices[index + 1] = m_vertices[index + 2];
+				m_vertices[index + 2] = m_vertices[index + 3];
+				m_vertices[index + 3] = m_vertices[index];
+				m_vertices[index + 4] = p;
+				m_vertices[index + 5] = p2;
+				mn_verticesCount += 2;
+			}
+		}
+	}
+/*
 	if (mf_transitionTimer >= mf_transitionTimerMax)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
@@ -348,7 +347,7 @@ void TransitionManager::update(float pf_deltatime)
 	}
 	updateOffset(pf_deltatime);
 	updateTransition(pf_deltatime);
-}
+*/}
 
 void TransitionManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {

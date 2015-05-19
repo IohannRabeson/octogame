@@ -12,15 +12,15 @@ MapManager::~MapManager(void)
 {
 }
 
-void MapManager::init(Map::EMapType p_mapType)
+void MapManager::init(void)
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 
 	// TransitionManager init the biome
-	m_collisionManager.init(this);
-	m_transitionManager.init(this, &m_biome, p_mapType);
+	//m_collisionManager.init(this);
+	m_transitionManager.init(this, &m_biome);
 	m_cameraManager.init(this);
-	m_decorManager.init(this, &m_biome);
+	//m_decorManager.init(this, &m_biome);
 	m_texture = &resources.getTexture(OCTO_PNG);
 }
 
@@ -47,15 +47,15 @@ void MapManager::update(float pf_deltatime)
 	//float alpha = accumulator / dt;
 	clock.restart();
 */
-	m_transitionManager.update(pf_deltatime);
-	m_decorManager.update(pf_deltatime);
-	m_collisionManager.update(pf_deltatime);
 	m_cameraManager.update(pf_deltatime);
+	m_transitionManager.update(pf_deltatime);
+	//m_decorManager.update(pf_deltatime);
+	//m_collisionManager.update(pf_deltatime);
 }
 
 void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	render.draw(m_decorManager);
+	//render.draw(m_decorManager);
 	render.draw(m_transitionManager);
 
 	/*sf::RectangleShape rect;
@@ -64,6 +64,6 @@ void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 	render.draw(rect);
 	*/
 	states.texture = m_texture;
-	render.draw(&m_collisionManager.getPlayer().m_vertices[0], 4, sf::Quads, states);
-	m_collisionManager.debugDraw(render);
+	//render.draw(&m_collisionManager.getPlayer().m_vertices[0], 4, sf::Quads, states);
+	//m_collisionManager.debugDraw(render);
 }

@@ -1,8 +1,8 @@
 #ifndef TRANSITIONMANAGER_HPP
 # define TRANSITIONMANAGER_HPP
 
-# include "FactoryMap.hpp"
 # include <Array2D.hpp>
+# include "Map.hpp"
 
 class MapManager;
 
@@ -14,14 +14,12 @@ public:
 
 	inline sf::Vertex * getHeight(int x) { m_tiles->getHeight(x); return m_tilesPrev->getHeight(x); }
 	inline Tile & getTile(int x, int y) const { return m_tiles->get(x, y); }
-	inline float getOffsetX(void) const { return mf_offsetX; }
-	inline float getOffsetY(void) const { return mf_offsetY; }
 	inline std::size_t getMapWidth(void) const { return m_tiles->getColumns(); }
 	inline std::size_t getMapHeight(void) const { return m_tiles->getRows(); }
 	// Only used by StaticObjectManager to compute initial position
 	inline void computeDecor(void) { m_tiles->computeDecor(); }
 
-	void init(MapManager * p_mapManager, Biome * p_biome, Map::EMapType p_mapType);
+	void init(MapManager * p_mapManager, Biome * p_biome);
 	void update(float pf_deltatime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
@@ -32,11 +30,11 @@ private:
 	MapManager *				m_mapManager;
 	Map *					m_tiles;
 	Map *					m_tilesPrev;
-	FactoryMap				m_factoryMap;
 	float					mf_transitionTimer;
 	float					mf_transitionTimerMax;
-	float					mf_offsetX;
-	float					mf_offsetY;
+	float					m_offsetX;
+	float					m_offsetY;
+	sf::Vector2f				m_offset;
 	std::unique_ptr<sf::Vertex[]>		m_vertices;
 	std::size_t				mn_verticesCount;
 

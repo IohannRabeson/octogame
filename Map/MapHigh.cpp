@@ -2,8 +2,8 @@
 #include "OctoNoise.hpp"
 #include <cmath>
 
-MapHigh::MapHigh(unsigned int pn_width, unsigned int pn_height) :
-	Map(pn_width, pn_height)
+MapHigh::MapHigh(void) :
+	Map()
 {}
 
 MapHigh::~MapHigh(void) { }

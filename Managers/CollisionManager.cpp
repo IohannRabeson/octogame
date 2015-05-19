@@ -53,8 +53,8 @@ void CollisionManager::broadPhase(void)
 	for (std::size_t k = 0u; k < m_dynamicPolygons.size(); k++)
 	{
 		sf::Rect<float> const & rect = m_dynamicPolygons[k]->getGlobalBounds();
-		int offsetX = static_cast<int>((m_dynamicPolygons[k]->getVelocity().x + rect.left - m_mapManager->getTransitionManager().getOffsetX()) / Tile::TileSize) + 2;
-		int offsetY = static_cast<int>((m_dynamicPolygons[k]->getVelocity().y + rect.top - m_mapManager->getTransitionManager().getOffsetY()) / Tile::TileSize) + 2;
+		int offsetX = static_cast<int>((m_dynamicPolygons[k]->getVelocity().x + rect.left/* - m_mapManager->getTransitionManager().getOffsetX()*/) / Tile::TileSize) + 2;
+		int offsetY = static_cast<int>((m_dynamicPolygons[k]->getVelocity().y + rect.top/* - m_mapManager->getTransitionManager().getOffsetY()*/) / Tile::TileSize) + 2;
 		int width = static_cast<int>(rect.width / Tile::TileSize) + 1 + offsetX;
 		int height = static_cast<int>(rect.height / Tile::TileSize) + 1 + offsetY;
 		if (m_dynamicPolygons[k]->getVelocity().x < 0)

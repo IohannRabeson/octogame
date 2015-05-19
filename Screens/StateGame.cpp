@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:29:33 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/15 15:09:09 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/05/19 11:15:05 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	StateGame::start()
 {
 	//octo::Application::getCamera().setZoom(0.75);
 	//octo::Application::getCamera().move(-310, -200);
-	m_mapManager.init(Map::e_map_instance);
+	m_mapManager.init();
 
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	m_back.setSize(sf::Vector2f(2000, 1300));

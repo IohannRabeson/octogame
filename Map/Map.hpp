@@ -51,11 +51,10 @@ public:
 
 	typedef octo::Array2D<Tile*> TileMap;
 
-	Map(std::size_t pn_width, std::size_t pn_height);
+	Map(void);
 	virtual ~Map(void);
 
 	sf::Vertex * getHeight(int x);
-	int getOffsetXDecor(int p_decorOffsetX) const;
 
 	inline std::size_t getColumns(void) const { return m_tiles.columns(); }
 	inline std::size_t getRows(void) const { return m_tiles.rows(); }
@@ -65,12 +64,10 @@ public:
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
 	inline Decors & getDecors(void) { return m_decors; }
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
-	inline void setOffset(int p_offsetX, int p_offsetY) { mn_offsetX = p_offsetX; mn_offsetY = p_offsetY; }
+	inline void setOffset(sf::Vector2f const & offset) { m_offset = offset; }
 
 	void init(Biome * p_biome);
 	void computeDecor(void);
-	void addOffsetX(int p_offsetX);
-	void addOffsetY(int p_offsetY);
 
 	virtual void swapDepth(void);
 	virtual void registerDepth(void);
@@ -86,7 +83,9 @@ protected:
 	std::size_t		mn_totalWidth;
 	int			mn_offsetX;
 	int			mn_offsetY;
-	int			mn_colorOffsetX;
+	std::size_t		m_width;
+	std::size_t		m_height;
+	sf::Vector2f		m_offset;
 
 	virtual void initBiome(void) = 0;
 	// first and second curve must return a value between -1 and 1
@@ -95,9 +94,6 @@ protected:
 	virtual void setColor(Tile & p_tile) = 0;
 
 private:
-	Map(void) = delete;
-	void initQuad(int x, int y);
-
 	static constexpr std::size_t MaxDecor = 200u;
 
 	Tile						m_reserveTile[MaxDecor];

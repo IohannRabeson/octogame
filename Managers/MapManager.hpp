@@ -13,7 +13,7 @@ public:
 	MapManager(void);
 	virtual ~MapManager(void);
 
-	void init(Map::EMapType p_mapType);
+	void init(void);
 	void update(float pf_deltatime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 

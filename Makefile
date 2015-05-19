@@ -29,9 +29,7 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
 				Firefly/FireflyPositionBehaviors.cpp
 
-SRC_MAP =		Map/FactoryMap.cpp						\
-				Map/Map.cpp								\
-				Map/MapClassic.cpp						\
+SRC_MAP =			Map/Map.cpp								\
 				Map/MapHigh.cpp							\
 				Map/MapInstance.cpp
 

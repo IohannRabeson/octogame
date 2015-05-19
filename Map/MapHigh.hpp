@@ -6,7 +6,7 @@
 class MapHigh : public Map
 {
 public:
-	MapHigh(unsigned int pn_width, unsigned int pn_height);
+	MapHigh(void);
 	virtual ~MapHigh(void);
 
 	virtual void nextStep(void);
@@ -17,9 +17,6 @@ protected:
 	virtual float firstCurve(float * vec);
 	virtual float secondCurve(float * vec);
 	virtual void setColor(Tile & p_tile);
-
-private:
-	MapHigh(void) = delete;
 
 };
 
