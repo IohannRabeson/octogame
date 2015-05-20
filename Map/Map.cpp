@@ -146,48 +146,64 @@ void Map::registerDepth(void)
 
 void Map::addOffsetX(int p_offsetX)
 {
-	mn_offsetX += p_offsetX;
-	if (mn_offsetX < 0)
-		mn_offsetX += mn_totalWidth;
-	else if (mn_offsetX >= static_cast<int>(mn_totalWidth))
-		mn_offsetX -= mn_totalWidth;
-
+	//TODO: change this
+	Tile *	m_tmp[500];
 	if (p_offsetX > 0)
 	{
+		for (std::size_t y = 0; y < m_tiles.rows(); y++)
+			m_tmp[y] = m_tiles(0, y);
 		for (std::size_t x = 0; x < m_tiles.columns() - 1; x++)
 		{
 			for (std::size_t y = 0; y < m_tiles.rows(); y++)
-				m_tiles(x, y)->copy(*m_tiles(x + 1, y), -Tile::TileSize, 0.f);
+				m_tiles(x, y) = m_tiles(x + 1, y);
 		}
+		for (std::size_t y = 0; y < m_tiles.rows(); y++)
+			m_tiles(m_tiles.columns() - 1, y) = m_tmp[y];
+		computeMapRange(m_tiles.columns() - 1, m_tiles.columns(), 0, m_tiles.rows());
 	}
 	else if (p_offsetX < 0)
 	{
+		for (std::size_t y = 0; y < m_tiles.rows(); y++)
+			m_tmp[y] = m_tiles(m_tiles.columns() - 1, y);
 		for (std::size_t x = m_tiles.columns() - 1; x > 0; x--)
 		{
 			for (std::size_t y = 0; y < m_tiles.rows(); y++)
-				m_tiles(x, y)->copy(*m_tiles(x - 1, y), Tile::TileSize, 0.f);
+				m_tiles(x, y) = m_tiles(x - 1, y);
 		}
+		for (std::size_t y = 0; y < m_tiles.rows(); y++)
+			m_tiles(0, y) = m_tmp[y];
+		computeMapRange(0, 1, 0, m_tiles.rows());
 	}
 }
 
 void Map::addOffsetY(int p_offsetY)
 {
-	mn_offsetY += p_offsetY;
-
+	//TODO: change this
+	Tile *	m_tmp[500];
 	if (p_offsetY > 0)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+			m_tmp[x] = m_tiles(x, 0);
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 		{
 			for (std::size_t y = 0; y < m_tiles.rows() - 1; y++)
-				m_tiles(x, y)->copy(*m_tiles(x, y + 1), 0.f, -Tile::TileSize);
+				m_tiles(x, y) = m_tiles(x, y + 1);
 		}
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+			m_tiles(x, m_tiles.rows() - 1) = m_tmp[x];
+		computeMapRange(0, m_tiles.columns(), m_tiles.rows() - 1, m_tiles.rows());
 	}
 	else if (p_offsetY < 0)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+			m_tmp[x] = m_tiles(x, m_tiles.rows() - 1);
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 		{
 			for (std::size_t y = m_tiles.rows() - 1; y > 0; y--)
-				m_tiles(x, y)->copy(*m_tiles(x, y - 1), 0.f, Tile::TileSize);
+				m_tiles(x, y) = m_tiles(x, y - 1);
 		}
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+			m_tiles(x, 0) = m_tmp[x];
+		computeMapRange(0, m_tiles.columns(), 0, 1);
 	}
 }

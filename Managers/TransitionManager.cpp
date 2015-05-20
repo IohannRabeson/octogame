@@ -9,8 +9,8 @@ TransitionManager::TransitionManager(void) :
 	m_tilesPrev(nullptr),
 	mf_transitionTimer(1.f),
 	mf_transitionTimerMax(0.4f),
-	m_offsetX(0),
-	m_offsetY(0),
+	mf_offsetX(0.f),
+	mf_offsetY(0.f),
 	m_offset(),
 	m_vertices(nullptr),
 	mn_verticesCount(0u)
@@ -228,9 +228,10 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 void TransitionManager::updateOffset(float)
 {
 	//float speed = speedbysecond * pf_deltatime;
+	static sf::Vector2f old = m_offset;
 	// TODO: compute border when we move
 	// TODO: use getter for tiles instead of setter to avoid copy
-	if (m_offsetX != static_cast<int>(m_offset.x) || m_offsetY != static_cast<int>(m_offset.y))
+/*	if (m_offsetX != static_cast<int>(m_offset.x) || m_offsetY != static_cast<int>(m_offset.y))
 	{
 		m_offsetX = static_cast<int>(m_offset.x);
 		m_offsetY = static_cast<int>(m_offset.y);
@@ -238,6 +239,47 @@ void TransitionManager::updateOffset(float)
 		m_tiles->computeMap();
 		m_tilesPrev->computeMap();
 		defineTransition();
+		m_tilesPrev->swapDepth();
+	}
+*/
+	mf_offsetX += old.x - m_offset.x;
+	mf_offsetY += old.y - m_offset.y;
+	old = m_offset;
+
+	if (mf_offsetX >= Tile::TileSize)
+	{
+		mf_offsetX -= Tile::TileSize;
+		m_tilesPrev->swapDepth();
+		m_tiles->addOffsetX(-1);
+		m_tilesPrev->addOffsetX(-1);
+		defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows());
+		m_tilesPrev->swapDepth();
+	}
+	else if (mf_offsetX <= -Tile::TileSize)
+	{
+		mf_offsetX += Tile::TileSize;
+		m_tilesPrev->swapDepth();
+		m_tiles->addOffsetX(1);
+		m_tilesPrev->addOffsetX(1);
+		defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows());
+		m_tilesPrev->swapDepth();
+	}
+	if (mf_offsetY >= Tile::TileSize)
+	{
+		mf_offsetY -= Tile::TileSize;
+		m_tilesPrev->swapDepth();
+		m_tiles->addOffsetY(-1);
+		m_tilesPrev->addOffsetY(-1);
+		defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+		m_tilesPrev->swapDepth();
+	}
+	else if (mf_offsetY <= -Tile::TileSize)
+	{
+		mf_offsetY += Tile::TileSize;
+		m_tilesPrev->swapDepth();
+		m_tiles->addOffsetY(1);
+		m_tilesPrev->addOffsetY(1);
+		defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
 		m_tilesPrev->swapDepth();
 	}
 }
