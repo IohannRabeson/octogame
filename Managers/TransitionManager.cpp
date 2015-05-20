@@ -97,10 +97,10 @@ void TransitionManager::setTransitionFull(Map * tiles, int x, int y)
 	ver[2] = m_baseValue.get(x, y * 4u + 2u);
 	ver[3] = m_baseValue.get(x, y * 4u + 3u);*/
 	//TODO:optimize
-	ver[0] = sf::Vector2f(m_offset.x + x * Tile::TileSize, m_offset.y + y * Tile::TileSize);
-	ver[1] = sf::Vector2f(m_offset.x + x * Tile::TileSize + Tile::TileSize, m_offset.y + y * Tile::TileSize);
-	ver[2] = sf::Vector2f(m_offset.x + x * Tile::TileSize + Tile::TileSize, m_offset.y + y * Tile::TileSize + Tile::TileSize);
-	ver[3] = sf::Vector2f(m_offset.x + x * Tile::TileSize, m_offset.y + y * Tile::TileSize + Tile::TileSize);
+	ver[0] = sf::Vector2f(static_cast<int>(m_offset.x) + x * Tile::TileSize, static_cast<int>(m_offset.y) + y * Tile::TileSize);
+	ver[1] = sf::Vector2f(static_cast<int>(m_offset.x) + x * Tile::TileSize + Tile::TileSize, static_cast<int>(m_offset.y) + y * Tile::TileSize);
+	ver[2] = sf::Vector2f(static_cast<int>(m_offset.x) + x * Tile::TileSize + Tile::TileSize, static_cast<int>(m_offset.y) + y * Tile::TileSize + Tile::TileSize);
+	ver[3] = sf::Vector2f(static_cast<int>(m_offset.x) + x * Tile::TileSize, static_cast<int>(m_offset.y) + y * Tile::TileSize + Tile::TileSize);
 }
 
 void TransitionManager::defineTransition(int x, int y)
@@ -182,6 +182,7 @@ void lerpColor(sf::Color & p_result, sf::Color & p_start, sf::Color & p_end, flo
 	p_result.b = p_start.b * (1.f - p_transition) + p_end.b * p_transition;
 }
 
+#include <iostream>
 void TransitionManager::updateTransition(float pf_deltatime)
 {
 	if (mf_transitionTimer > mf_transitionTimerMax)
@@ -198,6 +199,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_none)
 				continue;
+			//std::cout << m_tilesPrev->get(x, y).m_startTransition[0u].x << " " <<  m_tiles->get(x, y).m_startTransition[0u].x << std::endl;
 			lerp(m_vertices[mn_verticesCount].position, m_tilesPrev->get(x, y).m_startTransition[0u], m_tiles->get(x, y).m_startTransition[0u], transition);
 			lerp(m_vertices[mn_verticesCount + 1u].position, m_tilesPrev->get(x, y).m_startTransition[2u], m_tiles->get(x, y).m_startTransition[2u], transition);
 			lerp(m_vertices[mn_verticesCount + 2u].position, m_tilesPrev->get(x, y).m_startTransition[3u], m_tiles->get(x, y).m_startTransition[3u], transition);
@@ -206,6 +208,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 			m_vertices[mn_verticesCount + 5u].position = m_vertices[mn_verticesCount + 1u].position;
 			for (std::size_t i = 0; i < 6u; i++)
 				lerpColor(m_vertices[mn_verticesCount + i].color, m_tilesPrev->get(x, y).m_startColor, m_tiles->get(x, y).m_startColor, transition);
+			//std::cout << m_vertices[mn_verticesCount].position.x << std::endl;
 			mn_verticesCount += 6u;
 		}
 	}
@@ -251,26 +254,20 @@ void TransitionManager::updateOffset(float)
 	m_offsetY += old.y - m_offset.y;
 	old = m_offset;
 	// TODO: compute border when we move
-	//TODO: use getter for tiles instead of setter to avoid copy
-
+	// TODO: use getter for tiles instead of setter to avoid copy
 	if (m_offsetX >= 16.f)
 	{
 		m_offsetX -= 16.f;
 		m_tilesPrev->swapDepth();
-		//m_tiles->addOffsetX(-1);
-		//m_tilesPrev->addOffsetX(-1);
 		m_tiles->computeMap();
 		m_tilesPrev->computeMap();
 		defineTransition();
-		swapMap();
 		m_tilesPrev->swapDepth();
 	}
 	else if (m_offsetX <= -16.f)
 	{
 		m_offsetX += 16.f;
 		m_tilesPrev->swapDepth();
-		//m_tiles->addOffsetX(1);
-		//m_tilesPrev->addOffsetX(1);
 		m_tiles->computeMap();
 		m_tilesPrev->computeMap();
 		defineTransition();
@@ -280,8 +277,6 @@ void TransitionManager::updateOffset(float)
 	{
 		m_offsetY -= 16.f;
 		m_tilesPrev->swapDepth();
-		//m_tiles->addOffsetY(-1);
-		//m_tilesPrev->addOffsetY(-1);
 		m_tiles->computeMap();
 		m_tilesPrev->computeMap();
 		defineTransition();
@@ -291,8 +286,6 @@ void TransitionManager::updateOffset(float)
 	{
 		m_offsetY += 16.f;
 		m_tilesPrev->swapDepth();
-		//m_tiles->addOffsetY(1);
-		//m_tilesPrev->addOffsetY(1);
 		m_tiles->computeMap();
 		m_tilesPrev->computeMap();
 		defineTransition();

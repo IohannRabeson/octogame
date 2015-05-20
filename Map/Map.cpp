@@ -61,14 +61,13 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 	int offsetY;
 	int offsetPosX;
 	float v;
-	// Init perlin value
 	for (int x = p_startX; x < p_endX; x++)
 	{
 		offset = x + static_cast<int>(m_offset.x / Tile::TileSize);
 		offsetPosX = offset;
 		while (offset < 0)
 			offset += m_biome->mn_width;
-		while (static_cast<std::size_t>(offset) >= m_biome->mn_width)
+		while (offset >= static_cast<int>(m_biome->mn_width))
 			offset -= m_biome->mn_width;
 		vec[0] = static_cast<float>(offset);
 		vec[1] = mf_depth;
@@ -78,7 +77,7 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 		height = static_cast<int>(v);
 		for (int y = p_startY; y < p_endY; y++)
 		{
-			offsetY = y + m_offset.y / Tile::TileSize;
+			offsetY = y + static_cast<int>(m_offset.y / Tile::TileSize);
 			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize);
 			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize);
 			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
