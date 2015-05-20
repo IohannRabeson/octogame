@@ -7,40 +7,11 @@ Tile::Tile(void) :
 	me_transition(e_transition_none),
 	mp_upLeft(nullptr),
 	m_startColor(sf::Color::White)
-{
-}
+{}
 
 Tile::~Tile(void) {}
 
-bool Tile::isEmpty(void)
-{
-	return mb_isEmpty;
-}
-
-void Tile::lightCopy(Tile const & p_tile)
-{
-	mb_isEmpty = p_tile.mb_isEmpty;
-}
-
-void Tile::setUpLeft(sf::Vertex * vertex)
-{
-	m_recompute = true;
-	mp_upLeft = vertex;
-}
-
-void Tile::copy(Tile const & p_tile, float p_offsetX, float p_offsetY)
-{
-	mf_noiseValue = p_tile.mf_noiseValue;
-	mb_isEmpty = p_tile.mb_isEmpty;
-	me_transition = p_tile.me_transition;
-	m_startColor = p_tile.m_startColor;
-	for (int i = 0; i < 4; i++)
-	{
-		m_startTransition[i].x = p_tile.m_startTransition[i].x + p_offsetX;
-		m_startTransition[i].y = p_tile.m_startTransition[i].y + p_offsetY;
-	}
-}
-
+//TODO: optimize
 int getIndex(int i)
 {
 	if (i == 1)

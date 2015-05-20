@@ -29,8 +29,8 @@ Map::~Map(void)
 void Map::init(Biome * p_biome)
 {
 	m_biome = p_biome;
-	m_width = octo::Application::getGraphicsManager().getVideoMode().width / Tile::TileSize + 3u;
-	m_height  = octo::Application::getGraphicsManager().getVideoMode().height / Tile::TileSize + 5u;
+	m_width = octo::Application::getGraphicsManager().getVideoMode().width / Tile::TileSize + 4u;
+	m_height  = octo::Application::getGraphicsManager().getVideoMode().height / Tile::TileSize + 4u;
 	std::cout << octo::Application::getGraphicsManager().getVideoMode().width << std::endl;
 	std::cout << octo::Application::getGraphicsManager().getVideoMode().height << std::endl;
 	//m_width = 1920 / Tile::TileSize + 3u;
@@ -38,7 +38,7 @@ void Map::init(Biome * p_biome)
 
 	initBiome();
 
-	m_tiles.resize(m_width, m_height, nullptr);
+	m_tiles.resize(m_width - 20, m_height - 20, nullptr);
 
 	for (std::size_t x = 0; x < m_tiles.columns(); x++)
 	{
@@ -63,7 +63,7 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 	float v;
 	for (int x = p_startX; x < p_endX; x++)
 	{
-		offset = x + static_cast<int>(m_offset.x / Tile::TileSize);
+		offset = x + static_cast<int>(m_offset.x / Tile::TileSize) + 2u;
 		offsetPosX = offset;
 		while (offset < 0)
 			offset += m_biome->mn_width;
@@ -77,7 +77,7 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 		height = static_cast<int>(v);
 		for (int y = p_startY; y < p_endY; y++)
 		{
-			offsetY = y + static_cast<int>(m_offset.y / Tile::TileSize);
+			offsetY = y + static_cast<int>(m_offset.y / Tile::TileSize) + 2u;
 			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize);
 			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize);
 			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
@@ -184,9 +184,9 @@ void Map::addOffsetY(int p_offsetY)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tmp[x] = m_tiles(x, 0);
-		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+		for (std::size_t y = 0; y < m_tiles.rows() - 1; y++)
 		{
-			for (std::size_t y = 0; y < m_tiles.rows() - 1; y++)
+			for (std::size_t x = 0; x < m_tiles.columns(); x++)
 				m_tiles(x, y) = m_tiles(x, y + 1);
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
@@ -197,9 +197,9 @@ void Map::addOffsetY(int p_offsetY)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tmp[x] = m_tiles(x, m_tiles.rows() - 1);
-		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+		for (std::size_t y = m_tiles.rows() - 1; y > 0; y--)
 		{
-			for (std::size_t y = m_tiles.rows() - 1; y > 0; y--)
+			for (std::size_t x = 0; x < m_tiles.columns(); x++)
 				m_tiles(x, y) = m_tiles(x, y - 1);
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)

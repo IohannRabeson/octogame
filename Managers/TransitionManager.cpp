@@ -120,7 +120,10 @@ void TransitionManager::defineTransitionRange(int p_startX, int p_endX, int p_st
 		for (int y = p_startY; y < p_endY; y++)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_appear)
+			{
 				setTransitionAppear(x, y);
+				m_tiles->get(x, y).m_startColor = sf::Color::Red;
+			}
 		}
 	}
 	for (int x = p_startX; x < p_endX; x++)
@@ -128,7 +131,10 @@ void TransitionManager::defineTransitionRange(int p_startX, int p_endX, int p_st
 		for (int y = p_startY; y < p_endY; y++)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_already)
+			{
 				setTransitionModify(x, y);
+				m_tiles->get(x, y).m_startColor = sf::Color::Black;
+			}
 		}
 	}
 	for (int x = p_startX; x < p_endX; x++)
@@ -136,7 +142,10 @@ void TransitionManager::defineTransitionRange(int p_startX, int p_endX, int p_st
 		for (int y = p_startY; y < p_endY; y++)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_disappear)
+			{
 				setTransitionDisappear(x, y);
+				m_tiles->get(x, y).m_startColor = sf::Color::Blue;
+			}
 		}
 	}
 }
@@ -209,7 +218,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 
 void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY)
 {
-	for (int x = p_startX; x < p_endX; x++)
+	/*for (int x = p_startX; x < p_endX; x++)
 	{
 		for (int y = p_startY; y < p_endY; y++)
 		{
@@ -221,27 +230,14 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 					m_tilesPrev->get(x, y).m_startTransition[1].y += Tile::TileSize;
 			}
 		}
-	}
+	}*/
 	defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
 }
 
 void TransitionManager::updateOffset(float)
 {
-	//float speed = speedbysecond * pf_deltatime;
 	static sf::Vector2f old = m_offset;
-	// TODO: compute border when we move
-	// TODO: use getter for tiles instead of setter to avoid copy
-/*	if (m_offsetX != static_cast<int>(m_offset.x) || m_offsetY != static_cast<int>(m_offset.y))
-	{
-		m_offsetX = static_cast<int>(m_offset.x);
-		m_offsetY = static_cast<int>(m_offset.y);
-		m_tilesPrev->swapDepth();
-		m_tiles->computeMap();
-		m_tilesPrev->computeMap();
-		defineTransition();
-		m_tilesPrev->swapDepth();
-	}
-*/
+
 	mf_offsetX += old.x - m_offset.x;
 	mf_offsetY += old.y - m_offset.y;
 	old = m_offset;
@@ -289,6 +285,7 @@ void TransitionManager::update(float pf_deltatime)
 	bool compute = false;
 	mf_transitionTimer += pf_deltatime;
 
+	// TODO: use getter for tiles instead of setter to avoid copy
 	m_offset = m_mapManager->getCameraManager().getUpLeft();
 	m_tiles->setOffset(m_offset);
 	m_tilesPrev->setOffset(m_offset);

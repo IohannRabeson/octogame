@@ -26,12 +26,10 @@ public:
 	sf::Color		m_startColor;
 
 	Tile(void);
-	~Tile(void);
+	virtual ~Tile(void);
 
-	bool isEmpty(void);
-	void copy(Tile const & p_tile, float p_offsetX, float p_offsetY);
-	void lightCopy(Tile const & p_tile);
-	void setUpLeft(sf::Vertex * vertex);
+	inline bool isEmpty(void) { return mb_isEmpty; }
+	inline void setUpLeft(sf::Vertex * vertex) { m_recompute = true; mp_upLeft = vertex; }
 
 	virtual sf::Vector2f const & getVertex(std::size_t index) const;
 
