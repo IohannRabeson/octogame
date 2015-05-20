@@ -68,7 +68,7 @@ void Star::randomDecor(void)
 	mn_maxTriangle = 6;
 	mf_liveTime = 0.01;
 
-	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u]);
+	allocateVertex(mn_maxTriangle * 3u);
 
 	m_size = sf::Vector2f(randomRange(m_biome->m_star.mn_minSizeX, m_biome->m_star.mn_maxSizeX), randomRange(m_biome->m_star.mn_minSizeY, m_biome->m_star.mn_maxSizeY));
 	m_sizeHeart = sf::Vector2f(m_size.x / 50.f, m_size.x / 50.f);

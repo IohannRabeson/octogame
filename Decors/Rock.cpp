@@ -81,7 +81,7 @@ void Rock::randomDecor(void)
 	// Init containers
 	mn_countRock = randomRange(m_biome->m_rock.mn_minElement, m_biome->m_rock.mn_maxElement);
 	mn_maxTriangle = (10 * mn_countRock + 1) * 2; // +1 for root triangle
-	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u]);
+	allocateVertex(mn_maxTriangle * 3u);
 	mn_countTriangle = 0u;
 
 	m_refSize.resize(mn_countRock);

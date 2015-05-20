@@ -35,6 +35,7 @@ struct Biome
 	DecorValues			m_rock;
 	DecorValues			m_star;
 	DecorValues			m_sun;
+	DecorValues			m_cloud;
 };
 
 class Map

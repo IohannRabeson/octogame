@@ -107,7 +107,7 @@ void Crystal::randomDecor(void)
 	mn_countCrystal = randomRange(m_biome->m_crystal.mn_minElement, m_biome->m_crystal.mn_maxElement);
 	mn_maxTriangle = 8 * mn_countCrystal;
 
-	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u]);
+	allocateVertex(mn_maxTriangle * 3u);
 	m_refAngle.resize(mn_countCrystal);
 	m_refSize.resize(mn_countCrystal);
 	m_refColor.resize(mn_countCrystal);

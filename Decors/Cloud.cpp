@@ -87,6 +87,7 @@ void Cloud::createCloud(void)
 void Cloud::randomDecor(void)
 {
 	Decor::randomDecor();
+	mf_liveTime = randomRange(m_biome->m_tree.mn_minLive, m_biome->m_tree.mn_maxLive);
 	m_color = sf::Color(230.f, 230.f, 230.f);
 	m_color.a = randomRange(100, 220);
 	m_size = sf::Vector2f(randomRange(m_biome->m_cloud.mn_minSizeX, m_biome->m_cloud.mn_maxSizeX), randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY));

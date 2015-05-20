@@ -42,11 +42,11 @@ void Sun::createSun(void)
 	sf::Color transparency(m_color.r, m_color.g, m_color.b, 10);
 	for (int i = m_biome->m_sun.mn_nb; i > 0; i--)
 	{
-		float coef = 1.f + i / 5.f;
-		createOneSun(sf::Vector2f(m_size.x * coef * mf_mouvement, m_size.y * coef * mf_mouvement), sf::Vector2f(sizeCorner.x * coef * mf_mouvement, sizeCorner.y * coef * mf_mouvement), m_origin, transparency);
-		transparency.a = 110 - i * 10;
+		transparency.a = 140 - i * 10;
+		float coef = (1.f + i / 5.f) * mf_mouvement;
+		createOneSun(m_size * coef, sizeCorner * coef, m_origin, transparency);
 	}
-	createOneSun(sf::Vector2f(m_size.x * mf_mouvement, m_size.y * mf_mouvement), sf::Vector2f(sizeCorner.x * mf_mouvement, sizeCorner.y * mf_mouvement), m_origin, m_color);
+	createOneSun(m_size * mf_mouvement, sizeCorner * mf_mouvement, m_origin, transparency);
 }
 
 void Sun::randomDecor(void)
@@ -58,7 +58,7 @@ void Sun::randomDecor(void)
 
 	// Init containers
 	mn_maxTriangle = 10 * (m_biome->m_sun.mn_nb + 1);
-	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u]);
+	allocateVertex(mn_maxTriangle * 3u);
 	mn_countTriangle = 0u;
 
 	mf_mouvement = 0.00f;

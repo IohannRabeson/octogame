@@ -5,6 +5,7 @@
 #include "Rock.hpp"
 #include "Star.hpp"
 #include "Sun.hpp"
+#include "Cloud.hpp"
 
 #include <iostream>
 
@@ -25,39 +26,50 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 
 	// Init decors
 	float x;
-	int max = m_biome->mn_width;
-	int min = 0;
 	int i = 0;
 	m_decors.push_back(new Sun());
-	m_decors[i]->init(p_biome);
-	i++;
-	while (i < m_biome->m_rock.mn_nb)
+	m_decors[i++]->init(p_biome);
+
+	int total = 0;
+	total += m_biome->m_cloud.mn_nb;
+	while (i < total)
 	{
-		m_decors.push_back(new Rock());
-		m_decors[i]->init(p_biome);
-		x = random() % m_biome->mn_width;
-		m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
+		m_decors.push_back(new Cloud());
+		m_decors[i++]->init(p_biome);
+	}
+	total += m_biome->m_rock.mn_nb;
+	while (i < total)
+	{
+			m_decors.push_back(new Rock());
+			m_decors[i]->init(p_biome);
+			x = random() % m_biome->mn_width;
+			m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
 		i++;
 	}
-	while (i < m_biome->m_tree.mn_nb + m_biome->m_rock.mn_nb)
+	total += m_biome->m_tree.mn_nb;
+	while (i < total)
 	{
-		m_decors.push_back(new Tree());
-		m_decors[i]->init(p_biome);
-		x = static_cast<float>(random() % (max - min) + min);
-		m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
-		max -= m_biome->mn_width / m_biome->mn_nbDecor / 2.0f;
-		min += m_biome->mn_width / m_biome->mn_nbDecor / 2.0f;
+			m_decors.push_back(new Tree());
+			m_decors[i]->init(p_biome);
+			x = random() % m_biome->mn_width;
+			m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
 		i++;
 	}
-	while (i < m_biome->m_crystal.mn_nb + m_biome->m_tree.mn_nb + m_biome->m_rock.mn_nb)
+	total += m_biome->m_crystal.mn_nb;
+	while (i < total)
 	{
-		m_decors.push_back(new Crystal());
-		m_decors[i]->init(p_biome);
-		x = random() % m_biome->mn_width;
-		m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
+			m_decors.push_back(new Crystal());
+			m_decors[i]->init(p_biome);
+			x = random() % m_biome->mn_width;
+			m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
 		i++;
 	}
-	//m_decors[i]->setPosition(sf::Vector2f(x, m_mapManager->getTransitionManager().getHeight(x)->position.y));
+	total += m_biome->m_cloud.mn_nb;
+	while (i < total)
+	{
+		m_decors.push_back(new Cloud());
+		m_decors[i++]->init(p_biome);
+	}
 	setPosition();
 	m_mapManager->getTransitionManager().computeDecor();
 }
@@ -78,7 +90,7 @@ void DecorManager::update(float pf_deltatime)
 		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1900 + delta)
 			m_decors[i]->update(pf_deltatime);
 		else
-			m_decors[i]->updateOrigin();
+			m_decors[i]->updateOrigin(pf_deltatime);
 	}
 }
 

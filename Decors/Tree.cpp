@@ -13,7 +13,7 @@ Tree::Tree(void) :
 	mn_maxTriangle = mn_maxRectangle * 3;
 	mn_maxLeaf = pow(2, DEPTH - 1) - 1;
 
-	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u + mn_maxLeaf * 6u]);
+	allocateVertex(mn_maxTriangle * 3u + mn_maxLeaf * 6u);
 	m_refAngle.resize(mn_maxRectangle);
 }
 

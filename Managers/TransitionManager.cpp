@@ -265,9 +265,11 @@ void TransitionManager::updateTransition(float pf_deltatime)
 			m_vertices[index + 3] = m_vertices[index];
 			m_vertices[index + 4] = p;
 			m_vertices[index + 5] = p2;
+			/*
 			m_vertices[index + 3].color.g += 25;
 			m_vertices[index + 4].color.g += 25;
 			m_vertices[index + 5].color.g += 25;
+			*/
 			mn_verticesCount += 2;
 		}
 	}

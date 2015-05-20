@@ -58,6 +58,16 @@ void MapInstance::initBiome(void)
 	m_biome->m_sun.mn_maxSizeX = 100;
 	m_biome->m_sun.mn_minSizeY = 70;
 	m_biome->m_sun.mn_maxSizeY = 100;
+
+	m_biome->m_cloud.mn_nb = 10;
+	m_biome->m_cloud.mn_minSizeX = 10;
+	m_biome->m_cloud.mn_maxSizeX = 20;
+	m_biome->m_cloud.mn_minSizeY = 150;
+	m_biome->m_cloud.mn_maxSizeY = 400;
+	m_biome->m_cloud.mn_minElement = 4;
+	m_biome->m_cloud.mn_maxElement = 15;
+	m_biome->m_tree.mn_minLive = 10;
+	m_biome->m_tree.mn_maxLive = 15;
 }
 
 #include <iostream>
