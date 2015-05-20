@@ -32,8 +32,8 @@ private:
 	Map *					m_tilesPrev;
 	float					mf_transitionTimer;
 	float					mf_transitionTimerMax;
-	float					m_offsetX;
-	float					m_offsetY;
+	int					m_offsetX;
+	int					m_offsetY;
 	sf::Vector2f				m_offset;
 	std::unique_ptr<sf::Vertex[]>		m_vertices;
 	std::size_t				mn_verticesCount;
@@ -46,7 +46,6 @@ private:
 	void setTransitionAppear(int x, int y);
 	void setTransitionDisappear(int x, int y);
 	void setTransitionModify(int x, int y);
-	void setTransitionFull(Map * tiles, int x, int y);
 
 	void swapMap(void);
 	void updateOffset(float pf_deltatime);
