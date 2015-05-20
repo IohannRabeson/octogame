@@ -18,6 +18,10 @@ public:
 	void randomDecor(void);
 
 	virtual void update(float pf_deltatime);
+
+private:
+	sf::Vector2f	m_sizeCorner;
+	sf::Color		m_transparency;
 };
 
 #endif

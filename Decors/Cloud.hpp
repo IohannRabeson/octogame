@@ -11,8 +11,8 @@ private:
 	int							mn_countCloud;
 	std::vector<sf::Vector2f>	m_refSize;
 	std::vector<sf::Vector2f>	m_refOrigin;
-	std::vector<float>			m_refSizeLeft;
-	std::vector<float>			m_refSizeRight;
+	std::vector<float>			m_refSizeUp;
+	std::vector<float>			m_refSizeDown;
 	std::vector<float>			m_refSizeRec;
 
 public:
@@ -21,7 +21,7 @@ public:
 
 	void init(Biome * p_biome);
 
-	void createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color, float p_sizeLeft, float p_sizeRight, float p_sizeRec);
+	void createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec);
 	void createCloud(void);
 	void randomDecor(void);
 

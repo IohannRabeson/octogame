@@ -38,38 +38,41 @@ void Sun::createOneSun(sf::Vector2f p_size, sf::Vector2f p_sizeCorner, sf::Vecto
 void Sun::createSun(void)
 {
 	mn_countTriangle = 0;
-	sf::Vector2f sizeCorner(m_size.x / 2.f, m_size.y / 2.f);
-	sf::Color transparency(m_color.r, m_color.g, m_color.b, 10);
+
+	m_transparency.a = 110 - (110 * mf_timer / mf_maxTimer);
+	float coef = mf_timer * mf_mouvement / 2.f;
+	createOneSun(m_size * coef, m_sizeCorner * coef, m_origin, m_transparency);
 	for (int i = m_biome->m_sun.mn_nb; i > 0; i--)
 	{
-		transparency.a = 140 - i * 10;
-		float coef = (1.f + i / 5.f) * mf_mouvement;
-		createOneSun(m_size * coef, sizeCorner * coef, m_origin, transparency);
+		m_transparency.a = 110 - i;
+		coef = (1.f + i / 4.f) * mf_mouvement;
+		createOneSun(m_size * coef, m_sizeCorner * coef, m_origin, m_transparency);
 	}
-	createOneSun(m_size * mf_mouvement, sizeCorner * mf_mouvement, m_origin, transparency);
+	createOneSun(m_size * mf_mouvement, m_sizeCorner * mf_mouvement, m_origin, m_transparency);
 }
 
 void Sun::randomDecor(void)
 {
 	Decor::randomDecor();
 	m_color = sf::Color(255, 255, 255);
-	m_size = sf::Vector2f(randomRange(m_biome->m_sun.mn_minSizeX, m_biome->m_sun.mn_maxSizeX), randomRange(m_biome->m_sun.mn_minSizeY, m_biome->m_sun.mn_maxSizeY));
+	float size = randomRange(m_biome->m_sun.mn_minSizeX, m_biome->m_sun.mn_maxSizeX);
+	m_size = sf::Vector2f(size, size);
 	m_origin = sf::Vector2f(150, 150);
+	m_sizeCorner = sf::Vector2f(m_size.x / 2.f, m_size.y / 2.f);
+	m_transparency = sf::Color(m_color.r, m_color.g, m_color.b);
 
 	// Init containers
-	mn_maxTriangle = 10 * (m_biome->m_sun.mn_nb + 1);
+	mn_maxTriangle = 10 * (m_biome->m_sun.mn_nb + 2);
 	allocateVertex(mn_maxTriangle * 3u);
-	mn_countTriangle = 0u;
 
 	mf_mouvement = 0.00f;
-
-	createSun();
 }
 
 void Sun::init(Biome * p_biome)
 {
 	Decor::init(p_biome);
 	randomDecor();
+	createSun();
 }
 
 void Sun::update(float pf_deltatime)

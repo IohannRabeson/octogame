@@ -41,6 +41,7 @@ protected:
 	sf::Color						m_color;
 	Biome							*m_biome;
 	float							mf_timer;
+	float							mf_maxTimer;
 	float							mf_dieTimer;
 	float							mf_liveTime;
 	float							mf_mouvement;

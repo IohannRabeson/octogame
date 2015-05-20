@@ -11,6 +11,7 @@ Decor::Decor(void) :
 	m_color(sf::Color(0, 0, 0)),
 	m_biome(nullptr),
 	mf_timer(0.f),
+	mf_maxTimer(4.f),
 	mf_dieTimer(0.f),
 	mf_liveTime(0.f),
 	mf_mouvement(0.f),
@@ -83,11 +84,11 @@ void Decor::computeStates(float pf_deltatime)
 		{
 			mf_timer += pf_deltatime;
 			mf_dieTimer += pf_deltatime;
-			if (mf_timer > 4.0f)
+			if (mf_timer > mf_maxTimer)
 				mf_timer = 0.0f;
 			if (mf_dieTimer >= mf_liveTime && mf_liveTime != 0.f)
 				me_currentState = e_state_die;
-			else if (mf_timer > 2.0f)
+			else if (mf_timer > mf_maxTimer / 2.f)
 				mf_mouvement += pf_deltatime / (20 + (mf_timer - 2.0f) * 10);
 			else
 				mf_mouvement -= pf_deltatime / (20 + mf_timer * 10);
