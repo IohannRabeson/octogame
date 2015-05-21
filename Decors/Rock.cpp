@@ -60,16 +60,18 @@ void Rock::createRock(void)
 		createOneRock(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement), m_refOrigin[i] + m_origin, m_color,
 						m_refSizeLeft[i], m_refSizeRight[i], m_refSizeRec[i] * mf_mouvement);
 	createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, m_color);
-	/*
-	sf::Color iceColor(5, 103, 155, 60);
-	if (me_currentState == e_state_sleep)
+
+	if (b_isIce == true)
 	{
-		for (int i = 0; i < mn_countRock; i++)
+		sf::Color iceColor(5, 103, 155, 60);
+		if (me_currentState == e_state_sleep)
+		{
+			for (int i = 0; i < mn_countRock; i++)
 			createOneRock(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement * 1.1f), m_refOrigin[i] + m_origin, iceColor,
 							m_refSizeLeft[i] * 1.2f, m_refSizeRight[i] * 1.2f, m_refSizeRec[i] * mf_mouvement * 1.2f);
-		createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, iceColor);
+			createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, iceColor);
+		}
 	}
-	*/
 }
 
 void Rock::randomDecor(void)

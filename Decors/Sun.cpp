@@ -2,7 +2,8 @@
 #include "Map.hpp"
 
 Sun::Sun() :
-	Decor()
+	Decor(),
+	mf_angle(0.f)
 {
 }
 
@@ -49,6 +50,7 @@ void Sun::createSun(void)
 		createOneSun(m_size * coef, m_sizeCorner * coef, m_origin, m_transparency);
 	}
 	createOneSun(m_size * mf_mouvement, m_sizeCorner * mf_mouvement, m_origin, m_transparency);
+	createLightness();
 }
 
 void Sun::randomDecor(void)
@@ -67,6 +69,39 @@ void Sun::randomDecor(void)
 	createSun();
 }
 
+void Sun::createLightness(void)
+{
+	if (mf_angle > 0.f && mf_angle < 180.f)
+	{
+		sf::Vector2f upLeft(0.f, 0.f);
+		sf::Vector2f upRight(1900.f, 0.f);
+		sf::Vector2f downLeft(0.f, 1080.f);
+		sf::Vector2f downRight(1900, 1080.f);
+		sf::Vector2f origin(0.f, 0.f);
+		sf::Color color(255, 128, 0);
+		if (mf_angle > 0.f && mf_angle < 90.f)
+			color.a = mf_angle;
+		else
+			color.a = 180.f - mf_angle;
+
+		createRectangle(upLeft, upRight, downRight, downLeft, origin, color);
+	}
+}
+
+
+void Sun::computeOrigin(float pf_deltatime)
+{
+	m_origin = sf::Vector2f(-1900 / 2.f, -1080 / 2.f);
+	mf_angle += pf_deltatime * 10;
+	if (mf_angle >= 360.f)
+		mf_angle = 0.f;
+	float cosA = cos(mf_angle * PI / 180.f);
+	float sinA = sin(mf_angle * PI / 180.f);
+	rotateVec(&m_origin, cosA, sinA);
+	m_origin.x += 1900 / 2.f;
+	m_origin.y += 1080;
+}
+
 void Sun::init(Biome * p_biome)
 {
 	Decor::init(p_biome);
@@ -78,5 +113,6 @@ void Sun::update(float pf_deltatime)
 {
 	Decor::update(pf_deltatime);
 
+	computeOrigin(pf_deltatime);
 	createSun();
 }

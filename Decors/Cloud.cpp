@@ -60,15 +60,13 @@ void Cloud::createCloud(void)
 	for (int i = 0; i < mn_countCloud; i++)
 		createOneCloud(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement), m_refOrigin[i] + m_origin, m_color,
 						m_refSizeUp[i] * mf_mouvement, m_refSizeDown[i] * mf_mouvement, m_refSizeRec[i] * mf_mouvement);
-	/*
-	sf::Color iceColor(5, 103, 155, 60);
-	if (me_currentState == e_state_sleep)
+	if (b_isIce == true)
 	{
+		sf::Color iceColor(5, 103, 155, 60);
 		for (int i = 0; i < mn_countCloud; i++)
 			createOneCloud(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement * 1.1f), m_refOrigin[i] + m_origin, iceColor,
 							m_refSizeUp[i] * 1.2f, m_refSizeDown[i] * 1.2f, m_refSizeRec[i] * mf_mouvement * 1.2f);
 	}
-	*/
 }
 
 void Cloud::randomDecor(void)
@@ -84,7 +82,7 @@ void Cloud::randomDecor(void)
 
 	// Allocate memory
 	mn_countCloud = randomRange(m_biome->m_cloud.mn_minElement, m_biome->m_cloud.mn_maxElement);
-	mn_maxTriangle = (14 * mn_countCloud); // +1 for root triangle
+	mn_maxTriangle = (14 * mn_countCloud) * 2; // +1 for root triangle
 	allocateVertex(mn_maxTriangle * 3u);
 	mn_countTriangle = 0u;
 
@@ -152,7 +150,9 @@ void Cloud::update(float pf_deltatime)
 {
 	Decor::update(pf_deltatime);
 
-	m_origin.x += pf_deltatime * 100.f;
+	if (b_isIce == false)
+		m_origin.x += pf_deltatime * 100.f;
+
 	if (m_origin.x >= 1900 + 500)
 	{
 		randomDecor();

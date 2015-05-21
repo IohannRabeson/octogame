@@ -6,6 +6,7 @@ Decor::Decor(void) :
 	GameObject(),
 	mn_countTriangle(0u),
 	mn_maxTriangle(0u),
+	b_isIce(false),
 	me_currentState(e_state_sleep),
 	m_size(50.f, 50.f),
 	m_color(sf::Color(0, 0, 0)),
@@ -136,6 +137,14 @@ void Decor::updateOrigin(float pf_deltatime)
 {
 	computeStates(pf_deltatime);
 	putOnMap();
+}
+
+void Decor::iceDecor(void)
+{
+	if (b_isIce == true)
+		b_isIce = false;
+	else if (b_isIce == false)
+		b_isIce = true;
 }
 
 void Decor::update(float pf_deltatime)

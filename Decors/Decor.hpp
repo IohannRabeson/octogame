@@ -19,6 +19,7 @@ public:
 	virtual void	update(float pf_deltatime);
 	virtual void	draw(sf::RenderTarget & p_target, sf::RenderStates p_states) const;
 	virtual void	randomDecor(void);
+	void			iceDecor(void);
 	float			getOriginX(void) const;
 	void			updateOrigin(float pf_deltatime);
 
@@ -36,6 +37,7 @@ protected:
 	std::unique_ptr<sf::Vertex[]>	m_triangle;
 	int								mn_countTriangle;
 	int								mn_maxTriangle;
+	bool							b_isIce;
 	EState							me_currentState;
 	sf::Vector2f					m_size;
 	sf::Color						m_color;

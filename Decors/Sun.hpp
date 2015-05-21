@@ -16,12 +16,16 @@ public:
 	void createOneSun(sf::Vector2f p_size, sf::Vector2f p_sizeCorner, sf::Vector2f p_origin, sf::Color p_color);
 	void createSun(void);
 	void randomDecor(void);
+	void createLightness(void);
+	void computeOrigin(float pf_deltatime);
 
 	virtual void update(float pf_deltatime);
 
 private:
 	sf::Vector2f	m_sizeCorner;
 	sf::Color		m_transparency;
+
+	float			mf_angle;
 };
 
 #endif

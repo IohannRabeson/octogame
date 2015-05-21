@@ -6,6 +6,7 @@
 #include "Star.hpp"
 #include "Sun.hpp"
 #include "Cloud.hpp"
+#include "Moon.hpp"
 
 #include <iostream>
 
@@ -29,6 +30,12 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 	int i = 0;
 	m_decors.push_back(new Sun());
 	m_decors[i++]->init(p_biome);
+
+	m_decors.push_back(new Moon());
+	m_decors[i++]->init(p_biome);
+
+	//m_decors.push_back(new Sun());
+	//m_decors[i++]->init(p_biome);
 
 	int total = 0;
 	total += m_biome->m_cloud.mn_nb;
@@ -111,6 +118,11 @@ bool DecorManager::onPressed (sf::Event::KeyEvent const &event)
 	{
 		for (size_t i = 0; i < m_decors.size(); i++)
 			m_decors[i]->randomDecor();
+	}
+	if (event.code == sf::Keyboard::O)
+	{
+		for (size_t i = 0; i < m_decors.size(); i++)
+			m_decors[i]->iceDecor();
 	}
 	return true;
 }
