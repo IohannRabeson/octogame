@@ -78,7 +78,7 @@ void TransitionManager::setTransitionDisappear(int x, int y)
 void TransitionManager::setTransitionModify(int x, int y)
 {
 	// define if it's a quad or a triangle
-	if (y - 1 >= 0 && m_tiles->get(x, y - 1).isEmpty())
+	if (y - 1 >= 0 && m_tiles->get(x, y - 1).isEmpty() && m_tiles->get(x, y).m_startTransition[0].y == m_tiles->get(x, y).m_startTransition[1].y)
 	{
 		if (x - 1 >= 0 && m_tiles->get(x - 1, y).isEmpty())
 			m_tiles->get(x, y).m_startTransition[0].y += Tile::TileSize;
@@ -133,7 +133,7 @@ void TransitionManager::defineTransitionRange(int p_startX, int p_endX, int p_st
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_already)
 			{
 				setTransitionModify(x, y);
-				m_tiles->get(x, y).m_startColor = sf::Color::Black;
+				m_tiles->get(x, y).m_startColor = sf::Color::Green;
 			}
 		}
 	}
@@ -241,6 +241,7 @@ void TransitionManager::updateOffset(float)
 	mf_offsetX += old.x - m_offset.x;
 	mf_offsetY += old.y - m_offset.y;
 	old = m_offset;
+	//std::cout << mf_offsetX << " " << mf_offsetY << std::endl;
 
 	if (mf_offsetX >= Tile::TileSize)
 	{
@@ -249,6 +250,17 @@ void TransitionManager::updateOffset(float)
 		m_tiles->addOffsetX(-1);
 		m_tilesPrev->addOffsetX(-1);
 		defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows());
+		/*for (std::size_t j = 0; j < m_tiles->getRows(); j++)
+		{
+			m_tilesPrev->get(0, j).m_startTransition[0].x = m_tiles->get(0, j).m_startTransition[0].x;
+			m_tilesPrev->get(0, j).m_startTransition[1].x = m_tiles->get(0, j).m_startTransition[1].x;
+			m_tilesPrev->get(0, j).m_startTransition[2].x = m_tiles->get(0, j).m_startTransition[2].x;
+			m_tilesPrev->get(0, j).m_startTransition[3].x = m_tiles->get(0, j).m_startTransition[3].x;
+		}*/
+		for (std::size_t i = 0; i < m_tiles->getRows(); i++)
+		{
+			m_tiles->get(0, i).m_startColor = sf::Color::White;
+		}
 		m_tilesPrev->swapDepth();
 	}
 	else if (mf_offsetX <= -Tile::TileSize)
@@ -258,6 +270,17 @@ void TransitionManager::updateOffset(float)
 		m_tiles->addOffsetX(1);
 		m_tilesPrev->addOffsetX(1);
 		defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows());
+		/*for (std::size_t j = 0; j < m_tiles->getRows(); j++)
+		{
+			m_tilesPrev->get(m_tiles->getColumns() - 1, j).m_startTransition[0].x -= Tile::TileSize;
+			m_tilesPrev->get(m_tiles->getColumns() - 1, j).m_startTransition[1].x -= Tile::TileSize;
+			m_tilesPrev->get(m_tiles->getColumns() - 1, j).m_startTransition[2].x -= Tile::TileSize;
+			m_tilesPrev->get(m_tiles->getColumns() - 1, j).m_startTransition[3].x -= Tile::TileSize;
+		}*/
+		for (std::size_t i = 0; i < m_tiles->getRows(); i++)
+		{
+			m_tiles->get(m_tiles->getColumns() - 1, i).m_startColor = sf::Color::White;
+		}
 		m_tilesPrev->swapDepth();
 	}
 	if (mf_offsetY >= Tile::TileSize)

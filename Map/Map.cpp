@@ -45,10 +45,6 @@ void Map::init(Biome * p_biome)
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 		{
 			m_tiles.get(x, y) = new Tile();
-			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[3] = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
 		}
 	}
 }
@@ -78,6 +74,8 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 		for (int y = p_startY; y < p_endY; y++)
 		{
 			offsetY = y + static_cast<int>(m_offset.y / Tile::TileSize) + 2u;
+			// TODO: optimize
+			// TODO: keep pointer to vector to avoid copy
 			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize);
 			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize);
 			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
@@ -91,7 +89,6 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 			vec[1] = static_cast<float>(offsetY);
 			vec[2] = mf_depth;
 			// secondCurve return a value between -1 & 1
-			// TODO: keep pointer to vector to avoid copy
 			m_tiles.get(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
 			m_tiles.get(x, y)->mb_isEmpty = false;
 			setColor(*m_tiles.get(x, y));
@@ -159,7 +156,7 @@ void Map::addOffsetX(int p_offsetX)
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tiles(m_tiles.columns() - 1, y) = m_tmp[y];
-		computeMapRange(m_tiles.columns() - 1, m_tiles.columns(), 0, m_tiles.rows());
+		computeMapRangeX(m_tiles.columns() - 1, m_tiles.columns());
 	}
 	else if (p_offsetX < 0)
 	{
@@ -172,7 +169,7 @@ void Map::addOffsetX(int p_offsetX)
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tiles(0, y) = m_tmp[y];
-		computeMapRange(0, 1, 0, m_tiles.rows());
+		computeMapRangeX(0, 1);
 	}
 }
 
@@ -191,7 +188,7 @@ void Map::addOffsetY(int p_offsetY)
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tiles(x, m_tiles.rows() - 1) = m_tmp[x];
-		computeMapRange(0, m_tiles.columns(), m_tiles.rows() - 1, m_tiles.rows());
+		computeMapRangeY(m_tiles.rows() - 1, m_tiles.rows());
 	}
 	else if (p_offsetY < 0)
 	{
@@ -204,6 +201,6 @@ void Map::addOffsetY(int p_offsetY)
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tiles(x, 0) = m_tmp[x];
-		computeMapRange(0, m_tiles.columns(), 0, 1);
+		computeMapRangeY(0, 1);
 	}
 }

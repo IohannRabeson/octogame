@@ -64,6 +64,8 @@ public:
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
 	inline Decors & getDecors(void) { return m_decors; }
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
+	inline void computeMapRangeX(int startX, int endX) { computeMapRange(startX, endX, 0, m_tiles.rows()); }
+	inline void computeMapRangeY(int startY, int endY) { computeMapRange(0, m_tiles.columns(), startY, endY); }
 	inline void setOffset(sf::Vector2f const & offset) { m_offset = offset; }
 	inline sf::Vector2f const & getOffset(void) const { return m_offset; }
 	void addOffsetX(int p_offsetX);
