@@ -32,11 +32,10 @@ private:
 	Map *					m_tilesPrev;
 	float					mf_transitionTimer;
 	float					mf_transitionTimerMax;
-	float					mf_offsetX;
-	float					mf_offsetY;
 	sf::Vector2f				m_offset;
 	std::unique_ptr<sf::Vertex[]>		m_vertices;
 	std::size_t				mn_verticesCount;
+	sf::Vector2<int>			m_oldOffset;
 
 	// Transition
 	void defineTransition(void);
