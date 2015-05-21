@@ -15,7 +15,7 @@ Cloud::~Cloud()
 	m_refSizeRec.clear();
 }
 
-void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec)
+void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color const & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec)
 {
 	sf::Vector2f upLeft(-p_size.x + p_sizeUp, -p_size.y - p_sizeUp);
 	sf::Vector2f upRight(p_size.x - p_sizeUp, -p_size.y - p_sizeUp);
@@ -36,20 +36,22 @@ void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color
 	sf::Vector2f recDown(downMidLeft.x + 4.f, downMidLeft.y);
 	sf::Vector2f secondRec(downLeft.x, downLeft.y - 4.f);
 
-	(void)p_sizeRec;
+	// Corner up
 	createTriangle(upMidRight, cornerUpRight, upRight, p_origin, p_color);
-	sf::Color tmpColor = p_color;
-	createTriangle(upMidLeft, cornerUpLeft, upLeft, p_origin, tmpColor);
+	createTriangle(upMidLeft, cornerUpLeft, upLeft, p_origin, p_color);
 
+	// Fill with rectangle
 	createRectangle(upLeft, upRight, cornerUpRight, cornerUpLeft, p_origin, p_color);
 	createRectangle(upMidLeft, upMidRight, downMidRight, downMidLeft, p_origin, p_color);
 	createRectangle(downLeft, downRight, cornerDownRight, cornerDownLeft, p_origin, p_color);
 
+	// Corner down
 	createTriangle(downMidRight, cornerDownRight, downRight, p_origin, p_color);
 	createTriangle(downMidLeft, cornerDownLeft, downLeft, p_origin, p_color);
 
-	createRectangle(downMidLeft, recUpLeft, recUpRight, recDown, p_origin, tmpColor);
-	createRectangle(downMidLeft, recDown, secondRec, downLeft, p_origin, tmpColor);
+	// Details
+	createRectangle(downMidLeft, recUpLeft, recUpRight, recDown, p_origin, p_color);
+	createRectangle(downMidLeft, recDown, secondRec, downLeft, p_origin, p_color);
 }
 
 void Cloud::createCloud(void)
@@ -72,6 +74,7 @@ void Cloud::createCloud(void)
 void Cloud::randomDecor(void)
 {
 	Decor::randomDecor();
+	// Init values
 	mf_liveTime = randomRange(m_biome->m_tree.mn_minLive, m_biome->m_tree.mn_maxLive);
 	m_color = sf::Color(230.f, 230.f, 230.f);
 	m_color.a = randomRange(100, 220);
@@ -79,7 +82,7 @@ void Cloud::randomDecor(void)
 	m_origin.x = randomRange(0, 1900);
 	m_origin.y = randomRange(0, 500);
 
-	// Init containers
+	// Allocate memory
 	mn_countCloud = randomRange(m_biome->m_cloud.mn_minElement, m_biome->m_cloud.mn_maxElement);
 	mn_maxTriangle = (14 * mn_countCloud); // +1 for root triangle
 	allocateVertex(mn_maxTriangle * 3u);
@@ -91,8 +94,8 @@ void Cloud::randomDecor(void)
 	m_refSizeDown.resize(mn_countCloud);
 	m_refSizeRec.resize(mn_countCloud);
 
-	int i = 0;
 	// Compute left random values
+	int i = 0;
 	float totalY = 0;
 	sf::Vector2f size = m_size;
 	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
@@ -135,6 +138,7 @@ void Cloud::randomDecor(void)
 		}
 		i++;
 	}
+
 	createCloud();
 }
 

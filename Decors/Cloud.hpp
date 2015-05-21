@@ -21,7 +21,7 @@ public:
 
 	void init(Biome * p_biome);
 
-	void createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec);
+	void createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color const & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec);
 	void createCloud(void);
 	void randomDecor(void);
 

@@ -78,7 +78,7 @@ void Rock::randomDecor(void)
 	m_color = sf::Color(122.f, 108.f, 135.f);
 	m_size = sf::Vector2f(randomRange(m_biome->m_rock.mn_minSizeX, m_biome->m_rock.mn_maxSizeX), randomRange(m_biome->m_rock.mn_minSizeY, m_biome->m_rock.mn_maxSizeY));
 
-	// Init containers
+	// Allocate memory
 	mn_countRock = randomRange(m_biome->m_rock.mn_minElement, m_biome->m_rock.mn_maxElement);
 	mn_maxTriangle = (10 * mn_countRock + 1) * 2; // +1 for root triangle
 	allocateVertex(mn_maxTriangle * 3u);
@@ -93,8 +93,8 @@ void Rock::randomDecor(void)
 	m_left = sf::Vector2f(0.f, 0.f);
 	m_right = sf::Vector2f(0.f, 0.f);
 
-	int i = 0;
 	// Compute left random values
+	int i = 0;
 	float totalX = 0;
 	sf::Vector2f size = m_size;
 	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
@@ -137,7 +137,6 @@ void Rock::randomDecor(void)
 		}
 		i++;
 	}
-	mf_mouvement = 0.00f;
 
 	createRock();
 }

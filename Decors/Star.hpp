@@ -17,7 +17,6 @@ public:
 	void init(Biome * p_biome);
 
 	void createOneStar(sf::Vector2f p_size, sf::Vector2f p_sizeHeart, float p_angle, sf::Color p_color);
-	void createLight(sf::Vector2f p_size);
 	void randomDecor(void);
 	void setOrigin(sf::Vector2f p_origin);
 

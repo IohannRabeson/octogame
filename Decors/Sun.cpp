@@ -64,8 +64,7 @@ void Sun::randomDecor(void)
 	// Init containers
 	mn_maxTriangle = 10 * (m_biome->m_sun.mn_nb + 2);
 	allocateVertex(mn_maxTriangle * 3u);
-
-	mf_mouvement = 0.00f;
+	createSun();
 }
 
 void Sun::init(Biome * p_biome)
