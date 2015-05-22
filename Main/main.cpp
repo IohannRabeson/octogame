@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/10 19:16:49 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/23 01:43:13 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include "StateTest.hpp"
 #include "FireflyTestScreen.hpp"
 #include "PaletteDemoScreen.hpp"
+#include "SpriteSheetDemoScreen.hpp"
 #include "StateGame.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
@@ -28,6 +29,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<StateTest>("test");
 	manager.registerState<FireflyTestScreen>("firefly");
 	manager.registerState<PaletteDemoScreen>("colors");
+	manager.registerState<SpriteSheetDemoScreen>("sprite_sheet");
 	manager.registerState<StateGame>("game");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
