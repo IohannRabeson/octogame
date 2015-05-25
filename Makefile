@@ -24,6 +24,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/FireflyTestScreen.cpp			\
 				Screens/PaletteDemoScreen.cpp			\
 				Screens/SpriteSheetDemoScreen.cpp		\
+				Screens/AnimatedSpriteDemoScreen.cpp	\
 				Screens/StateGame.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
