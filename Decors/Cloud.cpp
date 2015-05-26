@@ -15,8 +15,10 @@ Cloud::~Cloud()
 	m_refSizeRec.clear();
 }
 
-void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color const & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec)
+void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec)
 {
+//	p_color.a *= mf_mouvement;
+
 	sf::Vector2f upLeft(-p_size.x + p_sizeUp, -p_size.y - p_sizeUp);
 	sf::Vector2f upRight(p_size.x - p_sizeUp, -p_size.y - p_sizeUp);
 	sf::Vector2f cornerUpLeft(-p_size.x + p_sizeUp, -p_size.y);
