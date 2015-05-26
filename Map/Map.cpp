@@ -173,6 +173,7 @@ void Map::addOffsetX(int p_offsetX)
 	}
 }
 
+// TODO: change this
 void Map::addOffsetY(int p_offsetY)
 {
 	//TODO: change this

@@ -58,8 +58,10 @@ void TransitionManager::setTransitionAppear(int x, int y)
 	int i = 0;
 	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).me_transition == Tile::e_transition_appear)
 		i++;
+	//TODO: use the getter once
 	for (std::size_t j = 0u; j < 4u; j++)
 		m_tilesPrev->get(x, y).m_startTransition[j].y = m_tilesPrev->get(x, y + i).m_startTransition[j].y;
+	m_tiles->get(x, y).m_startColor = sf::Color::Red;
 	setTransitionModify(x, y);
 	// TODO: store color in pointer to avoid copy
 	m_tilesPrev->get(x, y).m_startColor = m_tiles->get(x, y).m_startColor;
@@ -72,6 +74,7 @@ void TransitionManager::setTransitionDisappear(int x, int y)
 		i++;
 	for (std::size_t j = 0u; j < 4u; j++)
 		m_tiles->get(x, y).m_startTransition[j].y = m_tiles->get(x, y + i).m_startTransition[j].y;
+	m_tiles->get(x, y).m_startColor = sf::Color::Blue;
 }
 
 void TransitionManager::setTransitionModify(int x, int y)
@@ -80,9 +83,15 @@ void TransitionManager::setTransitionModify(int x, int y)
 	if (y - 1 >= 0 && m_tiles->get(x, y - 1).isEmpty() && m_tiles->get(x, y).m_startTransition[0].y == m_tiles->get(x, y).m_startTransition[1].y)
 	{
 		if (x - 1 >= 0 && m_tiles->get(x - 1, y).isEmpty())
+		{
+			m_tiles->get(x, y).m_startColor = sf::Color::Green;
 			m_tiles->get(x, y).m_startTransition[0].y += Tile::TileSize;
+		}
 		if (x + 1 < static_cast<int>(m_tiles->getColumns()) && m_tiles->get(x + 1, y).isEmpty())
+		{
+			m_tiles->get(x, y).m_startColor = sf::Color::Green;
 			m_tiles->get(x, y).m_startTransition[1].y += Tile::TileSize;
+		}
 	}
 }
 
@@ -119,10 +128,7 @@ void TransitionManager::defineTransitionRange(int p_startX, int p_endX, int p_st
 		for (int y = p_startY; y < p_endY; y++)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_appear)
-			{
 				setTransitionAppear(x, y);
-//				m_tiles->get(x, y).m_startColor = sf::Color::Red;
-			}
 		}
 	}
 	for (int x = p_startX; x < p_endX; x++)
@@ -130,10 +136,7 @@ void TransitionManager::defineTransitionRange(int p_startX, int p_endX, int p_st
 		for (int y = p_startY; y < p_endY; y++)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_already)
-			{
 				setTransitionModify(x, y);
-//				m_tiles->get(x, y).m_startColor = sf::Color::Green;
-			}
 		}
 	}
 	for (int x = p_startX; x < p_endX; x++)
@@ -141,10 +144,7 @@ void TransitionManager::defineTransitionRange(int p_startX, int p_endX, int p_st
 		for (int y = p_startY; y < p_endY; y++)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_disappear)
-			{
 				setTransitionDisappear(x, y);
-//				m_tiles->get(x, y).m_startColor = sf::Color::Blue;
-			}
 		}
 	}
 }
@@ -190,6 +190,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_none)
 				continue;
+			// avoid useless calcul, same y, same x
 			lerp(m_vertices[mn_verticesCount].position, m_tilesPrev->get(x, y).m_startTransition[0u], m_tiles->get(x, y).m_startTransition[0u], transition);
 			lerp(m_vertices[mn_verticesCount + 1u].position, m_tilesPrev->get(x, y).m_startTransition[2u], m_tiles->get(x, y).m_startTransition[2u], transition);
 			lerp(m_vertices[mn_verticesCount + 2u].position, m_tilesPrev->get(x, y).m_startTransition[3u], m_tiles->get(x, y).m_startTransition[3u], transition);
@@ -220,21 +221,21 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 	{
 		for (int y = p_startY; y < p_endY; y++)
 		{
-			if (y - 1 >= 0 && m_tilesPrev->get(x, y - 1).isEmpty())
+			if (y - 1 >= 0 && y + 1 < static_cast<int>(m_tiles->getRows()))
 			{
-				if (x - 1 >= 0 && m_tilesPrev->get(x - 1, y).isEmpty())
+				if (m_tiles->get(x, y - 1).isEmpty())
 				{
-					if (y + 1 < static_cast<int>(m_tiles->getRows()))
-						m_tilesPrev->get(x, y).m_startTransition[0].y = m_tilesPrev->get(x, y + 1).m_startTransition[0].y;
-					else
-						m_tilesPrev->get(x, y).m_startTransition[0].y += Tile::TileSize;
+					if (x - 1 >= 0 && m_tiles->get(x - 1, y).isEmpty())
+						m_tiles->get(x, y).m_startTransition[0].y = m_tiles->get(x, y + 1).m_startTransition[0].y;
+					if (x + 1 < static_cast<int>(m_tiles->getColumns()) && m_tiles->get(x + 1, y).isEmpty())
+						m_tiles->get(x, y).m_startTransition[1].y = m_tiles->get(x, y + 1).m_startTransition[1].y;
 				}
-				if (x + 1 < static_cast<int>(m_tilesPrev->getColumns()) && m_tilesPrev->get(x + 1, y).isEmpty())
+				if (m_tilesPrev->get(x, y - 1).isEmpty())
 				{
-					if (y + 1 < static_cast<int>(m_tiles->getRows()))
+					if (x - 1 >= 0 && m_tilesPrev->get(x - 1, y).isEmpty())
+						m_tilesPrev->get(x, y).m_startTransition[0].y = m_tilesPrev->get(x, y + 1).m_startTransition[0].y;
+					if (x + 1 < static_cast<int>(m_tilesPrev->getColumns()) && m_tilesPrev->get(x + 1, y).isEmpty())
 						m_tilesPrev->get(x, y).m_startTransition[1].y = m_tilesPrev->get(x, y + 1).m_startTransition[1].y;
-					else
-						m_tilesPrev->get(x, y).m_startTransition[1].y += Tile::TileSize;
 				}
 			}
 		}
