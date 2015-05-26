@@ -41,7 +41,7 @@ private:
 	void defineTransition(void);
 	void defineTransitionRange(int p_startX, int p_endX, int p_startY, int p_endY);
 	void defineTransition(int x, int y);
-	void defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY);
+	void defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY, bool horizontal);
 	void setTransitionAppear(int x, int y);
 	void setTransitionDisappear(int x, int y);
 	void setTransitionModify(int x, int y);

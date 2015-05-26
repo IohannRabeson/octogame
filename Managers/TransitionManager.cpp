@@ -227,7 +227,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 	}*/
 }
 
-void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY)
+void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY, bool horizontal)
 {
 	for (int x = p_startX; x < p_endX; x++)
 	{
@@ -253,46 +253,45 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 			}
 		}
 	}
-	//defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
-	defineTransition();
+	(void)horizontal;
+	defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
 }
 
+//TODO: replace 16.f by Tile::TileSize
 void TransitionManager::updateOffset(float)
 {
+	int ofX = 0, ofY = 0;
 	if (m_oldOffset.x > static_cast<int>(m_offset.x / 16.f))
-	{
-		m_tilesPrev->swapDepth();
-		m_tiles->addOffsetX(-1);
-		m_tilesPrev->addOffsetX(-1);
-		defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows());
-		m_tilesPrev->swapDepth();
-		m_oldOffset.x = static_cast<int>(m_offset.x / 16.f);
-	}
+		ofX = -1;
 	else if (m_oldOffset.x < static_cast<int>(m_offset.x / 16.f))
+		ofX = 1;
+	if (m_oldOffset.y > static_cast<int>(m_offset.y / 16.f))
+		ofY = -1;
+	else if (m_oldOffset.y < static_cast<int>(m_offset.y / 16.f))
+		ofY = 1;
+
+	if (ofX)
 	{
 		m_tilesPrev->swapDepth();
-		m_tiles->addOffsetX(1);
-		m_tilesPrev->addOffsetX(1);
-		defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows());
+		m_tiles->addOffsetX(ofX);
+		m_tilesPrev->addOffsetX(ofX);
 		m_tilesPrev->swapDepth();
+		if (ofX < 0)
+			defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows(), true);
+		else
+			defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows(), true);
 		m_oldOffset.x = static_cast<int>(m_offset.x / 16.f);
 	}
-	if (m_oldOffset.y > static_cast<int>(m_offset.y / 16.f))
+	if (ofY)
 	{
 		m_tilesPrev->swapDepth();
-		m_tiles->addOffsetY(-1);
-		m_tilesPrev->addOffsetY(-1);
-		defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+		m_tiles->addOffsetY(ofY);
+		m_tilesPrev->addOffsetY(ofY);
 		m_tilesPrev->swapDepth();
-		m_oldOffset.y = static_cast<int>(m_offset.y / 16.f);
-	}
-	else if (m_oldOffset.y < static_cast<int>(m_offset.y / 16.f))
-	{
-		m_tilesPrev->swapDepth();
-		m_tiles->addOffsetY(1);
-		m_tilesPrev->addOffsetY(1);
-		defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
-		m_tilesPrev->swapDepth();
+		if (ofY < 0)
+			defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2, false);
+		else
+			defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 10, m_tiles->getRows(), false);
 		m_oldOffset.y = static_cast<int>(m_offset.y / 16.f);
 	}
 }
