@@ -38,7 +38,7 @@ void Map::init(Biome * p_biome)
 
 	initBiome();
 
-	m_tiles.resize(m_width - 20, m_height - 20, nullptr);
+	m_tiles.resize(m_width, m_height, nullptr);
 
 	for (std::size_t x = 0; x < m_tiles.columns(); x++)
 	{

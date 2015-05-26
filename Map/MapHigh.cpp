@@ -12,7 +12,7 @@ void MapHigh::initBiome(void)
 {
 	m_biome->mn_height = 128;
 	m_biome->mn_width = 512;
-	m_biome->mf_transitionTimerMax = 1.1f;
+	m_biome->mf_transitionTimerMax = 2.1f;
 	m_biome->mn_temperature = 30;
 	m_biome->mn_nbDecor = 10;
 	mn_totalWidth = m_biome->mn_width;

@@ -61,12 +61,13 @@ void TransitionManager::setTransitionAppear(int x, int y)
 	//TODO: use the getter once
 	for (std::size_t j = 0u; j < 4u; j++)
 		m_tilesPrev->get(x, y).m_startTransition[j].y = m_tilesPrev->get(x, y + i).m_startTransition[j].y;
-	m_tiles->get(x, y).m_startColor = sf::Color::Red;
+	//m_tiles->get(x, y).m_startColor = sf::Color::Red;
 	setTransitionModify(x, y);
 	// TODO: store color in pointer to avoid copy
 	m_tilesPrev->get(x, y).m_startColor = m_tiles->get(x, y).m_startColor;
 }
 
+#include <iostream>
 void TransitionManager::setTransitionDisappear(int x, int y)
 {
 	int i = 0;
@@ -74,7 +75,14 @@ void TransitionManager::setTransitionDisappear(int x, int y)
 		i++;
 	for (std::size_t j = 0u; j < 4u; j++)
 		m_tiles->get(x, y).m_startTransition[j].y = m_tiles->get(x, y + i).m_startTransition[j].y;
-	m_tiles->get(x, y).m_startColor = sf::Color::Blue;
+	if (y + i >= static_cast<int>(m_tiles->getRows() - 1))
+	{
+	//for (std::size_t j = 0u; j < 2u; j++)
+	//	m_tiles->get(x, y).m_startTransition[j].y += Tile::TileSize;
+	//m_tiles->get(x, y).m_startColor = sf::Color::Magenta;
+	}
+	//else
+	//m_tiles->get(x, y).m_startColor = sf::Color::Blue;
 }
 
 void TransitionManager::setTransitionModify(int x, int y)
@@ -84,12 +92,12 @@ void TransitionManager::setTransitionModify(int x, int y)
 	{
 		if (x - 1 >= 0 && m_tiles->get(x - 1, y).isEmpty())
 		{
-			m_tiles->get(x, y).m_startColor = sf::Color::Green;
+			//m_tiles->get(x, y).m_startColor = sf::Color::Green;
 			m_tiles->get(x, y).m_startTransition[0].y += Tile::TileSize;
 		}
 		if (x + 1 < static_cast<int>(m_tiles->getColumns()) && m_tiles->get(x + 1, y).isEmpty())
 		{
-			m_tiles->get(x, y).m_startColor = sf::Color::Green;
+			//m_tiles->get(x, y).m_startColor = sf::Color::Green;
 			m_tiles->get(x, y).m_startTransition[1].y += Tile::TileSize;
 		}
 	}
@@ -198,7 +206,11 @@ void TransitionManager::updateTransition(float pf_deltatime)
 			m_vertices[mn_verticesCount + 3u].position = m_vertices[mn_verticesCount].position;
 			m_vertices[mn_verticesCount + 5u].position = m_vertices[mn_verticesCount + 1u].position;
 			for (std::size_t i = 0; i < 6u; i++)
+			{
+				m_vertices[mn_verticesCount + i].position.x -= Tile::DoubleTileSize;
+				m_vertices[mn_verticesCount + i].position.y -= Tile::DoubleTileSize;
 				lerpColor(m_vertices[mn_verticesCount + i].color, m_tilesPrev->get(x, y).m_startColor, m_tiles->get(x, y).m_startColor, transition);
+			}
 			mn_verticesCount += 6u;
 		}
 	}
@@ -223,6 +235,7 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 		{
 			if (y - 1 >= 0 && y + 1 < static_cast<int>(m_tiles->getRows()))
 			{
+				// Define triangle/quad
 				if (m_tiles->get(x, y - 1).isEmpty())
 				{
 					if (x - 1 >= 0 && m_tiles->get(x - 1, y).isEmpty())
@@ -240,7 +253,8 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 			}
 		}
 	}
-	defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
+	//defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
+	defineTransition();
 }
 
 void TransitionManager::updateOffset(float)
