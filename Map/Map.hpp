@@ -66,8 +66,7 @@ public:
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
 	inline void computeMapRangeX(int startX, int endX) { computeMapRange(startX, endX, 0, m_tiles.rows()); }
 	inline void computeMapRangeY(int startY, int endY) { computeMapRange(0, m_tiles.columns(), startY, endY); }
-	inline void setOffset(sf::Vector2f const & offset) { m_offset = offset; }
-	inline sf::Vector2f const & getOffset(void) const { return m_offset; }
+	inline void setCameraView(sf::Vector2f const * offset) { m_offset = offset; }
 	void addOffsetX(int p_offsetX);
 	void addOffsetY(int p_offsetY);
 
@@ -81,16 +80,20 @@ public:
 	virtual void computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY);
 
 protected:
-	float			mf_depth;
-	float			mf_oldDepth;
+	float			m_depth;
+	float			m_oldDepth;
 	Biome *			m_biome;
 	TileMap			m_tiles;
+	std::size_t		m_width;
+	std::size_t		m_height;
+	sf::Vector2f const *	m_offset;
+	// TODO:clear
 	std::size_t		mn_totalWidth;
 	int			mn_offsetX;
 	int			mn_offsetY;
-	std::size_t		m_width;
-	std::size_t		m_height;
-	sf::Vector2f		m_offset;
+
+	// Containes base value to avoid redundant calcul
+	octo::Array2D<sf::Vector2f>		m_baseValue;
 
 	virtual void initBiome(void) = 0;
 	// first and second curve must return a value between -1 and 1

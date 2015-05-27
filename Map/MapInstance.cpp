@@ -82,7 +82,7 @@ void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_
 		else
 			vec[0] = static_cast<float>(offset);
 
-		vec[1] = mf_depth;
+		vec[1] = m_depth;
 		// firstCurve return a value between -1 & 1
 		// we normalize it betwen 0 & max_height
 		v = (firstCurve(vec) + 1.f) * static_cast<float>(m_biome->mn_height) / 2.f;
@@ -101,7 +101,7 @@ void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_
 				m_tiles.get(x, y)->mb_isEmpty = false;
 			vec[0] = static_cast<float>(x + mn_offsetX);
 			vec[1] = static_cast<float>(y + mn_offsetY);
-			vec[2] = mf_depth;
+			vec[2] = m_depth;
 			m_tiles.get(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
 			setColor(*m_tiles.get(x, y));
 		}
@@ -156,26 +156,26 @@ void MapInstance::setColor(Tile & p_tile)
 
 void MapInstance::swapDepth(void)
 {
-	float tmp = mf_depth;
-	mf_depth = mf_oldDepth;
-	mf_oldDepth = tmp;
+	float tmp = m_depth;
+	m_depth = m_oldDepth;
+	m_oldDepth = tmp;
 	m_instance->swapDepth();
 }
 
 void MapInstance::registerDepth(void)
 {
-	mf_oldDepth = mf_depth;
+	m_oldDepth = m_depth;
 	m_instance->registerDepth();
 }
 
 void MapInstance::nextStep(void)
 {
-	mf_depth += 3.f;
+	m_depth += 3.f;
 	m_instance->nextStep();
 }
 
 void MapInstance::previousStep(void)
 {
-	mf_depth -= 3.f;
+	m_depth -= 3.f;
 	m_instance->previousStep();
 }

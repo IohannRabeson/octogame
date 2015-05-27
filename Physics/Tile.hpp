@@ -16,6 +16,7 @@ public:
 
 	static constexpr float	TileSize = 16.f;
 	static constexpr float	DoubleTileSize = Tile::TileSize * 2.f;
+	static constexpr float	TripleTileSize = Tile::TileSize * 3.f;
 	static constexpr float	HalfTileSize = Tile::TileSize / 2.f;
 
 	float			mf_noiseValue;

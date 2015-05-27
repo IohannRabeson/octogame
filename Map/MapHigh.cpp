@@ -12,7 +12,7 @@ void MapHigh::initBiome(void)
 {
 	m_biome->mn_height = 128;
 	m_biome->mn_width = 512;
-	m_biome->mf_transitionTimerMax = 2.1f;
+	m_biome->mf_transitionTimerMax = 1.1f;
 	m_biome->mn_temperature = 30;
 	m_biome->mn_nbDecor = 10;
 	mn_totalWidth = m_biome->mn_width;
@@ -50,10 +50,10 @@ void MapHigh::setColor(Tile & p_tile)
 
 void MapHigh::nextStep(void)
 {
-	mf_depth += 3.f;
+	m_depth += 3.f;
 }
 
 void MapHigh::previousStep(void)
 {
-	mf_depth -= 3.f;
+	m_depth -= 3.f;
 }

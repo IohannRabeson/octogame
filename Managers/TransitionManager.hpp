@@ -1,7 +1,6 @@
 #ifndef TRANSITIONMANAGER_HPP
 # define TRANSITIONMANAGER_HPP
 
-# include <Array2D.hpp>
 # include "Map.hpp"
 
 class MapManager;
@@ -24,24 +23,21 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	// Containes base value to avoid redundant calcul
-	octo::Array2D<sf::Vector2f>		m_baseValue;
-
 	MapManager *				m_mapManager;
 	Map *					m_tiles;
 	Map *					m_tilesPrev;
 	float					mf_transitionTimer;
 	float					mf_transitionTimerMax;
-	sf::Vector2f				m_offset;
+	sf::Vector2f const *			m_offset;
 	std::unique_ptr<sf::Vertex[]>		m_vertices;
 	std::size_t				mn_verticesCount;
 	sf::Vector2<int>			m_oldOffset;
 
 	// Transition
-	void defineTransition(void);
+	inline void defineTransition(void) { defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows()); }
 	void defineTransitionRange(int p_startX, int p_endX, int p_startY, int p_endY);
 	void defineTransition(int x, int y);
-	void defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY, bool horizontal);
+	void defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY);
 	void setTransitionAppear(int x, int y);
 	void setTransitionDisappear(int x, int y);
 	void setTransitionModify(int x, int y);
