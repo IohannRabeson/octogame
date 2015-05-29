@@ -286,6 +286,7 @@ void TransitionManager::updateOffset(float)
 				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
 			}
 		}
+		defineTransition();
 		m_tilesPrev->swapDepth();
 		m_oldOffset.x = static_cast<int>(m_offset->x / Tile::TileSize);
 		m_oldOffset.y = static_cast<int>(m_offset->y / Tile::TileSize);
