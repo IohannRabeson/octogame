@@ -35,7 +35,7 @@ void Map::init(Biome * p_biome)
 	// init vertices to place decors
 	m_vertices.reset(new sf::Vertex[MaxDecor]);
 
-	m_tiles.resize(m_width - 20, m_height - 20, nullptr);
+	m_tiles.resize(m_width, m_height, nullptr);
 	for (std::size_t x = 0; x < m_tiles.columns(); x++)
 	{
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
