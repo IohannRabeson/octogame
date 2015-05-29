@@ -153,7 +153,7 @@ void Map::addOffsetX(int p_offsetX)
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tiles(m_tiles.columns() - 1, y) = m_tmp[y];
-		computeMapRangeX(m_tiles.columns() - 1, m_tiles.columns());
+		//computeMapRangeX(m_tiles.columns() - 1, m_tiles.columns());
 	}
 	else if (p_offsetX < 0)
 	{
@@ -166,7 +166,7 @@ void Map::addOffsetX(int p_offsetX)
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tiles(0, y) = m_tmp[y];
-		computeMapRangeX(0, 1);
+		//computeMapRangeX(0, 1);
 	}
 }
 
@@ -184,7 +184,7 @@ void Map::addOffsetY(int p_offsetY)
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tiles(x, m_tiles.rows() - 1) = m_tmp[x];
-		computeMapRangeY(m_tiles.rows() - 1, m_tiles.rows());
+		//computeMapRangeY(m_tiles.rows() - 1, m_tiles.rows());
 	}
 	else if (p_offsetY < 0)
 	{
@@ -197,6 +197,6 @@ void Map::addOffsetY(int p_offsetY)
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tiles(x, 0) = m_tmp[x];
-		computeMapRangeY(0, 1);
+		//computeMapRangeY(0, 1);
 	}
 }

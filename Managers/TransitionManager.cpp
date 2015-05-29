@@ -225,41 +225,109 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 	defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
 }
 
+#include <iostream>
 void TransitionManager::updateOffset(float)
 {
 	int ofX = 0;
 	int ofY = 0;
-	if (m_oldOffset.x > static_cast<int>(m_offset->x / Tile::TileSize))
+	int newOfX = static_cast<int>(m_offset->x / Tile::TileSize);
+	int newOfY = static_cast<int>(m_offset->y / Tile::TileSize);
+	if (m_oldOffset.x > newOfX)
 		ofX = -1;
-	else if (m_oldOffset.x < static_cast<int>(m_offset->x / Tile::TileSize))
+	else if (m_oldOffset.x < newOfX)
 		ofX = 1;
-	if (m_oldOffset.y > static_cast<int>(m_offset->y / Tile::TileSize))
+	if (m_oldOffset.y > newOfY)
 		ofY = -1;
-	else if (m_oldOffset.y < static_cast<int>(m_offset->y / Tile::TileSize))
+	else if (m_oldOffset.y < newOfY)
 		ofY = 1;
 
-	if (ofX)
+	if (ofX && ofY)
+	{
+		m_tilesPrev->swapDepth();
+		m_tiles->addOffsetX(ofX);
+		m_tilesPrev->addOffsetX(ofX);
+		m_tiles->addOffsetY(ofY);
+		m_tilesPrev->addOffsetY(ofY);
+		m_tilesPrev->swapDepth();
+		if (ofX < 0)
+		{
+			m_tiles->computeMapRangeX(0, 1);
+			m_tilesPrev->computeMapRangeX(0, 1);
+			if (ofY < 0)
+			{
+				m_tiles->computeMapRangeY(0, 1);
+				m_tilesPrev->computeMapRangeY(0, 1);
+				defineTransitionBorderTileRange(0, 2, 2, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+			}
+			else
+			{
+				m_tiles->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
+				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows() - 2);
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
+			}
+		}
+		else
+		{
+			m_tiles->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
+			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
+			if (ofY < 0)
+			{
+				m_tiles->computeMapRangeY(0, 1);
+				m_tilesPrev->computeMapRangeY(0, 1);
+				defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 2, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+			}
+			else
+			{
+				m_tiles->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
+				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
+				defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows() - 2);
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
+			}
+		}
+		m_oldOffset.x = static_cast<int>(m_offset->x / Tile::TileSize);
+		m_oldOffset.y = static_cast<int>(m_offset->y / Tile::TileSize);
+	}
+	else if (ofX)
 	{
 		m_tilesPrev->swapDepth();
 		m_tiles->addOffsetX(ofX);
 		m_tilesPrev->addOffsetX(ofX);
 		m_tilesPrev->swapDepth();
 		if (ofX < 0)
+		{
+			m_tiles->computeMapRangeX(0, 1);
+			m_tilesPrev->computeMapRangeX(0, 1);
 			defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows());
+		}
 		else
+		{
+			m_tiles->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
+			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
 			defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows());
+		}
 		m_oldOffset.x = static_cast<int>(m_offset->x / Tile::TileSize);
 	}
-	if (ofY)
+	else if (ofY)
 	{
 		m_tilesPrev->swapDepth();
 		m_tiles->addOffsetY(ofY);
 		m_tilesPrev->addOffsetY(ofY);
 		m_tilesPrev->swapDepth();
 		if (ofY < 0)
+		{
+			m_tiles->computeMapRangeY(0, 1);
+			m_tilesPrev->computeMapRangeY(0, 1);
 			defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+		}
 		else
+		{
+			m_tiles->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
+			m_tilesPrev->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
 			defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 10, m_tiles->getRows());
+		}
 		m_oldOffset.y = static_cast<int>(m_offset->y / Tile::TileSize);
 	}
 }
@@ -268,8 +336,6 @@ void TransitionManager::update(float pf_deltatime)
 {
 	bool compute = false;
 	mf_transitionTimer += pf_deltatime;
-
-	// TODO: use getter for tiles instead of setter to avoid copy
 
 	if (mf_transitionTimer >= mf_transitionTimerMax)
 	{
