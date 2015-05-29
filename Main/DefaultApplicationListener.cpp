@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:49:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/23 02:30:38 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/29 17:45:59 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ bool	DefaultApplicationListener::onPressed(sf::Event::KeyEvent const& event)
 	{
 		case sf::Keyboard::Escape:
 			octo::Application::stop();
-			return (false);
 			break;
 		case sf::Keyboard::F5:
 			octo::Application::getConsole().setEnabled(true);
