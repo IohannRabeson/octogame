@@ -67,6 +67,7 @@ public:
 	inline void computeMapRangeX(int startX, int endX) { computeMapRange(startX, endX, 0, m_tiles.rows()); }
 	inline void computeMapRangeY(int startY, int endY) { computeMapRange(0, m_tiles.columns(), startY, endY); }
 	inline void setCameraView(sf::Vector2f const * offset) { m_offset = offset; }
+	inline void registerOffset(void) { m_curOffset = *m_offset; }
 	void addOffsetX(int p_offsetX);
 	void addOffsetY(int p_offsetY);
 
@@ -87,6 +88,7 @@ protected:
 	std::size_t		m_width;
 	std::size_t		m_height;
 	sf::Vector2f const *	m_offset;
+	sf::Vector2f		m_curOffset;
 	// TODO:clear
 	std::size_t		mn_totalWidth;
 	int			mn_offsetX;

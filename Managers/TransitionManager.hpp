@@ -32,6 +32,7 @@ private:
 	std::unique_ptr<sf::Vertex[]>		m_vertices;
 	std::size_t				mn_verticesCount;
 	sf::Vector2<int>			m_oldOffset;
+	bool					swap;
 
 	// Transition
 	inline void defineTransition(void) { defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows()); }

@@ -225,7 +225,6 @@ void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX
 	defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
 }
 
-#include <iostream>
 void TransitionManager::updateOffset(float)
 {
 	int ofX = 0;
@@ -241,8 +240,14 @@ void TransitionManager::updateOffset(float)
 	else if (m_oldOffset.y < newOfY)
 		ofY = 1;
 
+	// TODO: there is a bug if the speed > 16.f / second
+	// if speed = 600.f at 60fps, speed = 600.f / 60.f = 10.f per frame
+	// if speed per frame > 16.f the bug occur
+	// to trigger the bug, at 60 fps, speed must be 60 * 16 = 960
 	if (ofX && ofY)
 	{
+		m_tiles->registerOffset();
+		m_tilesPrev->registerOffset();
 		m_tilesPrev->swapDepth();
 		m_tiles->addOffsetX(ofX);
 		m_tilesPrev->addOffsetX(ofX);
@@ -286,13 +291,14 @@ void TransitionManager::updateOffset(float)
 				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
 			}
 		}
-		defineTransition();
 		m_tilesPrev->swapDepth();
-		m_oldOffset.x = static_cast<int>(m_offset->x / Tile::TileSize);
-		m_oldOffset.y = static_cast<int>(m_offset->y / Tile::TileSize);
+		m_oldOffset.x = newOfX;
+		m_oldOffset.y = newOfY;
 	}
 	else if (ofX)
 	{
+		m_tiles->registerOffset();
+		m_tilesPrev->registerOffset();
 		m_tilesPrev->swapDepth();
 		m_tiles->addOffsetX(ofX);
 		m_tilesPrev->addOffsetX(ofX);
@@ -308,11 +314,13 @@ void TransitionManager::updateOffset(float)
 			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
 			defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows());
 		}
-		m_oldOffset.x = static_cast<int>(m_offset->x / Tile::TileSize);
 		m_tilesPrev->swapDepth();
+		m_oldOffset.x = newOfX;
 	}
 	else if (ofY)
 	{
+		m_tiles->registerOffset();
+		m_tilesPrev->registerOffset();
 		m_tilesPrev->swapDepth();
 		m_tiles->addOffsetY(ofY);
 		m_tilesPrev->addOffsetY(ofY);
@@ -329,7 +337,7 @@ void TransitionManager::updateOffset(float)
 			defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 10, m_tiles->getRows());
 		}
 		m_tilesPrev->swapDepth();
-		m_oldOffset.y = static_cast<int>(m_offset->y / Tile::TileSize);
+		m_oldOffset.y = newOfY;
 	}
 }
 
@@ -337,6 +345,7 @@ void TransitionManager::update(float pf_deltatime)
 {
 	bool compute = false;
 	mf_transitionTimer += pf_deltatime;
+	swap = false;
 
 	if (mf_transitionTimer >= mf_transitionTimerMax)
 	{
@@ -358,6 +367,7 @@ void TransitionManager::update(float pf_deltatime)
 		{
 			mf_transitionTimer = 0.f;
 			swapMap();
+			swap = true;
 		}
 	}
 	updateOffset(pf_deltatime);
@@ -368,4 +378,3 @@ void TransitionManager::draw(sf::RenderTarget& render, sf::RenderStates states) 
 {
 	render.draw(m_vertices.get(), mn_verticesCount, sf::Triangles, states);
 }
-
