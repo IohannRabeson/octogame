@@ -2,6 +2,7 @@
 #include "MapManager.hpp"
 #include "MapInstance.hpp"
 #include "MapHigh.hpp"
+#include <Interpolations.hpp>
 
 TransitionManager::TransitionManager(void) :
 	m_mapManager(nullptr),
@@ -126,12 +127,6 @@ void TransitionManager::defineTransitionRange(int p_startX, int p_endX, int p_st
 	}
 }
 
-// TODO: use octo::linearInterpolation
-void TransitionManager::lerp(sf::Vector2f & p_result, sf::Vector2f & p_start, sf::Vector2f & p_end, float p_transition)
-{
-	p_result = p_start * (1.f - p_transition) + p_end * p_transition;
-}
-
 void TransitionManager::swapMap(void)
 {
 	Map * tmp = m_tilesPrev;
@@ -141,14 +136,6 @@ void TransitionManager::swapMap(void)
 	computeDecor();
 	defineTransition();
 	m_mapManager->getDecorManager().setPosition();
-}
-
-// TODO: to be deleted
-void lerpColor(sf::Color & p_result, sf::Color & p_start, sf::Color & p_end, float p_transition)
-{
-	p_result.r = p_start.r * (1.f - p_transition) + p_end.r * p_transition;
-	p_result.g = p_start.g * (1.f - p_transition) + p_end.g * p_transition;
-	p_result.b = p_start.b * (1.f - p_transition) + p_end.b * p_transition;
 }
 
 void TransitionManager::updateTransition(float pf_deltatime)
@@ -169,17 +156,17 @@ void TransitionManager::updateTransition(float pf_deltatime)
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_none)
 				continue;
 			// TODO:avoid useless calcul, same y, same x
-			lerp(m_vertices[mn_verticesCount].position, m_tilesPrev->get(x, y).m_startTransition[0u], m_tiles->get(x, y).m_startTransition[0u], transition);
-			lerp(m_vertices[mn_verticesCount + 1u].position, m_tilesPrev->get(x, y).m_startTransition[2u], m_tiles->get(x, y).m_startTransition[2u], transition);
-			lerp(m_vertices[mn_verticesCount + 2u].position, m_tilesPrev->get(x, y).m_startTransition[3u], m_tiles->get(x, y).m_startTransition[3u], transition);
-			lerp(m_vertices[mn_verticesCount + 4u].position, m_tilesPrev->get(x, y).m_startTransition[1u], m_tiles->get(x, y).m_startTransition[1u], transition);
+			m_vertices[mn_verticesCount].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[0u], m_tiles->get(x, y).m_startTransition[0u], transition);
+			m_vertices[mn_verticesCount + 1u].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[2u], m_tiles->get(x, y).m_startTransition[2u], transition);
+			m_vertices[mn_verticesCount + 2u].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[3u], m_tiles->get(x, y).m_startTransition[3u], transition);
+			m_vertices[mn_verticesCount + 4u].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[1u], m_tiles->get(x, y).m_startTransition[1u], transition);
 			m_vertices[mn_verticesCount + 3u].position = m_vertices[mn_verticesCount].position;
 			m_vertices[mn_verticesCount + 5u].position = m_vertices[mn_verticesCount + 1u].position;
 			for (std::size_t i = 0; i < 6u; i++)
 			{
 				m_vertices[mn_verticesCount + i].position.x -= Tile::DoubleTileSize;
 				m_vertices[mn_verticesCount + i].position.y -= Tile::DoubleTileSize;
-				lerpColor(m_vertices[mn_verticesCount + i].color, m_tilesPrev->get(x, y).m_startColor, m_tiles->get(x, y).m_startColor, transition);
+				m_vertices[mn_verticesCount + i].color = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startColor, m_tiles->get(x, y).m_startColor, transition);
 			}
 			mn_verticesCount += 6u;
 		}
@@ -190,11 +177,9 @@ void TransitionManager::updateTransition(float pf_deltatime)
 	auto tilesPrev = m_tilesPrev->getDecors();
 	for (auto it = tiles.begin(), itPrev = tilesPrev.begin(); it != tiles.end(); it++, itPrev++)
 	{
-		lerp(itPrev->second->mp_upLeft->position, itPrev->second->m_startTransition[0], it->second->m_startTransition[0], transition);
+		itPrev->second->mp_upLeft->position.y = octo::linearInterpolation(itPrev->second->m_startTransition[0].y, it->second->m_startTransition[0].y, transition) - Tile::DoubleTileSize;
 		itPrev->second->mp_upLeft->position.x = it->second->m_startTransition[0].x - Tile::DoubleTileSize;
-		itPrev->second->mp_upLeft->position.y = it->second->m_startTransition[0].y;
-		itPrev->second->mp_upLeft->position.y -= Tile::DoubleTileSize;
-		lerpColor(itPrev->second->mp_upLeft->color, itPrev->second->m_startColor, it->second->m_startColor, transition);
+		itPrev->second->mp_upLeft->color = octo::linearInterpolation(itPrev->second->m_startColor, it->second->m_startColor, transition);
 	}
 }
 
