@@ -27,7 +27,7 @@ void CollisionManager::init(MapManager * p_mapManager)
 	m_player = new Player();
 	m_pairs.resize(1000u);
 	m_dynamicPolygons.push_back(m_player);
-	m_dynamicPolygons.push_back(new NPC());
+	//m_dynamicPolygons.push_back(new NPC());
 }
 
 void CollisionManager::update(float pf_deltatime)
@@ -48,13 +48,15 @@ void CollisionManager::update(float pf_deltatime)
 		m_dynamicPolygons[i]->applyTransform();
 }
 
+#include <iostream>
 void CollisionManager::broadPhase(void)
 {
+	m_pairCount = 0u;
 	for (std::size_t k = 0u; k < m_dynamicPolygons.size(); k++)
 	{
 		sf::Rect<float> const & rect = m_dynamicPolygons[k]->getGlobalBounds();
-		int offsetX = static_cast<int>((m_dynamicPolygons[k]->getVelocity().x + rect.left/* - m_mapManager->getTransitionManager().getOffsetX()*/) / Tile::TileSize) + 2;
-		int offsetY = static_cast<int>((m_dynamicPolygons[k]->getVelocity().y + rect.top/* - m_mapManager->getTransitionManager().getOffsetY()*/) / Tile::TileSize) + 2;
+		int offsetX = static_cast<int>((m_dynamicPolygons[k]->getVelocity().x + rect.left - m_mapManager->getTransitionManager().getOffset().x) / Tile::TileSize) + 2;
+		int offsetY = static_cast<int>((m_dynamicPolygons[k]->getVelocity().y + rect.top - m_mapManager->getTransitionManager().getOffset().y) / Tile::TileSize) + 2;
 		int width = static_cast<int>(rect.width / Tile::TileSize) + 1 + offsetX;
 		int height = static_cast<int>(rect.height / Tile::TileSize) + 1 + offsetY;
 		if (m_dynamicPolygons[k]->getVelocity().x < 0)
@@ -108,6 +110,7 @@ void CollisionManager::broadPhase(void)
 	}
 }
 
+#include <iostream>
 void CollisionManager::narrowPhase(void)
 {
 	for(std::size_t i = 0u; i < m_pairCount; i++)
@@ -121,24 +124,23 @@ void CollisionManager::narrowPhase(void)
 				if (m_pairs[i].m_polygonA->getVelocity().x > 0 &&  m_pairs[i].m_polygonB->getVertex(0).y != m_pairs[i].m_polygonB->getVertex(3).y
 					&& m_pairs[i].m_polygonA->getVertex(1).x < m_pairs[i].m_polygonB->getVertex(0).x)
 				{
-					//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Green);
+					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Green);
 					m_pairs[i].m_polygonA->addVelocity(-m_mtv);
 				}
 				if ((m_mtv.y <= -0.00000001f || m_mtv.y >= 0.00000001f) && (m_mtv.x <= -0.00000001f || m_mtv.x >= 0.00000001f))
 				{
-					//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
+					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
 					m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
 				}
 				else
 				{
 					m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y);
-					//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Red);
+					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Red);
 				}
 			}
 			m_pairs[i].m_polygonA->onCollision(m_pairs[i].m_polygonB);
 		}
 	}
-	m_pairCount = 0u;
 }
 
 //TODO: move to math class

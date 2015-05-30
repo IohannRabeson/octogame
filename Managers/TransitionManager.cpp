@@ -151,6 +151,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 	{
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
+			m_tiles->get(x, y).setUpLeft(&m_vertices[mn_verticesCount]);
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_none)
 				continue;
 			m_vertices[mn_verticesCount].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[0u], m_tiles->get(x, y).m_startTransition[0u], transition);

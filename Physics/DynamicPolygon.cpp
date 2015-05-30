@@ -67,7 +67,7 @@ sf::Rect<float> const & DynamicPolygon::getGlobalBounds(void)
 void DynamicPolygon::applyTransform(void)
 {
 	m_oldVelocity = m_velocity;
-	m_velocity.x = 0.f;
+	//m_velocity.x = 0.f;
 	move(m_velocity);
 	m_velocity.x = 0.f;
 	m_velocity.y = 0.f;

@@ -15,6 +15,7 @@ public:
 	inline Tile & getTile(int x, int y) const { return m_tiles->get(x, y); }
 	inline std::size_t getMapWidth(void) const { return m_tiles->getColumns(); }
 	inline std::size_t getMapHeight(void) const { return m_tiles->getRows(); }
+	inline sf::Vector2f const & getOffset(void) const { return *m_offset; }
 	// Only used by StaticObjectManager to compute initial position
 	inline void computeDecor(void) { m_tiles->computeDecor(); }
 

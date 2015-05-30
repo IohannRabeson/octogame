@@ -3,7 +3,7 @@
 Polygon::Polygon(std::size_t p_verticesCount, CollideType p_collideType) :
 	m_recompute(true),
 	m_recomputeCenter(true),
-	m_center(0.f, 0.f),
+	m_center(),
 	m_verticesCount(p_verticesCount),
 	m_collideType(p_collideType)
 {
