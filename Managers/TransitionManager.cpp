@@ -138,9 +138,9 @@ void TransitionManager::swapMap(void)
 	m_tilesPrev = m_tiles;
 	m_tiles = tmp;
 	m_tiles->computeMap();
-	//computeDecor();
+	computeDecor();
 	defineTransition();
-	//m_mapManager->getDecorManager().setPosition();
+	m_mapManager->getDecorManager().setPosition();
 }
 
 // TODO: to be deleted
@@ -160,6 +160,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 	}
 	float transition = mf_transitionTimer / mf_transitionTimerMax;
 
+	// Update tiles
 	mn_verticesCount = 0u;
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
@@ -184,16 +185,17 @@ void TransitionManager::updateTransition(float pf_deltatime)
 		}
 	}
 
-/*
+	// Update decors
 	auto tiles = m_tiles->getDecors();
 	auto tilesPrev = m_tilesPrev->getDecors();
 	for (auto it = tiles.begin(), itPrev = tilesPrev.begin(); it != tiles.end(); it++, itPrev++)
 	{
 		lerp(itPrev->second->mp_upLeft->position, itPrev->second->m_startTransition[0], it->second->m_startTransition[0], transition);
-		itPrev->second->mp_upLeft->position.x = mf_offsetX + m_tilesPrev->getOffsetXDecor(it->first) * Tile::TileSize - Tile::DoubleTileSize;
-		itPrev->second->mp_upLeft->position.y += mf_offsetY - Tile::DoubleTileSize - m_tilesPrev->getOffsetY() * Tile::TileSize;
+		itPrev->second->mp_upLeft->position.x = it->second->m_startTransition[0].x - Tile::DoubleTileSize;
+		itPrev->second->mp_upLeft->position.y = it->second->m_startTransition[0].y;
+		itPrev->second->mp_upLeft->position.y -= Tile::DoubleTileSize;
 		lerpColor(itPrev->second->mp_upLeft->color, itPrev->second->m_startColor, it->second->m_startColor, transition);
-	}*/
+	}
 }
 
 void TransitionManager::defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY)
@@ -244,6 +246,8 @@ void TransitionManager::updateOffset(float)
 	// if speed = 600.f at 60fps, speed = 600.f / 60.f = 10.f per frame
 	// if speed per frame > 16.f the bug occur
 	// to trigger the bug, at 60 fps, speed must be 60 * 16 = 960
+	if (ofX)
+		computeDecor();
 	if (ofX && ofY)
 	{
 		m_tiles->registerOffset();

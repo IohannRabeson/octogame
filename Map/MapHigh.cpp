@@ -16,6 +16,39 @@ void MapHigh::initBiome(void)
 	m_biome->mn_temperature = 30;
 	m_biome->mn_nbDecor = 10;
 	mn_totalWidth = m_biome->mn_width;
+
+	// Decors values
+	m_biome->m_tree.mn_nb = 10;
+	m_biome->m_tree.mn_minSizeX = 20;
+	m_biome->m_tree.mn_maxSizeX = 50;
+	m_biome->m_tree.mn_minSizeY = 80;
+	m_biome->m_tree.mn_maxSizeY = 100;
+	m_biome->m_tree.mn_minAngle = 15;
+	m_biome->m_tree.mn_maxAngle = 75;
+	m_biome->m_tree.mn_minLive = 10;
+	m_biome->m_tree.mn_maxLive = 15;
+
+	m_biome->m_crystal.mn_nb = 10;
+	m_biome->m_crystal.mn_minSizeX = 10;
+	m_biome->m_crystal.mn_maxSizeX = 30;
+	m_biome->m_crystal.mn_minSizeY = 80;
+	m_biome->m_crystal.mn_maxSizeY = 150;
+	m_biome->m_crystal.mn_minElement = 3;
+	m_biome->m_crystal.mn_maxElement = 6;
+
+	m_biome->m_rock.mn_nb = 10;
+	m_biome->m_rock.mn_minSizeX = 10;
+	m_biome->m_rock.mn_maxSizeX = 20;
+	m_biome->m_rock.mn_minSizeY = 150;
+	m_biome->m_rock.mn_maxSizeY = 400;
+	m_biome->m_rock.mn_minElement = 4;
+	m_biome->m_rock.mn_maxElement = 15;
+
+	//m_biome->m_star.mn_nb = 10;
+	m_biome->m_star.mn_minSizeX = 70;
+	m_biome->m_star.mn_maxSizeX = 100;
+	m_biome->m_star.mn_minSizeY = 70;
+	m_biome->m_star.mn_maxSizeY = 100;
 }
 
 float MapHigh::firstCurve(float * vec)

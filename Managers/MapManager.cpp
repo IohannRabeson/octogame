@@ -20,7 +20,7 @@ void MapManager::init(void)
 	//m_collisionManager.init(this);
 	m_transitionManager.init(this, &m_biome);
 	m_cameraManager.init(this);
-	//m_decorManager.init(this, &m_biome);
+	m_decorManager.init(this, &m_biome);
 	m_texture = &resources.getTexture(OCTO_PNG);
 }
 
@@ -49,13 +49,13 @@ void MapManager::update(float pf_deltatime)
 */
 	m_cameraManager.update(pf_deltatime);
 	m_transitionManager.update(pf_deltatime);
-	//m_decorManager.update(pf_deltatime);
+	m_decorManager.update(pf_deltatime);
 	//m_collisionManager.update(pf_deltatime);
 }
 
 void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	//render.draw(m_decorManager);
+	render.draw(m_decorManager);
 	render.draw(m_transitionManager);
 
 	/*sf::RectangleShape rect;

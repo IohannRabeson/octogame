@@ -98,20 +98,39 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 void Map::computeDecor(void)
 {
 	float vec[3];
-	float v;
+	int offset;
+	int offsetPosX;
 	int height;
+	int offsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
 	for (auto it = m_decors.begin(); it != m_decors.end(); it++)
 	{
+		offset = offsetX;
+		offsetPosX = it->first;
+		while (offset < 0)
+		{
+			offset += m_biome->mn_width;
+			offsetPosX -= m_biome->mn_width;
+		}
+		while (offset >= static_cast<int>(m_biome->mn_width))
+		{
+			offset -= m_biome->mn_width;
+			offsetPosX += m_biome->mn_width;
+		}
+		int border = offset + static_cast<int>(m_tiles.columns());
+		if (border > static_cast<int>(m_biome->mn_width))
+		{
+			if (it->first < (border % static_cast<int>(m_biome->mn_width)) + 20)
+				offsetPosX += m_biome->mn_width;
+		}
 		vec[0] = static_cast<float>(it->first);
 		vec[1] = m_depth;
-		v = (firstCurve(vec) + 1.f) * static_cast<float>(m_biome->mn_height) / 2.f;
-		height = static_cast<int>(v);
-		it->second->m_startTransition[0].y = height * Tile::TileSize + Tile::TileSize;
-		vec[0] = static_cast<float>(it->first);
+		height = static_cast<int>((firstCurve(vec) + 1.f) * static_cast<float>(m_biome->mn_height) / 2.f);
+		it->second->m_startTransition[0].x = offsetPosX * Tile::TileSize;
+		it->second->m_startTransition[0].y = height * Tile::TileSize;
+		vec[0] = static_cast<float>(offsetPosX);
 		vec[1] = static_cast<float>(height);
 		vec[2] = m_depth;
 		it->second->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
-		it->second->mb_isEmpty = false;
 		setColor(*it->second);
 	}
 }
