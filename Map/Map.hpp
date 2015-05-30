@@ -58,8 +58,6 @@ public:
 
 	inline std::size_t getColumns(void) const { return m_tiles.columns(); }
 	inline std::size_t getRows(void) const { return m_tiles.rows(); }
-	inline int getOffsetX(void) const { return mn_offsetX; }
-	inline int getOffsetY(void) const { return mn_offsetY; }
 	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles(column, row); }
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
 	inline Decors & getDecors(void) { return m_decors; }
@@ -72,13 +70,13 @@ public:
 	void addOffsetY(int p_offsetY);
 
 	void init(Biome * p_biome);
-	void computeDecor(void);
 
 	virtual void swapDepth(void);
 	virtual void registerDepth(void);
 	virtual void nextStep(void) = 0;
 	virtual void previousStep(void) = 0;
 	virtual void computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY);
+	virtual void computeDecor(void);
 
 protected:
 	float			m_depth;
@@ -89,10 +87,7 @@ protected:
 	std::size_t		m_height;
 	sf::Vector2f const *	m_offset;
 	sf::Vector2f		m_curOffset;
-	// TODO:clear
 	std::size_t		mn_totalWidth;
-	int			mn_offsetX;
-	int			mn_offsetY;
 
 	// Containes base value to avoid redundant calcul
 	octo::Array2D<sf::Vector2f>		m_baseValue;

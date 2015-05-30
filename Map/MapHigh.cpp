@@ -1,6 +1,7 @@
 #include "MapHigh.hpp"
 #include "OctoNoise.hpp"
 #include <cmath>
+#include <Interpolations.hpp>
 
 MapHigh::MapHigh(void) :
 	Map()
@@ -66,19 +67,11 @@ float MapHigh::secondCurve(float * vec)
 	return sin(vec[0] * 15.f + OctoNoise::getCurrent().noise3(vec) * sin(vec[1]) * 5.f);
 }
 
-// TODO: To be deleted
-void lerp(sf::Color & p_result, sf::Color & p_start, sf::Color & p_end, float p_transition)
-{
-	p_result.r = p_start.r * (1.f - p_transition) + p_end.r * p_transition;
-	p_result.g = p_start.g * (1.f - p_transition) + p_end.g * p_transition;
-	p_result.b = p_start.b * (1.f - p_transition) + p_end.b * p_transition;
-}
-
 void MapHigh::setColor(Tile & p_tile)
 {
 	sf::Color start = sf::Color(180.f, 33.f, 85.f);
 	sf::Color end = sf::Color(212.f, 185.f, 39.f);
-	lerp(p_tile.m_startColor, start, end, p_tile.mf_noiseValue);
+	p_tile.m_startColor = octo::linearInterpolation(start, end, p_tile.mf_noiseValue);
 }
 
 void MapHigh::nextStep(void)

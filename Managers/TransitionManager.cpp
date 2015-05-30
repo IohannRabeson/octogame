@@ -1,7 +1,6 @@
 #include "TransitionManager.hpp"
 #include "MapManager.hpp"
 #include "MapInstance.hpp"
-#include "MapHigh.hpp"
 #include <Interpolations.hpp>
 
 TransitionManager::TransitionManager(void) :
@@ -26,8 +25,8 @@ void TransitionManager::init(MapManager * p_mapManager, Biome * p_biome)
 {
 	m_mapManager = p_mapManager;
 
-	m_tiles = new MapHigh();
-	m_tilesPrev = new MapHigh();
+	m_tiles = new MapInstance();
+	m_tilesPrev = new MapInstance();
 
 	// Init maps and biome
 	m_tiles->init(p_biome);
@@ -48,7 +47,6 @@ void TransitionManager::setTransitionAppear(int x, int y)
 	int i = 0;
 	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).me_transition == Tile::e_transition_appear)
 		i++;
-	//TODO: use the getter once
 	for (std::size_t j = 0u; j < 4u; j++)
 		m_tilesPrev->get(x, y).m_startTransition[j].y = m_tilesPrev->get(x, y + i).m_startTransition[j].y;
 	m_tilesPrev->get(x, y).m_startColor = m_tiles->get(x, y).m_startColor;
@@ -155,18 +153,18 @@ void TransitionManager::updateTransition(float pf_deltatime)
 		{
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_none)
 				continue;
-			// TODO:avoid useless calcul, same y, same x
 			m_vertices[mn_verticesCount].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[0u], m_tiles->get(x, y).m_startTransition[0u], transition);
 			m_vertices[mn_verticesCount + 1u].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[2u], m_tiles->get(x, y).m_startTransition[2u], transition);
 			m_vertices[mn_verticesCount + 2u].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[3u], m_tiles->get(x, y).m_startTransition[3u], transition);
 			m_vertices[mn_verticesCount + 4u].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[1u], m_tiles->get(x, y).m_startTransition[1u], transition);
 			m_vertices[mn_verticesCount + 3u].position = m_vertices[mn_verticesCount].position;
 			m_vertices[mn_verticesCount + 5u].position = m_vertices[mn_verticesCount + 1u].position;
+			m_vertices[mn_verticesCount].color = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startColor, m_tiles->get(x, y).m_startColor, transition);
 			for (std::size_t i = 0; i < 6u; i++)
 			{
 				m_vertices[mn_verticesCount + i].position.x -= Tile::DoubleTileSize;
 				m_vertices[mn_verticesCount + i].position.y -= Tile::DoubleTileSize;
-				m_vertices[mn_verticesCount + i].color = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startColor, m_tiles->get(x, y).m_startColor, transition);
+				m_vertices[mn_verticesCount + i].color = m_vertices[mn_verticesCount].color;
 			}
 			mn_verticesCount += 6u;
 		}

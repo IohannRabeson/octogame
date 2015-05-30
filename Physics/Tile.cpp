@@ -14,12 +14,15 @@ Tile::~Tile(void) {}
 //TODO: optimize
 int getIndex(int i)
 {
-	if (i == 1)
-		return 4;
-	else if (i == 2)
-		return 5;
-	else if (i == 3)
-		return 2;
+	switch (i)
+	{
+		case 1:
+			return 4;
+		case 2:
+			return 5;
+		case 4:
+			return 2;
+	}
 	return i;
 }
 

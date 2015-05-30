@@ -10,8 +10,6 @@ Map::Map(void) :
 	m_offset(nullptr),
 	m_curOffset(),
 	mn_totalWidth(0),
-	mn_offsetX(0),
-	mn_offsetY(0),
 	mn_decorTileCount(0u)
 {}
 
@@ -54,12 +52,13 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 	float vec[3];
 	int height;
 	int offset;
+	int offsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
 	int offsetY;
 	int offsetPosX;
 	float v;
 	for (int x = p_startX; x < p_endX; x++)
 	{
-		offset = x + static_cast<int>(m_curOffset.x / Tile::TileSize);
+		offset = x + offsetX;
 		offsetPosX = offset;
 		while (offset < 0)
 			offset += m_biome->mn_width;
@@ -84,7 +83,7 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 				m_tiles.get(x, y)->mb_isEmpty = true;
 				continue;
 			}
-			vec[0] = static_cast<float>(offset);
+			vec[0] = static_cast<float>(x + offsetX);
 			vec[1] = static_cast<float>(offsetY);
 			vec[2] = m_depth;
 			// secondCurve return a value between -1 & 1
@@ -108,19 +107,19 @@ void Map::computeDecor(void)
 		offsetPosX = it->first;
 		while (offset < 0)
 		{
-			offset += m_biome->mn_width;
-			offsetPosX -= m_biome->mn_width;
+			offset += mn_totalWidth;
+			offsetPosX -= mn_totalWidth;
 		}
-		while (offset >= static_cast<int>(m_biome->mn_width))
+		while (offset >= static_cast<int>(mn_totalWidth))
 		{
-			offset -= m_biome->mn_width;
-			offsetPosX += m_biome->mn_width;
+			offset -= mn_totalWidth;
+			offsetPosX += mn_totalWidth;
 		}
 		int border = offset + static_cast<int>(m_tiles.columns());
-		if (border > static_cast<int>(m_biome->mn_width))
+		if (border > static_cast<int>(mn_totalWidth))
 		{
-			if (it->first < (border % static_cast<int>(m_biome->mn_width)) + 20)
-				offsetPosX += m_biome->mn_width;
+			if (it->first < (border % static_cast<int>(mn_totalWidth)) + 20)
+				offsetPosX += mn_totalWidth;
 		}
 		vec[0] = static_cast<float>(it->first);
 		vec[1] = m_depth;
