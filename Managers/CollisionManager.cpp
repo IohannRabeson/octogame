@@ -55,8 +55,8 @@ void CollisionManager::broadPhase(void)
 	for (std::size_t k = 0u; k < m_dynamicPolygons.size(); k++)
 	{
 		sf::Rect<float> const & rect = m_dynamicPolygons[k]->getGlobalBounds();
-		int offsetX = static_cast<int>((m_dynamicPolygons[k]->getVelocity().x + rect.left - m_mapManager->getTransitionManager().getOffset().x) / Tile::TileSize) + 2;
-		int offsetY = static_cast<int>((m_dynamicPolygons[k]->getVelocity().y + rect.top - m_mapManager->getTransitionManager().getOffset().y) / Tile::TileSize) + 2;
+		int offsetX = static_cast<int>((m_dynamicPolygons[k]->getVelocity().x + rect.left) / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getTransitionManager().getOffset().x / Tile::TileSize);
+		int offsetY = static_cast<int>((m_dynamicPolygons[k]->getVelocity().y + rect.top) / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getTransitionManager().getOffset().y / Tile::TileSize);
 		int width = static_cast<int>(rect.width / Tile::TileSize) + 1 + offsetX;
 		int height = static_cast<int>(rect.height / Tile::TileSize) + 1 + offsetY;
 		if (m_dynamicPolygons[k]->getVelocity().x < 0)
@@ -135,7 +135,7 @@ void CollisionManager::narrowPhase(void)
 				else
 				{
 					m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y);
-					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Red);
+					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
 				}
 			}
 			m_pairs[i].m_polygonA->onCollision(m_pairs[i].m_polygonB);
@@ -247,6 +247,18 @@ void CollisionManager::debugDraw(sf::RenderTarget & render) const
 		shape.setFillColor(sf::Color::Transparent);
 		shape.setOutlineColor(sf::Color::Red);
 		shape.setOutlineThickness(2);
+		render.draw(shape);
+	}
+	for (std::size_t i = 0; i < m_pairCount; i++)
+	{
+		sf::ConvexShape shape;
+		Polygon * poly = m_pairs[i].m_polygonB;
+		shape.setPointCount(poly->getVerticeCount());
+		for (std::size_t j = 0; j < poly->getVerticeCount(); j++)
+			shape.setPoint(j, poly->getVertex(j));
+		shape.setFillColor(sf::Color::Transparent);
+		shape.setOutlineColor(sf::Color::Green);
+		shape.setOutlineThickness(1);
 		render.draw(shape);
 	}
 }

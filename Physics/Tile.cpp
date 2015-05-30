@@ -20,7 +20,7 @@ int getIndex(int i)
 			return 4;
 		case 2:
 			return 5;
-		case 4:
+		case 3:
 			return 2;
 	}
 	return i;
