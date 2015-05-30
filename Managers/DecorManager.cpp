@@ -34,6 +34,8 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 	m_decors.push_back(new Moon());
 	m_decors[i++]->init(p_biome);
 
+	m_decors.push_back(new Star());
+	m_decors[i++]->init(p_biome);
 	//m_decors.push_back(new Sun());
 	//m_decors[i++]->init(p_biome);
 

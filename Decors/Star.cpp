@@ -6,7 +6,9 @@
 #include <Application.hpp>
 
 Star::Star() :
-	Decor()
+	Decor(),
+	mf_shineTimer(0.f),
+	mf_maxShineTime(0.f)
 {
 }
 
@@ -56,10 +58,11 @@ void Star::createOneStar(sf::Vector2f p_size, sf::Vector2f p_sizeHeart, float p_
 void Star::randomDecor(void)
 {
 	Decor::randomDecor();
-	me_currentState = e_state_stop;
+	me_currentState = e_state_grow;
 
 	mn_maxTriangle = 6;
-	mf_liveTime = 0.01;
+	//TODO: Add this parameter im the biome
+	mf_maxShineTime = randomRange(1, 20);
 
 	allocateVertex(mn_maxTriangle * 3u);
 
@@ -85,14 +88,52 @@ void Star::init(Biome * p_biome)
 	createOneStar(m_size, m_sizeHeart, 0.0f, m_color);
 }
 
+void Star::computeStates(float pf_deltatime)
+{
+	switch (me_currentState)
+	{
+		case e_state_grow:
+		{
+			mf_mouvement += pf_deltatime * mf_growSpeed;
+			if (mf_mouvement >= 1.0f)
+				me_currentState = e_state_die;
+			break;
+		}
+		case e_state_die:
+		{
+			mf_mouvement -= pf_deltatime * mf_dieSpeed;
+			mf_dieTimer = 0.f;
+			break;
+		}
+		case e_state_stop:
+		{
+			mf_mouvement = 0.f;
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+void Star::shine(float pf_deltatime)
+{
+	computeStates(pf_deltatime);
+	mf_shineTimer += pf_deltatime;
+	//TODO: Find an other solution (this one could depend on fps, not good)
+	if (me_currentState == e_state_die && mf_mouvement <= 0.f)
+		me_currentState = e_state_stop;
+	if (me_currentState == e_state_stop && mf_shineTimer >= mf_maxShineTime)
+	{
+		randomDecor();
+		mf_shineTimer = 0.f;
+	}
+	if (me_currentState != e_state_stop)
+		createOneStar(sf::Vector2f(m_size.x * mf_mouvement, m_size.y * mf_mouvement), sf::Vector2f(m_sizeHeart.x * mf_mouvement, m_sizeHeart.y * mf_mouvement), 0.f, sf::Color(255,255,255, 50));
+}
+
 void Star::update(float pf_deltatime)
 {
 	Decor::update(pf_deltatime);
-	//TODO: Find an other solution (this one could depend on fps, not good)
-	if (me_currentState == e_state_die && mf_mouvement <= 0.01f)
-		me_currentState = e_state_stop;
-	if (me_currentState == e_state_stop && randomRange(1, 1000) >= 998)
-		me_currentState = e_state_grow;
 
 	if (me_currentState != e_state_stop)
 		createOneStar(sf::Vector2f(m_size.x * mf_mouvement, m_size.y * mf_mouvement), sf::Vector2f(m_sizeHeart.x * mf_mouvement, m_sizeHeart.y * mf_mouvement), 0.f, sf::Color(255,255,255, 50));
@@ -106,4 +147,3 @@ void Star::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
 		p_target.draw(m_light);
 	}
 }
-

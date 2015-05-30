@@ -141,7 +141,7 @@ void Crystal::update(float pf_deltatime)
 	if (mf_starTimer == 0.f)
 		m_nbCrystal = randomRange(0, mn_countCrystal);
 	m_star.setOrigin(m_up[m_nbCrystal] + m_origin);
-	m_star.update(pf_deltatime);
+	m_star.shine(pf_deltatime);
 }
 
 void Crystal::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
