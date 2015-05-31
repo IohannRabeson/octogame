@@ -1,13 +1,15 @@
 #include "Sun.hpp"
 #include "Map.hpp"
 
-Sun::Sun() :
+Sun::Sun(void) :
 	Decor(),
+	m_sizeCorner(),
+	m_transparency(sf::Color::White),
 	mf_angle(0.f)
 {
 }
 
-Sun::~Sun()
+Sun::~Sun(void)
 {
 }
 
@@ -64,7 +66,7 @@ void Sun::randomDecor(void)
 	m_transparency = sf::Color(m_color.r, m_color.g, m_color.b);
 
 	// Init containers
-	mn_maxTriangle = 10 * (m_biome->m_sun.mn_nb + 2);
+	mn_maxTriangle = 10 * (m_biome->m_sun.mn_nb + 3);
 	allocateVertex(mn_maxTriangle * 3u);
 	createSun();
 }
