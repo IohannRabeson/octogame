@@ -110,7 +110,6 @@ void CollisionManager::broadPhase(void)
 	}
 }
 
-#include <iostream>
 void CollisionManager::narrowPhase(void)
 {
 	for(std::size_t i = 0u; i < m_pairCount; i++)
@@ -121,12 +120,12 @@ void CollisionManager::narrowPhase(void)
 			if (m_pairs[i].m_polygonB->getCollideType() & Polygon::CollideType::e_tile)
 			{
 				//TODO: Block vertical tile
-				if (m_pairs[i].m_polygonA->getVelocity().x > 0 &&  m_pairs[i].m_polygonB->getVertex(0).y != m_pairs[i].m_polygonB->getVertex(3).y
+				/*if (m_pairs[i].m_polygonA->getVelocity().x > 0 &&  m_pairs[i].m_polygonB->getVertex(0).y != m_pairs[i].m_polygonB->getVertex(3).y
 					&& m_pairs[i].m_polygonA->getVertex(1).x < m_pairs[i].m_polygonB->getVertex(0).x)
 				{
 					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Green);
 					m_pairs[i].m_polygonA->addVelocity(-m_mtv);
-				}
+				}*/
 				if ((m_mtv.y <= -0.00000001f || m_mtv.y >= 0.00000001f) && (m_mtv.x <= -0.00000001f || m_mtv.x >= 0.00000001f))
 				{
 					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
