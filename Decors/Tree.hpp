@@ -6,7 +6,7 @@
 # include <cmath>
 
 # define DEPTH 8
-# define SIZE_SCREEN_Y 16 * 68
+# define SIZE_SCREEN_Y 1080
 
 class Tree : public Decor
 {
