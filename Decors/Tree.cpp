@@ -13,7 +13,7 @@ Tree::Tree(void) :
 	mn_maxTriangle = mn_maxRectangle * 3;
 	mn_maxLeaf = pow(2, DEPTH - 1) - 1;
 
-	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u + mn_maxLeaf * 6u]);
+	allocateVertex(mn_maxTriangle * 3u + mn_maxLeaf * 6u);
 	m_refAngle.resize(mn_maxRectangle);
 }
 
@@ -52,9 +52,8 @@ void Tree::createRectangle(sf::Vector2f const & p_center, sf::Vector2f const & p
 		*p_rightUp = rightUp;
 }
 
-void Tree::pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_angle, float pf_cos, float pf_sin, const int pn_depth)
+void Tree::pythagorasTree(sf::Vector2f const & p_center, sf::Vector2f const & p_size, float const & pf_angle, float  const & pf_cos, float const & pf_sin, const int pn_depth)
 {
-	m_leafColor = sf::Color(255 - m_color.r, 255 - m_color.g, 255 - m_color.b);
 	if (pn_depth == 1)
 	{
 		mn_countLeaf = mn_countAngle = 0;
@@ -133,7 +132,6 @@ void Tree::pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_a
 	// Left recursion
 	pythagorasTree(leftCenter, leftSize, rectangleAngleLeft, cosLeft, sinLeft, pn_depth + 1);
 
-	//color += sf::Color(10, 10, 10);
 	color += sf::Color(5, 5, 5);
 	// Fill empty space with triangle
 	createVertex(rightUpRoot + p_center, color, &mn_countTriangle);
@@ -155,7 +153,6 @@ void Tree::randomDecor(void)
 	mb_isLeaf = m_biome->mn_temperature >= 0 ? true : false;
 
 	m_color = sf::Color(180.f, 33.f, 85.f);
-	//m_leafColor = sf::Color(212.f, 185.f, 39.f);
 	float tmpX = randomRange(m_biome->m_tree.mn_minSizeX, m_biome->m_tree.mn_maxSizeX);
 	float tmpY = randomRange(m_biome->m_tree.mn_minSizeY, m_biome->m_tree.mn_maxSizeY);
 	m_size = sf::Vector2f(tmpX, tmpY);
@@ -175,7 +172,6 @@ void Tree::update(float pf_deltatime)
 {
 	Decor::update(pf_deltatime);
 	Decor::putOnMap();
-	//m_origin.x -= m_size.x / 2.0f;
 	m_origin.y -= m_size.y / 2.0f;
 
 	float delta = (m_size.y - m_size.y * mf_mouvement) / 2;

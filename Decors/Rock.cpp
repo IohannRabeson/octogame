@@ -60,16 +60,18 @@ void Rock::createRock(void)
 		createOneRock(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement), m_refOrigin[i] + m_origin, m_color,
 						m_refSizeLeft[i], m_refSizeRight[i], m_refSizeRec[i] * mf_mouvement);
 	createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, m_color);
-	/*
-	sf::Color iceColor(5, 103, 155, 60);
-	if (me_currentState == e_state_sleep)
+
+	if (b_isIce == true)
 	{
-		for (int i = 0; i < mn_countRock; i++)
+		sf::Color iceColor(5, 103, 155, 60);
+		if (me_currentState == e_state_sleep)
+		{
+			for (int i = 0; i < mn_countRock; i++)
 			createOneRock(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement * 1.1f), m_refOrigin[i] + m_origin, iceColor,
 							m_refSizeLeft[i] * 1.2f, m_refSizeRight[i] * 1.2f, m_refSizeRec[i] * mf_mouvement * 1.2f);
-		createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, iceColor);
+			createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, iceColor);
+		}
 	}
-	*/
 }
 
 void Rock::randomDecor(void)
@@ -78,10 +80,10 @@ void Rock::randomDecor(void)
 	m_color = sf::Color(122.f, 108.f, 135.f);
 	m_size = sf::Vector2f(randomRange(m_biome->m_rock.mn_minSizeX, m_biome->m_rock.mn_maxSizeX), randomRange(m_biome->m_rock.mn_minSizeY, m_biome->m_rock.mn_maxSizeY));
 
-	// Init containers
+	// Allocate memory
 	mn_countRock = randomRange(m_biome->m_rock.mn_minElement, m_biome->m_rock.mn_maxElement);
 	mn_maxTriangle = (10 * mn_countRock + 1) * 2; // +1 for root triangle
-	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u]);
+	allocateVertex(mn_maxTriangle * 3u);
 	mn_countTriangle = 0u;
 
 	m_refSize.resize(mn_countRock);
@@ -93,8 +95,8 @@ void Rock::randomDecor(void)
 	m_left = sf::Vector2f(0.f, 0.f);
 	m_right = sf::Vector2f(0.f, 0.f);
 
-	int i = 0;
 	// Compute left random values
+	int i = 0;
 	float totalX = 0;
 	sf::Vector2f size = m_size;
 	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
@@ -137,7 +139,6 @@ void Rock::randomDecor(void)
 		}
 		i++;
 	}
-	mf_mouvement = 0.00f;
 
 	createRock();
 }

@@ -128,13 +128,13 @@ void CollisionManager::narrowPhase(void)
 				}*/
 				if ((m_mtv.y <= -0.00000001f || m_mtv.y >= 0.00000001f) && (m_mtv.x <= -0.00000001f || m_mtv.x >= 0.00000001f))
 				{
-					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
+					//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
 					m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
 				}
 				else
 				{
 					m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y);
-					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
+					//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
 				}
 			}
 			m_pairs[i].m_polygonA->onCollision(m_pairs[i].m_polygonB);

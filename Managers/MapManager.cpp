@@ -2,14 +2,19 @@
 #include "../ResourceDefinitions.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <GraphicsManager.hpp>
 
 MapManager::MapManager(void) :
 	m_texture(nullptr)
 {
+	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
+	graphics.addKeyboardListener(&m_decorManager);
 }
 
 MapManager::~MapManager(void)
 {
+	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(&m_decorManager);
 }
 
 void MapManager::init(void)
@@ -65,5 +70,5 @@ void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 	*/
 	states.texture = m_texture;
 	render.draw(&m_collisionManager.getPlayer().m_vertices[0], 4, sf::Quads, states);
-	m_collisionManager.debugDraw(render);
+	//m_collisionManager.debugDraw(render);
 }

@@ -6,9 +6,13 @@ Decor::Decor(void) :
 	GameObject(),
 	mn_countTriangle(0u),
 	mn_maxTriangle(0u),
+	b_isIce(false),
 	me_currentState(e_state_sleep),
 	m_size(50.f, 50.f),
 	m_color(sf::Color(0, 0, 0)),
+	m_biome(nullptr),
+	mf_timer(0.f),
+	mf_maxTimer(4.f),
 	mf_dieTimer(0.f),
 	mf_liveTime(0.f),
 	mf_mouvement(0.f),
@@ -24,12 +28,11 @@ Decor::~Decor(void)
 {
 }
 
-void Decor::rotateVec(sf::Vector2f *p_point, float p_cosAngle, float p_sinAngle)
+void Decor::rotateVec(sf::Vector2f *p_vector, float p_cosAngle, float p_sinAngle)
 {
-	sf::Vector2f tmp;
-	tmp.x = p_point->x * p_cosAngle - p_point->y * p_sinAngle;
-	tmp.y = p_point->y * p_cosAngle + p_point->x * p_sinAngle;
-	*p_point = tmp;
+	float x = p_vector->x * p_cosAngle - p_vector->y * p_sinAngle;
+	p_vector->y = p_vector->y * p_cosAngle + p_vector->x * p_sinAngle;
+	p_vector->x = x;
 }
 
 float Decor::randomRange(int pn_min, int pn_max)
@@ -82,21 +85,34 @@ void Decor::computeStates(float pf_deltatime)
 		{
 			mf_timer += pf_deltatime;
 			mf_dieTimer += pf_deltatime;
-			if (mf_timer > 4.0f)
+			if (mf_timer > mf_maxTimer)
 				mf_timer = 0.0f;
 			if (mf_dieTimer >= mf_liveTime && mf_liveTime != 0.f)
 				me_currentState = e_state_die;
-			else if (mf_timer > 2.0f)
+			else if (mf_timer > mf_maxTimer / 2.f)
 				mf_mouvement += pf_deltatime / (20 + (mf_timer - 2.0f) * 10);
-				else
-			mf_mouvement -= pf_deltatime / (20 + mf_timer * 10);
+			else
+				mf_mouvement -= pf_deltatime / (20 + mf_timer * 10);
 			break;
 		}
 		case e_state_stop:
+		{
 			mf_mouvement = 0.f;
+			break;
+		}
 		default:
 			break;
 	}
+}
+
+void Decor::init(Biome * p_biome)
+{
+	m_biome = p_biome;
+}
+
+void Decor::allocateVertex(int pn_count)
+{
+	m_triangle.reset(new sf::Vertex[pn_count]);
 }
 
 void Decor::randomDecor(void)
@@ -105,9 +121,9 @@ void Decor::randomDecor(void)
 	me_currentState = e_state_grow;
 }
 
-void Decor::init(Biome * p_biome)
+float Decor::getOriginX(void) const
 {
-	m_biome = p_biome;
+	return m_origin.x;
 }
 
 void Decor::putOnMap(void)
@@ -117,11 +133,23 @@ void Decor::putOnMap(void)
 	m_origin.y = m_vertexPosition->position.y;
 }
 
+void Decor::updateOrigin(float pf_deltatime)
+{
+	computeStates(pf_deltatime);
+	putOnMap();
+}
+
+void Decor::iceDecor(void)
+{
+	if (b_isIce == true)
+		b_isIce = false;
+	else if (b_isIce == false)
+		b_isIce = true;
+}
+
 void Decor::update(float pf_deltatime)
 {
 	computeStates(pf_deltatime);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-		randomDecor();
 }
 
 void Decor::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const

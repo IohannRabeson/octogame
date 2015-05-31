@@ -55,6 +55,19 @@ void MapInstance::initBiome(void)
 	m_biome->m_star.mn_minSizeY = 70;
 	m_biome->m_star.mn_maxSizeY = 100;
 
+	m_biome->m_sun.mn_nb = 2;
+	m_biome->m_sun.mn_minSizeX = 70;
+	m_biome->m_sun.mn_maxSizeX = 100;
+
+	m_biome->m_cloud.mn_nb = 3;
+	m_biome->m_cloud.mn_minSizeX = 150;
+	m_biome->m_cloud.mn_maxSizeX = 400;
+	m_biome->m_cloud.mn_minSizeY = 10;
+	m_biome->m_cloud.mn_maxSizeY = 20;
+	m_biome->m_cloud.mn_minElement = 4;
+	m_biome->m_cloud.mn_maxElement = 15;
+	m_biome->m_tree.mn_minLive = 10;
+	m_biome->m_tree.mn_maxLive = 15;
 }
 
 void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
