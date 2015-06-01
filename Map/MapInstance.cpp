@@ -18,9 +18,11 @@ void MapInstance::initBiome(void)
 	m_biome->mf_transitionTimerMax = 0.5f;
 	m_biome->mn_nbDecor = 15u;
 	m_biome->mn_temperature = 1;
+	m_biome->mn_wind = 300;
 	m_instance = new StaticTileObject(140u, 40u, 5u);
 	m_instance->load();
 	mn_totalWidth = m_biome->mn_width + m_instance->getWidth();
+	m_biome->mn_totalWidth = mn_totalWidth;
 
 	// Decors values
 	m_biome->m_tree.mn_nb = 10;
@@ -54,6 +56,8 @@ void MapInstance::initBiome(void)
 	m_biome->m_star.mn_maxSizeX = 100;
 	m_biome->m_star.mn_minSizeY = 70;
 	m_biome->m_star.mn_maxSizeY = 100;
+	m_biome->m_star.mn_minLive = 5;
+	m_biome->m_star.mn_maxLive = 15;
 
 	m_biome->m_sun.mn_nb = 2;
 	m_biome->m_sun.mn_minSizeX = 70;

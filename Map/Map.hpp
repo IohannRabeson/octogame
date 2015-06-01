@@ -22,12 +22,14 @@ struct DecorValues
 
 struct Biome
 {
-	std::size_t		mn_height;
-	std::size_t		mn_width;
+	std::size_t			mn_height;
+	std::size_t			mn_width;
+	std::size_t			mn_totalWidth;
 	int					mn_temperature;
-	std::size_t		mn_nbDecor;
+	int					mn_wind;
+	std::size_t			mn_nbDecor;
 	// between 0 and mn_width, it will be use to set the player at first appartition
-	std::size_t		mn_startOffsetX;
+	std::size_t			mn_startOffsetX;
 	float				mf_transitionTimerMax;
 	// Pattern to put the decor on the map
 	DecorValues			m_tree;

@@ -37,7 +37,6 @@ void Tree::createRectangle(sf::Vector2f const & p_center, sf::Vector2f const & p
 	rotateVec(&rightDown, pf_cos, pf_sin);
 	rotateVec(&rightUp, pf_cos, pf_sin);
 
-	// Create rectangle (2 triangles)
 	createVertex(rightUp + p_center, p_color, pn_count);
 	createVertex(rightDown + p_center, p_color, pn_count);
 	createVertex(leftDown + p_center, p_color, pn_count);
