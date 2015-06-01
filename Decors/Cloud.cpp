@@ -46,8 +46,10 @@ void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color
 
 	// Fill with rectangle
 	createRectangle(upLeft, upRight, cornerUpRight, cornerUpLeft, p_origin, p_color);
-	createRectangle(upMidLeft, upMidRight, downMidRight, downMidLeft, p_origin, p_color);
-	createRectangle(downLeft, downRight, cornerDownRight, cornerDownLeft, p_origin, p_color);
+	createRectangle(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, p_origin, p_color);
+	createRectangle(cornerDownLeft, cornerDownRight, downRight, downLeft, p_origin, p_color);
+	createRectangle(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
+	createRectangle(cornerUpRight, upMidRight, downMidRight, cornerDownRight, p_origin, p_color);
 
 	// Corner down
 	createTriangle(downMidRight, cornerDownRight, downRight, p_origin, p_color);
@@ -86,7 +88,7 @@ void Cloud::randomDecor(void)
 
 	// Allocate memory
 	mn_countCloud = randomRange(m_biome->m_cloud.mn_minElement, m_biome->m_cloud.mn_maxElement);
-	mn_maxTriangle = (14 * mn_countCloud) * 2; // +1 for root triangle
+	mn_maxTriangle = (20 * mn_countCloud) * 2;
 	allocateVertex(mn_maxTriangle * 3u);
 	mn_countTriangle = 0u;
 

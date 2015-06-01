@@ -33,9 +33,16 @@ void Sun::createOneSun(sf::Vector2f p_size, sf::Vector2f p_sizeCorner, sf::Vecto
 	createTriangle(downLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
 	createTriangle(downRight, cornerDownRight, downMidRight, p_origin, p_color);
 
+	createRectangle(upLeft, upRight, cornerUpRight, cornerUpLeft, p_origin, p_color);
+	createRectangle(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, p_origin, p_color);
+	createRectangle(cornerDownLeft, cornerDownRight, downRight, downLeft, p_origin, p_color);
+	createRectangle(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
+	createRectangle(cornerUpRight, upMidRight, downMidRight, cornerDownRight, p_origin, p_color);
+	/*
 	createRectangle(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
 	createRectangle(upMidRight, cornerUpRight, cornerDownRight, downMidRight, p_origin, p_color);
 	createRectangle(upLeft, upRight, downRight, downLeft, p_origin, p_color);
+	*/
 }
 
 void Sun::createSun(void)
@@ -66,7 +73,7 @@ void Sun::randomDecor(void)
 	m_transparency = sf::Color(m_color.r, m_color.g, m_color.b);
 
 	// Init containers
-	mn_maxTriangle = 10 * (m_biome->m_sun.mn_nb + 3);
+	mn_maxTriangle = 14 * (m_biome->m_sun.mn_nb + 3);
 	allocateVertex(mn_maxTriangle * 3u);
 	createSun();
 }
