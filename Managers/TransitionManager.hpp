@@ -16,7 +16,7 @@ public:
 	inline std::size_t getMapWidth(void) const { return m_tiles->getColumns(); }
 	inline std::size_t getMapHeight(void) const { return m_tiles->getRows(); }
 	inline sf::Vector2f const & getOffset(void) const { return *m_offset; }
-	inline int getMapOffsetX(void) const { return static_cast<int>(m_offset->x / Tile::TileSize); }
+	inline int getMapOffsetX(void) const { return static_cast<int>(m_offset->x); }
 	// Only used by StaticObjectManager to compute initial position
 	inline void computeDecor(void) { m_tiles->computeDecor(); }
 

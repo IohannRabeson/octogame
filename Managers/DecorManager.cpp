@@ -36,8 +36,6 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 
 	m_decors.push_back(new Star());
 	m_decors[i++]->init(p_biome);
-	//m_decors.push_back(new Sun());
-	//m_decors[i++]->init(p_biome);
 
 	int total = 0;
 	total += m_biome->m_cloud.mn_nb;
@@ -91,12 +89,12 @@ void DecorManager::setPosition(void)
 
 void DecorManager::update(float pf_deltatime)
 {
-	m_offsetX = m_mapManager->getTransitionManager().getMapOffsetX() * 8;
+	m_offsetX = m_mapManager->getCameraManager().getUpLeft()->x;
 	int delta = 500;
 	for (size_t i = 0; i < m_decors.size(); i++)
 	{
 		int originX = m_decors[i]->getOriginX();
-		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1900 + delta)
+		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1920 + delta)
 			m_decors[i]->update(pf_deltatime);
 		else
 			m_decors[i]->updateOrigin(pf_deltatime);
@@ -109,7 +107,7 @@ void DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 	for (size_t i = 0; i < m_decors.size(); i++)
 	{
 		int originX = m_decors[i]->getOriginX();
-		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1900 + delta)
+		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1920 + delta)
 			render.draw(*m_decors[i], states);
 	}
 }

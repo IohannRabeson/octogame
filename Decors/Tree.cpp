@@ -37,7 +37,6 @@ void Tree::createRectangle(sf::Vector2f const & p_center, sf::Vector2f const & p
 	rotateVec(&rightDown, pf_cos, pf_sin);
 	rotateVec(&rightUp, pf_cos, pf_sin);
 
-	// Create rectangle (2 triangles)
 	createVertex(rightUp + p_center, p_color, pn_count);
 	createVertex(rightDown + p_center, p_color, pn_count);
 	createVertex(leftDown + p_center, p_color, pn_count);
@@ -72,21 +71,21 @@ void Tree::pythagorasTree(sf::Vector2f const & p_center, sf::Vector2f const & p_
 	float colorChange = pn_depth * 15;
 	sf::Color color = sf::Color(m_color.r + colorChange, m_color.g + colorChange, m_color.b + colorChange);
 
-	// Create extended root
-	if (pn_depth == 1)
-	{
-		createVertex(sf::Vector2f(p_center.x - p_size.x / 2, p_center.y + p_size.y / 2), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x + p_size.x / 2, p_center.y + p_size.y / 2), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x + p_size.x / 2, SIZE_SCREEN_Y), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x - p_size.x / 2, p_center.y + p_size.y / 2), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x + p_size.x / 2, SIZE_SCREEN_Y), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x - p_size.x / 2, SIZE_SCREEN_Y), color, &mn_countTriangle);
-	}
-
 	// Create root rectangle
 	sf::Vector2f leftUpRoot;
 	sf::Vector2f rightUpRoot;
 	createRectangle(p_center, p_size, color, 5, &mn_countTriangle, pf_cos, pf_sin, &leftUpRoot, &rightUpRoot);
+
+	// Create extended root
+	if (pn_depth == 1)
+	{
+		sf::Color rootColor(color.r - 5, color.g - 5, color.b - 5);
+		sf::Vector2f leftDownRoot(leftUpRoot.x, leftUpRoot.y + p_size.y);
+		sf::Vector2f rightDownRoot(rightUpRoot.x, rightUpRoot.y + p_size.y);
+		sf::Vector2f downLeft(leftUpRoot.x, SIZE_SCREEN_Y);
+		sf::Vector2f downRight(rightUpRoot.x, SIZE_SCREEN_Y);
+		Decor::createRectangle(leftDownRoot, rightDownRoot, downRight, downLeft, p_center, rootColor);
+	}
 
 	// Stop recursion
 	if (pn_depth >= DEPTH)

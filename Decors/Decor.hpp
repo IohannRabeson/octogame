@@ -34,7 +34,7 @@ protected:
 		e_state_nb
 	};
 
-	std::unique_ptr<sf::Vertex[]>	m_triangle;
+	sf::VertexArray *				m_triangle;
 	int								mn_countTriangle;
 	int								mn_maxTriangle;
 	bool							b_isIce;
@@ -52,7 +52,7 @@ protected:
 
 	// TODO: Think about random numbers generation
 	float randomRange(int pn_min, int pn_max);
-	void  rotateVec(sf::Vector2f *p_vertex, float p_cosAngle, float p_sinAngle);
+	void  rotateVec(sf::Vector2f *p_vertex, float const & p_cosAngle, float const & p_sinAngle);
 	void  createVertex(sf::Vector2f p_pos, sf::Color const & p_color, int * pn_count);
 	void  createTriangle(sf::Vector2f const & p_a, sf::Vector2f const & p_b, sf::Vector2f const & p_c, sf::Vector2f const & p_origin, sf::Color const & p_color);
 	void  createRectangle(sf::Vector2f const & p_a, sf::Vector2f const & p_b, sf::Vector2f const & p_c, sf::Vector2f const & p_d, sf::Vector2f const & p_origin, sf::Color const & p_color);

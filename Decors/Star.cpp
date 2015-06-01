@@ -61,8 +61,7 @@ void Star::randomDecor(void)
 	me_currentState = e_state_grow;
 
 	mn_maxTriangle = 6;
-	//TODO: Add this parameter im the biome
-	mf_maxShineTime = randomRange(1, 20);
+	mf_maxShineTime = randomRange(m_biome->m_star.mn_minLive, m_biome->m_star.mn_maxLive);
 
 	allocateVertex(mn_maxTriangle * 3u);
 
@@ -119,7 +118,6 @@ void Star::shine(float pf_deltatime)
 {
 	computeStates(pf_deltatime);
 	mf_shineTimer += pf_deltatime;
-	//TODO: Find an other solution (this one could depend on fps, not good)
 	if (me_currentState == e_state_die && mf_mouvement <= 0.f)
 		me_currentState = e_state_stop;
 	if (me_currentState == e_state_stop && mf_shineTimer >= mf_maxShineTime)

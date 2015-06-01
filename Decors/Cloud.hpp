@@ -14,6 +14,7 @@ private:
 	std::vector<float>			m_refSizeUp;
 	std::vector<float>			m_refSizeDown;
 	std::vector<float>			m_refSizeRec;
+	int							mn_alpha;
 
 public:
 	Cloud(void);

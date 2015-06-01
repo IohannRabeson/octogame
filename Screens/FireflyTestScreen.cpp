@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/08 16:58:26 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/23 01:32:34 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <ResourceManager.hpp>
 #include <Console.hpp>
 #include <Palette.hpp>
+#include <ColorWheel.hpp>
 #include <WPrintSFML.hpp>
 #include <StringUtils.hpp>
 

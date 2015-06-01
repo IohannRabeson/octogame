@@ -1,13 +1,13 @@
 #include "Moon.hpp"
 #include "Map.hpp"
 
-Moon::Moon() :
+Moon::Moon(void) :
 	Decor(),
 	mf_angle(180.f)
 {
 }
 
-Moon::~Moon()
+Moon::~Moon(void)
 {
 }
 

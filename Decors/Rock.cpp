@@ -38,7 +38,10 @@ void Rock::createOneRock(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p
 	right.y = right.y > 0.f ? 0.f : right.y;
 
 	createTriangle(right, midRight, upRight, p_origin, p_color);
-	createRectangle(upLeft, upRight, downMidRight, downMidLeft, p_origin, p_color);
+
+
+	createRectangle(upLeft, upRight, midRight, midLeft, p_origin, p_color);
+	createRectangle(midLeft, midRight, downMidRight, downMidLeft, p_origin, p_color);
 	createRectangle(left, midLeft, downMidLeft, downLeft, p_origin, p_color);
 	createRectangle(right, midRight, downMidRight, downRight, p_origin, p_color);
 
@@ -82,7 +85,7 @@ void Rock::randomDecor(void)
 
 	// Allocate memory
 	mn_countRock = randomRange(m_biome->m_rock.mn_minElement, m_biome->m_rock.mn_maxElement);
-	mn_maxTriangle = (10 * mn_countRock + 1) * 2; // +1 for root triangle
+	mn_maxTriangle = (12 * mn_countRock + 1) * 2; // +1 for root triangle
 	allocateVertex(mn_maxTriangle * 3u);
 	mn_countTriangle = 0u;
 

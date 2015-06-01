@@ -2,7 +2,9 @@
 #include "Map.hpp"
 
 Cloud::Cloud() :
-	Decor()
+	Decor(),
+	mn_countCloud(0),
+	mn_alpha(0)
 {
 }
 
@@ -17,9 +19,7 @@ Cloud::~Cloud()
 
 void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec)
 {
-	//TODO: Understand with this make disapear the clouds
-	//p_color.a is empty!
-	//p_color.a = mf_mouvement * p_color.a;
+	p_color.a = mf_mouvement * mn_alpha;
 
 	sf::Vector2f upLeft(-p_size.x + p_sizeUp, -p_size.y - p_sizeUp);
 	sf::Vector2f upRight(p_size.x - p_sizeUp, -p_size.y - p_sizeUp);
@@ -46,8 +46,10 @@ void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color
 
 	// Fill with rectangle
 	createRectangle(upLeft, upRight, cornerUpRight, cornerUpLeft, p_origin, p_color);
-	createRectangle(upMidLeft, upMidRight, downMidRight, downMidLeft, p_origin, p_color);
-	createRectangle(downLeft, downRight, cornerDownRight, cornerDownLeft, p_origin, p_color);
+	createRectangle(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, p_origin, p_color);
+	createRectangle(cornerDownLeft, cornerDownRight, downRight, downLeft, p_origin, p_color);
+	createRectangle(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
+	createRectangle(cornerUpRight, upMidRight, downMidRight, cornerDownRight, p_origin, p_color);
 
 	// Corner down
 	createTriangle(downMidRight, cornerDownRight, downRight, p_origin, p_color);
@@ -78,15 +80,15 @@ void Cloud::randomDecor(void)
 	Decor::randomDecor();
 	// Init values
 	mf_liveTime = randomRange(m_biome->m_tree.mn_minLive, m_biome->m_tree.mn_maxLive);
-	m_color = sf::Color(230.f, 230.f, 230.f);
-	m_color.a = randomRange(100, 220);
+	m_color = sf::Color(230, 230, 230);
+	mn_alpha = randomRange(100, 220);
 	m_size = sf::Vector2f(randomRange(m_biome->m_cloud.mn_minSizeX, m_biome->m_cloud.mn_maxSizeX), randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY));
 	m_origin.x = randomRange(0, 1900);
 	m_origin.y = randomRange(0, 500);
 
 	// Allocate memory
 	mn_countCloud = randomRange(m_biome->m_cloud.mn_minElement, m_biome->m_cloud.mn_maxElement);
-	mn_maxTriangle = (14 * mn_countCloud) * 2; // +1 for root triangle
+	mn_maxTriangle = (18 * mn_countCloud) * 2;
 	allocateVertex(mn_maxTriangle * 3u);
 	mn_countTriangle = 0u;
 
@@ -155,7 +157,7 @@ void Cloud::update(float pf_deltatime)
 	Decor::update(pf_deltatime);
 
 	if (b_isIce == false)
-		m_origin.x += pf_deltatime * 100.f;
+		m_origin.x += pf_deltatime * m_biome->mn_wind;
 
 	if (m_origin.x >= 1900 + 500)
 	{
