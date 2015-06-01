@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:29:33 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/31 15:44:55 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/06/01 16:17:59 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,6 @@ void	StateGame::update(sf::Time p_deltatime)
 void	StateGame::draw(sf::RenderTarget& render) const
 {
 	render.clear(sf::Color::Black);
-	render.draw(m_back);
+	//render.draw(m_back);
 	render.draw(m_mapManager);
 }

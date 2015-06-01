@@ -28,6 +28,10 @@ private:
 	DecorManager			m_decorManager;
 	CollisionManager		m_collisionManager;
 	CameraManager			m_cameraManager;
+	std::string			m_wave;
+	std::string			m_dark;
+	std::string			m_negative;
+	sf::Shader			m_shader;
 
 	//TODO: remove
 	sf::Texture const*		m_texture;
