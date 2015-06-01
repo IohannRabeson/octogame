@@ -54,8 +54,10 @@ void CollisionManager::broadPhase(void)
 	for (std::size_t k = 0u; k < m_dynamicPolygons.size(); k++)
 	{
 		sf::Rect<float> const & rect = m_dynamicPolygons[k]->getGlobalBounds();
-		int offsetX = static_cast<int>((m_dynamicPolygons[k]->getVelocity().x + rect.left) / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getTransitionManager().getOffset().x / Tile::TileSize);
-		int offsetY = static_cast<int>((m_dynamicPolygons[k]->getVelocity().y + rect.top) / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getTransitionManager().getOffset().y / Tile::TileSize);
+		int offsetX = static_cast<int>((m_dynamicPolygons[k]->getVelocity().x + rect.left) / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getCameraManager().getUpLeft()->x / Tile::TileSize);
+		if (rect.left < 0)
+			offsetX--;
+		int offsetY = static_cast<int>((m_dynamicPolygons[k]->getVelocity().y + rect.top) / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getCameraManager().getUpLeft()->y / Tile::TileSize);
 		int width = static_cast<int>(rect.width / Tile::TileSize) + 1 + offsetX;
 		int height = static_cast<int>(rect.height / Tile::TileSize) + 1 + offsetY;
 		if (m_dynamicPolygons[k]->getVelocity().x < 0)
@@ -113,34 +115,38 @@ void CollisionManager::narrowPhase(void)
 {
 	for(std::size_t i = 0u; i < m_pairCount; i++)
 	{
+		m_pairs[i].m_isColliding = false;
 		if (computeCollision(m_pairs[i].m_polygonA, m_pairs[i].m_polygonB))
 		{
 			// Collision with tiles to replace DynamicsPolygon
 			if (m_pairs[i].m_polygonB->getCollideType() & Polygon::CollideType::e_tile)
 			{
-				//TODO: Block vertical tile
-				/*if (m_pairs[i].m_polygonA->getVelocity().x > 0 &&  m_pairs[i].m_polygonB->getVertex(0).y != m_pairs[i].m_polygonB->getVertex(3).y
-					&& m_pairs[i].m_polygonA->getVertex(1).x < m_pairs[i].m_polygonB->getVertex(0).x)
+				// Move the polygon on X axis
+				if (m_pairs[i].m_polygonA->getVelocity().x > 0.f && m_pairs[i].m_polygonB->getVertex(0).y != m_pairs[i].m_polygonB->getVertex(3).y
+					&& m_pairs[i].m_polygonB->getVertex(1).x >= m_pairs[i].m_polygonA->getVertex(1).x
+					&& m_pairs[i].m_polygonB->getVertex(0).y <= m_pairs[i].m_polygonA->getVertex(3).y)
 				{
-					static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Green);
-					m_pairs[i].m_polygonA->addVelocity(-m_mtv);
-				}*/
+					m_pairs[i].m_polygonA->addVelocity(m_mtv.x, 0.f);
+				}
+				else if (m_pairs[i].m_polygonA->getVelocity().x < 0.f && m_pairs[i].m_polygonB->getVertex(1).y != m_pairs[i].m_polygonB->getVertex(2).y
+					&& m_pairs[i].m_polygonB->getVertex(0).x <= m_pairs[i].m_polygonA->getVertex(0).x
+					&& m_pairs[i].m_polygonB->getVertex(1).y <= m_pairs[i].m_polygonA->getVertex(3).y)
+				{
+					m_pairs[i].m_polygonA->addVelocity(m_mtv.x, 0.f);
+				}
+				// Move the polygon on Y axis
 				if ((m_mtv.y <= -0.00000001f || m_mtv.y >= 0.00000001f) && (m_mtv.x <= -0.00000001f || m_mtv.x >= 0.00000001f))
 				{
-					//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
 					m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
 				}
 				else
 				{
 					m_pairs[i].m_polygonA->addVelocity(0.f, m_mtv.y);
-					//static_cast<Tile*>(m_pairs[i].m_polygonB)->m_startColor = (sf::Color::Blue);
 				}
 			}
 			m_pairs[i].m_polygonA->onCollision(m_pairs[i].m_polygonB);
 			m_pairs[i].m_isColliding = true;
 		}
-		else
-			m_pairs[i].m_isColliding = false;
 	}
 }
 
@@ -169,8 +175,6 @@ bool CollisionManager::computeCollision(DynamicPolygon * polygonA, Polygon * pol
 		// On fait une projection du polygonA et du polygonB sur l'axe
 		m_projectionA.project(m_axis, polygonA);
 		m_projectionB.project(m_axis, polygonB);
-		// Si ils sont l'un sur l'autre, on test la normal suivante
-		// Si ils ne sont pas l'un sur l'autre, on est certain qu'il existe un axe entre les deux, donc il n'y a pas de collision
 		float overlap = m_projectionA.getOverlap(m_projectionB);
 		// On ajoute la velocité actuelle pour simuler le prochain déplacment
 		float vel = dot(m_axis, polygonA->getVelocity());
@@ -190,6 +194,8 @@ bool CollisionManager::computeCollision(DynamicPolygon * polygonA, Polygon * pol
 				overlap += max;
 			//std::cout << "CONTAINEMENT " << min << " " << max <<  std::endl;
 		}*/
+		// Si ils sont l'un sur l'autre, on test la normal suivante
+		// Si ils ne sont pas l'un sur l'autre, on est certain qu'il existe un axe entre les deux, donc il n'y a pas de collision
 		if (overlap >= 0.f)
 			return false;
 		overlap =  -overlap;

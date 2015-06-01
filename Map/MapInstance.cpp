@@ -103,7 +103,7 @@ void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_
 		// firstCurve return a value between -1 & 1
 		// we normalize it betwen 0 & max_height
 		v = (firstCurve(vec) + 1.f) * static_cast<float>(m_biome->mn_height) / 2.f;
-		offsetInstance = height = static_cast<int>(v);
+		height = static_cast<int>(v);
 		for (int y = p_startY; y < p_endY; y++)
 		{
 			offsetY = y + static_cast<int>(m_curOffset.y / Tile::TileSize);
@@ -112,9 +112,9 @@ void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_
 			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize);
 			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
 			m_tiles.get(x, y)->m_startTransition[3] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
-			float yy = offsetY - offsetInstance;
-			if (inInstance && yy >= 0 && yy < m_instance->getHeight())
-				m_tiles.get(x, y)->mb_isEmpty = m_instance->get(offset - m_biome->mn_width, yy).mb_isEmpty;
+			offsetInstance = offsetY - height;
+			if (inInstance && offsetInstance >= 0 && offsetInstance < static_cast<int>(m_instance->getHeight()))
+				m_tiles.get(x, y)->mb_isEmpty = m_instance->get(offset - m_biome->mn_width, offsetInstance).mb_isEmpty;
 			else if (offsetY < height || offsetY < 0)
 			{
 				m_tiles.get(x, y)->mb_isEmpty = true;
