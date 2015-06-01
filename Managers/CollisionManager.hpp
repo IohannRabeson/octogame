@@ -33,8 +33,9 @@ private:
 
 	struct Pair
 	{
-		DynamicPolygon *	m_polygonA;
-		Polygon *		m_polygonB;
+		DynamicPolygon *	m_polygonA = nullptr;
+		Polygon *		m_polygonB = nullptr;
+		bool			m_isColliding = false;
 	};
 
 	// Owner

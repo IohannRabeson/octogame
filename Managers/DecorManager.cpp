@@ -101,14 +101,14 @@ void DecorManager::update(float pf_deltatime)
 	}
 }
 
-void DecorManager::draw(sf::RenderTarget& render, sf::RenderStates) const
+void DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	int delta = 500;
 	for (size_t i = 0; i < m_decors.size(); i++)
 	{
 		int originX = m_decors[i]->getOriginX();
 		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1920 + delta)
-			render.draw(*m_decors[i]);
+			render.draw(*m_decors[i], states);
 	}
 }
 

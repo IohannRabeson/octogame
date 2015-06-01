@@ -48,7 +48,6 @@ void CollisionManager::update(float pf_deltatime)
 		m_dynamicPolygons[i]->applyTransform();
 }
 
-#include <iostream>
 void CollisionManager::broadPhase(void)
 {
 	m_pairCount = 0u;
@@ -138,7 +137,10 @@ void CollisionManager::narrowPhase(void)
 				}
 			}
 			m_pairs[i].m_polygonA->onCollision(m_pairs[i].m_polygonB);
+			m_pairs[i].m_isColliding = true;
 		}
+		else
+			m_pairs[i].m_isColliding = false;
 	}
 }
 
@@ -256,8 +258,11 @@ void CollisionManager::debugDraw(sf::RenderTarget & render) const
 		for (std::size_t j = 0; j < poly->getVerticeCount(); j++)
 			shape.setPoint(j, poly->getVertex(j));
 		shape.setFillColor(sf::Color::Transparent);
-		shape.setOutlineColor(sf::Color::Green);
-		shape.setOutlineThickness(1);
+		if (m_pairs[i].m_isColliding)
+			shape.setOutlineColor(sf::Color::Magenta);
+		else
+			shape.setOutlineColor(sf::Color::Green);
+		shape.setOutlineThickness(2);
 		render.draw(shape);
 	}
 }
