@@ -89,7 +89,7 @@ void DecorManager::setPosition(void)
 
 void DecorManager::update(float pf_deltatime)
 {
-	m_offsetX = m_mapManager->getTransitionManager().getMapOffsetX() * 16;
+	m_offsetX = m_mapManager->getTransitionManager().getMapOffsetX();
 	int delta = 500;
 	for (size_t i = 0; i < m_decors.size(); i++)
 	{
