@@ -139,7 +139,8 @@ void Decor::putOnMap(void)
 void Decor::updateOrigin(float pf_deltatime)
 {
 	computeStates(pf_deltatime);
-	putOnMap();
+	m_origin.x = m_vertexPosition->position.x;
+//	m_origin.y = m_vertexPosition->position.y;
 }
 
 void Decor::iceDecor(void)

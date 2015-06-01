@@ -95,10 +95,10 @@ void MapManager::update(float pf_deltatime)
 	m_transitionManager.update(pf_deltatime);
 	m_decorManager.update(pf_deltatime);
 	m_collisionManager.update(pf_deltatime);
-//	float x = static_cast<float>(sf::Mouse::getPosition().x) / octo::Application::getGraphicsManager().getVideoMode().width;
-//	float y = static_cast<float>(sf::Mouse::getPosition().y) / octo::Application::getGraphicsManager().getVideoMode().height;
-//	m_shader.setParameter("wave_phase", pf_deltatime);
-//	m_shader.setParameter("wave_amplitude", x * 40, y * 40);
+	//float x = static_cast<float>(sf::Mouse::getPosition().x) / octo::Application::getGraphicsManager().getVideoMode().width;
+	//float y = static_cast<float>(sf::Mouse::getPosition().y) / octo::Application::getGraphicsManager().getVideoMode().height;
+	//m_shader.setParameter("wave_phase", pf_deltatime);
+	//m_shader.setParameter("wave_amplitude", x * 90, y * 90);
 }
 
 void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
