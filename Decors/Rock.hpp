@@ -8,12 +8,16 @@
 class Rock : public Decor
 {
 private:
-	int							mn_countRock;
-	std::vector<sf::Vector2f>	m_refSize;
-	std::vector<sf::Vector2f>	m_refOrigin;
-	std::vector<float>			m_refSizeLeft;
-	std::vector<float>			m_refSizeRight;
-	std::vector<float>			m_refSizeRec;
+	struct OctogonValue
+	{
+		sf::Vector2f			size;
+		sf::Vector2f			origin;
+		float					sizeLeft;
+		float					sizeRight;
+		float					sizeRec;
+	};
+	int							mn_countOctogon;
+	std::vector<OctogonValue>	m_values;
 
 	sf::Vector2f				m_left;
 	sf::Vector2f				m_right;
@@ -24,7 +28,7 @@ public:
 
 	void init(Biome * p_biome);
 
-	void createOneRock(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color, float p_sizeLeft, float p_sizeRight, float p_sizeRec);
+	void createOctogon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color, float p_sizeLeft, float p_sizeRight, float p_sizeRec);
 	void createRock(void);
 	void randomDecor(void);
 

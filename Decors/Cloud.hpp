@@ -8,12 +8,17 @@
 class Cloud : public Decor
 {
 private:
-	int							mn_countCloud;
-	std::vector<sf::Vector2f>	m_refSize;
-	std::vector<sf::Vector2f>	m_refOrigin;
-	std::vector<float>			m_refSizeUp;
-	std::vector<float>			m_refSizeDown;
-	std::vector<float>			m_refSizeRec;
+	struct OctogonValue
+	{
+		sf::Vector2f			size;
+		sf::Vector2f			origin;
+		float					sizeUp;
+		float					sizeDown;
+		float					sizeRec;
+	};
+
+	int							mn_coundOctogon;
+	std::vector<OctogonValue>	m_values;
 	int							mn_alpha;
 
 public:
@@ -22,7 +27,7 @@ public:
 
 	void init(Biome * p_biome);
 
-	void createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec);
+	void createOctogon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec);
 	void createCloud(void);
 	void randomDecor(void);
 

@@ -3,21 +3,17 @@
 
 Cloud::Cloud() :
 	Decor(),
-	mn_countCloud(0),
+	mn_coundOctogon(0),
 	mn_alpha(0)
 {
 }
 
 Cloud::~Cloud()
 {
-	m_refSize.clear();
-	m_refOrigin.clear();
-	m_refSizeUp.clear();
-	m_refSizeDown.clear();
-	m_refSizeRec.clear();
+	m_values.clear();
 }
 
-void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec)
+void Cloud::createOctogon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec)
 {
 	p_color.a = mf_mouvement * mn_alpha;
 
@@ -62,16 +58,16 @@ void Cloud::createOneCloud(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color
 
 void Cloud::createCloud(void)
 {
-	mn_countTriangle = 0;
-	for (int i = 0; i < mn_countCloud; i++)
-		createOneCloud(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement), m_refOrigin[i] + m_origin, m_color,
-						m_refSizeUp[i] * mf_mouvement, m_refSizeDown[i] * mf_mouvement, m_refSizeRec[i] * mf_mouvement);
+	mn_countVertex = 0;
+	for (int i = 0; i < mn_coundOctogon; i++)
+		createOctogon(sf::Vector2f(m_values[i].size.x, m_values[i].size.y * mf_mouvement), m_values[i].origin + m_origin, m_color,
+						m_values[i].sizeUp * mf_mouvement, m_values[i].sizeDown * mf_mouvement, m_values[i].sizeRec * mf_mouvement);
 	if (b_isIce == true)
 	{
 		sf::Color iceColor(5, 103, 155, 60);
-		for (int i = 0; i < mn_countCloud; i++)
-			createOneCloud(sf::Vector2f(m_refSize[i].x, m_refSize[i].y * mf_mouvement * 1.1f), m_refOrigin[i] + m_origin, iceColor,
-							m_refSizeUp[i] * 1.2f, m_refSizeDown[i] * 1.2f, m_refSizeRec[i] * mf_mouvement * 1.2f);
+		for (int i = 0; i < mn_coundOctogon; i++)
+			createOctogon(sf::Vector2f(m_values[i].size.x, m_values[i].size.y * mf_mouvement * 1.1f), m_values[i].origin + m_origin, iceColor,
+							m_values[i].sizeUp * 1.2f, m_values[i].sizeDown * 1.2f, m_values[i].sizeRec * mf_mouvement * 1.2f);
 	}
 }
 
@@ -87,23 +83,19 @@ void Cloud::randomDecor(void)
 	m_origin.y = randomRange(0, 500);
 
 	// Allocate memory
-	mn_countCloud = randomRange(m_biome->m_cloud.mn_minElement, m_biome->m_cloud.mn_maxElement);
-	mn_maxTriangle = (18 * mn_countCloud) * 2;
+	mn_coundOctogon = randomRange(m_biome->m_cloud.mn_minElement, m_biome->m_cloud.mn_maxElement);
+	mn_maxTriangle = (18 * mn_coundOctogon) * 2;
 	allocateVertex(mn_maxTriangle * 3u);
-	mn_countTriangle = 0u;
+	mn_countVertex = 0u;
 
-	m_refSize.resize(mn_countCloud);
-	m_refOrigin.resize(mn_countCloud);
-	m_refSizeUp.resize(mn_countCloud);
-	m_refSizeDown.resize(mn_countCloud);
-	m_refSizeRec.resize(mn_countCloud);
+	m_values.resize(mn_coundOctogon);
 
 	// Compute left random values
 	int i = 0;
 	float totalY = 0;
 	sf::Vector2f size = m_size;
 	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
-	while (i < mn_countCloud / 2)
+	while (i < mn_coundOctogon / 2)
 	{
 		size.y = randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY);
 		totalY += size.y;
@@ -111,11 +103,11 @@ void Cloud::randomDecor(void)
 		origin.y += randomRange(static_cast<int>(-totalY), 0.f);
 		if (size.y * 2 < size.x)
 		{
-			m_refSize[i] = size;
-			m_refOrigin[i] = origin;
-			m_refSizeUp[i] = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_refSizeDown[i] = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_refSizeRec[i] = randomRange(10, static_cast<int>(size.y * 2));
+			m_values[i].size = size;
+			m_values[i].origin = origin;
+			m_values[i].sizeUp = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
+			m_values[i].sizeDown = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
+			m_values[i].sizeRec = randomRange(10, static_cast<int>(size.y * 2));
 		}
 		else
 			break;
@@ -126,7 +118,7 @@ void Cloud::randomDecor(void)
 	totalY = 0;
 	size = m_size;
 	origin = sf::Vector2f(0.f, 0.f + m_size.y);
-	while (i < mn_countCloud)
+	while (i < mn_coundOctogon)
 	{
 		size.y = randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY);
 		totalY += size.y;
@@ -134,11 +126,11 @@ void Cloud::randomDecor(void)
 		origin.y += randomRange(0.0f, static_cast<int>(totalY));
 		if (size.y * 2 < size.x)
 		{
-			m_refSize[i] = size;
-			m_refOrigin[i] = origin;
-			m_refSizeUp[i] = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_refSizeDown[i] = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_refSizeRec[i] = randomRange(10, static_cast<int>(size.y * 2));
+			m_values[i].size = size;
+			m_values[i].origin = origin;
+			m_values[i].sizeUp = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
+			m_values[i].sizeDown = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
+			m_values[i].sizeRec = randomRange(10, static_cast<int>(size.y * 2));
 		}
 		i++;
 	}
@@ -150,6 +142,7 @@ void Cloud::init(Biome * p_biome)
 {
 	Decor::init(p_biome);
 	randomDecor();
+	m_values.reserve(m_biome->m_cloud.mn_maxElement);
 }
 
 void Cloud::update(float pf_deltatime)

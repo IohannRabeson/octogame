@@ -4,7 +4,7 @@
 
 Decor::Decor(void) :
 	GameObject(),
-	mn_countTriangle(0u),
+	mn_countVertex(0u),
 	mn_maxTriangle(0u),
 	b_isIce(false),
 	me_currentState(e_state_sleep),
@@ -53,9 +53,9 @@ void Decor::createVertex(sf::Vector2f p_pos, sf::Color const & p_color, int * pn
 
 void Decor::createTriangle(sf::Vector2f const & p_a, sf::Vector2f const & p_b, sf::Vector2f const & p_c, sf::Vector2f const & p_origin, sf::Color const & p_color)
 {
-	createVertex(p_origin + p_a, p_color, &mn_countTriangle);
-	createVertex(p_origin + p_b, p_color, &mn_countTriangle);
-	createVertex(p_origin + p_c, p_color, &mn_countTriangle);
+	createVertex(p_origin + p_a, p_color, &mn_countVertex);
+	createVertex(p_origin + p_b, p_color, &mn_countVertex);
+	createVertex(p_origin + p_c, p_color, &mn_countVertex);
 }
 
 void Decor::createRectangle(sf::Vector2f const & p_a, sf::Vector2f const & p_b, sf::Vector2f const & p_c, sf::Vector2f const & p_d, sf::Vector2f const & p_origin, sf::Color const & p_color)

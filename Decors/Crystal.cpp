@@ -12,13 +12,11 @@ Crystal::Crystal() :
 
 Crystal::~Crystal()
 {
-	m_refAngle.clear();
-	m_refSize.clear();
-	m_refColor.clear();
+	m_values.clear();
 	m_up.clear();
 }
 
-sf::Vector2f Crystal::createOneCrystal(sf::Vector2f p_size, float pf_angle, sf::Color p_color)
+sf::Vector2f Crystal::createPolygon(sf::Vector2f p_size, float pf_angle, sf::Color p_color)
 {
 	sf::Vector2f up(0.0f, -p_size.x - p_size.y);
 	sf::Vector2f upLeft(-p_size.x, -p_size.y);
@@ -87,9 +85,9 @@ sf::Vector2f Crystal::createOneCrystal(sf::Vector2f p_size, float pf_angle, sf::
 
 void Crystal::createCrystal(void)
 {
-	mn_countTriangle = 0u;
+	mn_countVertex = 0u;
 	for (int i = 0; i < mn_countCrystal; i++)
-		m_up[i] = createOneCrystal(m_refSize[i] * mf_mouvement, m_refAngle[i], m_refColor[i]);
+		m_up[i] = createPolygon(m_values[i].size * mf_mouvement, m_values[i].angle, m_values[i].color);
 }
 
 void Crystal::randomDecor(void)
@@ -101,9 +99,7 @@ void Crystal::randomDecor(void)
 	mn_maxTriangle = 8 * mn_countCrystal;
 
 	allocateVertex(mn_maxTriangle * 3u);
-	m_refAngle.resize(mn_countCrystal);
-	m_refSize.resize(mn_countCrystal);
-	m_refColor.resize(mn_countCrystal);
+	m_values.resize(mn_countCrystal);
 	m_up.resize(mn_countCrystal);
 
 	// Init values
@@ -113,11 +109,11 @@ void Crystal::randomDecor(void)
 	// Compute random values
 	for (int i = 0; i < mn_countCrystal; i++)
 	{
-		m_refSize[i].x = randomRange(m_size.x / 2.0f, m_size.x);
-		m_refSize[i].y = randomRange(m_size.y / 2.0f, m_size.y);
-		m_refAngle[i] = randomRange(-45 + (i * 90 / mn_countCrystal), -45 + ((i + 1) * 90 / mn_countCrystal));
+		m_values[i].size.x = randomRange(m_size.x / 2.0f, m_size.x);
+		m_values[i].size.y = randomRange(m_size.y / 2.0f, m_size.y);
+		m_values[i].angle = randomRange(-45 + (i * 90 / mn_countCrystal), -45 + ((i + 1) * 90 / mn_countCrystal));
 		int deltaColor = randomRange(0, 80);
-		m_refColor[i] = m_color + sf::Color(deltaColor, deltaColor, deltaColor, 0);
+		m_values[i].color = m_color + sf::Color(deltaColor, deltaColor, deltaColor, 0);
 	}
 }
 
@@ -127,6 +123,8 @@ void Crystal::init(Biome * p_biome)
 	randomDecor();
 	createCrystal();
 	m_star.init(m_biome);
+	m_values.reserve(m_biome->m_crystal.mn_maxElement);
+	m_up.reserve(m_biome->m_crystal.mn_maxElement);
 }
 
 void Crystal::update(float pf_deltatime)

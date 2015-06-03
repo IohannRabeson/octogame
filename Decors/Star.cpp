@@ -18,7 +18,7 @@ Star::~Star()
 
 void Star::createOneStar(sf::Vector2f p_size, sf::Vector2f p_sizeHeart, float p_angle, sf::Color p_color)
 {
-	mn_countTriangle = 0u;
+	mn_countVertex = 0u;
 
 	sf::Vector2f left(-p_size.x / 2.f - p_sizeHeart.x, 0.f);
 	sf::Vector2f right(p_size.x / 2.f + p_sizeHeart.x, 0.f);

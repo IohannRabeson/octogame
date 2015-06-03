@@ -56,7 +56,7 @@ void Tree::pythagorasTree(sf::Vector2f const & p_center, sf::Vector2f const & p_
 	if (pn_depth == 1)
 	{
 		mn_countLeaf = mn_countAngle = 0;
-		mn_countTriangle = (mn_maxLeaf + 1) * 6u;
+		mn_countVertex = (mn_maxLeaf + 1) * 6u;
 	}
 
 	// Get seed angle
@@ -74,7 +74,7 @@ void Tree::pythagorasTree(sf::Vector2f const & p_center, sf::Vector2f const & p_
 	// Create root rectangle
 	sf::Vector2f leftUpRoot;
 	sf::Vector2f rightUpRoot;
-	createRectangle(p_center, p_size, color, 5, &mn_countTriangle, pf_cos, pf_sin, &leftUpRoot, &rightUpRoot);
+	createRectangle(p_center, p_size, color, 5, &mn_countVertex, pf_cos, pf_sin, &leftUpRoot, &rightUpRoot);
 
 	// Create extended root
 	if (pn_depth == 1)
@@ -133,12 +133,12 @@ void Tree::pythagorasTree(sf::Vector2f const & p_center, sf::Vector2f const & p_
 
 	color += sf::Color(5, 5, 5);
 	// Fill empty space with triangle
-	createVertex(rightUpRoot + p_center, color, &mn_countTriangle);
-	createVertex(leftUpRoot + p_center, color, &mn_countTriangle);
+	createVertex(rightUpRoot + p_center, color, &mn_countVertex);
+	createVertex(leftUpRoot + p_center, color, &mn_countVertex);
 	// Get upTriangle in m_rectangle
 	sf::Vector2f upTriangle(-rightSize.x, 0.f);
 	rotateVec(&upTriangle, cosRight, sinRight);
-	createVertex(upTriangle + p_center + rightUpRoot, color, &mn_countTriangle);
+	createVertex(upTriangle + p_center + rightUpRoot, color, &mn_countVertex);
 
 	// Right recusrion
 	pythagorasTree(rightCenter, rightSize, rectangleAngleRight, cosRight, sinRight, pn_depth + 1);

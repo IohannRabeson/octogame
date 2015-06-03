@@ -35,7 +35,7 @@ protected:
 	};
 
 	sf::VertexArray *				m_triangle;
-	int								mn_countTriangle;
+	int								mn_countVertex;
 	int								mn_maxTriangle;
 	bool							b_isIce;
 	EState							me_currentState;

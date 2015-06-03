@@ -9,10 +9,14 @@
 class Crystal : public Decor
 {
 private:
+	struct CrystalValue
+	{
+		sf::Vector2f			size;
+		sf::Color				color;
+		float					angle;
+	};
 	int							mn_countCrystal;
-	std::vector<sf::Vector2f>	m_refSize;
-	std::vector<sf::Color>		m_refColor;
-	std::vector<float>			m_refAngle;
+	std::vector<CrystalValue>	m_values;
 	std::vector<sf::Vector2f>	m_up;
 	Star						m_star;
 	int							m_picCrystal;
@@ -25,7 +29,7 @@ public:
 
 	void init(Biome * p_biome);
 
-	sf::Vector2f createOneCrystal(sf::Vector2f p_size, float pf_angle, sf::Color p_color);
+	sf::Vector2f createPolygon(sf::Vector2f p_size, float pf_angle, sf::Color p_color);
 	void createCrystal(void);
 	void randomDecor(void);
 

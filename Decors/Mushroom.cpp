@@ -21,7 +21,7 @@ void Mushroom::createOneMushroom(sf::Vector2f p_size, sf::Vector2f p_origin, sf:
 
 void Mushroom::createMushroom(void)
 {
-	mn_countTriangle = 0;
+	mn_countVertex = 0;
 
 	createOneMushroom(m_size * mf_mouvement, m_origin, m_color);
 }

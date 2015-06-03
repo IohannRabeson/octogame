@@ -37,7 +37,7 @@ void Moon::createOneMoon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p
 
 void Moon::createMoon(void)
 {
-	mn_countTriangle = 0;
+	mn_countVertex = 0;
 
 	/*
 	m_transparency.a = 110 - (110 * mf_timer / mf_maxTimer);
@@ -56,6 +56,7 @@ void Moon::createMoon(void)
 
 void Moon::randomDecor(void)
 {
+	//TODO: WORK ONN THE MOOOOON
 	Decor::randomDecor();
 	m_color = sf::Color(255, 255, 255);
 	float size = randomRange(m_biome->m_sun.mn_minSizeX, m_biome->m_sun.mn_maxSizeX);

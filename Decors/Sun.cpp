@@ -47,7 +47,7 @@ void Sun::createOneSun(sf::Vector2f p_size, sf::Vector2f p_sizeCorner, sf::Vecto
 
 void Sun::createSun(void)
 {
-	mn_countTriangle = 0;
+	mn_countVertex = 0;
 
 	m_transparency.a = 110 - (110 * mf_timer / mf_maxTimer);
 	float coef = mf_timer * mf_mouvement / 2.f;
