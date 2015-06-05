@@ -13,7 +13,7 @@ Tree::Tree(void) :
 	mn_maxTriangle = mn_maxRectangle * 3;
 	mn_maxLeaf = pow(2, DEPTH - 1) - 1;
 
-	m_triangle.reset(new sf::Vertex[mn_maxTriangle * 3u + mn_maxLeaf * 6u]);
+	allocateVertex(mn_maxTriangle * 3u + mn_maxLeaf * 6u);
 	m_refAngle.resize(mn_maxRectangle);
 }
 
@@ -37,7 +37,6 @@ void Tree::createRectangle(sf::Vector2f const & p_center, sf::Vector2f const & p
 	rotateVec(&rightDown, pf_cos, pf_sin);
 	rotateVec(&rightUp, pf_cos, pf_sin);
 
-	// Create rectangle (2 triangles)
 	createVertex(rightUp + p_center, p_color, pn_count);
 	createVertex(rightDown + p_center, p_color, pn_count);
 	createVertex(leftDown + p_center, p_color, pn_count);
@@ -52,13 +51,12 @@ void Tree::createRectangle(sf::Vector2f const & p_center, sf::Vector2f const & p
 		*p_rightUp = rightUp;
 }
 
-void Tree::pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_angle, float pf_cos, float pf_sin, const int pn_depth)
+void Tree::pythagorasTree(sf::Vector2f const & p_center, sf::Vector2f const & p_size, float const & pf_angle, float  const & pf_cos, float const & pf_sin, const int pn_depth)
 {
-	m_leafColor = sf::Color(255 - m_color.r, 255 - m_color.g, 255 - m_color.b);
 	if (pn_depth == 1)
 	{
 		mn_countLeaf = mn_countAngle = 0;
-		mn_countTriangle = (mn_maxLeaf + 1) * 6u;
+		mn_countVertex = (mn_maxLeaf + 1) * 6u;
 	}
 
 	// Get seed angle
@@ -73,21 +71,21 @@ void Tree::pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_a
 	float colorChange = pn_depth * 15;
 	sf::Color color = sf::Color(m_color.r + colorChange, m_color.g + colorChange, m_color.b + colorChange);
 
-	// Create extended root
-	if (pn_depth == 1)
-	{
-		createVertex(sf::Vector2f(p_center.x - p_size.x / 2, p_center.y + p_size.y / 2), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x + p_size.x / 2, p_center.y + p_size.y / 2), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x + p_size.x / 2, SIZE_SCREEN_Y), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x - p_size.x / 2, p_center.y + p_size.y / 2), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x + p_size.x / 2, SIZE_SCREEN_Y), color, &mn_countTriangle);
-		createVertex(sf::Vector2f(p_center.x - p_size.x / 2, SIZE_SCREEN_Y), color, &mn_countTriangle);
-	}
-
 	// Create root rectangle
 	sf::Vector2f leftUpRoot;
 	sf::Vector2f rightUpRoot;
-	createRectangle(p_center, p_size, color, 5, &mn_countTriangle, pf_cos, pf_sin, &leftUpRoot, &rightUpRoot);
+	createRectangle(p_center, p_size, color, 5, &mn_countVertex, pf_cos, pf_sin, &leftUpRoot, &rightUpRoot);
+
+	// Create extended root
+	if (pn_depth == 1)
+	{
+		sf::Color rootColor(color.r - 5, color.g - 5, color.b - 5);
+		sf::Vector2f leftDownRoot(leftUpRoot.x, leftUpRoot.y + p_size.y);
+		sf::Vector2f rightDownRoot(rightUpRoot.x, rightUpRoot.y + p_size.y);
+		sf::Vector2f downLeft(leftUpRoot.x, SIZE_SCREEN_Y);
+		sf::Vector2f downRight(rightUpRoot.x, SIZE_SCREEN_Y);
+		Decor::createRectangle(leftDownRoot, rightDownRoot, downRight, downLeft, p_center, rootColor);
+	}
 
 	// Stop recursion
 	if (pn_depth >= DEPTH)
@@ -124,7 +122,9 @@ void Tree::pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_a
 	// Create leaf
 	if (pn_depth == DEPTH - 1 && mb_isLeaf)
 	{
-		float size = (m_size.y * refAngle / (MAX_A - MIN_A)) * mf_mouvement;
+		//TODO: check this calcul
+		float size = (m_size.y * refAngle / (m_biome->m_tree.mn_minAngle - m_biome->m_tree.mn_maxAngle)) * mf_mouvement;
+		m_leafColor = m_color;
 		createRectangle(rightCenter, sf::Vector2f(size, size), m_leafColor, 5, &mn_countLeaf, cosRight, sinRight);
 		createRectangle(leftCenter, sf::Vector2f(size, size), m_leafColor, 5, &mn_countLeaf, cosLeft, sinLeft);
 	}
@@ -132,15 +132,14 @@ void Tree::pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_a
 	// Left recursion
 	pythagorasTree(leftCenter, leftSize, rectangleAngleLeft, cosLeft, sinLeft, pn_depth + 1);
 
-	//color += sf::Color(10, 10, 10);
 	color += sf::Color(5, 5, 5);
 	// Fill empty space with triangle
-	createVertex(rightUpRoot + p_center, color, &mn_countTriangle);
-	createVertex(leftUpRoot + p_center, color, &mn_countTriangle);
+	createVertex(rightUpRoot + p_center, color, &mn_countVertex);
+	createVertex(leftUpRoot + p_center, color, &mn_countVertex);
 	// Get upTriangle in m_rectangle
 	sf::Vector2f upTriangle(-rightSize.x, 0.f);
 	rotateVec(&upTriangle, cosRight, sinRight);
-	createVertex(upTriangle + p_center + rightUpRoot, color, &mn_countTriangle);
+	createVertex(upTriangle + p_center + rightUpRoot, color, &mn_countVertex);
 
 	// Right recusrion
 	pythagorasTree(rightCenter, rightSize, rectangleAngleRight, cosRight, sinRight, pn_depth + 1);
@@ -149,19 +148,17 @@ void Tree::pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_a
 void Tree::randomDecor(void)
 {
 	Decor::randomDecor();
-	mf_liveTime = randomRange(MIN_LIVE, MAX_LIVE);
+	mf_liveTime = randomRange(m_biome->m_tree.mn_minLive, m_biome->m_tree.mn_maxLive);
 	mb_growSide = static_cast<bool>(rand() % 2);
 	mb_isLeaf = m_biome->mn_temperature >= 0 ? true : false;
 
-	//m_color = sf::Color(randomRange(20, 200), randomRange(20, 200), randomRange(20, 200));
 	m_color = sf::Color(180.f, 33.f, 85.f);
-	m_leafColor = sf::Color(212.f, 185.f, 39.f);
-	float tmpX = randomRange(static_cast<int>(10000.f / m_biome->mn_height), static_cast<int>(13000.f / m_biome->mn_height));
-	float tmpY = randomRange(m_biome->mn_height / 2.0f, m_biome->mn_height);
+	float tmpX = randomRange(m_biome->m_tree.mn_minSizeX, m_biome->m_tree.mn_maxSizeX);
+	float tmpY = randomRange(m_biome->m_tree.mn_minSizeY, m_biome->m_tree.mn_maxSizeY);
 	m_size = sf::Vector2f(tmpX, tmpY);
 
 	for (int i = 0; i < mn_maxRectangle; i++)
-		m_refAngle[i] = randomRange(MIN_A, MAX_A);
+		m_refAngle[i] = randomRange(m_biome->m_tree.mn_minAngle, m_biome->m_tree.mn_maxAngle);
 	pythagorasTree(m_origin, m_size);
 }
 
@@ -174,7 +171,7 @@ void Tree::init(Biome * p_biome)
 void Tree::update(float pf_deltatime)
 {
 	Decor::update(pf_deltatime);
-	m_origin.x -= m_size.x / 2.0f;
+	Decor::putOnMap();
 	m_origin.y -= m_size.y / 2.0f;
 
 	float delta = (m_size.y - m_size.y * mf_mouvement) / 2;

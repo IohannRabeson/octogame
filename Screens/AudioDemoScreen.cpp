@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/25 22:07:16 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/26 18:00:24 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/31 16:15:10 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	AudioDemoScreen::start()
 	octo::Console&			console = octo::Application::getConsole();
 	octo::AudioManager&		audio = octo::Application::getAudioManager();
 
-	audio.startMusic(resources.getSound(KRUPA_SOLO_AIF), sf::Time::Zero);
+	audio.startMusic(resources.getSound(KRUPA_SOLO_WAV), sf::Time::Zero);
 	console.addCommand(L"demo.play", [](std::string const& soundFileName, unsigned int ms)
 		{
 			octo::ResourceManager&	resources = octo::Application::getResourceManager();

@@ -1,8 +1,19 @@
 #include "Player.hpp"
+#include "NPC.hpp"
+#include <Application.hpp>
+#include <GraphicsManager.hpp>
 
 Player::Player(void) :
-	DynamicPolygon(4u)
+	DynamicPolygon(4u, CollideType::e_player, true),
+	m_state(PlayerState::e_waiting),
+	m_speed(500.f),
+	m_timerAcceleration(0.f),
+	m_timerMaxAcceleration(0.3f),
+	m_timerJump(0.f),
+	m_timerJumpMax(1.f),
+	m_jumpSpeed(1500.f)
 {
+	m_collideMask = CollideType::e_tile;
 	sf::Vertex ver;
 	ver.position = sf::Vector2f(300.f, 360.f);
 	ver.texCoords = sf::Vector2f(20.f, 0.f);
@@ -16,6 +27,7 @@ Player::Player(void) :
 	ver.position = sf::Vector2f(300.f, 450.f);
 	ver.texCoords = sf::Vector2f(20.f, 785.f);
 	setVertex(3, ver);
+	setPosition(sf::Vector2f(octo::Application::getGraphicsManager().getVideoMode().width / 2, 0.f));
 }
 
 Player::~Player(void)
@@ -23,23 +35,55 @@ Player::~Player(void)
 	
 }
 
-void Player::updateVelocity(float pf_deltatime)
+void Player::update(float pf_deltatime)
 {
-	float speed = 300.f;
+	int move = 0;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
-		m_velocity.y = -speed;
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
-		m_velocity.y = speed;
+	// Movement left/right
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
-		m_velocity.x = -speed;
+		move = -1;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
-		m_velocity.x = speed;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		rotate(3.14f * pf_deltatime);
+		move = 1;
 
-	// Gravity
-	//m_velocity.x += speed / 2.f;
-	m_velocity.y += speed / 2.f;
-	m_velocity *= pf_deltatime;
+	// Jump
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && m_state != e_jumping && m_state != e_falling)
+	{
+		m_timerJump = m_timerJumpMax;
+		m_state = e_jumping;
+	}
+
+	if (m_state == e_jumping)
+	{
+		m_timerJump -= pf_deltatime;
+		if (m_timerJump <= 0.f)
+		{
+			m_timerJump = 0.f;
+			m_state = e_falling;
+		}
+	}
+
+	if (move)
+	{
+		m_timerAcceleration += pf_deltatime;
+		if (m_timerAcceleration >= m_timerMaxAcceleration)
+			m_timerAcceleration = m_timerMaxAcceleration;
+	}
+	else
+		m_timerAcceleration = 0.f;
+	m_velocity.x = m_speed * m_timerAcceleration / m_timerMaxAcceleration * static_cast<float>(move) * pf_deltatime;
+	m_velocity.y = -m_jumpSpeed * m_timerJump / m_timerJumpMax * pf_deltatime;
+}
+
+void Player::onCollision(Polygon * p_polygon)
+{
+	if (dynamic_cast<Tile*>(p_polygon))
+	{
+		if (m_state == e_falling)
+			m_state = e_waiting;
+	}
+	if (dynamic_cast<NPC*>(p_polygon))
+	{
+		if (m_state == e_falling)
+			m_state = e_waiting;
+	}
 }

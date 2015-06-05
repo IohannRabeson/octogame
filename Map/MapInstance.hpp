@@ -7,7 +7,7 @@
 class MapInstance : public Map
 {
 public:
-	MapInstance(unsigned int pn_width, unsigned int pn_height);
+	MapInstance(void);
 	virtual ~MapInstance(void);
 
 	virtual void swapDepth(void);
@@ -23,7 +23,6 @@ protected:
 	virtual void setColor(Tile & p_tile);
 
 private:
-	MapInstance(void) = delete;
 	StaticTileObject *		m_instance;
 
 };
