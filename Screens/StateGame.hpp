@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:28:19 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/15 19:29:26 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/05/31 16:50:18 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ public:
 	virtual void	draw(sf::RenderTarget& render)const;
 
 private:
-	MapManager		m_mapManager;
+	MapManager			m_mapManager;
+	sf::RectangleShape	m_back;
 };
 
 #endif

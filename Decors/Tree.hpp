@@ -6,12 +6,7 @@
 # include <cmath>
 
 # define DEPTH 8
-# define SIZE_SCREEN_Y 16 * 68
-
-# define MIN_A 15
-# define MAX_A 75
-# define MIN_LIVE 10
-# define MAX_LIVE 15
+# define SIZE_SCREEN_Y 1080
 
 class Tree : public Decor
 {
@@ -20,7 +15,6 @@ private:
 	sf::Color						m_leafColor;
 
 	int								mn_maxRectangle;
-	int								mn_maxTriangle;
 	int								mn_maxLeaf;
 	int								mn_countLeaf;
 	int								mn_countAngle;
@@ -36,7 +30,7 @@ public:
 
 	void  createRectangle(sf::Vector2f const & p_center, sf::Vector2f const & p_size, sf::Color & p_color, float p_valueColor, int * pn_count,
 						 float pf_cos, float pf_sin, sf::Vector2f * p_leftUp = NULL, sf::Vector2f * p_rightUp = NULL);
-	void pythagorasTree(sf::Vector2f p_center, sf::Vector2f p_size, float pf_angle = 0.0f, float p_cos = cos(0.0f), float p_sin = sin(0.0f), const int pn_depth = 1);
+	void pythagorasTree(sf::Vector2f const & p_center, sf::Vector2f const & p_size, float const & pf_angle = 0.0f, float const & p_cos = cos(0.0f), float const & p_sin = sin(0.0f), const int pn_depth = 1);
 	void randomDecor(void);
 
 	virtual void update(float pf_deltatime);

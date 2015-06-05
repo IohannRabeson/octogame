@@ -4,7 +4,11 @@
 #include "Crystal.hpp"
 #include "Rock.hpp"
 #include "Star.hpp"
+#include "Sun.hpp"
+#include "Cloud.hpp"
+#include "Moon.hpp"
 
+#include <random>
 #include <iostream>
 
 DecorManager::DecorManager(void)
@@ -21,41 +25,62 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 {
 	m_mapManager = p_mapManager;
 	m_biome = p_biome;
+	std::uniform_int_distribution<int> distribution(0, m_biome->mn_width);
+	std::random_device rd;
+	std::mt19937 engine(rd());
 
 	// Init decors
 	float x;
-	int max = m_biome->mn_width;
-	int min = 0;
-	size_t i = 0;
-	while (i < m_biome->mn_nbDecor)
-	{
-		m_decors.push_back(new Rock());
-		m_decors[i]->init(p_biome);
-		x = random() % m_biome->mn_width;
-		m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
-		i++;
-	}
-	while (i < m_biome->mn_nbDecor * 2)
-	{
-		m_decors.push_back(new Tree());
-		m_decors[i]->init(p_biome);
-		x = static_cast<float>(random() % (max - min) + min);
-		m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
-		max -= m_biome->mn_width / m_biome->mn_nbDecor / 2.0f;
-		min += m_biome->mn_width / m_biome->mn_nbDecor / 2.0f;
-		i++;
-	}
-	while (i < m_biome->mn_nbDecor * 3)
-	{
-		m_decors.push_back(new Crystal());
-		m_decors[i]->init(p_biome);
-		x = random() % m_biome->mn_width;
-		m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
-		i++;
-	}
+	int i = 0;
+	m_decors.push_back(new Sun());
+	m_decors[i++]->init(p_biome);
+
+	m_decors.push_back(new Moon());
+	m_decors[i++]->init(p_biome);
+
 	m_decors.push_back(new Star());
-	m_decors[i]->init(p_biome);
-	//m_decors[i]->setPosition(sf::Vector2f(x, m_mapManager->getTransitionManager().getHeight(x)->position.y));
+	m_decors[i++]->init(p_biome);
+
+	int total = 0;
+	total += m_biome->m_cloud.mn_nb;
+	while (i < total)
+	{
+		m_decors.push_back(new Cloud());
+		m_decors[i++]->init(p_biome);
+	}
+	total += m_biome->m_rock.mn_nb;
+	while (i < total)
+	{
+			m_decors.push_back(new Rock());
+			m_decors[i]->init(p_biome);
+			x = distribution(engine);
+			m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
+		i++;
+	}
+	total += m_biome->m_tree.mn_nb;
+	while (i < total)
+	{
+			m_decors.push_back(new Tree());
+			m_decors[i]->init(p_biome);
+			x = distribution(engine);
+			m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
+		i++;
+	}
+	total += m_biome->m_crystal.mn_nb;
+	while (i < total)
+	{
+			m_decors.push_back(new Crystal());
+			m_decors[i]->init(p_biome);
+			x = distribution(engine);
+			m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
+		i++;
+	}
+	total += m_biome->m_cloud.mn_nb;
+	while (i < total)
+	{
+		m_decors.push_back(new Cloud());
+		m_decors[i++]->init(p_biome);
+	}
 	setPosition();
 	m_mapManager->getTransitionManager().computeDecor();
 }
@@ -68,12 +93,40 @@ void DecorManager::setPosition(void)
 
 void DecorManager::update(float pf_deltatime)
 {
+	m_offsetX = m_mapManager->getCameraManager().getUpLeft()->x;
+	int delta = 500;
 	for (size_t i = 0; i < m_decors.size(); i++)
-		m_decors[i]->update(pf_deltatime);
+	{
+		int originX = m_decors[i]->getOriginX();
+		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1920 + delta)
+			m_decors[i]->update(pf_deltatime);
+		else
+			m_decors[i]->updateOrigin(pf_deltatime);
+	}
 }
 
-void DecorManager::draw(sf::RenderTarget& render, sf::RenderStates) const
+void DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	int delta = 500;
 	for (size_t i = 0; i < m_decors.size(); i++)
-		render.draw(*m_decors[i]);
+	{
+		int originX = m_decors[i]->getOriginX();
+		if (originX >= m_offsetX - delta && originX <= m_offsetX + 1920 + delta)
+			render.draw(*m_decors[i], states);
+	}
+}
+
+bool DecorManager::onPressed (sf::Event::KeyEvent const &event)
+{
+	if (event.code == sf::Keyboard::P)
+	{
+		for (size_t i = 0; i < m_decors.size(); i++)
+			m_decors[i]->randomDecor();
+	}
+	if (event.code == sf::Keyboard::O)
+	{
+		for (size_t i = 0; i < m_decors.size(); i++)
+			m_decors[i]->iceDecor();
+	}
+	return true;
 }

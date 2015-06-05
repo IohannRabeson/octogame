@@ -1,9 +1,10 @@
 #include "MapInstance.hpp"
 #include "OctoNoise.hpp"
 #include <cmath>
+#include <Interpolations.hpp>
 
-MapInstance::MapInstance(unsigned int pn_width, unsigned int pn_height) :
-	Map(pn_width, pn_height),
+MapInstance::MapInstance(void) :
+	Map(),
 	m_instance(nullptr)
 {}
 
@@ -13,65 +14,125 @@ void MapInstance::initBiome(void)
 {
 	m_biome->mn_height = 128u;
 	m_biome->mn_width = 512u;
+	m_biome->mn_startOffsetX = 0u;
 	m_biome->mf_transitionTimerMax = 0.5f;
 	m_biome->mn_nbDecor = 15u;
-	m_biome->mn_temperature = -1;
+	m_biome->mn_temperature = 1;
+	m_biome->mn_wind = 300;
 	m_instance = new StaticTileObject(140u, 40u, 5u);
 	m_instance->load();
 	mn_totalWidth = m_biome->mn_width + m_instance->getWidth();
+	m_biome->mn_totalWidth = mn_totalWidth;
+
+	// Decors values
+	m_biome->m_tree.mn_nb = 10;
+	m_biome->m_tree.mn_minSizeX = 20;
+	m_biome->m_tree.mn_maxSizeX = 50;
+	m_biome->m_tree.mn_minSizeY = 80;
+	m_biome->m_tree.mn_maxSizeY = 100;
+	m_biome->m_tree.mn_minAngle = 15;
+	m_biome->m_tree.mn_maxAngle = 75;
+	m_biome->m_tree.mn_minLive = 10;
+	m_biome->m_tree.mn_maxLive = 15;
+
+	m_biome->m_crystal.mn_nb = 10;
+	m_biome->m_crystal.mn_minSizeX = 10;
+	m_biome->m_crystal.mn_maxSizeX = 30;
+	m_biome->m_crystal.mn_minSizeY = 80;
+	m_biome->m_crystal.mn_maxSizeY = 150;
+	m_biome->m_crystal.mn_minElement = 3;
+	m_biome->m_crystal.mn_maxElement = 6;
+
+	m_biome->m_rock.mn_nb = 10;
+	m_biome->m_rock.mn_minSizeX = 10;
+	m_biome->m_rock.mn_maxSizeX = 20;
+	m_biome->m_rock.mn_minSizeY = 150;
+	m_biome->m_rock.mn_maxSizeY = 400;
+	m_biome->m_rock.mn_minElement = 4;
+	m_biome->m_rock.mn_maxElement = 15;
+
+	//m_biome->m_star.mn_nb = 10;
+	m_biome->m_star.mn_minSizeX = 70;
+	m_biome->m_star.mn_maxSizeX = 100;
+	m_biome->m_star.mn_minSizeY = 70;
+	m_biome->m_star.mn_maxSizeY = 100;
+	m_biome->m_star.mn_minLive = 5;
+	m_biome->m_star.mn_maxLive = 15;
+
+	m_biome->m_sun.mn_nb = 2;
+	m_biome->m_sun.mn_minSizeX = 70;
+	m_biome->m_sun.mn_maxSizeX = 100;
+
+	m_biome->m_cloud.mn_nb = 3;
+	m_biome->m_cloud.mn_minSizeX = 150;
+	m_biome->m_cloud.mn_maxSizeX = 400;
+	m_biome->m_cloud.mn_minSizeY = 10;
+	m_biome->m_cloud.mn_maxSizeY = 20;
+	m_biome->m_cloud.mn_minElement = 4;
+	m_biome->m_cloud.mn_maxElement = 15;
+	m_biome->m_tree.mn_minLive = 10;
+	m_biome->m_tree.mn_maxLive = 15;
 }
 
-#include <iostream>
 void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 {
 	float vec[3];
-	int height, offsetInstance;
-	unsigned int offset;
+	int height;
+	int offsetInstance;
+	int offset;
 	float v;
 	bool inInstance;
+	int offsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+	int offsetY = static_cast<int>(m_curOffset.y / Tile::TileSize);
+	int offsetPosX;
 
 	for (int x = p_startX; x < p_endX; x++)
 	{
 		inInstance = false;
-		offset = x + mn_offsetX;
-		if (offset >= m_biome->mn_width)
-		{
-			if (offset < mn_totalWidth)
-				inInstance = true;
-			else if (offset >= mn_totalWidth)
-				offset -= mn_totalWidth;
-		}
+		offset = x + offsetX;
+		offsetPosX = offset;
+		while (offset < 0)
+			offset += mn_totalWidth;
+		while (offset >= static_cast<int>(mn_totalWidth))
+			offset -= mn_totalWidth;
+		if (offset >= static_cast<int>(m_biome->mn_width) && offset < static_cast<int>(mn_totalWidth))
+			inInstance = true;
 
 		if (inInstance)
 			vec[0] = static_cast<float>(m_biome->mn_width);
 		else
 			vec[0] = static_cast<float>(offset);
 
-		vec[1] = mf_depth;
+		vec[1] = m_depth;
 		// firstCurve return a value between -1 & 1
 		// we normalize it betwen 0 & max_height
 		v = (firstCurve(vec) + 1.f) * static_cast<float>(m_biome->mn_height) / 2.f;
-		offsetInstance = height = static_cast<int>(v) - mn_offsetY;
-		if (height < 0)
-			height = 0;
-		else if (height > p_endY)
-			height = p_endY;
-
-		for (int y = height; y < p_endY; y++)
+		height = static_cast<int>(v);
+		for (int y = p_startY; y < p_endY; y++)
 		{
-			float yy = y - offsetInstance;
-			if (inInstance && yy >= 0 && yy < m_instance->getHeight())
-				m_tiles(x, y)->mb_isEmpty = m_instance->get(offset - m_biome->mn_width, yy).mb_isEmpty;
+			offsetY = y + static_cast<int>(m_curOffset.y / Tile::TileSize);
+			// Init square
+			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize);
+			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize);
+			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
+			m_tiles.get(x, y)->m_startTransition[3] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
+			offsetInstance = offsetY - height;
+			if (inInstance && offsetInstance >= 0 && offsetInstance < static_cast<int>(m_instance->getHeight()))
+				m_tiles.get(x, y)->mb_isEmpty = m_instance->get(offset - m_biome->mn_width, offsetInstance).mb_isEmpty;
+			else if (offsetY < height || offsetY < 0)
+			{
+				m_tiles.get(x, y)->mb_isEmpty = true;
+				continue;
+			}
 			else
-				m_tiles(x, y)->mb_isEmpty = false;
-			vec[0] = static_cast<float>(offset);
-			vec[1] = static_cast<float>(y + mn_offsetY);
-			vec[2] = mf_depth;
-			m_tiles(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
-			setColor(*m_tiles(x, y));
+				m_tiles.get(x, y)->mb_isEmpty = false;
+			vec[0] = static_cast<float>(x + offsetX);
+			vec[1] = static_cast<float>(offsetY);
+			vec[2] = m_depth;
+			// secondCurve return a value between -1 & 1
+			m_tiles.get(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
+			setColor(*m_tiles.get(x, y));
 		}
-		for (int y = p_startY; y < height; y++)
-			m_tiles(x, y)->mb_isEmpty = true;
 	}
 }
 
@@ -91,29 +152,19 @@ float MapInstance::secondCurve(float * vec)
 	//return sin(vec[0] * 15.f + OctoNoise::getCurrent().noise3(vec) * sin(vec[1]) * 5.f);
 }
 
-// TODO: To be deleted
-void lerpC(sf::Color & p_result, sf::Color & p_start, sf::Color & p_end, float p_transition)
-{
-	p_result.r = p_start.r * (1.f - p_transition) + p_end.r * p_transition;
-	p_result.g = p_start.g * (1.f - p_transition) + p_end.g * p_transition;
-	p_result.b = p_start.b * (1.f - p_transition) + p_end.b * p_transition;
-}
-
 void MapInstance::setColor(Tile & p_tile)
 {
 	sf::Color start = sf::Color(178.f, 0.f, 86.f);
 	sf::Color end = sf::Color(178.f, 162.f, 32.f);
 	sf::Color mid = sf::Color(0.f, 74.f, 213.f);
 
-	float changeColor = static_cast<float>(mn_offsetX) / mn_totalWidth;
-	lerpC(start, start, mid, changeColor);
-	lerpC(end, end, mid, p_tile.mf_noiseValue);
+	start = octo::linearInterpolation(end, mid, p_tile.mf_noiseValue);
 
 	if (p_tile.mf_noiseValue < 0.4f)
 		p_tile.m_startColor = start;
 	else if (p_tile.mf_noiseValue < 0.6f)
 	{
-		lerpC(p_tile.m_startColor, start, end, (p_tile.mf_noiseValue - 0.4f) * 5.f);
+		p_tile.m_startColor = octo::linearInterpolation(start, end, (p_tile.mf_noiseValue - 0.4f) * 5.f);
 	}
 	else
 		p_tile.m_startColor = end;
@@ -121,26 +172,26 @@ void MapInstance::setColor(Tile & p_tile)
 
 void MapInstance::swapDepth(void)
 {
-	float tmp = mf_depth;
-	mf_depth = mf_oldDepth;
-	mf_oldDepth = tmp;
+	float tmp = m_depth;
+	m_depth = m_oldDepth;
+	m_oldDepth = tmp;
 	m_instance->swapDepth();
 }
 
 void MapInstance::registerDepth(void)
 {
-	mf_oldDepth = mf_depth;
+	m_oldDepth = m_depth;
 	m_instance->registerDepth();
 }
 
 void MapInstance::nextStep(void)
 {
-	mf_depth += 3.f;
+	m_depth += 3.f;
 	m_instance->nextStep();
 }
 
 void MapInstance::previousStep(void)
 {
-	mf_depth -= 3.f;
+	m_depth -= 3.f;
 	m_instance->previousStep();
 }

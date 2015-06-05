@@ -40,5 +40,8 @@ doc/generated/
 # MacOS files
 *.DS_Store
 
-# log file
+# Log file
 log
+
+# Vallgrind fils
+callgrind.*
