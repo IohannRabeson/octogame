@@ -10,8 +10,19 @@ Mushroom::~Mushroom()
 {
 }
 
-void Mushroom::createOneMushroom(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color)
+void Mushroom::createMushroom1(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color)
 {
+	/*
+	m_leftVertex[0] = sf::Vector2f(-p_size.x / 2, 0.f);
+	m_rightVertex[0] = sf::Vector2f(p_size.x / 2, 0.f);
+	m_leftVertex[0] = sf::Vector2f(-p_size.x / 2, p_size.y);
+	m_rightVertex[0] = sf::Vector2f(p_size.x / 2, p_size.y);
+	m_leftVertex[0] = sf::Vector2f(-p_size.x / 2, p_size.y);
+	m_rightVertex[0] = sf::Vector2f(p_size.x / 2, p_size.y);
+*/
+
+
+
 	sf::Vector2f upLeft(-p_size.x / 2.f, -p_size.y);
 	sf::Vector2f upRight(p_size.x / 2.f, -p_size.y);
 	sf::Vector2f downLeft(-p_size.x / 2.f, 0.f);
@@ -21,9 +32,8 @@ void Mushroom::createOneMushroom(sf::Vector2f p_size, sf::Vector2f p_origin, sf:
 
 void Mushroom::createMushroom(void)
 {
-	mn_countVertex = 0;
 
-	createOneMushroom(m_size * mf_mouvement, m_origin, m_color);
+	createMushroom1(m_size * mf_mouvement, m_origin, m_color);
 }
 
 void Mushroom::randomDecor(void)
@@ -43,6 +53,8 @@ void Mushroom::randomDecor(void)
 void Mushroom::init(Biome * p_biome)
 {
 	Decor::init(p_biome);
+//	m_leftVertex.reserve(4);
+//	m_rightVertex.reserve(4);
 	randomDecor();
 	createMushroom();
 }

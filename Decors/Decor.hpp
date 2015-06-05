@@ -3,6 +3,7 @@
 
 # include "GameObject.hpp"
 # include <memory>
+# include <random>
 
 # define PI		3.14159265f
 # define RADIAN	PI / 180.0f

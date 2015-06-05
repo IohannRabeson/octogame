@@ -41,7 +41,12 @@ float Decor::randomRange(int pn_min, int pn_max)
 {
 	if (pn_max - pn_min == 0)
 		return pn_max;
-	return static_cast<float>(random() % (pn_max - pn_min) + pn_min);
+	std::uniform_int_distribution<int> distribution(pn_min, pn_max);
+	std::random_device rd;
+	std::mt19937 engine(rd());
+
+	return distribution(engine);
+	//return static_cast<float>(random() % (pn_max - pn_min) + pn_min);
 }
 
 void Decor::createVertex(sf::Vector2f p_pos, sf::Color const & p_color, int * pn_count)
@@ -69,39 +74,39 @@ void Decor::computeStates(float pf_deltatime)
 	switch (me_currentState)
 	{
 		case e_state_grow:
-		{
-			mf_mouvement += pf_deltatime * mf_growSpeed;
-			if (mf_mouvement >= 1.0f)
-				me_currentState = e_state_sleep;
-			break;
-		}
+			{
+				mf_mouvement += pf_deltatime * mf_growSpeed;
+				if (mf_mouvement >= 1.0f)
+					me_currentState = e_state_sleep;
+				break;
+			}
 		case e_state_die:
-		{
-			mf_mouvement -= pf_deltatime * mf_dieSpeed;
-			if (mf_mouvement <= 0.0f)
-				randomDecor();
-			mf_dieTimer = 0.f;
-			break;
-		}
+			{
+				mf_mouvement -= pf_deltatime * mf_dieSpeed;
+				if (mf_mouvement <= 0.0f)
+					randomDecor();
+				mf_dieTimer = 0.f;
+				break;
+			}
 		case e_state_sleep:
-		{
-			mf_timer += pf_deltatime;
-			mf_dieTimer += pf_deltatime;
-			if (mf_timer > mf_maxTimer)
-				mf_timer = 0.0f;
-			if (mf_dieTimer >= mf_liveTime && mf_liveTime != 0.f)
-				me_currentState = e_state_die;
-			else if (mf_timer > mf_maxTimer / 2.f)
-				mf_mouvement += pf_deltatime / (20 + (mf_timer - 2.0f) * 10);
-			else
-				mf_mouvement -= pf_deltatime / (20 + mf_timer * 10);
-			break;
-		}
+			{
+				mf_timer += pf_deltatime;
+				mf_dieTimer += pf_deltatime;
+				if (mf_timer > mf_maxTimer)
+					mf_timer = 0.0f;
+				if (mf_dieTimer >= mf_liveTime && mf_liveTime != 0.f)
+					me_currentState = e_state_die;
+				else if (mf_timer > mf_maxTimer / 2.f)
+					mf_mouvement += pf_deltatime / (20 + (mf_timer - 2.0f) * 10);
+				else
+					mf_mouvement -= pf_deltatime / (20 + mf_timer * 10);
+				break;
+			}
 		case e_state_stop:
-		{
-			mf_mouvement = 0.f;
-			break;
-		}
+			{
+				mf_mouvement = 0.f;
+				break;
+			}
 		default:
 			break;
 	}
@@ -140,7 +145,7 @@ void Decor::updateOrigin(float pf_deltatime)
 {
 	computeStates(pf_deltatime);
 	m_origin.x = m_vertexPosition->position.x;
-//	m_origin.y = m_vertexPosition->position.y;
+	//	m_origin.y = m_vertexPosition->position.y;
 }
 
 void Decor::iceDecor(void)

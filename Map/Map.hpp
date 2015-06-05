@@ -38,6 +38,7 @@ struct Biome
 	DecorValues			m_star;
 	DecorValues			m_sun;
 	DecorValues			m_cloud;
+	DecorValues			m_mushroom;
 };
 
 class Map

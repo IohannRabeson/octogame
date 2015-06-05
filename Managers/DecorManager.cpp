@@ -8,6 +8,7 @@
 #include "Cloud.hpp"
 #include "Moon.hpp"
 
+#include <random>
 #include <iostream>
 
 DecorManager::DecorManager(void)
@@ -24,6 +25,9 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 {
 	m_mapManager = p_mapManager;
 	m_biome = p_biome;
+	std::uniform_int_distribution<int> distribution(0, m_biome->mn_width);
+	std::random_device rd;
+	std::mt19937 engine(rd());
 
 	// Init decors
 	float x;
@@ -49,7 +53,7 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 	{
 			m_decors.push_back(new Rock());
 			m_decors[i]->init(p_biome);
-			x = random() % m_biome->mn_width;
+			x = distribution(engine);
 			m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
 		i++;
 	}
@@ -58,7 +62,7 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 	{
 			m_decors.push_back(new Tree());
 			m_decors[i]->init(p_biome);
-			x = random() % m_biome->mn_width;
+			x = distribution(engine);
 			m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
 		i++;
 	}
@@ -67,7 +71,7 @@ void DecorManager::init(MapManager * p_mapManager, Biome * p_biome)
 	{
 			m_decors.push_back(new Crystal());
 			m_decors[i]->init(p_biome);
-			x = random() % m_biome->mn_width;
+			x = distribution(engine);
 			m_decors[i]->setPosition(sf::Vector2f(x, 0.f));
 		i++;
 	}

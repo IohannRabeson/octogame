@@ -84,7 +84,7 @@ void Cloud::randomDecor(void)
 
 	// Allocate memory
 	mn_coundOctogon = randomRange(m_biome->m_cloud.mn_minElement, m_biome->m_cloud.mn_maxElement);
-	mn_maxTriangle = (18 * mn_coundOctogon) * 2;
+	mn_maxTriangle = (18 * mn_coundOctogon);
 	allocateVertex(mn_maxTriangle * 3u);
 	mn_countVertex = 0u;
 

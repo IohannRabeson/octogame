@@ -122,6 +122,7 @@ void Tree::pythagorasTree(sf::Vector2f const & p_center, sf::Vector2f const & p_
 	// Create leaf
 	if (pn_depth == DEPTH - 1 && mb_isLeaf)
 	{
+		//TODO: check this calcul
 		float size = (m_size.y * refAngle / (m_biome->m_tree.mn_minAngle - m_biome->m_tree.mn_maxAngle)) * mf_mouvement;
 		m_leafColor = m_color;
 		createRectangle(rightCenter, sf::Vector2f(size, size), m_leafColor, 5, &mn_countLeaf, cosRight, sinRight);
