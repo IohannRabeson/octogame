@@ -147,7 +147,7 @@ fclean_core_library:
 	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
 
 package:
-	$(PACKAGER) $(PACKAGE_FILE) -h ResourceDefinitions.hpp ./resources/*
+	$(PACKAGER) $(PACKAGE_FILE) -h Main/ResourceDefinitions.hpp ./resources/*
 
 complete:
 	make complete -C octolib/ MODE=$(MODE)

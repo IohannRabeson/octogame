@@ -1,5 +1,5 @@
 #include "MapManager.hpp"
-#include "../ResourceDefinitions.hpp"
+#include "ResourceDefinitions.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <GraphicsManager.hpp>

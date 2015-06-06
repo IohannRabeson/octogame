@@ -6,13 +6,13 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:00:29 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/23 01:32:34 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/06 10:36:58 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "FireflyTestScreen.hpp"
 #include "FireflyPositionBehaviors.hpp"
-#include "../ResourceDefinitions.hpp"
+#include "ResourceDefinitions.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
