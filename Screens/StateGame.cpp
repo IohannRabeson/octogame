@@ -6,12 +6,12 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:29:33 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/01 18:30:59 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/06/07 17:09:40 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "StateGame.hpp"
-#include "../ResourceDefinitions.hpp"
+#include "ResourceDefinitions.hpp"
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <ResourceManager.hpp>

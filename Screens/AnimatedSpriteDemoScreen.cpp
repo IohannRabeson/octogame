@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/23 15:32:28 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/23 16:20:03 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/06 10:36:31 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <Camera.hpp>
 #include <Console.hpp>
 
-#include "../ResourceDefinitions.hpp"
+#include "ResourceDefinitions.hpp"
 
 AnimatedSpriteDemoScreen::AnimatedSpriteDemoScreen()
 {

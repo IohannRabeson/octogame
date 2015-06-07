@@ -1,6 +1,6 @@
 #include "Star.hpp"
 #include "Map.hpp"
-#include "../ResourceDefinitions.hpp"
+#include "ResourceDefinitions.hpp"
 #include <cmath>
 #include <ResourceManager.hpp>
 #include <Application.hpp>
