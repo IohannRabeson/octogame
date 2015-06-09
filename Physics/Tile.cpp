@@ -1,7 +1,6 @@
 #include "Tile.hpp"
 
 Tile::Tile(void) :
-	Polygon(4u, CollideType::e_tile),
 	mf_noiseValue(0.f),
 	mb_isEmpty(true),
 	me_transition(e_transition_none),
@@ -25,7 +24,7 @@ int getIndex(int i)
 	}
 	return i;
 }
-
+/*
 void Tile::computeEdges(void)
 {
 	if (!m_recompute)
@@ -59,7 +58,7 @@ void Tile::computeCenter(void)
 	m_center.x /= nbVertice;
 	m_center.y /= nbVertice;
 }
-
+*/
 sf::Vector2f const & Tile::getVertex(std::size_t index) const
 {
 	return mp_upLeft[getIndex(index)].position;

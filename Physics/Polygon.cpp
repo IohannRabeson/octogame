@@ -1,68 +1,120 @@
 #include "Polygon.hpp"
+#include <limits>
 
-Polygon::Polygon(std::size_t p_verticesCount, CollideType p_collideType) :
-	m_recompute(true),
-	m_recomputeCenter(true),
-	m_center(),
-	m_verticesCount(p_verticesCount),
-	m_collideType(p_collideType)
+Polygon::Polygon(void) :
+	AShape(),
+	m_recomputeEdges(true),
+	m_recomputeGlobalBounds(true)
 {
-	m_vertices.resize(p_verticesCount);
-	m_edges.resize(p_verticesCount);
-	m_normals.resize(p_verticesCount);
+	// TODO: ask iohann what is the best
+	m_vertices.reserve(1000u);
+	m_edges.reserve(1000u);
+	m_normals.reserve(1000u);
 }
 
-Polygon::~Polygon(void) { }
+void Polygon::setVertexCount(std::size_t vertexCount)
+{
+	m_vertices.resize(vertexCount);
+	m_edges.resize(vertexCount);
+	m_normals.resize(vertexCount);
+}
 
 void Polygon::computeEdges(void)
 {
-	if (!m_recompute)
-		return;
-	m_recompute = false;
-	for (std::size_t i = 0; i < m_verticesCount; i++)
+	m_recomputeEdges = false;
+	for (std::size_t i = 0; i < m_vertices.size(); i++)
 	{
-		m_edges[i].x = m_vertices[i].position.x - m_vertices[(i + 1) % m_verticesCount].position.x;
-		m_edges[i].y = m_vertices[i].position.y - m_vertices[(i + 1) % m_verticesCount].position.y;
+		m_edges[i].x = m_vertices[i].x - m_vertices[(i + 1) % m_vertices.size()].x;
+		m_edges[i].y = m_vertices[i].y - m_vertices[(i + 1) % m_vertices.size()].y;
 		m_normals[i].x = -m_edges[i].y;
 		m_normals[i].y = m_edges[i].x;
 	}
 }
 
-void Polygon::computeCenter(void)
+sf::Rect<float> const & Polygon::getGlobalBounds(void)
 {
-	if (!m_recomputeCenter)
-		return;
-	m_recomputeCenter = false;
-	m_center.x = 0.f;
-	m_center.y = 0.f;
-	for (std::size_t i = 0; i < m_verticesCount; i++)
+	//TODO: ask io
+	//if (m_recomputeGlobalBounds)
 	{
-		m_center.x += m_vertices[i].position.x;
-		m_center.y += m_vertices[i].position.y;
+		m_recomputeGlobalBounds = false;
+		float minX = std::numeric_limits<float>::max();
+		float minY = std::numeric_limits<float>::max();
+		float maxX = -std::numeric_limits<float>::max();
+		float maxY = -std::numeric_limits<float>::max();
+		sf::Rect<float> globalBounds;
+		for (std::size_t i = 0; i < m_vertices.size(); i++)
+		{
+			if (m_vertices[i].x < minX)
+				minX = m_vertices[i].x;
+			if (m_vertices[i].x > maxX)
+				maxX = m_vertices[i].x;
+			if (m_vertices[i].y < minY)
+				minY = m_vertices[i].y;
+			if (m_vertices[i].y > maxY)
+				maxY = m_vertices[i].y;
+		}
+		globalBounds.left = minX + getPosition().x;
+		globalBounds.top = minY + getPosition().y;
+		globalBounds.width = maxX - minX;
+		globalBounds.height = maxY - minY;
+		setGlobalBounds(globalBounds);
 	}
-	m_center.x /= m_verticesCount;
-	m_center.y /= m_verticesCount;
-}
-
-sf::Vector2f const & Polygon::getVertex(std::size_t index) const
-{
-	return m_vertices[index].position;
-}
-
-sf::Vector2f const & Polygon::getCenter(void)
-{
-	computeCenter();
-	return m_center;
+	return AShape::getGlobalBounds();
 }
 
 sf::Vector2f const & Polygon::getEdge(std::size_t index)
 {
-	computeEdges();
+	if (m_recomputeEdges)
+		computeEdges();
 	return m_edges[index];
 }
 
 sf::Vector2f const & Polygon::getNormal(std::size_t index)
 {
-	computeEdges();
+	if (m_recomputeEdges)
+		computeEdges();
 	return m_normals[index];
+}
+
+sf::Vector2f const & Polygon::getCenter(void)
+{
+	sf::Vector2f center;
+	//recompute
+	center.x = 0.f;
+	center.y = 0.f;
+	for (std::size_t i = 0; i < m_vertices.size(); i++)
+		center += m_vertices[i];
+	center.x /= static_cast<float>(m_vertices.size());
+	center.y /= static_cast<float>(m_vertices.size());
+	center += getPosition();
+	setCenter(center);
+	return AShape::getCenter();
+}
+
+void Polygon::rotate(float angle)
+{
+	float cos = std::cos(angle);
+	float sin = std::sin(angle);
+	float x;
+	float y;
+	sf::Vector2f const & origin = getOrigin();
+	for (std::size_t i = 0; i < m_vertices.size(); i++)
+	{
+		x = m_vertices[i].x - origin.x;
+		y = m_vertices[i].y - origin.y;
+		m_vertices[i].x = origin.x + (x * cos - y * sin);
+		m_vertices[i].y = origin.y + (x * sin + y * cos);
+	}
+	m_recomputeEdges = true;
+	m_recomputeGlobalBounds = true;
+}
+
+void Polygon::debugDraw(sf::RenderTarget & render)
+{
+	sf::ConvexShape shape;
+	shape.setPointCount(m_vertices.size());
+	for (std::size_t i = 0; i < m_vertices.size(); i++)
+		shape.setPoint(i, getVertex(i));
+	render.draw(shape);
+	AShape::debugDraw(render);
 }

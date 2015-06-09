@@ -1,6 +1,6 @@
 #ifndef COLLISIONMANAGER_HPP
 # define COLLISIONMANAGER_HPP
-
+/*
 # include <SFML/Graphics.hpp>
 
 class MapManager;
@@ -66,5 +66,5 @@ private:
 	bool computeCollision(DynamicPolygon * polygonA, Polygon * polygonB);
 
 };
-
+*/
 #endif

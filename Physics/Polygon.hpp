@@ -1,52 +1,49 @@
 #ifndef POLYGON_HPP
 # define POLYGON_HPP
 
-# include <SFML/Graphics.hpp>
+# include "AShape.hpp"
 # include <vector>
 
-class Polygon
+class Polygon : public AShape
 {
 public:
-	enum CollideType
-	{
-		e_tile = 1,
-		e_player = 2,
-		e_pnj = 4
-	};
+	Polygon(void);
+	virtual ~Polygon(void) = default;
 
-	virtual ~Polygon(void);
+	/*! Set the vertex at a given index
+	 * If index > vertexCount, behavior is undefined
+	 * The vertex position is relative to the position of the shape
+	 *
+	 * \param index The given index
+	 * \param vector The new vector
+	 */
+	inline void setVertex(std::size_t index, sf::Vector2f const & vector) { m_recomputeEdges = true; m_vertices[index] = vector; }
 
-	sf::Vector2f const & getCenter(void);
-	sf::Vector2f const & getEdge(std::size_t index);
-	sf::Vector2f const & getNormal(std::size_t index);
+	inline sf::Vector2f getVertex(std::size_t index) const { return m_vertices[index] + getPosition(); }
+	inline std::size_t getVertexCount(void) const { return m_vertices.size(); }
 
-	inline int getCollideType(void) const { return m_collideType; }
-	inline void setVertex(std::size_t index, sf::Vector2f const & vector) { m_vertices[index].position = vector; }
-	inline void setVertex(std::size_t index, sf::Vertex const & vertex) { m_vertices[index] = vertex; }
-	inline std::size_t getVerticeCount(void) const { return m_verticesCount; }
+	/*! Set the vertex count
+	 * This method will resize the vectors that contain the vertices
+	 *
+	 * \param vertexCount The vertex count
+	 */
+	virtual void setVertexCount(std::size_t vertexCount);
 
-	virtual sf::Vector2f const & getVertex(std::size_t index) const;
-
-	// TODO: remove
-	std::vector<sf::Vertex>		m_vertices;
-
-protected:
-	Polygon(std::size_t p_verticesCount, CollideType p_collideType);
-
-	std::vector<sf::Vector2f>	m_edges;
-	std::vector<sf::Vector2f>	m_normals;
-	bool				m_recompute;
-	bool				m_recomputeCenter;
-	sf::Vector2f			m_center;
-	std::size_t			m_verticesCount;
-	int				m_collideType;
-
-	// Compute edges and normals
-	virtual void computeCenter(void);
-	virtual void computeEdges(void);
+	virtual sf::Vector2f const & getEdge(std::size_t index);
+	virtual sf::Vector2f const & getNormal(std::size_t index);
+	virtual sf::Vector2f const & getCenter(void);
+	virtual sf::Rect<float> const & getGlobalBounds(void);
+	virtual void rotate(float angle);
+	virtual void debugDraw(sf::RenderTarget & render);
 
 private:
-	Polygon(void) = delete;
+	std::vector<sf::Vector2f>	m_vertices;
+	std::vector<sf::Vector2f>	m_edges;
+	std::vector<sf::Vector2f>	m_normals;
+	bool				m_recomputeEdges;
+	bool				m_recomputeGlobalBounds;
+
+	void computeEdges(void);
 
 };
 

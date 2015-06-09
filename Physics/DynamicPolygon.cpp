@@ -1,16 +1,6 @@
 #include "DynamicPolygon.hpp"
 #include <cmath>
-
-DynamicPolygon::DynamicPolygon(std::size_t p_verticesCount, CollideType p_collideType, bool p_applyGravity) :
-	Polygon(p_verticesCount, p_collideType),
-	m_velocity(),
-	m_applyGravity(p_applyGravity),
-	m_collideMask(0u),
-	m_oldVelocity()
-{}
-
-DynamicPolygon::~DynamicPolygon(void) { }
-
+/*
 void DynamicPolygon::rotate(float angle)
 {
 	float cos = std::cos(angle);
@@ -63,12 +53,4 @@ sf::Rect<float> const & DynamicPolygon::getGlobalBounds(void)
 	m_globalBounds.height = maxY - minY;
 	return m_globalBounds;
 }
-
-void DynamicPolygon::applyTransform(void)
-{
-	m_oldVelocity = m_velocity;
-	//m_velocity.x = 0.f;
-	move(m_velocity);
-	m_velocity.x = 0.f;
-	m_velocity.y = 0.f;
-}
+*/

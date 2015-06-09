@@ -10,13 +10,13 @@ LIB_DIRS = $(CORE_DIR)
 LIBS = octo sfml-system sfml-window sfml-graphics sfml-audio
 
 # sources
-SRC = $(SRC_STATES)										\
+SRC = $(SRC_PHYSICS)										\
+	  $(SRC_STATES)									\
 	  $(SRC_FIREFLY)									\
 	  $(SRC_MAP)										\
 	  $(SRC_MANAGERS)									\
 	  $(SRC_OCTO)										\
 	  $(SRC_DECORS)										\
-	  $(SRC_PHYSICS)									\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp
 
@@ -26,6 +26,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/SpriteSheetDemoScreen.cpp		\
 				Screens/AnimatedSpriteDemoScreen.cpp	\
 				Screens/AudioDemoScreen.cpp				\
+				Screens/EngineScreen.cpp				\
 				Screens/StateGame.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
@@ -57,10 +58,13 @@ SRC_DECORS =	Decors/Crystal.cpp						\
 				Decors/Mushroom.cpp
 
 SRC_PHYSICS =	Physics/DynamicPolygon.cpp				\
-				Physics/Player.cpp						\
-				Physics/NPC.cpp						\
 				Physics/Polygon.cpp						\
-				Physics/Tile.cpp
+				Physics/OBB.cpp					\
+				Physics/AABB.cpp					\
+				Physics/Circle.cpp						\
+				Physics/Tile.cpp					\
+				Physics/PhysicsEngine.cpp					\
+				Physics/AShape.cpp
 
 # package files
 PACKAGE_FILE = default.pck
@@ -72,7 +76,7 @@ PACKAGER = $(CORE_DIR)/tools/packager/packager.app
 # flags used in both mode
 COMMON_FLAGS = -Werror -Wextra -Wall -std=c++11
 # flags used in release mode
-RELEASE_FLAGS = -O3
+RELEASE_FLAGS = -O3 -DNDEBUG
 # flags used in debug mode
 DEBUG_FLAGS = -g
 # includes dirs paths

@@ -3,7 +3,7 @@
 
 # include "Polygon.hpp"
 
-class Tile : public Polygon
+class Tile
 {
 public:
 	enum ETransitionType
@@ -30,13 +30,9 @@ public:
 	virtual ~Tile(void);
 
 	inline bool isEmpty(void) { return mb_isEmpty; }
-	inline void setUpLeft(sf::Vertex * vertex) { m_recompute = true; mp_upLeft = vertex; }
+	inline void setUpLeft(sf::Vertex * vertex) { /*m_recompute = true;*/ mp_upLeft = vertex; }
 
 	virtual sf::Vector2f const & getVertex(std::size_t index) const;
-
-protected:
-	virtual void computeCenter(void);
-	virtual void computeEdges(void);
 
 };
 
