@@ -45,3 +45,6 @@ log
 
 # Vallgrind fils
 callgrind.*
+
+# Hatedepend file
+.modifications
