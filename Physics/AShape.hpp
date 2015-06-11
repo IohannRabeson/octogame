@@ -27,7 +27,7 @@ public:
 	 * The velocity will be used to resolve the collision in the Engine
 	 *
 	 * \param velocity New velocity
-	 * \see move, Engine
+	 * \see move, PhysicsEngine
 	 */
 	inline void setVelocity(sf::Vector2f const & velocity) { m_velocity = velocity; }
 
@@ -54,12 +54,11 @@ public:
 	 */
 	inline void setPosition(sf::Vector2f const & position) { setPosition(position.x, position.y); }
 
-	/*! Set the rotation
+	/*! Add to the current rotation the rotation
 	 *
-	 * \param rotation New rotation, in degrees
+	 * \param angle New angle, in radian
 	 */
-	// TODO: supprimer cette mthode ou faire les calcul comme sfml, au moment du get ?
-	inline void setRotation(float rotation) { m_rotation = rotation; }
+	inline void setRotation(float angle) { m_rotation = angle; m_recompute = true; }
 
 	/*! Set the sleep state of the object
 	 *
@@ -68,7 +67,7 @@ public:
 	 */
 	inline void setSleep(bool sleep) { m_sleep = sleep; }
 
-	/*! Determine whether we apply the gravity or not 
+	/*! Determine whether we apply the gravity or not
 	 *
 	 * \param gravity true whether you want to apply the gravity or false if you don't
 	 */
@@ -101,7 +100,7 @@ public:
 	 *
 	 * if you want your object to collide with both Bee and Tree
 	 * \code
-	 * std::uint32_t mask = Bee->getCollideType | Tree->getCollideType;
+	 * std::uint32_t mask = Bee->getCollideType() | Tree->getCollideType();
 	 * setCollisionMask(mask);
 	 * \endcode
 	 *
@@ -156,31 +155,18 @@ public:
 	/*! Get the colision mask */
 	inline std::uint32_t getCollisionMask(void) const { return m_collisionMask; }
 
-	/*! Get the global bounds
-	 * The AABB is recomputed at each rotation
+	/*! Rotate the shape
+	 * Add the angle to the current rotation
 	 *
-	 * \see rotate
-	 */
-	inline virtual sf::Rect<float> const & getGlobalBounds(void) { return m_globalBounds; }
-
-	/*! Get the center of the object
-	 * The center is recomputed at each rotation
-	 *
-	 * \see rotate
-	 */
-	inline virtual sf::Vector2f const & getCenter(void) { return m_center; }
-
-	/*! Rotate the object
-	 * This function adds to the current rotation of the object
-	 *
-	 * \param angle The angle to add, in radian
+	 * \param angle The angle to rotate
 	 * \see setRotation
 	 */
-	virtual void rotate(float angle) = 0;
+	virtual void rotate(float angle) { m_rotation += angle; m_recompute = true; }
 
-	/*! Apply velocity
+	/*! Apply the velocity computed by the PhysicsEngine
 	 *
 	 * \param deltatime The current deltatime
+	 * \see PhysicsEngine
 	 */
 	virtual void update(void);
 
@@ -188,22 +174,35 @@ public:
 	 */
 	virtual void debugDraw(sf::RenderTarget & render);
 
+	/*! Get the global bounds
+	 * The AABB is recomputed at each rotation
+	 *
+	 * \see rotate
+	 */
+	virtual sf::Rect<float> const & getGlobalBounds(void) = 0;
+
+	/*! Get the center of the object
+	 * The center is recomputed at each rotation
+	 *
+	 * \see rotate
+	 */
+	virtual sf::Vector2f const & getCenter(void) = 0;
+
 protected:
-	inline void setGlobalBounds(sf::Rect<float> const & globalBounds) { m_globalBounds = globalBounds; }
-	inline void setCenter(sf::Vector2f const & center) { m_center = center; }
+	inline bool needRecompute(void) const { return m_recompute; }
+	inline void setRecompute(bool recompute) { m_recompute = recompute; }
 
 private:
 	sf::Vector2f			m_velocity;
 	sf::Vector2f			m_origin;
 	sf::Vector2f			m_position;
-	sf::Vector2f			m_center;
-	sf::Rect<float>			m_globalBounds;
 	float				m_rotation;
 	bool				m_sleep;
 	bool				m_applyGravity;
 	Type				m_type;
 	std::uint32_t			m_collisionType;
 	std::uint32_t			m_collisionMask;
+	bool				m_recompute;
 
 	void drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color);
 

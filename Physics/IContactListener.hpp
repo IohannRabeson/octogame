@@ -1,7 +1,7 @@
 #ifndef ICONTACTLISTENER_HPP
 # define ICONTACTLISTENER_HPP
 
-class Shape;
+class AShape;
 
 /*!
  * \ingroup Physic
@@ -13,8 +13,8 @@ class IContactListener
 public:
 	virtual ~IContactListener(void) = default;
 
-	virtual void onShapeCollision(Shape * shapeA, Shape * shapeB) = 0;
-	//TODO: virtual void onRayCollision(Shape * shapeA, Shape * shapeB) = 0;
+	virtual void onShapeCollision(AShape * shapeA, AShape * shapeB) = 0;
+	//TODO: virtual void onRayCollision() = 0;
 
 };
 

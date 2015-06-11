@@ -3,18 +3,18 @@
 Circle::Circle(void) :
 	AShape(),
 	m_rotatedCenter(),
+	m_center(),
+	m_globalBounds(),
 	m_radius(0.f)
 { }
 
 sf::Rect<float> const & Circle::getGlobalBounds(void)
 {
-	sf::Rect<float> globalBounds;
-	globalBounds.left = getCenter().x - m_radius;
-	globalBounds.top = getCenter().y - m_radius;
-	globalBounds.width = 2.f * m_radius;
-	globalBounds.height = 2.f * m_radius;
-	setGlobalBounds(globalBounds);
-	return AShape::getGlobalBounds();
+	m_globalBounds.left = getCenter().x - m_radius;
+	m_globalBounds.top = getCenter().y - m_radius;
+	m_globalBounds.width = 2.f * m_radius;
+	m_globalBounds.height = 2.f * m_radius;
+	return m_globalBounds;
 }
 
 void Circle::rotate(float angle)
@@ -32,12 +32,10 @@ void Circle::rotate(float angle)
 
 sf::Vector2f const & Circle::getCenter(void)
 {
-	sf::Vector2f center;
-	center = m_rotatedCenter + getPosition();
-	center.x += m_radius;
-	center.y += m_radius;
-	setCenter(center);
-	return AShape::getCenter();
+	m_center = m_rotatedCenter + getPosition();
+	m_center.x += m_radius;
+	m_center.y += m_radius;
+	return m_center;
 }
 
 // TODO: move debug draw Only debug

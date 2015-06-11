@@ -57,10 +57,9 @@ SRC_DECORS =	Decors/Crystal.cpp						\
 				Decors/Cloud.cpp						\
 				Decors/Mushroom.cpp
 
-SRC_PHYSICS =	Physics/DynamicPolygon.cpp				\
-				Physics/Polygon.cpp						\
-				Physics/OBB.cpp					\
-				Physics/AABB.cpp					\
+SRC_PHYSICS =	Physics/PolygonShape.cpp						\
+				Physics/RectangleShape.cpp						\
+				Physics/ConvexShape.cpp						\
 				Physics/Circle.cpp						\
 				Physics/Tile.cpp					\
 				Physics/PhysicsEngine.cpp					\

@@ -1,7 +1,7 @@
 #ifndef TILE_HPP
 # define TILE_HPP
 
-# include "Polygon.hpp"
+# include <SFML/Graphics.hpp>
 
 class Tile
 {

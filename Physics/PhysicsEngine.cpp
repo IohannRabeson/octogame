@@ -2,7 +2,7 @@
 #include "AShape.hpp"
 #include "IContactListener.hpp"
 #include "Circle.hpp"
-#include "Polygon.hpp"
+#include "PolygonShape.hpp"
 #include <Math.hpp>
 #include <assert.h>
 #include <limits>
@@ -19,6 +19,7 @@ void PhysicsEngine::init(void)
 	m_pairs.resize(1000u);
 }
 
+#include <iostream>
 void PhysicsEngine::update(float deltatime)
 {
 	// Add gravity
@@ -46,7 +47,6 @@ void PhysicsEngine::registerShape(AShape * shape)
 	m_shapes.push_back(shape);
 }
 
-#include <iostream>
 void PhysicsEngine::broadPhase(void)
 {
 	m_pairCount = 0u;
@@ -105,8 +105,8 @@ void PhysicsEngine::broadPhase(void)
 				if (m_shapes[i]->getGlobalBounds().intersects(m_shapes[k]->getGlobalBounds()))
 				{
 					//TODO: remove casr
-					m_pairs[m_pairCount].m_polygonA = dynamic_cast<Polygon *>(m_shapes[i]);
-					m_pairs[m_pairCount].m_polygonB = dynamic_cast<Polygon *>(m_shapes[k]);
+					m_pairs[m_pairCount].m_polygonA = dynamic_cast<PolygonShape *>(m_shapes[i]);
+					m_pairs[m_pairCount].m_polygonB = dynamic_cast<PolygonShape *>(m_shapes[k]);
 					m_pairCount++;
 				}
 			}
@@ -124,6 +124,7 @@ void PhysicsEngine::narrowPhase(void)
 			|| m_pairs[i].m_polygonA->isColliding(m_pairs[i].m_polygonB->getCollisionType()))
 		{
 			// Collision with tiles to replace DynamicsPolygon
+			//sf::Vector2f & velocity;
 			if (computeCollision(m_pairs[i].m_polygonA, m_pairs[i].m_polygonB))
 			{
 				// Move the polygon on X axis
@@ -170,7 +171,7 @@ void normalize(sf::Vector2f & norm, sf::Vector2f const & v)
 	norm.y = v.y / magnitude;
 }
 
-bool PhysicsEngine::computeCollision(Circle * , Polygon *)
+bool PhysicsEngine::computeCollision(Circle * , PolygonShape *)
 {
 	std::cout << "circle" << std::endl;
 	return true;
@@ -182,7 +183,7 @@ bool PhysicsEngine::computeCollision(Circle * , Circle * )
 	return true;
 }
 
-bool PhysicsEngine::test1(Polygon * polygonA, Polygon * polygonB)
+bool PhysicsEngine::test1(PolygonShape * polygonA, PolygonShape * polygonB)
 {
 	for (std::size_t i = 0u; i < polygonA->getVertexCount(); i++)
 	{
@@ -229,7 +230,7 @@ bool PhysicsEngine::test1(Polygon * polygonA, Polygon * polygonB)
 	return true;
 }
 
-bool PhysicsEngine::computeCollision(Polygon * polygonA, Polygon * polygonB)
+bool PhysicsEngine::computeCollision(PolygonShape * polygonA, PolygonShape * polygonB)
 {
 	m_magnitude = std::numeric_limits<float>::max();
 	if (!test1(polygonA, polygonB) || !test1(polygonB, polygonA))
@@ -272,7 +273,7 @@ bool PhysicsEngine::Projection::contains(Projection const & projection)
 	return false;
 }
 
-void PhysicsEngine::Projection::project(sf::Vector2f const & axis, Polygon * polygon)
+void PhysicsEngine::Projection::project(sf::Vector2f const & axis, PolygonShape * polygon)
 {
 	sf::Vector2f v = polygon->getVertex(0u);
 	float d = octo::dotProduct(axis, v);

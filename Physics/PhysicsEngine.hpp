@@ -5,14 +5,14 @@
 # include <vector>
 
 class AShape;
-class Polygon;
+class PolygonShape;
 class Circle;
 class IContactListener;
 
 /*!
  * \ingroup Physic
  * \class PhysicsEngine
- * Physic PhysicsEngine, compute collision between registered objects
+ * Physics Engine, compute collision between registered objects
  */
 class PhysicsEngine
 {
@@ -35,7 +35,7 @@ private:
 		float	min;
 		float	max;
 
-		void project(sf::Vector2f const & axis, Polygon * polygon);
+		void project(sf::Vector2f const & axis, PolygonShape * polygon);
 		bool overlap(Projection const & projection);
 		float getOverlap(Projection const & projection);
 		bool contains(Projection const & projection);
@@ -43,8 +43,8 @@ private:
 
 	struct Pair
 	{
-		Polygon *		m_polygonA = nullptr;
-		Polygon *		m_polygonB = nullptr;
+		PolygonShape *		m_polygonA = nullptr;
+		PolygonShape *		m_polygonB = nullptr;
 		bool			m_isColliding = false;
 	};
 
@@ -65,11 +65,11 @@ private:
 	// Determine if pairs are colliding
 	void narrowPhase(void);
 
-	bool computeCollision(Circle * circle, Polygon * polygon);
+	bool computeCollision(Circle * circle, PolygonShape * polygon);
 	bool computeCollision(Circle * circleA, Circle * circleB);
-	bool computeCollision(Polygon * polygonA, Polygon * polygonB);
-	bool test1(Polygon * polygonA, Polygon * polygonB);
-	bool test2(Polygon * polygonA, Polygon * polygonB);
+	bool computeCollision(PolygonShape * polygonA, PolygonShape * polygonB);
+	bool test1(PolygonShape * polygonA, PolygonShape * polygonB);
+	bool test2(PolygonShape * polygonA, PolygonShape * polygonB);
 
 	// TODO: use smart ptr
 	IContactListener *		m_contactListener;

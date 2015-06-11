@@ -20,6 +20,8 @@ public:
 
 private:
 	sf::Vector2f		m_rotatedCenter;
+	sf::Vector2f		m_center;
+	sf::Rect<float>		m_globalBounds;
 	float			m_radius;
 
 };
