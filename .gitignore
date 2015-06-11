@@ -43,5 +43,8 @@ doc/generated/
 # Log file
 log
 
-# Vallgrind fils
+# Vallgrind files
 callgrind.*
+
+# Hatedepend files
+.modifications

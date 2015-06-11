@@ -7,8 +7,6 @@
 MapManager::MapManager(void) :
 	m_texture(nullptr)
 {
-	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(&m_decorManager);
 	m_wave = "\
 	uniform float wave_phase;\
 	uniform vec2 wave_amplitude;\
@@ -47,8 +45,6 @@ MapManager::MapManager(void) :
 
 MapManager::~MapManager(void)
 {
-	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(&m_decorManager);
 }
 
 #include <iostream>
@@ -60,7 +56,6 @@ void MapManager::init(void)
 	// TransitionManager init the biome
 	m_transitionManager.init(this, &m_biome);
 	m_cameraManager.init(this);
-	m_decorManager.init(this, &m_biome);
 	m_texture = &resources.getTexture(OCTO_PNG);
 	if (!m_shader.loadFromMemory(m_wave, sf::Shader::Vertex))
 		std::cout << "caca" << std::endl;
@@ -93,7 +88,6 @@ void MapManager::update(float pf_deltatime)
 */
 	m_cameraManager.update(pf_deltatime);
 	m_transitionManager.update(pf_deltatime);
-	m_decorManager.update(pf_deltatime);
 	m_collisionManager.update(pf_deltatime);
 //	float x = static_cast<float>(sf::Mouse::getPosition().x) / octo::Application::getGraphicsManager().getVideoMode().width;
 //	float y = static_cast<float>(sf::Mouse::getPosition().y) / octo::Application::getGraphicsManager().getVideoMode().height;
@@ -103,7 +97,6 @@ void MapManager::update(float pf_deltatime)
 
 void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	render.draw(m_decorManager, &m_shader);
 	render.draw(m_transitionManager, &m_shader);
 
 	/*sf::RectangleShape rect;
