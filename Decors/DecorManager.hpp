@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 02:45:47 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 18:34:39 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/11 22:22:55 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <cstddef>
 # include <list>
 # include <random>
+# include <memory>
 
 # include <GenericFactory.hpp>
 # include <Camera.hpp>
