@@ -22,12 +22,13 @@ Decor::Decor(void) :
 	mf_timer = randomRange(0, 100) / 100.f;
 	//TODO: put it somewhere else
 	srand(time(NULL));
-	m_triangle = new sf::VertexArray(sf::Triangles);
+	m_triangle.setPrimitiveType(sf::Triangles);
+	//m_triangle = new sf::VertexArray(sf::Triangles);
 }
 
 Decor::~Decor(void)
 {
-	m_triangle->clear();
+	m_triangle.clear();
 }
 
 void Decor::rotateVec(sf::Vector2f *p_vector, float const & p_cosAngle, float const & p_sinAngle)
@@ -51,8 +52,8 @@ float Decor::randomRange(int pn_min, int pn_max)
 
 void Decor::createVertex(sf::Vector2f p_pos, sf::Color const & p_color, int * pn_count)
 {
-	(*m_triangle)[*pn_count].position = p_pos;
-	(*m_triangle)[*pn_count].color = p_color;
+	m_triangle[*pn_count].position = p_pos;
+	m_triangle[*pn_count].color = p_color;
 	(*pn_count)++;
 }
 
@@ -120,7 +121,7 @@ void Decor::init(Biome * p_biome)
 void Decor::allocateVertex(int pn_count)
 {
 	//m_triangle.reset(new sf::Vertex[pn_count]);
-	m_triangle->resize(pn_count);
+	m_triangle.resize(pn_count);
 }
 
 void Decor::randomDecor(void)
@@ -163,5 +164,5 @@ void Decor::update(float pf_deltatime)
 
 void Decor::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
 {
-	p_target.draw(*m_triangle, p_states);
+	p_target.draw(m_triangle, p_states);
 }
