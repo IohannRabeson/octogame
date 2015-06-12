@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 05:04:37 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/10 01:49:17 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 15:22:47 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ class DecorBuilder
 {
 public:
 	DecorBuilder(sf::Vertex* vertices, std::size_t count);
+
+	void		createVertex(sf::Vector2f const& pos, sf::Color const& color);
 
 	void		createTriangle(sf::Vector2f const& p0,
 							   sf::Vector2f const& p1,

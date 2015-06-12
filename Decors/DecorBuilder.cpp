@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 05:35:34 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/12 10:00:35 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 15:21:46 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@ DecorBuilder::DecorBuilder(sf::Vertex* vertices, std::size_t count) :
 	m_size(count),
 	m_used(0u)
 {
+}
+
+void	DecorBuilder::createVertex(sf::Vector2f const& pos, sf::Color const& color)
+{
+	if (m_used + 1 > m_size)
+		throw std::runtime_error("decor builder: no more vertices");
+	m_vertices[m_used].position = pos;
+	m_vertices[m_used].color = color;
+	++m_used;
 }
 
 void	DecorBuilder::createTriangle(sf::Vector2f const& p0,

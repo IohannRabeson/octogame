@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 01:39:09 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/12 09:54:31 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 15:22:09 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,33 +18,6 @@
 #include <Camera.hpp>
 #include <Console.hpp>
 #include <GraphicsManager.hpp>
-
-class DecorTestA : public ADecor
-{
-public:
-	DecorTestA() :
-		m_halfSize(30, 30)
-	{
-	}
-
-	virtual void			update(sf::Time frameTime,
-								   DecorBuilder& builder,
-								   ABiome& biome)
-	{
-		sf::Vector2f const&	pos = getPosition();
-
-		builder.createQuad(sf::Vector2f(pos.x - m_halfSize.x, pos.y - m_halfSize.y),
-						   sf::Vector2f(pos.x + m_halfSize.x, pos.y - m_halfSize.y),
-						   sf::Vector2f(pos.x + m_halfSize.x, pos.y + m_halfSize.y),
-						   sf::Vector2f(pos.x - m_halfSize.x, pos.y + m_halfSize.y),
-						   sf::Color::White);
-		static_cast<void>(frameTime);
-		static_cast<void>(random);
-		static_cast<void>(biome);
-	}
-private:
-	sf::Vector2f	m_halfSize;
-};
 
 DecorManagerDemoScreen::DecorManagerDemoScreen() :
 	m_manager(20000),
@@ -69,7 +42,7 @@ void	DecorManagerDemoScreen::start()
 	octo::Application::getGraphicsManager().addKeyboardListener(this);
 	console.addCommand(L"demo.select", this, &DecorManagerDemoScreen::selectDecorType);
 	console.addCommand(L"demo.setTreeDepth", m_biome, &TestBiome::setTreeDepth);
-//	console.addCommand(L"demo.setTreeLifeTime", m_biome, &TestBiome::setTreeLifeTime);
+	console.addCommand(L"demo.setTreeLifeTime", m_biome, &TestBiome::setTreeLifeTime);
 	console.addCommand(L"demo.setTreeColor", m_biome, &TestBiome::setTreeColor);
 	console.addCommand(L"demo.setCanCreateTree", m_biome, &TestBiome::setCanCreateTree);
 	console.addCommand(L"demo.setCrystalSize", m_biome, &TestBiome::setCrystalSize);
@@ -80,11 +53,11 @@ void	DecorManagerDemoScreen::start()
 	console.addCommand(L"demo.setCanCreateRock", m_biome, &TestBiome::setCanCreateRock);
 	console.addCommand(L"demo.setCloudSize", m_biome, &TestBiome::setCloudSize);
 	console.addCommand(L"demo.setCloudPartCount", m_biome, &TestBiome::setCloudPartCount);
-//	console.addCommand(L"demo.setCloudLifeTime", m_biome, &TestBiome::setCloudLifeTime);
+	console.addCommand(L"demo.setCloudLifeTime", m_biome, &TestBiome::setCloudLifeTime);
 	console.addCommand(L"demo.setCloudColor", m_biome, &TestBiome::setCloudColor);
 	console.addCommand(L"demo.setStarSize", m_biome, &TestBiome::setStarSize);
 	console.addCommand(L"demo.setStarColor", m_biome, &TestBiome::setStarColor);
-//	console.addCommand(L"demo.setStarLifeTime", m_biome, &TestBiome::setStarLifeTime);
+	console.addCommand(L"demo.setStarLifeTime", m_biome, &TestBiome::setStarLifeTime);
 	console.addCommand(L"demo.setCanCreateStar", m_biome, &TestBiome::setCanCreateStar);
 	console.addCommand(L"demo.setSunSize", m_biome, &TestBiome::setSunSize);
 	console.addCommand(L"demo.setSunColor", m_biome, &TestBiome::setSunColor);
