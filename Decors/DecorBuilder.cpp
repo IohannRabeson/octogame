@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 05:35:34 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 17:34:02 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 10:00:35 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	DecorBuilder::createQuad(sf::Vector2f const& p0,
 {
 	createTriangle(p0, p1, p2, color);
 	createTriangle(p0, p3, p2, color);
-	static_cast<void>(p3);
 }
 
 std::size_t DecorBuilder::getUsed()const
