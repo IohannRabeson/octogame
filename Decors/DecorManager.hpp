@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 02:45:47 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 22:22:55 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 16:29:48 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,14 @@ public:
 
 	explicit DecorManager(std::size_t maxVertexCount);
 
+	void		setup(ABiome* biome);
+
 	Iterator	add(DecorTypes type);
 	Iterator	add(ADecor* decor);
 	Iterator	erase(Iterator iterator);
 	void		clear();
 
-	void		update(sf::Time frameTime, ABiome& biome, octo::Camera const& camera);
+	void		update(sf::Time frameTime, octo::Camera const& camera);
 	void		draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 private:
 	void		registerDecors();
@@ -68,6 +70,7 @@ private:
 	std::unique_ptr<sf::Vertex[]>	m_vertices;
 	std::size_t						m_count;
 	std::size_t						m_used;
+	ABiome*							m_biome;
 };
 
 #endif

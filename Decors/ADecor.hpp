@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 02:40:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/10 03:02:40 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 16:31:41 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,13 @@ class ADecor
 public:
 	typedef std::mt19937	RandomEngine;
 
-	ADecor() = default;
+	explicit ADecor() = default;
 	virtual ~ADecor() = default;
 
+	virtual void			setup(ABiome& biome) = 0;
+
 	virtual void			update(sf::Time frameTime,
-								   DecorBuilder& manager,
+								   DecorBuilder& builder,
 								   ABiome& biome) = 0;
 
 	void					setPosition(sf::Vector2f const& pos);
