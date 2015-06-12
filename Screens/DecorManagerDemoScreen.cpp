@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 01:39:09 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/12 15:22:09 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 16:32:06 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	DecorManagerDemoScreen::start()
 	console.addCommand(L"demo.setMoonSize", m_biome, &TestBiome::setMoonSize);
 	console.addCommand(L"demo.setMoonColor", m_biome, &TestBiome::setMoonColor);
 	console.addCommand(L"demo.setCanCreateMoon", m_biome, &TestBiome::setCanCreateMoon);
+	m_manager.setup(&m_biome);
 }
 
 void	DecorManagerDemoScreen::pause()
@@ -86,7 +87,7 @@ void	DecorManagerDemoScreen::update(sf::Time frameTime)
 	octo::Camera&	camera = octo::Application::getCamera();
 
 	moveCamera(frameTime, camera);
-	m_manager.update(frameTime, m_biome, camera);
+	m_manager.update(frameTime, camera);
 }
 
 void	DecorManagerDemoScreen::draw(sf::RenderTarget& render)const
