@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 03:39:50 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 18:34:34 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 16:30:39 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,20 @@
 #include "DecorBuilder.hpp"
 #include "ADecor.hpp"
 
+#include <cassert>
+
 DecorManager::DecorManager(std::size_t maxVertexCount) :
 	m_vertices(new sf::Vertex[maxVertexCount]),
 	m_count(maxVertexCount),
-	m_used(0u)
+	m_used(0u),
+	m_biome(nullptr)
 {
 	registerDecors();
+}
+
+void	DecorManager::setup(ABiome* biome)
+{
+	m_biome = biome;
 }
 
 DecorManager::Iterator	DecorManager::add(DecorTypes type)
@@ -34,10 +42,12 @@ DecorManager::Iterator	DecorManager::add(DecorTypes type)
 
 DecorManager::Iterator	DecorManager::add(ADecor* decor)
 {
+	assert(m_biome != nullptr);
 	Iterator	it;
 
 	m_elements.push_back(decor);
 	it = std::prev(m_elements.end());
+	decor->setup(*m_biome);
 	return (it);
 }
 
@@ -55,7 +65,7 @@ void	DecorManager::clear()
 	m_elements.clear();
 }
 
-void	DecorManager::update(sf::Time frameTime, ABiome& biome, octo::Camera const& camera)
+void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 {
 	DecorBuilder	builder(m_vertices.get(), m_count);
 	float const		minVisibleX = camera.getCenter().x - camera.getSize().x;
@@ -67,7 +77,7 @@ void	DecorManager::update(sf::Time frameTime, ABiome& biome, octo::Camera const&
 		elementX = element->getPosition().x;
 		if (elementX >= minVisibleX && elementX <= maxVisibleX)
 		{
-			element->update(frameTime, builder, biome);
+			element->update(frameTime, builder, *m_biome);
 		}
 	}
 	m_used = builder.getUsed();
