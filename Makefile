@@ -60,7 +60,7 @@ SRC_DECORS =	Decors/Crystal.cpp						\
 SRC_PHYSICS =	Physics/PolygonShape.cpp						\
 				Physics/RectangleShape.cpp						\
 				Physics/ConvexShape.cpp						\
-				Physics/Circle.cpp						\
+				Physics/CircleShape.cpp						\
 				Physics/Tile.cpp					\
 				Physics/PhysicsEngine.cpp					\
 				Physics/AShape.cpp

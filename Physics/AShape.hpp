@@ -192,6 +192,8 @@ protected:
 	inline bool needRecompute(void) const { return m_recompute; }
 	inline void setRecompute(bool recompute) { m_recompute = recompute; }
 
+	void drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color);
+
 private:
 	sf::Vector2f			m_velocity;
 	sf::Vector2f			m_origin;
@@ -203,8 +205,6 @@ private:
 	std::uint32_t			m_collisionType;
 	std::uint32_t			m_collisionMask;
 	bool				m_recompute;
-
-	void drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color);
 
 	/*! Move the object
 	 * This function adds to the current position of the object

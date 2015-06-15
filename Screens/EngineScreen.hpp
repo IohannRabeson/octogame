@@ -6,7 +6,7 @@
 
 class RectangleShape;
 class ConvexShape;
-class Circle;
+class CircleShape;
 
 enum Type
 {
@@ -19,6 +19,9 @@ enum Type
 class EngineScreen : public octo::AbstractState
 {
 public:
+	EngineScreen(void);
+	virtual ~EngineScreen(void) = default;
+
 	virtual void	start();
 	virtual void	pause();
 	virtual void	resume();
@@ -34,7 +37,7 @@ private:
 	ConvexShape *			m_shapeA;
 	ConvexShape *			m_shapeB;
 	ConvexShape *			m_ground;
-	//Circle *			m_circle;
+	CircleShape *			m_circle;
 
 };
 

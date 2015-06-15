@@ -1,5 +1,6 @@
 #include "PolygonShape.hpp"
 #include <limits>
+#include <Math.hpp>
 
 PolygonShape::PolygonShape(void) :
 	AShape(),
@@ -91,6 +92,22 @@ sf::Vector2f const & PolygonShape::getCenter(void)
 	m_center.x /= static_cast<float>(m_initialVertices.size());
 	m_center.y /= static_cast<float>(m_initialVertices.size());
 	return m_center;
+}
+
+sf::Vector2f const & PolygonShape::getNearest(sf::Vector2f const & vertex)
+{
+	sf::Vector2f const * nearest;
+	float mag = 100000000000.f;
+	for (std::size_t i = 0u; i < getVertexCount(); i++)
+	{
+		float m = octo::magnitude(vertex - getVertex(i));
+		if (m < mag)
+		{
+			mag = m;
+			nearest = &getVertex(i);
+		}
+	}
+	return *nearest;
 }
 
 void PolygonShape::setVertexCount(std::size_t vertexCount)

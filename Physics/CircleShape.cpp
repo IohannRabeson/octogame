@@ -1,6 +1,6 @@
-#include "Circle.hpp"
+#include "CircleShape.hpp"
 
-Circle::Circle(void) :
+CircleShape::CircleShape(void) :
 	AShape(),
 	m_rotatedCenter(),
 	m_center(),
@@ -8,7 +8,7 @@ Circle::Circle(void) :
 	m_radius(0.f)
 { }
 
-sf::Rect<float> const & Circle::getGlobalBounds(void)
+sf::Rect<float> const & CircleShape::getGlobalBounds(void)
 {
 	m_globalBounds.left = getCenter().x - m_radius;
 	m_globalBounds.top = getCenter().y - m_radius;
@@ -17,7 +17,7 @@ sf::Rect<float> const & Circle::getGlobalBounds(void)
 	return m_globalBounds;
 }
 
-void Circle::rotate(float angle)
+void CircleShape::rotate(float angle)
 {
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);
@@ -30,7 +30,7 @@ void Circle::rotate(float angle)
 	m_rotatedCenter.y = origin.y + (x * sin + y * cos);
 }
 
-sf::Vector2f const & Circle::getCenter(void)
+sf::Vector2f const & CircleShape::getCenter(void)
 {
 	m_center = m_rotatedCenter + getPosition();
 	m_center.x += m_radius;
@@ -38,24 +38,7 @@ sf::Vector2f const & Circle::getCenter(void)
 	return m_center;
 }
 
-// TODO: move debug draw Only debug
-void drawCrosss(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color)
-{
-	sf::Vector2f sizeX(10.f, 0.f);
-	sf::Vector2f sizeY(0.f, 10.f);
-
-	sf::Vertex line[] =
-	{
-		sf::Vertex(position - sizeX, color),
-		sf::Vertex(position + sizeX, color),
-		sf::Vertex(position - sizeY, color),
-		sf::Vertex(position + sizeY, color),
-	};
-
-	render.draw(line, 4, sf::Lines);
-}
-
-void Circle::debugDraw(sf::RenderTarget & render)
+void CircleShape::debugDraw(sf::RenderTarget & render)
 {
 	sf::CircleShape shape(m_radius);
 	shape.setPointCount(100u);
@@ -76,7 +59,7 @@ void Circle::debugDraw(sf::RenderTarget & render)
 	sf::Vector2f ori = getOrigin() + getPosition();
 	ori.x += m_radius;
 	ori.y += m_radius;
-	drawCrosss(render, ori, sf::Color::Red);
-	drawCrosss(render, getPosition(), sf::Color::Magenta);
-	drawCrosss(render, getCenter(), sf::Color::Green);
+	drawCross(render, ori, sf::Color::Red);
+	drawCross(render, getPosition(), sf::Color::Magenta);
+	drawCross(render, getCenter(), sf::Color::Green);
 }

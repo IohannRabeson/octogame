@@ -1,9 +1,18 @@
 #include "EngineScreen.hpp"
 #include "RectangleShape.hpp"
 #include "ConvexShape.hpp"
-#include "Circle.hpp"
+#include "CircleShape.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+
+
+EngineScreen::EngineScreen(void) :
+	m_shape(nullptr),
+	m_shapeA(nullptr),
+	m_shapeB(nullptr),
+	m_ground(nullptr),
+	m_circle(nullptr)
+{ }
 
 void	EngineScreen::start()
 {
@@ -31,6 +40,8 @@ void	EngineScreen::start()
 	m_shapeA->setVertex(4u, sf::Vector2f(0.f, 200.f));
 
 	m_shapeB = new ConvexShape();
+	m_shapeB->setApplyGravity(false);
+	m_shapeB->setSleep(true);
 	m_shapeB->setCollisionType(Type::e_player);
 	m_shapeB->setCollisionMask(Type::e_player | Type::e_npc);
 	m_shapeB->setVertexCount(4u);
@@ -42,7 +53,6 @@ void	EngineScreen::start()
 	m_shapeB->setVertex(3u, sf::Vector2f(0.f, 200.f));
 
 	m_ground = new ConvexShape();
-	m_ground->setType(AShape::Type::e_static);
 	m_ground->setApplyGravity(false);
 	m_ground->setCollisionType(Type::e_player);
 	m_ground->setCollisionMask(Type::e_player | Type::e_npc);
@@ -52,16 +62,17 @@ void	EngineScreen::start()
 	m_ground->setVertex(1u, sf::Vector2f(1910.f, 0.f));
 	m_ground->setVertex(2u, sf::Vector2f(1910.f, 50.f));
 	m_ground->setVertex(3u, sf::Vector2f(0.f, 50.f));
-/*
-	m_circle = new ConvexShape();
-	m_circle->setCollisionType(Type::e_rock);
+
+	m_circle = new CircleShape();
+	m_circle->setApplyGravity(false);
+	m_circle->setCollisionType(Type::e_player);
 	m_circle->setCollisionMask(Type::e_player | Type::e_npc);
-	m_circle->setPosition(400.f, 450.f);
+	m_circle->setPosition(800.f, 450.f);
 	m_circle->setRadius(65.f);
 	m_circle->setOrigin(sf::Vector2f(10.f, 16.f));
-*/
+
 	m_engine.init();
-	//m_engine.registerShape(m_circle);
+	m_engine.registerShape(m_circle);
 	m_engine.registerShape(m_shape);
 	m_engine.registerShape(m_shapeA);
 	m_engine.registerShape(m_shapeB);
@@ -78,11 +89,16 @@ void	EngineScreen::resume()
 
 void	EngineScreen::stop()
 {
+	delete m_shape;
+	delete m_shapeA;
+	delete m_shapeB;
+	delete m_ground;
+	delete m_circle;
 }
 
 void	EngineScreen::update(sf::Time deltatime)
 {
-	float speed = 1250.f * deltatime.asSeconds();
+	float speed = 750.f * deltatime.asSeconds();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
 		m_shapeA->addVelocity(0.f, -speed);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
@@ -93,6 +109,7 @@ void	EngineScreen::update(sf::Time deltatime)
 		m_shapeA->addVelocity(-speed, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 		m_shapeA->rotate(3.14f * deltatime.asSeconds());
+	m_shapeA->update();
 	m_engine.update(deltatime.asSeconds());
 }
 
@@ -100,5 +117,4 @@ void	EngineScreen::draw(sf::RenderTarget & render) const
 {
 	render.clear(sf::Color::Black);
 	m_engine.debugDraw(render);
-	//m_circle->debugDraw(render);
 }

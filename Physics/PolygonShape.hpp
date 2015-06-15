@@ -52,6 +52,9 @@ public:
 	 */
 	virtual sf::Vector2f const & getCenter(void);
 
+	/*! Get the nearest point from the given vertex */
+	virtual sf::Vector2f const & getNearest(sf::Vector2f const & vertex);
+
 protected:
 	/*! Set the vertex at a given index
 	 * If index > vertexCount, behavior is undefined
