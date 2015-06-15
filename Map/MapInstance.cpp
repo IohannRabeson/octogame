@@ -8,7 +8,12 @@ MapInstance::MapInstance(void) :
 	m_instance(nullptr)
 {}
 
-MapInstance::~MapInstance(void) { }
+MapInstance::~MapInstance(void)
+{
+	//TODO: Understand was it cannot be free
+	if (m_instance != nullptr)
+		delete m_instance;
+}
 
 void MapInstance::initBiome(void)
 {

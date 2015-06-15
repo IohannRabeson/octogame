@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/25 22:07:16 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/31 16:15:10 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/06 10:36:45 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <Console.hpp>
 #include <AudioManager.hpp>
 
-#include "../ResourceDefinitions.hpp"
+#include "ResourceDefinitions.hpp"
 
 AudioDemoScreen::AudioDemoScreen()
 {

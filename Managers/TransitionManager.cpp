@@ -133,7 +133,6 @@ void TransitionManager::swapMap(void)
 	m_tiles->computeMap();
 	computeDecor();
 	defineTransition();
-	m_mapManager->getDecorManager().setPosition();
 }
 
 void TransitionManager::updateTransition(float pf_deltatime)

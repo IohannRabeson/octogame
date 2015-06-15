@@ -6,12 +6,12 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/19 21:23:07 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/23 01:33:20 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/06 10:37:09 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PaletteDemoScreen.hpp"
-#include "../ResourceDefinitions.hpp"
+#include "ResourceDefinitions.hpp"
 
 #include <Hsv.hpp>
 #include <Application.hpp>

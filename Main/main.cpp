@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/08 14:41:46 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/05/26 22:56:23 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@
 #include "SpriteSheetDemoScreen.hpp"
 #include "AnimatedSpriteDemoScreen.hpp"
 #include "AudioDemoScreen.hpp"
+#include "DecorManagerDemoScreen.hpp"
 #include "StateGame.hpp"
 #include "EngineScreen.hpp"
+#include "DecorManagerDemoScreen.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
@@ -35,6 +37,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<SpriteSheetDemoScreen>("sprite_sheet");
 	manager.registerState<AnimatedSpriteDemoScreen>("animated_sprite");
 	manager.registerState<AudioDemoScreen>("audio");
+	manager.registerState<DecorManagerDemoScreen>("decors");
 	manager.registerState<StateGame>("game");
 	manager.registerState<EngineScreen>("engine");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);

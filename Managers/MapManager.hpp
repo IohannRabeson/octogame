@@ -18,13 +18,11 @@ public:
 
 	//inline Player & getPlayer(void) const { return m_collisionManager.getPlayer(); }
 	inline TransitionManager & getTransitionManager(void) { return m_transitionManager; }
-	inline DecorManager & getDecorManager(void) { return m_decorManager; }
 	inline CameraManager & getCameraManager(void) { return m_cameraManager; }
 
 private:
 	Biome					m_biome;
 	TransitionManager		m_transitionManager;
-	DecorManager			m_decorManager;
 	//CollisionManager		m_collisionManager;
 	CameraManager			m_cameraManager;
 	std::string			m_wave;
