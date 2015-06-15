@@ -38,6 +38,7 @@ private:
 	ConvexShape *			m_shapeB;
 	ConvexShape *			m_ground;
 	CircleShape *			m_circle;
+	CircleShape *			m_circleA;
 
 };
 
