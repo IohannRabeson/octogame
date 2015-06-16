@@ -109,15 +109,15 @@ void	EngineScreen::update(sf::Time deltatime)
 {
 	float speed = 350.f * deltatime.asSeconds();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
-		m_shapeA->addVelocity(0.f, -speed);
+		m_circleA->addVelocity(0.f, -speed);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-		m_shapeA->addVelocity(0.f, speed);
+		m_circleA->addVelocity(0.f, speed);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-		m_shapeA->addVelocity(speed, 0.f);
+		m_circleA->addVelocity(speed, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
-		m_shapeA->addVelocity(-speed, 0.f);
+		m_circleA->addVelocity(-speed, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-		m_shapeA->rotate(3.14f * deltatime.asSeconds());
+		m_circleA->rotate(3.14f * deltatime.asSeconds());
 	m_engine.update(deltatime.asSeconds());
 }
 

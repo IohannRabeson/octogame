@@ -18,9 +18,7 @@ void PolygonShape::computeEdges(void)
 {
 	//m_recomputeEdges = false;
 	for (std::size_t i = 0; i < m_vertices.size(); i++)
-	{
 		m_initialVertices[i] = m_vertices[i] + getPosition();
-	}
 	computeRotation();
 	for (std::size_t i = 0; i < m_vertices.size(); i++)
 	{

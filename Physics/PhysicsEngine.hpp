@@ -36,16 +36,18 @@ public:
 	void debugDraw(sf::RenderTarget & render) const;
 
 private:
-	struct Projection
+	class Projection
 	{
-		float	min;
-		float	max;
-
+	public:
 		void project(sf::Vector2f const & axis, PolygonShape * polygon);
 		void project(sf::Vector2f const & axis, CircleShape * circle);
-		void project(sf::Vector2f const & axis, sf::Vector2f const & center, sf::Vector2f const & support);
 		float getOverlap(Projection const & projection);
 		bool contains(Projection const & projection);
+		void swept(sf::Vector2f const & axis, AShape const * shape);
+
+	private:
+		float	min;
+		float	max;
 	};
 
 	template<class T, class U>
@@ -77,9 +79,7 @@ private:
 	Projection						m_projectionA;
 	Projection						m_projectionB;
 	sf::Vector2f						m_axis;
-	sf::Vector2f						m_edge;
-	sf::Vector2f						m_mtv;
-	sf::Vector2f						m_support;
+	sf::Vector2f						m_mtv;		/// Minimum Translation Vector
 	sf::Vector2f						m_gravity;
 	float							m_magnitude;
 
