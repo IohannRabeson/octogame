@@ -43,6 +43,7 @@ private:
 
 		void project(sf::Vector2f const & axis, PolygonShape * polygon);
 		void project(sf::Vector2f const & axis, CircleShape * circle);
+		void project(sf::Vector2f const & axis, sf::Vector2f const & center, sf::Vector2f const & support);
 		float getOverlap(Projection const & projection);
 		bool contains(Projection const & projection);
 	};
@@ -107,17 +108,16 @@ private:
 	bool computeCollision(PolygonShape * polygonA, PolygonShape * polygonB);
 	bool computeCollision(PolygonShape * polygon, CircleShape * circle);
 	bool computeCollision(CircleShape * circleA, CircleShape * circleB);
-
-	/*! Get the support vertex
-	 * The support vertex is the farthest vzertex of the polygon along the direction
-	 *
-	 * \param polygon The polygon we are testing
-	 * \param direction The axis we used to search the farthest vertex
-	 */
-	sf::Vector2f const & getSupportVertex(PolygonShape * polygon, sf::Vector2f const & direction);
+	bool FindAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB);
 
 	// TODO: use smart ptr
 	IContactListener *		m_contactListener;
+
+	//TODO: delete
+	sf::Vector2f m_debug;
+	sf::Vector2f m_debug1;
+	sf::Vector2f m_debug2;
+	sf::Vector2f m_debug3;
 
 };
 

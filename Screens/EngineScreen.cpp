@@ -41,12 +41,12 @@ void	EngineScreen::start()
 
 	m_shapeB = new ConvexShape();
 	m_shapeB->setApplyGravity(false);
-	m_shapeB->setSleep(true);
+	m_shapeB->setSleep(false);
 	m_shapeB->setCollisionType(Type::e_player);
 	m_shapeB->setCollisionMask(Type::e_player | Type::e_npc);
 	m_shapeB->setVertexCount(4u);
 	m_shapeB->setOrigin(sf::Vector2f(100.f, 50.f));
-	m_shapeB->setPosition(sf::Vector2f(500.f, 300.f));
+	m_shapeB->setPosition(sf::Vector2f(800.f, 300.f));
 	m_shapeB->setVertex(0u, sf::Vector2f(0.f, 0.f));
 	m_shapeB->setVertex(1u, sf::Vector2f(50.f, 0.f));
 	m_shapeB->setVertex(2u, sf::Vector2f(150.f, 200.f));
@@ -107,18 +107,17 @@ void	EngineScreen::stop()
 
 void	EngineScreen::update(sf::Time deltatime)
 {
-	float speed = 750.f * deltatime.asSeconds();
+	float speed = 350.f * deltatime.asSeconds();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
-		m_circleA->addVelocity(0.f, -speed);
+		m_shapeA->addVelocity(0.f, -speed);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-		m_circleA->addVelocity(0.f, speed);
+		m_shapeA->addVelocity(0.f, speed);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-		m_circleA->addVelocity(speed, 0.f);
+		m_shapeA->addVelocity(speed, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
-		m_circleA->addVelocity(-speed, 0.f);
+		m_shapeA->addVelocity(-speed, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-		m_circleA->rotate(3.14f * deltatime.asSeconds());
-	m_shapeA->update();
+		m_shapeA->rotate(3.14f * deltatime.asSeconds());
 	m_engine.update(deltatime.asSeconds());
 }
 

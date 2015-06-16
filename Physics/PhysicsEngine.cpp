@@ -183,50 +183,80 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs, std::size_t pai
 	}
 }
 
-bool PhysicsEngine::resolveCollision(PolygonShape * polygonA, PolygonShape * polygonB)
+//bool PhysicsEngine::resolveCollision(PolygonShape * polygonA, PolygonShape * polygonB)
+//{
+//	for (std::size_t i = 0u; i < polygonA->getVertexCount(); i++)
+//	{
+//		// Calcul du premier axe (normal du coté du polygon)
+//		m_axis = polygonA->getNormal(i);
+//		octo::normalize(m_axis);
+//		// TODO: Tile, remove properly same point
+//		/*if (polygonB->getNormal(i).x == 0 && polygonB->getNormal(i).y == 0)
+//		{
+//			continue;
+//		}*/
+//		// On fait une projection du polygonA et du polygonB sur l'axe
+//		m_projectionA.project(m_axis, polygonA);
+//		m_projectionB.project(m_axis, polygonB);
+//		//TODO: remove that overlap
+//		float overlap = m_projectionA.getOverlap(m_projectionB);
+//		// On ajoute la velocité actuelle pour simuler le prochain déplacment
+//		float vel = octo::dotProduct(m_axis, polygonA->getVelocity());
+//		//std::cout << "1 -possible mtv " << m_axis.x << " " << m_axis.y << "  - vel  " << vel <<std::endl;
+//		if (vel < 0.f)
+//			m_projectionA.min += vel;
+//		else
+//			m_projectionA.max += vel;
+//		overlap = m_projectionA.getOverlap(m_projectionB);
+//		// TODO: manage containement
+//		/*if (m_projectionA.contains(m_projectionB))
+//		{
+//			float min = std::abs(m_projectionA.min - m_projectionB.min);
+//			float max = std::abs(m_projectionA.max - m_projectionB.max);
+//			if (min < max)
+//				overlap += min;
+//			else
+//				overlap += max;
+//			//std::cout << "CONTAINEMENT " << min << " " << max <<  std::endl;
+//		}*/
+//		// Si ils sont l'un sur l'autre, on test la normal suivante
+//		// Si ils ne sont pas l'un sur l'autre, on est certain qu'il existe un axe entre les deux, donc il n'y a pas de collision
+//		if (overlap >= 0.f)
+//			return false;
+//		overlap = -overlap;
+//		if (overlap < m_magnitude)
+//		{
+//			m_magnitude = overlap;
+//			m_mtv = m_axis;
+//		}
+//	}
+//	return true;
+//}
+
+bool PhysicsEngine::FindAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB)
 {
-	for (std::size_t i = 0u; i < polygonA->getVertexCount(); i++)
+	for(std::size_t i = 0; i < polygonA->getVertexCount(); ++i)
 	{
-		// Calcul du premier axe (normal du coté du polygon)
-		m_axis = polygonA->getNormal(i);
-		octo::normalize(m_axis);
-		// TODO: Tile, remove properly same point
-		/*if (polygonB->getNormal(i).x == 0 && polygonB->getNormal(i).y == 0)
-		{
-			continue;
-		}*/
-		// On fait une projection du polygonA et du polygonB sur l'axe
-		m_projectionA.project(m_axis, polygonA);
-		m_projectionB.project(m_axis, polygonB);
-		float overlap = m_projectionA.getOverlap(m_projectionB);
-		// On ajoute la velocité actuelle pour simuler le prochain déplacment
-		float vel = octo::dotProduct(m_axis, polygonA->getVelocity());
-		//std::cout << "1 -possible mtv " << m_axis.x << " " << m_axis.y << "  - vel  " << vel <<std::endl;
-		if (vel < 0.f)
-			m_projectionA.min += vel;
-		else
-			m_projectionA.max += vel;
-		overlap = m_projectionA.getOverlap(m_projectionB);
-		// TODO: manage containement
-		/*if (m_projectionA.contains(m_projectionB))
-		{
-			float min = std::abs(m_projectionA.min - m_projectionB.min);
-			float max = std::abs(m_projectionA.max - m_projectionB.max);
-			if (min < max)
-				overlap += min;
-			else
-				overlap += max;
-			//std::cout << "CONTAINEMENT " << min << " " << max <<  std::endl;
-		}*/
-		// Si ils sont l'un sur l'autre, on test la normal suivante
-		// Si ils ne sont pas l'un sur l'autre, on est certain qu'il existe un axe entre les deux, donc il n'y a pas de collision
-		if (overlap >= 0.f)
+		//Retrieve a face normal from A
+		sf::Vector2f const & n = polygonA->getNormal(i);
+		// Retrieve support point from B along -n
+		// TODO: support point in polygonshape
+		sf::Vector2f const & s = polygonB->getSupportVertex(-n);
+		// Retrieve vertex on face from A, transform into
+		// B's model space
+		sf::Vector2f const & v = polygonA->getVertex(i);
+		// Compute penetration distance (in B's model space)
+		float d = octo::dotProduct(n, s - v);
+		if (d > 0.f)
 			return false;
-		overlap = -overlap;
-		if (overlap < m_magnitude)
+		// Store greatest distance
+		if (d > m_magnitude)
 		{
-			m_magnitude = overlap;
-			m_mtv = m_axis;
+			m_magnitude = d;
+			m_mtv = n;
+			m_debug1 = s - v;
+			m_debug2 = v;
+			m_debug3 = s;
 		}
 	}
 	return true;
@@ -234,7 +264,7 @@ bool PhysicsEngine::resolveCollision(PolygonShape * polygonA, PolygonShape * pol
 
 bool PhysicsEngine::computeCollision(PolygonShape * polygonA, PolygonShape * polygonB)
 {
-	m_magnitude = std::numeric_limits<float>::max();
+/*	m_magnitude = std::numeric_limits<float>::max();
 	if (!resolveCollision(polygonA, polygonB) || !resolveCollision(polygonB, polygonA))
 		return false;
 	// On dirige le vecteur dans la bonne direction
@@ -242,6 +272,18 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygonA, PolygonShape * pol
 		m_mtv = -m_mtv;
 	m_mtv *= m_magnitude / 2.f;
 	// Si on arrive içi c'est que l'on a testé tous les axes, et qu'il n'existe pas d'axe qui sépare les deux polygons, donc il y a une collision
+	return true;
+*/
+	m_magnitude = -std::numeric_limits<float>::max();
+	if (!FindAxisLeastPenetration(polygonA, polygonB) || !FindAxisLeastPenetration(polygonB, polygonA))
+		return false;
+	octo::normalize(m_mtv);
+	float d = octo::dotProduct(m_mtv, m_debug3);
+	float dd = octo::dotProduct(m_mtv, m_debug2);
+	m_magnitude = dd - d;
+	m_mtv *= m_magnitude;
+	if (octo::dotProduct(m_mtv, polygonA->getCenter() - polygonB->getCenter()) < 0.f)
+		m_mtv = -m_mtv;
 	return true;
 }
 
@@ -252,7 +294,6 @@ bool PhysicsEngine::computeCollision(CircleShape * circleA, CircleShape * circle
 	octo::normalize(m_axis);
 	m_projectionA.project(m_axis, circleA);
 	m_projectionB.project(m_axis, circleB);
-	float overlap = m_projectionA.getOverlap(m_projectionB);
 	// On ajoute la velocité actuelle pour simuler le prochain déplacment
 	float vel = octo::dotProduct(m_axis, circleA->getVelocity());
 	if (vel < 0.f)
@@ -264,7 +305,7 @@ bool PhysicsEngine::computeCollision(CircleShape * circleA, CircleShape * circle
 		m_projectionB.min += vel;
 	else
 		m_projectionB.max += vel;
-	overlap = m_projectionA.getOverlap(m_projectionB);
+	float overlap = m_projectionA.getOverlap(m_projectionB);
 	if (overlap >= 0.f)
 		return false;
 	overlap = -overlap;
@@ -281,119 +322,36 @@ bool PhysicsEngine::computeCollision(CircleShape * circleA, CircleShape * circle
 
 bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circle)
 {
-	m_magnitude = std::numeric_limits<float>::max();
-	sf::Vector2f const & support = polygon->getNearest(circle->getCenter());
-	m_support = support;
-	m_axis = support - circle->getCenter();
-	// On fait une projection du polygon sur l'axe
-	m_projectionA.project(m_axis, polygon);
-	m_projectionB.project(m_axis, circle);
-	float overlap = m_projectionA.getOverlap(m_projectionB);
-	// On ajoute la velocité actuelle pour simuler le prochain déplacment
-	float vel = octo::dotProduct(m_axis, polygon->getVelocity());
-	if (vel < 0.f)
-		m_projectionA.min += vel;
-	else
-		m_projectionA.max += vel;
-	vel = octo::dotProduct(m_axis, circle->getVelocity());
-	if (vel < 0.f)
-		m_projectionB.min += vel;
-	else
-		m_projectionB.max += vel;
-	overlap = m_projectionA.getOverlap(m_projectionB);
-	// Si ils sont l'un sur l'autre, on test la normal suivante
-	// Si ils ne sont pas l'un sur l'autre, on est certain qu'il existe un axe entre les deux, donc il n'y a pas de collision
-	if (overlap >= 0.f)
-		return false;
-	overlap = -overlap;
-	if (overlap < m_magnitude)
-	{
-		m_magnitude = overlap;
-		m_mtv = m_axis;
-	}
+	m_magnitude = -std::numeric_limits<float>::max();
 	for (std::size_t i = 0u; i < polygon->getVertexCount(); i++)
 	{
-		// Calcul du premier axe (normal du coté du polygon)
 		m_axis = polygon->getNormal(i);
 		octo::normalize(m_axis);
-		// On fait une projection du polygon sur l'axe
+		
 		m_projectionA.project(m_axis, polygon);
 		m_projectionB.project(m_axis, circle);
 		float overlap = m_projectionA.getOverlap(m_projectionB);
-		// On ajoute la velocité actuelle pour simuler le prochain déplacment
-		float vel = octo::dotProduct(m_axis, polygon->getVelocity());
-		if (vel < 0.f)
-			m_projectionA.min += vel;
-		else
-			m_projectionA.max += vel;
-		vel = octo::dotProduct(m_axis, circle->getVelocity());
-		if (vel < 0.f)
-			m_projectionB.min += vel;
-		else
-			m_projectionB.max += vel;
-		overlap = m_projectionA.getOverlap(m_projectionB);
-		/*if (m_projectionA.contains(m_projectionB))
-		{
-			float min = std::abs(m_projectionA.min - m_projectionB.min);
-			float max = std::abs(m_projectionA.max - m_projectionB.max);
-			if (min < max)
-				overlap += min;
-			else
-				overlap += max;
-			//std::cout << "CONTAINEMENT " << min << " " << max <<  std::endl;
-		}*/
-		// Si ils sont l'un sur l'autre, on test la normal suivante
-		// Si ils ne sont pas l'un sur l'autre, on est certain qu'il existe un axe entre les deux, donc il n'y a pas de collision
-		if (overlap >= 0.f)
+		std::cout << overlap << std::endl;
+		if (overlap > 0.f)
 			return false;
-		overlap = -overlap;
-		if (overlap < m_magnitude)
+		if (overlap > circle->getRadius())
+			return false;
+		if (overlap > m_magnitude)
 		{
 			m_magnitude = overlap;
 			m_mtv = m_axis;
 		}
 	}
-	if (octo::dotProduct(m_mtv, polygon->getCenter() - circle->getCenter()) < 0)
+	if (octo::dotProduct(m_mtv, -polygon->getCenter() + circle->getCenter()) < 0.f)
 		m_mtv = -m_mtv;
-	m_mtv *= m_magnitude / 2.f;
-	// Si on arrive içi c'est que l'on a testé tous les axes, et qu'il n'existe pas d'axe qui sépare les deux polygons, donc il y a une collision
+	m_mtv *= m_magnitude;
 	return true;
-}
-
-sf::Vector2f const & PhysicsEngine::getSupportVertex(PolygonShape * polygon, sf::Vector2f const & direction)
-{
-	float bestProjection = -std::numeric_limits<float>::max();
-	sf::Vector2f const * bestVertex;
-	for (std::size_t i = 0; i < polygon->getVertexCount(); i++)
-	{
-		sf::Vector2f const & v = polygon->getVertex(i);
-		float projection = octo::dotProduct(v, direction);
-		if (projection > bestProjection)
-		{
-			bestVertex = &v;
-			bestProjection = projection;
-		}
-	}
-	return *bestVertex;
 }
 
 void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 {
 	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
 		(*i)->debugDraw(render);
-
-	sf::Vector2f sizeX(10.f, 0.f);
-	sf::Vector2f sizeY(0.f, 10.f);
-
-	sf::Vertex line[] =
-	{
-		sf::Vertex(m_support - sizeX, sf::Color::Magenta),
-		sf::Vertex(m_support + sizeX, sf::Color::Magenta),
-		sf::Vertex(m_support - sizeY, sf::Color::Magenta),
-		sf::Vertex(m_support + sizeY, sf::Color::Magenta),
-	};
-
-	render.draw(line, 4, sf::Lines);
 }
 
 // Nested Class Projection
@@ -428,10 +386,23 @@ void PhysicsEngine::Projection::project(sf::Vector2f const & axis, PolygonShape 
 	}
 }
 
+//TODO: use reference instead of pointer
 void PhysicsEngine::Projection::project(sf::Vector2f const & axis, CircleShape * circle)
 {
-	sf::Vector2f v = circle->getCenter();
-	float d = octo::dotProduct(axis, v);
+	float d = octo::dotProduct(axis, circle->getCenter());
 	min = d - circle->getRadius();
 	max = d + circle->getRadius();
+}
+
+
+void PhysicsEngine::Projection::project(sf::Vector2f const & axis, sf::Vector2f const & center, sf::Vector2f const & support)
+{
+	float d = octo::dotProduct(axis, center);
+	min = d;
+	max = d;
+	d = octo::dotProduct(axis, support);
+	if (d < min)
+		min = d;
+	if (d > max)
+		max = d;
 }

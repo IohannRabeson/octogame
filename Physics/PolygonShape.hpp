@@ -34,6 +34,13 @@ public:
 	 */
 	sf::Vector2f const & getVertex(std::size_t index);
 
+	/*! Get the support vertex
+	 * The support vertex is the farthest vzertex of the polygon along the direction
+	 *
+	 * \param direction The axis we used to search the farthest vertex
+	 */
+	sf::Vector2f const & getSupportVertex(sf::Vector2f const & direction);
+
 	/*! Use to draw debug information
 	 */
 	virtual void debugDraw(sf::RenderTarget & render);

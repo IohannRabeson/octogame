@@ -48,10 +48,10 @@ void AShape::debugDraw(sf::RenderTarget & render)
 	rect.setSize(sf::Vector2f(bounds.width, bounds.height));
 	render.draw(rect);
 
-	sf::Vector2f ori = getOrigin() + getPosition();
-	drawCross(render, ori, sf::Color::Red);
-	drawCross(render, getPosition(), sf::Color::Magenta);
-	drawCross(render, getCenter(), sf::Color::Green);
+	//sf::Vector2f ori = getOrigin() + getPosition();
+	//drawCross(render, ori, sf::Color::Red);
+	//drawCross(render, getPosition(), sf::Color::Magenta);
+	//drawCross(render, getCenter(), sf::Color::Green);
 	/*sf::Vector2f ce;
 	ce.x = rect.getPosition().x + rect.getSize().x / 2.f;
 	ce.y = rect.getPosition().y + rect.getSize().y / 2.f;

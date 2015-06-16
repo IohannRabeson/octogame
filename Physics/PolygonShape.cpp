@@ -84,6 +84,22 @@ sf::Vector2f const & PolygonShape::getVertex(std::size_t index)
 	return m_initialVertices[index];
 }
 
+sf::Vector2f const & PolygonShape::getSupportVertex(sf::Vector2f const & direction)
+{
+	float bestProjection = -std::numeric_limits<float>::max();
+	std::size_t index = 0u;
+	for (std::size_t i = 0u; i < getVertexCount(); i++)
+	{
+		float projection = octo::dotProduct(getVertex(i), direction);
+		if (projection > bestProjection)
+		{
+			index = i;
+			bestProjection = projection;
+		}
+	}
+	return getVertex(index);
+}
+
 sf::Vector2f const & PolygonShape::getCenter(void)
 {
 	//TODO: recompute
@@ -98,7 +114,7 @@ sf::Vector2f const & PolygonShape::getCenter(void)
 
 sf::Vector2f const & PolygonShape::getNearest(sf::Vector2f const & vertex)
 {
-	sf::Vector2f const * nearest;
+	sf::Vector2f const * nearest = nullptr;
 	float mag = 100000000000.f;
 	for (std::size_t i = 0u; i < getVertexCount(); i++)
 	{
