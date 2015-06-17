@@ -51,7 +51,7 @@ void MapManager::init(void)
 {
 	//m_collisionManager.init(this);
 	// TransitionManager init the biome
-	m_transitionManager.init(this, &m_biome);
+	m_terrainManager.init(this, &m_biome);
 	m_cameraManager.init(this);
 	if (!m_shader.loadFromMemory(m_wave, sf::Shader::Vertex))
 		std::cout << "caca" << std::endl;
@@ -66,7 +66,7 @@ void MapManager::update(float pf_deltatime)
 	float dt = 1.f / 120.f;
 
 	// Always update TransitionManager first
-	m_transitionManager.update(pf_deltatime);
+	m_terrainManager.update(pf_deltatime);
 	m_staticObjectManager.update(pf_deltatime);
 
 	accumulator += clock.getElapsedTime().asSeconds();
@@ -83,7 +83,7 @@ void MapManager::update(float pf_deltatime)
 	clock.restart();
 */
 	m_cameraManager.update(pf_deltatime);
-	m_transitionManager.update(pf_deltatime);
+	m_terrainManager.update(pf_deltatime);
 	//m_collisionManager.update(pf_deltatime);
 //	float x = static_cast<float>(sf::Mouse::getPosition().x) / octo::Application::getGraphicsManager().getVideoMode().width;
 //	float y = static_cast<float>(sf::Mouse::getPosition().y) / octo::Application::getGraphicsManager().getVideoMode().height;
@@ -93,7 +93,7 @@ void MapManager::update(float pf_deltatime)
 
 void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	render.draw(m_transitionManager, &m_shader);
+	render.draw(m_terrainManager, &m_shader);
 
 	/*sf::RectangleShape rect;
 	rect.setPosition(sf::Vector2f(m_collisionManager.getPlayer().getGlobalBounds().left, m_collisionManager.getPlayer().getGlobalBounds().top));

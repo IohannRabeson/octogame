@@ -1,16 +1,16 @@
-#ifndef TRANSITIONMANAGER_HPP
-# define TRANSITIONMANAGER_HPP
+#ifndef TERRAINMANAGER_HPP
+# define TERRAINMANAGER_HPP
 
 # include "Map.hpp"
 
 class MapManager;
 class ConvexShape;
 
-class TransitionManager : public sf::Drawable
+class TerrainManager : public sf::Drawable
 {
 public:
-	TransitionManager(void);
-	virtual ~TransitionManager(void);
+	TerrainManager(void);
+	virtual ~TerrainManager(void);
 
 	inline sf::Vertex * getHeight(int x) { m_tiles->getHeight(x); return m_tilesPrev->getHeight(x); }
 	inline Tile & getTile(int x, int y) const { return m_tiles->get(x, y); }

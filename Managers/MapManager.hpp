@@ -1,7 +1,7 @@
 #ifndef MAPMANAGER_HPP
 # define MAPMANAGER_HPP
 
-# include "TransitionManager.hpp"
+# include "TerrainManager.hpp"
 # include "DecorManager.hpp"
 # include "CollisionManager.hpp"
 # include "CameraManager.hpp"
@@ -17,12 +17,12 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 	//inline Player & getPlayer(void) const { return m_collisionManager.getPlayer(); }
-	inline TransitionManager & getTransitionManager(void) { return m_transitionManager; }
+	inline TerrainManager & getTerrainManager(void) { return m_terrainManager; }
 	inline CameraManager & getCameraManager(void) { return m_cameraManager; }
 
 private:
-	Biome					m_biome;
-	TransitionManager		m_transitionManager;
+	Biome				m_biome;
+	TerrainManager			m_terrainManager;
 	//CollisionManager		m_collisionManager;
 	CameraManager			m_cameraManager;
 	std::string			m_wave;

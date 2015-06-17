@@ -36,12 +36,11 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPositionBehaviors.cpp
 
 SRC_MAP =		Map/Map.cpp								\
-				Map/MapHigh.cpp							\
+				Map/TerrainManager.cpp			\
 				Map/MapInstance.cpp
 
 SRC_MANAGERS =	Managers/CollisionManager.cpp			\
 				Managers/MapManager.cpp					\
-				Managers/TransitionManager.cpp			\
 				Managers/CameraManager.cpp
 
 SRC_OCTO =		Octo/OctoNoise.cpp
