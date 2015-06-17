@@ -58,7 +58,7 @@ public:
 	 *
 	 * \param angle New angle, in radian
 	 */
-	inline void setRotation(float angle) { m_rotation = angle; m_recompute = true; }
+	inline void setRotation(float angle) { m_rotation = angle; }
 
 	/*! Set the sleep state of the object
 	 *
@@ -161,7 +161,7 @@ public:
 	 * \param angle The angle to rotate
 	 * \see setRotation
 	 */
-	virtual void rotate(float angle) { m_rotation += angle; m_recompute = true; }
+	void rotate(float angle) { m_rotation += angle; }
 
 	/*! Apply the velocity computed by the PhysicsEngine
 	 *
@@ -179,19 +179,16 @@ public:
 	 *
 	 * \see rotate
 	 */
-	virtual sf::Rect<float> const & getGlobalBounds(void) = 0;
+	virtual sf::Rect<float> const & getGlobalBounds(void) const = 0;
 
 	/*! Get the center of the object
 	 * The center is recomputed at each rotation
 	 *
 	 * \see rotate
 	 */
-	virtual sf::Vector2f const & getCenter(void) = 0;
+	virtual sf::Vector2f const & getBaryCenter(void) const = 0;
 
 protected:
-	inline bool needRecompute(void) const { return m_recompute; }
-	inline void setRecompute(bool recompute) { m_recompute = recompute; }
-
 	void drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color);
 
 private:
@@ -204,7 +201,6 @@ private:
 	Type				m_type;
 	std::uint32_t			m_collisionType;
 	std::uint32_t			m_collisionMask;
-	bool				m_recompute;
 
 	/*! Move the object
 	 * This function adds to the current position of the object

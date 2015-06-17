@@ -183,7 +183,7 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs, std::size_t pai
 //TODO: voir avec les tiles quelle technique fonctionne le mieux
 bool PhysicsEngine::resolveCollision(PolygonShape * polygonA, PolygonShape * polygonB)
 {
-	for (std::size_t i = 0u; i < polygonA->getVertexCount(); i++)
+	for (std::size_t i = 0u; i < polygonA->getEfficientVertexCount(); i++)
 	{
 		// Calcul du premier axe (normal du coté du polygon)
 		m_axis = polygonA->getNormal(i);
@@ -223,7 +223,7 @@ bool PhysicsEngine::resolveCollision(PolygonShape * polygonA, PolygonShape * pol
 
 bool PhysicsEngine::FindAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB)
 {
-	for(std::size_t i = 0u; i < polygonA->getVertexCount(); ++i)
+	for(std::size_t i = 0u; i < polygonA->getEfficientVertexCount(); ++i)
 	{
 		//Retrieve a face normal from A
 		sf::Vector2f const & n = polygonA->getNormal(i);
@@ -255,7 +255,7 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygonA, PolygonShape * pol
 	if (!resolveCollision(polygonA, polygonB) || !resolveCollision(polygonB, polygonA))
 		return false;
 	// On dirige le vecteur dans la bonne direction
-	if (octo::dotProduct(m_mtv, polygonB->getCenter() - polygonA->getCenter()) < 0.f)
+	if (octo::dotProduct(m_mtv, polygonB->getBaryCenter() - polygonA->getBaryCenter()) < 0.f)
 		m_mtv = -m_mtv;
 	m_mtv *= m_magnitude;
 	// Si on arrive içi c'est que l'on a testé tous les axes, et qu'il n'existe pas d'axe qui sépare les deux polygons, donc il y a une collision
@@ -269,7 +269,7 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygonA, PolygonShape * pol
 	float dd = octo::dotProduct(m_mtv, m_debug2);
 	m_magnitude = dd - d;
 	m_mtv *= m_magnitude;
-	if (octo::dotProduct(m_mtv, polygonA->getCenter() - polygonB->getCenter()) < 0.f)
+	if (octo::dotProduct(m_mtv, polygonA->getBaryCenter() - polygonB->getBaryCenter()) < 0.f)
 		m_mtv = -m_mtv;
 	return true;*/
 }
@@ -277,7 +277,7 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygonA, PolygonShape * pol
 bool PhysicsEngine::computeCollision(CircleShape * circleA, CircleShape * circleB)
 {
 	m_magnitude = -std::numeric_limits<float>::max();
-	m_axis = circleA->getCenter() - circleB->getCenter();
+	m_axis = circleA->getBaryCenter() - circleB->getBaryCenter();
 	octo::normalize(m_axis);
 	m_projectionA.project(m_axis, circleA);
 	m_projectionB.project(m_axis, circleB);
@@ -298,7 +298,7 @@ bool PhysicsEngine::computeCollision(CircleShape * circleA, CircleShape * circle
 bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circle)
 {
 	m_magnitude = -std::numeric_limits<float>::max();
-	for (std::size_t i = 0u; i < polygon->getVertexCount(); i++)
+	for (std::size_t i = 0u; i < polygon->getEfficientVertexCount(); i++)
 	{
 		m_axis = polygon->getNormal(i);
 		octo::normalize(m_axis);
@@ -313,7 +313,7 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circl
 			m_mtv = m_axis;
 		}
 	}
-	m_axis = circle->getCenter() - polygon->getCenter();
+	m_axis = circle->getBaryCenter() - polygon->getBaryCenter();
 	octo::normalize(m_axis);
 	m_projectionA.project(m_axis, polygon);
 	m_projectionB.project(m_axis, circle);
@@ -325,7 +325,7 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circl
 		m_magnitude = overlap;
 		m_mtv = m_axis;
 	}
-	if (octo::dotProduct(m_mtv, circle->getCenter() - polygon->getCenter()) < 0.f)
+	if (octo::dotProduct(m_mtv, circle->getBaryCenter() - polygon->getBaryCenter()) < 0.f)
 		m_mtv = -m_mtv;
 	m_mtv *= m_magnitude;
 	return true;
@@ -371,7 +371,7 @@ void PhysicsEngine::Projection::project(sf::Vector2f const & axis, PolygonShape 
 
 void PhysicsEngine::Projection::project(sf::Vector2f const & axis, CircleShape * circle)
 {
-	float d = octo::dotProduct(axis, circle->getCenter());
+	float d = octo::dotProduct(axis, circle->getBaryCenter());
 	min = d - circle->getRadius();
 	max = d + circle->getRadius();
 }

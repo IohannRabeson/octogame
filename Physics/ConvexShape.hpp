@@ -25,8 +25,6 @@ public:
 	 */
 	virtual void setVertexCount(std::size_t vertexCount);
 
-private:
-
 };
 
 #endif

@@ -10,8 +10,7 @@ AShape::AShape(void) :
 	m_applyGravity(true),
 	m_type(AShape::Type::e_dynamic),
 	m_collisionType(0u),
-	m_collisionMask(std::numeric_limits<std::uint32_t>::max()),
-	m_recompute(true)
+	m_collisionMask(std::numeric_limits<std::uint32_t>::max())
 { }
 
 void AShape::update(void)
@@ -48,12 +47,8 @@ void AShape::debugDraw(sf::RenderTarget & render)
 	rect.setSize(sf::Vector2f(bounds.width, bounds.height));
 	render.draw(rect);
 
-	//sf::Vector2f ori = getOrigin() + getPosition();
-	//drawCross(render, ori, sf::Color::Red);
-	//drawCross(render, getPosition(), sf::Color::Magenta);
-	//drawCross(render, getCenter(), sf::Color::Green);
-	/*sf::Vector2f ce;
-	ce.x = rect.getPosition().x + rect.getSize().x / 2.f;
-	ce.y = rect.getPosition().y + rect.getSize().y / 2.f;
-	drawCross(render, ce, sf::Color::Green);*/
+	sf::Vector2f ori = getOrigin() + getPosition();
+	drawCross(render, ori, sf::Color::Red);
+	drawCross(render, getPosition(), sf::Color::Magenta);
+	drawCross(render, getBaryCenter(), sf::Color::Green);
 }

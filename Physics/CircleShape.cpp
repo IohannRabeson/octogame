@@ -2,64 +2,48 @@
 
 CircleShape::CircleShape(void) :
 	AShape(),
-	m_rotatedCenter(),
-	m_center(),
+	m_baryCenter(),
+	m_initialBaryCenter(),
 	m_globalBounds(),
 	m_radius(0.f)
 { }
 
-sf::Rect<float> const & CircleShape::getGlobalBounds(void)
+void CircleShape::computeShape(void)
 {
-	m_globalBounds.left = getCenter().x - m_radius;
-	m_globalBounds.top = getCenter().y - m_radius;
-	m_globalBounds.width = 2.f * m_radius;
-	m_globalBounds.height = 2.f * m_radius;
-	return m_globalBounds;
-}
+	m_initialBaryCenter.x = m_radius;
+	m_initialBaryCenter.y = m_radius;
 
-void CircleShape::rotate(float angle)
-{
-	float cos = std::cos(angle);
-	float sin = std::sin(angle);
+	float cos = std::cos(getRotation());
+	float sin = std::sin(getRotation());
 	float x;
 	float y;
 	sf::Vector2f const & origin = getOrigin();
-	x = m_rotatedCenter.x - origin.x;
-	y = m_rotatedCenter.y - origin.y;
-	m_rotatedCenter.x = origin.x + (x * cos - y * sin);
-	m_rotatedCenter.y = origin.y + (x * sin + y * cos);
+	x = m_initialBaryCenter.x - origin.x;
+	y = m_initialBaryCenter.y - origin.y;
+	m_baryCenter.x = origin.x + (x * cos - y * sin) + getPosition().x;
+	m_baryCenter.y = origin.y + (x * sin + y * cos) + getPosition().y;
+
+	m_globalBounds.left = m_baryCenter.x - m_radius;
+	m_globalBounds.top = m_baryCenter.y - m_radius;
+	m_globalBounds.width = 2.f * m_radius;
+	m_globalBounds.height = 2.f * m_radius;
 }
 
-sf::Vector2f const & CircleShape::getCenter(void)
+void CircleShape::update(void)
 {
-	m_center = m_rotatedCenter + getPosition();
-	m_center.x += m_radius;
-	m_center.y += m_radius;
-	return m_center;
+	AShape::update();
+	computeShape();
 }
 
 void CircleShape::debugDraw(sf::RenderTarget & render)
 {
 	sf::CircleShape shape(m_radius);
 	shape.setPointCount(100u);
-	sf::Vector2f position = getCenter();
+	sf::Vector2f position = getBaryCenter();
 	position.x -= m_radius;
 	position.y -= m_radius;
 	shape.setPosition(position);
 	render.draw(shape);
 
-	sf::RectangleShape rect;
-	rect.setOutlineColor(sf::Color::Red);
-	rect.setFillColor(sf::Color::Transparent);
-	rect.setOutlineThickness(1);
-	rect.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
-	rect.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
-	render.draw(rect);
-
-	sf::Vector2f ori = getOrigin() + getPosition();
-	ori.x += m_radius;
-	ori.y += m_radius;
-	drawCross(render, ori, sf::Color::Red);
-	drawCross(render, getPosition(), sf::Color::Magenta);
-	drawCross(render, getCenter(), sf::Color::Green);
+	AShape::debugDraw(render);
 }

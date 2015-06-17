@@ -7,7 +7,6 @@
 class PolygonShape : public AShape
 {
 public:
-	PolygonShape(void);
 	virtual ~PolygonShape(void) = default;
 
 	/*! Get the vertex count */
@@ -18,21 +17,35 @@ public:
 	 *
 	 * \param index The index
 	 */
-	sf::Vector2f const & getEdge(std::size_t index);
+	inline sf::Vector2f const & getEdge(std::size_t index) const { return m_edges[index]; }
 
 	/*! Get the normal at a given index
 	 * If index > vertexCount, behavior is undefined
 	 *
 	 * \param index The index
 	 */
-	sf::Vector2f const & getNormal(std::size_t index);
+	inline sf::Vector2f const & getNormal(std::size_t index) const { return m_normals[index]; }
 
 	/*! Get the vertex at a given index
 	 * If index > vertexCount, behavior is undefined
 	 *
 	 * \param index The index
 	 */
-	sf::Vector2f const & getVertex(std::size_t index);
+	inline sf::Vector2f const & getVertex(std::size_t index) const { return m_vertices[index]; }
+
+	/*! Get the global bounds
+	 * The AABB is recomputed at each rotation
+	 *
+	 * \see rotate
+	 */
+	inline virtual sf::Rect<float> const & getGlobalBounds(void) const { return m_globalBounds; }
+
+	/*! Get the center of the object
+	 * The center is recomputed at each rotation
+	 *
+	 * \see rotate
+	 */
+	inline virtual sf::Vector2f const & getBaryCenter(void) const { return m_baryCenter; }
 
 	/*! Get the support vertex
 	 * The support vertex is the farthest vzertex of the polygon along the direction
@@ -41,28 +54,22 @@ public:
 	 */
 	sf::Vector2f const & getSupportVertex(sf::Vector2f const & direction);
 
-	/*! Use to draw debug information
+	/*! Get the vertex count needed to compute the sat */
+	inline virtual std::size_t getEfficientVertexCount(void) const { return m_vertices.size(); }
+
+	/*! Apply the velocity computed by the PhysicsEngine
+	 *
+	 * \param deltatime The current deltatime
+	 * \see PhysicsEngine
 	 */
+	virtual void update(void);
+
+	/*! Use to draw debug information */
 	virtual void debugDraw(sf::RenderTarget & render);
 
-	/*! Get the global bounds
-	 * The AABB is recomputed at each rotation
-	 *
-	 * \see rotate
-	 */
-	virtual sf::Rect<float> const & getGlobalBounds(void);
-
-	/*! Get the center of the object
-	 * The center is recomputed at each rotation
-	 *
-	 * \see rotate
-	 */
-	virtual sf::Vector2f const & getCenter(void);
-
-	/*! Get the nearest point from the given vertex */
-	virtual sf::Vector2f const & getNearest(sf::Vector2f const & vertex);
-
 protected:
+	PolygonShape(void);
+
 	/*! Set the vertex at a given index
 	 * If index > vertexCount, behavior is undefined
 	 * The vertex position is relative to the position of the shape
@@ -84,11 +91,10 @@ private:
 	std::vector<sf::Vector2f>	m_initialVertices;
 	std::vector<sf::Vector2f>	m_edges;
 	std::vector<sf::Vector2f>	m_normals;
-	sf::Vector2f			m_center;
+	sf::Vector2f			m_baryCenter;
 	sf::Rect<float>			m_globalBounds;
 
-	void computeRotation(void);
-	void computeEdges(void);
+	void computeShape(void);
 
 };
 

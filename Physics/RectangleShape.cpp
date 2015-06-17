@@ -7,7 +7,6 @@ RectangleShape::RectangleShape(void) :
 	setVertexCount(4u);
 }
 
-
 void RectangleShape::setSize(sf::Vector2f const & size)
 {
 	m_size = size;
@@ -15,9 +14,4 @@ void RectangleShape::setSize(sf::Vector2f const & size)
 	setVertex(1u, sf::Vector2f(size.x, 0.f));
 	setVertex(2u, size);
 	setVertex(3u, sf::Vector2f(0.f, size.y));
-}
-
-sf::Vector2f const & RectangleShape::getSize(void) const
-{
-	return m_size;
 }
