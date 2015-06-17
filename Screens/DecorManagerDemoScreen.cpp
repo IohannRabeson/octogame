@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 01:39:09 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/12 16:32:06 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 19:22:46 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ DecorManagerDemoScreen::DecorManagerDemoScreen() :
 	m_typeMapper["cloud"] = DecorManager::DecorTypes::Cloud;
 	m_typeMapper["sun"] = DecorManager::DecorTypes::Sun;
 	m_typeMapper["moon"] = DecorManager::DecorTypes::Moon;
+	m_typeMapper["lightning"] = DecorManager::DecorTypes::Lightning;
 }
 
 void	DecorManagerDemoScreen::start()

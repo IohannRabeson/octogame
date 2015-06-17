@@ -50,7 +50,8 @@ SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/DecorBuilder.cpp					\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\
-				Decors/TestBiome.cpp
+				Decors/TestBiome.cpp					\
+				Decors/Lightning.cpp
 
 SRC_PHYSICS =	Physics/DynamicPolygon.cpp				\
 				Physics/Player.cpp						\

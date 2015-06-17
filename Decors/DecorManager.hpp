@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 02:45:47 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/12 16:29:48 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/12 17:26:40 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ public:
 		Star,
 		Cloud,
 		Sun,
-		Moon
+		Moon,
+		Lightning
 	};
 
 	explicit DecorManager(std::size_t maxVertexCount);
