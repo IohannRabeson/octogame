@@ -5,6 +5,7 @@
 Map::Map(void) :
 	m_depth(0.f),
 	m_oldDepth(0.f),
+	m_biome(),
 	m_width(0u),
 	m_height(0u),
 	m_offset(nullptr),

@@ -4,7 +4,15 @@
 #include <ResourceManager.hpp>
 #include <GraphicsManager.hpp>
 
-MapManager::MapManager(void)
+
+MapManager::MapManager(void) :
+	m_biome(),
+	m_terrainManager(),
+	m_wave(),
+	m_dark(),
+	m_negative(),
+	m_shader(),
+	m_camera(octo::Application::getCamera())
 {
 	m_wave = "\
 	uniform float wave_phase;\
@@ -49,10 +57,8 @@ MapManager::~MapManager(void)
 #include <iostream>
 void MapManager::init(void)
 {
-	//m_collisionManager.init(this);
 	// TransitionManager init the biome
 	m_terrainManager.init(this, &m_biome);
-	m_cameraManager.init(this);
 	if (!m_shader.loadFromMemory(m_wave, sf::Shader::Vertex))
 		std::cout << "caca" << std::endl;
 	//if (!m_shader.loadFromMemory(m_negative, sf::Shader::Fragment))
@@ -82,9 +88,19 @@ void MapManager::update(float pf_deltatime)
 	//float alpha = accumulator / dt;
 	clock.restart();
 */
-	m_cameraManager.update(pf_deltatime);
+
+	// Update the camera position
+
 	m_terrainManager.update(pf_deltatime);
-	//m_collisionManager.update(pf_deltatime);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		m_camera.move(500.f * pf_deltatime, 0.f);
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		m_camera.move(-500.f * pf_deltatime, 0.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		m_camera.move(0.f, 500.f * pf_deltatime);
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		m_camera.move(0.f, -500.f * pf_deltatime);
 //	float x = static_cast<float>(sf::Mouse::getPosition().x) / octo::Application::getGraphicsManager().getVideoMode().width;
 //	float y = static_cast<float>(sf::Mouse::getPosition().y) / octo::Application::getGraphicsManager().getVideoMode().height;
 //	m_shader.setParameter("wave_phase", pf_deltatime);
@@ -102,5 +118,4 @@ void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 	*/
 	states.shader = &m_shader;
 	//render.draw(&m_collisionManager.getPlayer().m_vertices[0], 4, sf::Quads, states);
-	//m_collisionManager.debugDraw(render);
 }

@@ -39,9 +39,7 @@ SRC_MAP =		Map/Map.cpp								\
 				Map/TerrainManager.cpp			\
 				Map/MapInstance.cpp
 
-SRC_MANAGERS =	Managers/CollisionManager.cpp			\
-				Managers/MapManager.cpp					\
-				Managers/CameraManager.cpp
+SRC_MANAGERS =	Managers/MapManager.cpp
 
 SRC_OCTO =		Octo/OctoNoise.cpp
 

@@ -4,6 +4,8 @@
 #include "ConvexShape.hpp"
 #include <Interpolations.hpp>
 #include "PhysicsEngine.hpp"
+#include <Application.hpp>
+#include <Camera.hpp>
 
 TerrainManager::TerrainManager(void) :
 	m_mapManager(nullptr),
@@ -11,7 +13,7 @@ TerrainManager::TerrainManager(void) :
 	m_tilesPrev(nullptr),
 	mf_transitionTimer(1.f),
 	mf_transitionTimerMax(0.4f),
-	m_offset(nullptr),
+	m_offset(),
 	m_vertices(nullptr),
 	mn_verticesCount(0u),
 	m_oldOffset(0, 0)
@@ -34,6 +36,10 @@ void TerrainManager::init(MapManager * p_mapManager, Biome * p_biome)
 	m_tiles->init(p_biome);
 	m_tilesPrev->init(p_biome);
 
+	// Set pointer to the offset of the camera
+	m_tiles->setCameraView(&m_offset);
+	m_tilesPrev->setCameraView(&m_offset);
+
 	IShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
 	m_tileShapes.resize(m_tiles->getColumns(), m_tiles->getRows(), nullptr);
 
@@ -46,11 +52,6 @@ void TerrainManager::init(MapManager * p_mapManager, Biome * p_biome)
 	}
 
 	mf_transitionTimerMax = p_biome->mf_transitionTimerMax;
-
-	// Set pointer to the camera
-	m_offset = m_mapManager->getCameraManager().getUpLeft();
-	m_tiles->setCameraView(m_offset);
-	m_tilesPrev->setCameraView(m_offset);
 
 	// Init vertices
 	m_vertices.reset(new sf::Vertex[m_tiles->getRows() * m_tiles->getColumns() * 6u]);
@@ -228,8 +229,8 @@ void TerrainManager::updateOffset(float)
 {
 	int ofX = 0;
 	int ofY = 0;
-	int newOfX = static_cast<int>(m_offset->x / Tile::TileSize);
-	int newOfY = static_cast<int>(m_offset->y / Tile::TileSize);
+	int newOfX = static_cast<int>(m_offset.x / Tile::TileSize);
+	int newOfY = static_cast<int>(m_offset.y / Tile::TileSize);
 	if (m_oldOffset.x > newOfX)
 		ofX = -1;
 	else if (m_oldOffset.x < newOfX)
@@ -346,7 +347,11 @@ void TerrainManager::update(float pf_deltatime)
 {
 	bool compute = false;
 	mf_transitionTimer += pf_deltatime;
-	swap = false;
+
+	// Get the top left of the camera view
+	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
+	m_offset.x = rect.left;
+	m_offset.y = rect.top;
 
 	if (mf_transitionTimer >= mf_transitionTimerMax)
 	{
@@ -368,7 +373,6 @@ void TerrainManager::update(float pf_deltatime)
 		{
 			mf_transitionTimer = 0.f;
 			swapMap();
-			swap = true;
 		}
 	}
 	updateOffset(pf_deltatime);
