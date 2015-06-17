@@ -30,7 +30,7 @@ public:
 	virtual void	draw(sf::RenderTarget & render) const;
 
 private:
-	PhysicsEngine		m_engine;
+	PhysicsEngine &			m_engine;
 
 	// TODO:remove test var
 	RectangleShape *		m_shape;

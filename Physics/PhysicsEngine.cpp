@@ -1,10 +1,14 @@
 #include "PhysicsEngine.hpp"
 #include "IContactListener.hpp"
-#include "PolygonShape.hpp"
+#include "ConvexShape.hpp"
 #include "CircleShape.hpp"
+#include "RectangleShape.hpp"
+#include "Tile.hpp"
 #include <Math.hpp>
 #include <cassert>
 #include <limits>
+
+std::unique_ptr<PhysicsEngine> PhysicsEngine::m_instance = nullptr;
 
 PhysicsEngine::PhysicsEngine(void) :
 	m_polyPolyPairCount(0u),
@@ -20,14 +24,94 @@ PhysicsEngine::PhysicsEngine(void) :
 {
 }
 
+PhysicsEngine::~PhysicsEngine(void)
+{
+	//TODO: DELETE aLL SHAPES
+	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
+		delete (*i);
+	for (auto i = m_tileShapes.begin(); i != m_tileShapes.end(); i++)
+		delete (*i);
+}
+
+PhysicsEngine & PhysicsEngine::getInstance(void)
+{
+	if (m_instance == nullptr)
+	{
+		m_instance.reset(new PhysicsEngine());
+		m_instance->init();
+	}
+	return *m_instance;
+}
+
+IShapeBuilder & PhysicsEngine::getShapeBuilder(void)
+{
+	return getInstance();
+}
+
 void PhysicsEngine::init(void)
 {
 	m_shapes.reserve(MaxShapes);
 	m_circleShapes.reserve(MaxShapes);
 	m_polygonShapes.reserve(MaxShapes);
+	//TODO: get the right size
+	m_tileShapes.resize(200u, 200u, nullptr);
+
+	//TODO: use max pairs and assert in broadphae
 	m_polyPolyPairs.resize(1000u);
 	m_circleCirclePairs.resize(1000u);
 	m_polyCirclePairs.resize(1000u);
+}
+
+ConvexShape * PhysicsEngine::createConvex(void)
+{
+	ConvexShape * shape = new ConvexShape();
+	registerShape(shape);
+	return shape;
+}
+
+CircleShape * PhysicsEngine::createCircle(void)
+{
+	CircleShape * shape = new CircleShape();
+	registerShape(shape);
+	return shape;
+}
+
+RectangleShape * PhysicsEngine::createRectangle(void)
+{
+	RectangleShape * shape = new RectangleShape();
+	registerShape(shape);
+	return shape;
+}
+
+ConvexShape * PhysicsEngine::createTile(std::size_t x, std::size_t y)
+{
+	ConvexShape * shape = new ConvexShape();
+	shape->setVertexCount(4u);
+	registerTile(shape, x, y);
+	return shape;
+}
+
+void PhysicsEngine::registerShape(PolygonShape * shape)
+{
+	assert(m_shapes.size() < MaxShapes);
+	assert(m_polygonShapes.size() < MaxShapes);
+	m_shapes.push_back(shape);
+	m_polygonShapes.push_back(shape);
+}
+
+void PhysicsEngine::registerShape(CircleShape * shape)
+{
+	assert(m_shapes.size() < MaxShapes);
+	assert(m_circleShapes.size() < MaxShapes);
+	m_shapes.push_back(shape);
+	m_circleShapes.push_back(shape);
+}
+
+void PhysicsEngine::registerTile(PolygonShape * shape, int x,  int y)
+{
+	assert(m_shapes.size() < MaxShapes);
+	assert(m_tileShapes.size() < MaxShapes);
+	m_tileShapes.set(x, y, shape);
 }
 
 void PhysicsEngine::update(float deltatime)
@@ -51,45 +135,30 @@ void PhysicsEngine::update(float deltatime)
 	}
 }
 
-void PhysicsEngine::registerShape(PolygonShape * shape)
-{
-	assert(m_shapes.size() < MaxShapes);
-	assert(m_polygonShapes.size() < MaxShapes);
-	m_shapes.push_back(shape);
-	m_polygonShapes.push_back(shape);
-}
-
-void PhysicsEngine::registerShape(CircleShape * shape)
-{
-	assert(m_shapes.size() < MaxShapes);
-	assert(m_circleShapes.size() < MaxShapes);
-	m_shapes.push_back(shape);
-	m_circleShapes.push_back(shape);
-}
-
-void PhysicsEngine::registerTile(PolygonShape * shape, int x,  int y)
-{
-	assert(m_shapes.size() < MaxShapes);
-	assert(m_tileShapes.size() < MaxShapes);
-	m_shapes.push_back(shape);
-	m_tileShapes(x, y) = shape;
-}
-
 void PhysicsEngine::broadPhase(void)
 {
 	m_polyPolyPairCount = 0u;
 	m_circleCirclePairCount = 0u;
 	m_polyCirclePairCount = 0u;
-	/*for (std::size_t k = 0u; k < m_dynamicPolygons.size(); k++)
+	m_polyPolyPairCount = broadPhase(m_polygonShapes, m_polygonShapes, m_polyPolyPairs, true);
+	m_circleCirclePairCount = broadPhase(m_circleShapes, m_circleShapes, m_circleCirclePairs, true);
+	m_polyCirclePairCount = broadPhase(m_polygonShapes, m_circleShapes, m_polyCirclePairs);
+}
+
+template<class T>
+std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<Pair<ConvexShape *, T>> & pairs)
+{
+	/*
+	for (std::size_t k = 0u; k < vector.size(); k++)
 	{
-		sf::Rect<float> const & rect = m_dynamicPolygons[k]->getGlobalBounds();
-		int offsetX = static_cast<int>((m_dynamicPolygons[k]->getVelocity().x + rect.left) / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getCameraManager().getUpLeft()->x / Tile::TileSize);
+		sf::Rect<float> const & rect = vector[k]->getGlobalBounds();
+		int offsetX = static_cast<int>(rect.left / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getCameraManager().getUpLeft()->x / Tile::TileSize);
 		if (rect.left < 0)
 			offsetX--;
-		int offsetY = static_cast<int>((m_dynamicPolygons[k]->getVelocity().y + rect.top) / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getCameraManager().getUpLeft()->y / Tile::TileSize);
+		int offsetY = static_cast<int>(rect.top / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getCameraManager().getUpLeft()->y / Tile::TileSize);
 		int width = static_cast<int>(rect.width / Tile::TileSize) + 1 + offsetX;
 		int height = static_cast<int>(rect.height / Tile::TileSize) + 1 + offsetY;
-		if (m_dynamicPolygons[k]->getVelocity().x < 0)
+		if (vector[k]->getVelocity().x < 0)
 		{
 			for (int i = width; i >= offsetX; i--)
 			{
@@ -98,9 +167,9 @@ void PhysicsEngine::broadPhase(void)
 					if (i < 0 || i >= static_cast<int>(m_mapManager->getTransitionManager().getMapWidth()) || j < 0 || j >= static_cast<int>(m_mapManager->getTransitionManager().getMapHeight()))
 						continue;
 					Tile & tile = m_mapManager->getTransitionManager().getTile(i, j);
-					if (tile.getCollideType() & m_dynamicPolygons[k]->getCollideMask() && tile.me_transition != Tile::e_transition_none)
+					if (tile.getCollisionType() & vector[k]->getCollideMask() && tile.me_transition != Tile::e_transition_none)
 					{
-						m_polyPolyPairs[m_polyPolyPairCount].getShapeA() = m_dynamicPolygons[k];
+						m_polyPolyPairs[m_polyPolyPairCount].getShapeA() = vector[k];
 						m_polyPolyPairs[m_polyPolyPairCount].getShapeB() = &tile;
 						m_polyPolyPairCount++;
 					}
@@ -116,19 +185,17 @@ void PhysicsEngine::broadPhase(void)
 					if (i < 0 || i >= static_cast<int>(m_mapManager->getTransitionManager().getMapWidth()) || j < 0 || j >= static_cast<int>(m_mapManager->getTransitionManager().getMapHeight()))
 						continue;
 					Tile & tile = m_mapManager->getTransitionManager().getTile(i, j);
-					if (tile.getCollideType() & m_dynamicPolygons[k]->getCollideMask() && tile.me_transition != Tile::e_transition_none)
+					if (tile.getCollisionType() & vector[k]->getCollideMask() && tile.me_transition != Tile::e_transition_none)
 					{
-						m_polyPolyPairs[m_polyPolyPairCount].getShapeA() = m_dynamicPolygons[k];
+						m_polyPolyPairs[m_polyPolyPairCount].getShapeA() = vector[k];
 						m_polyPolyPairs[m_polyPolyPairCount].getShapeB() = &tile;
 						m_polyPolyPairCount++;
 					}
 				}
 			}
 		}
-	}*/
-	m_polyPolyPairCount = broadPhase(m_polygonShapes, m_polygonShapes, m_polyPolyPairs, true);
-	m_circleCirclePairCount = broadPhase(m_circleShapes, m_circleShapes, m_circleCirclePairs, true);
-	m_polyCirclePairCount = broadPhase(m_polygonShapes, m_circleShapes, m_polyCirclePairs);
+	}
+	*/(void)vector; (void)pairs;
 }
 
 template<class T, class U>

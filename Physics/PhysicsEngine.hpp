@@ -3,6 +3,8 @@
 
 # include <SFML/Graphics.hpp>
 # include <vector>
+# include <memory>
+# include "IShapeBuilder.hpp"
 # include "Array2D.hpp"
 
 class AShape;
@@ -15,27 +17,33 @@ class IContactListener;
  * \class PhysicsEngine
  * Physics Engine, compute collision between registered objects
  */
-class PhysicsEngine
+class PhysicsEngine : public IShapeBuilder
 {
 public:
-	PhysicsEngine(void);
-	virtual ~PhysicsEngine(void) = default;
+	virtual ~PhysicsEngine(void);
+
+	static PhysicsEngine & getInstance(void);
+	static IShapeBuilder & getShapeBuilder(void);
 
 	void init(void);
 
 	inline void setGravity(sf::Vector2f const & gravity) { m_gravity = gravity; }
 	inline sf::Vector2f const & getGravity(void) const { return m_gravity; }
 
+	virtual ConvexShape * createConvex(void);
+	virtual CircleShape * createCircle(void);
+	virtual RectangleShape * createRectangle(void);
+	virtual ConvexShape * createTile(std::size_t x, std::size_t y);
+
 	void update(float deltatime);
-	void registerShape(PolygonShape * shape);
-	void registerShape(CircleShape * shape);
-	void registerTile(PolygonShape * shape, int x, int y);
 
 	inline void setContactListener(IContactListener * contactListener) { m_contactListener = contactListener; }
 
 	void debugDraw(sf::RenderTarget & render) const;
 
 private:
+	PhysicsEngine(void);
+
 	class Projection
 	{
 	public:
@@ -57,6 +65,8 @@ private:
 		U		m_shapeB = nullptr;
 		bool		m_isColliding = false;
 	};
+
+	static std::unique_ptr<PhysicsEngine>			m_instance;
 
 	static constexpr std::size_t	MaxShapes = 1000u;
 	// Vectors containing all the shapes
@@ -83,6 +93,11 @@ private:
 	sf::Vector2f						m_gravity;
 	float							m_magnitude;
 
+	// Used by the IShapeBuilder to register the shape */
+	void registerShape(PolygonShape * shape);
+	void registerShape(CircleShape * shape);
+	void registerTile(PolygonShape * shape, int x, int y);
+
 	/*! Determine which pairs of objects might be colliding */
 	void broadPhase(void);
 
@@ -95,6 +110,8 @@ private:
 	 */
 	template<class T, class U>
 	std::size_t broadPhase(std::vector<T> const & vectorA, std::vector<U> const & vectorB, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate = false);
+	template<class T>
+	std::size_t broadPhase(std::vector<T> const & vector, std::vector<Pair<ConvexShape *, T>> & pairs);
 
 	/*! Determine if pairs are colliding */
 	void narrowPhase(void);

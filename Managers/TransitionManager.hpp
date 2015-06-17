@@ -4,6 +4,7 @@
 # include "Map.hpp"
 
 class MapManager;
+class ConvexShape;
 
 class TransitionManager : public sf::Drawable
 {
@@ -35,6 +36,7 @@ private:
 	std::size_t				mn_verticesCount;
 	sf::Vector2<int>			m_oldOffset;
 	bool					swap;
+	octo::Array2D<ConvexShape *>		m_tileShapes;
 
 	// Transition
 	inline void defineTransition(void) { defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows()); }

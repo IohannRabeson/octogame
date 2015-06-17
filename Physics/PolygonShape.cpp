@@ -8,10 +8,10 @@ PolygonShape::PolygonShape(void) :
 	m_baryCenter(),
 	m_globalBounds()
 {
-	m_initialVertices.reserve(1000u);
-	m_vertices.reserve(1000u);
-	m_edges.reserve(1000u);
-	m_normals.reserve(1000u);
+	m_initialVertices.reserve(MaxVertices);
+	m_vertices.reserve(MaxVertices);
+	m_edges.reserve(MaxVertices);
+	m_normals.reserve(MaxVertices);
 }
 
 void PolygonShape::computeShape(void)
@@ -94,7 +94,7 @@ void PolygonShape::setVertexCount(std::size_t vertexCount)
 
 void PolygonShape::setVertex(std::size_t index, sf::Vector2f const & vector)
 {
-	assert(index < MaxVertex);
+	assert(index < MaxVertices);
 	m_initialVertices[index] = vector;
 	m_vertices[index] = vector;
 	computeShape();

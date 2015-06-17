@@ -27,6 +27,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/AnimatedSpriteDemoScreen.cpp	\
 				Screens/AudioDemoScreen.cpp				\
 				Screens/EngineScreen.cpp				\
+				Screens/PhysicsMapScreen.cpp				\
 				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/StateGame.cpp
 

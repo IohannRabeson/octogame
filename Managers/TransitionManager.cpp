@@ -1,7 +1,9 @@
 #include "TransitionManager.hpp"
 #include "MapManager.hpp"
 #include "MapInstance.hpp"
+#include "ConvexShape.hpp"
 #include <Interpolations.hpp>
+#include "PhysicsEngine.hpp"
 
 TransitionManager::TransitionManager(void) :
 	m_mapManager(nullptr),
@@ -31,6 +33,18 @@ void TransitionManager::init(MapManager * p_mapManager, Biome * p_biome)
 	// Init maps and biome
 	m_tiles->init(p_biome);
 	m_tilesPrev->init(p_biome);
+
+	IShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
+	m_tileShapes.resize(m_tiles->getColumns(), m_tiles->getRows(), nullptr);
+
+	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
+	{
+		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
+		{
+			m_tileShapes(x, y) = builder.createTile(x, y);
+		}
+	}
+
 	mf_transitionTimerMax = p_biome->mf_transitionTimerMax;
 
 	// Set pointer to the camera
@@ -150,7 +164,7 @@ void TransitionManager::updateTransition(float pf_deltatime)
 	{
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
-			m_tiles->get(x, y).setUpLeft(&m_vertices[mn_verticesCount]);
+			//m_tiles->get(x, y).setPolygonVertices(&m_vertices[mn_verticesCount]);
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_none)
 				continue;
 			m_vertices[mn_verticesCount].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[0u], m_tiles->get(x, y).m_startTransition[0u], transition);

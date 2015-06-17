@@ -87,6 +87,7 @@ protected:
 	virtual void setVertexCount(std::size_t vertexCount);
 
 private:
+	static constexpr std::size_t MaxVertices = 100u;
 	std::vector<sf::Vector2f>	m_vertices;
 	std::vector<sf::Vector2f>	m_initialVertices;
 	std::vector<sf::Vector2f>	m_edges;

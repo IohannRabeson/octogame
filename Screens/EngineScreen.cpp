@@ -7,6 +7,7 @@
 
 
 EngineScreen::EngineScreen(void) :
+	m_engine(PhysicsEngine::getInstance()),
 	m_shape(nullptr),
 	m_shapeA(nullptr),
 	m_shapeB(nullptr),
@@ -17,8 +18,9 @@ EngineScreen::EngineScreen(void) :
 void	EngineScreen::start()
 {
 	octo::Application::getGraphicsManager().setFramerateLimit(60);
+	IShapeBuilder & builder = m_engine;
 
-	m_shape = new RectangleShape();
+	m_shape = builder.createRectangle();
 	m_shape->setApplyGravity(false);
 	m_shape->setCollisionType(Type::e_player);
 	m_shape->setCollisionMask(Type::e_player | Type::e_npc);
@@ -26,7 +28,7 @@ void	EngineScreen::start()
 	m_shape->setPosition(sf::Vector2f(200.f, 300.f));
 	m_shape->setSize(sf::Vector2f(200.f, 300.f));
 
-	m_shapeA = new ConvexShape();
+	m_shapeA = builder.createConvex();
 	m_shapeA->setApplyGravity(false);
 	m_shapeA->setCollisionType(Type::e_player);
 	m_shapeA->setCollisionMask(Type::e_player | Type::e_npc);
@@ -39,7 +41,7 @@ void	EngineScreen::start()
 	m_shapeA->setVertex(3u, sf::Vector2f(150.f, 200.f));
 	m_shapeA->setVertex(4u, sf::Vector2f(0.f, 200.f));
 
-	m_shapeB = new ConvexShape();
+	m_shapeB = builder.createConvex();
 	m_shapeB->setApplyGravity(false);
 	m_shapeB->setSleep(false);
 	m_shapeB->setCollisionType(Type::e_player);
@@ -52,7 +54,7 @@ void	EngineScreen::start()
 	m_shapeB->setVertex(2u, sf::Vector2f(150.f, 200.f));
 	m_shapeB->setVertex(3u, sf::Vector2f(0.f, 200.f));
 
-	m_ground = new ConvexShape();
+	m_ground = builder.createConvex();
 	m_ground->setApplyGravity(false);
 	m_ground->setCollisionType(Type::e_player);
 	m_ground->setCollisionMask(Type::e_player | Type::e_npc);
@@ -63,7 +65,7 @@ void	EngineScreen::start()
 	m_ground->setVertex(2u, sf::Vector2f(1910.f, 50.f));
 	m_ground->setVertex(3u, sf::Vector2f(0.f, 50.f));
 
-	m_circle = new CircleShape();
+	m_circle = builder.createCircle();
 	m_circle->setApplyGravity(false);
 	m_circle->setCollisionType(Type::e_player);
 	m_circle->setCollisionMask(Type::e_player | Type::e_npc);
@@ -71,7 +73,7 @@ void	EngineScreen::start()
 	m_circle->setBaryCenterPosition(0.f, 0.f);
 	m_circle->setOrigin(sf::Vector2f(160.f, 66.f));
 
-	m_circleA = new CircleShape();
+	m_circleA = builder.createCircle();
 	m_circleA->setApplyGravity(false);
 	m_circleA->setCollisionType(Type::e_player);
 	m_circleA->setCollisionMask(Type::e_player | Type::e_npc);
@@ -80,12 +82,6 @@ void	EngineScreen::start()
 	m_circleA->setOrigin(sf::Vector2f(10.f, 16.f));
 
 	m_engine.init();
-	m_engine.registerShape(m_circle);
-	m_engine.registerShape(m_circleA);
-	m_engine.registerShape(m_shape);
-	m_engine.registerShape(m_shapeA);
-	m_engine.registerShape(m_shapeB);
-	m_engine.registerShape(m_ground);
 }
 
 void	EngineScreen::pause()
@@ -98,11 +94,6 @@ void	EngineScreen::resume()
 
 void	EngineScreen::stop()
 {
-	delete m_shape;
-	delete m_shapeA;
-	delete m_shapeB;
-	delete m_ground;
-	delete m_circle;
 }
 
 void	EngineScreen::update(sf::Time deltatime)
