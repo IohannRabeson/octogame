@@ -26,35 +26,31 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/SpriteSheetDemoScreen.cpp		\
 				Screens/AnimatedSpriteDemoScreen.cpp	\
 				Screens/AudioDemoScreen.cpp				\
+				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/StateGame.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
 				Firefly/FireflyPositionBehaviors.cpp
 
-SRC_MAP =			Map/Map.cpp								\
+SRC_MAP =		Map/Map.cpp								\
 				Map/MapHigh.cpp							\
 				Map/MapInstance.cpp
 
 SRC_MANAGERS =	Managers/CollisionManager.cpp			\
-				Managers/DecorManager.cpp				\
 				Managers/MapManager.cpp					\
-				Managers/TransitionManager.cpp				\
+				Managers/TransitionManager.cpp			\
 				Managers/CameraManager.cpp
 
 SRC_OCTO =		Octo/OctoNoise.cpp
 
-SRC_DECORS =	Decors/Crystal.cpp						\
-				Decors/Decor.cpp						\
+SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/GameObject.cpp					\
-				Decors/Rock.cpp							\
-				Decors/Star.cpp							\
-				Decors/StaticTileObject.cpp				\
-				Decors/Tree.cpp							\
-				Decors/Sun.cpp							\
-				Decors/Moon.cpp							\
-				Decors/Cloud.cpp						\
-				Decors/Mushroom.cpp
+				Decors/DecorManager.cpp					\
+				Decors/DecorBuilder.cpp					\
+				Decors/ADecor.cpp						\
+				Decors/ABiome.cpp						\
+				Decors/TestBiome.cpp
 
 SRC_PHYSICS =	Physics/DynamicPolygon.cpp				\
 				Physics/Player.cpp						\
@@ -147,7 +143,7 @@ fclean_core_library:
 	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
 
 package:
-	$(PACKAGER) $(PACKAGE_FILE) -h ResourceDefinitions.hpp ./resources/*
+	$(PACKAGER) $(PACKAGE_FILE) -h Main/ResourceDefinitions.hpp ./resources/*
 
 complete:
 	make complete -C octolib/ MODE=$(MODE)

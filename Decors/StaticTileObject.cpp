@@ -27,6 +27,7 @@ StaticTileObject::StaticTileObject(unsigned int p_width, unsigned int p_height, 
 
 StaticTileObject::~StaticTileObject(void)
 {
+	
 	for (unsigned int i = 0; i < mn_maxDepth; i++)
 	{
 		for (unsigned int x = 0; x < m_tiles[i].columns(); x++)
@@ -35,7 +36,7 @@ StaticTileObject::~StaticTileObject(void)
 				delete m_tiles[i](x, y);
 		}
 	}
-	delete m_tiles;
+	delete [] m_tiles;
 }
 
 void StaticTileObject::load(void)
