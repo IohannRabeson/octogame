@@ -1,4 +1,5 @@
 #include "CircleShape.hpp"
+#include <cmath>
 
 CircleShape::CircleShape(void) :
 	AShape(),
