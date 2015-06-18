@@ -1,13 +1,20 @@
 #ifndef CRYSTAL_HPP
 # define CRYSTAL_HPP
 
-# include "Decor.hpp"
-# include "Star.hpp"
-# include <vector>
-# include <cmath>
+# include "ADecor.hpp"
+# include <SFML/Graphics/Color.hpp>
 
-class Crystal : public Decor
+class Crystal : public ADecor
 {
+public:
+	Crystal(void);
+	virtual ~Crystal(void) = default;
+
+	virtual void	setup(ABiome& biome);
+	virtual void	update(sf::Time frameTime,
+						   DecorBuilder& builder,
+						   ABiome& biome);
+
 private:
 	struct CrystalValue
 	{
@@ -15,26 +22,39 @@ private:
 		sf::Color				color;
 		float					angle;
 	};
-	int							mn_countCrystal;
+
+	sf::Vector2f				m_size;
+	sf::Color					m_color;
+	unsigned int				m_partCount;
 	std::vector<CrystalValue>	m_values;
+	float						m_animation;
+
 	std::vector<sf::Vector2f>	m_up;
-	Star						m_star;
-	int							m_picCrystal;
-	int							m_nbCrystal;
-	float						mf_starTimer;
+	//TODO: Implement shine effet
+	/*
+	unsigned int				m_shineCrystalNumber;
+	unsigned int				m_shineVertexNumber;
+	sf::Time					m_shineTimer;
+	sf::Time					m_shineTimerMax;
+	*/
 
-public:
-	Crystal(void);
-	virtual ~Crystal(void);
+	sf::Vector2f createPolygon(sf::Vector2f const & size,
+								sf::Vector2f const & origin,
+								float const angle,
+								sf::Color color,
+								DecorBuilder & builder);
 
-	void init(Biome * p_biome);
+	void createCrystal(std::vector<CrystalValue> const & values,
+						sf::Vector2f const & origin,
+						DecorBuilder & builder);
 
-	sf::Vector2f createPolygon(sf::Vector2f p_size, float pf_angle, sf::Color p_color);
-	void createCrystal(void);
-	void randomDecor(void);
+	static void rotateVec(sf::Vector2f & vector,
+							float const cosAngle,
+							float const sinAngle);
+	//TODO: To delete
+	float randomFloat(float min, float max);
 
-	virtual void update(float pf_deltatime);
-	virtual void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const;
+
 };
 
 #endif
