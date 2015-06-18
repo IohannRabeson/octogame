@@ -10,18 +10,6 @@ public:
 	Sun(void);
 	virtual ~Sun(void) = default;
 
-	void createOctogon(sf::Vector2f const & size,
-						sf::Vector2f const & sizeCorner,
-						sf::Vector2f const & origin,
-						sf::Color const & color,
-						DecorBuilder& builder);
-
-	void createSun(sf::Vector2f size,
-					sf::Vector2f sizeCorner,
-					sf::Vector2f const & origin,
-					sf::Color color,
-					DecorBuilder& builder);
-
 	virtual void setup(ABiome& biome);
 	virtual void update(sf::Time frameTime,
 						DecorBuilder& builder,
@@ -36,6 +24,18 @@ private:
 	float					m_animation;
 	sf::Time				m_glowingTimer;
 	sf::Time				m_glowingTimerMax;
+
+	void createOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & sizeCorner,
+						sf::Vector2f const & origin,
+						sf::Color const & color,
+						DecorBuilder& builder);
+
+	void createSun(sf::Vector2f size,
+					sf::Vector2f sizeCorner,
+					sf::Vector2f const & origin,
+					sf::Color color,
+					DecorBuilder& builder);
 };
 
 #endif

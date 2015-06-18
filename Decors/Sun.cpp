@@ -3,7 +3,7 @@
 #include "DecorBuilder.hpp"
 
 Sun::Sun(void) :
-	m_partCount(0),
+	m_partCount(0u),
 	m_animation(1.f),
 	m_glowingTimer(sf::seconds(0.f)),
 	m_glowingTimerMax(sf::seconds(3.f))
