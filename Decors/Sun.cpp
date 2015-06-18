@@ -62,8 +62,7 @@ void Sun::setup(ABiome& biome)
 	m_size = biome.getSunSize();
 	m_sizeCorner = m_size / 2.f;
 	m_color = biome.getSunColor();
-	//TODO: Add this in biome?
-	m_partCount = 3;//biome.getSunPartCount();
+	m_partCount = biome.getSunPartCount();
 }
 
 void Sun::update(sf::Time frameTime, DecorBuilder& builder, ABiome&)
