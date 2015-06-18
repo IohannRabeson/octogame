@@ -64,7 +64,7 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp						\
 PACKAGE_FILE = default.pck
 
 # compiler
-CC = $(CXX)
+COMPILER = $(CXX)
 # packager
 PACKAGER = $(CORE_DIR)/tools/packager/packager.app
 # flags used in both mode
@@ -99,19 +99,19 @@ all: print_summary $(COMPLETE_TARGET)
 
 $(COMPLETE_TARGET): $(BUILD_DIR) package core_library depend $(OBJS)
 	@echo " - $(COLOR_ACTION)building$(COLOR_OFF): $(COLOR_OBJECT)$@$(COLOR_OFF)"
-	@$(CC) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) 
+	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) 
 
 $(addprefix $(BUILD_DIR)/, %.o) : $(subst $(BUILD_DIR),, %.cpp)
 	@echo " - $(COLOR_ACTION)compiling$(COLOR_OFF): $(COLOR_OBJECT)$<$(COLOR_OFF)"
 	@mkdir -p $(dir $@)
-	@$(CC) $(INCLUDE_DIRS) $(CFLAGS) -c $< -o $@
+	@$(COMPILER) $(INCLUDE_DIRS) $(CFLAGS) -c $< -o $@
 
 re: print_summary fclean $(COMPLETE_TARGET)
 
 depend:
 ifeq ($(RUN_DEPEND), "1")
 	@echo " - $(COLOR_ACTION)Running hatedepend...$(COLOR_OFF)"
-	@hatedepend -r -I $(DIRS) -S $(DIRS) -O $(BUILD_DIR) --signal-unused-includes
+	@hatedepend -r -I $(DIRS) -S $(DIRS) -O $(BUILD_DIR) --signal-all
 endif
 
 fclean: clean

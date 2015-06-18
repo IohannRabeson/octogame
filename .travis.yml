@@ -4,7 +4,6 @@ sudo: required
 
 compiler:
  - clang
- - gcc
 
 env:
  - MODE=release
