@@ -3,6 +3,7 @@
 
 Tree::Tree(void) :
 	Decor(),
+	mn_countLeaf(0),
 	mn_countAngle(0u),
 	mb_growSide(false),
 	mb_isLeaf(false)
