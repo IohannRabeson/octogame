@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/17 13:16:15 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/06/19 06:05:06 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include "EngineScreen.hpp"
 #include "DecorManagerDemoScreen.hpp"
 #include "PhysicsMapScreen.hpp"
+#include "ParticleDemoScreen.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
@@ -42,6 +43,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<StateGame>("game");
 	manager.registerState<EngineScreen>("engine");
 	manager.registerState<PhysicsMapScreen>("physics_map");
+	manager.registerState<ParticleDemoScreen>("particles");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
