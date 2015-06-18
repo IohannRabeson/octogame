@@ -2,7 +2,8 @@
 #include "Map.hpp"
 
 Rock::Rock() :
-	Decor()
+	Decor(),
+	mn_countOctogon(0)
 {
 }
 

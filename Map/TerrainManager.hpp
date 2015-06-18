@@ -1,22 +1,23 @@
-#ifndef TRANSITIONMANAGER_HPP
-# define TRANSITIONMANAGER_HPP
+#ifndef TERRAINMANAGER_HPP
+# define TERRAINMANAGER_HPP
 
 # include "Map.hpp"
 
 class MapManager;
+class ConvexShape;
 
-class TransitionManager : public sf::Drawable
+class TerrainManager : public sf::Drawable
 {
 public:
-	TransitionManager(void);
-	virtual ~TransitionManager(void);
+	TerrainManager(void);
+	virtual ~TerrainManager(void);
 
 	inline sf::Vertex * getHeight(int x) { m_tiles->getHeight(x); return m_tilesPrev->getHeight(x); }
 	inline Tile & getTile(int x, int y) const { return m_tiles->get(x, y); }
 	inline std::size_t getMapWidth(void) const { return m_tiles->getColumns(); }
 	inline std::size_t getMapHeight(void) const { return m_tiles->getRows(); }
-	inline sf::Vector2f const & getOffset(void) const { return *m_offset; }
-	inline int getMapOffsetX(void) const { return static_cast<int>(m_offset->x); }
+	inline sf::Vector2f const & getOffset(void) const { return m_offset; }
+	inline int getMapOffsetX(void) const { return static_cast<int>(m_offset.x); }
 	// Only used by StaticObjectManager to compute initial position
 	inline void computeDecor(void) { m_tiles->computeDecor(); }
 
@@ -30,11 +31,11 @@ private:
 	Map *					m_tilesPrev;
 	float					mf_transitionTimer;
 	float					mf_transitionTimerMax;
-	sf::Vector2f const *			m_offset;
+	sf::Vector2f				m_offset;
 	std::unique_ptr<sf::Vertex[]>		m_vertices;
 	std::size_t				mn_verticesCount;
 	sf::Vector2<int>			m_oldOffset;
-	bool					swap;
+	octo::Array2D<ConvexShape *>		m_tileShapes;
 
 	// Transition
 	inline void defineTransition(void) { defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows()); }

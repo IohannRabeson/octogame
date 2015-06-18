@@ -1,9 +1,11 @@
 #ifndef TILE_HPP
 # define TILE_HPP
 
-# include "Polygon.hpp"
+# include <SFML/Graphics.hpp>
 
-class Tile : public Polygon
+class ConvexShape;
+
+class Tile
 {
 public:
 	enum ETransitionType
@@ -19,24 +21,22 @@ public:
 	static constexpr float	TripleTileSize = Tile::TileSize * 3.f;
 	static constexpr float	HalfTileSize = Tile::TileSize / 2.f;
 
+	//TODO: accessors
 	float			mf_noiseValue;
 	bool			mb_isEmpty;
 	ETransitionType		me_transition;
+	//TODO: use another variable to store the position for the decors
 	sf::Vertex *		mp_upLeft;
 	sf::Vector2f		m_startTransition[4];
 	sf::Color		m_startColor;
+	ConvexShape *		m_shape;
 
 	Tile(void);
-	virtual ~Tile(void);
+	virtual ~Tile(void) = default;
 
 	inline bool isEmpty(void) { return mb_isEmpty; }
-	inline void setUpLeft(sf::Vertex * vertex) { m_recompute = true; mp_upLeft = vertex; }
-
-	virtual sf::Vector2f const & getVertex(std::size_t index) const;
-
-protected:
-	virtual void computeCenter(void);
-	virtual void computeEdges(void);
+	inline void setShape(ConvexShape * shape) { m_shape = shape; }
+	void setPolygonVertices(sf::Vertex * vertex);
 
 };
 
