@@ -17,7 +17,7 @@ EngineScreen::EngineScreen(void) :
 
 void	EngineScreen::start()
 {
-	octo::Application::getGraphicsManager().setFramerateLimit(60);
+	//octo::Application::getGraphicsManager().setFramerateLimit(60);
 	IShapeBuilder & builder = m_engine;
 
 	m_shape = builder.createRectangle();
@@ -81,7 +81,13 @@ void	EngineScreen::start()
 	m_circleA->setRadius(65.f);
 	m_circleA->setOrigin(sf::Vector2f(10.f, 16.f));
 
-	m_engine.init();
+	for (std::size_t i = 0u; i < 50u; i++)
+	{
+		CircleShape * circle = builder.createCircle();
+		circle->setApplyGravity(false);
+		circle->setPosition(800.f, i * 15.f);
+		circle->setRadius(10.f);
+	}
 }
 
 void	EngineScreen::pause()

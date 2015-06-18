@@ -45,13 +45,6 @@ public:
 	 */
 	inline virtual sf::Vector2f const & getBaryCenter(void) const { return m_baryCenter; }
 
-	/*! Apply the velocity computed by the PhysicsEngine
-	 *
-	 * \param deltatime The current deltatime
-	 * \see PhysicsEngine
-	 */
-	virtual void update(void);
-
 	/*! Use to draw debug information */
 	virtual void debugDraw(sf::RenderTarget & render);
 
@@ -61,7 +54,8 @@ private:
 	sf::Rect<float>		m_globalBounds;
 	float			m_radius;
 
-	void computeShape(void);
+	/*! Compute the shape once per frame */
+	virtual void computeShape(void);
 
 };
 

@@ -18,6 +18,7 @@ void AShape::update(void)
 	move(m_velocity);
 	m_velocity.x = 0.f;
 	m_velocity.y = 0.f;
+	computeShape();
 }
 
 void AShape::drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color)

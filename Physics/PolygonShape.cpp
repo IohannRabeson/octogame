@@ -100,13 +100,6 @@ void PolygonShape::setVertex(std::size_t index, sf::Vector2f const & vector)
 	computeShape();
 }
 
-void PolygonShape::update(void)
-{
-	AShape::update();
-	// We recompute all data once per frame
-	computeShape();
-}
-
 void PolygonShape::debugDraw(sf::RenderTarget & render)
 {
 	sf::ConvexShape shape;
