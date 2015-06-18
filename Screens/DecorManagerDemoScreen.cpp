@@ -42,6 +42,7 @@ void	DecorManagerDemoScreen::start()
 	octo::Application::getGraphicsManager().addKeyboardListener(this);
 	console.addCommand(L"demo.select", this, &DecorManagerDemoScreen::selectDecorType);
 	console.addCommand(L"demo.setTreeDepth", m_biome, &TestBiome::setTreeDepth);
+	console.addCommand(L"demo.setTreeSize", m_biome, &TestBiome::setTreeSize);
 	console.addCommand(L"demo.setTreeLifeTime", m_biome, &TestBiome::setTreeLifeTime);
 	console.addCommand(L"demo.setTreeColor", m_biome, &TestBiome::setTreeColor);
 	console.addCommand(L"demo.setCanCreateTree", m_biome, &TestBiome::setCanCreateTree);

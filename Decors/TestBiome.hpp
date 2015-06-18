@@ -27,6 +27,7 @@ public:
 	virtual void			setup(std::size_t seed);
 	virtual std::string		getName()const;
 	virtual unsigned int	getTreeDepth();
+	virtual sf::Vector2f	getTreeSize();
 	virtual sf::Time		getTreeLifeTime();
 	virtual sf::Color		getTreeColor();
 	virtual bool			canCreateTree();
@@ -61,6 +62,7 @@ public:
 	virtual bool			canCreateMoon();
 
 	void					setTreeDepth(unsigned int depth);
+	void					setTreeSize(sf::Vector2f const& treeSize);
 	void					setTreeLifeTime(sf::Time lifeTime);
 	void					setTreeColor(sf::Color const& color);
 	void					setCanCreateTree(bool createTree);
@@ -95,6 +97,7 @@ public:
 	void					setCanCreateMoon(bool canCreate);
 private:
 	unsigned int			m_treeDepth;
+	sf::Vector2f			m_treeSize;
 	sf::Time				m_treeLifeTime;
 	sf::Color				m_treeColor;
 	bool					m_canCreateTree;

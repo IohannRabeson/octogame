@@ -53,6 +53,11 @@ unsigned int	TestBiome::getTreeDepth()
 	return (m_treeDepth);
 }
 
+sf::Vector2f	TestBiome::getTreeSize()
+{
+	return (m_treeSize);
+}
+
 sf::Time		TestBiome::getTreeLifeTime()
 {
 	return (m_treeLifeTime);
@@ -186,6 +191,11 @@ bool	TestBiome::canCreateMoon()
 void	TestBiome::setTreeDepth(unsigned int depth)
 {
 	m_treeDepth = depth;
+}
+
+void	TestBiome::setTreeSize(sf::Vector2f const& size)
+{
+	m_treeSize = size;
 }
 
 void	TestBiome::setTreeLifeTime(sf::Time lifeTime)
