@@ -1,31 +1,41 @@
 #ifndef SUN_HPP
 # define SUN_HPP
 
-# include "Decor.hpp"
-# include <vector>
-# include <cmath>
+# include "ADecor.hpp"
+# include <SFML/Graphics/Color.hpp>
 
-class Sun : public Decor
+class Sun : public ADecor
 {
 public:
 	Sun(void);
-	virtual ~Sun(void);
+	virtual ~Sun(void) = default;
 
-	void init(Biome * p_biome);
+	void createOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & sizeCorner,
+						sf::Vector2f const & origin,
+						sf::Color const & color,
+						DecorBuilder& builder);
 
-	void createOneSun(sf::Vector2f p_size, sf::Vector2f p_sizeCorner, sf::Vector2f p_origin, sf::Color p_color);
-	void createSun(void);
-	void randomDecor(void);
-	void createLightness(void);
-	void computeOrigin(float pf_deltatime);
+	void createSun(sf::Vector2f size,
+					sf::Vector2f sizeCorner,
+					sf::Vector2f const & origin,
+					sf::Color color,
+					DecorBuilder& builder);
 
-	virtual void update(float pf_deltatime);
+	virtual void setup(ABiome& biome);
+	virtual void update(sf::Time frameTime,
+						DecorBuilder& builder,
+						ABiome& biome);
 
 private:
-	sf::Vector2f	m_sizeCorner;
-	sf::Color		m_transparency;
+	sf::Vector2f			m_size;
+	sf::Vector2f			m_sizeCorner;
+	sf::Color				m_color;
+	std::size_t				m_partCount;
 
-	float			mf_angle;
+	float					m_animation;
+	sf::Time				m_glowingTimer;
+	sf::Time				m_glowingTimerMax;
 };
 
 #endif
