@@ -12,7 +12,8 @@ EngineScreen::EngineScreen(void) :
 	m_shapeA(nullptr),
 	m_shapeB(nullptr),
 	m_ground(nullptr),
-	m_circle(nullptr)
+	m_circle(nullptr),
+	m_circleA(nullptr)
 { }
 
 void	EngineScreen::start()
