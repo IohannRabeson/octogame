@@ -120,7 +120,7 @@ private:
 	bool computeCollision(PolygonShape * polygonA, PolygonShape * polygonB);
 	bool computeCollision(PolygonShape * polygon, CircleShape * circle);
 	bool computeCollision(CircleShape * circleA, CircleShape * circleB);
-	bool FindAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB);
+	bool findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB);
 
 	// TODO: use smart ptr
 	IContactListener *		m_contactListener;

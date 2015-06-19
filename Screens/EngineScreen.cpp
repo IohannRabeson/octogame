@@ -12,12 +12,12 @@ EngineScreen::EngineScreen(void) :
 	m_shapeA(nullptr),
 	m_shapeB(nullptr),
 	m_ground(nullptr),
-	m_circle(nullptr)
+	m_circle(nullptr),
+	m_circleA(nullptr)
 { }
 
 void	EngineScreen::start()
 {
-	octo::Application::getGraphicsManager().setFramerateLimit(60);
 	ShapeBuilder & builder = m_engine;
 
 	m_shape = builder.createRectangle();
@@ -80,8 +80,6 @@ void	EngineScreen::start()
 	m_circleA->setPosition(900.f, 650.f);
 	m_circleA->setRadius(65.f);
 	m_circleA->setOrigin(sf::Vector2f(10.f, 16.f));
-
-	m_engine.init();
 }
 
 void	EngineScreen::pause()
