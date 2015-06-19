@@ -6,7 +6,7 @@
 #include <random>
 
 Rock::Rock() :
-	m_partCount(0u),
+	m_partCount(1u),
 	m_animation(1.f)
 {
 }
@@ -24,8 +24,8 @@ void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin,
 	sf::Vector2f downMidLeft(-size.x, 0.f);
 	sf::Vector2f downMidRight(size.x, 0.f);
 	sf::Vector2f recUp(upLeft.x + sizeRec, upLeft.y);
-	sf::Vector2f recLeft(upLeft.x, upLeft.y + 4.0f);
-	sf::Vector2f recRight(recUp.x, recUp.y + 4.0f);
+	sf::Vector2f recLeft(upLeft.x, upLeft.y + 4.f);
+	sf::Vector2f recRight(recUp.x, recUp.y + 4.f);
 
 	// Avoid under limit point when grows
 	midLeft.y = midLeft.y > 0.f ? 0.f : midLeft.y;
@@ -51,9 +51,9 @@ void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin,
 		m_right.x = origin.x - rockOrigin.x + downRight.x;
 }
 
-void Rock::createRock(std::vector<OctogonValue> const & values, sf::Vector2f originRock, sf::Color const & color, DecorBuilder& builder)
+void Rock::createRock(std::vector<OctogonValue> const & values, sf::Vector2f const & originRock, sf::Color const & color, DecorBuilder& builder)
 {
-	for (unsigned int i = 0; i < m_partCount; i++)
+	for (std::size_t i = 0u; i < m_partCount; i++)
 		createOctogon(sf::Vector2f(values[i].size.x, values[i].size.y * m_animation), values[i].origin + originRock, color,
 						values[i].sizeLeft, values[i].sizeRight, values[i].sizeRec * m_animation, originRock, builder);
 	builder.createTriangle(m_left + originRock, m_right + originRock, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f) + originRock, color);
@@ -64,30 +64,31 @@ void Rock::setup(ABiome& biome)
 	m_size = biome.getRockSize();
 	m_color = biome.getRockColor();
 	m_partCount = biome.getRockPartCount();
+	m_partCount = m_partCount >= 2u ? m_partCount : 2;
 	m_values.resize(m_partCount);
 
-	unsigned int i = 0;
-	float totalX = 0;
+	std::size_t i = 0u;
 	float cornerSize = m_size.x / (m_partCount * 2.f);
+	float totalX = 0.f;
 	sf::Vector2f size;
 
 	// Compute left random values
 	size.x = cornerSize;
 	size.y = m_size.y;
-	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
-	while (i < m_partCount / 2)
+	sf::Vector2f origin(0.f, 0.f);
+	while (i < m_partCount / 2.f)
 	{
 		size.x = randomFloat(cornerSize * 0.5f, cornerSize);
 		totalX += size.x;
 		size.y -= totalX;
 		origin.x += randomFloat(-totalX, 0.f);
-		if (size.x * 2 < size.y)
+		if (size.x * 2.f < size.y)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeLeft = randomFloat(size.x, size.x * 2);
-			m_values[i].sizeRight = randomFloat(size.x, size.x * 2);
-			m_values[i].sizeRec = randomFloat(10.f, size.x * 2);
+			m_values[i].sizeLeft = randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRight = randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRec = randomFloat(10.f, size.x * 2.f);
 		}
 		else
 			break;
@@ -95,7 +96,7 @@ void Rock::setup(ABiome& biome)
 	}
 
 	// Compute right random values
-	totalX = 0;
+	totalX = 0.f;
 	size.x = cornerSize;
 	size.y = m_size.y;
 	origin = sf::Vector2f(0.f + size.x, 0.f);
@@ -105,13 +106,13 @@ void Rock::setup(ABiome& biome)
 		totalX += size.x;
 		size.y -= totalX;
 		origin.x += randomFloat(0.0f, totalX);
-		if (size.x * 2 < size.y)
+		if (size.x * 2.f < size.y)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeLeft = randomFloat(size.x, size.x * 2);
-			m_values[i].sizeRight = randomFloat(size.x, size.x * 2);
-			m_values[i].sizeRec = randomFloat(10.f, size.x * 2);
+			m_values[i].sizeLeft = randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRight = randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRec = randomFloat(10.f, size.x * 2.f);
 		}
 		i++;
 	}

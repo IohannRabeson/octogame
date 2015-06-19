@@ -27,7 +27,7 @@ public:
 private:
 	sf::Vector2f				m_size;
 	sf::Color					m_color;
-	unsigned int				m_partCount;
+	std::size_t					m_partCount;
 	std::vector<OctogonValue>	m_values;
 	float						m_animation;
 
@@ -44,7 +44,7 @@ private:
 						DecorBuilder& builder);
 
 	void createRock(std::vector<OctogonValue> const & values,
-					sf::Vector2f originRock,
+					sf::Vector2f const & originRock,
 					sf::Color const & color,
 					DecorBuilder& builder);
 
