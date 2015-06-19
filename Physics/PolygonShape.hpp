@@ -57,13 +57,6 @@ public:
 	/*! Get the vertex count needed to compute the sat */
 	inline virtual std::size_t getEfficientVertexCount(void) const { return m_vertices.size(); }
 
-	/*! Apply the velocity computed by the PhysicsEngine
-	 *
-	 * \param deltatime The current deltatime
-	 * \see PhysicsEngine
-	 */
-	virtual void update(void);
-
 	/*! Use to draw debug information */
 	virtual void debugDraw(sf::RenderTarget & render);
 
@@ -86,6 +79,9 @@ protected:
 	 */
 	virtual void setVertexCount(std::size_t vertexCount);
 
+	/*! Compute the shape once per frame */
+	virtual void computeShape(void);
+
 private:
 	static constexpr std::size_t MaxVertices = 100u;
 	std::vector<sf::Vector2f>	m_vertices;
@@ -94,8 +90,6 @@ private:
 	std::vector<sf::Vector2f>	m_normals;
 	sf::Vector2f			m_baryCenter;
 	sf::Rect<float>			m_globalBounds;
-
-	void computeShape(void);
 
 };
 

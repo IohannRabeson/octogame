@@ -30,12 +30,6 @@ void CircleShape::computeShape(void)
 	m_globalBounds.height = 2.f * m_radius;
 }
 
-void CircleShape::update(void)
-{
-	AShape::update();
-	computeShape();
-}
-
 void CircleShape::debugDraw(sf::RenderTarget & render)
 {
 	sf::CircleShape shape(m_radius);

@@ -47,7 +47,6 @@ SRC_OCTO =		Octo/OctoNoise.cpp
 SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/GameObject.cpp					\
 				Decors/DecorManager.cpp					\
-				Decors/DecorBuilder.cpp					\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp
@@ -58,6 +57,7 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp						\
 				Physics/CircleShape.cpp						\
 				Physics/Tile.cpp					\
 				Physics/PhysicsEngine.cpp					\
+				Physics/ShapeBuilder.cpp					\
 				Physics/AShape.cpp
 
 # package files

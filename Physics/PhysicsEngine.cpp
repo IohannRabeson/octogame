@@ -26,9 +26,7 @@ PhysicsEngine::PhysicsEngine(void) :
 
 PhysicsEngine::~PhysicsEngine(void)
 {
-	//TODO: DELETE aLL SHAPES
-	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
-		delete (*i);
+	m_shapes.clear();
 	for (auto i = m_tileShapes.begin(); i != m_tileShapes.end(); i++)
 		delete (*i);
 }
@@ -43,7 +41,7 @@ PhysicsEngine & PhysicsEngine::getInstance(void)
 	return *m_instance;
 }
 
-IShapeBuilder & PhysicsEngine::getShapeBuilder(void)
+ShapeBuilder & PhysicsEngine::getShapeBuilder(void)
 {
 	return getInstance();
 }
@@ -60,35 +58,6 @@ void PhysicsEngine::init(void)
 	m_polyPolyPairs.resize(1000u);
 	m_circleCirclePairs.resize(1000u);
 	m_polyCirclePairs.resize(1000u);
-}
-
-ConvexShape * PhysicsEngine::createConvex(void)
-{
-	ConvexShape * shape = new ConvexShape();
-	registerShape(shape);
-	return shape;
-}
-
-CircleShape * PhysicsEngine::createCircle(void)
-{
-	CircleShape * shape = new CircleShape();
-	registerShape(shape);
-	return shape;
-}
-
-RectangleShape * PhysicsEngine::createRectangle(void)
-{
-	RectangleShape * shape = new RectangleShape();
-	registerShape(shape);
-	return shape;
-}
-
-ConvexShape * PhysicsEngine::createTile(std::size_t x, std::size_t y)
-{
-	ConvexShape * shape = new ConvexShape();
-	shape->setVertexCount(4u);
-	registerTile(shape, x, y);
-	return shape;
 }
 
 void PhysicsEngine::registerShape(PolygonShape * shape)
@@ -117,20 +86,20 @@ void PhysicsEngine::update(float deltatime)
 {
 	// Add gravity
 	sf::Vector2f gravity = m_gravity * deltatime;
-	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
+	for (auto shape : m_shapes)
 	{
-		if (!(*i)->getSleep() && (*i)->getApplyGravity())
-			(*i)->addVelocity(gravity);
+		if (!shape->getSleep() && shape->getApplyGravity())
+			shape->addVelocity(gravity);
 	}
-	// Determine which paris of objects might be colliding
+	// Determine which pairs of objects might be colliding
 	broadPhase();
 	// Determine if pairs are colliding
 	narrowPhase();
 	// Apply the transformation computed by the collision manager
-	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
+	for (auto shape : m_shapes)
 	{
-		if (!(*i)->getSleep())
-			(*i)->update();
+		if (!shape->getSleep())
+			shape->update();
 	}
 }
 
@@ -287,7 +256,7 @@ bool PhysicsEngine::resolveCollision(PolygonShape * polygonA, PolygonShape * pol
 	return true;
 }
 
-bool PhysicsEngine::FindAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB)
+bool PhysicsEngine::findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB)
 {
 	for(std::size_t i = 0u; i < polygonA->getEfficientVertexCount(); ++i)
 	{
@@ -399,8 +368,8 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circl
 
 void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 {
-	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
-		(*i)->debugDraw(render);
+	for (auto shape : m_shapes)
+		shape->debugDraw(render);
 }
 
 // Nested Class Projection
