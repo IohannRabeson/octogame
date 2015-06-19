@@ -2,8 +2,8 @@
 #include "MapManager.hpp"
 #include "MapInstance.hpp"
 #include "ConvexShape.hpp"
-#include <Interpolations.hpp>
 #include "PhysicsEngine.hpp"
+#include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
 
@@ -18,7 +18,6 @@ TerrainManager::TerrainManager(void) :
 	mn_verticesCount(0u),
 	m_oldOffset(0, 0)
 {}
-i
 
 TerrainManager::~TerrainManager(void)
 {
@@ -41,7 +40,7 @@ void TerrainManager::init(MapManager * p_mapManager, Biome * p_biome)
 	m_tiles->setCameraView(&m_offset);
 	m_tilesPrev->setCameraView(&m_offset);
 
-	IShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
+	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
 	m_tileShapes.resize(m_tiles->getColumns(), m_tiles->getRows(), nullptr);
 
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)

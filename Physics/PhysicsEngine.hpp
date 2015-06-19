@@ -4,7 +4,7 @@
 # include <SFML/Graphics.hpp>
 # include <vector>
 # include <memory>
-# include "IShapeBuilder.hpp"
+# include "ShapeBuilder.hpp"
 # include "Array2D.hpp"
 
 class AShape;
@@ -17,23 +17,23 @@ class IContactListener;
  * \class PhysicsEngine
  * Physics Engine, compute collision between registered objects
  */
-class PhysicsEngine : public IShapeBuilder
+class PhysicsEngine : public ShapeBuilder
 {
 public:
 	virtual ~PhysicsEngine(void);
 
 	static PhysicsEngine & getInstance(void);
-	static IShapeBuilder & getShapeBuilder(void);
+	static ShapeBuilder & getShapeBuilder(void);
 
 	void init(void);
 
 	inline void setGravity(sf::Vector2f const & gravity) { m_gravity = gravity; }
 	inline sf::Vector2f const & getGravity(void) const { return m_gravity; }
 
-	virtual ConvexShape * createConvex(void);
-	virtual CircleShape * createCircle(void);
-	virtual RectangleShape * createRectangle(void);
-	virtual ConvexShape * createTile(std::size_t x, std::size_t y);
+	// Used by the ShapeBuilder to register the shape */
+	void registerShape(PolygonShape * shape);
+	void registerShape(CircleShape * shape);
+	void registerTile(PolygonShape * shape, int x, int y);
 
 	void update(float deltatime);
 
@@ -99,11 +99,6 @@ private:
 	sf::Vector2f						m_gravity;
 	float							m_magnitude;
 
-	// Used by the IShapeBuilder to register the shape */
-	void registerShape(PolygonShape * shape);
-	void registerShape(CircleShape * shape);
-	void registerTile(PolygonShape * shape, int x, int y);
-
 	/*! Determine which pairs of objects might be colliding */
 	void broadPhase(void);
 
@@ -135,7 +130,7 @@ private:
 	bool computeCollision(PolygonShape * polygonA, PolygonShape * polygonB);
 	bool computeCollision(PolygonShape * polygon, CircleShape * circle);
 	bool computeCollision(CircleShape * circleA, CircleShape * circleB);
-	bool FindAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB);
+	bool findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB);
 
 	// TODO: use smart ptr
 	IContactListener *		m_contactListener;

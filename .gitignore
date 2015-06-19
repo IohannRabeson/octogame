@@ -54,3 +54,6 @@ callgrind.*
 
 # vim session file
 .session*
+
+# personnal files
+TODO
