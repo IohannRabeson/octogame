@@ -1,5 +1,4 @@
 #include "Tree.hpp"
-#include "DecorBuilder.hpp"
 #include "ABiome.hpp"
 
 #define PI  3.14159265358979323846f
@@ -33,20 +32,20 @@ void Tree::computeQuad(sf::Vector2f const & size, sf::Vector2f const & center, f
 	quad.center = center;
 }
 
-void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, float const deltaColor, DecorBuilder & builder)
+void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, float const deltaColor, octo::VertexBuilder & builder)
 {
 	builder.createTriangle(quad.rightUp + quad.center, quad.rightDown + quad.center, quad.leftDown + quad.center, color);
 	sf::Color tmpColor(deltaColor + color.r, deltaColor + color.g, deltaColor + color.b);
 	builder.createTriangle(quad.leftDown + quad.center, quad.leftUp + quad.center, quad.rightUp + quad.center, color);
 }
 
-void Tree::createLeaf(std::vector<QuadValue> const & quads, sf::Color const & color, float const deltaColor, DecorBuilder & builder)
+void Tree::createLeaf(std::vector<QuadValue> const & quads, sf::Color const & color, float const deltaColor, octo::VertexBuilder & builder)
 {
 	for (auto quad : quads)
 		createBiColorQuad(quad, color, deltaColor, builder);
 }
 
-void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size, DecorBuilder & builder, float const angle, float const cosAngle, float const sinAngle, std::size_t currentDepth)
+void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size, octo::VertexBuilder & builder, float const angle, float const cosAngle, float const sinAngle, std::size_t currentDepth)
 {
 	// Stop recursion
 	if (currentDepth >= m_depth)
@@ -156,7 +155,7 @@ void Tree::setup(ABiome& biome)
 	m_leafColor = sf::Color(32, 243, 240);//biome.getTreeLeafColor();
 }
 
-void Tree::update(sf::Time frameTime, DecorBuilder& builder, ABiome&)
+void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
 	(void)frameTime;
 

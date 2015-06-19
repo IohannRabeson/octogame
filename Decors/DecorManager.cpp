@@ -6,14 +6,15 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 03:39:50 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/12 16:30:39 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/17 02:18:34 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "DecorManager.hpp"
-#include "DecorBuilder.hpp"
 #include "ADecor.hpp"
 #include "Tree.hpp"
+
+#include <VertexBuilder.hpp>
 
 #include <cassert>
 
@@ -68,10 +69,10 @@ void	DecorManager::clear()
 
 void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 {
-	DecorBuilder	builder(m_vertices.get(), m_count);
-	float const		minVisibleX = camera.getCenter().x - camera.getSize().x;
-	float const		maxVisibleX = camera.getCenter().x + camera.getSize().x;
-	float			elementX = 0.f;
+	octo::VertexBuilder	builder(m_vertices.get(), m_count);
+	float const			minVisibleX = camera.getCenter().x - camera.getSize().x;
+	float const			maxVisibleX = camera.getCenter().x + camera.getSize().x;
+	float				elementX = 0.f;
 
 	for (auto element : m_elements)
 	{

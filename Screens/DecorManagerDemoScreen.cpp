@@ -6,13 +6,12 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 01:39:09 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/12 16:32:06 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/17 02:28:32 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "DecorManagerDemoScreen.hpp"
 #include "ADecor.hpp"
-#include "DecorBuilder.hpp"
 
 #include <Application.hpp>
 #include <Camera.hpp>

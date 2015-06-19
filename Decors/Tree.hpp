@@ -2,6 +2,7 @@
 # define TREE_HPP
 
 # include "ADecor.hpp"
+# include "VertexBuilder.hpp"
 # include <SFML/Graphics/Color.hpp>
 
 class Tree : public ADecor
@@ -12,7 +13,7 @@ public:
 
 	virtual void setup(ABiome& biome);
 	virtual void update(sf::Time frameTime,
-						DecorBuilder& builder,
+						octo::VertexBuilder& builder,
 						ABiome& biome);
 
 private:
@@ -50,16 +51,16 @@ private:
 	void createBiColorQuad(QuadValue const & quad,
 							sf::Color const & color,
 							float const deltaColor,
-							DecorBuilder & builder);
+							octo::VertexBuilder & builder);
 
 	void createLeaf(std::vector<QuadValue> const & quads,
 					sf::Color const & color,
 					float const deltaColor,
-					DecorBuilder & builder);
+					octo::VertexBuilder & builder);
 
 	void pythagorasTree(sf::Vector2f const & center,
 						sf::Vector2f const & size,
-						DecorBuilder & builder,
+						octo::VertexBuilder & builder,
 						float const angle = 0.0f,
 						float const cosAngle = std::cos(0.0f),
 						float const sinAngle = std::sin(0.0f),
