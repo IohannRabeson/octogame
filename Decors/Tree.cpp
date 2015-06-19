@@ -10,7 +10,8 @@ Tree::Tree(void) :
 	m_animation(1.f),
 	m_growSide(false),
 	m_countLeaf(0u),
-	m_isLeaf(true)
+	m_isLeaf(true),
+	m_setLeaf(true)
 {
 }
 
