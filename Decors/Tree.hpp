@@ -25,45 +25,45 @@ private:
 		sf::Vector2f		center;
 	};
 
-	unsigned int			m_depth;
+	std::size_t				m_depth;
 	sf::Vector2f			m_size;
 	sf::Color				m_color;
 	std::vector<float>		m_refAngle;
+	std::size_t				m_count;
 
 	sf::Time				m_lifeTime;
 	float					m_animation;
-
 	bool					m_growSide;
+
 	std::vector<QuadValue>	m_leaf;
 	sf::Color				m_leafColor;
-	//int						m_maxLeaf;
-	//int						m_countLeaf;
-	//bool					m_isLeaf;
+	std::size_t				m_countLeaf;
+	bool					m_isLeaf;
+	bool					m_setLeaf;
 
 	void computeQuad(sf::Vector2f const & size,
 					sf::Vector2f const & center,
-					float cosAngle,
-					float sinAngle,
+					float const cosAngle,
+					float const sinAngle,
 					QuadValue & quad);
 
 	void createBiColorQuad(QuadValue const & quad,
-							sf::Color & color,
+							sf::Color const & color,
 							float const deltaColor,
 							DecorBuilder & builder);
 
 	void createLeaf(std::vector<QuadValue> const & quads,
-					sf::Color & color,
+					sf::Color const & color,
 					float const deltaColor,
 					DecorBuilder & builder);
 
 	void pythagorasTree(sf::Vector2f const & center,
 						sf::Vector2f const & size,
 						DecorBuilder & builder,
-						unsigned int angleCount = 0u,
 						float const angle = 0.0f,
 						float const cosAngle = std::cos(0.0f),
 						float const sinAngle = std::sin(0.0f),
-						unsigned int const currentDepth = 1);
+						std::size_t const currentDepth = 0u);
 
 	static void rotateVec(sf::Vector2f & vector,
 							float const cosAngle,

@@ -20,7 +20,7 @@
 #include <GraphicsManager.hpp>
 
 DecorManagerDemoScreen::DecorManagerDemoScreen() :
-	m_manager(20000),
+	m_manager(200000),
 	m_currentDecorType(DecorManager::DecorTypes::Invalid)
 {
 	std::fill(m_viewDirections.begin(), m_viewDirections.end(), false);
