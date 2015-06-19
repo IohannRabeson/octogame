@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/18 21:36:14 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/19 18:38:15 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/19 23:33:12 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <functional>
 # include <list>
 # include <tuple>
+# include <memory>
 
 # include <VertexBuilder.hpp>
 
@@ -33,7 +34,7 @@
  *	<h1>Particle is an entity</h1>
  *	Particle management is based on Entity Component System pattern (ECS).
  *	A particle is an entity and you can define at compile time the list
- *	of the compenents. In other words, you can define at compile time
+ *	of theses compenents. In other words, you can define at compile time
  *	the contents of the particles for this system.
  *
  *	Exemple, you need to know the life time of each particle, you
@@ -63,7 +64,7 @@
  *			std::get<Component::Position>(particle) = std::get<Component::Position>(particle) + (Velocity * frameTime.asSeconds());
  *		}
  *
- *		// This methods is called when we looking for dead particles
+ *		// This methods is called when the system is looking for dead particles
  *		virtual bool	isDeadParticle(Particle const& particle)
  *		{
  *			// Particle live 2 seconds only...
@@ -93,15 +94,28 @@ public:
 	ParticleSystem();
 	virtual ~ParticleSystem() = default;
 
+	/*!	Reset the system
+	 *	\param prototype Point collection used to build particle prototype
+	 *	\param type	Primitive type used to render particles
+ 	 *	\param maxParticleCount Define the maximum of particles
+	 *
+	 *	Allocate the memory and prepare the system to run.
+	 */	 
 	void			reset(Prototype const& prototype,
 						  sf::PrimitiveType type,
 						  std::size_t maxParticleCount);
 
+	/*!	Add a new particle */
 	void			add(Particle const& particle);
+
+	/*!	Add a new particle */
 	void			add(Particle&& particle);
 
+	/*!	Add a new particle */
 	template <class ... T>
 	void			emplace(T&& ... args);
+
+	/*!	Remove all particles */
 	void			clear();
 
 	virtual void	update(sf::Time frameTime);

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/19 06:05:06 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/19 23:21:13 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 #include "DecorManagerDemoScreen.hpp"
 #include "StateGame.hpp"
 #include "EngineScreen.hpp"
-#include "DecorManagerDemoScreen.hpp"
 #include "PhysicsMapScreen.hpp"
 #include "ParticleDemoScreen.hpp"
 
