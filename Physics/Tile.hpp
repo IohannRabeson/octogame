@@ -29,13 +29,11 @@ public:
 	sf::Vertex *		mp_upLeft;
 	sf::Vector2f		m_startTransition[4];
 	sf::Color		m_startColor;
-	ConvexShape *		m_shape;
 
 	Tile(void);
 	virtual ~Tile(void) = default;
 
 	inline bool isEmpty(void) { return mb_isEmpty; }
-	inline void setShape(ConvexShape * shape) { m_shape = shape; }
 	void setPolygonVertices(sf::Vertex * vertex);
 
 };

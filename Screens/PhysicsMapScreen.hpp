@@ -2,9 +2,10 @@
 # define PHYSICSMAPSCREEN_HPP
 
 # include <AbstractState.hpp>
-
 # include "PhysicsEngine.hpp"
 # include "MapManager.hpp"
+
+class ConvexShape;
 
 class PhysicsMapScreen : public octo::AbstractState
 {
@@ -21,6 +22,7 @@ public:
 private:
 	MapManager	m_mapManager;
 	PhysicsEngine &	m_engine;
+	ConvexShape *	m_shape;
 
 };
 

@@ -51,3 +51,6 @@ callgrind.*
 
 # kdiff3 files
 *.orig
+
+# vim session file
+.session*

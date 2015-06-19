@@ -85,6 +85,12 @@ private:
 	std::size_t						m_polyCirclePairCount;
 	std::size_t						m_circleCirclePairCount;
 
+	// Pairs of object which might be colliding with the tile map
+	std::vector<Pair<PolygonShape *, PolygonShape *>>	m_tilePolyPairs;
+	std::vector<Pair<PolygonShape *, CircleShape *>>	m_tileCirclePairs;
+	std::size_t						m_tilePolyPairCount;
+	std::size_t						m_tileCirclePairCount;
+
 	// Variable used to compute collisions (to avoid creation and copy)
 	Projection						m_projectionA;
 	Projection						m_projectionB;
@@ -111,7 +117,7 @@ private:
 	template<class T, class U>
 	std::size_t broadPhase(std::vector<T> const & vectorA, std::vector<U> const & vectorB, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate = false);
 	template<class T>
-	std::size_t broadPhase(std::vector<T> const & vector, std::vector<Pair<ConvexShape *, T>> & pairs);
+	std::size_t broadPhase(std::vector<T> const & vector, std::vector<Pair<PolygonShape *, T>> & pairs);
 
 	/*! Determine if pairs are colliding */
 	void narrowPhase(void);
@@ -119,6 +125,10 @@ private:
 	/*! Determine if pairs are colliding */
 	template<class T, class U>
 	void narrowPhase(std::vector<Pair<T, U>> & pairs, std::size_t pairCount);
+
+	/*! Determine if pairs are colliding with tiles */
+	template<class T, class U>
+	void narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t pairCount);
 
 	/*! Compute collision between different shape */
 	bool resolveCollision(PolygonShape * polygonA, PolygonShape * polygonB);

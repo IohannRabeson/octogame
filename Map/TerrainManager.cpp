@@ -18,6 +18,7 @@ TerrainManager::TerrainManager(void) :
 	mn_verticesCount(0u),
 	m_oldOffset(0, 0)
 {}
+i
 
 TerrainManager::~TerrainManager(void)
 {
@@ -163,11 +164,14 @@ void TerrainManager::updateTransition(float pf_deltatime)
 	mn_verticesCount = 0u;
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
+		bool isFirst = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
-			//m_tiles->get(x, y).setPolygonVertices(&m_vertices[mn_verticesCount]);
 			if (m_tiles->get(x, y).me_transition == Tile::e_transition_none)
+			{
+				m_tileShapes.get(x, y)->setSleep(true);
 				continue;
+			}
 			m_vertices[mn_verticesCount].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[0u], m_tiles->get(x, y).m_startTransition[0u], transition);
 			m_vertices[mn_verticesCount + 1u].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[2u], m_tiles->get(x, y).m_startTransition[2u], transition);
 			m_vertices[mn_verticesCount + 2u].position = octo::linearInterpolation(m_tilesPrev->get(x, y).m_startTransition[3u], m_tiles->get(x, y).m_startTransition[3u], transition);
@@ -180,6 +184,42 @@ void TerrainManager::updateTransition(float pf_deltatime)
 				m_vertices[mn_verticesCount + i].position.x -= Tile::DoubleTileSize;
 				m_vertices[mn_verticesCount + i].position.y -= Tile::DoubleTileSize;
 				m_vertices[mn_verticesCount + i].color = m_vertices[mn_verticesCount].color;
+			}
+			if (!isFirst)
+			{
+				isFirst = true;
+				m_tiles->get(x, y).setPolygonVertices(&m_vertices[mn_verticesCount]);
+				m_tileShapes.get(x, y)->setVertex(0u, m_vertices[mn_verticesCount].position);
+				m_tileShapes.get(x, y)->setVertex(1u, m_vertices[mn_verticesCount + 4u].position);
+				m_tileShapes.get(x, y)->setVertex(2u, m_vertices[mn_verticesCount + 5u].position);
+				m_tileShapes.get(x, y)->setVertex(3u, m_vertices[mn_verticesCount + 2u].position);
+				m_tileShapes.get(x, y)->setSleep(false);
+				m_tiles->get(x, y).m_startColor = sf::Color::Blue;
+			}
+			else
+			{
+				if (x - 1 > 0 && x + 1 < 122)
+				{
+					if (m_tiles->get(x + 1,y).me_transition == Tile::e_transition_none)
+					{
+						m_tileShapes.get(x + 1, y)->setVertex(0u, m_vertices[mn_verticesCount].position);
+						m_tileShapes.get(x + 1, y)->setVertex(1u, m_vertices[mn_verticesCount + 4u].position);
+						m_tileShapes.get(x + 1, y)->setVertex(2u, m_vertices[mn_verticesCount + 5u].position);
+						m_tileShapes.get(x + 1, y)->setVertex(3u, m_vertices[mn_verticesCount + 2u].position);
+						m_tileShapes.get(x + 1, y)->setSleep(false);
+						m_tiles->get(x, y).m_startColor = sf::Color::Red;
+					}
+					if (m_tiles->get(x - 1,y).me_transition == Tile::e_transition_none)
+					{
+						m_tileShapes.get(x - 1, y)->setVertex(0u, m_vertices[mn_verticesCount].position);
+						m_tileShapes.get(x - 1, y)->setVertex(1u, m_vertices[mn_verticesCount + 4u].position);
+						m_tileShapes.get(x - 1, y)->setVertex(2u, m_vertices[mn_verticesCount + 5u].position);
+						m_tileShapes.get(x - 1, y)->setVertex(3u, m_vertices[mn_verticesCount + 2u].position);
+						m_tileShapes.get(x - 1, y)->setSleep(false);
+						m_tiles->get(x, y).m_startColor = sf::Color::Red;
+					}
+				}
+				m_tileShapes.get(x, y)->setSleep(true);
 			}
 			mn_verticesCount += 6u;
 		}
