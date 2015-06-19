@@ -41,7 +41,7 @@ PhysicsEngine & PhysicsEngine::getInstance(void)
 	return *m_instance;
 }
 
-IShapeBuilder & PhysicsEngine::getShapeBuilder(void)
+ShapeBuilder & PhysicsEngine::getShapeBuilder(void)
 {
 	return getInstance();
 }
@@ -58,35 +58,6 @@ void PhysicsEngine::init(void)
 	m_polyPolyPairs.resize(1000u);
 	m_circleCirclePairs.resize(1000u);
 	m_polyCirclePairs.resize(1000u);
-}
-
-ConvexShape * PhysicsEngine::createConvex(void)
-{
-	ConvexShape * shape = new ConvexShape();
-	registerShape(shape);
-	return shape;
-}
-
-CircleShape * PhysicsEngine::createCircle(void)
-{
-	CircleShape * shape = new CircleShape();
-	registerShape(shape);
-	return shape;
-}
-
-RectangleShape * PhysicsEngine::createRectangle(void)
-{
-	RectangleShape * shape = new RectangleShape();
-	registerShape(shape);
-	return shape;
-}
-
-ConvexShape * PhysicsEngine::createTile(std::size_t x, std::size_t y)
-{
-	ConvexShape * shape = new ConvexShape();
-	shape->setVertexCount(4u);
-	registerTile(shape, x, y);
-	return shape;
 }
 
 void PhysicsEngine::registerShape(PolygonShape * shape)
