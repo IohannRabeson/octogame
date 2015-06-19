@@ -111,7 +111,7 @@ public:
 
 	/*! Determine wheter the object is colliding or not
 	 *
-	 * \pamra collisionType The collision type to compare
+	 * \param collisionType The collision type to compare
 	 */
 	inline bool isColliding(std::uint32_t collisionType) { return (m_collisionMask & collisionType); }
 
@@ -161,7 +161,7 @@ public:
 	 * \param angle The angle to rotate
 	 * \see setRotation
 	 */
-	void rotate(float angle) { m_rotation += angle; }
+	inline void rotate(float angle) { m_rotation += angle; }
 
 	/*! Apply the velocity computed by the PhysicsEngine
 	 *
