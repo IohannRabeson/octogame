@@ -16,33 +16,23 @@ Des explications à propos des sous modules: [issues 2](http://git-scm.com/book/
 
 ## Compilation, installation, et tout ça
 
-### Linux
-	TODO: voir scripts travis
-###
+### Dependances
+	- SFML 2.3
+	- [hatedepend](https://github.com/IohannRabeson/hatedepend)
+	- [cppcheck](https://github.com/danmar/cppcheck/)
+	- Tout ce qui est requis pour [libocto](https://github.com/IohannRabeson/octolib#requierements)
 
-Pour les dependances sous MacOS, rien n'est fait. Vous devez les installer a la mano
-pour l'instant.  
-Mais c'est prevu, voir [issues 2](https://github.com/IohannRabeson/octogame/issues/2)
+### Compiler le projet
 
-Les Makefile attendent que les librairies soient accessibles par le compilateur
-ce qui est le cas sous mac si on installe la sfml sans oublier
-d'utiliser sa regle make install.  
-Voir ce tutoriel officiel pour l'installe de la sfml avec CMake:
-http://www.sfml-dev.org/tutorials/2.2/compile-with-cmake.php
-
-Pour Boost, utilisez brew:
-
-    $> brew install boost --c++11
-    
-Pour Doxygen, utilisez brew:
-
-    $> brew install doxygen --with-graphviz
-
-## Compiler le projet
-
-Pour compiler la librairie, les tests et les outils:
+Pour compiler la librairie, les tests et les outils et le jeu:
 
 	$> make complete
+
+### Les tests
+Hatedepend vous previendra de certains probleme liee au inclusions.  
+Vous pouvez lancer l'analyse statique avec cppcheck en tapant:
+
+	$> make static-check
 
 ## Executer le projet
 
@@ -62,4 +52,9 @@ Dans ce cas, il est necessaire d'utiliser ldconfig apres l'installation en regle
 Le fichier default.conf permet le parametrage du programme.  
 Vous pouvez y modifier differente chose, comme le package de ressource a utiliser, le premier
 etat a lancer, etc...  
-La documentation a ce sujet est dans la classe Application.  
+La documentation a ce sujet est dans la classe Application.
+
+## Travis
+Travis effectue differents tests a chaque fois qu'un pull request est ouverte ou mise a jour.
+Les compilations se feront avec clang, en mode debug et release.
+Hatedepend n'est pas necessaire a travis, pour ne pas avoir a l'installer, il est desactive.
