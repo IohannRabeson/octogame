@@ -3,9 +3,9 @@
 #include "DecorBuilder.hpp"
 
 Sun::Sun(void) :
-	m_partCount(0u),
+	m_partCount(1u),
 	m_animation(1.f),
-	m_glowingTimer(sf::seconds(0.f)),
+	m_glowingTimer(sf::Time::Zero),
 	m_glowingTimerMax(sf::seconds(3.f))
 {
 }
@@ -37,15 +37,19 @@ void Sun::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorn
 	builder.createQuad(cornerUpRight + origin, upMidRight + origin, downMidRight + origin, cornerDownRight + origin, color);
 }
 
-void Sun::createSun(sf::Vector2f size, sf::Vector2f sizeCorner, sf::Vector2f const & origin, sf::Color color, DecorBuilder& builder)
+void Sun::createSun(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, std::size_t partCount, sf::Color color, DecorBuilder& builder)
 {
 	color.a = 105;
-	float deltaAlpha = (255 - 105) / m_partCount;
-	for (std::size_t i = 0; i < m_partCount; i++)
+	sf::Vector2f tmpSize = size;
+	sf::Vector2f tmpSizeCorner = sizeCorner;
+	partCount = partCount > 0 ? partCount : 1;
+	float deltaAlpha = (255 - 105) / partCount;
+
+	for (std::size_t i = 0; i < partCount; i++)
 	{
-		createOctogon(size, sizeCorner, origin, color, builder);
-		size = size - m_size / 10.f;
-		sizeCorner = sizeCorner - m_sizeCorner / 10.f;
+		createOctogon(tmpSize, tmpSizeCorner, origin, color, builder);
+		tmpSize = tmpSize - size / 10.f;
+		tmpSizeCorner = tmpSizeCorner - sizeCorner / 10.f;
 		color.a += deltaAlpha;
 	}
 
@@ -54,7 +58,7 @@ void Sun::createSun(sf::Vector2f size, sf::Vector2f sizeCorner, sf::Vector2f con
 	color.a = 255 * (1 - glowingCoef);
 	// x2 size for the glowing sun
 	float glowingCoefSize = glowingCoef * 2.f;
-	createOctogon(m_size * glowingCoefSize, m_sizeCorner * glowingCoefSize, origin, color, builder);
+	createOctogon(size * glowingCoefSize, sizeCorner * glowingCoefSize, origin, color, builder);
 }
 
 void Sun::setup(ABiome& biome)
@@ -72,5 +76,5 @@ void Sun::update(sf::Time frameTime, DecorBuilder& builder, ABiome&)
 		m_glowingTimer -= m_glowingTimerMax;
 
 	sf::Vector2f const & position = getPosition();
-	createSun(m_size * m_animation, m_sizeCorner * m_animation, position, m_color, builder);
+	createSun(m_size * m_animation, m_sizeCorner * m_animation, position, m_partCount, m_color, builder);
 }

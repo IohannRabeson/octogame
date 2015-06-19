@@ -31,9 +31,10 @@ private:
 						sf::Color const & color,
 						DecorBuilder& builder);
 
-	void createSun(sf::Vector2f size,
-					sf::Vector2f sizeCorner,
+	void createSun(sf::Vector2f const & size,
+					sf::Vector2f const & sizeCorner,
 					sf::Vector2f const & origin,
+					std::size_t partCount,
 					sf::Color color,
 					DecorBuilder& builder);
 };
