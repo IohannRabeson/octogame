@@ -191,6 +191,9 @@ public:
 protected:
 	void drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color);
 
+	/*! Compute the shape once per frame */
+	virtual void computeShape(void) = 0;
+
 private:
 	sf::Vector2f			m_velocity;
 	sf::Vector2f			m_origin;
