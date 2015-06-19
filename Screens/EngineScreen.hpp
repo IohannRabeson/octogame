@@ -10,10 +10,10 @@ class CircleShape;
 
 enum Type
 {
-	e_npc = 1u << 0u,
-	e_tile = 1u << 1u,
-	e_rock = 1u << 2u,
-	e_player = 1u << 3u
+	e_npc = 1u,
+	e_tile = 2u,
+	e_rock = 4u,
+	e_player = 8u
 };
 
 class EngineScreen : public octo::AbstractState

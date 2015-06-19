@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/23 01:27:24 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/23 02:33:42 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/18 21:15:30 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 #include <iostream>
 
 SpriteSheetDemoScreen::SpriteSheetDemoScreen() :
-	m_spriteSheet(nullptr)
+	m_spriteSheet(nullptr),
+	m_subTextureId(0u)
 {
 	octo::Application::getGraphicsManager().addKeyboardListener(this);
 }
