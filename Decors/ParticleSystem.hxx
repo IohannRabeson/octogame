@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/19 00:55:39 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/19 16:43:31 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/19 18:43:50 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,15 @@
 //
 //	ParticleSystem
 //
-template <class ... P>
-ParticleSystem<P...>::ParticleSystem() :
+template <class ... C>
+ParticleSystem<C...>::ParticleSystem() :
 	m_verticesCount(0u),
 	m_primitiveType(sf::Triangles)
 {
 }
 
-template <class ... P>
-void	ParticleSystem<P...>::reset(Prototype const& prototype,
+template <class ... C>
+void	ParticleSystem<C...>::reset(Prototype const& prototype,
 									 sf::PrimitiveType type,
 									 std::size_t maxParticleCount)
 {
@@ -35,26 +35,33 @@ void	ParticleSystem<P...>::reset(Prototype const& prototype,
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_verticesCount);
 }
 
-template <class ... P>
-void	ParticleSystem<P...>::add(Particle const& particle)
+template <class ... C>
+void	ParticleSystem<C...>::add(Particle const& particle)
 {
 	m_particles.push_front(particle);
 }
 
-template <class ... P>
-void	ParticleSystem<P...>::add(Particle&& particle)
+template <class ... C>
+void	ParticleSystem<C...>::add(Particle&& particle)
 {
 	m_particles.push_front(particle);
 }
 
-template <class ... P>
-void	ParticleSystem<P...>::clear()
+template <class ... C>
+template <class ... T>
+void	ParticleSystem<C...>::emplace(T&& ... args)
+{
+	m_particles.emplace_front(std::forward<T>(args)...);
+}
+
+template <class ... C>
+void	ParticleSystem<C...>::clear()
 {
 	m_particles.clear();
 }
 
-template <class ... P>
-void	ParticleSystem<P...>::update(sf::Time frameTime)
+template <class ... C>
+void	ParticleSystem<C...>::update(sf::Time frameTime)
 {
 	sf::Transform	transform;
 
@@ -75,8 +82,8 @@ void	ParticleSystem<P...>::update(sf::Time frameTime)
 	}
 }
 
-template <class ... P>
-void	ParticleSystem<P...>::draw(sf::RenderTarget& render, sf::RenderStates states)const
+template <class ... C>
+void	ParticleSystem<C...>::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	states.transform *= getTransform();
 	render.draw(m_vertices.get(), m_builder.getUsed(), m_primitiveType, states);

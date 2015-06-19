@@ -6,39 +6,83 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/19 06:00:19 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/19 16:43:32 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/19 19:02:45 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ParticleDemoScreen.hpp"
+#include <Application.hpp>
+#include <Camera.hpp>
+#include <GraphicsManager.hpp>
+
+#include <ctime>
+
+TestSystem::TestSystem() :
+	m_emit(false),
+	m_engine(std::time(0)),
+	m_lifeTimeDistri(0.5f, 1.f),
+	m_directionDistri(0.f, 2.f * M_PI)
+{
+}
+
+void	TestSystem::onMoved(sf::Event::MouseMoveEvent const& event)
+{
+	octo::Camera&	camera = octo::Application::getCamera();
+
+	m_emitter = camera.mapPixelToCoords(sf::Vector2i(event.x, event.y));	
+}
+
+void	TestSystem::onPressed(sf::Event::MouseButtonEvent const&)
+{
+	m_emit = true;
+}
+
+void	TestSystem::onReleased(sf::Event::MouseButtonEvent const&)
+{
+	m_emit = false;
+}
+
+void	TestSystem::update(sf::Time frameTime)
+{
+	ParticleSystem::update(frameTime);
+	if (m_emit)
+	{
+		emplace(sf::Color::Green, m_emitter, m_directionDistri(m_engine) * 180,
+				sf::Time::Zero,
+				sf::seconds(m_lifeTimeDistri(m_engine)),
+				m_directionDistri(m_engine));
+	}
+}
 
 void	TestSystem::updateParticle(sf::Time frameTime, Particle& particle)
 {
-	static sf::Vector2f const	Velocity(0.2f, 512.f);
+	static float const			Velocity = 256.f;
 	static float const			AngularVelocity = 30.f;
+	sf::Vector2f	direction(std::sin(std::get<MyComponent::Direction>(particle)) * Velocity,
+							  std::cos(std::get<MyComponent::Direction>(particle)) * Velocity);
 
-	std::get<Component::Position>(particle) = std::get<Component::Position>(particle) + (Velocity * frameTime.asSeconds());
+	std::get<Component::Position>(particle) = std::get<Component::Position>(particle) + direction * frameTime.asSeconds();
 	std::get<Component::Rotation>(particle) = std::get<Component::Rotation>(particle) + AngularVelocity * frameTime.asSeconds();
+	std::get<MyComponent::Time>(particle) = std::get<MyComponent::Time>(particle) + frameTime;
+	std::get<Component::Color>(particle).a = 255 * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds()));
 }
 
 bool	TestSystem::isDeadParticle(Particle const& particle)
 {
-	return (std::get<Component::Position>(particle).y > 512.f);
+	return (std::get<MyComponent::Time>(particle) >= std::get<MyComponent::Life>(particle));
 }
 
 void	ParticleDemoScreen::start()
 {
-	static float const	Size = 4.f;
+	static float const	Size = 8.f;
 
 	TestSystem::Prototype	prototype;
 
 	prototype.emplace_back(-Size, Size);
-	prototype.emplace_back(Size, Size);
 	prototype.emplace_back(Size, -Size);
 	prototype.emplace_back(-Size, -Size);
-	m_system.reset(prototype, sf::Quads, 2000);
-	for (float x = 0; x < 3000; x += 16.f)
-		m_system.add(TestSystem::Particle(sf::Color::Red, sf::Vector2f(x, 0.f), 0.f));
+	m_system.reset(prototype, sf::Triangles, 2000);
+	octo::Application::getGraphicsManager().addMouseListener(&m_system);
 }
 
 void	ParticleDemoScreen::pause()
@@ -53,7 +97,7 @@ void	ParticleDemoScreen::resume()
 
 void	ParticleDemoScreen::stop()
 {
-
+	octo::Application::getGraphicsManager().removeMouseListener(&m_system);
 }
 
 void	ParticleDemoScreen::update(sf::Time frameTime)

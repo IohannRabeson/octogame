@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/18 21:36:14 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/19 07:09:36 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/19 18:38:15 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,55 @@
 
 # include <VertexBuilder.hpp>
 
-template <class ... P>
+//	TODO: this file must be moved into octolib!
+
+/*!	\ingroup Graphics
+ *	\class ParticleSystem
+ *	\tparam C Custom component
+ *
+ *	<h1>Particle is an entity</h1>
+ *	Particle management is based on Entity Component System pattern (ECS).
+ *	A particle is an entity and you can define at compile time the list
+ *	of the compenents. In other words, you can define at compile time
+ *	the contents of the particles for this system.
+ *
+ *	Exemple, you need to know the life time of each particle, you
+ *	can define a ParticleSystem as follow:
+ *	\code
+ *	class YourParticleSystem : public octo::ParticleSystem<sf::Time>
+ *	{
+ *		...
+ *	};
+ *	\endcode
+ *	We add an sf::Time as template parameter of the ParticleSystem inerited by YourParticleSystem.
+ *	\endcode
+ *	Now we need to increase the time elapsed for each particles and kill particles which are
+ *	to old. Also, we need our particles move at each frame.
+ *	\code
+ *	class YourParticleSystem : public octo::ParticleSystem<sf::Time>
+ *	{
+ *	private:
+ *		// This method is called at each frame with each particle
+ *		virtual void	updateParticle(sf::Time frameTime, Particle& particle)
+ *		{
+ *			static sf::Vector2f const	Velocity(0.2f, 512.f);
+ *
+ *			// increase the life time
+ *			std::get<Component::User>(particle) = std::get<Component::User>(particle) + frameTime.asSeconds();
+ *			// move the particle
+ *			std::get<Component::Position>(particle) = std::get<Component::Position>(particle) + (Velocity * frameTime.asSeconds());
+ *		}
+ *
+ *		// This methods is called when we looking for dead particles
+ *		virtual bool	isDeadParticle(Particle const& particle)
+ *		{
+ *			// Particle live 2 seconds only...
+ *			return (std::get<Component::User>(particle) >= sf::second(2.f));
+ *		}
+ *	};
+ *	\endcode
+ */
+template <class ... C>
 class ParticleSystem : public sf::Transformable
 {
 public:
@@ -32,7 +80,7 @@ public:
 	typedef std::tuple<sf::Color,
 					   sf::Vector2f,
 					   float,
-					   P...>			Particle;
+					   C...>			Particle;
 
 	enum Component
 	{
@@ -51,12 +99,18 @@ public:
 
 	void			add(Particle const& particle);
 	void			add(Particle&& particle);
+
+	template <class ... T>
+	void			emplace(T&& ... args);
 	void			clear();
 
-	void			update(sf::Time frameTime);
+	virtual void	update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 private:
+	/*!	This methods is called each frame with each particle */
 	virtual void	updateParticle(sf::Time frameTime, Particle& particle) = 0;
+
+	/*!	This methods is called when the system removes the dead particles */
 	virtual bool	isDeadParticle(Particle const& particle) = 0;
 private:
 	std::list<Particle>			m_particles;
