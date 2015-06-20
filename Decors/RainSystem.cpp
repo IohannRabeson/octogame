@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:41:14 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/20 04:34:45 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/20 05:55:10 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ RainSystem::RainSystem() :
 	m_engine(std::time(0) ^ 0xB38421),
 	m_floatDistribution(0.f, 1.f),
 	m_dropChanceDistribution(0, 100),
+	m_cameraOffset(50.f, 50.f), 
 	m_initialRotation(0.f),
 	m_dropChance(0),
 	m_dropCountFactor(0)
@@ -75,22 +76,16 @@ void	RainSystem::updateParticle(sf::Time frameTime, Particle& particle)
 
 bool	RainSystem::isDeadParticle(Particle const& particle)
 {
-	static float const	Margin = 50.f;
-	octo::Camera&		camera = octo::Application::getCamera();
-	sf::FloatRect		viewRect = camera.getRectangle();
-	float				bottom = viewRect.top + viewRect.height + Margin;
+	float				bottom = m_cameraRect.top + m_cameraRect.height + m_cameraOffset.y;
 
 	return (std::get<Component::Position>(particle).y > bottom);
 }
 
 void			RainSystem::createDrop()
 {
-	static float const	Margin = 50.f;
-	octo::Camera&		camera = octo::Application::getCamera();
-	sf::FloatRect		viewRect = camera.getRectangle();
 	sf::Vector2f		pos;
 
-	pos.x = viewRect.left + m_floatDistribution(m_engine) * camera.getSize().x;
-	pos.y = viewRect.top - Margin * m_floatDistribution(m_engine);
+	pos.x = m_cameraRect.left - m_cameraOffset.x + m_floatDistribution(m_engine) * (m_cameraRect.width + m_cameraOffset.x);
+	pos.y = m_cameraRect.top - m_cameraOffset.y * m_floatDistribution(m_engine);
 	emplace(sf::Color(180, 180, 180), pos, m_initialRotation);
 }

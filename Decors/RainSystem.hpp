@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:32:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/20 04:27:59 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/20 05:49:35 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ private:
 	FDist						m_floatDistribution;
 	UIDist						m_dropChanceDistribution;
 	sf::FloatRect				m_cameraRect;
+	sf::Vector2f				m_cameraOffset;
 	sf::Vector2f				m_initialVelocity;
 	float						m_initialRotation;
 	unsigned int				m_dropChance;
