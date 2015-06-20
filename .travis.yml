@@ -9,6 +9,9 @@ env:
  - MODE=release
  - MODE=debug
 
+matrix:
+  fast_finish: true
+
 before_install:
  - chmod u=rx ./scripts/travis/*.sh
 
