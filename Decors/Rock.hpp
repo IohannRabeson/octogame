@@ -2,6 +2,7 @@
 # define ROCK_HPP
 
 # include "ADecor.hpp"
+# include "VertexBuilder.hpp"
 # include <SFML/Graphics/Color.hpp>
 
 class Rock : public ADecor
@@ -21,7 +22,7 @@ public:
 
 	virtual void	setup(ABiome& biome);
 	virtual void	update(sf::Time frameTime,
-						   DecorBuilder& builder,
+						   octo::VertexBuilder& builder,
 						   ABiome& biome);
 
 private:
@@ -41,12 +42,12 @@ private:
 						float const & sizeRight,
 						float const & sizeRec,
 						sf::Vector2f const & position,
-						DecorBuilder& builder);
+						octo::VertexBuilder& builder);
 
 	void createRock(std::vector<OctogonValue> const & values,
 					sf::Vector2f const & originRock,
 					sf::Color const & color,
-					DecorBuilder& builder);
+					octo::VertexBuilder& builder);
 
 	float randomFloat(float min, float max);
 };

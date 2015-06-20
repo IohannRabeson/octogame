@@ -1,5 +1,4 @@
 #include "Rock.hpp"
-#include "DecorBuilder.hpp"
 #include "ABiome.hpp"
 
 //TODO: Dont forget to delete
@@ -11,7 +10,7 @@ Rock::Rock() :
 {
 }
 
-void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float const & sizeLeft, float const & sizeRight, float const & sizeRec, sf::Vector2f const & rockOrigin, DecorBuilder& builder)
+void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float const & sizeLeft, float const & sizeRight, float const & sizeRec, sf::Vector2f const & rockOrigin, octo::VertexBuilder& builder)
 {
 	sf::Vector2f upLeft(-size.x, -size.y);
 	sf::Vector2f upRight(size.x, -size.y);
@@ -51,7 +50,7 @@ void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin,
 		m_right.x = origin.x - rockOrigin.x + downRight.x;
 }
 
-void Rock::createRock(std::vector<OctogonValue> const & values, sf::Vector2f const & originRock, sf::Color const & color, DecorBuilder& builder)
+void Rock::createRock(std::vector<OctogonValue> const & values, sf::Vector2f const & originRock, sf::Color const & color, octo::VertexBuilder& builder)
 {
 	for (std::size_t i = 0u; i < m_partCount; i++)
 		createOctogon(sf::Vector2f(values[i].size.x, values[i].size.y * m_animation), values[i].origin + originRock, color,
@@ -118,7 +117,7 @@ void Rock::setup(ABiome& biome)
 	}
 }
 
-void Rock::update(sf::Time, DecorBuilder& builder, ABiome&)
+void Rock::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
 {
 	sf::Vector2f const & position = getPosition();
 	//TODO: Test this with terrain
