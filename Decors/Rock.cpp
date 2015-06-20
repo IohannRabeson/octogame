@@ -129,7 +129,7 @@ float Rock::randomFloat(float min, float max)
 {
 	if (max - min == 0)
 		return max;
-	std::uniform_int_distribution<float> distribution(min, max);
+	std::uniform_real_distribution<float> distribution(min, max);
 	//TODO: REplace by timestamp unix
 	std::random_device rd;
 	std::mt19937 engine(rd());
