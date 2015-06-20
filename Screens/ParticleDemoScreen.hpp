@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/19 05:58:50 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/19 18:51:19 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/20 02:57:35 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <DefaultGraphicsListeners.hpp>
 
 # include "ParticleSystem.hpp"
+# include "RainSystem.hpp"
 
 # include <random>
 
@@ -34,7 +35,6 @@ public:
 
 	void			update(sf::Time frameTime);	
 private:
-
 	virtual void	updateParticle(sf::Time frameTime, Particle& particle);
 	virtual bool	isDeadParticle(Particle const& particle);
 
@@ -62,6 +62,7 @@ private:
 	virtual void	draw(sf::RenderTarget& render)const;
 private:
 	TestSystem	m_system;
+	RainSystem	m_rainSystem;
 };
 
 #endif

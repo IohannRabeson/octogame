@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/19 06:00:19 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/19 19:02:45 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/20 04:28:28 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <GraphicsManager.hpp>
+#include <Console.hpp>
 
 #include <ctime>
 
@@ -75,7 +76,7 @@ bool	TestSystem::isDeadParticle(Particle const& particle)
 void	ParticleDemoScreen::start()
 {
 	static float const	Size = 8.f;
-
+	octo::Console&		console = octo::Application::getConsole();
 	TestSystem::Prototype	prototype;
 
 	prototype.emplace_back(-Size, Size);
@@ -83,6 +84,9 @@ void	ParticleDemoScreen::start()
 	prototype.emplace_back(-Size, -Size);
 	m_system.reset(prototype, sf::Triangles, 2000);
 	octo::Application::getGraphicsManager().addMouseListener(&m_system);
+	console.addCommand(L"demo.setDropChance", m_rainSystem, &RainSystem::setDropChance);
+	console.addCommand(L"demo.setDropCountFactor", m_rainSystem, &RainSystem::setDropCountFactor);
+	console.addCommand(L"demo.setDropVelocity", m_rainSystem, &RainSystem::setDropVelocity);
 }
 
 void	ParticleDemoScreen::pause()
@@ -103,10 +107,13 @@ void	ParticleDemoScreen::stop()
 void	ParticleDemoScreen::update(sf::Time frameTime)
 {
 	m_system.update(frameTime);
+	m_rainSystem.setCameraRect(octo::Application::getCamera().getRectangle());
+	m_rainSystem.update(frameTime);
 }
 
 void	ParticleDemoScreen::draw(sf::RenderTarget& render)const
 {
 	render.clear();
 	m_system.draw(render);
+	m_rainSystem.draw(render);
 }
