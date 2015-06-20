@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:32:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/20 05:49:35 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/20 21:37:32 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,18 @@ public:
 
 	void			setCameraRect(sf::FloatRect const& cameraRect);
 
-	/*!	Define the maximum of drops produced at each frame. */
-	void			setDropCountFactor(unsigned int factor);
+	/*!	Define the number of drops produced at each seconds.
+	 *
+	 *	Default is 20.	
+	 */
+	void			setDropPerSecond(unsigned int count);
 
-	/*!	Define the percent of chance to produce drops at each frame. */
-	void			setDropChance(unsigned int chance);
-
+	/*!	Define the velocity of each drop
+	 *
+	 *	\param velocity Vector speed
+	 *	Default is 0;2048
+	 */
 	void			setDropVelocity(sf::Vector2f const& velocity);
-
-	void			setDropGravity(float gravity);
 
 	void			update(sf::Time frameTime);
 private:
@@ -46,13 +49,13 @@ private:
 	std::mt19937				m_engine;
 	std::vector<unsigned int>	m_dropChances;
 	FDist						m_floatDistribution;
-	UIDist						m_dropChanceDistribution;
 	sf::FloatRect				m_cameraRect;
 	sf::Vector2f				m_cameraOffset;
 	sf::Vector2f				m_initialVelocity;
 	float						m_initialRotation;
-	unsigned int				m_dropChance;
-	unsigned int				m_dropCountFactor;
+	unsigned int				m_dropPerSeconds;
+	sf::Time					m_dropInterval;
+	sf::Time					m_dropTimer;
 };
 
 #endif
