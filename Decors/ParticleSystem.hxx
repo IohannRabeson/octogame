@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/19 00:55:39 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/19 18:43:50 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/21 01:35:11 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 template <class ... C>
 ParticleSystem<C...>::ParticleSystem() :
 	m_verticesCount(0u),
-	m_primitiveType(sf::Triangles)
+	m_primitiveType(sf::Triangles),
+	m_maxParticleCount(0u)
 {
 }
 
@@ -33,6 +34,7 @@ void	ParticleSystem<C...>::reset(Prototype const& prototype,
 	m_vertices.reset(new sf::Vertex[maxParticleCount * m_prototype.size()]);
 	m_verticesCount = maxParticleCount * m_prototype.size();
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_verticesCount);
+	m_maxParticleCount = maxParticleCount;
 }
 
 template <class ... C>
@@ -58,6 +60,12 @@ template <class ... C>
 void	ParticleSystem<C...>::clear()
 {
 	m_particles.clear();
+}
+
+template <class ... C>
+std::size_t	ParticleSystem<C...>::getCapacity()const
+{
+	return (m_maxParticleCount - m_particles.size());
 }
 
 template <class ... C>

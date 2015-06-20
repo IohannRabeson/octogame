@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/18 21:36:14 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/19 23:33:12 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/21 01:35:25 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,8 @@ public:
 
 	virtual void	update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+
+	std::size_t		getCapacity()const;
 private:
 	/*!	This methods is called each frame with each particle */
 	virtual void	updateParticle(sf::Time frameTime, Particle& particle) = 0;
@@ -133,6 +135,7 @@ private:
 	Prototype					m_prototype;
 	sf::PrimitiveType			m_primitiveType;
 	octo::VertexBuilder			m_builder;
+	std::size_t					m_maxParticleCount;
 };
 
 #include "ParticleSystem.hxx"
