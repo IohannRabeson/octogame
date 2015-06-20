@@ -12,7 +12,7 @@ public:
 
 	virtual void setup(ABiome& biome);
 	virtual void update(sf::Time frameTime,
-						DecorBuilder& builder,
+						octo::VertexBuilder& builder,
 						ABiome& biome);
 
 private:
@@ -29,14 +29,14 @@ private:
 						sf::Vector2f const & sizeCorner,
 						sf::Vector2f const & origin,
 						sf::Color const & color,
-						DecorBuilder& builder);
+						octo::VertexBuilder& builder);
 
 	void createSun(sf::Vector2f const & size,
 					sf::Vector2f const & sizeCorner,
 					sf::Vector2f const & origin,
 					std::size_t partCount,
 					sf::Color color,
-					DecorBuilder& builder);
+					octo::VertexBuilder& builder);
 };
 
 #endif

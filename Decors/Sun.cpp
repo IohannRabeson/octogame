@@ -1,6 +1,5 @@
 #include "Sun.hpp"
 #include "ABiome.hpp"
-#include "DecorBuilder.hpp"
 
 Sun::Sun(void) :
 	m_partCount(1u),
@@ -10,7 +9,7 @@ Sun::Sun(void) :
 {
 }
 
-void Sun::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, DecorBuilder& builder)
+void Sun::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
 	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
 	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
@@ -37,7 +36,7 @@ void Sun::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorn
 	builder.createQuad(cornerUpRight + origin, upMidRight + origin, downMidRight + origin, cornerDownRight + origin, color);
 }
 
-void Sun::createSun(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, std::size_t partCount, sf::Color color, DecorBuilder& builder)
+void Sun::createSun(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, std::size_t partCount, sf::Color color, octo::VertexBuilder& builder)
 {
 	color.a = 105;
 	sf::Vector2f tmpSize = size;
@@ -69,7 +68,7 @@ void Sun::setup(ABiome& biome)
 	m_partCount = biome.getSunPartCount();
 }
 
-void Sun::update(sf::Time frameTime, DecorBuilder& builder, ABiome&)
+void Sun::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
 	m_glowingTimer += frameTime;
 	if (m_glowingTimer > m_glowingTimerMax)
