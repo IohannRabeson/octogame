@@ -79,7 +79,6 @@ void PhysicsEngine::registerShape(CircleShape * shape)
 void PhysicsEngine::registerTile(PolygonShape * shape, int x,  int y)
 {
 	assert(m_shapes.size() < MaxShapes);
-	assert(m_tileShapes.size() < MaxShapes);
 	m_tileShapes.set(x, y, shape);
 }
 
