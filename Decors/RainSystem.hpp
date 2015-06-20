@@ -6,53 +6,70 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:32:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/20 05:49:35 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 01:09:22 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RAINSYSTEM_HPP
 # define RAINSYSTEM_HPP
 
-# include "ParticleSystem.hpp"
+# include <ParticleSystem.hpp>
 
 # include <random>
 
-class RainSystem : public ParticleSystem<>
+class RainSystem : public octo::ParticleSystem<sf::Vector2f>
 {
+	enum MyComponent
+	{
+		Velocity = User
+	};
 public:
 	RainSystem();
 
 	void			setCameraRect(sf::FloatRect const& cameraRect);
 
-	/*!	Define the maximum of drops produced at each frame. */
-	void			setDropCountFactor(unsigned int factor);
+	/*!	Define the number of drops produced at each seconds.
+	 *
+	 *	Default is 20.	
+	 */
+	void			setDropPerSecond(unsigned int count);
 
-	/*!	Define the percent of chance to produce drops at each frame. */
-	void			setDropChance(unsigned int chance);
+	/*!	Define the drop fall angle
+	 *	\param angle Angle of drop falls in degrees, 0 means the drops falls straight.
+	 */
+	void			setDropAngle(float angle);
 
-	void			setDropVelocity(sf::Vector2f const& velocity);
+	/*!	Define the drop falls speed.
+	 *	\param speed Falling speed
+	 */
+	void			setDropSpeed(float speed);
 
-	void			setDropGravity(float gravity);
+	/*!	Enlarge at left and right the emitter range.
+	 *	This methode is usefull if the camera is moving.
+	 *	\param margin Margin size, default is 0.
+	 */
+	void			setMargin(float margin);
 
 	void			update(sf::Time frameTime);
 private:
 	virtual void	updateParticle(sf::Time frameTime, Particle& particle);
 	virtual bool	isDeadParticle(Particle const& particle);
 	void			createDrop();
+	void			updateHorizontalOffset();
 private:
 	typedef std::uniform_real_distribution<float>		FDist;
 	typedef std::uniform_int_distribution<unsigned int>	UIDist;
 
 	std::mt19937				m_engine;
-	std::vector<unsigned int>	m_dropChances;
 	FDist						m_floatDistribution;
-	UIDist						m_dropChanceDistribution;
 	sf::FloatRect				m_cameraRect;
-	sf::Vector2f				m_cameraOffset;
 	sf::Vector2f				m_initialVelocity;
 	float						m_initialRotation;
-	unsigned int				m_dropChance;
-	unsigned int				m_dropCountFactor;
+	unsigned int				m_dropPerSeconds;
+	sf::Time					m_dropInterval;
+	sf::Time					m_dropTimer;
+	float						m_horizontalOffset;
+	float						m_margin;
 };
 
 #endif

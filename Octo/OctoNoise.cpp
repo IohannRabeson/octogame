@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 #define setup(i,b0,b1,r0,r1)\
-	t = vec[i] + N;\
+	t = vec[i] + NMERDE;\
 	b0 = ((int)t) & BM;\
 	b1 = (b0+1) & BM;\
 	r0 = t - (int)t;\

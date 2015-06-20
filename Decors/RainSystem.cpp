@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:41:14 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/20 05:55:10 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 01:07:42 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,72 +20,105 @@
 RainSystem::RainSystem() :
 	m_engine(std::time(0) ^ 0xB38421),
 	m_floatDistribution(0.f, 1.f),
-	m_dropChanceDistribution(0, 100),
-	m_cameraOffset(50.f, 50.f), 
 	m_initialRotation(0.f),
-	m_dropChance(0),
-	m_dropCountFactor(0)
+	m_dropPerSeconds(0),
+	m_horizontalOffset(0.f),
+	m_margin(0.f)
 {
 	sf::Vector2f const	DropSize{0.6f, 25.f};
 
 	reset({-DropSize, {DropSize.x, -DropSize.y}, DropSize, {-DropSize.x, DropSize.y}},
 		   sf::Quads, 1000u);
-	setDropChance(50);
-	setDropCountFactor(16);
-	setDropVelocity(sf::Vector2f(0.f, 2048.f));
+	setDropSpeed(2048.f);
+	setDropPerSecond(20);
 }
 
 void	RainSystem::setCameraRect(sf::FloatRect const& cameraRect)
 {
 	m_cameraRect = cameraRect;
+	updateHorizontalOffset();
 }
 
 void	RainSystem::update(sf::Time frameTime)
 {
-	for (auto i = 0u; i < m_dropCountFactor; ++i)
+	m_dropTimer += frameTime;
+	while (getCapacity() > 0 && m_dropTimer > m_dropInterval)
 	{
-		if (m_dropChanceDistribution(m_engine) < m_dropChance)
-			createDrop();
+		createDrop();
+		m_dropTimer -= m_dropInterval;
 	}
 	ParticleSystem::update(frameTime);
 }
 
-void	RainSystem::setDropCountFactor(unsigned int factor)
+void	RainSystem::setDropPerSecond(unsigned int count)
 {
-	m_dropCountFactor = factor;
+	m_dropPerSeconds = count;
+	m_dropInterval = sf::seconds(1.f / count);
 }
 
-void	RainSystem::setDropChance(unsigned int chance)
+void	RainSystem::setDropSpeed(float speed)
 {
-	m_dropChance = chance;
+	sf::Vector2f	normalized;
+	float			radRotation = 0.f;
+
+	m_initialVelocity.y = speed;
+	normalized = octo::normalized(m_initialVelocity);
+	radRotation = std::atan2(normalized.y, normalized.x) - (octo::PiDiv2);
+	m_initialRotation = octo::rad2Deg(radRotation);
+	updateHorizontalOffset();
 }
 
-void	RainSystem::setDropVelocity(sf::Vector2f const& velocity)
+void	RainSystem::setDropAngle(float angle)
 {
-	sf::Vector2f	normalized = octo::normalized(velocity);
+	float const	angleRad = octo::deg2Rad(angle);
 
-	m_initialVelocity = velocity;
-	m_initialRotation = std::atan2(normalized.y, normalized.x) * (180.f / M_PI) - 90;
-	std::cout << m_initialRotation << std::endl;
+	m_initialVelocity.x = m_initialVelocity.y * std::tan(angleRad);
+	m_initialRotation = -angle;
+	updateHorizontalOffset();
+}
+
+void	RainSystem::setMargin(float margin)
+{
+	m_margin = margin;
 }
 
 void	RainSystem::updateParticle(sf::Time frameTime, Particle& particle)
 {
-	std::get<Component::Position>(particle) += m_initialVelocity * frameTime.asSeconds();
+	std::get<Component::Position>(particle) += std::get<Velocity>(particle) * frameTime.asSeconds();
 }
 
 bool	RainSystem::isDeadParticle(Particle const& particle)
 {
-	float				bottom = m_cameraRect.top + m_cameraRect.height + m_cameraOffset.y;
+	static float const	BottomMargin{64.f};
+	float				bottom = m_cameraRect.top + m_cameraRect.height + BottomMargin;
 
 	return (std::get<Component::Position>(particle).y > bottom);
 }
 
 void			RainSystem::createDrop()
 {
+	static float const	TopMargin{64.f};
 	sf::Vector2f		pos;
 
-	pos.x = m_cameraRect.left - m_cameraOffset.x + m_floatDistribution(m_engine) * (m_cameraRect.width + m_cameraOffset.x);
-	pos.y = m_cameraRect.top - m_cameraOffset.y * m_floatDistribution(m_engine);
-	emplace(sf::Color(180, 180, 180), pos, m_initialRotation);
+	if (m_horizontalOffset < 0.f)
+	{
+		pos.x = m_cameraRect.left + m_horizontalOffset - m_margin +
+				m_floatDistribution(m_engine) * (m_cameraRect.width - m_horizontalOffset + m_margin * 2.f);
+	}
+	else
+	{
+		pos.x = m_cameraRect.left - m_margin +
+				m_floatDistribution(m_engine) *	(m_cameraRect.width + m_horizontalOffset + m_margin * 2.f);
+	}
+	pos.y = m_cameraRect.top - TopMargin * m_floatDistribution(m_engine);
+	emplace(sf::Color(180, 180, 180), pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
 }
+
+void	RainSystem::updateHorizontalOffset()
+{
+	if (std::fabs(m_initialRotation) < std::numeric_limits<float>::epsilon())
+		m_horizontalOffset = 0.f;
+	else
+		m_horizontalOffset = std::tan(octo::deg2Rad(m_initialRotation)) * m_cameraRect.height;
+}
+
