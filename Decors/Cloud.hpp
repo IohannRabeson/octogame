@@ -1,37 +1,55 @@
 #ifndef CLOUD_HPP
 # define CLOUD_HPP
 
-# include "Decor.hpp"
-# include <vector>
-# include <cmath>
+# include "ADecor.hpp"
+# include <VertexBuilder.hpp>
+# include <SFML/Graphics/Color.hpp>
 
-class Cloud : public Decor
+class Cloud : public ADecor
 {
-private:
-	struct OctogonValue
-	{
-		sf::Vector2f			size;
-		sf::Vector2f			origin;
-		float					sizeUp;
-		float					sizeDown;
-		float					sizeRec;
-	};
-
-	int							mn_coundOctogon;
-	std::vector<OctogonValue>	m_values;
-	int							mn_alpha;
+struct OctogonValue
+{
+	sf::Vector2f			size;
+	sf::Vector2f			origin;
+	float					sizeUp;
+	float					sizeDown;
+	float					sizeRec;
+};
 
 public:
 	Cloud(void);
-	virtual ~Cloud(void);
+	virtual ~Cloud(void) = default;
 
-	void init(Biome * p_biome);
+	virtual void	setup(ABiome& biome);
+	virtual void	update(sf::Time frameTime,
+						   octo::VertexBuilder& builder,
+						   ABiome& biome);
 
-	void createOctogon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec);
-	void createCloud(void);
-	void randomDecor(void);
+	float randomFloat(float min, float max);
 
-	virtual void update(float pf_deltatime);
+private:
+	sf::Vector2f				m_size;
+	sf::Color					m_color;
+	std::size_t					m_partCount;
+	std::vector<OctogonValue>	m_values;
+	float						m_animation;
+	sf::Time					m_lifeTime;
+
+	//TODO: Change this
+	int							m_alpha;
+
+	void createOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & origin,
+						sf::Color color,
+						float const sizeUp,
+						float const sizeDown,
+						float const sizeRec,
+						octo::VertexBuilder& builder);
+
+	void createCloud(std::vector<OctogonValue> const & values,
+					sf::Vector2f const & originCloud,
+					sf::Color const & color,
+					octo::VertexBuilder& builder);
 };
 
 #endif

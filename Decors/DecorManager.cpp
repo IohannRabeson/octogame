@@ -12,6 +12,7 @@
 
 #include "DecorManager.hpp"
 #include "ADecor.hpp"
+#include "Cloud.hpp"
 
 #include <VertexBuilder.hpp>
 
@@ -91,5 +92,5 @@ void	DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	DecorManager::registerDecors()
 {
-
+	m_factory.registerCreator<Cloud>(DecorTypes::Cloud);
 }
