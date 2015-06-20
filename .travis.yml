@@ -5,15 +5,22 @@ sudo: required
 compiler:
  - clang
 
+env:
+ - MODE=release
+ - MODE=debug
+
+matrix:
+  fast_finish: true
+
 before_install:
- - chmod u=rx ./scripts/linux/*.sh ./scripts/commons/*.sh
+ - chmod u=rx ./scripts/travis/*.sh
 
 install:
- - sudo ./scripts/linux/install_compiler.sh
- - sudo ./scripts/linux/install_cppcheck.sh
- - sudo ./scripts/commons/install_sfml.sh
+ - sudo ./scripts/travis/install_compiler.sh
+ - if [ "$MODE" = "debug" ]; then sudo ./scripts/travis/install_cppcheck.sh; fi
+ - sudo ./scripts/travis/install_sfml.sh
 
 script:
- - ./scripts/linux/run_static_analysis.sh
- - make complete
+ - if [ "$MODE" = "debug" ]; then make static-check; fi
+ - make complete RUN_DEPEND=off
 
