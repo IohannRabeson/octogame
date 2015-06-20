@@ -9,15 +9,18 @@ env:
  - MODE=release
  - MODE=debug
 
+matrix:
+  fast_finish: true
+
 before_install:
  - chmod u=rx ./scripts/travis/*.sh
 
 install:
  - sudo ./scripts/travis/install_compiler.sh
- - sudo ./scripts/travis/install_cppcheck.sh
+ - if [ "$MODE" = "debug" ]; then sudo ./scripts/travis/install_cppcheck.sh; fi
  - sudo ./scripts/travis/install_sfml.sh
 
 script:
- - make static-check
+ - if [ "$MODE" = "debug" ]; then make static-check; fi
  - make complete RUN_DEPEND=off MODE=$MODE
 
