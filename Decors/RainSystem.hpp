@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:32:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/21 01:26:43 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/21 19:55:03 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,21 @@ public:
 	 */
 	void			setDropPerSecond(unsigned int count);
 
+	/*!	Define the drop fall angle
+	 *	\param angle Angle of drop falls in degrees, 0 means the drops falls straight.
+	 */
 	void			setDropAngle(float angle);
-	void			setDropGravity(float gravity);
+
+	/*!	Define the drop falls speed.
+	 *	\param speed Falling speed
+	 */
+	void			setDropSpeed(float speed);
+
+	/*!	Enlarge at left and right the emitter range.
+	 *	This methode is usefull if the camera is moving.
+	 *	\param margin Margin size, default is 0.
+	 */
+	void			setMargin(float margin);
 
 	void			update(sf::Time frameTime);
 private:
@@ -48,7 +61,6 @@ private:
 	typedef std::uniform_int_distribution<unsigned int>	UIDist;
 
 	std::mt19937				m_engine;
-	std::vector<unsigned int>	m_dropChances;
 	FDist						m_floatDistribution;
 	sf::FloatRect				m_cameraRect;
 	sf::Vector2f				m_initialVelocity;
@@ -57,6 +69,7 @@ private:
 	sf::Time					m_dropInterval;
 	sf::Time					m_dropTimer;
 	float						m_horizontalOffset;
+	float						m_margin;
 };
 
 #endif
