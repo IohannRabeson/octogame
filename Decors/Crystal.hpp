@@ -2,6 +2,7 @@
 # define CRYSTAL_HPP
 
 # include "ADecor.hpp"
+# include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
 class Crystal : public ADecor
@@ -12,7 +13,7 @@ public:
 
 	virtual void	setup(ABiome& biome);
 	virtual void	update(sf::Time frameTime,
-						   DecorBuilder& builder,
+						   octo::VertexBuilder& builder,
 						   ABiome& biome);
 
 private:
@@ -42,11 +43,11 @@ private:
 								sf::Vector2f const & origin,
 								float const angle,
 								sf::Color color,
-								DecorBuilder & builder);
+								octo::VertexBuilder & builder);
 
 	void createCrystal(std::vector<CrystalValue> const & values,
 						sf::Vector2f const & origin,
-						DecorBuilder & builder);
+						octo::VertexBuilder & builder);
 
 	static void rotateVec(sf::Vector2f & vector,
 							float const cosAngle,

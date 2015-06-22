@@ -1,5 +1,4 @@
 #include "Crystal.hpp"
-#include "DecorBuilder.hpp"
 #include "ABiome.hpp"
 
 //TODO: Other solutions?
@@ -18,7 +17,7 @@ Crystal::Crystal() :
 {
 }
 
-sf::Vector2f Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & origin, float const angle, sf::Color color, DecorBuilder & builder)
+sf::Vector2f Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & origin, float const angle, sf::Color color, octo::VertexBuilder & builder)
 {
 	sf::Vector2f up(0.0f, -size.x - size.y);
 	sf::Vector2f upLeft(-size.x, -size.y);
@@ -89,7 +88,7 @@ sf::Vector2f Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f cons
 	return up;
 }
 
-void Crystal::createCrystal(std::vector<CrystalValue> const & values, sf::Vector2f const & origin, DecorBuilder & builder)
+void Crystal::createCrystal(std::vector<CrystalValue> const & values, sf::Vector2f const & origin, octo::VertexBuilder & builder)
 {
 	for (unsigned int i = 0; i < m_partCount; i++)
 		m_up[i] = createPolygon(values[i].size * m_animation, origin, values[i].angle, values[i].color, builder);
@@ -112,7 +111,7 @@ void Crystal::setup(ABiome& biome)
 	}
 }
 
-void Crystal::update(sf::Time frameTime, DecorBuilder& builder, ABiome&)
+void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
 	sf::Vector2f const & position = getPosition();
 	//TODO: Test this with terrain
