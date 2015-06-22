@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 17:23:00 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/13 17:45:01 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/23 01:24:15 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include "ADecor.hpp"
 
 # include <Math.hpp>
+# include <VertexBuilder.hpp>
 
 # include <list>
 
@@ -67,9 +68,9 @@ class Lightning : public ADecor
 {
 public:
 	virtual void	setup(ABiome& biome);
-	virtual void	update(sf::Time frameTime, DecorBuilder& builder, ABiome& biome);
+	virtual void	update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome);
 private:
-	void			createSegment(Segment const& segment, DecorBuilder& builder)const;
+	void			createSegment(Segment const& segment, octo::VertexBuilder& builder)const;
 	void			fractalizeSegments(std::list<Segment>& segments, std::size_t count);
 private:
 	std::list<Segment>						m_segments;

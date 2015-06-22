@@ -48,3 +48,9 @@ callgrind.*
 
 # Hatedepend files
 .modifications
+
+# kdiff3 files
+*.orig
+
+# personnal files
+TODO

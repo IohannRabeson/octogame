@@ -6,12 +6,12 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 17:25:02 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/15 16:07:11 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/23 01:24:31 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Lightning.hpp"
-#include "DecorBuilder.hpp"
+#include "VertexBuilder.hpp"
 
 #include <list>
 
@@ -33,7 +33,7 @@ void	Lightning::setup(ABiome& biome)
 	m_segments = std::move(segments);
 }
 
-void	Lightning::update(sf::Time frameTime, DecorBuilder& builder, ABiome& biome)
+void	Lightning::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	for (auto const& segment : m_segments)
 	{
@@ -44,7 +44,7 @@ void	Lightning::update(sf::Time frameTime, DecorBuilder& builder, ABiome& biome)
 	(void)biome;
 }
 
-void	Lightning::createSegment(Segment const& segment, DecorBuilder& builder)const
+void	Lightning::createSegment(Segment const& segment, octo::VertexBuilder& builder)const
 {
 	sf::Vector2f	p = perpendicular(segment.direction());
 
