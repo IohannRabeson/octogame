@@ -12,6 +12,7 @@
 
 #include "DecorManager.hpp"
 #include "ADecor.hpp"
+#include "Crystal.hpp"
 
 #include <VertexBuilder.hpp>
 
@@ -91,5 +92,5 @@ void	DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	DecorManager::registerDecors()
 {
-
+	m_factory.registerCreator<Crystal>(DecorTypes::Crystal);
 }
