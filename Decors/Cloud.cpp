@@ -61,10 +61,9 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 
 void Cloud::setup(ABiome& biome)
 {
-	//m_size = sf::Vector2f(randomFloat(200.f, 300.f), randomFloat(400.f, 600.f));//biome.getCloudSize();
 	m_size = biome.getCloudSize();
 	m_color = biome.getCloudColor();
-	m_partCount = 6;//biome.getCloudPartCount();
+	m_partCount = biome.getCloudPartCount();
 	m_values.resize(m_partCount);
 	//TODO: Dont forget to add random to timer for un syncronize decors
 	//TO DO IN ALL CLASS
