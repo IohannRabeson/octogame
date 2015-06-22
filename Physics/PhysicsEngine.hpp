@@ -131,6 +131,7 @@ private:
 	bool computeCollision(PolygonShape * polygon, CircleShape * circle);
 	bool computeCollision(CircleShape * circleA, CircleShape * circleB);
 	bool findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB);
+	bool findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB, sf::Vector2f const & velocity);
 
 	// TODO: use smart ptr
 	IContactListener *		m_contactListener;

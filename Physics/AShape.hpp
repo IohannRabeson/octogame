@@ -137,6 +137,9 @@ public:
 	/*! Get the position */
 	inline sf::Vector2f const & getPosition(void) const { return m_position; }
 
+	/*! Get the oldVelocity */
+	inline sf::Vector2f const & getOldVelocity(void) const { return m_oldVelocity; }
+
 	/*! Get the rotation */
 	inline float getRotation(void) const { return m_rotation; }
 
@@ -198,6 +201,7 @@ private:
 	sf::Vector2f			m_velocity;
 	sf::Vector2f			m_origin;
 	sf::Vector2f			m_position;
+	sf::Vector2f			m_oldVelocity;
 	float				m_rotation;
 	bool				m_sleep;
 	bool				m_applyGravity;

@@ -2,12 +2,14 @@
 # define PHYSICSMAPSCREEN_HPP
 
 # include <AbstractState.hpp>
+# include <GraphicsListeners.hpp>
 # include "PhysicsEngine.hpp"
 # include "MapManager.hpp"
 
 class ConvexShape;
+class CircleShape;
 
-class PhysicsMapScreen : public octo::AbstractState
+class PhysicsMapScreen : public octo::AbstractState, public octo::IKeyboardListener
 {
 public:
 	PhysicsMapScreen(void);
@@ -23,6 +25,11 @@ private:
 	MapManager	m_mapManager;
 	PhysicsEngine &	m_engine;
 	ConvexShape *	m_shape;
+	CircleShape *	m_circle;
+	bool		go;
+
+	virtual bool onPressed(sf::Event::KeyEvent const & event);
+	virtual bool onReleased(sf::Event::KeyEvent const & ) {return false;}
 
 };
 
