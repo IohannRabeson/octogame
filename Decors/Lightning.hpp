@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 17:23:00 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/23 14:21:02 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/23 15:01:19 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <VertexBuilder.hpp>
 
 # include <list>
+# include <memory>
+# include <vector>
 
 # include <SFML/Graphics/RenderTarget.hpp>
 
