@@ -137,7 +137,7 @@ void Tree::setup(ABiome& biome)
 	m_size = biome.getTreeSize();
 	m_color = biome.getTreeColor();
 
-	std::size_t angleCount = pow(2, m_depth) + 1;
+	std::size_t angleCount = std::pow(2, m_depth) + 1;
 	m_refAngle.resize(angleCount);
 	for (std::size_t i = 0u; i < angleCount; i++)
 	{
@@ -152,7 +152,7 @@ void Tree::setup(ABiome& biome)
 
 	//TODO: Use palette
 	//m_isLeaf = biome.getTreeLeafBool(); // m_isLeaf = biome.getTemperature() > 0 ? true : false;
-	m_leaf.resize(pow(2, m_depth) + 1);
+	m_leaf.resize(std::pow(2, m_depth) + 1);
 	m_leafColor = sf::Color(32, 243, 240);//biome.getTreeLeafColor();
 }
 
