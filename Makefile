@@ -11,8 +11,8 @@ LIB_DIRS = $(CORE_DIR)
 LIBS = octo sfml-system sfml-window sfml-graphics sfml-audio
 
 # sources
-SRC = $(SRC_PHYSICS)										\
-	  $(SRC_STATES)									\
+SRC = $(SRC_PHYSICS)									\
+	  $(SRC_STATES)										\
 	  $(SRC_FIREFLY)									\
 	  $(SRC_MAP)										\
 	  $(SRC_MANAGERS)									\
@@ -31,6 +31,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/PhysicsMapScreen.cpp			\
 				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/LightningDemoScreen.cpp			\
+				Screens/ParticleDemoScreen.cpp			\
 				Screens/StateGame.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
@@ -51,7 +52,8 @@ SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp					\
-				Decors/Lightning.cpp
+				Decors/Lightning.cpp					\
+				Decors/RainSystem.cpp
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp						\
 				Physics/RectangleShape.cpp						\
