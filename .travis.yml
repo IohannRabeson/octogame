@@ -22,5 +22,5 @@ install:
 
 script:
  - if [ "$MODE" = "debug" ]; then make static-check; fi
- - make complete RUN_DEPEND=off
+ - make complete RUN_DEPEND=off MODE=$MODE
 
