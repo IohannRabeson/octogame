@@ -6,13 +6,12 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 03:39:50 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/17 02:18:34 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/23 02:35:51 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "DecorManager.hpp"
 #include "ADecor.hpp"
-#include "Lightning.hpp"
 
 #include <VertexBuilder.hpp>
 
@@ -92,5 +91,4 @@ void	DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	DecorManager::registerDecors()
 {
-	m_factory.registerCreator<Lightning>(DecorTypes::Lightning);
 }

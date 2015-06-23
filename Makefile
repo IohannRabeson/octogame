@@ -28,8 +28,9 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/AnimatedSpriteDemoScreen.cpp	\
 				Screens/AudioDemoScreen.cpp				\
 				Screens/EngineScreen.cpp				\
-				Screens/PhysicsMapScreen.cpp				\
+				Screens/PhysicsMapScreen.cpp			\
 				Screens/DecorManagerDemoScreen.cpp		\
+				Screens/LightningDemoScreen.cpp			\
 				Screens/StateGame.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
