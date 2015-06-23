@@ -1,147 +1,102 @@
 #include "Star.hpp"
-#include "Map.hpp"
-#include "ResourceDefinitions.hpp"
 #include <cmath>
-#include <ResourceManager.hpp>
-#include <Application.hpp>
 
 Star::Star() :
-	Decor(),
-	mf_shineTimer(0.f),
-	mf_maxShineTime(0.f)
+	m_liveTime(sf::Time::Zero),
+	m_animation(1.f)
 {
 }
 
-Star::~Star()
+void Star::createStar(sf::Vector2f const & size, sf::Vector2f const & sizeHeart, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
+	sf::Vector2f left(-size.x / 2.f - sizeHeart.x, 0.f);
+	sf::Vector2f right(size.x / 2.f + sizeHeart.x, 0.f);
+	sf::Vector2f up(0.f, -size.y / 2.f - sizeHeart.y);
+	sf::Vector2f down(0.f, size.y / 2.f + sizeHeart.y);
+	sf::Vector2f heartLeftUp(-sizeHeart.x, -sizeHeart.y);
+	sf::Vector2f heartRightUp(sizeHeart.x, -sizeHeart.y);
+	sf::Vector2f heartLeftDown(-sizeHeart.x, sizeHeart.y);
+	sf::Vector2f heartRightDown(sizeHeart.x, sizeHeart.y);
+
+	builder.createTriangle(up + origin, heartLeftUp + origin, heartRightUp + origin, color);
+	builder.createTriangle(down + origin, heartLeftDown + origin, heartRightDown + origin, color);
+	builder.createTriangle(left + origin, heartLeftUp + origin, heartLeftDown + origin, color);
+	builder.createTriangle(right + origin, heartRightUp + origin, heartRightDown + origin, color);
+	builder.createQuad(heartLeftUp + origin, heartRightUp + origin, heartRightDown + origin, heartLeftDown + origin, color);
 }
 
-void Star::createOneStar(sf::Vector2f p_size, sf::Vector2f p_sizeHeart, float p_angle, sf::Color p_color)
+void Star::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	mn_countVertex = 0u;
+	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
+	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
+	sf::Vector2f cornerUpLeft(-size.x + sizeCorner.x, -size.y + sizeCorner.y);
+	sf::Vector2f cornerUpRight(size.x - sizeCorner.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidRight(size.x, -size.y + sizeCorner.y);
+	sf::Vector2f downLeft(-size.x + sizeCorner.x, size.y);
+	sf::Vector2f downRight(size.x - sizeCorner.x, size.y);
+	sf::Vector2f cornerDownLeft(-size.x + sizeCorner.x, size.y - sizeCorner.y);
+	sf::Vector2f cornerDownRight(size.x - sizeCorner.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
 
-	sf::Vector2f left(-p_size.x / 2.f - p_sizeHeart.x, 0.f);
-	sf::Vector2f right(p_size.x / 2.f + p_sizeHeart.x, 0.f);
-	sf::Vector2f up(0.f, -p_size.y / 2.f - p_sizeHeart.y);
-	sf::Vector2f down(0.f, p_size.y / 2.f + p_sizeHeart.y);
-	sf::Vector2f heartLeftUp(-p_sizeHeart.x, -p_sizeHeart.y);
-	sf::Vector2f heartRightUp(p_sizeHeart.x, -p_sizeHeart.y);
-	sf::Vector2f heartLeftDown(-p_sizeHeart.x, p_sizeHeart.y);
-	sf::Vector2f heartRightDown(p_sizeHeart.x, p_sizeHeart.y);
+	sf::Color originColor = color;
+	originColor.a = 100;
+	sf::Color transparent = color;
+	transparent.a = 0;
 
-	float angle = p_angle * PI / 180.f;
-	float cosA = cos(angle);
-	float sinA = sin(angle);
+	builder.createVertex(upLeft + origin, transparent);
+	builder.createVertex(upRight + origin, transparent);
+	builder.createVertex(origin, originColor);
 
-	rotateVec(&left, cosA, sinA);
-	rotateVec(&right, cosA, sinA);
-	rotateVec(&up, cosA, sinA);
-	rotateVec(&down, cosA, sinA);
-	rotateVec(&heartLeftUp, cosA, sinA);
-	rotateVec(&heartRightUp, cosA, sinA);
-	rotateVec(&heartLeftDown, cosA, sinA);
-	rotateVec(&heartRightDown, cosA, sinA);
+	builder.createVertex(upRight + origin, transparent);
+	builder.createVertex(upMidRight + origin, transparent);
+	builder.createVertex(origin, originColor);
 
-	createTriangle(up, heartLeftUp, heartRightUp, m_origin, p_color);
-	createTriangle(down, heartLeftDown, heartRightDown, m_origin, p_color);
-	createTriangle(left, heartLeftUp, heartLeftDown, m_origin, p_color);
-	createTriangle(right, heartRightUp, heartRightDown, m_origin, p_color);
-	createRectangle(heartLeftUp, heartRightUp, heartRightDown, heartLeftDown, m_origin, p_color);
+	builder.createVertex(upMidRight + origin, transparent);
+	builder.createVertex(downMidRight + origin, transparent);
+	builder.createVertex(origin, originColor);
 
-	// Create light
-	float radius = p_size.x / 3.f;
-	m_light.setRadius(radius);
-	m_light.setOrigin(sf::Vector2f(radius, radius));
-	m_light.setPosition(m_origin);
+	builder.createVertex(downMidRight + origin, transparent);
+	builder.createVertex(downRight + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(downRight + origin, transparent);
+	builder.createVertex(downLeft + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(downLeft + origin, transparent);
+	builder.createVertex(downMidLeft + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(downMidLeft + origin, transparent);
+	builder.createVertex(upMidLeft + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(upMidLeft + origin, transparent);
+	builder.createVertex(upLeft + origin, transparent);
+	builder.createVertex(origin, originColor);
 }
 
-void Star::randomDecor(void)
+void Star::setup(ABiome& biome)
 {
-	Decor::randomDecor();
-	me_currentState = e_state_grow;
-
-	mn_maxTriangle = 6;
-	mf_maxShineTime = randomRange(m_biome->m_star.mn_minLive, m_biome->m_star.mn_maxLive);
-
-	allocateVertex(mn_maxTriangle * 3u);
-
-	m_size = sf::Vector2f(randomRange(m_biome->m_star.mn_minSizeX, m_biome->m_star.mn_maxSizeX), randomRange(m_biome->m_star.mn_minSizeY, m_biome->m_star.mn_maxSizeY));
+	(void)biome;
+	//TODO: Add this to biome
+	m_size = sf::Vector2f(200,200);//biome.getStarSize();
+	m_color = sf::Color(255,255,255);//biome.getStarColor();
 	m_sizeHeart = sf::Vector2f(m_size.x / 50.f, m_size.x / 50.f);
+	//m_liveTime = biome.getStarLifeTime();
 
-	// Init light
-	octo::ResourceManager&	resources = octo::Application::getResourceManager();
-	m_light.setTexture(&resources.getTexture(FIREFLY01_PNG));
+	m_glowSize = m_size;
+	m_glowSizeCorner = m_glowSize / 2.f;
 }
 
-void Star::setOrigin(sf::Vector2f p_origin)
+void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	m_origin = p_origin;
+	(void)frameTime;
+
+	sf::Vector2f const & position = getPosition();
+	createStar(m_size, m_sizeHeart, position, m_color, builder);
+	createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, m_color, builder);
 }
 
-void Star::init(Biome * p_biome)
-{
-	Decor::init(p_biome);
-	mf_growSpeed = 2.f;
-	mf_dieSpeed = 2.f;
-	randomDecor();
-	createOneStar(m_size, m_sizeHeart, 0.0f, m_color);
-}
-
-void Star::computeStates(float pf_deltatime)
-{
-	switch (me_currentState)
-	{
-		case e_state_grow:
-		{
-			mf_mouvement += pf_deltatime * mf_growSpeed;
-			if (mf_mouvement >= 1.0f)
-				me_currentState = e_state_die;
-			break;
-		}
-		case e_state_die:
-		{
-			mf_mouvement -= pf_deltatime * mf_dieSpeed;
-			mf_dieTimer = 0.f;
-			break;
-		}
-		case e_state_stop:
-		{
-			mf_mouvement = 0.f;
-			break;
-		}
-		default:
-			break;
-	}
-}
-
-void Star::shine(float pf_deltatime)
-{
-	computeStates(pf_deltatime);
-	mf_shineTimer += pf_deltatime;
-	if (me_currentState == e_state_die && mf_mouvement <= 0.f)
-		me_currentState = e_state_stop;
-	if (me_currentState == e_state_stop && mf_shineTimer >= mf_maxShineTime)
-	{
-		randomDecor();
-		mf_shineTimer = 0.f;
-	}
-	if (me_currentState != e_state_stop)
-		createOneStar(sf::Vector2f(m_size.x * mf_mouvement, m_size.y * mf_mouvement), sf::Vector2f(m_sizeHeart.x * mf_mouvement, m_sizeHeart.y * mf_mouvement), 0.f, sf::Color(255,255,255, 50));
-}
-
-void Star::update(float pf_deltatime)
-{
-	Decor::update(pf_deltatime);
-
-	if (me_currentState != e_state_stop)
-		createOneStar(sf::Vector2f(m_size.x * mf_mouvement, m_size.y * mf_mouvement), sf::Vector2f(m_sizeHeart.x * mf_mouvement, m_sizeHeart.y * mf_mouvement), 0.f, sf::Color(255,255,255, 50));
-}
-
-void Star::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
-{
-	if (me_currentState != e_state_stop)
-	{
-		Decor::draw(p_target, p_states);
-		p_target.draw(m_light);
-	}
-}
