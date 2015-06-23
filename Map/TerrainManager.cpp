@@ -150,11 +150,10 @@ void TerrainManager::swapMap(void)
 	defineTransition();
 }
 
-void TerrainManager::updateTransition(float pf_deltatime)
+void TerrainManager::updateTransition(float)
 {
 	if (mf_transitionTimer > mf_transitionTimerMax)
 	{
-		pf_deltatime = mf_transitionTimer - mf_transitionTimerMax;
 		mf_transitionTimer = mf_transitionTimerMax;
 	}
 	float transition = mf_transitionTimer / mf_transitionTimerMax;
