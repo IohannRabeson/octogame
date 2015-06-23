@@ -8,7 +8,7 @@ PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_engine(PhysicsEngine::getInstance()),
 	m_shape(nullptr),
 	m_circle(nullptr),
-	go(false)
+	m_frameByFrame(false)
 {}
 
 void	PhysicsMapScreen::start()
@@ -55,7 +55,7 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 	float speed = 100.f * deltatime.asSeconds();
 
 	m_mapManager.update(deltatime.asSeconds());
-	if (go)
+	if (m_frameByFrame)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
 			m_shape->addVelocity(0.f, -speed);
@@ -67,7 +67,7 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 			m_shape->addVelocity(-speed, 0.f);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 			m_shape->rotate(3.14f * deltatime.asSeconds());
-		go = false;
+		m_frameByFrame = false;
 		m_engine.update(deltatime.asSeconds());
 	}
 }
@@ -75,7 +75,7 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const & event)
 {
 	if (event.code == sf::Keyboard::Space)
-		go = true;
+		m_frameByFrame = true;
 	return true;
 }
 

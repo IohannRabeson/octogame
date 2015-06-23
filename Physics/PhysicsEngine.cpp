@@ -254,6 +254,7 @@ void PhysicsEngine::narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t
 		for (std::size_t j = 0u; j < m_iterationCount; j++)
 		{
 			pairs[i].m_shapeB->addVelocity(vel);
+			//TODO: if a shape will collide with a lot of tile, a AABB recheck could be efficient
 			if (computeTileCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
 			{
 				if ((m_mtv.y <= -0.00000001f || m_mtv.y >= 0.00000001f) && (m_mtv.x <= -0.00000001f || m_mtv.x >= 0.00000001f))

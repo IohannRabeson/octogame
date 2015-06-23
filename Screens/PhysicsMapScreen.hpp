@@ -26,7 +26,7 @@ private:
 	PhysicsEngine &	m_engine;
 	ConvexShape *	m_shape;
 	CircleShape *	m_circle;
-	bool		go;
+	bool		m_frameByFrame;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 	virtual bool onReleased(sf::Event::KeyEvent const & ) {return false;}
