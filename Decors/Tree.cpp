@@ -1,7 +1,6 @@
 #include "Tree.hpp"
 #include "ABiome.hpp"
-
-#define PI  3.14159265358979323846f
+#include <Math.hpp>
 
 Tree::Tree(void) :
 	m_depth(0u),
@@ -76,11 +75,11 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 
 	// Compute left branch
 	float rectangleAngleLeft = angle - refAngle;
-	float radianLeft = rectangleAngleLeft * PI / 180.f;
+	float radianLeft = rectangleAngleLeft * octo::Deg2Rad;
 	float cosLeft = cos(radianLeft);
 	float sinLeft = sin(radianLeft);
 
-	float leftSizeX = cos(refAngle * PI / 180.f) * size.x;
+	float leftSizeX = cos(refAngle * octo::Deg2Rad) * size.x;
 	float leftSizeY = leftSizeX * size.y / size.x;
 	leftSizeY *= m_animation;
 	sf::Vector2f leftSize(leftSizeX, leftSizeY);
@@ -90,11 +89,11 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 
 	// Compute right branch
 	float rectangleAngleRight = angle + 90.f - refAngle;
-	float radianRight = rectangleAngleRight * PI / 180.f;
+	float radianRight = rectangleAngleRight * octo::Deg2Rad;
 	float cosRight = cos(radianRight);
 	float sinRight = sin(radianRight);
 
-	float rightSizeX = cos((90.0f - refAngle) * PI / 180.f) * size.x;
+	float rightSizeX = cos((90.0f - refAngle) * octo::Deg2Rad) * size.x;
 	float rightSizeY = (rightSizeX * size.y / size.x);
 	rightSizeY *= m_animation;
 	sf::Vector2f rightSize(rightSizeX, rightSizeY);

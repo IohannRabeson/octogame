@@ -54,6 +54,7 @@ public:
 	virtual bool			canCreateStar();
 
 	virtual sf::Vector2f 	getSunSize();
+	virtual unsigned int	getSunPartCount();
 	virtual sf::Color		getSunColor();
 	virtual bool			canCreateSun();
 
@@ -89,6 +90,7 @@ public:
 	void					setCanCreateStar(bool canCreate);
 
 	void					setSunSize(sf::Vector2f const& size);
+	void					setSunPartCount(unsigned int count);
 	void					setSunColor(sf::Color const& color);
 	void					setCanCreateSun(bool canCreate);
 
@@ -124,6 +126,7 @@ private:
 	bool					m_canCreateStar;
 
 	sf::Vector2f			m_sunSize;
+	unsigned int			m_sunPartCount;
 	sf::Color				m_sunColor;
 	bool					m_canCreateSun;
 
