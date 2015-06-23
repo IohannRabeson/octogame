@@ -5,7 +5,7 @@
 # include <vector>
 # include <memory>
 # include "ShapeBuilder.hpp"
-# include "Array2D.hpp"
+# include <Array2D.hpp>
 
 class AShape;
 class PolygonShape;
@@ -30,10 +30,22 @@ public:
 	inline void setGravity(sf::Vector2f const & gravity) { m_gravity = gravity; }
 	inline sf::Vector2f const & getGravity(void) const { return m_gravity; }
 
+	/*! Set the count of iteration
+	 * The iteration count is only used to compute collision between shapes and tiles
+	 * Such precision isn't needed between others polygon
+	 *
+	 * \param iterationCount The count of iteration
+	 */
+	inline void setIterationCount(std::size_t iterationCount) { m_iterationCount = iterationCount; }
+	inline std::size_t getIterationCount(void) const { return m_iterationCount; }
+
+	inline void setTileCollision(bool tileCollision) { m_tileCollision = tileCollision; }
+	inline bool getTileCollision(void) const { return m_tileCollision; }
+
 	// Used by the ShapeBuilder to register the shape */
 	void registerShape(PolygonShape * shape);
 	void registerShape(CircleShape * shape);
-	void registerTile(PolygonShape * shape, int x, int y);
+	void registerTile(PolygonShape * shape, std::size_t x, std::size_t y);
 
 	void update(float deltatime);
 
@@ -61,43 +73,45 @@ private:
 	template<class T, class U>
 	struct Pair
 	{
-		T		m_shapeA = nullptr;
-		U		m_shapeB = nullptr;
-		bool		m_isColliding = false;
+		T				m_shapeA;
+		U				m_shapeB;
 	};
 
-	static std::unique_ptr<PhysicsEngine>			m_instance;
+	static constexpr std::size_t						MaxShapes = 1000u;
 
-	static constexpr std::size_t	MaxShapes = 1000u;
+	static std::unique_ptr<PhysicsEngine>				m_instance;
+
 	// Vectors containing all the shapes
-	std::vector<AShape *>					m_shapes;
+	std::vector<AShape *>								m_shapes;
 
 	// Vectors containing shapes by type to improve performance during collision detection
-	std::vector<CircleShape *>				m_circleShapes;
-	std::vector<PolygonShape *>				m_polygonShapes;
-	octo::Array2D<PolygonShape *>				m_tileShapes;
+	std::vector<CircleShape *>							m_circleShapes;
+	std::vector<PolygonShape *>							m_polygonShapes;
+	octo::Array2D<PolygonShape *>						m_tileShapes;
 
 	// Pairs of object which might be colliding
 	std::vector<Pair<PolygonShape *, PolygonShape *>>	m_polyPolyPairs;
 	std::vector<Pair<PolygonShape *, CircleShape *>>	m_polyCirclePairs;
 	std::vector<Pair<CircleShape *, CircleShape *>>		m_circleCirclePairs;
-	std::size_t						m_polyPolyPairCount;
-	std::size_t						m_polyCirclePairCount;
-	std::size_t						m_circleCirclePairCount;
+	std::size_t											m_polyPolyPairCount;
+	std::size_t											m_polyCirclePairCount;
+	std::size_t											m_circleCirclePairCount;
 
 	// Pairs of object which might be colliding with the tile map
 	std::vector<Pair<PolygonShape *, PolygonShape *>>	m_tilePolyPairs;
 	std::vector<Pair<PolygonShape *, CircleShape *>>	m_tileCirclePairs;
-	std::size_t						m_tilePolyPairCount;
-	std::size_t						m_tileCirclePairCount;
+	std::size_t											m_tilePolyPairCount;
+	std::size_t											m_tileCirclePairCount;
 
 	// Variable used to compute collisions (to avoid creation and copy)
-	Projection						m_projectionA;
-	Projection						m_projectionB;
-	sf::Vector2f						m_axis;
-	sf::Vector2f						m_mtv;		/// Minimum Translation Vector
-	sf::Vector2f						m_gravity;
-	float							m_magnitude;
+	Projection											m_projectionA;
+	Projection											m_projectionB;
+	sf::Vector2f										m_axis;
+	sf::Vector2f										m_mtv;		/// Minimum Translation Vector
+	sf::Vector2f										m_gravity;
+	float												m_magnitude;
+	std::size_t											m_iterationCount;
+	bool												m_tileCollision;
 
 	/*! Determine which pairs of objects might be colliding */
 	void broadPhase(void);
@@ -126,21 +140,15 @@ private:
 	void narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t pairCount);
 
 	/*! Compute collision between different shape */
-	bool resolveCollision(PolygonShape * polygonA, PolygonShape * polygonB);
+	bool computeTileCollision(PolygonShape * polygonA, PolygonShape * polygonB);
+	bool computeTileCollision(PolygonShape * polygonA, CircleShape * polygonB);
 	bool computeCollision(PolygonShape * polygonA, PolygonShape * polygonB);
 	bool computeCollision(PolygonShape * polygon, CircleShape * circle);
 	bool computeCollision(CircleShape * circleA, CircleShape * circleB);
-	bool findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB);
-	bool findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB, sf::Vector2f const & velocity);
+	bool findAxisLeastPenetration(PolygonShape * polygonA, PolygonShape * polygonB);
+	bool findAxisLeastPenetration(PolygonShape * polygonA, PolygonShape * polygonB, sf::Vector2f const & velocity);
 
-	// TODO: use smart ptr
 	IContactListener *		m_contactListener;
-
-	//TODO: delete
-	sf::Vector2f m_debug;
-	sf::Vector2f m_debug1;
-	sf::Vector2f m_debug2;
-	sf::Vector2f m_debug3;
 
 };
 
