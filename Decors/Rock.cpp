@@ -33,22 +33,36 @@ void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin,
 	midRight.y = midRight.y > 0.f ? 0.f : midRight.y;
 	right.y = right.y > 0.f ? 0.f : right.y;
 
-	builder.createTriangle(right + origin, midRight + origin, upRight + origin, color);
+	upLeft += origin;
+	upRight += origin;
+	left += origin;
+	right += origin;
+	midLeft += origin;
+	midRight += origin;
+	downLeft += origin;
+	downRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+	recUp += origin;
+	recLeft += origin;
+	recRight += origin;
 
-	builder.createQuad(upLeft + origin, upRight + origin, midRight + origin, midLeft + origin, color);
-	builder.createQuad(midLeft + origin, midRight + origin, downMidRight + origin, downMidLeft + origin, color);
-	builder.createQuad(left + origin, midLeft + origin, downMidLeft + origin, downLeft + origin, color);
-	builder.createQuad(right + origin, midRight + origin, downMidRight + origin, downRight + origin, color);
+	builder.createTriangle(right, midRight, upRight, color);
 
-	builder.createTriangle(left + origin, midLeft + origin, upLeft + origin, color + sf::Color(100, 100, 100));
-	builder.createQuad(upLeft + origin, recUp + origin, recRight + origin, recLeft + origin, color + sf::Color(100, 100, 100));
+	builder.createQuad(upLeft, upRight, midRight, midLeft, color);
+	builder.createQuad(midLeft, midRight, downMidRight, downMidLeft, color);
+	builder.createQuad(left, midLeft, downMidLeft, downLeft, color);
+	builder.createQuad(right, midRight, downMidRight, downRight, color);
+
+	builder.createTriangle(left, midLeft, upLeft, color + sf::Color(100, 100, 100));
+	builder.createQuad(upLeft, recUp, recRight, recLeft, color + sf::Color(100, 100, 100));
 
 	// Compute last left point
-	if (origin.x - rockOrigin.x + downLeft.x < m_left.x && origin.x - rockOrigin.x < 0.f)
-		m_left.x = origin.x - rockOrigin.x + downLeft.x;
+	if (downLeft.x - rockOrigin.x < m_left.x && origin.x < rockOrigin.x)
+		m_left.x = downLeft.x - rockOrigin.x;
 	// Compute last right point
-	if (origin.x - rockOrigin.x + downRight.x > m_right.x && origin.x - rockOrigin.x > 0.f)
-		m_right.x = origin.x - rockOrigin.x + downRight.x;
+	if (downRight.x - rockOrigin.x > m_right.x && origin.x > rockOrigin.x)
+		m_right.x = downRight.x - rockOrigin.x;
 }
 
 void Rock::createRock(std::vector<OctogonValue> const & values, sf::Vector2f const & originRock, sf::Color const & color, octo::VertexBuilder& builder)
