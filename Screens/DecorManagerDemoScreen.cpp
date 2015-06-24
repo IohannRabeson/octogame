@@ -59,6 +59,7 @@ void	DecorManagerDemoScreen::start()
 	console.addCommand(L"demo.setStarLifeTime", m_biome, &TestBiome::setStarLifeTime);
 	console.addCommand(L"demo.setCanCreateStar", m_biome, &TestBiome::setCanCreateStar);
 	console.addCommand(L"demo.setSunSize", m_biome, &TestBiome::setSunSize);
+	console.addCommand(L"demo.setSunPartCount", m_biome, &TestBiome::setSunPartCount);
 	console.addCommand(L"demo.setSunColor", m_biome, &TestBiome::setSunColor);
 	console.addCommand(L"demo.setCanCreateSun", m_biome, &TestBiome::setCanCreateSun);
 	console.addCommand(L"demo.setMoonSize", m_biome, &TestBiome::setMoonSize);

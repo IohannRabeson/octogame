@@ -6,13 +6,14 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 03:39:50 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/17 02:18:34 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 04:34:18 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "DecorManager.hpp"
 #include "ADecor.hpp"
 #include "Cloud.hpp"
+#include "Sun.hpp"
 
 #include <VertexBuilder.hpp>
 
@@ -25,6 +26,11 @@ DecorManager::DecorManager(std::size_t maxVertexCount) :
 	m_biome(nullptr)
 {
 	registerDecors();
+}
+
+DecorManager::~DecorManager()
+{
+	clear();
 }
 
 void	DecorManager::setup(ABiome* biome)
@@ -93,4 +99,5 @@ void	DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states)const
 void	DecorManager::registerDecors()
 {
 	m_factory.registerCreator<Cloud>(DecorTypes::Cloud);
+	m_factory.registerCreator<Sun>(DecorTypes::Sun);
 }

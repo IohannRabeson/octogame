@@ -30,6 +30,7 @@ TestBiome::TestBiome() :
 	m_canCreateCloud(false),
 	m_starColor(255, 105, 180),
 	m_canCreateStar(false),
+	m_sunPartCount(3u),
 	m_sunColor(255, 105, 180),
 	m_canCreateSun(false),
 	m_moonColor(255, 105, 180),
@@ -156,6 +157,11 @@ bool	TestBiome::canCreateStar()
 sf::Vector2f 	TestBiome::getSunSize()
 {
 	return (m_sunSize);
+}
+
+unsigned int	TestBiome::getSunPartCount()
+{
+	return (m_sunPartCount);
 }
 
 sf::Color	TestBiome::getSunColor()
@@ -291,6 +297,11 @@ void	TestBiome::setCanCreateStar(bool canCreate)
 void	TestBiome::setSunSize(sf::Vector2f const& size)
 {
 	m_sunSize = size;
+}
+
+void	TestBiome::setSunPartCount(unsigned int count)
+{
+	m_sunPartCount = count;
 }
 
 void	TestBiome::setSunColor(sf::Color const& color)
