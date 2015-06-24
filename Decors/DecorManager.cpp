@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 03:39:50 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 04:34:18 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 05:53:41 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 
 void	DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
+	states.transform *= getTransform();
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 }
 

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 03:05:12 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 19:50:48 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 06:12:14 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ TestBiome::TestBiome() :
 	m_canCreateCloud(false),
 	m_starColor(255, 105, 180),
 	m_canCreateStar(false),
+	m_sunSize(100.f, 100.f),
 	m_sunPartCount(3u),
 	m_sunColor(255, 105, 180),
 	m_canCreateSun(false),
