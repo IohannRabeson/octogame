@@ -26,11 +26,16 @@ public:
 
 	virtual void			setup(std::size_t seed);
 	virtual std::string		getName()const;
+
 	virtual unsigned int	getTreeDepth();
 	virtual sf::Vector2f	getTreeSize();
 	virtual sf::Time		getTreeLifeTime();
 	virtual sf::Color		getTreeColor();
+	virtual float			getTreeAngle();
 	virtual bool			canCreateTree();
+	virtual bool			canCreateLeaf();
+	virtual sf::Vector2f	getLeafSize();
+	virtual sf::Color		getLeafColor();
 
 	virtual sf::Vector2f	getCrystalSize();
 	virtual unsigned int	getCrystalPartCount();
@@ -66,7 +71,11 @@ public:
 	void					setTreeSize(sf::Vector2f const& treeSize);
 	void					setTreeLifeTime(sf::Time lifeTime);
 	void					setTreeColor(sf::Color const& color);
+	void					setTreeAngle(float const angle);
 	void					setCanCreateTree(bool createTree);
+	void					setCanCreateLeaf(bool createLeaf);
+	void					setLeafSize(sf::Vector2f const& size);
+	void					setLeafColor(sf::Color const& color);
 
 	void					setCrystalSize(sf::Vector2f const& crystalSize);
 	void					setCrystalPartCount(unsigned int count);
@@ -102,7 +111,11 @@ private:
 	sf::Vector2f			m_treeSize;
 	sf::Time				m_treeLifeTime;
 	sf::Color				m_treeColor;
+	float					m_treeAngle;
 	bool					m_canCreateTree;
+	bool					m_canCreateLeaf;
+	sf::Vector2f			m_leafSize;
+	sf::Color				m_leafColor;
 
 	sf::Vector2f			m_crystalSize;
 	unsigned int			m_crystalPartCount;

@@ -15,10 +15,15 @@
 #include <iostream>
 
 TestBiome::TestBiome() :
-	m_treeDepth(10u),
+	m_treeDepth(8u),
+	m_treeSize(30.f, 200.f),
 	m_treeLifeTime(sf::seconds(1)),
 	m_treeColor(255, 105, 180),
+	m_treeAngle(45.f),
 	m_canCreateTree(false),
+	m_canCreateLeaf(true),
+	m_leafSize(150.f, 150.f),
+	m_leafColor(0, 105, 180),
 	m_crystalPartCount(0u),
 	m_crystalColor(255, 105, 180),
 	m_canCreateCrystal(false),
@@ -69,9 +74,29 @@ sf::Color		TestBiome::getTreeColor()
 	return (m_treeColor);
 }
 
+float			TestBiome::getTreeAngle()
+{
+	return (m_treeAngle);
+}
+
 bool	TestBiome::canCreateTree()
 {
 	return (m_canCreateTree);
+}
+
+bool	TestBiome::canCreateLeaf()
+{
+	return (m_canCreateLeaf);
+}
+
+sf::Vector2f	TestBiome::getLeafSize()
+{
+	return (m_leafSize);
+}
+
+sf::Color		TestBiome::getLeafColor()
+{
+	return (m_leafColor);
 }
 
 sf::Vector2f	TestBiome::getCrystalSize()
@@ -194,6 +219,7 @@ bool	TestBiome::canCreateMoon()
 	return (m_canCreateMoon);
 }
 
+
 void	TestBiome::setTreeDepth(unsigned int depth)
 {
 	m_treeDepth = depth;
@@ -214,9 +240,29 @@ void	TestBiome::setTreeColor(sf::Color const& color)
 	m_treeColor = color;
 }
 
+void	TestBiome::setTreeAngle(float const angle)
+{
+	m_treeAngle = angle;
+}
+
 void	TestBiome::setCanCreateTree(bool createTree)
 {
 	m_canCreateTree = createTree;
+}
+
+void	TestBiome::setCanCreateLeaf(bool createLeaf)
+{
+	m_canCreateLeaf = createLeaf;
+}
+
+void	TestBiome::setLeafSize(sf::Vector2f const& size)
+{
+	m_leafSize = size;
+}
+
+void	TestBiome::setLeafColor(sf::Color const& color)
+{
+	m_leafColor = color;
 }
 
 void	TestBiome::setCrystalSize(sf::Vector2f const& size)

@@ -2,14 +2,17 @@
 #include "ABiome.hpp"
 #include <Math.hpp>
 
+std::bernoulli_distribution	Tree::m_distribution(0.5);
+std::default_random_engine	Tree::m_engine;
+
 Tree::Tree(void) :
 	m_depth(0u),
 	m_count(0u),
 	m_lifeTime(sf::seconds(0.f)),
 	m_animation(1.f),
-	m_growSide(false),
-	m_countLeaf(0u),
+	m_growSide(true),
 	m_isLeaf(true),
+	m_countLeaf(0u),
 	m_setLeaf(true)
 {
 }
@@ -36,7 +39,7 @@ void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, fl
 {
 	builder.createTriangle(quad.rightUp + quad.center, quad.rightDown + quad.center, quad.leftDown + quad.center, color);
 	sf::Color tmpColor(deltaColor + color.r, deltaColor + color.g, deltaColor + color.b);
-	builder.createTriangle(quad.leftDown + quad.center, quad.leftUp + quad.center, quad.rightUp + quad.center, color);
+	builder.createTriangle(quad.leftDown + quad.center, quad.leftUp + quad.center, quad.rightUp + quad.center, tmpColor);
 }
 
 void Tree::createLeaf(std::vector<QuadValue> const & quads, sf::Color const & color, float const deltaColor, octo::VertexBuilder & builder)
@@ -101,33 +104,34 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	rotateVec(rightCenter, cosRight, sinRight);
 	rightCenter += center + root.rightUp;
 
+	// Create leaf
+	if (currentDepth == m_depth - 2 && m_isLeaf)
+	{
+		computeQuad(m_leafSize[m_countLeaf] * m_animation, rightCenter, cosRight, sinRight, m_leaf[m_countLeaf]);
+		m_countLeaf++;
+		computeQuad(m_leafSize[m_countLeaf] * m_animation, leftCenter, cosLeft, sinLeft, m_leaf[m_countLeaf]);
+		m_countLeaf++;
+	}
+
 	// Left & right recursion
 	pythagorasTree(leftCenter, leftSize, builder, rectangleAngleLeft, cosLeft, sinLeft, currentDepth + 1);
 	pythagorasTree(rightCenter, rightSize, builder, rectangleAngleRight, cosRight, sinRight, currentDepth + 1);
 
-	// Create leaf
-	if (currentDepth == m_depth - 2 && m_isLeaf)
-	{
-		//TODO: compute size of leaf differently
-		sf::Vector2f sizeLeaf(m_size.y * m_animation, m_size.y * m_animation);
-		computeQuad(sizeLeaf, rightCenter, cosRight, sinRight, m_leaf[m_countLeaf++]);
-		computeQuad(sizeLeaf, leftCenter, cosLeft, sinLeft, m_leaf[m_countLeaf++]);
-	}
-
-	if (m_setLeaf == true)
+	if (m_setLeaf == true && m_isLeaf == true)
 	{
 		m_setLeaf = false;
 		createLeaf(m_leaf, m_leafColor, 5, builder);
 	}
 
+	//TODO: find a smart way to compute deltaColor
+	createBiColorQuad(root, color, 5, builder);
+
+	// Fill empty space with triangle
 	color += sf::Color(5, 5, 5);
 	sf::Vector2f upTriangle(-rightSize.x, 0.f);
 	rotateVec(upTriangle, cosRight, sinRight);
 	builder.createTriangle(root.rightUp + center, root.leftUp + center, upTriangle + center + root.rightUp, color);
 
-	// Fill empty space with triangle
-	//TODO: find a smart way to compute deltaColor
-	createBiColorQuad(root, color, 5, builder);
 }
 
 void Tree::setup(ABiome& biome)
@@ -139,20 +143,17 @@ void Tree::setup(ABiome& biome)
 	std::size_t angleCount = std::pow(2, m_depth) + 1;
 	m_refAngle.resize(angleCount);
 	for (std::size_t i = 0u; i < angleCount; i++)
-	{
-		m_refAngle[i] = randomFloat(15.f, 75.f);
-		//TODO: Change this with biome function
-		//m_refAngle[i] = biome.getTreeAngle();
-	}
-
+		m_refAngle[i] = biome.getTreeAngle();
 	m_lifeTime = biome.getTreeLifeTime();
-	//TODO: Add this parameter in biome;
-	//m_growSide = biome.getTreeGrowSide();
+	m_growSide = Tree::getGrowSide();
 
-	//TODO: Use palette
-	//m_isLeaf = biome.getTreeLeafBool(); // m_isLeaf = biome.getTemperature() > 0 ? true : false;
-	m_leaf.resize(std::pow(2, m_depth) + 1);
-	m_leafColor = sf::Color(32, 243, 240);//biome.getTreeLeafColor();
+	m_isLeaf = biome.canCreateLeaf();
+	std::size_t leafCount = std::pow(2, m_depth) + 1;
+	m_leaf.resize(leafCount);
+	m_leafSize.resize(leafCount);
+	for (std::size_t i = 0; i < leafCount; i++)
+		m_leafSize[i] = biome.getLeafSize();
+	m_leafColor = biome.getLeafColor();
 }
 
 void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
@@ -160,7 +161,8 @@ void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	(void)frameTime;
 
 	sf::Vector2f const & position = getPosition();
-	//TODO: set position to be center
+	//TODO: set position to be centered, to test when terrain will be here
+	//Add behind root to stick the botom of screen
 	//position.y -= m_size.y / 2.0f;
 	//float delta = (m_size.y - m_size.y * m_animation) / 2;
 	pythagorasTree(sf::Vector2f(position.x, position.y), sf::Vector2f(m_size.x, m_size.y * m_animation), builder);
@@ -173,15 +175,8 @@ void Tree::rotateVec(sf::Vector2f & vector, float const cosAngle, float const si
 	vector.x = x;
 }
 
-// TODO: To delete and add in Biome
-float Tree::randomFloat(float min, float max)
+bool Tree::getGrowSide(void)
 {
-	if (max - min == 0)
-		return max;
-	std::uniform_real_distribution<float> distribution(min, max);
-	std::random_device rd;
-	std::mt19937 engine(rd());
-
-	return distribution(engine);
+	return m_distribution(m_engine);
 }
 

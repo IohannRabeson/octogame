@@ -28,11 +28,16 @@ public:
 
 	virtual void			setup(std::size_t seed) = 0;
 	virtual std::string		getName()const = 0;
+
 	virtual unsigned int	getTreeDepth()= 0;
 	virtual sf::Vector2f	getTreeSize() = 0;
 	virtual sf::Time		getTreeLifeTime() = 0;
 	virtual sf::Color		getTreeColor() = 0;
+	virtual float			getTreeAngle() = 0;
 	virtual bool			canCreateTree() = 0;
+	virtual bool			canCreateLeaf() = 0;
+	virtual sf::Vector2f	getLeafSize() = 0;
+	virtual sf::Color		getLeafColor() = 0;
 
 	virtual sf::Vector2f	getCrystalSize() = 0;
 	virtual unsigned int	getCrystalPartCount() = 0;

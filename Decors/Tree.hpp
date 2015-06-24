@@ -4,6 +4,7 @@
 # include "ADecor.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
+# include <random>
 
 class Tree : public ADecor
 {
@@ -19,28 +20,29 @@ public:
 private:
 	struct QuadValue
 	{
-		sf::Vector2f		leftDown;
-		sf::Vector2f		leftUp;
-		sf::Vector2f		rightDown;
-		sf::Vector2f		rightUp;
-		sf::Vector2f		center;
+		sf::Vector2f			leftDown;
+		sf::Vector2f			leftUp;
+		sf::Vector2f			rightDown;
+		sf::Vector2f			rightUp;
+		sf::Vector2f			center;
 	};
 
-	std::size_t				m_depth;
-	sf::Vector2f			m_size;
-	sf::Color				m_color;
-	std::vector<float>		m_refAngle;
-	std::size_t				m_count;
+	std::size_t					m_depth;
+	sf::Vector2f				m_size;
+	sf::Color					m_color;
+	std::vector<float>			m_refAngle;
+	std::size_t					m_count;
 
-	sf::Time				m_lifeTime;
-	float					m_animation;
-	bool					m_growSide;
+	sf::Time					m_lifeTime;
+	float						m_animation;
+	bool						m_growSide;
 
-	std::vector<QuadValue>	m_leaf;
-	sf::Color				m_leafColor;
-	std::size_t				m_countLeaf;
-	bool					m_isLeaf;
-	bool					m_setLeaf;
+	bool						m_isLeaf;
+	std::vector<QuadValue>		m_leaf;
+	std::vector<sf::Vector2f>	m_leafSize;
+	sf::Color					m_leafColor;
+	std::size_t					m_countLeaf;
+	bool						m_setLeaf;
 
 	void computeQuad(sf::Vector2f const & size,
 					sf::Vector2f const & center,
@@ -66,10 +68,15 @@ private:
 						float const sinAngle = std::sin(0.0f),
 						std::size_t const currentDepth = 0u);
 
+private:
+	static std::default_random_engine	m_engine;
+	static std::bernoulli_distribution	m_distribution;
+
 	static void rotateVec(sf::Vector2f & vector,
 							float const cosAngle,
 							float const sinAngle);
-	float randomFloat(float min, float max);
+
+	static bool getGrowSide(void);
 };
 
 #endif
