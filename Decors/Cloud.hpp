@@ -25,8 +25,6 @@ public:
 						   octo::VertexBuilder& builder,
 						   ABiome& biome);
 
-	float randomFloat(float min, float max);
-
 private:
 	sf::Vector2f				m_size;
 	sf::Color					m_color;
@@ -34,9 +32,6 @@ private:
 	std::vector<OctogonValue>	m_values;
 	float						m_animation;
 	sf::Time					m_lifeTime;
-
-	//TODO: Change this
-	int							m_alpha;
 
 	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & origin,
@@ -47,9 +42,13 @@ private:
 						octo::VertexBuilder& builder);
 
 	void createCloud(std::vector<OctogonValue> const & values,
-					sf::Vector2f const & originCloud,
-					sf::Color const & color,
-					octo::VertexBuilder& builder);
+						sf::Vector2f const & originCloud,
+						sf::Color const & color,
+						octo::VertexBuilder& builder);
+
+private:
+	static std::mt19937 m_engine;
+	static float randomFloat(float min, float max);
 };
 
 #endif

@@ -1,17 +1,20 @@
 #include "Cloud.hpp"
 #include "ABiome.hpp"
 
+std::mt19937	Cloud::m_engine;
+
 Cloud::Cloud() :
 	m_partCount(0),
 	m_animation(1.f),
-	m_lifeTime(sf::Time::Zero),
-	m_alpha(0)
+	m_lifeTime(sf::Time::Zero)
 {
+	std::random_device rd;
+	m_engine.seed(rd());
 }
 
 void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color color, float const sizeUp, float const sizeDown, float const sizeRec, octo::VertexBuilder& builder)
 {
-	color.a = m_animation * m_alpha;
+	color.a = m_animation * color.a;
 
 	sf::Vector2f upLeft(-size.x + sizeUp, -size.y - sizeUp);
 	sf::Vector2f upRight(size.x - sizeUp, -size.y - sizeUp);
@@ -63,15 +66,10 @@ void Cloud::setup(ABiome& biome)
 {
 	m_size = biome.getCloudSize();
 	m_color = biome.getCloudColor();
+	m_color.a = randomFloat(80.f, 200.f);
 	m_partCount = biome.getCloudPartCount();
 	m_values.resize(m_partCount);
-	//TODO: Dont forget to add random to timer for un syncronize decors
-	//TO DO IN ALL CLASS
-
 	m_lifeTime = biome.getCloudLifeTime();
-
-	//TODO: Change this
-	m_alpha = randomFloat(100, 220);
 
 	std::size_t i = 0;
 	float totalY = 0;
@@ -104,7 +102,7 @@ void Cloud::setup(ABiome& biome)
 
 	// Compute right random values
 	totalY = 0;
-	m_size = sf::Vector2f(randomFloat(200.f, 300.f), randomFloat(400.f, 600.f));//biome.getCloudSize();
+	m_size = biome.getCloudSize();
 	cornerSize = m_size.x / (m_partCount * 2.f);
 	size.x = m_size.x - cornerSize;
 	size.y = cornerSize;
@@ -136,15 +134,11 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	createCloud(m_values, position, m_color, builder);
 }
 
-// TODO: To delete and add in Biome
 float Cloud::randomFloat(float min, float max)
 {
 	if (max - min == 0)
 		return max;
 	std::uniform_real_distribution<float> distribution(min, max);
-	std::random_device rd;
-	std::mt19937 engine(rd());
-
-	return distribution(engine);
+	return distribution(m_engine);
 }
 
