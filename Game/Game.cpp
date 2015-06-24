@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 06:12:46 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 06:21:50 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ void	Game::update(sf::Time frameTime)
 
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
+	render.clear();
 	render.draw(m_skyDecorManager, states);
 }
