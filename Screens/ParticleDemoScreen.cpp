@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/19 06:00:19 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/21 04:10:55 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 01:05:59 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	TestSystem::update(sf::Time frameTime)
 	ParticleSystem::update(frameTime);
 	if (m_emit)
 	{
-		emplace(sf::Color::Green, m_emitter, m_directionDistri(m_engine) * 180,
+		emplace(sf::Color::Green, m_emitter, sf::Vector2f(1.f, 1.f), m_directionDistri(m_engine) * 180,
 				sf::Time::Zero,
 				sf::seconds(m_lifeTimeDistri(m_engine)),
 				m_directionDistri(m_engine));

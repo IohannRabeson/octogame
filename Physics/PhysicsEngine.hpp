@@ -64,8 +64,8 @@ private:
 	template<class T, class U>
 	struct Pair
 	{
-		T		m_shapeA = nullptr;
-		U		m_shapeB = nullptr;
+		T		m_shapeA;
+		U		m_shapeB;
 		bool		m_isColliding = false;
 	};
 

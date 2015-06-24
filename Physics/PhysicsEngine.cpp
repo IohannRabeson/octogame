@@ -164,6 +164,7 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector
 		}
 	}
 	*/(void)vector; (void)pairs;
+	return 0u;
 }
 
 template<class T, class U>

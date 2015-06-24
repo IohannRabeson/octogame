@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:41:14 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/21 19:55:11 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 01:07:42 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void			RainSystem::createDrop()
 				m_floatDistribution(m_engine) *	(m_cameraRect.width + m_horizontalOffset + m_margin * 2.f);
 	}
 	pos.y = m_cameraRect.top - TopMargin * m_floatDistribution(m_engine);
-	emplace(sf::Color(180, 180, 180), pos, m_initialRotation, m_initialVelocity);
+	emplace(sf::Color(180, 180, 180), pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
 }
 
 void	RainSystem::updateHorizontalOffset()

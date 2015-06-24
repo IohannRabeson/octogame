@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/19 05:58:50 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/20 02:57:35 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 01:09:49 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 # define PARTICLEDEMOSCREEN_HPP
 # include <AbstractState.hpp>
 # include <DefaultGraphicsListeners.hpp>
+# include <ParticleSystem.hpp>
 
-# include "ParticleSystem.hpp"
 # include "RainSystem.hpp"
 
 # include <random>
 
-class TestSystem : public ParticleSystem<sf::Time, sf::Time, float>,
+class TestSystem : public octo::ParticleSystem<sf::Time, sf::Time, float>,
 				   public octo::DefaultMouseListener
 {
 public:

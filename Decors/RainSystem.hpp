@@ -6,18 +6,18 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:32:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/21 19:55:03 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 01:09:22 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RAINSYSTEM_HPP
 # define RAINSYSTEM_HPP
 
-# include "ParticleSystem.hpp"
+# include <ParticleSystem.hpp>
 
 # include <random>
 
-class RainSystem : public ParticleSystem<sf::Vector2f>
+class RainSystem : public octo::ParticleSystem<sf::Vector2f>
 {
 	enum MyComponent
 	{

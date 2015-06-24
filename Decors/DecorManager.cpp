@@ -12,6 +12,7 @@
 
 #include "DecorManager.hpp"
 #include "ADecor.hpp"
+#include "Sun.hpp"
 
 #include <VertexBuilder.hpp>
 
@@ -91,4 +92,5 @@ void	DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	DecorManager::registerDecors()
 {
+	m_factory.registerCreator<Sun>(DecorTypes::Sun);
 }
