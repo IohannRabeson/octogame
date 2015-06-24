@@ -51,6 +51,7 @@ SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp					\
+				Decors/Sun.cpp						\
 				Decors/RainSystem.cpp
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp						\

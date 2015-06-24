@@ -55,6 +55,7 @@ public:
 	virtual bool			canCreateStar() = 0;
 
 	virtual sf::Vector2f 	getSunSize() = 0;
+	virtual unsigned int	getSunPartCount() = 0;
 	virtual sf::Color		getSunColor() = 0;
 	virtual bool			canCreateSun() = 0;
 

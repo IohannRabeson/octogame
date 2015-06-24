@@ -36,6 +36,7 @@ doc/generated/
 
 # Vim files
 *.swp
+.session*
 
 # MacOS files
 *.DS_Store
