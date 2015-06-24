@@ -29,6 +29,7 @@
 #include "EngineScreen.hpp"
 #include "PhysicsMapScreen.hpp"
 #include "GameScreen.hpp"
+#include "ParticleDemoScreen.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
@@ -42,6 +43,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<GameScreen>("game");
 	manager.registerState<EngineScreen>("engine");
 	manager.registerState<PhysicsMapScreen>("physics_map");
+	manager.registerState<ParticleDemoScreen>("particles");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
