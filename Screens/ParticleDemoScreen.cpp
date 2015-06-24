@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/19 06:00:19 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 01:05:59 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 06:26:03 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <Camera.hpp>
 #include <GraphicsManager.hpp>
 #include <Console.hpp>
+#include <Math.hpp>
 
 #include <ctime>
 
@@ -22,7 +23,7 @@ TestSystem::TestSystem() :
 	m_emit(false),
 	m_engine(std::time(0)),
 	m_lifeTimeDistri(0.5f, 1.f),
-	m_directionDistri(0.f, 2.f * M_PI)
+	m_directionDistri(0.f, 2.f * octo::Pi)
 {
 }
 
