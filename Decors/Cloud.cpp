@@ -35,24 +35,43 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin
 	sf::Vector2f recDown(downMidLeft.x + 4.f, downMidLeft.y);
 	sf::Vector2f secondRec(downLeft.x, downLeft.y - 4.f);
 
+	upLeft += origin;
+	upRight += origin;
+	cornerUpLeft += origin;
+	cornerUpRight += origin;
+	upMidLeft += origin;
+	upMidRight += origin;
+
+	downLeft += origin;
+	downRight += origin;
+	cornerDownLeft += origin;
+	cornerDownRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+
+	recUpLeft += origin;
+	recUpRight += origin;
+	recDown += origin;
+	secondRec += origin;
+
 	// Corner up
-	builder.createTriangle(upMidRight + origin, cornerUpRight + origin, upRight + origin, color);
-	builder.createTriangle(upMidLeft + origin, cornerUpLeft + origin, upLeft + origin, color);
+	builder.createTriangle(upMidRight, cornerUpRight, upRight, color);
+	builder.createTriangle(upMidLeft, cornerUpLeft, upLeft, color);
 
 	// Fill with rectangle
-	builder.createQuad(upLeft + origin, upRight + origin, cornerUpRight + origin, cornerUpLeft + origin, color);
-	builder.createQuad(cornerUpLeft + origin, cornerUpRight + origin, cornerDownRight + origin, cornerDownLeft + origin, color);
-	builder.createQuad(cornerDownLeft + origin, cornerDownRight + origin, downRight + origin, downLeft + origin, color);
-	builder.createQuad(upMidLeft + origin, cornerUpLeft + origin, cornerDownLeft + origin, downMidLeft + origin, color);
-	builder.createQuad(cornerUpRight + origin, upMidRight + origin, downMidRight + origin, cornerDownRight + origin, color);
+	builder.createQuad(upLeft, upRight, cornerUpRight, cornerUpLeft, color);
+	builder.createQuad(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, color);
+	builder.createQuad(cornerDownLeft, cornerDownRight, downRight, downLeft, color);
+	builder.createQuad(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, color);
+	builder.createQuad(cornerUpRight, upMidRight, downMidRight, cornerDownRight, color);
 
 	// Corner down
-	builder.createTriangle(downMidRight + origin, cornerDownRight + origin, downRight + origin, color);
-	builder.createTriangle(downMidLeft + origin, cornerDownLeft + origin, downLeft + origin, color);
+	builder.createTriangle(downMidRight, cornerDownRight, downRight, color);
+	builder.createTriangle(downMidLeft, cornerDownLeft, downLeft, color);
 
 	// Details
-	builder.createQuad(downMidLeft + origin, recUpLeft + origin, recUpRight + origin, recDown + origin, color);
-	builder.createQuad(downMidLeft + origin, recDown + origin, secondRec + origin, downLeft + origin, color);
+	builder.createQuad(downMidLeft, recUpLeft, recUpRight, recDown, color);
+	builder.createQuad(downMidLeft, recDown, secondRec, downLeft, color);
 }
 
 void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f const & originCloud, sf::Color const & color, octo::VertexBuilder& builder)
