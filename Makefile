@@ -38,7 +38,7 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPositionBehaviors.cpp
 
 SRC_MAP =		Map/Map.cpp								\
-				Map/TerrainManager.cpp			\
+				Map/TerrainManager.cpp					\
 				Map/MapInstance.cpp
 
 SRC_MANAGERS =	Managers/MapManager.cpp
@@ -51,16 +51,17 @@ SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp					\
-				Decors/Sun.cpp						\
+				Decors/Tree.cpp							\
+				Decors/Sun.cpp							\
 				Decors/RainSystem.cpp
 
-SRC_PHYSICS =	Physics/PolygonShape.cpp						\
-				Physics/RectangleShape.cpp						\
-				Physics/ConvexShape.cpp						\
-				Physics/CircleShape.cpp						\
-				Physics/Tile.cpp					\
-				Physics/PhysicsEngine.cpp					\
-				Physics/ShapeBuilder.cpp					\
+SRC_PHYSICS =	Physics/PolygonShape.cpp				\
+				Physics/RectangleShape.cpp				\
+				Physics/ConvexShape.cpp					\
+				Physics/CircleShape.cpp					\
+				Physics/Tile.cpp						\
+				Physics/PhysicsEngine.cpp				\
+				Physics/ShapeBuilder.cpp				\
 				Physics/AShape.cpp
 
 # package files
