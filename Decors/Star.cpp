@@ -1,4 +1,5 @@
 #include "Star.hpp"
+#include "ABiome.hpp"
 #include <cmath>
 
 Star::Star() :
@@ -80,14 +81,12 @@ void Star::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner
 
 void Star::setup(ABiome& biome)
 {
-	(void)biome;
-	//TODO: Add this to biome
-	m_size = sf::Vector2f(200,200);//biome.getStarSize();
-	m_color = sf::Color(255,255,255);//biome.getStarColor();
+	m_size = biome.getStarSize();
+	m_color = biome.getStarColor();
 	m_sizeHeart = sf::Vector2f(m_size.x / 50.f, m_size.x / 50.f);
-	//m_liveTime = biome.getStarLifeTime();
+	m_liveTime = biome.getStarLifeTime();
 
-	m_glowSize = m_size;
+	m_glowSize = m_size / 2.5f;
 	m_glowSizeCorner = m_glowSize / 2.f;
 }
 
@@ -96,7 +95,7 @@ void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	(void)frameTime;
 
 	sf::Vector2f const & position = getPosition();
-	createStar(m_size, m_sizeHeart, position, m_color, builder);
+	createStar(m_size * m_animation, m_sizeHeart * m_animation, position, m_color, builder);
 	createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, m_color, builder);
 }
 
