@@ -1,8 +1,8 @@
 #include "Crystal.hpp"
 #include "ABiome.hpp"
+#include <Math.hpp>
 
-//TODO: Other solutions?
-#define PI  3.14159265358979323846
+std::mt19937 Crystal::m_engine;
 
 Crystal::Crystal() :
 	m_partCount(0u),
@@ -15,6 +15,8 @@ Crystal::Crystal() :
 	m_shineTimerMax(sf::seconds(3.f))
 	*/
 {
+	std::random_device rd;
+	m_engine.seed(rd());
 }
 
 sf::Vector2f Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & origin, float const angle, sf::Color color, octo::VertexBuilder & builder)
@@ -29,7 +31,7 @@ sf::Vector2f Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f cons
 	sf::Vector2f downMid(0.0f, 0.f);
 	sf::Vector2f downRight(size.x, 0.f);
 
-	float radianAngle = angle * PI / 180.0f;
+	float radianAngle = angle * octo::Deg2Rad;
 	float cosA = std::cos(radianAngle);
 	float sinA = std::sin(radianAngle);
 
@@ -104,7 +106,7 @@ void Crystal::setup(ABiome& biome)
 
 	for (unsigned int i = 0; i < m_partCount; i++)
 	{
-		m_values[i].size = sf::Vector2f(10.f, 100.f);//biome.getCrystalSize();
+		m_values[i].size = biome.getCrystalSize();
 		m_values[i].angle = randomFloat(-45.f + (i * 90.f / m_partCount), -45.f + ((i + 1) * 90.f / m_partCount));
 		int deltaColor = randomFloat(0.f, 80.f);
 		m_values[i].color = m_color + sf::Color(deltaColor, deltaColor, deltaColor, 0);
@@ -121,9 +123,8 @@ void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	(void)frameTime;
 	/*
 	m_shineTimer += frameTime;
-	//TODO: Change randomFloat by randomInt
 	if (m_shineTimer.asSeconds() == 0.f)
-		m_shineCrystalNumber = randomFloat(0, m_partCount - 0.01);
+		m_shineCrystalNumber = randomInt(0, m_partCount);
 	m_star.setOrigin(m_up[m_shineCrystalNumber] + m_origin);
 	m_star.shine(deltatime);
 	*/
@@ -136,14 +137,18 @@ void Crystal::rotateVec(sf::Vector2f & vector, float const cosAngle, float const
 	vector.x = x;
 }
 
-// TODO: To delete and add in Biome
 float Crystal::randomFloat(float min, float max)
 {
 	if (max - min == 0)
 		return max;
 	std::uniform_real_distribution<float> distribution(min, max);
-	std::random_device rd;
-	std::mt19937 engine(rd());
+	return distribution(m_engine);
+}
 
-	return distribution(engine);
+float Crystal::randomInt(int min, int max)
+{
+	if (max - min == 0)
+		return max;
+	std::uniform_int_distribution<int> distribution(min, max);
+	return distribution(m_engine);
 }
