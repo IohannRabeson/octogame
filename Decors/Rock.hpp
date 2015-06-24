@@ -2,7 +2,7 @@
 # define ROCK_HPP
 
 # include "ADecor.hpp"
-# include "VertexBuilder.hpp"
+# include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
 class Rock : public ADecor
