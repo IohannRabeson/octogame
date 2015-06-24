@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 02:45:47 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/23 02:35:59 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 04:34:46 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ public:
 	};
 
 	explicit DecorManager(std::size_t maxVertexCount);
+	~DecorManager();
 
 	void		setup(ABiome* biome);
 

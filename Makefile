@@ -137,9 +137,9 @@ $(BUILD_DIR):
 
 print_summary:
 ifeq ($(MODE), debug)
-	@echo " - Making $(TARGET) [DEBUG]: $(CFLAGS)"
+	@echo " - Making $(TARGET) [DEBUG]: $(CFLAGS) | $(COMPILER)"
 else
-	@echo " - Making $(TARGET): $(CFLAGS)"
+	@echo " - Making $(TARGET): $(CFLAGS) | $(COMPILER)"
 endif
 
 core_library:

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:41:14 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 01:07:42 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 04:32:55 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	RainSystem::update(sf::Time frameTime)
 
 void	RainSystem::setDropPerSecond(unsigned int count)
 {
+	assert(count != 0);
+
 	m_dropPerSeconds = count;
 	m_dropInterval = sf::seconds(1.f / count);
 }

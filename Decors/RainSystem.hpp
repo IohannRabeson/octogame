@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:32:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 01:09:22 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 03:45:24 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ private:
 	void			updateHorizontalOffset();
 private:
 	typedef std::uniform_real_distribution<float>		FDist;
-	typedef std::uniform_int_distribution<unsigned int>	UIDist;
 
 	std::mt19937				m_engine;
 	FDist						m_floatDistribution;

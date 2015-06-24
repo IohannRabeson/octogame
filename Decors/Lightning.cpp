@@ -6,16 +6,16 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 17:25:02 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/23 14:18:50 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 19:11:10 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Lightning.hpp"
-#include "VertexBuilder.hpp"
 
 #include <list>
 
 #include <Math.hpp>
+#include <VertexBuilder.hpp>
 
 static sf::Vector2f	perpendicular(sf::Vector2f const& v)
 {
