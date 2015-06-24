@@ -54,7 +54,7 @@ std::string		TestBiome::getName()const
 	return ("Biome Test");
 }
 
-unsigned int	TestBiome::getTreeDepth()
+std::size_t	TestBiome::getTreeDepth()
 {
 	return (m_treeDepth);
 }
@@ -79,12 +79,12 @@ float			TestBiome::getTreeAngle()
 	return (m_treeAngle);
 }
 
-bool	TestBiome::canCreateTree()
+bool			TestBiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool	TestBiome::canCreateLeaf()
+bool			TestBiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
@@ -104,17 +104,17 @@ sf::Vector2f	TestBiome::getCrystalSize()
 	return (m_crystalSize);
 }
 
-unsigned int	TestBiome::getCrystalPartCount()
+std::size_t		TestBiome::getCrystalPartCount()
 {
 	return (m_crystalPartCount);
 }
 
-sf::Color	TestBiome::getCrystalColor()
+sf::Color		TestBiome::getCrystalColor()
 {
 	return (m_crystalColor);
 }
 
-bool	TestBiome::canCreateCrystal()
+bool			TestBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
@@ -124,17 +124,17 @@ sf::Vector2f	TestBiome::getRockSize()
 	return (m_rockSize);
 }
 
-unsigned int	TestBiome::getRockPartCount()
+std::size_t		TestBiome::getRockPartCount()
 {
 	return (m_rockPartCount);
 }
 
-sf::Color	TestBiome::getRockColor()
+sf::Color		TestBiome::getRockColor()
 {
 	return (m_rockColor);
 }
 
-bool	TestBiome::canCreateRock()
+bool			TestBiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
@@ -144,22 +144,22 @@ sf::Vector2f	TestBiome::getCloudSize()
 	return (m_cloudSize);
 }
 
-unsigned int	TestBiome::getCloudPartCount()
+std::size_t		TestBiome::getCloudPartCount()
 {
 	return (m_cloudPartCount);
 }
 
-sf::Time	TestBiome::getCloudLifeTime()
+sf::Time		TestBiome::getCloudLifeTime()
 {
 	return (m_cloudLifeTime);
 }
 
-sf::Color	TestBiome::getCloudColor()
+sf::Color		TestBiome::getCloudColor()
 {
 	return (m_cloudColor);
 }
 
-bool	TestBiome::canCreateCloud()
+bool			TestBiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
@@ -169,17 +169,17 @@ sf::Vector2f	TestBiome::getStarSize()
 	return (m_starSize);
 }
 
-sf::Color	TestBiome::getStarColor()
+sf::Color		TestBiome::getStarColor()
 {
 	return (m_starColor);
 }
 
-sf::Time	TestBiome::getStarLifeTime()
+sf::Time		TestBiome::getStarLifeTime()
 {
 	return (m_starLifeTime);
 }
 
-bool	TestBiome::canCreateStar()
+bool			TestBiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
@@ -189,17 +189,17 @@ sf::Vector2f 	TestBiome::getSunSize()
 	return (m_sunSize);
 }
 
-unsigned int	TestBiome::getSunPartCount()
+std::size_t		TestBiome::getSunPartCount()
 {
 	return (m_sunPartCount);
 }
 
-sf::Color	TestBiome::getSunColor()
+sf::Color		TestBiome::getSunColor()
 {
 	return (m_sunColor);
 }
 
-bool	TestBiome::canCreateSun()
+bool			TestBiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
@@ -209,18 +209,18 @@ sf::Vector2f 	TestBiome::getMoonSize()
 	return (m_moonSize);
 }
 
-sf::Color	TestBiome::getMoonColor()
+sf::Color		TestBiome::getMoonColor()
 {
 	return (m_moonColor);
 }
 
-bool	TestBiome::canCreateMoon()
+bool			TestBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
 
-void	TestBiome::setTreeDepth(unsigned int depth)
+void	TestBiome::setTreeDepth(std::size_t depth)
 {
 	m_treeDepth = depth;
 }
@@ -270,7 +270,7 @@ void	TestBiome::setCrystalSize(sf::Vector2f const& size)
 	m_crystalSize = size;
 }
 
-void	TestBiome::setCrystalPartCount(unsigned int count)
+void	TestBiome::setCrystalPartCount(std::size_t count)
 {
 	m_crystalPartCount = count;
 }
@@ -290,7 +290,7 @@ void	TestBiome::setRockSize(sf::Vector2f const& size)
 	m_rockSize = size;
 }
 
-void	TestBiome::setRockPartCount(unsigned int count)
+void	TestBiome::setRockPartCount(std::size_t count)
 {
 	m_rockPartCount = count;
 }
@@ -310,7 +310,7 @@ void	TestBiome::setCloudSize(sf::Vector2f const& size)
 	m_cloudSize = size;
 }
 
-void	TestBiome::setCloudPartCount(unsigned int count)
+void	TestBiome::setCloudPartCount(std::size_t count)
 {
 	m_cloudPartCount = count;
 }
@@ -355,7 +355,7 @@ void	TestBiome::setSunSize(sf::Vector2f const& size)
 	m_sunSize = size;
 }
 
-void	TestBiome::setSunPartCount(unsigned int count)
+void	TestBiome::setSunPartCount(std::size_t count)
 {
 	m_sunPartCount = count;
 }

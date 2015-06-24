@@ -27,7 +27,7 @@ public:
 	virtual void			setup(std::size_t seed);
 	virtual std::string		getName()const;
 
-	virtual unsigned int	getTreeDepth();
+	virtual std::size_t		getTreeDepth();
 	virtual sf::Vector2f	getTreeSize();
 	virtual sf::Time		getTreeLifeTime();
 	virtual sf::Color		getTreeColor();
@@ -38,17 +38,17 @@ public:
 	virtual sf::Color		getLeafColor();
 
 	virtual sf::Vector2f	getCrystalSize();
-	virtual unsigned int	getCrystalPartCount();
+	virtual std::size_t		getCrystalPartCount();
 	virtual sf::Color		getCrystalColor();
 	virtual bool			canCreateCrystal();
 
 	virtual sf::Vector2f	getRockSize();
-	virtual unsigned int	getRockPartCount();
+	virtual std::size_t		getRockPartCount();
 	virtual sf::Color		getRockColor();
 	virtual bool			canCreateRock();
 
 	virtual sf::Vector2f	getCloudSize();
-	virtual unsigned int	getCloudPartCount();
+	virtual std::size_t		getCloudPartCount();
 	virtual sf::Time		getCloudLifeTime();
 	virtual sf::Color		getCloudColor();
 	virtual bool			canCreateCloud();
@@ -59,7 +59,7 @@ public:
 	virtual bool			canCreateStar();
 
 	virtual sf::Vector2f 	getSunSize();
-	virtual unsigned int	getSunPartCount();
+	virtual std::size_t		getSunPartCount();
 	virtual sf::Color		getSunColor();
 	virtual bool			canCreateSun();
 
@@ -67,7 +67,7 @@ public:
 	virtual sf::Color		getMoonColor();
 	virtual bool			canCreateMoon();
 
-	void					setTreeDepth(unsigned int depth);
+	void					setTreeDepth(std::size_t depth);
 	void					setTreeSize(sf::Vector2f const& treeSize);
 	void					setTreeLifeTime(sf::Time lifeTime);
 	void					setTreeColor(sf::Color const& color);
@@ -78,17 +78,17 @@ public:
 	void					setLeafColor(sf::Color const& color);
 
 	void					setCrystalSize(sf::Vector2f const& crystalSize);
-	void					setCrystalPartCount(unsigned int count);
+	void					setCrystalPartCount(std::size_t count);
 	void					setCrystalColor(sf::Color const& color);
 	void					setCanCreateCrystal(bool canCreate);
 
 	void					setRockSize(sf::Vector2f const& rockSize);
-	void					setRockPartCount(unsigned int count);
+	void					setRockPartCount(std::size_t count);
 	void					setRockColor(sf::Color const& color);
 	void					setCanCreateRock(bool canCreate);
 
 	void					setCloudSize(sf::Vector2f const& rockSize);
-	void					setCloudPartCount(unsigned int count);
+	void					setCloudPartCount(std::size_t count);
 	void					setCloudLifeTime(sf::Time time);
 	void					setCloudColor(sf::Color const& color);
 	void					setCanCreateCloud(bool canCreate);
@@ -99,7 +99,7 @@ public:
 	void					setCanCreateStar(bool canCreate);
 
 	void					setSunSize(sf::Vector2f const& size);
-	void					setSunPartCount(unsigned int count);
+	void					setSunPartCount(std::size_t count);
 	void					setSunColor(sf::Color const& color);
 	void					setCanCreateSun(bool canCreate);
 
@@ -107,7 +107,7 @@ public:
 	void					setMoonColor(sf::Color const& color);
 	void					setCanCreateMoon(bool canCreate);
 private:
-	unsigned int			m_treeDepth;
+	std::size_t				m_treeDepth;
 	sf::Vector2f			m_treeSize;
 	sf::Time				m_treeLifeTime;
 	sf::Color				m_treeColor;
@@ -118,17 +118,17 @@ private:
 	sf::Color				m_leafColor;
 
 	sf::Vector2f			m_crystalSize;
-	unsigned int			m_crystalPartCount;
+	std::size_t				m_crystalPartCount;
 	sf::Color				m_crystalColor;
 	bool					m_canCreateCrystal;
 
 	sf::Vector2f			m_rockSize;
-	unsigned int			m_rockPartCount;
+	std::size_t				m_rockPartCount;
 	sf::Color				m_rockColor;
 	bool					m_canCreateRock;
 
 	sf::Vector2f			m_cloudSize;
-	unsigned int			m_cloudPartCount;
+	std::size_t				m_cloudPartCount;
 	sf::Time				m_cloudLifeTime;
 	sf::Color				m_cloudColor;
 	bool					m_canCreateCloud;
@@ -139,7 +139,7 @@ private:
 	bool					m_canCreateStar;
 
 	sf::Vector2f			m_sunSize;
-	unsigned int			m_sunPartCount;
+	std::size_t				m_sunPartCount;
 	sf::Color				m_sunColor;
 	bool					m_canCreateSun;
 

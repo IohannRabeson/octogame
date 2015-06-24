@@ -4,7 +4,6 @@
 # include "ADecor.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
-# include <random>
 
 class Tree : public ADecor
 {

@@ -37,9 +37,12 @@ void Tree::computeQuad(sf::Vector2f const & size, sf::Vector2f const & center, f
 
 void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, float const deltaColor, octo::VertexBuilder & builder)
 {
-	builder.createTriangle(quad.rightUp + quad.center, quad.rightDown + quad.center, quad.leftDown + quad.center, color);
+	sf::Vector2f tmpLeftDown = quad.leftDown + quad.center;
+	sf::Vector2f tmpRightUp = quad.rightUp + quad.center;
+
+	builder.createTriangle(tmpRightUp, quad.rightDown + quad.center, tmpLeftDown, color);
 	sf::Color tmpColor(deltaColor + color.r, deltaColor + color.g, deltaColor + color.b);
-	builder.createTriangle(quad.leftDown + quad.center, quad.leftUp + quad.center, quad.rightUp + quad.center, tmpColor);
+	builder.createTriangle(tmpLeftDown, quad.leftUp + quad.center, tmpRightUp, tmpColor);
 }
 
 void Tree::createLeaf(std::vector<QuadValue> const & quads, sf::Color const & color, float const deltaColor, octo::VertexBuilder & builder)
@@ -79,10 +82,10 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	// Compute left branch
 	float rectangleAngleLeft = angle - refAngle;
 	float radianLeft = rectangleAngleLeft * octo::Deg2Rad;
-	float cosLeft = cos(radianLeft);
-	float sinLeft = sin(radianLeft);
+	float cosLeft = std::cos(radianLeft);
+	float sinLeft = std::sin(radianLeft);
 
-	float leftSizeX = cos(refAngle * octo::Deg2Rad) * size.x;
+	float leftSizeX = std::cos(refAngle * octo::Deg2Rad) * size.x;
 	float leftSizeY = leftSizeX * size.y / size.x;
 	leftSizeY *= m_animation;
 	sf::Vector2f leftSize(leftSizeX, leftSizeY);
@@ -93,10 +96,10 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	// Compute right branch
 	float rectangleAngleRight = angle + 90.f - refAngle;
 	float radianRight = rectangleAngleRight * octo::Deg2Rad;
-	float cosRight = cos(radianRight);
-	float sinRight = sin(radianRight);
+	float cosRight = std::cos(radianRight);
+	float sinRight = std::sin(radianRight);
 
-	float rightSizeX = cos((90.0f - refAngle) * octo::Deg2Rad) * size.x;
+	float rightSizeX = std::cos((90.0f - refAngle) * octo::Deg2Rad) * size.x;
 	float rightSizeY = (rightSizeX * size.y / size.x);
 	rightSizeY *= m_animation;
 	sf::Vector2f rightSize(rightSizeX, rightSizeY);
@@ -105,7 +108,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	rightCenter += center + root.rightUp;
 
 	// Create leaf
-	if (currentDepth == m_depth - 2 && m_isLeaf)
+	if (m_isLeaf && currentDepth == m_depth - 2)
 	{
 		computeQuad(m_leafSize[m_countLeaf] * m_animation, rightCenter, cosRight, sinRight, m_leaf[m_countLeaf]);
 		m_countLeaf++;
