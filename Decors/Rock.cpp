@@ -1,13 +1,14 @@
 #include "Rock.hpp"
 #include "ABiome.hpp"
 
-//TODO: Dont forget to delete
-#include <random>
+std::mt19937	Rock::m_engine;
 
 Rock::Rock() :
 	m_partCount(1u),
 	m_animation(1.f)
 {
+	std::random_device rd;
+	m_engine.seed(rd());
 }
 
 void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float const & sizeLeft, float const & sizeRight, float const & sizeRec, sf::Vector2f const & rockOrigin, octo::VertexBuilder& builder)
@@ -54,8 +55,8 @@ void Rock::createRock(std::vector<OctogonValue> const & values, sf::Vector2f con
 {
 	for (std::size_t i = 0u; i < m_partCount; i++)
 		createOctogon(sf::Vector2f(values[i].size.x, values[i].size.y * m_animation), values[i].origin + originRock, color,
-						values[i].sizeLeft, values[i].sizeRight, values[i].sizeRec * m_animation, originRock, builder);
-	builder.createTriangle(m_left + originRock, m_right + originRock, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f) + originRock, color);
+						values[i].sizeLeft, values[i].sizeRight, values[i].sizeRec, originRock, builder);
+	builder.createTriangle(m_left + originRock, m_right + originRock, sf::Vector2f(m_left.x + (m_right.x - m_left.x) / 2.f, ((m_right.x - m_left.x) / 2.f) * m_animation) + originRock, color);
 }
 
 void Rock::setup(ABiome& biome)
@@ -87,7 +88,7 @@ void Rock::setup(ABiome& biome)
 			m_values[i].origin = origin;
 			m_values[i].sizeLeft = randomFloat(size.x, size.x * 2.f);
 			m_values[i].sizeRight = randomFloat(size.x, size.x * 2.f);
-			m_values[i].sizeRec = randomFloat(10.f, size.x * 2.f);
+			m_values[i].sizeRec = randomFloat(0.f, size.x * 2.f);
 		}
 		else
 			break;
@@ -96,6 +97,8 @@ void Rock::setup(ABiome& biome)
 
 	// Compute right random values
 	totalX = 0.f;
+	m_size = biome.getRockSize();
+	cornerSize = m_size.x / (m_partCount * 2.f);
 	size.x = cornerSize;
 	size.y = m_size.y;
 	origin = sf::Vector2f(0.f + size.x, 0.f);
@@ -117,23 +120,20 @@ void Rock::setup(ABiome& biome)
 	}
 }
 
-void Rock::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
+void Rock::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
+	(void)frameTime;
 	sf::Vector2f const & position = getPosition();
 	//TODO: Test this with terrain
 	createRock(m_values, sf::Vector2f(position.x, position.y + m_size.x / 2.f), m_color, builder);
 }
 
-// TODO: To delete and add in Biome
 float Rock::randomFloat(float min, float max)
 {
 	if (max - min == 0)
 		return max;
 	std::uniform_real_distribution<float> distribution(min, max);
-	//TODO: REplace by timestamp unix
-	std::random_device rd;
-	std::mt19937 engine(rd());
 
-	return distribution(engine);
+	return distribution(m_engine);
 }
 

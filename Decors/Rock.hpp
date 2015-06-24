@@ -49,7 +49,11 @@ private:
 					sf::Color const & color,
 					octo::VertexBuilder& builder);
 
-	float randomFloat(float min, float max);
+private:
+	static std::uniform_real_distribution<float>	m_distribution;
+	static std::mt19937								m_engine;
+
+	static float randomFloat(float min, float max);
 };
 
 #endif
