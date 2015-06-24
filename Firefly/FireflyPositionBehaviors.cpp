@@ -6,11 +6,13 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/17 19:29:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/17 19:35:32 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 06:26:09 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "FireflyPositionBehaviors.hpp"
+
+#include <Math.hpp>
 
 //
 //	StrictPositionBehavior
@@ -53,7 +55,7 @@ sf::Vector2f const&		FireflySwarm::RectanglePositionBehavior::getHalfSize()const
 //
 FireflySwarm::CirclePositionBehavior::CirclePositionBehavior(std::size_t seed, float radius) :
 	m_engine(seed),
-	m_trigoDistribution(-M_PI, M_PI),
+	m_trigoDistribution(-octo::Pi, octo::Pi),
 	m_radiusDistribution(0.f, 1.f),
 	m_radius(radius)
 {
