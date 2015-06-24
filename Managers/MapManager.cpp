@@ -107,7 +107,7 @@ void MapManager::update(float pf_deltatime)
 //	m_shader.setParameter("wave_amplitude", x * 40, y * 40);
 }
 
-void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
+void MapManager::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_terrainManager, &m_shader);
 
@@ -116,6 +116,6 @@ void MapManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 	rect.setSize(sf::Vector2f(m_collisionManager.getPlayer().getGlobalBounds().width, m_collisionManager.getPlayer().getGlobalBounds().height));
 	render.draw(rect);
 	*/
-	states.shader = &m_shader;
+	//states.shader = &m_shader;
 	//render.draw(&m_collisionManager.getPlayer().m_vertices[0], 4, sf::Quads, states);
 }

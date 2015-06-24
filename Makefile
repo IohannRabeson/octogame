@@ -11,8 +11,8 @@ LIB_DIRS = $(CORE_DIR)
 LIBS = octo sfml-system sfml-window sfml-graphics sfml-audio
 
 # sources
-SRC = $(SRC_PHYSICS)										\
-	  $(SRC_STATES)									\
+SRC = $(SRC_PHYSICS)									\
+	  $(SRC_STATES)										\
 	  $(SRC_FIREFLY)									\
 	  $(SRC_MAP)										\
 	  $(SRC_MANAGERS)									\
@@ -28,8 +28,9 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/AnimatedSpriteDemoScreen.cpp	\
 				Screens/AudioDemoScreen.cpp				\
 				Screens/EngineScreen.cpp				\
-				Screens/PhysicsMapScreen.cpp				\
+				Screens/PhysicsMapScreen.cpp			\
 				Screens/DecorManagerDemoScreen.cpp		\
+				Screens/ParticleDemoScreen.cpp			\
 				Screens/StateGame.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
@@ -37,7 +38,7 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPositionBehaviors.cpp
 
 SRC_MAP =		Map/Map.cpp								\
-				Map/TerrainManager.cpp			\
+				Map/TerrainManager.cpp					\
 				Map/MapInstance.cpp
 
 SRC_MANAGERS =	Managers/MapManager.cpp
@@ -51,15 +52,16 @@ SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp					\
 				Decors/Tree.cpp							\
-				Decors/Sun.cpp
+				Decors/Sun.cpp							\
+				Decors/RainSystem.cpp
 
-SRC_PHYSICS =	Physics/PolygonShape.cpp						\
-				Physics/RectangleShape.cpp						\
-				Physics/ConvexShape.cpp						\
-				Physics/CircleShape.cpp						\
-				Physics/Tile.cpp					\
-				Physics/PhysicsEngine.cpp					\
-				Physics/ShapeBuilder.cpp					\
+SRC_PHYSICS =	Physics/PolygonShape.cpp				\
+				Physics/RectangleShape.cpp				\
+				Physics/ConvexShape.cpp					\
+				Physics/CircleShape.cpp					\
+				Physics/Tile.cpp						\
+				Physics/PhysicsEngine.cpp				\
+				Physics/ShapeBuilder.cpp				\
 				Physics/AShape.cpp
 
 # package files
