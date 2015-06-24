@@ -10,6 +10,7 @@
 class AShape;
 class PolygonShape;
 class CircleShape;
+class TileShape;
 class IContactListener;
 
 /*!
@@ -45,7 +46,7 @@ public:
 	// Used by the ShapeBuilder to register the shape */
 	void registerShape(PolygonShape * shape);
 	void registerShape(CircleShape * shape);
-	void registerTile(PolygonShape * shape, std::size_t x, std::size_t y);
+	void registerTileS(TileShape * shape, std::size_t x, std::size_t y);
 
 	void update(float deltatime);
 
@@ -87,7 +88,7 @@ private:
 	// Vectors containing shapes by type to improve performance during collision detection
 	std::vector<CircleShape *>							m_circleShapes;
 	std::vector<PolygonShape *>							m_polygonShapes;
-	octo::Array2D<PolygonShape *>						m_tileShapes;
+	octo::Array2D<TileShape *>							m_tileShapes;
 
 	// Pairs of object which might be colliding
 	std::vector<Pair<PolygonShape *, PolygonShape *>>	m_polyPolyPairs;
@@ -98,8 +99,8 @@ private:
 	std::size_t											m_circleCirclePairCount;
 
 	// Pairs of object which might be colliding with the tile map
-	std::vector<Pair<PolygonShape *, PolygonShape *>>	m_tilePolyPairs;
-	std::vector<Pair<PolygonShape *, CircleShape *>>	m_tileCirclePairs;
+	std::vector<Pair<TileShape *, PolygonShape *>>		m_tilePolyPairs;
+	std::vector<Pair<TileShape *, CircleShape *>>		m_tileCirclePairs;
 	std::size_t											m_tilePolyPairCount;
 	std::size_t											m_tileCirclePairCount;
 
@@ -125,8 +126,10 @@ private:
 	 */
 	template<class T, class U>
 	std::size_t broadPhase(std::vector<T> const & vectorA, std::vector<U> const & vectorB, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate = false);
+
+	/*! Broadphase for tiles */
 	template<class T>
-	std::size_t broadPhase(std::vector<T> const & vector, std::vector<Pair<PolygonShape *, T>> & pairs);
+	std::size_t broadPhase(std::vector<T> const & vector, std::vector<Pair<TileShape *, T>> & pairs);
 
 	/*! Determine if pairs are colliding */
 	void narrowPhase(void);
@@ -140,13 +143,13 @@ private:
 	void narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t pairCount);
 
 	/*! Compute collision between different shape */
-	bool computeTileCollision(PolygonShape * polygonA, PolygonShape * polygonB);
-	bool computeTileCollision(PolygonShape * polygonA, CircleShape * polygonB);
 	bool computeCollision(PolygonShape * polygonA, PolygonShape * polygonB);
 	bool computeCollision(PolygonShape * polygon, CircleShape * circle);
 	bool computeCollision(CircleShape * circleA, CircleShape * circleB);
+	bool computeCollision(TileShape * tile, PolygonShape * polygon);
+	bool computeCollision(TileShape * tile, CircleShape * polygon);
 	bool findAxisLeastPenetration(PolygonShape * polygonA, PolygonShape * polygonB);
-	bool findAxisLeastPenetration(PolygonShape * polygonA, PolygonShape * polygonB, sf::Vector2f const & velocity);
+	bool findAxisLeastPenetration(TileShape * tile, PolygonShape * polygon);
 
 	IContactListener *		m_contactListener;
 

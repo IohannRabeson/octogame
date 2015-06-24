@@ -51,13 +51,14 @@ SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp
 
-SRC_PHYSICS =	Physics/PolygonShape.cpp						\
-				Physics/RectangleShape.cpp						\
-				Physics/ConvexShape.cpp						\
-				Physics/CircleShape.cpp						\
-				Physics/Tile.cpp					\
-				Physics/PhysicsEngine.cpp					\
-				Physics/ShapeBuilder.cpp					\
+SRC_PHYSICS =	Physics/PolygonShape.cpp				\
+				Physics/RectangleShape.cpp				\
+				Physics/ConvexShape.cpp					\
+				Physics/CircleShape.cpp					\
+				Physics/Tile.cpp						\
+				Physics/TileShape.cpp					\
+				Physics/PhysicsEngine.cpp				\
+				Physics/ShapeBuilder.cpp				\
 				Physics/AShape.cpp
 
 # package files

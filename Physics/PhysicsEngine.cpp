@@ -4,6 +4,7 @@
 #include "CircleShape.hpp"
 #include "RectangleShape.hpp"
 #include "Tile.hpp"
+#include "TileShape.hpp"
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <Math.hpp>
@@ -27,7 +28,8 @@ PhysicsEngine::PhysicsEngine(void) :
 
 PhysicsEngine::~PhysicsEngine(void)
 {
-	m_shapes.clear();
+	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
+		delete (*i);
 	for (auto i = m_tileShapes.begin(); i != m_tileShapes.end(); i++)
 		delete (*i);
 }
@@ -79,7 +81,7 @@ void PhysicsEngine::registerShape(CircleShape * shape)
 	m_circleShapes.push_back(shape);
 }
 
-void PhysicsEngine::registerTile(PolygonShape * shape, std::size_t x,  std::size_t y)
+void PhysicsEngine::registerTileS(TileShape * shape, std::size_t x,  std::size_t y)
 {
 	assert(x < m_tileShapes.columns() && x >= 0 && y >= 0 && y < m_tileShapes.rows());
 	m_tileShapes.set(x, y, shape);
@@ -88,6 +90,14 @@ void PhysicsEngine::registerTile(PolygonShape * shape, std::size_t x,  std::size
 void PhysicsEngine::update(float deltatime)
 {
 	// Add gravity
+	for (std::size_t i = 0u; i < 123/*m_tileShapes.columns()*/; i++)
+	{
+		for (std::size_t k = 0u; k < 72/*m_tileShapes.rows()*/; k++)
+		{
+				if (!m_tileShapes.get(i, k)->getSleep())
+					m_tileShapes.get(i, k)->update();
+		}
+	}
 	sf::Vector2f gravity = m_gravity * deltatime;
 	for (auto shape : m_shapes)
 	{
@@ -120,7 +130,7 @@ void PhysicsEngine::broadPhase(void)
 }
 
 template<class T>
-std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<Pair<PolygonShape *, T>> & pairs)
+std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<Pair<TileShape *, T>> & pairs)
 {
 	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
 	sf::FloatRect shapeAABB;
@@ -255,7 +265,7 @@ void PhysicsEngine::narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t
 		{
 			pairs[i].m_shapeB->addVelocity(vel);
 			//TODO: if a shape will collide with a lot of tile, a AABB recheck could be efficient
-			if (computeTileCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
+			if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
 			{
 				if ((m_mtv.y <= -0.00000001f || m_mtv.y >= 0.00000001f) && (m_mtv.x <= -0.00000001f || m_mtv.x >= 0.00000001f))
 				{
@@ -274,18 +284,18 @@ void PhysicsEngine::narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t
 	}
 }
 
-bool PhysicsEngine::findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB, sf::Vector2f const & velocity)
+bool PhysicsEngine::findAxisLeastPenetration(TileShape * tile, PolygonShape * polygon)
 {
-	for(std::size_t i = 0u; i < polygonB->getEfficientVertexCount(); ++i)
+	for(std::size_t i = 0u; i < polygon->getEfficientVertexCount(); ++i)
 	{
-		m_axis = polygonB->getNormal(i);
+		m_axis = polygon->getNormal(i);
 		if (m_axis.x == 0.f && m_axis.y == 0.f)
 			continue;
 		octo::normalize(m_axis);
 		// On récupère le supportPoint dans le sens inverse de l'axe
-		sf::Vector2f const & s = polygonA->getSupportVertex(-m_axis);
+		sf::Vector2f const & s = tile->getSupportVertex(-m_axis);
 		// On récupère chaque vertex
-		sf::Vector2f const & v = polygonB->getVertex(i) + velocity;
+		sf::Vector2f const & v = polygon->getVertex(i) + polygon->getVelocity();
 		// Projection de s - v sur l'axe, si d < 0.f, il y a une possible collision
 		float d = octo::dotProduct(m_axis, s - v);
 		// Il y a un axe separateur
@@ -298,15 +308,16 @@ bool PhysicsEngine::findAxisLeastPenetration(PolygonShape *polygonA, PolygonShap
 		}
 	}
 
+	//TODO: check the direction of the mtv to valid it or not
 	// For the tile, we only test the axis of the top
-	m_axis = polygonA->getNormal(0u);
+	m_axis = tile->getNormal(0u);
 	if (m_axis.x != 0.f && m_axis.y != 0.f)
 	{
 		octo::normalize(m_axis);
 		// On récupère le supportPoint dans le sens inverse de l'axe
-		sf::Vector2f const & s = polygonB->getSupportVertex(-m_axis) + velocity;
+		sf::Vector2f const & s = polygon->getSupportVertex(-m_axis) + polygon->getVelocity();
 		// On récupère chaque vertex
-		sf::Vector2f v = polygonA->getVertex(0u);
+		sf::Vector2f v = tile->getVertex(0u);
 		// Projection de s - v sur l'axe, si d < 0.f, il y a une possible collision
 		float d = octo::dotProduct(m_axis, s - v);
 		// Il y a un axe separateur
@@ -319,10 +330,9 @@ bool PhysicsEngine::findAxisLeastPenetration(PolygonShape *polygonA, PolygonShap
 		}
 	}
 	return true;
-
 }
 
-bool PhysicsEngine::findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB)
+bool PhysicsEngine::findAxisLeastPenetration(PolygonShape * polygonA, PolygonShape * polygonB)
 {
 	//TODO: check if it' still work
 	for(std::size_t i = 0u; i < polygonA->getEfficientVertexCount(); ++i)
@@ -367,12 +377,12 @@ bool PhysicsEngine::findAxisLeastPenetration(PolygonShape *polygonA, PolygonShap
 	return true;
 }
 
-bool PhysicsEngine::computeTileCollision(PolygonShape * polygonA, PolygonShape * polygonB)
+bool PhysicsEngine::computeCollision(TileShape * tile, PolygonShape * polygon)
 {
 	m_magnitude = -std::numeric_limits<float>::max();
-	if (!findAxisLeastPenetration(polygonA, polygonB, polygonB->getVelocity()))
+	if (!findAxisLeastPenetration(tile, polygon))
 		return false;
-	if (octo::dotProduct(m_mtv, polygonA->getBaryCenter() - polygonB->getBaryCenter()) > 0.f)
+	if (octo::dotProduct(m_mtv, tile->getBaryCenter() - polygon->getBaryCenter()) > 0.f)
 		m_mtv = -m_mtv;
 	m_mtv *= m_magnitude;
 	return true;
@@ -412,9 +422,9 @@ bool PhysicsEngine::computeCollision(CircleShape * circleA, CircleShape * circle
 	return true;
 }
 
-bool PhysicsEngine::computeTileCollision(PolygonShape * polygon, CircleShape * circle)
+bool PhysicsEngine::computeCollision(TileShape * tile, CircleShape * circle)
 {
-	return computeCollision(polygon, circle);
+	return computeCollision(tile, circle);
 }
 
 bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circle)

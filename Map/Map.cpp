@@ -90,6 +90,7 @@ void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
 			// secondCurve return a value between -1 & 1
 			m_tiles.get(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
 			m_tiles.get(x, y)->mb_isEmpty = false;
+			//TODO: pointer to function, merge with secondCurve
 			setColor(*m_tiles.get(x, y));
 		}
 	}
@@ -137,6 +138,7 @@ void Map::computeDecor(void)
 
 sf::Vertex * Map::getHeight(int x)
 {
+	//TODO: emplace or insert
 	auto it = m_decors.find(x);
 	if (it == m_decors.end())
 	{

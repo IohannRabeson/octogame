@@ -17,8 +17,9 @@ void	PhysicsMapScreen::start()
 	m_engine.setTileCollision(true);
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
-	octo::Application::getGraphicsManager().setFramerateLimit(60);
+	//octo::Application::getGraphicsManager().setFramerateLimit(60);
 	m_mapManager.init();
+
 	m_shape = m_engine.createConvex();
 	m_shape->setPosition(300.f, 600.f);
 	m_shape->setApplyGravity(true);
@@ -31,12 +32,12 @@ void	PhysicsMapScreen::start()
 	m_shape->setVertex(3u, sf::Vector2f(0.f, 60.f));
 	m_circle = nullptr;
 
-	m_circle = m_engine.createCircle();
+/*	m_circle = m_engine.createCircle();
 	m_circle->setApplyGravity(true);
 	m_circle->setRadius(15.f);
 	m_circle->setBaryCenterPosition(550.f, 0.f);
 	m_circle->setOrigin(sf::Vector2f(10.f, 6.f));
-}
+*/}
 
 void	PhysicsMapScreen::pause()
 {
@@ -52,10 +53,10 @@ void	PhysicsMapScreen::stop()
 
 void	PhysicsMapScreen::update(sf::Time deltatime)
 {
-	float speed = 100.f * deltatime.asSeconds();
+	float speed = 200.f * deltatime.asSeconds();
 
 	m_mapManager.update(deltatime.asSeconds());
-	if (m_frameByFrame)
+	//if (m_frameByFrame)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
 			m_shape->addVelocity(0.f, -speed);

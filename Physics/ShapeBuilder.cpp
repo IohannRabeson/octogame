@@ -2,6 +2,7 @@
 #include "PhysicsEngine.hpp"
 #include "ConvexShape.hpp"
 #include "CircleShape.hpp"
+#include "TileShape.hpp"
 #include "RectangleShape.hpp"
 
 ConvexShape * ShapeBuilder::createConvex(void)
@@ -25,11 +26,9 @@ RectangleShape * ShapeBuilder::createRectangle(void)
 	return shape;
 }
 
-ConvexShape * ShapeBuilder::createTile(std::size_t x, std::size_t y)
+TileShape * ShapeBuilder::createTileS(std::size_t x, std::size_t y)
 {
-	ConvexShape * shape = new ConvexShape();
-	shape->setVertexCount(4u);
-	PhysicsEngine::getInstance().registerTile(shape, x, y);
+	TileShape * shape = new TileShape();
+	PhysicsEngine::getInstance().registerTileS(shape, x, y);
 	return shape;
 }
-
