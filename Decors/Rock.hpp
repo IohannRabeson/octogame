@@ -1,38 +1,58 @@
 #ifndef ROCK_HPP
 # define ROCK_HPP
 
-# include "Decor.hpp"
-# include <vector>
-# include <cmath>
+# include "ADecor.hpp"
+# include "VertexBuilder.hpp"
+# include <SFML/Graphics/Color.hpp>
 
-class Rock : public Decor
+class Rock : public ADecor
 {
+struct OctogonValue
+{
+	sf::Vector2f			size;
+	sf::Vector2f			origin;
+	float					sizeLeft;
+	float					sizeRight;
+	float					sizeRec;
+};
+
+public:
+	Rock(void);
+	virtual ~Rock(void) = default;
+
+	virtual void	setup(ABiome& biome);
+	virtual void	update(sf::Time frameTime,
+						   octo::VertexBuilder& builder,
+						   ABiome& biome);
+
 private:
-	struct OctogonValue
-	{
-		sf::Vector2f			size;
-		sf::Vector2f			origin;
-		float					sizeLeft;
-		float					sizeRight;
-		float					sizeRec;
-	};
-	int							mn_countOctogon;
+	sf::Vector2f				m_size;
+	sf::Color					m_color;
+	std::size_t					m_partCount;
 	std::vector<OctogonValue>	m_values;
+	float						m_animation;
 
 	sf::Vector2f				m_left;
 	sf::Vector2f				m_right;
 
-public:
-	Rock(void);
-	virtual ~Rock(void);
+	void createOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & origin,
+						sf::Color const & color,
+						float const & sizeLeft,
+						float const & sizeRight,
+						float const & sizeRec,
+						sf::Vector2f const & position,
+						octo::VertexBuilder& builder);
 
-	void init(Biome * p_biome);
+	void createRock(std::vector<OctogonValue> const & values,
+					sf::Vector2f const & originRock,
+					sf::Color const & color,
+					octo::VertexBuilder& builder);
 
-	void createOctogon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color, float p_sizeLeft, float p_sizeRight, float p_sizeRec);
-	void createRock(void);
-	void randomDecor(void);
+private:
+	static std::mt19937 m_engine;
 
-	virtual void update(float pf_deltatime);
+	static float randomFloat(float min, float max);
 };
 
 #endif
