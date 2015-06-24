@@ -26,8 +26,8 @@ void MapInstance::initBiome(void)
 	m_biome->mn_wind = 300;
 	m_instance = new StaticTileObject(140u, 40u, 5u);
 	m_instance->load();
-	mn_totalWidth = m_biome->mn_width + m_instance->getWidth();
-	m_biome->mn_totalWidth = mn_totalWidth;
+	m_totalWidth = m_biome->mn_width + m_instance->getWidth();
+	m_biome->m_totalWidth = m_totalWidth;
 
 	// Decors values
 	m_biome->m_tree.mn_nb = 10;
@@ -97,10 +97,10 @@ void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_
 		offset = x + offsetX;
 		offsetPosX = offset;
 		while (offset < 0)
-			offset += mn_totalWidth;
-		while (offset >= static_cast<int>(mn_totalWidth))
-			offset -= mn_totalWidth;
-		if (offset >= static_cast<int>(m_biome->mn_width) && offset < static_cast<int>(mn_totalWidth))
+			offset += m_totalWidth;
+		while (offset >= static_cast<int>(m_totalWidth))
+			offset -= m_totalWidth;
+		if (offset >= static_cast<int>(m_biome->mn_width) && offset < static_cast<int>(m_totalWidth))
 			inInstance = true;
 
 		if (inInstance)
@@ -117,25 +117,25 @@ void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_
 		{
 			offsetY = y + static_cast<int>(m_curOffset.y / Tile::TileSize);
 			// Init square
-			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[3] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
+			m_tiles.get(x, y)->setStartTransition(0, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(1, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(2, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(3, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
 			offsetInstance = offsetY - height;
 			if (inInstance && offsetInstance >= 0 && offsetInstance < static_cast<int>(m_instance->getHeight()))
-				m_tiles.get(x, y)->mb_isEmpty = m_instance->get(offset - m_biome->mn_width, offsetInstance).mb_isEmpty;
+				m_tiles.get(x, y)->setIsEmpty(m_instance->get(offset - m_biome->mn_width, offsetInstance).isEmpty());
 			else if (offsetY < height || offsetY < 0)
 			{
-				m_tiles.get(x, y)->mb_isEmpty = true;
+				m_tiles.get(x, y)->setIsEmpty(true);
 				continue;
 			}
 			else
-				m_tiles.get(x, y)->mb_isEmpty = false;
+				m_tiles.get(x, y)->setIsEmpty(false);
 			vec[0] = static_cast<float>(x + offsetX);
 			vec[1] = static_cast<float>(offsetY);
 			vec[2] = m_depth;
 			// secondCurve return a value between -1 & 1
-			m_tiles.get(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
+			m_tiles.get(x, y)->setNoiseValue((secondCurve(vec) + 1.f) / 2.f);
 			setColor(*m_tiles.get(x, y));
 		}
 	}
@@ -163,16 +163,16 @@ void MapInstance::setColor(Tile & p_tile)
 	sf::Color end = sf::Color(178.f, 162.f, 32.f);
 	sf::Color mid = sf::Color(0.f, 74.f, 213.f);
 
-	start = octo::linearInterpolation(end, mid, p_tile.mf_noiseValue);
+	start = octo::linearInterpolation(end, mid, p_tile.getNoiseValue());
 
-	if (p_tile.mf_noiseValue < 0.4f)
-		p_tile.m_startColor = start;
-	else if (p_tile.mf_noiseValue < 0.6f)
+	if (p_tile.getNoiseValue() < 0.4f)
+		p_tile.setStartColor(start);
+	else if (p_tile.getNoiseValue() < 0.6f)
 	{
-		p_tile.m_startColor = octo::linearInterpolation(start, end, (p_tile.mf_noiseValue - 0.4f) * 5.f);
+		p_tile.setStartColor(octo::linearInterpolation(start, end, (p_tile.getNoiseValue() - 0.4f) * 5.f));
 	}
 	else
-		p_tile.m_startColor = end;
+		p_tile.setStartColor(end);
 }
 
 void MapInstance::swapDepth(void)

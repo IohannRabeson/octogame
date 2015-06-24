@@ -27,16 +27,15 @@ public:
 	void update(float pf_deltatime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
-	//TODO: rename variables
 private:
 	// TODO: smart ptr
 	Map *							m_tiles;
 	Map *							m_tilesPrev;
-	float							mf_transitionTimer;
-	float							mf_transitionTimerMax;
+	float							m_transitionTimer;
+	float							m_transitionTimerMax;
 	sf::Vector2f					m_offset;
 	std::unique_ptr<sf::Vertex[]>	m_vertices;
-	std::size_t						mn_verticesCount;
+	std::size_t						m_verticesCount;
 	sf::Vector2i					m_oldOffset;
 	octo::Array2D<TileShape *>		m_tileShapes;
 

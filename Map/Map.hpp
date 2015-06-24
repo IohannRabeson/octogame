@@ -24,7 +24,7 @@ struct Biome
 {
 	std::size_t			mn_height;
 	std::size_t			mn_width;
-	std::size_t			mn_totalWidth;
+	std::size_t			m_totalWidth;
 	int					mn_temperature;
 	int					mn_wind;
 	std::size_t			mn_nbDecor;
@@ -76,6 +76,7 @@ public:
 
 	void init(Biome * p_biome);
 
+	//TODO: nor more virtual, pointer to function instead
 	virtual void swapDepth(void);
 	virtual void registerDepth(void);
 	virtual void nextStep(void) = 0;
@@ -84,15 +85,15 @@ public:
 	virtual void computeDecor(void);
 
 protected:
-	float			m_depth;
-	float			m_oldDepth;
-	Biome *			m_biome;
-	TileMap			m_tiles;
-	std::size_t		m_width;
-	std::size_t		m_height;
+	float					m_depth;
+	float					m_oldDepth;
+	Biome *					m_biome;
+	TileMap					m_tiles;
+	std::size_t				m_width;
+	std::size_t				m_height;
 	sf::Vector2f const *	m_offset;
-	sf::Vector2f		m_curOffset;
-	std::size_t		mn_totalWidth;
+	sf::Vector2f			m_curOffset;
+	std::size_t				m_totalWidth;
 
 	// Containes base value to avoid redundant calcul
 	octo::Array2D<sf::Vector2f>		m_baseValue;
@@ -106,10 +107,10 @@ protected:
 private:
 	static constexpr std::size_t MaxDecor = 200u;
 
-	Tile						m_reserveTile[MaxDecor];
-	Decors						m_decors;
-	std::size_t					mn_decorTileCount;
-	std::unique_ptr<sf::Vertex[]>			m_vertices;
+	Tile							m_reserveTile[MaxDecor];
+	Decors							m_decors;
+	std::size_t						m_decorTileCount;
+	std::unique_ptr<sf::Vertex[]>	m_vertices;
 
 };
 

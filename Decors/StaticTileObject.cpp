@@ -48,13 +48,13 @@ void StaticTileObject::load(void)
 			for (unsigned int y = 0; y < m_tiles[i].rows(); y++)
 			{
 				if (i == 1)
-					m_tiles[i](x, y)->mb_isEmpty = false;
+					m_tiles[i](x, y)->setIsEmpty(false);
 				else
 				{
 					if ((x % 3 == 0 || x % 4 == 0) && y < 8)
-						m_tiles[i](x, y)->mb_isEmpty = true;
+						m_tiles[i](x, y)->setIsEmpty(true);
 					else
-						m_tiles[i](x, y)->mb_isEmpty = false;
+						m_tiles[i](x, y)->setIsEmpty(false);
 				}
 			}
 		}
