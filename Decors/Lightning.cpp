@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 17:25:02 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 19:11:10 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 23:40:33 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,16 @@ void	Lightning::setArc(std::size_t id, sf::Vector2f const& p0, sf::Vector2f cons
 	m_lightnings.at(id)->setSegment(p0, p1);
 }
 
+Lightning::Arc&	Lightning::getArc(std::size_t id)
+{
+	return (*m_lightnings.at(id));
+}
+
+Lightning::Arc const&	Lightning::getArc(std::size_t id)const
+{
+	return (*m_lightnings.at(id));
+}
+
 void	Lightning::removeArc(std::size_t id)
 {
 	m_lightnings.erase(std::next(m_lightnings.begin(), id));
@@ -153,9 +163,12 @@ void	Lightning::Arc::setFractalLevel(std::size_t level)
 	m_fractalLevel = level;
 }
 
+/*!	Set the maximum angle for a new branch
+ *	\param angle Angle in degrees
+ */
 void	Lightning::Arc::setBranchMaxAngle(float angle)
 {
-	m_branchAngle = angle;
+	m_branchAngle = octo::deg2Rad(angle);
 }
 
 void	Lightning::Arc::setBranchMaxLenght(float lenght)
@@ -185,6 +198,15 @@ void	Lightning::Arc::setSegment(sf::Vector2f const& p0, sf::Vector2f const& p1)
 	m_segments.emplace_back(p0, p1);
 }
 
+//
+//	This method attemps m_segments contains at least one segment and
+//	fractalize theses segments.
+//
+//	This type of algorithm is called "mid point algorithm" because at each iteration
+//	he uses the middle point of the current segment.
+//	Each segment is cutted in two parts and the point between is moved
+//	along the perpendicular, then 2 segments are created in replacement of the first.
+//
 void	Lightning::Arc::fractalizeSegments()
 {
 	sf::Vector2f	midPoint;

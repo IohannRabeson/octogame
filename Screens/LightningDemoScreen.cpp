@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/23 02:40:01 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/23 05:33:13 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 23:13:02 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <GraphicsManager.hpp>
+#include <Console.hpp>
 
 LightningDemoScreen::LightningDemoScreen() :
 	m_lightning(200000)
@@ -24,6 +25,7 @@ void	LightningDemoScreen::start()
 {
 	octo::Camera&			camera = octo::Application::getCamera();
 	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
+	octo::Console&			console = octo::Application::getConsole();
 	sf::Vector2f			offset{0.f, (camera.getSize().y / 2.f) - 64.f};
 
 	graphics.addMouseListener(this);
@@ -44,6 +46,41 @@ void	LightningDemoScreen::start()
 						 });
 	m_p0.setPosition(camera.getCenter() - offset, true);
 	m_p1.setPosition(camera.getCenter() + offset, true);
+	console.addCommand(L"demo.setBranchProbability",
+					   [this](float proba)
+					   {
+					   		m_lightning.getArc(0).setBranchProbability(proba);
+					   });
+	console.addCommand(L"demo.setColor",
+					   [this](sf::Color const& color)
+					   {
+					   		m_lightning.getArc(0).setColor(color);
+					   });
+	console.addCommand(L"demo.setThickness",
+					   [this](float thickness)
+					   {
+					   		m_lightning.getArc(0).setThickness(thickness);
+					   });
+	console.addCommand(L"demo.setMiddleOffsetFactor",
+					   [this](float factor)
+					   {
+					   		m_lightning.getArc(0).setMiddleOffsetFactor(factor);
+					   });
+	console.addCommand(L"demo.setFractalLevel",
+					   [this](std::size_t level)
+					   {
+					   		m_lightning.getArc(0).setFractalLevel(level);
+					   });
+	console.addCommand(L"demo.setBranchMaxAngle",
+					   [this](float maxAngle)
+					   {
+					   		m_lightning.getArc(0).setBranchMaxAngle(maxAngle);
+					   });
+	console.addCommand(L"demo.setBranchMaxLenght",
+					   [this](float lenght)
+					   {
+					   		m_lightning.getArc(0).setBranchMaxLenght(lenght);
+					   });
 }
 
 void	LightningDemoScreen::pause()
