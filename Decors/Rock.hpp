@@ -50,8 +50,7 @@ private:
 					octo::VertexBuilder& builder);
 
 private:
-	static std::uniform_real_distribution<float>	m_distribution;
-	static std::mt19937								m_engine;
+	static std::mt19937 m_engine;
 
 	static float randomFloat(float min, float max);
 };
