@@ -28,23 +28,29 @@ public:
 
 	virtual void			setup(std::size_t seed) = 0;
 	virtual std::string		getName()const = 0;
-	virtual unsigned int	getTreeDepth()= 0;
+
+	virtual std::size_t		getTreeDepth()= 0;
+	virtual sf::Vector2f	getTreeSize() = 0;
 	virtual sf::Time		getTreeLifeTime() = 0;
 	virtual sf::Color		getTreeColor() = 0;
+	virtual float			getTreeAngle() = 0;
 	virtual bool			canCreateTree() = 0;
+	virtual bool			canCreateLeaf() = 0;
+	virtual sf::Vector2f	getLeafSize() = 0;
+	virtual sf::Color		getLeafColor() = 0;
 
 	virtual sf::Vector2f	getCrystalSize() = 0;
-	virtual unsigned int	getCrystalPartCount() = 0;
+	virtual std::size_t		getCrystalPartCount() = 0;
 	virtual sf::Color		getCrystalColor() = 0;
 	virtual bool			canCreateCrystal() = 0;
 
 	virtual sf::Vector2f	getRockSize() = 0;
-	virtual unsigned int	getRockPartCount() = 0;
+	virtual std::size_t		getRockPartCount() = 0;
 	virtual sf::Color		getRockColor() = 0;
 	virtual bool			canCreateRock() = 0;
 
 	virtual sf::Vector2f	getCloudSize() = 0;
-	virtual unsigned int	getCloudPartCount() = 0;
+	virtual std::size_t		getCloudPartCount() = 0;
 	virtual sf::Time		getCloudLifeTime() = 0;
 	virtual sf::Color		getCloudColor() = 0;
 	virtual bool			canCreateCloud() = 0;
@@ -55,7 +61,7 @@ public:
 	virtual bool			canCreateStar() = 0;
 
 	virtual sf::Vector2f 	getSunSize() = 0;
-	virtual unsigned int	getSunPartCount() = 0;
+	virtual std::size_t		getSunPartCount() = 0;
 	virtual sf::Color		getSunColor() = 0;
 	virtual bool			canCreateSun() = 0;
 
