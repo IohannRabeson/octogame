@@ -163,6 +163,7 @@ void TerrainManager::updateTransition(void)
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
 		bool isFirst = false;
+		bool isSecond = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
@@ -172,18 +173,22 @@ void TerrainManager::updateTransition(void)
 				continue;
 			}
 			tilePrev = &m_tilesPrev->get(x, y);
-			//TODO: better managment of tiles
+			// Update tile transition
 			m_vertices[m_verticesCount + 0u].position = octo::linearInterpolation(tilePrev->getStartTransition(0u), tile->getStartTransition(0u), transition);
 			m_vertices[m_verticesCount + 1u].position = octo::linearInterpolation(tilePrev->getStartTransition(1u), tile->getStartTransition(1u), transition);
 			m_vertices[m_verticesCount + 2u].position = octo::linearInterpolation(tilePrev->getStartTransition(2u), tile->getStartTransition(2u), transition);
 			m_vertices[m_verticesCount + 3u].position = octo::linearInterpolation(tilePrev->getStartTransition(3u), tile->getStartTransition(3u), transition);
 			m_vertices[m_verticesCount].color = octo::linearInterpolation(tilePrev->getStartColor(), tile->getStartColor(), transition);
+
+			// Update tile color and offset
 			for (std::size_t i = 0u; i < 4u; i++)
 			{
 				m_vertices[m_verticesCount + i].position.x -= Tile::DoubleTileSize;
 				m_vertices[m_verticesCount + i].position.y -= Tile::DoubleTileSize;
 				m_vertices[m_verticesCount + i].color = m_vertices[m_verticesCount].color;
 			}
+
+			// Update physics information
 			if (!isFirst)
 			{
 				isFirst = true;
