@@ -1,113 +1,118 @@
 #include "Cloud.hpp"
-#include "Map.hpp"
+#include "ABiome.hpp"
+
+std::mt19937	Cloud::m_engine;
 
 Cloud::Cloud() :
-	Decor(),
-	mn_coundOctogon(0),
-	mn_alpha(0)
+	m_partCount(0),
+	m_animation(1.f),
+	m_lifeTime(sf::Time::Zero)
 {
+	std::random_device rd;
+	m_engine.seed(rd());
 }
 
-Cloud::~Cloud()
+void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color color, float const sizeUp, float const sizeDown, float const sizeRec, octo::VertexBuilder& builder)
 {
-	m_values.clear();
-}
+	color.a = m_animation * color.a;
 
-void Cloud::createOctogon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec)
-{
-	p_color.a = mf_mouvement * mn_alpha;
+	sf::Vector2f upLeft(-size.x + sizeUp, -size.y - sizeUp);
+	sf::Vector2f upRight(size.x - sizeUp, -size.y - sizeUp);
+	sf::Vector2f cornerUpLeft(-size.x + sizeUp, -size.y);
+	sf::Vector2f cornerUpRight(size.x - sizeUp, -size.y);
+	sf::Vector2f upMidLeft(-size.x, -size.y);
+	sf::Vector2f upMidRight(size.x, -size.y);
 
-	sf::Vector2f upLeft(-p_size.x + p_sizeUp, -p_size.y - p_sizeUp);
-	sf::Vector2f upRight(p_size.x - p_sizeUp, -p_size.y - p_sizeUp);
-	sf::Vector2f cornerUpLeft(-p_size.x + p_sizeUp, -p_size.y);
-	sf::Vector2f cornerUpRight(p_size.x - p_sizeUp, -p_size.y);
-	sf::Vector2f upMidLeft(-p_size.x, -p_size.y);
-	sf::Vector2f upMidRight(p_size.x, -p_size.y);
+	sf::Vector2f downLeft(-size.x + sizeDown, size.y + sizeDown);
+	sf::Vector2f downRight(size.x - sizeDown, size.y + sizeDown);
+	sf::Vector2f cornerDownLeft(-size.x + sizeDown, size.y);
+	sf::Vector2f cornerDownRight(size.x - sizeDown, size.y);
+	sf::Vector2f downMidLeft(-size.x, size.y);
+	sf::Vector2f downMidRight(size.x, size.y);
 
-	sf::Vector2f downLeft(-p_size.x + p_sizeDown, p_size.y + p_sizeDown);
-	sf::Vector2f downRight(p_size.x - p_sizeDown, p_size.y + p_sizeDown);
-	sf::Vector2f cornerDownLeft(-p_size.x + p_sizeDown, p_size.y);
-	sf::Vector2f cornerDownRight(p_size.x - p_sizeDown, p_size.y);
-	sf::Vector2f downMidLeft(-p_size.x, p_size.y);
-	sf::Vector2f downMidRight(p_size.x, p_size.y);
-
-	sf::Vector2f recUpLeft(downMidLeft.x, downMidLeft.y - p_sizeRec);
+	sf::Vector2f recUpLeft(downMidLeft.x, downMidLeft.y - sizeRec);
 	sf::Vector2f recUpRight(downMidLeft.x + 4.f, recUpLeft.y);
 	sf::Vector2f recDown(downMidLeft.x + 4.f, downMidLeft.y);
 	sf::Vector2f secondRec(downLeft.x, downLeft.y - 4.f);
 
+	upLeft += origin;
+	upRight += origin;
+	cornerUpLeft += origin;
+	cornerUpRight += origin;
+	upMidLeft += origin;
+	upMidRight += origin;
+
+	downLeft += origin;
+	downRight += origin;
+	cornerDownLeft += origin;
+	cornerDownRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+
+	recUpLeft += origin;
+	recUpRight += origin;
+	recDown += origin;
+	secondRec += origin;
+
 	// Corner up
-	createTriangle(upMidRight, cornerUpRight, upRight, p_origin, p_color);
-	createTriangle(upMidLeft, cornerUpLeft, upLeft, p_origin, p_color);
+	builder.createTriangle(upMidRight, cornerUpRight, upRight, color);
+	builder.createTriangle(upMidLeft, cornerUpLeft, upLeft, color);
 
 	// Fill with rectangle
-	createRectangle(upLeft, upRight, cornerUpRight, cornerUpLeft, p_origin, p_color);
-	createRectangle(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, p_origin, p_color);
-	createRectangle(cornerDownLeft, cornerDownRight, downRight, downLeft, p_origin, p_color);
-	createRectangle(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
-	createRectangle(cornerUpRight, upMidRight, downMidRight, cornerDownRight, p_origin, p_color);
+	builder.createQuad(upLeft, upRight, cornerUpRight, cornerUpLeft, color);
+	builder.createQuad(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, color);
+	builder.createQuad(cornerDownLeft, cornerDownRight, downRight, downLeft, color);
+	builder.createQuad(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, color);
+	builder.createQuad(cornerUpRight, upMidRight, downMidRight, cornerDownRight, color);
 
 	// Corner down
-	createTriangle(downMidRight, cornerDownRight, downRight, p_origin, p_color);
-	createTriangle(downMidLeft, cornerDownLeft, downLeft, p_origin, p_color);
+	builder.createTriangle(downMidRight, cornerDownRight, downRight, color);
+	builder.createTriangle(downMidLeft, cornerDownLeft, downLeft, color);
 
 	// Details
-	createRectangle(downMidLeft, recUpLeft, recUpRight, recDown, p_origin, p_color);
-	createRectangle(downMidLeft, recDown, secondRec, downLeft, p_origin, p_color);
+	builder.createQuad(downMidLeft, recUpLeft, recUpRight, recDown, color);
+	builder.createQuad(downMidLeft, recDown, secondRec, downLeft, color);
 }
 
-void Cloud::createCloud(void)
+void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f const & originCloud, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	mn_countVertex = 0;
-	for (int i = 0; i < mn_coundOctogon; i++)
-		createOctogon(sf::Vector2f(m_values[i].size.x, m_values[i].size.y * mf_mouvement), m_values[i].origin + m_origin, m_color,
-						m_values[i].sizeUp * mf_mouvement, m_values[i].sizeDown * mf_mouvement, m_values[i].sizeRec * mf_mouvement);
-	if (b_isIce == true)
-	{
-		sf::Color iceColor(5, 103, 155, 60);
-		for (int i = 0; i < mn_coundOctogon; i++)
-			createOctogon(sf::Vector2f(m_values[i].size.x, m_values[i].size.y * mf_mouvement * 1.1f), m_values[i].origin + m_origin, iceColor,
-							m_values[i].sizeUp * 1.2f, m_values[i].sizeDown * 1.2f, m_values[i].sizeRec * mf_mouvement * 1.2f);
-	}
+	for (std::size_t i = 0; i < m_partCount; i++)
+		createOctogon(sf::Vector2f(values[i].size.x, values[i].size.y * m_animation), values[i].origin + originCloud, color,
+						values[i].sizeUp * m_animation, values[i].sizeDown * m_animation, values[i].sizeRec * m_animation, builder);
 }
 
-void Cloud::randomDecor(void)
+void Cloud::setup(ABiome& biome)
 {
-	Decor::randomDecor();
-	// Init values
-	mf_liveTime = randomRange(m_biome->m_tree.mn_minLive, m_biome->m_tree.mn_maxLive);
-	m_color = sf::Color(230, 230, 230);
-	mn_alpha = randomRange(100, 220);
-	m_size = sf::Vector2f(randomRange(m_biome->m_cloud.mn_minSizeX, m_biome->m_cloud.mn_maxSizeX), randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY));
-	m_origin.x = randomRange(0, 1900);
-	m_origin.y = randomRange(0, 500);
+	m_size = biome.getCloudSize();
+	m_color = biome.getCloudColor();
+	m_color.a = randomFloat(80.f, 200.f);
+	m_partCount = biome.getCloudPartCount();
+	m_values.resize(m_partCount);
+	m_lifeTime = biome.getCloudLifeTime();
 
-	// Allocate memory
-	mn_coundOctogon = randomRange(m_biome->m_cloud.mn_minElement, m_biome->m_cloud.mn_maxElement);
-	mn_maxTriangle = (18 * mn_coundOctogon);
-	allocateVertex(mn_maxTriangle * 3u);
-	mn_countVertex = 0u;
-
-	m_values.resize(mn_coundOctogon);
+	std::size_t i = 0;
+	float totalY = 0;
+	float cornerSize = m_size.x / (m_partCount * 2.f);
+	sf::Vector2f size;
 
 	// Compute left random values
-	int i = 0;
-	float totalY = 0;
-	sf::Vector2f size = m_size;
+	size.x = m_size.x;
+	size.y = cornerSize;
 	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
-	while (i < mn_coundOctogon / 2)
+	while (i < m_partCount / 2)
 	{
-		size.y = randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY);
+		//TODO: Find a better way to have more random values here
+		size.y = randomFloat(cornerSize * 0.5f, cornerSize);
 		totalY += size.y;
 		size.x -= totalY;
-		origin.y += randomRange(static_cast<int>(-totalY), 0.f);
+		origin.y += randomFloat(-totalY, 0.f);
 		if (size.y * 2 < size.x)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeUp = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_values[i].sizeDown = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_values[i].sizeRec = randomRange(10, static_cast<int>(size.y * 2));
+			m_values[i].sizeUp = randomFloat(size.y, size.y * 2);
+			m_values[i].sizeDown = randomFloat(size.y, size.y * 2);
+			m_values[i].sizeRec = randomFloat(10, size.y * 2);
 		}
 		else
 			break;
@@ -116,47 +121,43 @@ void Cloud::randomDecor(void)
 
 	// Compute right random values
 	totalY = 0;
-	size = m_size;
-	origin = sf::Vector2f(0.f, 0.f + m_size.y);
-	while (i < mn_coundOctogon)
+	m_size = biome.getCloudSize();
+	cornerSize = m_size.x / (m_partCount * 2.f);
+	size.x = m_size.x - cornerSize;
+	size.y = cornerSize;
+	origin = sf::Vector2f(0.f, 0.f + size.y);
+	while (i < m_partCount)
 	{
-		size.y = randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY);
+		//TODO: Find a better way to have more random values here
+		size.y = randomFloat(cornerSize * 0.5f, cornerSize);
 		totalY += size.y;
 		size.x -= totalY;
-		origin.y += randomRange(0.0f, static_cast<int>(totalY));
+		origin.y += randomFloat(0.0f, totalY);
 		if (size.y * 2 < size.x)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeUp = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_values[i].sizeDown = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_values[i].sizeRec = randomRange(10, static_cast<int>(size.y * 2));
+			m_values[i].sizeUp = randomFloat(size.y, size.y * 2);
+			m_values[i].sizeDown = randomFloat(size.y, size.y * 2);
+			m_values[i].sizeRec = randomFloat(10, size.y * 2);
 		}
 		i++;
 	}
-
-	createCloud();
 }
 
-void Cloud::init(Biome * p_biome)
+void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	Decor::init(p_biome);
-	randomDecor();
-	m_values.reserve(m_biome->m_cloud.mn_maxElement);
+	(void)frameTime;
+
+	sf::Vector2f const & position = getPosition();
+	createCloud(m_values, position, m_color, builder);
 }
 
-void Cloud::update(float pf_deltatime)
+float Cloud::randomFloat(float min, float max)
 {
-	Decor::update(pf_deltatime);
-
-	if (b_isIce == false)
-		m_origin.x += pf_deltatime * m_biome->mn_wind;
-
-	if (m_origin.x >= 1900 + 500)
-	{
-		randomDecor();
-		m_origin.x = -500;
-	}
-
-	createCloud();
+	if (max - min == 0)
+		return max;
+	std::uniform_real_distribution<float> distribution(min, max);
+	return distribution(m_engine);
 }
+
