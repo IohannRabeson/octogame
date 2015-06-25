@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 17:23:00 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 22:54:43 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/25 16:33:30 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ private:
 	octo::VertexBuilder						m_builder;
 	std::mt19937							m_engine{3294};
 	std::uniform_real_distribution<float>	m_dist{-1.f, 1.f};
-	std::vector<ArcPtr>						m_lightnings;
+	std::vector<ArcPtr>						m_arcs;
 	float									m_defaultMiddleOffsetFactor;
 	float									m_defaultBranchProbability;
 	float									m_defaultBranchMaxAngle;
@@ -58,6 +58,9 @@ private:
 	sf::Color								m_defaultColor;
 	std::size_t								m_defaultFractalLevel;
 	sf::Time								m_defaultCycleTime;
+	std::size_t								m_currentArc;
+	sf::Time								m_triggerTime;
+	sf::Time								m_currentTime;
 };
 
 class Lightning::Segment
@@ -130,10 +133,13 @@ public:
 	void							setBranchMaxAngle(float angle);
 	void							setBranchMaxLenght(float factor);
 
+	void							restart();
 	void							update(sf::Time frameTime);
 	void							buildVertices(octo::VertexBuilder& builder)const;
+	bool							isExpired()const;
 private:
 	void							fractalizeSegments();
+	void							updateColor();
 private:
 	Engine&							m_engine;
 	Distri&							m_dist;
@@ -146,7 +152,7 @@ private:
 	std::size_t						m_fractalLevel;
 	float							m_branchAngle;
 	float							m_branchLenght;
-	sf::Time						m_current;
+	sf::Time						m_currentTime;
 	sf::Time						m_cycleTime;
 };
 #endif

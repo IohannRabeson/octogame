@@ -6,16 +6,20 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 17:25:02 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 23:40:33 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/25 17:12:59 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Lightning.hpp"
 
 #include <list>
+#include <algorithm>
 
 #include <Math.hpp>
 #include <VertexBuilder.hpp>
+#include <Interpolations.hpp>
+
+#include <iostream> // TEST
 
 static sf::Vector2f	perpendicular(sf::Vector2f const& v)
 {
@@ -43,17 +47,31 @@ Lightning::Lightning(std::size_t maxVertices) :
 	m_defaultBranchMaxLenght(0.7f),
 	m_defaultColor(sf::Color::White),
 	m_defaultFractalLevel(8u),
-	m_defaultCycleTime(sf::milliseconds(100))
+	m_defaultCycleTime(sf::seconds(1.f / 3.f)),
+	m_currentArc(0u),
+	m_triggerTime(sf::seconds(1.f / 6.f))
 {
 }
 
 void	Lightning::update(sf::Time frameTime)
 {
-	m_builder.clear();
-	for (auto& lightning : m_lightnings)
+	ArcPtr	arc;
+
+	m_currentTime += frameTime;
+	if (m_currentTime >= m_triggerTime)
 	{
-		lightning->update(frameTime);
-		lightning->buildVertices(m_builder);		
+		m_arcs.at(m_currentArc)->restart();
+		m_currentArc = (m_currentArc + 1) % m_arcs.size();
+		m_currentTime -= m_triggerTime;
+	}
+	m_builder.clear();
+	for (auto& arc : m_arcs)
+	{
+		if (arc->isExpired() == false)
+		{
+			arc->update(frameTime);
+			arc->buildVertices(m_builder);
+		}
 	}
 }
 
@@ -66,9 +84,9 @@ std::size_t	Lightning::addArc(sf::Vector2f const& p0,
 							  sf::Vector2f const& p1,
 							  float thickness)
 {
-	std::size_t	id = m_lightnings.size();
+	std::size_t	id = m_arcs.size();
 
-	m_lightnings.emplace_back(
+	m_arcs.emplace_back(
 			std::make_shared<Arc>(m_engine, m_dist, p0, p1, m_defaultColor,
 									thickness, m_defaultMiddleOffsetFactor,
 									m_defaultBranchProbability,
@@ -80,32 +98,32 @@ std::size_t	Lightning::addArc(sf::Vector2f const& p0,
 
 void	Lightning::setArc(std::size_t id, sf::Vector2f const& p0, sf::Vector2f const& p1)
 {
-	m_lightnings.at(id)->setSegment(p0, p1);
+	m_arcs.at(id)->setSegment(p0, p1);
 }
 
 Lightning::Arc&	Lightning::getArc(std::size_t id)
 {
-	return (*m_lightnings.at(id));
+	return (*m_arcs.at(id));
 }
 
 Lightning::Arc const&	Lightning::getArc(std::size_t id)const
 {
-	return (*m_lightnings.at(id));
+	return (*m_arcs.at(id));
 }
 
 void	Lightning::removeArc(std::size_t id)
 {
-	m_lightnings.erase(std::next(m_lightnings.begin(), id));
+	m_arcs.erase(std::next(m_arcs.begin(), id));
 }
 
 void	Lightning::clear()
 {
-	m_lightnings.clear();
+	m_arcs.clear();
 }
 
 std::size_t		Lightning::getArcCount()const
 {
-	return (m_lightnings.size());
+	return (m_arcs.size());
 }
 
 //
@@ -176,19 +194,19 @@ void	Lightning::Arc::setBranchMaxLenght(float lenght)
 	m_branchLenght = lenght;
 }
 
+void	Lightning::Arc::restart()
+{
+	m_currentTime = sf::Time::Zero;
+	m_color.a = 0;
+	fractalizeSegments();
+}
+
 void	Lightning::Arc::update(sf::Time frameTime)
 {
-	bool	rebuild = false;
-
-	m_current += frameTime;
-	while (m_current >= m_cycleTime)
+	if (m_currentTime < m_cycleTime)
 	{
-		m_current -= m_cycleTime;
-		rebuild = true;
-	}
-	if (rebuild)
-	{
-		fractalizeSegments();
+		m_currentTime += frameTime;
+		updateColor();
 	}
 }
 
@@ -196,6 +214,11 @@ void	Lightning::Arc::setSegment(sf::Vector2f const& p0, sf::Vector2f const& p1)
 {
 	m_segments.clear();
 	m_segments.emplace_back(p0, p1);
+}
+
+bool	Lightning::Arc::isExpired()const
+{
+	return (m_currentTime >= m_cycleTime);
 }
 
 //
@@ -237,7 +260,22 @@ void	Lightning::Arc::fractalizeSegments()
 		offsetFactor /= 2.f;
 	}
 }
-	
+
+
+void	Lightning::Arc::updateColor()
+{
+	sf::Time const	HalfTime = m_cycleTime / 2.f;
+
+	if (m_currentTime < HalfTime)
+	{
+		m_color.a = std::min<sf::Uint8>(m_currentTime / HalfTime * 255.f, 255.f);
+	}
+	else
+	{
+		m_color.a = std::max<float>((1.f - (m_currentTime - HalfTime) / HalfTime) * 255.f, 0.f);
+	}
+}
+
 void	Lightning::Arc::buildVertices(octo::VertexBuilder& builder)const
 {
 	for (auto const& segment : m_fractalizedSegments)

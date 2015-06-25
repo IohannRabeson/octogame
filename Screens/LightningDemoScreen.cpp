@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/23 02:40:01 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 23:13:02 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/25 17:14:12 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@ void	LightningDemoScreen::start()
 
 	graphics.addMouseListener(this);
 	m_lightning.addArc(camera.getCenter() - offset, camera.getCenter() + offset, 2.f);
+	m_lightning.addArc(camera.getCenter() - offset, camera.getCenter() + offset, 2.f);
+	m_lightning.addArc(camera.getCenter() - offset, camera.getCenter() + offset, 2.f);
+	m_lightning.addArc(camera.getCenter() - offset, camera.getCenter() + offset, 2.f);
+	m_lightning.addArc(camera.getCenter() - offset, camera.getCenter() + offset, 2.f);
+	m_lightning.addArc(camera.getCenter() - offset, camera.getCenter() + offset, 2.f);
 	m_p0.setMoveCallback([this](sf::Vector2f const&)
 						 {
 						 	for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
@@ -49,37 +54,44 @@ void	LightningDemoScreen::start()
 	console.addCommand(L"demo.setBranchProbability",
 					   [this](float proba)
 					   {
-					   		m_lightning.getArc(0).setBranchProbability(proba);
+						 	for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+					   			m_lightning.getArc(i).setBranchProbability(proba);
 					   });
 	console.addCommand(L"demo.setColor",
 					   [this](sf::Color const& color)
 					   {
-					   		m_lightning.getArc(0).setColor(color);
+						 	for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+					   			m_lightning.getArc(i).setColor(color);
 					   });
 	console.addCommand(L"demo.setThickness",
 					   [this](float thickness)
 					   {
-					   		m_lightning.getArc(0).setThickness(thickness);
+						 	for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+					   			m_lightning.getArc(i).setThickness(thickness);
 					   });
 	console.addCommand(L"demo.setMiddleOffsetFactor",
 					   [this](float factor)
 					   {
-					   		m_lightning.getArc(0).setMiddleOffsetFactor(factor);
+						 	for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+					   			m_lightning.getArc(i).setMiddleOffsetFactor(factor);
 					   });
 	console.addCommand(L"demo.setFractalLevel",
 					   [this](std::size_t level)
 					   {
-					   		m_lightning.getArc(0).setFractalLevel(level);
+						 	for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+					   			m_lightning.getArc(i).setFractalLevel(level);
 					   });
 	console.addCommand(L"demo.setBranchMaxAngle",
 					   [this](float maxAngle)
 					   {
-					   		m_lightning.getArc(0).setBranchMaxAngle(maxAngle);
+						 	for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+					   			m_lightning.getArc(i).setBranchMaxAngle(maxAngle);
 					   });
 	console.addCommand(L"demo.setBranchMaxLenght",
 					   [this](float lenght)
 					   {
-					   		m_lightning.getArc(0).setBranchMaxLenght(lenght);
+						 	for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+					   			m_lightning.getArc(i).setBranchMaxLenght(lenght);
 					   });
 }
 
