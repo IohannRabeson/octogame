@@ -83,7 +83,7 @@ void PhysicsEngine::registerShape(CircleShape * shape)
 
 void PhysicsEngine::registerTileS(TileShape * shape, std::size_t x,  std::size_t y)
 {
-	assert(x < m_tileShapes.columns() && x >= 0 && y >= 0 && y < m_tileShapes.rows());
+	assert(x < m_tileShapes.columns() && y < m_tileShapes.rows());
 	m_tileShapes.set(x, y, shape);
 }
 
@@ -195,6 +195,7 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector
 		}
 	}
 	return count;
+	return 0u;
 }
 
 template<class T, class U>

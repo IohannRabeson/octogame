@@ -6,13 +6,12 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 01:39:09 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/12 16:32:06 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/17 02:28:32 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "DecorManagerDemoScreen.hpp"
 #include "ADecor.hpp"
-#include "DecorBuilder.hpp"
 
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -20,7 +19,7 @@
 #include <GraphicsManager.hpp>
 
 DecorManagerDemoScreen::DecorManagerDemoScreen() :
-	m_manager(20000),
+	m_manager(200000),
 	m_currentDecorType(DecorManager::DecorTypes::Invalid)
 {
 	std::fill(m_viewDirections.begin(), m_viewDirections.end(), false);
@@ -42,6 +41,7 @@ void	DecorManagerDemoScreen::start()
 	octo::Application::getGraphicsManager().addKeyboardListener(this);
 	console.addCommand(L"demo.select", this, &DecorManagerDemoScreen::selectDecorType);
 	console.addCommand(L"demo.setTreeDepth", m_biome, &TestBiome::setTreeDepth);
+	console.addCommand(L"demo.setTreeSize", m_biome, &TestBiome::setTreeSize);
 	console.addCommand(L"demo.setTreeLifeTime", m_biome, &TestBiome::setTreeLifeTime);
 	console.addCommand(L"demo.setTreeColor", m_biome, &TestBiome::setTreeColor);
 	console.addCommand(L"demo.setCanCreateTree", m_biome, &TestBiome::setCanCreateTree);
@@ -60,6 +60,7 @@ void	DecorManagerDemoScreen::start()
 	console.addCommand(L"demo.setStarLifeTime", m_biome, &TestBiome::setStarLifeTime);
 	console.addCommand(L"demo.setCanCreateStar", m_biome, &TestBiome::setCanCreateStar);
 	console.addCommand(L"demo.setSunSize", m_biome, &TestBiome::setSunSize);
+	console.addCommand(L"demo.setSunPartCount", m_biome, &TestBiome::setSunPartCount);
 	console.addCommand(L"demo.setSunColor", m_biome, &TestBiome::setSunColor);
 	console.addCommand(L"demo.setCanCreateSun", m_biome, &TestBiome::setCanCreateSun);
 	console.addCommand(L"demo.setMoonSize", m_biome, &TestBiome::setMoonSize);

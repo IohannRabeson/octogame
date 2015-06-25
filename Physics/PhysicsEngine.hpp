@@ -2,9 +2,12 @@
 # define PHYSICSENGINE_HPP
 
 # include <SFML/Graphics.hpp>
+
 # include <vector>
 # include <memory>
+
 # include "ShapeBuilder.hpp"
+
 # include <Array2D.hpp>
 
 class AShape;

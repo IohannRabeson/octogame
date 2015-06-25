@@ -4,7 +4,7 @@
 # define B 0x100
 # define BM 0xff
 
-# define N 0x1000
+# define NMERDE 0x1000
 # define NP 12   /* 2^N */
 # define NM 0xfff
 

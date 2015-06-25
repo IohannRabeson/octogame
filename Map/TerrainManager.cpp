@@ -163,7 +163,7 @@ void TerrainManager::updateTransition(void)
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
 		bool isFirst = false;
-		bool isSecond = false;
+		//bool isSecond = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
