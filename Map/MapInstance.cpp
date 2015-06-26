@@ -79,7 +79,7 @@ void MapInstance::initBiome(void)
 	m_biome->m_tree.mn_maxLive = 15;
 }
 
-void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
+void MapInstance::computeMapRange(int startX, int endX, int startY, int endY)
 {
 	float vec[3];
 	int height;
@@ -91,7 +91,7 @@ void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_
 	int offsetY = static_cast<int>(m_curOffset.y / Tile::TileSize);
 	int offsetPosX;
 
-	for (int x = p_startX; x < p_endX; x++)
+	for (int x = startX; x < endX; x++)
 	{
 		inInstance = false;
 		offset = x + offsetX;
@@ -113,7 +113,7 @@ void MapInstance::computeMapRange(int p_startX, int p_endX, int p_startY, int p_
 		// we normalize it betwen 0 & max_height
 		v = (firstCurve(vec) + 1.f) * static_cast<float>(m_biome->mn_height) / 2.f;
 		height = static_cast<int>(v);
-		for (int y = p_startY; y < p_endY; y++)
+		for (int y = startY; y < endY; y++)
 		{
 			offsetY = y + static_cast<int>(m_curOffset.y / Tile::TileSize);
 			// Init square
@@ -157,22 +157,22 @@ float MapInstance::secondCurve(float * vec)
 	//return sin(vec[0] * 15.f + OctoNoise::getCurrent().noise3(vec) * sin(vec[1]) * 5.f);
 }
 
-void MapInstance::setColor(Tile & p_tile)
+void MapInstance::setColor(Tile & tile)
 {
 	sf::Color start = sf::Color(178.f, 0.f, 86.f);
 	sf::Color end = sf::Color(178.f, 162.f, 32.f);
 	sf::Color mid = sf::Color(0.f, 74.f, 213.f);
 
-	start = octo::linearInterpolation(end, mid, p_tile.getNoiseValue());
+	start = octo::linearInterpolation(end, mid, tile.getNoiseValue());
 
-	if (p_tile.getNoiseValue() < 0.4f)
-		p_tile.setStartColor(start);
-	else if (p_tile.getNoiseValue() < 0.6f)
+	if (tile.getNoiseValue() < 0.4f)
+		tile.setStartColor(start);
+	else if (tile.getNoiseValue() < 0.6f)
 	{
-		p_tile.setStartColor(octo::linearInterpolation(start, end, (p_tile.getNoiseValue() - 0.4f) * 5.f));
+		tile.setStartColor(octo::linearInterpolation(start, end, (tile.getNoiseValue() - 0.4f) * 5.f));
 	}
 	else
-		p_tile.setStartColor(end);
+		tile.setStartColor(end);
 }
 
 void MapInstance::swapDepth(void)

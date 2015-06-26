@@ -2,7 +2,6 @@
 # define PHYSICSENGINE_HPP
 
 # include <SFML/Graphics.hpp>
-
 # include <vector>
 # include <memory>
 
@@ -31,7 +30,10 @@ public:
 
 	void init(void);
 
+	/*! Set the gravity */
 	inline void setGravity(sf::Vector2f const & gravity) { m_gravity = gravity; }
+
+	/*! Get the gravity */
 	inline sf::Vector2f const & getGravity(void) const { return m_gravity; }
 
 	/*! Set the count of iteration
@@ -43,18 +45,31 @@ public:
 	inline void setIterationCount(std::size_t iterationCount) { m_iterationCount = iterationCount; }
 	inline std::size_t getIterationCount(void) const { return m_iterationCount; }
 
+	/*! Set whether the tile collision is activated or not */
 	inline void setTileCollision(bool tileCollision) { m_tileCollision = tileCollision; }
 	inline bool getTileCollision(void) const { return m_tileCollision; }
 
-	// Used by the ShapeBuilder to register the shape */
+	/*! Used by the ShapeBuilder to register a PolygonShape */
 	void registerShape(PolygonShape * shape);
+
+	/*! Used by the ShapeBuilder to register a CircleShape */
 	void registerShape(CircleShape * shape);
+
+	/*! Used by the ShapeBuilder to register a TileShape */
 	void registerTileS(TileShape * shape, std::size_t x, std::size_t y);
 
+	/*! Update the physic */
 	void update(float deltatime);
 
+	/*! Set the ContactListener
+	 * The contact listener is call each time there is a collision between two object
+	 *
+	 * \param contactListener The new ContactListener
+	 * \see IContactListener
+	 */
 	inline void setContactListener(IContactListener * contactListener) { m_contactListener = contactListener; }
 
+	/*! Draw debug information */
 	void debugDraw(sf::RenderTarget & render) const;
 
 private:
@@ -74,6 +89,7 @@ private:
 		float	max;
 	};
 
+	//TODO: std::pair
 	template<class T, class U>
 	struct Pair
 	{

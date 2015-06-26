@@ -9,7 +9,7 @@
 class ConvexShape;
 class CircleShape;
 
-class PhysicsMapScreen : public octo::AbstractState, public octo::IKeyboardListener
+class PhysicsMapScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
 public:
 	PhysicsMapScreen(void);
@@ -22,14 +22,13 @@ public:
 	virtual void	draw(sf::RenderTarget& render)const;
 
 private:
-	MapManager	m_mapManager;
-	PhysicsEngine &	m_engine;
-	ConvexShape *	m_shape;
-	CircleShape *	m_circle;
-	bool		m_frameByFrame;
+	MapManager			m_mapManager;
+	PhysicsEngine &		m_engine;
+	ConvexShape *		m_shape;
+	CircleShape *		m_circle;
+	bool				m_frameByFrame;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
-	virtual bool onReleased(sf::Event::KeyEvent const & ) {return false;}
 
 };
 

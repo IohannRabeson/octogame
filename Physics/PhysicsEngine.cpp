@@ -2,7 +2,6 @@
 #include "IContactListener.hpp"
 #include "ConvexShape.hpp"
 #include "CircleShape.hpp"
-#include "RectangleShape.hpp"
 #include "Tile.hpp"
 #include "TileShape.hpp"
 #include <Application.hpp>
@@ -28,6 +27,7 @@ PhysicsEngine::PhysicsEngine(void) :
 
 PhysicsEngine::~PhysicsEngine(void)
 {
+		// TODO: erase
 	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
 		delete (*i);
 	for (auto i = m_tileShapes.begin(); i != m_tileShapes.end(); i++)
@@ -92,10 +92,10 @@ void PhysicsEngine::update(float deltatime)
 	// Add gravity
 	for (std::size_t i = 0u; i < 123/*m_tileShapes.columns()*/; i++)
 	{
-		for (std::size_t k = 0u; k < 72/*m_tileShapes.rows()*/; k++)
+		//for (std::size_t k = 0u; k < 72/*m_tileShapes.rows()*/; k++)
 		{
-				if (!m_tileShapes.get(i, k)->getSleep())
-					m_tileShapes.get(i, k)->update();
+				if (!m_tileShapes.get(i, 0)->getSleep())
+					m_tileShapes.get(i, 0)->update();
 		}
 	}
 	sf::Vector2f gravity = m_gravity * deltatime;
@@ -129,46 +129,49 @@ void PhysicsEngine::broadPhase(void)
 	}
 }
 
+#include <iostream>
 template<class T>
 std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<Pair<TileShape *, T>> & pairs)
 {
 	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
 	sf::FloatRect shapeAABB;
 	std::size_t count = 0u;
+	std::size_t nb = 0u;
 	for (auto shape : vector)
 	{
 		sf::Rect<float> const & rect = shape->getGlobalBounds();
 		//TODO fix bug camera move
-		float offX = rect.left + Tile::DoubleTileSize - camRect.left;
-		if (rect.left < 0)
-			offX--;
-		float offY = rect.top + Tile::DoubleTileSize - camRect.top;
-		float w = rect.width + Tile::TileSize + offX + shape->getVelocity().x;
-		float h = rect.height + Tile::TileSize + offY + shape->getVelocity().y;
-		int offsetX = static_cast<int>(offX / Tile::TileSize);
-		int offsetY = static_cast<int>(offY / Tile::TileSize);
-		int width = static_cast<int>(w / Tile::TileSize);
-		int height = static_cast<int>(h / Tile::TileSize);
+		float offX = rect.left - camRect.left;
+		//if (rect.left < 0)
+		//	offX--;
+		//float offY = rect.top + Tile::DoubleTileSize - camRect.top;
+		float w = rect.width + offX;
+		//float h = rect.height + Tile::TileSize + offY + shape->getVelocity().y;
+		int offsetX = static_cast<int>(offX / Tile::TileSize) + 2 - 1;
+		//int offsetY = static_cast<int>(offY / Tile::TileSize);
+		int width = static_cast<int>(w / Tile::TileSize) + 2 + 1;
+		//int height = static_cast<int>(h / Tile::TileSize);
 		if (shape->getVelocity().x < 0)
 		{
 			// TODO: make one more method to did this
 			for (int x = width; x >= offsetX; x--)
 			{
-				for (int y = height; y >= offsetY; y--)
+				//for (int y = height; y >= offsetY; y--)
 				//for (int y = offsetY; y <= height; y++)
 				{
 					// TODO: check out of bounds
 					//if (i < 0 || i >= static_cast<int>(m_mapManager->getTransitionManager().getMapWidth()) || j < 0 || j >= static_cast<int>(m_mapManager->getTransitionManager().getMapHeight()))
 					//	continue;
-					if (shape->getSleep() || m_tileShapes(x, y)->getSleep())
+					if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
 						continue;
 					// TODO: may be a better choice ?
+					nb++;
 					shapeAABB = shape->getGlobalBounds();
 					shapeAABB.left += shape->getVelocity().x;
 					shapeAABB.top += shape->getVelocity().y;
-					if (shapeAABB.intersects(m_tileShapes(x, y)->getGlobalBounds()))
+					if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds()))
 					{
-						pairs[count].m_shapeA = m_tileShapes(x, y);
+						pairs[count].m_shapeA = m_tileShapes(x, 0);
 						pairs[count++].m_shapeB = shape;
 					}
 				}
@@ -178,16 +181,17 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector
 		{
 			for (int x = offsetX; x <= width; x++)
 			{
-				for (int y = height; y >= offsetY; y--)
+				//for (int y = height; y >= offsetY; y--)
 				{
-					if (shape->getSleep() || m_tileShapes(x, y)->getSleep())
+					if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
 						continue;
+					nb++;
 					shapeAABB = shape->getGlobalBounds();
 					shapeAABB.left += shape->getVelocity().x;
 					shapeAABB.top += shape->getVelocity().y;
-					if (shapeAABB.intersects(m_tileShapes(x, y)->getGlobalBounds()))
+					if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds()))
 					{
-						pairs[count].m_shapeA = m_tileShapes(x, y);
+						pairs[count].m_shapeA = m_tileShapes(x, 0);
 						pairs[count++].m_shapeB = shape;
 					}
 				}
@@ -195,7 +199,6 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector
 		}
 	}
 	return count;
-	return 0u;
 }
 
 template<class T, class U>
@@ -309,7 +312,6 @@ bool PhysicsEngine::findAxisLeastPenetration(TileShape * tile, PolygonShape * po
 		}
 	}
 
-	//TODO: check the direction of the mtv to valid it or not
 	// For the tile, we only test the axis of the top
 	m_axis = tile->getNormal(0u);
 	if (m_axis.x != 0.f && m_axis.y != 0.f)
@@ -335,7 +337,6 @@ bool PhysicsEngine::findAxisLeastPenetration(TileShape * tile, PolygonShape * po
 
 bool PhysicsEngine::findAxisLeastPenetration(PolygonShape * polygonA, PolygonShape * polygonB)
 {
-	//TODO: check if it' still work
 	for(std::size_t i = 0u; i < polygonA->getEfficientVertexCount(); ++i)
 	{
 		//Retrieve a face normal from A

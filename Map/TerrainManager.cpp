@@ -1,7 +1,5 @@
 #include "TerrainManager.hpp"
-#include "MapManager.hpp"
 #include "MapInstance.hpp"
-#include "ConvexShape.hpp"
 #include "TileShape.hpp"
 #include "PhysicsEngine.hpp"
 #include <Interpolations.hpp>
@@ -25,15 +23,14 @@ TerrainManager::~TerrainManager(void)
 	delete m_tilesPrev;
 }
 
-//TODO: remove mapManager
-void TerrainManager::init(MapManager *, Biome * p_biome)
+void TerrainManager::init(Biome * biome)
 {
 	m_tiles = new MapInstance();
 	m_tilesPrev = new MapInstance();
 
 	// Init maps and biome
-	m_tiles->init(p_biome);
-	m_tilesPrev->init(p_biome);
+	m_tiles->init(biome);
+	m_tilesPrev->init(biome);
 
 	// Set pointer to the offset of the camera
 	m_tiles->setCameraView(&m_offset);
@@ -54,7 +51,7 @@ void TerrainManager::init(MapManager *, Biome * p_biome)
 		}
 	}
 
-	m_transitionTimerMax = p_biome->mf_transitionTimerMax;
+	m_transitionTimerMax = biome->mf_transitionTimerMax;
 }
 
 void TerrainManager::setTransitionAppear(int x, int y)
@@ -66,7 +63,6 @@ void TerrainManager::setTransitionAppear(int x, int y)
 		m_tilesPrev->get(x, y).setStartTransitionY(j, m_tilesPrev->get(x, y + i).getStartTransition(j).y);
 	m_tilesPrev->get(x, y).setStartColor(m_tiles->get(x, y).getStartColor());
 	setTransitionModify(x, y);
-	// TODO: store color in pointer to avoid copy
 }
 
 void TerrainManager::setTransitionDisappear(int x, int y)
@@ -106,33 +102,33 @@ void TerrainManager::defineTransition(int x, int y)
 		m_tiles->get(x, y).setTransitionType(Tile::e_transition_none);
 }
 
-void TerrainManager::defineTransitionRange(int p_startX, int p_endX, int p_startY, int p_endY)
+void TerrainManager::defineTransitionRange(int startX, int endX, int startY, int endY)
 {
 	// For each tile, define the type and transition type
-	for (int x = p_startX; x < p_endX; x++)
+	for (int x = startX; x < endX; x++)
 	{
-		for (int y = p_startY; y < p_endY; y++)
+		for (int y = startY; y < endY; y++)
 			defineTransition(x, y);
 	}
-	for (int x = p_startX; x < p_endX; x++)
+	for (int x = startX; x < endX; x++)
 	{
-		for (int y = p_startY; y < p_endY; y++)
+		for (int y = startY; y < endY; y++)
 		{
 			if (m_tiles->get(x, y).isTransitionType(Tile::e_transition_appear))
 				setTransitionAppear(x, y);
 		}
 	}
-	for (int x = p_startX; x < p_endX; x++)
+	for (int x = startX; x < endX; x++)
 	{
-		for (int y = p_startY; y < p_endY; y++)
+		for (int y = startY; y < endY; y++)
 		{
 			if (m_tiles->get(x, y).isTransitionType(Tile::e_transition_already))
 				setTransitionModify(x, y);
 		}
 	}
-	for (int x = p_startX; x < p_endX; x++)
+	for (int x = startX; x < endX; x++)
 	{
-		for (int y = p_startY; y < p_endY; y++)
+		for (int y = startY; y < endY; y++)
 		{
 			if (m_tiles->get(x, y).isTransitionType(Tile::e_transition_disappear))
 				setTransitionDisappear(x, y);
@@ -163,26 +159,23 @@ void TerrainManager::updateTransition(void)
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
 		bool isFirst = false;
-		//bool isSecond = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
-			if (m_tiles->get(x, y).isTransitionType(Tile::e_transition_none))
+			if (tile->isTransitionType(Tile::e_transition_none))
 			{
+					//TODO: remove sleep
 				m_tileShapes.get(x, y)->setSleep(true);
 				continue;
 			}
 			tilePrev = &m_tilesPrev->get(x, y);
-			// Update tile transition
-			m_vertices[m_verticesCount + 0u].position = octo::linearInterpolation(tilePrev->getStartTransition(0u), tile->getStartTransition(0u), transition);
-			m_vertices[m_verticesCount + 1u].position = octo::linearInterpolation(tilePrev->getStartTransition(1u), tile->getStartTransition(1u), transition);
-			m_vertices[m_verticesCount + 2u].position = octo::linearInterpolation(tilePrev->getStartTransition(2u), tile->getStartTransition(2u), transition);
-			m_vertices[m_verticesCount + 3u].position = octo::linearInterpolation(tilePrev->getStartTransition(3u), tile->getStartTransition(3u), transition);
-			m_vertices[m_verticesCount].color = octo::linearInterpolation(tilePrev->getStartColor(), tile->getStartColor(), transition);
 
-			// Update tile color and offset
+			// Update tile transition
+			m_vertices[m_verticesCount].color = octo::linearInterpolation(tilePrev->getStartColor(), tile->getStartColor(), transition);
 			for (std::size_t i = 0u; i < 4u; i++)
 			{
+				m_vertices[m_verticesCount + i].position.y = octo::linearInterpolation(tilePrev->getStartTransition(i).y, tile->getStartTransition(i).y, transition);
+				m_vertices[m_verticesCount + i].position.x = tilePrev->getStartTransition(i).x;
 				m_vertices[m_verticesCount + i].position.x -= Tile::DoubleTileSize;
 				m_vertices[m_verticesCount + i].position.y -= Tile::DoubleTileSize;
 				m_vertices[m_verticesCount + i].color = m_vertices[m_verticesCount].color;
@@ -193,29 +186,10 @@ void TerrainManager::updateTransition(void)
 			{
 				isFirst = true;
 				m_tiles->get(x, y).setUpLeft(&m_vertices[m_verticesCount]);
-				m_tileShapes.get(x, y)->setSleep(false);
-				m_tileShapes.get(x, y)->setVertex(&m_vertices[m_verticesCount]);
+				m_tileShapes.get(x, 0)->setVertex(&m_vertices[m_verticesCount]);
 				m_tiles->get(x, y).setStartColor(sf::Color::Blue);
 			}
-			else
-			{
-				if (x + 1u < m_tiles->getColumns() && m_tiles->get(x + 1, y).isTransitionType(Tile::e_transition_none))
-				{
-					m_tiles->get(x, y).setUpLeft(&m_vertices[m_verticesCount]);
-					m_tileShapes.get(x, y)->setSleep(false);
-					m_tileShapes.get(x, y)->setVertex(&m_vertices[m_verticesCount]);
-					m_tiles->get(x, y).setStartColor(sf::Color::Red);
-				}
-				else if (x > 0u && m_tiles->get(x - 1, y).isTransitionType(Tile::e_transition_none))
-				{
-					m_tiles->get(x, y).setUpLeft(&m_vertices[m_verticesCount]);
-					m_tileShapes.get(x, y)->setSleep(false);
-					m_tileShapes.get(x, y)->setVertex(&m_vertices[m_verticesCount]);
-					m_tiles->get(x, y).setStartColor(sf::Color::Red);
-				}
-				else
-					m_tileShapes.get(x, y)->setSleep(false);
-			}
+			m_tileShapes.get(x, 0)->setSleep(false);
 			m_verticesCount += 4u;
 		}
 	}
@@ -232,11 +206,11 @@ void TerrainManager::updateTransition(void)
 	}*/
 }
 
-void TerrainManager::defineTransitionBorderTileRange(int p_startX, int p_endX, int p_startY, int p_endY)
+void TerrainManager::defineTransitionBorderTileRange(int startX, int endX, int startY, int endY)
 {
-	for (int x = p_startX; x < p_endX; x++)
+	for (int x = startX; x < endX; x++)
 	{
-		for (int y = p_startY; y < p_endY; y++)
+		for (int y = startY; y < endY; y++)
 		{
 			if (y - 1 >= 0 && y + 1 < static_cast<int>(m_tiles->getRows()))
 			{
@@ -258,7 +232,7 @@ void TerrainManager::defineTransitionBorderTileRange(int p_startX, int p_endX, i
 			}
 		}
 	}
-	defineTransitionRange(p_startX, p_endX, p_startY, p_endY);
+	defineTransitionRange(startX, endX, startY, endY);
 }
 
 void TerrainManager::updateOffset(float)

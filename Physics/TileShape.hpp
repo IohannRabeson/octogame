@@ -38,7 +38,7 @@ public:
 	 *
 	 * \param index The index
 	 */
-	inline sf::Vector2f const & getVertex(std::size_t index) const { return m_vertices[index].position; }
+	sf::Vector2f const & getVertex(std::size_t index) const;
 
 	/*! Set the up left vertex
 	 * Other vertices are accessible at index between 0 && 4
@@ -49,7 +49,7 @@ public:
 	 *
 	 * \param vertex The new vertex pointer
 	 */
-	inline void setVertex(sf::Vertex * vertex) { m_vertices = vertex; }
+	inline void setVertex(sf::Vertex * vertex) { m_vertex = vertex; }
 
 	/*! Get the global bounds
 	 * The AABB is recomputed at each rotation
@@ -83,7 +83,8 @@ protected:
 	virtual void computeShape(void);
 
 private:
-	sf::Vertex *				m_vertices; /// Pointer to the up left vertex of the tile
+	sf::Vertex *				m_vertex; /// Pointer to the up left vertex of the tile
+	sf::Vector2f				m_vertices[2];
 	std::vector<sf::Vector2f>	m_edges;
 	std::vector<sf::Vector2f>	m_normals;
 	sf::Vector2f				m_baryCenter;

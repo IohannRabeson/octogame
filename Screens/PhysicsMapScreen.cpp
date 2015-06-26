@@ -17,7 +17,6 @@ void	PhysicsMapScreen::start()
 	m_engine.setTileCollision(true);
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
-	//octo::Application::getGraphicsManager().setFramerateLimit(60);
 	m_mapManager.init();
 
 	m_shape = m_engine.createConvex();
