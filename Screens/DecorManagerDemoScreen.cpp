@@ -19,7 +19,7 @@
 #include <GraphicsManager.hpp>
 
 DecorManagerDemoScreen::DecorManagerDemoScreen() :
-	m_manager(20000),
+	m_manager(200000),
 	m_currentDecorType(DecorManager::DecorTypes::Invalid)
 {
 	std::fill(m_viewDirections.begin(), m_viewDirections.end(), false);
@@ -41,6 +41,7 @@ void	DecorManagerDemoScreen::start()
 	octo::Application::getGraphicsManager().addKeyboardListener(this);
 	console.addCommand(L"demo.select", this, &DecorManagerDemoScreen::selectDecorType);
 	console.addCommand(L"demo.setTreeDepth", m_biome, &TestBiome::setTreeDepth);
+	console.addCommand(L"demo.setTreeSize", m_biome, &TestBiome::setTreeSize);
 	console.addCommand(L"demo.setTreeLifeTime", m_biome, &TestBiome::setTreeLifeTime);
 	console.addCommand(L"demo.setTreeColor", m_biome, &TestBiome::setTreeColor);
 	console.addCommand(L"demo.setCanCreateTree", m_biome, &TestBiome::setCanCreateTree);
