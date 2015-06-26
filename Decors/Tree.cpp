@@ -8,7 +8,6 @@ std::default_random_engine	Tree::m_engine;
 Tree::Tree(void) :
 	m_depth(0u),
 	m_count(0u),
-	m_lifeTime(sf::seconds(0.f)),
 	m_animation(1.f),
 	m_growSide(true),
 	m_isLeaf(true),
@@ -147,7 +146,7 @@ void Tree::setup(ABiome& biome)
 	m_refAngle.resize(angleCount);
 	for (std::size_t i = 0u; i < angleCount; i++)
 		m_refAngle[i] = biome.getTreeAngle();
-	m_lifeTime = biome.getTreeLifeTime();
+	m_animator.setup(biome.getTreeLifeTime());
 	m_growSide = Tree::getGrowSide();
 
 	m_isLeaf = biome.canCreateLeaf();
@@ -161,14 +160,12 @@ void Tree::setup(ABiome& biome)
 
 void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	(void)frameTime;
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f const & position = getPosition();
-	//TODO: set position to be centered, to test when terrain will be here
-	//Add behind root to stick the botom of screen
-	//position.y -= m_size.y / 2.0f;
-	//float delta = (m_size.y - m_size.y * m_animation) / 2;
-	pythagorasTree(sf::Vector2f(position.x, position.y), sf::Vector2f(m_size.x, m_size.y * m_animation), builder);
+	float positionY = position.y + (m_size.y - m_size.y * m_animation) / 2 - m_size.y / 2.f;
+	pythagorasTree(sf::Vector2f(position.x, positionY), sf::Vector2f(m_size.x, m_size.y * m_animation), builder);
 }
 
 void Tree::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)

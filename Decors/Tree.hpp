@@ -2,6 +2,7 @@
 # define TREE_HPP
 
 # include "ADecor.hpp"
+# include "DecorAnimator.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
@@ -32,7 +33,7 @@ private:
 	std::vector<float>			m_refAngle;
 	std::size_t					m_count;
 
-	sf::Time					m_lifeTime;
+	DecorAnimator				m_animator;
 	float						m_animation;
 	bool						m_growSide;
 
