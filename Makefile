@@ -52,6 +52,9 @@ SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp					\
 				Decors/Crystal.cpp						\
+				Decors/Cloud.cpp						\
+				Decors/Rock.cpp							\
+				Decors/Tree.cpp							\
 				Decors/Sun.cpp							\
 				Decors/RainSystem.cpp
 
@@ -136,9 +139,9 @@ $(BUILD_DIR):
 
 print_summary:
 ifeq ($(MODE), debug)
-	@echo " - Making $(TARGET) [DEBUG]: $(CFLAGS)"
+	@echo " - Making $(TARGET) [DEBUG]: $(CFLAGS) | $(COMPILER)"
 else
-	@echo " - Making $(TARGET): $(CFLAGS)"
+	@echo " - Making $(TARGET): $(CFLAGS) | $(COMPILER)"
 endif
 
 core_library:
