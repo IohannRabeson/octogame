@@ -2,6 +2,7 @@
 # define CRYSTAL_HPP
 
 # include "ADecor.hpp"
+# include "Star.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
@@ -13,8 +14,8 @@ public:
 
 	virtual void	setup(ABiome& biome);
 	virtual void	update(sf::Time frameTime,
-						   octo::VertexBuilder& builder,
-						   ABiome& biome);
+							octo::VertexBuilder& builder,
+							ABiome& biome);
 
 private:
 	struct CrystalValue
@@ -30,14 +31,12 @@ private:
 	std::vector<CrystalValue>	m_values;
 	float						m_animation;
 
+	Star						m_shine;
 	std::vector<sf::Vector2f>	m_up;
-	//TODO: Implement shine effet
-	/*
 	unsigned int				m_shineCrystalNumber;
 	unsigned int				m_shineVertexNumber;
 	sf::Time					m_shineTimer;
 	sf::Time					m_shineTimerMax;
-	*/
 
 	sf::Vector2f createPolygon(sf::Vector2f const & size,
 								sf::Vector2f const & origin,

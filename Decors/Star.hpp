@@ -18,6 +18,10 @@ public:
 						octo::VertexBuilder& builder,
 						ABiome& biome);
 
+	void shine(sf::Time frameTime,
+				octo::VertexBuilder& builder,
+				sf::Vector2f const & position);
+
 private:
 	sf::Vector2f	m_size;
 	sf::Color		m_color;
@@ -33,6 +37,7 @@ private:
 					sf::Vector2f const & sizeHeart,
 					sf::Vector2f const & origin,
 					sf::Color const & color,
+					float const angle,
 					float const cosAngle,
 					float const sinAngle,
 					octo::VertexBuilder& builder);
@@ -41,6 +46,7 @@ private:
 					sf::Vector2f const & sizeCorner,
 					sf::Vector2f const & origin,
 					sf::Color const & color,
+					float const angle,
 					float const cosAngle,
 					float const sinAngle,
 					octo::VertexBuilder& builder);

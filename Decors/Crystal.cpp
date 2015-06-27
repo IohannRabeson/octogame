@@ -6,14 +6,12 @@ std::mt19937 Crystal::m_engine;
 
 Crystal::Crystal() :
 	m_partCount(0u),
-	m_animation(1u)
-	//TODO: Implement shine effet
-	/*
+	m_animation(1u),
+	m_shine(sf::Vector2f(150.f, 150.f), sf::Color(255, 255, 255, 100), 100.f),
 	m_shineCrystalNumber(0u),
 	m_shineVertexNumber(0u),
 	m_shineTimer(sf::seconds(0.f)),
-	m_shineTimerMax(sf::seconds(3.f))
-	*/
+	m_shineTimerMax(sf::seconds(0.5f))
 {
 	std::random_device rd;
 	m_engine.seed(rd());
@@ -65,12 +63,9 @@ sf::Vector2f Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f cons
 	color += tmpAddColor;
 	builder.createTriangle(up + origin, upMid + origin, upLeft + origin, color);
 
-	//TODO: Implement shine effet
-	/*
-	if (m_shineTimer.asSeconds() >= 0.3f)
+	if (m_shineTimer >= m_shineTimerMax)
 	{
-		//TODO: Change this random number generation
-		m_shineVertexNumber = static_cast<int>(randomFloat(0.f, 3.99f));
+		m_shineVertexNumber = randomInt(0, 4);
 		m_shineTimer = sf::seconds(0.f);
 	}
 	switch (m_shineVertexNumber)
@@ -86,7 +81,6 @@ sf::Vector2f Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f cons
 		default:
 			return up;
 	}
-	*/
 	return up;
 }
 
@@ -119,15 +113,10 @@ void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	//TODO: Test this with terrain
 	createCrystal(m_values, sf::Vector2f(position.x, position.y + m_size.x), builder);
 
-	//TODO: Implement shine effet
-	(void)frameTime;
-	/*
 	m_shineTimer += frameTime;
 	if (m_shineTimer.asSeconds() == 0.f)
 		m_shineCrystalNumber = randomInt(0, m_partCount);
-	m_star.setOrigin(m_up[m_shineCrystalNumber] + m_origin);
-	m_star.shine(deltatime);
-	*/
+	m_shine.shine(frameTime, builder, m_up[m_shineCrystalNumber] + position);
 }
 
 void Crystal::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)

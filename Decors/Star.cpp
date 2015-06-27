@@ -22,7 +22,7 @@ Star::Star(sf::Vector2f const & size, sf::Color const & color, float const angle
 {
 }
 
-void Star::createStar(sf::Vector2f const & size, sf::Vector2f const & sizeHeart, sf::Vector2f const & origin, sf::Color const & color, float const cosAngle, float const sinAngle, octo::VertexBuilder& builder)
+void Star::createStar(sf::Vector2f const & size, sf::Vector2f const & sizeHeart, sf::Vector2f const & origin, sf::Color const & color, float const angle, float const cosAngle, float const sinAngle, octo::VertexBuilder& builder)
 {
 	sf::Vector2f left(-size.x / 2.f - sizeHeart.x, 0.f);
 	sf::Vector2f right(size.x / 2.f + sizeHeart.x, 0.f);
@@ -33,7 +33,7 @@ void Star::createStar(sf::Vector2f const & size, sf::Vector2f const & sizeHeart,
 	sf::Vector2f heartLeftDown(-sizeHeart.x, sizeHeart.y);
 	sf::Vector2f heartRightDown(sizeHeart.x, sizeHeart.y);
 
-	if (m_angle != 0.f)
+	if (angle != 0.f)
 	{
 		rotateVec(left, cosAngle, sinAngle);
 		rotateVec(right, cosAngle, sinAngle);
@@ -52,7 +52,7 @@ void Star::createStar(sf::Vector2f const & size, sf::Vector2f const & sizeHeart,
 	builder.createQuad(heartLeftUp + origin, heartRightUp + origin, heartRightDown + origin, heartLeftDown + origin, color);
 }
 
-void Star::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, float const cosAngle, float const sinAngle, octo::VertexBuilder& builder)
+void Star::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, float const angle, float const cosAngle, float const sinAngle, octo::VertexBuilder& builder)
 {
 	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
 	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
@@ -67,7 +67,7 @@ void Star::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner
 	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
 	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
 
-	if (m_angle != 0.f)
+	if (angle != 0.f)
 	{
 		rotateVec(upLeft, cosAngle, sinAngle);
 		rotateVec(upRight, cosAngle, sinAngle);
@@ -132,6 +132,20 @@ void Star::setup(ABiome& biome)
 	m_animator.setup(biome.getStarLifeTime());
 }
 
+void Star::shine(sf::Time frameTime, octo::VertexBuilder& builder, sf::Vector2f const & position)
+{
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
+
+	float angle = m_angle * m_animation * octo::Deg2Rad;
+	float cosAngle = std::cos(angle);
+	float sinAngle = std::sin(angle);
+
+	sf::Color animationColor(m_color.r, m_color.g, m_color.b, m_color.a * (m_animation > 1.f ? 1.f : m_animation));
+	createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, m_angle, cosAngle, sinAngle, builder);
+	createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, m_angle, cosAngle, sinAngle, builder);
+}
+
 void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
 	m_animator.update(frameTime);
@@ -143,8 +157,8 @@ void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	float sinAngle = std::sin(angle);
 
 	sf::Color animationColor(m_color.r, m_color.g, m_color.b, m_color.a * (m_animation > 1.f ? 1.f : m_animation));
-	createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, cosAngle, sinAngle, builder);
-	createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, cosAngle, sinAngle, builder);
+	createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, m_angle, cosAngle, sinAngle, builder);
+	createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, m_angle, cosAngle, sinAngle, builder);
 }
 
 void Star::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
