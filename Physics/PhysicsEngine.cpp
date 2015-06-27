@@ -27,9 +27,9 @@ PhysicsEngine::PhysicsEngine(void) :
 
 PhysicsEngine::~PhysicsEngine(void)
 {
-		// TODO: erase
 	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
 		delete (*i);
+	m_shapes.clear();
 	for (auto i = m_tileShapes.begin(); i != m_tileShapes.end(); i++)
 		delete (*i);
 }
@@ -56,15 +56,15 @@ void PhysicsEngine::init(void)
 	m_polygonShapes.reserve(MaxShapes);
 
 	//TODO: use max pairs and assert in broadphae
-	m_polyPolyPairs.resize(1000u);
-	m_circleCirclePairs.resize(1000u);
-	m_polyCirclePairs.resize(1000u);
-	m_tilePolyPairs.resize(1000u);
-	m_tileCirclePairs.resize(1000u);
+	m_polyPolyPairs.resize(MaxPairs);
+	m_circleCirclePairs.resize(MaxPairs);
+	m_polyCirclePairs.resize(MaxPairs);
+	m_tilePolyPairs.resize(MaxPairs);
+	m_tileCirclePairs.resize(MaxPairs);
 
-	m_test.resize(1000u);
+	m_test.resize(MaxPairs);
 	for (auto test : m_test)
-			test.reserve(1000u);
+			test.reserve(MaxPairs);
 }
 
 void PhysicsEngine::setTileMapSize(sf::Vector2i const & tileMapSize)
@@ -96,15 +96,17 @@ void PhysicsEngine::registerTile(TileShape * shape, std::size_t x,  std::size_t 
 
 void PhysicsEngine::update(float deltatime)
 {
-	// Add gravity
+	//TODO: BIG TODO use a vector instead of a array2D
+	// Tile don't move so we update them now
 	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
 	{
-		//for (std::size_t k = 0u; k < 72/*m_tileShapes.rows()*/; k++)
+		//for (std::size_t k = 0u; k < m_tileShapes.rows(); k++)
 		{
-				if (!m_tileShapes.get(i, 0)->getSleep())
-					m_tileShapes.get(i, 0)->update();
+			if (!m_tileShapes.get(i, 0u)->getSleep())
+				m_tileShapes.get(i, 0u)->update();
 		}
 	}
+	// Add gravity
 	sf::Vector2f gravity = m_gravity * deltatime;
 	for (auto shape : m_shapes)
 	{
@@ -131,13 +133,13 @@ void PhysicsEngine::broadPhase(void)
 
 	if (m_tileCollision)
 	{
+			//TODO: finalize m_test
 		//m_tilePolyPairCount = broadPhase(m_polygonShapes, m_tilePolyPairs);
 		m_tilePolyPairCount = broadPhase(m_polygonShapes, m_test);
 		m_tileCirclePairCount = broadPhase(m_circleShapes, m_tileCirclePairs);
 	}
 }
 
-#include <iostream>
 template<class T>
 std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<Pair<TileShape *, T>> & pairs)
 {
@@ -147,10 +149,8 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector
 	for (auto shape : vector)
 	{
 		sf::Rect<float> const & rect = shape->getGlobalBounds();
-		//TODO fix bug camera move
 		float offX = rect.left - camRect.left;
-		//if (rect.left < 0)
-		//	offX--;
+		//TODO: remove commentary
 		//float offY = rect.top + Tile::DoubleTileSize - camRect.top;
 		float w = rect.width + offX;
 		//float h = rect.height + Tile::TileSize + offY + shape->getVelocity().y;
@@ -385,9 +385,6 @@ bool PhysicsEngine::findAxisLeastPenetration(TileShape * tile, PolygonShape * po
 	for(std::size_t i = 0u; i < polygon->getEfficientVertexCount(); ++i)
 	{
 		m_axis = polygon->getNormal(i);
-		// TODO: remove and test
-		if (m_axis.x == 0.f && m_axis.y == 0.f)
-			continue;
 		octo::normalize(m_axis);
 		// On récupère le supportPoint dans le sens inverse de l'axe
 		sf::Vector2f const & s = tile->getSupportVertex(-m_axis);

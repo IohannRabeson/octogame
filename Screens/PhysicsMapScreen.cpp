@@ -65,8 +65,6 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 			m_shape->addVelocity(speed, 0.f);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
 			m_shape->addVelocity(-speed, 0.f);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-			m_shape->rotate(3.14f * deltatime.asSeconds());
 		m_frameByFrame = false;
 		m_engine.update(deltatime.asSeconds());
 	}

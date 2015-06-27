@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 03:03:00 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 19:45:17 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/27 17:53:14 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,9 @@ public:
 	virtual sf::Color		getMoonColor();
 	virtual bool			canCreateMoon();
 
+	virtual sf::Vector2u const & getMapSize();
+	virtual float getTransitionDuration();
+
 	void					setTreeDepth(std::size_t depth);
 	void					setTreeSize(sf::Vector2f const& treeSize);
 	void					setTreeLifeTime(sf::Time lifeTime);
@@ -106,6 +109,10 @@ public:
 	void					setMoonSize(sf::Vector2f const& size);
 	void					setMoonColor(sf::Color const& color);
 	void					setCanCreateMoon(bool canCreate);
+
+	void					setMapSize(sf::Vector2u const & mapSize);
+	void					setTransitionDuration(float transitionDuration);
+
 private:
 	std::size_t				m_treeDepth;
 	sf::Vector2f			m_treeSize;
@@ -146,6 +153,10 @@ private:
 	sf::Vector2f			m_moonSize;
 	sf::Color				m_moonColor;
 	bool					m_canCreateMoon;
+
+	sf::Vector2u			m_mapSize;
+	float					m_transitionDuration;
+
 };
 
 #endif

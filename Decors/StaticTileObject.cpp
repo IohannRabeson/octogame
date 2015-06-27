@@ -1,26 +1,19 @@
 #include "StaticTileObject.hpp"
+#include "Tile.hpp"
 
-StaticTileObject::StaticTileObject(unsigned int p_width, unsigned int p_height, unsigned int p_depth) :
-	GameObject(),
-	mn_maxDepth(p_depth),
-	mn_depth(0),
-	mn_oldDepth(0),
-	mn_width(p_width),
-	mn_height(p_height)
+StaticTileObject::StaticTileObject(std::size_t width, std::size_t height, std::size_t depth) :
+	m_depth(0),
+	m_oldDepth(0)
 {
 	// Init 3D TileMap
-	m_tiles = new Map::TileMap[mn_maxDepth];
-	for (unsigned int i = 0; i < mn_maxDepth; i++)
-		m_tiles[i].resize(p_width, p_height, nullptr);
+	m_tiles.resize(width, height, depth, nullptr);
 
-	for (unsigned int i = 0; i < mn_maxDepth; i++)
+	for (std::size_t z = 0; z < m_tiles.depth(); z++)
 	{
-		for (unsigned int x = 0; x < m_tiles[i].columns(); x++)
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 		{
-			for (unsigned int y = 0; y < m_tiles[i].rows(); y++)
-			{
-				m_tiles[i](x, y) = new Tile();
-			}
+			for (std::size_t y = 0; y < m_tiles.rows(); y++)
+				m_tiles(x, y, z) = new Tile();
 		}
 	}
 }
@@ -28,33 +21,32 @@ StaticTileObject::StaticTileObject(unsigned int p_width, unsigned int p_height, 
 StaticTileObject::~StaticTileObject(void)
 {
 	
-	for (unsigned int i = 0; i < mn_maxDepth; i++)
+	for (std::size_t z = 0; z < m_tiles.depth(); z++)
 	{
-		for (unsigned int x = 0; x < m_tiles[i].columns(); x++)
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 		{
-			for (unsigned int y = 0; y < m_tiles[i].rows(); y++)
-				delete m_tiles[i](x, y);
+			for (std::size_t y = 0; y < m_tiles.rows(); y++)
+				delete m_tiles(x, y, z);
 		}
 	}
-	delete [] m_tiles;
 }
 
 void StaticTileObject::load(void)
 {
-	for (unsigned int i = 0; i < mn_maxDepth; i++)
+	for (std::size_t z = 0; z < m_tiles.depth(); z++)
 	{
-		for (unsigned int x = 0; x < m_tiles[i].columns(); x++)
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 		{
-			for (unsigned int y = 0; y < m_tiles[i].rows(); y++)
+			for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			{
-				if (i == 1)
-					m_tiles[i](x, y)->setIsEmpty(false);
+				if (z == 1)
+					m_tiles(x, y, z)->setIsEmpty(false);
 				else
 				{
 					if ((x % 3 == 0 || x % 4 == 0) && y < 8)
-						m_tiles[i](x, y)->setIsEmpty(true);
+						m_tiles(x, y, z)->setIsEmpty(true);
 					else
-						m_tiles[i](x, y)->setIsEmpty(false);
+						m_tiles(x, y, z)->setIsEmpty(false);
 				}
 			}
 		}
@@ -63,41 +55,41 @@ void StaticTileObject::load(void)
 
 void StaticTileObject::swapDepth(void)
 {
-	int tmp = mn_depth;
-	mn_depth = mn_oldDepth;
-	mn_oldDepth = tmp;
+	int tmp = m_depth;
+	m_depth = m_oldDepth;
+	m_oldDepth = tmp;
 }
 
 void StaticTileObject::registerDepth(void)
 {
-	mn_oldDepth = mn_depth;
+	m_oldDepth = m_depth;
 }
 
 void StaticTileObject::nextStep(void)
 {
-	mn_depth++;
-	if (mn_depth >= static_cast<int>(mn_maxDepth))
-		mn_depth = 0;
+	m_depth++;
+	if (m_depth >= static_cast<int>(m_tiles.depth()))
+		m_depth = 0;
 }
 
 void StaticTileObject::previousStep(void)
 {
-	mn_depth--;
-	if (mn_depth < 0)
-		mn_depth = mn_maxDepth - 1;
+	m_depth--;
+	if (m_depth < 0)
+		m_depth = static_cast<int>(m_tiles.depth()) - 1;
 }
 
-Tile const & StaticTileObject::get(unsigned int x, unsigned int y) const
+Tile const & StaticTileObject::get(std::size_t x, std::size_t y) const
 {
-	return *m_tiles[mn_depth](x, y);
+	return *m_tiles(x, y, m_depth);
 }
 
-unsigned int StaticTileObject::getWidth(void) const
+std::size_t StaticTileObject::getWidth(void) const
 {
-	return mn_width;
+	return m_tiles.columns();
 }
 
-unsigned int StaticTileObject::getHeight(void) const
+std::size_t StaticTileObject::getHeight(void) const
 {
-	return mn_height;
+	return m_tiles.rows();
 }

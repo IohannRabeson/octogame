@@ -5,6 +5,7 @@
 # include <Camera.hpp>
 # include "GroundManager.hpp"
 # include "DecorManager.hpp"
+# include "TestBiome.hpp"
 
 class MapManager : public sf::Drawable
 {
@@ -20,13 +21,13 @@ public:
 	inline GroundManager & getGroundManager(void) { return m_terrainManager; }
 
 private:
-	Biome				m_biome;
 	GroundManager		m_terrainManager;
 	std::string			m_wave;
 	std::string			m_dark;
 	std::string			m_negative;
 	sf::Shader			m_shader;
 	octo::Camera &		m_camera;
+	TestBiome			m_biome;
 
 };
 

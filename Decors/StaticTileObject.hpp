@@ -1,13 +1,17 @@
 #ifndef STATICTILEOBJECT_HPP
 # define STATICTILEOBJECT_HPP
 
-# include "GameObject.hpp"
-# include "Map.hpp"
+# include <memory>
+# include <Array3D.hpp>
+# include "IMapTransformable.hpp"
 
-class StaticTileObject : public GameObject
+class Tile;
+
+//TODO: rename
+class StaticTileObject : public IMapTransformable
 {
 public:
-	StaticTileObject(unsigned int p_width, unsigned int p_height, unsigned int p_depth);
+	StaticTileObject(std::size_t width, std::size_t height, std::size_t depth);
 	virtual ~StaticTileObject(void);
 
 	// Load the tilemap from resources
@@ -17,19 +21,16 @@ public:
 	void registerDepth(void);
 	void nextStep(void);
 	void previousStep(void);
-	Tile const & get(unsigned int x, unsigned int y) const;
-	unsigned int getWidth(void) const;
-	unsigned int getHeight(void) const;
+	Tile const & get(std::size_t x, std::size_t y) const;
+	std::size_t getWidth(void) const;
+	std::size_t getHeight(void) const;
 
 private:
 	StaticTileObject(void) = delete;
 
-	Map::TileMap *			m_tiles;
-	unsigned int			mn_maxDepth;
-	int				mn_depth;
-	int				mn_oldDepth;
-	unsigned int			mn_width;
-	unsigned int			mn_height;
+	octo::Array3D<Tile *>	m_tiles;
+	int						m_depth;
+	int						m_oldDepth;
 
 };
 

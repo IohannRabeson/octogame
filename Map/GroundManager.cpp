@@ -1,7 +1,8 @@
 #include "GroundManager.hpp"
-#include "MapInstance.hpp"
+#include "NewMap.hpp"
 #include "TileShape.hpp"
 #include "PhysicsEngine.hpp"
+#include "ABiome.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -17,10 +18,10 @@ GroundManager::GroundManager(void) :
 	m_oldOffset(0, 0)
 {}
 
-void GroundManager::init(Biome * biome)
+void GroundManager::init(ABiome & biome)
 {
-	m_tiles.reset(new MapInstance());
-	m_tilesPrev.reset(new MapInstance());
+	m_tiles.reset(new NewMap());
+	m_tilesPrev.reset(new NewMap());
 
 	// Init maps and biome
 	m_tiles->init(biome);
@@ -35,18 +36,18 @@ void GroundManager::init(Biome * biome)
 
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
 	// TODO: use vector instead of array
-	m_tileShapes.resize(m_tiles->getColumns(), m_tiles->getRows(), nullptr);
+	m_tileShapes.resize(m_tiles->getColumns(), nullptr);
 
 	PhysicsEngine::getInstance().setTileMapSize(sf::Vector2i(m_tiles->getColumns(), m_tiles->getRows()));
 
 
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
-		m_tileShapes(x, 0u) = builder.createTile(x, 0u);
-		m_tileShapes(x, 0u)->setVertex(&m_vertices[0u]);
+		m_tileShapes[x] = builder.createTile(x, 0u);
+		m_tileShapes[x]->setVertex(&m_vertices[0u]);
 	}
 
-	m_transitionTimerMax = biome->mf_transitionTimerMax;
+	m_transitionTimerMax = biome.getTransitionDuration();
 }
 
 void GroundManager::setTransitionAppear(int x, int y)
@@ -172,7 +173,7 @@ void GroundManager::updateTransition(void)
 			if (!isFirst)
 			{
 				isFirst = true;
-				m_tileShapes.get(x, 0)->setVertex(&m_vertices[m_verticesCount]);
+				m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount]);
 			}
 			m_verticesCount += 4u;
 		}
