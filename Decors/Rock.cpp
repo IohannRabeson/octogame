@@ -5,6 +5,7 @@ std::mt19937	Rock::m_engine;
 
 Rock::Rock() :
 	m_partCount(1u),
+	m_animator(1.f, 0.f, 3.f, 0.1f),
 	m_animation(1.f)
 {
 	std::random_device rd;
@@ -132,11 +133,14 @@ void Rock::setup(ABiome& biome)
 		}
 		i++;
 	}
+	m_animator.setup();
 }
 
 void Rock::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	(void)frameTime;
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
+
 	sf::Vector2f const & position = getPosition();
 	//TODO: Test this with terrain
 	createRock(m_values, sf::Vector2f(position.x, position.y + m_size.x / 2.f), m_color, builder);
