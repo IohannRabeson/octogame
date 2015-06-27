@@ -4,6 +4,7 @@
 
 Star::Star() :
 	m_liveTime(sf::Time::Zero),
+	m_animator(3.f, 3.f, 0.f, 0.1f),
 	m_animation(1.f)
 {
 }
@@ -42,7 +43,7 @@ void Star::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner
 	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
 
 	sf::Color originColor = color;
-	originColor.a = 100;
+	originColor.a = originColor.a * m_animation;
 	sf::Color transparent = color;
 	transparent.a = 0;
 
@@ -88,11 +89,13 @@ void Star::setup(ABiome& biome)
 
 	m_glowSize = m_size / 2.5f;
 	m_glowSizeCorner = m_glowSize / 2.f;
+	m_animator.setup(sf::seconds(0.f));
 }
 
 void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	(void)frameTime;
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f const & position = getPosition();
 	createStar(m_size * m_animation, m_sizeHeart * m_animation, position, m_color, builder);

@@ -2,6 +2,7 @@
 # define STAR_HPP
 
 # include "ADecor.hpp"
+# include "DecorAnimator.hpp"
 # include <VertexBuilder.hpp>
 # include <vector>
 
@@ -25,14 +26,15 @@ public:
 
 	virtual void setup(ABiome& biome);
 	virtual void update(sf::Time frameTime,
-							octo::VertexBuilder& builder,
-							ABiome& biome);
+						octo::VertexBuilder& builder,
+						ABiome& biome);
 
 private:
 	sf::Vector2f	m_size;
 	sf::Color		m_color;
 	sf::Vector2f	m_sizeHeart;
 	sf::Time		m_liveTime;
+	DecorAnimator	m_animator;
 	float			m_animation;
 
 	sf::Vector2f	m_glowSize;
