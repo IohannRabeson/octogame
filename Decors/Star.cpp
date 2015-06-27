@@ -1,147 +1,155 @@
 #include "Star.hpp"
-#include "Map.hpp"
-#include "ResourceDefinitions.hpp"
+#include "ABiome.hpp"
+#include <math.hpp>
 #include <cmath>
-#include <ResourceManager.hpp>
-#include <Application.hpp>
 
 Star::Star() :
-	Decor(),
-	mf_shineTimer(0.f),
-	mf_maxShineTime(0.f)
+	m_angle(0.f),
+	m_animator(3.f, 3.f, 3.f, 0.3f),
+	m_animation(1.f)
 {
 }
 
-Star::~Star()
+Star::Star(sf::Vector2f const & size, sf::Color const & color, float const angle) :
+	m_size(size),
+	m_color(color),
+	m_sizeHeart(size / 50.f),
+	m_angle(angle),
+	m_animator(3.f, 3.f, 0.f, 0.1f),
+	m_animation(1.f),
+	m_glowSize(size / 2.5f),
+	m_glowSizeCorner(m_glowSize / 2.f)
 {
 }
 
-void Star::createOneStar(sf::Vector2f p_size, sf::Vector2f p_sizeHeart, float p_angle, sf::Color p_color)
+void Star::createStar(sf::Vector2f const & size, sf::Vector2f const & sizeHeart, sf::Vector2f const & origin, sf::Color const & color, float const cosAngle, float const sinAngle, octo::VertexBuilder& builder)
 {
-	mn_countVertex = 0u;
+	sf::Vector2f left(-size.x / 2.f - sizeHeart.x, 0.f);
+	sf::Vector2f right(size.x / 2.f + sizeHeart.x, 0.f);
+	sf::Vector2f up(0.f, -size.y / 2.f - sizeHeart.y);
+	sf::Vector2f down(0.f, size.y / 2.f + sizeHeart.y);
+	sf::Vector2f heartLeftUp(-sizeHeart.x, -sizeHeart.y);
+	sf::Vector2f heartRightUp(sizeHeart.x, -sizeHeart.y);
+	sf::Vector2f heartLeftDown(-sizeHeart.x, sizeHeart.y);
+	sf::Vector2f heartRightDown(sizeHeart.x, sizeHeart.y);
 
-	sf::Vector2f left(-p_size.x / 2.f - p_sizeHeart.x, 0.f);
-	sf::Vector2f right(p_size.x / 2.f + p_sizeHeart.x, 0.f);
-	sf::Vector2f up(0.f, -p_size.y / 2.f - p_sizeHeart.y);
-	sf::Vector2f down(0.f, p_size.y / 2.f + p_sizeHeart.y);
-	sf::Vector2f heartLeftUp(-p_sizeHeart.x, -p_sizeHeart.y);
-	sf::Vector2f heartRightUp(p_sizeHeart.x, -p_sizeHeart.y);
-	sf::Vector2f heartLeftDown(-p_sizeHeart.x, p_sizeHeart.y);
-	sf::Vector2f heartRightDown(p_sizeHeart.x, p_sizeHeart.y);
-
-	float angle = p_angle * PI / 180.f;
-	float cosA = cos(angle);
-	float sinA = sin(angle);
-
-	rotateVec(&left, cosA, sinA);
-	rotateVec(&right, cosA, sinA);
-	rotateVec(&up, cosA, sinA);
-	rotateVec(&down, cosA, sinA);
-	rotateVec(&heartLeftUp, cosA, sinA);
-	rotateVec(&heartRightUp, cosA, sinA);
-	rotateVec(&heartLeftDown, cosA, sinA);
-	rotateVec(&heartRightDown, cosA, sinA);
-
-	createTriangle(up, heartLeftUp, heartRightUp, m_origin, p_color);
-	createTriangle(down, heartLeftDown, heartRightDown, m_origin, p_color);
-	createTriangle(left, heartLeftUp, heartLeftDown, m_origin, p_color);
-	createTriangle(right, heartRightUp, heartRightDown, m_origin, p_color);
-	createRectangle(heartLeftUp, heartRightUp, heartRightDown, heartLeftDown, m_origin, p_color);
-
-	// Create light
-	float radius = p_size.x / 3.f;
-	m_light.setRadius(radius);
-	m_light.setOrigin(sf::Vector2f(radius, radius));
-	m_light.setPosition(m_origin);
-}
-
-void Star::randomDecor(void)
-{
-	Decor::randomDecor();
-	me_currentState = e_state_grow;
-
-	mn_maxTriangle = 6;
-	mf_maxShineTime = randomRange(m_biome->m_star.mn_minLive, m_biome->m_star.mn_maxLive);
-
-	allocateVertex(mn_maxTriangle * 3u);
-
-	m_size = sf::Vector2f(randomRange(m_biome->m_star.mn_minSizeX, m_biome->m_star.mn_maxSizeX), randomRange(m_biome->m_star.mn_minSizeY, m_biome->m_star.mn_maxSizeY));
-	m_sizeHeart = sf::Vector2f(m_size.x / 50.f, m_size.x / 50.f);
-
-	// Init light
-	octo::ResourceManager&	resources = octo::Application::getResourceManager();
-	m_light.setTexture(&resources.getTexture(FIREFLY01_PNG));
-}
-
-void Star::setOrigin(sf::Vector2f p_origin)
-{
-	m_origin = p_origin;
-}
-
-void Star::init(Biome * p_biome)
-{
-	Decor::init(p_biome);
-	mf_growSpeed = 2.f;
-	mf_dieSpeed = 2.f;
-	randomDecor();
-	createOneStar(m_size, m_sizeHeart, 0.0f, m_color);
-}
-
-void Star::computeStates(float pf_deltatime)
-{
-	switch (me_currentState)
+	if (m_angle != 0.f)
 	{
-		case e_state_grow:
-		{
-			mf_mouvement += pf_deltatime * mf_growSpeed;
-			if (mf_mouvement >= 1.0f)
-				me_currentState = e_state_die;
-			break;
-		}
-		case e_state_die:
-		{
-			mf_mouvement -= pf_deltatime * mf_dieSpeed;
-			mf_dieTimer = 0.f;
-			break;
-		}
-		case e_state_stop:
-		{
-			mf_mouvement = 0.f;
-			break;
-		}
-		default:
-			break;
+		rotateVec(left, cosAngle, sinAngle);
+		rotateVec(right, cosAngle, sinAngle);
+		rotateVec(up, cosAngle, sinAngle);
+		rotateVec(down, cosAngle, sinAngle);
+		rotateVec(heartLeftUp, cosAngle, sinAngle);
+		rotateVec(heartRightUp, cosAngle, sinAngle);
+		rotateVec(heartLeftDown, cosAngle, sinAngle);
+		rotateVec(heartRightDown, cosAngle, sinAngle);
 	}
+
+	builder.createTriangle(up + origin, heartLeftUp + origin, heartRightUp + origin, color);
+	builder.createTriangle(down + origin, heartLeftDown + origin, heartRightDown + origin, color);
+	builder.createTriangle(left + origin, heartLeftUp + origin, heartLeftDown + origin, color);
+	builder.createTriangle(right + origin, heartRightUp + origin, heartRightDown + origin, color);
+	builder.createQuad(heartLeftUp + origin, heartRightUp + origin, heartRightDown + origin, heartLeftDown + origin, color);
 }
 
-void Star::shine(float pf_deltatime)
+void Star::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, float const cosAngle, float const sinAngle, octo::VertexBuilder& builder)
 {
-	computeStates(pf_deltatime);
-	mf_shineTimer += pf_deltatime;
-	if (me_currentState == e_state_die && mf_mouvement <= 0.f)
-		me_currentState = e_state_stop;
-	if (me_currentState == e_state_stop && mf_shineTimer >= mf_maxShineTime)
+	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
+	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
+	sf::Vector2f cornerUpLeft(-size.x + sizeCorner.x, -size.y + sizeCorner.y);
+	sf::Vector2f cornerUpRight(size.x - sizeCorner.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidRight(size.x, -size.y + sizeCorner.y);
+	sf::Vector2f downLeft(-size.x + sizeCorner.x, size.y);
+	sf::Vector2f downRight(size.x - sizeCorner.x, size.y);
+	sf::Vector2f cornerDownLeft(-size.x + sizeCorner.x, size.y - sizeCorner.y);
+	sf::Vector2f cornerDownRight(size.x - sizeCorner.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
+
+	if (m_angle != 0.f)
 	{
-		randomDecor();
-		mf_shineTimer = 0.f;
+		rotateVec(upLeft, cosAngle, sinAngle);
+		rotateVec(upRight, cosAngle, sinAngle);
+		rotateVec(cornerUpLeft, cosAngle, sinAngle);
+		rotateVec(cornerUpRight, cosAngle, sinAngle);
+		rotateVec(upMidLeft, cosAngle, sinAngle);
+		rotateVec(upMidRight, cosAngle, sinAngle);
+		rotateVec(downLeft, cosAngle, sinAngle);
+		rotateVec(downRight, cosAngle, sinAngle);
+		rotateVec(cornerDownLeft, cosAngle, sinAngle);
+		rotateVec(cornerDownRight, cosAngle, sinAngle);
+		rotateVec(downMidLeft, cosAngle, sinAngle);
+		rotateVec(downMidRight, cosAngle, sinAngle);
 	}
-	if (me_currentState != e_state_stop)
-		createOneStar(sf::Vector2f(m_size.x * mf_mouvement, m_size.y * mf_mouvement), sf::Vector2f(m_sizeHeart.x * mf_mouvement, m_sizeHeart.y * mf_mouvement), 0.f, sf::Color(255,255,255, 50));
+
+	sf::Color originColor = color;
+	originColor.a = originColor.a;
+	sf::Color transparent = color;
+	transparent.a = 0;
+
+	builder.createVertex(upLeft + origin, transparent);
+	builder.createVertex(upRight + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(upRight + origin, transparent);
+	builder.createVertex(upMidRight + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(upMidRight + origin, transparent);
+	builder.createVertex(downMidRight + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(downMidRight + origin, transparent);
+	builder.createVertex(downRight + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(downRight + origin, transparent);
+	builder.createVertex(downLeft + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(downLeft + origin, transparent);
+	builder.createVertex(downMidLeft + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(downMidLeft + origin, transparent);
+	builder.createVertex(upMidLeft + origin, transparent);
+	builder.createVertex(origin, originColor);
+
+	builder.createVertex(upMidLeft + origin, transparent);
+	builder.createVertex(upLeft + origin, transparent);
+	builder.createVertex(origin, originColor);
 }
 
-void Star::update(float pf_deltatime)
+void Star::setup(ABiome& biome)
 {
-	Decor::update(pf_deltatime);
+	m_size = biome.getStarSize();
+	m_color = biome.getStarColor();
+	m_sizeHeart = m_size / 50.f;
 
-	if (me_currentState != e_state_stop)
-		createOneStar(sf::Vector2f(m_size.x * mf_mouvement, m_size.y * mf_mouvement), sf::Vector2f(m_sizeHeart.x * mf_mouvement, m_sizeHeart.y * mf_mouvement), 0.f, sf::Color(255,255,255, 50));
+	m_glowSize = m_size / 2.5f;
+	m_glowSizeCorner = m_glowSize / 2.f;
+	m_animator.setup(biome.getStarLifeTime());
 }
 
-void Star::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
+void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	if (me_currentState != e_state_stop)
-	{
-		Decor::draw(p_target, p_states);
-		p_target.draw(m_light);
-	}
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
+
+	sf::Vector2f const & position = getPosition();
+	float angle = m_angle * m_animation * octo::Deg2Rad;
+	float cosAngle = std::cos(angle);
+	float sinAngle = std::sin(angle);
+
+	sf::Color animationColor(m_color.r, m_color.g, m_color.b, m_color.a * (m_animation > 1.f ? 1.f : m_animation));
+	createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, cosAngle, sinAngle, builder);
+	createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, cosAngle, sinAngle, builder);
+}
+
+void Star::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
+{
+	float x = vector.x * cosAngle - vector.y * sinAngle;
+	vector.y = vector.y * cosAngle + vector.x * sinAngle;
+	vector.x = x;
 }

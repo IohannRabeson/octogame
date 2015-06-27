@@ -1,31 +1,54 @@
 #ifndef STAR_HPP
 # define STAR_HPP
 
-# include "Decor.hpp"
+# include "ADecor.hpp"
+# include "DecorAnimator.hpp"
+# include <VertexBuilder.hpp>
 # include <vector>
 
-class Star : public Decor
+class Star : public ADecor
 {
-private:
-	sf::CircleShape				m_light;
-	sf::Vector2f				m_sizeHeart;
-	float						mf_shineTimer;
-	float						mf_maxShineTime;
-
 public:
 	Star(void);
-	virtual ~Star(void);
+	Star(sf::Vector2f const & size, sf::Color const & color, float const angle);
+	virtual ~Star(void) = default;
 
-	void init(Biome * p_biome);
+	virtual void setup(ABiome& biome);
+	virtual void update(sf::Time frameTime,
+						octo::VertexBuilder& builder,
+						ABiome& biome);
 
-	void createOneStar(sf::Vector2f p_size, sf::Vector2f p_sizeHeart, float p_angle, sf::Color p_color);
-	void randomDecor(void);
-	void setOrigin(sf::Vector2f p_origin);
-	void shine(float pf_deltatime);
-	void computeStates(float pf_deltatime);
+private:
+	sf::Vector2f	m_size;
+	sf::Color		m_color;
+	sf::Vector2f	m_sizeHeart;
+	float			m_angle;
+	DecorAnimator	m_animator;
+	float			m_animation;
 
-	virtual void update(float pf_deltatime);
-	virtual void draw(sf::RenderTarget & p_target, sf::RenderStates p_states) const;
+	sf::Vector2f	m_glowSize;
+	sf::Vector2f	m_glowSizeCorner;
+
+	void createStar(sf::Vector2f const & size,
+					sf::Vector2f const & sizeHeart,
+					sf::Vector2f const & origin,
+					sf::Color const & color,
+					float const cosAngle,
+					float const sinAngle,
+					octo::VertexBuilder& builder);
+
+	void createGlow(sf::Vector2f const & size,
+					sf::Vector2f const & sizeCorner,
+					sf::Vector2f const & origin,
+					sf::Color const & color,
+					float const cosAngle,
+					float const sinAngle,
+					octo::VertexBuilder& builder);
+
+private:
+	static void rotateVec(sf::Vector2f & vector,
+							float const cosAngle,
+							float const sinAngle);
 };
 
 #endif

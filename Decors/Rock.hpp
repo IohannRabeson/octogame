@@ -2,6 +2,7 @@
 # define ROCK_HPP
 
 # include "ADecor.hpp"
+# include "DecorAnimator.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
@@ -30,6 +31,7 @@ private:
 	sf::Color					m_color;
 	std::size_t					m_partCount;
 	std::vector<OctogonValue>	m_values;
+	DecorAnimator				m_animator;
 	float						m_animation;
 
 	sf::Vector2f				m_left;
