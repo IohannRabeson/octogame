@@ -2,33 +2,12 @@
 
 std::mt19937	DecorAnimator::m_engine;
 
-DecorAnimator::DecorAnimator(void) :
-	m_currentState(e_state_grow),
-	m_lastState(e_state_grow),
-	m_animation(0.f),
-	m_lifeTimer(0.f),
-	m_lifeTimerMax(10.f),
-	m_growTimer(0.f),
-	m_growTimerMax(2.f),
-	m_dieTimer(0.f),
-	m_dieTimerMax(2.f),
-	m_beatTimer(0.f),
-	m_beatTimerMax(1.f),
-	m_beatDirection(true),
-	m_beatDelta(0.2f)
-{
-	std::random_device rd;
-	m_engine.seed(rd());
-//	m_timer += randomFloat(0.f, 1.f);
-}
-
-//TODO: Not tested
 DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, float delta) :
 	m_currentState(e_state_grow),
 	m_lastState(e_state_grow),
 	m_animation(0.f),
 	m_lifeTimer(0.f),
-	m_lifeTimerMax(10.f),
+	m_lifeTimerMax(0.f),
 	m_growTimer(0.f),
 	m_growTimerMax(growTime),
 	m_dieTimer(0.f),
@@ -40,13 +19,11 @@ DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, floa
 {
 	std::random_device rd;
 	m_engine.seed(rd());
+	m_finalAnimation = 1.0f - m_beatDelta + randomFloat(0.f, 0.1f);
 }
 
 void DecorAnimator::computeBeat(float frameTime)
 {
-	(void)m_beatDelta;
-	m_animation = 1.f;
-
 	m_beatTimer += frameTime;
 	if (m_beatTimer >= m_beatTimerMax)
 	{
@@ -56,26 +33,31 @@ void DecorAnimator::computeBeat(float frameTime)
 		else
 			m_beatDirection = true;
 	}
-	//TODO: Be smart and find how to do that!
 	if (m_beatDirection == true)
-	{
-	}
+		m_animation = m_finalAnimation + (m_beatDelta * m_beatTimer / m_beatTimerMax);
 	else
-	{
-	}
+		m_animation = m_finalAnimation + m_beatDelta - (m_beatDelta * m_beatTimer / m_beatTimerMax);
 }
 
-void DecorAnimator::computeState(float frameTime)
+bool DecorAnimator::computeState(float frameTime)
 {
 	switch (m_currentState)
 	{
 		case e_state_life:
 		{
+			if (!m_lifeTimerMax && m_dieTimerMax)
+			{
+				m_currentState = e_state_die;
+				break;
+			}
+				
 			m_lifeTimer += frameTime;
-			if (m_lifeTimer >= m_lifeTimerMax)
+			if (m_lifeTimer >= m_lifeTimerMax && m_animation == m_finalAnimation)
 			{
 				m_lifeTimer = 0.f;
-				m_currentState = e_state_die;
+				m_beatTimer = 0.f;
+				if (m_dieTimerMax)
+					m_currentState = e_state_die;
 				break;
 			}
 			computeBeat(frameTime);
@@ -84,7 +66,7 @@ void DecorAnimator::computeState(float frameTime)
 		case e_state_grow:
 		{
 			m_growTimer += frameTime;
-			m_animation = m_growTimer / m_growTimerMax;
+			m_animation = m_growTimer / m_growTimerMax * m_finalAnimation;
 			if (m_growTimer >= m_growTimerMax)
 			{
 				m_growTimer = 0.f;
@@ -95,32 +77,30 @@ void DecorAnimator::computeState(float frameTime)
 		case e_state_die:
 		{
 			m_dieTimer += frameTime;
-			m_animation = 1.f - m_dieTimer / m_dieTimerMax;
+			m_animation = m_finalAnimation - m_dieTimer / m_dieTimerMax * m_finalAnimation;
 			if (m_dieTimer >= m_dieTimerMax)
 			{
 				m_dieTimer = 0.f;
 				m_currentState = e_state_grow;
+				return true;
 			}
+			break;
+		}
+		case e_state_sleep:
+		{
+			m_animation = m_finalAnimation;
 			break;
 		}
 		case e_state_stop:
 		{
-			m_animation = 1.f;
 			break;
 		}
 		default:
 			break;
 	}
+	return false;
 }
 
-/*
-				else if (m_timer > m_timerMax / 2.f)
-					m_animation += frameTime / (20.f + (m_timer - 2.f) * 10.f);
-				else if (m_timer < m_timerMax / 2.f)
-					m_animation -= frameTime / (20.f + m_timer * 10.f);
-*/
-
-//TODO: Not tested
 void DecorAnimator::pause(void)
 {
 	if (m_currentState != e_state_stop)
@@ -129,11 +109,16 @@ void DecorAnimator::pause(void)
 		m_currentState = e_state_stop;
 	}
 }
-//TODO:: Not tested
+
 void DecorAnimator::play(void)
 {
 	if (m_currentState == e_state_stop)
 		m_currentState = m_lastState;
+}
+
+void DecorAnimator::sleep(void)
+{
+	m_currentState = e_state_sleep;
 }
 
 void DecorAnimator::setup(sf::Time lifeTime)
@@ -141,9 +126,11 @@ void DecorAnimator::setup(sf::Time lifeTime)
 	m_lifeTimerMax = lifeTime.asSeconds();
 }
 
-void DecorAnimator::update(sf::Time frameTime)
+bool DecorAnimator::update(sf::Time frameTime)
 {
-	computeState(frameTime.asSeconds());
+	if (computeState(frameTime.asSeconds()))
+		return true;
+	return false;
 }
 
 float DecorAnimator::getAnimation(void) const

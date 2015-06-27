@@ -8,6 +8,7 @@ std::default_random_engine	Tree::m_engine;
 Tree::Tree(void) :
 	m_depth(0u),
 	m_count(0u),
+	m_animator(2.f, 4.f, 3.f, 0.15f),
 	m_animation(1.f),
 	m_growSide(true),
 	m_isLeaf(true),
@@ -158,9 +159,29 @@ void Tree::setup(ABiome& biome)
 	m_leafColor = biome.getLeafColor();
 }
 
-void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
+void Tree::newTree(ABiome& biome)
 {
-	m_animator.update(frameTime);
+	m_size = biome.getTreeSize();
+	m_color = biome.getTreeColor();
+
+	std::size_t angleCount = std::pow(2, m_depth) + 1;
+	for (std::size_t i = 0u; i < angleCount; i++)
+		m_refAngle[i] = biome.getTreeAngle();
+	m_animator.setup(biome.getTreeLifeTime());
+	m_growSide = Tree::getGrowSide();
+
+	m_isLeaf = biome.canCreateLeaf();
+
+	std::size_t leafCount = std::pow(2, m_depth) + 1;
+	for (std::size_t i = 0; i < leafCount; i++)
+		m_leafSize[i] = biome.getLeafSize();
+	m_leafColor = biome.getLeafColor();
+}
+
+void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
+{
+	if (m_animator.update(frameTime))
+		newTree(biome);
 	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f const & position = getPosition();

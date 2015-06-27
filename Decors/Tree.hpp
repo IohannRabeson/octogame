@@ -68,6 +68,8 @@ private:
 						float const sinAngle = std::sin(0.0f),
 						std::size_t const currentDepth = 0u);
 
+	void newTree(ABiome& biome);
+
 private:
 	static std::default_random_engine	m_engine;
 	static std::bernoulli_distribution	m_distribution;
