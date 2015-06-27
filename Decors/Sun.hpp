@@ -2,6 +2,7 @@
 # define SUN_HPP
 
 # include "ADecor.hpp"
+# include "DecorAnimator.hpp"
 # include <SFML/Graphics/Color.hpp>
 
 class Sun : public ADecor
@@ -21,7 +22,9 @@ private:
 	sf::Color				m_color;
 	std::size_t				m_partCount;
 
+	DecorAnimator			m_animator;
 	float					m_animation;
+
 	sf::Time				m_glowingTimer;
 	sf::Time				m_glowingTimerMax;
 
