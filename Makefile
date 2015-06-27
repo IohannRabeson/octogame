@@ -51,6 +51,7 @@ SRC_DECORS =	Decors/StaticTileObject.cpp				\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp					\
+				Decors/DecorAnimator.cpp				\
 				Decors/Cloud.cpp						\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\

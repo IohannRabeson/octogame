@@ -5,6 +5,7 @@ std::mt19937	Cloud::m_engine;
 
 Cloud::Cloud() :
 	m_partCount(0),
+	m_animator(2.f, 4.f, 3.f, 0.4f),
 	m_animation(1.f),
 	m_lifeTime(sf::Time::Zero)
 {
@@ -83,12 +84,16 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 
 void Cloud::setup(ABiome& biome)
 {
+	m_partCount = biome.getCloudPartCount();
+	m_values.resize(m_partCount);
+	newCloud(biome);
+}
+
+void Cloud::newCloud(ABiome& biome)
+{
 	m_size = biome.getCloudSize();
 	m_color = biome.getCloudColor();
 	m_color.a = randomFloat(80.f, 200.f);
-	m_partCount = biome.getCloudPartCount();
-	m_values.resize(m_partCount);
-	m_lifeTime = biome.getCloudLifeTime();
 
 	std::size_t i = 0;
 	float totalY = 0;
@@ -143,11 +148,14 @@ void Cloud::setup(ABiome& biome)
 		}
 		i++;
 	}
+	m_animator.setup(biome.getCloudLifeTime());
 }
 
-void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
+void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
-	(void)frameTime;
+	if (m_animator.update(frameTime))
+		newCloud(biome);
+	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f const & position = getPosition();
 	createCloud(m_values, position, m_color, builder);

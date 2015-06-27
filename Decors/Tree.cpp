@@ -8,12 +8,14 @@ std::default_random_engine	Tree::m_engine;
 Tree::Tree(void) :
 	m_depth(0u),
 	m_count(0u),
-	m_lifeTime(sf::seconds(0.f)),
+	m_angleMaxCount(0u),
+	m_animator(2.f, 4.f, 3.f, 0.15f),
 	m_animation(1.f),
 	m_growSide(true),
 	m_isLeaf(true),
 	m_countLeaf(0u),
-	m_setLeaf(true)
+	m_setLeaf(true),
+	m_leafMaxCount(0u)
 {
 }
 
@@ -140,35 +142,44 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 void Tree::setup(ABiome& biome)
 {
 	m_depth = biome.getTreeDepth();
+
+	m_angleMaxCount = std::pow(2, m_depth) + 1;
+	m_refAngle.resize(m_angleMaxCount);
+
+	m_leafMaxCount = std::pow(2, m_depth) + 1;
+	m_leaf.resize(m_leafMaxCount);
+	m_leafSize.resize(m_leafMaxCount);
+
+	newTree(biome);
+}
+
+void Tree::newTree(ABiome& biome)
+{
 	m_size = biome.getTreeSize();
 	m_color = biome.getTreeColor();
 
-	std::size_t angleCount = std::pow(2, m_depth) + 1;
-	m_refAngle.resize(angleCount);
-	for (std::size_t i = 0u; i < angleCount; i++)
+	for (std::size_t i = 0u; i < m_angleMaxCount; i++)
 		m_refAngle[i] = biome.getTreeAngle();
-	m_lifeTime = biome.getTreeLifeTime();
+	m_animator.setup(biome.getTreeLifeTime());
 	m_growSide = Tree::getGrowSide();
 
 	m_isLeaf = biome.canCreateLeaf();
-	std::size_t leafCount = std::pow(2, m_depth) + 1;
-	m_leaf.resize(leafCount);
-	m_leafSize.resize(leafCount);
-	for (std::size_t i = 0; i < leafCount; i++)
+
+	for (std::size_t i = 0; i < m_leafMaxCount; i++)
 		m_leafSize[i] = biome.getLeafSize();
 	m_leafColor = biome.getLeafColor();
+	m_animator.setup(biome.getTreeLifeTime());
 }
 
-void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
+void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
-	(void)frameTime;
+	if (m_animator.update(frameTime))
+		newTree(biome);
+	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f const & position = getPosition();
-	//TODO: set position to be centered, to test when terrain will be here
-	//Add behind root to stick the botom of screen
-	//position.y -= m_size.y / 2.0f;
-	//float delta = (m_size.y - m_size.y * m_animation) / 2;
-	pythagorasTree(sf::Vector2f(position.x, position.y), sf::Vector2f(m_size.x, m_size.y * m_animation), builder);
+	float positionY = position.y + (m_size.y - m_size.y * m_animation) / 2 - m_size.y / 2.f;
+	pythagorasTree(sf::Vector2f(position.x, positionY), sf::Vector2f(m_size.x, m_size.y * m_animation), builder);
 }
 
 void Tree::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
