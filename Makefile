@@ -38,7 +38,7 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPositionBehaviors.cpp
 
 SRC_MAP =		Map/Map.cpp								\
-				Map/TerrainManager.cpp					\
+				Map/GroundManager.cpp					\
 				Map/MapInstance.cpp
 
 SRC_MANAGERS =	Managers/MapManager.cpp
@@ -89,7 +89,7 @@ SRCS = $(SRC)
 CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = debug
+MODE = release
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)

@@ -1,4 +1,4 @@
-#include "TerrainManager.hpp"
+#include "GroundManager.hpp"
 #include "MapInstance.hpp"
 #include "TileShape.hpp"
 #include "PhysicsEngine.hpp"
@@ -6,7 +6,7 @@
 #include <Application.hpp>
 #include <Camera.hpp>
 
-TerrainManager::TerrainManager(void) :
+GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
 	m_tilesPrev(nullptr),
 	m_transitionTimer(1.f),
@@ -17,7 +17,7 @@ TerrainManager::TerrainManager(void) :
 	m_oldOffset(0, 0)
 {}
 
-void TerrainManager::init(Biome * biome)
+void GroundManager::init(Biome * biome)
 {
 	m_tiles.reset(new MapInstance());
 	m_tilesPrev.reset(new MapInstance());
@@ -49,7 +49,7 @@ void TerrainManager::init(Biome * biome)
 	m_transitionTimerMax = biome->mf_transitionTimerMax;
 }
 
-void TerrainManager::setTransitionAppear(int x, int y)
+void GroundManager::setTransitionAppear(int x, int y)
 {
 	int i = 0;
 	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).isTransitionType(Tile::e_transition_appear))
@@ -60,7 +60,7 @@ void TerrainManager::setTransitionAppear(int x, int y)
 	setTransitionModify(x, y);
 }
 
-void TerrainManager::setTransitionDisappear(int x, int y)
+void GroundManager::setTransitionDisappear(int x, int y)
 {
 	int i = 0;
 	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).isTransitionType(Tile::e_transition_disappear))
@@ -70,7 +70,7 @@ void TerrainManager::setTransitionDisappear(int x, int y)
 	m_tiles->get(x, y).setStartColor(m_tilesPrev->get(x, y).getStartColor());
 }
 
-void TerrainManager::setTransitionModify(int x, int y)
+void GroundManager::setTransitionModify(int x, int y)
 {
 	// Define if it's a quad or a triangle
 	if (y - 1 >= 0 && m_tiles->get(x, y - 1).isEmpty() && y + 1 < static_cast<int>(m_tiles->getRows()))
@@ -82,7 +82,7 @@ void TerrainManager::setTransitionModify(int x, int y)
 	}
 }
 
-void TerrainManager::defineTransition(int x, int y)
+void GroundManager::defineTransition(int x, int y)
 {
 	int prev = m_tilesPrev->get(x, y).isEmpty();
 	int current = m_tiles->get(x, y).isEmpty();
@@ -97,7 +97,7 @@ void TerrainManager::defineTransition(int x, int y)
 		m_tiles->get(x, y).setTransitionType(Tile::e_transition_none);
 }
 
-void TerrainManager::defineTransitionRange(int startX, int endX, int startY, int endY)
+void GroundManager::defineTransitionRange(int startX, int endX, int startY, int endY)
 {
 	// For each tile, define the type and transition type
 	for (int x = startX; x < endX; x++)
@@ -131,7 +131,7 @@ void TerrainManager::defineTransitionRange(int startX, int endX, int startY, int
 	}
 }
 
-void TerrainManager::swapMap(void)
+void GroundManager::swapMap(void)
 {
 	m_tiles.swap(m_tilesPrev);
 	m_tiles->computeMap();
@@ -139,7 +139,7 @@ void TerrainManager::swapMap(void)
 	defineTransition();
 }
 
-void TerrainManager::updateTransition(void)
+void GroundManager::updateTransition(void)
 {
 	if (m_transitionTimer > m_transitionTimerMax)
 		m_transitionTimer = m_transitionTimerMax;
@@ -190,7 +190,7 @@ void TerrainManager::updateTransition(void)
 	}*/
 }
 
-void TerrainManager::defineTransitionBorderTileRange(int startX, int endX, int startY, int endY)
+void GroundManager::defineTransitionBorderTileRange(int startX, int endX, int startY, int endY)
 {
 	for (int x = startX; x < endX; x++)
 	{
@@ -219,7 +219,7 @@ void TerrainManager::defineTransitionBorderTileRange(int startX, int endX, int s
 	defineTransitionRange(startX, endX, startY, endY);
 }
 
-void TerrainManager::updateOffset(float)
+void GroundManager::updateOffset(float)
 {
 	int ofX = 0;
 	int ofY = 0;
@@ -337,7 +337,7 @@ void TerrainManager::updateOffset(float)
 	}
 }
 
-void TerrainManager::update(float pf_deltatime)
+void GroundManager::update(float pf_deltatime)
 {
 	bool compute = false;
 	m_transitionTimer += pf_deltatime;
@@ -373,7 +373,7 @@ void TerrainManager::update(float pf_deltatime)
 	updateTransition();
 }
 
-void TerrainManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
+void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }

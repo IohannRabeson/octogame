@@ -4,7 +4,6 @@
 #include <ResourceManager.hpp>
 #include <GraphicsManager.hpp>
 
-
 MapManager::MapManager(void) :
 	m_biome(),
 	m_terrainManager(),

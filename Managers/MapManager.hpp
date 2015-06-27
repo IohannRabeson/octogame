@@ -1,10 +1,9 @@
 #ifndef MAPMANAGER_HPP
 # define MAPMANAGER_HPP
 
-
 # include <Application.hpp>
 # include <Camera.hpp>
-# include "TerrainManager.hpp"
+# include "GroundManager.hpp"
 # include "DecorManager.hpp"
 
 class MapManager : public sf::Drawable
@@ -18,16 +17,16 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 	//inline Player & getPlayer(void) const { return m_collisionManager.getPlayer(); }
-	inline TerrainManager & getTerrainManager(void) { return m_terrainManager; }
+	inline GroundManager & getGroundManager(void) { return m_terrainManager; }
 
 private:
 	Biome				m_biome;
-	TerrainManager			m_terrainManager;
+	GroundManager		m_terrainManager;
 	std::string			m_wave;
 	std::string			m_dark;
 	std::string			m_negative;
 	sf::Shader			m_shader;
-	octo::Camera &			m_camera;
+	octo::Camera &		m_camera;
 
 };
 

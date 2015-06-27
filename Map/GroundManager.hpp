@@ -5,11 +5,11 @@
 
 class TileShape;
 
-class TerrainManager : public sf::Drawable
+class GroundManager : public sf::Drawable
 {
 public:
-	TerrainManager(void);
-	virtual ~TerrainManager(void) = default;
+	GroundManager(void);
+	virtual ~GroundManager(void) = default;
 
 	inline sf::Vertex * getHeight(int x) { m_tiles->getHeight(x); return m_tilesPrev->getHeight(x); }
 	// Only used by StaticObjectManager to compute initial position
