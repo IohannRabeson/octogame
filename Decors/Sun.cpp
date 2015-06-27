@@ -3,6 +3,7 @@
 
 Sun::Sun(void) :
 	m_partCount(1u),
+	m_animator(1.f, 0.f, 4.f, 0.1f),
 	m_animation(1.f),
 	m_glowingTimer(sf::Time::Zero),
 	m_glowingTimerMax(sf::seconds(3.f))
@@ -66,10 +67,14 @@ void Sun::setup(ABiome& biome)
 	m_sizeCorner = m_size / 2.f;
 	m_color = biome.getSunColor();
 	m_partCount = biome.getSunPartCount();
+	m_animator.setup();
 }
 
 void Sun::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
+
 	m_glowingTimer += frameTime;
 	if (m_glowingTimer > m_glowingTimerMax)
 		m_glowingTimer -= m_glowingTimerMax;

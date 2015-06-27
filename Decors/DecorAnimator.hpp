@@ -27,7 +27,7 @@ public:
 	void			pause(void);
 	void			play(void);
 	void			sleep(void);
-	void			setup(sf::Time lifeTime = sf::Time::Zero);
+	void			setup(sf::Time lifeTime = sf::seconds(1.f));
 	bool			update(sf::Time frameTime);
 	float			getAnimation(void) const;
 

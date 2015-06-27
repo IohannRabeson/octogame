@@ -32,6 +32,7 @@ private:
 	sf::Color					m_color;
 	std::vector<float>			m_refAngle;
 	std::size_t					m_count;
+	std::size_t					m_angleMaxCount;
 
 	DecorAnimator				m_animator;
 	float						m_animation;
@@ -43,6 +44,7 @@ private:
 	sf::Color					m_leafColor;
 	std::size_t					m_countLeaf;
 	bool						m_setLeaf;
+	std::size_t					m_leafMaxCount;
 
 	void computeQuad(sf::Vector2f const & size,
 					sf::Vector2f const & center,
