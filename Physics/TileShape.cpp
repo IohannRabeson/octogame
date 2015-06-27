@@ -45,6 +45,7 @@ void TileShape::computeShape(void)
 	m_globalBounds.width = 16.f;
 	m_globalBounds.height = 144.f;
 
+	//TODO: center
 	// Compute bary center
 	m_baryCenter = m_vertex[0u].position;
 	for (std::size_t i = 1u; i < 4u; i++)

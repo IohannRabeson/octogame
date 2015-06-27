@@ -9,7 +9,7 @@ class TerrainManager : public sf::Drawable
 {
 public:
 	TerrainManager(void);
-	virtual ~TerrainManager(void);
+	virtual ~TerrainManager(void) = default;
 
 	inline sf::Vertex * getHeight(int x) { m_tiles->getHeight(x); return m_tilesPrev->getHeight(x); }
 	// Only used by StaticObjectManager to compute initial position
@@ -20,9 +20,8 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	// TODO: unique/smart ptr
-	Map *							m_tiles;
-	Map *							m_tilesPrev;
+	std::unique_ptr<Map>			m_tiles;
+	std::unique_ptr<Map>			m_tilesPrev;
 	float							m_transitionTimer;
 	float							m_transitionTimerMax;
 	sf::Vector2f					m_offset;

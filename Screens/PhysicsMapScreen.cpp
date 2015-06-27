@@ -54,9 +54,9 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 {
 	float speed = 200.f * deltatime.asSeconds();
 
-	m_mapManager.update(deltatime.asSeconds());
 	//if (m_frameByFrame)
 	{
+	m_mapManager.update(deltatime.asSeconds());
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
 			m_shape->addVelocity(0.f, -speed);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))

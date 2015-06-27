@@ -28,7 +28,7 @@ public:
 	RectangleShape * createRectangle(void);
 
 	/*! Create a new TileShape */
-	TileShape * createTileS(std::size_t x, std::size_t y);
+	TileShape * createTile(std::size_t x, std::size_t y);
 
 };
 

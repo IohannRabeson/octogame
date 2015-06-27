@@ -54,8 +54,6 @@ void PhysicsEngine::init(void)
 	m_shapes.reserve(MaxShapes);
 	m_circleShapes.reserve(MaxShapes);
 	m_polygonShapes.reserve(MaxShapes);
-	//TODO: get the right size
-	m_tileShapes.resize(200u, 200u, nullptr);
 
 	//TODO: use max pairs and assert in broadphae
 	m_polyPolyPairs.resize(1000u);
@@ -63,6 +61,15 @@ void PhysicsEngine::init(void)
 	m_polyCirclePairs.resize(1000u);
 	m_tilePolyPairs.resize(1000u);
 	m_tileCirclePairs.resize(1000u);
+
+	m_test.resize(1000u);
+	for (auto test : m_test)
+			test.reserve(1000u);
+}
+
+void PhysicsEngine::setTileMapSize(sf::Vector2i const & tileMapSize)
+{
+	m_tileShapes.resize(tileMapSize.x, tileMapSize.y, nullptr);
 }
 
 void PhysicsEngine::registerShape(PolygonShape * shape)
@@ -81,7 +88,7 @@ void PhysicsEngine::registerShape(CircleShape * shape)
 	m_circleShapes.push_back(shape);
 }
 
-void PhysicsEngine::registerTileS(TileShape * shape, std::size_t x,  std::size_t y)
+void PhysicsEngine::registerTile(TileShape * shape, std::size_t x,  std::size_t y)
 {
 	assert(x < m_tileShapes.columns() && y < m_tileShapes.rows());
 	m_tileShapes.set(x, y, shape);
@@ -90,7 +97,7 @@ void PhysicsEngine::registerTileS(TileShape * shape, std::size_t x,  std::size_t
 void PhysicsEngine::update(float deltatime)
 {
 	// Add gravity
-	for (std::size_t i = 0u; i < 123/*m_tileShapes.columns()*/; i++)
+	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
 	{
 		//for (std::size_t k = 0u; k < 72/*m_tileShapes.rows()*/; k++)
 		{
@@ -124,7 +131,8 @@ void PhysicsEngine::broadPhase(void)
 
 	if (m_tileCollision)
 	{
-		m_tilePolyPairCount = broadPhase(m_polygonShapes, m_tilePolyPairs);
+		//m_tilePolyPairCount = broadPhase(m_polygonShapes, m_tilePolyPairs);
+		m_tilePolyPairCount = broadPhase(m_polygonShapes, m_test);
 		m_tileCirclePairCount = broadPhase(m_circleShapes, m_tileCirclePairs);
 	}
 }
@@ -136,7 +144,6 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector
 	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
 	sf::FloatRect shapeAABB;
 	std::size_t count = 0u;
-	std::size_t nb = 0u;
 	for (auto shape : vector)
 	{
 		sf::Rect<float> const & rect = shape->getGlobalBounds();
@@ -160,17 +167,17 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector
 				//for (int y = offsetY; y <= height; y++)
 				{
 					// TODO: check out of bounds
-					//if (i < 0 || i >= static_cast<int>(m_mapManager->getTransitionManager().getMapWidth()) || j < 0 || j >= static_cast<int>(m_mapManager->getTransitionManager().getMapHeight()))
-					//	continue;
+					if (x < 0 || x >= static_cast<int>(m_tileShapes.columns()))
+						continue;
 					if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
 						continue;
 					// TODO: may be a better choice ?
-					nb++;
 					shapeAABB = shape->getGlobalBounds();
 					shapeAABB.left += shape->getVelocity().x;
 					shapeAABB.top += shape->getVelocity().y;
-					if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds()))
+					if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds(), shapeAABB))
 					{
+						pairs[count].m_area = shapeAABB.width * shapeAABB.height;
 						pairs[count].m_shapeA = m_tileShapes(x, 0);
 						pairs[count++].m_shapeB = shape;
 					}
@@ -181,23 +188,75 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector
 		{
 			for (int x = offsetX; x <= width; x++)
 			{
-				//for (int y = height; y >= offsetY; y--)
+				if (x < 0 || x >= static_cast<int>(m_tileShapes.columns()))
+					continue;
+				if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
+					continue;
+				shapeAABB = shape->getGlobalBounds();
+				shapeAABB.left += shape->getVelocity().x;
+				shapeAABB.top += shape->getVelocity().y;
+				if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds(), shapeAABB))
 				{
-					if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
-						continue;
-					nb++;
-					shapeAABB = shape->getGlobalBounds();
-					shapeAABB.left += shape->getVelocity().x;
-					shapeAABB.top += shape->getVelocity().y;
-					if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds()))
-					{
-						pairs[count].m_shapeA = m_tileShapes(x, 0);
-						pairs[count++].m_shapeB = shape;
-					}
+					pairs[count].m_area = shapeAABB.width * shapeAABB.height;
+					pairs[count].m_shapeA = m_tileShapes(x, 0);
+					pairs[count++].m_shapeB = shape;
 				}
 			}
 		}
 	}
+	std::sort(pairs.begin(), pairs.begin() + count, [](Pair<TileShape *, T> const & pairA, Pair<TileShape *, T> const & pairB)
+					{ return pairA.m_shapeA->getPosition().y < pairB.m_shapeA->getPosition().y; });
+	return count;
+}
+
+template<class T>
+std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<std::vector<Pair<TileShape *, T>>> & pairs)
+{
+	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
+	sf::FloatRect shapeAABB;
+	std::size_t count = 0u;
+	for (std::size_t i = 0u; i < pairs.size(); i++)
+		pairs[i].clear();
+	for (auto shape : vector)
+	{
+		sf::Rect<float> const & rect = shape->getGlobalBounds();
+		float offX = rect.left - camRect.left;
+		float w = rect.width + offX;
+		int offsetX = static_cast<int>(offX / Tile::TileSize) + 2 - 1;
+		int width = static_cast<int>(w / Tile::TileSize) + 2 + 1;
+		for (int x = width; x >= offsetX; x--)
+		{
+			if (x < 0 || x >= static_cast<int>(m_tileShapes.columns()))
+				continue;
+			if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
+				continue;
+			shapeAABB = shape->getGlobalBounds();
+			shapeAABB.left += shape->getVelocity().x;
+			shapeAABB.top += shape->getVelocity().y;
+			if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds(), shapeAABB))
+			{
+				std::size_t i;
+				for (i = 0u; i < pairs.size(); i++)
+				{
+					if (pairs[i].size() == 0u || m_tileShapes(x, 0)->getGlobalBounds().top == pairs[i][0u].m_shapeA->getGlobalBounds().top)
+					{
+						pairs[i].emplace_back(m_tileShapes(x, 0), shape, shapeAABB.width * shapeAABB.height);
+						break;
+					}
+				}
+				if (i > count)
+					count = i;
+			}
+		}
+	}
+	count++;
+	for (std::size_t i = 0u; i < count; i++)
+	{
+		std::sort(pairs[i].begin(), pairs[i].end(), [](Pair<TileShape *, T> const & pairA, Pair<TileShape *, T> const & pairB)
+					{ return pairA.m_area > pairB.m_area; });
+	}
+	std::sort(pairs.begin(), pairs.begin() + count, [](std::vector<Pair<TileShape *, T>> const & vectorA, std::vector<Pair<TileShape *, T>> const & vectorB)
+				{ return vectorA[0u].m_shapeA->getGlobalBounds().top > vectorB[0u].m_shapeA->getGlobalBounds().top; });
 	return count;
 }
 
@@ -233,15 +292,16 @@ void PhysicsEngine::narrowPhase(void)
 
 	if (m_tileCollision)
 	{
-		narrowPhaseTile(m_tilePolyPairs, m_tilePolyPairCount);
-		narrowPhaseTile(m_tileCirclePairs, m_tileCirclePairCount);
+		narrowPhaseTile(m_test, m_tilePolyPairCount);
+		//narrowPhaseTile(m_tilePolyPairs, m_tilePolyPairCount);
+		//narrowPhaseTile(m_tileCirclePairs, m_tileCirclePairCount);
 	}
 }
 
 template<class T, class U>
 void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs, std::size_t pairCount)
 {
-	for(std::size_t i = 0u; i < pairCount; i++)
+	for (std::size_t i = 0u; i < pairCount; i++)
 	{
 		if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
 		{
@@ -256,6 +316,40 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs, std::size_t pai
 	}
 }
 
+template<class T>
+void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>>> & pairs, std::size_t pairCount)
+{
+	for (std::size_t i = 0u; i < pairCount; i++)
+	{
+		for (auto pair : pairs[i])
+		{
+			// The shape A is the tile, the shapeB is the other one
+			sf::Vector2f vel = pair.m_shapeB->getVelocity() / static_cast<float>(m_iterationCount);
+			pair.m_shapeB->setVelocity(0.f, 0.f);
+			for (std::size_t j = 0u; j < m_iterationCount; j++)
+			{
+				pair.m_shapeB->addVelocity(vel);
+				if (computeCollision(pair.m_shapeA, pair.m_shapeB))
+				{
+					if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
+					{
+						pair.m_shapeB->addVelocity(-m_mtv.x, 0.f);
+					}
+					else if (std::fabs(m_mtv.x) > std::numeric_limits<float>::epsilon())
+					{
+						pair.m_shapeB->addVelocity(0.f, -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y)));
+					}
+					else
+					{
+						pair.m_shapeB->addVelocity(0.f, -m_mtv.y);
+					}
+					pair.m_shapeB->update();
+				}
+			}
+		}
+	}
+}
+
 template<class T, class U>
 void PhysicsEngine::narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t pairCount)
 {
@@ -264,20 +358,18 @@ void PhysicsEngine::narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t
 		// The shape A is the tile, the shapeB is the other one
 		sf::Vector2f vel = pairs[i].m_shapeB->getVelocity() / static_cast<float>(m_iterationCount);
 		pairs[i].m_shapeB->setVelocity(0.f, 0.f);
-
 		for (std::size_t j = 0u; j < m_iterationCount; j++)
 		{
 			pairs[i].m_shapeB->addVelocity(vel);
-			//TODO: if a shape will collide with a lot of tile, a AABB recheck could be efficient
 			if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
 			{
-				if ((m_mtv.y <= -0.00000001f || m_mtv.y >= 0.00000001f) && (m_mtv.x <= -0.00000001f || m_mtv.x >= 0.00000001f))
-				{
-					pairs[i].m_shapeB->addVelocity(0.f, -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y)));
-				}
-				else if (m_mtv.y >= -0.00000001f && m_mtv.y <= 0.00000001f)
+				if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
 				{
 					pairs[i].m_shapeB->addVelocity(-m_mtv.x, 0.f);
+				}
+				else if (std::fabs(m_mtv.x) > std::numeric_limits<float>::epsilon())
+				{
+					pairs[i].m_shapeB->addVelocity(0.f, -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y)));
 				}
 				else
 				{
@@ -293,6 +385,7 @@ bool PhysicsEngine::findAxisLeastPenetration(TileShape * tile, PolygonShape * po
 	for(std::size_t i = 0u; i < polygon->getEfficientVertexCount(); ++i)
 	{
 		m_axis = polygon->getNormal(i);
+		// TODO: remove and test
 		if (m_axis.x == 0.f && m_axis.y == 0.f)
 			continue;
 		octo::normalize(m_axis);
@@ -474,7 +567,11 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 	for (auto shape : m_shapes)
 		shape->debugDraw(render);
 	for (std::size_t i = 0u; i < m_tilePolyPairCount; i++)
-		m_tilePolyPairs[i].m_shapeA->debugDraw(render);
+	{
+		for (auto pair : m_test[i])
+			pair.m_shapeA->debugDraw(render);
+		;//m_tilePolyPairs[i].m_shapeA->debugDraw(render);
+	}
 }
 
 // Nested Class Projection

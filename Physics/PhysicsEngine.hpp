@@ -56,10 +56,14 @@ public:
 	void registerShape(CircleShape * shape);
 
 	/*! Used by the ShapeBuilder to register a TileShape */
-	void registerTileS(TileShape * shape, std::size_t x, std::size_t y);
+	void registerTile(TileShape * shape, std::size_t x, std::size_t y);
 
 	/*! Update the physic */
 	void update(float deltatime);
+
+	/*! Set the size of the tile map */
+	void setTileMapSize(sf::Vector2i const & tileMapSize);
+
 
 	/*! Set the ContactListener
 	 * The contact listener is call each time there is a collision between two object
@@ -95,6 +99,19 @@ private:
 	{
 		T				m_shapeA;
 		U				m_shapeB;
+		float			m_area;
+
+		Pair(void) :
+				m_shapeA(),
+				m_shapeB(),
+				m_area(0.f)
+			{}
+
+		Pair(T shapeA, U shapeB, float area) :
+				m_shapeA(shapeA),
+				m_shapeB(shapeB),
+				m_area(area)
+			{}
 	};
 
 	static constexpr std::size_t						MaxShapes = 1000u;
@@ -123,6 +140,8 @@ private:
 	std::size_t											m_tilePolyPairCount;
 	std::size_t											m_tileCirclePairCount;
 
+	std::vector<std::vector<Pair<TileShape *, PolygonShape *>>>		m_test;
+
 	// Variable used to compute collisions (to avoid creation and copy)
 	Projection											m_projectionA;
 	Projection											m_projectionB;
@@ -150,6 +169,9 @@ private:
 	template<class T>
 	std::size_t broadPhase(std::vector<T> const & vector, std::vector<Pair<TileShape *, T>> & pairs);
 
+	template<class T>
+	std::size_t broadPhase(std::vector<T> const & vector, std::vector<std::vector<Pair<TileShape *, T>>> & pairs);
+
 	/*! Determine if pairs are colliding */
 	void narrowPhase(void);
 
@@ -160,6 +182,9 @@ private:
 	/*! Determine if pairs are colliding with tiles */
 	template<class T, class U>
 	void narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t pairCount);
+
+	template<class T>
+	void narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>>> & pairs, std::size_t pairCount);
 
 	/*! Compute collision between different shape */
 	bool computeCollision(PolygonShape * polygonA, PolygonShape * polygonB);

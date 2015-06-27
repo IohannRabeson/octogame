@@ -26,9 +26,9 @@ RectangleShape * ShapeBuilder::createRectangle(void)
 	return shape;
 }
 
-TileShape * ShapeBuilder::createTileS(std::size_t x, std::size_t y)
+TileShape * ShapeBuilder::createTile(std::size_t x, std::size_t y)
 {
 	TileShape * shape = new TileShape();
-	PhysicsEngine::getInstance().registerTileS(shape, x, y);
+	PhysicsEngine::getInstance().registerTile(shape, x, y);
 	return shape;
 }
