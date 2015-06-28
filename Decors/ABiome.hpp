@@ -43,6 +43,10 @@ public:
 	virtual std::size_t		getCrystalPartCount() = 0;
 	virtual sf::Color		getCrystalColor() = 0;
 	virtual bool			canCreateCrystal() = 0;
+	virtual sf::Vector2f	getShineEffectSize() = 0;
+	virtual sf::Color		getShineEffectColor() = 0;
+	virtual float			getShineEffectRotateAngle() = 0;
+	virtual bool			canCreateShineEffect() = 0;
 
 	virtual sf::Vector2f	getRockSize() = 0;
 	virtual std::size_t		getRockPartCount() = 0;

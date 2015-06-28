@@ -2,10 +2,12 @@
 
 std::mt19937	DecorAnimator::m_engine;
 
-DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, float delta) :
+DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, float delta, float start) :
 	m_currentState(e_state_grow),
 	m_lastState(e_state_grow),
 	m_animation(0.f),
+	m_startTimer(0.f),
+	m_startTimerMax(0.f),
 	m_lifeTimer(0.f),
 	m_lifeTimerMax(0.f),
 	m_growTimer(0.f),
@@ -20,6 +22,7 @@ DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, floa
 	std::random_device rd;
 	m_engine.seed(rd());
 	m_finalAnimation = 1.0f - m_beatDelta + randomFloat(0.f, 0.1f);
+	m_startTimerMax = randomFloat(0.f, start);
 }
 
 void DecorAnimator::computeBeat(float frameTime)
@@ -50,7 +53,6 @@ bool DecorAnimator::computeState(float frameTime)
 				m_currentState = e_state_die;
 				break;
 			}
-				
 			m_lifeTimer += frameTime;
 			if (m_lifeTimer >= m_lifeTimerMax && m_animation == m_finalAnimation)
 			{
@@ -128,14 +130,24 @@ void DecorAnimator::setup(sf::Time lifeTime)
 
 bool DecorAnimator::update(sf::Time frameTime)
 {
-	if (computeState(frameTime.asSeconds()))
-		return true;
+	if (m_startTimer < m_startTimerMax)
+		m_startTimer += frameTime.asSeconds();
+	else
+	{
+		if (computeState(frameTime.asSeconds()))
+			return true;
+	}
 	return false;
 }
 
 float DecorAnimator::getAnimation(void) const
 {
 	return m_animation;
+}
+
+float DecorAnimator::getAnimationTime(void) const
+{
+	return m_lifeTimerMax + m_growTimerMax + m_dieTimerMax;
 }
 
 float DecorAnimator::randomFloat(float min, float max)

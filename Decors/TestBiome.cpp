@@ -28,6 +28,10 @@ TestBiome::TestBiome() :
 	m_crystalPartCount(4u),
 	m_crystalColor(255, 105, 180),
 	m_canCreateCrystal(false),
+	m_shineEffectSize(150.f, 150.f),
+	m_shineEffectColor(255,255,255,100),
+	m_shineEffectRotateAngle(150.f),
+	m_canCreateShineEffect(true),
 	m_rockSize(300.f, 300.f),
 	m_rockPartCount(5u),
 	m_rockColor(255, 105, 180),
@@ -38,6 +42,7 @@ TestBiome::TestBiome() :
 	m_canCreateCloud(false),
 	m_starSize(200.f, 200.f),
 	m_starColor(255, 255, 255),
+	m_starLifeTime(sf::seconds(10.f)),
 	m_canCreateStar(false),
 	m_sunSize(200.f, 200.f),
 	m_sunPartCount(3u),
@@ -122,6 +127,26 @@ sf::Color		TestBiome::getCrystalColor()
 bool			TestBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
+}
+//
+sf::Vector2f	TestBiome::getShineEffectSize()
+{
+	return (m_shineEffectSize);
+}
+
+sf::Color		TestBiome::getShineEffectColor()
+{
+	return (m_shineEffectColor);
+}
+
+float			TestBiome::getShineEffectRotateAngle()
+{
+	return m_shineEffectRotateAngle;
+}
+
+bool			TestBiome::canCreateShineEffect()
+{
+	return (m_canCreateShineEffect);
 }
 
 sf::Vector2f	TestBiome::getRockSize()

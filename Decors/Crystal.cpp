@@ -1,26 +1,26 @@
 #include "Crystal.hpp"
 #include "ABiome.hpp"
+#include <Interpolations.hpp>
 #include <Math.hpp>
 
 std::mt19937 Crystal::m_engine;
 
 Crystal::Crystal() :
 	m_partCount(0u),
-	m_animation(1u),
-	m_shine(sf::Vector2f(150.f, 150.f), sf::Color(255, 255, 255, 100), 100.f),
+	m_animator(1.f, 0.f, 3.f, 0.1f),
+	m_animation(0u),
 	m_shineCrystalNumber(0u),
-	m_shineVertexNumber(0u),
 	m_shineTimer(sf::seconds(0.f)),
-	m_shineTimerMax(sf::seconds(0.5f))
+	m_shineTimerMax(sf::seconds(0.f))
 {
 	std::random_device rd;
 	m_engine.seed(rd());
 }
 
-sf::Vector2f Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & origin, float const angle, sf::Color color, octo::VertexBuilder & builder)
+void Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & origin, float const angle, sf::Color color, sf::Vector2f & up, sf::Vector2f & upLeft, octo::VertexBuilder & builder)
 {
-	sf::Vector2f up(0.0f, -size.x - size.y);
-	sf::Vector2f upLeft(-size.x, -size.y);
+	up = sf::Vector2f(0.0f, -size.x - size.y);
+	upLeft = sf::Vector2f(-size.x, -size.y);
 	sf::Vector2f upMid(0.0f, -size.y);
 	sf::Vector2f upRight(size.x, -size.y);
 
@@ -62,32 +62,12 @@ sf::Vector2f Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f cons
 	// Up left
 	color += tmpAddColor;
 	builder.createTriangle(up + origin, upMid + origin, upLeft + origin, color);
-
-	if (m_shineTimer >= m_shineTimerMax)
-	{
-		m_shineVertexNumber = randomInt(0, 4);
-		m_shineTimer = sf::seconds(0.f);
-	}
-	switch (m_shineVertexNumber)
-	{
-		case 0:
-			return up;
-		case 1:
-			return upLeft;
-		case 2:
-			return upRight;
-		case 3:
-			return upMid;
-		default:
-			return up;
-	}
-	return up;
 }
 
 void Crystal::createCrystal(std::vector<CrystalValue> const & values, sf::Vector2f const & origin, octo::VertexBuilder & builder)
 {
 	for (unsigned int i = 0; i < m_partCount; i++)
-		m_up[i] = createPolygon(values[i].size * m_animation, origin, values[i].angle, values[i].color, builder);
+		createPolygon(values[i].size * m_animation, origin, values[i].angle, values[i].color, m_up[i], m_upLeft[i], builder);
 }
 
 void Crystal::setup(ABiome& biome)
@@ -97,6 +77,7 @@ void Crystal::setup(ABiome& biome)
 	m_values.resize(m_partCount);
 
 	m_up.resize(m_partCount);
+	m_upLeft.resize(m_partCount);
 
 	for (unsigned int i = 0; i < m_partCount; i++)
 	{
@@ -105,18 +86,34 @@ void Crystal::setup(ABiome& biome)
 		int deltaColor = randomFloat(0.f, 80.f);
 		m_values[i].color = m_color + sf::Color(deltaColor, deltaColor, deltaColor, 0);
 	}
+	m_animator.setup();
+	m_shine.setup(biome);
+	m_shineTimerMax = sf::seconds(m_shine.getAnimator().getAnimationTime());
+	m_shineCrystalNumber = randomInt(0, m_partCount - 1);
 }
 
-void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
+void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	sf::Vector2f const & position = getPosition();
-	//TODO: Test this with terrain
 	createCrystal(m_values, sf::Vector2f(position.x, position.y + m_size.x), builder);
 
-	m_shineTimer += frameTime;
-	if (m_shineTimer.asSeconds() == 0.f)
-		m_shineCrystalNumber = randomInt(0, m_partCount);
-	m_shine.shine(frameTime, builder, m_up[m_shineCrystalNumber] + position);
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
+
+	if (m_animation > 0.f)
+	{
+		m_shineTimer += frameTime;
+		if (m_shineTimer >= m_shineTimerMax)
+		{
+			m_shineTimer = sf::seconds(0.f);
+			m_shineCrystalNumber = randomInt(0, m_partCount - 1);
+		}
+		float interpolateValue = m_shineTimer / m_shineTimerMax;
+
+		sf::Vector2f shinePosition = octo::linearInterpolation(m_up[m_shineCrystalNumber], m_upLeft[m_shineCrystalNumber], interpolateValue);
+		m_shine.setPosition(shinePosition + position);
+		m_shine.update(frameTime, builder, biome);
+	}
 }
 
 void Crystal::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)

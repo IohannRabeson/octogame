@@ -2,7 +2,8 @@
 # define CRYSTAL_HPP
 
 # include "ADecor.hpp"
-# include "Star.hpp"
+# include "ShineEffect.hpp"
+# include "DecorAnimator.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
@@ -29,19 +30,22 @@ private:
 	sf::Color					m_color;
 	unsigned int				m_partCount;
 	std::vector<CrystalValue>	m_values;
+	DecorAnimator				m_animator;
 	float						m_animation;
 
-	Star						m_shine;
+	ShineEffect					m_shine;
 	std::vector<sf::Vector2f>	m_up;
+	std::vector<sf::Vector2f>	m_upLeft;
 	unsigned int				m_shineCrystalNumber;
-	unsigned int				m_shineVertexNumber;
 	sf::Time					m_shineTimer;
 	sf::Time					m_shineTimerMax;
 
-	sf::Vector2f createPolygon(sf::Vector2f const & size,
+	void createPolygon(sf::Vector2f const & size,
 								sf::Vector2f const & origin,
 								float const angle,
 								sf::Color color,
+								sf::Vector2f & up,
+								sf::Vector2f & upLeft,
 								octo::VertexBuilder & builder);
 
 	void createCrystal(std::vector<CrystalValue> const & values,
