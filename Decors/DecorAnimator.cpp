@@ -116,11 +116,14 @@ void DecorAnimator::play(void)
 {
 	if (m_currentState == e_state_stop)
 		m_currentState = m_lastState;
+	else if (m_currentState == e_state_sleep)
+		m_currentState = e_state_life;
 }
 
 void DecorAnimator::sleep(void)
 {
-	m_currentState = e_state_sleep;
+	if (m_currentState != e_state_grow)
+		m_currentState = e_state_sleep;
 }
 
 void DecorAnimator::setup(sf::Time lifeTime)

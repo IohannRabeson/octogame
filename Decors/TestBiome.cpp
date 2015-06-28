@@ -20,6 +20,7 @@ TestBiome::TestBiome() :
 	m_treeLifeTime(sf::seconds(1)),
 	m_treeColor(255, 105, 180),
 	m_treeAngle(45.f),
+	m_treeIsMoving(true),
 	m_canCreateTree(false),
 	m_canCreateLeaf(true),
 	m_leafSize(150.f, 150.f),
@@ -42,7 +43,7 @@ TestBiome::TestBiome() :
 	m_canCreateCloud(false),
 	m_starSize(200.f, 200.f),
 	m_starColor(255, 255, 255),
-	m_starLifeTime(sf::seconds(10.f)),
+	m_starLifeTime(sf::seconds(20.f)),
 	m_canCreateStar(false),
 	m_sunSize(200.f, 200.f),
 	m_sunPartCount(3u),
@@ -87,6 +88,11 @@ sf::Color		TestBiome::getTreeColor()
 float			TestBiome::getTreeAngle()
 {
 	return (m_treeAngle);
+}
+
+bool			TestBiome::getTreeIsMoving()
+{
+	return (m_treeIsMoving);
 }
 
 bool			TestBiome::canCreateTree()

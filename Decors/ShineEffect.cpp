@@ -1,6 +1,6 @@
 #include "ShineEffect.hpp"
 #include "ABiome.hpp"
-#include <math.hpp>
+#include <Math.hpp>
 #include <cmath>
 
 ShineEffect::ShineEffect() :

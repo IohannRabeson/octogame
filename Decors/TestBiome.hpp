@@ -32,6 +32,7 @@ public:
 	virtual sf::Time		getTreeLifeTime();
 	virtual sf::Color		getTreeColor();
 	virtual float			getTreeAngle();
+	virtual bool			getTreeIsMoving();
 	virtual bool			canCreateTree();
 	virtual bool			canCreateLeaf();
 	virtual sf::Vector2f	getLeafSize();
@@ -116,6 +117,7 @@ private:
 	sf::Time				m_treeLifeTime;
 	sf::Color				m_treeColor;
 	float					m_treeAngle;
+	bool					m_treeIsMoving;
 	bool					m_canCreateTree;
 	bool					m_canCreateLeaf;
 	sf::Vector2f			m_leafSize;
