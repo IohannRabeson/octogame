@@ -42,31 +42,38 @@ void Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & orig
 	rotateVec(downMid, cosA, sinA);
 	rotateVec(downRight, cosA, sinA);
 
+	upMid += origin;
+	upRight += origin;
+	down += origin;
+	downLeft += origin;
+	downMid += origin;
+	downRight += origin;
+
 	sf::Color tmpAddColor(5, 5, 5, 0);
 
 	// Down right
 	color += tmpAddColor;
-	builder.createTriangle(down + origin, downMid + origin, downRight + origin, color);
+	builder.createTriangle(down, downMid, downRight, color);
 	// Mid right
 	color += tmpAddColor;
-	builder.createQuad(upRight + origin, upMid + origin, downMid + origin, downRight + origin, color);
+	builder.createQuad(upRight, upMid, downMid, downRight, color);
 	// Up right
 	color += tmpAddColor;
-	builder.createTriangle(up + origin, upMid + origin, upRight + origin, color);
+	builder.createTriangle(up + origin, upMid, upRight, color);
 	// Down left
 	color += tmpAddColor;
-	builder.createTriangle(down + origin, downMid + origin, downLeft + origin, color);
+	builder.createTriangle(down, downMid, downLeft, color);
 	// Mid left
 	color += tmpAddColor;
-	builder.createQuad(upLeft + origin, upMid + origin, downMid + origin, downLeft + origin, color);
+	builder.createQuad(upLeft + origin, upMid, downMid, downLeft, color);
 	// Up left
 	color += tmpAddColor;
-	builder.createTriangle(up + origin, upMid + origin, upLeft + origin, color);
+	builder.createTriangle(up + origin, upMid, upLeft + origin, color);
 }
 
 void Crystal::createCrystal(std::vector<CrystalValue> const & values, sf::Vector2f const & origin, octo::VertexBuilder & builder)
 {
-	for (unsigned int i = 0; i < m_partCount; i++)
+	for (std::size_t i = 0; i < m_partCount; i++)
 		createPolygon(values[i].size * m_animation, origin, values[i].angle, values[i].color, m_up[i], m_upLeft[i], builder);
 }
 
@@ -79,7 +86,7 @@ void Crystal::setup(ABiome& biome)
 	m_up.resize(m_partCount);
 	m_upLeft.resize(m_partCount);
 
-	for (unsigned int i = 0; i < m_partCount; i++)
+	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		m_values[i].size = biome.getCrystalSize();
 		m_values[i].angle = randomFloat(-45.f + (i * 90.f / m_partCount), -45.f + ((i + 1) * 90.f / m_partCount));

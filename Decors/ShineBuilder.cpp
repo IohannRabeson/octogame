@@ -28,11 +28,20 @@ void ShineBuilder::createStar(sf::Vector2f const & size, sf::Vector2f const & si
 		rotateVec(heartRightDown, cosAngle, sinAngle);
 	}
 
-	builder.createTriangle(up + origin, heartLeftUp + origin, heartRightUp + origin, color);
-	builder.createTriangle(down + origin, heartLeftDown + origin, heartRightDown + origin, color);
-	builder.createTriangle(left + origin, heartLeftUp + origin, heartLeftDown + origin, color);
-	builder.createTriangle(right + origin, heartRightUp + origin, heartRightDown + origin, color);
-	builder.createQuad(heartLeftUp + origin, heartRightUp + origin, heartRightDown + origin, heartLeftDown + origin, color);
+	left += origin;
+	right += origin;
+	up += origin;
+	down += origin;
+	heartLeftUp += origin;
+	heartRightUp += origin;
+	heartLeftDown += origin;
+	heartRightDown += origin;
+
+	builder.createTriangle(up, heartLeftUp, heartRightUp, color);
+	builder.createTriangle(down, heartLeftDown, heartRightDown, color);
+	builder.createTriangle(left, heartLeftUp, heartLeftDown, color);
+	builder.createTriangle(right, heartRightUp, heartRightDown, color);
+	builder.createQuad(heartLeftUp, heartRightUp, heartRightDown, heartLeftDown, color);
 }
 
 void ShineBuilder::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder, float const angle, float const cosAngle, float const sinAngle)
@@ -66,42 +75,53 @@ void ShineBuilder::createGlow(sf::Vector2f const & size, sf::Vector2f const & si
 		rotateVec(downMidRight, cosAngle, sinAngle);
 	}
 
-	sf::Color originColor = color;
-	originColor.a = originColor.a;
+	upLeft += origin;
+	upRight += origin;
+	cornerUpLeft += origin;
+	cornerUpRight += origin;
+	upMidLeft += origin;
+	upMidRight += origin;
+	downLeft += origin;
+	downRight += origin;
+	cornerDownLeft += origin;
+	cornerDownRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+
 	sf::Color transparent = color;
 	transparent.a = 0;
 
-	builder.createVertex(upLeft + origin, transparent);
-	builder.createVertex(upRight + origin, transparent);
-	builder.createVertex(origin, originColor);
+	builder.createVertex(upLeft, transparent);
+	builder.createVertex(upRight, transparent);
+	builder.createVertex(origin, color);
 
-	builder.createVertex(upRight + origin, transparent);
-	builder.createVertex(upMidRight + origin, transparent);
-	builder.createVertex(origin, originColor);
+	builder.createVertex(upRight, transparent);
+	builder.createVertex(upMidRight, transparent);
+	builder.createVertex(origin, color);
 
-	builder.createVertex(upMidRight + origin, transparent);
-	builder.createVertex(downMidRight + origin, transparent);
-	builder.createVertex(origin, originColor);
+	builder.createVertex(upMidRight, transparent);
+	builder.createVertex(downMidRight, transparent);
+	builder.createVertex(origin, color);
 
-	builder.createVertex(downMidRight + origin, transparent);
-	builder.createVertex(downRight + origin, transparent);
-	builder.createVertex(origin, originColor);
+	builder.createVertex(downMidRight, transparent);
+	builder.createVertex(downRight, transparent);
+	builder.createVertex(origin, color);
 
-	builder.createVertex(downRight + origin, transparent);
-	builder.createVertex(downLeft + origin, transparent);
-	builder.createVertex(origin, originColor);
+	builder.createVertex(downRight, transparent);
+	builder.createVertex(downLeft, transparent);
+	builder.createVertex(origin, color);
 
-	builder.createVertex(downLeft + origin, transparent);
-	builder.createVertex(downMidLeft + origin, transparent);
-	builder.createVertex(origin, originColor);
+	builder.createVertex(downLeft, transparent);
+	builder.createVertex(downMidLeft, transparent);
+	builder.createVertex(origin, color);
 
-	builder.createVertex(downMidLeft + origin, transparent);
-	builder.createVertex(upMidLeft + origin, transparent);
-	builder.createVertex(origin, originColor);
+	builder.createVertex(downMidLeft, transparent);
+	builder.createVertex(upMidLeft, transparent);
+	builder.createVertex(origin, color);
 
-	builder.createVertex(upMidLeft + origin, transparent);
-	builder.createVertex(upLeft + origin, transparent);
-	builder.createVertex(origin, originColor);
+	builder.createVertex(upMidLeft, transparent);
+	builder.createVertex(upLeft, transparent);
+	builder.createVertex(origin, color);
 }
 
 void ShineBuilder::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)

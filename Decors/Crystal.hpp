@@ -28,7 +28,7 @@ private:
 
 	sf::Vector2f				m_size;
 	sf::Color					m_color;
-	unsigned int				m_partCount;
+	std::size_t					m_partCount;
 	std::vector<CrystalValue>	m_values;
 	DecorAnimator				m_animator;
 	float						m_animation;
@@ -36,7 +36,7 @@ private:
 	ShineEffect					m_shine;
 	std::vector<sf::Vector2f>	m_up;
 	std::vector<sf::Vector2f>	m_upLeft;
-	unsigned int				m_shineCrystalNumber;
+	std::size_t					m_shineCrystalNumber;
 	sf::Time					m_shineTimer;
 	sf::Time					m_shineTimerMax;
 

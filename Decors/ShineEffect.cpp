@@ -4,7 +4,7 @@
 #include <cmath>
 
 ShineEffect::ShineEffect() :
-	m_position(sf::Vector2f(0.f, 0.f)),
+	m_angle(0.f),
 	m_animator(3.f, 3.f, 0.f, 0.1f, 0.f),
 	m_animation(1.f),
 	m_isShineEffect(true)
