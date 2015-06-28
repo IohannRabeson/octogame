@@ -8,12 +8,14 @@ std::default_random_engine	Tree::m_engine;
 Tree::Tree(void) :
 	m_depth(0u),
 	m_count(0u),
+	m_angleMaxCount(0u),
 	m_animator(2.f, 4.f, 3.f, 0.15f),
 	m_animation(1.f),
 	m_growSide(true),
 	m_isLeaf(true),
 	m_countLeaf(0u),
-	m_setLeaf(true)
+	m_setLeaf(true),
+	m_leafMaxCount(0u)
 {
 }
 
