@@ -1,7 +1,5 @@
 #include "ShineBuilder.hpp"
 #include "ABiome.hpp"
-#include <math.hpp>
-#include <cmath>
 
 ShineBuilder::ShineBuilder()
 {
