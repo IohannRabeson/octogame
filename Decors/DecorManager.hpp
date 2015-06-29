@@ -47,7 +47,8 @@ public:
 		Star,
 		Cloud,
 		Sun,
-		Moon
+		Moon,
+		Rainbow
 	};
 
 	explicit DecorManager(std::size_t maxVertexCount);

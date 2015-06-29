@@ -72,6 +72,10 @@ public:
 	virtual sf::Color		getMoonColor();
 	virtual bool			canCreateMoon();
 
+	virtual sf::Vector2f	getRainbowSize();
+	virtual std::size_t		getRainbowPartCount();
+	virtual bool			canCreateRainbow();
+
 	void					setTreeDepth(std::size_t depth);
 	void					setTreeSize(sf::Vector2f const& treeSize);
 	void					setTreeLifeTime(sf::Time lifeTime);
@@ -157,6 +161,10 @@ private:
 	sf::Vector2f			m_moonSize;
 	sf::Color				m_moonColor;
 	bool					m_canCreateMoon;
+
+	sf::Vector2f			m_rainbowSize;
+	std::size_t				m_rainbowPartCount;
+	bool					m_canCreateRainbow;
 };
 
 #endif

@@ -50,7 +50,10 @@ TestBiome::TestBiome() :
 	m_sunColor(255, 105, 180),
 	m_canCreateSun(false),
 	m_moonColor(255, 105, 180),
-	m_canCreateMoon(false)
+	m_canCreateMoon(false),
+	m_rainbowSize(200.f, 200.f),
+	m_rainbowPartCount(5u),
+	m_canCreateRainbow(true)
 {
 }
 
@@ -253,6 +256,21 @@ sf::Color		TestBiome::getMoonColor()
 bool			TestBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
+}
+
+sf::Vector2f 	TestBiome::getRainbowSize()
+{
+	return (m_rainbowSize);
+}
+
+std::size_t		TestBiome::getRainbowPartCount()
+{
+	return (m_rainbowPartCount);
+}
+
+bool			TestBiome::canCreateRainbow()
+{
+	return (m_canCreateRainbow);
 }
 
 

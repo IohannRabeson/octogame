@@ -73,6 +73,10 @@ public:
 	virtual sf::Vector2f 	getMoonSize() = 0;
 	virtual sf::Color		getMoonColor() = 0;
 	virtual bool			canCreateMoon() = 0;
+
+	virtual sf::Vector2f	getRainbowSize() = 0;
+	virtual std::size_t		getRainbowPartCount() = 0;
+	virtual bool			canCreateRainbow() = 0;
 };
 
 #endif

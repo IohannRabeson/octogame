@@ -30,6 +30,7 @@ DecorManagerDemoScreen::DecorManagerDemoScreen() :
 	m_typeMapper["cloud"] = DecorManager::DecorTypes::Cloud;
 	m_typeMapper["sun"] = DecorManager::DecorTypes::Sun;
 	m_typeMapper["moon"] = DecorManager::DecorTypes::Moon;
+	m_typeMapper["rainbow"] = DecorManager::DecorTypes::Rainbow;
 }
 
 void	DecorManagerDemoScreen::start()
