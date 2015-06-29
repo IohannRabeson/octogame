@@ -1,6 +1,7 @@
 #include "NewMap.hpp"
 #include "OctoNoise.hpp"
 #include "ABiome.hpp"
+#include "StaticTileObject.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Interpolations.hpp>
@@ -16,11 +17,8 @@ NewMap::NewMap(void) :
 
 NewMap::~NewMap(void)
 {
-	for (std::size_t x = 0; x < m_tiles.columns(); x++)
-	{
-		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			delete m_tiles.get(x, y);
-	}
+	for (auto it = m_tiles.begin(); it != m_tiles.end(); it++)
+		delete *it;
 }
 
 void NewMap::init(ABiome & biome)
@@ -45,50 +43,72 @@ void NewMap::init(ABiome & biome)
 			m_tiles.get(x, y)->setStartTransition(3u, sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize + Tile::TileSize));
 		}
 	}
+
+	m_instances.push_back(std::unique_ptr<StaticTileObject>(new StaticTileObject(6u, 6u, 5u)));
+	for (auto & instance : m_instances)
+		instance->load();
 }
 
+#include <iostream>
 void NewMap::computeMapRange(int startX, int endX, int startY, int endY)
 {
+	//TODO: perlin will get 3 value instead of vector
 	float vec[3];
-	int height;
-	int offset;
-	int offsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+	int height; // The height of the generated map
+	int offsetX; // The tile position adjust to avoid negativ offset (because map is circular)
 	int offsetY;
-	int offsetPosX;
-	float v;
+	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+	int curOffsetY = static_cast<int>(m_curOffset.y / Tile::TileSize);
+	int offsetPosX; // The real position of the tile (in the world)
+	StaticTileObject * curInstance;
 	for (int x = startX; x < endX; x++)
 	{
-		offset = x + offsetX;
-		offsetPosX = offset;
-		while (offset < 0)
-			offset += m_mapSize.x;
-		while (offset >= static_cast<int>(m_mapSize.x))
-			offset -= m_mapSize.x;
-		vec[0] = static_cast<float>(offset);
+		curInstance = nullptr;
+		offsetX = x + curOffsetX;
+		offsetPosX = offsetX;
+		while (offsetX < 0)
+			offsetX += m_mapSize.x;
+		while (offsetX >= static_cast<int>(m_mapSize.x))
+			offsetX -= m_mapSize.x;
+		vec[0] = static_cast<float>(offsetX);
 		vec[1] = m_depth;
-		// firstCurve return a value b/tween -1 & 1
+
+		for (auto & instance : m_instances)
+		{
+			if (offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
+			{
+				curInstance = instance.get();
+				break;
+			}
+		}
+		// firstCurve return a value between -1 & 1
 		// we normalize it betwen 0 & max_height
-		v = (firstCurve(vec) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
-		height = static_cast<int>(v);
+		// TODO: perlin return a value between 0 & 1
+		height = static_cast<int>((firstCurve(vec) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
 		for (int y = startY; y < endY; y++)
 		{
-			offsetY = y + static_cast<int>(m_curOffset.y / Tile::TileSize);
+			offsetY = y + curOffsetY;
 			// Init square
-			m_tiles.get(x, y)->setStartTransition(0, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize));
-			m_tiles.get(x, y)->setStartTransition(1, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize));
-			m_tiles.get(x, y)->setStartTransition(2, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
-			m_tiles.get(x, y)->setStartTransition(3, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
-			if (offsetY < height || offsetY < 0)
+			m_tiles.get(x, y)->setStartTransition(0u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(1u, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(2u, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(3u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
+			if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
+			{
+				m_tiles.get(x, y)->setIsEmpty(curInstance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top).isEmpty());
+			}
+			else if (offsetY < height)
 			{
 				m_tiles.get(x, y)->setIsEmpty(true);
 				continue;
 			}
-			vec[0] = static_cast<float>(x + offsetX);
+			else
+				m_tiles.get(x, y)->setIsEmpty(false);
+			vec[0] = static_cast<float>(x + curOffsetX);
 			vec[1] = static_cast<float>(offsetY);
 			vec[2] = m_depth;
 			// secondCurve return a value between -1 & 1
 			m_tiles.get(x, y)->setNoiseValue((secondCurve(vec) + 1.f) / 2.f);
-			m_tiles.get(x, y)->setIsEmpty(false);
 			setColor(*m_tiles.get(x, y));
 		}
 	}
@@ -124,7 +144,7 @@ void NewMap::computeDecor(void)
 		vec[0] = static_cast<float>(it->first);
 		vec[1] = m_depth;
 		height = static_cast<int>((firstCurve(vec) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
-		it->second->setStartTransition(0, sf::Vector2f(offsetPosX * Tile::TileSize, height * Tile::TileSize));
+		it->second->setStartTransition(0u, sf::Vector2f(offsetPosX * Tile::TileSize, height * Tile::TileSize));
 		vec[0] = static_cast<float>(offsetPosX);
 		vec[1] = static_cast<float>(height);
 		vec[2] = m_depth;
@@ -185,11 +205,29 @@ void NewMap::swapDepth(void)
 	float tmp = m_depth;
 	m_depth = m_oldDepth;
 	m_oldDepth = tmp;
+	for (auto & instance : m_instances)
+		instance->swapDepth();
 }
 
 void NewMap::registerDepth(void)
 {
 	m_oldDepth = m_depth;
+	for (auto & instance : m_instances)
+		instance->registerDepth();
+}
+
+void NewMap::nextStep(void)
+{
+	m_depth += 3.f;
+	for (auto & instance : m_instances)
+		instance->nextStep();
+}
+
+void NewMap::previousStep(void)
+{
+	m_depth -= 3.f;
+	for (auto & instance : m_instances)
+		instance->previousStep();
 }
 
 void NewMap::addOffsetX(int offsetX)
@@ -248,14 +286,4 @@ void NewMap::addOffsetY(int offsetY)
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tiles(x, 0) = m_tmp[x];
 	}
-}
-
-void NewMap::nextStep(void)
-{
-	m_depth += 3.f;
-}
-
-void NewMap::previousStep(void)
-{
-	m_depth -= 3.f;
 }

@@ -35,7 +35,6 @@ void GroundManager::init(ABiome & biome)
 	m_vertices.reset(new sf::Vertex[m_tiles->getRows() * m_tiles->getColumns() * 4u]);
 
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
-	// TODO: use vector instead of array
 	m_tileShapes.resize(m_tiles->getColumns(), nullptr);
 
 	PhysicsEngine::getInstance().setTileMapSize(sf::Vector2i(m_tiles->getColumns(), m_tiles->getRows()));
@@ -147,17 +146,29 @@ void GroundManager::updateTransition(void)
 	float transition = m_transitionTimer / m_transitionTimerMax;
 	Tile * tile;
 	Tile * tilePrev;
+	TileShape * first;
+	std::size_t height;
+	bool isComputed;
 
 	// Update tiles
 	m_verticesCount = 0u;
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
-		bool isFirst = false;
+		first = nullptr;
+		height = 0u;
+		isComputed = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
 			if (tile->isTransitionType(Tile::e_transition_none))
+			{
+				if (first && !isComputed)
+				{
+					first->setHeight(static_cast<float>(height) * Tile::TileSize);
+					isComputed = true;
+				}
 				continue;
+			}
 			tilePrev = &m_tilesPrev->get(x, y);
 
 			// Update tile transition
@@ -170,13 +181,16 @@ void GroundManager::updateTransition(void)
 			}
 
 			// Update physics information
-			if (!isFirst)
+			if (!first)
 			{
-				isFirst = true;
+				first = m_tileShapes[x];
 				m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount]);
 			}
+			height++;
 			m_verticesCount += 4u;
 		}
+		if (first && !isComputed)
+			first->setHeight(static_cast<float>(height) * Tile::TileSize);
 	}
 
 	/* TODO: change decor and use vertex instead of tile

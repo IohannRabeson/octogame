@@ -51,6 +51,8 @@ public:
 	 */
 	inline void setVertex(sf::Vertex * vertex) { m_vertex = vertex; }
 
+	inline void setHeight(float height) { m_height = height; }
+
 	/*! Get the global bounds
 	 * The AABB is recomputed at each rotation
 	 *
@@ -89,6 +91,7 @@ private:
 	std::vector<sf::Vector2f>	m_normals;
 	sf::Vector2f				m_baryCenter;
 	sf::FloatRect				m_globalBounds;
+	float						m_height;
 
 };
 

@@ -39,6 +39,7 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\
+				Map/StaticTileObject.cpp				\
 				Map/NewMap.cpp							\
 				Map/MapInstance.cpp
 
@@ -46,8 +47,7 @@ SRC_MANAGERS =	Managers/MapManager.cpp
 
 SRC_OCTO =		Octo/OctoNoise.cpp
 
-SRC_DECORS =	Decors/StaticTileObject.cpp				\
-				Decors/GameObject.cpp					\
+SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/DecorManager.cpp					\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\

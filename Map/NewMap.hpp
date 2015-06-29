@@ -7,6 +7,7 @@
 # include "IMapTransformable.hpp"
 
 class ABiome;
+class StaticTileObject;
 
 class NewMap : public IMapTransformable
 {
@@ -46,13 +47,14 @@ public:
 	virtual void computeDecor(void);
 
 private:
-	float					m_depth;
-	float					m_oldDepth;
-	TileMap					m_tiles;
-	std::size_t				m_width;
-	std::size_t				m_height;
-	sf::Vector2f const *	m_offset;
-	sf::Vector2f			m_curOffset;
+	float								m_depth;
+	float								m_oldDepth;
+	TileMap								m_tiles;
+	std::size_t							m_width;
+	std::size_t							m_height;
+	sf::Vector2f const *				m_offset;
+	sf::Vector2f						m_curOffset;
+	std::vector<std::unique_ptr<StaticTileObject>>	m_instances;
 
 	// first and second curve must return a value between -1 and 1
 	//TODO: nor more virtual, pointer to function instead

@@ -21,7 +21,7 @@ void	PhysicsMapScreen::start()
 
 	m_shape = m_engine.createConvex();
 	m_shape->setPosition(300.f, 600.f);
-	m_shape->setApplyGravity(true);
+	m_shape->setApplyGravity(false);
 	m_shape->setVertexCount(4u);
 	m_shape->setOrigin(sf::Vector2f(10.f, 30.f));
 	m_shape->setPosition(sf::Vector2f(460.f, 350.f));

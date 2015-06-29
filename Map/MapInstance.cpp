@@ -24,7 +24,7 @@ void MapInstance::initBiome(void)
 	m_biome->mn_nbDecor = 15u;
 	m_biome->mn_temperature = 1;
 	m_biome->mn_wind = 300;
-	m_instance = new StaticTileObject(140u, 40u, 5u);
+	//m_instance = new StaticTileObject(140u, 40u, 5u);
 	m_instance->load();
 	m_totalWidth = m_biome->mn_width + m_instance->getWidth();
 	m_biome->m_totalWidth = m_totalWidth;
