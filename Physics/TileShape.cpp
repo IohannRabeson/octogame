@@ -24,9 +24,6 @@ void TileShape::computeShape(void)
 
 	// Compute edges and normals
 	m_edges[0u] = m_vertex[0u].position - m_vertex[1u].position;
-	//m_edges[1u] = m_vertex[1u].position - m_vertex[2u].position;
-	//m_edges[2u] = m_vertex[2u].position - m_vertex[3u].position;
-	//m_edges[3u] = m_vertex[3u].position - m_vertex[0u].position;
 
 	m_vertices[0u] = m_vertex[1u].position;
 	m_vertices[1u] = m_vertex[0u].position;
@@ -41,7 +38,6 @@ void TileShape::computeShape(void)
 	m_globalBounds.width = 16.f;
 	m_globalBounds.height = m_height;
 
-	//TODO: center
 	// Compute bary center
 	m_baryCenter = m_vertex[0u].position;
 	for (std::size_t i = 1u; i < 4u; i++)

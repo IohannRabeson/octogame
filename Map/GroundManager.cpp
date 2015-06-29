@@ -1,5 +1,5 @@
 #include "GroundManager.hpp"
-#include "NewMap.hpp"
+#include "Map.hpp"
 #include "TileShape.hpp"
 #include "PhysicsEngine.hpp"
 #include "ABiome.hpp"
@@ -20,8 +20,8 @@ GroundManager::GroundManager(void) :
 
 void GroundManager::init(ABiome & biome)
 {
-	m_tiles.reset(new NewMap());
-	m_tilesPrev.reset(new NewMap());
+	m_tiles.reset(new Map());
+	m_tilesPrev.reset(new Map());
 
 	// Init maps and biome
 	m_tiles->init(biome);

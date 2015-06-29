@@ -39,8 +39,6 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\
-				Map/StaticTileObject.cpp				\
-				Map/NewMap.cpp							\
 				Map/MapInstance.cpp
 
 SRC_MANAGERS =	Managers/MapManager.cpp

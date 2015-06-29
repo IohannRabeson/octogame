@@ -1,59 +1,20 @@
-#ifndef MAP_HPP
-# define MAP_HPP
+#ifndef NEWMAP_HPP
+# define NEWMAP_HPP
 
 # include <map>
 # include <Array2D.hpp>
 # include "Tile.hpp"
+# include "IMapTransformable.hpp"
 
-struct DecorValues
-{
-	int					mn_nb;
-	int					mn_minSizeX;
-	int					mn_minSizeY;
-	int					mn_maxSizeX;
-	int					mn_maxSizeY;
-	int					mn_minAngle = 0;
-	int					mn_maxAngle = 0;
-	int					mn_minElement = 0;
-	int					mn_maxElement = 0;
-	int					mn_minLive = 0;
-	int					mn_maxLive = 0;
-};
+class ABiome;
+class MapInstance;
 
-struct Biome
-{
-	std::size_t			mn_height;
-	std::size_t			mn_width;
-	std::size_t			m_totalWidth;
-	int					mn_temperature;
-	int					mn_wind;
-	std::size_t			mn_nbDecor;
-	// between 0 and mn_width, it will be use to set the player at first appartition
-	std::size_t			mn_startOffsetX;
-	float				mf_transitionTimerMax;
-	// Pattern to put the decor on the map
-	DecorValues			m_tree;
-	DecorValues			m_crystal;
-	DecorValues			m_rock;
-	DecorValues			m_star;
-	DecorValues			m_sun;
-	DecorValues			m_cloud;
-	DecorValues			m_mushroom;
-};
-
-class Map
+class Map : public IMapTransformable
 {
 private:
 	typedef std::map<int, Tile*> Decors;
 
 public:
-	enum EMapType
-	{
-		e_map_classic,
-		e_map_high,
-		e_map_instance
-	};
-
 	typedef octo::Array2D<Tile*> TileMap;
 
 	Map(void);
@@ -66,51 +27,49 @@ public:
 	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles(column, row); }
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
 	inline Decors & getDecors(void) { return m_decors; }
+
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
 	inline void computeMapRangeX(int startX, int endX) { computeMapRange(startX, endX, 0, m_tiles.rows()); }
 	inline void computeMapRangeY(int startY, int endY) { computeMapRange(0, m_tiles.columns(), startY, endY); }
 	inline void setCameraView(sf::Vector2f const * offset) { m_offset = offset; }
 	inline void registerOffset(void) { m_curOffset = *m_offset; }
-	void addOffsetX(int p_offsetX);
-	void addOffsetY(int p_offsetY);
 
-	void init(Biome * p_biome);
+	void addOffsetX(int offsetX);
+	void addOffsetY(int offsetY);
+
+	void init(ABiome & biome);
 
 	virtual void swapDepth(void);
 	virtual void registerDepth(void);
 	virtual void nextStep(void);
 	virtual void previousStep(void);
-	virtual void computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY);
+	virtual void computeMapRange(int startX, int endX, int startY, int endY);
 	virtual void computeDecor(void);
 
-protected:
-	float					m_depth;
-	float					m_oldDepth;
-	Biome *					m_biome;
-	TileMap					m_tiles;
-	std::size_t				m_width;
-	std::size_t				m_height;
-	sf::Vector2f const *	m_offset;
-	sf::Vector2f			m_curOffset;
-	std::size_t				m_totalWidth;
+private:
+	float								m_depth;
+	float								m_oldDepth;
+	TileMap								m_tiles;
+	std::size_t							m_width;
+	std::size_t							m_height;
+	sf::Vector2f const *				m_offset;
+	sf::Vector2f						m_curOffset;
+	std::vector<std::unique_ptr<MapInstance>>	m_instances;
 
-	// Contains base value to avoid redundant calcul
-	octo::Array2D<sf::Vector2f>		m_baseValue;
-
-	virtual void initBiome(void);
 	// first and second curve must return a value between -1 and 1
 	//TODO: nor more virtual, pointer to function instead
 	virtual float firstCurve(float * vec);
 	virtual float secondCurve(float * vec);
-	virtual void setColor(Tile & p_tile);
+	virtual void setColor(Tile & tile);
 
-private:
 	static constexpr std::size_t MaxDecor = 200u;
 
 	Tile							m_reserveTile[MaxDecor];
 	Decors							m_decors;
 	std::size_t						m_decorTileCount;
 	std::unique_ptr<sf::Vertex[]>	m_vertices;
+
+	sf::Vector2u					m_mapSize;
 
 };
 

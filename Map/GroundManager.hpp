@@ -1,7 +1,7 @@
 #ifndef TERRAINMANAGER_HPP
 # define TERRAINMANAGER_HPP
 
-# include "NewMap.hpp"
+# include "Map.hpp"
 
 class TileShape;
 class ABiome;
@@ -21,8 +21,8 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	std::unique_ptr<NewMap>			m_tiles;
-	std::unique_ptr<NewMap>			m_tilesPrev;
+	std::unique_ptr<Map>			m_tiles;
+	std::unique_ptr<Map>			m_tilesPrev;
 	float							m_transitionTimer;
 	float							m_transitionTimerMax;
 	sf::Vector2f					m_offset;
