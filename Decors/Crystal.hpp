@@ -53,7 +53,7 @@ private:
 						octo::VertexBuilder & builder);
 
 private:
-	static std::mt19937 m_engine;
+	static std::mt19937 s_engine;
 	static float randomFloat(float min, float max);
 	static float randomInt(int min, int max);
 
