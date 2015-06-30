@@ -24,7 +24,7 @@ struct Biome
 {
 	std::size_t			mn_height;
 	std::size_t			mn_width;
-	std::size_t			mn_totalWidth;
+	std::size_t			m_totalWidth;
 	int					mn_temperature;
 	int					mn_wind;
 	std::size_t			mn_nbDecor;
@@ -76,40 +76,41 @@ public:
 
 	void init(Biome * p_biome);
 
+	//TODO: nor more virtual, pointer to function instead
 	virtual void swapDepth(void);
 	virtual void registerDepth(void);
-	virtual void nextStep(void) = 0;
-	virtual void previousStep(void) = 0;
+	virtual void nextStep(void);
+	virtual void previousStep(void);
 	virtual void computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY);
 	virtual void computeDecor(void);
 
 protected:
-	float			m_depth;
-	float			m_oldDepth;
-	Biome *			m_biome;
-	TileMap			m_tiles;
-	std::size_t		m_width;
-	std::size_t		m_height;
+	float					m_depth;
+	float					m_oldDepth;
+	Biome *					m_biome;
+	TileMap					m_tiles;
+	std::size_t				m_width;
+	std::size_t				m_height;
 	sf::Vector2f const *	m_offset;
-	sf::Vector2f		m_curOffset;
-	std::size_t		mn_totalWidth;
+	sf::Vector2f			m_curOffset;
+	std::size_t				m_totalWidth;
 
 	// Containes base value to avoid redundant calcul
 	octo::Array2D<sf::Vector2f>		m_baseValue;
 
-	virtual void initBiome(void) = 0;
+	virtual void initBiome(void);
 	// first and second curve must return a value between -1 and 1
-	virtual float firstCurve(float * vec) = 0;
-	virtual float secondCurve(float * vec) = 0;
-	virtual void setColor(Tile & p_tile) = 0;
+	virtual float firstCurve(float * vec);
+	virtual float secondCurve(float * vec);
+	virtual void setColor(Tile & p_tile);
 
 private:
 	static constexpr std::size_t MaxDecor = 200u;
 
-	Tile						m_reserveTile[MaxDecor];
-	Decors						m_decors;
-	std::size_t					mn_decorTileCount;
-	std::unique_ptr<sf::Vertex[]>			m_vertices;
+	Tile							m_reserveTile[MaxDecor];
+	Decors							m_decors;
+	std::size_t						m_decorTileCount;
+	std::unique_ptr<sf::Vertex[]>	m_vertices;
 
 };
 
