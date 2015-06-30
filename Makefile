@@ -1,5 +1,5 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Managers Octo Decors Physics
+DIRS = Main Firefly Screens Map Octo Decors Physics
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game/
@@ -15,7 +15,6 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_STATES)										\
 	  $(SRC_FIREFLY)									\
 	  $(SRC_MAP)										\
-	  $(SRC_MANAGERS)									\
 	  $(SRC_OCTO)										\
 	  $(SRC_DECORS)										\
 	  Main/DefaultApplicationListener.cpp				\
@@ -30,8 +29,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/EngineScreen.cpp				\
 				Screens/PhysicsMapScreen.cpp			\
 				Screens/DecorManagerDemoScreen.cpp		\
-				Screens/ParticleDemoScreen.cpp			\
-				Screens/StateGame.cpp
+				Screens/ParticleDemoScreen.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -40,8 +38,6 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\
 				Map/MapInstance.cpp
-
-SRC_MANAGERS =	Managers/MapManager.cpp
 
 SRC_OCTO =		Octo/OctoNoise.cpp
 
