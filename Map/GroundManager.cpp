@@ -240,19 +240,11 @@ void GroundManager::updateOffset(float)
 	int ofY = 0;
 	int newOfX = static_cast<int>(m_offset.x / Tile::TileSize);
 	int newOfY = static_cast<int>(m_offset.y / Tile::TileSize);
-	if (m_oldOffset.x > newOfX)
-		ofX = -1;
-	else if (m_oldOffset.x < newOfX)
-		ofX = 1;
-	if (m_oldOffset.y > newOfY)
-		ofY = -1;
-	else if (m_oldOffset.y < newOfY)
-		ofY = 1;
+	if (m_oldOffset.x != newOfX)
+		ofX = newOfX - m_oldOffset.x;
+	if (m_oldOffset.y != newOfY)
+		ofY = newOfY - m_oldOffset.y;
 
-	// TODO: there is a bug if the speed > 16.f / second
-	// if speed = 600.f at 60fps, speed = 600.f / 60.f = 10.f per frame
-	// if speed per frame > 16.f the bug occur
-	// to trigger the bug, at 60 fps, speed must be 60 * 16 = 960
 	if (ofX)
 		computeDecor();
 	if (ofX && ofY)
@@ -266,40 +258,40 @@ void GroundManager::updateOffset(float)
 		m_tilesPrev->addOffsetY(ofY);
 		if (ofX < 0)
 		{
-			m_tiles->computeMapRangeX(0, 1);
-			m_tilesPrev->computeMapRangeX(0, 1);
+			m_tiles->computeMapRangeX(0, -ofX);
+			m_tilesPrev->computeMapRangeX(0, -ofX);
 			if (ofY < 0)
 			{
-				m_tiles->computeMapRangeY(0, 1);
-				m_tilesPrev->computeMapRangeY(0, 1);
-				defineTransitionBorderTileRange(0, 2, 2, m_tiles->getRows());
-				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+				m_tiles->computeMapRangeY(0, -ofY);
+				m_tilesPrev->computeMapRangeY(0, -ofY);
+				defineTransitionBorderTileRange(0, -ofX + 1, -ofY + 1, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, -ofY + 1);
 			}
 			else
 			{
-				m_tiles->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-				defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows() - 2);
-				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
+				m_tiles->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, ofY + 1, 0, m_tiles->getRows() - ofY - 1);
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - ofY - 1, m_tiles->getRows());
 			}
 		}
 		else
 		{
-			m_tiles->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
-			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
+			m_tiles->computeMapRangeX(m_tiles->getColumns() - ofX, m_tiles->getColumns());
+			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - ofX, m_tiles->getColumns());
 			if (ofY < 0)
 			{
-				m_tiles->computeMapRangeY(0, 1);
-				m_tilesPrev->computeMapRangeY(0, 1);
-				defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 2, m_tiles->getRows());
-				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+				m_tiles->computeMapRangeY(0, -ofY);
+				m_tilesPrev->computeMapRangeY(0, -ofY);
+				defineTransitionBorderTileRange(m_tiles->getColumns() - ofX - 1, m_tiles->getColumns(), -ofY, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, -ofY);
 			}
 			else
 			{
-				m_tiles->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-				defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows() - 2);
-				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
+				m_tiles->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+				defineTransitionBorderTileRange(m_tiles->getColumns() - ofX - 1, m_tiles->getColumns(), 0, m_tiles->getRows() - ofY - 1);
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - ofY - 1, m_tiles->getRows());
 			}
 		}
 		m_tilesPrev->swapDepth();
@@ -315,15 +307,15 @@ void GroundManager::updateOffset(float)
 		m_tilesPrev->addOffsetX(ofX);
 		if (ofX < 0)
 		{
-			m_tiles->computeMapRangeX(0, 1);
-			m_tilesPrev->computeMapRangeX(0, 1);
-			defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows());
+			m_tiles->computeMapRangeX(0, -ofX);
+			m_tilesPrev->computeMapRangeX(0, -ofX);
+			defineTransitionBorderTileRange(0, -ofX + 1, 0, m_tiles->getRows());
 		}
 		else
 		{
-			m_tiles->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
-			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
-			defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows());
+			m_tiles->computeMapRangeX(m_tiles->getColumns() - ofX, m_tiles->getColumns());
+			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - ofX, m_tiles->getColumns());
+			defineTransitionBorderTileRange(m_tiles->getColumns() - ofX - 1, m_tiles->getColumns(), 0, m_tiles->getRows());
 		}
 		m_tilesPrev->swapDepth();
 		m_oldOffset.x = newOfX;
@@ -337,14 +329,14 @@ void GroundManager::updateOffset(float)
 		m_tilesPrev->addOffsetY(ofY);
 		if (ofY < 0)
 		{
-			m_tiles->computeMapRangeY(0, 1);
-			m_tilesPrev->computeMapRangeY(0, 1);
-			defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+			m_tiles->computeMapRangeY(0, -ofY);
+			m_tilesPrev->computeMapRangeY(0, -ofY);
+			defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, -ofY + 1);
 		}
 		else
 		{
-			m_tiles->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-			m_tilesPrev->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
+			m_tiles->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+			m_tilesPrev->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
 			defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 10, m_tiles->getRows());
 		}
 		m_tilesPrev->swapDepth();

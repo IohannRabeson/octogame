@@ -230,6 +230,7 @@ void Map::previousStep(void)
 void Map::addOffsetX(int offsetX)
 {
 	Tile *	m_tmp[m_tiles.rows()];
+
 	if (offsetX > 0)
 	{
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
@@ -241,6 +242,7 @@ void Map::addOffsetX(int offsetX)
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tiles(m_tiles.columns() - 1, y) = m_tmp[y];
+		addOffsetX(offsetX - 1);
 	}
 	else if (offsetX < 0)
 	{
@@ -253,12 +255,14 @@ void Map::addOffsetX(int offsetX)
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tiles(0, y) = m_tmp[y];
+		addOffsetX(offsetX + 1);
 	}
 }
 
 void Map::addOffsetY(int offsetY)
 {
 	Tile *	m_tmp[m_tiles.columns()];
+
 	if (offsetY > 0)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
@@ -270,6 +274,7 @@ void Map::addOffsetY(int offsetY)
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tiles(x, m_tiles.rows() - 1) = m_tmp[x];
+		addOffsetY(offsetY - 1);
 	}
 	else if (offsetY < 0)
 	{
@@ -282,5 +287,6 @@ void Map::addOffsetY(int offsetY)
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tiles(x, 0) = m_tmp[x];
+		addOffsetY(offsetY + 1);
 	}
 }

@@ -92,13 +92,13 @@ void MapManager::update(float pf_deltatime)
 	m_terrainManager.update(pf_deltatime);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		m_camera.move(500.f * pf_deltatime, 0.f);
+		m_camera.move(3000.f * pf_deltatime, 0.f);
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		m_camera.move(-500.f * pf_deltatime, 0.f);
+		m_camera.move(-3000.f * pf_deltatime, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		m_camera.move(0.f, 500.f * pf_deltatime);
+		m_camera.move(0.f, 3000.f * pf_deltatime);
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		m_camera.move(0.f, -500.f * pf_deltatime);
+		m_camera.move(0.f, -3000.f * pf_deltatime);
 //	float x = static_cast<float>(sf::Mouse::getPosition().x) / octo::Application::getGraphicsManager().getVideoMode().width;
 //	float y = static_cast<float>(sf::Mouse::getPosition().y) / octo::Application::getGraphicsManager().getVideoMode().height;
 //	m_shader.setParameter("wave_phase", pf_deltatime);
