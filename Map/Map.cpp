@@ -79,9 +79,9 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 				break;
 			}
 		}
-		// firstCurve return a value between -1 & 1
+		// mapSurface return a value between -1 & 1
 		// we normalize it betwen 0 & max_height
-		height = static_cast<int>((firstCurve(vec) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
+		height = static_cast<int>((mapSurface(vec) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
 		for (int y = startY; y < endY; y++)
 		{
 			offsetY = y + curOffsetY;
@@ -104,9 +104,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			vec[0] = static_cast<float>(x + curOffsetX);
 			vec[1] = static_cast<float>(offsetY);
 			vec[2] = m_depth;
-			// secondCurve return a value between -1 & 1
-			m_tiles.get(x, y)->setNoiseValue((secondCurve(vec) + 1.f) / 2.f);
-			setColor(*m_tiles.get(x, y));
+			setTileColor(vec, *m_tiles.get(x, y));
 		}
 	}
 }
@@ -140,13 +138,12 @@ void Map::computeDecor(void)
 		}
 		vec[0] = static_cast<float>(it->first);
 		vec[1] = m_depth;
-		height = static_cast<int>((firstCurve(vec) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
+		height = static_cast<int>((mapSurface(vec) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
 		it->second->setStartTransition(0u, sf::Vector2f(offsetPosX * Tile::TileSize, height * Tile::TileSize));
 		vec[0] = static_cast<float>(offsetPosX);
 		vec[1] = static_cast<float>(height);
 		vec[2] = m_depth;
-		it->second->setNoiseValue((secondCurve(vec) + 1.f) / 2.f);
-		setColor(*it->second);
+		setTileColor(vec, *it->second);
 	}
 }
 
@@ -163,38 +160,24 @@ sf::Vertex * Map::getHeight(int x)
 	return m_decors[x]->getUpLeft();
 }
 
-float Map::firstCurve(float * vec)
+float Map::mapSurface(float * vec)
 {
 	vec[0] /= 100.f;
 	vec[1] /= 100.f;
 	return OctoNoise::getCurrent().fbm(vec, 3, 2.0f, 0.4f);
 }
 
-float Map::secondCurve(float * vec)
+void Map::setTileColor(float * vec, Tile & tile)
 {
 	vec[0] /= 10.f;
 	vec[1] /= 10.f;
 	vec[2] /= 10.f;
-	return OctoNoise::getCurrent().noise3(vec);
-	//return sin(vec[0] * 15.f + OctoNoise::getCurrent().noise3(vec) * sin(vec[1]) * 5.f);
-}
+	float noise = (OctoNoise::getCurrent().noise3(vec) + 1.f) / 2.f;
 
-void Map::setColor(Tile & tile)
-{
-	sf::Color start = sf::Color(178.f, 0.f, 86.f);
-	sf::Color end = sf::Color(178.f, 162.f, 32.f);
-	sf::Color mid = sf::Color(0.f, 74.f, 213.f);
+	sf::Color end = sf::Color(250.f, 150.f, 0.f);
+	sf::Color start = sf::Color(250.f, 0.f, 0.f);
 
-	start = octo::linearInterpolation(end, mid, tile.getNoiseValue());
-
-	if (tile.getNoiseValue() < 0.4f)
-		tile.setStartColor(start);
-	else if (tile.getNoiseValue() < 0.6f)
-	{
-		tile.setStartColor(octo::linearInterpolation(start, end, (tile.getNoiseValue() - 0.4f) * 5.f));
-	}
-	else
-		tile.setStartColor(end);
+	tile.setStartColor(octo::linearInterpolation(start, end, noise));
 }
 
 void Map::swapDepth(void)

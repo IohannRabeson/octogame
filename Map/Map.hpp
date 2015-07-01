@@ -47,20 +47,18 @@ public:
 	virtual void computeDecor(void);
 
 private:
-	float								m_depth;
-	float								m_oldDepth;
-	TileMap								m_tiles;
-	std::size_t							m_width;
-	std::size_t							m_height;
-	sf::Vector2f const *				m_offset;
-	sf::Vector2f						m_curOffset;
+	float										m_depth;
+	float										m_oldDepth;
+	TileMap										m_tiles;
+	std::size_t									m_width;
+	std::size_t									m_height;
+	sf::Vector2f const *						m_offset;
+	sf::Vector2f								m_curOffset;
 	std::vector<std::unique_ptr<MapInstance>>	m_instances;
 
-	// first and second curve must return a value between -1 and 1
 	//TODO: nor more virtual, pointer to function instead
-	virtual float firstCurve(float * vec);
-	virtual float secondCurve(float * vec);
-	virtual void setColor(Tile & tile);
+	float mapSurface(float * vec);
+	void setTileColor(float * vec, Tile & tile);
 
 	static constexpr std::size_t MaxDecor = 200u;
 

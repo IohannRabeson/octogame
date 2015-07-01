@@ -28,14 +28,12 @@ public:
 	inline ETransitionType getTransitionType(void) const { return m_transitionType; }
 	inline bool isTransitionType(ETransitionType transitionType) { return (m_transitionType == transitionType); }
 
+	inline void setStartColor(sf::Color && startColor) { m_startColor = startColor; }
 	inline void setStartColor(sf::Color const & startColor) { m_startColor = startColor; }
 	inline sf::Color & getStartColor(void) { return m_startColor; }
 
 	inline void setUpLeft(sf::Vertex * upLeft) { m_upLeft = upLeft; }
 	inline sf::Vertex * getUpLeft(void) const { return m_upLeft; }
-
-	inline void setNoiseValue(float noiseValue) { m_noiseValue = noiseValue; }
-	inline float getNoiseValue(void) const { return m_noiseValue; }
 
 	inline void setIsEmpty(bool isEmpty) { m_isEmpty = isEmpty; }
 	inline bool isEmpty(void) const { return m_isEmpty; }
@@ -50,7 +48,6 @@ private:
 	ETransitionType		m_transitionType;
 	sf::Color			m_startColor;
 	sf::Vertex *		m_upLeft;
-	float				m_noiseValue;
 	bool				m_isEmpty;
 
 };
