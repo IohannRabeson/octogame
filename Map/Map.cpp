@@ -116,7 +116,7 @@ void Map::computeDecor(void)
 	int offsetPosX;
 	int height;
 	int offsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
-	for (auto it = m_decors.begin(); it != m_decors.end(); it++)
+	for (auto it = m_decorPositions.begin(); it != m_decorPositions.end(); it++)
 	{
 		offset = offsetX;
 		offsetPosX = it->first;
@@ -139,25 +139,19 @@ void Map::computeDecor(void)
 		vec[0] = static_cast<float>(it->first);
 		vec[1] = m_depth;
 		height = static_cast<int>((firstCurve(vec) + 1.f) * static_cast<float>(m_biome->mn_height) / 2.f);
-		it->second->setStartTransition(0, sf::Vector2f(offsetPosX * Tile::TileSize, height * Tile::TileSize));
-		vec[0] = static_cast<float>(offsetPosX);
-		vec[1] = static_cast<float>(height);
-		vec[2] = m_depth;
-		it->second->setNoiseValue((secondCurve(vec) + 1.f) / 2.f);
-		setColor(*it->second);
+		it->second.x = offsetPosX * Tile::TileSize;
+		it->second.y = height * Tile::TileSize;
+		//vec[0] = static_cast<float>(offsetPosX);
+		//vec[1] = static_cast<float>(height);
+		//vec[2] = m_depth;
+		//it->second->setNoiseValue((secondCurve(vec) + 1.f) / 2.f);
+		//setColor(*it->second);
 	}
 }
 
-sf::Vertex * Map::getHeight(int x)
+void Map::registerDecor(int x)
 {
-	auto it = m_decors.find(x);
-	if (it == m_decors.end())
-	{
-		m_decors[x] = &m_reserveTile[m_decorTileCount];
-		m_decors[x]->setUpLeft(&m_vertices[m_decorTileCount]);
-		m_decorTileCount++;
-	}
-	return m_decors[x]->getUpLeft();
+	m_decorPositions.emplace_back(std::pair<int, sf::Vector2f>(x, sf::Vector2f()));
 }
 
 float Map::firstCurve(float * vec)

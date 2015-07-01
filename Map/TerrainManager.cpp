@@ -19,10 +19,9 @@ TerrainManager::TerrainManager(void) :
 
 void TerrainManager::init(Biome * biome)
 {
+	// Init maps
 	m_tiles.reset(new MapInstance());
 	m_tilesPrev.reset(new MapInstance());
-
-	// Init maps and biome
 	m_tiles->init(biome);
 	m_tilesPrev->init(biome);
 
@@ -33,13 +32,10 @@ void TerrainManager::init(Biome * biome)
 	// Init vertices
 	m_vertices.reset(new sf::Vertex[m_tiles->getRows() * m_tiles->getColumns() * 4u]);
 
+	// Init physics
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
-	// TODO: use vector instead of array
 	m_tileShapes.resize(m_tiles->getColumns(), m_tiles->getRows(), nullptr);
-
 	PhysicsEngine::getInstance().setTileMapSize(sf::Vector2i(m_tiles->getColumns(), m_tiles->getRows()));
-
-
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
 		m_tileShapes(x, 0u) = builder.createTile(x, 0u);
@@ -47,6 +43,12 @@ void TerrainManager::init(Biome * biome)
 	}
 
 	m_transitionTimerMax = biome->mf_transitionTimerMax;
+
+	// Init decors
+	//m_decorPositions.resize(biome.getDecorCount());
+	// Loop over each decor to generate x and register it in maps
+	// m_tiles->registerDecor(x);
+	// m_tilesPrev->registerDecor(x);
 }
 
 void TerrainManager::setTransitionAppear(int x, int y)
@@ -178,16 +180,15 @@ void TerrainManager::updateTransition(void)
 		}
 	}
 
-	/* TODO: change decor and use vertex instead of tile
 	// Update decors
-	auto tiles = m_tiles->getDecors();
-	auto tilesPrev = m_tilesPrev->getDecors();
-	for (auto it = tiles.begin(), itPrev = tilesPrev.begin(); it != tiles.end(); it++, itPrev++)
+	Map::Iterator it;
+	Map::Iterator itPrev;
+	std::size_t index = 0u;
+	for (it = m_tiles->begin(), itPrev = m_tilesPrev->begin(); it != m_tiles->end(); it++, itPrev++, index++)
 	{
-		itPrev->second->mp_upLeft->position.y = octo::linearInterpolation(itPrev->second->m_startTransition[0].y, it->second->m_startTransition[0].y, transition) - Tile::DoubleTileSize;
-		itPrev->second->mp_upLeft->position.x = it->second->m_startTransition[0].x - Tile::DoubleTileSize;
-		itPrev->second->mp_upLeft->color = octo::linearInterpolation(itPrev->second->getStartColor(), it->second->getStartColor(), transition);
-	}*/
+		m_decorPositions[index].y = octo::linearInterpolation(itPrev->second.y, it->second.y, transition) - Tile::DoubleTileSize;
+		m_decorPositions[index].x = it->first - Tile::DoubleTileSize;
+	}
 }
 
 void TerrainManager::defineTransitionBorderTileRange(int startX, int endX, int startY, int endY)

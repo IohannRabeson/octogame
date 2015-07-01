@@ -11,7 +11,6 @@ public:
 	TerrainManager(void);
 	virtual ~TerrainManager(void) = default;
 
-	inline sf::Vertex * getHeight(int x) { m_tiles->getHeight(x); return m_tilesPrev->getHeight(x); }
 	// Only used by StaticObjectManager to compute initial position
 	inline void computeDecor(void) { m_tiles->computeDecor(); }
 
@@ -29,6 +28,7 @@ private:
 	std::size_t						m_verticesCount;
 	sf::Vector2i					m_oldOffset;
 	octo::Array2D<TileShape *>		m_tileShapes;
+	std::vector<sf::Vector2f>		m_decorPositions;
 
 	inline void defineTransition(void) { defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows()); }
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
