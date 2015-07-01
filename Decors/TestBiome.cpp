@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "TestBiome.hpp"
+#include "RandomGenerator.hpp"
 
 #include <iostream>
 
@@ -52,6 +53,7 @@ TestBiome::TestBiome() :
 	m_moonColor(255, 105, 180),
 	m_canCreateMoon(false)
 {
+	RandomGenerator::setSeed("test_biome");
 }
 
 void			TestBiome::setup(std::size_t seed)

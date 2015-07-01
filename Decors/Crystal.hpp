@@ -4,6 +4,7 @@
 # include "ADecor.hpp"
 # include "ShineEffect.hpp"
 # include "DecorAnimator.hpp"
+# include "RandomGenerator.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
@@ -32,6 +33,7 @@ private:
 	std::vector<CrystalValue>	m_values;
 	DecorAnimator				m_animator;
 	float						m_animation;
+	RandomGenerator				m_generator;
 
 	ShineEffect					m_shine;
 	std::vector<sf::Vector2f>	m_up;
@@ -53,10 +55,6 @@ private:
 						octo::VertexBuilder & builder);
 
 private:
-	static std::mt19937 s_engine;
-	static float randomFloat(float min, float max);
-	static float randomInt(int min, int max);
-
 	static void rotateVec(sf::Vector2f & vector,
 							float const cosAngle,
 							float const sinAngle);

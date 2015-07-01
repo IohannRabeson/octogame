@@ -3,8 +3,6 @@
 #include <Interpolations.hpp>
 #include <Math.hpp>
 
-std::mt19937 Crystal::s_engine;
-
 Crystal::Crystal() :
 	m_partCount(0u),
 	m_animator(1.f, 0.f, 3.f, 0.1f),
@@ -13,8 +11,6 @@ Crystal::Crystal() :
 	m_shineTimer(sf::seconds(0.f)),
 	m_shineTimerMax(sf::seconds(0.f))
 {
-	std::random_device rd;
-	s_engine.seed(rd());
 }
 
 void Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & origin, float const angle, sf::Color color, sf::Vector2f & up, sf::Vector2f & upLeft, octo::VertexBuilder & builder)
@@ -89,14 +85,14 @@ void Crystal::setup(ABiome& biome)
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		m_values[i].size = biome.getCrystalSize();
-		m_values[i].angle = randomFloat(-45.f + (i * 90.f / m_partCount), -45.f + ((i + 1) * 90.f / m_partCount));
-		int deltaColor = randomFloat(0.f, 80.f);
+		m_values[i].angle = m_generator.randomFloat(-45.f + (i * 90.f / m_partCount), -45.f + ((i + 1) * 90.f / m_partCount));
+		int deltaColor = m_generator.randomFloat(0.f, 80.f);
 		m_values[i].color = m_color + sf::Color(deltaColor, deltaColor, deltaColor, 0);
 	}
 	m_animator.setup();
 	m_shine.setup(biome);
 	m_shineTimerMax = sf::seconds(m_shine.getAnimator().getAnimationTime());
-	m_shineCrystalNumber = randomInt(0, m_partCount - 1);
+	m_shineCrystalNumber = m_generator.randomInt(0, m_partCount - 1);
 }
 
 void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
@@ -113,7 +109,7 @@ void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& b
 		if (m_shineTimer >= m_shineTimerMax)
 		{
 			m_shineTimer -= m_shineTimerMax;
-			m_shineCrystalNumber = randomInt(0, m_partCount - 1);
+			m_shineCrystalNumber = m_generator.randomInt(0, m_partCount - 1);
 		}
 		float interpolateValue = m_shineTimer / m_shineTimerMax;
 
@@ -130,16 +126,3 @@ void Crystal::rotateVec(sf::Vector2f & vector, float const cosAngle, float const
 	vector.x = x;
 }
 
-float Crystal::randomFloat(float min, float max)
-{
-	std::uniform_real_distribution<float> distribution(min, max);
-	return distribution(s_engine);
-}
-
-float Crystal::randomInt(int min, int max)
-{
-	if (max - min == 0)
-		return max;
-	std::uniform_int_distribution<int> distribution(min, max);
-	return distribution(s_engine);
-}
