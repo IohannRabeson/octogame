@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "TestBiome.hpp"
+#include "RandomGenerator.hpp"
 
 #include <iostream>
 
@@ -57,6 +58,7 @@ TestBiome::TestBiome() :
 	m_mapSize(512u, 128u),
 	m_transitionDuration(0.5f)
 {
+	RandomGenerator::setSeed("test_biome");
 }
 
 void			TestBiome::setup(std::size_t seed)
