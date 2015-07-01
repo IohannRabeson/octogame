@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 06:21:50 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/01 13:28:26 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 Game::Game() :
 	m_skyDecorManager(500)
 {
-	m_terrainManager.init(&m_mapManager, &m_biome);
 }
 
 void	Game::setup()

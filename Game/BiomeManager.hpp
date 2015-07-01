@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:16:51 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 05:57:53 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/01 13:31:36 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define BIOMEMANAGER_HPP
 # include <NonCopyable.hpp>
 # include <GenericFactory.hpp>
-
 # include <string>
 # include <memory>
 

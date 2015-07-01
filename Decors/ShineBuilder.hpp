@@ -2,7 +2,7 @@
 # define SHINEBUILDER_HPP
 
 # include "ADecor.hpp"
-# include "VertexBuilder.hpp"
+# include <VertexBuilder.hpp>
 
 class ShineBuilder : public ADecor
 {
