@@ -34,9 +34,7 @@ private:
 	std::vector<TileShape *>			m_tileShapes;
 	std::vector<sf::Vector2f>			m_decorPositions;
 	DecorManager						m_decorManager;
-	std::vector<DecorManager::Iterator>	m_decors;
 
-	void initDecors(ABiome & biome);
 	inline void defineTransition(void) { defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows()); }
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
 	void defineTransition(int x, int y);
@@ -45,6 +43,8 @@ private:
 	void setTransitionDisappear(int x, int y);
 	void setTransitionModify(int x, int y);
 
+	void initDecors(ABiome & biome);
+	void updateDecors(float pf_deltatime);
 	void swapMap(void);
 	void updateOffset(float pf_deltatime);
 	void updateTransition(void);

@@ -57,7 +57,6 @@ void GroundManager::initDecors(ABiome & biome)
 	m_decorManager.setup(&biome);
 	std::size_t groundDecorsCount = biome.getGroundDecorsCount();
 	std::size_t crystalsCount = biome.getCrystalsCount();
-	m_decors.resize(groundDecorsCount + crystalsCount);
 
 //	std::size_t mapSizeX = 300u;//biome.getMapSize().x;
 
@@ -85,9 +84,9 @@ void GroundManager::initDecors(ABiome & biome)
 			int chooseDecor = 1;//generator.randomInt(0, decorsTypeCount);
 
 			if (chooseDecor == 0)
-				m_decors[i] = m_decorManager.add(DecorManager::DecorTypes::Tree);
+				m_decorManager.add(DecorManager::DecorTypes::Tree);
 			else if (chooseDecor == 1)
-				m_decors[i] = m_decorManager.add(DecorManager::DecorTypes::Rock);
+				m_decorManager.add(DecorManager::DecorTypes::Rock);
 
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -96,10 +95,10 @@ void GroundManager::initDecors(ABiome & biome)
 
 	if (canCreateCrystal)
 	{
-		for (std::size_t i = 0; i < crystalsCount; i++)
+		for (std::size_t i = groundDecorsCount; i < crystalsCount + groundDecorsCount; i++)
 		{
 			int x = 40;//generator.randomInt(0.f, mapSizeX);
-			m_decors[i] = m_decorManager.add(DecorManager::DecorTypes::Crystal);
+			m_decorManager.add(DecorManager::DecorTypes::Crystal);
 
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -259,7 +258,7 @@ void GroundManager::updateTransition(void)
 	for (it = m_tiles->begin(), itPrev = m_tilesPrev->begin(); it != m_tiles->end(); it++, itPrev++, index++)
 	{
 		m_decorPositions[index].y = octo::linearInterpolation(itPrev->second.y, it->second.y, transition) - Tile::DoubleTileSize;
-		m_decorPositions[index].x = it->first - Tile::DoubleTileSize;
+		m_decorPositions[index].x = (it->first * Tile::TileSize) - Tile::DoubleTileSize;
 	}
 }
 
@@ -341,8 +340,8 @@ void GroundManager::updateOffset(float)
 			{
 				m_tiles->computeMapRangeY(0, -ofY);
 				m_tilesPrev->computeMapRangeY(0, -ofY);
-				defineTransitionBorderTileRange(m_tiles->getColumns() - ofX - 1, m_tiles->getColumns(), -ofY, m_tiles->getRows());
-				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, -ofY);
+				defineTransitionBorderTileRange(m_tiles->getColumns() - ofX - 1, m_tiles->getColumns(), -ofY + 1, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, -ofY + 1);
 			}
 			else
 			{
@@ -402,6 +401,16 @@ void GroundManager::updateOffset(float)
 	}
 }
 
+void GroundManager::updateDecors(float pf_deltatime)
+{
+	std::size_t i = 0;
+	for (auto it = m_decorManager.begin(); it != m_decorManager.end(); it++, i++)
+		(*it)->setPosition(m_decorPositions[i]);
+
+	octo::Camera& camera = octo::Application::getCamera();
+	m_decorManager.update(sf::seconds(pf_deltatime), camera);
+}
+
 void GroundManager::update(float pf_deltatime)
 {
 	bool compute = false;
@@ -436,9 +445,11 @@ void GroundManager::update(float pf_deltatime)
 	}
 	updateOffset(pf_deltatime);
 	updateTransition();
+	updateDecors(pf_deltatime);
 }
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	m_decorManager.draw(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
