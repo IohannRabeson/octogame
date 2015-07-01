@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 02:17:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 19:42:39 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/27 17:53:25 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,10 @@ public:
 	virtual sf::Vector2f 	getMoonSize() = 0;
 	virtual sf::Color		getMoonColor() = 0;
 	virtual bool			canCreateMoon() = 0;
+
+	virtual sf::Vector2u const & getMapSize() = 0;
+	virtual float getTransitionDuration() = 0;
+
 };
 
 #endif

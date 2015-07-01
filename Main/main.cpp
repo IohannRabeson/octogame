@@ -25,7 +25,6 @@
 #include "AnimatedSpriteDemoScreen.hpp"
 #include "AudioDemoScreen.hpp"
 #include "DecorManagerDemoScreen.hpp"
-#include "StateGame.hpp"
 #include "EngineScreen.hpp"
 #include "PhysicsMapScreen.hpp"
 #include "GameScreen.hpp"

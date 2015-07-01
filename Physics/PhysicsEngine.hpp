@@ -93,7 +93,6 @@ private:
 		float	max;
 	};
 
-	//TODO: std::pair
 	template<class T, class U>
 	struct Pair
 	{
@@ -115,6 +114,7 @@ private:
 	};
 
 	static constexpr std::size_t						MaxShapes = 1000u;
+	static constexpr std::size_t						MaxPairs = 1000u;
 
 	static std::unique_ptr<PhysicsEngine>				m_instance;
 
@@ -183,6 +183,7 @@ private:
 	template<class T, class U>
 	void narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t pairCount);
 
+	//TODO: adapt new system for circle and remove old useless function
 	template<class T>
 	void narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>>> & pairs, std::size_t pairCount);
 
