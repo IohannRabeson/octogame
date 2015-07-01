@@ -11,9 +11,9 @@ public:
 	~RandomGenerator(void) = default;
 
 	static void setSeed(std::string string);
-	static float randomFloat(float min, float max);
-	static int randomInt(int min, int max);
-	static bool randomBool(float percent);
+	float randomFloat(float min, float max);
+	int randomInt(int min, int max);
+	bool randomBool(float percent);
 
 private:
 	static std::mt19937								s_engine;

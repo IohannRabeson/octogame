@@ -53,8 +53,7 @@ TestBiome::TestBiome() :
 	m_moonColor(255, 105, 180),
 	m_canCreateMoon(false)
 {
-	RandomGenerator generator;
-	generator.setSeed("test_biome");
+	RandomGenerator::setSeed("test_biome");
 }
 
 void			TestBiome::setup(std::size_t seed)

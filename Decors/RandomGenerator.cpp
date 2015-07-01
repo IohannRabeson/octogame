@@ -3,16 +3,11 @@
 std::mt19937							RandomGenerator::s_engine;
 std::uniform_real_distribution<float>	RandomGenerator::s_distributionFloat;
 std::uniform_int_distribution<int>		RandomGenerator::s_distributionInt;
-std::bernoulli_distribution				RandomGenerator::s_distributionBool(0.5);
+std::bernoulli_distribution				RandomGenerator::s_distributionBool;
 std::string								RandomGenerator::s_lastSeed;
 
 RandomGenerator::RandomGenerator(void)
 {
-}
-
-RandomGenerator::RandomGenerator(std::string string)
-{
-	setSeed(string);
 }
 
 void RandomGenerator::setSeed(std::string string)
@@ -25,7 +20,7 @@ void RandomGenerator::setSeed(std::string string)
 	}
 	else if (string == "")
 	{
-		static std::random_device rd;
+		std::random_device rd;
 		s_engine.seed(rd());
 	}
 }
