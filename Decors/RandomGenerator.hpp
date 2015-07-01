@@ -7,13 +7,12 @@ class RandomGenerator
 {
 public:
 	RandomGenerator(void);
-	RandomGenerator(std::string string);
 	~RandomGenerator(void) = default;
 
 	static void setSeed(std::string string);
-	float randomFloat(float min, float max);
-	int randomInt(int min, int max);
-	bool randomBool(float percent);
+	static float randomFloat(float min, float max);
+	static int randomInt(int min, int max);
+	static bool randomBool(float percent);
 
 private:
 	static std::mt19937								s_engine;
