@@ -6,6 +6,7 @@
 class ConvexShape;
 class RectangleShape;
 class CircleShape;
+class TileShape;
 
 /*!
  * \ingroup Physic
@@ -26,8 +27,8 @@ public:
 	/*! Create a new RectangleShape */
 	RectangleShape * createRectangle(void);
 
-	/*! Create a new ConvexShape */
-	ConvexShape * createTile(std::size_t x, std::size_t y);
+	/*! Create a new TileShape */
+	TileShape * createTile(std::size_t x, std::size_t y);
 
 };
 

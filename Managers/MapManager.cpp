@@ -58,7 +58,7 @@ MapManager::~MapManager(void)
 void MapManager::init(void)
 {
 	// TransitionManager init the biome
-	m_terrainManager.init(this, &m_biome);
+	m_terrainManager.init(&m_biome);
 	if (!m_shader.loadFromMemory(m_wave, sf::Shader::Vertex))
 		std::cout << "caca" << std::endl;
 	//if (!m_shader.loadFromMemory(m_negative, sf::Shader::Fragment))
