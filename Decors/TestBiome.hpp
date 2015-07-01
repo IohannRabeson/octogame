@@ -27,6 +27,10 @@ public:
 	virtual void			setup(std::size_t seed);
 	virtual std::string		getName()const;
 
+	virtual std::size_t		getGroundDecorsCount();
+	virtual std::size_t		getCrystalsCount();
+	virtual std::size_t		getSkyDecorsCount();
+
 	virtual std::size_t		getTreeDepth();
 	virtual sf::Vector2f	getTreeSize();
 	virtual sf::Time		getTreeLifeTime();
@@ -112,6 +116,10 @@ public:
 	void					setMoonColor(sf::Color const& color);
 	void					setCanCreateMoon(bool canCreate);
 private:
+	std::size_t				m_groundDecorsCount;
+	std::size_t				m_crystalsCount;
+	std::size_t				m_skyDecorsCount;
+
 	std::size_t				m_treeDepth;
 	sf::Vector2f			m_treeSize;
 	sf::Time				m_treeLifeTime;

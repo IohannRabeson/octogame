@@ -2,7 +2,10 @@
 # define TERRAINMANAGER_HPP
 
 # include "Map.hpp"
+# include "DecorManager.hpp"
 
+class ADecor;
+class ABiome;
 class TileShape;
 
 class TerrainManager : public sf::Drawable
@@ -19,17 +22,20 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	std::unique_ptr<Map>			m_tiles;
-	std::unique_ptr<Map>			m_tilesPrev;
-	float							m_transitionTimer;
-	float							m_transitionTimerMax;
-	sf::Vector2f					m_offset;
-	std::unique_ptr<sf::Vertex[]>	m_vertices;
-	std::size_t						m_verticesCount;
-	sf::Vector2i					m_oldOffset;
-	octo::Array2D<TileShape *>		m_tileShapes;
-	std::vector<sf::Vector2f>		m_decorPositions;
+	std::unique_ptr<Map>				m_tiles;
+	std::unique_ptr<Map>				m_tilesPrev;
+	float								m_transitionTimer;
+	float								m_transitionTimerMax;
+	sf::Vector2f						m_offset;
+	std::unique_ptr<sf::Vertex[]>		m_vertices;
+	std::size_t							m_verticesCount;
+	sf::Vector2i						m_oldOffset;
+	octo::Array2D<TileShape *>			m_tileShapes;
+	std::vector<sf::Vector2f>			m_decorPositions;
+	DecorManager						m_decorManager;
+	std::vector<DecorManager::Iterator>	m_decors;
 
+	void initDecors(ABiome * biome);
 	inline void defineTransition(void) { defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows()); }
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
 	void defineTransition(int x, int y);
