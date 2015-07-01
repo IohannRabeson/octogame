@@ -173,6 +173,8 @@ void Tree::newTree(ABiome& biome)
 
 void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
+	if (biome.getTreeIsMoving() == false)
+		m_animator.sleep();
 	if (m_animator.update(frameTime))
 		newTree(biome);
 	m_animation = m_animator.getAnimation();
