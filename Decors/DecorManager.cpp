@@ -12,6 +12,8 @@
 
 #include "DecorManager.hpp"
 #include "ADecor.hpp"
+#include "Crystal.hpp"
+#include "Star.hpp"
 #include "Cloud.hpp"
 #include "Rock.hpp"
 #include "Tree.hpp"
@@ -100,6 +102,8 @@ void	DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	DecorManager::registerDecors()
 {
+	m_factory.registerCreator<Crystal>(DecorTypes::Crystal);
+	m_factory.registerCreator<Star>(DecorTypes::Star);
 	m_factory.registerCreator<Cloud>(DecorTypes::Cloud);
 	m_factory.registerCreator<Rock>(DecorTypes::Rock);
 	m_factory.registerCreator<Tree>(DecorTypes::Tree);

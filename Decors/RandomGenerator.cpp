@@ -3,6 +3,7 @@
 std::mt19937							RandomGenerator::s_engine;
 std::uniform_real_distribution<float>	RandomGenerator::s_distributionFloat;
 std::uniform_int_distribution<int>		RandomGenerator::s_distributionInt;
+std::bernoulli_distribution				RandomGenerator::s_distributionBool(0.5);
 std::string								RandomGenerator::s_lastSeed;
 
 RandomGenerator::RandomGenerator(void)
@@ -41,3 +42,8 @@ int RandomGenerator::randomInt(int min, int max)
 	return s_distributionInt(s_engine);
 }
 
+bool RandomGenerator::randomBool(float percent)
+{
+	s_distributionBool.param(std::bernoulli_distribution::param_type(percent));
+	return s_distributionBool(s_engine);
+}

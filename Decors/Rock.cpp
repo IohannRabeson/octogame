@@ -22,8 +22,9 @@ void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin,
 	sf::Vector2f downMidLeft(-size.x, 0.f);
 	sf::Vector2f downMidRight(size.x, 0.f);
 	sf::Vector2f recUp(upLeft.x + sizeRec, upLeft.y);
-	sf::Vector2f recLeft(upLeft.x, upLeft.y + 4.f);
-	sf::Vector2f recRight(recUp.x, recUp.y + 4.f);
+	//TODO: Not a clean way to set rec size
+	sf::Vector2f recLeft(upLeft.x, upLeft.y + (4.f * m_animation));
+	sf::Vector2f recRight(recUp.x, recUp.y + (4.f * m_animation));
 
 	// Avoid under limit point when grows
 	midLeft.y = midLeft.y > 0.f ? 0.f : midLeft.y;
