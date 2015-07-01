@@ -2,6 +2,9 @@
 #include "MapInstance.hpp"
 #include "TileShape.hpp"
 #include "PhysicsEngine.hpp"
+//#include "RandomGenerator.hpp"
+#include "ADecor.hpp"
+#include "ABiome.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -14,7 +17,8 @@ TerrainManager::TerrainManager(void) :
 	m_offset(),
 	m_vertices(nullptr),
 	m_verticesCount(0u),
-	m_oldOffset(0, 0)
+	m_oldOffset(0, 0),
+	m_decorManager(200000)
 {}
 
 void TerrainManager::init(Biome * biome)
@@ -47,6 +51,55 @@ void TerrainManager::init(Biome * biome)
 	}
 
 	m_transitionTimerMax = biome->mf_transitionTimerMax;
+}
+
+void TerrainManager::initDecors(ABiome * biome)
+{
+	m_decorManager.setup(biome);
+	std::size_t groundDecorsCount = biome->getGroundDecorsCount();
+	std::size_t crystalsCount = biome->getCrystalsCount();
+	m_decors.resize(groundDecorsCount + crystalsCount);
+
+//	std::size_t mapSizeX = 300u;//biome->getMapSize().x;
+
+	bool canCreateCrystal = biome->canCreateCrystal();
+
+	bool canCreateTree = biome->canCreateTree();
+	bool canCreateRock = biome->canCreateRock();
+
+	//TODO: Think of an other way to do that
+	int decorsTypeCount = canCreateTree + canCreateRock - 1;
+	if (decorsTypeCount != -1)
+	{
+		std::vector<int> decorsType;
+		decorsType.reserve(decorsTypeCount);
+		if (canCreateTree)
+			decorsType.push_back(0);
+		if (canCreateRock)
+			decorsType.push_back(1);
+
+//		RandomGenerator generator;
+
+		for (std::size_t i = 0; i < groundDecorsCount; i++)
+		{
+			//int x = 20;//generator.randomInt(0.f, mapSizeX);
+			int chooseDecor = 1;//generator.randomInt(0, decorsTypeCount);
+
+			if (chooseDecor == 0)
+				m_decors[i] = m_decorManager.add(DecorManager::DecorTypes::Tree);
+			else if (chooseDecor == 1)
+				m_decors[i] = m_decorManager.add(DecorManager::DecorTypes::Rock);
+		}
+	}
+
+	if (canCreateCrystal)
+	{
+		for (std::size_t i = 0; i < crystalsCount; i++)
+		{
+			//int x = 40;//generator.randomInt(0.f, mapSizeX);
+		m_decors[i] = m_decorManager.add(DecorManager::DecorTypes::Crystal);
+		}
+	}
 }
 
 void TerrainManager::setTransitionAppear(int x, int y)

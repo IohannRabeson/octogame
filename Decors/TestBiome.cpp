@@ -15,6 +15,9 @@
 #include <iostream>
 
 TestBiome::TestBiome() :
+	m_groundDecorsCount(50u),
+	m_crystalsCount(20u),
+	m_skyDecorsCount(40u),
 	m_treeDepth(8u),
 	m_treeSize(30.f, 200.f),
 	m_treeLifeTime(sf::seconds(1)),
@@ -63,6 +66,22 @@ void			TestBiome::setup(std::size_t seed)
 std::string		TestBiome::getName()const
 {
 	return ("Biome Test");
+}
+
+
+std::size_t		TestBiome::getGroundDecorsCount()
+{
+	return (m_groundDecorsCount);
+}
+
+std::size_t		TestBiome::getCrystalsCount()
+{
+	return (m_crystalsCount);
+}
+
+std::size_t		TestBiome::getSkyDecorsCount()
+{
+	return (m_skyDecorsCount);
 }
 
 std::size_t	TestBiome::getTreeDepth()

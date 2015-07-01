@@ -29,7 +29,11 @@ public:
 	virtual void			setup(std::size_t seed) = 0;
 	virtual std::string		getName()const = 0;
 
-	virtual std::size_t		getTreeDepth()= 0;
+	virtual std::size_t		getGroundDecorsCount() = 0;
+	virtual std::size_t		getCrystalsCount() = 0;
+	virtual std::size_t		getSkyDecorsCount() = 0;
+
+	virtual std::size_t		getTreeDepth() = 0;
 	virtual sf::Vector2f	getTreeSize() = 0;
 	virtual sf::Time		getTreeLifeTime() = 0;
 	virtual sf::Color		getTreeColor() = 0;
