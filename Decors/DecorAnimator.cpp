@@ -1,6 +1,5 @@
 #include "DecorAnimator.hpp"
-
-std::mt19937	DecorAnimator::m_engine;
+#include "RandomGenerator.hpp"
 
 DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, float delta) :
 	m_currentState(e_state_grow),
@@ -17,9 +16,8 @@ DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, floa
 	m_beatDirection(true),
 	m_beatDelta(delta)
 {
-	std::random_device rd;
-	m_engine.seed(rd());
-	m_finalAnimation = 1.0f - m_beatDelta + randomFloat(0.f, 0.1f);
+	RandomGenerator generator;
+	m_finalAnimation = 1.0f - m_beatDelta + generator.randomFloat(0.f, 0.1f);
 }
 
 void DecorAnimator::computeBeat(float frameTime)
@@ -136,13 +134,5 @@ bool DecorAnimator::update(sf::Time frameTime)
 float DecorAnimator::getAnimation(void) const
 {
 	return m_animation;
-}
-
-float DecorAnimator::randomFloat(float min, float max)
-{
-	if (max - min == 0)
-		return max;
-	std::uniform_real_distribution<float> distribution(min, max);
-	return distribution(m_engine);
 }
 

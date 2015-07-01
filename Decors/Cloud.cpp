@@ -1,7 +1,6 @@
 #include "Cloud.hpp"
+#include "RandomGenerator.hpp"
 #include "ABiome.hpp"
-
-std::mt19937	Cloud::m_engine;
 
 Cloud::Cloud() :
 	m_partCount(0),
@@ -9,8 +8,6 @@ Cloud::Cloud() :
 	m_animation(1.f),
 	m_lifeTime(sf::Time::Zero)
 {
-	std::random_device rd;
-	m_engine.seed(rd());
 }
 
 void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color color, float const sizeUp, float const sizeDown, float const sizeRec, octo::VertexBuilder& builder)
@@ -93,7 +90,8 @@ void Cloud::newCloud(ABiome& biome)
 {
 	m_size = biome.getCloudSize();
 	m_color = biome.getCloudColor();
-	m_color.a = randomFloat(80.f, 200.f);
+	RandomGenerator generator;
+	m_color.a = generator.randomFloat(80.f, 200.f);
 
 	std::size_t i = 0;
 	float totalY = 0;
@@ -107,17 +105,17 @@ void Cloud::newCloud(ABiome& biome)
 	while (i < m_partCount / 2)
 	{
 		//TODO: Find a better way to have more random values here
-		size.y = randomFloat(cornerSize * 0.5f, cornerSize);
+		size.y = generator.randomFloat(cornerSize * 0.5f, cornerSize);
 		totalY += size.y;
 		size.x -= totalY;
-		origin.y += randomFloat(-totalY, 0.f);
+		origin.y += generator.randomFloat(-totalY, 0.f);
 		if (size.y * 2 < size.x)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeUp = randomFloat(size.y, size.y * 2);
-			m_values[i].sizeDown = randomFloat(size.y, size.y * 2);
-			m_values[i].sizeRec = randomFloat(10, size.y * 2);
+			m_values[i].sizeUp = generator.randomFloat(size.y, size.y * 2);
+			m_values[i].sizeDown = generator.randomFloat(size.y, size.y * 2);
+			m_values[i].sizeRec = generator.randomFloat(10, size.y * 2);
 		}
 		else
 			break;
@@ -134,17 +132,17 @@ void Cloud::newCloud(ABiome& biome)
 	while (i < m_partCount)
 	{
 		//TODO: Find a better way to have more random values here
-		size.y = randomFloat(cornerSize * 0.5f, cornerSize);
+		size.y = generator.randomFloat(cornerSize * 0.5f, cornerSize);
 		totalY += size.y;
 		size.x -= totalY;
-		origin.y += randomFloat(0.0f, totalY);
+		origin.y += generator.randomFloat(0.0f, totalY);
 		if (size.y * 2 < size.x)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeUp = randomFloat(size.y, size.y * 2);
-			m_values[i].sizeDown = randomFloat(size.y, size.y * 2);
-			m_values[i].sizeRec = randomFloat(10, size.y * 2);
+			m_values[i].sizeUp = generator.randomFloat(size.y, size.y * 2);
+			m_values[i].sizeDown = generator.randomFloat(size.y, size.y * 2);
+			m_values[i].sizeRec = generator.randomFloat(10, size.y * 2);
 		}
 		i++;
 	}
@@ -159,13 +157,5 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 
 	sf::Vector2f const & position = getPosition();
 	createCloud(m_values, position, m_color, builder);
-}
-
-float Cloud::randomFloat(float min, float max)
-{
-	if (max - min == 0)
-		return max;
-	std::uniform_real_distribution<float> distribution(min, max);
-	return distribution(m_engine);
 }
 

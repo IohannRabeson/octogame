@@ -50,10 +50,6 @@ private:
 
 	bool			computeState(float frameTime);
 	void			computeBeat(float frameTime);
-
-private:
-	static			std::mt19937 m_engine;
-	static float	randomFloat(float min, float max);
 };
 
 #endif
