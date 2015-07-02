@@ -110,29 +110,38 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 void Map::computeDecor(void)
 {
 	float vec[3];
-	int offset;
-	int offsetPosX;
 	int height;
-	int offsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+	int offsetX;
+	int offsetPosX;
+	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
 	for (auto it = m_decorPositions.begin(); it != m_decorPositions.end(); it++)
 	{
-		offset = offsetX;
+		offsetX = curOffsetX;
 		offsetPosX = it->first;
-		while (offset < 0)
+		while (offsetX < 0)
 		{
-			offset += m_mapSize.x;
+			offsetX += m_mapSize.x;
 			offsetPosX -= m_mapSize.x;
 		}
-		while (offset >= static_cast<int>(m_mapSize.x))
+		while (offsetX >= static_cast<int>(m_mapSize.x))
 		{
-			offset -= m_mapSize.x;
+			offsetX -= m_mapSize.x;
 			offsetPosX += m_mapSize.x;
 		}
-		int border = offset + static_cast<int>(m_tiles.columns());
+		int border = offsetX + static_cast<int>(m_tiles.columns()) + 20;
 		if (border > static_cast<int>(m_mapSize.x))
 		{
-			if (it->first < (border % static_cast<int>(m_mapSize.x)) + 20)
+			if (it->first < (border % static_cast<int>(m_mapSize.x)) + static_cast<int>(m_tiles.columns()))
 				offsetPosX += m_mapSize.x;
+			else if (it->first < 40)
+			{
+				offsetPosX += m_mapSize.x;
+			}
+		}
+		else if (offsetX < 60)
+		{
+			if (it->first > static_cast<int>(m_mapSize.x) - 40)
+				offsetPosX -= m_mapSize.x;
 		}
 		vec[0] = static_cast<float>(it->first);
 		vec[1] = m_depth;

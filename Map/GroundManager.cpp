@@ -256,8 +256,8 @@ void GroundManager::updateTransition(void)
 	std::size_t index = 0u;
 	for (it = m_tiles->begin(), itPrev = m_tilesPrev->begin(); it != m_tiles->end(); it++, itPrev++, index++)
 	{
-		m_decorPositions[index].y = octo::linearInterpolation(itPrev->second.y, it->second.y, transition) - Tile::DoubleTileSize;
-		m_decorPositions[index].x = (it->first * Tile::TileSize) - Tile::DoubleTileSize;
+		m_decorPositions[index].y = octo::linearInterpolation(itPrev->second.y, it->second.y, transition);
+		m_decorPositions[index].x = it->second.x;
 	}
 }
 
