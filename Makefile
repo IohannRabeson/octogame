@@ -1,8 +1,8 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Octo Decors Physics
+DIRS = Main Firefly Screens Map Octo Decors Physics Game
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
-BUILD_DIR = ./builds/game/
+BUILD_DIR = ./builds/game
 OUTPUT_DIR = .
 # libraries directories (ex: ../libft)
 LIB_DIRS = $(CORE_DIR)
@@ -17,6 +17,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_MAP)										\
 	  $(SRC_OCTO)										\
 	  $(SRC_DECORS)										\
+	  $(SRC_GAME)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp
 
@@ -29,7 +30,11 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/EngineScreen.cpp				\
 				Screens/PhysicsMapScreen.cpp			\
 				Screens/DecorManagerDemoScreen.cpp		\
+				Screens/GameScreen.cpp					\
 				Screens/ParticleDemoScreen.cpp
+
+SRC_GAME =		Game/Game.cpp							\
+				Game/BiomeManager.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -46,7 +51,12 @@ SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp					\
+				Decors/RandomGenerator.cpp				\
 				Decors/DecorAnimator.cpp				\
+				Decors/Crystal.cpp						\
+				Decors/ShineBuilder.cpp					\
+				Decors/ShineEffect.cpp					\
+				Decors/Star.cpp							\
 				Decors/Cloud.cpp						\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\
@@ -84,7 +94,7 @@ SRCS = $(SRC)
 CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = release
+MODE = debug
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)

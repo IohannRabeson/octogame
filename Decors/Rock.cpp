@@ -1,15 +1,12 @@
 #include "Rock.hpp"
+#include "RandomGenerator.hpp"
 #include "ABiome.hpp"
-
-std::mt19937	Rock::m_engine;
 
 Rock::Rock() :
 	m_partCount(1u),
 	m_animator(1.f, 0.f, 3.f, 0.1f),
 	m_animation(1.f)
 {
-	std::random_device rd;
-	m_engine.seed(rd());
 }
 
 void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float const & sizeLeft, float const & sizeRight, float const & sizeRec, sf::Vector2f const & rockOrigin, octo::VertexBuilder& builder)
@@ -25,8 +22,9 @@ void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin,
 	sf::Vector2f downMidLeft(-size.x, 0.f);
 	sf::Vector2f downMidRight(size.x, 0.f);
 	sf::Vector2f recUp(upLeft.x + sizeRec, upLeft.y);
-	sf::Vector2f recLeft(upLeft.x, upLeft.y + 4.f);
-	sf::Vector2f recRight(recUp.x, recUp.y + 4.f);
+	//TODO: Not a clean way to set rec size
+	sf::Vector2f recLeft(upLeft.x, upLeft.y + (4.f * m_animation));
+	sf::Vector2f recRight(recUp.x, recUp.y + (4.f * m_animation));
 
 	// Avoid under limit point when grows
 	midLeft.y = midLeft.y > 0.f ? 0.f : midLeft.y;
@@ -86,6 +84,7 @@ void Rock::setup(ABiome& biome)
 	float cornerSize = m_size.x / (m_partCount * 2.f);
 	float totalX = 0.f;
 	sf::Vector2f size;
+	RandomGenerator generator;
 
 	// Compute left random values
 	size.x = cornerSize;
@@ -93,17 +92,17 @@ void Rock::setup(ABiome& biome)
 	sf::Vector2f origin(0.f, 0.f);
 	while (i < m_partCount / 2.f)
 	{
-		size.x = randomFloat(cornerSize * 0.5f, cornerSize);
+		size.x = generator.randomFloat(cornerSize * 0.5f, cornerSize);
 		totalX += size.x;
 		size.y -= totalX;
-		origin.x += randomFloat(-totalX, 0.f);
+		origin.x += generator.randomFloat(-totalX, 0.f);
 		if (size.x * 2.f < size.y)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeLeft = randomFloat(size.x, size.x * 2.f);
-			m_values[i].sizeRight = randomFloat(size.x, size.x * 2.f);
-			m_values[i].sizeRec = randomFloat(0.f, size.x * 2.f);
+			m_values[i].sizeLeft = generator.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRight = generator.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRec = generator.randomFloat(0.f, size.x * 2.f);
 		}
 		else
 			break;
@@ -119,17 +118,17 @@ void Rock::setup(ABiome& biome)
 	origin = sf::Vector2f(0.f + size.x, 0.f);
 	while (i < m_partCount)
 	{
-		size.x = randomFloat(cornerSize * 0.5f, cornerSize);
+		size.x = generator.randomFloat(cornerSize * 0.5f, cornerSize);
 		totalX += size.x;
 		size.y -= totalX;
-		origin.x += randomFloat(0.0f, totalX);
+		origin.x += generator.randomFloat(0.0f, totalX);
 		if (size.x * 2.f < size.y)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeLeft = randomFloat(size.x, size.x * 2.f);
-			m_values[i].sizeRight = randomFloat(size.x, size.x * 2.f);
-			m_values[i].sizeRec = randomFloat(10.f, size.x * 2.f);
+			m_values[i].sizeLeft = generator.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRight = generator.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRec = generator.randomFloat(10.f, size.x * 2.f);
 		}
 		i++;
 	}
@@ -144,14 +143,5 @@ void Rock::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	sf::Vector2f const & position = getPosition();
 	//TODO: Test this with terrain
 	createRock(m_values, sf::Vector2f(position.x, position.y + m_size.x / 2.f), m_color, builder);
-}
-
-float Rock::randomFloat(float min, float max)
-{
-	if (max - min == 0)
-		return max;
-	std::uniform_real_distribution<float> distribution(min, max);
-
-	return distribution(m_engine);
 }
 

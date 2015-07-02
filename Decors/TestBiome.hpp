@@ -32,6 +32,7 @@ public:
 	virtual sf::Time		getTreeLifeTime();
 	virtual sf::Color		getTreeColor();
 	virtual float			getTreeAngle();
+	virtual bool			getTreeIsMoving();
 	virtual bool			canCreateTree();
 	virtual bool			canCreateLeaf();
 	virtual sf::Vector2f	getLeafSize();
@@ -41,6 +42,10 @@ public:
 	virtual std::size_t		getCrystalPartCount();
 	virtual sf::Color		getCrystalColor();
 	virtual bool			canCreateCrystal();
+	virtual sf::Vector2f	getShineEffectSize();
+	virtual sf::Color		getShineEffectColor();
+	virtual float			getShineEffectRotateAngle();
+	virtual bool			canCreateShineEffect();
 
 	virtual sf::Vector2f	getRockSize();
 	virtual std::size_t		getRockPartCount();
@@ -119,6 +124,7 @@ private:
 	sf::Time				m_treeLifeTime;
 	sf::Color				m_treeColor;
 	float					m_treeAngle;
+	bool					m_treeIsMoving;
 	bool					m_canCreateTree;
 	bool					m_canCreateLeaf;
 	sf::Vector2f			m_leafSize;
@@ -128,6 +134,11 @@ private:
 	std::size_t				m_crystalPartCount;
 	sf::Color				m_crystalColor;
 	bool					m_canCreateCrystal;
+
+	sf::Vector2f			m_shineEffectSize;
+	sf::Color				m_shineEffectColor;
+	float					m_shineEffectRotateAngle;
+	bool					m_canCreateShineEffect;
 
 	sf::Vector2f			m_rockSize;
 	std::size_t				m_rockPartCount;

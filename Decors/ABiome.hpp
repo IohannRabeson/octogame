@@ -34,6 +34,7 @@ public:
 	virtual sf::Time		getTreeLifeTime() = 0;
 	virtual sf::Color		getTreeColor() = 0;
 	virtual float			getTreeAngle() = 0;
+	virtual bool			getTreeIsMoving() = 0;
 	virtual bool			canCreateTree() = 0;
 	virtual bool			canCreateLeaf() = 0;
 	virtual sf::Vector2f	getLeafSize() = 0;
@@ -43,6 +44,10 @@ public:
 	virtual std::size_t		getCrystalPartCount() = 0;
 	virtual sf::Color		getCrystalColor() = 0;
 	virtual bool			canCreateCrystal() = 0;
+	virtual sf::Vector2f	getShineEffectSize() = 0;
+	virtual sf::Color		getShineEffectColor() = 0;
+	virtual float			getShineEffectRotateAngle() = 0;
+	virtual bool			canCreateShineEffect() = 0;
 
 	virtual sf::Vector2f	getRockSize() = 0;
 	virtual std::size_t		getRockPartCount() = 0;

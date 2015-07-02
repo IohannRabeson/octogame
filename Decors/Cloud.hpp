@@ -49,10 +49,6 @@ private:
 						octo::VertexBuilder& builder);
 
 	void newCloud(ABiome& biome);
-
-private:
-	static std::mt19937 m_engine;
-	static float randomFloat(float min, float max);
 };
 
 #endif

@@ -1,9 +1,7 @@
 #include "Tree.hpp"
 #include "ABiome.hpp"
+#include "RandomGenerator.hpp"
 #include <Math.hpp>
-
-std::bernoulli_distribution	Tree::m_distribution(0.5);
-std::default_random_engine	Tree::m_engine;
 
 Tree::Tree(void) :
 	m_depth(0u),
@@ -161,7 +159,8 @@ void Tree::newTree(ABiome& biome)
 	for (std::size_t i = 0u; i < m_angleMaxCount; i++)
 		m_refAngle[i] = biome.getTreeAngle();
 	m_animator.setup(biome.getTreeLifeTime());
-	m_growSide = Tree::getGrowSide();
+	RandomGenerator generator;
+	m_growSide = generator.randomBool(0.5);
 
 	m_isLeaf = biome.canCreateLeaf();
 
@@ -173,6 +172,8 @@ void Tree::newTree(ABiome& biome)
 
 void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
+	if (biome.getTreeIsMoving() == false)
+		m_animator.sleep();
 	if (m_animator.update(frameTime))
 		newTree(biome);
 	m_animation = m_animator.getAnimation();
@@ -187,10 +188,5 @@ void Tree::rotateVec(sf::Vector2f & vector, float const cosAngle, float const si
 	float x = vector.x * cosAngle - vector.y * sinAngle;
 	vector.y = vector.y * cosAngle + vector.x * sinAngle;
 	vector.x = x;
-}
-
-bool Tree::getGrowSide(void)
-{
-	return m_distribution(m_engine);
 }
 

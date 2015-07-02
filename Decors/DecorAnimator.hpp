@@ -21,7 +21,7 @@ enum EState
 };
 
 public:
-	DecorAnimator(float growTime = 2.f, float dieTime = 4.f, float beatTime = 3.f, float delta = 0.15f);
+	DecorAnimator(float growTime = 2.f, float dieTime = 4.f, float beatTime = 3.f, float delta = 0.15f, float start = 4.f);
 	virtual ~DecorAnimator(void) = default;
 
 	void			pause(void);
@@ -30,6 +30,7 @@ public:
 	void			setup(sf::Time lifeTime = sf::seconds(1.f));
 	bool			update(sf::Time frameTime);
 	float			getAnimation(void) const;
+	float			getAnimationTime(void) const;
 
 private:
 	EState			m_currentState;
@@ -37,6 +38,8 @@ private:
 	float			m_animation;
 	float			m_finalAnimation;
 
+	float			m_startTimer;
+	float			m_startTimerMax;
 	float			m_lifeTimer;
 	float			m_lifeTimerMax;
 	float			m_growTimer;
@@ -50,10 +53,6 @@ private:
 
 	bool			computeState(float frameTime);
 	void			computeBeat(float frameTime);
-
-private:
-	static			std::mt19937 m_engine;
-	static float	randomFloat(float min, float max);
 };
 
 #endif

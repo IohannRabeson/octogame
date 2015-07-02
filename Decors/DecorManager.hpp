@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 02:45:47 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 04:34:46 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 05:52:59 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <SFML/Graphics/Color.hpp>
 # include <SFML/Graphics/Vertex.hpp>
 # include <SFML/Graphics/RenderTarget.hpp>
+# include <SFML/Graphics/Drawable.hpp>
+# include <SFML/Graphics/Transformable.hpp>
 # include <SFML/System/Time.hpp>
 
 # include <cstddef>
@@ -30,7 +32,8 @@
 class ADecor;
 class ABiome;
 
-class DecorManager
+class DecorManager : public sf::Drawable,
+					 public sf::Transformable
 {
 	typedef std::list<ADecor*>		List;
 	typedef std::mt19937			RandomEngine;
