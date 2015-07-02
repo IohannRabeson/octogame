@@ -3,6 +3,7 @@
 
 Sun::Sun(void) :
 	m_partCount(1u),
+	m_animator(1.f, 0.f, 4.f, 0.1f),
 	m_animation(1.f),
 	m_glowingTimer(sf::Time::Zero),
 	m_glowingTimerMax(sf::seconds(3.f))
@@ -24,16 +25,29 @@ void Sun::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorn
 	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
 	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
 
-	builder.createTriangle(upLeft + origin, cornerUpLeft + origin, upMidLeft + origin, color);
-	builder.createTriangle(upRight + origin, cornerUpRight + origin, upMidRight + origin, color);
-	builder.createTriangle(downLeft + origin, cornerDownLeft + origin, downMidLeft + origin, color);
-	builder.createTriangle(downRight + origin, cornerDownRight + origin, downMidRight + origin, color);
+	upLeft += origin;
+	upRight += origin;
+	cornerUpLeft += origin;
+	cornerUpRight += origin;
+	upMidLeft += origin;
+	upMidRight += origin;
+	downLeft += origin;
+	downRight += origin;
+	cornerDownLeft += origin;
+	cornerDownRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
 
-	builder.createQuad(upLeft + origin, upRight + origin, cornerUpRight + origin, cornerUpLeft + origin, color);
-	builder.createQuad(cornerUpLeft + origin, cornerUpRight + origin, cornerDownRight + origin, cornerDownLeft + origin, color);
-	builder.createQuad(cornerDownLeft + origin, cornerDownRight + origin, downRight + origin, downLeft + origin, color);
-	builder.createQuad(upMidLeft + origin, cornerUpLeft + origin, cornerDownLeft + origin, downMidLeft + origin, color);
-	builder.createQuad(cornerUpRight + origin, upMidRight + origin, downMidRight + origin, cornerDownRight + origin, color);
+	builder.createTriangle(upLeft, cornerUpLeft, upMidLeft, color);
+	builder.createTriangle(upRight, cornerUpRight, upMidRight, color);
+	builder.createTriangle(downLeft, cornerDownLeft, downMidLeft, color);
+	builder.createTriangle(downRight, cornerDownRight, downMidRight, color);
+
+	builder.createQuad(upLeft, upRight, cornerUpRight, cornerUpLeft, color);
+	builder.createQuad(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, color);
+	builder.createQuad(cornerDownLeft, cornerDownRight, downRight, downLeft, color);
+	builder.createQuad(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, color);
+	builder.createQuad(cornerUpRight, upMidRight, downMidRight, cornerDownRight, color);
 }
 
 void Sun::createSun(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, std::size_t partCount, sf::Color color, octo::VertexBuilder& builder)
@@ -66,10 +80,14 @@ void Sun::setup(ABiome& biome)
 	m_sizeCorner = m_size / 2.f;
 	m_color = biome.getSunColor();
 	m_partCount = biome.getSunPartCount();
+	m_animator.setup();
 }
 
 void Sun::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
+
 	m_glowingTimer += frameTime;
 	if (m_glowingTimer > m_glowingTimerMax)
 		m_glowingTimer -= m_glowingTimerMax;

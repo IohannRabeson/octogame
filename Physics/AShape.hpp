@@ -29,7 +29,15 @@ public:
 	 * \param velocity New velocity
 	 * \see move, PhysicsEngine
 	 */
-	inline void setVelocity(sf::Vector2f const & velocity) { m_velocity = velocity; }
+	inline void setVelocity(sf::Vector2f const & velocity) { setVelocity(velocity.x, velocity.y); }
+
+	/*! Set the velocity
+	 * The velocity will be used to resolve the collision in the Engine
+	 *
+	 * \param velocity New velocity
+	 * \see move, PhysicsEngine
+	 */
+	inline void setVelocity(float x, float y) { m_velocity.x = x; m_velocity.y = y; }
 
 	/*! Set the origin
 	 * The origin of an object defines the point for transformation (move, rotate)
@@ -198,10 +206,10 @@ private:
 	sf::Vector2f			m_velocity;
 	sf::Vector2f			m_origin;
 	sf::Vector2f			m_position;
-	float				m_rotation;
-	bool				m_sleep;
-	bool				m_applyGravity;
-	Type				m_type;
+	float					m_rotation;
+	bool					m_sleep;
+	bool					m_applyGravity;
+	Type					m_type;
 	std::uint32_t			m_collisionType;
 	std::uint32_t			m_collisionMask;
 

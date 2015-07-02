@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 03:03:00 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 19:45:17 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/27 17:53:14 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ public:
 	virtual sf::Time		getTreeLifeTime();
 	virtual sf::Color		getTreeColor();
 	virtual float			getTreeAngle();
+	virtual bool			getTreeIsMoving();
 	virtual bool			canCreateTree();
 	virtual bool			canCreateLeaf();
 	virtual sf::Vector2f	getLeafSize();
@@ -41,6 +42,10 @@ public:
 	virtual std::size_t		getCrystalPartCount();
 	virtual sf::Color		getCrystalColor();
 	virtual bool			canCreateCrystal();
+	virtual sf::Vector2f	getShineEffectSize();
+	virtual sf::Color		getShineEffectColor();
+	virtual float			getShineEffectRotateAngle();
+	virtual bool			canCreateShineEffect();
 
 	virtual sf::Vector2f	getRockSize();
 	virtual std::size_t		getRockPartCount();
@@ -66,6 +71,9 @@ public:
 	virtual sf::Vector2f 	getMoonSize();
 	virtual sf::Color		getMoonColor();
 	virtual bool			canCreateMoon();
+
+	virtual sf::Vector2u const & getMapSize();
+	virtual float getTransitionDuration();
 
 	void					setTreeDepth(std::size_t depth);
 	void					setTreeSize(sf::Vector2f const& treeSize);
@@ -106,12 +114,17 @@ public:
 	void					setMoonSize(sf::Vector2f const& size);
 	void					setMoonColor(sf::Color const& color);
 	void					setCanCreateMoon(bool canCreate);
+
+	void					setMapSize(sf::Vector2u const & mapSize);
+	void					setTransitionDuration(float transitionDuration);
+
 private:
 	std::size_t				m_treeDepth;
 	sf::Vector2f			m_treeSize;
 	sf::Time				m_treeLifeTime;
 	sf::Color				m_treeColor;
 	float					m_treeAngle;
+	bool					m_treeIsMoving;
 	bool					m_canCreateTree;
 	bool					m_canCreateLeaf;
 	sf::Vector2f			m_leafSize;
@@ -121,6 +134,11 @@ private:
 	std::size_t				m_crystalPartCount;
 	sf::Color				m_crystalColor;
 	bool					m_canCreateCrystal;
+
+	sf::Vector2f			m_shineEffectSize;
+	sf::Color				m_shineEffectColor;
+	float					m_shineEffectRotateAngle;
+	bool					m_canCreateShineEffect;
 
 	sf::Vector2f			m_rockSize;
 	std::size_t				m_rockPartCount;
@@ -146,6 +164,10 @@ private:
 	sf::Vector2f			m_moonSize;
 	sf::Color				m_moonColor;
 	bool					m_canCreateMoon;
+
+	sf::Vector2u			m_mapSize;
+	float					m_transitionDuration;
+
 };
 
 #endif

@@ -1,8 +1,8 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Managers Octo Decors Physics
+DIRS = Main Firefly Screens Map Octo Decors Physics Game
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
-BUILD_DIR = ./builds/game/
+BUILD_DIR = ./builds/game
 OUTPUT_DIR = .
 # libraries directories (ex: ../libft)
 LIB_DIRS = $(CORE_DIR)
@@ -15,9 +15,9 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_STATES)										\
 	  $(SRC_FIREFLY)									\
 	  $(SRC_MAP)										\
-	  $(SRC_MANAGERS)									\
 	  $(SRC_OCTO)										\
 	  $(SRC_DECORS)										\
+	  $(SRC_GAME)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp
 
@@ -31,27 +31,33 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/PhysicsMapScreen.cpp			\
 				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/LightningDemoScreen.cpp			\
-				Screens/ParticleDemoScreen.cpp			\
-				Screens/StateGame.cpp
+				Screens/GameScreen.cpp					\
+				Screens/ParticleDemoScreen.cpp
+
+SRC_GAME =		Game/Game.cpp							\
+				Game/BiomeManager.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
 				Firefly/FireflyPositionBehaviors.cpp
 
 SRC_MAP =		Map/Map.cpp								\
-				Map/TerrainManager.cpp					\
+				Map/GroundManager.cpp					\
 				Map/MapInstance.cpp
-
-SRC_MANAGERS =	Managers/MapManager.cpp
 
 SRC_OCTO =		Octo/OctoNoise.cpp
 
-SRC_DECORS =	Decors/StaticTileObject.cpp				\
-				Decors/GameObject.cpp					\
+SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/DecorManager.cpp					\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp					\
+				Decors/RandomGenerator.cpp				\
+				Decors/DecorAnimator.cpp				\
+				Decors/Crystal.cpp						\
+				Decors/ShineBuilder.cpp					\
+				Decors/ShineEffect.cpp					\
+				Decors/Star.cpp							\
 				Decors/Cloud.cpp						\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\
@@ -64,6 +70,7 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/ConvexShape.cpp					\
 				Physics/CircleShape.cpp					\
 				Physics/Tile.cpp						\
+				Physics/TileShape.cpp					\
 				Physics/PhysicsEngine.cpp				\
 				Physics/ShapeBuilder.cpp				\
 				Physics/AShape.cpp
@@ -89,7 +96,7 @@ SRCS = $(SRC)
 CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = release
+MODE = debug
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)

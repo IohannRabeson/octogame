@@ -2,8 +2,10 @@
 #include "IContactListener.hpp"
 #include "ConvexShape.hpp"
 #include "CircleShape.hpp"
-#include "RectangleShape.hpp"
 #include "Tile.hpp"
+#include "TileShape.hpp"
+#include <Application.hpp>
+#include <Camera.hpp>
 #include <Math.hpp>
 #include <cassert>
 #include <limits>
@@ -14,21 +16,19 @@ PhysicsEngine::PhysicsEngine(void) :
 	m_polyPolyPairCount(0u),
 	m_polyCirclePairCount(0u),
 	m_circleCirclePairCount(0u),
-	m_projectionA(),
-	m_projectionB(),
-	m_axis(),
-	m_mtv(),
-	m_gravity(0.f, 800.f),
+	m_tilePolyPairCount(0u),
+	m_tileCirclePairCount(0u),
+	m_gravity(0.f, 400.f),
 	m_magnitude(0.f),
+	m_iterationCount(0u),
+	m_tileCollision(false),
 	m_contactListener(nullptr)
-{
-}
+{}
 
 PhysicsEngine::~PhysicsEngine(void)
 {
-	m_shapes.clear();
-	for (auto i = m_tileShapes.begin(); i != m_tileShapes.end(); i++)
-		delete (*i);
+	unregisterAllShapes();
+	unregisterAllTiles();
 }
 
 PhysicsEngine & PhysicsEngine::getInstance(void)
@@ -51,13 +51,24 @@ void PhysicsEngine::init(void)
 	m_shapes.reserve(MaxShapes);
 	m_circleShapes.reserve(MaxShapes);
 	m_polygonShapes.reserve(MaxShapes);
-	//TODO: get the right size
-	m_tileShapes.resize(200u, 200u, nullptr);
 
-	//TODO: use max pairs and assert in broadphae
-	m_polyPolyPairs.resize(1000u);
-	m_circleCirclePairs.resize(1000u);
-	m_polyCirclePairs.resize(1000u);
+	m_polyPolyPairs.resize(MaxPairs);
+	m_circleCirclePairs.resize(MaxPairs);
+	m_polyCirclePairs.resize(MaxPairs);
+
+	m_tilePolyPairs.resize(MaxPairs);
+	for (auto & vector : m_tilePolyPairs)
+		vector.reserve(MaxPairs);
+
+	m_tileCirclePairs.resize(MaxPairs);
+	for (auto & vector : m_tileCirclePairs)
+		vector.reserve(MaxPairs);
+}
+
+void PhysicsEngine::setTileMapSize(sf::Vector2i const & tileMapSize)
+{
+	m_tileShapes.resize(tileMapSize.x, tileMapSize.y, nullptr);
+	m_tileCollision = true;
 }
 
 void PhysicsEngine::registerShape(PolygonShape * shape)
@@ -76,17 +87,65 @@ void PhysicsEngine::registerShape(CircleShape * shape)
 	m_circleShapes.push_back(shape);
 }
 
-void PhysicsEngine::registerTile(PolygonShape * shape, int x,  int y)
+void PhysicsEngine::registerTile(TileShape * shape, std::size_t x,  std::size_t y)
 {
-	assert(m_shapes.size() < MaxShapes);
+	assert(x < m_tileShapes.columns() && y < m_tileShapes.rows());
 	m_tileShapes.set(x, y, shape);
+}
+
+void PhysicsEngine::unregisterShape(PolygonShape * shape)
+{
+	if (!shape)
+		return;
+	m_polygonShapes.erase(std::remove(m_polygonShapes.begin(), m_polygonShapes.end(), shape), m_polygonShapes.end());
+	m_shapes.erase(std::remove(m_shapes.begin(), m_shapes.end(), shape), m_shapes.end());
+	delete shape;
+}
+
+void PhysicsEngine::unregisterShape(CircleShape * shape)
+{
+	if (!shape)
+		return;
+	m_circleShapes.erase(std::remove(m_circleShapes.begin(), m_circleShapes.end(), shape), m_circleShapes.end());
+	m_shapes.erase(std::remove(m_shapes.begin(), m_shapes.end(), shape), m_shapes.end());
+	delete shape;
+}
+
+void PhysicsEngine::unregisterAllShapes(void)
+{
+	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
+		delete (*i);
+	m_shapes.clear();
+	m_polygonShapes.clear();
+	m_circleShapes.clear();
+}
+
+void PhysicsEngine::unregisterAllTiles(void)
+{
+	for (std::size_t x = 0u; x < m_tileShapes.columns(); x++)
+	{
+		for (std::size_t y = 0u; y < m_tileShapes.rows(); y++)
+		{
+			if (m_tileShapes.get(x, y))
+				delete (m_tileShapes.get(x, y));
+			m_tileShapes.get(x, y) = nullptr;
+		}
+	}
+	m_tileShapes.resize(0, 0);
+	m_tileCollision = false;
 }
 
 void PhysicsEngine::update(float deltatime)
 {
+	// Tile don't move so we update them now
+	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
+	{
+		if (!m_tileShapes.get(i, 0u)->getSleep())
+			m_tileShapes.get(i, 0u)->update();
+	}
 	// Add gravity
 	sf::Vector2f gravity = m_gravity * deltatime;
-	for (auto shape : m_shapes)
+	for (auto & shape : m_shapes)
 	{
 		if (!shape->getSleep() && shape->getApplyGravity())
 			shape->addVelocity(gravity);
@@ -96,7 +155,7 @@ void PhysicsEngine::update(float deltatime)
 	// Determine if pairs are colliding
 	narrowPhase();
 	// Apply the transformation computed by the collision manager
-	for (auto shape : m_shapes)
+	for (auto & shape : m_shapes)
 	{
 		if (!shape->getSleep())
 			shape->update();
@@ -105,72 +164,72 @@ void PhysicsEngine::update(float deltatime)
 
 void PhysicsEngine::broadPhase(void)
 {
-	m_polyPolyPairCount = 0u;
-	m_circleCirclePairCount = 0u;
-	m_polyCirclePairCount = 0u;
 	m_polyPolyPairCount = broadPhase(m_polygonShapes, m_polygonShapes, m_polyPolyPairs, true);
 	m_circleCirclePairCount = broadPhase(m_circleShapes, m_circleShapes, m_circleCirclePairs, true);
 	m_polyCirclePairCount = broadPhase(m_polygonShapes, m_circleShapes, m_polyCirclePairs);
+
+	if (m_tileCollision)
+	{
+		m_tilePolyPairCount = broadPhase(m_polygonShapes, m_tilePolyPairs);
+		m_tileCirclePairCount = broadPhase(m_circleShapes, m_tileCirclePairs);
+	}
 }
 
 template<class T>
-std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<Pair<ConvexShape *, T>> & pairs)
+std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<std::vector<Pair<TileShape *, T>>> & pairs)
 {
-	/*
-	for (std::size_t k = 0u; k < vector.size(); k++)
+	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
+	sf::FloatRect shapeAABB;
+	std::size_t count = 0u;
+	for (std::size_t i = 0u; i < pairs.size(); i++)
+		pairs[i].clear();
+	for (auto const & shape : vector)
 	{
-		sf::Rect<float> const & rect = vector[k]->getGlobalBounds();
-		int offsetX = static_cast<int>(rect.left / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getCameraManager().getUpLeft()->x / Tile::TileSize);
-		if (rect.left < 0)
-			offsetX--;
-		int offsetY = static_cast<int>(rect.top / Tile::TileSize) + 2 - static_cast<int>(m_mapManager->getCameraManager().getUpLeft()->y / Tile::TileSize);
-		int width = static_cast<int>(rect.width / Tile::TileSize) + 1 + offsetX;
-		int height = static_cast<int>(rect.height / Tile::TileSize) + 1 + offsetY;
-		if (vector[k]->getVelocity().x < 0)
+		sf::Rect<float> const & rect = shape->getGlobalBounds();
+		float offX = rect.left - camRect.left;
+		float w = rect.width + offX;
+		int offsetX = static_cast<int>(offX / Tile::TileSize) + 2 - 1;
+		int width = static_cast<int>(w / Tile::TileSize) + 2 + 1;
+		for (int x = width; x >= offsetX; x--)
 		{
-			for (int i = width; i >= offsetX; i--)
+			if (x < 0 || x >= static_cast<int>(m_tileShapes.columns()))
+				continue;
+			if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
+				continue;
+			shapeAABB = shape->getGlobalBounds();
+			shapeAABB.left += shape->getVelocity().x;
+			shapeAABB.top += shape->getVelocity().y;
+			if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds(), shapeAABB))
 			{
-				for (int j = height; j >= offsetY; j--)
+				std::size_t i;
+				for (i = 0u; i < pairs.size(); i++)
 				{
-					if (i < 0 || i >= static_cast<int>(m_mapManager->getTransitionManager().getMapWidth()) || j < 0 || j >= static_cast<int>(m_mapManager->getTransitionManager().getMapHeight()))
-						continue;
-					Tile & tile = m_mapManager->getTransitionManager().getTile(i, j);
-					if (tile.getCollisionType() & vector[k]->getCollideMask() && tile.me_transition != Tile::e_transition_none)
+					if (pairs[i].size() == 0u || m_tileShapes(x, 0)->getGlobalBounds().top == pairs[i][0u].m_shapeA->getGlobalBounds().top)
 					{
-						m_polyPolyPairs[m_polyPolyPairCount].getShapeA() = vector[k];
-						m_polyPolyPairs[m_polyPolyPairCount].getShapeB() = &tile;
-						m_polyPolyPairCount++;
+						pairs[i].emplace_back(m_tileShapes(x, 0), shape, shapeAABB.width * shapeAABB.height);
+						break;
 					}
 				}
-			}
-		}
-		else
-		{
-			for (int i = offsetX; i <= width; i++)
-			{
-				for (int j = height; j >= offsetY; j--)
-				{
-					if (i < 0 || i >= static_cast<int>(m_mapManager->getTransitionManager().getMapWidth()) || j < 0 || j >= static_cast<int>(m_mapManager->getTransitionManager().getMapHeight()))
-						continue;
-					Tile & tile = m_mapManager->getTransitionManager().getTile(i, j);
-					if (tile.getCollisionType() & vector[k]->getCollideMask() && tile.me_transition != Tile::e_transition_none)
-					{
-						m_polyPolyPairs[m_polyPolyPairCount].getShapeA() = vector[k];
-						m_polyPolyPairs[m_polyPolyPairCount].getShapeB() = &tile;
-						m_polyPolyPairCount++;
-					}
-				}
+				if (i > count)
+					count = i;
 			}
 		}
 	}
-	*/(void)vector; (void)pairs;
-	return 0u;
+	count++;
+	for (std::size_t i = 0u; i < count; i++)
+	{
+		std::sort(pairs[i].begin(), pairs[i].end(), [](Pair<TileShape *, T> const & pairA, Pair<TileShape *, T> const & pairB)
+					{ return pairA.m_area > pairB.m_area; });
+	}
+	std::sort(pairs.begin(), pairs.begin() + count, [](std::vector<Pair<TileShape *, T>> const & vectorA, std::vector<Pair<TileShape *, T>> const & vectorB)
+				{ return vectorA[0u].m_shapeA->getGlobalBounds().top > vectorB[0u].m_shapeA->getGlobalBounds().top; });
+	return count;
 }
 
 template<class T, class U>
 std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vectorA, std::vector<U> const & vectorB, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate)
 {
-	std::size_t	count = 0u;
+	std::size_t count = 0u;
 	for (std::size_t i = 0u; i < vectorA.size(); i++)
 	{
 		if (vectorA[i]->getSleep())
@@ -196,118 +255,175 @@ void PhysicsEngine::narrowPhase(void)
 	narrowPhase(m_polyPolyPairs, m_polyPolyPairCount);
 	narrowPhase(m_circleCirclePairs, m_circleCirclePairCount);
 	narrowPhase(m_polyCirclePairs, m_polyCirclePairCount);
+
+	if (m_tileCollision)
+	{
+		narrowPhaseTile(m_tilePolyPairs, m_tilePolyPairCount);
+		narrowPhaseTile(m_tileCirclePairs, m_tileCirclePairCount);
+	}
 }
 
 template<class T, class U>
 void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs, std::size_t pairCount)
 {
-	for(std::size_t i = 0u; i < pairCount; i++)
+	for (std::size_t i = 0u; i < pairCount; i++)
 	{
-		pairs[i].m_isColliding = false;
 		if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
 		{
+			// TODO: manage type kinematic static, ...
 			if (pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_kinematic)
 			{
-				pairs[i].m_shapeA->addVelocity(m_mtv.x / 2.f, m_mtv.y / 2.f);
-				pairs[i].m_shapeB->addVelocity(-m_mtv.x / 2.f, -m_mtv.y / 2.f);
+				m_mtv /= 2.f;
+				pairs[i].m_shapeA->addVelocity(m_mtv.x, m_mtv.y);
+				pairs[i].m_shapeB->addVelocity(-m_mtv.x, -m_mtv.y);
 			}
-			pairs[i].m_isColliding = true;
 		}
 	}
 }
 
-//TODO: voir avec les tiles quelle technique fonctionne le mieux
-bool PhysicsEngine::resolveCollision(PolygonShape * polygonA, PolygonShape * polygonB)
+template<class T>
+void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>>> & pairs, std::size_t pairCount)
 {
-	for (std::size_t i = 0u; i < polygonA->getEfficientVertexCount(); i++)
+	for (std::size_t i = 0u; i < pairCount; i++)
 	{
-		// Calcul du premier axe (normal du coté du polygon)
-		m_axis = polygonA->getNormal(i);
+		for (auto & pair : pairs[i])
+		{
+			// The shape A is the tile, the shapeB is the other one
+			sf::Vector2f vel = pair.m_shapeB->getVelocity() / static_cast<float>(m_iterationCount);
+			pair.m_shapeB->setVelocity(0.f, 0.f);
+			for (std::size_t j = 0u; j < m_iterationCount; j++)
+			{
+				pair.m_shapeB->addVelocity(vel);
+				if (computeCollision(pair.m_shapeA, pair.m_shapeB))
+				{
+					if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
+					{
+						pair.m_shapeB->addVelocity(-m_mtv.x, 0.f);
+					}
+					else if (std::fabs(m_mtv.x) > std::numeric_limits<float>::epsilon())
+					{
+						pair.m_shapeB->addVelocity(0.f, -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y)));
+					}
+					else
+					{
+						pair.m_shapeB->addVelocity(0.f, -m_mtv.y);
+					}
+					pair.m_shapeB->update();
+				}
+			}
+		}
+	}
+}
+
+bool PhysicsEngine::findAxisLeastPenetration(TileShape * tile, PolygonShape * polygon)
+{
+	for(std::size_t i = 0u; i < polygon->getEfficientVertexCount(); ++i)
+	{
+		m_axis = polygon->getNormal(i);
 		octo::normalize(m_axis);
-		// TODO: Tile, remove properly same point
-		/*if (polygonB->getNormal(i).x == 0 && polygonB->getNormal(i).y == 0)
-		{
-			continue;
-		}*/
-		// On fait une projection du polygonA et du polygonB sur l'axe
-		m_projectionA.project(m_axis, polygonA);
-		m_projectionB.project(m_axis, polygonB);
-		float overlap = m_projectionA.getOverlap(m_projectionB);
-		// TODO: manage containement
-		/*if (m_projectionA.contains(m_projectionB))
-		{
-			float min = std::abs(m_projectionA.min - m_projectionB.min);
-			float max = std::abs(m_projectionA.max - m_projectionB.max);
-			if (min < max)
-				overlap += min;
-			else
-				overlap += max;
-			//std::cout << "CONTAINEMENT " << min << " " << max <<  std::endl;
-		}*/
-		// Si ils sont l'un sur l'autre, on test la normal suivante
-		// Si ils ne sont pas l'un sur l'autre, on est certain qu'il existe un axe entre les deux, donc il n'y a pas de collision
-		if (overlap > 0.f)
+		// On récupère le supportPoint dans le sens inverse de l'axe
+		sf::Vector2f const & s = tile->getSupportVertex(-m_axis);
+		// On récupère chaque vertex
+		sf::Vector2f const & v = polygon->getVertex(i) + polygon->getVelocity();
+		// Projection de s - v sur l'axe, si d < 0.f, il y a une possible collision
+		float d = octo::dotProduct(m_axis, s - v);
+		// Il y a un axe separateur
+		if (d >= 0.f)
 			return false;
-		if (overlap > m_magnitude)
+		if (d > m_magnitude)
 		{
-			m_magnitude = overlap;
+			m_magnitude = d;
+			m_mtv = m_axis;
+		}
+	}
+
+	// For the tile, we only test the axis of the top
+	m_axis = tile->getNormal(0u);
+	if (m_axis.x != 0.f && m_axis.y != 0.f)
+	{
+		octo::normalize(m_axis);
+		// On récupère le supportPoint dans le sens inverse de l'axe
+		sf::Vector2f const & s = polygon->getSupportVertex(-m_axis) + polygon->getVelocity();
+		// On récupère chaque vertex
+		sf::Vector2f v = tile->getVertex(0u);
+		// Projection de s - v sur l'axe, si d < 0.f, il y a une possible collision
+		float d = octo::dotProduct(m_axis, s - v);
+		// Il y a un axe separateur
+		if (d >= 0.f)
+			return false;
+		if (d > m_magnitude)
+		{
+			m_magnitude = d;
 			m_mtv = m_axis;
 		}
 	}
 	return true;
 }
 
-bool PhysicsEngine::findAxisLeastPenetration(PolygonShape *polygonA, PolygonShape *polygonB)
+bool PhysicsEngine::findAxisLeastPenetration(PolygonShape * polygonA, PolygonShape * polygonB)
 {
 	for(std::size_t i = 0u; i < polygonA->getEfficientVertexCount(); ++i)
 	{
 		//Retrieve a face normal from A
-		sf::Vector2f const & n = polygonA->getNormal(i);
-		// Retrieve support point from B along -n
-		sf::Vector2f const & s = polygonB->getSupportVertex(-n);
-		// Retrieve vertex on face from A, transform into
-		// B's model space
+		m_axis = polygonA->getNormal(i);
+		if (m_axis.x == 0.f && m_axis.y == 0.f)
+		{
+			continue;
+		}
+		octo::normalize(m_axis);
+		// On récupère le supportPoint dans le sens inverse de l'axe
+		sf::Vector2f const & s = polygonB->getSupportVertex(-m_axis);
+		// On récupère chaque vertex
 		sf::Vector2f const & v = polygonA->getVertex(i);
-		// Compute penetration distance (in B's model space)
-		float d = octo::dotProduct(n, s - v);
-		if (d > 0.f)
+		// Projection de s - v sur l'axe, si d < 0.f, il y a une possible collision
+		float d = octo::dotProduct(m_axis, s - v);
+
+		// Il y a un axe separateur
+		if (d >= 0.f)
 			return false;
+
+		float vel = octo::dotProduct(m_axis, polygonA->getVelocity());
+		float vell = octo::dotProduct(m_axis, polygonB->getVelocity());
+
+		float dd = d;
+		if (vel > 0.f)
+			dd += vel;
+		if (vell > 0.f)
+			dd += vell;
+
+		if (d >= 0.f)
+			return false;
+
 		// Store greatest distance
 		if (d > m_magnitude)
 		{
 			m_magnitude = d;
-			m_mtv = n;
-			m_debug1 = s - v;
-			m_debug2 = v;
-			m_debug3 = s;
+			m_mtv = m_axis;
 		}
 	}
+	return true;
+}
+
+bool PhysicsEngine::computeCollision(TileShape * tile, PolygonShape * polygon)
+{
+	m_magnitude = -std::numeric_limits<float>::max();
+	if (!findAxisLeastPenetration(tile, polygon))
+		return false;
+	if (octo::dotProduct(m_mtv, tile->getBaryCenter() - polygon->getBaryCenter()) > 0.f)
+		m_mtv = -m_mtv;
+	m_mtv *= m_magnitude;
 	return true;
 }
 
 bool PhysicsEngine::computeCollision(PolygonShape * polygonA, PolygonShape * polygonB)
 {
 	m_magnitude = -std::numeric_limits<float>::max();
-	if (!resolveCollision(polygonA, polygonB) || !resolveCollision(polygonB, polygonA))
+	if (!findAxisLeastPenetration(polygonA, polygonB) || !findAxisLeastPenetration(polygonB, polygonA))
 		return false;
-	// On dirige le vecteur dans la bonne direction
-	if (octo::dotProduct(m_mtv, polygonB->getBaryCenter() - polygonA->getBaryCenter()) < 0.f)
+	if (octo::dotProduct(m_mtv, polygonA->getBaryCenter() - polygonB->getBaryCenter()) > 0.f)
 		m_mtv = -m_mtv;
 	m_mtv *= m_magnitude;
-	// Si on arrive içi c'est que l'on a testé tous les axes, et qu'il n'existe pas d'axe qui sépare les deux polygons, donc il y a une collision
 	return true;
-/*
-	m_magnitude = -std::numeric_limits<float>::max();
-	if (!FindAxisLeastPenetration(polygonA, polygonB) || !FindAxisLeastPenetration(polygonB, polygonA))
-		return false;
-	octo::normalize(m_mtv);
-	float d = octo::dotProduct(m_mtv, m_debug3);
-	float dd = octo::dotProduct(m_mtv, m_debug2);
-	m_magnitude = dd - d;
-	m_mtv *= m_magnitude;
-	if (octo::dotProduct(m_mtv, polygonA->getBaryCenter() - polygonB->getBaryCenter()) < 0.f)
-		m_mtv = -m_mtv;
-	return true;*/
 }
 
 bool PhysicsEngine::computeCollision(CircleShape * circleA, CircleShape * circleB)
@@ -317,8 +433,10 @@ bool PhysicsEngine::computeCollision(CircleShape * circleA, CircleShape * circle
 	octo::normalize(m_axis);
 	m_projectionA.project(m_axis, circleA);
 	m_projectionB.project(m_axis, circleB);
+	m_projectionA.swept(m_axis, circleA);
+	m_projectionB.swept(m_axis, circleB);
 	float overlap = m_projectionA.getOverlap(m_projectionB);
-	if (overlap > 0.f)
+	if (overlap >= 0.f)
 		return false;
 	if (overlap > m_magnitude)
 	{
@@ -326,6 +444,42 @@ bool PhysicsEngine::computeCollision(CircleShape * circleA, CircleShape * circle
 		m_mtv = m_axis;
 	}
 	if (octo::dotProduct(m_mtv, m_axis) > 0.f)
+		m_mtv = -m_mtv;
+	m_mtv *= m_magnitude;
+	return true;
+}
+
+bool PhysicsEngine::computeCollision(TileShape * tile, CircleShape * circle)
+{
+	m_magnitude = -std::numeric_limits<float>::max();
+	m_axis = tile->getNormal(0u);
+	octo::normalize(m_axis);
+	m_projectionA.project(m_axis, tile);
+	m_projectionB.project(m_axis, circle);
+	m_projectionB.swept(m_axis, circle);
+	float overlap = m_projectionA.getOverlap(m_projectionB);
+	if (overlap >= 0.f)
+		return false;
+	if (overlap > m_magnitude)
+	{
+		m_magnitude = overlap;
+		m_mtv = m_axis;
+	}
+
+	m_axis = circle->getBaryCenter() - tile->getBaryCenter();
+	octo::normalize(m_axis);
+	m_projectionA.project(m_axis, tile);
+	m_projectionB.project(m_axis, circle);
+	m_projectionB.swept(m_axis, circle);
+	overlap = m_projectionA.getOverlap(m_projectionB);
+	if (overlap >= 0.f)
+		return false;
+	if (overlap > m_magnitude)
+	{
+		m_magnitude = overlap;
+		m_mtv = m_axis;
+	}
+	if (octo::dotProduct(m_mtv, circle->getBaryCenter() - tile->getBaryCenter()) < 0.f)
 		m_mtv = -m_mtv;
 	m_mtv *= m_magnitude;
 	return true;
@@ -340,8 +494,10 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circl
 		octo::normalize(m_axis);
 		m_projectionA.project(m_axis, polygon);
 		m_projectionB.project(m_axis, circle);
+		m_projectionA.swept(m_axis, polygon);
+		m_projectionB.swept(m_axis, circle);
 		float overlap = m_projectionA.getOverlap(m_projectionB);
-		if (overlap > 0.f)
+		if (overlap >= 0.f)
 			return false;
 		if (overlap > m_magnitude)
 		{
@@ -353,8 +509,10 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circl
 	octo::normalize(m_axis);
 	m_projectionA.project(m_axis, polygon);
 	m_projectionB.project(m_axis, circle);
+	m_projectionA.swept(m_axis, polygon);
+	m_projectionB.swept(m_axis, circle);
 	float overlap = m_projectionA.getOverlap(m_projectionB);
-	if (overlap > 0.f)
+	if (overlap >= 0.f)
 		return false;
 	if (overlap > m_magnitude)
 	{
@@ -369,8 +527,18 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circl
 
 void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 {
-	for (auto shape : m_shapes)
+	for (auto const & shape : m_shapes)
 		shape->debugDraw(render);
+	for (std::size_t i = 0u; i < m_tilePolyPairCount; i++)
+	{
+		for (auto const & pair : m_tilePolyPairs[i])
+			pair.m_shapeA->debugDraw(render);
+	}
+	for (std::size_t i = 0u; i < m_tileCirclePairCount; i++)
+	{
+		for (auto const & pair : m_tileCirclePairs[i])
+			pair.m_shapeA->debugDraw(render);
+	}
 }
 
 // Nested Class Projection
@@ -390,12 +558,13 @@ bool PhysicsEngine::Projection::contains(Projection const & projection)
 	return false;
 }
 
-void PhysicsEngine::Projection::project(sf::Vector2f const & axis, PolygonShape * polygon)
+template<class T>
+void PhysicsEngine::Projection::project(sf::Vector2f const & axis, T * polygon)
 {
 	float d = octo::dotProduct(axis, polygon->getVertex(0u));
 	min = d;
 	max = d;
-	for (std::size_t i = 1u; i < polygon->getVertexCount(); i++)
+	for (std::size_t i = 1u; i < polygon->getEfficientVertexCount(); i++)
 	{
 		d = octo::dotProduct(axis, polygon->getVertex(i));
 		if (d < min)
@@ -415,8 +584,6 @@ void PhysicsEngine::Projection::project(sf::Vector2f const & axis, CircleShape *
 void PhysicsEngine::Projection::swept(sf::Vector2f const & axis, AShape const * shape)
 {
 	float vel = octo::dotProduct(axis, shape->getVelocity());
-	if (vel < 0.f)
-		min += vel;
-	else
-		max += vel;
+	min += vel;
+	max += vel;
 }

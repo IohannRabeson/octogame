@@ -2,11 +2,16 @@
 # define PHYSICSMAPSCREEN_HPP
 
 # include <AbstractState.hpp>
-
+# include <GraphicsListeners.hpp>
+# include <Camera.hpp>
 # include "PhysicsEngine.hpp"
-# include "MapManager.hpp"
+# include "GroundManager.hpp"
+# include "TestBiome.hpp"
 
-class PhysicsMapScreen : public octo::AbstractState
+class ConvexShape;
+class RectangleShape;
+
+class PhysicsMapScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
 public:
 	PhysicsMapScreen(void);
@@ -19,8 +24,14 @@ public:
 	virtual void	draw(sf::RenderTarget& render)const;
 
 private:
-	MapManager	m_mapManager;
-	PhysicsEngine &	m_engine;
+	PhysicsEngine &					m_engine;
+	octo::Camera &					m_camera;
+	ConvexShape *					m_shape;
+	std::vector<RectangleShape *>	m_shapes;
+	GroundManager					m_groundManager;
+	TestBiome						m_biome;
+
+	virtual bool onPressed(sf::Event::KeyEvent const & event);
 
 };
 

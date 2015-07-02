@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 02:17:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 19:42:39 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/27 17:53:25 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ public:
 	virtual sf::Time		getTreeLifeTime() = 0;
 	virtual sf::Color		getTreeColor() = 0;
 	virtual float			getTreeAngle() = 0;
+	virtual bool			getTreeIsMoving() = 0;
 	virtual bool			canCreateTree() = 0;
 	virtual bool			canCreateLeaf() = 0;
 	virtual sf::Vector2f	getLeafSize() = 0;
@@ -43,6 +44,10 @@ public:
 	virtual std::size_t		getCrystalPartCount() = 0;
 	virtual sf::Color		getCrystalColor() = 0;
 	virtual bool			canCreateCrystal() = 0;
+	virtual sf::Vector2f	getShineEffectSize() = 0;
+	virtual sf::Color		getShineEffectColor() = 0;
+	virtual float			getShineEffectRotateAngle() = 0;
+	virtual bool			canCreateShineEffect() = 0;
 
 	virtual sf::Vector2f	getRockSize() = 0;
 	virtual std::size_t		getRockPartCount() = 0;
@@ -68,6 +73,10 @@ public:
 	virtual sf::Vector2f 	getMoonSize() = 0;
 	virtual sf::Color		getMoonColor() = 0;
 	virtual bool			canCreateMoon() = 0;
+
+	virtual sf::Vector2u const & getMapSize() = 0;
+	virtual float getTransitionDuration() = 0;
+
 };
 
 #endif

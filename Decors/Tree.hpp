@@ -2,6 +2,7 @@
 # define TREE_HPP
 
 # include "ADecor.hpp"
+# include "DecorAnimator.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
@@ -31,8 +32,9 @@ private:
 	sf::Color					m_color;
 	std::vector<float>			m_refAngle;
 	std::size_t					m_count;
+	std::size_t					m_angleMaxCount;
 
-	sf::Time					m_lifeTime;
+	DecorAnimator				m_animator;
 	float						m_animation;
 	bool						m_growSide;
 
@@ -42,6 +44,7 @@ private:
 	sf::Color					m_leafColor;
 	std::size_t					m_countLeaf;
 	bool						m_setLeaf;
+	std::size_t					m_leafMaxCount;
 
 	void computeQuad(sf::Vector2f const & size,
 					sf::Vector2f const & center,
@@ -67,15 +70,12 @@ private:
 						float const sinAngle = std::sin(0.0f),
 						std::size_t const currentDepth = 0u);
 
-private:
-	static std::default_random_engine	m_engine;
-	static std::bernoulli_distribution	m_distribution;
+	void newTree(ABiome& biome);
 
+private:
 	static void rotateVec(sf::Vector2f & vector,
 							float const cosAngle,
 							float const sinAngle);
-
-	static bool getGrowSide(void);
 };
 
 #endif

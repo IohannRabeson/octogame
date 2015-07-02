@@ -6,11 +6,13 @@
 class ConvexShape;
 class RectangleShape;
 class CircleShape;
+class TileShape;
 
 /*!
  * \ingroup Physic
  * \class IShapeBuilder
  * Interface that allow to create new Shapes and register them in the PhysicsEngine
+ * PhysicsEngine manage the memory of the allocated shapes
  */
 class ShapeBuilder
 {
@@ -26,8 +28,8 @@ public:
 	/*! Create a new RectangleShape */
 	RectangleShape * createRectangle(void);
 
-	/*! Create a new ConvexShape */
-	ConvexShape * createTile(std::size_t x, std::size_t y);
+	/*! Create a new TileShape */
+	TileShape * createTile(std::size_t x, std::size_t y);
 
 };
 

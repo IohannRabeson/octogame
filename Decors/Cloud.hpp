@@ -2,6 +2,7 @@
 # define CLOUD_HPP
 
 # include "ADecor.hpp"
+# include "DecorAnimator.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
@@ -20,16 +21,17 @@ public:
 	Cloud(void);
 	virtual ~Cloud(void) = default;
 
-	virtual void	setup(ABiome& biome);
-	virtual void	update(sf::Time frameTime,
-						   octo::VertexBuilder& builder,
-						   ABiome& biome);
+	virtual void setup(ABiome& biome);
+	virtual void update(sf::Time frameTime,
+						octo::VertexBuilder& builder,
+						ABiome& biome);
 
 private:
 	sf::Vector2f				m_size;
 	sf::Color					m_color;
 	std::size_t					m_partCount;
 	std::vector<OctogonValue>	m_values;
+	DecorAnimator				m_animator;
 	float						m_animation;
 	sf::Time					m_lifeTime;
 
@@ -46,9 +48,7 @@ private:
 						sf::Color const & color,
 						octo::VertexBuilder& builder);
 
-private:
-	static std::mt19937 m_engine;
-	static float randomFloat(float min, float max);
+	void newCloud(ABiome& biome);
 };
 
 #endif

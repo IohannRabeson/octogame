@@ -6,11 +6,12 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 03:05:12 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 19:50:48 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 06:12:14 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "TestBiome.hpp"
+#include "RandomGenerator.hpp"
 
 #include <iostream>
 
@@ -20,13 +21,19 @@ TestBiome::TestBiome() :
 	m_treeLifeTime(sf::seconds(1)),
 	m_treeColor(255, 105, 180),
 	m_treeAngle(45.f),
+	m_treeIsMoving(true),
 	m_canCreateTree(false),
 	m_canCreateLeaf(true),
 	m_leafSize(150.f, 150.f),
 	m_leafColor(0, 105, 180),
-	m_crystalPartCount(0u),
+	m_crystalSize(10.f, 100.f),
+	m_crystalPartCount(4u),
 	m_crystalColor(255, 105, 180),
 	m_canCreateCrystal(false),
+	m_shineEffectSize(150.f, 150.f),
+	m_shineEffectColor(255,255,255,100),
+	m_shineEffectRotateAngle(150.f),
+	m_canCreateShineEffect(true),
 	m_rockSize(300.f, 300.f),
 	m_rockPartCount(5u),
 	m_rockColor(255, 105, 180),
@@ -35,15 +42,20 @@ TestBiome::TestBiome() :
 	m_cloudPartCount(5u),
 	m_cloudColor(255, 105, 180),
 	m_canCreateCloud(false),
-	m_starColor(255, 105, 180),
+	m_starSize(200.f, 200.f),
+	m_starColor(255, 255, 255),
+	m_starLifeTime(sf::seconds(20.f)),
 	m_canCreateStar(false),
 	m_sunSize(200.f, 200.f),
 	m_sunPartCount(3u),
 	m_sunColor(255, 105, 180),
 	m_canCreateSun(false),
 	m_moonColor(255, 105, 180),
-	m_canCreateMoon(false)
+	m_canCreateMoon(false),
+	m_mapSize(512u, 128u),
+	m_transitionDuration(0.5f)
 {
+	RandomGenerator::setSeed("test_biome");
 }
 
 void			TestBiome::setup(std::size_t seed)
@@ -80,6 +92,11 @@ sf::Color		TestBiome::getTreeColor()
 float			TestBiome::getTreeAngle()
 {
 	return (m_treeAngle);
+}
+
+bool			TestBiome::getTreeIsMoving()
+{
+	return (m_treeIsMoving);
 }
 
 bool			TestBiome::canCreateTree()
@@ -120,6 +137,26 @@ sf::Color		TestBiome::getCrystalColor()
 bool			TestBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
+}
+//
+sf::Vector2f	TestBiome::getShineEffectSize()
+{
+	return (m_shineEffectSize);
+}
+
+sf::Color		TestBiome::getShineEffectColor()
+{
+	return (m_shineEffectColor);
+}
+
+float			TestBiome::getShineEffectRotateAngle()
+{
+	return m_shineEffectRotateAngle;
+}
+
+bool			TestBiome::canCreateShineEffect()
+{
+	return (m_canCreateShineEffect);
 }
 
 sf::Vector2f	TestBiome::getRockSize()
@@ -222,6 +259,15 @@ bool			TestBiome::canCreateMoon()
 	return (m_canCreateMoon);
 }
 
+sf::Vector2u const & TestBiome::getMapSize()
+{
+	return m_mapSize;
+}
+
+float TestBiome::getTransitionDuration()
+{
+	return m_transitionDuration;
+}
 
 void	TestBiome::setTreeDepth(std::size_t depth)
 {
@@ -386,4 +432,14 @@ void	TestBiome::setMoonColor(sf::Color const& color)
 void	TestBiome::setCanCreateMoon(bool canCreate)
 {
 	m_canCreateMoon = canCreate;
+}
+
+void	TestBiome::setMapSize(sf::Vector2u const & mapSize)
+{
+	m_mapSize = mapSize;
+}
+
+void	TestBiome::setTransitionDuration(float transitionDuration)
+{
+	m_transitionDuration = transitionDuration;
 }
