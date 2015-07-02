@@ -56,7 +56,7 @@ TestBiome::TestBiome() :
 	m_canCreateMoon(true),
 	m_mapSize(512u, 128u),
 	m_transitionDuration(0.5f),
-	m_bossInstancePosX(200u)
+	m_bossInstancePosX(0u)
 {
 	m_generator.setSeed("test_biome");
 }
@@ -172,11 +172,22 @@ sf::Color		TestBiome::getCrystalColor()
 	return (m_crystalColor);
 }
 
+int				TestBiome::getCrystalPosX()
+{
+	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
+	x += m_bossInstancePosX - m_mapSize.x / 2.f;
+	if (x > static_cast<int>(m_mapSize.x))
+		x -= m_mapSize.x;
+	else if (x < 0)
+		x += m_mapSize.x;
+	return (static_cast<int>(x));
+}
+
 bool			TestBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
-//
+
 sf::Vector2f	TestBiome::getShineEffectSize()
 {
 	return (m_shineEffectSize);
