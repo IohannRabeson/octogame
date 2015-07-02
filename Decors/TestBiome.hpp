@@ -14,6 +14,7 @@
 # define TESTBIOME_HPP
 
 # include "ABiome.hpp"
+# include "RandomGenerator.hpp"
 
 # include <cstddef>
 
@@ -26,6 +27,11 @@ public:
 
 	virtual void			setup(std::size_t seed);
 	virtual std::string		getName()const;
+	virtual void			setSeed(std::string string);
+
+	virtual float			randomFloat(float min, float max);
+	virtual int				randomInt(int min, int max);
+	virtual bool			randomBool(float percent);
 
 	virtual std::size_t		getGroundDecorsCount();
 	virtual std::size_t		getCrystalsCount();
@@ -78,6 +84,7 @@ public:
 
 	virtual sf::Vector2u const & getMapSize();
 	virtual float getTransitionDuration();
+	virtual int getBossInstancePosX();
 
 	void					setTreeDepth(std::size_t depth);
 	void					setTreeSize(sf::Vector2f const& treeSize);
@@ -123,6 +130,8 @@ public:
 	void					setTransitionDuration(float transitionDuration);
 
 private:
+	RandomGenerator			m_generator;
+
 	std::size_t				m_groundDecorsCount;
 	std::size_t				m_crystalsCount;
 	std::size_t				m_skyDecorsCount;
@@ -175,7 +184,7 @@ private:
 
 	sf::Vector2u			m_mapSize;
 	float					m_transitionDuration;
-
+	int						m_bossInstancePosX;
 };
 
 #endif

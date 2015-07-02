@@ -2,7 +2,6 @@
 #include "Map.hpp"
 #include "TileShape.hpp"
 #include "PhysicsEngine.hpp"
-//#include "RandomGenerator.hpp"
 #include "ADecor.hpp"
 #include "ABiome.hpp"
 #include <Interpolations.hpp>
@@ -58,7 +57,7 @@ void GroundManager::initDecors(ABiome & biome)
 	std::size_t groundDecorsCount = biome.getGroundDecorsCount();
 	std::size_t crystalsCount = biome.getCrystalsCount();
 
-//	std::size_t mapSizeX = 300u;//biome.getMapSize().x;
+	std::size_t mapSizeX = biome.getMapSize().x;
 
 	bool canCreateCrystal = biome.canCreateCrystal();
 
@@ -76,12 +75,10 @@ void GroundManager::initDecors(ABiome & biome)
 		if (canCreateRock)
 			decorsType.push_back(1);
 
-//		RandomGenerator generator;
-
 		for (std::size_t i = 0; i < groundDecorsCount; i++)
 		{
-			int x = 20;//generator.randomInt(0.f, mapSizeX);
-			int chooseDecor = 1;//generator.randomInt(0, decorsTypeCount);
+			int x = biome.randomInt(0.f, mapSizeX);
+			int chooseDecor = biome.randomInt(0, decorsTypeCount);
 
 			if (chooseDecor == 0)
 				m_decorManager.add(DecorManager::DecorTypes::Tree);
@@ -93,11 +90,13 @@ void GroundManager::initDecors(ABiome & biome)
 		}
 	}
 
+	int bossPosX = biome.getBossInstancePosX();
+	(void)bossPosX;
 	if (canCreateCrystal)
 	{
 		for (std::size_t i = groundDecorsCount; i < crystalsCount + groundDecorsCount; i++)
 		{
-			int x = 40;//generator.randomInt(0.f, mapSizeX);
+			int x = biome.randomInt(0.f, mapSizeX);
 			m_decorManager.add(DecorManager::DecorTypes::Crystal);
 
 			m_tiles->registerDecor(x);

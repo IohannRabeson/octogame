@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "TestBiome.hpp"
-#include "RandomGenerator.hpp"
 
 #include <iostream>
 
@@ -40,7 +39,7 @@ TestBiome::TestBiome() :
 	m_rockSize(300.f, 300.f),
 	m_rockPartCount(5u),
 	m_rockColor(255, 105, 180),
-	m_canCreateRock(false),
+	m_canCreateRock(true),
 	m_cloudSize(400.f, 200.f),
 	m_cloudPartCount(5u),
 	m_cloudColor(255, 105, 180),
@@ -56,9 +55,10 @@ TestBiome::TestBiome() :
 	m_moonColor(255, 105, 180),
 	m_canCreateMoon(true),
 	m_mapSize(512u, 128u),
-	m_transitionDuration(0.5f)
+	m_transitionDuration(0.5f),
+	m_bossInstancePosX(200u)
 {
-	RandomGenerator::setSeed("test_biome");
+	m_generator.setSeed("test_biome");
 }
 
 void			TestBiome::setup(std::size_t seed)
@@ -72,6 +72,25 @@ std::string		TestBiome::getName()const
 	return ("Biome Test");
 }
 
+void			TestBiome::setSeed(std::string string)
+{
+	m_generator.setSeed(string);
+}
+
+float			TestBiome::randomFloat(float min, float max)
+{
+	return m_generator.randomFloat(min, max);
+}
+
+int				TestBiome::randomInt(int min, int max)
+{
+	return m_generator.randomInt(min, max);
+}
+
+bool			TestBiome::randomBool(float percent)
+{
+	return m_generator.randomBool(percent);
+}
 
 std::size_t		TestBiome::getGroundDecorsCount()
 {
@@ -288,6 +307,11 @@ float TestBiome::getTransitionDuration()
 	return m_transitionDuration;
 }
 
+int		TestBiome::getBossInstancePosX(void)
+{
+	return m_bossInstancePosX;
+}
+
 void	TestBiome::setTreeDepth(std::size_t depth)
 {
 	m_treeDepth = depth;
@@ -462,3 +486,4 @@ void	TestBiome::setTransitionDuration(float transitionDuration)
 {
 	m_transitionDuration = transitionDuration;
 }
+
