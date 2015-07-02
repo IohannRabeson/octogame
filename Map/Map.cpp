@@ -139,11 +139,6 @@ void Map::computeDecor(void)
 		height = static_cast<int>((firstCurve(vec) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
 		it->second.x = offsetPosX * Tile::TileSize;
 		it->second.y = height * Tile::TileSize;
-		//vec[0] = static_cast<float>(offsetPosX);
-		//vec[1] = static_cast<float>(height);
-		//vec[2] = m_depth;
-		//it->second->setNoiseValue((secondCurve(vec) + 1.f) / 2.f);
-		//setColor(*it->second);
 	}
 }
 
