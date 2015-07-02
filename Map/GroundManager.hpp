@@ -4,18 +4,19 @@
 # include "Map.hpp"
 
 class TileShape;
+class ABiome;
 
-class TerrainManager : public sf::Drawable
+class GroundManager : public sf::Drawable
 {
 public:
-	TerrainManager(void);
-	virtual ~TerrainManager(void) = default;
+	GroundManager(void);
+	virtual ~GroundManager(void) = default;
 
 	inline sf::Vertex * getHeight(int x) { m_tiles->getHeight(x); return m_tilesPrev->getHeight(x); }
 	// Only used by StaticObjectManager to compute initial position
 	inline void computeDecor(void) { m_tiles->computeDecor(); }
 
-	void init(Biome * biome);
+	void init(ABiome & biome);
 	void update(float pf_deltatime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
@@ -28,7 +29,7 @@ private:
 	std::unique_ptr<sf::Vertex[]>	m_vertices;
 	std::size_t						m_verticesCount;
 	sf::Vector2i					m_oldOffset;
-	octo::Array2D<TileShape *>		m_tileShapes;
+	std::vector<TileShape *>		m_tileShapes;
 
 	inline void defineTransition(void) { defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows()); }
 	void defineTransitionRange(int startX, int endX, int startY, int endY);

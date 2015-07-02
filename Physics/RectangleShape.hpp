@@ -19,7 +19,7 @@ public:
 	inline sf::Vector2f const & getSize(void) const { return m_size; }
 
 	/*! Get the vertex count needed to compute the sat */
-	inline virtual std::size_t getEfficientVertexCount(void) const { return 2u; }
+	inline virtual std::size_t getEfficientVertexCount(void) const { return 3u; }
 
 private:
 	sf::Vector2f	m_size;

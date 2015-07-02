@@ -51,7 +51,9 @@ TestBiome::TestBiome() :
 	m_sunColor(255, 105, 180),
 	m_canCreateSun(false),
 	m_moonColor(255, 105, 180),
-	m_canCreateMoon(false)
+	m_canCreateMoon(false),
+	m_mapSize(512u, 128u),
+	m_transitionDuration(0.5f)
 {
 	RandomGenerator::setSeed("test_biome");
 }
@@ -257,6 +259,15 @@ bool			TestBiome::canCreateMoon()
 	return (m_canCreateMoon);
 }
 
+sf::Vector2u const & TestBiome::getMapSize()
+{
+	return m_mapSize;
+}
+
+float TestBiome::getTransitionDuration()
+{
+	return m_transitionDuration;
+}
 
 void	TestBiome::setTreeDepth(std::size_t depth)
 {
@@ -421,4 +432,14 @@ void	TestBiome::setMoonColor(sf::Color const& color)
 void	TestBiome::setCanCreateMoon(bool canCreate)
 {
 	m_canCreateMoon = canCreate;
+}
+
+void	TestBiome::setMapSize(sf::Vector2u const & mapSize)
+{
+	m_mapSize = mapSize;
+}
+
+void	TestBiome::setTransitionDuration(float transitionDuration)
+{
+	m_transitionDuration = transitionDuration;
 }
