@@ -28,11 +28,10 @@ public:
 
 	virtual void			setup(std::size_t seed) = 0;
 	virtual std::string		getName()const = 0;
-	virtual void			setSeed(std::string string) = 0;
 
-	virtual float			randomFloat(float min, float max) = 0;
-	virtual int				randomInt(int min, int max) = 0;
-	virtual bool			randomBool(float percent) = 0;
+	virtual sf::Vector2u	getMapSize() = 0;
+	virtual float			getTransitionDuration() = 0;
+	virtual int				getBossInstancePosX() = 0;
 
 	virtual std::size_t		getGroundDecorsCount() = 0;
 	virtual std::size_t		getCrystalsCount() = 0;
@@ -84,9 +83,9 @@ public:
 	virtual sf::Color		getMoonColor() = 0;
 	virtual bool			canCreateMoon() = 0;
 
-	virtual sf::Vector2u const & getMapSize() = 0;
-	virtual float getTransitionDuration() = 0;
-	virtual int getBossInstancePosX() = 0;
+	virtual float			randomFloat(float min, float max) = 0;
+	virtual int				randomInt(int min, int max) = 0;
+	virtual bool			randomBool(float percent) = 0;
 
 };
 

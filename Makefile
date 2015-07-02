@@ -48,7 +48,8 @@ SRC_MAP =		Map/Map.cpp								\
 SRC_OCTO =		Octo/OctoNoise.cpp
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
-				Biomes/TestBiome.cpp
+				Biomes/TestBiome.cpp					\
+				Biomes/DefaultBiome.cpp
 
 SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/DecorManager.cpp					\

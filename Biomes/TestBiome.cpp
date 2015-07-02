@@ -72,11 +72,6 @@ std::string		TestBiome::getName()const
 	return ("Biome Test");
 }
 
-void			TestBiome::setSeed(std::string string)
-{
-	m_generator.setSeed(string);
-}
-
 float			TestBiome::randomFloat(float min, float max)
 {
 	return m_generator.randomFloat(min, max);
@@ -308,7 +303,7 @@ bool			TestBiome::canCreateMoon()
 	return (m_canCreateMoon);
 }
 
-sf::Vector2u const & TestBiome::getMapSize()
+sf::Vector2u TestBiome::getMapSize()
 {
 	return m_mapSize;
 }

@@ -5,7 +5,7 @@
 # include <GraphicsListeners.hpp>
 # include "PhysicsEngine.hpp"
 # include "GroundManager.hpp"
-# include "TestBiome.hpp"
+# include "DefaultBiome.hpp"
 # include <Camera.hpp>
 
 class ConvexShape;
@@ -27,7 +27,7 @@ private:
 	octo::Camera &		m_camera;
 	ConvexShape *		m_shape;
 	GroundManager		m_groundManager;
-	TestBiome			m_biome;
+	DefaultBiome		m_biome;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 

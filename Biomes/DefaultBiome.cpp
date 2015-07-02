@@ -1,166 +1,174 @@
-#include "TestBiome.hpp"
+#include "DefaultBiome.hpp"
 
 #include <iostream>
 
-TestBiome::TestBiome() :
-	m_groundDecorsCount(50u),
-	m_crystalsCount(20u),
-	m_skyDecorsCount(40u),
-	m_treeDepth(8u),
-	m_treeSize(30.f, 200.f),
-	m_treeLifeTime(sf::seconds(1)),
-	m_treeColor(255, 105, 180),
-	m_treeAngle(45.f),
-	m_treeIsMoving(true),
+DefaultBiome::DefaultBiome() :
+	m_name("Default Biome"),
+	m_mapSize(sf::Vector2f(512u, 128u)),
+	m_transitionDuration(0.5f),
+	m_bossInstancePosX(m_mapSize.x / 2.f),
+
+	m_groundDecorsCount(10u, 20u),
+	m_crystalsCount(30u, 50u),
+	m_skyDecorsCount(30u, 50u),
+
 	m_canCreateTree(true),
 	m_canCreateLeaf(true),
-	m_leafSize(150.f, 150.f),
-	m_leafColor(0, 105, 180),
-	m_crystalSize(10.f, 100.f),
-	m_crystalPartCount(4u),
-	m_crystalColor(255, 105, 180),
+	m_treeIsMoving(true),
 	m_canCreateCrystal(true),
-	m_shineEffectSize(150.f, 150.f),
-	m_shineEffectColor(255,255,255,100),
-	m_shineEffectRotateAngle(150.f),
 	m_canCreateShineEffect(true),
-	m_rockSize(300.f, 300.f),
-	m_rockPartCount(5u),
-	m_rockColor(255, 105, 180),
 	m_canCreateRock(true),
-	m_cloudSize(400.f, 200.f),
-	m_cloudPartCount(5u),
-	m_cloudColor(255, 105, 180),
 	m_canCreateCloud(true),
-	m_starSize(200.f, 200.f),
-	m_starColor(255, 255, 255),
-	m_starLifeTime(sf::seconds(20.f)),
 	m_canCreateStar(true),
-	m_sunSize(200.f, 200.f),
-	m_sunPartCount(3u),
-	m_sunColor(255, 105, 180),
 	m_canCreateSun(true),
-	m_moonColor(255, 105, 180),
 	m_canCreateMoon(true),
-	m_mapSize(512u, 128u),
-	m_transitionDuration(0.5f),
-	m_bossInstancePosX(0u)
+
+	m_treeDepth(6u, 8u),
+	m_treeSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(40.f, 200.f)),
+	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
+	m_treeColor(255, 105, 180),
+	m_treeAngle(15.f, 75.f),
+	m_leafSize(sf::Vector2f(50.f, 50.f), sf::Vector2f(200.f, 200.f)),
+	m_leafColor(100, 105, 180),
+
+	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 150.f)),
+	m_crystalPartCount(2u, 8u),
+	m_crystalColor(255, 105, 180),
+	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
+	m_shineEffectColor(255, 255, 255, 100),
+	m_shineEffectRotateAngle(100.f, 200.f),
+
+	m_rockSize(sf::Vector2f(10.f, 150.f), sf::Vector2f(40.f, 400.f)),
+	m_rockPartCount(2.f, 10.f),
+	m_rockColor(255, 0, 100),
+
+	m_cloudSize(sf::Vector2f(300u, 100u), sf::Vector2f(500u, 250u)),
+	m_cloudPartCount(2u, 10u),
+	m_cloudLifeTime(sf::seconds(15), sf::seconds(60)),
+	m_cloudColor(),
+
+	m_starSize(sf::Vector2f(50.f, 50.f), sf::Vector2f(100.f, 100.f)),
+	m_starColor(),
+	m_starLifeTime(sf::seconds(15), sf::seconds(60)),
+
+	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
+	m_sunPartCount(2u, 4u),
+	m_sunColor(),
+
+	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
+	m_moonColor()
 {
-	m_generator.setSeed("test_biome");
+	m_generator.setSeed("default_biome");
 }
 
-void			TestBiome::setup(std::size_t seed)
+void			DefaultBiome::setup(std::size_t seed)
 {
-	std::cout << "Test biome setup...\n";
-	static_cast<void>(seed);
+	(void)seed;
 }
 
-std::string		TestBiome::getName()const
+std::string		DefaultBiome::getName()const
 {
-	return ("Biome Test");
+	return (m_name);
 }
 
-void			TestBiome::setSeed(std::string string)
+//TODO:: We'll probably need a setter for mapSize
+sf::Vector2u	DefaultBiome::getMapSize()
 {
-	m_generator.setSeed(string);
+	return (m_mapSize);
 }
 
-float			TestBiome::randomFloat(float min, float max)
+float			DefaultBiome::getTransitionDuration()
 {
-	return m_generator.randomFloat(min, max);
+	return (m_transitionDuration);
 }
 
-int				TestBiome::randomInt(int min, int max)
+int				DefaultBiome::getBossInstancePosX(void)
 {
-	return m_generator.randomInt(min, max);
+	return (m_bossInstancePosX);
 }
 
-bool			TestBiome::randomBool(float percent)
+std::size_t		DefaultBiome::getGroundDecorsCount()
 {
-	return m_generator.randomBool(percent);
+	return (randomRangeInt(m_groundDecorsCount));
 }
 
-std::size_t		TestBiome::getGroundDecorsCount()
+std::size_t		DefaultBiome::getCrystalsCount()
 {
-	return (m_groundDecorsCount);
+	return (randomRangeInt(m_crystalsCount));
 }
 
-std::size_t		TestBiome::getCrystalsCount()
+std::size_t		DefaultBiome::getSkyDecorsCount()
 {
-	return (m_crystalsCount);
+	return (randomRangeInt(m_skyDecorsCount));
 }
 
-std::size_t		TestBiome::getSkyDecorsCount()
+std::size_t	DefaultBiome::getTreeDepth()
 {
-	return (m_skyDecorsCount);
+	return (randomRangeInt(m_treeDepth));
 }
 
-std::size_t	TestBiome::getTreeDepth()
+sf::Vector2f	DefaultBiome::getTreeSize()
 {
-	return (m_treeDepth);
+	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Vector2f	TestBiome::getTreeSize()
+sf::Time		DefaultBiome::getTreeLifeTime()
 {
-	return (m_treeSize);
+	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Time		TestBiome::getTreeLifeTime()
-{
-	return (m_treeLifeTime);
-}
-
-sf::Color		TestBiome::getTreeColor()
+sf::Color		DefaultBiome::getTreeColor()
 {
 	return (m_treeColor);
 }
 
-float			TestBiome::getTreeAngle()
+float			DefaultBiome::getTreeAngle()
 {
-	return (m_treeAngle);
+	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			TestBiome::getTreeIsMoving()
+bool			DefaultBiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-bool			TestBiome::canCreateTree()
+bool			DefaultBiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			TestBiome::canCreateLeaf()
+bool			DefaultBiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	TestBiome::getLeafSize()
+sf::Vector2f	DefaultBiome::getLeafSize()
 {
-	return (m_leafSize);
+	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
+	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		TestBiome::getLeafColor()
+sf::Color		DefaultBiome::getLeafColor()
 {
 	return (m_leafColor);
 }
 
-sf::Vector2f	TestBiome::getCrystalSize()
+sf::Vector2f	DefaultBiome::getCrystalSize()
 {
-	return (m_crystalSize);
+	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		TestBiome::getCrystalPartCount()
+std::size_t		DefaultBiome::getCrystalPartCount()
 {
-	return (m_crystalPartCount);
+	return (randomRangeInt(m_crystalPartCount));
 }
 
-sf::Color		TestBiome::getCrystalColor()
+sf::Color		DefaultBiome::getCrystalColor()
 {
 	return (m_crystalColor);
 }
 
-int				TestBiome::getCrystalPosX()
+int				DefaultBiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_bossInstancePosX - m_mapSize.x / 2.f;
@@ -171,143 +179,165 @@ int				TestBiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			TestBiome::canCreateCrystal()
+bool			DefaultBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	TestBiome::getShineEffectSize()
+sf::Vector2f	DefaultBiome::getShineEffectSize()
 {
-	return (m_shineEffectSize);
+	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		TestBiome::getShineEffectColor()
+sf::Color		DefaultBiome::getShineEffectColor()
 {
 	return (m_shineEffectColor);
 }
 
-float			TestBiome::getShineEffectRotateAngle()
+float			DefaultBiome::getShineEffectRotateAngle()
 {
-	return m_shineEffectRotateAngle;
+	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			TestBiome::canCreateShineEffect()
+bool			DefaultBiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	TestBiome::getRockSize()
+sf::Vector2f	DefaultBiome::getRockSize()
 {
-	return (m_rockSize);
+	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		TestBiome::getRockPartCount()
+std::size_t		DefaultBiome::getRockPartCount()
 {
-	return (m_rockPartCount);
+	return (randomRangeInt(m_rockPartCount));
 }
 
-sf::Color		TestBiome::getRockColor()
+sf::Color		DefaultBiome::getRockColor()
 {
 	return (m_rockColor);
 }
 
-bool			TestBiome::canCreateRock()
+bool			DefaultBiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	TestBiome::getCloudSize()
+sf::Vector2f	DefaultBiome::getCloudSize()
 {
-	return (m_cloudSize);
+	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		TestBiome::getCloudPartCount()
+std::size_t		DefaultBiome::getCloudPartCount()
 {
-	return (m_cloudPartCount);
+	return (randomRangeInt(m_cloudPartCount));
 }
 
-sf::Time		TestBiome::getCloudLifeTime()
+sf::Time		DefaultBiome::getCloudLifeTime()
 {
-	return (m_cloudLifeTime);
+	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		TestBiome::getCloudColor()
+sf::Color		DefaultBiome::getCloudColor()
 {
 	return (m_cloudColor);
 }
 
-bool			TestBiome::canCreateCloud()
+bool			DefaultBiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	TestBiome::getStarSize()
+sf::Vector2f	DefaultBiome::getStarSize()
 {
-	return (m_starSize);
+	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		TestBiome::getStarColor()
+sf::Color		DefaultBiome::getStarColor()
 {
 	return (m_starColor);
 }
 
-sf::Time		TestBiome::getStarLifeTime()
+sf::Time		DefaultBiome::getStarLifeTime()
 {
-	return (m_starLifeTime);
+	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			TestBiome::canCreateStar()
+bool			DefaultBiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	TestBiome::getSunSize()
+sf::Vector2f 	DefaultBiome::getSunSize()
 {
-	return (m_sunSize);
+	return (randomRangeVector2f(m_sunSize));
 }
 
-std::size_t		TestBiome::getSunPartCount()
+std::size_t		DefaultBiome::getSunPartCount()
 {
-	return (m_sunPartCount);
+	return (randomRangeInt(m_sunPartCount));
 }
 
-sf::Color		TestBiome::getSunColor()
+sf::Color		DefaultBiome::getSunColor()
 {
 	return (m_sunColor);
 }
 
-bool			TestBiome::canCreateSun()
+bool			DefaultBiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	TestBiome::getMoonSize()
+sf::Vector2f 	DefaultBiome::getMoonSize()
 {
-	return (m_moonSize);
+	return (randomRangeVector2f(m_moonSize));
 }
 
-sf::Color		TestBiome::getMoonColor()
+sf::Color		DefaultBiome::getMoonColor()
 {
 	return (m_moonColor);
 }
 
-bool			TestBiome::canCreateMoon()
+bool			DefaultBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-sf::Vector2u const & TestBiome::getMapSize()
+float			DefaultBiome::randomFloat(float min, float max)
 {
-	return m_mapSize;
+	return (m_generator.randomFloat(min, max));
 }
 
-float TestBiome::getTransitionDuration()
+int				DefaultBiome::randomInt(int min, int max)
 {
-	return m_transitionDuration;
+	return (m_generator.randomInt(min, max));
 }
 
-int		TestBiome::getBossInstancePosX(void)
+bool			DefaultBiome::randomBool(float percent)
 {
-	return m_bossInstancePosX;
+	return (m_generator.randomBool(percent));
 }
 
+float			DefaultBiome::randomRangeFloat(Range<float> const & range)
+{
+	return (randomFloat(range.min, range.max));
+}
+
+int				DefaultBiome::randomRangeInt(Range<std::size_t> const & range)
+{
+	return (randomInt(range.min, range.max));
+}
+
+sf::Vector2f	DefaultBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+{
+	sf::Vector2f tmp;
+	tmp.x = randomFloat(range.min.x, range.max.x);
+	tmp.y = randomFloat(range.min.y, range.max.y);
+	return tmp;
+}
+
+sf::Time		DefaultBiome::randomRangeTime(Range<sf::Time> const & range)
+{
+	return (sf::seconds(randomFloat(range.min.asSeconds(), range.min.asSeconds())));
+}
