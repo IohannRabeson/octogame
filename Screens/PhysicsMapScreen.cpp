@@ -1,5 +1,7 @@
 #include "PhysicsMapScreen.hpp"
 #include "ConvexShape.hpp"
+#include "CircleShape.hpp"
+#include "RectangleShape.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 
@@ -29,6 +31,24 @@ void	PhysicsMapScreen::start()
 	m_shape->setVertex(1u, sf::Vector2f(40.f, 0.f));
 	m_shape->setVertex(2u, sf::Vector2f(40.f, 60.f));
 	m_shape->setVertex(3u, sf::Vector2f(0.f, 60.f));
+
+	for (std::size_t i = 0u; i < 10; i++)
+	{
+		m_shapes[i] = m_engine.createRectangle();
+		if (i == 1)
+			m_shapes[i]->setApplyGravity(false);
+		else
+			m_shapes[i]->setApplyGravity(true);
+		m_shapes[i]->setPosition(sf::Vector2f(560.f + i * 50.f, 350.f));
+		m_shapes[i]->setSize(sf::Vector2f(40.f, 60.f));
+	}
+
+	RectangleShape * rect = m_engine.createRectangle();
+	rect->setSize(sf::Vector2f(40.f, 60.f));
+	rect->setPosition(sf::Vector2f(1500.f, 500.f));
+	rect->setApplyGravity(true);
+
+	m_engine.unregisterShape(m_shapes[5]);
 }
 
 void	PhysicsMapScreen::pause()

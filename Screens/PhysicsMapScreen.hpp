@@ -3,12 +3,14 @@
 
 # include <AbstractState.hpp>
 # include <GraphicsListeners.hpp>
+# include <Camera.hpp>
 # include "PhysicsEngine.hpp"
 # include "GroundManager.hpp"
 # include "TestBiome.hpp"
-# include <Camera.hpp>
 
 class ConvexShape;
+class RectangleShape;
+class CircleShape;
 
 class PhysicsMapScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
@@ -26,6 +28,7 @@ private:
 	PhysicsEngine &		m_engine;
 	octo::Camera &		m_camera;
 	ConvexShape *		m_shape;
+	RectangleShape *	m_shapes[10];
 	GroundManager		m_groundManager;
 	TestBiome			m_biome;
 
