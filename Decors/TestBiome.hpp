@@ -55,6 +55,7 @@ public:
 	virtual sf::Vector2f	getShineEffectSize();
 	virtual sf::Color		getShineEffectColor();
 	virtual float			getShineEffectRotateAngle();
+	virtual int				getCrystalPosX();
 	virtual bool			canCreateShineEffect();
 
 	virtual sf::Vector2f	getRockSize();

@@ -68,12 +68,12 @@ void GroundManager::initDecors(ABiome & biome)
 	int decorsTypeCount = canCreateTree + canCreateRock - 1;
 	if (decorsTypeCount != -1)
 	{
-		std::vector<int> decorsType;
+		std::vector<DecorManager::DecorTypes> decorsType;
 		decorsType.reserve(decorsTypeCount);
 		if (canCreateTree)
-			decorsType.push_back(0);
+			decorsType.push_back(DecorManager::DecorTypes::Tree);
 		if (canCreateRock)
-			decorsType.push_back(1);
+			decorsType.push_back(DecorManager::DecorTypes::Rock);
 
 		for (std::size_t i = 0; i < groundDecorsCount; i++)
 		{
@@ -81,22 +81,20 @@ void GroundManager::initDecors(ABiome & biome)
 			int chooseDecor = biome.randomInt(0, decorsTypeCount);
 
 			if (chooseDecor == 0)
-				m_decorManager.add(DecorManager::DecorTypes::Tree);
+				m_decorManager.add(decorsType[chooseDecor]);
 			else if (chooseDecor == 1)
-				m_decorManager.add(DecorManager::DecorTypes::Rock);
+				m_decorManager.add(decorsType[chooseDecor]);
 
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
 	}
 
-	int bossPosX = biome.getBossInstancePosX();
-	(void)bossPosX;
 	if (canCreateCrystal)
 	{
 		for (std::size_t i = groundDecorsCount; i < crystalsCount + groundDecorsCount; i++)
 		{
-			int x = biome.randomInt(0.f, mapSizeX);
+			int x = biome.getCrystalPosX();
 			m_decorManager.add(DecorManager::DecorTypes::Crystal);
 
 			m_tiles->registerDecor(x);
