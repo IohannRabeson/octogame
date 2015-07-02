@@ -10,7 +10,6 @@
 
 class ConvexShape;
 class RectangleShape;
-class CircleShape;
 
 class PhysicsMapScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
@@ -25,12 +24,12 @@ public:
 	virtual void	draw(sf::RenderTarget& render)const;
 
 private:
-	PhysicsEngine &		m_engine;
-	octo::Camera &		m_camera;
-	ConvexShape *		m_shape;
-	RectangleShape *	m_shapes[10];
-	GroundManager		m_groundManager;
-	TestBiome			m_biome;
+	PhysicsEngine &					m_engine;
+	octo::Camera &					m_camera;
+	ConvexShape *					m_shape;
+	std::vector<RectangleShape *>	m_shapes;
+	GroundManager					m_groundManager;
+	TestBiome						m_biome;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 
