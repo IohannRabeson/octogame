@@ -58,6 +58,11 @@ public:
 
 	void		setup(ABiome* biome);
 
+	inline Iterator begin() { return m_elements.begin(); };
+	inline Iterator end() { return m_elements.end(); };
+	//ConstIterator begin() const { return m_elements.begin(); };
+	//ConstIterator end() const { return m_elements.end(); };
+
 	Iterator	add(DecorTypes type);
 	Iterator	add(ADecor* decor);
 	Iterator	erase(Iterator iterator);

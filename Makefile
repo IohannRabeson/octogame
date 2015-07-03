@@ -35,7 +35,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/ParticleDemoScreen.cpp
 
 SRC_GAME =		Game/Game.cpp							\
-				Game/BiomeManager.cpp
+				Game/BiomeManager.cpp					\
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -49,6 +49,7 @@ SRC_OCTO =		Octo/OctoNoise.cpp
 
 SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/DecorManager.cpp					\
+				Decors/SkyManager.cpp					\
 				Decors/ADecor.cpp						\
 				Decors/ABiome.cpp						\
 				Decors/TestBiome.cpp					\

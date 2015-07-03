@@ -42,7 +42,7 @@ TestBiome::TestBiome() :
 	m_cloudPartCount(5u),
 	m_cloudColor(255, 105, 180),
 	m_canCreateCloud(false),
-	m_starSize(200.f, 200.f),
+	m_starSize(10.f, 10.f),
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(20.f)),
 	m_canCreateStar(false),
