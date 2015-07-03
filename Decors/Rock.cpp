@@ -80,17 +80,15 @@ void Rock::setup(ABiome& biome)
 	m_values.resize(m_partCount);
 
 	std::size_t i = 0u;
-	float cornerSize = m_size.x / (m_partCount * 2.f);
 	float totalX = 0.f;
 	sf::Vector2f size;
 
 	// Compute left random values
-	size.x = cornerSize;
-	size.y = m_size.y;
+	size = m_size;
 	sf::Vector2f origin(0.f, 0.f);
 	while (i < m_partCount / 2.f)
 	{
-		size.x = biome.randomFloat(cornerSize * 0.5f, cornerSize);
+		size.x = biome.randomFloat(m_size.x * 0.5f, m_size.x);
 		totalX += size.x;
 		size.y -= totalX;
 		origin.x += biome.randomFloat(-totalX, 0.f);
@@ -110,13 +108,11 @@ void Rock::setup(ABiome& biome)
 	// Compute right random values
 	totalX = 0.f;
 	m_size = biome.getRockSize();
-	cornerSize = m_size.x / (m_partCount * 2.f);
-	size.x = cornerSize;
-	size.y = m_size.y;
+	size = m_size;
 	origin = sf::Vector2f(0.f + size.x, 0.f);
 	while (i < m_partCount)
 	{
-		size.x = biome.randomFloat(cornerSize * 0.5f, cornerSize);
+		size.x = biome.randomFloat(m_size.x * 0.5f, m_size.x);
 		totalX += size.x;
 		size.y -= totalX;
 		origin.x += biome.randomFloat(0.0f, totalX);

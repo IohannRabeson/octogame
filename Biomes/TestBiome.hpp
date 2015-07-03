@@ -27,7 +27,6 @@ public:
 
 	virtual void			setup(std::size_t seed);
 	virtual std::string		getName()const;
-	virtual void			setSeed(std::string string);
 
 	virtual float			randomFloat(float min, float max);
 	virtual int				randomInt(int min, int max);
@@ -83,7 +82,7 @@ public:
 	virtual sf::Color		getMoonColor();
 	virtual bool			canCreateMoon();
 
-	virtual sf::Vector2u const & getMapSize();
+	virtual sf::Vector2u getMapSize();
 	virtual float getTransitionDuration();
 	virtual int getBossInstancePosX();
 
