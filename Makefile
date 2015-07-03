@@ -32,10 +32,12 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/LightningDemoScreen.cpp			\
 				Screens/GameScreen.cpp					\
-				Screens/ParticleDemoScreen.cpp
+				Screens/ParticleDemoScreen.cpp			\
+				Screens/FsmDemoScreen.cpp
 
 SRC_GAME =		Game/Game.cpp							\
-				Game/BiomeManager.cpp
+				Game/BiomeManager.cpp					\
+				Game/FiniteStateMachine.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
