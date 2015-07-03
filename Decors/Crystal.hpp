@@ -4,7 +4,6 @@
 # include "ADecor.hpp"
 # include "ShineEffect.hpp"
 # include "DecorAnimator.hpp"
-# include "RandomGenerator.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
@@ -33,7 +32,6 @@ private:
 	std::vector<CrystalValue>	m_values;
 	DecorAnimator				m_animator;
 	float						m_animation;
-	RandomGenerator				m_generator;
 
 	ShineEffect					m_shine;
 	std::vector<sf::Vector2f>	m_up;

@@ -1,5 +1,4 @@
 #include "Rock.hpp"
-#include "RandomGenerator.hpp"
 #include "ABiome.hpp"
 
 Rock::Rock() :
@@ -84,7 +83,6 @@ void Rock::setup(ABiome& biome)
 	float cornerSize = m_size.x / (m_partCount * 2.f);
 	float totalX = 0.f;
 	sf::Vector2f size;
-	RandomGenerator generator;
 
 	// Compute left random values
 	size.x = cornerSize;
@@ -92,17 +90,17 @@ void Rock::setup(ABiome& biome)
 	sf::Vector2f origin(0.f, 0.f);
 	while (i < m_partCount / 2.f)
 	{
-		size.x = generator.randomFloat(cornerSize * 0.5f, cornerSize);
+		size.x = biome.randomFloat(cornerSize * 0.5f, cornerSize);
 		totalX += size.x;
 		size.y -= totalX;
-		origin.x += generator.randomFloat(-totalX, 0.f);
+		origin.x += biome.randomFloat(-totalX, 0.f);
 		if (size.x * 2.f < size.y)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeLeft = generator.randomFloat(size.x, size.x * 2.f);
-			m_values[i].sizeRight = generator.randomFloat(size.x, size.x * 2.f);
-			m_values[i].sizeRec = generator.randomFloat(0.f, size.x * 2.f);
+			m_values[i].sizeLeft = biome.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRight = biome.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRec = biome.randomFloat(0.f, size.x * 2.f);
 		}
 		else
 			break;
@@ -118,17 +116,17 @@ void Rock::setup(ABiome& biome)
 	origin = sf::Vector2f(0.f + size.x, 0.f);
 	while (i < m_partCount)
 	{
-		size.x = generator.randomFloat(cornerSize * 0.5f, cornerSize);
+		size.x = biome.randomFloat(cornerSize * 0.5f, cornerSize);
 		totalX += size.x;
 		size.y -= totalX;
-		origin.x += generator.randomFloat(0.0f, totalX);
+		origin.x += biome.randomFloat(0.0f, totalX);
 		if (size.x * 2.f < size.y)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeLeft = generator.randomFloat(size.x, size.x * 2.f);
-			m_values[i].sizeRight = generator.randomFloat(size.x, size.x * 2.f);
-			m_values[i].sizeRec = generator.randomFloat(10.f, size.x * 2.f);
+			m_values[i].sizeLeft = biome.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRight = biome.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRec = biome.randomFloat(10.f, size.x * 2.f);
 		}
 		i++;
 	}

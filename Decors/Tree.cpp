@@ -1,6 +1,5 @@
 #include "Tree.hpp"
 #include "ABiome.hpp"
-#include "RandomGenerator.hpp"
 #include <Math.hpp>
 
 Tree::Tree(void) :
@@ -159,8 +158,7 @@ void Tree::newTree(ABiome& biome)
 	for (std::size_t i = 0u; i < m_angleMaxCount; i++)
 		m_refAngle[i] = biome.getTreeAngle();
 	m_animator.setup(biome.getTreeLifeTime());
-	RandomGenerator generator;
-	m_growSide = generator.randomBool(0.5);
+	m_growSide = biome.randomBool(0.5);
 
 	m_isLeaf = biome.canCreateLeaf();
 
