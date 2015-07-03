@@ -14,10 +14,10 @@ class DefaultBiome : public ABiome
 template<class T>
 struct Range
 {
-	Range(T minRange, T maxRange)
+	Range(T minRange, T maxRange) :
+		min(minRange),
+		max(maxRange)
 	{
-		min = minRange;
-		max = maxRange;
 	}
 	T min;
 	T max;

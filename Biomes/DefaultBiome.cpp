@@ -42,21 +42,21 @@ DefaultBiome::DefaultBiome() :
 	m_rockPartCount(2.f, 10.f),
 	m_rockColor(255, 0, 100),
 
-	m_cloudSize(sf::Vector2f(300u, 100u), sf::Vector2f(500u, 250u)),
+	m_cloudSize(sf::Vector2f(300.f, 10.f), sf::Vector2f(500.f, 40.f)),
 	m_cloudPartCount(2u, 10u),
 	m_cloudLifeTime(sf::seconds(15), sf::seconds(60)),
-	m_cloudColor(),
+	m_cloudColor(255, 255, 255),
 
 	m_starSize(sf::Vector2f(50.f, 50.f), sf::Vector2f(100.f, 100.f)),
-	m_starColor(),
+	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(60)),
 
 	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(),
+	m_sunColor(255, 162, 0),
 
 	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
-	m_moonColor()
+	m_moonColor(0, 111, 255)
 {
 	m_generator.setSeed("default_biome");
 }
@@ -271,7 +271,8 @@ bool			DefaultBiome::canCreateStar()
 
 sf::Vector2f 	DefaultBiome::getSunSize()
 {
-	return (randomRangeVector2f(m_sunSize));
+	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
+	return (sf::Vector2f(tmp, tmp));
 }
 
 std::size_t		DefaultBiome::getSunPartCount()
@@ -339,5 +340,6 @@ sf::Vector2f	DefaultBiome::randomRangeVector2f(Range<sf::Vector2f> const & range
 
 sf::Time		DefaultBiome::randomRangeTime(Range<sf::Time> const & range)
 {
-	return (sf::seconds(randomFloat(range.min.asSeconds(), range.min.asSeconds())));
+
+	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.min.asMicroseconds())));
 }

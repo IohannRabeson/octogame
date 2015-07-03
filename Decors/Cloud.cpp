@@ -4,8 +4,7 @@
 Cloud::Cloud() :
 	m_partCount(0),
 	m_animator(2.f, 4.f, 3.f, 0.4f),
-	m_animation(1.f),
-	m_lifeTime(sf::Time::Zero)
+	m_animation(1.f)
 {
 }
 
@@ -93,17 +92,15 @@ void Cloud::newCloud(ABiome& biome)
 
 	std::size_t i = 0;
 	float totalY = 0;
-	float cornerSize = m_size.x / (m_partCount * 2.f);
 	sf::Vector2f size;
 
 	// Compute left random values
-	size.x = m_size.x;
-	size.y = cornerSize;
+	size = m_size;
 	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
 	while (i < m_partCount / 2)
 	{
 		//TODO: Find a better way to have more random values here
-		size.y = biome.randomFloat(cornerSize * 0.5f, cornerSize);
+		size.y = biome.randomFloat(m_size.y * 0.5f, m_size.y);
 		totalY += size.y;
 		size.x -= totalY;
 		origin.y += biome.randomFloat(-totalY, 0.f);
@@ -123,14 +120,12 @@ void Cloud::newCloud(ABiome& biome)
 	// Compute right random values
 	totalY = 0;
 	m_size = biome.getCloudSize();
-	cornerSize = m_size.x / (m_partCount * 2.f);
-	size.x = m_size.x - cornerSize;
-	size.y = cornerSize;
+	size = m_size;
 	origin = sf::Vector2f(0.f, 0.f + size.y);
 	while (i < m_partCount)
 	{
 		//TODO: Find a better way to have more random values here
-		size.y = biome.randomFloat(cornerSize * 0.5f, cornerSize);
+		size.y = biome.randomFloat(m_size.y * 0.5f, m_size.y);
 		totalY += size.y;
 		size.x -= totalY;
 		origin.y += biome.randomFloat(0.0f, totalY);
