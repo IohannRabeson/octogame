@@ -58,12 +58,25 @@ public:
 	/*! Used by the ShapeBuilder to register a TileShape */
 	void registerTile(TileShape * shape, std::size_t x, std::size_t y);
 
+	/*! Unregister and destroy a PolygonShape */
+	void unregisterShape(PolygonShape * shape);
+
+	/*! Unregister and destroy a CircleShape */
+	void unregisterShape(CircleShape * shape);
+
+	/*! Unregister all shapes */
+	void unregisterAllShapes(void);
+
+	/*! Unregister all tiles
+	 * \deprecated Use with caution
+	 */
+	void unregisterAllTiles(void);
+
 	/*! Update the physic */
 	void update(float deltatime);
 
 	/*! Set the size of the tile map */
 	void setTileMapSize(sf::Vector2i const & tileMapSize);
-
 
 	/*! Set the ContactListener
 	 * The contact listener is call each time there is a collision between two object
@@ -82,7 +95,8 @@ private:
 	class Projection
 	{
 	public:
-		void project(sf::Vector2f const & axis, PolygonShape * polygon);
+		template<class T>
+		void project(sf::Vector2f const & axis, T * polygon);
 		void project(sf::Vector2f const & axis, CircleShape * circle);
 		float getOverlap(Projection const & projection);
 		bool contains(Projection const & projection);
@@ -135,12 +149,10 @@ private:
 	std::size_t											m_circleCirclePairCount;
 
 	// Pairs of object which might be colliding with the tile map
-	std::vector<Pair<TileShape *, PolygonShape *>>		m_tilePolyPairs;
-	std::vector<Pair<TileShape *, CircleShape *>>		m_tileCirclePairs;
+	std::vector<std::vector<Pair<TileShape *, PolygonShape *>>>		m_tilePolyPairs;
+	std::vector<std::vector<Pair<TileShape *, CircleShape *>>>		m_tileCirclePairs;
 	std::size_t											m_tilePolyPairCount;
 	std::size_t											m_tileCirclePairCount;
-
-	std::vector<std::vector<Pair<TileShape *, PolygonShape *>>>		m_test;
 
 	// Variable used to compute collisions (to avoid creation and copy)
 	Projection											m_projectionA;
@@ -167,9 +179,6 @@ private:
 
 	/*! Broadphase for tiles */
 	template<class T>
-	std::size_t broadPhase(std::vector<T> const & vector, std::vector<Pair<TileShape *, T>> & pairs);
-
-	template<class T>
 	std::size_t broadPhase(std::vector<T> const & vector, std::vector<std::vector<Pair<TileShape *, T>>> & pairs);
 
 	/*! Determine if pairs are colliding */
@@ -180,10 +189,6 @@ private:
 	void narrowPhase(std::vector<Pair<T, U>> & pairs, std::size_t pairCount);
 
 	/*! Determine if pairs are colliding with tiles */
-	template<class T, class U>
-	void narrowPhaseTile(std::vector<Pair<T, U>> & pairs, std::size_t pairCount);
-
-	//TODO: adapt new system for circle and remove old useless function
 	template<class T>
 	void narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>>> & pairs, std::size_t pairCount);
 
