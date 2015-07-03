@@ -40,8 +40,9 @@ TestBiome::TestBiome() :
 	m_rockPartCount(5u),
 	m_rockColor(255, 105, 180),
 	m_canCreateRock(true),
-	m_cloudSize(400.f, 200.f),
+	m_cloudSize(400.f, 20.f),
 	m_cloudPartCount(5u),
+	m_cloudLifeTime(sf::seconds(10.f)),
 	m_cloudColor(255, 105, 180),
 	m_canCreateCloud(true),
 	m_starSize(10.f, 10.f),
@@ -70,11 +71,6 @@ void			TestBiome::setup(std::size_t seed)
 std::string		TestBiome::getName()const
 {
 	return ("Biome Test");
-}
-
-void			TestBiome::setSeed(std::string string)
-{
-	m_generator.setSeed(string);
 }
 
 float			TestBiome::randomFloat(float min, float max)
@@ -308,7 +304,7 @@ bool			TestBiome::canCreateMoon()
 	return (m_canCreateMoon);
 }
 
-sf::Vector2u const & TestBiome::getMapSize()
+sf::Vector2u TestBiome::getMapSize()
 {
 	return m_mapSize;
 }
