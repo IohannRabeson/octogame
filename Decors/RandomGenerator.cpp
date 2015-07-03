@@ -7,7 +7,7 @@ RandomGenerator::RandomGenerator(void)
 	m_distributionPiecewise.param(std::piecewise_linear_distribution<>::param_type(i.begin(), i.end(), w.begin()));
 }
 
-void RandomGenerator::setSeed(std::string string)
+void RandomGenerator::setSeed(std::string const & string)
 {
 	if (string == "random")
 	{
