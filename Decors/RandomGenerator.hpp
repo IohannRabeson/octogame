@@ -9,17 +9,18 @@ public:
 	RandomGenerator(void);
 	~RandomGenerator(void) = default;
 
-	static void setSeed(std::string string);
-	static float randomFloat(float min, float max);
-	static int randomInt(int min, int max);
-	static bool randomBool(float percent);
+	void setSeed(std::string const & string);
+	float randomFloat(float min, float max);
+	int randomInt(int min, int max);
+	bool randomBool(float percent);
+	std::size_t randomPiecewise(std::size_t max);
 
 private:
-	static std::mt19937								s_engine;
-	static std::uniform_real_distribution<float>	s_distributionFloat;
-	static std::uniform_int_distribution<int>		s_distributionInt;
-	static std::bernoulli_distribution				s_distributionBool;
-	static std::string								s_lastSeed;
+	std::mt19937							m_engine;
+	std::uniform_real_distribution<float>	m_distributionFloat;
+	std::uniform_int_distribution<int>		m_distributionInt;
+	std::bernoulli_distribution				m_distributionBool;
+	std::piecewise_linear_distribution<>	m_distributionPiecewise;
 };
 
 #endif

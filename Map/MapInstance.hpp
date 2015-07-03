@@ -1,5 +1,5 @@
-#ifndef STATICTILEOBJECT_HPP
-# define STATICTILEOBJECT_HPP
+#ifndef MAPINSTANCE_HPP
+# define MAPINSTANCE_HPP
 
 # include <SFML/Graphics.hpp>
 # include <Array2D.hpp>

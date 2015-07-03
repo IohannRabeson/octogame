@@ -1,7 +1,9 @@
 #ifndef NEWMAP_HPP
 # define NEWMAP_HPP
 
+//TODO:remove
 # include <map>
+# include <utility>
 # include <Array2D.hpp>
 # include "Tile.hpp"
 # include "IMapTransformable.hpp"
@@ -11,28 +13,29 @@ class MapInstance;
 
 class Map : public IMapTransformable
 {
-private:
-	typedef std::map<int, Tile*> Decors;
-
 public:
+	typedef std::vector<std::pair<int, sf::Vector2f>>	Decors;
+	typedef Decors::iterator							Iterator;
+
 	typedef octo::Array2D<Tile*> TileMap;
 
 	Map(void);
 	virtual ~Map(void);
 
-	sf::Vertex * getHeight(int x);
-
 	inline std::size_t getColumns(void) const { return m_tiles.columns(); }
 	inline std::size_t getRows(void) const { return m_tiles.rows(); }
 	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles(column, row); }
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
-	inline Decors & getDecors(void) { return m_decors; }
 
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
 	inline void computeMapRangeX(int startX, int endX) { computeMapRange(startX, endX, 0, m_tiles.rows()); }
 	inline void computeMapRangeY(int startY, int endY) { computeMapRange(0, m_tiles.columns(), startY, endY); }
 	inline void setCameraView(sf::Vector2f const * offset) { m_offset = offset; }
 	inline void registerOffset(void) { m_curOffset = *m_offset; }
+	inline Iterator begin(void) { return m_decorPositions.begin(); }
+	inline Iterator end(void) { return m_decorPositions.end(); }
+
+	void registerDecor(int x);
 
 	void addOffsetX(int offsetX);
 	void addOffsetY(int offsetY);
@@ -62,13 +65,7 @@ private:
 	virtual float secondCurve(float * vec);
 	virtual void setColor(Tile & tile);
 
-	static constexpr std::size_t MaxDecor = 200u;
-
-	Tile							m_reserveTile[MaxDecor];
-	Decors							m_decors;
-	std::size_t						m_decorTileCount;
-	std::unique_ptr<sf::Vertex[]>	m_vertices;
-
+	std::vector<std::pair<int, sf::Vector2f>>	m_decorPositions;
 	sf::Vector2u					m_mapSize;
 
 };

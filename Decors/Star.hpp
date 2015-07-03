@@ -8,6 +8,7 @@ class Star : public ShineBuilder
 {
 public:
 	Star(void);
+	Star(float * dayNightClock);
 	virtual ~Star(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -24,6 +25,8 @@ private:
 
 	sf::Vector2f	m_glowSize;
 	sf::Vector2f	m_glowSizeCorner;
+
+	float			*m_dayNightClock;
 };
 
 #endif

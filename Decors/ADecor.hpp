@@ -15,8 +15,6 @@
 
 # include <VertexBuilder.hpp>
 
-# include <random>
-
 # include <SFML/System/Time.hpp>
 # include <SFML/System/Vector2.hpp>
 
@@ -25,7 +23,6 @@ class ABiome;
 class ADecor
 {
 public:
-	typedef std::mt19937	RandomEngine;
 	virtual ~ADecor();
 
 	virtual void			setup(ABiome& biome) = 0;

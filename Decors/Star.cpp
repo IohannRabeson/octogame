@@ -2,9 +2,15 @@
 #include "ABiome.hpp"
 
 Star::Star() :
-	m_animator(3.f, 3.f, 3.f, 0.3f),
+	m_animator(5.f, 3.f, 3.f, 0.3f),
 	m_animation(1.f)
 {
+}
+
+Star::Star(float * dayNightClock) :
+	Star()
+{
+	m_dayNightClock = dayNightClock;
 }
 
 void Star::setup(ABiome& biome)
@@ -17,11 +23,18 @@ void Star::setup(ABiome& biome)
 	m_glowSizeCorner = m_glowSize / 2.f;
 
 	m_animator.setup(biome.getStarLifeTime());
+	m_animator.pause();
 }
 
 void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	m_animator.update(frameTime);
+	if (*m_dayNightClock < 0.5f)
+		m_animator.die();
+
+	if (m_animator.update(frameTime))
+		m_animator.pause();
+	else if (*m_dayNightClock > 0.5f)
+		m_animator.play();
 	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f const & position = getPosition();

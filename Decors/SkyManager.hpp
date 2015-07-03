@@ -4,6 +4,7 @@
 #include "DecorManager.hpp"
 
 class ABiome;
+class Star;
 
 class SkyManager
 {
@@ -15,7 +16,9 @@ public:
 	void update(sf::Time frameTime);
 
 private:
-	sf::Vector2f computePosition(DecorManager::Iterator decor, sf::Vector2f origin, sf::Vector2f originRotate, float cos, float sin);
+	sf::Vector2f setPosition(DecorManager::Iterator decor, sf::Vector2f origin, sf::Vector2f originRotate, float cos, float sin);
+	void setupStars(ABiome & biome, sf::Vector2f cameraSize);
+	void setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCenter);
 
 	DecorManager *				m_decorManager;
 

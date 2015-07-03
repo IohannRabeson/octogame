@@ -85,14 +85,14 @@ void Crystal::setup(ABiome& biome)
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		m_values[i].size = biome.getCrystalSize();
-		m_values[i].angle = m_generator.randomFloat(-45.f + (i * 90.f / m_partCount), -45.f + ((i + 1) * 90.f / m_partCount));
-		int deltaColor = m_generator.randomFloat(0.f, 80.f);
+		m_values[i].angle = biome.randomFloat(-45.f + (i * 90.f / m_partCount), -45.f + ((i + 1) * 90.f / m_partCount));
+		int deltaColor = biome.randomFloat(0.f, 80.f);
 		m_values[i].color = m_color + sf::Color(deltaColor, deltaColor, deltaColor, 0);
 	}
 	m_animator.setup();
 	m_shine.setup(biome);
 	m_shineTimerMax = sf::seconds(m_shine.getAnimator().getAnimationTime());
-	m_shineCrystalNumber = m_generator.randomInt(0, m_partCount - 1);
+	m_shineCrystalNumber = biome.randomInt(0, m_partCount - 1);
 }
 
 void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
@@ -109,7 +109,7 @@ void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& b
 		if (m_shineTimer >= m_shineTimerMax)
 		{
 			m_shineTimer -= m_shineTimerMax;
-			m_shineCrystalNumber = m_generator.randomInt(0, m_partCount - 1);
+			m_shineCrystalNumber = biome.randomInt(0, m_partCount - 1);
 		}
 		float interpolateValue = m_shineTimer / m_shineTimerMax;
 
