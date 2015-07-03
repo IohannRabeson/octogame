@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "Game.hpp"
-#include "TestBiome.hpp"
+#include "DefaultBiome.hpp"
 
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -23,7 +23,7 @@ Game::Game() :
 
 void	Game::setup()
 {
-	m_biomeManager.registerBiome<TestBiome>("test");		
+	m_biomeManager.registerBiome<DefaultBiome>("test");		
 }
 
 void	Game::loadLevel(std::string const& fileName)

@@ -66,6 +66,7 @@ SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\
 				Decors/Sun.cpp							\
+				Decors/Moon.cpp							\
 				Decors/Lightning.cpp					\
 				Decors/RainSystem.cpp
 

@@ -47,16 +47,16 @@ DefaultBiome::DefaultBiome() :
 	m_cloudLifeTime(sf::seconds(15), sf::seconds(60)),
 	m_cloudColor(255, 255, 255),
 
-	m_starSize(sf::Vector2f(50.f, 50.f), sf::Vector2f(100.f, 100.f)),
+	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),
-	m_starLifeTime(sf::seconds(15), sf::seconds(60)),
+	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
 	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 162, 0),
+	m_sunColor(255, 255, 200),
 
-	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
-	m_moonColor(0, 111, 255)
+	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 80.f)),
+	m_moonColor(255, 255, 255)
 {
 	m_generator.setSeed("default_biome");
 }
@@ -341,5 +341,5 @@ sf::Vector2f	DefaultBiome::randomRangeVector2f(Range<sf::Vector2f> const & range
 sf::Time		DefaultBiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
-	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.min.asMicroseconds())));
+	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }

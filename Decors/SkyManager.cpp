@@ -9,7 +9,7 @@
 
 SkyManager::SkyManager(void) :
 	m_timer(0.f),
-	m_timerMax(10.f),
+	m_timerMax(30.f),
 	m_starCount(600u)
 {
 }
@@ -44,7 +44,7 @@ void SkyManager::setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCen
 {
 	m_decorManager->add(DecorManager::DecorTypes::Sun);
 	//TODO: To change for moon
-	m_decorManager->add(DecorManager::DecorTypes::Sun);
+	m_decorManager->add(DecorManager::DecorTypes::Moon);
 
 	m_originRotate = sf::Vector2f(cameraCenter.x, cameraSize.y);
 	m_originSun = sf::Vector2f(0.f, cameraSize.y);
