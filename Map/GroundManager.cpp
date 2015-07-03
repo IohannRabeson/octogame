@@ -39,6 +39,7 @@ void GroundManager::init(ABiome & biome)
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
 	m_tileShapes.resize(m_tiles->getColumns(), nullptr);
 	PhysicsEngine::getInstance().setTileMapSize(sf::Vector2i(m_tiles->getColumns(), m_tiles->getRows()));
+
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
 		m_tileShapes[x] = builder.createTile(x, 0u);

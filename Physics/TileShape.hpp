@@ -75,7 +75,7 @@ public:
 	sf::Vector2f const & getSupportVertex(sf::Vector2f const & direction);
 
 	/*! Get the vertex count needed to compute the sat */
-	inline virtual std::size_t getEfficientVertexCount(void) const { return 1u; }
+	inline virtual std::size_t getEfficientVertexCount(void) const { return 4u; }
 
 	/*! Use to draw debug information */
 	virtual void debugDraw(sf::RenderTarget & render);
