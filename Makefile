@@ -37,7 +37,8 @@ SRC_STATES =	Screens/StateTest.cpp					\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
-				Game/FiniteStateMachine.cpp
+				Game/FiniteStateMachine.cpp				\
+				Game/ACharacter.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\

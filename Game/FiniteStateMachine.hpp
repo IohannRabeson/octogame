@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/03 14:24:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/03 19:51:22 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/14 20:12:54 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ public:
 	/*!	Null event idenitifier */
 	static constexpr EventId const	NullEvent = std::numeric_limits<EventId>::max();
 
-
 	/*!	Create an empty state machine */
 	FiniteStateMachine();
 
@@ -68,8 +67,7 @@ public:
 
 	/*!	Update the automaton
 	 *
-	 *	If a change has been programmed then is performed.<br>
-	 *	Call update method of the current state.
+	 *	If a change has been programmed then performes it.<br>
 	 */
 	void		update(sf::Time frameTime);
 
@@ -80,6 +78,7 @@ public:
 	 *	
 	 *	This method requiere a non null start state.
 	 *	\see setStart()
+	 *	\see isReady()
 	 */
 	void		start();
 	
