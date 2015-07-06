@@ -53,6 +53,15 @@ void Map::init(ABiome & biome)
 	{
 		return this->m_noise.fBm(x, y, 3, 3.f, 0.3f);
 	};
+
+	m_tileColor = [this](float x, float y, float z)
+	{
+		static const sf::Color end = sf::Color(250.f, 150.f, 0.f);
+		static const sf::Color start = sf::Color(250.f, 0.f, 0.f);
+
+		float noise = (this->m_noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		return octo::linearInterpolation(start, end, noise);
+	};
 }
 
 void Map::computeMapRange(int startX, int endX, int startY, int endY)
@@ -114,7 +123,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			vec[0] = static_cast<float>(x + curOffsetX);
 			vec[1] = static_cast<float>(offsetY);
 			vec[2] = m_depth;
-			setTileColor(vec, *m_tiles.get(x, y));
+			m_tiles.get(x, y)->setStartColor(m_tileColor(vec[0], vec[1], vec[2]));
 		}
 	}
 }
@@ -171,19 +180,6 @@ void Map::computeDecor(void)
 void Map::registerDecor(int x)
 {
 	m_decorPositions.emplace_back(std::pair<int, sf::Vector2f>(x, sf::Vector2f()));
-}
-
-void Map::setTileColor(float * vec, Tile & tile)
-{
-	vec[0] /= 10.f;
-	vec[1] /= 10.f;
-	vec[2] /= 10.f;
-	float noise = (OctoNoise::getCurrent().noise3(vec) + 1.f) / 2.f;
-
-	sf::Color end = sf::Color(250.f, 150.f, 0.f);
-	sf::Color start = sf::Color(250.f, 0.f, 0.f);
-
-	tile.setStartColor(octo::linearInterpolation(start, end, noise));
 }
 
 void Map::swapDepth(void)

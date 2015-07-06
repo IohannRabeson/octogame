@@ -1,8 +1,6 @@
-#ifndef NEWMAP_HPP
-# define NEWMAP_HPP
+#ifndef MAP_HPP
+# define MAP_HPP
 
-//TODO:remove
-# include <map>
 # include <functional>
 # include <Array2D.hpp>
 # include "Tile.hpp"
@@ -15,12 +13,11 @@ class MapInstance;
 class Map : public IMapTransformable
 {
 public:
-	typedef std::vector<std::pair<int, sf::Vector2f>>	Decors;
-	typedef Decors::iterator							Iterator;
-
-	typedef octo::Array2D<Tile*> TileMap;
-	typedef std::function<float(float x, float y)>		MapSurfaceCallback;
-	//std::function<sf::Color(float x, float y, float z)>		m_getTileColor;
+	typedef std::vector<std::pair<int, sf::Vector2f>>			Decors;
+	typedef Decors::iterator									Iterator;
+	typedef octo::Array2D<Tile*>								TileMap;
+	typedef std::function<float(float x, float y)>				MapSurfaceCallback;
+	typedef std::function<sf::Color(float x, float y, float z)>	TileColorCallback;
 
 	Map(void);
 	virtual ~Map(void);
@@ -30,6 +27,7 @@ public:
 	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles(column, row); }
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
 	inline void setMapSurface(MapSurfaceCallback mapSurface) { m_mapSurface = mapSurface; }
+	inline void setTileColorCallback(TileColorCallback tileColor) { m_tileColor = tileColor; }
 
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
 	inline void computeMapRangeX(int startX, int endX) { computeMapRange(startX, endX, 0, m_tiles.rows()); }
@@ -62,14 +60,11 @@ private:
 	sf::Vector2f const *						m_offset;
 	sf::Vector2f								m_curOffset;
 	std::vector<std::unique_ptr<MapInstance>>	m_instances;
+	Decors										m_decorPositions;
+	sf::Vector2u								m_mapSize;
 	Noise										m_noise;
-
-	void setTileColor(float * vec, Tile & tile);
-
 	MapSurfaceCallback							m_mapSurface;
-
-	std::vector<std::pair<int, sf::Vector2f>>	m_decorPositions;
-	sf::Vector2u					m_mapSize;
+	TileColorCallback							m_tileColor;
 
 };
 
