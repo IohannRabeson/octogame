@@ -1,5 +1,5 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Octo Decors Physics Game
+DIRS = Main Firefly Screens Map Octo Decors Physics Game Biomes
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -16,6 +16,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_FIREFLY)									\
 	  $(SRC_MAP)										\
 	  $(SRC_OCTO)										\
+	  $(SRC_BIOMES)										\
 	  $(SRC_DECORS)										\
 	  $(SRC_GAME)										\
 	  Main/DefaultApplicationListener.cpp				\
@@ -30,6 +31,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/EngineScreen.cpp				\
 				Screens/PhysicsMapScreen.cpp			\
 				Screens/DecorManagerDemoScreen.cpp		\
+				Screens/LightningDemoScreen.cpp			\
 				Screens/GameScreen.cpp					\
 				Screens/ParticleDemoScreen.cpp
 
@@ -47,11 +49,13 @@ SRC_MAP =		Map/Map.cpp								\
 
 SRC_OCTO =		Octo/OctoNoise.cpp
 
+SRC_BIOMES =	Biomes/ABiome.cpp						\
+				Biomes/TestBiome.cpp					\
+				Biomes/DefaultBiome.cpp
+
 SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/DecorManager.cpp					\
 				Decors/ADecor.cpp						\
-				Decors/ABiome.cpp						\
-				Decors/TestBiome.cpp					\
 				Decors/RandomGenerator.cpp				\
 				Decors/DecorAnimator.cpp				\
 				Decors/Crystal.cpp						\
@@ -62,6 +66,7 @@ SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\
 				Decors/Sun.cpp							\
+				Decors/Lightning.cpp					\
 				Decors/RainSystem.cpp
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\

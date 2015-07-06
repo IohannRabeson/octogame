@@ -19,6 +19,7 @@ DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, floa
 	m_beatDelta(delta)
 {
 	RandomGenerator generator;
+	generator.setSeed("random");
 	m_finalAnimation = 1.0f - m_beatDelta + generator.randomFloat(0.f, 0.1f);
 	m_startTimerMax = generator.randomFloat(0.f, start);
 }
