@@ -2,9 +2,11 @@
 # define NEWMAP_HPP
 
 # include <map>
+# include <functional>
 # include <Array2D.hpp>
 # include "Tile.hpp"
 # include "IMapTransformable.hpp"
+# include "Noise.hpp"
 
 class ABiome;
 class MapInstance;
@@ -16,6 +18,8 @@ private:
 
 public:
 	typedef octo::Array2D<Tile*> TileMap;
+	typedef std::function<float(float x, float y)>		MapSurfaceCallback;
+	//std::function<sf::Color(float x, float y, float z)>		m_getTileColor;
 
 	Map(void);
 	virtual ~Map(void);
@@ -27,6 +31,7 @@ public:
 	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles(column, row); }
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
 	inline Decors & getDecors(void) { return m_decors; }
+	inline void setMapSurface(MapSurfaceCallback mapSurface) { m_mapSurface = mapSurface; }
 
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
 	inline void computeMapRangeX(int startX, int endX) { computeMapRange(startX, endX, 0, m_tiles.rows()); }
@@ -55,10 +60,11 @@ private:
 	sf::Vector2f const *						m_offset;
 	sf::Vector2f								m_curOffset;
 	std::vector<std::unique_ptr<MapInstance>>	m_instances;
+	Noise										m_noise;
 
-	//TODO: nor more virtual, pointer to function instead
-	float mapSurface(float * vec);
 	void setTileColor(float * vec, Tile & tile);
+
+	MapSurfaceCallback							m_mapSurface;
 
 	static constexpr std::size_t MaxDecor = 200u;
 
