@@ -35,7 +35,7 @@ void Rainbow::createRainbowPart(float thickness, sf::Vector2f const & origin, st
 	(void)thickness;
 	for (std::size_t i = 0; i < stripeCount - 1; i++)
 	{
-		builder.createQuad(start[i] + origin, start[i + 1] + origin, end[i + 1] + origin, end[i] + origin, sf::Color(i*20 + 100,i*10 + 15,i*10 + 2));
+		builder.createQuad(start[i] + origin, start[i + 1] + origin, end[i + 1] + origin, end[i] + origin, m_stripesColors[i]);
 	}
 }
 
@@ -82,7 +82,15 @@ void Rainbow::setup(ABiome& biome)
 {
 	m_size = biome.getRainbowSize();
 	m_partCount = 8u;//biome.getRainbowPartCount();
-	m_stripeCount = 8u;
+	m_stripeCount = 7u;
+	m_stripesColors.resize(m_stripeCount);
+	m_stripesColors[0] = sf::Color(255, 0, 0);
+	m_stripesColors[1] = sf::Color(255, 127, 0);
+	m_stripesColors[2] = sf::Color(255, 255, 0);
+	m_stripesColors[3] = sf::Color(0, 255, 0);
+	m_stripesColors[4] = sf::Color(0, 0, 255);
+	m_stripesColors[5] = sf::Color(75, 0, 130);
+	m_stripesColors[6] = sf::Color(143, 0, 255);
 	m_cos = 0;//std::cos(90.f * octo::Deg2Rad);
 	m_sin = 1;//std::sin(90.f * octo::Deg2Rad);
 

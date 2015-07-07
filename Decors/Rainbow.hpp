@@ -25,6 +25,7 @@ private:
 	sf::Vector2f							m_size;
 	std::size_t								m_partCount;
 	std::size_t								m_stripeCount;
+	std::vector<sf::Color>					m_stripesColors;
 	float									m_cos;
 	float									m_sin;
 
