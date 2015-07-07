@@ -43,7 +43,6 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f cameraSize)
 void SkyManager::setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCenter)
 {
 	m_decorManager->add(DecorManager::DecorTypes::Sun);
-	//TODO: To change for moon
 	m_decorManager->add(DecorManager::DecorTypes::Moon);
 
 	m_originRotate = sf::Vector2f(cameraCenter.x, cameraSize.y);

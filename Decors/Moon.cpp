@@ -2,46 +2,56 @@
 #include "ABiome.hpp"
 
 Moon::Moon(void) :
-	m_animator(1.f, 0.f, 4.f, 0.1f),
+	m_animator(1.f, 0.f, 4.f, 0.2f),
 	m_animation(1.f)
 {
 }
 
-void Moon::createMoon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
+void Moon::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	float unit = size.x / 3.f;
-
-	sf::Vector2f upLeft(-unit * 2.f, -size.y);
-	sf::Vector2f upRight(-unit, -size.y);
-	sf::Vector2f quarterUpLeft(-size.x, -size.y + unit);
-	sf::Vector2f quarterUpRight(-unit * 2.f, -size.y + unit);
-	sf::Vector2f upMidLeft(-unit, -unit);
-	sf::Vector2f upMidRight(unit, -unit);
-	sf::Vector2f downMidLeft(-unit, unit);
-	sf::Vector2f downMidRight(unit, unit);
-	sf::Vector2f quarterDownLeft(-size.x, size.y - unit);
-	sf::Vector2f quarterDownRight(-unit * 2.f, size.y - unit);
-	sf::Vector2f downLeft(-unit * 2.f, size.y);
-	sf::Vector2f downRight(-unit, size.y);
+	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
+	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
+	sf::Vector2f cornerUpLeft(-size.x + sizeCorner.x, -size.y + sizeCorner.y);
+	sf::Vector2f cornerUpRight(size.x - sizeCorner.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidRight(size.x, -size.y + sizeCorner.y);
+	sf::Vector2f downLeft(-size.x + sizeCorner.x, size.y);
+	sf::Vector2f downRight(size.x - sizeCorner.x, size.y);
+	sf::Vector2f cornerDownLeft(-size.x + sizeCorner.x, size.y - sizeCorner.y);
+	sf::Vector2f cornerDownRight(size.x - sizeCorner.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
 
 	upLeft += origin;
 	upRight += origin;
-	quarterUpLeft += origin;
-	quarterUpRight += origin;
+	cornerUpLeft += origin;
+	cornerUpRight += origin;
 	upMidLeft += origin;
 	upMidRight += origin;
-	downMidLeft += origin;
-	downMidRight += origin;
-	quarterDownLeft += origin;
-	quarterDownRight += origin;
 	downLeft += origin;
 	downRight += origin;
+	cornerDownLeft += origin;
+	cornerDownRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
 
-	builder.createQuad(upLeft, upRight, quarterUpRight, quarterUpLeft, color);
-	builder.createQuad(upRight, upMidRight, upMidLeft, quarterUpRight, color);
-	builder.createQuad(upMidRight, downMidRight, downMidLeft, upMidLeft, color);
-	builder.createQuad(downLeft, downRight, quarterDownRight, quarterDownLeft, color);
-	builder.createQuad(downRight, downMidRight, downMidLeft, quarterDownRight, color);
+	builder.createTriangle(upLeft, cornerUpLeft, upMidLeft, color);
+	builder.createTriangle(upRight, cornerUpRight, upMidRight, color);
+	builder.createTriangle(downLeft, cornerDownLeft, downMidLeft, color);
+	builder.createTriangle(downRight, cornerDownRight, downMidRight, color);
+
+	builder.createQuad(upLeft, upRight, cornerUpRight, cornerUpLeft, color);
+	builder.createQuad(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, color);
+	builder.createQuad(cornerDownLeft, cornerDownRight, downRight, downLeft, color);
+	builder.createQuad(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, color);
+	builder.createQuad(cornerUpRight, upMidRight, downMidRight, cornerDownRight, color);
+}
+
+void Moon::createMoon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
+{
+	createOctogon(size, size / 2.f, origin, color, builder);
+	sf::Color darkSideColor(0, 0, 0, 150);
+	createOctogon(sf::Vector2f(size.x / 2.f, size.y), size / 2.f, origin + sf::Vector2f(size.x / 2.f, 0.f), darkSideColor, builder);
 }
 
 void Moon::setup(ABiome& biome)
@@ -57,5 +67,6 @@ void Moon::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f const & position = getPosition();
+
 	createMoon(m_size * m_animation, position, m_color, builder);
 }

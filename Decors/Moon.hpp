@@ -17,6 +17,12 @@ public:
 						ABiome& biome);
 
 private:
+	void createOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & sizeCorner,
+						sf::Vector2f const & origin,
+						sf::Color const & color,
+						octo::VertexBuilder& builder);
+
 	void createMoon(sf::Vector2f const & size,
 					sf::Vector2f const & origin,
 					sf::Color const & color,

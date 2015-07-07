@@ -56,7 +56,7 @@ DefaultBiome::DefaultBiome() :
 	m_sunColor(255, 255, 200),
 
 	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 80.f)),
-	m_moonColor(255, 255, 255)
+	m_moonColor(200, 200, 200)
 {
 	m_generator.setSeed("default_biome");
 }
@@ -271,7 +271,7 @@ bool			DefaultBiome::canCreateStar()
 
 sf::Vector2f 	DefaultBiome::getSunSize()
 {
-	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
+	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
@@ -292,7 +292,8 @@ bool			DefaultBiome::canCreateSun()
 
 sf::Vector2f 	DefaultBiome::getMoonSize()
 {
-	return (randomRangeVector2f(m_moonSize));
+	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
+	return (sf::Vector2f(tmp, tmp));
 }
 
 sf::Color		DefaultBiome::getMoonColor()
