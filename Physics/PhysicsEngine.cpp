@@ -1,6 +1,7 @@
 #include "PhysicsEngine.hpp"
 #include "IContactListener.hpp"
 #include "ConvexShape.hpp"
+#include "GroupShape.hpp"
 #include "CircleShape.hpp"
 #include "Tile.hpp"
 #include "TileShape.hpp"
@@ -51,6 +52,7 @@ void PhysicsEngine::init(void)
 	m_shapes.reserve(MaxShapes);
 	m_circleShapes.reserve(MaxShapes);
 	m_polygonShapes.reserve(MaxShapes);
+	m_groupShapes.reserve(MaxShapes);
 
 	m_polyPolyPairs.resize(MaxPairs);
 	m_circleCirclePairs.resize(MaxPairs);
@@ -74,17 +76,25 @@ void PhysicsEngine::setTileMapSize(sf::Vector2i const & tileMapSize)
 void PhysicsEngine::registerShape(PolygonShape * shape)
 {
 	assert(m_shapes.size() < MaxShapes);
-	assert(m_polygonShapes.size() < MaxShapes);
 	m_shapes.push_back(shape);
+	assert(m_polygonShapes.size() < MaxShapes);
 	m_polygonShapes.push_back(shape);
 }
 
 void PhysicsEngine::registerShape(CircleShape * shape)
 {
 	assert(m_shapes.size() < MaxShapes);
-	assert(m_circleShapes.size() < MaxShapes);
 	m_shapes.push_back(shape);
+	assert(m_circleShapes.size() < MaxShapes);
 	m_circleShapes.push_back(shape);
+}
+
+void PhysicsEngine::registerShape(GroupShape * shape)
+{
+	assert(m_shapes.size() < MaxShapes);
+	m_shapes.push_back(shape);
+	assert(m_groupShapes.size() < MaxShapes);
+	m_groupShapes.push_back(shape);
 }
 
 void PhysicsEngine::registerTile(TileShape * shape, std::size_t x,  std::size_t y)
@@ -113,6 +123,7 @@ void PhysicsEngine::unregisterShape(CircleShape * shape)
 
 void PhysicsEngine::unregisterAllShapes(void)
 {
+	//TODO: add ingroups
 	for (auto i = m_shapes.begin(); i != m_shapes.end(); i++)
 		delete (*i);
 	m_shapes.clear();
@@ -164,9 +175,14 @@ void PhysicsEngine::update(float deltatime)
 
 void PhysicsEngine::broadPhase(void)
 {
+	// Poly vs Poly
 	m_polyPolyPairCount = broadPhase(m_polygonShapes, m_polygonShapes, m_polyPolyPairs, true);
+	// Circle vs Circle
 	m_circleCirclePairCount = broadPhase(m_circleShapes, m_circleShapes, m_circleCirclePairs, true);
+	// Poly vs Circle
 	m_polyCirclePairCount = broadPhase(m_polygonShapes, m_circleShapes, m_polyCirclePairs);
+	// Group vs Group
+	//m_polyPolyPairCount = broadPhase(m_groupShapes, m_groupShapes, m_polyPolyPairs, true);
 
 	if (m_tileCollision)
 	{
@@ -244,6 +260,29 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vectorA, std::vecto
 			{
 				pairs[count].m_shapeA = vectorA[i];
 				pairs[count++].m_shapeB = vectorB[k];
+			}
+		}
+	}
+	return count;
+}
+
+template<class T, class U>
+std::size_t PhysicsEngine::broadPhase(std::vector<GroupShape *> const & groups, std::vector<U> const & vector, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate)
+{
+	std::size_t count = 0u;
+	for (std::size_t i = 0u; i < groups.size(); i++)
+	{
+		if (groups[i]->getSleep())
+			continue;
+		for (std::size_t k = 0u; k < vector.size(); k++)
+		{
+			if (vector[k]->getSleep() || (cullingDuplicate && k <= i))
+				continue;
+			else if (static_cast<AShape *>(groups[i]) == static_cast<AShape *>(vector[k]))
+				continue;
+			if (groups[i]->getGlobalBounds().intersects(vector[k]->getGlobalBounds()))
+			{
+				broadPhase();
 			}
 		}
 	}
@@ -527,8 +566,6 @@ bool PhysicsEngine::computeCollision(PolygonShape * polygon, CircleShape * circl
 
 void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 {
-	for (auto const & shape : m_shapes)
-		shape->debugDraw(render);
 	for (std::size_t i = 0u; i < m_tilePolyPairCount; i++)
 	{
 		for (auto const & pair : m_tilePolyPairs[i])
@@ -539,6 +576,8 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 		for (auto const & pair : m_tileCirclePairs[i])
 			pair.m_shapeA->debugDraw(render);
 	}
+	for (auto const & shape : m_shapes)
+		shape->debugDraw(render);
 }
 
 // Nested Class Projection

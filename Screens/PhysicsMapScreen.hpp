@@ -7,10 +7,10 @@
 # include "PhysicsEngine.hpp"
 # include "GroundManager.hpp"
 # include "DefaultBiome.hpp"
-# include <Camera.hpp>
 
 class ConvexShape;
 class RectangleShape;
+class GroupShape;
 
 class PhysicsMapScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
@@ -31,6 +31,7 @@ private:
 	std::vector<RectangleShape *>	m_shapes;
 	GroundManager					m_groundManager;
 	DefaultBiome					m_biome;
+	GroupShape *					m_groupShape;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 

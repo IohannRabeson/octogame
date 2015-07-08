@@ -1,6 +1,7 @@
 #include "PhysicsMapScreen.hpp"
 #include "ConvexShape.hpp"
 #include "RectangleShape.hpp"
+#include "GroupShape.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 
@@ -43,10 +44,21 @@ void	PhysicsMapScreen::start()
 		m_shapes.push_back(rect);
 	}
 
-	RectangleShape * rect = m_engine.createRectangle();
-	rect->setSize(sf::Vector2f(40.f, 60.f));
-	rect->setPosition(sf::Vector2f(1500.f, 500.f));
-	rect->setApplyGravity(true);
+	m_groupShape = m_engine.createGroupShape();
+	m_groupShape->setSize(100.f, 50.f);
+	m_groupShape->setApplyGravity(false);
+	m_groupShape->setPosition(100.f, 500.f);
+	m_groupShape->setOrigin(sf::Vector2f(30.f, 15.f));
+	RectangleShape * r = m_groupShape->addRectangleShape();
+	r->setSize(20.f, 20.f);
+	r->setPosition(-20.f, -20.f);
+	r->setOrigin(sf::Vector2f(10.f, 10.f));
+	r->setRotation(3.14f / 3.f);
+	r = m_groupShape->addRectangleShape();
+	r->setSize(20.f, 40.f);
+	r->setPosition(30.f, -60.f);
+	r->setOrigin(sf::Vector2f(10.f, 20.f));
+	r->setRotation(3.14f / 5.f);
 
 	m_engine.unregisterShape(m_shapes[5]);
 }
@@ -71,13 +83,13 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 	m_groundManager.update(deltatime.asSeconds());
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
-		m_shape->addVelocity(0.f, -speed);
+		m_groupShape->addVelocity(0.f, -speed);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-		m_shape->addVelocity(0.f, speed);
+		m_groupShape->addVelocity(0.f, speed);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-		m_shape->addVelocity(speed, 0.f);
+		m_groupShape->addVelocity(speed, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
-		m_shape->addVelocity(-speed, 0.f);
+		m_groupShape->addVelocity(-speed, 0.f);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		m_camera.move(-cameraSpeed, 0.f);

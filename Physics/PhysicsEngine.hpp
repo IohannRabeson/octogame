@@ -55,6 +55,9 @@ public:
 	/*! Used by the ShapeBuilder to register a CircleShape */
 	void registerShape(CircleShape * shape);
 
+	/*! Used by the ShapeBuilder to register a GroupShape */
+	void registerShape(GroupShape * shape);
+
 	/*! Used by the ShapeBuilder to register a TileShape */
 	void registerTile(TileShape * shape, std::size_t x, std::size_t y);
 
@@ -138,6 +141,7 @@ private:
 	// Vectors containing shapes by type to improve performance during collision detection
 	std::vector<CircleShape *>							m_circleShapes;
 	std::vector<PolygonShape *>							m_polygonShapes;
+	std::vector<GroupShape *>							m_groupShapes;
 	octo::Array2D<TileShape *>							m_tileShapes;
 
 	// Pairs of object which might be colliding
@@ -151,8 +155,8 @@ private:
 	// Pairs of object which might be colliding with the tile map
 	std::vector<std::vector<Pair<TileShape *, PolygonShape *>>>		m_tilePolyPairs;
 	std::vector<std::vector<Pair<TileShape *, CircleShape *>>>		m_tileCirclePairs;
-	std::size_t											m_tilePolyPairCount;
-	std::size_t											m_tileCirclePairCount;
+	std::size_t														m_tilePolyPairCount;
+	std::size_t														m_tileCirclePairCount;
 
 	// Variable used to compute collisions (to avoid creation and copy)
 	Projection											m_projectionA;
@@ -169,7 +173,7 @@ private:
 
 	/*! Compare all the AShape in the vectorA with all the AShape in the vectorB,
 	 * and check for AABB collisions
-	 * If they are colliding store both shape in the pairs given as parameter
+	 * If they are colliding, store both shape in the pairs given as parameter
 	 * Set cullingDuplicate at true if you use this method with the same vector as vectorA and vectorB
 	 *
 	 * \return The number of AABB collisions
