@@ -181,6 +181,15 @@ private:
 	template<class T, class U>
 	std::size_t broadPhase(std::vector<T> const & vectorA, std::vector<U> const & vectorB, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate = false);
 
+	/*! Compare all the AShape in the vector with the other shape,
+	 * and check for AABB collisions
+	 * If they are colliding, store both shape in the pairs given as parameter
+	 *
+	 * \return The number of AABB collisions
+	 */
+	template<class T, class U>
+	std::size_t broadPhase(std::vector<T> const & vector, U const & shape, std::vector<Pair<T, U>> & pairs);
+
 	/*! Broadphase for tiles */
 	template<class T>
 	std::size_t broadPhase(std::vector<T> const & vector, std::vector<std::vector<Pair<TileShape *, T>>> & pairs);

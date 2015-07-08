@@ -31,6 +31,9 @@ public:
 	 */
 	RectangleShape * addRectangleShape(void);
 
+	inline std::vector<PolygonShape *> const & getPolygons(void) const { return m_polyShapes; }
+	inline std::vector<CircleShape *> const & getCircles(void) const { return m_circleShapes; }
+
 	void resetTriggerShapes(void);
 
 	/*! Get the global bounds

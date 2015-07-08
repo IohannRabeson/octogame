@@ -243,6 +243,25 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector
 }
 
 template<class T, class U>
+std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vector, U const & shape, std::vector<Pair<T, U>> & pairs)
+{
+	std::size_t count = 0u;
+	for (std::size_t i = 0u; i < vector.size(); i++)
+	{
+		if (vector[i]->getSleep() || shape->getSleep())
+			continue;
+		else if (static_cast<AShape *>(vector[i]) == static_cast<AShape *>(shape))
+			continue;
+		if (vector[i]->getGlobalBounds().intersects(shape->getGlobalBounds()))
+		{
+			pairs[count].m_shapeA = shape;
+			pairs[count++].m_shapeB = vector[i];
+		}
+	}
+	return count;
+}
+
+template<class T, class U>
 std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vectorA, std::vector<U> const & vectorB, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate)
 {
 	std::size_t count = 0u;
@@ -267,7 +286,7 @@ std::size_t PhysicsEngine::broadPhase(std::vector<T> const & vectorA, std::vecto
 }
 
 template<class T, class U>
-std::size_t PhysicsEngine::broadPhase(std::vector<GroupShape *> const & groups, std::vector<U> const & vector, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate)
+std::size_t PhysicsEngine::broadPhase(std::vector<GroupShape *> const & groups, std::vector<U> const & vector, std::vector<Pair<PolygonShape *, U>> & polyPairs, std::vector<Pair<U, CircleShape *>> & circlePairs)
 {
 	std::size_t count = 0u;
 	for (std::size_t i = 0u; i < groups.size(); i++)
@@ -276,13 +295,14 @@ std::size_t PhysicsEngine::broadPhase(std::vector<GroupShape *> const & groups, 
 			continue;
 		for (std::size_t k = 0u; k < vector.size(); k++)
 		{
-			if (vector[k]->getSleep() || (cullingDuplicate && k <= i))
+			if (vector[k]->getSleep())
 				continue;
 			else if (static_cast<AShape *>(groups[i]) == static_cast<AShape *>(vector[k]))
 				continue;
 			if (groups[i]->getGlobalBounds().intersects(vector[k]->getGlobalBounds()))
 			{
-				broadPhase();
+				broadPhase(groups.getPolygons(), vector[k], polyPairs);
+				broadPhase(groups.getCircles(), vector[k], circlePairs);
 			}
 		}
 	}
