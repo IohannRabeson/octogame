@@ -53,6 +53,7 @@ TestBiome::TestBiome() :
 	m_sunPartCount(3u),
 	m_sunColor(255, 105, 180),
 	m_canCreateSun(true),
+	m_moonSize(300.f, 300.f),
 	m_moonColor(255, 105, 180),
 	m_canCreateMoon(true),
 	m_mapSize(512u, 128u),

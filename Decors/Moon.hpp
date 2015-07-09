@@ -23,9 +23,17 @@ private:
 						sf::Color const & color,
 						octo::VertexBuilder& builder);
 
+	void createDarkOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & sizeCorner,
+						sf::Vector2f const & origin,
+						sf::Color const & color,
+						float interpolateValue,
+						octo::VertexBuilder& builder);
+
 	void createMoon(sf::Vector2f const & size,
 					sf::Vector2f const & origin,
 					sf::Color const & color,
+					float interpolateValue,
 					octo::VertexBuilder& builder);
 
 	DecorAnimator			m_animator;
@@ -33,6 +41,10 @@ private:
 
 	sf::Vector2f			m_size;
 	sf::Color				m_color;
+
+	sf::Time				m_timer;
+	sf::Time				m_timerMax;
+	bool					m_way;
 };
 
 #endif

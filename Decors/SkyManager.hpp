@@ -12,15 +12,16 @@ public:
 	SkyManager(void);
 	~SkyManager(void) = default;
 
-	void setup(ABiome & biome, DecorManager * decorManager);
+	void setup(ABiome & biome);
 	void update(sf::Time frameTime);
+	DecorManager const & getDecors(void) const;
 
 private:
 	sf::Vector2f setPosition(DecorManager::Iterator decor, sf::Vector2f origin, sf::Vector2f originRotate, float cos, float sin);
 	void setupStars(ABiome & biome, sf::Vector2f cameraSize);
 	void setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCenter);
 
-	DecorManager *				m_decorManager;
+	DecorManager				m_decorManager;
 
 	float						m_timeCoef;
 	//TODO: Get from GameClock

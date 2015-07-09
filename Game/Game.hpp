@@ -14,8 +14,8 @@
 # define GAME_HPP
 
 # include "BiomeManager.hpp"
-# include "DecorManager.hpp"
 # include "SkyManager.hpp"
+# include "GroundManager.hpp"
 
 class Game
 {
@@ -31,7 +31,7 @@ private:
 	// Add GroundManager
 	BiomeManager	m_biomeManager;
 	SkyManager		m_skyManager;
-	DecorManager	m_skyDecorManager;
+	GroundManager	m_groundManager;
 	// @Francois: tu peux fourrer ici des decors manager:
 	// DecorManager	m_starDecorManager;
 	// DecorManager m_terrainDecorManager;

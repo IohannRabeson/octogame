@@ -8,7 +8,9 @@
 #include <Camera.hpp>
 
 SkyManager::SkyManager(void) :
+	m_decorManager(200000),
 	m_timer(0.f),
+	//TODO: Add this in biome
 	m_timerMax(30.f),
 	m_starCount(600u)
 {
@@ -25,7 +27,7 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f cameraSize)
 {
 	//TODO: Check with Iohann for delete element
 	for (std::size_t i = 0u; i < m_starCount; i++)
-		m_decorManager->add(new Star(&m_timeCoef));
+		m_decorManager.add(new Star(&m_timeCoef));
 
 	m_originStars.resize(m_starCount);
 
@@ -42,18 +44,17 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f cameraSize)
 
 void SkyManager::setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCenter)
 {
-	m_decorManager->add(DecorManager::DecorTypes::Sun);
-	m_decorManager->add(DecorManager::DecorTypes::Moon);
+	m_decorManager.add(DecorManager::DecorTypes::Sun);
+	m_decorManager.add(DecorManager::DecorTypes::Moon);
 
 	m_originRotate = sf::Vector2f(cameraCenter.x, cameraSize.y);
 	m_originSun = sf::Vector2f(0.f, cameraSize.y);
 	m_originMoon = cameraSize;
 }
 
-void SkyManager::setup(ABiome & biome, DecorManager * decorManager)
+void SkyManager::setup(ABiome & biome)
 {
-	m_decorManager = decorManager;
-	m_decorManager->setup(&biome);
+	m_decorManager.setup(&biome);
 
 	octo::Camera camera = octo::Application::getCamera();
 	sf::Vector2f cameraSize = camera.getSize();
@@ -74,17 +75,18 @@ void SkyManager::update(sf::Time frameTime)
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);
 
-	DecorManager::Iterator decor = m_decorManager->begin();
+	DecorManager::Iterator decor = m_decorManager.begin();
 	for (std::size_t i = 0; i < m_starCount; i++)
-	{
-		setPosition(decor, m_originStars[i] + m_originRotateStar, m_originRotateStar, cos, sin);
-		decor++;
-	}
-	setPosition(decor, m_originSun, m_originRotate, cos, sin);
-	decor++;
+		setPosition(decor++, m_originStars[i] + m_originRotateStar, m_originRotateStar, cos, sin);
+	setPosition(decor++, m_originSun, m_originRotate, cos, sin);
 	m_originRotateStar = setPosition(decor, m_originMoon, m_originRotate, cos, sin);
 
-	m_decorManager->update(frameTime, octo::Application::getCamera());
+	m_decorManager.update(frameTime, octo::Application::getCamera());
+}
+
+DecorManager const & SkyManager::getDecors(void) const
+{
+	return m_decorManager;
 }
 
 void SkyManager::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)

@@ -33,7 +33,7 @@ DefaultBiome::DefaultBiome() :
 
 	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 150.f)),
 	m_crystalPartCount(2u, 8u),
-	m_crystalColor(255, 105, 180),
+	m_crystalColor(255, 105, 180, 150),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),

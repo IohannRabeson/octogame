@@ -21,6 +21,7 @@ public:
 	void init(ABiome & biome);
 	void update(float pf_deltatime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	DecorManager const & getDecors(void) const;
 
 private:
 	std::unique_ptr<Map>				m_tiles;
