@@ -7,8 +7,7 @@ Moon::Moon(void) :
 	m_animator(1.f, 0.f, 4.f, 0.2f),
 	m_animation(1.f),
 	m_timer(sf::Time::Zero),
-	//TODO: Add this in biome
-	m_timerMax(sf::seconds(25.f)),
+	m_timerMax(sf::seconds(30.f)),
 	m_way(true)
 {
 }
@@ -53,6 +52,7 @@ void Moon::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCor
 	builder.createQuad(cornerUpRight, upMidRight, downMidRight, cornerDownRight, color);
 }
 
+//TODO: Possible to factorize and avoid computing twice all right points
 void Moon::createDarkOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, float interpolateValue, octo::VertexBuilder& builder)
 {
 	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
@@ -113,6 +113,7 @@ void Moon::setup(ABiome& biome)
 {
 	m_size = biome.getMoonSize();
 	m_color = biome.getMoonColor();
+	m_timerMax = biome.getMoonLifeTime();
 	m_animator.setup();
 }
 

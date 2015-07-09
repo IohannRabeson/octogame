@@ -8,8 +8,8 @@ DefaultBiome::DefaultBiome() :
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
-	m_groundDecorsCount(10u, 20u),
-	m_crystalsCount(30u, 50u),
+	m_groundDecorsCount(40u, 50u),
+	m_crystalsCount(15u, 30u),
 	m_skyDecorsCount(30u, 50u),
 
 	m_canCreateTree(true),
@@ -56,7 +56,8 @@ DefaultBiome::DefaultBiome() :
 	m_sunColor(255, 255, 200),
 
 	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 80.f)),
-	m_moonColor(200, 200, 200)
+	m_moonColor(200, 200, 200),
+	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f))
 {
 	m_generator.setSeed("default_biome");
 }
@@ -299,6 +300,11 @@ sf::Vector2f 	DefaultBiome::getMoonSize()
 sf::Color		DefaultBiome::getMoonColor()
 {
 	return (m_moonColor);
+}
+
+sf::Time		DefaultBiome::getMoonLifeTime()
+{
+	return (randomRangeTime(m_moonLifeTime));
 }
 
 bool			DefaultBiome::canCreateMoon()

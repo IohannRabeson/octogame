@@ -81,6 +81,7 @@ public:
 
 	virtual sf::Vector2f 	getMoonSize() = 0;
 	virtual sf::Color		getMoonColor() = 0;
+	virtual sf::Time		getMoonLifeTime() = 0;
 	virtual bool			canCreateMoon() = 0;
 
 	virtual float			randomFloat(float min, float max) = 0;

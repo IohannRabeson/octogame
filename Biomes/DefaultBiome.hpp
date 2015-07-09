@@ -81,6 +81,7 @@ public:
 
 	virtual sf::Vector2f 	getMoonSize();
 	virtual sf::Color		getMoonColor();
+	virtual sf::Time		getMoonLifeTime();
 	virtual bool			canCreateMoon();
 
 	virtual float			randomFloat(float min, float max);
@@ -144,6 +145,7 @@ private:
 
 	Range<sf::Vector2f>	m_moonSize;
 	sf::Color			m_moonColor;
+	Range<sf::Time>		m_moonLifeTime;
 
 	float				randomRangeFloat(Range<float> const & range);
 	int					randomRangeInt(Range<std::size_t> const & range);

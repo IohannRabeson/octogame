@@ -80,6 +80,7 @@ public:
 
 	virtual sf::Vector2f 	getMoonSize();
 	virtual sf::Color		getMoonColor();
+	virtual sf::Time		getMoonLifeTime();
 	virtual bool			canCreateMoon();
 
 	virtual sf::Vector2u getMapSize();
@@ -180,6 +181,7 @@ private:
 
 	sf::Vector2f			m_moonSize;
 	sf::Color				m_moonColor;
+	sf::Time				m_moonLifeTime;
 	bool					m_canCreateMoon;
 
 	sf::Vector2u			m_mapSize;

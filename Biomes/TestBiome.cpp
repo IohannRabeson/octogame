@@ -55,6 +55,7 @@ TestBiome::TestBiome() :
 	m_canCreateSun(true),
 	m_moonSize(300.f, 300.f),
 	m_moonColor(255, 105, 180),
+	m_moonLifeTime(sf::seconds(30.f)),
 	m_canCreateMoon(true),
 	m_mapSize(512u, 128u),
 	m_transitionDuration(0.5f),
@@ -298,6 +299,11 @@ sf::Vector2f 	TestBiome::getMoonSize()
 sf::Color		TestBiome::getMoonColor()
 {
 	return (m_moonColor);
+}
+
+sf::Time		TestBiome::getMoonLifeTime()
+{
+	return (m_moonLifeTime);
 }
 
 bool			TestBiome::canCreateMoon()

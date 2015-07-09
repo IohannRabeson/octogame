@@ -23,7 +23,7 @@ private:
 						sf::Color const & color,
 						octo::VertexBuilder& builder);
 
-	void createDarkOctogon(sf::Vector2f const & size,
+	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & sizeCorner,
 						sf::Vector2f const & origin,
 						sf::Color const & color,

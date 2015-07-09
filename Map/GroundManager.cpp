@@ -55,8 +55,8 @@ void GroundManager::init(ABiome & biome)
 void GroundManager::initDecors(ABiome & biome)
 {
 	m_decorManager.setup(&biome);
-	std::size_t groundDecorsCount = biome.getGroundDecorsCount();
 	std::size_t crystalsCount = biome.getCrystalsCount();
+	std::size_t groundDecorsCount = biome.getGroundDecorsCount() - crystalsCount;
 
 	std::size_t mapSizeX = biome.getMapSize().x;
 
