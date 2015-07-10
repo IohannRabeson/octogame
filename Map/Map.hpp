@@ -54,6 +54,8 @@ public:
 private:
 	float										m_depth;
 	float										m_oldDepth;
+	float										m_mapJoinWidth;
+	float										m_mapJoinHalfWidth;
 	TileMap										m_tiles;
 	std::size_t									m_width;
 	std::size_t									m_height;
