@@ -43,6 +43,7 @@ private:
 					std::size_t stripeCount,
 					sf::Vector2f const & origin,
 					std::vector<sf::Color> const & colors,
+					float interpolateValue,
 					octo::VertexBuilder& builder);
 
 	void createRainbow(sf::Vector2f const & origin,
@@ -52,6 +53,10 @@ private:
 						std::vector<sf::Color> const & colors,
 						octo::VertexBuilder& builder);
 
+	void computeInterpolateValues(sf::Time frameTime,
+								std::vector<float> & values);
+
+	//TODO: Remove animator
 	DecorAnimator				m_animator;
 	float						m_animation;
 	float						m_cos;
@@ -66,6 +71,13 @@ private:
 	std::vector<sf::Vector2f>	m_sizes;
 	std::size_t					m_stripeCount;
 	std::vector<sf::Color>		m_colors;
+
+	sf::Time					m_timer;
+	sf::Time					m_timerMax;
+	std::vector<float>			m_interpolateValues;
+
+	sf::Vector2f				m_endPosition;
+	bool						m_firstFrame;
 
 private:
 	static void rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle);
