@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/02 14:20:46 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/03 17:32:47 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include "LightningDemoScreen.hpp"
 #include "GameScreen.hpp"
 #include "ParticleDemoScreen.hpp"
+#include "FsmDemoScreen.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
@@ -45,6 +46,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<PhysicsMapScreen>("physics_map");
 	manager.registerState<ParticleDemoScreen>("particles");
 	manager.registerState<LightningDemoScreen>("lightning");
+	manager.registerState<FsmDemoScreen>("tamagotchi");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
