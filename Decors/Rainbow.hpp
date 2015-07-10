@@ -17,51 +17,59 @@ public:
 						ABiome& biome);
 
 private:
-	std::vector<sf::Vector2f>				m_startPart;
-	std::vector<sf::Vector2f>				m_endPart;
-	std::vector<sf::Vector2f>				m_partLineOrigin;
-	std::vector<float>						m_partSizes;
-	std::vector<bool>						m_partSides;
-	sf::Vector2f							m_size;
-	std::size_t								m_partCount;
-	std::size_t								m_stripeCount;
-	std::vector<sf::Color>					m_stripesColors;
-	float									m_cos;
-	float									m_sin;
+	typedef std::vector<sf::Vector2f>	Line;
 
-	DecorAnimator							m_animator;
-	float									m_animation;
+	void setupSizes(ABiome & biome,
+					std::vector<sf::Vector2f> & sizes,
+					std::size_t loopCount,
+					std::size_t partCount,
+					float thickness);
 
-	void computeHorizontalLine(float thickness,
-								sf::Vector2f const & origin,
-								std::size_t stripeCount,
-								std::vector<sf::Vector2f> & points);
+	void setupColors(std::vector<sf::Color> & colors);
 
-	void computeVerticalLine(float thickness,
-								sf::Vector2f const & origin,
-								std::size_t stripeCount,
-								std::vector<sf::Vector2f> & points);
+	void createFirstLine(Line & line,
+						std::size_t stripeCount,
+						float thickness);
 
-	void createRainbowPart(float thickness,
-							sf::Vector2f const & origin,
-							std::vector<sf::Vector2f> & start,
-							std::vector<sf::Vector2f> & end,
-							std::size_t stripeCount,
-							octo::VertexBuilder& builder);
+	void rotateLine(Line const & start,
+					Line & end,
+					std::size_t stripeCount,
+					sf::Vector2f const & origin,
+					float cos,
+					float sin);
+
+	void createPart(Line const & start,
+					Line const & end,
+					std::size_t stripeCount,
+					sf::Vector2f const & origin,
+					std::vector<sf::Color> const & colors,
+					octo::VertexBuilder& builder);
 
 	void createRainbow(sf::Vector2f const & origin,
-						std::size_t partCount,
-						std::vector<sf::Vector2f> & partLineOrigin,
-						sf::Color const & color,
+						std::vector<sf::Vector2f> const & sizes,
+						std::size_t stripeCount,
+						float thickness,
+						std::vector<sf::Color> const & colors,
 						octo::VertexBuilder& builder);
 
-private:
-	static std::default_random_engine	m_engine;
-	static std::bernoulli_distribution	m_distribution;
-	static bool getPartAngle(void);
+	DecorAnimator				m_animator;
+	float						m_animation;
+	float						m_cos;
+	float						m_sin;
 
+	Line						m_start;
+	Line						m_end;
+
+	std::size_t					m_loopCount;
+	std::size_t					m_partCount;
+	float						m_thickness;
+	std::vector<sf::Vector2f>	m_sizes;
+	std::size_t					m_stripeCount;
+	std::vector<sf::Color>		m_colors;
+
+private:
 	static void rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle);
-	static void rotateVec(sf::Vector2f & vector, sf::Vector2f const & origin, float const cosAngle, float const sinAngle);
+	static sf::Vector2f rotateVecCopy(sf::Vector2f const & vector, sf::Vector2f const & origin, float const cosAngle, float const sinAngle);
 
 };
 
