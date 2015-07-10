@@ -50,12 +50,16 @@ void Noise::setSeed(std::size_t seed)
 float Noise::noise(float x, float y)
 {
 	// Get the integer part
-	int X = static_cast<int>(x) & 0xFF;
-	int Y = static_cast<int>(y) & 0xFF;
+	int X = x < 0 ? static_cast<int>(x) - 1 : static_cast<int>(x);
+	int Y = y < 0 ? static_cast<int>(y) - 1 : static_cast<int>(y);
 
 	// Get the fractionnal part
-	x -= static_cast<float>(static_cast<int>(x));
-	y -= static_cast<float>(static_cast<int>(y));
+	x -= static_cast<float>(X);
+	y -= static_cast<float>(Y);
+
+	// Get the 8 last bit
+	X &= 0xFF;
+	Y &= 0xFF;
 
 	// Compute fade curves for each of x, y
 	float u = fade(x);
@@ -78,14 +82,19 @@ float Noise::noise(float x, float y)
 float Noise::noise(float x, float y, float z)
 {
 	// Get the integer part
-	int X = static_cast<int>(x) & 0xFF;
-	int Y = static_cast<int>(y) & 0xFF;
-	int Z = static_cast<int>(z) & 0xFF;
+	int X = x < 0 ? static_cast<int>(x) - 1 : static_cast<int>(x);
+	int Y = y < 0 ? static_cast<int>(y) - 1 : static_cast<int>(y);
+	int Z = z < 0 ? static_cast<int>(z) - 1 : static_cast<int>(z);
 
 	// Get the fractionnal part
-	x -= static_cast<float>(static_cast<int>(x));
-	y -= static_cast<float>(static_cast<int>(y));
-	z -= static_cast<float>(static_cast<int>(z));
+	x -= static_cast<float>(X);
+	y -= static_cast<float>(Y);
+	z -= static_cast<float>(Z);
+
+	// Get the 8 last bit
+	X &= 255;
+	Y &= 255;
+	Z &= 255;
 
 	// Compute fade curves for each of x, y, z
 	float u = fade(x);
