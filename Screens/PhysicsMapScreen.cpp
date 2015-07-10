@@ -1,6 +1,7 @@
 #include "PhysicsMapScreen.hpp"
 #include "ConvexShape.hpp"
 #include "RectangleShape.hpp"
+#include "CircleShape.hpp"
 #include "GroupShape.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -8,7 +9,8 @@
 PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_engine(PhysicsEngine::getInstance()),
 	m_camera(octo::Application::getCamera()),
-	m_shape(nullptr)
+	m_shape(nullptr),
+	m_nbCollision(0u)
 {}
 
 void	PhysicsMapScreen::start()
@@ -20,6 +22,7 @@ void	PhysicsMapScreen::start()
 
 	m_engine.setIterationCount(4u);
 	m_engine.setTileCollision(true);
+	m_engine.setContactListener(this);
 
 	m_shape = m_engine.createConvex();
 	m_shape->setPosition(300.f, 600.f);
@@ -59,6 +62,15 @@ void	PhysicsMapScreen::start()
 	r->setPosition(30.f, -60.f);
 	r->setOrigin(sf::Vector2f(10.f, 20.f));
 	r->setRotation(3.14f / 5.f);
+	r = m_groupShape->addRectangleShape();
+	r->setSize(20.f, 40.f);
+	r->setPosition(60.f, 60.f);
+	r->setOrigin(sf::Vector2f(10.f, 20.f));
+	r->setRotation(3.14f / 2.31f);
+
+	CircleShape * c = m_groupShape->addCircleShape();
+	c->setRadius(10.f);
+	c->setPosition(120.f, 60.f);
 
 	m_engine.unregisterShape(m_shapes[5]);
 }
@@ -75,11 +87,13 @@ void	PhysicsMapScreen::stop()
 {
 }
 
+#include <iostream>
 void	PhysicsMapScreen::update(sf::Time deltatime)
 {
 	float speed = 200.f * deltatime.asSeconds();
 	float cameraSpeed = 500.f * deltatime.asSeconds();
 
+	m_nbCollision = 0u;
 	m_groundManager.update(deltatime.asSeconds());
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
@@ -101,6 +115,14 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 		m_camera.move(0.f, cameraSpeed);
 
 	m_engine.update(deltatime.asSeconds());
+	std::cout << m_nbCollision << std::endl;
+}
+
+void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)
+{
+	(void)shapeA;
+	(void)shapeB;
+	m_nbCollision++;
 }
 
 bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const &)

@@ -123,6 +123,12 @@ private:
 				m_area(0.f)
 			{}
 
+		Pair(T shapeA, U shapeB) :
+				m_shapeA(shapeA),
+				m_shapeB(shapeB),
+				m_area(0.f)
+			{}
+
 		Pair(T shapeA, U shapeB, float area) :
 				m_shapeA(shapeA),
 				m_shapeB(shapeB),
@@ -148,15 +154,10 @@ private:
 	std::vector<Pair<PolygonShape *, PolygonShape *>>	m_polyPolyPairs;
 	std::vector<Pair<PolygonShape *, CircleShape *>>	m_polyCirclePairs;
 	std::vector<Pair<CircleShape *, CircleShape *>>		m_circleCirclePairs;
-	std::size_t											m_polyPolyPairCount;
-	std::size_t											m_polyCirclePairCount;
-	std::size_t											m_circleCirclePairCount;
 
 	// Pairs of object which might be colliding with the tile map
 	std::vector<std::vector<Pair<TileShape *, PolygonShape *>>>		m_tilePolyPairs;
 	std::vector<std::vector<Pair<TileShape *, CircleShape *>>>		m_tileCirclePairs;
-	std::size_t														m_tilePolyPairCount;
-	std::size_t														m_tileCirclePairCount;
 
 	// Variable used to compute collisions (to avoid creation and copy)
 	Projection											m_projectionA;
@@ -175,35 +176,44 @@ private:
 	 * and check for AABB collisions
 	 * If they are colliding, store both shape in the pairs given as parameter
 	 * Set cullingDuplicate at true if you use this method with the same vector as vectorA and vectorB
-	 *
-	 * \return The number of AABB collisions
 	 */
 	template<class T, class U>
-	std::size_t broadPhase(std::vector<T> const & vectorA, std::vector<U> const & vectorB, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate = false);
+	void broadPhase(std::vector<T> const & vectorA, std::vector<U> const & vectorB, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate = false);
 
-	/*! Compare all the AShape in the vector with the other shape,
+	/*! Compare all the AShape in the vector with the PolygonShape,
 	 * and check for AABB collisions
 	 * If they are colliding, store both shape in the pairs given as parameter
-	 *
-	 * \return The number of AABB collisions
 	 */
 	template<class T, class U>
-	std::size_t broadPhase(std::vector<T> const & vector, U const & shape, std::vector<Pair<T, U>> & pairs);
+	void broadPhase(std::vector<T> const & vector, PolygonShape * shape, std::vector<Pair<PolygonShape *, U>> & pairs);
+
+	/*! Compare all the AShape in the vector with the CircleShape,
+	 * and check for AABB collisions
+	 * If they are colliding, store both shape in the pairs given as parameter
+	 */
+	template<class T, class U>
+	void broadPhase(std::vector<T> const & vector, CircleShape * shape, std::vector<Pair<U, CircleShape *>> & pairs);
+
+	/*! Compare all the AShape in the group vector with the all the shape in the other vector,
+	 * and check for AABB collisions
+	 * If they are colliding, store both shape in the pairs given as parameter
+	 */
+	void broadPhase(std::vector<GroupShape *> const & groups);
 
 	/*! Broadphase for tiles */
 	template<class T>
-	std::size_t broadPhase(std::vector<T> const & vector, std::vector<std::vector<Pair<TileShape *, T>>> & pairs);
+	void broadPhase(std::vector<T> const & vector, std::vector<std::vector<Pair<TileShape *, T>>> & pairs);
 
 	/*! Determine if pairs are colliding */
 	void narrowPhase(void);
 
 	/*! Determine if pairs are colliding */
 	template<class T, class U>
-	void narrowPhase(std::vector<Pair<T, U>> & pairs, std::size_t pairCount);
+	void narrowPhase(std::vector<Pair<T, U>> & pairs);
 
 	/*! Determine if pairs are colliding with tiles */
 	template<class T>
-	void narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>>> & pairs, std::size_t pairCount);
+	void narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>>> & pairs);
 
 	/*! Compute collision between different shape */
 	bool computeCollision(PolygonShape * polygonA, PolygonShape * polygonB);

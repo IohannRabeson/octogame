@@ -21,27 +21,36 @@ public:
 	GroupShape(void);
 	virtual ~GroupShape(void);
 
-	/*! Add rectangle shape
+	/*! Add RectangleShape
 	 * The shape is register in the PhysicsEngine with a special status,
 	 * it won't be updated by the PhysicsEngine, but by the GroupShape.
 	 * The PhysicsEngine only detect collisions between the trigger shape and other shapes, it won't resolve it.
 	 *
 	 * \return The new rectangle shape
-	 * \see PhysicsEngine
+	 * \see PhysicsEngine, RectangleShape
 	 */
 	RectangleShape * addRectangleShape(void);
 
+	/*! Add CircleShape
+	 * The shape is register in the PhysicsEngine with a special status,
+	 * it won't be updated by the PhysicsEngine, but by the GroupShape.
+	 * The PhysicsEngine only detect collisions between the trigger shape and other shapes, it won't resolve it.
+	 *
+	 * \return The new rectangle shape
+	 * \see PhysicsEngine, CircleShape
+	 */
+	CircleShape * addCircleShape(void);
+
+	inline RectangleShape const & getPhysicShape(void) const { return *this; }
 	inline std::vector<PolygonShape *> const & getPolygons(void) const { return m_polyShapes; }
 	inline std::vector<CircleShape *> const & getCircles(void) const { return m_circleShapes; }
-
-	void resetTriggerShapes(void);
 
 	/*! Get the global bounds
 	 * The AABB is recomputed at each rotation
 	 *
 	 * \see rotate
 	 */
-	inline virtual sf::FloatRect const & getGlobalBounds(void) const { return m_globalBounds; }
+	inline sf::FloatRect const & getGroupGlobalBounds(void) const { return m_groupGlobalBounds; }
 
 	/*! Use to draw debug information
 	 */
@@ -55,7 +64,7 @@ private:
 	std::vector<AShape *>		m_shapes;
 	std::vector<PolygonShape *>	m_polyShapes;
 	std::vector<CircleShape *>	m_circleShapes;
-	sf::FloatRect				m_globalBounds;
+	sf::FloatRect				m_groupGlobalBounds;
 
 };
 

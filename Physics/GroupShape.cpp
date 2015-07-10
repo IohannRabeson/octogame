@@ -1,16 +1,20 @@
 #include "GroupShape.hpp"
 #include "PhysicsEngine.hpp"
+#include "CircleShape.hpp"
 #include <cassert>
 #include <limits>
 
 GroupShape::GroupShape(void)
 {
 	m_shapes.reserve(100u);
+	m_polyShapes.reserve(100u);
+	m_circleShapes.reserve(100u);
 }
 
 GroupShape::~GroupShape(void)
 {
-	//TODO: delete shapes
+	for (auto & shape : m_shapes)
+		delete shape;
 }
 
 RectangleShape * GroupShape::addRectangleShape(void)
@@ -19,16 +23,20 @@ RectangleShape * GroupShape::addRectangleShape(void)
 	RectangleShape * rect = builder.createRectangle(true);
 	rect->setType(Type::e_trigger);
 	m_shapes.push_back(rect);
+	m_polyShapes.push_back(rect);
 	return rect;
 }
 
-void GroupShape::resetTriggerShapes(void)
+CircleShape * GroupShape::addCircleShape(void)
 {
-	PhysicsEngine & engine = PhysicsEngine::getInstance();
-	//TODO: reset shapes
+	ShapeBuilder & builder = PhysicsEngine::getInstance();
+	CircleShape * rect = builder.createCircle(true);
+	rect->setType(Type::e_trigger);
+	m_shapes.push_back(rect);
+	m_circleShapes.push_back(rect);
+	return rect;
 }
 
-#include <iostream>
 void GroupShape::computeShape(void)
 {
 	float minX = std::numeric_limits<float>::max();
@@ -69,14 +77,21 @@ void GroupShape::computeShape(void)
 		minY = rect.top;
 	if (rect.top + rect.height > maxY)
 		maxY = rect.top + rect.height;
-	m_globalBounds.left = minX;
-	m_globalBounds.top = minY;
-	m_globalBounds.width = maxX - minX;
-	m_globalBounds.height = maxY - minY;
+	m_groupGlobalBounds.left = minX;
+	m_groupGlobalBounds.top = minY;
+	m_groupGlobalBounds.width = maxX - minX;
+	m_groupGlobalBounds.height = maxY - minY;
 }
 
 void GroupShape::debugDraw(sf::RenderTarget & render)
 {
+	sf::RectangleShape rect;
+	rect.setOutlineColor(sf::Color::Red);
+	rect.setFillColor(sf::Color::Transparent);
+	rect.setOutlineThickness(1);
+	rect.setPosition(sf::Vector2f(m_groupGlobalBounds.left, m_groupGlobalBounds.top));
+	rect.setSize(sf::Vector2f(m_groupGlobalBounds.width, m_groupGlobalBounds.height));
+	render.draw(rect);
 	for (auto & pair : m_shapes)
 		pair->debugDraw(render);
 	RectangleShape::debugDraw(render);

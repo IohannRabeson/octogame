@@ -7,12 +7,13 @@
 # include "PhysicsEngine.hpp"
 # include "GroundManager.hpp"
 # include "DefaultBiome.hpp"
+# include "IContactListener.hpp"
 
 class ConvexShape;
 class RectangleShape;
 class GroupShape;
 
-class PhysicsMapScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
+class PhysicsMapScreen : public octo::AbstractState, public octo::DefaultKeyboardListener, public IContactListener
 {
 public:
 	PhysicsMapScreen(void);
@@ -32,8 +33,10 @@ private:
 	GroundManager					m_groundManager;
 	DefaultBiome					m_biome;
 	GroupShape *					m_groupShape;
+	std::size_t						m_nbCollision;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
+	virtual void onShapeCollision(AShape * shapeA, AShape * shapeB);
 
 };
 
