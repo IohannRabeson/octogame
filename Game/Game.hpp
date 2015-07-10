@@ -28,13 +28,9 @@ public:
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
 private:
-	// Add GroundManager
 	BiomeManager	m_biomeManager;
 	SkyManager		m_skyManager;
 	GroundManager	m_groundManager;
-	// @Francois: tu peux fourrer ici des decors manager:
-	// DecorManager	m_starDecorManager;
-	// DecorManager m_terrainDecorManager;
 };
 
 #endif

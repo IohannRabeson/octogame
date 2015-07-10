@@ -10,7 +10,8 @@
 //TODO: Add canCreate* for moon, stars and sun
 
 SkyManager::SkyManager(void) :
-	m_decorManager(200000),
+	m_decorManagerBack(200000),
+	m_decorManagerFront(20000),
 	m_wind(0.f),
 	//TODO: Put this in GameClock and add this in biome
 	m_timer(0.f),
@@ -33,7 +34,7 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f cameraSize)
 	m_originStars.resize(m_starCount);
 	//TODO: Check with Iohann for delete element
 	for (std::size_t i = 0u; i < m_starCount; i++)
-		m_decorManager.add(new Star(&m_timeCoef));
+		m_decorManagerBack.add(new Star(&m_timeCoef));
 
 	for (std::size_t i = 0u; i < m_starCount; i++)
 	{
@@ -48,8 +49,8 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f cameraSize)
 
 void SkyManager::setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCenter)
 {
-	m_decorManager.add(DecorManager::DecorTypes::Sun);
-	m_decorManager.add(DecorManager::DecorTypes::Moon);
+	m_decorManagerBack.add(DecorManager::DecorTypes::Sun);
+	m_decorManagerBack.add(DecorManager::DecorTypes::Moon);
 
 	m_originRotate = sf::Vector2f(cameraCenter.x, cameraSize.y);
 	m_originSun = sf::Vector2f(0.f, cameraSize.y);
@@ -62,7 +63,7 @@ void SkyManager::setupClouds(ABiome & biome)
 	m_originClouds.resize(m_cloudCount);
 	for (size_t i = 0; i < m_cloudCount; i++)
 	{
-		m_decorManager.add(DecorManager::DecorTypes::Cloud);
+		m_decorManagerBack.add(DecorManager::DecorTypes::Cloud);
 		m_originClouds[i].x = biome.randomFloat(0.f, m_mapSizeFloat.x);
 		m_originClouds[i].y = biome.randomFloat(0.f, m_mapSizeFloat.y);
 	}
@@ -70,7 +71,8 @@ void SkyManager::setupClouds(ABiome & biome)
 
 void SkyManager::setup(ABiome & biome)
 {
-	m_decorManager.setup(&biome);
+	m_decorManagerBack.setup(&biome);
+	m_decorManagerFront.setup(&biome);
 
 	octo::Camera camera = octo::Application::getCamera();
 	sf::Vector2f cameraSize = camera.getSize();
@@ -95,29 +97,32 @@ void SkyManager::update(sf::Time frameTime)
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);
 
-	DecorManager::Iterator decor = m_decorManager.begin();
-	for (std::size_t i = 0; i < m_starCount; i++)
-		setPosition(decor++, m_originStars[i] + m_originRotateStar, m_originRotateStar, cos, sin);
+	DecorManager::Iterator decor = m_decorManagerBack.begin();
+	for (auto it = m_originStars.begin(); it != m_originStars.end(); it++)
+		setPosition(decor++, *it + m_originRotateStar, m_originRotateStar, cos, sin);
 	setPosition(decor++, m_originSun, m_originRotate, cos, sin);
 	m_originRotateStar = setPosition(decor++, m_originMoon, m_originRotate, cos, sin);
 
-	for (std::size_t i = 0; i < m_cloudCount; i++)
+	for (auto it = m_originClouds.begin(); it != m_originClouds.end(); it++)
 	{
-		m_originClouds[i].x += m_wind * frameTime.asSeconds();
-/*		if (m_originClouds[i].x >= m_mapSizeFloat.x && m_wind >= 0.f)
-			m_originClouds[i].x = m_originClouds[i].x - m_mapSizeFloat.x;
-		else if (m_originClouds[i].x < 0.f && m_wind < 0.f)
-			m_originClouds[i].x = m_mapSizeFloat.x + m_originClouds[i].x;
-*/		(*decor)->setPosition(m_originClouds[i]);
+		it->x += m_wind * frameTime.asSeconds();
+		//TODO: make a loop with position
+		(*decor)->setPosition(*it);
 		decor++;
 	}
 
-	m_decorManager.update(frameTime, octo::Application::getCamera());
+	m_decorManagerBack.update(frameTime, octo::Application::getCamera());
+	m_decorManagerFront.update(frameTime, octo::Application::getCamera());
 }
 
-DecorManager const & SkyManager::getDecors(void) const
+DecorManager const & SkyManager::getDecorsBack(void) const
 {
-	return m_decorManager;
+	return m_decorManagerBack;
+}
+
+DecorManager const & SkyManager::getDecorsFront(void) const
+{
+	return m_decorManagerFront;
 }
 
 void SkyManager::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)

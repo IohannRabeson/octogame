@@ -1,5 +1,5 @@
 #include "DefaultBiome.hpp"
-#include "Map.hpp"
+#include "Tile.hpp"
 
 #include <iostream>
 

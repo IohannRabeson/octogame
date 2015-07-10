@@ -14,7 +14,8 @@ public:
 
 	void setup(ABiome & biome);
 	void update(sf::Time frameTime);
-	DecorManager const & getDecors(void) const;
+	DecorManager const & getDecorsBack(void) const;
+	DecorManager const & getDecorsFront(void) const;
 
 private:
 	sf::Vector2f setPosition(DecorManager::Iterator decor, sf::Vector2f origin, sf::Vector2f originRotate, float cos, float sin);
@@ -22,7 +23,8 @@ private:
 	void setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCenter);
 	void setupClouds(ABiome & biome);
 
-	DecorManager				m_decorManager;
+	DecorManager				m_decorManagerBack;
+	DecorManager				m_decorManagerFront;
 	float						m_wind;
 	sf::Vector2f				m_mapSizeFloat;
 
