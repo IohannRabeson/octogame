@@ -13,10 +13,12 @@
 #ifndef GAMESCREEN_HPP
 # define GAMESCREEN_HPP
 # include <AbstractState.hpp>
+# include <GraphicsListeners.hpp>
+# include <Camera.hpp>
 
 # include "Game.hpp"
 
-class GameScreen : public octo::AbstractState
+class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
 	virtual void	start();
 	virtual void	pause();
@@ -25,7 +27,9 @@ class GameScreen : public octo::AbstractState
 	virtual void	update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render)const;
 private:
-	Game	m_game;
+	Game			m_game;
+
+	virtual bool onPressed(sf::Event::KeyEvent const & event);
 };
 
 #endif

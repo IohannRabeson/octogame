@@ -30,12 +30,16 @@ public:
 	virtual std::string		getName()const;
 
 	virtual sf::Vector2u	getMapSize();
+	virtual sf::Vector2f	getMapSizeFloat();
 	virtual float			getTransitionDuration();
 	virtual int				getBossInstancePosX();
 
+	virtual float			getWind();
+
 	virtual std::size_t		getGroundDecorsCount();
 	virtual std::size_t		getCrystalsCount();
-	virtual std::size_t		getSkyDecorsCount();
+	virtual std::size_t		getStarCount();
+	virtual std::size_t		getCloudCount();
 
 	virtual std::size_t		getTreeDepth();
 	virtual sf::Vector2f	getTreeSize();
@@ -96,9 +100,12 @@ private:
 	float				m_transitionDuration;
 	std::size_t			m_bossInstancePosX;
 
+	Range<float>		m_wind;
+
 	Range<std::size_t>	m_groundDecorsCount;
 	Range<std::size_t>	m_crystalsCount;
-	Range<std::size_t>	m_skyDecorsCount;
+	Range<std::size_t>	m_starCount;
+	Range<std::size_t>	m_cloudCount;
 
 	bool				m_canCreateTree;
 	bool				m_canCreateLeaf;

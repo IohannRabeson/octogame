@@ -30,7 +30,6 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/AudioDemoScreen.cpp				\
 				Screens/EngineScreen.cpp				\
 				Screens/PhysicsMapScreen.cpp			\
-				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/LightningDemoScreen.cpp			\
 				Screens/GameScreen.cpp					\
 				Screens/ParticleDemoScreen.cpp
@@ -49,7 +48,6 @@ SRC_MAP =		Map/Map.cpp								\
 SRC_OCTO =		Octo/OctoNoise.cpp
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
-				Biomes/TestBiome.cpp					\
 				Biomes/DefaultBiome.cpp
 
 SRC_DECORS =	Decors/GameObject.cpp					\

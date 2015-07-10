@@ -1,4 +1,5 @@
 #include "DefaultBiome.hpp"
+#include "Map.hpp"
 
 #include <iostream>
 
@@ -8,9 +9,12 @@ DefaultBiome::DefaultBiome() :
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
+	m_wind(50.f, 100.f),
+
 	m_groundDecorsCount(40u, 50u),
 	m_crystalsCount(15u, 30u),
-	m_skyDecorsCount(30u, 50u),
+	m_starCount(500u, 800u),
+	m_cloudCount(20u, 40u),
 
 	m_canCreateTree(true),
 	m_canCreateLeaf(true),
@@ -42,7 +46,7 @@ DefaultBiome::DefaultBiome() :
 	m_rockPartCount(2.f, 10.f),
 	m_rockColor(255, 0, 100),
 
-	m_cloudSize(sf::Vector2f(300.f, 10.f), sf::Vector2f(500.f, 40.f)),
+	m_cloudSize(sf::Vector2f(100.f, 10.f), sf::Vector2f(500.f, 60.f)),
 	m_cloudPartCount(2u, 10u),
 	m_cloudLifeTime(sf::seconds(15), sf::seconds(60)),
 	m_cloudColor(255, 255, 255),
@@ -78,14 +82,24 @@ sf::Vector2u	DefaultBiome::getMapSize()
 	return (m_mapSize);
 }
 
+sf::Vector2f	DefaultBiome::getMapSizeFloat()
+{
+	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
+}
+
 float			DefaultBiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				DefaultBiome::getBossInstancePosX(void)
+int				DefaultBiome::getBossInstancePosX()
 {
 	return (m_bossInstancePosX);
+}
+
+float			DefaultBiome::getWind()
+{
+	return (randomRangeFloat(m_wind));
 }
 
 std::size_t		DefaultBiome::getGroundDecorsCount()
@@ -98,9 +112,14 @@ std::size_t		DefaultBiome::getCrystalsCount()
 	return (randomRangeInt(m_crystalsCount));
 }
 
-std::size_t		DefaultBiome::getSkyDecorsCount()
+std::size_t		DefaultBiome::getStarCount()
 {
-	return (randomRangeInt(m_skyDecorsCount));
+	return (randomRangeInt(m_starCount));
+}
+
+std::size_t		DefaultBiome::getCloudCount()
+{
+	return (randomRangeInt(m_cloudCount));
 }
 
 std::size_t	DefaultBiome::getTreeDepth()

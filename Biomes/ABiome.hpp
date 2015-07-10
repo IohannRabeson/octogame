@@ -30,12 +30,16 @@ public:
 	virtual std::string		getName()const = 0;
 
 	virtual sf::Vector2u	getMapSize() = 0;
+	virtual sf::Vector2f	getMapSizeFloat() = 0;
 	virtual float			getTransitionDuration() = 0;
 	virtual int				getBossInstancePosX() = 0;
 
+	virtual float			getWind() = 0;
+
 	virtual std::size_t		getGroundDecorsCount() = 0;
 	virtual std::size_t		getCrystalsCount() = 0;
-	virtual std::size_t		getSkyDecorsCount() = 0;
+	virtual std::size_t		getStarCount() = 0;
+	virtual std::size_t		getCloudCount() = 0;
 
 	virtual std::size_t		getTreeDepth() = 0;
 	virtual sf::Vector2f	getTreeSize() = 0;
