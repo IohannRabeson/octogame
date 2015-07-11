@@ -2,9 +2,6 @@
 #include "ABiome.hpp"
 #include <Math.hpp>
 
-std::bernoulli_distribution	Tree::m_distribution(0.5);
-std::default_random_engine	Tree::m_engine;
-
 Tree::Tree(void) :
 	m_depth(0u),
 	m_count(0u),
@@ -161,7 +158,7 @@ void Tree::newTree(ABiome& biome)
 	for (std::size_t i = 0u; i < m_angleMaxCount; i++)
 		m_refAngle[i] = biome.getTreeAngle();
 	m_animator.setup(biome.getTreeLifeTime());
-	m_growSide = Tree::getGrowSide();
+	m_growSide = biome.randomBool(0.5);
 
 	m_isLeaf = biome.canCreateLeaf();
 
@@ -189,10 +186,5 @@ void Tree::rotateVec(sf::Vector2f & vector, float const cosAngle, float const si
 	float x = vector.x * cosAngle - vector.y * sinAngle;
 	vector.y = vector.y * cosAngle + vector.x * sinAngle;
 	vector.x = x;
-}
-
-bool Tree::getGrowSide(void)
-{
-	return m_distribution(m_engine);
 }
 

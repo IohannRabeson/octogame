@@ -5,30 +5,40 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/11 13:37:15 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 16:07:16 by irabeson         ###   ########.fr       */
+/*   Created: 2015/06/24 05:16:51 by irabeson          #+#    #+#             */
+/*   Updated: 2015/07/01 13:31:36 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BIOMEMANAGER_HPP
 # define BIOMEMANAGER_HPP
-# include "ABiome.hpp"
-
+# include <NonCopyable.hpp>
 # include <GenericFactory.hpp>
+# include <string>
+# include <memory>
 
-class BiomeManager
+class ABiome;
+
+class BiomeManager : public octo::NonCopyable
 {
 public:
-	ABiome&	getCurrent();
-
+	void	changeBiome(std::string const& key, std::size_t seed);
+	
 	template <class T>
-	void	registerBiome(std::string const& key)
-	{
-		m_factory.registerCreator<T>(key);
-	}
+	void	registerBiome(std::string const& key);
+
+	ABiome&	getCurrentBiome();
 private:
-	octo::GenericFactory<std::string, ABiome>	m_factory;
-	std::unique_ptr<ABiome>						m_biome;
+	typedef octo::GenericFactory<std::string, ABiome>	BiomeFactory;
+
+	BiomeFactory			m_factory;
+	std::unique_ptr<ABiome>	m_biome;
 };
+
+template <class T>
+void	BiomeManager::registerBiome(std::string const& key)
+{
+	m_factory.registerCreator<T>(key);
+}
 
 #endif

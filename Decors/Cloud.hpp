@@ -33,7 +33,6 @@ private:
 	std::vector<OctogonValue>	m_values;
 	DecorAnimator				m_animator;
 	float						m_animation;
-	sf::Time					m_lifeTime;
 
 	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & origin,
@@ -49,10 +48,6 @@ private:
 						octo::VertexBuilder& builder);
 
 	void newCloud(ABiome& biome);
-
-private:
-	static std::mt19937 m_engine;
-	static float randomFloat(float min, float max);
 };
 
 #endif

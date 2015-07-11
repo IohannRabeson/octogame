@@ -12,6 +12,7 @@ class TileShape;
  * \ingroup Physic
  * \class IShapeBuilder
  * Interface that allow to create new Shapes and register them in the PhysicsEngine
+ * PhysicsEngine manage the memory of the allocated shapes
  */
 class ShapeBuilder
 {

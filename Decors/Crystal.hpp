@@ -53,10 +53,6 @@ private:
 						octo::VertexBuilder & builder);
 
 private:
-	static std::mt19937 m_engine;
-	static float randomFloat(float min, float max);
-	static float randomInt(int min, int max);
-
 	static void rotateVec(sf::Vector2f & vector,
 							float const cosAngle,
 							float const sinAngle);

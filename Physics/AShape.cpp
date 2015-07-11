@@ -16,8 +16,6 @@ AShape::AShape(void) :
 void AShape::update(void)
 {
 	move(m_velocity);
-	// TODO: remove  ?
-	m_oldVelocity = m_velocity;
 	m_velocity.x = 0.f;
 	m_velocity.y = 0.f;
 	computeShape();

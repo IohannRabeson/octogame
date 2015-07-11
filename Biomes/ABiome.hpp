@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 02:17:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 19:42:39 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/27 17:53:25 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,15 @@ public:
 	virtual void			setup(std::size_t seed) = 0;
 	virtual std::string		getName()const = 0;
 
-	virtual std::size_t		getTreeDepth()= 0;
+	virtual sf::Vector2u	getMapSize() = 0;
+	virtual float			getTransitionDuration() = 0;
+	virtual int				getBossInstancePosX() = 0;
+
+	virtual std::size_t		getGroundDecorsCount() = 0;
+	virtual std::size_t		getCrystalsCount() = 0;
+	virtual std::size_t		getSkyDecorsCount() = 0;
+
+	virtual std::size_t		getTreeDepth() = 0;
 	virtual sf::Vector2f	getTreeSize() = 0;
 	virtual sf::Time		getTreeLifeTime() = 0;
 	virtual sf::Color		getTreeColor() = 0;
@@ -47,6 +55,7 @@ public:
 	virtual sf::Vector2f	getShineEffectSize() = 0;
 	virtual sf::Color		getShineEffectColor() = 0;
 	virtual float			getShineEffectRotateAngle() = 0;
+	virtual int				getCrystalPosX() = 0;
 	virtual bool			canCreateShineEffect() = 0;
 
 	virtual sf::Vector2f	getRockSize() = 0;
@@ -74,9 +83,10 @@ public:
 	virtual sf::Color		getMoonColor() = 0;
 	virtual bool			canCreateMoon() = 0;
 
-	virtual sf::Vector2f	getRainbowSize() = 0;
-	virtual std::size_t		getRainbowPartCount() = 0;
-	virtual bool			canCreateRainbow() = 0;
+	virtual float			randomFloat(float min, float max) = 0;
+	virtual int				randomInt(int min, int max) = 0;
+	virtual bool			randomBool(float percent) = 0;
+
 };
 
 #endif

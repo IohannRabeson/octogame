@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 03:03:00 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/11 19:45:17 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/27 17:53:14 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define TESTBIOME_HPP
 
 # include "ABiome.hpp"
+# include "RandomGenerator.hpp"
 
 # include <cstddef>
 
@@ -26,6 +27,14 @@ public:
 
 	virtual void			setup(std::size_t seed);
 	virtual std::string		getName()const;
+
+	virtual float			randomFloat(float min, float max);
+	virtual int				randomInt(int min, int max);
+	virtual bool			randomBool(float percent);
+
+	virtual std::size_t		getGroundDecorsCount();
+	virtual std::size_t		getCrystalsCount();
+	virtual std::size_t		getSkyDecorsCount();
 
 	virtual std::size_t		getTreeDepth();
 	virtual sf::Vector2f	getTreeSize();
@@ -45,6 +54,7 @@ public:
 	virtual sf::Vector2f	getShineEffectSize();
 	virtual sf::Color		getShineEffectColor();
 	virtual float			getShineEffectRotateAngle();
+	virtual int				getCrystalPosX();
 	virtual bool			canCreateShineEffect();
 
 	virtual sf::Vector2f	getRockSize();
@@ -72,9 +82,9 @@ public:
 	virtual sf::Color		getMoonColor();
 	virtual bool			canCreateMoon();
 
-	virtual sf::Vector2f	getRainbowSize();
-	virtual std::size_t		getRainbowPartCount();
-	virtual bool			canCreateRainbow();
+	virtual sf::Vector2u getMapSize();
+	virtual float getTransitionDuration();
+	virtual int getBossInstancePosX();
 
 	void					setTreeDepth(std::size_t depth);
 	void					setTreeSize(sf::Vector2f const& treeSize);
@@ -115,7 +125,17 @@ public:
 	void					setMoonSize(sf::Vector2f const& size);
 	void					setMoonColor(sf::Color const& color);
 	void					setCanCreateMoon(bool canCreate);
+
+	void					setMapSize(sf::Vector2u const & mapSize);
+	void					setTransitionDuration(float transitionDuration);
+
 private:
+	RandomGenerator			m_generator;
+
+	std::size_t				m_groundDecorsCount;
+	std::size_t				m_crystalsCount;
+	std::size_t				m_skyDecorsCount;
+
 	std::size_t				m_treeDepth;
 	sf::Vector2f			m_treeSize;
 	sf::Time				m_treeLifeTime;
@@ -162,9 +182,9 @@ private:
 	sf::Color				m_moonColor;
 	bool					m_canCreateMoon;
 
-	sf::Vector2f			m_rainbowSize;
-	std::size_t				m_rainbowPartCount;
-	bool					m_canCreateRainbow;
+	sf::Vector2u			m_mapSize;
+	float					m_transitionDuration;
+	int						m_bossInstancePosX;
 };
 
 #endif

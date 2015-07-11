@@ -51,6 +51,8 @@ public:
 	 */
 	inline void setVertex(sf::Vertex * vertex) { m_vertex = vertex; }
 
+	inline void setHeight(float height) { m_height = height; }
+
 	/*! Get the global bounds
 	 * The AABB is recomputed at each rotation
 	 *
@@ -73,7 +75,7 @@ public:
 	sf::Vector2f const & getSupportVertex(sf::Vector2f const & direction);
 
 	/*! Get the vertex count needed to compute the sat */
-	inline virtual std::size_t getEfficientVertexCount(void) const { return 1u; }
+	inline virtual std::size_t getEfficientVertexCount(void) const { return 4u; }
 
 	/*! Use to draw debug information */
 	virtual void debugDraw(sf::RenderTarget & render);
@@ -89,6 +91,7 @@ private:
 	std::vector<sf::Vector2f>	m_normals;
 	sf::Vector2f				m_baryCenter;
 	sf::FloatRect				m_globalBounds;
+	float						m_height;
 
 };
 

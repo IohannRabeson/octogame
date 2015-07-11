@@ -1,12 +1,14 @@
-#include "TerrainManager.hpp"
-#include "MapInstance.hpp"
+#include "GroundManager.hpp"
+#include "Map.hpp"
 #include "TileShape.hpp"
 #include "PhysicsEngine.hpp"
+#include "ADecor.hpp"
+#include "ABiome.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
 
-TerrainManager::TerrainManager(void) :
+GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
 	m_tilesPrev(nullptr),
 	m_transitionTimer(1.f),
@@ -14,15 +16,15 @@ TerrainManager::TerrainManager(void) :
 	m_offset(),
 	m_vertices(nullptr),
 	m_verticesCount(0u),
-	m_oldOffset(0, 0)
+	m_oldOffset(0, 0),
+	m_decorManager(200000)
 {}
 
-void TerrainManager::init(Biome * biome)
+void GroundManager::init(ABiome & biome)
 {
-	m_tiles.reset(new MapInstance());
-	m_tilesPrev.reset(new MapInstance());
-
-	// Init maps and biome
+	// Init maps
+	m_tiles.reset(new Map());
+	m_tilesPrev.reset(new Map());
 	m_tiles->init(biome);
 	m_tilesPrev->init(biome);
 
@@ -33,23 +35,77 @@ void TerrainManager::init(Biome * biome)
 	// Init vertices
 	m_vertices.reset(new sf::Vertex[m_tiles->getRows() * m_tiles->getColumns() * 4u]);
 
+	// Init physics
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
-	// TODO: use vector instead of array
-	m_tileShapes.resize(m_tiles->getColumns(), m_tiles->getRows(), nullptr);
-
+	m_tileShapes.resize(m_tiles->getColumns(), nullptr);
 	PhysicsEngine::getInstance().setTileMapSize(sf::Vector2i(m_tiles->getColumns(), m_tiles->getRows()));
-
 
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
-		m_tileShapes(x, 0u) = builder.createTile(x, 0u);
-		m_tileShapes(x, 0u)->setVertex(&m_vertices[0u]);
+		m_tileShapes[x] = builder.createTile(x, 0u);
+		m_tileShapes[x]->setVertex(&m_vertices[0u]);
 	}
 
-	m_transitionTimerMax = biome->mf_transitionTimerMax;
+	m_transitionTimerMax = biome.getTransitionDuration();
+
+	// Init decors
+	initDecors(biome);
 }
 
-void TerrainManager::setTransitionAppear(int x, int y)
+void GroundManager::initDecors(ABiome & biome)
+{
+	m_decorManager.setup(&biome);
+	std::size_t groundDecorsCount = biome.getGroundDecorsCount();
+	std::size_t crystalsCount = biome.getCrystalsCount();
+
+	std::size_t mapSizeX = biome.getMapSize().x;
+
+	bool canCreateCrystal = biome.canCreateCrystal();
+
+	bool canCreateTree = biome.canCreateTree();
+	bool canCreateRock = biome.canCreateRock();
+
+	//TODO: Think of an other way to do that
+	int decorsTypeCount = canCreateTree + canCreateRock - 1;
+	if (decorsTypeCount != -1)
+	{
+		std::vector<DecorManager::DecorTypes> decorsType;
+		decorsType.reserve(decorsTypeCount);
+		if (canCreateTree)
+			decorsType.push_back(DecorManager::DecorTypes::Tree);
+		if (canCreateRock)
+			decorsType.push_back(DecorManager::DecorTypes::Rock);
+
+		for (std::size_t i = 0; i < groundDecorsCount; i++)
+		{
+			int x = biome.randomInt(0.f, mapSizeX);
+			int chooseDecor = biome.randomInt(0, decorsTypeCount);
+
+			if (chooseDecor == 0)
+				m_decorManager.add(decorsType[chooseDecor]);
+			else if (chooseDecor == 1)
+				m_decorManager.add(decorsType[chooseDecor]);
+
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+	}
+
+	if (canCreateCrystal)
+	{
+		for (std::size_t i = groundDecorsCount; i < crystalsCount + groundDecorsCount; i++)
+		{
+			int x = biome.getCrystalPosX();
+			m_decorManager.add(DecorManager::DecorTypes::Crystal);
+
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+	}
+	m_decorPositions.resize(groundDecorsCount + crystalsCount);
+}
+
+void GroundManager::setTransitionAppear(int x, int y)
 {
 	int i = 0;
 	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).isTransitionType(Tile::e_transition_appear))
@@ -60,7 +116,7 @@ void TerrainManager::setTransitionAppear(int x, int y)
 	setTransitionModify(x, y);
 }
 
-void TerrainManager::setTransitionDisappear(int x, int y)
+void GroundManager::setTransitionDisappear(int x, int y)
 {
 	int i = 0;
 	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).isTransitionType(Tile::e_transition_disappear))
@@ -70,7 +126,7 @@ void TerrainManager::setTransitionDisappear(int x, int y)
 	m_tiles->get(x, y).setStartColor(m_tilesPrev->get(x, y).getStartColor());
 }
 
-void TerrainManager::setTransitionModify(int x, int y)
+void GroundManager::setTransitionModify(int x, int y)
 {
 	// Define if it's a quad or a triangle
 	if (y - 1 >= 0 && m_tiles->get(x, y - 1).isEmpty() && y + 1 < static_cast<int>(m_tiles->getRows()))
@@ -82,7 +138,7 @@ void TerrainManager::setTransitionModify(int x, int y)
 	}
 }
 
-void TerrainManager::defineTransition(int x, int y)
+void GroundManager::defineTransition(int x, int y)
 {
 	int prev = m_tilesPrev->get(x, y).isEmpty();
 	int current = m_tiles->get(x, y).isEmpty();
@@ -97,7 +153,7 @@ void TerrainManager::defineTransition(int x, int y)
 		m_tiles->get(x, y).setTransitionType(Tile::e_transition_none);
 }
 
-void TerrainManager::defineTransitionRange(int startX, int endX, int startY, int endY)
+void GroundManager::defineTransitionRange(int startX, int endX, int startY, int endY)
 {
 	// For each tile, define the type and transition type
 	for (int x = startX; x < endX; x++)
@@ -131,7 +187,7 @@ void TerrainManager::defineTransitionRange(int startX, int endX, int startY, int
 	}
 }
 
-void TerrainManager::swapMap(void)
+void GroundManager::swapMap(void)
 {
 	m_tiles.swap(m_tilesPrev);
 	m_tiles->computeMap();
@@ -139,24 +195,36 @@ void TerrainManager::swapMap(void)
 	defineTransition();
 }
 
-void TerrainManager::updateTransition(void)
+void GroundManager::updateTransition(void)
 {
 	if (m_transitionTimer > m_transitionTimerMax)
 		m_transitionTimer = m_transitionTimerMax;
 	float transition = m_transitionTimer / m_transitionTimerMax;
 	Tile * tile;
 	Tile * tilePrev;
+	TileShape * first;
+	std::size_t height;
+	bool isComputed;
 
 	// Update tiles
 	m_verticesCount = 0u;
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
-		bool isFirst = false;
+		first = nullptr;
+		height = 0u;
+		isComputed = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
 			if (tile->isTransitionType(Tile::e_transition_none))
+			{
+				if (first && !isComputed)
+				{
+					first->setHeight(static_cast<float>(height) * Tile::TileSize);
+					isComputed = true;
+				}
 				continue;
+			}
 			tilePrev = &m_tilesPrev->get(x, y);
 
 			// Update tile transition
@@ -169,28 +237,30 @@ void TerrainManager::updateTransition(void)
 			}
 
 			// Update physics information
-			if (!isFirst)
+			if (!first)
 			{
-				isFirst = true;
-				m_tileShapes.get(x, 0)->setVertex(&m_vertices[m_verticesCount]);
+				first = m_tileShapes[x];
+				m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount]);
 			}
+			height++;
 			m_verticesCount += 4u;
 		}
+		if (first && !isComputed)
+			first->setHeight(static_cast<float>(height) * Tile::TileSize);
 	}
 
-	/* TODO: change decor and use vertex instead of tile
 	// Update decors
-	auto tiles = m_tiles->getDecors();
-	auto tilesPrev = m_tilesPrev->getDecors();
-	for (auto it = tiles.begin(), itPrev = tilesPrev.begin(); it != tiles.end(); it++, itPrev++)
+	Map::Iterator it;
+	Map::Iterator itPrev;
+	std::size_t index = 0u;
+	for (it = m_tiles->begin(), itPrev = m_tilesPrev->begin(); it != m_tiles->end(); it++, itPrev++, index++)
 	{
-		itPrev->second->mp_upLeft->position.y = octo::linearInterpolation(itPrev->second->m_startTransition[0].y, it->second->m_startTransition[0].y, transition) - Tile::DoubleTileSize;
-		itPrev->second->mp_upLeft->position.x = it->second->m_startTransition[0].x - Tile::DoubleTileSize;
-		itPrev->second->mp_upLeft->color = octo::linearInterpolation(itPrev->second->getStartColor(), it->second->getStartColor(), transition);
-	}*/
+		m_decorPositions[index].y = octo::linearInterpolation(itPrev->second.y, it->second.y, transition);
+		m_decorPositions[index].x = it->second.x;
+	}
 }
 
-void TerrainManager::defineTransitionBorderTileRange(int startX, int endX, int startY, int endY)
+void GroundManager::defineTransitionBorderTileRange(int startX, int endX, int startY, int endY)
 {
 	for (int x = startX; x < endX; x++)
 	{
@@ -219,25 +289,17 @@ void TerrainManager::defineTransitionBorderTileRange(int startX, int endX, int s
 	defineTransitionRange(startX, endX, startY, endY);
 }
 
-void TerrainManager::updateOffset(float)
+void GroundManager::updateOffset(float)
 {
 	int ofX = 0;
 	int ofY = 0;
 	int newOfX = static_cast<int>(m_offset.x / Tile::TileSize);
 	int newOfY = static_cast<int>(m_offset.y / Tile::TileSize);
-	if (m_oldOffset.x > newOfX)
-		ofX = -1;
-	else if (m_oldOffset.x < newOfX)
-		ofX = 1;
-	if (m_oldOffset.y > newOfY)
-		ofY = -1;
-	else if (m_oldOffset.y < newOfY)
-		ofY = 1;
+	if (m_oldOffset.x != newOfX)
+		ofX = newOfX - m_oldOffset.x;
+	if (m_oldOffset.y != newOfY)
+		ofY = newOfY - m_oldOffset.y;
 
-	// TODO: there is a bug if the speed > 16.f / second
-	// if speed = 600.f at 60fps, speed = 600.f / 60.f = 10.f per frame
-	// if speed per frame > 16.f the bug occur
-	// to trigger the bug, at 60 fps, speed must be 60 * 16 = 960
 	if (ofX)
 		computeDecor();
 	if (ofX && ofY)
@@ -251,40 +313,40 @@ void TerrainManager::updateOffset(float)
 		m_tilesPrev->addOffsetY(ofY);
 		if (ofX < 0)
 		{
-			m_tiles->computeMapRangeX(0, 1);
-			m_tilesPrev->computeMapRangeX(0, 1);
+			m_tiles->computeMapRangeX(0, -ofX);
+			m_tilesPrev->computeMapRangeX(0, -ofX);
 			if (ofY < 0)
 			{
-				m_tiles->computeMapRangeY(0, 1);
-				m_tilesPrev->computeMapRangeY(0, 1);
-				defineTransitionBorderTileRange(0, 2, 2, m_tiles->getRows());
-				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+				m_tiles->computeMapRangeY(0, -ofY);
+				m_tilesPrev->computeMapRangeY(0, -ofY);
+				defineTransitionBorderTileRange(0, -ofX + 1, -ofY + 1, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, -ofY + 1);
 			}
 			else
 			{
-				m_tiles->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-				defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows() - 2);
-				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
+				m_tiles->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, ofY + 1, 0, m_tiles->getRows() - ofY - 1);
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - ofY - 1, m_tiles->getRows());
 			}
 		}
 		else
 		{
-			m_tiles->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
-			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
+			m_tiles->computeMapRangeX(m_tiles->getColumns() - ofX, m_tiles->getColumns());
+			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - ofX, m_tiles->getColumns());
 			if (ofY < 0)
 			{
-				m_tiles->computeMapRangeY(0, 1);
-				m_tilesPrev->computeMapRangeY(0, 1);
-				defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 2, m_tiles->getRows());
-				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+				m_tiles->computeMapRangeY(0, -ofY);
+				m_tilesPrev->computeMapRangeY(0, -ofY);
+				defineTransitionBorderTileRange(m_tiles->getColumns() - ofX - 1, m_tiles->getColumns(), -ofY + 1, m_tiles->getRows());
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, -ofY + 1);
 			}
 			else
 			{
-				m_tiles->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-				defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows() - 2);
-				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 2, m_tiles->getRows());
+				m_tiles->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+				m_tilesPrev->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+				defineTransitionBorderTileRange(m_tiles->getColumns() - ofX - 1, m_tiles->getColumns(), 0, m_tiles->getRows() - ofY - 1);
+				defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - ofY - 1, m_tiles->getRows());
 			}
 		}
 		m_tilesPrev->swapDepth();
@@ -300,15 +362,15 @@ void TerrainManager::updateOffset(float)
 		m_tilesPrev->addOffsetX(ofX);
 		if (ofX < 0)
 		{
-			m_tiles->computeMapRangeX(0, 1);
-			m_tilesPrev->computeMapRangeX(0, 1);
-			defineTransitionBorderTileRange(0, 2, 0, m_tiles->getRows());
+			m_tiles->computeMapRangeX(0, -ofX);
+			m_tilesPrev->computeMapRangeX(0, -ofX);
+			defineTransitionBorderTileRange(0, -ofX + 1, 0, m_tiles->getRows());
 		}
 		else
 		{
-			m_tiles->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
-			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - 1, m_tiles->getColumns());
-			defineTransitionBorderTileRange(m_tiles->getColumns() - 2, m_tiles->getColumns(), 0, m_tiles->getRows());
+			m_tiles->computeMapRangeX(m_tiles->getColumns() - ofX, m_tiles->getColumns());
+			m_tilesPrev->computeMapRangeX(m_tiles->getColumns() - ofX, m_tiles->getColumns());
+			defineTransitionBorderTileRange(m_tiles->getColumns() - ofX - 1, m_tiles->getColumns(), 0, m_tiles->getRows());
 		}
 		m_tilesPrev->swapDepth();
 		m_oldOffset.x = newOfX;
@@ -322,14 +384,14 @@ void TerrainManager::updateOffset(float)
 		m_tilesPrev->addOffsetY(ofY);
 		if (ofY < 0)
 		{
-			m_tiles->computeMapRangeY(0, 1);
-			m_tilesPrev->computeMapRangeY(0, 1);
-			defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, 2);
+			m_tiles->computeMapRangeY(0, -ofY);
+			m_tilesPrev->computeMapRangeY(0, -ofY);
+			defineTransitionBorderTileRange(0, m_tiles->getColumns(), 0, -ofY + 1);
 		}
 		else
 		{
-			m_tiles->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
-			m_tilesPrev->computeMapRangeY(m_tiles->getRows() - 1, m_tiles->getRows());
+			m_tiles->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
+			m_tilesPrev->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
 			defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 10, m_tiles->getRows());
 		}
 		m_tilesPrev->swapDepth();
@@ -337,7 +399,17 @@ void TerrainManager::updateOffset(float)
 	}
 }
 
-void TerrainManager::update(float pf_deltatime)
+void GroundManager::updateDecors(float pf_deltatime)
+{
+	std::size_t i = 0;
+	for (auto it = m_decorManager.begin(); it != m_decorManager.end(); it++, i++)
+		(*it)->setPosition(m_decorPositions[i]);
+
+	octo::Camera& camera = octo::Application::getCamera();
+	m_decorManager.update(sf::seconds(pf_deltatime), camera);
+}
+
+void GroundManager::update(float pf_deltatime)
 {
 	bool compute = false;
 	m_transitionTimer += pf_deltatime;
@@ -371,9 +443,11 @@ void TerrainManager::update(float pf_deltatime)
 	}
 	updateOffset(pf_deltatime);
 	updateTransition();
+	updateDecors(pf_deltatime);
 }
 
-void TerrainManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
+void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	m_decorManager.draw(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }

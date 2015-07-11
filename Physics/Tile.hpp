@@ -49,6 +49,7 @@ private:
 	sf::Vector2f		m_startTransition[4];
 	ETransitionType		m_transitionType;
 	sf::Color			m_startColor;
+	//TODO: remove
 	sf::Vertex *		m_upLeft;
 	float				m_noiseValue;
 	bool				m_isEmpty;

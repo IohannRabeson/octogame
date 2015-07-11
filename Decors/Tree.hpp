@@ -73,14 +73,9 @@ private:
 	void newTree(ABiome& biome);
 
 private:
-	static std::default_random_engine	m_engine;
-	static std::bernoulli_distribution	m_distribution;
-
 	static void rotateVec(sf::Vector2f & vector,
 							float const cosAngle,
 							float const sinAngle);
-
-	static bool getGrowSide(void);
 };
 
 #endif
