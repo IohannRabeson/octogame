@@ -28,6 +28,7 @@
 #include "PhysicsMapScreen.hpp"
 #include "LightningDemoScreen.hpp"
 #include "GameScreen.hpp"
+#include "DecorManagerDemoScreen.hpp"
 #include "ParticleDemoScreen.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
@@ -43,6 +44,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<PhysicsMapScreen>("physics_map");
 	manager.registerState<ParticleDemoScreen>("particles");
 	manager.registerState<LightningDemoScreen>("lightning");
+	manager.registerState<DecorManagerDemoScreen>("decor");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 

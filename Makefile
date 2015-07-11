@@ -32,6 +32,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/PhysicsMapScreen.cpp			\
 				Screens/LightningDemoScreen.cpp			\
 				Screens/GameScreen.cpp					\
+				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/ParticleDemoScreen.cpp
 
 SRC_GAME =		Game/Game.cpp							\
