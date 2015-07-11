@@ -21,7 +21,7 @@ private:
 	sf::Vector2f setPosition(DecorManager::Iterator decor, sf::Vector2f origin, sf::Vector2f originRotate, float cos, float sin);
 	void setupStars(ABiome & biome, sf::Vector2f cameraSize);
 	void setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCenter);
-	void setupClouds(ABiome & biome);
+	void setupClouds(ABiome & biome, sf::Vector2f const & cameraSize);
 
 	DecorManager				m_decorManagerBack;
 	DecorManager				m_decorManagerFront;

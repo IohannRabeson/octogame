@@ -57,7 +57,7 @@ void SkyManager::setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCen
 	m_originMoon = cameraSize;
 }
 
-void SkyManager::setupClouds(ABiome & biome)
+void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize)
 {
 	m_cloudCount = biome.getCloudCount();
 	m_originClouds.resize(m_cloudCount);
@@ -65,7 +65,7 @@ void SkyManager::setupClouds(ABiome & biome)
 	{
 		m_decorManagerBack.add(DecorManager::DecorTypes::Cloud);
 		m_originClouds[i].x = biome.randomFloat(0.f, m_mapSizeFloat.x);
-		m_originClouds[i].y = biome.randomFloat(0.f, m_mapSizeFloat.y);
+		m_originClouds[i].y = biome.randomFloat(cameraSize.y / 2.f, -m_mapSizeFloat.y);
 	}
 }
 
@@ -83,7 +83,7 @@ void SkyManager::setup(ABiome & biome)
 
 	setupStars(biome, cameraSize);
 	setupSunAndMoon(cameraSize, cameraCenter);
-	setupClouds(biome);
+	setupClouds(biome, cameraSize);
 }
 
 void SkyManager::update(sf::Time frameTime)
