@@ -26,6 +26,7 @@ DefaultBiome::DefaultBiome() :
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
+	m_canCreateRainbow(true),
 
 	m_treeDepth(6u, 8u),
 	m_treeSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(40.f, 200.f)),
@@ -61,7 +62,12 @@ DefaultBiome::DefaultBiome() :
 
 	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 80.f)),
 	m_moonColor(200, 200, 200),
-	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f))
+	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
+
+	m_rainbowThickness(80.f, 150.f),
+	m_rainbowPartSize(50.f, 200.f),
+	m_rainbowLoopCount(1u, 5u),
+	m_rainbowGrowTime(sf::seconds(1.f), sf::seconds(10.f))
 {
 	m_generator.setSeed("default_biome");
 }
@@ -330,6 +336,32 @@ bool			DefaultBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
+
+float			DefaultBiome::getRainbowThickness()
+{
+	return (randomRangeFloat(m_rainbowThickness));
+}
+
+float			DefaultBiome::getRainbowPartSize()
+{
+	return (randomRangeFloat(m_rainbowPartSize));
+}
+
+std::size_t		DefaultBiome::getRainbowLoopCount()
+{
+	return (randomRangeInt(m_rainbowLoopCount));
+}
+
+sf::Time		DefaultBiome::getRainbowGrowTime()
+{
+	return (randomRangeTime(m_rainbowGrowTime));
+}
+
+bool			DefaultBiome::canCreateRainbow()
+{
+	return (m_canCreateRainbow);
+}
+
 
 float			DefaultBiome::randomFloat(float min, float max)
 {

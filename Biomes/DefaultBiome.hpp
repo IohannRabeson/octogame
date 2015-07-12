@@ -88,6 +88,12 @@ public:
 	virtual sf::Time		getMoonLifeTime();
 	virtual bool			canCreateMoon();
 
+	virtual float			getRainbowThickness();
+	virtual float			getRainbowPartSize();
+	virtual std::size_t		getRainbowLoopCount();
+	virtual sf::Time		getRainbowGrowTime();
+	virtual bool			canCreateRainbow();
+
 	virtual float			randomFloat(float min, float max);
 	virtual int				randomInt(int min, int max);
 	virtual bool			randomBool(float percent);
@@ -117,6 +123,7 @@ private:
 	bool				m_canCreateStar;
 	bool				m_canCreateSun;
 	bool				m_canCreateMoon;
+	bool				m_canCreateRainbow;
 
 	Range<std::size_t>	m_treeDepth;
 	Range<sf::Vector2f>	m_treeSize;
@@ -153,6 +160,11 @@ private:
 	Range<sf::Vector2f>	m_moonSize;
 	sf::Color			m_moonColor;
 	Range<sf::Time>		m_moonLifeTime;
+
+	Range<float>		m_rainbowThickness;
+	Range<float>		m_rainbowPartSize;
+	Range<std::size_t>	m_rainbowLoopCount;
+	Range<sf::Time>		m_rainbowGrowTime;
 
 	float				randomRangeFloat(Range<float> const & range);
 	int					randomRangeInt(Range<std::size_t> const & range);
