@@ -19,6 +19,7 @@
 #include "Tree.hpp"
 #include "Sun.hpp"
 #include "Moon.hpp"
+#include "Rainbow.hpp"
 
 #include <VertexBuilder.hpp>
 
@@ -111,4 +112,5 @@ void	DecorManager::registerDecors()
 	m_factory.registerCreator<Tree>(DecorTypes::Tree);
 	m_factory.registerCreator<Sun>(DecorTypes::Sun);
 	m_factory.registerCreator<Moon>(DecorTypes::Moon);
+	m_factory.registerCreator<Rainbow>(DecorTypes::Rainbow);
 }

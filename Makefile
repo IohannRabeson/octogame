@@ -33,10 +33,12 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/LightningDemoScreen.cpp			\
 				Screens/GameScreen.cpp					\
 				Screens/DecorManagerDemoScreen.cpp		\
-				Screens/ParticleDemoScreen.cpp
+				Screens/ParticleDemoScreen.cpp			\
+				Screens/FsmDemoScreen.cpp
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
+				Game/FiniteStateMachine.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -61,6 +63,7 @@ SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/ShineBuilder.cpp					\
 				Decors/ShineEffect.cpp					\
 				Decors/Star.cpp							\
+				Decors/Rainbow.cpp						\
 				Decors/Cloud.cpp						\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\
