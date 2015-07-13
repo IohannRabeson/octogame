@@ -39,6 +39,8 @@ public:
 	virtual std::size_t		getGroundDecorsCount() = 0;
 	virtual std::size_t		getCrystalsCount() = 0;
 	virtual std::size_t		getStarCount() = 0;
+	virtual std::size_t		getSunCount() = 0;
+	virtual std::size_t		getMoonCount() = 0;
 	virtual std::size_t		getCloudCount() = 0;
 
 	virtual std::size_t		getTreeDepth() = 0;

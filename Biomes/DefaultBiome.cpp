@@ -14,6 +14,8 @@ DefaultBiome::DefaultBiome() :
 	m_groundDecorsCount(40u, 50u),
 	m_crystalsCount(15u, 30u),
 	m_starCount(500u, 800u),
+	m_sunCount(1u, 3u),
+	m_moonCount(1u, 3u),
 	m_cloudCount(20u, 40u),
 
 	m_canCreateTree(true),
@@ -121,6 +123,16 @@ std::size_t		DefaultBiome::getCrystalsCount()
 std::size_t		DefaultBiome::getStarCount()
 {
 	return (randomRangeInt(m_starCount));
+}
+
+std::size_t		DefaultBiome::getSunCount()
+{
+	return (randomRangeInt(m_sunCount));
+}
+
+std::size_t		DefaultBiome::getMoonCount()
+{
+	return (randomRangeInt(m_moonCount));
 }
 
 std::size_t		DefaultBiome::getCloudCount()

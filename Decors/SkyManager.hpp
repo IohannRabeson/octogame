@@ -18,10 +18,22 @@ public:
 	DecorManager const & getDecorsFront(void) const;
 
 private:
-	sf::Vector2f setPosition(DecorManager::Iterator decor, sf::Vector2f origin, sf::Vector2f originRotate, float cos, float sin);
-	void setupStars(ABiome & biome, sf::Vector2f cameraSize);
-	void setupSunAndMoon(sf::Vector2f cameraSize, sf::Vector2f cameraCenter);
-	void setupClouds(ABiome & biome, sf::Vector2f const & cameraSize);
+	sf::Vector2f setRotatePosition(DecorManager::Iterator decor,
+									sf::Vector2f origin,
+									sf::Vector2f const & originRotate,
+									sf::Vector2f const & offsetCamera,
+									float cos,
+									float sin);
+
+	void setupStars(ABiome & biome,
+					sf::Vector2f const & cameraSize);
+
+	void setupSunAndMoon(ABiome & biome,
+						sf::Vector2f const & cameraSize,
+						sf::Vector2f const & cameraCenter);
+
+	void setupClouds(ABiome & biome,
+					sf::Vector2f const & cameraSize);
 
 	DecorManager				m_decorManagerBack;
 	DecorManager				m_decorManagerFront;
@@ -33,15 +45,18 @@ private:
 	float						m_timer;
 	float						m_timerMax;
 
+	std::size_t					m_sunCount;
+	std::size_t					m_moonCount;
 	std::size_t					m_starCount;
 	std::size_t					m_cloudCount;
 	//TODO: To sync with paralax?
 	sf::Vector2f				m_originRotate;
-	sf::Vector2f				m_originSun;
-	sf::Vector2f				m_originMoon;
+	std::vector<sf::Vector2f>	m_originSuns;
+	std::vector<sf::Vector2f>	m_originMoons;
 	sf::Vector2f				m_originRotateStar;
 	std::vector<sf::Vector2f>	m_originStars;
-	std::vector<sf::Vector2f>	m_originClouds;
+	std::vector<sf::Vector2f>	m_originCloudsBack;
+	std::vector<sf::Vector2f>	m_originCloudsFront;
 
 private:
 	static void rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle);
