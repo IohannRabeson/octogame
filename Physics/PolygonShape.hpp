@@ -88,8 +88,8 @@ private:
 	std::vector<sf::Vector2f>	m_initialVertices;
 	std::vector<sf::Vector2f>	m_edges;
 	std::vector<sf::Vector2f>	m_normals;
-	sf::Vector2f			m_baryCenter;
-	sf::Rect<float>			m_globalBounds;
+	sf::Vector2f				m_baryCenter;
+	sf::Rect<float>				m_globalBounds;
 
 };
 
