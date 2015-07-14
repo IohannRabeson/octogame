@@ -6,7 +6,8 @@
 # include <Camera.hpp>
 # include "PhysicsEngine.hpp"
 # include "GroundManager.hpp"
-# include "TestBiome.hpp"
+# include "DefaultBiome.hpp"
+# include <Camera.hpp>
 
 class ConvexShape;
 class RectangleShape;
@@ -29,7 +30,7 @@ private:
 	ConvexShape *					m_shape;
 	std::vector<RectangleShape *>	m_shapes;
 	GroundManager					m_groundManager;
-	TestBiome						m_biome;
+	DefaultBiome					m_biome;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 

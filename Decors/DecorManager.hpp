@@ -38,8 +38,8 @@ class DecorManager : public sf::Drawable,
 	typedef std::list<ADecor*>		List;
 	typedef std::mt19937			RandomEngine;
 public:
-	typedef typename List::iterator	Iterator;
-	typedef typename List::iterator	ConstIterator;
+	typedef typename List::iterator			Iterator;
+	typedef typename List::const_iterator	ConstIterator;
 
 	enum class DecorTypes
 	{
@@ -50,13 +50,19 @@ public:
 		Star,
 		Cloud,
 		Sun,
-		Moon
+		Moon,
+		Rainbow
 	};
 
 	explicit DecorManager(std::size_t maxVertexCount);
 	~DecorManager();
 
 	void		setup(ABiome* biome);
+
+	inline Iterator begin() { return m_elements.begin(); };
+	inline Iterator end() { return m_elements.end(); };
+	ConstIterator begin() const { return m_elements.begin(); };
+	ConstIterator end() const { return m_elements.end(); };
 
 	Iterator	add(DecorTypes type);
 	Iterator	add(ADecor* decor);
