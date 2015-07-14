@@ -35,6 +35,11 @@ void	PhysicsMapScreen::start()
 	m_shape->setVertex(2u, sf::Vector2f(40.f, 60.f));
 	m_shape->setVertex(3u, sf::Vector2f(0.f, 60.f));
 
+	m_rectShape = m_engine.createRectangle();
+	m_rectShape->setSize(100.f, 50.f);
+	m_rectShape->setPosition(100.f, 600.f);
+	m_rectShape->setApplyGravity(false);
+
 	for (std::size_t i = 0u; i < 10; i++)
 	{
 		RectangleShape * rect = m_engine.createRectangle();

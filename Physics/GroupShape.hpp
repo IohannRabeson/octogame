@@ -41,19 +41,16 @@ public:
 	 */
 	CircleShape * addCircleShape(void);
 
-	inline RectangleShape const & getPhysicShape(void) const { return *this; }
+	/*! Get all the PolygonShape */
 	inline std::vector<PolygonShape *> const & getPolygons(void) const { return m_polyShapes; }
+
+	/*! Get all the CircleShape */
 	inline std::vector<CircleShape *> const & getCircles(void) const { return m_circleShapes; }
 
-	/*! Get the global bounds
-	 * The AABB is recomputed at each rotation
-	 *
-	 * \see rotate
-	 */
+	/*! Get the global bounds */
 	inline sf::FloatRect const & getGroupGlobalBounds(void) const { return m_groupGlobalBounds; }
 
-	/*! Use to draw debug information
-	 */
+	/*! Use to draw debug information */
 	virtual void debugDraw(sf::RenderTarget & render);
 
 protected:
@@ -61,6 +58,8 @@ protected:
 	virtual void computeShape(void);
 
 private:
+	static constexpr std::size_t	MaxShapes = 100u;
+
 	std::vector<AShape *>		m_shapes;
 	std::vector<PolygonShape *>	m_polyShapes;
 	std::vector<CircleShape *>	m_circleShapes;

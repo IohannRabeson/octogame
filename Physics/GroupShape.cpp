@@ -6,9 +6,9 @@
 
 GroupShape::GroupShape(void)
 {
-	m_shapes.reserve(100u);
-	m_polyShapes.reserve(100u);
-	m_circleShapes.reserve(100u);
+	m_shapes.reserve(MaxShapes);
+	m_polyShapes.reserve(MaxShapes);
+	m_circleShapes.reserve(MaxShapes);
 }
 
 GroupShape::~GroupShape(void)
@@ -19,6 +19,7 @@ GroupShape::~GroupShape(void)
 
 RectangleShape * GroupShape::addRectangleShape(void)
 {
+	assert(m_shapes.size() < MaxShapes);
 	ShapeBuilder & builder = PhysicsEngine::getInstance();
 	RectangleShape * rect = builder.createRectangle(true);
 	rect->setType(Type::e_trigger);
@@ -29,6 +30,7 @@ RectangleShape * GroupShape::addRectangleShape(void)
 
 CircleShape * GroupShape::addCircleShape(void)
 {
+	assert(m_shapes.size() < MaxShapes);
 	ShapeBuilder & builder = PhysicsEngine::getInstance();
 	CircleShape * rect = builder.createCircle(true);
 	rect->setType(Type::e_trigger);
@@ -52,11 +54,6 @@ void GroupShape::computeShape(void)
 		shape->setPosition(getPosition() + pos);
 		shape->update();
 		shape->setPosition(pos);
-
-		//sf::Vector2f o = getPosition() - shape->getPosition() + getOrigin();
-		//shape->setOrigin(o);
-		//shape->setRotation(getRotation());
-		//shape->update();
 
 		sf::FloatRect const & rect = shape->getGlobalBounds();
 		if (rect.left < minX)

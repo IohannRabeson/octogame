@@ -89,8 +89,9 @@ void PhysicsEngine::registerShape(GroupShape * shape)
 	assert(m_shapes.size() < MaxShapes);
 	m_shapes.push_back(shape);
 	assert(m_groupShapes.size() < MaxShapes);
-	m_polygonShapes.push_back(shape);
 	m_groupShapes.push_back(shape);
+	assert(m_polygonShapes.size() < MaxShapes);
+	m_polygonShapes.push_back(shape);
 }
 
 void PhysicsEngine::registerTile(TileShape * shape, std::size_t x,  std::size_t y)
@@ -124,7 +125,7 @@ void PhysicsEngine::unregisterAllShapes(void)
 	m_shapes.clear();
 	m_polygonShapes.clear();
 	m_circleShapes.clear();
-	//TODO: remove group
+	m_groupShapes.clear();
 }
 
 void PhysicsEngine::unregisterAllTiles(void)
