@@ -16,7 +16,9 @@ GroundManager::GroundManager(void) :
 	m_vertices(nullptr),
 	m_verticesCount(0u),
 	m_oldOffset(0, 0),
-	m_decorManager(200000),
+	//TODO:Estimate what we need
+	m_decorManagerBack(200000),
+	m_decorManagerFront(200000),
 	m_nextState(GenerationState::None)
 {}
 
@@ -54,55 +56,66 @@ void GroundManager::init(ABiome & biome)
 
 void GroundManager::initDecors(ABiome & biome)
 {
-	m_decorManager.setup(&biome);
-	std::size_t groundDecorsCount = biome.getGroundDecorsCount();
-	std::size_t crystalsCount = biome.getCrystalsCount();
+	m_decorManagerBack.setup(&biome);
+	m_decorManagerFront.setup(&biome);
 
+	std::size_t treeCount = biome.getTreeCount();
+	std::size_t rockCount = static_cast<std::size_t>(biome.getRockCount() / 2.f);
+	std::size_t crystalCount = static_cast<std::size_t>(biome.getCrystalCount() / 2);
 	std::size_t mapSizeX = biome.getMapSize().x;
 
-	bool canCreateCrystal = biome.canCreateCrystal();
-
-	bool canCreateTree = biome.canCreateTree();
-	bool canCreateRock = biome.canCreateRock();
-
-	//TODO: Think of an other way to do that
-	int decorsTypeCount = canCreateTree + canCreateRock - 1;
-	if (decorsTypeCount != -1)
+	if (biome.canCreateRock())
 	{
-		std::vector<DecorManager::DecorTypes> decorsType;
-		decorsType.reserve(decorsTypeCount);
-		if (canCreateTree)
-			decorsType.push_back(DecorManager::DecorTypes::Tree);
-		if (canCreateRock)
-			decorsType.push_back(DecorManager::DecorTypes::Rock);
-
-		for (std::size_t i = 0; i < groundDecorsCount; i++)
+		for (std::size_t i = 0; i < rockCount; i++)
 		{
 			int x = biome.randomInt(0.f, mapSizeX);
-			int chooseDecor = biome.randomInt(0, decorsTypeCount);
-
-			if (chooseDecor == 0)
-				m_decorManager.add(decorsType[chooseDecor]);
-			else if (chooseDecor == 1)
-				m_decorManager.add(decorsType[chooseDecor]);
-
+			m_decorManagerBack.add(DecorManager::DecorTypes::Rock);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
 	}
 
-	if (canCreateCrystal)
+	if (biome.canCreateTree())
 	{
-		for (std::size_t i = groundDecorsCount; i < crystalsCount + groundDecorsCount; i++)
+		for (std::size_t i = 0; i < treeCount; i++)
+		{
+			int x = biome.randomInt(0.f, mapSizeX);
+			m_decorManagerBack.add(DecorManager::DecorTypes::Tree);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+	}
+
+	if (biome.canCreateRock())
+	{
+		for (std::size_t i = 0; i < rockCount; i++)
+		{
+			int x = biome.randomInt(0.f, mapSizeX);
+			m_decorManagerBack.add(DecorManager::DecorTypes::Rock);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+	}
+
+	if (biome.canCreateCrystal())
+	{
+		for (std::size_t i = 0; i < crystalCount; i++)
 		{
 			int x = biome.getCrystalPosX();
-			m_decorManager.add(DecorManager::DecorTypes::Crystal);
-
+			m_decorManagerBack.add(DecorManager::DecorTypes::Crystal);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		for (std::size_t i = 0; i < crystalCount; i++)
+		{
+			int x = biome.getCrystalPosX();
+			m_decorManagerFront.add(DecorManager::DecorTypes::Crystal);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
 	}
-	m_decorPositions.resize(groundDecorsCount + crystalsCount);
+
+	m_decorPositions.resize(rockCount * 2 + treeCount + crystalCount * 2);
 }
 
 void GroundManager::setTransitionAppear(int x, int y)
@@ -409,14 +422,17 @@ void GroundManager::updateOffset(float)
 	}
 }
 
-void GroundManager::updateDecors(float deltatime)
+void GroundManager::updateDecors(sf::Time deltatime)
 {
 	std::size_t i = 0;
-	for (auto it = m_decorManager.begin(); it != m_decorManager.end(); it++, i++)
+	for (auto it = m_decorManagerBack.begin(); it != m_decorManagerBack.end(); it++, i++)
+		(*it)->setPosition(m_decorPositions[i]);
+	for (auto it = m_decorManagerFront.begin(); it != m_decorManagerFront.end(); it++, i++)
 		(*it)->setPosition(m_decorPositions[i]);
 
 	octo::Camera& camera = octo::Application::getCamera();
-	m_decorManager.update(sf::seconds(deltatime), camera);
+	m_decorManagerBack.update(deltatime, camera);
+	m_decorManagerFront.update(deltatime, camera);
 }
 
 void GroundManager::update(float deltatime)
@@ -455,11 +471,20 @@ void GroundManager::update(float deltatime)
 	}
 	updateOffset(deltatime);
 	updateTransition();
-	updateDecors(deltatime);
+	updateDecors(sf::seconds(deltatime));
 }
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	m_decorManager.draw(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
+}
+
+DecorManager const & GroundManager::getDecorsBack(void) const
+{
+	return m_decorManagerBack;
+}
+
+DecorManager const & GroundManager::getDecorsFront(void) const
+{
+	return m_decorManagerFront;
 }

@@ -87,7 +87,7 @@ void Crystal::setup(ABiome& biome)
 		m_values[i].size = biome.getCrystalSize();
 		m_values[i].angle = biome.randomFloat(-45.f + (i * 90.f / m_partCount), -45.f + ((i + 1) * 90.f / m_partCount));
 		int deltaColor = biome.randomFloat(0.f, 80.f);
-		m_values[i].color = m_color + sf::Color(deltaColor, deltaColor, deltaColor, 0);
+		m_values[i].color = m_color + sf::Color(deltaColor, deltaColor, deltaColor, deltaColor);
 	}
 	m_animator.setup();
 	m_shine.setup(biome);

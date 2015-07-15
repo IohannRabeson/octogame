@@ -3,10 +3,7 @@
 #include <Interpolations.hpp>
 #include <Math.hpp>
 
-//TODO: Create all biome accessor
 Rainbow::Rainbow(void) :
-	m_animator(1.f, 0.f, 4.f, 0.1f),
-	m_animation(1.f),
 	m_cos(0),//std::cos(90.f * octo::Deg2Rad);
 	m_sin(1),//std::sin(90.f * octo::Deg2Rad);
 	m_loopCount(0u),
@@ -73,21 +70,21 @@ void Rainbow::createRainbow(sf::Vector2f const & origin, std::vector<sf::Vector2
 
 void Rainbow::setupSizes(ABiome & biome, std::vector<sf::Vector2f> & sizes, std::size_t loopCount, std::size_t partCount, float thickness)
 {
-	(void)biome;
-	sizes[0] = sf::Vector2f(400.f + thickness, 0.f);//biome.getRainbowPartSize() * 2;
+	sizes[0] = sf::Vector2f(biome.getRainbowPartSize() * 4 + thickness, 0.f);
 
 	for (size_t j = 0; j < loopCount; j++)
 	{
 		for (std::size_t i = 0; i < partCount; i++)
 		{
+			float partSize = biome.getRainbowPartSize();
 			if (i == 0)
-				sizes[(j * 4) + i + 1] = sf::Vector2f(0.f, 200.f);//biome.getRainbowPartSize();
+				sizes[(j * 4) + i + 1] = sf::Vector2f(0.f, partSize * 2.f);
 			if (i == 1)
-				sizes[(j * 4) + i + 1] = sf::Vector2f(-120.f, 0.f);//biome.getRainbowPartSize();
+				sizes[(j * 4) + i + 1] = sf::Vector2f(-partSize / 2.f, 0.f);
 			if (i == 2)
-				sizes[(j * 4) + i + 1] = sf::Vector2f(0.f, -80.f);//biome.getRainbowPartSize();
+				sizes[(j * 4) + i + 1] = sf::Vector2f(0.f, -partSize / 2.f);
 			if (i == 3)
-				sizes[(j * 4) + i + 1] = sf::Vector2f(200.f, 0.f);//biome.getRainbowPartSize();
+				sizes[(j * 4) + i + 1] = sf::Vector2f(partSize * 2.f, 0.f);
 		}
 	}
 	sizes[partCount - 1] = sf::Vector2f(0.f, 0.f);
@@ -106,25 +103,21 @@ void Rainbow::setupColors(std::vector<sf::Color> & colors)
 
 void Rainbow::setup(ABiome& biome)
 {
-	(void)biome;
-	m_loopCount = 2u;//biome.getLoopCount();
+	m_loopCount = biome.getRainbowLoopCount();
 	m_partCount = 2u + m_loopCount * 4u;
-	m_thickness = 100.f;//biome.getRainbowThickness();
+	m_thickness = biome.getRainbowThickness();
 	m_sizes.resize(m_partCount);
 	setupSizes(biome, m_sizes, m_loopCount, m_partCount, m_thickness);
 
-	m_stripeCount = 7u;//biome.getStripeCount();
 	m_start.resize(m_stripeCount + 1);
 	m_end.resize(m_stripeCount + 1);
 	m_colors.resize(m_stripeCount);
 	setupColors(m_colors);
-	m_timerMax = sf::seconds(4.f / m_partCount);//biome.getRainbowGrowTime() / m_partCount;
+	m_timerMax = sf::seconds(biome.getRainbowGrowTime().asSeconds() / m_partCount);
 
 	m_interpolateValues.resize(m_partCount + 1);
 	for (std::size_t i = 0; i < m_partCount + 1; i++)
 		m_interpolateValues[i] = 0.f;
-
-	m_animator.setup();
 }
 
 void Rainbow::computeInterpolateValues(sf::Time frameTime, std::vector<float> & values)
@@ -147,9 +140,6 @@ void Rainbow::computeInterpolateValues(sf::Time frameTime, std::vector<float> & 
 
 void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	m_animator.update(frameTime);
-	m_animation = m_animator.getAnimation();
-
 	sf::Vector2f const & position = getPosition();
 	computeInterpolateValues(frameTime, m_interpolateValues);
 	// position - m_endPosition make the arrival be the origin

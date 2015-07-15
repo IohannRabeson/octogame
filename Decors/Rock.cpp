@@ -1,5 +1,6 @@
 #include "Rock.hpp"
 #include "ABiome.hpp"
+#include "Tile.hpp"
 
 Rock::Rock() :
 	m_partCount(1u),
@@ -135,7 +136,9 @@ void Rock::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f const & position = getPosition();
-	//TODO: Test this with terrain
-	createRock(m_values, sf::Vector2f(position.x, position.y + m_size.x / 2.f), m_color, builder);
+	float delta = (m_left.x + (m_right.x - m_left.x) / 2.f);
+	if (delta >= 0)
+		delta = -delta - Tile::TileSize;
+	createRock(m_values, sf::Vector2f(position.x + delta, position.y + m_size.x / 2.f), m_color, builder);
 }
 

@@ -15,7 +15,7 @@
 # include <AbstractState.hpp>
 # include <DefaultGraphicsListeners.hpp>
 # include "DecorManager.hpp"
-# include "TestBiome.hpp"
+# include "DefaultBiome.hpp"
 
 # include <map>
 # include <array>
@@ -53,7 +53,7 @@ private:
 	};
 
 	DecorManager				m_manager;
-	TestBiome					m_biome;
+	DefaultBiome				m_biome;
 	DecorTypeMapper				m_typeMapper;
 	DecorManager::DecorTypes	m_currentDecorType;
 	std::array<bool, 4>			m_viewDirections;
