@@ -132,9 +132,9 @@ void SkyManager::setup(ABiome & biome, GameClock & clock)
 	m_decorManagerFront.setup(&biome);
 	m_clock = &clock;
 
-	octo::Camera camera = octo::Application::getCamera();
-	sf::Vector2f cameraSize = camera.getSize();
-	sf::Vector2f cameraCenter = camera.getCenter();
+	octo::Camera & camera = octo::Application::getCamera();
+	sf::Vector2f const & cameraSize = camera.getSize();
+	sf::Vector2f const & cameraCenter = camera.getCenter();
 
 	m_mapSizeFloat = biome.getMapSizeFloat();
 	m_wind = biome.getWind();
@@ -147,8 +147,8 @@ void SkyManager::setup(ABiome & biome, GameClock & clock)
 
 void SkyManager::update(sf::Time frameTime)
 {
-	octo::Camera camera = octo::Application::getCamera();
-	sf::FloatRect rec = camera.getRectangle();
+	octo::Camera const & camera = octo::Application::getCamera();
+	sf::FloatRect const & rec = camera.getRectangle();
 	sf::Vector2f offsetCamera(rec.left, rec.top);
 	float angle = m_clock->getCycleValue() * 360.f * octo::Deg2Rad;
 	float cos = std::cos(angle);
@@ -165,9 +165,10 @@ void SkyManager::update(sf::Time frameTime)
 	for (auto it = m_originRainbows.begin(); it != m_originRainbows.end(); it++)
 		decorBack++;
 
+	float windMove = m_wind * frameTime.asSeconds();
 	for (auto it = m_originCloudsBack.begin(); it != m_originCloudsBack.end(); it++)
 	{
-		it->x += m_wind * frameTime.asSeconds();
+		it->x += windMove;
 		//TODO: make a loop with position (ju?)
 		(*decorBack)->setPosition(*it);
 		decorBack++;
@@ -175,7 +176,7 @@ void SkyManager::update(sf::Time frameTime)
 	DecorManager::Iterator decorFront = m_decorManagerFront.begin();
 	for (auto it = m_originCloudsFront.begin(); it != m_originCloudsFront.end(); it++)
 	{
-		it->x += m_wind * frameTime.asSeconds();
+		it->x += windMove;
 		//TODO: make a loop with position (ju?)
 		(*decorFront)->setPosition(*it);
 		decorFront++;

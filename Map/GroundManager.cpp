@@ -422,7 +422,7 @@ void GroundManager::updateOffset(float)
 	}
 }
 
-void GroundManager::updateDecors(float deltatime)
+void GroundManager::updateDecors(sf::Time deltatime)
 {
 	std::size_t i = 0;
 	for (auto it = m_decorManagerBack.begin(); it != m_decorManagerBack.end(); it++, i++)
@@ -431,8 +431,8 @@ void GroundManager::updateDecors(float deltatime)
 		(*it)->setPosition(m_decorPositions[i]);
 
 	octo::Camera& camera = octo::Application::getCamera();
-	m_decorManagerBack.update(sf::seconds(deltatime), camera);
-	m_decorManagerFront.update(sf::seconds(deltatime), camera);
+	m_decorManagerBack.update(deltatime, camera);
+	m_decorManagerFront.update(deltatime, camera);
 }
 
 void GroundManager::update(float deltatime)
@@ -471,7 +471,7 @@ void GroundManager::update(float deltatime)
 	}
 	updateOffset(deltatime);
 	updateTransition();
-	updateDecors(deltatime);
+	updateDecors(sf::seconds(deltatime));
 }
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const

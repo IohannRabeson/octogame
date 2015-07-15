@@ -20,8 +20,6 @@ public:
 
 	void		setDayDuration(sf::Time);
 	void		setNightDuration(sf::Time);
-//	void		setDawn(sf::Time);
-//	void		setTwilight(sf::Time);
 
 	void		update(sf::Time frameTime);
 	void		setup(ABiome & biome);
