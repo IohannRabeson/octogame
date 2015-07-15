@@ -6,18 +6,16 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/30 01:22:07 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/13 19:11:41 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/15 14:39:39 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ResourceLoadingScreen.hpp"
-#include "FireflyPositionBehaviors.hpp"
 #include <ResourceLoading.hpp>
 #include <StateManager.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
-#include <AudioManager.hpp>
 
 #include "ResourceDefinitions.hpp"
 
@@ -35,7 +33,7 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 void	ResourceLoadingScreen::start()
 {
 	// TODO: definir les packages a charger ici
-	// pushLoading("sounds.pck");
+	// exemple: pushLoading("sounds.pck");
 	AbstractResourceLoadingState::start();
 }
 
