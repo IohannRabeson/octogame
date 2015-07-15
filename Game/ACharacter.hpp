@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/04 19:20:48 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/14 21:21:32 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/15 20:58:15 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,42 +17,39 @@
 
 # include <AnimatedSprite.hpp>
 
-class ACharacterState : public FiniteStateMachine::AState
-{
-public:
-	ACharacterState(std::string const& name,
-					octo::SpriteAnimation const& animation,
-					octo::AnimatedSprite& sprite,
-					RectangleShape* box);
-
-	octo::AnimatedSprite&	getSprite();
-	RectangleShape*			getBox();
-private:
-	octo::AnimatedSprite&			m_sprite;
-	octo::SpriteAnimation const&	m_animation;
-	RectangleShape* const			m_box;
-};
-
+/*!
+ *	\class ACharacter
+ *	\brief Base of a character
+ */
 class ACharacter
 {
 public:
+	virtual ~ACharacter() = 0;
+
 	void			setSleep(bool sleep);
-	virtual void	update(sf::Time frameTime);
+	void			update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render, sf::RenderStates states)const;
 protected:
+	friend class						CharacterState;
+	class								CharacterState;
 	typedef FiniteStateMachine::EventId	EventId;
 
 	/*!
-	 *	This method must be called to setup a character.
+	 *	This method must be called to setup the character sprite sheet.
 	 *	\param spriteSheet Sprite sheet with all textures for the character.
-	 *	\param machine FSM configured with your own ACharacterState.<br>
-	 *	The states into this machine defines the behavior and the animation of the
-	 *	character.
-	 *	\param boxSize Physical box size
 	 */
-	void			setup(octo::SpriteSheet const& spriteSheet,
-						  FiniteStateMachine&& machine,
-						  sf::Vector2f const& boxSize);
+	void			setupSpriteSheet(octo::SpriteSheet const& spriteSheet);
+
+	/*!
+	 *	This method must be called to setup the physical representation of the character .
+	 *	\param boxSize Size of the rectangle used as physics representation.
+	 */
+	void			setupPhysicsBox(sf::Vector2f const& boxSize);
+
+	/*!	This method must be called to setup the finite state machine to
+	 *	manage the animations.
+	 */
+	void			setupMachine(FiniteStateMachine const& machine);
 
 	/*!	State the machine */
 	void			start();
@@ -61,7 +58,8 @@ protected:
 	 *	Define the next event sent to the machine.<br>
 	 *
 	 *	Typically this method is called when something happens to your character.<br>
-	 *	It can be a player input, or a collision with the ground or with an another game object.<br>
+	 *	It can be a player input, or a collision with the ground or with an another
+	 *	game object.<br>
 	 *	In your own character implementation, the best way seems to provides a
 	 *	set of method, one for each event, within you call setEvent().
 	 *	\code
@@ -101,12 +99,51 @@ protected:
 	/*!	Access to the physical box */
 	RectangleShape*	getBox()const;
 private:
+	/*!	This method allows user to customize character updating.
+	 *
+	 *	This method is called after animation update, and before
+	 *	refreshing graphics from physical datas.<br>
+	 *	This is the good place to update the logic and the physical
+	 *	components of your character.
+	 */
+	virtual void	updateCharacter(sf::Time frameTime);
+
 	/*!	Refresh the graphical representation with the updated physical state */
 	void			commitPhysicsToGraphics();
 private:
 	octo::AnimatedSprite	m_sprite;
 	RectangleShape*			m_box;
 	FiniteStateMachine		m_machine;
+};
+
+/*!
+ *	Basic implementation of a state for an animated character.
+ *
+ *	The methods are implemented to manage the animation of the sprite.
+ */
+class ACharacter::CharacterState : public FiniteStateMachine::AState
+{
+public:
+	CharacterState(std::string const& name,
+				   octo::SpriteAnimation const& animation,
+				   ACharacter* character);
+	
+	/*!	When started, this state begin the animation defined */
+	virtual void					start();
+	
+	/*!	When stopped, this state break the current animation */
+	virtual void					stop();
+
+	/*!	When updated, this state update the state animation */
+	virtual void					update(sf::Time frameTime);
+protected:
+	octo::SpriteAnimation const&	getAnimation();
+	octo::AnimatedSprite&			getSprite();
+	RectangleShape*					getBox();
+private:
+	octo::AnimatedSprite&			m_sprite;
+	octo::SpriteAnimation const&	m_animation;
+	RectangleShape* const			m_box;
 };
 
 #endif
