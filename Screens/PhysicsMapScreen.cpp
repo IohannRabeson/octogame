@@ -10,6 +10,8 @@ PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_engine(PhysicsEngine::getInstance()),
 	m_camera(octo::Application::getCamera()),
 	m_shape(nullptr),
+	m_rectShape(nullptr),
+	m_groupShape(nullptr),
 	m_nbCollision(0u)
 {}
 
