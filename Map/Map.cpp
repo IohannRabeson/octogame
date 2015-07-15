@@ -48,19 +48,20 @@ void Map::init(ABiome & biome)
 	m_noise.setSeed(42);
 
 	// Initialize mapSurface pointer
-	m_mapSurface = [this](float x, float y)
+	setMapSurfaceGenerator([](Noise & noise, float x, float y)
 	{
-		return this->m_noise.fBm(x, y, 3, 3.f, 0.3f);
-	};
+		return noise.fBm(x, y, 3, 3.f, 0.3f);
+	});
 
-	m_tileColor = [this](float x, float y, float z)
+	// Initialize tileColor pointer
+	setTileColorGenerator([](Noise & noise, float x, float y, float z)
 	{
 		static const sf::Color end = sf::Color(250.f, 150.f, 0.f);
 		static const sf::Color start = sf::Color(250.f, 0.f, 0.f);
 
-		float noise = (this->m_noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		return octo::linearInterpolation(start, end, noise);
-	};
+		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		return octo::linearInterpolation(start, end, transition);
+	});
 }
 
 void Map::computeMapRange(int startX, int endX, int startY, int endY)
@@ -208,6 +209,16 @@ void Map::previousStep(void)
 	m_depth -= 3.f;
 	for (auto & instance : m_instances)
 		instance->previousStep();
+}
+
+void Map::setMapSurfaceGenerator(MapSurfaceGenerator mapSurface)
+{
+	m_mapSurface = std::bind(mapSurface, std::ref(m_noise), std::placeholders::_1, std::placeholders::_2);
+}
+
+void Map::setTileColorGenerator(TileColorGenerator tileColor)
+{
+	m_tileColor = std::bind(tileColor, std::ref(m_noise), std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 }
 
 void Map::addOffsetX(int offsetX)
