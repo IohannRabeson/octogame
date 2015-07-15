@@ -38,7 +38,8 @@ public:
 	virtual sf::Time		getNightDuration() = 0;
 	virtual float			getWind() = 0;
 
-	virtual std::size_t		getGroundDecorsCount() = 0;
+	virtual std::size_t		getRockCount() = 0;
+	virtual std::size_t		getTreeCount() = 0;
 	virtual std::size_t		getCrystalCount() = 0;
 	virtual std::size_t		getStarCount() = 0;
 	virtual std::size_t		getSunCount() = 0;

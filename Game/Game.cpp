@@ -47,12 +47,9 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	render.clear();
 	render.draw(m_skyManager.getDecorsBack(), states);
-	render.draw(m_groundManager.getDecors(), states);
-	//TODO:
-	//render.draw(m_groundManager.getDecorsBack(), states);
+	render.draw(m_groundManager.getDecorsBack(), states);
 	// Draw Octo and pnj
-	//render.draw(m_groundManager.getDecorsFront(), states);
-//	render.draw(m_groundManager.getDecors(), states);
+	render.draw(m_groundManager.getDecorsFront(), states);
 	render.draw(m_groundManager, states);
 	render.draw(m_skyManager.getDecorsFront(), states);
 }

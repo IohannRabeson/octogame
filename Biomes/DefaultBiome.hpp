@@ -38,7 +38,8 @@ public:
 	virtual sf::Time		getNightDuration();
 	virtual float			getWind();
 
-	virtual std::size_t		getGroundDecorsCount();
+	virtual std::size_t		getRockCount();
+	virtual std::size_t		getTreeCount();
 	virtual std::size_t		getCrystalCount();
 	virtual std::size_t		getSunCount();
 	virtual std::size_t		getMoonCount();
@@ -115,7 +116,8 @@ private:
 	sf::Time			m_nightDuration;
 	Range<float>		m_wind;
 
-	Range<std::size_t>	m_groundDecorsCount;
+	Range<std::size_t>	m_rockCount;
+	Range<std::size_t>	m_treeCount;
 	Range<std::size_t>	m_crystalCount;
 	Range<std::size_t>	m_starCount;
 	Range<std::size_t>	m_sunCount;

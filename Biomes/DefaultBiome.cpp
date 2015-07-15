@@ -13,7 +13,8 @@ DefaultBiome::DefaultBiome() :
 	m_nightDuration(sf::seconds(15.f)),
 	m_wind(50.f, 100.f),
 
-	m_groundDecorsCount(15u, 30u),
+	m_rockCount(10u, 20u),
+	m_treeCount(5u, 10u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 3u),
@@ -123,9 +124,14 @@ float			DefaultBiome::getWind()
 	return (randomRangeFloat(m_wind));
 }
 
-std::size_t		DefaultBiome::getGroundDecorsCount()
+std::size_t		DefaultBiome::getRockCount()
 {
-	return (randomRangeInt(m_groundDecorsCount));
+	return (randomRangeInt(m_rockCount));
+}
+
+std::size_t		DefaultBiome::getTreeCount()
+{
+	return (randomRangeInt(m_treeCount));
 }
 
 std::size_t		DefaultBiome::getCrystalCount()
