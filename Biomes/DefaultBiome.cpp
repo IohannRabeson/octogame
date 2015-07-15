@@ -5,7 +5,7 @@
 
 DefaultBiome::DefaultBiome() :
 	m_name("Default Biome"),
-	m_mapSize(sf::Vector2f(512u, 1000u)),
+	m_mapSize(sf::Vector2f(512u, 128u)),
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
@@ -52,7 +52,7 @@ DefaultBiome::DefaultBiome() :
 
 	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(40.f, 200.f)),
 	m_rockPartCount(2.f, 10.f),
-	m_rockColor(107, 172, 166, 100),
+	m_rockColor(107, 172, 166),
 
 	m_cloudSize(sf::Vector2f(100.f, 10.f), sf::Vector2f(400.f, 60.f)),
 	m_cloudPartCount(2u, 10u),
