@@ -1,6 +1,7 @@
 #include "Map.hpp"
 #include "ABiome.hpp"
 #include "MapInstance.hpp"
+#include "FunctionsOffset.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Interpolations.hpp>
@@ -150,43 +151,15 @@ void Map::computeDecor(void)
 {
 	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
 	int height;
-	int offsetX;
-	int offsetPosX;
 	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
 
 	assert(m_mapSurface);
 
 	float startTransitionX = (m_mapSurface((static_cast<float>(m_mapSize.x) - m_mapJoinHalfWidth) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
 	float endTransitionX = (m_mapSurface(m_mapJoinHalfWidth / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+
 	for (auto it = m_decorPositions.begin(); it != m_decorPositions.end(); it++)
 	{
-		offsetX = curOffsetX;
-		offsetPosX = it->first;
-		while (offsetX < 0)
-		{
-			offsetX += m_mapSize.x;
-			offsetPosX -= m_mapSize.x;
-		}
-		while (offsetX >= static_cast<int>(m_mapSize.x))
-		{
-			offsetX -= m_mapSize.x;
-			offsetPosX += m_mapSize.x;
-		}
-		int border = offsetX + static_cast<int>(m_tiles.columns()) + 20;
-		if (border > static_cast<int>(m_mapSize.x))
-		{
-			if (it->first < (border % static_cast<int>(m_mapSize.x)) + static_cast<int>(m_tiles.columns()))
-				offsetPosX += m_mapSize.x;
-			else if (it->first < 40)
-			{
-				offsetPosX += m_mapSize.x;
-			}
-		}
-		else if (offsetX < 60)
-		{
-			if (it->first > static_cast<int>(m_mapSize.x) - 40)
-				offsetPosX -= m_mapSize.x;
-		}
 		// Check if we are at the transition between 0 and m_mapSize.x
 		if (it->first < static_cast<int>(m_mapJoinHalfWidth) || it->first >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
 		{
@@ -199,8 +172,8 @@ void Map::computeDecor(void)
 			// we normalize it betwen 0 & max_height
 			height = static_cast<int>((m_mapSurface(static_cast<float>(it->first) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
 		}
-		it->second.x = offsetPosX * Tile::TileSize;
-		it->second.y = height * Tile::TileSize;
+		it->second.x = Tile::TileSize * static_cast<float>(getCircleOffset(curOffsetX, it->first, static_cast<int>(m_tiles.columns()), static_cast<int>(m_mapSize.x)));
+		it->second.y = Tile::TileSize * static_cast<float>(height);
 	}
 }
 
