@@ -174,9 +174,9 @@ float Map::secondCurve(float * vec)
 
 void Map::setColor(Tile & tile)
 {
-	sf::Color start = sf::Color(178.f, 0.f, 86.f);
-	sf::Color end = sf::Color(178.f, 162.f, 32.f);
-	sf::Color mid = sf::Color(0.f, 74.f, 213.f);
+	sf::Color start = sf::Color(205.f, 203.f, 101.f);
+	sf::Color end = sf::Color(254.f, 231.f, 170.f);
+	sf::Color mid = sf::Color(205.f, 203.f, 101.f);
 
 	start = octo::linearInterpolation(end, mid, tile.getNoiseValue());
 

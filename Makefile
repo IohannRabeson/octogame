@@ -37,6 +37,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/FsmDemoScreen.cpp
 
 SRC_GAME =		Game/Game.cpp							\
+				Game/GameClock.cpp						\
 				Game/BiomeManager.cpp					\
 				Game/FiniteStateMachine.cpp
 

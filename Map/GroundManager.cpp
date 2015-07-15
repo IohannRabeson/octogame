@@ -55,8 +55,8 @@ void GroundManager::init(ABiome & biome)
 void GroundManager::initDecors(ABiome & biome)
 {
 	m_decorManager.setup(&biome);
-	std::size_t crystalsCount = biome.getCrystalsCount();
-	std::size_t groundDecorsCount = biome.getGroundDecorsCount() - crystalsCount;
+	std::size_t crystalCount = biome.getCrystalCount();
+	std::size_t groundDecorsCount = biome.getGroundDecorsCount() - crystalCount;
 
 	std::size_t mapSizeX = biome.getMapSize().x;
 
@@ -93,7 +93,7 @@ void GroundManager::initDecors(ABiome & biome)
 
 	if (canCreateCrystal)
 	{
-		for (std::size_t i = groundDecorsCount; i < crystalsCount + groundDecorsCount; i++)
+		for (std::size_t i = groundDecorsCount; i < crystalCount + groundDecorsCount; i++)
 		{
 			int x = biome.getCrystalPosX();
 			m_decorManager.add(DecorManager::DecorTypes::Crystal);
@@ -102,7 +102,7 @@ void GroundManager::initDecors(ABiome & biome)
 			m_tilesPrev->registerDecor(x);
 		}
 	}
-	m_decorPositions.resize(groundDecorsCount + crystalsCount);
+	m_decorPositions.resize(groundDecorsCount + crystalCount);
 }
 
 void GroundManager::setTransitionAppear(int x, int y)

@@ -34,13 +34,16 @@ public:
 	virtual float			getTransitionDuration();
 	virtual int				getBossInstancePosX();
 
+	virtual sf::Time		getDayDuration();
+	virtual sf::Time		getNightDuration();
 	virtual float			getWind();
 
 	virtual std::size_t		getGroundDecorsCount();
-	virtual std::size_t		getCrystalsCount();
+	virtual std::size_t		getCrystalCount();
 	virtual std::size_t		getSunCount();
 	virtual std::size_t		getMoonCount();
 	virtual std::size_t		getStarCount();
+	virtual std::size_t		getRainbowCount();
 	virtual std::size_t		getCloudCount();
 
 	virtual std::size_t		getTreeDepth();
@@ -108,13 +111,16 @@ private:
 	float				m_transitionDuration;
 	std::size_t			m_bossInstancePosX;
 
+	sf::Time			m_dayDuration;
+	sf::Time			m_nightDuration;
 	Range<float>		m_wind;
 
 	Range<std::size_t>	m_groundDecorsCount;
-	Range<std::size_t>	m_crystalsCount;
+	Range<std::size_t>	m_crystalCount;
 	Range<std::size_t>	m_starCount;
 	Range<std::size_t>	m_sunCount;
 	Range<std::size_t>	m_moonCount;
+	Range<std::size_t>	m_rainbowCount;
 	Range<std::size_t>	m_cloudCount;
 
 	bool				m_canCreateTree;

@@ -34,13 +34,16 @@ public:
 	virtual float			getTransitionDuration() = 0;
 	virtual int				getBossInstancePosX() = 0;
 
+	virtual sf::Time		getDayDuration() = 0;
+	virtual sf::Time		getNightDuration() = 0;
 	virtual float			getWind() = 0;
 
 	virtual std::size_t		getGroundDecorsCount() = 0;
-	virtual std::size_t		getCrystalsCount() = 0;
+	virtual std::size_t		getCrystalCount() = 0;
 	virtual std::size_t		getStarCount() = 0;
 	virtual std::size_t		getSunCount() = 0;
 	virtual std::size_t		getMoonCount() = 0;
+	virtual std::size_t		getRainbowCount() = 0;
 	virtual std::size_t		getCloudCount() = 0;
 
 	virtual std::size_t		getTreeDepth() = 0;

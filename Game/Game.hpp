@@ -13,6 +13,7 @@
 #ifndef GAME_HPP
 # define GAME_HPP
 
+# include "GameClock.hpp"
 # include "BiomeManager.hpp"
 # include "SkyManager.hpp"
 # include "GroundManager.hpp"
@@ -28,6 +29,7 @@ public:
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
 private:
+	GameClock		m_gameClock;
 	BiomeManager	m_biomeManager;
 	SkyManager		m_skyManager;
 	GroundManager	m_groundManager;

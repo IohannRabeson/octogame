@@ -3,6 +3,7 @@
 
 #include "DecorManager.hpp"
 
+class GameClock;
 class ABiome;
 class Star;
 
@@ -12,7 +13,7 @@ public:
 	SkyManager(void);
 	~SkyManager(void) = default;
 
-	void setup(ABiome & biome);
+	void setup(ABiome & biome, GameClock & clock);
 	void update(sf::Time frameTime);
 	DecorManager const & getDecorsBack(void) const;
 	DecorManager const & getDecorsFront(void) const;
@@ -32,22 +33,25 @@ private:
 						sf::Vector2f const & cameraSize,
 						sf::Vector2f const & cameraCenter);
 
+	void setupRainbow(ABiome & biome,
+					sf::Vector2f const & cameraSize,
+					sf::Vector2f const & mapSize);
+
 	void setupClouds(ABiome & biome,
-					sf::Vector2f const & cameraSize);
+					sf::Vector2f const & cameraSize,
+					sf::Vector2f const & mapSize);
 
 	DecorManager				m_decorManagerBack;
 	DecorManager				m_decorManagerFront;
 	float						m_wind;
 	sf::Vector2f				m_mapSizeFloat;
 
-	float						m_timeCoef;
-	//TODO: Get from GameClock
-	float						m_timer;
-	float						m_timerMax;
+	GameClock *					m_clock;
 
 	std::size_t					m_sunCount;
 	std::size_t					m_moonCount;
 	std::size_t					m_starCount;
+	std::size_t					m_rainbowCount;
 	std::size_t					m_cloudCount;
 	//TODO: To sync with paralax?
 	sf::Vector2f				m_originRotate;
@@ -55,6 +59,7 @@ private:
 	std::vector<sf::Vector2f>	m_originMoons;
 	sf::Vector2f				m_originRotateStar;
 	std::vector<sf::Vector2f>	m_originStars;
+	std::vector<sf::Vector2f>	m_originRainbows;
 	std::vector<sf::Vector2f>	m_originCloudsBack;
 	std::vector<sf::Vector2f>	m_originCloudsFront;
 
