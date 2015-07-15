@@ -12,17 +12,24 @@ class ABiome;
 class GroundManager : public sf::Drawable
 {
 public:
+	enum GenerationState
+	{
+		None,
+		Next,
+		Previous
+	};
+
 	GroundManager(void);
 	virtual ~GroundManager(void) = default;
 
-	// Only used by StaticObjectManager to compute initial position
-	inline void computeDecor(void) { m_tiles->computeDecor(); }
-
 	void init(ABiome & biome);
-	void update(float pf_deltatime);
+	void update(float deltatime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	DecorManager const & getDecorsBack(void) const;
 	DecorManager const & getDecorsFront(void) const;
+
+	void computeDecor(void);
+	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 
 private:
 	std::unique_ptr<Map>				m_tiles;
@@ -37,8 +44,9 @@ private:
 	std::vector<sf::Vector2f>			m_decorPositions;
 	DecorManager						m_decorManagerBack;
 	DecorManager						m_decorManagerFront;
+	GenerationState						m_nextState;
 
-	inline void defineTransition(void) { defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows()); }
+	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
 	void defineTransition(int x, int y);
 	void defineTransitionBorderTileRange(int startX, int endX, int startY, int endY);
@@ -47,10 +55,10 @@ private:
 	void setTransitionModify(int x, int y);
 
 	void initDecors(ABiome & biome);
-	void updateDecors(float pf_deltatime);
-	void swapMap(void);
-	void updateOffset(float pf_deltatime);
+	void updateDecors(float deltatime);
+	void updateOffset(float deltatime);
 	void updateTransition(void);
+	void swapMap(void);
 
 };
 

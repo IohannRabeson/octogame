@@ -1,12 +1,11 @@
-#ifndef NEWMAP_HPP
-# define NEWMAP_HPP
+#ifndef MAP_HPP
+# define MAP_HPP
 
-//TODO:remove
-# include <map>
-# include <utility>
+# include <functional>
 # include <Array2D.hpp>
 # include "Tile.hpp"
 # include "IMapTransformable.hpp"
+# include "Noise.hpp"
 
 class ABiome;
 class MapInstance;
@@ -14,10 +13,12 @@ class MapInstance;
 class Map : public IMapTransformable
 {
 public:
-	typedef std::vector<std::pair<int, sf::Vector2f>>	Decors;
-	typedef Decors::iterator							Iterator;
+	typedef std::vector<std::pair<int, sf::Vector2f>>			Decors;
+	typedef Decors::iterator									Iterator;
+	typedef octo::Array2D<Tile*>								TileMap;
 
-	typedef octo::Array2D<Tile*> TileMap;
+	typedef std::function<float(Noise & noise, float x, float y)>				MapSurfaceGenerator;
+	typedef std::function<sf::Color(Noise & noise, float x, float y, float z)>	TileColorGenerator;
 
 	Map(void);
 	virtual ~Map(void);
@@ -26,6 +27,8 @@ public:
 	inline std::size_t getRows(void) const { return m_tiles.rows(); }
 	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles(column, row); }
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
+	void setMapSurfaceGenerator(MapSurfaceGenerator mapSurface);
+	void setTileColorGenerator(TileColorGenerator tileColor);
 
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
 	inline void computeMapRangeX(int startX, int endX) { computeMapRange(startX, endX, 0, m_tiles.rows()); }
@@ -50,23 +53,22 @@ public:
 	virtual void computeDecor(void);
 
 private:
-	float								m_depth;
-	float								m_oldDepth;
-	TileMap								m_tiles;
-	std::size_t							m_width;
-	std::size_t							m_height;
-	sf::Vector2f const *				m_offset;
-	sf::Vector2f						m_curOffset;
+	typedef std::function<float(float x, float y)>				MapSurfaceGeneratorBind;
+	typedef std::function<sf::Color(float x, float y, float z)>	TileColorGeneratorBind;
+
+	float										m_depth;
+	float										m_oldDepth;
+	TileMap										m_tiles;
+	std::size_t									m_width;
+	std::size_t									m_height;
+	sf::Vector2f const *						m_offset;
+	sf::Vector2f								m_curOffset;
 	std::vector<std::unique_ptr<MapInstance>>	m_instances;
-
-	// first and second curve must return a value between -1 and 1
-	//TODO: nor more virtual, pointer to function instead
-	virtual float firstCurve(float * vec);
-	virtual float secondCurve(float * vec);
-	virtual void setColor(Tile & tile);
-
-	std::vector<std::pair<int, sf::Vector2f>>	m_decorPositions;
-	sf::Vector2u					m_mapSize;
+	Decors										m_decorPositions;
+	sf::Vector2u								m_mapSize;
+	Noise										m_noise;
+	MapSurfaceGeneratorBind						m_mapSurface;
+	TileColorGeneratorBind						m_tileColor;
 
 };
 

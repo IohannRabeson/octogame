@@ -1,5 +1,4 @@
 #include "GroundManager.hpp"
-#include "Map.hpp"
 #include "TileShape.hpp"
 #include "PhysicsEngine.hpp"
 #include "ADecor.hpp"
@@ -19,7 +18,8 @@ GroundManager::GroundManager(void) :
 	m_oldOffset(0, 0),
 	//TODO:Estimate what we need
 	m_decorManagerBack(200000),
-	m_decorManagerFront(200000)
+	m_decorManagerFront(200000),
+	m_nextState(GenerationState::None)
 {}
 
 void GroundManager::init(ABiome & biome)
@@ -151,6 +151,11 @@ void GroundManager::setTransitionModify(int x, int y)
 	}
 }
 
+void GroundManager::defineTransition(void)
+{
+	defineTransitionRange(0, m_tiles->getColumns(), 0, m_tiles->getRows());
+}
+
 void GroundManager::defineTransition(int x, int y)
 {
 	int prev = m_tilesPrev->get(x, y).isEmpty();
@@ -206,6 +211,11 @@ void GroundManager::swapMap(void)
 	m_tiles->computeMap();
 	computeDecor();
 	defineTransition();
+}
+
+void GroundManager::computeDecor(void)
+{
+	m_tiles->computeDecor();
 }
 
 void GroundManager::updateTransition(void)
@@ -412,7 +422,7 @@ void GroundManager::updateOffset(float)
 	}
 }
 
-void GroundManager::updateDecors(float pf_deltatime)
+void GroundManager::updateDecors(float deltatime)
 {
 	std::size_t i = 0;
 	for (auto it = m_decorManagerBack.begin(); it != m_decorManagerBack.end(); it++, i++)
@@ -421,14 +431,13 @@ void GroundManager::updateDecors(float pf_deltatime)
 		(*it)->setPosition(m_decorPositions[i]);
 
 	octo::Camera& camera = octo::Application::getCamera();
-	m_decorManagerBack.update(sf::seconds(pf_deltatime), camera);
-	m_decorManagerFront.update(sf::seconds(pf_deltatime), camera);
+	m_decorManagerBack.update(sf::seconds(deltatime), camera);
+	m_decorManagerFront.update(sf::seconds(deltatime), camera);
 }
 
-void GroundManager::update(float pf_deltatime)
+void GroundManager::update(float deltatime)
 {
-	bool compute = false;
-	m_transitionTimer += pf_deltatime;
+	m_transitionTimer += deltatime;
 
 	// Get the top left of the camera view
 	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
@@ -437,19 +446,22 @@ void GroundManager::update(float pf_deltatime)
 
 	if (m_transitionTimer >= m_transitionTimerMax)
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+		bool compute = false;
+		if (m_nextState == GenerationState::Next)
 		{
 			compute = true;
 			m_tilesPrev->nextStep();
 			m_tiles->registerDepth();
 			m_tiles->nextStep();
+			m_nextState = GenerationState::None;
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+		else if (m_nextState == GenerationState::Previous)
 		{
 			compute = true;
 			m_tilesPrev->previousStep();
 			m_tiles->registerDepth();
 			m_tiles->previousStep();
+			m_nextState = GenerationState::None;
 		}
 		if (compute)
 		{
@@ -457,9 +469,9 @@ void GroundManager::update(float pf_deltatime)
 			swapMap();
 		}
 	}
-	updateOffset(pf_deltatime);
+	updateOffset(deltatime);
 	updateTransition();
-	updateDecors(pf_deltatime);
+	updateDecors(deltatime);
 }
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
