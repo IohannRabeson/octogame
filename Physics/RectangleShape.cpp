@@ -7,11 +7,12 @@ RectangleShape::RectangleShape(void) :
 	setVertexCount(4u);
 }
 
-void RectangleShape::setSize(sf::Vector2f const & size)
+void RectangleShape::setSize(float width, float height)
 {
-	m_size = size;
+	m_size.x = width;
+	m_size.y = height;
 	setVertex(0u, sf::Vector2f(0.f, 0.f));
-	setVertex(1u, sf::Vector2f(size.x, 0.f));
-	setVertex(2u, size);
-	setVertex(3u, sf::Vector2f(0.f, size.y));
+	setVertex(1u, sf::Vector2f(width, 0.f));
+	setVertex(2u, m_size);
+	setVertex(3u, sf::Vector2f(0.f, height));
 }

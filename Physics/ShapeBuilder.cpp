@@ -1,27 +1,38 @@
 #include "ShapeBuilder.hpp"
 #include "PhysicsEngine.hpp"
 #include "ConvexShape.hpp"
+#include "RectangleShape.hpp"
+#include "GroupShape.hpp"
 #include "CircleShape.hpp"
 #include "TileShape.hpp"
-#include "RectangleShape.hpp"
 
-ConvexShape * ShapeBuilder::createConvex(void)
+ConvexShape * ShapeBuilder::createConvex(bool inGroup)
 {
 	ConvexShape * shape = new ConvexShape();
-	PhysicsEngine::getInstance().registerShape(shape);
+	if (!inGroup)
+		PhysicsEngine::getInstance().registerShape(shape);
 	return shape;
 }
 
-CircleShape * ShapeBuilder::createCircle(void)
+CircleShape * ShapeBuilder::createCircle(bool inGroup)
 {
 	CircleShape * shape = new CircleShape();
-	PhysicsEngine::getInstance().registerShape(shape);
+	if (!inGroup)
+		PhysicsEngine::getInstance().registerShape(shape);
 	return shape;
 }
 
-RectangleShape * ShapeBuilder::createRectangle(void)
+RectangleShape * ShapeBuilder::createRectangle(bool inGroup)
 {
 	RectangleShape * shape = new RectangleShape();
+	if (!inGroup)
+		PhysicsEngine::getInstance().registerShape(shape);
+	return shape;
+}
+
+GroupShape * ShapeBuilder::createGroupShape(void)
+{
+	GroupShape * shape = new GroupShape();
 	PhysicsEngine::getInstance().registerShape(shape);
 	return shape;
 }

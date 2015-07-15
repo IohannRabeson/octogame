@@ -78,6 +78,7 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/TileShape.cpp					\
 				Physics/PhysicsEngine.cpp				\
 				Physics/ShapeBuilder.cpp				\
+				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp
 
 # package files
