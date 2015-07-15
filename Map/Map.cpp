@@ -70,13 +70,6 @@ void Map::init(ABiome & biome)
 	});
 }
 
-//TODO: use octolib cos inter
-float cosinter(float a, float b, float t)
-{
-	float alpha = -(std::cos(t * octo::Pi) / 2.f) + 0.5f;
-	return (a * (1.f - alpha) + b * alpha);
-}
-
 void Map::computeMapRange(int startX, int endX, int startY, int endY)
 {
 	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
@@ -116,7 +109,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 		if (offsetX < static_cast<int>(m_mapJoinHalfWidth) || offsetX >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
 		{
 			float transition = offsetX < static_cast<int>(m_mapJoinHalfWidth) ? static_cast<float>(offsetX) + m_mapJoinHalfWidth : m_mapJoinHalfWidth - static_cast<float>(m_mapSize.x) + static_cast<float>(offsetX);
-			height =  cosinter(startTransitionX, endTransitionX, transition / m_mapJoinWidth);
+			height =  octo::cosinusInterpolation(startTransitionX, endTransitionX, transition / m_mapJoinWidth);
 		}
 		else
 		{
