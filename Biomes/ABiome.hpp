@@ -30,12 +30,22 @@ public:
 	virtual std::string		getName()const = 0;
 
 	virtual sf::Vector2u	getMapSize() = 0;
+	virtual sf::Vector2f	getMapSizeFloat() = 0;
 	virtual float			getTransitionDuration() = 0;
 	virtual int				getBossInstancePosX() = 0;
 
-	virtual std::size_t		getGroundDecorsCount() = 0;
-	virtual std::size_t		getCrystalsCount() = 0;
-	virtual std::size_t		getSkyDecorsCount() = 0;
+	virtual sf::Time		getDayDuration() = 0;
+	virtual sf::Time		getNightDuration() = 0;
+	virtual float			getWind() = 0;
+
+	virtual std::size_t		getRockCount() = 0;
+	virtual std::size_t		getTreeCount() = 0;
+	virtual std::size_t		getCrystalCount() = 0;
+	virtual std::size_t		getStarCount() = 0;
+	virtual std::size_t		getSunCount() = 0;
+	virtual std::size_t		getMoonCount() = 0;
+	virtual std::size_t		getRainbowCount() = 0;
+	virtual std::size_t		getCloudCount() = 0;
 
 	virtual std::size_t		getTreeDepth() = 0;
 	virtual sf::Vector2f	getTreeSize() = 0;
@@ -81,7 +91,14 @@ public:
 
 	virtual sf::Vector2f 	getMoonSize() = 0;
 	virtual sf::Color		getMoonColor() = 0;
+	virtual sf::Time		getMoonLifeTime() = 0;
 	virtual bool			canCreateMoon() = 0;
+
+	virtual float			getRainbowThickness() = 0;
+	virtual float			getRainbowPartSize() = 0;
+	virtual std::size_t		getRainbowLoopCount() = 0;
+	virtual sf::Time		getRainbowGrowTime() = 0;
+	virtual bool			canCreateRainbow() = 0;
 
 	virtual float			randomFloat(float min, float max) = 0;
 	virtual int				randomInt(int min, int max) = 0;

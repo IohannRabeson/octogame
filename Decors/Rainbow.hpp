@@ -2,7 +2,6 @@
 # define RAINBOW_HPP
 
 # include "ADecor.hpp"
-# include "DecorAnimator.hpp"
 # include <SFML/Graphics/Color.hpp>
 
 class Rainbow : public ADecor
@@ -56,9 +55,6 @@ private:
 	void computeInterpolateValues(sf::Time frameTime,
 								std::vector<float> & values);
 
-	//TODO: Remove animator
-	DecorAnimator				m_animator;
-	float						m_animation;
 	float						m_cos;
 	float						m_sin;
 

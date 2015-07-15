@@ -13,8 +13,10 @@
 #ifndef GAME_HPP
 # define GAME_HPP
 
+# include "GameClock.hpp"
 # include "BiomeManager.hpp"
-# include "DecorManager.hpp"
+# include "SkyManager.hpp"
+# include "GroundManager.hpp"
 
 class Game
 {
@@ -27,12 +29,10 @@ public:
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
 private:
-	// Add GroundManager
+	GameClock		m_gameClock;
 	BiomeManager	m_biomeManager;
-	DecorManager	m_skyDecorManager;
-	// @Francois: tu peux fourrer ici des decors manager:
-	// DecorManager	m_starDecorManager;
-	// DecorManager m_terrainDecorManager;
+	SkyManager		m_skyManager;
+	GroundManager	m_groundManager;
 };
 
 #endif
