@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 03:39:50 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 05:53:41 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/15 14:58:44 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 	for (auto element : m_elements)
 	{
 		elementX = element->getPosition().x;
-		if (elementX >= minVisibleX && elementX <= maxVisibleX)
+		if (element->isDisabledIfOutOfScreen() == false ||
+			(elementX >= minVisibleX && elementX <= maxVisibleX))
 		{
 			element->update(frameTime, builder, *m_biome);
 		}

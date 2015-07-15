@@ -19,6 +19,11 @@ Rainbow::Rainbow(void) :
 {
 }
 
+bool Rainbow::isDisabledIfOutOfScreen()const
+{
+	return (false);
+}
+
 void Rainbow::createFirstLine(Line & line, std::size_t stripeCount, float thickness)
 {
 	float delta = -thickness / stripeCount + 1;
