@@ -132,8 +132,19 @@ void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)
 	m_nbCollision++;
 }
 
-bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const &)
+bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const & event)
 {
+	switch (event.code)
+	{
+		case sf::Keyboard::E:
+			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next);
+		break;
+		case sf::Keyboard::R:
+			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Previous);
+		break;
+		default:
+		break;
+	}
 	return true;
 }
 
