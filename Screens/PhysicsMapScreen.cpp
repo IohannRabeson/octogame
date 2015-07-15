@@ -91,8 +91,19 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 	m_engine.update(deltatime.asSeconds());
 }
 
-bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const &)
+bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const & event)
 {
+	switch (event.code)
+	{
+		case sf::Keyboard::E:
+			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next);
+		break;
+		case sf::Keyboard::R:
+			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Previous);
+		break;
+		default:
+		break;
+	}
 	return true;
 }
 
