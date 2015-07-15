@@ -4,9 +4,10 @@
 #include <random>
 #include <algorithm>
 
-Noise::Noise(void)
+Noise::Noise(void) :
+	m_seed(0u)
 {
-	permutation = {
+	m_permutation = {
 	151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,
 	8,99,37,240,21,10,23,190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,
 	35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,
@@ -33,42 +34,48 @@ Noise::Noise(void)
 	138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180 };
 }
 
-Noise::Noise(std::size_t seed)
+Noise::Noise(std::size_t seed) :
+	m_seed(seed)
 {
 	setSeed(seed);
 }
 
 void Noise::setSeed(std::size_t seed)
 {
-	permutation.resize(256);
-	std::iota(permutation.begin(), permutation.end(), 0);
+	m_seed = seed;
+	m_permutation.resize(256);
+	std::iota(m_permutation.begin(), m_permutation.end(), 0);
 	std::default_random_engine engine(seed);
-	std::shuffle(permutation.begin(), permutation.end(), engine);
-	permutation.insert(permutation.end(), permutation.begin(), permutation.end());
+	std::shuffle(m_permutation.begin(), m_permutation.end(), engine);
+	m_permutation.insert(m_permutation.end(), m_permutation.begin(), m_permutation.end());
 }
 
 float Noise::noise(float x, float y)
 {
 	// Get the integer part
-	int X = static_cast<int>(x) & 0xFF;
-	int Y = static_cast<int>(y) & 0xFF;
+	int X = x < 0 ? static_cast<int>(x) - 1 : static_cast<int>(x);
+	int Y = y < 0 ? static_cast<int>(y) - 1 : static_cast<int>(y);
 
 	// Get the fractionnal part
-	x -= static_cast<float>(static_cast<int>(x));
-	y -= static_cast<float>(static_cast<int>(y));
+	x -= static_cast<float>(X);
+	y -= static_cast<float>(Y);
+
+	// Get the 8 last bit
+	X &= 0xFF;
+	Y &= 0xFF;
 
 	// Compute fade curves for each of x, y
 	float u = fade(x);
 	float v = fade(y);
 
 	// Hash coordinates of the 4 square corners
-	int g00 = permutation[X] + Y;
-	int g10 = permutation[X + 1] + Y;
+	int g00 = m_permutation[X] + Y;
+	int g10 = m_permutation[X + 1] + Y;
 	int g01 = g00 + 1;
 	int g11 = g10 + 1;
 
-	float x0 = lerp(u, grad(permutation[g00], x, y), grad(permutation[g10], x - 1.f, y));
-	float x1 = lerp(u, grad(permutation[g01], x, y - 1.f), grad(permutation[g11], x - 1.f, y - 1.f));
+	float x0 = lerp(u, grad(m_permutation[g00], x, y), grad(m_permutation[g10], x - 1.f, y));
+	float x1 = lerp(u, grad(m_permutation[g01], x, y - 1.f), grad(m_permutation[g11], x - 1.f, y - 1.f));
 
 	float xy = lerp(v, x0, x1);
 
@@ -78,14 +85,19 @@ float Noise::noise(float x, float y)
 float Noise::noise(float x, float y, float z)
 {
 	// Get the integer part
-	int X = static_cast<int>(x) & 0xFF;
-	int Y = static_cast<int>(y) & 0xFF;
-	int Z = static_cast<int>(z) & 0xFF;
+	int X = x < 0 ? static_cast<int>(x) - 1 : static_cast<int>(x);
+	int Y = y < 0 ? static_cast<int>(y) - 1 : static_cast<int>(y);
+	int Z = z < 0 ? static_cast<int>(z) - 1 : static_cast<int>(z);
 
 	// Get the fractionnal part
-	x -= static_cast<float>(static_cast<int>(x));
-	y -= static_cast<float>(static_cast<int>(y));
-	z -= static_cast<float>(static_cast<int>(z));
+	x -= static_cast<float>(X);
+	y -= static_cast<float>(Y);
+	z -= static_cast<float>(Z);
+
+	// Get the 8 last bit
+	X &= 255;
+	Y &= 255;
+	Z &= 255;
 
 	// Compute fade curves for each of x, y, z
 	float u = fade(x);
@@ -93,22 +105,22 @@ float Noise::noise(float x, float y, float z)
 	float w = fade(z);
 
 	// Hash coordinates of the 8 cube corners
-	int g00 = permutation[X] + Y;
-	int g10 = permutation[X + 1] + Y;
+	int g00 = m_permutation[X] + Y;
+	int g10 = m_permutation[X + 1] + Y;
 
-	int g000 = permutation[g00] + Z;
+	int g000 = m_permutation[g00] + Z;
 	int g001 = g000 + 1;
-	int g010 = permutation[g00 + 1] + Z;
+	int g010 = m_permutation[g00 + 1] + Z;
 	int g011 = g010 + 1;
-	int g100 = permutation[g10] + Z;
+	int g100 = m_permutation[g10] + Z;
 	int g101 = g100 + 1;
-	int g110 = permutation[g10 + 1] + Z;
+	int g110 = m_permutation[g10 + 1] + Z;
 	int g111 = g110 + 1;
 
-	float x00 = lerp(u, grad(permutation[g000], x, y, z), grad(permutation[g100], x - 1.f, y, z));
-	float x10 = lerp(u, grad(permutation[g010], x, y - 1.f, z), grad(permutation[g110], x - 1.f, y - 1.f, z));
-	float x01 = lerp(u, grad(permutation[g001], x, y, z - 1.f), grad(permutation[g101], x - 1.f, y, z - 1.f));
-	float x11 = lerp(u, grad(permutation[g011], x, y - 1.f, z - 1.f), grad(permutation[g111], x - 1.f, y - 1.f, z - 1.f));
+	float x00 = lerp(u, grad(m_permutation[g000], x, y, z), grad(m_permutation[g100], x - 1.f, y, z));
+	float x10 = lerp(u, grad(m_permutation[g010], x, y - 1.f, z), grad(m_permutation[g110], x - 1.f, y - 1.f, z));
+	float x01 = lerp(u, grad(m_permutation[g001], x, y, z - 1.f), grad(m_permutation[g101], x - 1.f, y, z - 1.f));
+	float x11 = lerp(u, grad(m_permutation[g011], x, y - 1.f, z - 1.f), grad(m_permutation[g111], x - 1.f, y - 1.f, z - 1.f));
 
 	float xy0 = lerp(v, x00, x10);
 	float xy1 = lerp(v, x01, x11);

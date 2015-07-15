@@ -50,7 +50,8 @@ public:
 	float fBm(float x, float y, float z, std::size_t octaves, float lacunarity, float gain);
 
 private:
-	std::vector<int> permutation;
+	std::vector<int>	m_permutation;
+	std::size_t			m_seed;
 
 	float fade(float t);
 	float lerp(float t, float a, float b);

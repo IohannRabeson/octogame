@@ -2,6 +2,7 @@
 # define TILE_HPP
 
 # include <SFML/Graphics.hpp>
+# include <utility>
 
 class Tile
 {
@@ -26,7 +27,7 @@ public:
 	inline ETransitionType getTransitionType(void) const { return m_transitionType; }
 	inline bool isTransitionType(ETransitionType transitionType) { return (m_transitionType == transitionType); }
 
-	inline void setStartColor(sf::Color && startColor) { m_startColor = startColor; }
+	inline void setStartColor(sf::Color && startColor) { m_startColor = std::forward<sf::Color>(startColor); }
 	inline void setStartColor(sf::Color const & startColor) { m_startColor = startColor; }
 	inline sf::Color & getStartColor(void) { return m_startColor; }
 
