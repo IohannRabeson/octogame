@@ -31,9 +31,6 @@ public:
 	inline void setStartColor(sf::Color const & startColor) { m_startColor = startColor; }
 	inline sf::Color & getStartColor(void) { return m_startColor; }
 
-	inline void setUpLeft(sf::Vertex * upLeft) { m_upLeft = upLeft; }
-	inline sf::Vertex * getUpLeft(void) const { return m_upLeft; }
-
 	inline void setIsEmpty(bool isEmpty) { m_isEmpty = isEmpty; }
 	inline bool isEmpty(void) const { return m_isEmpty; }
 
@@ -46,8 +43,6 @@ private:
 	sf::Vector2f		m_startTransition[4];
 	ETransitionType		m_transitionType;
 	sf::Color			m_startColor;
-	//TODO: remove
-	sf::Vertex *		m_upLeft;
 	bool				m_isEmpty;
 
 };
