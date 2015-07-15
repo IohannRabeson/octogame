@@ -3,10 +3,7 @@
 #include <Interpolations.hpp>
 #include <Math.hpp>
 
-//TODO: Create all biome accessor
 Rainbow::Rainbow(void) :
-	m_animator(1.f, 0.f, 4.f, 0.1f),
-	m_animation(1.f),
 	m_cos(0),//std::cos(90.f * octo::Deg2Rad);
 	m_sin(1),//std::sin(90.f * octo::Deg2Rad);
 	m_loopCount(0u),
@@ -121,8 +118,6 @@ void Rainbow::setup(ABiome& biome)
 	m_interpolateValues.resize(m_partCount + 1);
 	for (std::size_t i = 0; i < m_partCount + 1; i++)
 		m_interpolateValues[i] = 0.f;
-
-	m_animator.setup();
 }
 
 void Rainbow::computeInterpolateValues(sf::Time frameTime, std::vector<float> & values)
@@ -145,9 +140,6 @@ void Rainbow::computeInterpolateValues(sf::Time frameTime, std::vector<float> & 
 
 void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	m_animator.update(frameTime);
-	m_animation = m_animator.getAnimation();
-
 	sf::Vector2f const & position = getPosition();
 	computeInterpolateValues(frameTime, m_interpolateValues);
 	// position - m_endPosition make the arrival be the origin

@@ -35,7 +35,7 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f const & cameraSize)
 	{
 		m_starCount = biome.getStarCount();
 		m_originStars.resize(m_starCount);
-		//TODO: Check with Iohann for delete element
+		//TODO: Check with Iohann for delete element: Is the decorManager handle it?
 		for (std::size_t i = 0u; i < m_starCount; i++)
 			m_decorManagerBack.add(new Star(m_clock));
 
@@ -54,6 +54,7 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f const & cameraSize)
 void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & cameraCenter)
 {
 	m_originRotate = sf::Vector2f(cameraCenter.x, cameraSize.y);
+	float deltaPos = cameraSize.y / 3;
 
 	if (biome.canCreateSun())
 	{
@@ -62,11 +63,12 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 		for (std::size_t i = 0u; i < m_sunCount; i++)
 		{
 			m_decorManagerBack.add(DecorManager::DecorTypes::Sun);
-			m_originSuns[i] = sf::Vector2f(0.f, cameraSize.y);
+			m_originSuns[i].x = 0.f + biome.randomFloat(0.f, deltaPos);
+			m_originSuns[i].y = cameraSize.y;
 			float angle = biome.randomFloat(-20.f, 20.f) * octo::Deg2Rad;
 			float cos = std::cos(angle);
 			float sin = std::sin(angle);
-			rotateVec(m_originSuns[i], cos, sin);
+			rotateVec(m_originSuns[i], m_originRotate, cos, sin);
 		}
 	}
 	if (biome.canCreateMoon())
@@ -76,11 +78,12 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 		for (std::size_t i = 0u; i < m_moonCount; i++)
 		{
 			m_decorManagerBack.add(DecorManager::DecorTypes::Moon);
-			m_originMoons[i] = cameraSize;
+			m_originMoons[i].x = cameraSize.x + biome.randomFloat(-deltaPos, 0.f);
+			m_originMoons[i].y = cameraSize.y;
 			float angle = biome.randomFloat(-20.f, 20.f) * octo::Deg2Rad;
 			float cos = std::cos(angle);
 			float sin = std::sin(angle);
-			rotateVec(m_originMoons[i], cos, sin);
+			rotateVec(m_originMoons[i], m_originRotate, cos, sin);
 		}
 	}
 }
@@ -147,7 +150,6 @@ void SkyManager::update(sf::Time frameTime)
 	octo::Camera camera = octo::Application::getCamera();
 	sf::FloatRect rec = camera.getRectangle();
 	sf::Vector2f offsetCamera(rec.left, rec.top);
-	//TODO: User day/night instead of cycle
 	float angle = m_clock->getCycleValue() * 360.f * octo::Deg2Rad;
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);

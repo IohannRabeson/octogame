@@ -9,6 +9,7 @@ DefaultBiome::DefaultBiome() :
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
+	//Day and night durations needs to be the same for the moment
 	m_dayDuration(sf::seconds(15.f)),
 	m_nightDuration(sf::seconds(15.f)),
 	m_wind(50.f, 100.f),
