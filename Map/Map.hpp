@@ -16,8 +16,8 @@ public:
 	typedef std::vector<std::pair<int, sf::Vector2f>>			Decors;
 	typedef Decors::iterator									Iterator;
 	typedef octo::Array2D<Tile*>								TileMap;
-	typedef std::function<float(float x, float y)>				MapSurfaceCallback;
-	typedef std::function<sf::Color(float x, float y, float z)>	TileColorCallback;
+	typedef std::function<float(float x, float y)>				MapSurfaceGenerator;
+	typedef std::function<sf::Color(float x, float y, float z)>	TileColorGenerator;
 
 	Map(void);
 	virtual ~Map(void);
@@ -26,8 +26,8 @@ public:
 	inline std::size_t getRows(void) const { return m_tiles.rows(); }
 	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles(column, row); }
 	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
-	inline void setMapSurface(MapSurfaceCallback mapSurface) { m_mapSurface = mapSurface; }
-	inline void setTileColorCallback(TileColorCallback tileColor) { m_tileColor = tileColor; }
+	inline void setMapSurface(MapSurfaceGenerator mapSurface) { m_mapSurface = mapSurface; }
+	inline void setTileColorGenerator(TileColorGenerator tileColor) { m_tileColor = tileColor; }
 
 	inline void computeMap(void) { computeMapRange(0, m_tiles.columns(), 0, m_tiles.rows()); }
 	inline void computeMapRangeX(int startX, int endX) { computeMapRange(startX, endX, 0, m_tiles.rows()); }
@@ -63,8 +63,8 @@ private:
 	Decors										m_decorPositions;
 	sf::Vector2u								m_mapSize;
 	Noise										m_noise;
-	MapSurfaceCallback							m_mapSurface;
-	TileColorCallback							m_tileColor;
+	MapSurfaceGenerator							m_mapSurface;
+	TileColorGenerator							m_tileColor;
 
 };
 

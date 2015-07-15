@@ -139,7 +139,6 @@ void Map::computeDecor(void)
 	assert(m_mapSurface);
 
 	for (auto it = m_decorPositions.begin(); it != m_decorPositions.end(); it++)
-
 	{
 		offsetX = curOffsetX;
 		offsetPosX = it->first;
