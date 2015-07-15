@@ -47,7 +47,7 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\
 				Map/Noise.cpp							\
-				Map/AParallaxScrolling.cpp				\
+				Map/ParallaxScrolling.cpp				\
 				Map/MapInstance.cpp
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\

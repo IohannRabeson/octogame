@@ -3,14 +3,17 @@
 #include "RectangleShape.hpp"
 #include "CircleShape.hpp"
 #include "GroupShape.hpp"
+#include "GenerativeLayer.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+#include <iostream>
 
 PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_engine(PhysicsEngine::getInstance()),
 	m_camera(octo::Application::getCamera()),
 	m_shape(nullptr),
-	m_nbCollision(0u)
+	m_nbCollision(0u),
+	m_parallaxScrolling({ new GenerativeLayer() })
 {}
 
 void	PhysicsMapScreen::start()
@@ -92,7 +95,6 @@ void	PhysicsMapScreen::stop()
 {
 }
 
-#include <iostream>
 void	PhysicsMapScreen::update(sf::Time deltatime)
 {
 	float speed = 200.f * deltatime.asSeconds();
@@ -120,6 +122,7 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 		m_camera.move(0.f, cameraSpeed);
 
 	m_engine.update(deltatime.asSeconds());
+	m_parallaxScrolling.update(deltatime.asSeconds());
 	std::cout << m_nbCollision << std::endl;
 }
 
@@ -137,7 +140,9 @@ bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const &)
 
 void	PhysicsMapScreen::draw(sf::RenderTarget& render)const
 {
+	sf::RenderStates states;
 	render.clear(sf::Color::Black);
 	render.draw(m_groundManager);
 	m_engine.debugDraw(render);
+	m_parallaxScrolling.draw(render, states);
 }

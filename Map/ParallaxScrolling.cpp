@@ -11,6 +11,13 @@ ParallaxScrolling::ParallaxScrolling(std::initializer_list<ALayer *> list) :
 	m_layers(list)
 {}
 
+ParallaxScrolling::~ParallaxScrolling(void)
+{
+	for (auto it = m_layers.begin(); it != m_layers.end(); it++)
+		delete (*it);
+	m_layers.clear();
+}
+
 void ParallaxScrolling::update(float deltatime)
 {
 	for (auto & layer : m_layers)
@@ -25,16 +32,4 @@ void ParallaxScrolling::draw(sf::RenderTarget & render, sf::RenderStates states)
 {
 	for (auto const & layer : m_layers)
 		layer->draw(render, states);
-}
-
-// Nested class ALayer
-ParallaxScrolling::ALayer::ALayer(void) :
-	m_offset(0.f),
-	m_speed(0.5f),
-	m_isScrolling(true)
-{}
-
-void ParallaxScrolling::ALayer::updateOffset(float offset)
-{
-	m_offset = offset * m_speed;
 }
