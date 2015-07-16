@@ -125,6 +125,12 @@ void DecorAnimator::sleep(void)
 		m_currentState = e_state_sleep;
 }
 
+void DecorAnimator::die(void)
+{
+	if (m_currentState == e_state_life)
+		m_currentState = e_state_die;
+}
+
 void DecorAnimator::setup(sf::Time lifeTime)
 {
 	m_lifeTimerMax = lifeTime.asSeconds();

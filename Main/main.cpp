@@ -24,11 +24,11 @@
 #include "SpriteSheetDemoScreen.hpp"
 #include "AnimatedSpriteDemoScreen.hpp"
 #include "AudioDemoScreen.hpp"
-#include "DecorManagerDemoScreen.hpp"
 #include "EngineScreen.hpp"
 #include "PhysicsMapScreen.hpp"
 #include "LightningDemoScreen.hpp"
 #include "GameScreen.hpp"
+#include "DecorManagerDemoScreen.hpp"
 #include "ParticleDemoScreen.hpp"
 #include "FsmDemoScreen.hpp"
 
@@ -40,12 +40,12 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<SpriteSheetDemoScreen>("sprite_sheet");
 	manager.registerState<AnimatedSpriteDemoScreen>("animated_sprite");
 	manager.registerState<AudioDemoScreen>("audio");
-	manager.registerState<DecorManagerDemoScreen>("decors");
 	manager.registerState<GameScreen>("game");
 	manager.registerState<EngineScreen>("engine");
 	manager.registerState<PhysicsMapScreen>("physics_map");
 	manager.registerState<ParticleDemoScreen>("particles");
 	manager.registerState<LightningDemoScreen>("lightning");
+	manager.registerState<DecorManagerDemoScreen>("decor");
 	manager.registerState<FsmDemoScreen>("tamagotchi");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }

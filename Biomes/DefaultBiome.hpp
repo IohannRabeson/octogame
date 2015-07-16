@@ -30,12 +30,22 @@ public:
 	virtual std::string		getName()const;
 
 	virtual sf::Vector2u	getMapSize();
+	virtual sf::Vector2f	getMapSizeFloat();
 	virtual float			getTransitionDuration();
 	virtual int				getBossInstancePosX();
 
-	virtual std::size_t		getGroundDecorsCount();
-	virtual std::size_t		getCrystalsCount();
-	virtual std::size_t		getSkyDecorsCount();
+	virtual sf::Time		getDayDuration();
+	virtual sf::Time		getNightDuration();
+	virtual float			getWind();
+
+	virtual std::size_t		getRockCount();
+	virtual std::size_t		getTreeCount();
+	virtual std::size_t		getCrystalCount();
+	virtual std::size_t		getSunCount();
+	virtual std::size_t		getMoonCount();
+	virtual std::size_t		getStarCount();
+	virtual std::size_t		getRainbowCount();
+	virtual std::size_t		getCloudCount();
 
 	virtual std::size_t		getTreeDepth();
 	virtual sf::Vector2f	getTreeSize();
@@ -81,7 +91,14 @@ public:
 
 	virtual sf::Vector2f 	getMoonSize();
 	virtual sf::Color		getMoonColor();
+	virtual sf::Time		getMoonLifeTime();
 	virtual bool			canCreateMoon();
+
+	virtual float			getRainbowThickness();
+	virtual float			getRainbowPartSize();
+	virtual std::size_t		getRainbowLoopCount();
+	virtual sf::Time		getRainbowGrowTime();
+	virtual bool			canCreateRainbow();
 
 	virtual float			randomFloat(float min, float max);
 	virtual int				randomInt(int min, int max);
@@ -95,9 +112,18 @@ private:
 	float				m_transitionDuration;
 	std::size_t			m_bossInstancePosX;
 
-	Range<std::size_t>	m_groundDecorsCount;
-	Range<std::size_t>	m_crystalsCount;
-	Range<std::size_t>	m_skyDecorsCount;
+	sf::Time			m_dayDuration;
+	sf::Time			m_nightDuration;
+	Range<float>		m_wind;
+
+	Range<std::size_t>	m_rockCount;
+	Range<std::size_t>	m_treeCount;
+	Range<std::size_t>	m_crystalCount;
+	Range<std::size_t>	m_starCount;
+	Range<std::size_t>	m_sunCount;
+	Range<std::size_t>	m_moonCount;
+	Range<std::size_t>	m_rainbowCount;
+	Range<std::size_t>	m_cloudCount;
 
 	bool				m_canCreateTree;
 	bool				m_canCreateLeaf;
@@ -109,6 +135,7 @@ private:
 	bool				m_canCreateStar;
 	bool				m_canCreateSun;
 	bool				m_canCreateMoon;
+	bool				m_canCreateRainbow;
 
 	Range<std::size_t>	m_treeDepth;
 	Range<sf::Vector2f>	m_treeSize;
@@ -144,6 +171,12 @@ private:
 
 	Range<sf::Vector2f>	m_moonSize;
 	sf::Color			m_moonColor;
+	Range<sf::Time>		m_moonLifeTime;
+
+	Range<float>		m_rainbowThickness;
+	Range<float>		m_rainbowPartSize;
+	Range<std::size_t>	m_rainbowLoopCount;
+	Range<sf::Time>		m_rainbowGrowTime;
 
 	float				randomRangeFloat(Range<float> const & range);
 	int					randomRangeInt(Range<std::size_t> const & range);

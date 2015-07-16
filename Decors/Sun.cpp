@@ -3,7 +3,7 @@
 
 Sun::Sun(void) :
 	m_partCount(1u),
-	m_animator(1.f, 0.f, 4.f, 0.1f),
+	m_animator(1.f, 0.f, 4.f, 0.2f),
 	m_animation(1.f),
 	m_glowingTimer(sf::Time::Zero),
 	m_glowingTimerMax(sf::seconds(3.f))
