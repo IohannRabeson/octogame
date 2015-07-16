@@ -40,12 +40,18 @@ public:
 
 	virtual std::size_t		getRockCount() = 0;
 	virtual std::size_t		getTreeCount() = 0;
+	virtual std::size_t		getMushroomCount() = 0;
 	virtual std::size_t		getCrystalCount() = 0;
+	virtual std::size_t		getCloudCount() = 0;
 	virtual std::size_t		getStarCount() = 0;
 	virtual std::size_t		getSunCount() = 0;
 	virtual std::size_t		getMoonCount() = 0;
 	virtual std::size_t		getRainbowCount() = 0;
-	virtual std::size_t		getCloudCount() = 0;
+
+	virtual sf::Vector2f	getRockSize() = 0;
+	virtual std::size_t		getRockPartCount() = 0;
+	virtual sf::Color		getRockColor() = 0;
+	virtual bool			canCreateRock() = 0;
 
 	virtual std::size_t		getTreeDepth() = 0;
 	virtual sf::Vector2f	getTreeSize() = 0;
@@ -58,6 +64,11 @@ public:
 	virtual sf::Vector2f	getLeafSize() = 0;
 	virtual sf::Color		getLeafColor() = 0;
 
+	virtual sf::Vector2f	getMushroomSize() = 0;
+	virtual sf::Color		getMushroomColor() = 0;
+	virtual sf::Time		getMushroomLifeTime() = 0;
+	virtual bool			canCreateMushroom() = 0;
+
 	virtual sf::Vector2f	getCrystalSize() = 0;
 	virtual std::size_t		getCrystalPartCount() = 0;
 	virtual sf::Color		getCrystalColor() = 0;
@@ -67,11 +78,6 @@ public:
 	virtual float			getShineEffectRotateAngle() = 0;
 	virtual int				getCrystalPosX() = 0;
 	virtual bool			canCreateShineEffect() = 0;
-
-	virtual sf::Vector2f	getRockSize() = 0;
-	virtual std::size_t		getRockPartCount() = 0;
-	virtual sf::Color		getRockColor() = 0;
-	virtual bool			canCreateRock() = 0;
 
 	virtual sf::Vector2f	getCloudSize() = 0;
 	virtual std::size_t		getCloudPartCount() = 0;

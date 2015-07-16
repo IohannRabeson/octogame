@@ -51,7 +51,8 @@ public:
 		Cloud,
 		Sun,
 		Moon,
-		Rainbow
+		Rainbow,
+		Mushroom
 	};
 
 	explicit DecorManager(std::size_t maxVertexCount);
