@@ -40,6 +40,7 @@ public:
 	private:
 		float		m_speed;
 		float		m_offset;
+		//TODO: rename static
 		bool		m_isScrolling;
 	};
 

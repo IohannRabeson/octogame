@@ -142,7 +142,7 @@ void	PhysicsMapScreen::draw(sf::RenderTarget& render)const
 {
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
+	m_parallaxScrolling.draw(render, states);
 	render.draw(m_groundManager);
 	m_engine.debugDraw(render);
-	m_parallaxScrolling.draw(render, states);
 }
