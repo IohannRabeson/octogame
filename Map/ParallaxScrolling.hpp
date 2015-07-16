@@ -5,11 +5,6 @@
 # include <vector>
 # include <initializer_list>
 
-namespace octo
-{
-	class Camera;
-}
-
 class ParallaxScrolling : public sf::Drawable
 {
 public:
@@ -21,25 +16,21 @@ public:
 		{}
 		ALayer(float speed) :
 			m_speed(speed),
-			m_offset(0.f),
 			m_isScrolling(true)
 		{}
 		virtual ~ALayer(void) = default;
 
 		inline void setSpeed(float speed) { m_speed = speed; }
 		inline void setIsScrolling(bool isScrolling) { m_isScrolling = isScrolling; }
-		inline float getOffset(void) const { return m_offset; }
 		inline float getSpeed(void) const { return m_speed; }
 		inline bool isScrolling(void) const { return m_isScrolling; }
 
 //TODO: private and friend with parallax
-		void updateOffset(float offset) { m_offset = offset * m_speed; }
 		virtual void update(float deltatime) = 0;
 		virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const = 0;
 
 	private:
 		float		m_speed;
-		float		m_offset;
 		//TODO: rename static
 		bool		m_isScrolling;
 	};
@@ -56,7 +47,6 @@ public:
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 private:
-	octo::Camera &			m_camera;
 	//TODO: use unique_ptr
 	std::vector<ALayer *>	m_layers;
 

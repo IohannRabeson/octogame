@@ -13,7 +13,7 @@ PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_camera(octo::Application::getCamera()),
 	m_shape(nullptr),
 	m_nbCollision(0u),
-	m_parallaxScrolling({ new GenerativeLayer() })
+	m_parallaxScrolling({ new GenerativeLayer(sf::Color(170, 170, 170), 0.4f), new GenerativeLayer(sf::Color(200, 200, 200), 0.6f) })
 {}
 
 void	PhysicsMapScreen::start()

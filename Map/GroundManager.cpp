@@ -448,6 +448,6 @@ void GroundManager::update(float pf_deltatime)
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	m_decorManager.draw(render, states);
+	//m_decorManager.draw(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
