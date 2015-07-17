@@ -30,13 +30,15 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/AudioDemoScreen.cpp				\
 				Screens/EngineScreen.cpp				\
 				Screens/PhysicsMapScreen.cpp			\
-				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/LightningDemoScreen.cpp			\
 				Screens/GameScreen.cpp					\
+				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/ParticleDemoScreen.cpp			\
+				Screens/ResourceLoadingScreen.cpp		\
 				Screens/FsmDemoScreen.cpp
 
 SRC_GAME =		Game/Game.cpp							\
+				Game/GameClock.cpp						\
 				Game/BiomeManager.cpp					\
 				Game/FiniteStateMachine.cpp
 
@@ -52,11 +54,11 @@ SRC_MAP =		Map/Map.cpp								\
 				Map/MapInstance.cpp
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
-				Biomes/TestBiome.cpp					\
 				Biomes/DefaultBiome.cpp
 
 SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/DecorManager.cpp					\
+				Decors/SkyManager.cpp					\
 				Decors/ADecor.cpp						\
 				Decors/RandomGenerator.cpp				\
 				Decors/DecorAnimator.cpp				\
@@ -69,6 +71,7 @@ SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\
 				Decors/Sun.cpp							\
+				Decors/Moon.cpp							\
 				Decors/Lightning.cpp					\
 				Decors/RainSystem.cpp
 

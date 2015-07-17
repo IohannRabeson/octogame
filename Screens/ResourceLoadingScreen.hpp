@@ -1,35 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   GameScreen.hpp                                     :+:      :+:    :+:   */
+/*   ResourceLoadingScreen.hpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/24 05:54:08 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 06:07:37 by irabeson         ###   ########.fr       */
+/*   Created: 2015/05/30 01:20:21 by irabeson          #+#    #+#             */
+/*   Updated: 2015/06/06 08:10:41 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GAMESCREEN_HPP
-# define GAMESCREEN_HPP
-# include <AbstractState.hpp>
-# include <GraphicsListeners.hpp>
-# include <Camera.hpp>
+#ifndef RESOURCELOADINGSCREEN_HPP
+# define RESOURCELOADINGSCREEN_HPP
+# include <AbstractResourceLoadingState.hpp>
 
-# include "Game.hpp"
+# include "FireflySwarm.hpp"
+# include "FireflyPopulation.hpp"
 
-class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
+# include <string>
+
+# include <SFML/Graphics/Text.hpp>
+# include <SFML/Graphics/RectangleShape.hpp>
+
+class ResourceLoadingScreen : public octo::AbstractResourceLoadingState
 {
+public:
+	ResourceLoadingScreen();
+private:
 	virtual void	start();
-	virtual void	pause();
-	virtual void	resume();
-	virtual void	stop();
 	virtual void	update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render)const;
+	virtual void	onNoMoreLoading();	
 private:
-	Game			m_game;
-
-	virtual bool onPressed(sf::Event::KeyEvent const & event);
+	sf::Text			m_message;
+	sf::RectangleShape	m_borders;
+	sf::RectangleShape	m_bar;
 };
 
 #endif

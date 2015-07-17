@@ -4,10 +4,13 @@
 # include "ShineBuilder.hpp"
 # include "DecorAnimator.hpp"
 
+class GameClock;
+
 class Star : public ShineBuilder
 {
 public:
 	Star(void);
+	Star(GameClock * clock);
 	virtual ~Star(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -24,6 +27,8 @@ private:
 
 	sf::Vector2f	m_glowSize;
 	sf::Vector2f	m_glowSizeCorner;
+
+	GameClock		*m_clock;
 };
 
 #endif

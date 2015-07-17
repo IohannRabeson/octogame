@@ -1,30 +1,50 @@
 #ifndef MOON_HPP
 # define MOON_HPP
 
-# include "Decor.hpp"
-# include <vector>
-# include <cmath>
+# include "ADecor.hpp"
+# include "DecorAnimator.hpp"
+# include <SFML/Graphics/Color.hpp>
 
-class Moon : public Decor
+class Moon : public ADecor
 {
 public:
 	Moon(void);
-	virtual ~Moon(void);
+	virtual ~Moon(void) = default;
 
-	void init(Biome * p_biome);
-
-	void createOneMoon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color);
-	void createMoon(void);
-	void randomDecor(void);
-	void createDarkness(void);
-	void computeOrigin(float pf_deltatime);
-
-	virtual void update(float pf_deltatime);
+	virtual void setup(ABiome& biome);
+	virtual void update(sf::Time frameTime,
+						octo::VertexBuilder& builder,
+						ABiome& biome);
 
 private:
-	sf::Color		m_transparency;
+	void createOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & sizeCorner,
+						sf::Vector2f const & origin,
+						sf::Color const & color,
+						octo::VertexBuilder& builder);
 
-	float			mf_angle;
+	void createDarkOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & sizeCorner,
+						sf::Vector2f const & origin,
+						sf::Color const & color,
+						float interpolateValue,
+						octo::VertexBuilder& builder);
+
+	void createMoon(sf::Vector2f const & size,
+					sf::Vector2f const & origin,
+					sf::Color const & color,
+					float interpolateValue,
+					octo::VertexBuilder& builder);
+
+	DecorAnimator			m_animator;
+	float					m_animation;
+
+	sf::Vector2f			m_size;
+	sf::Color				m_color;
+
+	sf::Time				m_timer;
+	sf::Time				m_timerMax;
+	bool					m_way;
 };
 
 #endif

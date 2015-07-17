@@ -11,19 +11,18 @@
 /* ************************************************************************** */
 
 #include "Game.hpp"
-#include "TestBiome.hpp"
+#include "DefaultBiome.hpp"
 
 #include <Application.hpp>
 #include <Camera.hpp>
 
-Game::Game() :
-	m_skyDecorManager(500)
+Game::Game()
 {
 }
 
 void	Game::setup()
 {
-	m_biomeManager.registerBiome<TestBiome>("test");		
+	m_biomeManager.registerBiome<DefaultBiome>("test");
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -31,17 +30,26 @@ void	Game::loadLevel(std::string const& fileName)
 	(void)fileName;
 	// TODO
 	m_biomeManager.changeBiome("test", 0x12345);
-	m_skyDecorManager.setup(&m_biomeManager.getCurrentBiome());
-	m_skyDecorManager.add(DecorManager::DecorTypes::Sun);
+
+	m_gameClock.setup(m_biomeManager.getCurrentBiome());
+	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
+	m_groundManager.init(m_biomeManager.getCurrentBiome());
 }
 
 void	Game::update(sf::Time frameTime)
 {
-	m_skyDecorManager.update(frameTime, octo::Application::getCamera());
+	m_gameClock.update(frameTime);
+	m_skyManager.update(frameTime);
+	m_groundManager.update(frameTime.asSeconds());
 }
 
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	render.clear();
-	render.draw(m_skyDecorManager, states);
+	render.draw(m_skyManager.getDecorsBack(), states);
+	render.draw(m_groundManager.getDecorsBack(), states);
+	// Draw Octo and pnj
+	render.draw(m_groundManager.getDecorsFront(), states);
+	render.draw(m_groundManager, states);
+	render.draw(m_skyManager.getDecorsFront(), states);
 }

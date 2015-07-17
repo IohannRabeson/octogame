@@ -1,4 +1,5 @@
 #include "DefaultBiome.hpp"
+#include "Tile.hpp"
 
 #include <iostream>
 
@@ -8,9 +9,19 @@ DefaultBiome::DefaultBiome() :
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
-	m_groundDecorsCount(10u, 20u),
-	m_crystalsCount(30u, 50u),
-	m_skyDecorsCount(30u, 50u),
+	//Day and night durations needs to be the same for the moment
+	m_dayDuration(sf::seconds(15.f)),
+	m_nightDuration(sf::seconds(15.f)),
+	m_wind(50.f, 100.f),
+
+	m_rockCount(10u, 20u),
+	m_treeCount(5u, 10u),
+	m_crystalCount(10u, 15u),
+	m_starCount(500u, 800u),
+	m_sunCount(1u, 3u),
+	m_moonCount(1u, 3u),
+	m_rainbowCount(3u, 6u),
+	m_cloudCount(20u, 40u),
 
 	m_canCreateTree(true),
 	m_canCreateLeaf(true),
@@ -22,43 +33,50 @@ DefaultBiome::DefaultBiome() :
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
+	m_canCreateRainbow(false),
 
 	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(40.f, 200.f)),
+	m_treeSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
-	m_treeColor(255, 105, 180),
+	m_treeColor(30, 30, 30),
 	m_treeAngle(15.f, 75.f),
-	m_leafSize(sf::Vector2f(50.f, 50.f), sf::Vector2f(200.f, 200.f)),
-	m_leafColor(100, 105, 180),
+	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(150.f, 150.f)),
+	m_leafColor(143, 208, 202),
 
-	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 150.f)),
+	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 100.f)),
 	m_crystalPartCount(2u, 8u),
-	m_crystalColor(255, 105, 180),
+	m_crystalColor(230, 168, 0, 150),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_rockSize(sf::Vector2f(10.f, 150.f), sf::Vector2f(40.f, 400.f)),
+	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(40.f, 200.f)),
 	m_rockPartCount(2.f, 10.f),
-	m_rockColor(255, 0, 100),
+	m_rockColor(107, 172, 166),
 
-	m_cloudSize(sf::Vector2f(300.f, 10.f), sf::Vector2f(500.f, 40.f)),
+	m_cloudSize(sf::Vector2f(100.f, 10.f), sf::Vector2f(400.f, 60.f)),
 	m_cloudPartCount(2u, 10u),
 	m_cloudLifeTime(sf::seconds(15), sf::seconds(60)),
 	m_cloudColor(255, 255, 255),
 
-	m_starSize(sf::Vector2f(50.f, 50.f), sf::Vector2f(100.f, 100.f)),
+	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),
-	m_starLifeTime(sf::seconds(15), sf::seconds(60)),
+	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
-	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
+	m_sunSize(sf::Vector2f(60.f, 60.f), sf::Vector2f(150.f, 150.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 162, 0),
+	m_sunColor(255, 255, 200),
 
-	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
-	m_moonColor(0, 111, 255)
+	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 100.f)),
+	m_moonColor(200, 200, 200),
+	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
+
+	m_rainbowThickness(50.f, 100.f),
+	m_rainbowPartSize(50.f, 200.f),
+	m_rainbowLoopCount(1u, 5u),
+	m_rainbowGrowTime(sf::seconds(4.f), sf::seconds(8.f))
 {
-	m_generator.setSeed("default_biome");
+	m_generator.setSeed(m_name);
 }
 
 void			DefaultBiome::setup(std::size_t seed)
@@ -77,29 +95,74 @@ sf::Vector2u	DefaultBiome::getMapSize()
 	return (m_mapSize);
 }
 
+sf::Vector2f	DefaultBiome::getMapSizeFloat()
+{
+	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
+}
+
 float			DefaultBiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				DefaultBiome::getBossInstancePosX(void)
+int				DefaultBiome::getBossInstancePosX()
 {
 	return (m_bossInstancePosX);
 }
 
-std::size_t		DefaultBiome::getGroundDecorsCount()
+sf::Time		DefaultBiome::getDayDuration()
 {
-	return (randomRangeInt(m_groundDecorsCount));
+	return (m_dayDuration);
 }
 
-std::size_t		DefaultBiome::getCrystalsCount()
+sf::Time		DefaultBiome::getNightDuration()
 {
-	return (randomRangeInt(m_crystalsCount));
+	return (m_nightDuration);
 }
 
-std::size_t		DefaultBiome::getSkyDecorsCount()
+float			DefaultBiome::getWind()
 {
-	return (randomRangeInt(m_skyDecorsCount));
+	return (randomRangeFloat(m_wind));
+}
+
+std::size_t		DefaultBiome::getRockCount()
+{
+	return (randomRangeInt(m_rockCount));
+}
+
+std::size_t		DefaultBiome::getTreeCount()
+{
+	return (randomRangeInt(m_treeCount));
+}
+
+std::size_t		DefaultBiome::getCrystalCount()
+{
+	return (randomRangeInt(m_crystalCount));
+}
+
+std::size_t		DefaultBiome::getStarCount()
+{
+	return (randomRangeInt(m_starCount));
+}
+
+std::size_t		DefaultBiome::getSunCount()
+{
+	return (randomRangeInt(m_sunCount));
+}
+
+std::size_t		DefaultBiome::getMoonCount()
+{
+	return (randomRangeInt(m_moonCount));
+}
+
+std::size_t		DefaultBiome::getRainbowCount()
+{
+	return (randomRangeInt(m_rainbowCount));
+}
+
+std::size_t		DefaultBiome::getCloudCount()
+{
+	return (randomRangeInt(m_cloudCount));
 }
 
 std::size_t	DefaultBiome::getTreeDepth()
@@ -271,7 +334,7 @@ bool			DefaultBiome::canCreateStar()
 
 sf::Vector2f 	DefaultBiome::getSunSize()
 {
-	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
+	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
@@ -292,7 +355,8 @@ bool			DefaultBiome::canCreateSun()
 
 sf::Vector2f 	DefaultBiome::getMoonSize()
 {
-	return (randomRangeVector2f(m_moonSize));
+	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
+	return (sf::Vector2f(tmp, tmp));
 }
 
 sf::Color		DefaultBiome::getMoonColor()
@@ -300,10 +364,41 @@ sf::Color		DefaultBiome::getMoonColor()
 	return (m_moonColor);
 }
 
+sf::Time		DefaultBiome::getMoonLifeTime()
+{
+	return (randomRangeTime(m_moonLifeTime));
+}
+
 bool			DefaultBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
+
+float			DefaultBiome::getRainbowThickness()
+{
+	return (randomRangeFloat(m_rainbowThickness));
+}
+
+float			DefaultBiome::getRainbowPartSize()
+{
+	return (randomRangeFloat(m_rainbowPartSize));
+}
+
+std::size_t		DefaultBiome::getRainbowLoopCount()
+{
+	return (randomRangeInt(m_rainbowLoopCount));
+}
+
+sf::Time		DefaultBiome::getRainbowGrowTime()
+{
+	return (randomRangeTime(m_rainbowGrowTime));
+}
+
+bool			DefaultBiome::canCreateRainbow()
+{
+	return (m_canCreateRainbow);
+}
+
 
 float			DefaultBiome::randomFloat(float min, float max)
 {
@@ -341,5 +436,5 @@ sf::Vector2f	DefaultBiome::randomRangeVector2f(Range<sf::Vector2f> const & range
 sf::Time		DefaultBiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
-	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.min.asMicroseconds())));
+	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }

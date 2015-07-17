@@ -71,6 +71,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	m_count++;
 
 	// Init color
+	//TODO: find a smart way to compute deltaColor
 	float colorChange = currentDepth * 15.f + 1;
 	sf::Color color = sf::Color(m_color.r + colorChange, m_color.g + colorChange, m_color.b + colorChange);
 
