@@ -6,6 +6,7 @@ Tree::Tree(void) :
 	m_depth(0u),
 	m_count(0u),
 	m_angleMaxCount(0u),
+	m_mapSizeY(0.f),
 	m_animator(2.f, 4.f, 3.f, 0.15f),
 	m_animation(1.f),
 	m_growSide(true),
@@ -44,6 +45,16 @@ void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, fl
 	builder.createTriangle(tmpLeftDown, quad.leftUp + quad.center, tmpRightUp, tmpColor);
 }
 
+void Tree::createTrunk(sf::Vector2f const & size, sf::Vector2f const & center, sf::Color const & color, octo::VertexBuilder & builder)
+{
+	sf::Vector2f upLeft(center.x - size.x / 2.f, center.y - size.y / 2.f);
+	sf::Vector2f upRight(center.x + size.x / 2.f, center.y - size.y / 2.f);
+	sf::Vector2f downLeft(upLeft.x, upLeft.y + m_mapSizeY);
+	sf::Vector2f downRight(upRight.x, upRight.y + m_mapSizeY);
+
+	builder.createQuad(upLeft, upRight, downRight, downLeft, color);
+}
+
 void Tree::createLeaf(std::vector<QuadValue> const & quads, sf::Color const & color, float const deltaColor, octo::VertexBuilder & builder)
 {
 	for (auto quad : quads)
@@ -60,6 +71,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	{
 		m_count = m_countLeaf = 0u;
 		m_setLeaf = m_isLeaf;
+		createTrunk(size, center, m_color, builder);
 	}
 
 	// Get current angle
@@ -147,6 +159,7 @@ void Tree::setup(ABiome& biome)
 	m_leafMaxCount = std::pow(2, m_depth) + 1;
 	m_leaf.resize(m_leafMaxCount);
 	m_leafSize.resize(m_leafMaxCount);
+	m_mapSizeY = biome.getMapSizeFloat().y;
 
 	newTree(biome);
 }
