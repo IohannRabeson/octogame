@@ -41,6 +41,10 @@ void	Game::update(sf::Time frameTime)
 	m_gameClock.update(frameTime);
 	m_skyManager.update(frameTime);
 	m_groundManager.update(frameTime.asSeconds());
+
+	//TODO: To delete
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+		m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next);
 }
 
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const

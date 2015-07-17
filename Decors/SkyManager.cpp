@@ -90,7 +90,8 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 
 void SkyManager::setupRainbow(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & mapSize)
 {
-	if (biome.canCreateRainbow())
+	//TODO: Remove this is the other solution is choose (test)
+	if (false)//biome.canCreateRainbow())
 	{
 		m_rainbowCount = biome.getRainbowCount();
 		m_originRainbows.resize(m_rainbowCount);

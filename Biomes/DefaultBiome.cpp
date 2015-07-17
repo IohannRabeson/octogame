@@ -35,7 +35,7 @@ DefaultBiome::DefaultBiome() :
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
-	m_canCreateRainbow(false),
+	m_canCreateRainbow(true),
 
 	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(40.f, 200.f)),
 	m_rockPartCount(2.f, 10.f),
