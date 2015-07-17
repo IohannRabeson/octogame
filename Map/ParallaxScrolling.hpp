@@ -40,7 +40,10 @@ public:
 
 	//TODO
 	void addLayer(ALayer * layer);
-	void removeLayer(ALayer * layer);
+	/*! Remove the layer from the vector and release the allocated memory */
+	void removeLayer(std::size_t index);
+	/*! Remove all layers from the vector and release the allocated memory */
+	void removeAllLayers(void);
 
 	virtual void update(float deltatime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
