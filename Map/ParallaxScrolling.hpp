@@ -12,27 +12,26 @@ public:
 	{
 	public:
 		ALayer(void) :
-			ALayer(0.5f)
+			ALayer(sf::Vector2f(0.5f, 0.5f))
 		{}
-		ALayer(float speed) :
+		ALayer(sf::Vector2f const & speed) :
 			m_speed(speed),
 			m_isScrolling(true)
 		{}
 		virtual ~ALayer(void) = default;
 
-		inline void setSpeed(float speed) { m_speed = speed; }
+		inline void setSpeed(sf::Vector2f const & speed) { m_speed = speed; }
 		inline void setIsScrolling(bool isScrolling) { m_isScrolling = isScrolling; }
-		inline float getSpeed(void) const { return m_speed; }
+		inline sf::Vector2f const & getSpeed(void) const { return m_speed; }
 		inline bool isScrolling(void) const { return m_isScrolling; }
 
-//TODO: private and friend with parallax
 		virtual void update(float deltatime) = 0;
 		virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const = 0;
 
 	private:
-		float		m_speed;
+		sf::Vector2f	m_speed;
 		//TODO: rename static
-		bool		m_isScrolling;
+		bool			m_isScrolling;
 	};
 
 	ParallaxScrolling(void);
@@ -48,6 +47,7 @@ public:
 
 private:
 	//TODO: use unique_ptr
+	//TODO:get map size from biome here
 	std::vector<ALayer *>	m_layers;
 
 };
