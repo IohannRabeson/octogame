@@ -27,22 +27,17 @@ void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & or
 	m_leftSecond[3] = sf::Vector2f(-unit * 5.f, -size.y + unit);
 	m_leftSecond[4] = sf::Vector2f(0.f, 0.f);
 
-	for (std::size_t i = 0; i < m_leftFinal.size(); i++)
+	for (std::size_t i = 0; i < m_pointCount; i++)
 	{
-		m_leftFinal[i].x = octo::linearInterpolation(m_leftFirst[i].x, m_leftSecond[i].x, bouncingValue);
+		m_leftFinal[i].x = octo::linearInterpolation(m_leftFirst[i].x, m_leftSecond[i].x, bouncingValue) - unit / 2.f;
 		m_leftFinal[i].y = octo::linearInterpolation(m_leftFirst[i].y, m_leftSecond[i].y, bouncingValue);
-	}
-	for (std::size_t i = 0; i < m_pointCount; i++)
-		m_leftFinal[i] -= sf::Vector2f(unit / 2.f, 0.f);
-	for (std::size_t i = 0; i < m_pointCount; i++)
 		m_rightFinal[i] = sf::Vector2f(-1 * m_leftFinal[i].x, m_leftFinal[i].y) + origin;
-	for (std::size_t i = 0; i < m_pointCount; i++)
 		m_leftFinal[i] += origin;
+	}
 
 	builder.createQuad(m_leftFinal[0], m_leftFinal[4], m_rightFinal[4], m_rightFinal[0], sf::Color(255, 255, 255));
 	builder.createQuad(m_leftFinal[1], m_leftFinal[2], m_rightFinal[2], m_rightFinal[1], color);
 	builder.createQuad(m_leftFinal[2], m_leftFinal[3], m_rightFinal[3], m_rightFinal[2], color);
-
 }
 
 void Mushroom::setup(ABiome& biome)
@@ -86,6 +81,5 @@ void Mushroom::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& 
 
 	sf::Vector2f const & position = getPosition();
 	float bouncingValue = computeBouncingValue(frameTime);
-	(void)bouncingValue;
 	createMushroom(m_size * m_animation, position, m_color, bouncingValue, builder);
 }
