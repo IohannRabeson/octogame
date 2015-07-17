@@ -62,8 +62,8 @@ void Map::init(ABiome & biome)
 	// Initialize tileColor pointer
 	setTileColorGenerator([](Noise & noise, float x, float y, float z)
 	{
-		static const sf::Color end = sf::Color(250.f, 150.f, 0.f);
-		static const sf::Color start = sf::Color(250.f, 0.f, 0.f);
+		static const sf::Color end = sf::Color(254.f, 231.f, 170.f);
+		static const sf::Color start = sf::Color(230.f, 168.f, 0.f);
 
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
 		return octo::linearInterpolation(start, end, transition);

@@ -47,6 +47,7 @@ public:
 	virtual std::size_t		getMoonCount();
 	virtual std::size_t		getStarCount();
 	virtual std::size_t		getRainbowCount();
+	virtual std::size_t		getGroundRockCount();
 
 	virtual sf::Vector2f	getRockSize();
 	virtual std::size_t		getRockPartCount();
@@ -131,6 +132,7 @@ private:
 	Range<std::size_t>	m_moonCount;
 	Range<std::size_t>	m_rainbowCount;
 	Range<std::size_t>	m_cloudCount;
+	Range<std::size_t>	m_groundRockCount;
 
 	bool				m_canCreateRock;
 	bool				m_canCreateTree;

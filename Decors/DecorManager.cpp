@@ -21,6 +21,7 @@
 #include "Moon.hpp"
 #include "Rainbow.hpp"
 #include "Mushroom.hpp"
+#include "GroundRock.hpp"
 
 #include <VertexBuilder.hpp>
 
@@ -116,4 +117,5 @@ void	DecorManager::registerDecors()
 	m_factory.registerCreator<Moon>(DecorTypes::Moon);
 	m_factory.registerCreator<Rainbow>(DecorTypes::Rainbow);
 	m_factory.registerCreator<Mushroom>(DecorTypes::Mushroom);
+	m_factory.registerCreator<GroundRock>(DecorTypes::GroundRock);
 }
