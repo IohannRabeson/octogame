@@ -9,9 +9,7 @@ ParallaxScrolling::ParallaxScrolling(std::initializer_list<ALayer *> list) :
 
 ParallaxScrolling::~ParallaxScrolling(void)
 {
-	for (auto it = m_layers.begin(); it != m_layers.end(); it++)
-		delete (*it);
-	m_layers.clear();
+	removeAllLayers();
 }
 
 void ParallaxScrolling::addLayer(ALayer * layer)

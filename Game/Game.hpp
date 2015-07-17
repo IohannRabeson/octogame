@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:16:26 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/17 11:45:05 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/17 12:43:28 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include "GroundManager.hpp"
 # include "ParallaxScrolling.hpp"
 
-class Game
+class Game : public octo::DefaultKeyboardListener
 {
 public:
 	Game();
@@ -36,6 +36,8 @@ private:
 	SkyManager			m_skyManager;
 	GroundManager		m_groundManager;
 	ParallaxScrolling	m_parallaxScrolling;
+
+	bool onPressed(sf::Event::KeyEvent const & event);
 
 };
 
