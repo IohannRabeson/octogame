@@ -35,8 +35,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/GameScreen.cpp					\
 				Screens/ParticleDemoScreen.cpp			\
 				Screens/ResourceLoadingScreen.cpp		\
-				Screens/FsmDemoScreen.cpp				\
-				Screens/CharacterDemoScreen.cpp
+				Screens/FsmDemoScreen.cpp
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
