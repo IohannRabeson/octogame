@@ -61,6 +61,7 @@ void GroundManager::initDecors(ABiome & biome)
 
 	std::size_t treeCount = biome.getTreeCount();
 	std::size_t rockCount = static_cast<std::size_t>(biome.getRockCount() / 2.f);
+	std::size_t mushroomCount = static_cast<std::size_t>(biome.getMushroomCount() / 2.f);
 	std::size_t crystalCount = static_cast<std::size_t>(biome.getCrystalCount() / 2);
 	std::size_t mapSizeX = biome.getMapSize().x;
 
@@ -97,6 +98,24 @@ void GroundManager::initDecors(ABiome & biome)
 		}
 	}
 
+	if (biome.canCreateMushroom())
+	{
+		for (std::size_t i = 0; i < mushroomCount; i++)
+		{
+			int x = biome.randomInt(0.f, mapSizeX);
+			m_decorManagerBack.add(DecorManager::DecorTypes::Mushroom);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		for (std::size_t i = 0; i < mushroomCount; i++)
+		{
+			int x = biome.randomInt(0.f, mapSizeX);
+			m_decorManagerFront.add(DecorManager::DecorTypes::Mushroom);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+	}
+
 	if (biome.canCreateCrystal())
 	{
 		for (std::size_t i = 0; i < crystalCount; i++)
@@ -115,7 +134,7 @@ void GroundManager::initDecors(ABiome & biome)
 		}
 	}
 
-	m_decorPositions.resize(rockCount * 2 + treeCount + crystalCount * 2);
+	m_decorPositions.resize(rockCount * 2 + treeCount + crystalCount * 2 + mushroomCount * 2);
 }
 
 void GroundManager::setTransitionAppear(int x, int y)

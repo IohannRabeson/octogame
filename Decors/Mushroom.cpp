@@ -1,66 +1,85 @@
 #include "Mushroom.hpp"
-#include "Map.hpp"
+#include "ABiome.hpp"
+#include <Interpolations.hpp>
 
-Mushroom::Mushroom() :
-	Decor()
+Mushroom::Mushroom(void) :
+	m_pointCount(5u),
+	m_animator(0.5f, 4.f, 1.f, 0.2f),
+	m_animation(1.f),
+	m_bouncingTimer(sf::Time::Zero),
+	m_bouncingTimerMax(sf::seconds(1.f)),
+	m_bouncingBool(true)
 {
 }
 
-Mushroom::~Mushroom()
+void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float bouncingValue, octo::VertexBuilder& builder)
 {
+	float unit = size.x / 6.f;
+	m_leftFirst[0] = sf::Vector2f(0.f, -size.y);
+	m_leftFirst[1] = sf::Vector2f(-unit, -size.y);
+	m_leftFirst[2] = sf::Vector2f(-unit * 2.f, -size.y + unit);
+	m_leftFirst[3] = sf::Vector2f(-unit * 2.f, -size.y + unit * 4.f);
+	m_leftFirst[4] = sf::Vector2f(0.f, 0.f);
+
+	m_leftSecond[0] = sf::Vector2f(0.f, -size.y);
+	m_leftSecond[1] = sf::Vector2f(-unit * 4.f, -size.y);
+	m_leftSecond[2] = sf::Vector2f(-unit * 5.f, -size.y + unit);
+	m_leftSecond[3] = sf::Vector2f(-unit * 5.f, -size.y + unit);
+	m_leftSecond[4] = sf::Vector2f(0.f, 0.f);
+
+	for (std::size_t i = 0; i < m_pointCount; i++)
+	{
+		m_leftFinal[i].x = octo::linearInterpolation(m_leftFirst[i].x, m_leftSecond[i].x, bouncingValue) - unit / 2.f;
+		m_leftFinal[i].y = octo::linearInterpolation(m_leftFirst[i].y, m_leftSecond[i].y, bouncingValue);
+		m_rightFinal[i] = sf::Vector2f(-1 * m_leftFinal[i].x, m_leftFinal[i].y) + origin;
+		m_leftFinal[i] += origin;
+	}
+
+	builder.createQuad(m_leftFinal[0], m_leftFinal[4], m_rightFinal[4], m_rightFinal[0], sf::Color(255, 255, 255));
+	builder.createQuad(m_leftFinal[1], m_leftFinal[2], m_rightFinal[2], m_rightFinal[1], color);
+	builder.createQuad(m_leftFinal[2], m_leftFinal[3], m_rightFinal[3], m_rightFinal[2], color);
 }
 
-void Mushroom::createMushroom1(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color)
+void Mushroom::setup(ABiome& biome)
 {
-	/*
-	m_leftVertex[0] = sf::Vector2f(-p_size.x / 2, 0.f);
-	m_rightVertex[0] = sf::Vector2f(p_size.x / 2, 0.f);
-	m_leftVertex[0] = sf::Vector2f(-p_size.x / 2, p_size.y);
-	m_rightVertex[0] = sf::Vector2f(p_size.x / 2, p_size.y);
-	m_leftVertex[0] = sf::Vector2f(-p_size.x / 2, p_size.y);
-	m_rightVertex[0] = sf::Vector2f(p_size.x / 2, p_size.y);
-*/
-
-
-
-	sf::Vector2f upLeft(-p_size.x / 2.f, -p_size.y);
-	sf::Vector2f upRight(p_size.x / 2.f, -p_size.y);
-	sf::Vector2f downLeft(-p_size.x / 2.f, 0.f);
-	sf::Vector2f downRight(p_size.x / 2.f, 0.f);
-	createRectangle(upLeft, upRight, downRight, downLeft, p_origin, p_color);
+	m_leftFirst.resize(m_pointCount);
+	m_leftSecond.resize(m_pointCount);
+	m_leftFinal.resize(m_pointCount);
+	m_rightFinal.resize(m_pointCount);
+	newMushroom(biome);
 }
 
-void Mushroom::createMushroom(void)
+void Mushroom::newMushroom(ABiome & biome)
 {
-
-	createMushroom1(m_size * mf_mouvement, m_origin, m_color);
+	m_size = biome.getMushroomSize();
+	m_color = biome.getMushroomColor();
+	m_animator.setup(biome.getMushroomLifeTime());
 }
 
-void Mushroom::randomDecor(void)
+float Mushroom::computeBouncingValue(sf::Time frameTime)
 {
-	Decor::randomDecor();
-	m_color = sf::Color(255, 255, 255);
-	float size = randomRange(m_biome->m_sun.mn_minSizeX, m_biome->m_sun.mn_maxSizeX);
-	m_size = sf::Vector2f(size, size);
-	m_origin = sf::Vector2f(400, 400);
-
-	// Init containers
-	mn_maxTriangle = 10 * (m_biome->m_sun.mn_nb + 2);
-	allocateVertex(mn_maxTriangle * 3u);
-	createMushroom();
+	if (m_bouncingBool == true)
+	{
+		m_bouncingTimer += frameTime;
+		if (m_bouncingTimer >= m_bouncingTimerMax)
+			m_bouncingBool = false;
+	}
+	else
+	{
+		m_bouncingTimer -= frameTime;
+		if (m_bouncingTimer <= sf::Time::Zero)
+			m_bouncingBool = true;
+	}
+	return m_bouncingTimer / m_bouncingTimerMax;
 }
 
-void Mushroom::init(Biome * p_biome)
+void Mushroom::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
-	Decor::init(p_biome);
-//	m_leftVertex.reserve(4);
-//	m_rightVertex.reserve(4);
-	randomDecor();
-	createMushroom();
-}
+	if (m_animator.update(frameTime))
+		newMushroom(biome);
+	m_animation = m_animator.getAnimation();
 
-void Mushroom::update(float pf_deltatime)
-{
-	Decor::update(pf_deltatime);
-	createMushroom();
+	sf::Vector2f const & position = getPosition();
+	float bouncingValue = computeBouncingValue(frameTime);
+	createMushroom(m_size * m_animation, position, m_color, bouncingValue, builder);
 }
