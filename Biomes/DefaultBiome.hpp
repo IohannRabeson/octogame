@@ -40,12 +40,18 @@ public:
 
 	virtual std::size_t		getRockCount();
 	virtual std::size_t		getTreeCount();
+	virtual std::size_t		getMushroomCount();
 	virtual std::size_t		getCrystalCount();
+	virtual std::size_t		getCloudCount();
 	virtual std::size_t		getSunCount();
 	virtual std::size_t		getMoonCount();
 	virtual std::size_t		getStarCount();
 	virtual std::size_t		getRainbowCount();
-	virtual std::size_t		getCloudCount();
+
+	virtual sf::Vector2f	getRockSize();
+	virtual std::size_t		getRockPartCount();
+	virtual sf::Color		getRockColor();
+	virtual bool			canCreateRock();
 
 	virtual std::size_t		getTreeDepth();
 	virtual sf::Vector2f	getTreeSize();
@@ -58,6 +64,11 @@ public:
 	virtual sf::Vector2f	getLeafSize();
 	virtual sf::Color		getLeafColor();
 
+	virtual sf::Vector2f	getMushroomSize();
+	virtual sf::Color		getMushroomColor();
+	virtual sf::Time		getMushroomLifeTime();
+	virtual bool			canCreateMushroom();
+
 	virtual sf::Vector2f	getCrystalSize();
 	virtual std::size_t		getCrystalPartCount();
 	virtual sf::Color		getCrystalColor();
@@ -67,11 +78,6 @@ public:
 	virtual float			getShineEffectRotateAngle();
 	virtual int				getCrystalPosX();
 	virtual bool			canCreateShineEffect();
-
-	virtual sf::Vector2f	getRockSize();
-	virtual std::size_t		getRockPartCount();
-	virtual sf::Color		getRockColor();
-	virtual bool			canCreateRock();
 
 	virtual sf::Vector2f	getCloudSize();
 	virtual std::size_t		getCloudPartCount();
@@ -118,6 +124,7 @@ private:
 
 	Range<std::size_t>	m_rockCount;
 	Range<std::size_t>	m_treeCount;
+	Range<std::size_t>	m_mushroomCount;
 	Range<std::size_t>	m_crystalCount;
 	Range<std::size_t>	m_starCount;
 	Range<std::size_t>	m_sunCount;
@@ -125,17 +132,22 @@ private:
 	Range<std::size_t>	m_rainbowCount;
 	Range<std::size_t>	m_cloudCount;
 
+	bool				m_canCreateRock;
 	bool				m_canCreateTree;
 	bool				m_canCreateLeaf;
 	bool				m_treeIsMoving;
+	bool				m_canCreateMushroom;
 	bool				m_canCreateCrystal;
 	bool				m_canCreateShineEffect;
-	bool				m_canCreateRock;
 	bool				m_canCreateCloud;
 	bool				m_canCreateStar;
 	bool				m_canCreateSun;
 	bool				m_canCreateMoon;
 	bool				m_canCreateRainbow;
+
+	Range<sf::Vector2f>	m_rockSize;
+	Range<std::size_t>	m_rockPartCount;
+	sf::Color			m_rockColor;
 
 	Range<std::size_t>	m_treeDepth;
 	Range<sf::Vector2f>	m_treeSize;
@@ -145,16 +157,16 @@ private:
 	Range<sf::Vector2f>	m_leafSize;
 	sf::Color			m_leafColor;
 
+	Range<sf::Vector2f>	m_mushroomSize;
+	sf::Color			m_mushroomColor;
+	Range<sf::Time>		m_mushroomLifeTime;
+
 	Range<sf::Vector2f>	m_crystalSize;
 	Range<std::size_t>	m_crystalPartCount;
 	sf::Color			m_crystalColor;
 	Range<sf::Vector2f>	m_shineEffectSize;
 	sf::Color			m_shineEffectColor;
 	Range<float>		m_shineEffectRotateAngle;
-
-	Range<sf::Vector2f>	m_rockSize;
-	Range<std::size_t>	m_rockPartCount;
-	sf::Color			m_rockColor;
 
 	Range<sf::Vector2f>	m_cloudSize;
 	Range<std::size_t>	m_cloudPartCount;
