@@ -15,7 +15,7 @@ PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_rectShape(nullptr),
 	m_groupShape(nullptr),
 	m_nbCollision(0u),
-	m_parallaxScrolling({ new GenerativeLayer(sf::Color(170, 170, 170), sf::Vector2f(0.4f, 0.4f)), new GenerativeLayer(sf::Color(200, 200, 200), sf::Vector2f(0.6f, 0.2f)) })
+	m_parallaxScrolling({ new GenerativeLayer(sf::Color(170, 170, 170), sf::Vector2f(0.4f, 0.4f), sf::Vector2u(512u, 128u)), new GenerativeLayer(sf::Color(200, 200, 200), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(512u, 128u)) })
 {}
 
 void	PhysicsMapScreen::start()

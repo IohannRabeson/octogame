@@ -1,11 +1,10 @@
 #include "ParallaxScrolling.hpp"
 
-ParallaxScrolling::ParallaxScrolling(void)
-{}
-
-ParallaxScrolling::ParallaxScrolling(std::initializer_list<ALayer *> list) :
-	m_layers(list)
-{}
+ParallaxScrolling::ParallaxScrolling(std::initializer_list<ALayer *> list)
+{
+	for (auto & layer : list)
+		addLayer(layer);
+}
 
 ParallaxScrolling::~ParallaxScrolling(void)
 {
@@ -16,22 +15,19 @@ void ParallaxScrolling::addLayer(ALayer * layer)
 {
 	if (!layer)
 		return;
-	m_layers.push_back(layer);
+	layer->init();
+	m_layers.push_back(std::move(std::unique_ptr<ALayer>(layer)));
 }
 
 void ParallaxScrolling::removeLayer(std::size_t index)
 {
 	if (index >= m_layers.size())
 		return;
-	ALayer * layer = m_layers[index];
 	m_layers.erase(m_layers.begin() + index);
-	delete layer;
 }
 
 void ParallaxScrolling::removeAllLayers(void)
 {
-	for (auto i = m_layers.begin(); i != m_layers.end(); i++)
-		delete (*i);
 	m_layers.clear();
 }
 

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/17 13:49:10 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/18 10:05:52 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,28 +27,6 @@ void	Game::setup()
 	m_biomeManager.registerBiome<DefaultBiome>("test");
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
-
-	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), -1.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.perlinNoise(x * 10.f, y, 2, 2.f);
-			});
-	layer->init();
-	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), 30.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.perlinNoise(x, y, 3, 2.f);
-			});
-	layer->init();
-	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), 30.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.noise(x * 1.1f, y);
-			});
-	layer->init();
-	m_parallaxScrolling.addLayer(layer);
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -60,6 +38,26 @@ void	Game::loadLevel(std::string const& fileName)
 	m_gameClock.setup(m_biomeManager.getCurrentBiome());
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
 	m_groundManager.init(m_biomeManager.getCurrentBiome());
+
+	sf::Vector2u const & mapSize = m_biomeManager.getCurrentBiome().getMapSize();
+	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, -1.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+			{
+				return noise.perlinNoise(x * 10.f, y, 2, 2.f);
+			});
+	m_parallaxScrolling.addLayer(layer);
+	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 30.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+			{
+				return noise.perlinNoise(x, y, 3, 2.f);
+			});
+	m_parallaxScrolling.addLayer(layer);
+	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 30.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+			{
+				return noise.noise(x * 1.1f, y);
+			});
+	m_parallaxScrolling.addLayer(layer);
 }
 
 void	Game::update(sf::Time frameTime)
