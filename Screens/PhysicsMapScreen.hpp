@@ -3,13 +3,17 @@
 
 # include <AbstractState.hpp>
 # include <GraphicsListeners.hpp>
+# include <Camera.hpp>
 # include "PhysicsEngine.hpp"
-# include "MapManager.hpp"
+# include "GroundManager.hpp"
+# include "DefaultBiome.hpp"
+# include "IContactListener.hpp"
 
 class ConvexShape;
-class CircleShape;
+class RectangleShape;
+class GroupShape;
 
-class PhysicsMapScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
+class PhysicsMapScreen : public octo::AbstractState, public octo::DefaultKeyboardListener, public IContactListener
 {
 public:
 	PhysicsMapScreen(void);
@@ -22,13 +26,18 @@ public:
 	virtual void	draw(sf::RenderTarget& render)const;
 
 private:
-	MapManager			m_mapManager;
-	PhysicsEngine &		m_engine;
-	ConvexShape *		m_shape;
-	CircleShape *		m_circle;
-	bool				m_frameByFrame;
+	PhysicsEngine &					m_engine;
+	octo::Camera &					m_camera;
+	ConvexShape *					m_shape;
+	RectangleShape *				m_rectShape;
+	std::vector<RectangleShape *>	m_shapes;
+	GroundManager					m_groundManager;
+	DefaultBiome					m_biome;
+	GroupShape *					m_groupShape;
+	std::size_t						m_nbCollision;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
+	virtual void onShapeCollision(AShape * shapeA, AShape * shapeB);
 
 };
 

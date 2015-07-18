@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 03:39:50 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 04:34:18 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/15 14:58:44 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 #include "Rock.hpp"
 #include "Tree.hpp"
 #include "Sun.hpp"
+#include "Moon.hpp"
+#include "Rainbow.hpp"
+#include "Mushroom.hpp"
 
 #include <VertexBuilder.hpp>
 
@@ -87,7 +90,8 @@ void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 	for (auto element : m_elements)
 	{
 		elementX = element->getPosition().x;
-		if (elementX >= minVisibleX && elementX <= maxVisibleX)
+		if (element->isDisabledIfOutOfScreen() == false ||
+			(elementX >= minVisibleX && elementX <= maxVisibleX))
 		{
 			element->update(frameTime, builder, *m_biome);
 		}
@@ -97,6 +101,7 @@ void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 
 void	DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
+	states.transform *= getTransform();
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 }
 
@@ -108,4 +113,7 @@ void	DecorManager::registerDecors()
 	m_factory.registerCreator<Rock>(DecorTypes::Rock);
 	m_factory.registerCreator<Tree>(DecorTypes::Tree);
 	m_factory.registerCreator<Sun>(DecorTypes::Sun);
+	m_factory.registerCreator<Moon>(DecorTypes::Moon);
+	m_factory.registerCreator<Rainbow>(DecorTypes::Rainbow);
+	m_factory.registerCreator<Mushroom>(DecorTypes::Mushroom);
 }

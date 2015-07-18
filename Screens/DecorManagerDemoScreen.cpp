@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 01:39:09 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/17 02:28:32 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/23 02:36:13 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ DecorManagerDemoScreen::DecorManagerDemoScreen() :
 	m_typeMapper["cloud"] = DecorManager::DecorTypes::Cloud;
 	m_typeMapper["sun"] = DecorManager::DecorTypes::Sun;
 	m_typeMapper["moon"] = DecorManager::DecorTypes::Moon;
+	m_typeMapper["rainbow"] = DecorManager::DecorTypes::Rainbow;
+	m_typeMapper["mushroom"] = DecorManager::DecorTypes::Mushroom;
 }
 
 void	DecorManagerDemoScreen::start()
@@ -40,32 +42,6 @@ void	DecorManagerDemoScreen::start()
 	octo::Application::getGraphicsManager().addMouseListener(this);
 	octo::Application::getGraphicsManager().addKeyboardListener(this);
 	console.addCommand(L"demo.select", this, &DecorManagerDemoScreen::selectDecorType);
-	console.addCommand(L"demo.setTreeDepth", m_biome, &TestBiome::setTreeDepth);
-	console.addCommand(L"demo.setTreeSize", m_biome, &TestBiome::setTreeSize);
-	console.addCommand(L"demo.setTreeLifeTime", m_biome, &TestBiome::setTreeLifeTime);
-	console.addCommand(L"demo.setTreeColor", m_biome, &TestBiome::setTreeColor);
-	console.addCommand(L"demo.setCanCreateTree", m_biome, &TestBiome::setCanCreateTree);
-	console.addCommand(L"demo.setCrystalSize", m_biome, &TestBiome::setCrystalSize);
-	console.addCommand(L"demo.setCrystalPartCount", m_biome, &TestBiome::setCrystalPartCount);
-	console.addCommand(L"demo.setCrystalColor", m_biome, &TestBiome::setCrystalColor);
-	console.addCommand(L"demo.setRockSize", m_biome, &TestBiome::setRockSize);
-	console.addCommand(L"demo.setRockPartCount", m_biome, &TestBiome::setRockPartCount);
-	console.addCommand(L"demo.setCanCreateRock", m_biome, &TestBiome::setCanCreateRock);
-	console.addCommand(L"demo.setCloudSize", m_biome, &TestBiome::setCloudSize);
-	console.addCommand(L"demo.setCloudPartCount", m_biome, &TestBiome::setCloudPartCount);
-	console.addCommand(L"demo.setCloudLifeTime", m_biome, &TestBiome::setCloudLifeTime);
-	console.addCommand(L"demo.setCloudColor", m_biome, &TestBiome::setCloudColor);
-	console.addCommand(L"demo.setStarSize", m_biome, &TestBiome::setStarSize);
-	console.addCommand(L"demo.setStarColor", m_biome, &TestBiome::setStarColor);
-	console.addCommand(L"demo.setStarLifeTime", m_biome, &TestBiome::setStarLifeTime);
-	console.addCommand(L"demo.setCanCreateStar", m_biome, &TestBiome::setCanCreateStar);
-	console.addCommand(L"demo.setSunSize", m_biome, &TestBiome::setSunSize);
-	console.addCommand(L"demo.setSunPartCount", m_biome, &TestBiome::setSunPartCount);
-	console.addCommand(L"demo.setSunColor", m_biome, &TestBiome::setSunColor);
-	console.addCommand(L"demo.setCanCreateSun", m_biome, &TestBiome::setCanCreateSun);
-	console.addCommand(L"demo.setMoonSize", m_biome, &TestBiome::setMoonSize);
-	console.addCommand(L"demo.setMoonColor", m_biome, &TestBiome::setMoonColor);
-	console.addCommand(L"demo.setCanCreateMoon", m_biome, &TestBiome::setCanCreateMoon);
 	m_manager.setup(&m_biome);
 }
 

@@ -1,8 +1,8 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Managers Octo Decors Physics
+DIRS = Main Firefly Screens Map Decors Physics Game Biomes
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
-BUILD_DIR = ./builds/game/
+BUILD_DIR = ./builds/game
 OUTPUT_DIR = .
 # libraries directories (ex: ../libft)
 LIB_DIRS = $(CORE_DIR)
@@ -15,9 +15,10 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_STATES)										\
 	  $(SRC_FIREFLY)									\
 	  $(SRC_MAP)										\
-	  $(SRC_MANAGERS)									\
 	  $(SRC_OCTO)										\
+	  $(SRC_BIOMES)										\
 	  $(SRC_DECORS)										\
+	  $(SRC_GAME)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp
 
@@ -29,37 +30,49 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/AudioDemoScreen.cpp				\
 				Screens/EngineScreen.cpp				\
 				Screens/PhysicsMapScreen.cpp			\
+				Screens/LightningDemoScreen.cpp			\
+				Screens/GameScreen.cpp					\
 				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/ParticleDemoScreen.cpp			\
-				Screens/StateGame.cpp
+				Screens/ResourceLoadingScreen.cpp		\
+				Screens/FsmDemoScreen.cpp
+
+SRC_GAME =		Game/Game.cpp							\
+				Game/GameClock.cpp						\
+				Game/BiomeManager.cpp					\
+				Game/FiniteStateMachine.cpp				\
+				Game/ACharacter.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
 				Firefly/FireflyPositionBehaviors.cpp
 
 SRC_MAP =		Map/Map.cpp								\
-				Map/TerrainManager.cpp					\
+				Map/GroundManager.cpp					\
+				Map/Noise.cpp							\
 				Map/MapInstance.cpp
 
-SRC_MANAGERS =	Managers/MapManager.cpp
+SRC_BIOMES =	Biomes/ABiome.cpp						\
+				Biomes/DefaultBiome.cpp
 
-SRC_OCTO =		Octo/OctoNoise.cpp
-
-SRC_DECORS =	Decors/StaticTileObject.cpp				\
-				Decors/GameObject.cpp					\
+SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/DecorManager.cpp					\
+				Decors/SkyManager.cpp					\
 				Decors/ADecor.cpp						\
-				Decors/ABiome.cpp						\
-				Decors/TestBiome.cpp					\
+				Decors/RandomGenerator.cpp				\
 				Decors/DecorAnimator.cpp				\
 				Decors/Crystal.cpp						\
 				Decors/ShineBuilder.cpp					\
 				Decors/ShineEffect.cpp					\
 				Decors/Star.cpp							\
+				Decors/Rainbow.cpp						\
 				Decors/Cloud.cpp						\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\
 				Decors/Sun.cpp							\
+				Decors/Mushroom.cpp						\
+				Decors/Moon.cpp							\
+				Decors/Lightning.cpp					\
 				Decors/RainSystem.cpp
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
@@ -70,6 +83,7 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/TileShape.cpp					\
 				Physics/PhysicsEngine.cpp				\
 				Physics/ShapeBuilder.cpp				\
+				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp
 
 # package files

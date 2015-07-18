@@ -1,0 +1,22 @@
+digraph G
+{
+	node [shape=box];
+	0 [label="attente"];
+	1 [label="saut montant"];
+	2 [label="danse"];
+	3 [label="marcher"];
+	6 [label="saut descendant"];
+	8 [label="double saut ascendant"];
+	7 [label="parachute"];
+	9 [label="ascenseur"];
+	10 [label="mort"];
+
+	0 -> { 1, 2, 3, 9, 10 }
+	1 -> { 8, 6, 9, 10 }
+	2 -> { 0, 9, 10 }
+	3 -> { 1, 0, 9, 10 }
+	6 -> { 7, 0, 9, 10 }
+	8 -> { 6, 10 }
+	7 -> { 6, 0, 9, 10 }
+	9 -> { 6, 10 }
+}

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 18:41:27 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/18 00:30:25 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/23 04:17:26 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ public:
 
 	PointHandle(sf::Color const& color = sf::Color::Green,
 				float radius = 8.f) :
-		m_shape(8.f, 32),
+		m_shape(radius, 32),
+		m_radius(radius),
 		m_handled(false)
 	{
-		m_shape.setOrigin(sf::Vector2f(radius / 2.f, radius / 2.f));
 		m_shape.setFillColor(sf::Color::Transparent);
 		m_shape.setOutlineColor(color);
 		setHandled(false);
@@ -46,6 +46,7 @@ public:
 	void	setHandled(bool handled)
 	{
 		m_shape.setOutlineThickness((handled) ? 4.f : 2.f);
+		m_shape.setOrigin(sf::Vector2f(m_radius, m_radius));
 		m_handled = handled;
 	}
 
@@ -57,6 +58,15 @@ public:
 	bool	hitTest(sf::Vector2f const& position)const
 	{
 		return (m_shape.getGlobalBounds().contains(position));
+	}
+
+	void	setPosition(sf::Vector2f const& position, bool forceCallback)
+	{
+		if (forceCallback == false && isHandled() == false)
+			return;
+		m_shape.setPosition(position);
+		if (m_moveCallback)
+			m_moveCallback(position);
 	}
 
 	void	setPosition(sf::Vector2f const& position)
@@ -73,13 +83,14 @@ public:
 		return (m_shape.getPosition());
 	}
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates()) const
 	{
 		target.draw(m_shape, states);
 	}
 private:
 	sf::CircleShape	m_shape;
 	MoveCallback	m_moveCallback;
+	float			m_radius;
 	bool			m_handled;
 };
 

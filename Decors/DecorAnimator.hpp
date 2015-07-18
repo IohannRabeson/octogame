@@ -27,6 +27,7 @@ public:
 	void			pause(void);
 	void			play(void);
 	void			sleep(void);
+	void			die(void);
 	void			setup(sf::Time lifeTime = sf::seconds(1.f));
 	bool			update(sf::Time frameTime);
 	float			getAnimation(void) const;
@@ -53,10 +54,6 @@ private:
 
 	bool			computeState(float frameTime);
 	void			computeBeat(float frameTime);
-
-private:
-	static			std::mt19937 m_engine;
-	static float	randomFloat(float min, float max);
 };
 
 #endif

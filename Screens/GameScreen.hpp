@@ -1,33 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   StateGame.hpp                                      :+:      :+:    :+:   */
+/*   GameScreen.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/04/15 19:28:19 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/31 16:50:18 by pciavald         ###   ########.fr       */
+/*   Created: 2015/06/24 05:54:08 by irabeson          #+#    #+#             */
+/*   Updated: 2015/06/24 06:07:37 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STATEGAME_HPP
-# define STATEGAME_HPP
+#ifndef GAMESCREEN_HPP
+# define GAMESCREEN_HPP
 # include <AbstractState.hpp>
-# include "MapManager.hpp"
+# include <GraphicsListeners.hpp>
+# include <Camera.hpp>
 
-class StateGame : public octo::AbstractState
+# include "Game.hpp"
+
+class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
-public:
 	virtual void	start();
 	virtual void	pause();
 	virtual void	resume();
 	virtual void	stop();
-	virtual void	update(sf::Time p_deltatime);
+	virtual void	update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render)const;
-
 private:
-	MapManager			m_mapManager;
-	sf::RectangleShape	m_back;
+	Game			m_game;
+
+	virtual bool onPressed(sf::Event::KeyEvent const & event);
 };
 
 #endif

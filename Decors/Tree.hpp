@@ -33,6 +33,7 @@ private:
 	std::vector<float>			m_refAngle;
 	std::size_t					m_count;
 	std::size_t					m_angleMaxCount;
+	float						m_mapSizeY;
 
 	DecorAnimator				m_animator;
 	float						m_animation;
@@ -57,6 +58,11 @@ private:
 							float const deltaColor,
 							octo::VertexBuilder & builder);
 
+	void createTrunk(sf::Vector2f const & size,
+						sf::Vector2f const & center,
+						sf::Color const & color,
+						octo::VertexBuilder & builder);
+
 	void createLeaf(std::vector<QuadValue> const & quads,
 					sf::Color const & color,
 					float const deltaColor,
@@ -73,14 +79,9 @@ private:
 	void newTree(ABiome& biome);
 
 private:
-	static std::default_random_engine	m_engine;
-	static std::bernoulli_distribution	m_distribution;
-
 	static void rotateVec(sf::Vector2f & vector,
 							float const cosAngle,
 							float const sinAngle);
-
-	static bool getGrowSide(void);
 };
 
 #endif
