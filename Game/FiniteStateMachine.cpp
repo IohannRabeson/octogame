@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/03 14:51:35 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/03 17:45:31 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/03 19:51:48 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,16 @@
 FiniteStateMachine::FiniteStateMachine() :
 	m_isRunning(false)
 {
+}
+
+FiniteStateMachine::StatePtr const&	FiniteStateMachine::getCurrentState()const
+{
+	return (m_current);
+}
+
+FiniteStateMachine::StatePtr const& FiniteStateMachine::getStartState()const
+{
+	return (m_startState);
 }
 
 void	FiniteStateMachine::addTransition(EventId eventId, StatePtr source, StatePtr target, TransitionCallback callback)

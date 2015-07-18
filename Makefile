@@ -41,7 +41,8 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/GameClock.cpp						\
 				Game/BiomeManager.cpp					\
 				Game/FiniteStateMachine.cpp				\
-				Game/AGameObject.cpp
+				Game/AGameObject.cpp			\
+				Game/ACharacter.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
