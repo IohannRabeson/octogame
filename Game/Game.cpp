@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/18 10:05:52 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/18 10:27:39 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ void	Game::loadLevel(std::string const& fileName)
 				return noise.perlinNoise(x * 10.f, y, 2, 2.f);
 			});
 	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 30.f);
+	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 			{
 				return noise.perlinNoise(x, y, 3, 2.f);
 			});
 	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 30.f);
+	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 			{
 				return noise.noise(x * 1.1f, y);

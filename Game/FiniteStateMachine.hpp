@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/03 14:24:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/03 17:45:48 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/14 20:12:54 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,14 @@ public:
 	/*!	Null event idenitifier */
 	static constexpr EventId const	NullEvent = std::numeric_limits<EventId>::max();
 
-
 	/*!	Create an empty state machine */
 	FiniteStateMachine();
 
-	StatePtr const&	getCurrentState()const
-	{
-		return (m_current);
-	}
+	/*!	Get the current state or null if the machine is stopped */
+	StatePtr const&	getCurrentState()const;
+
+	/*!	Get the start state */
+	StatePtr const& getStartState()const;
 
 	/*!	Add a transition between 2 nodes
 	 *
@@ -62,12 +62,12 @@ public:
 	 */
 	void		addTransition(EventId eventId, StatePtr source, StatePtr target, TransitionCallback callback = TransitionCallback());
 
-	/*!	Define the event will be triggered by next call to update() */
+	/*!	Define the event that will be triggered by next call to update() */
 	void		setNextEvent(EventId eventId);
 
 	/*!	Update the automaton
 	 *
-	 *	Call update method of the current state.
+	 *	If a change has been programmed then performes it.<br>
 	 */
 	void		update(sf::Time frameTime);
 
@@ -78,6 +78,7 @@ public:
 	 *	
 	 *	This method requiere a non null start state.
 	 *	\see setStart()
+	 *	\see isReady()
 	 */
 	void		start();
 	
@@ -125,7 +126,7 @@ private:
 	std::string		m_name;
 };
 
-/*!	Transition between two state
+/*!	Transition between two states
  *	
  *	When a transition is triggered a callback function is called.
  */

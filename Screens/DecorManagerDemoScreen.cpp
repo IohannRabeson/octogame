@@ -31,6 +31,7 @@ DecorManagerDemoScreen::DecorManagerDemoScreen() :
 	m_typeMapper["sun"] = DecorManager::DecorTypes::Sun;
 	m_typeMapper["moon"] = DecorManager::DecorTypes::Moon;
 	m_typeMapper["rainbow"] = DecorManager::DecorTypes::Rainbow;
+	m_typeMapper["mushroom"] = DecorManager::DecorTypes::Mushroom;
 }
 
 void	DecorManagerDemoScreen::start()

@@ -82,7 +82,7 @@ void GenerativeLayer::computeVertices(std::vector<sf::Vector2f> & positions)
 void GenerativeLayer::swap(void)
 {
 	m_positions.swap(m_positionsPrev);
-	m_depth += 1.f;
+	m_depth += 0.03f;
 	computeVertices(m_positions);
 }
 

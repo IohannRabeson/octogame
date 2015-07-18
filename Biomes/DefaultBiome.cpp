@@ -16,6 +16,7 @@ DefaultBiome::DefaultBiome() :
 
 	m_rockCount(10u, 20u),
 	m_treeCount(5u, 10u),
+	m_mushroomCount(3u, 40u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 3u),
@@ -23,17 +24,22 @@ DefaultBiome::DefaultBiome() :
 	m_rainbowCount(3u, 6u),
 	m_cloudCount(20u, 40u),
 
+	m_canCreateRock(true),
 	m_canCreateTree(true),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
+	m_canCreateMushroom(true),
 	m_canCreateCrystal(true),
 	m_canCreateShineEffect(true),
-	m_canCreateRock(true),
 	m_canCreateCloud(true),
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+
+	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(40.f, 200.f)),
+	m_rockPartCount(2.f, 10.f),
+	m_rockColor(107, 172, 166),
 
 	m_treeDepth(6u, 8u),
 	m_treeSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 150.f)),
@@ -43,16 +49,16 @@ DefaultBiome::DefaultBiome() :
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(150.f, 150.f)),
 	m_leafColor(143, 208, 202),
 
+	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
+	m_mushroomColor(107, 172, 166),
+	m_mushroomLifeTime(sf::seconds(20), sf::seconds(60)),
+
 	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 100.f)),
 	m_crystalPartCount(2u, 8u),
 	m_crystalColor(230, 168, 0, 150),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
-
-	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(40.f, 200.f)),
-	m_rockPartCount(2.f, 10.f),
-	m_rockColor(107, 172, 166),
 
 	m_cloudSize(sf::Vector2f(100.f, 10.f), sf::Vector2f(400.f, 60.f)),
 	m_cloudPartCount(2u, 10u),
@@ -133,6 +139,11 @@ std::size_t		DefaultBiome::getRockCount()
 std::size_t		DefaultBiome::getTreeCount()
 {
 	return (randomRangeInt(m_treeCount));
+}
+
+std::size_t		DefaultBiome::getMushroomCount()
+{
+	return (randomRangeInt(m_mushroomCount));
 }
 
 std::size_t		DefaultBiome::getCrystalCount()
@@ -285,6 +296,26 @@ sf::Color		DefaultBiome::getRockColor()
 bool			DefaultBiome::canCreateRock()
 {
 	return (m_canCreateRock);
+}
+
+sf::Vector2f	DefaultBiome::getMushroomSize()
+{
+	return (randomRangeVector2f(m_mushroomSize));
+}
+
+sf::Color		DefaultBiome::getMushroomColor()
+{
+	return (m_mushroomColor);
+}
+
+sf::Time		DefaultBiome::getMushroomLifeTime()
+{
+	return (randomRangeTime(m_mushroomLifeTime));
+}
+
+bool			DefaultBiome::canCreateMushroom()
+{
+	return (m_canCreateMushroom);
 }
 
 sf::Vector2f	DefaultBiome::getCloudSize()
