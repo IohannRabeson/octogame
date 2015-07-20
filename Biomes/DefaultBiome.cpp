@@ -23,6 +23,7 @@ DefaultBiome::DefaultBiome() :
 	m_moonCount(1u, 3u),
 	m_rainbowCount(3u, 6u),
 	m_cloudCount(20u, 40u),
+	m_groundRockCount(100u, 200u),
 
 	m_canCreateRock(true),
 	m_canCreateTree(true),
@@ -174,6 +175,11 @@ std::size_t		DefaultBiome::getRainbowCount()
 std::size_t		DefaultBiome::getCloudCount()
 {
 	return (randomRangeInt(m_cloudCount));
+}
+
+std::size_t		DefaultBiome::getGroundRockCount()
+{
+	return (randomRangeInt(m_groundRockCount));
 }
 
 std::size_t	DefaultBiome::getTreeDepth()

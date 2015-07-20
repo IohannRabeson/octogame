@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/03 17:32:47 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/17 15:28:58 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #include "DecorManagerDemoScreen.hpp"
 #include "ParticleDemoScreen.hpp"
 #include "FsmDemoScreen.hpp"
+#include "AGameObject.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {

@@ -47,6 +47,7 @@ public:
 	virtual std::size_t		getSunCount() = 0;
 	virtual std::size_t		getMoonCount() = 0;
 	virtual std::size_t		getRainbowCount() = 0;
+	virtual std::size_t		getGroundRockCount() = 0;
 
 	virtual sf::Vector2f	getRockSize() = 0;
 	virtual std::size_t		getRockPartCount() = 0;

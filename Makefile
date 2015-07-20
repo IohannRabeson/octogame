@@ -39,7 +39,8 @@ SRC_STATES =	Screens/StateTest.cpp					\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/GameClock.cpp						\
-				Game/BiomeManager.cpp
+				Game/BiomeManager.cpp					\
+				Game/AGameObject.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -70,8 +71,9 @@ SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\
 				Decors/Sun.cpp							\
-				Decors/Mushroom.cpp						\
 				Decors/Moon.cpp							\
+				Decors/Mushroom.cpp						\
+				Decors/GroundRock.cpp					\
 				Decors/Lightning.cpp					\
 				Decors/RainSystem.cpp
 
