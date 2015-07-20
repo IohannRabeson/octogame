@@ -21,7 +21,7 @@ DefaultBiome::DefaultBiome() :
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 3u),
 	m_moonCount(1u, 3u),
-	m_rainbowCount(3u, 6u),
+	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
 
 	m_canCreateRock(true),
@@ -80,7 +80,7 @@ DefaultBiome::DefaultBiome() :
 	m_rainbowThickness(50.f, 100.f),
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
-	m_rainbowGrowTime(sf::seconds(4.f), sf::seconds(8.f))
+	m_rainbowGrowTime(sf::seconds(6.f), sf::seconds(10.f))
 {
 	m_generator.setSeed(m_name);
 }

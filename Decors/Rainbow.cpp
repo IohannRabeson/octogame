@@ -148,7 +148,7 @@ void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	sf::Vector2f const & position = getPosition();
 	computeInterpolateValues(frameTime, m_interpolateValues);
 	// position - m_endPosition make the arrival be the origin
-	createRainbow(position - m_endPosition, m_sizes, m_stripeCount, m_thickness, m_colors, builder);
+	createRainbow(position - m_endPosition + sf::Vector2f(0.f, m_thickness), m_sizes, m_stripeCount, m_thickness, m_colors, builder);
 }
 
 void Rainbow::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
