@@ -1,5 +1,4 @@
 #include "Noise.hpp"
-#include <iostream>
 #include <cmath>
 #include <random>
 #include <algorithm>
