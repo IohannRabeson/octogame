@@ -3,6 +3,7 @@
 #include "RectangleShape.hpp"
 #include "CircleShape.hpp"
 #include "GroupShape.hpp"
+#include "GenerativeLayer.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 
@@ -10,9 +11,9 @@ PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_engine(PhysicsEngine::getInstance()),
 	m_camera(octo::Application::getCamera()),
 	m_shape(nullptr),
-	m_rectShape(nullptr),
 	m_groupShape(nullptr),
-	m_nbCollision(0u)
+	m_nbCollision(0u),
+	m_parallaxScrolling({ new GenerativeLayer(sf::Color(170, 170, 170), sf::Vector2f(0.4f, 0.4f), sf::Vector2u(512u, 128u)), new GenerativeLayer(sf::Color(200, 200, 200), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(512u, 128u)) })
 {}
 
 void	PhysicsMapScreen::start()
@@ -36,11 +37,6 @@ void	PhysicsMapScreen::start()
 	m_shape->setVertex(1u, sf::Vector2f(40.f, 0.f));
 	m_shape->setVertex(2u, sf::Vector2f(40.f, 60.f));
 	m_shape->setVertex(3u, sf::Vector2f(0.f, 60.f));
-
-	m_rectShape = m_engine.createRectangle();
-	m_rectShape->setSize(100.f, 50.f);
-	m_rectShape->setPosition(100.f, 600.f);
-	m_rectShape->setApplyGravity(false);
 
 	for (std::size_t i = 0u; i < 10; i++)
 	{
@@ -94,7 +90,6 @@ void	PhysicsMapScreen::stop()
 {
 }
 
-#include <iostream>
 void	PhysicsMapScreen::update(sf::Time deltatime)
 {
 	float speed = 200.f * deltatime.asSeconds();
@@ -122,7 +117,7 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 		m_camera.move(0.f, cameraSpeed);
 
 	m_engine.update(deltatime.asSeconds());
-	std::cout << m_nbCollision << std::endl;
+	m_parallaxScrolling.update(deltatime.asSeconds());
 }
 
 void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)
@@ -150,7 +145,9 @@ bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const & event)
 
 void	PhysicsMapScreen::draw(sf::RenderTarget& render)const
 {
+	sf::RenderStates states;
 	render.clear(sf::Color::Black);
+	m_parallaxScrolling.draw(render, states);
 	render.draw(m_groundManager);
 	m_engine.debugDraw(render);
 }
