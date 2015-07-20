@@ -109,18 +109,13 @@ void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf
 	if (biome.canCreateCloud())
 	{
 		m_cloudCount = biome.getCloudCount();
-		m_originCloudsBack.resize(m_cloudCount);
-		for (size_t i = 0; i < m_cloudCount; i++)
-		{
-			m_decorManagerBack.add(DecorManager::DecorTypes::Cloud);
-			m_originCloudsBack[i].x = biome.randomFloat(cameraCenter.x - cameraSize.x, cameraCenter.x + cameraSize.x);
-			m_originCloudsBack[i].y = biome.randomFloat(cameraSize.y / 2.f, -mapSize.y);
-		}
 		m_originCloudsFront.resize(m_cloudCount);
+		float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
+		float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
 		for (size_t i = 0; i < m_cloudCount; i++)
 		{
 			m_decorManagerFront.add(DecorManager::DecorTypes::Cloud);
-			m_originCloudsFront[i].x = biome.randomFloat(cameraCenter.x - cameraSize.x, cameraCenter.x + cameraSize.x);
+			m_originCloudsFront[i].x = biome.randomFloat(leftLimit, rightLimit);
 			m_originCloudsFront[i].y = biome.randomFloat(cameraSize.y / 2.f, -mapSize.y);
 		}
 	}
@@ -168,24 +163,16 @@ void SkyManager::update(sf::Time frameTime)
 		decorBack++;
 
 	float windMove = m_wind * frameTime.asSeconds();
-	for (auto it = m_originCloudsBack.begin(); it != m_originCloudsBack.end(); it++)
-	{
-		it->x += windMove;
-		if (it->x >= cameraCenter.x + cameraSize.x)
-			it->x = cameraCenter.x - cameraSize.x;
-		else if (it->x <= cameraCenter.x - cameraSize.x)
-			it->x = cameraCenter.x + cameraSize.x;
-		(*decorBack)->setPosition(*it);
-		decorBack++;
-	}
+	float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
+	float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
 	DecorManager::Iterator decorFront = m_decorManagerFront.begin();
 	for (auto it = m_originCloudsFront.begin(); it != m_originCloudsFront.end(); it++)
 	{
 		it->x += windMove;
-		if (it->x >= cameraCenter.x + cameraSize.x)
-			it->x = cameraCenter.x - cameraSize.x;
-		else if (it->x <= cameraCenter.x - cameraSize.x)
-			it->x = cameraCenter.x + cameraSize.x;
+		if (it->x >= rightLimit)
+			it->x = leftLimit;
+		else if (it->x <= leftLimit)
+			it->x = rightLimit;
 		(*decorFront)->setPosition(*it);
 		decorFront++;
 	}
