@@ -6,12 +6,13 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 02:40:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/15 15:13:14 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/17 15:33:39 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ADECOR_HPP
 # define ADECOR_HPP
+# include "AGameObject.hpp"
 
 # include <VertexBuilder.hpp>
 
@@ -20,7 +21,7 @@
 
 class ABiome;
 
-class ADecor
+class ADecor : public AGameObject<GameObjectType::Decor>
 {
 public:
 	virtual ~ADecor();
