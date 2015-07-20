@@ -9,9 +9,9 @@ GroundRock::GroundRock(void) :
 {
 }
 
-void GroundRock::createGroundRock(std::size_t type, sf::Vector2f const & origin, sf::Color color, octo::VertexBuilder& builder)
+void GroundRock::createGroundRock(std::size_t type, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	sf::Vector2f upLeft(0.f, 0.f);;
+	sf::Vector2f upLeft(0.f, 0.f);
 	sf::Vector2f upRight(Tile::TileSize, 0.f);
 	sf::Vector2f downLeft(0.f, Tile::TileSize);
 	sf::Vector2f downRight(Tile::TileSize, Tile::TileSize);

@@ -22,7 +22,7 @@ private:
 
 	void createGroundRock(std::size_t type,
 					sf::Vector2f const & origin,
-					sf::Color color,
+					sf::Color const & color,
 					octo::VertexBuilder& builder);
 };
 
