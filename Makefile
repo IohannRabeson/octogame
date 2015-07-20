@@ -40,7 +40,8 @@ SRC_STATES =	Screens/StateTest.cpp					\
 SRC_GAME =		Game/Game.cpp							\
 				Game/GameClock.cpp						\
 				Game/BiomeManager.cpp					\
-				Game/FiniteStateMachine.cpp
+				Game/FiniteStateMachine.cpp				\
+				Game/ACharacter.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -49,6 +50,8 @@ SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\
 				Map/Noise.cpp							\
+				Map/ParallaxScrolling.cpp				\
+				Map/GenerativeLayer.cpp					\
 				Map/MapInstance.cpp
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\

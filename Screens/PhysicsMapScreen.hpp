@@ -8,6 +8,7 @@
 # include "GroundManager.hpp"
 # include "DefaultBiome.hpp"
 # include "IContactListener.hpp"
+# include "ParallaxScrolling.hpp"
 
 class ConvexShape;
 class RectangleShape;
@@ -29,12 +30,12 @@ private:
 	PhysicsEngine &					m_engine;
 	octo::Camera &					m_camera;
 	ConvexShape *					m_shape;
-	RectangleShape *				m_rectShape;
 	std::vector<RectangleShape *>	m_shapes;
 	GroundManager					m_groundManager;
 	DefaultBiome					m_biome;
 	GroupShape *					m_groupShape;
 	std::size_t						m_nbCollision;
+	ParallaxScrolling				m_parallaxScrolling;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 	virtual void onShapeCollision(AShape * shapeA, AShape * shapeB);
