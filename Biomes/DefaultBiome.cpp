@@ -12,7 +12,7 @@ DefaultBiome::DefaultBiome() :
 	//Day and night durations needs to be the same for the moment
 	m_dayDuration(sf::seconds(15.f)),
 	m_nightDuration(sf::seconds(15.f)),
-	m_wind(50.f, 100.f),
+	m_wind(100.f, 150.f),
 
 	m_rockCount(10u, 20u),
 	m_treeCount(5u, 10u),
@@ -60,10 +60,10 @@ DefaultBiome::DefaultBiome() :
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(100.f, 10.f), sf::Vector2f(400.f, 60.f)),
-	m_cloudPartCount(2u, 10u),
-	m_cloudLifeTime(sf::seconds(15), sf::seconds(60)),
-	m_cloudColor(255, 255, 255),
+	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
+	m_cloudPartCount(6u, 10u),
+	m_cloudLifeTime(sf::seconds(15), sf::seconds(20)),
+	m_cloudColor(255, 255, 255, 200),
 
 	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),

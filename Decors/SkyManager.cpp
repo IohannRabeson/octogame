@@ -104,7 +104,7 @@ void SkyManager::setupRainbow(ABiome & biome, sf::Vector2f const & cameraSize, s
 	}
 }
 
-void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & mapSize)
+void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & cameraCenter, sf::Vector2f const & mapSize)
 {
 	if (biome.canCreateCloud())
 	{
@@ -113,14 +113,14 @@ void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf
 		for (size_t i = 0; i < m_cloudCount; i++)
 		{
 			m_decorManagerBack.add(DecorManager::DecorTypes::Cloud);
-			m_originCloudsBack[i].x = biome.randomFloat(0.f, mapSize.x);
+			m_originCloudsBack[i].x = biome.randomFloat(cameraCenter.x - cameraSize.x, cameraCenter.x + cameraSize.x);
 			m_originCloudsBack[i].y = biome.randomFloat(cameraSize.y / 2.f, -mapSize.y);
 		}
 		m_originCloudsFront.resize(m_cloudCount);
 		for (size_t i = 0; i < m_cloudCount; i++)
 		{
 			m_decorManagerFront.add(DecorManager::DecorTypes::Cloud);
-			m_originCloudsFront[i].x = biome.randomFloat(0.f, mapSize.x);
+			m_originCloudsFront[i].x = biome.randomFloat(cameraCenter.x - cameraSize.x, cameraCenter.x + cameraSize.x);
 			m_originCloudsFront[i].y = biome.randomFloat(cameraSize.y / 2.f, -mapSize.y);
 		}
 	}
@@ -142,13 +142,15 @@ void SkyManager::setup(ABiome & biome, GameClock & clock)
 	setupStars(biome, cameraSize);
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
 	setupRainbow(biome, cameraSize, m_mapSizeFloat);
-	setupClouds(biome, cameraSize, m_mapSizeFloat);
+	setupClouds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
 }
 
 void SkyManager::update(sf::Time frameTime)
 {
 	octo::Camera const & camera = octo::Application::getCamera();
 	sf::FloatRect const & rec = camera.getRectangle();
+	sf::Vector2f cameraCenter = camera.getCenter();
+	sf::Vector2f cameraSize = camera.getSize();
 	sf::Vector2f offsetCamera(rec.left, rec.top);
 	float angle = m_clock->getCycleValue() * 360.f * octo::Deg2Rad;
 	float cos = std::cos(angle);
@@ -169,7 +171,10 @@ void SkyManager::update(sf::Time frameTime)
 	for (auto it = m_originCloudsBack.begin(); it != m_originCloudsBack.end(); it++)
 	{
 		it->x += windMove;
-		//TODO: make a loop with position (ju?)
+		if (it->x >= cameraCenter.x + cameraSize.x)
+			it->x = cameraCenter.x - cameraSize.x;
+		else if (it->x <= cameraCenter.x - cameraSize.x)
+			it->x = cameraCenter.x + cameraSize.x;
 		(*decorBack)->setPosition(*it);
 		decorBack++;
 	}
@@ -177,7 +182,10 @@ void SkyManager::update(sf::Time frameTime)
 	for (auto it = m_originCloudsFront.begin(); it != m_originCloudsFront.end(); it++)
 	{
 		it->x += windMove;
-		//TODO: make a loop with position (ju?)
+		if (it->x >= cameraCenter.x + cameraSize.x)
+			it->x = cameraCenter.x - cameraSize.x;
+		else if (it->x <= cameraCenter.x - cameraSize.x)
+			it->x = cameraCenter.x + cameraSize.x;
 		(*decorFront)->setPosition(*it);
 		decorFront++;
 	}
