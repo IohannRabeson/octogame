@@ -10,8 +10,7 @@ DefaultBiome::DefaultBiome() :
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
 	//Day and night durations needs to be the same for the moment
-	m_dayDuration(sf::seconds(15.f)),
-	m_nightDuration(sf::seconds(15.f)),
+	m_dayDuration(sf::seconds(40.f)),
 	m_wind(50.f, 100.f),
 
 	m_rockCount(10u, 20u),
@@ -120,11 +119,6 @@ int				DefaultBiome::getBossInstancePosX()
 sf::Time		DefaultBiome::getDayDuration()
 {
 	return (m_dayDuration);
-}
-
-sf::Time		DefaultBiome::getNightDuration()
-{
-	return (m_nightDuration);
 }
 
 float			DefaultBiome::getWind()

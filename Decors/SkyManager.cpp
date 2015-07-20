@@ -3,6 +3,8 @@
 #include "ABiome.hpp"
 #include "ADecor.hpp"
 #include "Star.hpp"
+#include "Sky.hpp"
+#include "DayNightLight.hpp"
 
 #include <Math.hpp>
 #include <Application.hpp>
@@ -139,10 +141,12 @@ void SkyManager::setup(ABiome & biome, GameClock & clock)
 	m_mapSizeFloat = biome.getMapSizeFloat();
 	m_wind = biome.getWind();
 
+	m_decorManagerBack.add(new Sky(m_clock));
 	setupStars(biome, cameraSize);
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
 	setupRainbow(biome, cameraSize, m_mapSizeFloat);
 	setupClouds(biome, cameraSize, m_mapSizeFloat);
+	m_decorManagerFront.add(new DayNightLight(m_clock));
 }
 
 void SkyManager::update(sf::Time frameTime)
@@ -155,6 +159,8 @@ void SkyManager::update(sf::Time frameTime)
 	float sin = std::sin(angle);
 
 	DecorManager::Iterator decorBack = m_decorManagerBack.begin();
+	(*decorBack)->setPosition(camera.getCenter());
+	decorBack++;
 	for (auto it = m_originStars.begin(); it != m_originStars.end(); it++)
 		setRotatePosition(decorBack++, *it + m_originRotateStar, m_originRotateStar, offsetCamera, cos, sin);
 	for (auto it = m_originSuns.begin(); it != m_originSuns.end(); it++)
@@ -181,6 +187,7 @@ void SkyManager::update(sf::Time frameTime)
 		(*decorFront)->setPosition(*it);
 		decorFront++;
 	}
+	(*decorFront)->setPosition(camera.getCenter());
 	m_decorManagerBack.update(frameTime, camera);
 	m_decorManagerFront.update(frameTime, camera);
 }

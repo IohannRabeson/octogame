@@ -35,7 +35,6 @@ public:
 	virtual int				getBossInstancePosX();
 
 	virtual sf::Time		getDayDuration();
-	virtual sf::Time		getNightDuration();
 	virtual float			getWind();
 
 	virtual std::size_t		getRockCount();
@@ -120,7 +119,6 @@ private:
 	std::size_t			m_bossInstancePosX;
 
 	sf::Time			m_dayDuration;
-	sf::Time			m_nightDuration;
 	Range<float>		m_wind;
 
 	Range<std::size_t>	m_rockCount;

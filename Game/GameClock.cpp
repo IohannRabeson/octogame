@@ -3,7 +3,9 @@
 
 GameClock::GameClock(void) :
 	m_isDay(true),
-	m_isNight(false)
+	m_isMidDay(false),
+	m_isNight(false),
+	m_isMidNight(false)
 {
 }
 
@@ -19,11 +21,7 @@ float GameClock::getNightValue(void) const
 
 float GameClock::getCycleValue(void) const
 {
-	if (m_isDay)
-		return (m_timerDay / (m_timerDayMax + m_timerNightMax));
-	else if (m_isNight)
-		return ((m_timerDayMax + m_timerNight) / (m_timerDayMax + m_timerNightMax));
-	return 0.f;
+	return m_timer / m_timerMax;
 }
 
 bool GameClock::isDay(void) const
@@ -38,30 +36,54 @@ bool GameClock::isNight(void) const
 
 void GameClock::setup(ABiome & biome)
 {
-	m_timerDayMax = biome.getDayDuration();
-	m_timerNightMax = biome.getNightDuration();
+	m_timerMax = biome.getDayDuration();
+	m_timerDayMax = m_timerMax / 4.f;
+	m_timerNightMax = m_timerMax / 4.f;
 }
 
 void GameClock::update(sf::Time frameTime)
 {
+	m_timer += frameTime;
+	if (m_timer >= m_timerMax)
+		m_timer = sf::Time::Zero;
 	if (m_isDay)
 	{
-		m_timerDay += frameTime;
-		if (m_timerDay >= m_timerDayMax)
+		if (m_isMidDay == false)
 		{
-			m_timerDay = sf::Time::Zero;
-			m_isNight = true;
-			m_isDay = false;
+			m_timerDay += frameTime;
+			if (m_timerDay >= m_timerDayMax)
+				m_isMidDay = true;
+		}
+		else
+		{
+			m_timerDay -= frameTime;
+			if (m_timerDay <= sf::Time::Zero)
+			{
+				m_timerDay = sf::Time::Zero;
+				m_isMidDay = false;
+				m_isNight = true;
+				m_isDay = false;
+			}
 		}
 	}
-	else if (m_isNight)
+	if (m_isNight)
 	{
-		m_timerNight += frameTime;
-		if (m_timerNight >= m_timerNightMax)
+		if (m_isMidNight == false)
 		{
-			m_timerNight = sf::Time::Zero;
-			m_isNight = false;
-			m_isDay = true;
+			m_timerNight += frameTime;
+			if (m_timerNight >= m_timerNightMax)
+				m_isMidNight = true;
+		}
+		else
+		{
+			m_timerNight -= frameTime;
+			if (m_timerNight <= sf::Time::Zero)
+			{
+				m_isNight = false;
+				m_timerNight = sf::Time::Zero;
+				m_isMidNight = false;
+				m_isDay = true;
+			}
 		}
 	}
 }

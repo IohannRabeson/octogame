@@ -35,7 +35,6 @@ public:
 	virtual int				getBossInstancePosX() = 0;
 
 	virtual sf::Time		getDayDuration() = 0;
-	virtual sf::Time		getNightDuration() = 0;
 	virtual float			getWind() = 0;
 
 	virtual std::size_t		getRockCount() = 0;
