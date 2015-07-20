@@ -166,13 +166,13 @@ else
 endif
 
 core_library:
-	@make -s -C $(CORE_DIR) MODE=$(MODE)
+	@make -s -C $(CORE_DIR) MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 clean_core_library:
-	@make -s -C $(CORE_DIR) clean MODE=$(MODE)
+	@make -s -C $(CORE_DIR) clean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 fclean_core_library:
-	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
+	@make -s -C $(CORE_DIR) fclean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 package: $(PACKAGE_FILE)
 	
@@ -181,7 +181,7 @@ $(PACKAGE_FILE):
 	$(PACKAGER) $(PACKAGE_FILE) -h Main/ResourceDefinitions.hpp ./resources/*
 
 complete:
-	make complete -C octolib/ MODE=$(MODE)
+	make complete -C octolib/ MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 	make re
 
 static-check:
