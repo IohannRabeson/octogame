@@ -6,13 +6,11 @@
 #include "GenerativeLayer.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
-#include <iostream>
 
 PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_engine(PhysicsEngine::getInstance()),
 	m_camera(octo::Application::getCamera()),
 	m_shape(nullptr),
-	m_rectShape(nullptr),
 	m_groupShape(nullptr),
 	m_nbCollision(0u),
 	m_parallaxScrolling({ new GenerativeLayer(sf::Color(170, 170, 170), sf::Vector2f(0.4f, 0.4f), sf::Vector2u(512u, 128u)), new GenerativeLayer(sf::Color(200, 200, 200), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(512u, 128u)) })
@@ -39,11 +37,6 @@ void	PhysicsMapScreen::start()
 	m_shape->setVertex(1u, sf::Vector2f(40.f, 0.f));
 	m_shape->setVertex(2u, sf::Vector2f(40.f, 60.f));
 	m_shape->setVertex(3u, sf::Vector2f(0.f, 60.f));
-
-	m_rectShape = m_engine.createRectangle();
-	m_rectShape->setSize(100.f, 50.f);
-	m_rectShape->setPosition(100.f, 600.f);
-	m_rectShape->setApplyGravity(false);
 
 	for (std::size_t i = 0u; i < 10; i++)
 	{
@@ -125,7 +118,6 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 
 	m_engine.update(deltatime.asSeconds());
 	m_parallaxScrolling.update(deltatime.asSeconds());
-	//std::cout << m_nbCollision << std::endl;
 }
 
 void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)

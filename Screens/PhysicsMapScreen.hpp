@@ -30,7 +30,6 @@ private:
 	PhysicsEngine &					m_engine;
 	octo::Camera &					m_camera;
 	ConvexShape *					m_shape;
-	RectangleShape *				m_rectShape;
 	std::vector<RectangleShape *>	m_shapes;
 	GroundManager					m_groundManager;
 	DefaultBiome					m_biome;
