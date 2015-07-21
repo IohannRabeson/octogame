@@ -1,23 +1,29 @@
 #include "MapInstance.hpp"
 #include "Tile.hpp"
+#include <Application.hpp>
+#include <LevelMap.hpp>
+#include <ResourceManager.hpp>
 
-MapInstance::MapInstance(std::size_t width, std::size_t height, std::size_t depth) :
-	m_maxDepth(depth),
+MapInstance::MapInstance(std::string const & resourceId) :
+	m_levelMap(octo::Application::getResourceManager().getLevelMap(resourceId)),
+	m_maxDepth(m_levelMap.getMapCount()),
 	m_depth(0),
 	m_oldDepth(0)
 {
 	// Init 3D TileMap
 	m_tiles = new octo::Array2D<Tile*>[m_maxDepth];
 	for (std::size_t i = 0; i < m_maxDepth; i++)
-		m_tiles[i].resize(width, height, nullptr);
+		m_tiles[i].resize(m_levelMap.getMapSize().x, m_levelMap.getMapSize().y, nullptr);
 
 	for (std::size_t i = 0; i < m_maxDepth; i++)
 	{
+		int * map = m_levelMap.getMap(i);
 		for (std::size_t x = 0; x < m_tiles[i].columns(); x++)
 		{
 			for (std::size_t y = 0; y < m_tiles[i].rows(); y++)
 			{
 				m_tiles[i](x, y) = new Tile();
+				m_tiles[i](x, y)->setIsEmpty(map[x * m_tiles[i].columns() + y]);
 			}
 		}
 	}

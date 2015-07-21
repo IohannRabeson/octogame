@@ -6,11 +6,15 @@
 # include "IMapTransformable.hpp"
 
 class Tile;
+namespace octo
+{
+	class LevelMap;
+}
 
 class MapInstance : public IMapTransformable
 {
 public:
-	MapInstance(std::size_t width, std::size_t height, std::size_t depth);
+	MapInstance(std::string const & resourceId);
 	virtual ~MapInstance(void);
 
 	// Load the tilemap from resources
@@ -29,6 +33,7 @@ private:
 	MapInstance(void) = delete;
 
 	octo::Array2D<Tile *> *	m_tiles;
+	octo::LevelMap const &	m_levelMap;
 	sf::IntRect				m_cornerPositions;
 	std::size_t				m_maxDepth;
 	int						m_depth;
