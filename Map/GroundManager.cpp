@@ -53,6 +53,8 @@ void GroundManager::init(ABiome & biome)
 
 	// Init decors
 	initDecors(biome);
+
+	swapMap();
 }
 
 void GroundManager::initDecors(ABiome & biome)
