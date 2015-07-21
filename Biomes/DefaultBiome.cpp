@@ -1,5 +1,6 @@
 #include "DefaultBiome.hpp"
 #include "Tile.hpp"
+#include "ResourceDefinitions.hpp"
 
 #include <iostream>
 
@@ -85,7 +86,8 @@ DefaultBiome::DefaultBiome() :
 {
 	m_generator.setSeed(m_name);
 
-	m_instances[0] = "village";
+	m_instances[12] = TEST_MAP_OMP;
+	m_instances[46] = TEST_MAP2_OMP;
 }
 
 void			DefaultBiome::setup(std::size_t seed)

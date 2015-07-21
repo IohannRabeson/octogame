@@ -14,7 +14,7 @@ namespace octo
 class MapInstance : public IMapTransformable
 {
 public:
-	MapInstance(std::string const & resourceId);
+	MapInstance(std::size_t position, std::string const & resourceId);
 	virtual ~MapInstance(void);
 
 	// Load the tilemap from resources

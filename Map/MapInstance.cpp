@@ -4,12 +4,16 @@
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
 
-MapInstance::MapInstance(std::string const & resourceId) :
+MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_levelMap(octo::Application::getResourceManager().getLevelMap(resourceId)),
 	m_maxDepth(m_levelMap.getMapCount()),
 	m_depth(0),
 	m_oldDepth(0)
 {
+	m_cornerPositions.left = position;
+	m_cornerPositions.top = -m_levelMap.getMapSize().y;
+	m_cornerPositions.width = m_cornerPositions.left + m_levelMap.getMapSize().x;
+	m_cornerPositions.height = m_cornerPositions.top + m_levelMap.getMapSize().y;
 	// Init 3D TileMap
 	m_tiles = new octo::Array2D<Tile*>[m_maxDepth];
 	for (std::size_t i = 0; i < m_maxDepth; i++)
