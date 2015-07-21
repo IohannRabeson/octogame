@@ -84,6 +84,8 @@ DefaultBiome::DefaultBiome() :
 	m_rainbowGrowTime(sf::seconds(4.f), sf::seconds(8.f))
 {
 	m_generator.setSeed(m_name);
+
+	m_instances[0] = "village";
 }
 
 void			DefaultBiome::setup(std::size_t seed)
@@ -115,6 +117,11 @@ float			DefaultBiome::getTransitionDuration()
 int				DefaultBiome::getBossInstancePosX()
 {
 	return (m_bossInstancePosX);
+}
+
+std::map<std::size_t, std::string> const & DefaultBiome::getInstances()
+{
+	return m_instances;
 }
 
 sf::Time		DefaultBiome::getDayDuration()

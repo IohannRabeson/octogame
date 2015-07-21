@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 02:17:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/27 17:53:25 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/21 09:45:17 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 # include <cstddef>
 # include <string>
+# include <map>
 
 class ABiome : public octo::NonCopyable
 {
@@ -33,6 +34,8 @@ public:
 	virtual sf::Vector2f	getMapSizeFloat() = 0;
 	virtual float			getTransitionDuration() = 0;
 	virtual int				getBossInstancePosX() = 0;
+
+	virtual std::map<std::size_t, std::string>	const & getInstances() = 0;
 
 	virtual sf::Time		getDayDuration() = 0;
 	virtual sf::Time		getNightDuration() = 0;

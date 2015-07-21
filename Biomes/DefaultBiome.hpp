@@ -34,6 +34,8 @@ public:
 	virtual float			getTransitionDuration();
 	virtual int				getBossInstancePosX();
 
+	virtual std::map<std::size_t, std::string>	const & getInstances();
+
 	virtual sf::Time		getDayDuration();
 	virtual sf::Time		getNightDuration();
 	virtual float			getWind();
@@ -118,6 +120,8 @@ private:
 	sf::Vector2u		m_mapSize;
 	float				m_transitionDuration;
 	std::size_t			m_bossInstancePosX;
+
+	std::map<std::size_t, std::string>	m_instances;
 
 	sf::Time			m_dayDuration;
 	sf::Time			m_nightDuration;
