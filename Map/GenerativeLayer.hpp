@@ -17,7 +17,7 @@ public:
 	typedef std::function<float(Noise & noise, float x, float y)>	BackgroundSurfaceGenerator;
 
 	GenerativeLayer(void);
-	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float transitionDuration = 20.f);
+	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float transitionDuration = 20.f);
 	virtual ~GenerativeLayer(void) = default;
 
 	void init(void);
@@ -44,12 +44,13 @@ private:
 	sf::Vector2u						m_mapSize;
 	sf::Color							m_color;
 	Noise								m_noise;
-	std::size_t							m_widthScreen;
-	std::size_t							m_verticesCount;
 	float								m_tileSize;
 	float								m_depth;
 	float								m_transitionTimer;
 	float								m_transitionTimerDuration;
+	int									m_heightOffset;
+	std::size_t							m_widthScreen;
+	std::size_t							m_verticesCount;
 	BackgroundSurfaceGeneratorBind		m_backgroundSurface;
 
 	void computeVertices(std::vector<sf::Vector2f> & positions);
