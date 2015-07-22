@@ -6,19 +6,25 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/18 10:27:39 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/22 10:33:18 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Game.hpp"
 #include "DefaultBiome.hpp"
 #include "GenerativeLayer.hpp"
+#include "PhysicsEngine.hpp"
+#include "RectangleShape.hpp"
+#include "MapInstance.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
+#include <LevelMap.hpp>
+#include <ResourceManager.hpp>
 
-Game::Game()
+Game::Game() :
+	m_engine(PhysicsEngine::getInstance())
 {
 }
 
@@ -27,8 +33,13 @@ void	Game::setup()
 	m_biomeManager.registerBiome<DefaultBiome>("test");
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
+
+	m_engine.setIterationCount(4u);
+	m_engine.setTileCollision(true);
+	m_engine.setContactListener(this);
 }
 
+#include <iostream>
 void	Game::loadLevel(std::string const& fileName)
 {
 	(void)fileName;
@@ -39,25 +50,45 @@ void	Game::loadLevel(std::string const& fileName)
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
 	m_groundManager.init(m_biomeManager.getCurrentBiome());
 
+	//TODO get theses information from biome
 	sf::Vector2u const & mapSize = m_biomeManager.getCurrentBiome().getMapSize();
 	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.perlinNoise(x * 10.f, y, 2, 2.f);
-			});
+		{
+			return noise.perlinNoise(x * 10.f, y, 2, 2.f);
+		});
 	m_parallaxScrolling.addLayer(layer);
 	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.perlinNoise(x, y, 3, 2.f);
-			});
+		{
+			return noise.perlinNoise(x, y, 3, 2.f);
+		});
 	m_parallaxScrolling.addLayer(layer);
 	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.noise(x * 1.1f, y);
-			});
+		{
+			return noise.noise(x * 1.1f, y);
+		});
 	m_parallaxScrolling.addLayer(layer);
+
+	auto const & instances = m_biomeManager.getCurrentBiome().getInstances();
+	for (auto & instance : instances)
+	{
+		octo::LevelMap const & levelMap = octo::Application::getResourceManager().getLevelMap(instance.second);
+		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
+		{
+			//TODO: finish this
+			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
+			std::cout << "----" << std::endl;
+			std::cout << spriteTrigger.position.x << std::endl;
+			std::cout << spriteTrigger.position.y << std::endl;
+			RectangleShape * rect = m_engine.createRectangle();
+			rect->setPosition(sf::Vector2f(spriteTrigger.position.x + instance.first * Tile::TileSize, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.position.y));
+			rect->setSize(spriteTrigger.trigger.getSize());
+			rect->setApplyGravity(false);
+			rect->setType(AShape::Type::e_trigger);
+		}
+	}
 }
 
 void	Game::update(sf::Time frameTime)
@@ -66,6 +97,7 @@ void	Game::update(sf::Time frameTime)
 	m_skyManager.update(frameTime);
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
+	m_engine.update(frameTime.asSeconds());
 }
 
 bool Game::onPressed(sf::Event::KeyEvent const & event)
@@ -84,6 +116,13 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	return true;
 }
 
+void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
+{
+	//TODO: implements gameobject behaviour
+	(void)shapeA;
+	(void)shapeB;
+}
+
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	render.clear();
@@ -95,4 +134,5 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_groundManager, states);
 	render.draw(m_groundManager.getDecorsGround(), states);
 	render.draw(m_skyManager.getDecorsFront(), states);
+	m_engine.debugDraw(render);
 }

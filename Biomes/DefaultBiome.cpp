@@ -86,7 +86,7 @@ DefaultBiome::DefaultBiome() :
 {
 	m_generator.setSeed(m_name);
 
-	m_instances[12] = VILLAGE_OMP;
+	m_instances[12] = MINIMAP_OMP;
 	m_instances[86] = TEST_MAP2_OMP;
 }
 
