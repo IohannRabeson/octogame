@@ -5,10 +5,10 @@
 #include <Interpolations.hpp>
 
 GenerativeLayer::GenerativeLayer(void) :
-	GenerativeLayer(sf::Color::Yellow, sf::Vector2f(0.5f, 0.5f), sf::Vector2u(512u, 128u), 16.f, 20, 20.f)
+	GenerativeLayer(sf::Color::Yellow, sf::Vector2f(0.5f, 0.5f), sf::Vector2u(512u, 128u), 16.f, 20, 0.f, 20.f)
 {}
 
-GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float transitionDuration) :
+GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float opacity, float transitionDuration) :
 	ALayer(speed),
 	m_camera(octo::Application::getCamera()),
 	m_positions(0u),
@@ -19,6 +19,7 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	m_depth(0.f),
 	m_transitionTimer(0.f),
 	m_transitionTimerDuration(transitionDuration),
+	m_opacity(opacity),
 	m_heightOffset(heightOffset),
 	m_widthScreen(octo::Application::getGraphicsManager().getVideoMode().width / m_tileSize + 4u),
 	m_verticesCount(0u)
@@ -41,8 +42,8 @@ void GenerativeLayer::init(void)
 
 	for (std::size_t i = 0u; i < m_widthScreen; i++)
 	{
-		m_vertices[(i * 4u) + 2u].position.y = static_cast<float>(getMapSize().y) * m_tileSize + 1000.f;
-		m_vertices[(i * 4u) + 3u].position.y = static_cast<float>(getMapSize().y) * m_tileSize + 1000.f;
+		m_vertices[(i * 4u) + 2u].position.y = static_cast<float>(getMapSize().y) * m_tileSize * 2.f;
+		m_vertices[(i * 4u) + 3u].position.y = static_cast<float>(getMapSize().y) * m_tileSize * 2.f;
 	}
 
 	computeVertices(m_positions);
@@ -107,6 +108,7 @@ void GenerativeLayer::setBackgroundSurfaceGenerator(BackgroundSurfaceGenerator m
 	m_backgroundSurface = std::bind(mapSurface, std::ref(m_noise), std::placeholders::_1, std::placeholders::_2);
 }
 
+#include <iostream>
 void GenerativeLayer::update(float deltatime)
 {
 	m_transitionTimer += deltatime;
@@ -139,6 +141,31 @@ void GenerativeLayer::update(float deltatime)
 		m_vertices[(i * 4u) + 1u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize;
 		m_vertices[(i * 4u) + 2u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize;
 		m_vertices[(i * 4u) + 3u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize;
+	}
+	static const sf::Color startColor(0, 0, 0);
+	sf::Color color;
+	float	rgb[3];
+	rgb[0] = startColor.r - m_color.r;
+	rgb[1] = startColor.g - m_color.g;
+	rgb[2] = startColor.b - m_color.b;
+	//float max = m_vertices[3u].position.y;
+	for (std::size_t i = 0u; i < m_widthScreen; i++)
+	{
+		//TODO: manage interpolation with camera pos for a better result
+		//float transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 0u].position.y / max);
+		//m_vertices[(i * 4u) + 0u].color.r = m_color.r + (rgb[0]) * transition;
+		//m_vertices[(i * 4u) + 0u].color.g = m_color.g + (rgb[1]) * transition;
+		//m_vertices[(i * 4u) + 0u].color.b = m_color.b + (rgb[2]) * transition;
+		//transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 1u].position.y / max);
+		//m_vertices[(i * 4u) + 1u].color.r = m_color.r + (rgb[0]) * transition;
+		//m_vertices[(i * 4u) + 1u].color.g = m_color.g + (rgb[1]) * transition;
+		//m_vertices[(i * 4u) + 1u].color.b = m_color.b + (rgb[2]) * transition;
+		m_vertices[(i * 4u) + 0u].color.r = m_color.r + (rgb[0]) * m_opacity;
+		m_vertices[(i * 4u) + 0u].color.g = m_color.g + (rgb[1]) * m_opacity;
+		m_vertices[(i * 4u) + 0u].color.b = m_color.b + (rgb[2]) * m_opacity;
+		m_vertices[(i * 4u) + 1u].color = m_vertices[(i * 4u) + 0u].color;
+		m_vertices[(i * 4u) + 2u].color = m_vertices[(i * 4u) + 0u].color;
+		m_vertices[(i * 4u) + 3u].color = m_vertices[(i * 4u) + 0u].color;
 	}
 }
 

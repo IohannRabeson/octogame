@@ -17,12 +17,13 @@ public:
 	typedef std::function<float(Noise & noise, float x, float y)>	BackgroundSurfaceGenerator;
 
 	GenerativeLayer(void);
-	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float transitionDuration = 20.f);
+	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float opacity, float transitionDuration);
 	virtual ~GenerativeLayer(void) = default;
 
 	void init(void);
 	void setColor(sf::Color const & color);
 
+	//TODO: use bool to manage this
 	/*! Set the transition duration
 	 * If transitionDuration < 0.f, the map won't move
 	 */
@@ -48,6 +49,7 @@ private:
 	float								m_depth;
 	float								m_transitionTimer;
 	float								m_transitionTimerDuration;
+	float								m_opacity;
 	int									m_heightOffset;
 	std::size_t							m_widthScreen;
 	std::size_t							m_verticesCount;
