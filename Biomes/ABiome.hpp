@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 02:17:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/21 09:45:17 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/22 10:48:22 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,12 @@
 # include <SFML/Graphics/Color.hpp>
 # include <SFML/System/Vector2.hpp>
 
+# include "ParallaxScrolling.hpp"
+
 # include <cstddef>
 # include <string>
 # include <map>
+# include <vector>
 
 class ABiome : public octo::NonCopyable
 {
@@ -36,6 +39,7 @@ public:
 	virtual int				getBossInstancePosX() = 0;
 
 	virtual std::map<std::size_t, std::string>	const & getInstances() = 0;
+	virtual std::vector<ParallaxScrolling::ALayer *> getLayers() = 0;
 
 	virtual sf::Time		getDayDuration() = 0;
 	virtual sf::Time		getNightDuration() = 0;

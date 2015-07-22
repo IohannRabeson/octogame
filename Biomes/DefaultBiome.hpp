@@ -35,6 +35,7 @@ public:
 	virtual int				getBossInstancePosX();
 
 	virtual std::map<std::size_t, std::string>	const & getInstances();
+	virtual std::vector<ParallaxScrolling::ALayer *> getLayers();
 
 	virtual sf::Time		getDayDuration();
 	virtual sf::Time		getNightDuration();

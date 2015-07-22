@@ -1,5 +1,6 @@
 #include "DefaultBiome.hpp"
 #include "Tile.hpp"
+#include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 
 #include <iostream>
@@ -124,6 +125,32 @@ int				DefaultBiome::getBossInstancePosX()
 std::map<std::size_t, std::string> const & DefaultBiome::getInstances()
 {
 	return m_instances;
+}
+
+std::vector<ParallaxScrolling::ALayer *> DefaultBiome::getLayers()
+{
+	sf::Vector2u const & mapSize = getMapSize();
+	std::vector<ParallaxScrolling::ALayer *> vector;
+
+	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, -1.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlinNoise(x * 10.f, y, 2, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 11.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlinNoise(x, y, 3, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 6.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 1.1f, y);
+		});
+	vector.push_back(layer);
+	return vector;
 }
 
 sf::Time		DefaultBiome::getDayDuration()
