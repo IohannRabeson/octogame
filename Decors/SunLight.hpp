@@ -1,5 +1,5 @@
-#ifndef DAYNIGHTLIGHT_HPP
-# define DAYNIGHTLIGHT_HPP
+#ifndef SUNLIGHT_HPP
+# define SUNLIGHT_HPP
 
 # include "ADecor.hpp"
 # include "DecorAnimator.hpp"
@@ -7,12 +7,12 @@
 
 class GameClock;
 
-class DayNightLight : public ADecor
+class SunLight : public ADecor
 {
 public:
-	DayNightLight(void);
-	DayNightLight(GameClock * clock);
-	virtual ~DayNightLight(void) = default;
+	SunLight(void);
+	SunLight(GameClock * clock);
+	virtual ~SunLight(void) = default;
 
 	virtual void setup(ABiome& biome);
 	virtual void update(sf::Time frameTime,
@@ -23,16 +23,14 @@ private:
 	sf::Vector2f			m_size;
 	sf::Vector2f			m_dayPos;
 	sf::Vector2f			m_nightPos;
-	sf::Vector2f			m_middlePos;
-	sf::Color				m_transparancy;
-	sf::Color				m_colorDay;
+	sf::Vector2f			m_sunsetPos;
 	sf::Color				m_colorNight;
-	sf::Color				m_colorMiddle;
+	sf::Color				m_colorSunset;
 	sf::Vector2f			m_cameraSize;
 
 	GameClock *				m_clock;
 
-	void createDayNightLight(sf::Vector2f const & size,
+	void createSunLight(sf::Vector2f const & size,
 					sf::Vector2f const & origin,
 					octo::VertexBuilder& builder);
 

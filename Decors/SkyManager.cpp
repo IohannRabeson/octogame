@@ -4,7 +4,7 @@
 #include "ADecor.hpp"
 #include "Star.hpp"
 #include "Sky.hpp"
-#include "DayNightLight.hpp"
+#include "SunLight.hpp"
 
 #include <Math.hpp>
 #include <Application.hpp>
@@ -37,7 +37,6 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f const & cameraSize)
 	{
 		m_starCount = biome.getStarCount();
 		m_originStars.resize(m_starCount);
-		//TODO: Check with Iohann for delete element: Is the decorManager handle it?
 		for (std::size_t i = 0u; i < m_starCount; i++)
 			m_decorManagerBack.add(new Star(m_clock));
 
@@ -141,7 +140,7 @@ void SkyManager::setup(ABiome & biome, GameClock & clock)
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
 	setupRainbow(biome, cameraSize, m_mapSizeFloat);
 	setupClouds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
-	m_decorManagerFront.add(new DayNightLight(m_clock));
+	m_decorManagerFront.add(new SunLight(m_clock));
 }
 
 void SkyManager::update(sf::Time frameTime)

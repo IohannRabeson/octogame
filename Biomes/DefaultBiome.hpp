@@ -35,6 +35,10 @@ public:
 	virtual int				getBossInstancePosX();
 
 	virtual sf::Time		getDayDuration();
+	virtual sf::Color		getSkyDayColor();
+	virtual sf::Color		getSkyNightColor();
+	virtual sf::Color		getNightLightColor();
+	virtual sf::Color		getSunsetLightColor();
 	virtual float			getWind();
 
 	virtual std::size_t		getRockCount();
@@ -119,6 +123,10 @@ private:
 	std::size_t			m_bossInstancePosX;
 
 	sf::Time			m_dayDuration;
+	sf::Color			m_skyDayColor;
+	sf::Color			m_skyNightColor;
+	sf::Color			m_nightLightColor;
+	sf::Color			m_SunsetLightColor;
 	Range<float>		m_wind;
 
 	Range<std::size_t>	m_rockCount;

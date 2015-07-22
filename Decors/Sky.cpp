@@ -5,7 +5,6 @@
 #include <Application.hpp>
 #include <Camera.hpp>
 
-//TODO: Get gameclock in constructor?
 Sky::Sky(void) :
 	m_clock(nullptr)
 {
@@ -38,17 +37,14 @@ void Sky::createSky(sf::Vector2f const & size, sf::Vector2f const & origin, sf::
 
 void Sky::setup(ABiome& biome)
 {
-	(void)biome;
-	//TODO: Get colors from biome
-	m_colorUpDay = sf::Color(188, 200, 206);//biome.getSkyColorUp();
-	m_colorUpNight = sf::Color(8, 20, 26);
-	m_colorDownDay = sf::Color(255, 255, 255);//biome.getSkyColorDown();
-	m_colorDownNight = sf::Color(50, 50, 50);//biome.getSkyColorDown();
+	m_colorUpDay = biome.getSkyDayColor();
+	m_colorUpNight = biome.getSkyNightColor();
+	m_colorDownDay = sf::Color(255, 255, 255);
+	m_colorDownNight = sf::Color(50, 50, 50);
 }
 
-void Sky::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
+void Sky::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
 {
-	(void)frameTime;
 	sf::Vector2f const & position = getPosition();
 	sf::Vector2f cameraSize = octo::Application::getCamera().getSize();
 	float interpolateValue = m_clock->getNightValue() * 2.f >= 1.f ? 1.f : m_clock->getNightValue() * 2.f;
