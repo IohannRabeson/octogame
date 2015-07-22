@@ -49,9 +49,7 @@ void Map::init(ABiome & biome)
 
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
-	{
 		m_instances.push_back(std::unique_ptr<MapInstance>(new MapInstance(instance.first, instance.second)));
-	}
 
 	m_noise.setSeed(42);
 

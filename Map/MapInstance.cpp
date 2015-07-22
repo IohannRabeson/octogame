@@ -11,7 +11,7 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_oldDepth(0)
 {
 	m_cornerPositions.left = position;
-	m_cornerPositions.top = -m_levelMap.getMapSize().y;
+	m_cornerPositions.top = -m_levelMap.getMapSize().y - 70;
 	m_cornerPositions.width = m_cornerPositions.left + m_levelMap.getMapSize().x;
 	m_cornerPositions.height = m_cornerPositions.top + m_levelMap.getMapSize().y;
 	// Init 3D TileMap
@@ -27,7 +27,10 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 			for (std::size_t y = 0; y < m_tiles[i].rows(); y++)
 			{
 				m_tiles[i](x, y) = new Tile();
-				m_tiles[i](x, y)->setIsEmpty(map[x * m_tiles[i].columns() + y]);
+				if (map[y * m_tiles[i].columns() + x] == 0)
+					m_tiles[i](x, y)->setIsEmpty(true);
+				else
+					m_tiles[i](x, y)->setIsEmpty(false);
 			}
 		}
 	}
@@ -48,6 +51,7 @@ MapInstance::~MapInstance(void)
 
 void MapInstance::load(void)
 {
+	std::cout << "bouh" << std::endl;
 		//TODO: load file from resources
 	// The x position must be > 0
 	// The y position is set by using the height of the map

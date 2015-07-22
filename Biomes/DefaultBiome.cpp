@@ -86,8 +86,8 @@ DefaultBiome::DefaultBiome() :
 {
 	m_generator.setSeed(m_name);
 
-	m_instances[12] = TEST_MAP_OMP;
-	m_instances[46] = TEST_MAP2_OMP;
+	m_instances[12] = VILLAGE_OMP;
+	m_instances[86] = TEST_MAP2_OMP;
 }
 
 void			DefaultBiome::setup(std::size_t seed)
