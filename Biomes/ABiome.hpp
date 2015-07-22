@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 02:17:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/22 10:48:22 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/22 11:01:06 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <SFML/System/Vector2.hpp>
 
 # include "ParallaxScrolling.hpp"
+# include "Map.hpp"
 
 # include <cstddef>
 # include <string>
@@ -40,6 +41,8 @@ public:
 
 	virtual std::map<std::size_t, std::string>	const & getInstances() = 0;
 	virtual std::vector<ParallaxScrolling::ALayer *> getLayers() = 0;
+	virtual Map::MapSurfaceGenerator getMapSurfaceGenerator() = 0;
+	virtual Map::TileColorGenerator getTileColorGenerator() = 0;
 
 	virtual sf::Time		getDayDuration() = 0;
 	virtual sf::Time		getNightDuration() = 0;

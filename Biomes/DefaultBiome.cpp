@@ -2,6 +2,7 @@
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
+#include <Interpolations.hpp>
 
 #include <iostream>
 
@@ -151,6 +152,26 @@ std::vector<ParallaxScrolling::ALayer *> DefaultBiome::getLayers()
 		});
 	vector.push_back(layer);
 	return vector;
+}
+
+Map::MapSurfaceGenerator DefaultBiome::getMapSurfaceGenerator()
+{
+	return [](Noise & noise, float x, float y)
+	{
+		return noise.fBm(x, y, 3, 3.f, 0.3f);
+	};
+}
+
+Map::TileColorGenerator DefaultBiome::getTileColorGenerator()
+{
+	return [](Noise & noise, float x, float y, float z)
+	{
+		static const sf::Color end = sf::Color(254, 231, 170);
+		static const sf::Color start = sf::Color(230, 168, 0);
+
+		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		return octo::linearInterpolation(start, end, transition);
+	};
 }
 
 sf::Time		DefaultBiome::getDayDuration()

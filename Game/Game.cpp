@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/22 10:56:27 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/22 13:27:34 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ void	Game::loadLevel(std::string const& fileName)
 			//TODO: finish this
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
 			std::cout << "----" << std::endl;
-			std::cout << spriteTrigger.position.x << std::endl;
-			std::cout << spriteTrigger.position.y << std::endl;
+			std::cout << spriteTrigger.trigger.getPosition().x << std::endl;
+			std::cout << spriteTrigger.trigger.getPosition().y << std::endl;
 			RectangleShape * rect = m_engine.createRectangle();
-			rect->setPosition(sf::Vector2f(spriteTrigger.position.x + instance.first * Tile::TileSize, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.position.y));
+			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y));
 			rect->setSize(spriteTrigger.trigger.getSize());
 			rect->setApplyGravity(false);
 			rect->setType(AShape::Type::e_trigger);
