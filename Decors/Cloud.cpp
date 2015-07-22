@@ -92,4 +92,11 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 
 	sf::Vector2f const & position = getPosition();
 	createCloud(m_values, position, m_partCount, m_color, builder);
+
+	if (true)//biome.isRaining()
+	{
+		sf::FloatRect behindCloud(position.x - 50, position.y, 100.f, 1000.f);
+		m_rain.setCameraRect(behindCloud);
+		m_rain.update(frameTime, builder);
+	}
 }

@@ -51,6 +51,7 @@ public:
 	void			setMargin(float margin);
 
 	void			update(sf::Time frameTime);
+	void			update(sf::Time frameTime, octo::VertexBuilder & builder);
 private:
 	virtual void	updateParticle(sf::Time frameTime, Particle& particle);
 	virtual bool	isDeadParticle(Particle const& particle);

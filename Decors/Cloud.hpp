@@ -3,6 +3,7 @@
 
 # include "ADecor.hpp"
 # include "DecorAnimator.hpp"
+# include "RainSystem.hpp"
 # include <SFML/Graphics/Color.hpp>
 
 class Cloud : public ADecor
@@ -31,6 +32,8 @@ private:
 
 	DecorAnimator				m_animator;
 	float						m_animation;
+
+	RainSystem					m_rain;
 
 	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & sizeCorner,

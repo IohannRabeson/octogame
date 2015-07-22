@@ -27,8 +27,11 @@ RainSystem::RainSystem() :
 {
 	sf::Vector2f const	DropSize{0.6f, 25.f};
 
-	reset({-DropSize, {DropSize.x, -DropSize.y}, DropSize, {-DropSize.x, DropSize.y}},
-		   sf::Quads, 1000u);
+//	reset({-DropSize, {DropSize.x, -DropSize.y}, DropSize, {-DropSize.x, DropSize.y}},
+//		   sf::Quads, 1000u);
+
+	reset({-DropSize, {DropSize.x, -DropSize.y}, DropSize},
+		   sf::Triangles, 1000u);
 	setDropSpeed(2048.f);
 	setDropPerSecond(20);
 }
@@ -48,6 +51,17 @@ void	RainSystem::update(sf::Time frameTime)
 		m_dropTimer -= m_dropInterval;
 	}
 	ParticleSystem::update(frameTime);
+}
+
+void	RainSystem::update(sf::Time frameTime, octo::VertexBuilder & builder)
+{
+	m_dropTimer += frameTime;
+	while (getCapacity() > 0 && m_dropTimer > m_dropInterval)
+	{
+		createDrop();
+		m_dropTimer -= m_dropInterval;
+	}
+	ParticleSystem::update(frameTime, builder);
 }
 
 void	RainSystem::setDropPerSecond(unsigned int count)
