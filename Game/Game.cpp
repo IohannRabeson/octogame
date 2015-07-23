@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/23 15:59:03 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/23 16:30:57 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ void	Game::loadLevel(std::string const& fileName)
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
 	m_groundManager.init(m_biomeManager.getCurrentBiome());
 
+	//TODO: Maybe its better to put all of that in a GenerativeLayerManager??
 	sf::Vector2u const & mapSize = m_biomeManager.getCurrentBiome().getMapSize();
 	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 1.f, -1.f);
+	//TODO: To remove this line (it's just to decrease the y of parallax elem)
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 			{
 				return noise.perlinNoise(x * 10.f, y, 2, 2.f);
