@@ -38,6 +38,14 @@ private:
 					float cos,
 					float sin);
 
+	void createBicolorQuad(sf::Vector2f const & upLeft,
+							sf::Vector2f const & upRight,
+							sf::Vector2f const & downRight,
+							sf::Vector2f const & downLeft,
+							sf::Color const & colorUp,
+							sf::Color const & colorDown,
+							octo::VertexBuilder & builder);
+
 	void createPart(Line const & start,
 					Line const & end,
 					std::size_t stripeCount,

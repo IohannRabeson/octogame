@@ -34,17 +34,29 @@ void Rainbow::rotateLine(Line const & start, Line & end, std::size_t stripeCount
 		end[i] = rotateVecCopy(start[i], origin, cos, sin);
 }
 
+void Rainbow::createBicolorQuad(sf::Vector2f const & upLeft, sf::Vector2f const & upRight, sf::Vector2f const & downRight, sf::Vector2f const & downLeft, sf::Color const & colorUp, sf::Color const & colorDown, octo::VertexBuilder & builder)
+{
+	builder.createVertex(upLeft, colorUp);
+	builder.createVertex(upRight, colorUp);
+	builder.createVertex(downRight, colorDown);
+	builder.createVertex(upLeft, colorUp);
+	builder.createVertex(downLeft, colorDown);
+	builder.createVertex(downRight, colorDown);
+}
+
 void Rainbow::createPart(Line const & start, Line const & end, std::size_t stripeCount, sf::Vector2f const & origin, std::vector<sf::Color> const & colors, float interpolateValue, octo::VertexBuilder& builder)
 {
 	for (std::size_t i = 0; i < stripeCount; i++)
 	{
+		sf::Color tmpColor = colors[i];
+		tmpColor.a *= interpolateValue;
 		if (m_grow)
 		{
 			sf::Vector2f downLeft = start[i];
 			sf::Vector2f downRight = start[i + 1];
 			sf::Vector2f upLeft = octo::linearInterpolation(downLeft, end[i], interpolateValue);
 			sf::Vector2f upRight = octo::linearInterpolation(downRight, end[i + 1], interpolateValue);
-			builder.createQuad(downLeft + origin, downRight + origin, upRight + origin, upLeft + origin, colors[i]);
+			createBicolorQuad(upRight + origin, upLeft + origin, downLeft + origin, downRight + origin, tmpColor, colors[i], builder);
 		}
 		else
 		{
@@ -52,7 +64,7 @@ void Rainbow::createPart(Line const & start, Line const & end, std::size_t strip
 			sf::Vector2f upRight = end[i + 1];
 			sf::Vector2f downLeft = octo::linearInterpolation(upLeft, start[i], interpolateValue);
 			sf::Vector2f downRight = octo::linearInterpolation(upRight, start[i + 1], interpolateValue);
-			builder.createQuad(downLeft + origin, downRight + origin, upRight + origin, upLeft + origin, colors[i]);
+			createBicolorQuad(upRight + origin, upLeft + origin, downLeft + origin, downRight + origin, colors[i], tmpColor, builder);
 		}
 	}
 }
@@ -132,7 +144,7 @@ void Rainbow::setup(ABiome& biome)
 
 	float totalFlatSizeX = 0.f;
 	for (std::size_t i = 0; i < m_partCount; i++)
-		totalFlatSizeX += fabs(m_sizes[i].x) + fabs(m_sizes[i].y);
+		totalFlatSizeX += fabs(m_sizes[i].x + m_sizes[i].y);
 
 	m_timerMax.resize(m_partCount);
 	m_interpolateValues.resize(m_partCount);
@@ -193,7 +205,7 @@ void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	else
 		computeInterpolateValuesDie(frameTime, m_interpolateValues);
 	// position - m_endPosition make the arrival be the origin
-	createRainbow(position - m_endPosition + sf::Vector2f(0.f, m_thickness), m_sizes, m_stripeCount, m_thickness, m_colors, builder);
+	createRainbow(position - m_endPosition, m_sizes, m_stripeCount, m_thickness, m_colors, builder);
 }
 
 void Rainbow::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
