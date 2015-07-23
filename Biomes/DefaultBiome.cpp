@@ -9,9 +9,11 @@ DefaultBiome::DefaultBiome() :
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
-	//Day and night durations needs to be the same for the moment
-	m_dayDuration(sf::seconds(15.f)),
-	m_nightDuration(sf::seconds(15.f)),
+	m_dayDuration(sf::seconds(40.f)),
+	m_skyDayColor(188, 200, 206),
+	m_skyNightColor(8, 20, 26),
+	m_nightLightColor(0, 197, 255, 100),
+	m_SunsetLightColor(238, 173, 181, 100),
 	m_wind(100.f, 150.f),
 
 	m_rockCount(10u, 20u),
@@ -47,7 +49,7 @@ DefaultBiome::DefaultBiome() :
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(30, 30, 30),
 	m_treeAngle(15.f, 75.f),
-	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(150.f, 150.f)),
+	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(143, 208, 202),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
@@ -122,9 +124,24 @@ sf::Time		DefaultBiome::getDayDuration()
 	return (m_dayDuration);
 }
 
-sf::Time		DefaultBiome::getNightDuration()
+sf::Color		DefaultBiome::getSkyDayColor()
 {
-	return (m_nightDuration);
+	return (m_skyDayColor);
+}
+
+sf::Color		DefaultBiome::getSkyNightColor()
+{
+	return (m_skyNightColor);
+}
+
+sf::Color		DefaultBiome::getNightLightColor()
+{
+	return (m_nightLightColor);
+}
+
+sf::Color		DefaultBiome::getSunsetLightColor()
+{
+	return (m_SunsetLightColor);
 }
 
 float			DefaultBiome::getWind()
