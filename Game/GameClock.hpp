@@ -31,7 +31,6 @@ private:
 	bool		m_isMidDay;
 	sf::Time	m_timerDay;
 	sf::Time	m_timerDayMax;
-	bool		m_isNight;
 	bool		m_isMidNight;
 	sf::Time	m_timerNight;
 	sf::Time	m_timerNightMax;

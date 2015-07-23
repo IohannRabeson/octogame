@@ -4,7 +4,6 @@
 GameClock::GameClock(void) :
 	m_isDay(true),
 	m_isMidDay(false),
-	m_isNight(false),
 	m_isMidNight(false)
 {
 }
@@ -31,7 +30,10 @@ bool GameClock::isDay(void) const
 
 bool GameClock::isNight(void) const
 {
-	return m_isNight;
+	if (m_isDay)
+		return false;
+	else
+		return true;
 }
 
 void GameClock::setup(ABiome & biome)
@@ -61,12 +63,11 @@ void GameClock::update(sf::Time frameTime)
 			{
 				m_timerDay = sf::Time::Zero;
 				m_isMidDay = false;
-				m_isNight = true;
 				m_isDay = false;
 			}
 		}
 	}
-	if (m_isNight)
+	else
 	{
 		if (m_isMidNight == false)
 		{
@@ -79,7 +80,6 @@ void GameClock::update(sf::Time frameTime)
 			m_timerNight -= frameTime;
 			if (m_timerNight <= sf::Time::Zero)
 			{
-				m_isNight = false;
 				m_timerNight = sf::Time::Zero;
 				m_isMidNight = false;
 				m_isDay = true;
