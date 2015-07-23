@@ -3,18 +3,15 @@
 
 # include "ADecor.hpp"
 # include "DecorAnimator.hpp"
-# include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
 
 class Cloud : public ADecor
 {
 struct OctogonValue
 {
-	sf::Vector2f			size;
-	sf::Vector2f			origin;
-	float					sizeUp;
-	float					sizeDown;
-	float					sizeRec;
+	sf::Vector2f	size;
+	sf::Vector2f	sizeCorner;
+	sf::Vector2f	origin;
 };
 
 public:
@@ -28,26 +25,26 @@ public:
 
 private:
 	sf::Vector2f				m_size;
-	sf::Color					m_color;
 	std::size_t					m_partCount;
+	sf::Color					m_color;
 	std::vector<OctogonValue>	m_values;
+
 	DecorAnimator				m_animator;
 	float						m_animation;
 
 	void createOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & sizeCorner,
 						sf::Vector2f const & origin,
 						sf::Color color,
-						float const sizeUp,
-						float const sizeDown,
-						float const sizeRec,
 						octo::VertexBuilder& builder);
 
 	void createCloud(std::vector<OctogonValue> const & values,
-						sf::Vector2f const & originCloud,
-						sf::Color const & color,
-						octo::VertexBuilder& builder);
+					sf::Vector2f const & origin,
+					std::size_t partCount,
+					sf::Color const & color,
+					octo::VertexBuilder& builder);
 
-	void newCloud(ABiome& biome);
+	void newCloud(ABiome & biome);
 };
 
 #endif

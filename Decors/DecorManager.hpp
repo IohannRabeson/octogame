@@ -52,7 +52,10 @@ public:
 		Sun,
 		Moon,
 		Rainbow,
-		Mushroom
+		Mushroom,
+		GroundRock,
+		Sky,
+		SunLight
 	};
 
 	explicit DecorManager(std::size_t maxVertexCount);

@@ -35,7 +35,10 @@ public:
 	virtual int				getBossInstancePosX() = 0;
 
 	virtual sf::Time		getDayDuration() = 0;
-	virtual sf::Time		getNightDuration() = 0;
+	virtual sf::Color		getSkyDayColor() = 0;
+	virtual sf::Color		getSkyNightColor() = 0;
+	virtual sf::Color		getNightLightColor() = 0;
+	virtual sf::Color		getSunsetLightColor() = 0;
 	virtual float			getWind() = 0;
 
 	virtual std::size_t		getRockCount() = 0;
@@ -47,6 +50,7 @@ public:
 	virtual std::size_t		getSunCount() = 0;
 	virtual std::size_t		getMoonCount() = 0;
 	virtual std::size_t		getRainbowCount() = 0;
+	virtual std::size_t		getGroundRockCount() = 0;
 
 	virtual sf::Vector2f	getRockSize() = 0;
 	virtual std::size_t		getRockPartCount() = 0;

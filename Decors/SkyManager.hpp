@@ -39,6 +39,7 @@ private:
 
 	void setupClouds(ABiome & biome,
 					sf::Vector2f const & cameraSize,
+					sf::Vector2f const & cameraCenter,
 					sf::Vector2f const & mapSize);
 
 	DecorManager				m_decorManagerBack;

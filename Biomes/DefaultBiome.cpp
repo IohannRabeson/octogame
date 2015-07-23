@@ -9,10 +9,12 @@ DefaultBiome::DefaultBiome() :
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
-	//Day and night durations needs to be the same for the moment
-	m_dayDuration(sf::seconds(15.f)),
-	m_nightDuration(sf::seconds(15.f)),
-	m_wind(50.f, 100.f),
+	m_dayDuration(sf::seconds(40.f)),
+	m_skyDayColor(188, 200, 206),
+	m_skyNightColor(8, 20, 26),
+	m_nightLightColor(0, 197, 255, 100),
+	m_SunsetLightColor(238, 173, 181, 100),
+	m_wind(100.f, 150.f),
 
 	m_rockCount(10u, 20u),
 	m_treeCount(5u, 10u),
@@ -23,6 +25,7 @@ DefaultBiome::DefaultBiome() :
 	m_moonCount(1u, 3u),
 	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
+	m_groundRockCount(100u, 200u),
 
 	m_canCreateRock(true),
 	m_canCreateTree(true),
@@ -46,7 +49,7 @@ DefaultBiome::DefaultBiome() :
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(30, 30, 30),
 	m_treeAngle(15.f, 75.f),
-	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(150.f, 150.f)),
+	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(143, 208, 202),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
@@ -60,10 +63,10 @@ DefaultBiome::DefaultBiome() :
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(100.f, 10.f), sf::Vector2f(400.f, 60.f)),
-	m_cloudPartCount(2u, 10u),
-	m_cloudLifeTime(sf::seconds(15), sf::seconds(60)),
-	m_cloudColor(255, 255, 255),
+	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
+	m_cloudPartCount(6u, 10u),
+	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
+	m_cloudColor(255, 255, 255, 200),
 
 	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),
@@ -121,9 +124,24 @@ sf::Time		DefaultBiome::getDayDuration()
 	return (m_dayDuration);
 }
 
-sf::Time		DefaultBiome::getNightDuration()
+sf::Color		DefaultBiome::getSkyDayColor()
 {
-	return (m_nightDuration);
+	return (m_skyDayColor);
+}
+
+sf::Color		DefaultBiome::getSkyNightColor()
+{
+	return (m_skyNightColor);
+}
+
+sf::Color		DefaultBiome::getNightLightColor()
+{
+	return (m_nightLightColor);
+}
+
+sf::Color		DefaultBiome::getSunsetLightColor()
+{
+	return (m_SunsetLightColor);
 }
 
 float			DefaultBiome::getWind()
@@ -174,6 +192,11 @@ std::size_t		DefaultBiome::getRainbowCount()
 std::size_t		DefaultBiome::getCloudCount()
 {
 	return (randomRangeInt(m_cloudCount));
+}
+
+std::size_t		DefaultBiome::getGroundRockCount()
+{
+	return (randomRangeInt(m_groundRockCount));
 }
 
 std::size_t	DefaultBiome::getTreeDepth()

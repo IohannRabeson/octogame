@@ -35,7 +35,10 @@ public:
 	virtual int				getBossInstancePosX();
 
 	virtual sf::Time		getDayDuration();
-	virtual sf::Time		getNightDuration();
+	virtual sf::Color		getSkyDayColor();
+	virtual sf::Color		getSkyNightColor();
+	virtual sf::Color		getNightLightColor();
+	virtual sf::Color		getSunsetLightColor();
 	virtual float			getWind();
 
 	virtual std::size_t		getRockCount();
@@ -47,6 +50,7 @@ public:
 	virtual std::size_t		getMoonCount();
 	virtual std::size_t		getStarCount();
 	virtual std::size_t		getRainbowCount();
+	virtual std::size_t		getGroundRockCount();
 
 	virtual sf::Vector2f	getRockSize();
 	virtual std::size_t		getRockPartCount();
@@ -119,7 +123,10 @@ private:
 	std::size_t			m_bossInstancePosX;
 
 	sf::Time			m_dayDuration;
-	sf::Time			m_nightDuration;
+	sf::Color			m_skyDayColor;
+	sf::Color			m_skyNightColor;
+	sf::Color			m_nightLightColor;
+	sf::Color			m_SunsetLightColor;
 	Range<float>		m_wind;
 
 	Range<std::size_t>	m_rockCount;
@@ -131,6 +138,7 @@ private:
 	Range<std::size_t>	m_moonCount;
 	Range<std::size_t>	m_rainbowCount;
 	Range<std::size_t>	m_cloudCount;
+	Range<std::size_t>	m_groundRockCount;
 
 	bool				m_canCreateRock;
 	bool				m_canCreateTree;

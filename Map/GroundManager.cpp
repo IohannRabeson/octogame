@@ -19,6 +19,7 @@ GroundManager::GroundManager(void) :
 	//TODO:Estimate what we need
 	m_decorManagerBack(200000),
 	m_decorManagerFront(200000),
+	m_decorManagerGround(200000),
 	m_nextState(GenerationState::None)
 {}
 
@@ -52,19 +53,24 @@ void GroundManager::init(ABiome & biome)
 
 	// Init decors
 	initDecors(biome);
+
+	swapMap();
 }
 
 void GroundManager::initDecors(ABiome & biome)
 {
 	m_decorManagerBack.setup(&biome);
 	m_decorManagerFront.setup(&biome);
+	m_decorManagerGround.setup(&biome);
+	std::size_t mapSizeX = biome.getMapSize().x;
 
 	std::size_t treeCount = biome.getTreeCount();
 	std::size_t rainbowCount = biome.getRainbowCount();
 	std::size_t rockCount = static_cast<std::size_t>(biome.getRockCount() / 2.f);
 	std::size_t mushroomCount = static_cast<std::size_t>(biome.getMushroomCount() / 2.f);
 	std::size_t crystalCount = static_cast<std::size_t>(biome.getCrystalCount() / 2);
-	std::size_t mapSizeX = biome.getMapSize().x;
+	std::size_t groundRockCount = biome.getGroundRockCount();
+	std::size_t totalCount = 0u;
 
 	if (biome.canCreateRainbow())
 	{
@@ -86,6 +92,7 @@ void GroundManager::initDecors(ABiome & biome)
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
+		totalCount += rockCount;
 	}
 
 	if (biome.canCreateTree())
@@ -97,6 +104,7 @@ void GroundManager::initDecors(ABiome & biome)
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
+		totalCount += treeCount;
 	}
 
 	if (biome.canCreateRock())
@@ -108,6 +116,7 @@ void GroundManager::initDecors(ABiome & biome)
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
+		totalCount += rockCount;
 	}
 
 	if (biome.canCreateMushroom())
@@ -119,6 +128,7 @@ void GroundManager::initDecors(ABiome & biome)
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
+		totalCount += mushroomCount;
 		for (std::size_t i = 0; i < mushroomCount; i++)
 		{
 			int x = biome.randomInt(0.f, mapSizeX);
@@ -126,6 +136,7 @@ void GroundManager::initDecors(ABiome & biome)
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
+		totalCount += mushroomCount;
 	}
 
 	if (biome.canCreateCrystal())
@@ -137,6 +148,7 @@ void GroundManager::initDecors(ABiome & biome)
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
+		totalCount += crystalCount;
 		for (std::size_t i = 0; i < crystalCount; i++)
 		{
 			int x = biome.getCrystalPosX();
@@ -144,9 +156,19 @@ void GroundManager::initDecors(ABiome & biome)
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
+		totalCount += crystalCount;
 	}
 
-	m_decorPositions.resize(rockCount * 2 + treeCount + crystalCount * 2 + mushroomCount * 2 + rainbowCount);
+	for (std::size_t i = 0; i < groundRockCount; i++)
+	{
+		int x = biome.randomFloat(0.f, mapSizeX);
+		m_decorManagerGround.add(DecorManager::DecorTypes::GroundRock);
+		m_tiles->registerDecor(x);
+		m_tilesPrev->registerDecor(x);
+	}
+	totalCount += groundRockCount;
+
+	m_decorPositions.resize(totalCount);
 }
 
 void GroundManager::setTransitionAppear(int x, int y)
@@ -460,10 +482,14 @@ void GroundManager::updateDecors(sf::Time deltatime)
 		(*it)->setPosition(m_decorPositions[i]);
 	for (auto it = m_decorManagerFront.begin(); it != m_decorManagerFront.end(); it++, i++)
 		(*it)->setPosition(m_decorPositions[i]);
+	for (auto it = m_decorManagerGround.begin(); it != m_decorManagerGround.end(); it++, i++)
+		(*it)->setPosition(m_decorPositions[i]);
+
 
 	octo::Camera& camera = octo::Application::getCamera();
 	m_decorManagerBack.update(deltatime, camera);
 	m_decorManagerFront.update(deltatime, camera);
+	m_decorManagerGround.update(deltatime, camera);
 }
 
 void GroundManager::update(float deltatime)
@@ -518,4 +544,9 @@ DecorManager const & GroundManager::getDecorsBack(void) const
 DecorManager const & GroundManager::getDecorsFront(void) const
 {
 	return m_decorManagerFront;
+}
+
+DecorManager const & GroundManager::getDecorsGround(void) const
+{
+	return m_decorManagerGround;
 }

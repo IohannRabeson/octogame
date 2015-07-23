@@ -27,6 +27,15 @@ private:
 		sf::Vector2f			center;
 	};
 
+	struct OctogonValue
+	{
+		sf::Vector2f			size;
+		sf::Vector2f			sizeCorner;
+		sf::Vector2f			origin;
+		float					cos;
+		float					sin;
+	};
+
 	std::size_t					m_depth;
 	sf::Vector2f				m_size;
 	sf::Color					m_color;
@@ -40,8 +49,9 @@ private:
 	bool						m_growSide;
 
 	bool						m_isLeaf;
-	std::vector<QuadValue>		m_leaf;
+	std::vector<OctogonValue>	m_octogonLeaf;
 	std::vector<sf::Vector2f>	m_leafSize;
+	float						m_leafCornerCoef;
 	sf::Color					m_leafColor;
 	std::size_t					m_countLeaf;
 	bool						m_setLeaf;
@@ -53,6 +63,20 @@ private:
 					float const sinAngle,
 					QuadValue & quad);
 
+	void setOctogonValue(OctogonValue & value,
+						sf::Vector2f const & size,
+						sf::Vector2f const & origin,
+						float cos,
+						float sin);
+
+	void createOctogon(sf::Vector2f const & size,
+						sf::Vector2f const & sizeCorner,
+						sf::Vector2f const & origin,
+						float cos,
+						float sin,
+						sf::Color const & color,
+						octo::VertexBuilder& builder);
+
 	void createBiColorQuad(QuadValue const & quad,
 							sf::Color const & color,
 							float const deltaColor,
@@ -63,9 +87,8 @@ private:
 						sf::Color const & color,
 						octo::VertexBuilder & builder);
 
-	void createLeaf(std::vector<QuadValue> const & quads,
+	void createLeaf(std::vector<OctogonValue> const & leaf,
 					sf::Color const & color,
-					float const deltaColor,
 					octo::VertexBuilder & builder);
 
 	void pythagorasTree(sf::Vector2f const & center,

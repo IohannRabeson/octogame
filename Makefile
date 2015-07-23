@@ -41,6 +41,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/GameClock.cpp						\
 				Game/BiomeManager.cpp					\
 				Game/FiniteStateMachine.cpp				\
+				Game/AGameObject.cpp			\
 				Game/ACharacter.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
@@ -72,8 +73,11 @@ SRC_DECORS =	Decors/GameObject.cpp					\
 				Decors/Rock.cpp							\
 				Decors/Tree.cpp							\
 				Decors/Sun.cpp							\
-				Decors/Mushroom.cpp						\
 				Decors/Moon.cpp							\
+				Decors/Mushroom.cpp						\
+				Decors/GroundRock.cpp					\
+				Decors/Sky.cpp							\
+				Decors/SunLight.cpp						\
 				Decors/Lightning.cpp					\
 				Decors/RainSystem.cpp
 

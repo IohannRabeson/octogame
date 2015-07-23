@@ -27,6 +27,7 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	DecorManager const & getDecorsBack(void) const;
 	DecorManager const & getDecorsFront(void) const;
+	DecorManager const & getDecorsGround(void) const;
 
 	void computeDecor(void);
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
@@ -44,6 +45,7 @@ private:
 	std::vector<sf::Vector2f>			m_decorPositions;
 	DecorManager						m_decorManagerBack;
 	DecorManager						m_decorManagerFront;
+	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
 
 	void defineTransition(void);
