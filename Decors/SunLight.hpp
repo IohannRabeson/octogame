@@ -20,19 +20,9 @@ public:
 						ABiome& biome);
 
 private:
-	sf::Vector2f			m_size;
-	sf::Vector2f			m_dayPos;
-	sf::Vector2f			m_nightPos;
-	sf::Vector2f			m_sunsetPos;
-	sf::Color				m_colorNight;
-	sf::Color				m_colorSunset;
-	sf::Vector2f			m_cameraSize;
-
-	GameClock *				m_clock;
-
 	void createSunLight(sf::Vector2f const & size,
-					sf::Vector2f const & origin,
-					octo::VertexBuilder& builder);
+						sf::Vector2f const & origin,
+						octo::VertexBuilder& builder);
 
 	void createBicolorQuad(sf::Vector2f const & upLeft,
 							sf::Vector2f const & upRight,
@@ -41,6 +31,16 @@ private:
 							sf::Color const & colorUp,
 							sf::Color const & colorDown,
 							octo::VertexBuilder & builder);
+
+	sf::Vector2f	m_size;
+	sf::Vector2f	m_dayPos;
+	sf::Vector2f	m_nightPos;
+	sf::Vector2f	m_sunsetPos;
+	sf::Color		m_colorNight;
+	sf::Color		m_colorSunset;
+	sf::Vector2f	m_cameraSize;
+
+	GameClock *		m_clock;
 };
 
 #endif

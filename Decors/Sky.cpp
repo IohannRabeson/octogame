@@ -46,7 +46,7 @@ void Sky::setup(ABiome& biome)
 void Sky::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
 {
 	sf::Vector2f const & position = getPosition();
-	sf::Vector2f cameraSize = octo::Application::getCamera().getSize();
+	sf::Vector2f const & cameraSize = octo::Application::getCamera().getSize();
 	float interpolateValue = m_clock->getNightValue() * 2.f >= 1.f ? 1.f : m_clock->getNightValue() * 2.f;
 	sf::Color colorUp = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
 	sf::Color colorDown = octo::linearInterpolation(m_colorDownDay, m_colorDownNight, interpolateValue);

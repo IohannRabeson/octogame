@@ -41,7 +41,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 	//TODO: Maybe its better to put all of that in a GenerativeLayerManager??
 	sf::Vector2u mapSize = m_biomeManager.getCurrentBiome().getMapSize();
-	//TODO: To remove this line (it's just to decrease th y of parallax elem)
+	//TODO: To remove this line (it's just to decrease the y of parallax elem)
 	mapSize.y = static_cast<std::size_t>(mapSize.y * 1.2f);
 	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
