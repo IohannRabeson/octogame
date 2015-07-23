@@ -42,8 +42,8 @@ void GenerativeLayer::init(void)
 
 	for (std::size_t i = 0u; i < m_widthScreen; i++)
 	{
-		m_vertices[(i * 4u) + 2u].position.y = static_cast<float>(getMapSize().y) * m_tileSize * 2.f;
-		m_vertices[(i * 4u) + 3u].position.y = static_cast<float>(getMapSize().y) * m_tileSize * 2.f;
+		m_vertices[(i * 4u) + 2u].position.y = static_cast<float>(getMapSize().y) * m_tileSize * 1.2f;
+		m_vertices[(i * 4u) + 3u].position.y = static_cast<float>(getMapSize().y) * m_tileSize * 1.2f;
 	}
 
 	computeVertices(m_positions);
@@ -108,7 +108,6 @@ void GenerativeLayer::setBackgroundSurfaceGenerator(BackgroundSurfaceGenerator m
 	m_backgroundSurface = std::bind(mapSurface, std::ref(m_noise), std::placeholders::_1, std::placeholders::_2);
 }
 
-#include <iostream>
 void GenerativeLayer::update(float deltatime)
 {
 	m_transitionTimer += deltatime;
@@ -144,28 +143,34 @@ void GenerativeLayer::update(float deltatime)
 	}
 	static const sf::Color startColor(0, 0, 0);
 	sf::Color color;
-	float	rgb[3];
-	rgb[0] = startColor.r - m_color.r;
-	rgb[1] = startColor.g - m_color.g;
-	rgb[2] = startColor.b - m_color.b;
-	//float max = m_vertices[3u].position.y;
+	float max = m_vertices[3u].position.y;
 	for (std::size_t i = 0u; i < m_widthScreen; i++)
 	{
-		//TODO: manage interpolation with camera pos for a better result
-		//float transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 0u].position.y / max);
-		//m_vertices[(i * 4u) + 0u].color.r = m_color.r + (rgb[0]) * transition;
-		//m_vertices[(i * 4u) + 0u].color.g = m_color.g + (rgb[1]) * transition;
-		//m_vertices[(i * 4u) + 0u].color.b = m_color.b + (rgb[2]) * transition;
-		//transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 1u].position.y / max);
-		//m_vertices[(i * 4u) + 1u].color.r = m_color.r + (rgb[0]) * transition;
-		//m_vertices[(i * 4u) + 1u].color.g = m_color.g + (rgb[1]) * transition;
-		//m_vertices[(i * 4u) + 1u].color.b = m_color.b + (rgb[2]) * transition;
-		m_vertices[(i * 4u) + 0u].color.r = m_color.r + (rgb[0]) * m_opacity;
-		m_vertices[(i * 4u) + 0u].color.g = m_color.g + (rgb[1]) * m_opacity;
-		m_vertices[(i * 4u) + 0u].color.b = m_color.b + (rgb[2]) * m_opacity;
-		m_vertices[(i * 4u) + 1u].color = m_vertices[(i * 4u) + 0u].color;
-		m_vertices[(i * 4u) + 2u].color = m_vertices[(i * 4u) + 0u].color;
-		m_vertices[(i * 4u) + 3u].color = m_vertices[(i * 4u) + 0u].color;
+		float transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 0u].position.y / max);
+		if (i ==1)
+	//	std::cout << (max + offsetY) << " " << m_vertices[(i * 4u) + 0u].position.y << " - " << offsetY << " = " << (m_vertices[(i * 4u) + 0u].position.y - offsetY) << std::endl;
+		m_vertices[(i * 4u) + 0u].color.r = (1.f - transition) * m_color.r + transition * startColor.r;
+		m_vertices[(i * 4u) + 0u].color.g = (1.f - transition) * m_color.g + transition * startColor.g;
+		m_vertices[(i * 4u) + 0u].color.b = (1.f - transition) * m_color.b + transition * startColor.b;
+		transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 1u].position.y / max);
+		m_vertices[(i * 4u) + 1u].color.r = (1.f - transition) * m_color.r + transition * startColor.r;
+		m_vertices[(i * 4u) + 1u].color.g = (1.f - transition) * m_color.g + transition * startColor.g;
+		m_vertices[(i * 4u) + 1u].color.b = (1.f - transition) * m_color.b + transition * startColor.b;
+		m_vertices[(i * 4u) + 2u].color.r = (1.f - m_opacity) * m_color.r + m_opacity * startColor.r;
+		m_vertices[(i * 4u) + 2u].color.g = (1.f - m_opacity) * m_color.g + m_opacity * startColor.g;
+		m_vertices[(i * 4u) + 2u].color.b = (1.f - m_opacity) * m_color.b + m_opacity * startColor.b;
+		m_vertices[(i * 4u) + 3u].color = m_vertices[(i * 4u) + 2u].color;
+		/*m_vertices[(i * 4u) + 0u].color.r = m_color.r + (rgb[0]) * transition;
+		m_vertices[(i * 4u) + 0u].color.g = m_color.g + (rgb[1]) * transition;
+		m_vertices[(i * 4u) + 0u].color.b = m_color.b + (rgb[2]) * transition;
+		transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 1u].position.y / max);
+		m_vertices[(i * 4u) + 1u].color.r = m_color.r + (rgb[0]) * transition;
+		m_vertices[(i * 4u) + 1u].color.g = m_color.g + (rgb[1]) * transition;
+		m_vertices[(i * 4u) + 1u].color.b = m_color.b + (rgb[2]) * transition;
+		m_vertices[(i * 4u) + 2u].color.r = m_color.r + (rgb[0]) * m_opacity;
+		m_vertices[(i * 4u) + 2u].color.g = m_color.g + (rgb[1]) * m_opacity;
+		m_vertices[(i * 4u) + 2u].color.b = m_color.b + (rgb[2]) * m_opacity;
+		m_vertices[(i * 4u) + 3u].color = m_vertices[(i * 4u) + 2u].color;*/
 	}
 }
 
