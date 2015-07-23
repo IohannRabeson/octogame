@@ -9,33 +9,34 @@
 
 class DecorAnimator
 {
-enum EState
+public:
+enum class State
 {
-	e_state_life,
-	e_state_grow,
-	e_state_die,
-	e_state_sleep,
-	e_state_stop,
+	Life,
+	Grow,
+	Die,
+	Sleep,
+	Stop,
 
-	e_state_nb
+	Count
 };
 
-public:
 	DecorAnimator(float growTime = 2.f, float dieTime = 4.f, float beatTime = 3.f, float delta = 0.15f, float start = 4.f);
 	virtual ~DecorAnimator(void) = default;
 
-	void			pause(void);
-	void			play(void);
-	void			sleep(void);
-	void			die(void);
-	void			setup(sf::Time lifeTime = sf::seconds(1.f));
-	bool			update(sf::Time frameTime);
-	float			getAnimation(void) const;
-	float			getAnimationTime(void) const;
+	void					pause(void);
+	void					play(void);
+	void					sleep(void);
+	void					die(void);
+	void					setup(sf::Time lifeTime = sf::seconds(1.f));
+	bool					update(sf::Time frameTime);
+	float					getAnimation(void) const;
+	float					getAnimationTime(void) const;
+	DecorAnimator::State	getState(void) const;
 
 private:
-	EState			m_currentState;
-	EState			m_lastState;
+	State			m_currentState;
+	State			m_lastState;
 	float			m_animation;
 	float			m_finalAnimation;
 

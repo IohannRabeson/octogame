@@ -53,7 +53,10 @@ private:
 						std::vector<sf::Color> const & colors,
 						octo::VertexBuilder& builder);
 
-	void computeInterpolateValues(sf::Time frameTime,
+	void computeInterpolateValuesGrow(sf::Time frameTime,
+								std::vector<float> & values);
+
+	void computeInterpolateValuesDie(sf::Time frameTime,
 								std::vector<float> & values);
 
 	float						m_cos;
@@ -70,8 +73,9 @@ private:
 	std::vector<sf::Color>		m_colors;
 
 	sf::Time					m_timer;
-	sf::Time					m_timerMax;
+	std::vector<sf::Time>		m_timerMax;
 	std::vector<float>			m_interpolateValues;
+	bool						m_grow;
 
 	sf::Vector2f				m_endPosition;
 	bool						m_firstFrame;

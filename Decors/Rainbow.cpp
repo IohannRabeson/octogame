@@ -11,7 +11,7 @@ Rainbow::Rainbow(void) :
 	m_thickness(50.f),
 	m_stripeCount(7u),
 	m_timer(sf::seconds(0.f)),
-	m_timerMax(sf::seconds(0.5f)),
+	m_grow(true),
 	m_firstFrame(true)
 {
 }
@@ -38,11 +38,22 @@ void Rainbow::createPart(Line const & start, Line const & end, std::size_t strip
 {
 	for (std::size_t i = 0; i < stripeCount; i++)
 	{
-		sf::Vector2f downLeft = start[i];
-		sf::Vector2f downRight = start[i + 1];
-		sf::Vector2f upLeft = octo::linearInterpolation(downLeft, end[i], interpolateValue);
-		sf::Vector2f upRight = octo::linearInterpolation(downRight, end[i + 1], interpolateValue);
-		builder.createQuad(downLeft + origin, downRight + origin, upRight + origin, upLeft + origin, colors[i]);
+		if (m_grow)
+		{
+			sf::Vector2f downLeft = start[i];
+			sf::Vector2f downRight = start[i + 1];
+			sf::Vector2f upLeft = octo::linearInterpolation(downLeft, end[i], interpolateValue);
+			sf::Vector2f upRight = octo::linearInterpolation(downRight, end[i + 1], interpolateValue);
+			builder.createQuad(downLeft + origin, downRight + origin, upRight + origin, upLeft + origin, colors[i]);
+		}
+		else
+		{
+			sf::Vector2f upLeft = end[i];
+			sf::Vector2f upRight = end[i + 1];
+			sf::Vector2f downLeft = octo::linearInterpolation(upLeft, start[i], interpolateValue);
+			sf::Vector2f downRight = octo::linearInterpolation(upRight, start[i + 1], interpolateValue);
+			builder.createQuad(downLeft + origin, downRight + origin, upRight + origin, upLeft + origin, colors[i]);
+		}
 	}
 }
 
@@ -92,7 +103,7 @@ void Rainbow::setupSizes(ABiome & biome, std::vector<sf::Vector2f> & sizes, std:
 				sizes[(j * 4) + i + 1] = sf::Vector2f(partSize * 2.f, 0.f);
 		}
 	}
-	sizes[partCount - 1] = sf::Vector2f(0.f, 0.f);
+	sizes[partCount - 1] = sizes[0];
 }
 
 void Rainbow::setupColors(std::vector<sf::Color> & colors)
@@ -118,22 +129,35 @@ void Rainbow::setup(ABiome& biome)
 	m_end.resize(m_stripeCount + 1);
 	m_colors.resize(m_stripeCount);
 	setupColors(m_colors);
-	m_timerMax = sf::seconds(biome.getRainbowGrowTime().asSeconds() / m_partCount);
 
-	m_interpolateValues.resize(m_partCount + 1);
-	for (std::size_t i = 0; i < m_partCount + 1; i++)
+	float totalFlatSizeX = 0.f;
+	for (std::size_t i = 0; i < m_partCount; i++)
+		totalFlatSizeX += fabs(m_sizes[i].x) + fabs(m_sizes[i].y);
+
+	m_timerMax.resize(m_partCount);
+	m_interpolateValues.resize(m_partCount);
+	float growTime = biome.getRainbowGrowTime().asSeconds();
+	for (std::size_t i = 0; i < m_partCount; i++)
+	{
+		m_timerMax[i] = sf::seconds(growTime * (fabs(m_sizes[i].x + m_sizes[i].y)) / totalFlatSizeX);
 		m_interpolateValues[i] = 0.f;
+	}
 }
 
-void Rainbow::computeInterpolateValues(sf::Time frameTime, std::vector<float> & values)
+void Rainbow::computeInterpolateValuesGrow(sf::Time frameTime, std::vector<float> & values)
 {
+	if (values[m_partCount - 1] == 1.f)
+	{
+		m_grow = false;
+		return;
+	}
 	m_timer += frameTime;
-	for (std::size_t i = 0; i < m_partCount + 1; i++)
+	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		if (values[i] != 1.f)
 		{
-			values[i] = m_timer / m_timerMax;
-			if (m_timer >= m_timerMax)
+			values[i] = m_timer / m_timerMax[i];
+			if (m_timer >= m_timerMax[i])
 			{
 				m_timer = sf::Time::Zero;
 				values[i] = 1.f;
@@ -143,10 +167,31 @@ void Rainbow::computeInterpolateValues(sf::Time frameTime, std::vector<float> & 
 	}
 }
 
+void Rainbow::computeInterpolateValuesDie(sf::Time frameTime, std::vector<float> & values)
+{
+	m_timer += frameTime;
+	for (std::size_t i = 0; i < m_partCount; i++)
+	{
+		if (values[i] != 0.f)
+		{
+			values[i] = 1 - (m_timer / m_timerMax[i]);
+			if (m_timer >= m_timerMax[i])
+			{
+				m_timer = sf::Time::Zero;
+				values[i] = 0.f;
+			}
+			break;
+		}
+	}
+}
+
 void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
 	sf::Vector2f const & position = getPosition();
-	computeInterpolateValues(frameTime, m_interpolateValues);
+	if (m_grow)
+		computeInterpolateValuesGrow(frameTime, m_interpolateValues);
+	else
+		computeInterpolateValuesDie(frameTime, m_interpolateValues);
 	// position - m_endPosition make the arrival be the origin
 	createRainbow(position - m_endPosition + sf::Vector2f(0.f, m_thickness), m_sizes, m_stripeCount, m_thickness, m_colors, builder);
 }
