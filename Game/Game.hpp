@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:16:26 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/18 09:51:45 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/23 03:24:43 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "SkyManager.hpp"
 # include "GroundManager.hpp"
 # include "ParallaxScrolling.hpp"
+# include "CharacterOcto.hpp"
 
 class Game : public octo::DefaultKeyboardListener
 {
@@ -29,13 +30,15 @@ public:
 
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
-
+private:
+	void			followPlayer();
 private:
 	GameClock			m_gameClock;
 	BiomeManager		m_biomeManager;
 	SkyManager			m_skyManager;
 	GroundManager		m_groundManager;
 	ParallaxScrolling	m_parallaxScrolling;
+	CharacterOcto		m_octo;
 
 	bool onPressed(sf::Event::KeyEvent const & event);
 

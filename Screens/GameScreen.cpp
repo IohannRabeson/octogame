@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 06:03:08 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 06:08:01 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/23 03:22:39 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,7 @@ void	GameScreen::stop()
 
 void	GameScreen::update(sf::Time frameTime)
 {
-	float cameraSpeed = 500.f * frameTime.asSeconds();
-	octo::Camera & camera = octo::Application::getCamera();
-
 	m_game.update(frameTime);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		camera.move(-cameraSpeed, 0.f);
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		camera.move(cameraSpeed, 0.f);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		camera.move(0.f, -cameraSpeed);
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		camera.move(0.f, cameraSpeed);
 }
 
 bool GameScreen::onPressed(sf::Event::KeyEvent const &)

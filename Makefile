@@ -40,7 +40,8 @@ SRC_STATES =	Screens/StateTest.cpp					\
 SRC_GAME =		Game/Game.cpp							\
 				Game/GameClock.cpp						\
 				Game/BiomeManager.cpp					\
-				Game/AGameObject.cpp
+				Game/AGameObject.cpp					\
+				Game/CharacterOcto.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
