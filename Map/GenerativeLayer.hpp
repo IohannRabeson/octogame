@@ -50,6 +50,7 @@ private:
 	float								m_transitionTimer;
 	float								m_transitionTimerDuration;
 	float								m_opacity;
+	float								m_highestY;
 	int									m_heightOffset;
 	std::size_t							m_widthScreen;
 	std::size_t							m_verticesCount;

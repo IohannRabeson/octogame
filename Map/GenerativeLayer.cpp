@@ -20,6 +20,7 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	m_transitionTimer(0.f),
 	m_transitionTimerDuration(transitionDuration),
 	m_opacity(opacity),
+	m_highestY(0.f),
 	m_heightOffset(heightOffset),
 	m_widthScreen(octo::Application::getGraphicsManager().getVideoMode().width / m_tileSize + 4u),
 	m_verticesCount(0u)
@@ -40,10 +41,12 @@ void GenerativeLayer::init(void)
 	m_positionsPrev.resize(getMapSize().x * 4);
 	m_noise.setSeed(42);
 
-	for (std::size_t i = 0u; i < m_widthScreen; i++)
+	for (std::size_t i = 0u; i < getMapSize().x; i++)
 	{
-		m_vertices[(i * 4u) + 2u].position.y = static_cast<float>(getMapSize().y) * m_tileSize * 1.2f;
-		m_vertices[(i * 4u) + 3u].position.y = static_cast<float>(getMapSize().y) * m_tileSize * 1.2f;
+		m_positions[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize;
+		m_positions[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize;
+		m_positionsPrev[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize;
+		m_positionsPrev[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize;
 	}
 
 	computeVertices(m_positions);
@@ -52,6 +55,8 @@ void GenerativeLayer::init(void)
 
 void GenerativeLayer::computeVertices(std::vector<sf::Vector2f> & positions)
 {
+	//TODO: limit
+	m_highestY = 10000.f;
 	// Compute value to manage start/end transition
 	float start = getHeightValue((getMapSize().x - 5) * 4);
 	float end = getHeightValue(5 * 4);
@@ -94,7 +99,10 @@ void GenerativeLayer::swap(void)
 float GenerativeLayer::getHeightValue(int x)
 {
 	int f = (m_backgroundSurface(static_cast<float>(x) / static_cast<float>(getMapSize().x), m_depth) + 1.f) / 2.f * static_cast<float>(getMapSize().y) - m_heightOffset;
-	return (f * static_cast<int>(m_tileSize));
+	float ff = f * m_tileSize;
+	if (ff < m_highestY)
+		m_highestY = ff;
+	return ff;
 }
 
 void GenerativeLayer::setColor(sf::Color const & color)
@@ -127,50 +135,41 @@ void GenerativeLayer::update(float deltatime)
 	{
 		if (m_transitionTimerDuration < 0.f)
 		{
-			m_vertices[(i * 4u) + 0u].position.y = m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y + offsetY;
-			m_vertices[(i * 4u) + 1u].position.y = m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y + offsetY;
+			m_vertices[(i * 4u) + 0u].position.y = m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y;
+			m_vertices[(i * 4u) + 1u].position.y = m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y;
 		}
 		else
 		{
-			m_vertices[(i * 4u) + 0u].position.y = octo::cosinusInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, transition) + offsetY;
-			m_vertices[(i * 4u) + 1u].position.y = octo::cosinusInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, transition) + offsetY;
+			m_vertices[(i * 4u) + 0u].position.y = octo::cosinusInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, transition);
+			m_vertices[(i * 4u) + 1u].position.y = octo::cosinusInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, transition);
 		}
+		m_vertices[(i * 4u) + 2u].position.y = m_positions[(i * 4u) + 2u].y;
+		m_vertices[(i * 4u) + 3u].position.y = m_positions[(i * 4u) + 3u].y;
 		//TODO: little optimization possible if we precompute some values, maybe not worth
 		m_vertices[(i * 4u) + 0u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize;
 		m_vertices[(i * 4u) + 1u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize;
 		m_vertices[(i * 4u) + 2u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize;
 		m_vertices[(i * 4u) + 3u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize;
 	}
-	static const sf::Color startColor(0, 0, 0);
-	sf::Color color;
-	float max = m_vertices[3u].position.y;
+	//TODO: get skycolor
+	static const sf::Color botColor(0, 0, 0);
+	float max = m_vertices[3u].position.y - m_highestY;
+	float t;
 	for (std::size_t i = 0u; i < m_widthScreen; i++)
 	{
-		float transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 0u].position.y / max);
-		if (i ==1)
-	//	std::cout << (max + offsetY) << " " << m_vertices[(i * 4u) + 0u].position.y << " - " << offsetY << " = " << (m_vertices[(i * 4u) + 0u].position.y - offsetY) << std::endl;
-		m_vertices[(i * 4u) + 0u].color.r = (1.f - transition) * m_color.r + transition * startColor.r;
-		m_vertices[(i * 4u) + 0u].color.g = (1.f - transition) * m_color.g + transition * startColor.g;
-		m_vertices[(i * 4u) + 0u].color.b = (1.f - transition) * m_color.b + transition * startColor.b;
-		transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 1u].position.y / max);
-		m_vertices[(i * 4u) + 1u].color.r = (1.f - transition) * m_color.r + transition * startColor.r;
-		m_vertices[(i * 4u) + 1u].color.g = (1.f - transition) * m_color.g + transition * startColor.g;
-		m_vertices[(i * 4u) + 1u].color.b = (1.f - transition) * m_color.b + transition * startColor.b;
-		m_vertices[(i * 4u) + 2u].color.r = (1.f - m_opacity) * m_color.r + m_opacity * startColor.r;
-		m_vertices[(i * 4u) + 2u].color.g = (1.f - m_opacity) * m_color.g + m_opacity * startColor.g;
-		m_vertices[(i * 4u) + 2u].color.b = (1.f - m_opacity) * m_color.b + m_opacity * startColor.b;
+		t = octo::linearInterpolation(0.f, m_opacity, (m_vertices[(i * 4u) + 0u].position.y - m_highestY) / max);
+		m_vertices[(i * 4u) + 0u].color = std::move(octo::linearInterpolation(m_color, botColor, t));
+
+		t = octo::linearInterpolation(0.f, m_opacity, (m_vertices[(i * 4u) + 1u].position.y - m_highestY) / max);
+		m_vertices[(i * 4u) + 1u].color = std::move(octo::linearInterpolation(m_color, botColor, t));
+
+		m_vertices[(i * 4u) + 2u].color = std::move(octo::linearInterpolation(m_color, botColor, m_opacity));
 		m_vertices[(i * 4u) + 3u].color = m_vertices[(i * 4u) + 2u].color;
-		/*m_vertices[(i * 4u) + 0u].color.r = m_color.r + (rgb[0]) * transition;
-		m_vertices[(i * 4u) + 0u].color.g = m_color.g + (rgb[1]) * transition;
-		m_vertices[(i * 4u) + 0u].color.b = m_color.b + (rgb[2]) * transition;
-		transition = octo::linearInterpolation(0.f, m_opacity, m_vertices[(i * 4u) + 1u].position.y / max);
-		m_vertices[(i * 4u) + 1u].color.r = m_color.r + (rgb[0]) * transition;
-		m_vertices[(i * 4u) + 1u].color.g = m_color.g + (rgb[1]) * transition;
-		m_vertices[(i * 4u) + 1u].color.b = m_color.b + (rgb[2]) * transition;
-		m_vertices[(i * 4u) + 2u].color.r = m_color.r + (rgb[0]) * m_opacity;
-		m_vertices[(i * 4u) + 2u].color.g = m_color.g + (rgb[1]) * m_opacity;
-		m_vertices[(i * 4u) + 2u].color.b = m_color.b + (rgb[2]) * m_opacity;
-		m_vertices[(i * 4u) + 3u].color = m_vertices[(i * 4u) + 2u].color;*/
+
+		m_vertices[(i * 4u) + 0u].position.y += offsetY;
+		m_vertices[(i * 4u) + 1u].position.y += offsetY;
+		m_vertices[(i * 4u) + 2u].position.y += offsetY;
+		m_vertices[(i * 4u) + 3u].position.y += offsetY;
 	}
 }
 
