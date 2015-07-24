@@ -30,7 +30,7 @@ RainSystem::RainSystem() :
 //	reset({-DropSize, {DropSize.x, -DropSize.y}, DropSize, {-DropSize.x, DropSize.y}},
 //		   sf::Quads, 1000u);
 
-	reset({-DropSize, {DropSize.x, -DropSize.y}, DropSize},
+	reset({-DropSize, {0.f, -DropSize.y}, DropSize},
 		   sf::Triangles, 1000u);
 	setDropSpeed(2048.f);
 	setDropPerSecond(20);

@@ -63,6 +63,7 @@ void SunLight::setup(ABiome& biome)
 	m_sunsetPos = sf::Vector2f(0.f, -m_cameraSize.y * 2.f);
 	m_colorNight = biome.getNightLightColor();
 	m_colorSunset = biome.getSunsetLightColor();
+	//TODO: Create rain filter
 }
 
 void SunLight::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
