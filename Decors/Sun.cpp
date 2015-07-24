@@ -14,40 +14,30 @@ void Sun::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorn
 {
 	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
 	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
-	sf::Vector2f cornerUpLeft(-size.x + sizeCorner.x, -size.y + sizeCorner.y);
-	sf::Vector2f cornerUpRight(size.x - sizeCorner.x, -size.y + sizeCorner.y);
 	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
 	sf::Vector2f upMidRight(size.x, -size.y + sizeCorner.y);
 	sf::Vector2f downLeft(-size.x + sizeCorner.x, size.y);
 	sf::Vector2f downRight(size.x - sizeCorner.x, size.y);
-	sf::Vector2f cornerDownLeft(-size.x + sizeCorner.x, size.y - sizeCorner.y);
-	sf::Vector2f cornerDownRight(size.x - sizeCorner.x, size.y - sizeCorner.y);
 	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
 	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
 
 	upLeft += origin;
 	upRight += origin;
-	cornerUpLeft += origin;
-	cornerUpRight += origin;
 	upMidLeft += origin;
 	upMidRight += origin;
 	downLeft += origin;
 	downRight += origin;
-	cornerDownLeft += origin;
-	cornerDownRight += origin;
 	downMidLeft += origin;
 	downMidRight += origin;
 
-	builder.createTriangle(upLeft, cornerUpLeft, upMidLeft, color);
-	builder.createTriangle(upRight, cornerUpRight, upMidRight, color);
-	builder.createTriangle(downLeft, cornerDownLeft, downMidLeft, color);
-	builder.createTriangle(downRight, cornerDownRight, downMidRight, color);
-
-	builder.createQuad(upLeft, upRight, cornerUpRight, cornerUpLeft, color);
-	builder.createQuad(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, color);
-	builder.createQuad(cornerDownLeft, cornerDownRight, downRight, downLeft, color);
-	builder.createQuad(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, color);
-	builder.createQuad(cornerUpRight, upMidRight, downMidRight, cornerDownRight, color);
+	builder.createTriangle(origin, upLeft, upRight, color);
+	builder.createTriangle(origin, upRight, upMidRight, color);
+	builder.createTriangle(origin, upMidRight, downMidRight, color);
+	builder.createTriangle(origin, downMidRight, downRight, color);
+	builder.createTriangle(origin, downRight, downLeft, color);
+	builder.createTriangle(origin, downLeft, downMidLeft, color);
+	builder.createTriangle(origin, downMidLeft, upMidLeft, color);
+	builder.createTriangle(origin, upMidLeft, upLeft, color);
 }
 
 void Sun::createSun(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, std::size_t partCount, sf::Color color, octo::VertexBuilder& builder)
