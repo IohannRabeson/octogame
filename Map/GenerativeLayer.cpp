@@ -140,8 +140,8 @@ void GenerativeLayer::update(float deltatime)
 		}
 		else
 		{
-			m_vertices[(i * 4u) + 0u].position.y = octo::cosinusInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, transition);
-			m_vertices[(i * 4u) + 1u].position.y = octo::cosinusInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, transition);
+			m_vertices[(i * 4u) + 0u].position.y = octo::linearInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, transition);
+			m_vertices[(i * 4u) + 1u].position.y = octo::linearInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, transition);
 		}
 		m_vertices[(i * 4u) + 2u].position.y = m_positions[(i * 4u) + 2u].y;
 		m_vertices[(i * 4u) + 3u].position.y = m_positions[(i * 4u) + 3u].y;
