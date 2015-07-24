@@ -15,6 +15,7 @@ DefaultBiome::DefaultBiome() :
 	m_nightLightColor(0, 197, 255, 100),
 	m_SunsetLightColor(238, 173, 181, 100),
 	m_wind(100.f, 150.f),
+	m_isRaining(true),
 
 	m_rockCount(10u, 20u),
 	m_treeCount(5u, 10u),
@@ -23,7 +24,7 @@ DefaultBiome::DefaultBiome() :
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 3u),
 	m_moonCount(1u, 3u),
-	m_rainbowCount(1u, 2u),
+	m_rainbowCount(1u, 3u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
@@ -80,10 +81,11 @@ DefaultBiome::DefaultBiome() :
 	m_moonColor(200, 200, 200),
 	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
 
-	m_rainbowThickness(50.f, 100.f),
+	m_rainbowThickness(150.f, 200.f),
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
-	m_rainbowGrowTime(sf::seconds(6.f), sf::seconds(10.f))
+	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
+	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_name);
 }
@@ -147,6 +149,11 @@ sf::Color		DefaultBiome::getSunsetLightColor()
 float			DefaultBiome::getWind()
 {
 	return (randomRangeFloat(m_wind));
+}
+
+bool			DefaultBiome::isRaining()
+{
+	return (m_isRaining);
 }
 
 std::size_t		DefaultBiome::getRockCount()
@@ -443,9 +450,14 @@ std::size_t		DefaultBiome::getRainbowLoopCount()
 	return (randomRangeInt(m_rainbowLoopCount));
 }
 
-sf::Time		DefaultBiome::getRainbowGrowTime()
+sf::Time		DefaultBiome::getRainbowLifeTime()
 {
-	return (randomRangeTime(m_rainbowGrowTime));
+	return (randomRangeTime(m_rainbowLifeTime));
+}
+
+sf::Time		DefaultBiome::getRainbowIntervalTime()
+{
+	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
 bool			DefaultBiome::canCreateRainbow()

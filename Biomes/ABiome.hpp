@@ -40,6 +40,7 @@ public:
 	virtual sf::Color		getNightLightColor() = 0;
 	virtual sf::Color		getSunsetLightColor() = 0;
 	virtual float			getWind() = 0;
+	virtual bool			isRaining() = 0;
 
 	virtual std::size_t		getRockCount() = 0;
 	virtual std::size_t		getTreeCount() = 0;
@@ -107,7 +108,8 @@ public:
 	virtual float			getRainbowThickness() = 0;
 	virtual float			getRainbowPartSize() = 0;
 	virtual std::size_t		getRainbowLoopCount() = 0;
-	virtual sf::Time		getRainbowGrowTime() = 0;
+	virtual sf::Time		getRainbowLifeTime() = 0;
+	virtual sf::Time		getRainbowIntervalTime() = 0;
 	virtual bool			canCreateRainbow() = 0;
 
 	virtual float			randomFloat(float min, float max) = 0;
