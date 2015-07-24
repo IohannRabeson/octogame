@@ -209,8 +209,6 @@ void Tree::setup(ABiome& biome)
 	m_leafMaxCount = std::pow(2, m_depth) + 1;
 	m_octogonLeaf.resize(m_leafMaxCount);
 	m_leafSize.resize(m_leafMaxCount);
-	//TODO: Add this in biom
-	//m_leafCornerCoef = biome.getLeafCornerCoef();
 	m_mapSizeY = biome.getMapSizeFloat().y;
 
 	newTree(biome);

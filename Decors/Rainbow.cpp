@@ -240,8 +240,8 @@ void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& b
 		// position - m_endPosition make the arrival be the origin
 		createRainbow(position - m_endPosition, m_sizes, m_stripeCount, m_thickness, m_colors, m_transparent, builder);
 	}
-	//TODO:
-	else if (biome.isRaining);// && m_clock->isDay())
+	//TODO: Add clock somewhere
+	else if (biome.isRaining())// && m_clock->isDay())
 	{
 		newRainbow(biome);
 	}
