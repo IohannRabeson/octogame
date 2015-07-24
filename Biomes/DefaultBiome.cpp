@@ -24,7 +24,7 @@ DefaultBiome::DefaultBiome() :
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 3u),
 	m_moonCount(1u, 3u),
-	m_rainbowCount(1u, 3u),
+	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
@@ -81,7 +81,7 @@ DefaultBiome::DefaultBiome() :
 	m_moonColor(200, 200, 200),
 	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
 
-	m_rainbowThickness(150.f, 200.f),
+	m_rainbowThickness(70.f, 120.f),
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
