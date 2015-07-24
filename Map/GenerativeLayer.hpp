@@ -22,6 +22,7 @@ public:
 
 	void init(void);
 	void setColor(sf::Color const & color);
+	void setOpacityColor(sf::Color const & color) { m_opacityColor = color; }
 
 	//TODO: use bool to manage this
 	/*! Set the transition duration
@@ -44,6 +45,7 @@ private:
 	std::vector<sf::Vector2f>			m_positionsPrev;
 	sf::Vector2u						m_mapSize;
 	sf::Color							m_color;
+	sf::Color							m_opacityColor;
 	Noise								m_noise;
 	float								m_tileSize;
 	float								m_depth;

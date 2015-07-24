@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/23 16:30:57 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/24 13:57:09 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,15 @@ void	Game::loadLevel(std::string const& fileName)
 	m_parallaxScrolling.addLayer(layer);
 }
 
+#include <Interpolations.hpp>
 void	Game::update(sf::Time frameTime)
 {
+	sf::Color m_colorUpDay = m_biomeManager.getCurrentBiome().getSkyDayColor();
+	sf::Color m_colorUpNight = m_biomeManager.getCurrentBiome().getSkyNightColor();
+	float interpolateValue = m_gameClock.getNightValue() * 2.f >= 1.f ? 1.f : m_gameClock.getNightValue() * 2.f;
+	sf::Color colorUp = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
+	m_parallaxScrolling.setColor(colorUp);
+
 	m_gameClock.update(frameTime);
 	m_skyManager.update(frameTime);
 	m_groundManager.update(frameTime.asSeconds());

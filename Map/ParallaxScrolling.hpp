@@ -22,6 +22,7 @@ public:
 
 		inline void setSpeed(sf::Vector2f const & speed) { m_speed = speed; }
 		inline sf::Vector2f const & getSpeed(void) const { return m_speed; }
+		virtual void setOpacityColor(sf::Color const & ) = 0;
 
 		virtual void init(void) = 0;
 		virtual void update(float deltatime) = 0;
@@ -35,6 +36,7 @@ public:
 	ParallaxScrolling(std::initializer_list<ALayer *> list);
 	virtual ~ParallaxScrolling(void);
 
+		void setColor(sf::Color const & color);
 	/*! Add a layer */
 	void addLayer(ALayer * layer);
 	/*! Remove the layer from the vector and release the allocated memory */

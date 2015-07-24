@@ -15,6 +15,7 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	m_positionsPrev(0u),
 	m_mapSize(mapSize),
 	m_color(color),
+	m_opacityColor(sf::Color::Black),
 	m_tileSize(tileSize),
 	m_depth(0.f),
 	m_transitionTimer(0.f),
@@ -157,13 +158,13 @@ void GenerativeLayer::update(float deltatime)
 	float t;
 	for (std::size_t i = 0u; i < m_widthScreen; i++)
 	{
-		t = octo::linearInterpolation(0.f, m_opacity, (m_vertices[(i * 4u) + 0u].position.y - m_highestY) / max);
-		m_vertices[(i * 4u) + 0u].color = std::move(octo::linearInterpolation(m_color, botColor, t));
+		t = m_opacity - octo::linearInterpolation(0.f, m_opacity, (m_vertices[(i * 4u) + 0u].position.y - m_highestY) / max);
+		m_vertices[(i * 4u) + 0u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, t));
 
-		t = octo::linearInterpolation(0.f, m_opacity, (m_vertices[(i * 4u) + 1u].position.y - m_highestY) / max);
-		m_vertices[(i * 4u) + 1u].color = std::move(octo::linearInterpolation(m_color, botColor, t));
+		t = m_opacity - octo::linearInterpolation(0.f, m_opacity, (m_vertices[(i * 4u) + 1u].position.y - m_highestY) / max);
+		m_vertices[(i * 4u) + 1u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, t));
 
-		m_vertices[(i * 4u) + 2u].color = std::move(octo::linearInterpolation(m_color, botColor, m_opacity));
+		m_vertices[(i * 4u) + 2u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, 0.f));
 		m_vertices[(i * 4u) + 3u].color = m_vertices[(i * 4u) + 2u].color;
 
 		m_vertices[(i * 4u) + 0u].position.y += offsetY;

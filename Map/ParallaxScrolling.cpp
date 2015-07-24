@@ -26,6 +26,12 @@ void ParallaxScrolling::removeLayer(std::size_t index)
 	m_layers.erase(m_layers.begin() + index);
 }
 
+void ParallaxScrolling::setColor(sf::Color const & color)
+{
+	for (auto & layer : m_layers)
+		layer->setOpacityColor(color);
+}
+
 void ParallaxScrolling::removeAllLayers(void)
 {
 	m_layers.clear();
