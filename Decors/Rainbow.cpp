@@ -49,25 +49,28 @@ void Rainbow::createBicolorQuad(sf::Vector2f const & upLeft, sf::Vector2f const 
 
 void Rainbow::createPart(Line const & start, Line const & end, std::size_t stripeCount, sf::Vector2f const & origin, std::vector<sf::Color> colorsStart, std::vector<sf::Color> colorsEnd, float interpolateValue, octo::VertexBuilder& builder)
 {
-	for (std::size_t i = 0; i < stripeCount; i++)
+	if (m_firstFrame == false)
 	{
-		if (m_grow)
+		for (std::size_t i = 0; i < stripeCount; i++)
 		{
-			colorsEnd[i].a *= interpolateValue;
-			sf::Vector2f downLeft = start[i];
-			sf::Vector2f downRight = start[i + 1];
-			sf::Vector2f upLeft = octo::linearInterpolation(downLeft, end[i], interpolateValue);
-			sf::Vector2f upRight = octo::linearInterpolation(downRight, end[i + 1], interpolateValue);
-			createBicolorQuad(upRight + origin, upLeft + origin, downLeft + origin, downRight + origin, colorsEnd[i], colorsStart[i], builder);
-		}
-		else
-		{
-			colorsStart[i].a *= interpolateValue;
-			sf::Vector2f upLeft = end[i];
-			sf::Vector2f upRight = end[i + 1];
-			sf::Vector2f downLeft = octo::linearInterpolation(upLeft, start[i], interpolateValue);
-			sf::Vector2f downRight = octo::linearInterpolation(upRight, start[i + 1], interpolateValue);
-			createBicolorQuad(upRight + origin, upLeft + origin, downLeft + origin, downRight + origin, colorsEnd[i], colorsStart[i], builder);
+			if (m_grow)
+			{
+				colorsEnd[i].a *= interpolateValue;
+				sf::Vector2f downLeft = start[i];
+				sf::Vector2f downRight = start[i + 1];
+				sf::Vector2f upLeft = octo::linearInterpolation(downLeft, end[i], interpolateValue);
+				sf::Vector2f upRight = octo::linearInterpolation(downRight, end[i + 1], interpolateValue);
+				createBicolorQuad(upRight + origin, upLeft + origin, downLeft + origin, downRight + origin, colorsEnd[i], colorsStart[i], builder);
+			}
+			else
+			{
+				colorsStart[i].a *= interpolateValue;
+				sf::Vector2f upLeft = end[i];
+				sf::Vector2f upRight = end[i + 1];
+				sf::Vector2f downLeft = octo::linearInterpolation(upLeft, start[i], interpolateValue);
+				sf::Vector2f downRight = octo::linearInterpolation(upRight, start[i + 1], interpolateValue);
+				createBicolorQuad(upRight + origin, upLeft + origin, downLeft + origin, downRight + origin, colorsEnd[i], colorsStart[i], builder);
+			}
 		}
 	}
 }
@@ -84,24 +87,21 @@ void Rainbow::createRainbow(sf::Vector2f const & origin, std::vector<sf::Vector2
 			m_start = m_end;
 		originRotate = m_start[0] + sizes[i];
 		rotateLine(m_start, m_end, stripeCount, originRotate, m_cos, m_sin);
-		if (m_firstFrame == false)
-		{
-			if (i == 0)
-				createPart(m_start, m_end, stripeCount, origin, transparent, colors, m_interpolateValues[i], builder);
-			else
-				createPart(m_start, m_end, stripeCount, origin, colors, colors, m_interpolateValues[i], builder);
-		}
+		if (i == 0)
+			createPart(m_start, m_end, stripeCount, origin, transparent, colors, m_interpolateValues[i], builder);
+		else
+			createPart(m_start, m_end, stripeCount, origin, colors, colors, m_interpolateValues[i], builder);
 	}
 	m_start = m_end;
 	originRotate = m_start[0] + sf::Vector2f(0.f, -m_start[0].y);
 	rotateLine(m_start, m_end, stripeCount, originRotate, m_cos, m_sin);
+	createPart(m_start, m_end, stripeCount, origin, colors, transparent, m_interpolateValues[m_partCount - 1], builder);
+
 	if (m_firstFrame == true)
 	{
 		m_endPosition = m_end[0];
 		m_firstFrame = false;
 	}
-	else
-		createPart(m_start, m_end, stripeCount, origin, colors, transparent, m_interpolateValues[m_partCount - 1], builder);
 }
 
 void Rainbow::setupSizes(ABiome & biome, std::vector<sf::Vector2f> & sizes, std::size_t loopCount, std::size_t partCount, float thickness)

@@ -5,9 +5,9 @@ static int getCircleOffset(int offsetX, int posDecorX, int screenSizeX, int mapS
 	int newPosDecorX = countMap * mapSizeX + posDecorX;
 	int borderLeft = offsetX + screenSizeX / 2.f + mapSizeX / 2.f;
 	int borderRight = offsetX + screenSizeX / 2.f - mapSizeX / 2.f;
-	if (newPosDecorX - mapSizeX > borderRight && newPosDecorX < (countMap + 1) * mapSizeX)
+	if (newPosDecorX - mapSizeX >= borderRight && newPosDecorX <= (countMap + 1) * mapSizeX)
 		return (newPosDecorX - mapSizeX);
-	else if (newPosDecorX + mapSizeX < borderLeft && newPosDecorX > countMap * mapSizeX)
+	else if (newPosDecorX + mapSizeX <= borderLeft && newPosDecorX >= countMap * mapSizeX)
 		return (newPosDecorX + mapSizeX);
 	return (newPosDecorX);
 }
