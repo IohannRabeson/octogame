@@ -12,8 +12,7 @@ PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_camera(octo::Application::getCamera()),
 	m_shape(nullptr),
 	m_groupShape(nullptr),
-	m_nbCollision(0u),
-	m_parallaxScrolling({ new GenerativeLayer(sf::Color(170, 170, 170), sf::Vector2f(0.4f, 0.4f), sf::Vector2u(512u, 128u)), new GenerativeLayer(sf::Color(200, 200, 200), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(512u, 128u)) })
+	m_nbCollision(0u)
 {}
 
 void	PhysicsMapScreen::start()
@@ -117,7 +116,6 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 		m_camera.move(0.f, cameraSpeed);
 
 	m_engine.update(deltatime.asSeconds());
-	m_parallaxScrolling.update(deltatime.asSeconds());
 }
 
 void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)
@@ -147,7 +145,6 @@ void	PhysicsMapScreen::draw(sf::RenderTarget& render)const
 {
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
-	m_parallaxScrolling.draw(render, states);
 	render.draw(m_groundManager);
 	m_engine.debugDraw(render);
 }
