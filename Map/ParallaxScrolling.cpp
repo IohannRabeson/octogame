@@ -1,6 +1,10 @@
 #include "ParallaxScrolling.hpp"
 #include "ABiome.hpp"
 
+ParallaxScrolling::ParallaxScrolling(void) :
+	m_biome(nullptr)
+{}
+
 ParallaxScrolling::~ParallaxScrolling(void)
 {
 	removeAllLayers();
@@ -8,24 +12,25 @@ ParallaxScrolling::~ParallaxScrolling(void)
 
 void ParallaxScrolling::setup(ABiome & biome)
 {
+	m_biome = &biome;
 	// Clean existing layers
 	removeAllLayers();
 	// Add new layers
-	addLayer(biome.getLayers(), biome);
+	addLayer(biome.getLayers());
 }
 
-void ParallaxScrolling::addLayer(ALayer * layer, ABiome & biome)
+void ParallaxScrolling::addLayer(ALayer * layer)
 {
 	if (!layer)
 		return;
-	layer->setup(biome);
+	layer->setup();
 	m_layers.push_back(std::move(std::unique_ptr<ALayer>(layer)));
 }
 
-void ParallaxScrolling::addLayer(std::vector<ALayer *> const & layers, ABiome & biome)
+void ParallaxScrolling::addLayer(std::vector<ALayer *> const & layers)
 {
 	for (auto & layer : layers)
-		addLayer(layer, biome);
+		addLayer(layer);
 }
 
 void ParallaxScrolling::removeLayer(std::size_t index)
@@ -33,12 +38,6 @@ void ParallaxScrolling::removeLayer(std::size_t index)
 	if (index >= m_layers.size())
 		return;
 	m_layers.erase(m_layers.begin() + index);
-}
-
-void ParallaxScrolling::setColor(sf::Color const & color)
-{
-	for (auto & layer : m_layers)
-		layer->setOpacityColor(color);
 }
 
 void ParallaxScrolling::removeAllLayers(void)
@@ -49,7 +48,7 @@ void ParallaxScrolling::removeAllLayers(void)
 void ParallaxScrolling::update(float deltatime)
 {
 	for (auto & layer : m_layers)
-		layer->update(deltatime);
+		layer->update(deltatime, *m_biome);
 }
 
 void ParallaxScrolling::draw(sf::RenderTarget & render, sf::RenderStates states) const

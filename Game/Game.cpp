@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Game.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/27 13:37:39 by pciavald         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Game.hpp"
 #include "DefaultBiome.hpp"
 #include "GenerativeLayer.hpp"
@@ -40,7 +28,6 @@ void	Game::setup()
 	m_engine.setContactListener(this);
 }
 
-#include <iostream>
 void	Game::loadLevel(std::string const& fileName)
 {
 	(void)fileName;
@@ -71,12 +58,6 @@ void	Game::loadLevel(std::string const& fileName)
 
 void	Game::update(sf::Time frameTime)
 {
-	sf::Color m_colorUpDay = sf::Color(255, 255, 255);//m_biomeManager.getCurrentBiome().getSkyDayColor();
-	sf::Color m_colorUpNight = sf::Color(50, 50, 50);//m_biomeManager.getCurrentBiome().getSkyNightColor();
-	float interpolateValue = m_gameClock.getNightValue() * 2.f >= 1.f ? 1.f : m_gameClock.getNightValue() * 2.f;
-	sf::Color colorUp = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
-	m_parallaxScrolling.setColor(colorUp);
-
 	m_gameClock.update(frameTime);
 	m_skyManager.update(frameTime);
 	m_groundManager.update(frameTime.asSeconds());

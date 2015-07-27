@@ -3,6 +3,7 @@
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
+#include <limits>
 
 GenerativeLayer::GenerativeLayer(void) :
 	GenerativeLayer(sf::Color::Yellow, sf::Vector2f(0.5f, 0.5f), sf::Vector2u(512u, 128u), 16.f, 20, 0.f, 1.f, 20.f)
@@ -34,7 +35,7 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	});
 }
 
-void GenerativeLayer::setup(ABiome & )
+void GenerativeLayer::setup(void)
 {
 	m_verticesCount = m_widthScreen * 4u;
 	m_vertices.reset(new sf::Vertex[m_verticesCount]);
@@ -58,7 +59,7 @@ void GenerativeLayer::setup(ABiome & )
 void GenerativeLayer::computeVertices(std::vector<sf::Vector2f> & positions)
 {
 	//TODO: limit
-	m_highestY = 10000.f;
+	m_highestY = std::numeric_limits<float>::max();
 	// Compute value to manage start/end transition
 	float start = getHeightValue((getMapSize().x - 5) * 4);
 	float end = getHeightValue(5 * 4);
@@ -118,7 +119,7 @@ void GenerativeLayer::setBackgroundSurfaceGenerator(BackgroundSurfaceGenerator m
 	m_backgroundSurface = std::bind(mapSurface, std::ref(m_noise), std::placeholders::_1, std::placeholders::_2);
 }
 
-void GenerativeLayer::update(float deltatime)
+void GenerativeLayer::update(float deltatime, ABiome &)
 {
 	m_transitionTimer += deltatime;
 	if (m_transitionTimerDuration > 0.f && m_transitionTimer > m_transitionTimerDuration)
@@ -153,6 +154,13 @@ void GenerativeLayer::update(float deltatime)
 		m_vertices[(i * 4u) + 2u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize;
 		m_vertices[(i * 4u) + 3u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize;
 	}
+
+	//TODO
+/*	sf::Color m_colorUpDay = sf::Color(255, 255, 255);//m_biomeManager.getCurrentBiome().getSkyDayColor();
+	sf::Color m_colorUpNight = sf::Color(50, 50, 50);//m_biomeManager.getCurrentBiome().getSkyNightColor();
+	float interpolateValue = m_gameClock.getNightValue() * 2.f >= 1.f ? 1.f : m_gameClock.getNightValue() * 2.f;
+	m_opacityColor = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
+*/
 	float max = m_vertices[3u].position.y - m_highestY;
 	float t;
 	for (std::size_t i = 0u; i < m_widthScreen; i++)

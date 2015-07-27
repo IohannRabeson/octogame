@@ -20,9 +20,8 @@ public:
 	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration);
 	virtual ~GenerativeLayer(void) = default;
 
-	void setup(ABiome & biome);
+	void setup(void);
 	void setColor(sf::Color const & color);
-	void setOpacityColor(sf::Color const & color) { m_opacityColor = color; }
 
 	//TODO: use bool to manage this
 	/*! Set the transition duration
@@ -33,7 +32,7 @@ public:
 	inline void setMapSize(sf::Vector2u const & mapSize) { m_mapSize = mapSize; }
 	inline sf::Vector2u const & getMapSize(void) const { return m_mapSize; }
 
-	void update(float);
+	void update(float frametime, ABiome & biome);
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 private:
@@ -44,7 +43,6 @@ private:
 	std::vector<sf::Vector2f>			m_positions;
 	std::vector<sf::Vector2f>			m_positionsPrev;
 	sf::Vector2u						m_mapSize;
-	//TODO: bot and top opacity color in biome
 	sf::Color							m_color;
 	sf::Color							m_opacityColor;
 	Noise								m_noise;
