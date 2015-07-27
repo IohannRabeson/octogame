@@ -20,7 +20,7 @@ public:
 	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration);
 	virtual ~GenerativeLayer(void) = default;
 
-	void init(void);
+	void setup(ABiome & biome);
 	void setColor(sf::Color const & color);
 	void setOpacityColor(sf::Color const & color) { m_opacityColor = color; }
 

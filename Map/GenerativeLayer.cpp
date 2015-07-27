@@ -34,7 +34,7 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	});
 }
 
-void GenerativeLayer::init(void)
+void GenerativeLayer::setup(ABiome & )
 {
 	m_verticesCount = m_widthScreen * 4u;
 	m_vertices.reset(new sf::Vertex[m_verticesCount]);
