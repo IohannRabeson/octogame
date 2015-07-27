@@ -25,8 +25,6 @@
 #include "Sky.hpp"
 #include "SunLight.hpp"
 
-#include <VertexBuilder.hpp>
-
 #include <cassert>
 
 DecorManager::DecorManager(std::size_t maxVertexCount) :
@@ -36,6 +34,7 @@ DecorManager::DecorManager(std::size_t maxVertexCount) :
 	m_biome(nullptr)
 {
 	registerDecors();
+	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 }
 
 DecorManager::~DecorManager()
@@ -85,7 +84,7 @@ void	DecorManager::clear()
 
 void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 {
-	octo::VertexBuilder	builder(m_vertices.get(), m_count);
+	m_builder.clear();
 	float const			minVisibleX = camera.getCenter().x - camera.getSize().x;
 	float const			maxVisibleX = camera.getCenter().x + camera.getSize().x;
 	float				elementX = 0.f;
@@ -96,10 +95,10 @@ void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 		if (element->isDisabledIfOutOfScreen() == false ||
 			(elementX >= minVisibleX && elementX <= maxVisibleX))
 		{
-			element->update(frameTime, builder, *m_biome);
+			element->update(frameTime, m_builder, *m_biome);
 		}
 	}
-	m_used = builder.getUsed();
+	m_used = m_builder.getUsed();
 }
 
 void	DecorManager::draw(sf::RenderTarget& render, sf::RenderStates states)const
