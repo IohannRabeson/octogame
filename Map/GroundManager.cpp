@@ -76,7 +76,7 @@ void GroundManager::initDecors(ABiome & biome)
 	{
 		for (std::size_t i = 0; i < rainbowCount; i++)
 		{
-			int x = biome.randomInt(1.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerBack.add(DecorManager::DecorTypes::Rainbow);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -87,7 +87,7 @@ void GroundManager::initDecors(ABiome & biome)
 	{
 		for (std::size_t i = 0; i < rockCount; i++)
 		{
-			int x = biome.randomInt(1.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerBack.add(DecorManager::DecorTypes::Rock);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -99,7 +99,7 @@ void GroundManager::initDecors(ABiome & biome)
 	{
 		for (std::size_t i = 0; i < treeCount; i++)
 		{
-			int x = biome.randomInt(1.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerBack.add(DecorManager::DecorTypes::Tree);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -111,7 +111,7 @@ void GroundManager::initDecors(ABiome & biome)
 	{
 		for (std::size_t i = 0; i < rockCount; i++)
 		{
-			int x = biome.randomInt(1.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerBack.add(DecorManager::DecorTypes::Rock);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -123,7 +123,7 @@ void GroundManager::initDecors(ABiome & biome)
 	{
 		for (std::size_t i = 0; i < mushroomCount; i++)
 		{
-			int x = biome.randomInt(1.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerBack.add(DecorManager::DecorTypes::Mushroom);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -131,7 +131,7 @@ void GroundManager::initDecors(ABiome & biome)
 		totalCount += mushroomCount;
 		for (std::size_t i = 0; i < mushroomCount; i++)
 		{
-			int x = biome.randomInt(1.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerFront.add(DecorManager::DecorTypes::Mushroom);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -161,7 +161,7 @@ void GroundManager::initDecors(ABiome & biome)
 
 	for (std::size_t i = 0; i < groundRockCount; i++)
 	{
-		int x = biome.randomFloat(1.f, mapSizeX);
+		int x = biome.randomInt(1u, mapSizeX);
 		m_decorManagerGround.add(DecorManager::DecorTypes::GroundRock);
 		m_tiles->registerDecor(x);
 		m_tilesPrev->registerDecor(x);
