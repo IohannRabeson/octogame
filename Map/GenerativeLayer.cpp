@@ -5,10 +5,10 @@
 #include <Interpolations.hpp>
 
 GenerativeLayer::GenerativeLayer(void) :
-	GenerativeLayer(sf::Color::Yellow, sf::Vector2f(0.5f, 0.5f), sf::Vector2u(512u, 128u), 16.f, 20, 0.f, 20.f)
+	GenerativeLayer(sf::Color::Yellow, sf::Vector2f(0.5f, 0.5f), sf::Vector2u(512u, 128u), 16.f, 20, 0.f, 1.f, 20.f)
 {}
 
-GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float opacity, float transitionDuration) :
+GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration) :
 	ALayer(speed),
 	m_camera(octo::Application::getCamera()),
 	m_positions(0u),
@@ -20,7 +20,8 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	m_depth(0.f),
 	m_transitionTimer(0.f),
 	m_transitionTimerDuration(transitionDuration),
-	m_opacity(opacity),
+	m_topOpacity(topOpacity),
+	m_botOpacity(botOpacity),
 	m_highestY(0.f),
 	m_heightOffset(heightOffset),
 	m_widthScreen(octo::Application::getGraphicsManager().getVideoMode().width / m_tileSize + 4u),
@@ -152,19 +153,17 @@ void GenerativeLayer::update(float deltatime)
 		m_vertices[(i * 4u) + 2u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize;
 		m_vertices[(i * 4u) + 3u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize;
 	}
-	//TODO: get skycolor
-	static const sf::Color botColor(0, 0, 0);
 	float max = m_vertices[3u].position.y - m_highestY;
 	float t;
 	for (std::size_t i = 0u; i < m_widthScreen; i++)
 	{
-		t = m_opacity - octo::linearInterpolation(0.f, m_opacity, (m_vertices[(i * 4u) + 0u].position.y - m_highestY) / max);
+		t = octo::linearInterpolation(m_topOpacity, m_botOpacity, (m_vertices[(i * 4u) + 0u].position.y - m_highestY) / max);
 		m_vertices[(i * 4u) + 0u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, t));
 
-		t = m_opacity - octo::linearInterpolation(0.f, m_opacity, (m_vertices[(i * 4u) + 1u].position.y - m_highestY) / max);
+		t = octo::linearInterpolation(m_topOpacity, m_botOpacity, (m_vertices[(i * 4u) + 1u].position.y - m_highestY) / max);
 		m_vertices[(i * 4u) + 1u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, t));
 
-		m_vertices[(i * 4u) + 2u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, 0.f));
+		m_vertices[(i * 4u) + 2u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, m_botOpacity));
 		m_vertices[(i * 4u) + 3u].color = m_vertices[(i * 4u) + 2u].color;
 
 		m_vertices[(i * 4u) + 0u].position.y += offsetY;

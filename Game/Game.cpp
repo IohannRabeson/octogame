@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/24 13:57:09 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/27 12:11:15 by pciavald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,20 @@ void	Game::loadLevel(std::string const& fileName)
 
 	//TODO: Maybe its better to put all of that in a GenerativeLayerManager??
 	sf::Vector2u const & mapSize = m_biomeManager.getCurrentBiome().getMapSize();
-	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 1.f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.0f, 1.f, -1.f);
 	//TODO: To remove this line (it's just to decrease the y of parallax elem)
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 			{
 				return noise.perlinNoise(x * 10.f, y, 2, 2.f);
 			});
 	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.9f, 11.f);
+	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 			{
 				return noise.perlinNoise(x, y, 3, 2.f);
 			});
 	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.8f, 6.f);
+	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 			{
 				return noise.noise(x * 1.1f, y);
@@ -65,8 +65,8 @@ void	Game::loadLevel(std::string const& fileName)
 #include <Interpolations.hpp>
 void	Game::update(sf::Time frameTime)
 {
-	sf::Color m_colorUpDay = m_biomeManager.getCurrentBiome().getSkyDayColor();
-	sf::Color m_colorUpNight = m_biomeManager.getCurrentBiome().getSkyNightColor();
+	sf::Color m_colorUpDay = sf::Color(255, 255, 255);//m_biomeManager.getCurrentBiome().getSkyDayColor();
+	sf::Color m_colorUpNight = sf::Color(50, 50, 50);//m_biomeManager.getCurrentBiome().getSkyNightColor();
 	float interpolateValue = m_gameClock.getNightValue() * 2.f >= 1.f ? 1.f : m_gameClock.getNightValue() * 2.f;
 	sf::Color colorUp = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
 	m_parallaxScrolling.setColor(colorUp);
