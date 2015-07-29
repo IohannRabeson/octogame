@@ -79,6 +79,12 @@ public:
 	 */
 	inline void setRotation(float angle) { m_rotation = angle; }
 
+	/*! Set whether the shape is out of the screen or not
+	 * This state is define by the PhysicsEngine
+	 * \see PhysicsEngine
+	 */
+	inline void setOutOfScreen(bool outOfScreen) { m_outOfScreen = outOfScreen; }
+
 	/*! Set the sleep state of the object
 	 *
 	 * \param sleep true whether you want to compute collision or false if you don't
@@ -162,8 +168,11 @@ public:
 	/*! Get the rotation */
 	inline float getRotation(void) const { return m_rotation; }
 
+	/*! Get whether the shape is out of the screen or not */
+	inline bool isOutOfScreen(void) const { return m_outOfScreen; }
+
 	/*! Get the sleep state of the object */
-	inline bool getSleep(void) const { return m_sleep; }
+	inline bool getSleep(void) const { return (m_sleep || m_outOfScreen); }
 
 	/*! Get the gravity state of the object */
 	inline bool getApplyGravity(void) const { return m_applyGravity; }
@@ -226,6 +235,7 @@ private:
 	float					m_rotation;
 	bool					m_sleep;
 	bool					m_applyGravity;
+	bool					m_outOfScreen;
 	Type					m_type;
 	std::uint32_t			m_collisionType;
 	std::uint32_t			m_collisionMask;

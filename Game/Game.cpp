@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/29 13:09:47 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/07/29 18:33:32 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,14 @@
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
+#include "RectangleShape.hpp"
+#include "MapInstance.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
+#include <LevelMap.hpp>
+#include <ResourceManager.hpp>
 
 Game::Game() :
 	m_physicsEngine(PhysicsEngine::getInstance())
@@ -41,32 +45,28 @@ void	Game::loadLevel(std::string const& fileName)
 	m_gameClock.setup(m_biomeManager.getCurrentBiome());
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
 	m_groundManager.init(m_biomeManager.getCurrentBiome());
+	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome());
 
 	m_physicsEngine.setIterationCount(4u);
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
 
-	//TODO: Maybe its better to put all of that in a GenerativeLayerManager??
-	sf::Vector2u const & mapSize = m_biomeManager.getCurrentBiome().getMapSize();
-	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 1.f, -1.f);
-	//TODO: To remove this line (it's just to decrease the y of parallax elem)
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.perlinNoise(x * 10.f, y, 2, 2.f);
-			});
-	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.9f, 11.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.perlinNoise(x, y, 3, 2.f);
-			});
-	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.8f, 6.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.noise(x * 1.1f, y);
-			});
-	m_parallaxScrolling.addLayer(layer);
+	//TODO: put in a function
+	auto const & instances = m_biomeManager.getCurrentBiome().getInstances();
+	for (auto & instance : instances)
+	{
+		octo::LevelMap const & levelMap = octo::Application::getResourceManager().getLevelMap(instance.second);
+		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
+		{
+			//TODO: finish this
+			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
+			RectangleShape * rect = m_physicsEngine.createRectangle();
+			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y));
+			rect->setSize(spriteTrigger.trigger.getSize());
+			rect->setApplyGravity(false);
+			rect->setType(AShape::Type::e_trigger);
+		}
+	}
 }
 
 void	Game::update(sf::Time frameTime)
