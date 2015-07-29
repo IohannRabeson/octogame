@@ -26,7 +26,7 @@ class RainSystem : public octo::ParticleSystem<sf::Vector2f>
 public:
 	RainSystem();
 
-	void			setCameraRect(sf::FloatRect const& cameraRect);
+	void			setRainRect(sf::FloatRect const& cameraRect);
 
 	/*!	Define the number of drops produced at each seconds.
 	 *
@@ -51,6 +51,7 @@ public:
 	void			setMargin(float margin);
 
 	void			update(sf::Time frameTime);
+	void			update(sf::Time frameTime, octo::VertexBuilder & builder);
 private:
 	virtual void	updateParticle(sf::Time frameTime, Particle& particle);
 	virtual bool	isDeadParticle(Particle const& particle);

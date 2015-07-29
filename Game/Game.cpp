@@ -65,7 +65,7 @@ void	Game::loadLevel(std::string const& fileName)
 void	Game::update(sf::Time frameTime)
 {
 	m_gameClock.update(frameTime);
-	m_skyManager.update(frameTime);
+	m_skyManager.update(frameTime, m_biomeManager.getCurrentBiome());
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
 }

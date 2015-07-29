@@ -3,6 +3,7 @@
 
 # include "ADecor.hpp"
 # include "DecorAnimator.hpp"
+# include "RainSystem.hpp"
 # include <SFML/Graphics/Color.hpp>
 
 class Cloud : public ADecor
@@ -16,7 +17,7 @@ struct OctogonValue
 
 public:
 	Cloud(void);
-	virtual ~Cloud(void) = default;
+	virtual ~Cloud(void);
 
 	virtual void setup(ABiome& biome);
 	virtual void update(sf::Time frameTime,
@@ -31,6 +32,9 @@ private:
 
 	DecorAnimator				m_animator;
 	float						m_animation;
+
+	std::vector<RainSystem *>	m_rain;
+	std::vector<sf::Vector2f>	m_rainUpLeft;
 
 	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & sizeCorner,
