@@ -40,8 +40,12 @@ public:
 	virtual Map::TileColorGenerator getTileColorGenerator();
 
 	virtual sf::Time		getDayDuration();
-	virtual sf::Time		getNightDuration();
+	virtual sf::Color		getSkyDayColor();
+	virtual sf::Color		getSkyNightColor();
+	virtual sf::Color		getNightLightColor();
+	virtual sf::Color		getSunsetLightColor();
 	virtual float			getWind();
+	virtual bool			isRaining();
 
 	virtual std::size_t		getRockCount();
 	virtual std::size_t		getTreeCount();
@@ -109,7 +113,8 @@ public:
 	virtual float			getRainbowThickness();
 	virtual float			getRainbowPartSize();
 	virtual std::size_t		getRainbowLoopCount();
-	virtual sf::Time		getRainbowGrowTime();
+	virtual sf::Time		getRainbowLifeTime();
+	virtual sf::Time		getRainbowIntervalTime();
 	virtual bool			canCreateRainbow();
 
 	virtual float			randomFloat(float min, float max);
@@ -127,8 +132,12 @@ private:
 	std::map<std::size_t, std::string>	m_instances;
 
 	sf::Time			m_dayDuration;
-	sf::Time			m_nightDuration;
+	sf::Color			m_skyDayColor;
+	sf::Color			m_skyNightColor;
+	sf::Color			m_nightLightColor;
+	sf::Color			m_SunsetLightColor;
 	Range<float>		m_wind;
+	bool				m_isRaining;
 
 	Range<std::size_t>	m_rockCount;
 	Range<std::size_t>	m_treeCount;
@@ -197,7 +206,8 @@ private:
 	Range<float>		m_rainbowThickness;
 	Range<float>		m_rainbowPartSize;
 	Range<std::size_t>	m_rainbowLoopCount;
-	Range<sf::Time>		m_rainbowGrowTime;
+	Range<sf::Time>		m_rainbowLifeTime;
+	Range<sf::Time>		m_rainbowIntervalTime;
 
 	float				randomRangeFloat(Range<float> const & range);
 	int					randomRangeInt(Range<std::size_t> const & range);

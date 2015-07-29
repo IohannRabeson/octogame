@@ -3,6 +3,8 @@
 #include "ABiome.hpp"
 #include "ADecor.hpp"
 #include "Star.hpp"
+#include "Sky.hpp"
+#include "SunLight.hpp"
 
 #include <Math.hpp>
 #include <Application.hpp>
@@ -17,7 +19,6 @@ SkyManager::SkyManager(void) :
 	m_sunCount(0u),
 	m_moonCount(0u),
 	m_starCount(0u),
-	m_rainbowCount(0u),
 	m_cloudCount(0u)
 {
 }
@@ -35,7 +36,6 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f const & cameraSize)
 	{
 		m_starCount = biome.getStarCount();
 		m_originStars.resize(m_starCount);
-		//TODO: Check with Iohann for delete element: Is the decorManager handle it?
 		for (std::size_t i = 0u; i < m_starCount; i++)
 			m_decorManagerBack.add(new Star(m_clock));
 
@@ -88,22 +88,6 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 	}
 }
 
-void SkyManager::setupRainbow(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & mapSize)
-{
-	if (biome.canCreateRainbow())
-	{
-		m_rainbowCount = biome.getRainbowCount();
-		m_originRainbows.resize(m_rainbowCount);
-		for (size_t i = 0; i < m_rainbowCount; i++)
-		{
-			DecorManager::Iterator it = m_decorManagerBack.add(DecorManager::DecorTypes::Rainbow);
-			m_originRainbows[i].x = biome.randomFloat(0.f, mapSize.x);
-			m_originRainbows[i].y = cameraSize.y;
-			(*it)->setPosition(m_originRainbows[i]);
-		}
-	}
-}
-
 void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & cameraCenter, sf::Vector2f const & mapSize)
 {
 	if (biome.canCreateCloud())
@@ -134,10 +118,11 @@ void SkyManager::setup(ABiome & biome, GameClock & clock)
 	m_mapSizeFloat = biome.getMapSizeFloat();
 	m_wind = biome.getWind();
 
+	m_decorManagerBack.add(new Sky(m_clock));
 	setupStars(biome, cameraSize);
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
-	setupRainbow(biome, cameraSize, m_mapSizeFloat);
 	setupClouds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
+	m_decorManagerFront.add(new SunLight(m_clock));
 }
 
 void SkyManager::update(sf::Time frameTime)
@@ -152,15 +137,14 @@ void SkyManager::update(sf::Time frameTime)
 	float sin = std::sin(angle);
 
 	DecorManager::Iterator decorBack = m_decorManagerBack.begin();
+	(*decorBack)->setPosition(camera.getCenter());
+	decorBack++;
 	for (auto it = m_originStars.begin(); it != m_originStars.end(); it++)
 		setRotatePosition(decorBack++, *it + m_originRotateStar, m_originRotateStar, offsetCamera, cos, sin);
 	for (auto it = m_originSuns.begin(); it != m_originSuns.end(); it++)
 		setRotatePosition(decorBack++, *it, m_originRotate, offsetCamera, cos, sin);
 	for (auto it = m_originMoons.begin(); it != m_originMoons.end(); it++)
 		m_originRotateStar = setRotatePosition(decorBack++, *it, m_originRotate, offsetCamera, cos, sin);
-
-	for (auto it = m_originRainbows.begin(); it != m_originRainbows.end(); it++)
-		decorBack++;
 
 	float windMove = m_wind * frameTime.asSeconds();
 	float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
@@ -176,6 +160,7 @@ void SkyManager::update(sf::Time frameTime)
 		(*decorFront)->setPosition(*it);
 		decorFront++;
 	}
+	(*decorFront)->setPosition(camera.getCenter());
 	m_decorManagerBack.update(frameTime, camera);
 	m_decorManagerFront.update(frameTime, camera);
 }

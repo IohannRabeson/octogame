@@ -11,6 +11,7 @@ Tree::Tree(void) :
 	m_animation(1.f),
 	m_growSide(true),
 	m_isLeaf(true),
+	m_leafCornerCoef(2.f),
 	m_countLeaf(0u),
 	m_setLeaf(true),
 	m_leafMaxCount(0u)
@@ -35,6 +36,54 @@ void Tree::computeQuad(sf::Vector2f const & size, sf::Vector2f const & center, f
 	quad.center = center;
 }
 
+void Tree::setOctogonValue(OctogonValue & value, sf::Vector2f const & size, sf::Vector2f const & origin, float cos, float sin)
+{
+	value.size = size;
+	value.sizeCorner = size / m_leafCornerCoef;
+	value.origin = origin;
+	value.cos = cos;
+	value.sin = sin;
+}
+
+void Tree::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, float cos, float sin, sf::Color const & color, octo::VertexBuilder& builder)
+{
+	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
+	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
+	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidRight(size.x, -size.y + sizeCorner.y);
+	sf::Vector2f downLeft(-size.x + sizeCorner.x, size.y);
+	sf::Vector2f downRight(size.x - sizeCorner.x, size.y);
+	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
+
+	rotateVec(upLeft, cos, sin);
+	rotateVec(upRight, cos, sin);
+	rotateVec(upMidLeft, cos, sin);
+	rotateVec(upMidRight, cos, sin);
+	rotateVec(downLeft, cos, sin);
+	rotateVec(downRight, cos, sin);
+	rotateVec(downMidLeft, cos, sin);
+	rotateVec(downMidRight, cos, sin);
+
+	upLeft += origin;
+	upRight += origin;
+	upMidLeft += origin;
+	upMidRight += origin;
+	downLeft += origin;
+	downRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+
+	builder.createTriangle(origin, upLeft, upRight, color + sf::Color(5, 5, 5));
+	builder.createTriangle(origin, upRight, upMidRight, color + sf::Color(5, 5, 5));
+	builder.createTriangle(origin, upMidRight, downMidRight, color + sf::Color(5, 5, 5));
+	builder.createTriangle(origin, downMidRight, downRight, color + sf::Color(5, 5, 5));
+	builder.createTriangle(origin, downRight, downLeft, color);
+	builder.createTriangle(origin, downLeft, downMidLeft, color);
+	builder.createTriangle(origin, downMidLeft, upMidLeft, color);
+	builder.createTriangle(origin, upMidLeft, upLeft, color);
+}
+
 void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, float const deltaColor, octo::VertexBuilder & builder)
 {
 	sf::Vector2f tmpLeftDown = quad.leftDown + quad.center;
@@ -55,10 +104,10 @@ void Tree::createTrunk(sf::Vector2f const & size, sf::Vector2f const & center, s
 	builder.createQuad(upLeft, upRight, downRight, downLeft, color);
 }
 
-void Tree::createLeaf(std::vector<QuadValue> const & quads, sf::Color const & color, float const deltaColor, octo::VertexBuilder & builder)
+void Tree::createLeaf(std::vector<OctogonValue> const & leafs, sf::Color const & color, octo::VertexBuilder & builder)
 {
-	for (auto quad : quads)
-		createBiColorQuad(quad, color, deltaColor, builder);
+	for (auto leaf : leafs)
+		createOctogon(leaf.size, leaf.sizeCorner, leaf.origin, leaf.cos, leaf.sin, color ,builder);
 }
 
 void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size, octo::VertexBuilder & builder, float const angle, float const cosAngle, float const sinAngle, std::size_t currentDepth)
@@ -122,9 +171,9 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	// Create leaf
 	if (m_isLeaf && currentDepth == m_depth - 2)
 	{
-		computeQuad(m_leafSize[m_countLeaf] * m_animation, rightCenter, cosRight, sinRight, m_leaf[m_countLeaf]);
+		setOctogonValue(m_octogonLeaf[m_countLeaf], m_leafSize[m_countLeaf] / 2.f * m_animation, rightCenter, cosRight, sinRight);
 		m_countLeaf++;
-		computeQuad(m_leafSize[m_countLeaf] * m_animation, leftCenter, cosLeft, sinLeft, m_leaf[m_countLeaf]);
+		setOctogonValue(m_octogonLeaf[m_countLeaf], m_leafSize[m_countLeaf] / 2.f * m_animation, leftCenter, cosLeft, sinLeft);
 		m_countLeaf++;
 	}
 
@@ -135,7 +184,8 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	if (m_setLeaf == true && m_isLeaf == true)
 	{
 		m_setLeaf = false;
-		createLeaf(m_leaf, m_leafColor, 5, builder);
+		//createLeaf(m_leaf, m_leafColor, 5, builder);
+		createLeaf(m_octogonLeaf, m_leafColor, builder);
 	}
 
 	//TODO: find a smart way to compute deltaColor
@@ -157,7 +207,7 @@ void Tree::setup(ABiome& biome)
 	m_refAngle.resize(m_angleMaxCount);
 
 	m_leafMaxCount = std::pow(2, m_depth) + 1;
-	m_leaf.resize(m_leafMaxCount);
+	m_octogonLeaf.resize(m_leafMaxCount);
 	m_leafSize.resize(m_leafMaxCount);
 	m_mapSizeY = biome.getMapSizeFloat().y;
 

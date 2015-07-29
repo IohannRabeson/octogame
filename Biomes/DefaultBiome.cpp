@@ -12,10 +12,13 @@ DefaultBiome::DefaultBiome() :
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
-	//Day and night durations needs to be the same for the moment
-	m_dayDuration(sf::seconds(15.f)),
-	m_nightDuration(sf::seconds(15.f)),
+	m_dayDuration(sf::seconds(40.f)),
+	m_skyDayColor(188, 200, 206),
+	m_skyNightColor(8, 20, 26),
+	m_nightLightColor(0, 197, 255, 100),
+	m_SunsetLightColor(238, 173, 181, 100),
 	m_wind(100.f, 150.f),
+	m_isRaining(true),
 
 	m_rockCount(10u, 20u),
 	m_treeCount(5u, 10u),
@@ -24,7 +27,7 @@ DefaultBiome::DefaultBiome() :
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 3u),
 	m_moonCount(1u, 3u),
-	m_rainbowCount(3u, 6u),
+	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
@@ -39,7 +42,7 @@ DefaultBiome::DefaultBiome() :
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
-	m_canCreateRainbow(false),
+	m_canCreateRainbow(true),
 
 	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(40.f, 200.f)),
 	m_rockPartCount(2.f, 10.f),
@@ -50,7 +53,7 @@ DefaultBiome::DefaultBiome() :
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(30, 30, 30),
 	m_treeAngle(15.f, 75.f),
-	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(150.f, 150.f)),
+	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(143, 208, 202),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
@@ -81,10 +84,11 @@ DefaultBiome::DefaultBiome() :
 	m_moonColor(200, 200, 200),
 	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
 
-	m_rainbowThickness(50.f, 100.f),
+	m_rainbowThickness(70.f, 120.f),
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
-	m_rainbowGrowTime(sf::seconds(4.f), sf::seconds(8.f))
+	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
+	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_name);
 
@@ -133,19 +137,19 @@ std::vector<ParallaxScrolling::ALayer *> DefaultBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlinNoise(x * 10.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 11.f);
+	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlinNoise(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 6.f);
+	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.8f, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 1.1f, y);
@@ -179,14 +183,34 @@ sf::Time		DefaultBiome::getDayDuration()
 	return (m_dayDuration);
 }
 
-sf::Time		DefaultBiome::getNightDuration()
+sf::Color		DefaultBiome::getSkyDayColor()
 {
-	return (m_nightDuration);
+	return (m_skyDayColor);
+}
+
+sf::Color		DefaultBiome::getSkyNightColor()
+{
+	return (m_skyNightColor);
+}
+
+sf::Color		DefaultBiome::getNightLightColor()
+{
+	return (m_nightLightColor);
+}
+
+sf::Color		DefaultBiome::getSunsetLightColor()
+{
+	return (m_SunsetLightColor);
 }
 
 float			DefaultBiome::getWind()
 {
 	return (randomRangeFloat(m_wind));
+}
+
+bool			DefaultBiome::isRaining()
+{
+	return (m_isRaining);
 }
 
 std::size_t		DefaultBiome::getRockCount()
@@ -483,9 +507,14 @@ std::size_t		DefaultBiome::getRainbowLoopCount()
 	return (randomRangeInt(m_rainbowLoopCount));
 }
 
-sf::Time		DefaultBiome::getRainbowGrowTime()
+sf::Time		DefaultBiome::getRainbowLifeTime()
 {
-	return (randomRangeTime(m_rainbowGrowTime));
+	return (randomRangeTime(m_rainbowLifeTime));
+}
+
+sf::Time		DefaultBiome::getRainbowIntervalTime()
+{
+	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
 bool			DefaultBiome::canCreateRainbow()
