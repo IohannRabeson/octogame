@@ -53,6 +53,7 @@ SRC_MAP =		Map/Map.cpp								\
 				Map/Noise.cpp							\
 				Map/ParallaxScrolling.cpp				\
 				Map/GenerativeLayer.cpp					\
+				Map/Tile.cpp							\
 				Map/MapInstance.cpp
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
@@ -85,7 +86,6 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
 				Physics/ConvexShape.cpp					\
 				Physics/CircleShape.cpp					\
-				Physics/Tile.cpp						\
 				Physics/TileShape.cpp					\
 				Physics/PhysicsEngine.cpp				\
 				Physics/ShapeBuilder.cpp				\

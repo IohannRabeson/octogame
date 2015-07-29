@@ -3,8 +3,9 @@
 
 # include <SFML/Graphics.hpp>
 # include <utility>
+# include "AGameObject.hpp"
 
-class Tile
+class Tile : public AGameObject<GameObjectType::Tile>
 {
 public:
 	Tile(void);

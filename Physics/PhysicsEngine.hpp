@@ -19,6 +19,13 @@ class IContactListener;
  * \ingroup Physic
  * \class PhysicsEngine
  * Physics Engine, compute collision between registered objects
+ *
+ * \code
+ * PhysicsEngine engine = PhysicsEngine::getInstance();
+ * engine.setIterationCount(4u);
+ * engine.setTileCollision(true);
+ * engine.setContactListener(this); // this must inherits from IContactListener
+ * \endcode
  */
 class PhysicsEngine : public ShapeBuilder
 {
