@@ -1,5 +1,6 @@
 #include "Cloud.hpp"
 #include "ABiome.hpp"
+#include <Interpolations.hpp>
 
 Cloud::Cloud(void) :
 	m_partCount(1u),
@@ -90,15 +91,17 @@ void Cloud::newCloud(ABiome & biome)
 void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	sf::Vector2f const & position = getPosition();
-	//TODO: when position_rainbow will be merged
-	if (true)//biome.isRaining()
+	std::size_t weather = biome.getWeather();
+	if (weather && biome.canRain())
 	{
 		sf::Vector2f size(0.f, biome.getMapSizeFloat().y);
 		for (std::size_t i = 0; i < m_partCount; i++)
 		{
 			size.x = m_values[i].size.x * 2.f;
 			sf::FloatRect rect(m_rainUpLeft[i] + position, size * m_animation);
-			m_rain[i]->setCameraRect(rect);
+			m_rain[i]->setDropAngle(biome.getWind() / 4.f);
+			m_rain[i]->setDropPerSecond(static_cast<std::size_t>(weather));
+			m_rain[i]->setRainRect(rect);
 			m_rain[i]->update(frameTime, builder);
 		}
 	}

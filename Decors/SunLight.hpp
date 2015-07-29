@@ -32,13 +32,20 @@ private:
 							sf::Color const & colorDown,
 							octo::VertexBuilder & builder);
 
+	void computeDayColorValue(sf::Time frameTime, ABiome & biome);
+
 	sf::Vector2f	m_size;
 	sf::Vector2f	m_dayPos;
 	sf::Vector2f	m_nightPos;
 	sf::Vector2f	m_sunsetPos;
 	sf::Color		m_colorNight;
 	sf::Color		m_colorSunset;
+	sf::Color		m_colorDay;
+	sf::Color		m_colorDayRaining;
 	sf::Vector2f	m_cameraSize;
+
+	sf::Time		m_timerRain;
+	sf::Time		m_timerRainMax;
 
 	GameClock *		m_clock;
 };

@@ -27,19 +27,17 @@ RainSystem::RainSystem() :
 {
 	sf::Vector2f const	DropSize{0.6f, 25.f};
 
-//	reset({-DropSize, {DropSize.x, -DropSize.y}, DropSize, {-DropSize.x, DropSize.y}},
-//		   sf::Quads, 1000u);
-
 	reset({-DropSize, {0.f, -DropSize.y}, DropSize},
 		   sf::Triangles, 1000u);
-	setDropSpeed(2048.f);
+	setDropSpeed(1024.f);
 	setDropPerSecond(20);
 }
 
-void	RainSystem::setCameraRect(sf::FloatRect const& cameraRect)
+//TODO: Remove updateHorizontalOffset
+void	RainSystem::setRainRect(sf::FloatRect const& cameraRect)
 {
 	m_cameraRect = cameraRect;
-	updateHorizontalOffset();
+	//updateHorizontalOffset();
 }
 
 void	RainSystem::update(sf::Time frameTime)
@@ -81,7 +79,7 @@ void	RainSystem::setDropSpeed(float speed)
 	normalized = octo::normalized(m_initialVelocity);
 	radRotation = std::atan2(normalized.y, normalized.x) - (octo::PiDiv2);
 	m_initialRotation = octo::rad2Deg(radRotation);
-	updateHorizontalOffset();
+	//updateHorizontalOffset();
 }
 
 void	RainSystem::setDropAngle(float angle)
@@ -90,7 +88,7 @@ void	RainSystem::setDropAngle(float angle)
 
 	m_initialVelocity.x = m_initialVelocity.y * std::tan(angleRad);
 	m_initialRotation = -angle;
-	updateHorizontalOffset();
+	//updateHorizontalOffset();
 }
 
 void	RainSystem::setMargin(float margin)
@@ -127,7 +125,7 @@ void			RainSystem::createDrop()
 				m_floatDistribution(m_engine) *	(m_cameraRect.width + m_horizontalOffset + m_margin * 2.f);
 	}
 	pos.y = m_cameraRect.top - TopMargin * m_floatDistribution(m_engine);
-	emplace(sf::Color(180, 180, 180), pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
+	emplace(sf::Color(255, 255, 255), pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
 }
 
 void	RainSystem::updateHorizontalOffset()

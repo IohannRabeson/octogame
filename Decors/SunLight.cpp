@@ -6,11 +6,15 @@
 #include <Interpolations.hpp>
 
 SunLight::SunLight(void) :
+	m_timerRain(sf::Time::Zero),
+	m_timerRainMax(sf::seconds(2.f)),
 	m_clock(nullptr)
 {
 }
 
 SunLight::SunLight(GameClock * clock) :
+	m_timerRain(sf::Time::Zero),
+	m_timerRainMax(sf::seconds(2.f)),
 	m_clock(clock)
 {
 }
@@ -37,6 +41,8 @@ void SunLight::createSunLight(sf::Vector2f const & cameraSize, sf::Vector2f cons
 
 	sf::Vector2f dayUpLeft(-cameraSize.x, -cameraSize.y);
 	sf::Vector2f dayUpRight(cameraSize.x, -cameraSize.y);
+	sf::Vector2f dayDownLeft(-cameraSize.x, cameraSize.y * 2);
+	sf::Vector2f dayDownRight(cameraSize.x, cameraSize.y * 2);
 
 	nightUpLeft += origin;
 	nightUpRight += origin;
@@ -48,8 +54,11 @@ void SunLight::createSunLight(sf::Vector2f const & cameraSize, sf::Vector2f cons
 
 	dayUpLeft += origin;
 	dayUpRight += origin;
+	dayDownLeft += origin;
+	dayDownRight += origin;
 
-	createBicolorQuad(sunsetLeft, sunsetRight, dayUpRight, dayUpLeft, m_colorSunset, sf::Color::Transparent, builder);
+	createBicolorQuad(dayUpLeft, dayUpRight, dayDownRight, dayDownLeft, m_colorDay, m_colorDay, builder);
+	createBicolorQuad(sunsetLeft, sunsetRight, dayUpRight, dayUpLeft, m_colorSunset, m_colorDay, builder);
 	createBicolorQuad(nightDownLeft, nightDownRight, sunsetRight, sunsetLeft, m_colorNight, m_colorSunset, builder);
 	createBicolorQuad(nightUpLeft, nightUpRight, nightDownRight, nightDownLeft, m_colorNight, m_colorNight, builder);
 }
@@ -63,12 +72,32 @@ void SunLight::setup(ABiome& biome)
 	m_sunsetPos = sf::Vector2f(0.f, -m_cameraSize.y * 2.f);
 	m_colorNight = biome.getNightLightColor();
 	m_colorSunset = biome.getSunsetLightColor();
-	//TODO: Create rain filter
+	m_colorDay = sf::Color::Transparent;
+	m_colorDayRaining = sf::Color(100, 100, 100, 100);
 }
 
-void SunLight::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
+void SunLight::computeDayColorValue(sf::Time frameTime, ABiome & biome)
+{
+	float weather = biome.getWeather();
+	m_colorDayRaining.a = weather * 2.f;
+	if (weather)
+	{
+		if (m_timerRain <= m_timerRainMax)
+			m_timerRain += frameTime;
+	}
+	else
+	{
+		if (m_timerRain > sf::Time::Zero)
+			m_timerRain -= frameTime;
+	}
+	m_colorDay = octo::linearInterpolation(sf::Color::Transparent, m_colorDayRaining, m_timerRain / m_timerRainMax);
+}
+
+void SunLight::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	sf::Vector2f position = getPosition();
+	if (biome.canRain())
+		computeDayColorValue(frameTime, biome);
 	float dayValue = m_clock->getDayValue();
 	float nightValue = m_clock->getNightValue();
 	if (m_clock->isDay())

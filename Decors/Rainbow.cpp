@@ -184,6 +184,7 @@ void Rainbow::setup(ABiome& biome)
 	m_colors.resize(m_stripeCount);
 	m_transparent.resize(m_stripeCount);
 	newRainbow(biome);
+	m_intervalTimer = m_intervalTimerMax;
 }
 
 void Rainbow::computeInterpolateValuesGrow(sf::Time frameTime, std::vector<float> & values)
@@ -241,10 +242,8 @@ void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& b
 		createRainbow(position - m_endPosition, m_sizes, m_stripeCount, m_thickness, m_colors, m_transparent, builder);
 	}
 	//TODO: Add clock somewhere
-	else if (biome.isRaining())// && m_clock->isDay())
-	{
+	else if (biome.getWeather() != 0.f)// && m_clock->isDay())
 		newRainbow(biome);
-	}
 }
 
 void Rainbow::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
