@@ -145,18 +145,21 @@ void PhysicsEngine::unregisterAllTiles(void)
 
 void PhysicsEngine::update(float deltatime)
 {
+	// Check if shape is out of screen
+	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
+	sf::Vector2f gravity = m_gravity * deltatime;
+	for (auto & shape : m_shapes)
+	{
+		shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));
+		// Add gravity
+		if (!shape->getSleep() && shape->getApplyGravity())
+			shape->addVelocity(gravity);
+	}
 	// Tile don't move so we update them now
 	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
 	{
 		if (!m_tileShapes.get(i, 0u)->getSleep())
 			m_tileShapes.get(i, 0u)->update();
-	}
-	// Add gravity
-	sf::Vector2f gravity = m_gravity * deltatime;
-	for (auto & shape : m_shapes)
-	{
-		if (!shape->getSleep() && shape->getApplyGravity())
-			shape->addVelocity(gravity);
 	}
 	// Determine which pairs of objects might be colliding
 	broadPhase();

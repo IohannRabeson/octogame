@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:16:26 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/29 13:09:47 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/07/29 18:26:40 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
 
+class PhysicsEngine;
 class AShape;
 
 class Game : public octo::DefaultKeyboardListener, public IContactListener
@@ -33,17 +34,17 @@ public:
 
 	void	update(sf::Time frameTime);
 	void	draw(sf::RenderTarget& render, sf::RenderStates states)const;
-	void	onShapeCollision(AShape * shapeA, AShape * shapeB);
 
 private:
+	PhysicsEngine &		m_physicsEngine;
 	GameClock			m_gameClock;
 	BiomeManager		m_biomeManager;
 	SkyManager			m_skyManager;
 	GroundManager		m_groundManager;
 	ParallaxScrolling	m_parallaxScrolling;
-	PhysicsEngine &		m_physicsEngine;
 
 	bool onPressed(sf::Event::KeyEvent const & event);
+	void onShapeCollision(AShape * shapeA, AShape * shapeB);
 
 };
 
