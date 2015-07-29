@@ -58,8 +58,7 @@ SRC_MAP =		Map/Map.cpp								\
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/DefaultBiome.cpp
 
-SRC_DECORS =	Decors/GameObject.cpp					\
-				Decors/DecorManager.cpp					\
+SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
 				Decors/ADecor.cpp						\
 				Decors/RandomGenerator.cpp				\
