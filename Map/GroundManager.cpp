@@ -82,6 +82,7 @@ void GroundManager::initDecors(ABiome & biome)
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
+		totalCount += rainbowCount;
 	}
 
 	if (biome.canCreateRock())
