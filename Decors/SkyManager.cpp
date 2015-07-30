@@ -1,5 +1,5 @@
 #include "SkyManager.hpp"
-#include "GameClock.hpp"
+#include "SkyCycle.hpp"
 #include "ABiome.hpp"
 #include "ADecor.hpp"
 #include "Star.hpp"
@@ -15,7 +15,7 @@ SkyManager::SkyManager(void) :
 	m_decorManagerBack(200000),
 	m_decorManagerFront(200000),
 	m_wind(0.f),
-	m_clock(nullptr),
+	m_cycle(nullptr),
 	m_sunCount(0u),
 	m_moonCount(0u),
 	m_starCount(0u),
@@ -39,7 +39,7 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f const & cameraSize)
 		m_starCount = biome.getStarCount();
 		m_originStars.resize(m_starCount);
 		for (std::size_t i = 0u; i < m_starCount; i++)
-			m_decorManagerBack.add(new Star(m_clock));
+			m_decorManagerBack.add(new Star(m_cycle));
 
 		for (std::size_t i = 0u; i < m_starCount; i++)
 		{
@@ -118,11 +118,11 @@ void SkyManager::newRainCycle(ABiome & biome)
 	m_rainDropPerSecond = biome.getRainDropPerSecond();
 }
 
-void SkyManager::setup(ABiome & biome, GameClock & clock)
+void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 {
 	m_decorManagerBack.setup(&biome);
 	m_decorManagerFront.setup(&biome);
-	m_clock = &clock;
+	m_cycle = &cycle;
 
 	octo::Camera & camera = octo::Application::getCamera();
 	sf::Vector2f const & cameraSize = camera.getSize();
@@ -131,11 +131,11 @@ void SkyManager::setup(ABiome & biome, GameClock & clock)
 	m_mapSizeFloat = biome.getMapSizeFloat();
 	m_wind = biome.getWind();
 
-	m_decorManagerBack.add(new Sky(m_clock));
+	m_decorManagerBack.add(new Sky(m_cycle));
 	setupStars(biome, cameraSize);
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
 	setupClouds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
-	m_decorManagerFront.add(new SunLight(m_clock));
+	m_decorManagerFront.add(new SunLight(m_cycle));
 
 	newRainCycle(biome);
 }
@@ -166,7 +166,7 @@ void SkyManager::update(sf::Time frameTime, ABiome & biome)
 	sf::Vector2f cameraCenter = camera.getCenter();
 	sf::Vector2f cameraSize = camera.getSize();
 	sf::Vector2f offsetCamera(rec.left, rec.top);
-	float angle = m_clock->getCycleValue() * 360.f * octo::Deg2Rad;
+	float angle = m_cycle->getCycleValue() * 360.f * octo::Deg2Rad;
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);
 

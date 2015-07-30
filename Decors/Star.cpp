@@ -1,18 +1,18 @@
 #include "Star.hpp"
-#include "GameClock.hpp"
+#include "SkyCycle.hpp"
 #include "ABiome.hpp"
 
 Star::Star() :
 	m_animator(5.f, 3.f, 3.f, 0.3f),
 	m_animation(1.f),
-	m_clock(nullptr)
+	m_cycle(nullptr)
 {
 }
 
-Star::Star(GameClock * clock) :
+Star::Star(SkyCycle * cycle) :
 	Star()
 {
-	m_clock = clock;
+	m_cycle = cycle;
 }
 
 void Star::setup(ABiome& biome)
@@ -30,12 +30,12 @@ void Star::setup(ABiome& biome)
 
 void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	if (m_clock && m_clock->isDay())
+	if (m_cycle && m_cycle->isDay())
 		m_animator.die();
 
 	if (m_animator.update(frameTime))
 		m_animator.pause();
-	else if ((m_clock && m_clock->isNight()) || m_clock == nullptr)
+	else if ((m_cycle && m_cycle->isNight()) || m_cycle == nullptr)
 		m_animator.play();
 	m_animation = m_animator.getAnimation();
 

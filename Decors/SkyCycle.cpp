@@ -1,34 +1,34 @@
-#include "GameClock.hpp"
+#include "SkyCycle.hpp"
 #include "ABiome.hpp"
 
-GameClock::GameClock(void) :
+SkyCycle::SkyCycle(void) :
 	m_isDay(true),
 	m_isMidDay(false),
 	m_isMidNight(false)
 {
 }
 
-float GameClock::getDayValue(void) const
+float SkyCycle::getDayValue(void) const
 {
 	return m_timerDay / m_timerDayMax;
 }
 
-float GameClock::getNightValue(void) const
+float SkyCycle::getNightValue(void) const
 {
 	return m_timerNight / m_timerNightMax;
 }
 
-float GameClock::getCycleValue(void) const
+float SkyCycle::getCycleValue(void) const
 {
 	return m_timer / m_timerMax;
 }
 
-bool GameClock::isDay(void) const
+bool SkyCycle::isDay(void) const
 {
 	return m_isDay;
 }
 
-bool GameClock::isNight(void) const
+bool SkyCycle::isNight(void) const
 {
 	if (m_isDay)
 		return false;
@@ -36,14 +36,14 @@ bool GameClock::isNight(void) const
 		return true;
 }
 
-void GameClock::setup(ABiome & biome)
+void SkyCycle::setup(ABiome & biome)
 {
 	m_timerMax = biome.getDayDuration();
 	m_timerDayMax = m_timerMax / 4.f;
 	m_timerNightMax = m_timerMax / 4.f;
 }
 
-void GameClock::update(sf::Time frameTime)
+void SkyCycle::update(sf::Time frameTime)
 {
 	m_timer += frameTime;
 	if (m_timer >= m_timerMax)

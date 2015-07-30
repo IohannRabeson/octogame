@@ -3,7 +3,7 @@
 
 #include "DecorManager.hpp"
 
-class GameClock;
+class SkyCycle;
 class ABiome;
 class Star;
 
@@ -13,7 +13,7 @@ public:
 	SkyManager(void);
 	~SkyManager(void) = default;
 
-	void setup(ABiome & biome, GameClock & clock);
+	void setup(ABiome & biome, SkyCycle & cycle);
 	void update(sf::Time frameTime, ABiome & biome);
 	DecorManager const & getDecorsBack(void) const;
 	DecorManager const & getDecorsFront(void) const;
@@ -48,7 +48,7 @@ private:
 	float						m_wind;
 	sf::Vector2f				m_mapSizeFloat;
 
-	GameClock *					m_clock;
+	SkyCycle *					m_cycle;
 
 	std::size_t					m_sunCount;
 	std::size_t					m_moonCount;

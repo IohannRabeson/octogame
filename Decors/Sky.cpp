@@ -1,17 +1,17 @@
 #include "Sky.hpp"
 #include "ABiome.hpp"
-#include "GameClock.hpp"
+#include "SkyCycle.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
 
 Sky::Sky(void) :
-	m_clock(nullptr)
+	m_cycle(nullptr)
 {
 }
 
-Sky::Sky(GameClock * clock) :
-	m_clock(clock)
+Sky::Sky(SkyCycle * cycle) :
+	m_cycle(cycle)
 {
 }
 
@@ -47,7 +47,7 @@ void Sky::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
 {
 	sf::Vector2f const & position = getPosition();
 	sf::Vector2f const & cameraSize = octo::Application::getCamera().getSize();
-	float interpolateValue = m_clock->getNightValue() * 2.f >= 1.f ? 1.f : m_clock->getNightValue() * 2.f;
+	float interpolateValue = m_cycle->getNightValue() * 2.f >= 1.f ? 1.f : m_cycle->getNightValue() * 2.f;
 	sf::Color colorUp = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
 	sf::Color colorDown = octo::linearInterpolation(m_colorDownDay, m_colorDownNight, interpolateValue);
 	createSky(cameraSize, position, colorUp, colorDown, builder);

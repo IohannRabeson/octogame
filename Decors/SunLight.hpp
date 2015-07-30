@@ -5,13 +5,13 @@
 # include "DecorAnimator.hpp"
 # include <SFML/Graphics/Color.hpp>
 
-class GameClock;
+class SkyCycle;
 
 class SunLight : public ADecor
 {
 public:
 	SunLight(void);
-	SunLight(GameClock * clock);
+	SunLight(SkyCycle * cycle);
 	virtual ~SunLight(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -47,7 +47,7 @@ private:
 	sf::Time		m_timerRain;
 	sf::Time		m_timerRainMax;
 
-	GameClock *		m_clock;
+	SkyCycle *		m_cycle;
 };
 
 #endif

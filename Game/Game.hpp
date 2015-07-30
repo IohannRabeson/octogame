@@ -13,7 +13,7 @@
 #ifndef GAME_HPP
 # define GAME_HPP
 
-# include "GameClock.hpp"
+# include "SkyCycle.hpp"
 # include "BiomeManager.hpp"
 # include "SkyManager.hpp"
 # include "GroundManager.hpp"
@@ -36,7 +36,7 @@ public:
 
 private:
 	PhysicsEngine &		m_engine;
-	GameClock			m_gameClock;
+	SkyCycle			m_skyCycle;
 	BiomeManager		m_biomeManager;
 	SkyManager			m_skyManager;
 	GroundManager		m_groundManager;

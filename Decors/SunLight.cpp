@@ -1,6 +1,6 @@
 #include "SunLight.hpp"
 #include "ABiome.hpp"
-#include "GameClock.hpp"
+#include "SkyCycle.hpp"
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
@@ -8,14 +8,14 @@
 SunLight::SunLight(void) :
 	m_timerRain(sf::Time::Zero),
 	m_timerRainMax(sf::seconds(2.f)),
-	m_clock(nullptr)
+	m_cycle(nullptr)
 {
 }
 
-SunLight::SunLight(GameClock * clock) :
+SunLight::SunLight(SkyCycle * cycle) :
 	m_timerRain(sf::Time::Zero),
 	m_timerRainMax(sf::seconds(2.f)),
-	m_clock(clock)
+	m_cycle(cycle)
 {
 }
 
@@ -98,11 +98,11 @@ void SunLight::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& 
 	sf::Vector2f position = getPosition();
 	if (biome.canRain())
 		computeDayColorValue(frameTime, biome);
-	float dayValue = m_clock->getDayValue();
-	float nightValue = m_clock->getNightValue();
-	if (m_clock->isDay())
+	float dayValue = m_cycle->getDayValue();
+	float nightValue = m_cycle->getNightValue();
+	if (m_cycle->isDay())
 		position -= octo::linearInterpolation(m_sunsetPos, m_dayPos, dayValue);
-	else if (m_clock->isNight())
+	else if (m_cycle->isNight())
 		position -= octo::linearInterpolation(m_sunsetPos, m_nightPos, nightValue);
 	createSunLight(m_cameraSize, position, builder);
 }

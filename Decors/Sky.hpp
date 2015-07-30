@@ -5,13 +5,13 @@
 # include "DecorAnimator.hpp"
 # include <SFML/Graphics/Color.hpp>
 
-class GameClock;
+class SkyCycle;
 
 class Sky : public ADecor
 {
 public:
 	Sky(void);
-	Sky(GameClock * clock);
+	Sky(SkyCycle * cycle);
 	virtual ~Sky(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -31,7 +31,7 @@ private:
 	sf::Color	m_colorDownDay;
 	sf::Color	m_colorDownNight;
 
-	GameClock	*m_clock;
+	SkyCycle	*m_cycle;
 };
 
 #endif

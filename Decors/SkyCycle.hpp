@@ -1,15 +1,15 @@
-#ifndef GAMECLOCK_HPP
-# define GAMECLOCK_HPP
+#ifndef SKYCYCLE_HPP
+# define SKYCYCLE_HPP
 
 #include <SFML/System/Time.hpp>
 
 class ABiome;
 
-class GameClock
+class SkyCycle
 {
 public:
-	GameClock(void);
-	~GameClock(void) = default;
+	SkyCycle(void);
+	~SkyCycle(void) = default;
 
 	float		getDayValue(void) const;
 	float		getNightValue(void) const;
