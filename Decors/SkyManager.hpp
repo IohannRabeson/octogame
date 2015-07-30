@@ -33,10 +33,6 @@ private:
 						sf::Vector2f const & cameraSize,
 						sf::Vector2f const & cameraCenter);
 
-	void setupRainbow(ABiome & biome,
-					sf::Vector2f const & cameraSize,
-					sf::Vector2f const & mapSize);
-
 	void setupClouds(ABiome & biome,
 					sf::Vector2f const & cameraSize,
 					sf::Vector2f const & cameraCenter,
@@ -52,7 +48,6 @@ private:
 	std::size_t					m_sunCount;
 	std::size_t					m_moonCount;
 	std::size_t					m_starCount;
-	std::size_t					m_rainbowCount;
 	std::size_t					m_cloudCount;
 	//TODO: To sync with paralax?
 	sf::Vector2f				m_originRotate;
@@ -60,7 +55,6 @@ private:
 	std::vector<sf::Vector2f>	m_originMoons;
 	sf::Vector2f				m_originRotateStar;
 	std::vector<sf::Vector2f>	m_originStars;
-	std::vector<sf::Vector2f>	m_originRainbows;
 	std::vector<sf::Vector2f>	m_originCloudsBack;
 	std::vector<sf::Vector2f>	m_originCloudsFront;
 

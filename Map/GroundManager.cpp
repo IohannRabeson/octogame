@@ -65,17 +65,29 @@ void GroundManager::initDecors(ABiome & biome)
 	std::size_t mapSizeX = biome.getMapSize().x;
 
 	std::size_t treeCount = biome.getTreeCount();
+	std::size_t rainbowCount = biome.getRainbowCount();
 	std::size_t rockCount = static_cast<std::size_t>(biome.getRockCount() / 2.f);
 	std::size_t mushroomCount = static_cast<std::size_t>(biome.getMushroomCount() / 2.f);
 	std::size_t crystalCount = static_cast<std::size_t>(biome.getCrystalCount() / 2);
 	std::size_t groundRockCount = biome.getGroundRockCount();
 	std::size_t totalCount = 0u;
 
+	if (biome.canCreateRainbow())
+	{
+		for (std::size_t i = 0; i < rainbowCount; i++)
+		{
+			int x = biome.randomInt(1u, mapSizeX);
+			m_decorManagerBack.add(DecorManager::DecorTypes::Rainbow);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+	}
+
 	if (biome.canCreateRock())
 	{
 		for (std::size_t i = 0; i < rockCount; i++)
 		{
-			int x = biome.randomInt(0.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerBack.add(DecorManager::DecorTypes::Rock);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -87,7 +99,7 @@ void GroundManager::initDecors(ABiome & biome)
 	{
 		for (std::size_t i = 0; i < treeCount; i++)
 		{
-			int x = biome.randomInt(0.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerBack.add(DecorManager::DecorTypes::Tree);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -99,7 +111,7 @@ void GroundManager::initDecors(ABiome & biome)
 	{
 		for (std::size_t i = 0; i < rockCount; i++)
 		{
-			int x = biome.randomInt(0.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerBack.add(DecorManager::DecorTypes::Rock);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -111,7 +123,7 @@ void GroundManager::initDecors(ABiome & biome)
 	{
 		for (std::size_t i = 0; i < mushroomCount; i++)
 		{
-			int x = biome.randomInt(0.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerBack.add(DecorManager::DecorTypes::Mushroom);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -119,7 +131,7 @@ void GroundManager::initDecors(ABiome & biome)
 		totalCount += mushroomCount;
 		for (std::size_t i = 0; i < mushroomCount; i++)
 		{
-			int x = biome.randomInt(0.f, mapSizeX);
+			int x = biome.randomInt(1u, mapSizeX);
 			m_decorManagerFront.add(DecorManager::DecorTypes::Mushroom);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
@@ -149,7 +161,7 @@ void GroundManager::initDecors(ABiome & biome)
 
 	for (std::size_t i = 0; i < groundRockCount; i++)
 	{
-		int x = biome.randomFloat(0.f, mapSizeX);
+		int x = biome.randomInt(1u, mapSizeX);
 		m_decorManagerGround.add(DecorManager::DecorTypes::GroundRock);
 		m_tiles->registerDecor(x);
 		m_tilesPrev->registerDecor(x);

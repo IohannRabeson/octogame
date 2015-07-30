@@ -2,8 +2,8 @@
 #include "RandomGenerator.hpp"
 
 DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, float delta, float start) :
-	m_currentState(e_state_grow),
-	m_lastState(e_state_grow),
+	m_currentState(State::Grow),
+	m_lastState(State::Grow),
 	m_animation(0.f),
 	m_startTimer(0.f),
 	m_startTimerMax(0.f),
@@ -45,11 +45,11 @@ bool DecorAnimator::computeState(float frameTime)
 {
 	switch (m_currentState)
 	{
-		case e_state_life:
+		case State::Life:
 		{
 			if (!m_lifeTimerMax && m_dieTimerMax)
 			{
-				m_currentState = e_state_die;
+				m_currentState = State::Die;
 				break;
 			}
 			m_lifeTimer += frameTime;
@@ -58,41 +58,41 @@ bool DecorAnimator::computeState(float frameTime)
 				m_lifeTimer = 0.f;
 				m_beatTimer = 0.f;
 				if (m_dieTimerMax)
-					m_currentState = e_state_die;
+					m_currentState = State::Die;
 				break;
 			}
 			computeBeat(frameTime);
 			break;
 		}
-		case e_state_grow:
+		case State::Grow:
 		{
 			m_growTimer += frameTime;
 			m_animation = m_growTimer / m_growTimerMax * m_finalAnimation;
 			if (m_growTimer >= m_growTimerMax)
 			{
 				m_growTimer = 0.f;
-				m_currentState = e_state_life;
+				m_currentState = State::Life;
 			}
 			break;
 		}
-		case e_state_die:
+		case State::Die:
 		{
 			m_dieTimer += frameTime;
 			m_animation = m_finalAnimation - m_dieTimer / m_dieTimerMax * m_finalAnimation;
 			if (m_dieTimer >= m_dieTimerMax)
 			{
 				m_dieTimer = 0.f;
-				m_currentState = e_state_grow;
+				m_currentState = State::Grow;
 				return true;
 			}
 			break;
 		}
-		case e_state_sleep:
+		case State::Sleep:
 		{
 			m_animation = m_finalAnimation;
 			break;
 		}
-		case e_state_stop:
+		case State::Stop:
 		{
 			break;
 		}
@@ -104,31 +104,31 @@ bool DecorAnimator::computeState(float frameTime)
 
 void DecorAnimator::pause(void)
 {
-	if (m_currentState != e_state_stop)
+	if (m_currentState != State::Stop)
 	{
 		m_lastState = m_currentState;
-		m_currentState = e_state_stop;
+		m_currentState = State::Stop;
 	}
 }
 
 void DecorAnimator::play(void)
 {
-	if (m_currentState == e_state_stop)
+	if (m_currentState == State::Stop)
 		m_currentState = m_lastState;
-	else if (m_currentState == e_state_sleep)
-		m_currentState = e_state_life;
+	else if (m_currentState == State::Sleep)
+		m_currentState = State::Life;
 }
 
 void DecorAnimator::sleep(void)
 {
-	if (m_currentState != e_state_grow)
-		m_currentState = e_state_sleep;
+	if (m_currentState != State::Grow)
+		m_currentState = State::Sleep;
 }
 
 void DecorAnimator::die(void)
 {
-	if (m_currentState == e_state_life)
-		m_currentState = e_state_die;
+	if (m_currentState == State::Life)
+		m_currentState = State::Die;
 }
 
 void DecorAnimator::setup(sf::Time lifeTime)
@@ -158,3 +158,7 @@ float DecorAnimator::getAnimationTime(void) const
 	return m_lifeTimerMax + m_growTimerMax + m_dieTimerMax;
 }
 
+DecorAnimator::State DecorAnimator::getState(void) const
+{
+	return m_currentState;
+}
