@@ -47,27 +47,16 @@ void Map::init(ABiome & biome)
 		}
 	}
 
-	m_instances.push_back(std::unique_ptr<MapInstance>(new MapInstance(6u, 6u, 5u)));
-	for (auto & instance : m_instances)
-		instance->load();
+	auto const & instances = biome.getInstances();
+	for (auto & instance : instances)
+		m_instances.push_back(std::unique_ptr<MapInstance>(new MapInstance(instance.first, instance.second)));
 
 	m_noise.setSeed(42);
 
 	// Initialize mapSurface pointer
-	setMapSurfaceGenerator([](Noise & noise, float x, float y)
-	{
-		return noise.fBm(x, y, 3, 3.f, 0.3f);
-	});
-
+	setMapSurfaceGenerator(biome.getMapSurfaceGenerator());
 	// Initialize tileColor pointer
-	setTileColorGenerator([](Noise & noise, float x, float y, float z)
-	{
-		static const sf::Color end = sf::Color(254, 231, 170);
-		static const sf::Color start = sf::Color(230, 168, 0);
-
-		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		return octo::linearInterpolation(start, end, transition);
-	});
+	setTileColorGenerator(biome.getTileColorGenerator());
 }
 
 void Map::computeMapRange(int startX, int endX, int startY, int endY)

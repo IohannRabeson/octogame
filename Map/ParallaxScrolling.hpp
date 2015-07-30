@@ -6,6 +6,8 @@
 # include <initializer_list>
 # include <SFML/Graphics.hpp>
 
+class ABiome;
+
 class ParallaxScrolling : public sf::Drawable
 {
 public:
@@ -35,8 +37,12 @@ public:
 	ParallaxScrolling(std::initializer_list<ALayer *> list);
 	virtual ~ParallaxScrolling(void);
 
+	/*! Setup */
+	void setup(ABiome & biome);
 	/*! Add a layer */
 	void addLayer(ALayer * layer);
+	/*! Add a vector of layers */
+	void addLayer(std::vector<ALayer *> const & layers);
 	/*! Remove the layer from the vector and release the allocated memory */
 	void removeLayer(std::size_t index);
 	/*! Remove all layers from the vector and release the allocated memory */

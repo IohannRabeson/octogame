@@ -1,5 +1,8 @@
 #include "DefaultBiome.hpp"
 #include "Tile.hpp"
+#include "GenerativeLayer.hpp"
+#include "ResourceDefinitions.hpp"
+#include <Interpolations.hpp>
 
 #include <iostream>
 
@@ -88,6 +91,9 @@ DefaultBiome::DefaultBiome() :
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_name);
+
+	m_instances[12] = MINIMAP_OMP;
+	m_instances[86] = TEST_MAP2_OMP;
 }
 
 void			DefaultBiome::setup(std::size_t seed)
@@ -119,6 +125,57 @@ float			DefaultBiome::getTransitionDuration()
 int				DefaultBiome::getBossInstancePosX()
 {
 	return (m_bossInstancePosX);
+}
+
+std::map<std::size_t, std::string> const & DefaultBiome::getInstances()
+{
+	return m_instances;
+}
+
+std::vector<ParallaxScrolling::ALayer *> DefaultBiome::getLayers()
+{
+	sf::Vector2u const & mapSize = getMapSize();
+	std::vector<ParallaxScrolling::ALayer *> vector;
+
+	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 1.f, -1.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlinNoise(x * 10.f, y, 2, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.9f, 11.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlinNoise(x, y, 3, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.8f, 6.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 1.1f, y);
+		});
+	vector.push_back(layer);
+	return vector;
+}
+
+Map::MapSurfaceGenerator DefaultBiome::getMapSurfaceGenerator()
+{
+	return [](Noise & noise, float x, float y)
+	{
+		return noise.fBm(x, y, 3, 3.f, 0.3f);
+	};
+}
+
+Map::TileColorGenerator DefaultBiome::getTileColorGenerator()
+{
+	return [](Noise & noise, float x, float y, float z)
+	{
+		static const sf::Color end = sf::Color(254, 231, 170);
+		static const sf::Color start = sf::Color(230, 168, 0);
+
+		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		return octo::linearInterpolation(start, end, transition);
+	};
 }
 
 sf::Time		DefaultBiome::getDayDuration()
