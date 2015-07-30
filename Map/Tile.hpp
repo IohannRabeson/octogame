@@ -45,6 +45,7 @@ private:
 	ETransitionType		m_transitionType;
 	sf::Color			m_startColor;
 	bool				m_isEmpty;
+	//TODO: add instance enumtiletype
 
 };
 
