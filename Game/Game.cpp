@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/29 18:14:05 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/07/30 17:24:35 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 	m_gameClock.setup(m_biomeManager.getCurrentBiome());
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
-	m_groundManager.init(m_biomeManager.getCurrentBiome());
+	m_groundManager.setup(m_biomeManager.getCurrentBiome());
 	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome());
 
 	auto const & instances = m_biomeManager.getCurrentBiome().getInstances();

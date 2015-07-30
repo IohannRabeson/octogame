@@ -23,7 +23,7 @@ GroundManager::GroundManager(void) :
 	m_nextState(GenerationState::None)
 {}
 
-void GroundManager::init(ABiome & biome)
+void GroundManager::setup(ABiome & biome)
 {
 	// Init maps
 	m_tiles.reset(new Map());
