@@ -293,12 +293,17 @@ void GroundManager::updateTransition(void)
 
 			// Update tile transition
 			m_vertices[m_verticesCount].color = octo::linearInterpolation(tilePrev->getStartColor(), tile->getStartColor(), transition);
-			for (std::size_t i = 0u; i < 4u; i++)
+			for (std::size_t i = 0u; i < 3u; i++)
 			{
 				m_vertices[m_verticesCount + i].position.y = octo::linearInterpolation(tilePrev->getStartTransition(i).y, tile->getStartTransition(i).y, transition) - Tile::DoubleTileSize;
-				m_vertices[m_verticesCount + i].position.x = tilePrev->getStartTransition(i).x - Tile::DoubleTileSize;
-				m_vertices[m_verticesCount + i].color = m_vertices[m_verticesCount].color;
+				m_vertices[m_verticesCount + i + 1u].color = m_vertices[m_verticesCount].color;
 			}
+			m_vertices[m_verticesCount + 3u].position.y = m_vertices[m_verticesCount + 2u].position.y;
+
+			m_vertices[m_verticesCount + 0u].position.x = tilePrev->getStartTransition(0u).x - Tile::DoubleTileSize;
+			m_vertices[m_verticesCount + 1u].position.x = tilePrev->getStartTransition(1u).x - Tile::DoubleTileSize;
+			m_vertices[m_verticesCount + 2u].position.x = m_vertices[m_verticesCount + 1u].position.x;
+			m_vertices[m_verticesCount + 3u].position.x = m_vertices[m_verticesCount + 0u].position.x;
 
 			// Update physics information
 			if (!first)

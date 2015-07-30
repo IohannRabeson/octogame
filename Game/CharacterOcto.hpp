@@ -30,6 +30,9 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	{
 		Idle,
 		Left,
+		Jump,
+		DoubleJump,
+		Fall,
 		Right
 	};
 public:
@@ -48,8 +51,11 @@ private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
+	octo::CharacterAnimation	m_jumpAnimation;
+	octo::CharacterAnimation	m_fallAnimation;
 	RectangleShape*				m_box;
-	std::array<bool, 2>			m_controls;
+	bool						m_originMoove;
+	std::array<bool, 3>			m_controls;
 };
 
 #endif

@@ -14,6 +14,7 @@
 #include "DefaultBiome.hpp"
 #include "GenerativeLayer.hpp"
 
+#include "PhysicsEngine.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -28,6 +29,9 @@ void	Game::setup()
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 	graphics.addKeyboardListener(&m_octo);
+
+	PhysicsEngine::getInstance().setIterationCount(4u);
+	PhysicsEngine::getInstance().setTileCollision(true);
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -39,21 +43,23 @@ void	Game::loadLevel(std::string const& fileName)
 	m_gameClock.setup(m_biomeManager.getCurrentBiome());
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
 	m_groundManager.init(m_biomeManager.getCurrentBiome());
-
-	sf::Vector2u const & mapSize = m_biomeManager.getCurrentBiome().getMapSize();
+	//TODO: Maybe its better to put all of that in a GenerativeLayerManager??
+	sf::Vector2u mapSize = m_biomeManager.getCurrentBiome().getMapSize();
+	//TODO: To remove this line (it's just to decrease the y of parallax elem)
+	mapSize.y = static_cast<std::size_t>(mapSize.y * 1.2f);
 	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 			{
 				return noise.perlinNoise(x * 10.f, y, 2, 2.f);
 			});
 	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 11.f);
+	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 3.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 			{
 				return noise.perlinNoise(x, y, 3, 2.f);
 			});
 	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 6.f);
+	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 2.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 			{
 				return noise.noise(x * 1.1f, y);
@@ -70,6 +76,8 @@ void	Game::update(sf::Time frameTime)
 	m_groundManager.update(seconds);
 	m_parallaxScrolling.update(seconds);
 	m_octo.update(frameTime);
+	m_npc.update(frameTime);
+	m_bnpc.update(frameTime);
 	followPlayer();
 }
 
@@ -96,11 +104,17 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_parallaxScrolling, states);
 	render.draw(m_groundManager.getDecorsBack(), states);
 	// Draw pnj
-	render.draw(m_octo, states);
 	render.draw(m_groundManager.getDecorsFront(), states);
 	render.draw(m_groundManager, states);
 	render.draw(m_groundManager.getDecorsGround(), states);
 	render.draw(m_skyManager.getDecorsFront(), states);
+
+	//TODO replace 
+	PhysicsEngine::getInstance().debugDraw(render);
+	render.draw(m_octo, states);
+	render.draw(m_npc, states);
+	render.draw(m_bnpc, states);
+
 }
 
 void	Game::followPlayer()

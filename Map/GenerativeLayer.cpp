@@ -39,6 +39,12 @@ void GenerativeLayer::init(void)
 	m_positionsPrev.resize(getMapSize().x * 4);
 	m_noise.setSeed(42);
 
+	for (std::size_t i = 0u; i < m_widthScreen; i++)
+	{
+		m_vertices[(i * 4u) + 2u].position.y = static_cast<float>(getMapSize().y) * m_tileSize;
+		m_vertices[(i * 4u) + 3u].position.y = static_cast<float>(getMapSize().y) * m_tileSize;
+	}
+
 	computeVertices(m_positions);
 	swap();
 }
@@ -55,7 +61,7 @@ void GenerativeLayer::computeVertices(std::vector<sf::Vector2f> & positions)
 		{
 			float transition = i < 5u ? static_cast<float>(i + 5) : static_cast<float>(5 - static_cast<int>(getMapSize().x) + static_cast<float>(i));
 			transition = octo::cosinusInterpolation(start, end, transition / 10.f);
-			transition = static_cast<int>(transition) - static_cast<int>(transition) % 16;
+			transition = static_cast<int>(transition) - static_cast<int>(transition) % static_cast<int>(m_tileSize);
 			positions[(i * 4u) + 0u] = std::move(sf::Vector2f(i * m_tileSize, transition));
 			positions[(i * 4u) + 1u] = std::move(sf::Vector2f((i + 1u) * m_tileSize, transition));
 		}
@@ -64,8 +70,6 @@ void GenerativeLayer::computeVertices(std::vector<sf::Vector2f> & positions)
 			positions[(i * 4u) + 0u] = std::move(sf::Vector2f(i * m_tileSize, getHeightValue(i * 4u)));
 			positions[(i * 4u) + 1u] = std::move(sf::Vector2f((i + 1u) * m_tileSize, getHeightValue(i * 4u)));
 		}
-		positions[(i * 4u) + 2u] = std::move(sf::Vector2f((i + 1u) * m_tileSize, static_cast<float>(getMapSize().y) * m_tileSize));
-		positions[(i * 4u) + 3u] = std::move(sf::Vector2f(i * m_tileSize, static_cast<float>(getMapSize().y) * m_tileSize));
 	}
 	// Set triangles
 	for (std::size_t i = 0u; i < getMapSize().x; i++)
@@ -130,8 +134,6 @@ void GenerativeLayer::update(float deltatime)
 			m_vertices[(i * 4u) + 0u].position.y = octo::cosinusInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 0u].y, transition) + offsetY;
 			m_vertices[(i * 4u) + 1u].position.y = octo::cosinusInterpolation(m_positionsPrev[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 1u].y, transition) + offsetY;
 		}
-		m_vertices[(i * 4u) + 2u].position.y = m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 2u].y + offsetY;
-		m_vertices[(i * 4u) + 3u].position.y = m_positions[((offsetBackground + i) * 4u) % (getMapSize().x * 4) + 3u].y + offsetY;
 		m_vertices[(i * 4u) + 0u].position.x = i * m_tileSize + rect.left - offsetX - Tile::DoubleTileSize;
 		m_vertices[(i * 4u) + 1u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - Tile::DoubleTileSize;
 		m_vertices[(i * 4u) + 2u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - Tile::DoubleTileSize;
