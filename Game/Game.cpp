@@ -36,7 +36,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 	m_gameClock.setup(m_biomeManager.getCurrentBiome());
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
-	m_groundManager.init(m_biomeManager.getCurrentBiome());
+	m_groundManager.setup(m_biomeManager.getCurrentBiome());
 	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome());
 
 	auto const & instances = m_biomeManager.getCurrentBiome().getInstances();
