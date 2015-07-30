@@ -14,7 +14,6 @@ class Map : public IMapTransformable
 {
 public:
 	typedef std::vector<std::pair<int, sf::Vector2f>>			Decors;
-	typedef Decors::iterator									Iterator;
 	typedef octo::Array2D<Tile*>								TileMap;
 
 	typedef std::function<float(Noise & noise, float x, float y)>				MapSurfaceGenerator;
@@ -35,8 +34,7 @@ public:
 	inline void computeMapRangeY(int startY, int endY) { computeMapRange(0, m_tiles.columns(), startY, endY); }
 	inline void setCameraView(sf::Vector2f const * offset) { m_offset = offset; }
 	inline void registerOffset(void) { m_curOffset = *m_offset; }
-	inline Iterator begin(void) { return m_decorPositions.begin(); }
-	inline Iterator end(void) { return m_decorPositions.end(); }
+	inline Decors const & getDecorsPosition(void) const { return m_decorPositions; }
 
 	void registerDecor(int x);
 
