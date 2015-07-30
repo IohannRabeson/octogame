@@ -34,6 +34,11 @@ public:
 	virtual float			getTransitionDuration();
 	virtual int				getBossInstancePosX();
 
+	virtual std::map<std::size_t, std::string>	const & getInstances();
+	virtual std::vector<ParallaxScrolling::ALayer *> getLayers();
+	virtual Map::MapSurfaceGenerator getMapSurfaceGenerator();
+	virtual Map::TileColorGenerator getTileColorGenerator();
+
 	virtual sf::Time		getDayDuration();
 	virtual sf::Color		getSkyDayColor();
 	virtual sf::Color		getSkyNightColor();
@@ -130,6 +135,8 @@ private:
 	sf::Vector2u		m_mapSize;
 	float				m_transitionDuration;
 	std::size_t			m_bossInstancePosX;
+
+	std::map<std::size_t, std::string>	m_instances;
 
 	sf::Time			m_dayDuration;
 	sf::Color			m_skyDayColor;
