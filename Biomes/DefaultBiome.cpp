@@ -17,7 +17,7 @@ DefaultBiome::DefaultBiome() :
 	m_wind(100.f),
 	m_rainDropPerSecond(20u, 50u),
 	m_weather(0.f),
-	m_sunnyTime(sf::seconds(20.f), sf::seconds(30.f)),
+	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(10.f), sf::seconds(15.f)),
 
 	m_rockCount(10u, 20u),

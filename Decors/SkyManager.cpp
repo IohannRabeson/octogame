@@ -19,7 +19,9 @@ SkyManager::SkyManager(void) :
 	m_sunCount(0u),
 	m_moonCount(0u),
 	m_starCount(0u),
-	m_cloudCount(0u)
+	m_cloudCount(0u),
+	m_rainDropPerSecond(0u),
+	m_rainAppear(true)
 {
 }
 
