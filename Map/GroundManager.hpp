@@ -22,7 +22,7 @@ public:
 	GroundManager(void);
 	virtual ~GroundManager(void) = default;
 
-	void init(ABiome & biome);
+	void setup(ABiome & biome);
 	void update(float deltatime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	DecorManager const & getDecorsBack(void) const;
