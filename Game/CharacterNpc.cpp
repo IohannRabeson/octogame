@@ -5,7 +5,8 @@
 #include <ResourceManager.hpp>
 #include <LevelMap.hpp>
 
-CharacterNpc::CharacterNpc()
+CharacterNpc::CharacterNpc(sf::Vector2f position, sf::FloatRect area)
+	: m_area(area)
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
 	typedef octo::CharacterSprite::ACharacterState	State;
@@ -72,7 +73,7 @@ CharacterNpc::CharacterNpc()
 	machine.addTransition(Idle, state1, state0);
 	machine.addTransition(Idle, state2, state0);
 
-	m_sprite.setPosition(sf::Vector2f(0, 400));
+	m_sprite.setPosition(position);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
@@ -82,14 +83,14 @@ CharacterNpc::CharacterNpc()
 
 void	CharacterNpc::update(sf::Time frameTime)
 {
-	if (m_sprite.getPosition().x == 0.f && canWalk()){
+	if (m_sprite.getPosition().x == m_area.left && canWalk()){
 		m_sprite.setNextEvent(Right);
 		m_sprite.setScale(1, 1);
 		if (m_velocity == -0.5f)
 			m_sprite.setOrigin(m_sprite.getOrigin().x - 177, 0);
 		m_velocity = 0.5f;
 	}
-	else if (m_sprite.getPosition().x == 500.f && canWalk()){
+	else if (m_sprite.getPosition().x == (m_area.left + m_area.width) && canWalk()){
 		m_sprite.setNextEvent(Left);
 		m_sprite.setScale(-1, 1);
 		m_sprite.setOrigin(m_sprite.getOrigin().x + 177, 0);
@@ -97,7 +98,7 @@ void	CharacterNpc::update(sf::Time frameTime)
 	}
 	if (canWalk())
 		m_sprite.setPosition(m_sprite.getPosition() + sf::Vector2f(m_velocity, 0.f));
-	if ((m_sprite.getPosition().x == 0.f || m_sprite.getPosition().x == 500.f)
+	if ((m_sprite.getPosition().x == 0.f || m_sprite.getPosition().x == (m_area.left + m_area.width))
 			&& !m_idle){
 		m_sprite.setNextEvent(Idle);
 		m_clock.restart();

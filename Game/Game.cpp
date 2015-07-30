@@ -20,6 +20,7 @@
 #include <Camera.hpp>
 
 Game::Game()
+	: m_npc(sf::Vector2f(0, 600), sf::FloatRect(0, 0, 200, 0))
 {
 }
 

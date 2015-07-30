@@ -17,8 +17,11 @@
 #include <ResourceManager.hpp>
 
 CharacterOcto::CharacterOcto() :
-	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false))
-{
+	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
+	m_pixelSecond(320.f),
+	m_canDoubleJump(false),
+	m_onGround(true)
+	{
 	typedef octo::CharacterAnimation::Frame			Frame;
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
@@ -46,15 +49,14 @@ CharacterOcto::CharacterOcto() :
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_jumpAnimation.setFrames({
-			Frame(sf::seconds(0.2f), {23, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {24, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {26, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()})
 			});
+	m_jumpAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_fallAnimation.setFrames({
-			Frame(sf::seconds(0.5f), {26, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.5f), {31, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {29, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {30, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			});
 	m_fallAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -82,10 +84,10 @@ CharacterOcto::CharacterOcto() :
 	machine.addTransition(Jump, state1, state3);
 	machine.addTransition(Jump, state2, state3);
 	machine.addTransition(Jump, state4, state3);
-	machine.addTransition(Jump, state5, state3);
 
 	machine.addTransition(DoubleJump, state3, state4);
 	machine.addTransition(DoubleJump, state5, state4);
+	machine.addTransition(DoubleJump, state0, state4);
 
 	machine.addTransition(Fall, state0, state5);
 	machine.addTransition(Fall, state1, state5);
@@ -113,9 +115,8 @@ CharacterOcto::CharacterOcto() :
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	m_sprite.update(frameTime);
-
 	PhysicsEngine::getInstance().update(frameTime.asSeconds());
-	commitControlsToPhysics();
+	commitControlsToPhysics(frameTime);
 	commitPhysicsToGraphics();
 }
 
@@ -131,54 +132,32 @@ void	CharacterOcto::commitPhysicsToGraphics()
 	m_sprite.setPosition(bounds.left -50, bounds.top);
 }
 
-void	CharacterOcto::commitControlsToPhysics()
+void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
 	if (m_controls[0])
 	{
-		velocity.x = -12.f;
+		velocity.x = (-1 * m_pixelSecond) * frameTime.asSeconds();
 	}
 	else if (m_controls[1])
 	{
-		velocity.x = 12.f;
+		velocity.x = m_pixelSecond * frameTime.asSeconds();
 	}
-	if (m_controls[2])
+	if (m_controls[2] && (m_jumpVelocity * frameTime.asSeconds() < 0)
+			&& (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
 	{
-		velocity.y = -30.f;
+		velocity.y = m_jumpVelocity++ * frameTime.asSeconds() ;
 	}
 	m_box->setVelocity(velocity);
 }
 
 bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 {
-	bool canDoubleJump = false;
-	bool canJump = false;
-	std::vector<octo::FiniteStateMachine::EventId>::iterator it;
-	for (auto i : m_sprite.getPossibleEvents()){
-		if (i == Jump){
-			std::cout << "jump|";
-			canJump = true;
-		}
-		else if (i == Fall)
-			std::cout << "fall|";
-		else if (i == Left)
-			std::cout << "Left|";
-		else if (i == Right)
-			std::cout << "Right|";
-		else if (i == DoubleJump){
-			std::cout << "doubleJump|";
-			canDoubleJump = true;
-		}
-		else if (i == Idle)
-			std::cout << "idle|";
-	}
-	std::cout << "\n";
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
 			if (m_controls[0] == false)
 			{
-				std::cout << "=> Left\n";
 				m_controls[0] = true;
 				m_sprite.setNextEvent(Left);
 				if (!m_originMoove){
@@ -191,7 +170,6 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Right:
 			if (m_controls[1] == false)
 			{
-				std::cout << "=> Right\n";
 				m_controls[1] = true;
 				m_sprite.setNextEvent(Right);
 				if (m_originMoove){
@@ -202,10 +180,20 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 			}
 			break;
 		case sf::Keyboard::Space:
-			if (m_controls[2] == false && canJump){
-				std::cout << "=> Jump\n";
+			if (m_controls[2] == false)
+			{
 				m_controls[2] = true;
-				m_sprite.setNextEvent(Jump);
+				m_jumpVelocity = -640.f;
+				if (m_canDoubleJump && m_sprite.canGetEvent(DoubleJump)){
+					m_sprite.setNextEvent(DoubleJump);
+					m_canDoubleJump = false;
+					m_onGround = false;
+				}
+				else if (m_sprite.canGetEvent(Jump) && m_onGround){
+					m_sprite.setNextEvent(Jump);
+					m_canDoubleJump = true;
+					m_onGround = false;
+				}
 			}
 		default:
 			break;
@@ -215,7 +203,6 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {
-	bool	fall = false;
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
@@ -226,16 +213,17 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Space:
 			m_controls[2] = false;
-			fall = true;
 		default:
 			break;
 	}
 	if (std::find(m_controls.begin(), m_controls.end(), true) == m_controls.end())
 	{
-		if (fall)
+		if (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump)
 			m_sprite.setNextEvent(Fall);
-		else
+		else{
+			m_onGround = true;
 			m_sprite.setNextEvent(Idle);
+		}
 	}
 	return (true);
 }
@@ -244,3 +232,4 @@ sf::Vector2f	CharacterOcto::getPosition()const
 {
 	return (m_box->getBaryCenter());
 }
+

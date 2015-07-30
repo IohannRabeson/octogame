@@ -45,7 +45,7 @@ public:
 	bool			onReleased(sf::Event::KeyEvent const& event);
 	sf::Vector2f	getPosition()const;
 private:
-	void	commitControlsToPhysics();
+	void	commitControlsToPhysics(sf::Time frameTime);
 	void	commitPhysicsToGraphics();
 private:
 	octo::CharacterSprite		m_sprite;
@@ -54,7 +54,11 @@ private:
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
 	RectangleShape*				m_box;
+	float						m_jumpVelocity;
+	float						m_pixelSecond;
 	bool						m_originMoove;
+	bool						m_canDoubleJump;
+	bool						m_onGround;
 	std::array<bool, 3>			m_controls;
 };
 
