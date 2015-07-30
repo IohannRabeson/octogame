@@ -11,6 +11,7 @@
 #include <Camera.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
+#include <Interpolations.hpp>
 
 Game::Game() :
 	m_physicsEngine(PhysicsEngine::getInstance())
@@ -32,7 +33,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 	m_gameClock.setup(m_biomeManager.getCurrentBiome());
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
-	m_groundManager.init(m_biomeManager.getCurrentBiome());
+	m_groundManager.setup(m_biomeManager.getCurrentBiome());
 	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome());
 
 	m_physicsEngine.setIterationCount(4u);

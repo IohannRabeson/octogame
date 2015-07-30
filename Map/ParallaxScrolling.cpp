@@ -1,11 +1,9 @@
 #include "ParallaxScrolling.hpp"
 #include "ABiome.hpp"
 
-ParallaxScrolling::ParallaxScrolling(std::initializer_list<ALayer *> list)
-{
-	for (auto & layer : list)
-		addLayer(layer);
-}
+ParallaxScrolling::ParallaxScrolling(void) :
+	m_biome(nullptr)
+{}
 
 ParallaxScrolling::~ParallaxScrolling(void)
 {
@@ -14,6 +12,7 @@ ParallaxScrolling::~ParallaxScrolling(void)
 
 void ParallaxScrolling::setup(ABiome & biome)
 {
+	m_biome = &biome;
 	// Clean existing layers
 	removeAllLayers();
 	// Add new layers
@@ -24,7 +23,7 @@ void ParallaxScrolling::addLayer(ALayer * layer)
 {
 	if (!layer)
 		return;
-	layer->init();
+	layer->setup();
 	m_layers.push_back(std::unique_ptr<ALayer>(layer));
 }
 
@@ -49,7 +48,7 @@ void ParallaxScrolling::removeAllLayers(void)
 void ParallaxScrolling::update(float deltatime)
 {
 	for (auto & layer : m_layers)
-		layer->update(deltatime);
+		layer->update(deltatime, *m_biome);
 }
 
 void ParallaxScrolling::draw(sf::RenderTarget & render, sf::RenderStates states) const

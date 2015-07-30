@@ -23,7 +23,7 @@ GroundManager::GroundManager(void) :
 	m_nextState(GenerationState::None)
 {}
 
-void GroundManager::init(ABiome & biome)
+void GroundManager::setup(ABiome & biome)
 {
 	// Init maps
 	m_tiles.reset(new Map());
@@ -334,13 +334,12 @@ void GroundManager::updateTransition(void)
 	}
 
 	// Update decors
-	Map::Iterator it;
-	Map::Iterator itPrev;
-	std::size_t index = 0u;
-	for (it = m_tiles->begin(), itPrev = m_tilesPrev->begin(); it != m_tiles->end(); it++, itPrev++, index++)
+	Map::Decors const & current = m_tiles->getDecorsPosition();
+	Map::Decors const & prev = m_tilesPrev->getDecorsPosition();
+	for (std::size_t i = 0u; i < m_tiles->getDecorsPosition().size(); i++)
 	{
-		m_decorPositions[index].y = octo::linearInterpolation(itPrev->second.y, it->second.y, transition);
-		m_decorPositions[index].x = it->second.x;
+		m_decorPositions[i].y = octo::linearInterpolation(prev[i].second.y, current[i].second.y, transition);
+		m_decorPositions[i].x = current[i].second.x;
 	}
 }
 
