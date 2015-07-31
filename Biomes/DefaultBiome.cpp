@@ -18,10 +18,9 @@ DefaultBiome::DefaultBiome() :
 	m_nightLightColor(0, 197, 255, 100),
 	m_SunsetLightColor(238, 173, 181, 100),
 	m_wind(100.f),
-	m_rainDropPerSecond(20u, 50u),
-	m_weather(0.f),
-	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
-	m_rainingTime(sf::seconds(10.f), sf::seconds(15.f)),
+	m_rainDropPerSecond(20u, 40u),
+	m_sunnyTime(sf::seconds(20.f), sf::seconds(40.f)),
+	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 
 	m_rockCount(10u, 20u),
 	m_treeCount(5u, 10u),
@@ -31,7 +30,7 @@ DefaultBiome::DefaultBiome() :
 	m_sunCount(1u, 3u),
 	m_moonCount(1u, 3u),
 	m_rainbowCount(1u, 2u),
-	m_cloudCount(30u, 50u),
+	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
 	m_canRain(true),
@@ -229,16 +228,6 @@ std::size_t		DefaultBiome::getRainDropPerSecond()
 		return (value);
 	else
 		return (80u);
-}
-
-float			DefaultBiome::getWeather()
-{
-	return (m_weather);
-}
-
-void			DefaultBiome::setWeather(float weather)
-{
-	m_weather = weather;
 }
 
 sf::Time		DefaultBiome::getSunnyTime()

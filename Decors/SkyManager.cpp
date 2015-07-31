@@ -5,6 +5,7 @@
 #include "Star.hpp"
 #include "Sky.hpp"
 #include "SunLight.hpp"
+#include "Cloud.hpp"
 
 #include <Math.hpp>
 #include <Application.hpp>
@@ -19,9 +20,7 @@ SkyManager::SkyManager(void) :
 	m_sunCount(0u),
 	m_moonCount(0u),
 	m_starCount(0u),
-	m_cloudCount(0u),
-	m_rainDropPerSecond(0u),
-	m_rainAppear(true)
+	m_cloudCount(0u)
 {
 }
 
@@ -100,22 +99,11 @@ void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf
 		float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
 		for (size_t i = 0; i < m_cloudCount; i++)
 		{
-			m_decorManagerFront.add(DecorManager::DecorTypes::Cloud);
+			m_decorManagerFront.add(new Cloud(m_cycle));
 			m_originCloudsFront[i].x = biome.randomFloat(leftLimit, rightLimit);
 			m_originCloudsFront[i].y = biome.randomFloat(cameraSize.y / 2.f, -mapSize.y);
 		}
 	}
-}
-
-void SkyManager::newRainCycle(ABiome & biome)
-{
-	biome.setWeather(0.f);
-	m_sunnyTimer = sf::Time::Zero;
-	m_sunnyTimerMax = biome.getSunnyTime();
-	m_rainingTimer = sf::Time::Zero;
-	m_rainingTimerMax = biome.getRainingTime() / 2.f;
-	m_rainAppear = true;
-	m_rainDropPerSecond = biome.getRainDropPerSecond();
 }
 
 void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
@@ -136,30 +124,9 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
 	setupClouds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
 	m_decorManagerFront.add(new SunLight(m_cycle));
-
-	newRainCycle(biome);
 }
 
-void SkyManager::computeRain(sf::Time frameTime, ABiome & biome)
-{
-	if (m_sunnyTimer <= m_sunnyTimerMax)
-		m_sunnyTimer += frameTime;
-	else if (m_rainingTimer <= m_rainingTimerMax && m_rainAppear)
-	{
-		m_rainingTimer += frameTime;
-		biome.setWeather(m_rainingTimer / m_rainingTimerMax * m_rainDropPerSecond);
-	}
-	else if (m_rainingTimer >= sf::Time::Zero)
-	{
-		m_rainAppear = false;
-		m_rainingTimer -= frameTime;
-		biome.setWeather(m_rainingTimer / m_rainingTimerMax * m_rainDropPerSecond);
-	}
-	else
-		newRainCycle(biome);
-}
-
-void SkyManager::update(sf::Time frameTime, ABiome & biome)
+void SkyManager::update(sf::Time frameTime)
 {
 	octo::Camera const & camera = octo::Application::getCamera();
 	sf::FloatRect const & rec = camera.getRectangle();
@@ -197,8 +164,6 @@ void SkyManager::update(sf::Time frameTime, ABiome & biome)
 	(*decorFront)->setPosition(camera.getCenter());
 	m_decorManagerBack.update(frameTime, camera);
 	m_decorManagerFront.update(frameTime, camera);
-
-	computeRain(frameTime, biome);
 }
 
 DecorManager const & SkyManager::getDecorsBack(void) const

@@ -1,7 +1,6 @@
 #include "Sky.hpp"
 #include "ABiome.hpp"
 #include "SkyCycle.hpp"
-#include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
 
@@ -35,20 +34,17 @@ void Sky::createSky(sf::Vector2f const & size, sf::Vector2f const & origin, sf::
 	builder.createVertex(downRight, colorDown);
 }
 
-void Sky::setup(ABiome& biome)
+void Sky::setup(ABiome&)
 {
-	m_colorUpDay = biome.getSkyDayColor();
-	m_colorUpNight = biome.getSkyNightColor();
-	m_colorDownDay = sf::Color(255, 255, 255);
-	m_colorDownNight = sf::Color(50, 50, 50);
+	m_colorUp = m_cycle->getSkyColorUp();
+	m_colorDown = m_cycle->getSkyColorDown();
 }
 
 void Sky::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
 {
 	sf::Vector2f const & position = getPosition();
 	sf::Vector2f const & cameraSize = octo::Application::getCamera().getSize();
-	float interpolateValue = m_cycle->getNightValue() * 2.f >= 1.f ? 1.f : m_cycle->getNightValue() * 2.f;
-	sf::Color colorUp = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
-	sf::Color colorDown = octo::linearInterpolation(m_colorDownDay, m_colorDownNight, interpolateValue);
-	createSky(cameraSize, position, colorUp, colorDown, builder);
+	m_colorUp = m_cycle->getSkyColorUp();
+	m_colorDown = m_cycle->getSkyColorDown();
+	createSky(cameraSize, position, m_colorUp, m_colorDown, builder);
 }

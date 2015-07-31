@@ -6,6 +6,8 @@
 # include "RainSystem.hpp"
 # include <SFML/Graphics/Color.hpp>
 
+class SkyCycle;
+
 class Cloud : public ADecor
 {
 struct OctogonValue
@@ -17,6 +19,7 @@ struct OctogonValue
 
 public:
 	Cloud(void);
+	Cloud(SkyCycle * cycle);
 	virtual ~Cloud(void);
 
 	virtual void setup(ABiome& biome);
@@ -25,17 +28,6 @@ public:
 						ABiome& biome);
 
 private:
-	sf::Vector2f				m_size;
-	std::size_t					m_partCount;
-	sf::Color					m_color;
-	std::vector<OctogonValue>	m_values;
-
-	DecorAnimator				m_animator;
-	float						m_animation;
-
-	std::vector<RainSystem *>	m_rain;
-	std::vector<sf::Vector2f>	m_rainUpLeft;
-
 	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & sizeCorner,
 						sf::Vector2f const & origin,
@@ -49,6 +41,19 @@ private:
 					octo::VertexBuilder& builder);
 
 	void newCloud(ABiome & biome);
+
+	sf::Vector2f				m_size;
+	std::size_t					m_partCount;
+	sf::Color					m_color;
+	std::vector<OctogonValue>	m_values;
+
+	DecorAnimator				m_animator;
+	float						m_animation;
+
+	std::vector<RainSystem *>	m_rain;
+	std::vector<sf::Vector2f>	m_rainUpLeft;
+
+	SkyCycle *					m_cycle;
 };
 
 #endif

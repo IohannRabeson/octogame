@@ -26,11 +26,8 @@ private:
 					sf::Color const & colorDown,
 					octo::VertexBuilder& builder);
 
-	sf::Color	m_colorUpDay;
-	sf::Color	m_colorUpNight;
-	sf::Color	m_colorDownDay;
-	sf::Color	m_colorDownNight;
-
+	sf::Color	m_colorUp;
+	sf::Color	m_colorDown;
 	SkyCycle	*m_cycle;
 };
 

@@ -8,6 +8,7 @@ class ADecor;
 class ABiome;
 class TileShape;
 class ABiome;
+class SkyCycle;
 
 class GroundManager : public sf::Drawable
 {
@@ -22,7 +23,7 @@ public:
 	GroundManager(void);
 	virtual ~GroundManager(void) = default;
 
-	void init(ABiome & biome);
+	void setup(ABiome & biome, SkyCycle & cycle);
 	void update(float deltatime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	DecorManager const & getDecorsBack(void) const;
@@ -46,6 +47,7 @@ private:
 	DecorManager						m_decorManagerFront;
 	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
+	SkyCycle *							m_cycle;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
@@ -55,7 +57,7 @@ private:
 	void setTransitionDisappear(int x, int y);
 	void setTransitionModify(int x, int y);
 
-	void initDecors(ABiome & biome);
+	void setupDecors(ABiome & biome);
 	void updateDecors(sf::Time deltatime);
 	void updateOffset(float deltatime);
 	void updateTransition(void);

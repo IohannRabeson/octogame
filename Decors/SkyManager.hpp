@@ -14,7 +14,7 @@ public:
 	~SkyManager(void) = default;
 
 	void setup(ABiome & biome, SkyCycle & cycle);
-	void update(sf::Time frameTime, ABiome & biome);
+	void update(sf::Time frameTime);
 	DecorManager const & getDecorsBack(void) const;
 	DecorManager const & getDecorsFront(void) const;
 
@@ -38,11 +38,6 @@ private:
 					sf::Vector2f const & cameraCenter,
 					sf::Vector2f const & mapSize);
 
-	void newRainCycle(ABiome & biome);
-
-	void computeRain(sf::Time frameTime,
-					ABiome & biome);
-
 	DecorManager				m_decorManagerBack;
 	DecorManager				m_decorManagerFront;
 	float						m_wind;
@@ -62,13 +57,6 @@ private:
 	std::vector<sf::Vector2f>	m_originStars;
 	std::vector<sf::Vector2f>	m_originCloudsBack;
 	std::vector<sf::Vector2f>	m_originCloudsFront;
-
-	std::size_t					m_rainDropPerSecond;
-	sf::Time					m_sunnyTimer;
-	sf::Time					m_sunnyTimerMax;
-	sf::Time					m_rainingTimer;
-	sf::Time					m_rainingTimerMax;
-	bool						m_rainAppear;
 
 private:
 	static void rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle);

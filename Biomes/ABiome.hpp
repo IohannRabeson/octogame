@@ -51,11 +51,8 @@ public:
 	virtual sf::Color		getSunsetLightColor() = 0;
 
 	virtual float			getWind() = 0;
-	virtual void			setWind(float wind) = 0;
 	virtual bool			canRain() = 0;
 	virtual std::size_t		getRainDropPerSecond() = 0;
-	virtual float			getWeather() = 0;
-	virtual void			setWeather(float weather) = 0;
 	virtual sf::Time		getSunnyTime() = 0;
 	virtual sf::Time		getRainingTime() = 0;
 

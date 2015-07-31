@@ -13,10 +13,9 @@ SunLight::SunLight(void) :
 }
 
 SunLight::SunLight(SkyCycle * cycle) :
-	m_timerRain(sf::Time::Zero),
-	m_timerRainMax(sf::seconds(2.f)),
-	m_cycle(cycle)
+	SunLight()
 {
+	m_cycle = cycle;
 }
 
 void SunLight::createBicolorQuad(sf::Vector2f const & upLeft, sf::Vector2f const & upRight, sf::Vector2f const & downRight, sf::Vector2f const & downLeft, sf::Color const & colorUp, sf::Color const & colorDown, octo::VertexBuilder & builder)
@@ -76,9 +75,9 @@ void SunLight::setup(ABiome& biome)
 	m_colorDayRaining = sf::Color(100, 100, 100, 100);
 }
 
-void SunLight::computeDayColorValue(sf::Time frameTime, ABiome & biome)
+void SunLight::computeDayColorValue(sf::Time frameTime, ABiome &)
 {
-	float weather = biome.getWeather();
+	float weather = m_cycle->getWeatherValue();
 	m_colorDayRaining.a = weather * 2.f;
 	if (weather)
 	{

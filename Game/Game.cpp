@@ -47,7 +47,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 	m_skyCycle.setup(m_biomeManager.getCurrentBiome());
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
-	m_groundManager.init(m_biomeManager.getCurrentBiome());
+	m_groundManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
 	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome());
 
 	auto const & instances = m_biomeManager.getCurrentBiome().getInstances();
@@ -69,8 +69,8 @@ void	Game::loadLevel(std::string const& fileName)
 
 void	Game::update(sf::Time frameTime)
 {
-	m_skyCycle.update(frameTime);
-	m_skyManager.update(frameTime, m_biomeManager.getCurrentBiome());
+	m_skyCycle.update(frameTime, m_biomeManager.getCurrentBiome());
+	m_skyManager.update(frameTime);
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
 	m_engine.update(frameTime.asSeconds());

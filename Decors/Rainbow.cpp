@@ -1,5 +1,6 @@
 #include "Rainbow.hpp"
 #include "ABiome.hpp"
+#include "SkyCycle.hpp"
 #include <Interpolations.hpp>
 #include <Math.hpp>
 
@@ -15,8 +16,15 @@ Rainbow::Rainbow(void) :
 	m_intervalTimer(sf::Time::Zero),
 	m_intervalTimerMax(sf::Time::Zero),
 	m_grow(true),
-	m_firstFrame(true)
+	m_firstFrame(true),
+	m_cycle(nullptr)
 {
+}
+
+Rainbow::Rainbow(SkyCycle * cycle) :
+	Rainbow()
+{
+	m_cycle = cycle;
 }
 
 bool Rainbow::isDisabledIfOutOfScreen()const
@@ -241,8 +249,7 @@ void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& b
 		// position - m_endPosition make the arrival be the origin
 		createRainbow(position - m_endPosition, m_sizes, m_stripeCount, m_thickness, m_colors, m_transparent, builder);
 	}
-	//TODO: Add clock somewhere
-	else if (biome.getWeather() != 0.f)// && m_clock->isDay())
+	else if (m_cycle && m_cycle->getWeatherValue() != 0.f && m_cycle->isDay())
 		newRainbow(biome);
 }
 

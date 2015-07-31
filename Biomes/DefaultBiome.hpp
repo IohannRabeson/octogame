@@ -49,8 +49,6 @@ public:
 	virtual void			setWind(float wind);
 	virtual bool			canRain();
 	virtual std::size_t		getRainDropPerSecond();
-	virtual float			getWeather();
-	virtual void			setWeather(float weather);
 	virtual sf::Time		getSunnyTime();
 	virtual sf::Time		getRainingTime();
 
@@ -145,7 +143,6 @@ private:
 	sf::Color			m_SunsetLightColor;
 	float				m_wind;
 	Range<std::size_t>	m_rainDropPerSecond;
-	float				m_weather;
 	Range<sf::Time>		m_sunnyTime;
 	Range<sf::Time>		m_rainingTime;
 
