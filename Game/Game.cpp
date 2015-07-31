@@ -1,27 +1,21 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Game.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/23 03:24:15 by irabeson         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Game.hpp"
 #include "DefaultBiome.hpp"
 #include "GenerativeLayer.hpp"
-
 #include "PhysicsEngine.hpp"
+#include "RectangleShape.hpp"
+#include "MapInstance.hpp"
+
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
+#include <LevelMap.hpp>
+#include <ResourceManager.hpp>
+#include <Interpolations.hpp>
 
-Game::Game()
-	: m_npc(sf::Vector2f(0, 600), sf::FloatRect(0, 0, 200, 0))
+Game::Game() :
+	m_engine(PhysicsEngine::getInstance())
 {
+			m_npc.setup(sf::Vector2f(0, -200), sf::FloatRect(0, -200, 400 , 0));
 }
 
 void	Game::setup()
@@ -31,8 +25,9 @@ void	Game::setup()
 	graphics.addKeyboardListener(this);
 	graphics.addKeyboardListener(&m_octo);
 
-	PhysicsEngine::getInstance().setIterationCount(4u);
-	PhysicsEngine::getInstance().setTileCollision(true);
+	m_engine.setIterationCount(4u);
+	m_engine.setTileCollision(true);
+	m_engine.setContactListener(this);
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -43,43 +38,37 @@ void	Game::loadLevel(std::string const& fileName)
 
 	m_gameClock.setup(m_biomeManager.getCurrentBiome());
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
-	m_groundManager.init(m_biomeManager.getCurrentBiome());
-	//TODO: Maybe its better to put all of that in a GenerativeLayerManager??
-	sf::Vector2u mapSize = m_biomeManager.getCurrentBiome().getMapSize();
-	//TODO: To remove this line (it's just to decrease the y of parallax elem)
-	mapSize.y = static_cast<std::size_t>(mapSize.y * 1.2f);
-	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, -1.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.perlinNoise(x * 10.f, y, 2, 2.f);
-			});
-	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 3.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.perlinNoise(x, y, 3, 2.f);
-			});
-	m_parallaxScrolling.addLayer(layer);
-	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 2.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-			{
-				return noise.noise(x * 1.1f, y);
-			});
-	m_parallaxScrolling.addLayer(layer);
+	m_groundManager.setup(m_biomeManager.getCurrentBiome());
+	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome());
+
+	auto const & instances = m_biomeManager.getCurrentBiome().getInstances();
+	for (auto & instance : instances)
+	{
+		octo::LevelMap const & levelMap = octo::Application::getResourceManager().getLevelMap(instance.second);
+		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
+		{
+			//TODO: finish this
+			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
+			RectangleShape * rect = m_engine.createRectangle();
+			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y));
+			rect->setSize(spriteTrigger.trigger.getSize());
+			rect->setApplyGravity(false);
+			rect->setType(AShape::Type::e_trigger);
+		}
+	}
 }
 
 void	Game::update(sf::Time frameTime)
 {
-	float const		seconds = frameTime.asSeconds();
-
 	m_gameClock.update(frameTime);
 	m_skyManager.update(frameTime);
-	m_groundManager.update(seconds);
-	m_parallaxScrolling.update(seconds);
 	m_octo.update(frameTime);
 	m_npc.update(frameTime);
 	m_bnpc.update(frameTime);
 	followPlayer();
+	m_groundManager.update(frameTime.asSeconds());
+	m_parallaxScrolling.update(frameTime.asSeconds());
+	m_engine.update(frameTime.asSeconds());
 }
 
 bool Game::onPressed(sf::Event::KeyEvent const & event)
@@ -98,6 +87,13 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	return true;
 }
 
+void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
+{
+	//TODO: implements gameobject behaviour
+	(void)shapeA;
+	(void)shapeB;
+}
+
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	render.clear();
@@ -105,17 +101,17 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_parallaxScrolling, states);
 	render.draw(m_groundManager.getDecorsBack(), states);
 	// Draw pnj
+	render.draw(m_octo, states);
+	render.draw(m_npc, states);
+	render.draw(m_bnpc, states);
 	render.draw(m_groundManager.getDecorsFront(), states);
 	render.draw(m_groundManager, states);
 	render.draw(m_groundManager.getDecorsGround(), states);
 	render.draw(m_skyManager.getDecorsFront(), states);
+	
 
-	//TODO replace 
-	PhysicsEngine::getInstance().debugDraw(render);
+	m_engine.debugDraw(render);
 	render.draw(m_octo, states);
-	render.draw(m_npc, states);
-	render.draw(m_bnpc, states);
-
 }
 
 void	Game::followPlayer()

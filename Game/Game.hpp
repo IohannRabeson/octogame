@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Game.hpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/24 05:16:26 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/23 03:24:43 by irabeson         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef GAME_HPP
 # define GAME_HPP
 
@@ -21,8 +9,12 @@
 # include "CharacterOcto.hpp"
 # include "CharacterNpc.hpp"
 # include "CharacterBasicNpc.hpp"
+# include "IContactListener.hpp"
 
-class Game : public octo::DefaultKeyboardListener
+class PhysicsEngine;
+class AShape;
+
+class Game : public octo::DefaultKeyboardListener, public IContactListener
 {
 public:
 	Game();
@@ -35,6 +27,7 @@ public:
 private:
 	void			followPlayer();
 private:
+	PhysicsEngine &		m_engine;
 	GameClock			m_gameClock;
 	BiomeManager		m_biomeManager;
 	SkyManager			m_skyManager;
@@ -45,6 +38,7 @@ private:
 	CharacterBasicNpc	m_bnpc;
 
 	bool onPressed(sf::Event::KeyEvent const & event);
+	void onShapeCollision(AShape * shapeA, AShape * shapeB);
 
 };
 

@@ -22,19 +22,20 @@ CharacterOcto::CharacterOcto() :
 	m_canDoubleJump(false),
 	m_onGround(true)
 	{
-	typedef octo::CharacterAnimation::Frame			Frame;
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
-	octo::FiniteStateMachine	machine;
-	StatePtr					state0;
-	StatePtr					state1;
-	StatePtr					state2;
-	StatePtr					state3;
-	StatePtr					state4;
-	StatePtr					state5;
+	
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
+	setupAnimation();
+	setupMachine();
+	m_sprite.restart();
+	m_box->setSize(sf::Vector2f(177.f / 2.f,152.f));
+	m_originMoove = false;
+	std::fill(m_controls.begin(), m_controls.end(), false);
+}
 
+void	CharacterOcto::setupAnimation()
+{
+	typedef octo::CharacterAnimation::Frame			Frame;
 	m_idleAnimation.setFrames({Frame(sf::seconds(0.4f), {0, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			});
 
@@ -59,6 +60,20 @@ CharacterOcto::CharacterOcto() :
 			Frame(sf::seconds(0.2f), {30, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			});
 	m_fallAnimation.setLoop(octo::LoopMode::Loop);
+}
+
+void	CharacterOcto::setupMachine()
+{
+	typedef octo::CharacterSprite::ACharacterState	State;
+	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
+
+	octo::FiniteStateMachine	machine;
+	StatePtr					state0;
+	StatePtr					state1;
+	StatePtr					state2;
+	StatePtr					state3;
+	StatePtr					state4;
+	StatePtr					state5;
 
 	state0 = std::make_shared<State>("0", m_idleAnimation, m_sprite);
 	state1 = std::make_shared<State>("1", m_walkAnimation, m_sprite);
@@ -95,7 +110,6 @@ CharacterOcto::CharacterOcto() :
 	machine.addTransition(Fall, state3, state5);
 	machine.addTransition(Fall, state4, state5);
 
-
 	machine.addTransition(Idle, state0, state0);
 	machine.addTransition(Idle, state1, state0);
 	machine.addTransition(Idle, state2, state0);
@@ -103,13 +117,7 @@ CharacterOcto::CharacterOcto() :
 	machine.addTransition(Idle, state4, state0);
 	machine.addTransition(Idle, state5, state0);
 
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	m_sprite.setMachine(machine);
-	m_sprite.restart();
-	m_box->setSize(sf::Vector2f(177.f / 2.f,152.f));
-	//m_sprite.setOrigin(177 / 2, 0);
-	m_originMoove = false;
-	std::fill(m_controls.begin(), m_controls.end(), false);
 }
 
 void	CharacterOcto::update(sf::Time frameTime)
@@ -129,7 +137,7 @@ void	CharacterOcto::commitPhysicsToGraphics()
 {
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
-	m_sprite.setPosition(bounds.left -50, bounds.top);
+	m_sprite.setPosition(bounds.left, bounds.top);
 }
 
 void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
@@ -146,7 +154,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 	if (m_controls[2] && (m_jumpVelocity * frameTime.asSeconds() < 0)
 			&& (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
 	{
-		velocity.y = m_jumpVelocity++ * frameTime.asSeconds() ;
+		velocity.y = m_jumpVelocity++;
 	}
 	m_box->setVelocity(velocity);
 }
@@ -183,7 +191,7 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 			if (m_controls[2] == false)
 			{
 				m_controls[2] = true;
-				m_jumpVelocity = -640.f;
+				m_jumpVelocity = -40.f;
 				if (m_canDoubleJump && m_sprite.canGetEvent(DoubleJump)){
 					m_sprite.setNextEvent(DoubleJump);
 					m_canDoubleJump = false;
@@ -200,6 +208,8 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 	}
 	return (true);
 }
+
+
 
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {

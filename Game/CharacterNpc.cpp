@@ -5,8 +5,7 @@
 #include <ResourceManager.hpp>
 #include <LevelMap.hpp>
 
-CharacterNpc::CharacterNpc(sf::Vector2f position, sf::FloatRect area)
-	: m_area(area)
+CharacterNpc::CharacterNpc()
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
 	typedef octo::CharacterSprite::ACharacterState	State;
@@ -73,7 +72,6 @@ CharacterNpc::CharacterNpc(sf::Vector2f position, sf::FloatRect area)
 	machine.addTransition(Idle, state1, state0);
 	machine.addTransition(Idle, state2, state0);
 
-	m_sprite.setPosition(position);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	m_sprite.setMachine(machine);
 	m_sprite.restart();

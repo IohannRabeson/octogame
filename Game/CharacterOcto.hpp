@@ -45,8 +45,11 @@ public:
 	bool			onReleased(sf::Event::KeyEvent const& event);
 	sf::Vector2f	getPosition()const;
 private:
+	void	setupAnimation();
+	void	setupMachine();
 	void	commitControlsToPhysics(sf::Time frameTime);
 	void	commitPhysicsToGraphics();
+
 private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;

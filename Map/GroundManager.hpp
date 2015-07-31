@@ -22,14 +22,13 @@ public:
 	GroundManager(void);
 	virtual ~GroundManager(void) = default;
 
-	void init(ABiome & biome);
+	void setup(ABiome & biome);
 	void update(float deltatime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	DecorManager const & getDecorsBack(void) const;
 	DecorManager const & getDecorsFront(void) const;
 	DecorManager const & getDecorsGround(void) const;
 
-	void computeDecor(void);
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 
 private:
@@ -60,6 +59,7 @@ private:
 	void updateDecors(sf::Time deltatime);
 	void updateOffset(float deltatime);
 	void updateTransition(void);
+	void computeDecor(void);
 	void swapMap(void);
 
 };

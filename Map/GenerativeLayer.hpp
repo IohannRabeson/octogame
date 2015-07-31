@@ -17,12 +17,13 @@ public:
 	typedef std::function<float(Noise & noise, float x, float y)>	BackgroundSurfaceGenerator;
 
 	GenerativeLayer(void);
-	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float transitionDuration = 20.f);
+	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration);
 	virtual ~GenerativeLayer(void) = default;
 
-	void init(void);
+	void setup(void);
 	void setColor(sf::Color const & color);
 
+	//TODO: use bool to manage this
 	/*! Set the transition duration
 	 * If transitionDuration < 0.f, the map won't move
 	 */
@@ -31,7 +32,7 @@ public:
 	inline void setMapSize(sf::Vector2u const & mapSize) { m_mapSize = mapSize; }
 	inline sf::Vector2u const & getMapSize(void) const { return m_mapSize; }
 
-	void update(float);
+	void update(float frametime, ABiome & biome);
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 private:
@@ -43,13 +44,18 @@ private:
 	std::vector<sf::Vector2f>			m_positionsPrev;
 	sf::Vector2u						m_mapSize;
 	sf::Color							m_color;
+	sf::Color							m_opacityColor;
 	Noise								m_noise;
-	std::size_t							m_widthScreen;
-	std::size_t							m_verticesCount;
 	float								m_tileSize;
 	float								m_depth;
 	float								m_transitionTimer;
 	float								m_transitionTimerDuration;
+	float								m_topOpacity;
+	float								m_botOpacity;
+	float								m_highestY;
+	int									m_heightOffset;
+	std::size_t							m_widthScreen;
+	std::size_t							m_verticesCount;
 	BackgroundSurfaceGeneratorBind		m_backgroundSurface;
 
 	void computeVertices(std::vector<sf::Vector2f> & positions);

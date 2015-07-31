@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 02:17:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/27 17:53:25 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/07/30 17:12:25 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,13 @@
 # include <SFML/Graphics/Color.hpp>
 # include <SFML/System/Vector2.hpp>
 
+# include "ParallaxScrolling.hpp"
+# include "Map.hpp"
+
 # include <cstddef>
 # include <string>
+# include <map>
+# include <vector>
 
 class ABiome : public octo::NonCopyable
 {
@@ -34,12 +39,18 @@ public:
 	virtual float			getTransitionDuration() = 0;
 	virtual int				getBossInstancePosX() = 0;
 
+	virtual std::map<std::size_t, std::string>	const & getInstances() = 0;
+	virtual std::vector<ParallaxScrolling::ALayer *> getLayers() = 0;
+	virtual Map::MapSurfaceGenerator getMapSurfaceGenerator() = 0;
+	virtual Map::TileColorGenerator getTileColorGenerator() = 0;
+
 	virtual sf::Time		getDayDuration() = 0;
 	virtual sf::Color		getSkyDayColor() = 0;
 	virtual sf::Color		getSkyNightColor() = 0;
 	virtual sf::Color		getNightLightColor() = 0;
 	virtual sf::Color		getSunsetLightColor() = 0;
 	virtual float			getWind() = 0;
+	virtual bool			isRaining() = 0;
 
 	virtual std::size_t		getRockCount() = 0;
 	virtual std::size_t		getTreeCount() = 0;
@@ -107,7 +118,8 @@ public:
 	virtual float			getRainbowThickness() = 0;
 	virtual float			getRainbowPartSize() = 0;
 	virtual std::size_t		getRainbowLoopCount() = 0;
-	virtual sf::Time		getRainbowGrowTime() = 0;
+	virtual sf::Time		getRainbowLifeTime() = 0;
+	virtual sf::Time		getRainbowIntervalTime() = 0;
 	virtual bool			canCreateRainbow() = 0;
 
 	virtual float			randomFloat(float min, float max) = 0;

@@ -7,7 +7,6 @@
 # include "RectangleShape.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
-
 # include <array>
 
 class CharacterNpc : public AGameObject<GameObjectType::Npc>,
@@ -21,10 +20,14 @@ class CharacterNpc : public AGameObject<GameObjectType::Npc>,
 		Right
 	};
 public:
-	CharacterNpc(sf::Vector2f position, sf::FloatRect area);
+	CharacterNpc();
 
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+	void			setup(sf::Vector2f position, sf::FloatRect area){
+	m_sprite.setPosition(position);
+	m_area = area;
+	};
 
 private:
 	bool		canWalk();

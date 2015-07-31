@@ -3,8 +3,9 @@
 
 # include <memory>
 # include <vector>
-# include <initializer_list>
 # include <SFML/Graphics.hpp>
+
+class ABiome;
 
 class ParallaxScrolling : public sf::Drawable
 {
@@ -23,20 +24,23 @@ public:
 		inline void setSpeed(sf::Vector2f const & speed) { m_speed = speed; }
 		inline sf::Vector2f const & getSpeed(void) const { return m_speed; }
 
-		virtual void init(void) = 0;
-		virtual void update(float deltatime) = 0;
+		virtual void setup(void) = 0;
+		virtual void update(float deltatime, ABiome & biome) = 0;
 		virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const = 0;
 
 	private:
 		sf::Vector2f	m_speed;
 	};
 
-	ParallaxScrolling(void) = default;
-	ParallaxScrolling(std::initializer_list<ALayer *> list);
+	ParallaxScrolling(void);
 	virtual ~ParallaxScrolling(void);
 
+	/*! Setup */
+	void setup(ABiome & biome);
 	/*! Add a layer */
 	void addLayer(ALayer * layer);
+	/*! Add a vector of layers */
+	void addLayer(std::vector<ALayer *> const & layers);
 	/*! Remove the layer from the vector and release the allocated memory */
 	void removeLayer(std::size_t index);
 	/*! Remove all layers from the vector and release the allocated memory */
@@ -47,6 +51,7 @@ public:
 
 private:
 	std::vector<std::unique_ptr<ALayer>>	m_layers;
+	ABiome *								m_biome;
 
 };
 
