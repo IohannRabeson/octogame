@@ -149,10 +149,10 @@ void GenerativeLayer::update(float deltatime, ABiome &)
 		m_vertices[(i * 4u) + 2u].position.y = m_positions[(i * 4u) + 2u].y;
 		m_vertices[(i * 4u) + 3u].position.y = m_positions[(i * 4u) + 3u].y;
 		//TODO: little optimization possible if we precompute some values, maybe not worth
-		m_vertices[(i * 4u) + 0u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize;
-		m_vertices[(i * 4u) + 1u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize;
-		m_vertices[(i * 4u) + 2u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize;
-		m_vertices[(i * 4u) + 3u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize;
+		m_vertices[(i * 4u) + 0u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize * 2;
+		m_vertices[(i * 4u) + 1u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize * 2;
+		m_vertices[(i * 4u) + 2u].position.x = (i + 1) * m_tileSize + rect.left - offsetX - m_tileSize * 2;
+		m_vertices[(i * 4u) + 3u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize * 2;
 	}
 
 	//TODO

@@ -74,3 +74,16 @@ void MapInstance::previousStep(void)
 	if (m_depth < 0)
 		m_depth = m_maxDepth - 1;
 }
+
+void MapInstance::setTransitionType(Tile & tile)
+{
+	(void)tile;
+	/*
+	switch (tile.tileType)
+	{
+		case 0:
+			break;
+		default:
+			break;
+	}*/
+}

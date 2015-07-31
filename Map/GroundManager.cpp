@@ -52,6 +52,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	{
 		m_tileShapes[x] = builder.createTile(x, 0u);
 		m_tileShapes[x]->setVertex(&m_vertices[0u]);
+		m_tileShapes[x]->setGameObject(nullptr);
 	}
 
 	m_transitionTimerMax = biome.getTransitionDuration();
@@ -328,6 +329,7 @@ void GroundManager::updateTransition(void)
 			{
 				first = m_tileShapes[x];
 				m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount]);
+				m_tileShapes[x]->setGameObject(tilePrev);
 			}
 			height++;
 			m_verticesCount += 4u;

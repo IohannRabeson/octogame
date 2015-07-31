@@ -2,11 +2,22 @@
 # define SHAPE_HPP
 
 # include <SFML/Graphics.hpp>
+# include "AGameObject.hpp"
 
 /*!
  * \ingroup Physic
  * \class AShape
  * Abstract class representing a physic shape
+ *
+ * \code
+ * Character * octo = new Character(); // Character inherits from AGameObject
+ * ShapeBuilder builder = PhysicsEngine::getInstance();
+ * AShape * box = builder.createRectangle();
+ * box->setPosition(10, 15);
+ * box->setGameObject(octo);
+ * octo->setBox(box);
+ * \endcode
+ *
  */
 class AShape
 {
@@ -123,6 +134,9 @@ public:
 	 */
 	inline void setCollisionMask(std::uint32_t collisionMask) { m_collisionMask = collisionMask; }
 
+	/*! Set the owner */
+	inline void setGameObject(AGameObjectBase * gameObject) { m_gameObject = gameObject; }
+
 	/*! Determine wheter the object is colliding or not
 	 *
 	 * \param collisionType The collision type to compare
@@ -171,6 +185,9 @@ public:
 
 	/*! Get the colision mask */
 	inline std::uint32_t getCollisionMask(void) const { return m_collisionMask; }
+
+	/*! Get the owner */
+	inline AGameObjectBase * getGameObject(void) const { return m_gameObject; }
 
 	/*! Rotate the shape
 	 * Add the angle to the current rotation
@@ -222,6 +239,7 @@ private:
 	Type					m_type;
 	std::uint32_t			m_collisionType;
 	std::uint32_t			m_collisionMask;
+	AGameObjectBase *		m_gameObject;
 
 	/*! Move the object
 	 * This function adds to the current position of the object
