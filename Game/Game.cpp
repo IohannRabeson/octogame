@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Game.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/24 05:25:10 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/29 18:14:05 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Game.hpp"
 #include "DefaultBiome.hpp"
 #include "GenerativeLayer.hpp"
@@ -22,6 +10,7 @@
 #include <Camera.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
+#include <Interpolations.hpp>
 
 Game::Game() :
 	m_engine(PhysicsEngine::getInstance())
