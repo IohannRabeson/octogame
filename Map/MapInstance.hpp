@@ -28,8 +28,11 @@ public:
 	inline std::size_t getHeight(void) const { return m_tiles[0].rows(); }
 	inline sf::IntRect const & getCornerPositions(void) const { return m_cornerPositions; }
 
+	static void setTransitionType(Tile & tile);
+
 private:
 	MapInstance(void) = delete;
+	void setStartTransition(int transitionType, Tile & tile, int x, int y);
 
 	octo::Array2D<Tile *> *	m_tiles;
 	octo::LevelMap const &	m_levelMap;

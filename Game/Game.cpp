@@ -2,6 +2,7 @@
 #include "DefaultBiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
+#include "AShape.hpp"
 #include "RectangleShape.hpp"
 #include "MapInstance.hpp"
 
@@ -13,7 +14,7 @@
 #include <Interpolations.hpp>
 
 Game::Game() :
-	m_engine(PhysicsEngine::getInstance())
+	m_physicsEngine(PhysicsEngine::getInstance())
 {
 }
 
@@ -22,10 +23,6 @@ void	Game::setup()
 	m_biomeManager.registerBiome<DefaultBiome>("test");
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
-
-	m_engine.setIterationCount(4u);
-	m_engine.setTileCollision(true);
-	m_engine.setContactListener(this);
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -39,6 +36,11 @@ void	Game::loadLevel(std::string const& fileName)
 	m_groundManager.setup(m_biomeManager.getCurrentBiome());
 	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome());
 
+	m_physicsEngine.setIterationCount(4u);
+	m_physicsEngine.setTileCollision(true);
+	m_physicsEngine.setContactListener(this);
+
+	//TODO: put in a function
 	auto const & instances = m_biomeManager.getCurrentBiome().getInstances();
 	for (auto & instance : instances)
 	{
@@ -47,7 +49,7 @@ void	Game::loadLevel(std::string const& fileName)
 		{
 			//TODO: finish this
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			RectangleShape * rect = m_engine.createRectangle();
+			RectangleShape * rect = m_physicsEngine.createRectangle();
 			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y));
 			rect->setSize(spriteTrigger.trigger.getSize());
 			rect->setApplyGravity(false);
@@ -62,7 +64,15 @@ void	Game::update(sf::Time frameTime)
 	m_skyManager.update(frameTime);
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
-	m_engine.update(frameTime.asSeconds());
+	m_physicsEngine.update(frameTime.asSeconds());
+}
+
+void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
+{
+	// don't forget to check if shapeA->getGameObject() != nullptr
+	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
+	(void)shapeA;
+	(void)shapeB;
 }
 
 bool Game::onPressed(sf::Event::KeyEvent const & event)
@@ -81,13 +91,6 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	return true;
 }
 
-void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
-{
-	//TODO: implements gameobject behaviour
-	(void)shapeA;
-	(void)shapeB;
-}
-
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	render.clear();
@@ -99,5 +102,5 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_groundManager, states);
 	render.draw(m_groundManager.getDecorsGround(), states);
 	render.draw(m_skyManager.getDecorsFront(), states);
-	m_engine.debugDraw(render);
+	m_physicsEngine.debugDraw(render);
 }
