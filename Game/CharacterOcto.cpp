@@ -228,13 +228,12 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	}
 	if (std::find(m_controls.begin(), m_controls.end(), true) == m_controls.end())
 	{
-		if (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump)
-			m_sprite.setNextEvent(Fall);
-		else{
 			m_onGround = true;
 			m_sprite.setNextEvent(Idle);
-		}
 	}
+	if (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump)
+			m_sprite.setNextEvent(Fall);
+
 	return (true);
 }
 
