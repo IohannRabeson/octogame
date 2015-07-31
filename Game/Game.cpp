@@ -49,7 +49,7 @@ void	Game::loadLevel(std::string const& fileName)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
 			RectangleShape * rect = m_physicsEngine.createRectangle();
-			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize - Tile::DoubleTileSize, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y - Tile::DoubleTileSize));
+			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize - Map::OffsetX, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y - Map::OffsetY));
 			rect->setSize(spriteTrigger.trigger.getSize());
 			rect->setApplyGravity(false);
 			rect->setType(AShape::Type::e_trigger);
