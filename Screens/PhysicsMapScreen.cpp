@@ -20,7 +20,7 @@ void	PhysicsMapScreen::start()
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 
-	m_groundManager.setup(m_biome);
+	m_groundManager.setup(m_biome, m_cycle);
 
 	m_engine.setIterationCount(4u);
 	m_engine.setTileCollision(true);

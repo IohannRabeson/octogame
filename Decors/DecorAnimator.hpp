@@ -4,7 +4,7 @@
 # include <SFML/System/Time.hpp>
 # include <random>
 
-// if m_lifeTimerMax == 0.f there isn't life state
+// if m_lifeTimerMax == 0.f there isn't life state (default)
 // if m_dieTimerMax == 0.f there isn't die state
 
 class DecorAnimator

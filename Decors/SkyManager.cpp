@@ -1,10 +1,11 @@
 #include "SkyManager.hpp"
-#include "GameClock.hpp"
+#include "SkyCycle.hpp"
 #include "ABiome.hpp"
 #include "ADecor.hpp"
 #include "Star.hpp"
 #include "Sky.hpp"
 #include "SunLight.hpp"
+#include "Cloud.hpp"
 
 #include <Math.hpp>
 #include <Application.hpp>
@@ -13,9 +14,9 @@
 SkyManager::SkyManager(void) :
 	//TODO:Estimate how much vertex we need
 	m_decorManagerBack(200000),
-	m_decorManagerFront(20000),
+	m_decorManagerFront(200000),
 	m_wind(0.f),
-	m_clock(nullptr),
+	m_cycle(nullptr),
 	m_sunCount(0u),
 	m_moonCount(0u),
 	m_starCount(0u),
@@ -37,7 +38,7 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f const & cameraSize)
 		m_starCount = biome.getStarCount();
 		m_originStars.resize(m_starCount);
 		for (std::size_t i = 0u; i < m_starCount; i++)
-			m_decorManagerBack.add(new Star(m_clock));
+			m_decorManagerBack.add(new Star(m_cycle));
 
 		for (std::size_t i = 0u; i < m_starCount; i++)
 		{
@@ -98,31 +99,31 @@ void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf
 		float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
 		for (size_t i = 0; i < m_cloudCount; i++)
 		{
-			m_decorManagerFront.add(DecorManager::DecorTypes::Cloud);
+			m_decorManagerFront.add(new Cloud(m_cycle));
 			m_originCloudsFront[i].x = biome.randomFloat(leftLimit, rightLimit);
 			m_originCloudsFront[i].y = biome.randomFloat(cameraSize.y / 2.f, -mapSize.y);
 		}
 	}
 }
 
-void SkyManager::setup(ABiome & biome, GameClock & clock)
+void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 {
 	m_decorManagerBack.setup(&biome);
 	m_decorManagerFront.setup(&biome);
-	m_clock = &clock;
+	m_cycle = &cycle;
 
-	octo::Camera & camera = octo::Application::getCamera();
+	octo::Camera const & camera = octo::Application::getCamera();
 	sf::Vector2f const & cameraSize = camera.getSize();
 	sf::Vector2f const & cameraCenter = camera.getCenter();
 
 	m_mapSizeFloat = biome.getMapSizeFloat();
 	m_wind = biome.getWind();
 
-	m_decorManagerBack.add(new Sky(m_clock));
+	m_decorManagerBack.add(new Sky(m_cycle));
 	setupStars(biome, cameraSize);
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
 	setupClouds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
-	m_decorManagerFront.add(new SunLight(m_clock));
+	m_decorManagerFront.add(new SunLight(m_cycle));
 }
 
 void SkyManager::update(sf::Time frameTime)
@@ -132,7 +133,7 @@ void SkyManager::update(sf::Time frameTime)
 	sf::Vector2f cameraCenter = camera.getCenter();
 	sf::Vector2f cameraSize = camera.getSize();
 	sf::Vector2f offsetCamera(rec.left, rec.top);
-	float angle = m_clock->getCycleValue() * 360.f * octo::Deg2Rad;
+	float angle = m_cycle->getCycleValue() * 360.f * octo::Deg2Rad;
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);
 

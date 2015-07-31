@@ -4,10 +4,13 @@
 # include "ADecor.hpp"
 # include <SFML/Graphics/Color.hpp>
 
+class SkyCycle;
+
 class Rainbow : public ADecor
 {
 public:
 	Rainbow(void);
+	Rainbow(SkyCycle * cycle);
 	virtual ~Rainbow(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -96,6 +99,8 @@ private:
 
 	sf::Vector2f				m_endPosition;
 	bool						m_firstFrame;
+
+	SkyCycle *					m_cycle;
 
 private:
 	static void rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle);

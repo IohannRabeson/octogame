@@ -5,13 +5,13 @@
 # include "DecorAnimator.hpp"
 # include <SFML/Graphics/Color.hpp>
 
-class GameClock;
+class SkyCycle;
 
 class SunLight : public ADecor
 {
 public:
 	SunLight(void);
-	SunLight(GameClock * clock);
+	SunLight(SkyCycle * cycle);
 	virtual ~SunLight(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -32,15 +32,22 @@ private:
 							sf::Color const & colorDown,
 							octo::VertexBuilder & builder);
 
+	void computeDayColorValue(sf::Time frameTime, ABiome & biome);
+
 	sf::Vector2f	m_size;
 	sf::Vector2f	m_dayPos;
 	sf::Vector2f	m_nightPos;
 	sf::Vector2f	m_sunsetPos;
 	sf::Color		m_colorNight;
 	sf::Color		m_colorSunset;
+	sf::Color		m_colorDay;
+	sf::Color		m_colorDayRaining;
 	sf::Vector2f	m_cameraSize;
 
-	GameClock *		m_clock;
+	sf::Time		m_timerRain;
+	sf::Time		m_timerRainMax;
+
+	SkyCycle *		m_cycle;
 };
 
 #endif

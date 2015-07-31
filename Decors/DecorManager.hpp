@@ -26,6 +26,7 @@
 # include <random>
 # include <memory>
 
+# include <VertexBuilder.hpp>
 # include <GenericFactory.hpp>
 # include <Camera.hpp>
 
@@ -84,6 +85,7 @@ private:
 	std::unique_ptr<sf::Vertex[]>	m_vertices;
 	std::size_t						m_count;
 	std::size_t						m_used;
+	octo::VertexBuilder				m_builder;
 	ABiome*							m_biome;
 };
 

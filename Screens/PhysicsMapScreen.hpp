@@ -8,6 +8,7 @@
 # include "GroundManager.hpp"
 # include "DefaultBiome.hpp"
 # include "IContactListener.hpp"
+# include "SkyCycle.hpp"
 
 class ConvexShape;
 class RectangleShape;
@@ -34,6 +35,7 @@ private:
 	DefaultBiome					m_biome;
 	GroupShape *					m_groupShape;
 	std::size_t						m_nbCollision;
+	SkyCycle						m_cycle;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 	virtual void onShapeCollision(AShape * shapeA, AShape * shapeB);

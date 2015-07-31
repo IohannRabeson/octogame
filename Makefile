@@ -38,7 +38,6 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/FsmDemoScreen.cpp
 
 SRC_GAME =		Game/Game.cpp							\
-				Game/GameClock.cpp						\
 				Game/BiomeManager.cpp					\
 				Game/FiniteStateMachine.cpp				\
 				Game/AGameObject.cpp			\
@@ -61,6 +60,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
+				Decors/SkyCycle.cpp						\
 				Decors/ADecor.cpp						\
 				Decors/RandomGenerator.cpp				\
 				Decors/DecorAnimator.cpp				\

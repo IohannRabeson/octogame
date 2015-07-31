@@ -31,9 +31,9 @@ void	Game::loadLevel(std::string const& fileName)
 	// TODO
 	m_biomeManager.changeBiome("test", 0x12345);
 
-	m_gameClock.setup(m_biomeManager.getCurrentBiome());
-	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_gameClock);
-	m_groundManager.setup(m_biomeManager.getCurrentBiome());
+	m_skyCycle.setup(m_biomeManager.getCurrentBiome());
+	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
+	m_groundManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
 	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome());
 
 	m_physicsEngine.setIterationCount(4u);
@@ -60,7 +60,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 void	Game::update(sf::Time frameTime)
 {
-	m_gameClock.update(frameTime);
+	m_skyCycle.update(frameTime, m_biomeManager.getCurrentBiome());
 	m_skyManager.update(frameTime);
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
