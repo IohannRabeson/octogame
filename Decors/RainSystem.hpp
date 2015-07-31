@@ -32,7 +32,7 @@ public:
 	 *
 	 *	Default is 20.	
 	 */
-	void			setDropPerSecond(unsigned int count);
+	void			setDropPerSecond(std::size_t count);
 
 	/*!	Define the drop fall angle
 	 *	\param angle Angle of drop falls in degrees, 0 means the drops falls straight.

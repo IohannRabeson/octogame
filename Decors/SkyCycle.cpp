@@ -147,7 +147,9 @@ void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 {
 	computeDayNight(frameTime);
 	computeRain(frameTime, biome);
-	float interpolateValue = getNightValue() * 2.f >= 1.f ? 1.f : getNightValue() * 2.f;
+	float interpolateValue = getNightValue() * 2.f;
+	if (interpolateValue > 1.f)
+		interpolateValue = 1.f;
 	m_colorSkyDown = octo::linearInterpolation(m_colorDownDay, m_colorDownNight, interpolateValue);
 	m_colorSkyUp = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
 }

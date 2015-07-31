@@ -5,6 +5,11 @@
 #include <Math.hpp>
 
 Rainbow::Rainbow(void) :
+	Rainbow(nullptr)
+{
+}
+
+Rainbow::Rainbow(SkyCycle * cycle) :
 	m_cos(0),//std::cos(90.f * octo::Deg2Rad);
 	m_sin(1),//std::sin(90.f * octo::Deg2Rad);
 	m_loopCountMax(10u),
@@ -17,14 +22,8 @@ Rainbow::Rainbow(void) :
 	m_intervalTimerMax(sf::Time::Zero),
 	m_grow(true),
 	m_firstFrame(true),
-	m_cycle(nullptr)
+	m_cycle(cycle)
 {
-}
-
-Rainbow::Rainbow(SkyCycle * cycle) :
-	Rainbow()
-{
-	m_cycle = cycle;
 }
 
 bool Rainbow::isDisabledIfOutOfScreen()const

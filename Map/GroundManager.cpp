@@ -22,7 +22,8 @@ GroundManager::GroundManager(void) :
 	m_decorManagerBack(200000),
 	m_decorManagerFront(200000),
 	m_decorManagerGround(200000),
-	m_nextState(GenerationState::None)
+	m_nextState(GenerationState::None),
+	m_cycle(nullptr)
 {}
 
 void GroundManager::setup(ABiome & biome, SkyCycle & cycle)

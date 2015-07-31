@@ -4,17 +4,16 @@
 #include <Interpolations.hpp>
 
 Cloud::Cloud(void) :
-	m_partCount(1u),
-	m_animator(4.f, 5.f, 4.f, 0.1f),
-	m_animation(1.f),
-	m_cycle(nullptr)
+	Cloud(nullptr)
 {
 }
 
 Cloud::Cloud(SkyCycle * cycle) :
-	Cloud()
+	m_partCount(1u),
+	m_animator(4.f, 5.f, 4.f, 0.1f),
+	m_animation(1.f),
+	m_cycle(cycle)
 {
-	m_cycle = cycle;
 }
 
 Cloud::~Cloud(void)
@@ -100,7 +99,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 {
 	//TODO: To improve: Replace rain rect just top of screen, dont update rain all time
 	sf::Vector2f const & position = getPosition();
-	float weather = m_cycle->getWeatherValue();
+	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue();
 	std::size_t dropPerSecond = static_cast<std::size_t>(weather);
 	if (biome.canRain())
 	{

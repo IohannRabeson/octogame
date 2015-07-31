@@ -6,16 +6,15 @@
 #include <Interpolations.hpp>
 
 SunLight::SunLight(void) :
-	m_timerRain(sf::Time::Zero),
-	m_timerRainMax(sf::seconds(2.f)),
-	m_cycle(nullptr)
+	SunLight(nullptr)
 {
 }
 
 SunLight::SunLight(SkyCycle * cycle) :
-	SunLight()
+	m_timerRain(sf::Time::Zero),
+	m_timerRainMax(sf::seconds(2.f)),
+	m_cycle(cycle)
 {
-	m_cycle = cycle;
 }
 
 void SunLight::createBicolorQuad(sf::Vector2f const & upLeft, sf::Vector2f const & upRight, sf::Vector2f const & downRight, sf::Vector2f const & downLeft, sf::Color const & colorUp, sf::Color const & colorDown, octo::VertexBuilder & builder)

@@ -112,7 +112,7 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 	m_decorManagerFront.setup(&biome);
 	m_cycle = &cycle;
 
-	octo::Camera & camera = octo::Application::getCamera();
+	octo::Camera const & camera = octo::Application::getCamera();
 	sf::Vector2f const & cameraSize = camera.getSize();
 	sf::Vector2f const & cameraCenter = camera.getCenter();
 
