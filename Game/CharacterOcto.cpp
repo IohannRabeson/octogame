@@ -77,8 +77,8 @@ void	CharacterOcto::setupAnimation()
 	m_jumpAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_fallAnimation.setFrames({
-			Frame(sf::seconds(0.2f), {35, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {36, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {27, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {28, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			});
 	m_fallAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -93,7 +93,7 @@ void	CharacterOcto::setupAnimation()
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_umbrellaAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {28, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			});
 	m_umbrellaAnimation.setLoop(octo::LoopMode::Loop);
 
