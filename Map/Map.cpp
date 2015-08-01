@@ -116,7 +116,10 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			m_tiles.get(x, y)->setStartTransition(3u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
 
 			if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
+			{
+				//TODO: if we are in an instance, we set the startTransition
 				m_tiles.get(x, y)->setIsEmpty(curInstance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top).isEmpty());
+			}
 			else if (offsetY < height)
 			{
 				m_tiles.get(x, y)->setIsEmpty(true);

@@ -11,7 +11,8 @@ AShape::AShape(void) :
 	m_outOfScreen(false),
 	m_type(AShape::Type::e_dynamic),
 	m_collisionType(0u),
-	m_collisionMask(std::numeric_limits<std::uint32_t>::max())
+	m_collisionMask(std::numeric_limits<std::uint32_t>::max()),
+	m_gameObject(nullptr)
 { }
 
 void AShape::update(void)

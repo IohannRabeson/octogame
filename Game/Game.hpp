@@ -9,6 +9,7 @@
 # include "CharacterOcto.hpp"
 # include "CharacterNpc.hpp"
 # include "CharacterBasicNpc.hpp"
+# include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
 
 class PhysicsEngine;
@@ -19,15 +20,16 @@ class Game : public octo::DefaultKeyboardListener, public IContactListener
 public:
 	Game();
 
-	void			setup();
-	void			loadLevel(std::string const& fileName);
+	void	setup();
+	void	loadLevel(std::string const& fileName);
 
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
+
 private:
 	void			followPlayer();
 private:
-	PhysicsEngine &		m_engine;
+	PhysicsEngine &		m_physicsEngine;
 	GameClock			m_gameClock;
 	BiomeManager		m_biomeManager;
 	SkyManager			m_skyManager;

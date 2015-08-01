@@ -29,11 +29,16 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	enum Events
 	{
 		Idle,
+		Right,
 		Left,
 		Jump,
 		DoubleJump,
 		Fall,
-		Right
+		Dance,
+		Umbrella,
+		Elevator,
+		Death,
+		Drink,
 	};
 public:
 	CharacterOcto();
@@ -44,24 +49,34 @@ public:
 	bool			onPressed(sf::Event::KeyEvent const& event);
 	bool			onReleased(sf::Event::KeyEvent const& event);
 	sf::Vector2f	getPosition()const;
+	void			onCollision(GameObjectType type);
 private:
 	void	setupAnimation();
 	void	setupMachine();
 	void	commitControlsToPhysics(sf::Time frameTime);
 	void	commitPhysicsToGraphics();
-
+	void	dance();
 private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
+	octo::CharacterAnimation	m_danceAnimation;
+	octo::CharacterAnimation	m_umbrellaAnimation;
+	octo::CharacterAnimation	m_elevatorAnimation;
+	octo::CharacterAnimation	m_deathAnimation;
+	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
 	float						m_jumpVelocity;
+	sf::Clock					m_clockAFK;
+	sf::Clock					m_clockCollision;
 	float						m_pixelSecond;
 	bool						m_originMoove;
 	bool						m_canDoubleJump;
+	bool						m_doubleJump;
 	bool						m_onGround;
+	float						m_prevY;
 	std::array<bool, 3>			m_controls;
 };
 

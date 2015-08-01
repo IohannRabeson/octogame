@@ -19,6 +19,13 @@ class IContactListener;
  * \ingroup Physic
  * \class PhysicsEngine
  * Physics Engine, compute collision between registered objects
+ *
+ * \code
+ * PhysicsEngine engine = PhysicsEngine::getInstance();
+ * engine.setIterationCount(4u);
+ * engine.setTileCollision(true);
+ * engine.setContactListener(this); // this must inherits from IContactListener
+ * \endcode
  */
 class PhysicsEngine : public ShapeBuilder
 {
@@ -27,8 +34,6 @@ public:
 
 	static PhysicsEngine & getInstance(void);
 	static ShapeBuilder & getShapeBuilder(void);
-
-	void init(void);
 
 	/*! Set the gravity */
 	inline void setGravity(sf::Vector2f const & gravity) { m_gravity = gravity; }
@@ -168,6 +173,8 @@ private:
 	float												m_magnitude;
 	std::size_t											m_iterationCount;
 	bool												m_tileCollision;
+
+	void init(void);
 
 	/*! Determine which pairs of objects might be colliding */
 	void broadPhase(void);

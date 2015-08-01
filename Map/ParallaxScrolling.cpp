@@ -24,7 +24,7 @@ void ParallaxScrolling::addLayer(ALayer * layer)
 	if (!layer)
 		return;
 	layer->setup();
-	m_layers.push_back(std::move(std::unique_ptr<ALayer>(layer)));
+	m_layers.push_back(std::unique_ptr<ALayer>(layer));
 }
 
 void ParallaxScrolling::addLayer(std::vector<ALayer *> const & layers)
