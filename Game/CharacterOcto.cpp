@@ -123,7 +123,7 @@ void	CharacterOcto::setupMachine()
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
 
-	std::function<void()> clockRestart = [this]{ m_clockAFK.restart();};
+	std::function<void()> clockAFKRestart = [this]{ m_clockAFK.restart();};
 	octo::FiniteStateMachine	machine;
 	StatePtr					state0;
 	StatePtr					state1;
@@ -216,14 +216,14 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Drink, state2, state10);
 
 	machine.addTransition(Idle, state0, state0);
-	machine.addTransition(Idle, state1, state0, clockRestart);
-	machine.addTransition(Idle, state2, state0, clockRestart);
-	machine.addTransition(Idle, state3, state0, clockRestart);
-	machine.addTransition(Idle, state4, state0, clockRestart);
-	machine.addTransition(Idle, state5, state0, clockRestart);
-	machine.addTransition(Idle, state6, state0, clockRestart);
-	machine.addTransition(Idle, state7, state0, clockRestart);
-	machine.addTransition(Idle, state10, state0, clockRestart);
+	machine.addTransition(Idle, state1, state0, clockAFKRestart);
+	machine.addTransition(Idle, state2, state0, clockAFKRestart);
+	machine.addTransition(Idle, state3, state0, clockAFKRestart);
+	machine.addTransition(Idle, state4, state0, clockAFKRestart);
+	machine.addTransition(Idle, state5, state0, clockAFKRestart);
+	machine.addTransition(Idle, state6, state0, clockAFKRestart);
+	machine.addTransition(Idle, state7, state0, clockAFKRestart);
+	machine.addTransition(Idle, state10, state0, clockAFKRestart);
 	/*
 	   std::ofstream ms;
 	   ms.open("octoDot.dot");
