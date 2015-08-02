@@ -396,8 +396,9 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Space:
 			m_controls[2] = false;
+			if (!m_afterJump){
 			m_afterJump = true;
-			m_jumpVelocity = -20.f;
+			m_jumpVelocity = -20.f;}
 			m_sprite.setNextEvent(Fall);
 		default:
 			break;
