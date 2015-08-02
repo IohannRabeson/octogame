@@ -76,6 +76,7 @@ private:
 	bool						m_canDoubleJump;
 	bool						m_doubleJump;
 	bool						m_onGround;
+	bool						m_afterJump;
 	float						m_prevY;
 	std::array<bool, 3>			m_controls;
 };

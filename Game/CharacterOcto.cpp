@@ -21,7 +21,8 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecond(320.f),
 	m_canDoubleJump(false),
 	m_doubleJump(false),
-	m_onGround(true)
+	m_onGround(true),
+	m_afterJump(false)
 {
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
 
@@ -74,7 +75,6 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {26, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()})
 			});
-	m_jumpAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_fallAnimation.setFrames({
 			Frame(sf::seconds(0.2f), {27, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
@@ -259,6 +259,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 				m_sprite.setNextEvent(Idle);
 			m_onGround = true;
 			m_canDoubleJump = false;
+			m_afterJump = false;
 		}
 	}
 	m_sprite.update(frameTime);
@@ -315,6 +316,8 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 	else if (m_controls[2] && m_sprite.getCurrentEvent() == Umbrella){
 		velocity.y = -5.f;
 	}
+	else if (m_afterJump && m_jumpVelocity < 0 )
+		velocity.y = m_jumpVelocity++;
 	m_box->setVelocity(velocity);
 }
 
@@ -358,16 +361,17 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 		std::cout << "(" << event.code << ")";
 */
 				m_controls[2] = true;
-				m_jumpVelocity = -50.f;
 				if (m_onGround && m_sprite.canGetEvent(Jump)){
 					m_onGround = false;
 					m_sprite.setNextEvent(Jump);
 					m_canDoubleJump = true;
+					m_jumpVelocity = -50.f;
 				}
 				else if (m_canDoubleJump && m_sprite.canGetEvent(DoubleJump)){
 					m_doubleJump = true;
 					m_sprite.setNextEvent(DoubleJump);
 					m_canDoubleJump = false;
+					m_jumpVelocity = -50.f;
 				}
 				else if (!m_onGround){
 					m_sprite.setNextEvent(Umbrella);
@@ -392,6 +396,8 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Space:
 			m_controls[2] = false;
+			m_afterJump = true;
+			m_jumpVelocity = -20.f;
 			m_sprite.setNextEvent(Fall);
 		default:
 			break;
