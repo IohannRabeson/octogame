@@ -116,7 +116,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_groundManager.getDecorsGround(), states);
 	render.draw(m_skyManager.getDecorsFront(), states);
 
-//	m_physicsEngine.debugDraw(render);
+	//m_physicsEngine.debugDraw(render);
 }
 
 void	Game::followPlayer()

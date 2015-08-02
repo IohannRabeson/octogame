@@ -34,7 +34,9 @@ CharacterOcto::CharacterOcto() :
 	m_box->setSize(sf::Vector2f(177.f / 2.f,152.f));
 	m_originMoove = false;
 	m_sprite.setNextEvent(Idle);
-	std::fill(m_controls.begin(), m_controls.end(), false);
+	m_controls["left"] = false;
+	m_controls["right"] = false;
+	m_controls["space"] = false;
 }
 
 void	CharacterOcto::setupAnimation()
@@ -177,6 +179,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Jump, state6, state3);
 	machine.addTransition(Jump, state8, state3);
 
+	machine.addTransition(DoubleJump, state1, state4);
+	machine.addTransition(DoubleJump, state2, state4);
 	machine.addTransition(DoubleJump, state3, state4);
 	machine.addTransition(DoubleJump, state5, state4);
 
@@ -236,32 +240,7 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
-	if (m_clockCollision.getElapsedTime() > frameTime){
-		if (m_box->getGlobalBounds().top > m_prevY && m_sprite.getCurrentEvent() != Fall){
-			if (!m_doubleJump && m_sprite.getCurrentEvent() != Umbrella){
-				m_sprite.setNextEvent(Fall);
-			}
-			else
-				m_doubleJump = false;
-		}
-		else {
-		}
-	}
-	else{
-		if (m_sprite.getCurrentEvent() == Fall || m_sprite.getCurrentEvent() == Umbrella){
-			m_sprite.restart();
-			m_clockAFK.restart();
-			if (m_controls[0] == true)
-				m_sprite.setNextEvent(Left);
-			else if (m_controls[1] == true)
-				m_sprite.setNextEvent(Right);
-			else
-				m_sprite.setNextEvent(Idle);
-			m_onGround = true;
-			m_canDoubleJump = false;
-			m_afterJump = false;
-		}
-	}
+	collisionUpdate(frameTime);
 	m_sprite.update(frameTime);
 	PhysicsEngine::getInstance().update(frameTime.asSeconds());
 	commitControlsToPhysics(frameTime);
@@ -281,11 +260,40 @@ void	CharacterOcto::onCollision(GameObjectType type)
 	}
 }
 
+void	CharacterOcto::collisionUpdate(sf::Time frameTime)
+{
+	if (m_clockCollision.getElapsedTime() > frameTime){
+		if (m_box->getGlobalBounds().top > m_prevY && m_sprite.getCurrentEvent() != Fall){
+			m_afterJump = true;
+			m_afterJumpVelocity = -10.f;
+			if (!m_doubleJump && m_sprite.getCurrentEvent() != Umbrella){
+				m_sprite.setNextEvent(Fall);
+			}
+			else
+				m_doubleJump = false;
+		}
+	}
+	else{
+		if (m_sprite.getCurrentEvent() == Fall || m_sprite.getCurrentEvent() == Umbrella){
+			m_sprite.restart();
+			m_clockAFK.restart();
+			if (m_controls["left"] == true)
+				m_sprite.setNextEvent(Left);
+			else if (m_controls["right"] == true)
+				m_sprite.setNextEvent(Right);
+			else
+				m_sprite.setNextEvent(Idle);
+			m_onGround = true;
+			m_canDoubleJump = false;
+			m_afterJump = false;
+		}
+	}
+}
+
 void	CharacterOcto::dance()
 {
 	if (m_sprite.getCurrentEvent() == Idle && m_clockAFK.getElapsedTime().asSeconds() > 2.4f)
 		m_sprite.setNextEvent(Dance);
-
 }
 
 void	CharacterOcto::commitPhysicsToGraphics()
@@ -300,24 +308,27 @@ void	CharacterOcto::commitPhysicsToGraphics()
 void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
-	if (m_controls[0])
+	if (m_controls["left"])
 	{
 		velocity.x = (-1 * m_pixelSecond) * frameTime.asSeconds();
 	}
-	else if (m_controls[1])
+	else if (m_controls["right"])
 	{
 		velocity.x = m_pixelSecond * frameTime.asSeconds();
 	}
-	if (m_controls[2] && (m_jumpVelocity * frameTime.asSeconds() < 0)
+
+	if (m_controls["space"] && (m_jumpVelocity * frameTime.asSeconds() < 0)
 			&& (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
 	{
 		velocity.y = m_jumpVelocity++;
 	}
-	else if (m_controls[2] && m_sprite.getCurrentEvent() == Umbrella){
+	else if (m_controls["space"] && m_sprite.getCurrentEvent() == Umbrella){
 		velocity.y = -5.f;
 	}
-	else if (m_afterJump && m_jumpVelocity < 0 )
-		velocity.y = m_jumpVelocity++;
+	else if (m_afterJump && m_afterJumpVelocity < 0 ){
+		m_afterJumpVelocity = m_afterJumpVelocity + 0.5f;
+		velocity.y = m_afterJumpVelocity;
+	}
 	m_box->setVelocity(velocity);
 }
 
@@ -326,57 +337,13 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
-			if (m_controls[0] == false && m_sprite.canGetEvent(Left))
-			{
-				m_controls[0] = true;
-				m_controls[1] = false;
-				m_sprite.setNextEvent(Left);
-				if (!m_originMoove){
-					m_sprite.setScale(-1, 1);
-					m_sprite.setOrigin(m_sprite.getOrigin().x + 177, 0);
-					m_originMoove = true;
-				}
-			}
+			caseLeft();
 			break;
 		case sf::Keyboard::Right:
-			if (m_controls[1] == false && m_sprite.canGetEvent(Right))
-			{
-				m_controls[1] = true;
-				m_controls[0] = false;
-				m_sprite.setNextEvent(Right);
-				if (m_originMoove){
-					m_sprite.setScale(1, 1);
-					m_sprite.setOrigin(m_sprite.getOrigin().x - 177, 0);
-					m_originMoove = false;
-				}
-			}
+			caseRight();
 			break;
 		case sf::Keyboard::Space:
-			if (m_controls[2] == false)
-			{
-/*		std::cout << static_cast<int>(m_sprite.getCurrentEvent()) << "->";
-		for ( auto d : m_sprite.getPossibleEvents()){
-		std::cout << static_cast<int>(d) << ",";
-		}
-		std::cout << "(" << event.code << ")";
-*/
-				m_controls[2] = true;
-				if (m_onGround && m_sprite.canGetEvent(Jump)){
-					m_onGround = false;
-					m_sprite.setNextEvent(Jump);
-					m_canDoubleJump = true;
-					m_jumpVelocity = -50.f;
-				}
-				else if (m_canDoubleJump && m_sprite.canGetEvent(DoubleJump)){
-					m_doubleJump = true;
-					m_sprite.setNextEvent(DoubleJump);
-					m_canDoubleJump = false;
-					m_jumpVelocity = -50.f;
-				}
-				else if (!m_onGround){
-					m_sprite.setNextEvent(Umbrella);
-				}
-			}
+			caseSpace();
 			break;
 		default:
 			break;
@@ -384,26 +351,79 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 	return (true);
 }
 
+void	CharacterOcto::caseLeft()
+{
+	if (m_controls["left"] == false && m_sprite.canGetEvent(Left))
+	{
+		m_controls["left"] = true;
+		m_controls["right"] = false;
+		m_sprite.setNextEvent(Left);
+		if (!m_originMoove){
+			m_sprite.setScale(-1, 1);
+			m_sprite.setOrigin(m_sprite.getOrigin().x + 177, 0);
+			m_originMoove = true;
+		}
+	}
+}
+
+void	CharacterOcto::caseRight()
+{
+	if (m_controls["right"] == false && m_sprite.canGetEvent(Right))
+	{
+		m_controls["right"] = true;
+		m_controls["left"] = false;
+		m_sprite.setNextEvent(Right);
+		if (m_originMoove){
+			m_sprite.setScale(1, 1);
+			m_sprite.setOrigin(m_sprite.getOrigin().x - 177, 0);
+			m_originMoove = false;
+		}
+	}
+}
+
+void	CharacterOcto::caseSpace()
+{
+	if (m_controls["space"] == false)
+	{
+		m_jumpVelocity = -50.f;
+		m_controls["space"] = true;
+		if (m_onGround && m_sprite.canGetEvent(Jump)){
+			m_onGround = false;
+			m_sprite.setNextEvent(Jump);
+			m_canDoubleJump = true;
+		}
+		else if (m_canDoubleJump && m_sprite.canGetEvent(DoubleJump)){
+			m_doubleJump = true;
+			m_sprite.setNextEvent(DoubleJump);
+			m_canDoubleJump = false;
+		}
+		else if (!m_onGround){
+			m_sprite.setNextEvent(Umbrella);
+		}
+	}
+}
+
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
-			m_controls[0] = false;
+			m_controls["left"] = false;
 			break;
 		case sf::Keyboard::Right:
-			m_controls[1] = false;
+			m_controls["right"] = false;
 			break;
 		case sf::Keyboard::Space:
-			m_controls[2] = false;
+			m_controls["space"] = false;
 			if (!m_afterJump){
-			m_afterJump = true;
-			m_jumpVelocity = -20.f;}
+				m_afterJump = true;
+				m_afterJumpVelocity = -20.f;
+			}
 			m_sprite.setNextEvent(Fall);
 		default:
 			break;
 	}
-	if (m_sprite.canGetEvent(Idle) && m_onGround && std::find(m_controls.begin(), m_controls.end() - 1, true) == m_controls.end() -1)
+	if (m_sprite.canGetEvent(Idle) && m_onGround && !m_controls["left"] && !m_controls["right"])
 	{
 		m_sprite.setNextEvent(Idle);
 	}
@@ -412,6 +432,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 
 sf::Vector2f	CharacterOcto::getPosition()const
 {
-	return (m_box->getBaryCenter());
+	//TODO fix center
+	return (m_box->getBaryCenter() + sf::Vector2f(0.f, -300.f));
 }
 

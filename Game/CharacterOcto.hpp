@@ -19,7 +19,6 @@
 # include "RectangleShape.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
-
 # include <array>
 
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
@@ -53,8 +52,12 @@ public:
 private:
 	void	setupAnimation();
 	void	setupMachine();
+	void	collisionUpdate(sf::Time frameTime);
 	void	commitControlsToPhysics(sf::Time frameTime);
 	void	commitPhysicsToGraphics();
+	void	caseLeft();
+	void	caseRight();
+	void	caseSpace();
 	void	dance();
 private:
 	octo::CharacterSprite		m_sprite;
@@ -69,6 +72,7 @@ private:
 	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
 	float						m_jumpVelocity;
+	float						m_afterJumpVelocity;
 	sf::Clock					m_clockAFK;
 	sf::Clock					m_clockCollision;
 	float						m_pixelSecond;
@@ -78,7 +82,7 @@ private:
 	bool						m_onGround;
 	bool						m_afterJump;
 	float						m_prevY;
-	std::array<bool, 3>			m_controls;
+	std::map<std::string, bool>		m_controls;
 };
 
 #endif
