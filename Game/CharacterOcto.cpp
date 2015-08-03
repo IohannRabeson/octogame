@@ -319,7 +319,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 		velocity.x = m_pixelSecond * frameTime.asSeconds();
 	}
 
-	if (m_keySpace && !m_onGround && m_numberOfJump <= 2)
+	if (m_keySpace && !m_onGround && m_numberOfJump <= 2 && m_sprite.getCurrentEvent() != Fall)
 	{
 		if (m_jumpVelocity == -50.f)
 			m_numberOfJump++;
