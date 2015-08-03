@@ -26,13 +26,13 @@ class RainSystem : public octo::ParticleSystem<sf::Vector2f>
 public:
 	RainSystem();
 
-	void			setCameraRect(sf::FloatRect const& cameraRect);
+	void			setRainRect(sf::FloatRect const& rainRect);
 
 	/*!	Define the number of drops produced at each seconds.
 	 *
 	 *	Default is 20.	
 	 */
-	void			setDropPerSecond(unsigned int count);
+	void			setDropPerSecond(std::size_t count);
 
 	/*!	Define the drop fall angle
 	 *	\param angle Angle of drop falls in degrees, 0 means the drops falls straight.
@@ -51,6 +51,7 @@ public:
 	void			setMargin(float margin);
 
 	void			update(sf::Time frameTime);
+	void			update(sf::Time frameTime, octo::VertexBuilder & builder);
 private:
 	virtual void	updateParticle(sf::Time frameTime, Particle& particle);
 	virtual bool	isDeadParticle(Particle const& particle);
@@ -61,13 +62,14 @@ private:
 
 	std::mt19937				m_engine;
 	FDist						m_floatDistribution;
-	sf::FloatRect				m_cameraRect;
+	float						m_cameraBottom;
+	sf::FloatRect				m_rainRect;
 	sf::Vector2f				m_initialVelocity;
 	float						m_initialRotation;
 	unsigned int				m_dropPerSeconds;
 	sf::Time					m_dropInterval;
 	sf::Time					m_dropTimer;
-	float						m_horizontalOffset;
+	bool						m_canCreateDrop;
 	float						m_margin;
 };
 

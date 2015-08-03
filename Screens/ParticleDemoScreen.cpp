@@ -108,7 +108,7 @@ void	ParticleDemoScreen::stop()
 void	ParticleDemoScreen::update(sf::Time frameTime)
 {
 	m_system.update(frameTime);
-	m_rainSystem.setCameraRect(octo::Application::getCamera().getRectangle());
+	m_rainSystem.setRainRect(octo::Application::getCamera().getRectangle());
 	m_rainSystem.update(frameTime);
 }
 

@@ -5,13 +5,13 @@
 # include "DecorAnimator.hpp"
 # include <SFML/Graphics/Color.hpp>
 
-class GameClock;
+class SkyCycle;
 
 class Sky : public ADecor
 {
 public:
 	Sky(void);
-	Sky(GameClock * clock);
+	Sky(SkyCycle * cycle);
 	virtual ~Sky(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -26,12 +26,9 @@ private:
 					sf::Color const & colorDown,
 					octo::VertexBuilder& builder);
 
-	sf::Color	m_colorUpDay;
-	sf::Color	m_colorUpNight;
-	sf::Color	m_colorDownDay;
-	sf::Color	m_colorDownNight;
-
-	GameClock	*m_clock;
+	sf::Color	m_colorUp;
+	sf::Color	m_colorDown;
+	SkyCycle	*m_cycle;
 };
 
 #endif

@@ -3,6 +3,8 @@
 #include "PhysicsEngine.hpp"
 #include "ADecor.hpp"
 #include "ABiome.hpp"
+#include "Rainbow.hpp"
+#include "SkyCycle.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -20,11 +22,14 @@ GroundManager::GroundManager(void) :
 	m_decorManagerBack(200000),
 	m_decorManagerFront(200000),
 	m_decorManagerGround(200000),
-	m_nextState(GenerationState::None)
+	m_nextState(GenerationState::None),
+	m_cycle(nullptr)
 {}
 
-void GroundManager::setup(ABiome & biome)
+void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 {
+	m_cycle = &cycle;
+
 	// Init maps
 	m_tiles.reset(new Map());
 	m_tilesPrev.reset(new Map());
@@ -53,12 +58,12 @@ void GroundManager::setup(ABiome & biome)
 	m_transitionTimerMax = biome.getTransitionDuration();
 
 	// Init decors
-	initDecors(biome);
+	setupDecors(biome);
 
 	swapMap();
 }
 
-void GroundManager::initDecors(ABiome & biome)
+void GroundManager::setupDecors(ABiome & biome)
 {
 	m_decorManagerBack.setup(&biome);
 	m_decorManagerFront.setup(&biome);
@@ -78,7 +83,7 @@ void GroundManager::initDecors(ABiome & biome)
 		for (std::size_t i = 0; i < rainbowCount; i++)
 		{
 			int x = biome.randomInt(1u, mapSizeX);
-			m_decorManagerBack.add(DecorManager::DecorTypes::Rainbow);
+			m_decorManagerBack.add(new Rainbow(m_cycle));
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}

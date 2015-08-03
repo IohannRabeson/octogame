@@ -3,7 +3,7 @@
 
 #include "DecorManager.hpp"
 
-class GameClock;
+class SkyCycle;
 class ABiome;
 class Star;
 
@@ -13,7 +13,7 @@ public:
 	SkyManager(void);
 	~SkyManager(void) = default;
 
-	void setup(ABiome & biome, GameClock & clock);
+	void setup(ABiome & biome, SkyCycle & cycle);
 	void update(sf::Time frameTime);
 	DecorManager const & getDecorsBack(void) const;
 	DecorManager const & getDecorsFront(void) const;
@@ -43,13 +43,13 @@ private:
 	float						m_wind;
 	sf::Vector2f				m_mapSizeFloat;
 
-	GameClock *					m_clock;
+	SkyCycle *					m_cycle;
 
 	std::size_t					m_sunCount;
 	std::size_t					m_moonCount;
 	std::size_t					m_starCount;
 	std::size_t					m_cloudCount;
-	//TODO: To sync with paralax?
+
 	sf::Vector2f				m_originRotate;
 	std::vector<sf::Vector2f>	m_originSuns;
 	std::vector<sf::Vector2f>	m_originMoons;

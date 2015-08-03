@@ -20,23 +20,23 @@
 RainSystem::RainSystem() :
 	m_engine(std::time(0) ^ 0xB38421),
 	m_floatDistribution(0.f, 1.f),
+	m_cameraBottom(0.f),
 	m_initialRotation(0.f),
 	m_dropPerSeconds(0),
-	m_horizontalOffset(0.f),
+	m_canCreateDrop(true),
 	m_margin(0.f)
 {
 	sf::Vector2f const	DropSize{0.6f, 25.f};
 
-	reset({-DropSize, {DropSize.x, -DropSize.y}, DropSize, {-DropSize.x, DropSize.y}},
-		   sf::Quads, 1000u);
-	setDropSpeed(2048.f);
+	reset({-DropSize, {0.f, -DropSize.y}, DropSize},
+		   sf::Triangles, 1000u);
+	setDropSpeed(1024.f);
 	setDropPerSecond(20);
 }
 
-void	RainSystem::setCameraRect(sf::FloatRect const& cameraRect)
+void	RainSystem::setRainRect(sf::FloatRect const& rainRect)
 {
-	m_cameraRect = cameraRect;
-	updateHorizontalOffset();
+	m_rainRect = rainRect;
 }
 
 void	RainSystem::update(sf::Time frameTime)
@@ -50,12 +50,29 @@ void	RainSystem::update(sf::Time frameTime)
 	ParticleSystem::update(frameTime);
 }
 
-void	RainSystem::setDropPerSecond(unsigned int count)
+void	RainSystem::update(sf::Time frameTime, octo::VertexBuilder & builder)
 {
-	assert(count != 0);
+	m_dropTimer += frameTime;
+	octo::Camera const & camera = octo::Application::getCamera();
+	m_cameraBottom = camera.getRectangle().top + camera.getSize().y;
+	while (m_canCreateDrop && getCapacity() > 0 && m_dropTimer > m_dropInterval)
+	{
+		createDrop();
+		m_dropTimer -= m_dropInterval;
+	}
+	ParticleSystem::update(frameTime, builder);
+}
 
+void	RainSystem::setDropPerSecond(std::size_t count)
+{
 	m_dropPerSeconds = count;
-	m_dropInterval = sf::seconds(1.f / count);
+	if (count == 0u)
+		m_canCreateDrop = false;
+	else
+	{
+		m_dropInterval = sf::seconds(1.f / count);
+		m_canCreateDrop = true;
+	}
 }
 
 void	RainSystem::setDropSpeed(float speed)
@@ -67,7 +84,6 @@ void	RainSystem::setDropSpeed(float speed)
 	normalized = octo::normalized(m_initialVelocity);
 	radRotation = std::atan2(normalized.y, normalized.x) - (octo::PiDiv2);
 	m_initialRotation = octo::rad2Deg(radRotation);
-	updateHorizontalOffset();
 }
 
 void	RainSystem::setDropAngle(float angle)
@@ -76,7 +92,6 @@ void	RainSystem::setDropAngle(float angle)
 
 	m_initialVelocity.x = m_initialVelocity.y * std::tan(angleRad);
 	m_initialRotation = -angle;
-	updateHorizontalOffset();
 }
 
 void	RainSystem::setMargin(float margin)
@@ -92,7 +107,7 @@ void	RainSystem::updateParticle(sf::Time frameTime, Particle& particle)
 bool	RainSystem::isDeadParticle(Particle const& particle)
 {
 	static float const	BottomMargin{64.f};
-	float				bottom = m_cameraRect.top + m_cameraRect.height + BottomMargin;
+	float				bottom = m_cameraBottom + BottomMargin;
 
 	return (std::get<Component::Position>(particle).y > bottom);
 }
@@ -102,25 +117,10 @@ void			RainSystem::createDrop()
 	static float const	TopMargin{64.f};
 	sf::Vector2f		pos;
 
-	if (m_horizontalOffset < 0.f)
-	{
-		pos.x = m_cameraRect.left + m_horizontalOffset - m_margin +
-				m_floatDistribution(m_engine) * (m_cameraRect.width - m_horizontalOffset + m_margin * 2.f);
-	}
-	else
-	{
-		pos.x = m_cameraRect.left - m_margin +
-				m_floatDistribution(m_engine) *	(m_cameraRect.width + m_horizontalOffset + m_margin * 2.f);
-	}
-	pos.y = m_cameraRect.top - TopMargin * m_floatDistribution(m_engine);
-	emplace(sf::Color(180, 180, 180), pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
-}
+	pos.x = m_rainRect.left - m_margin +
+			m_floatDistribution(m_engine) *	(m_rainRect.width + m_margin * 2.f);
 
-void	RainSystem::updateHorizontalOffset()
-{
-	if (std::fabs(m_initialRotation) < std::numeric_limits<float>::epsilon())
-		m_horizontalOffset = 0.f;
-	else
-		m_horizontalOffset = std::tan(octo::deg2Rad(m_initialRotation)) * m_cameraRect.height;
+	pos.y = m_rainRect.top - TopMargin * m_floatDistribution(m_engine);
+	emplace(sf::Color(255, 255, 255), pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
 }
 
