@@ -27,6 +27,7 @@ public:
 						octo::VertexBuilder& builder,
 						ABiome& biome);
 
+	virtual bool isDisabledIfOutOfScreen()const;
 private:
 	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & sizeCorner,

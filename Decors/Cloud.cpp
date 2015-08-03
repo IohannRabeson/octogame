@@ -22,6 +22,11 @@ Cloud::~Cloud(void)
 		delete m_rain[i];
 }
 
+bool Cloud::isDisabledIfOutOfScreen()const
+{
+	return (false);
+}
+
 void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color color, octo::VertexBuilder& builder)
 {
 	color.a *= m_animation;
