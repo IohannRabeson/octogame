@@ -105,7 +105,6 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	//TODO: To improve: Replace rain rect just top of screen, dont update rain all time
 	sf::Vector2f const & position = getPosition();
 	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue();
-//	std::size_t dropPerSecond = static_cast<std::size_t>(weather);
 	if (biome.canRain())
 	{
 		sf::Vector2f size(0.f, biome.getMapSizeFloat().y);
