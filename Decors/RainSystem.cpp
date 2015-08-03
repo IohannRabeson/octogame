@@ -63,10 +63,10 @@ void	RainSystem::update(sf::Time frameTime, octo::VertexBuilder & builder)
 	ParticleSystem::update(frameTime, builder);
 }
 
-void	RainSystem::setDropPerSecond(std::size_t count)
+void	RainSystem::setDropPerSecond(float count)
 {
 	m_dropPerSeconds = count;
-	if (count == 0u)
+	if (count == 0.f)
 		m_canCreateDrop = false;
 	else
 	{
