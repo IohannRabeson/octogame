@@ -45,7 +45,12 @@ void	CharacterOcto::setupAnimation()
 	typedef octo::CharacterAnimation::Frame			Frame;
 
 	m_idleAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {0, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {12, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {13, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {14, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			});
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -321,7 +326,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 
 	if (m_keySpace && !m_onGround && m_numberOfJump <= 2 && m_sprite.getCurrentEvent() != Fall)
 	{
-		if (m_jumpVelocity == -50.f)
+		if (m_jumpVelocity == -35.f)
 			m_numberOfJump++;
 		if (m_numberOfJump <= 2)
 			velocity.y = m_jumpVelocity++;
@@ -389,7 +394,7 @@ void	CharacterOcto::caseSpace()
 {
 	if (!m_keySpace)
 	{
-		m_jumpVelocity = -50.f;
+		m_jumpVelocity = -35.f;
 		m_keySpace = true;
 		if (m_onGround && m_sprite.canGetEvent(Jump)){
 			m_onGround = false;
