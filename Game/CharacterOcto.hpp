@@ -76,12 +76,16 @@ private:
 	sf::Clock					m_clockAFK;
 	sf::Clock					m_clockCollision;
 	float						m_pixelSecond;
+	std::size_t					m_numberOfJump;
+	float						m_prevY;
 	bool						m_originMoove;
 	bool						m_canDoubleJump;
 	bool						m_doubleJump;
 	bool						m_onGround;
 	bool						m_afterJump;
-	float						m_prevY;
+	bool						m_keyLeft;
+	bool						m_keyRight;
+	bool						m_keySpace;
 	std::map<std::string, bool>		m_controls;
 };
 

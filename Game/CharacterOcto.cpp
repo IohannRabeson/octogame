@@ -19,10 +19,14 @@
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_pixelSecond(320.f),
+	m_numberOfJump(0),
 	m_canDoubleJump(false),
 	m_doubleJump(false),
 	m_onGround(true),
-	m_afterJump(false)
+	m_afterJump(false),
+	m_keyLeft(false),
+	m_keyRight(false),
+	m_keySpace(false)
 {
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
 
@@ -34,9 +38,6 @@ CharacterOcto::CharacterOcto() :
 	m_box->setSize(sf::Vector2f(177.f / 2.f,152.f));
 	m_originMoove = false;
 	m_sprite.setNextEvent(Idle);
-	m_controls["left"] = false;
-	m_controls["right"] = false;
-	m_controls["space"] = false;
 }
 
 void	CharacterOcto::setupAnimation()
@@ -277,15 +278,16 @@ void	CharacterOcto::collisionUpdate(sf::Time frameTime)
 		if (m_sprite.getCurrentEvent() == Fall || m_sprite.getCurrentEvent() == Umbrella){
 			m_sprite.restart();
 			m_clockAFK.restart();
-			if (m_controls["left"] == true)
+			if (m_keyLeft)
 				m_sprite.setNextEvent(Left);
-			else if (m_controls["right"] == true)
+			else if (m_keyRight)
 				m_sprite.setNextEvent(Right);
 			else
 				m_sprite.setNextEvent(Idle);
 			m_onGround = true;
 			m_canDoubleJump = false;
 			m_afterJump = false;
+			m_numberOfJump = 0;
 		}
 	}
 }
@@ -308,21 +310,23 @@ void	CharacterOcto::commitPhysicsToGraphics()
 void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
-	if (m_controls["left"])
+	if (m_keyLeft)
 	{
 		velocity.x = (-1 * m_pixelSecond) * frameTime.asSeconds();
 	}
-	else if (m_controls["right"])
+	else if (m_keyRight)
 	{
 		velocity.x = m_pixelSecond * frameTime.asSeconds();
 	}
 
-	if (m_controls["space"] && (m_jumpVelocity * frameTime.asSeconds() < 0)
-			&& (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
+	if (m_keySpace && !m_onGround && m_numberOfJump <= 2)
 	{
-		velocity.y = m_jumpVelocity++;
+		if (m_jumpVelocity == -50.f)
+			m_numberOfJump++;
+		if (m_numberOfJump <= 2)
+			velocity.y = m_jumpVelocity++;
 	}
-	else if (m_controls["space"] && m_sprite.getCurrentEvent() == Umbrella){
+	else if (m_keySpace && m_sprite.getCurrentEvent() == Umbrella){
 		velocity.y = -5.f;
 	}
 	else if (m_afterJump && m_afterJumpVelocity < 0 ){
@@ -353,10 +357,10 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 
 void	CharacterOcto::caseLeft()
 {
-	if (m_controls["left"] == false && m_sprite.canGetEvent(Left))
+	if (!m_keyLeft && m_sprite.canGetEvent(Left))
 	{
-		m_controls["left"] = true;
-		m_controls["right"] = false;
+		m_keyLeft = true;
+		m_keyRight = false;
 		m_sprite.setNextEvent(Left);
 		if (!m_originMoove){
 			m_sprite.setScale(-1, 1);
@@ -368,10 +372,10 @@ void	CharacterOcto::caseLeft()
 
 void	CharacterOcto::caseRight()
 {
-	if (m_controls["right"] == false && m_sprite.canGetEvent(Right))
+	if (!m_keyRight && m_sprite.canGetEvent(Right))
 	{
-		m_controls["right"] = true;
-		m_controls["left"] = false;
+		m_keyRight = true;
+		m_keyLeft = false;
 		m_sprite.setNextEvent(Right);
 		if (m_originMoove){
 			m_sprite.setScale(1, 1);
@@ -383,10 +387,10 @@ void	CharacterOcto::caseRight()
 
 void	CharacterOcto::caseSpace()
 {
-	if (m_controls["space"] == false)
+	if (!m_keySpace)
 	{
 		m_jumpVelocity = -50.f;
-		m_controls["space"] = true;
+		m_keySpace = true;
 		if (m_onGround && m_sprite.canGetEvent(Jump)){
 			m_onGround = false;
 			m_sprite.setNextEvent(Jump);
@@ -408,14 +412,14 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
-			m_controls["left"] = false;
+			m_keyLeft = false;
 			break;
 		case sf::Keyboard::Right:
-			m_controls["right"] = false;
+			m_keyRight = false;
 			break;
 		case sf::Keyboard::Space:
-			m_controls["space"] = false;
-			if (!m_afterJump){
+			m_keySpace = false;
+			if (!m_afterJump && !m_onGround){
 				m_afterJump = true;
 				m_afterJumpVelocity = -20.f;
 			}
@@ -423,10 +427,8 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 		default:
 			break;
 	}
-	if (m_sprite.canGetEvent(Idle) && m_onGround && !m_controls["left"] && !m_controls["right"])
-	{
+	if (m_sprite.canGetEvent(Idle) && m_onGround && !m_keyLeft && !m_keyRight)
 		m_sprite.setNextEvent(Idle);
-	}
 	return (true);
 }
 
