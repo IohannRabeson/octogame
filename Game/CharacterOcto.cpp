@@ -399,6 +399,7 @@ void	CharacterOcto::caseSpace()
 		else if (m_canDoubleJump && m_sprite.canGetEvent(DoubleJump)){
 			m_doubleJump = true;
 			m_sprite.setNextEvent(DoubleJump);
+			m_afterJump = false;
 			m_canDoubleJump = false;
 		}
 		else if (!m_onGround){
