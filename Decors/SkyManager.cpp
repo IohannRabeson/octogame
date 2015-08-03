@@ -138,7 +138,7 @@ void SkyManager::update(sf::Time frameTime)
 	float sin = std::sin(angle);
 
 	DecorManager::Iterator decorBack = m_decorManagerBack.begin();
-	(*decorBack)->setPosition(camera.getCenter());
+	(*decorBack)->setPosition(cameraCenter);
 	decorBack++;
 	for (auto it = m_originStars.begin(); it != m_originStars.end(); it++)
 		setRotatePosition(decorBack++, *it + m_originRotateStar, m_originRotateStar, offsetCamera, cos, sin);
@@ -161,7 +161,7 @@ void SkyManager::update(sf::Time frameTime)
 		(*decorFront)->setPosition(*it);
 		decorFront++;
 	}
-	(*decorFront)->setPosition(camera.getCenter());
+	(*decorFront)->setPosition(cameraCenter);
 	m_decorManagerBack.update(frameTime, camera);
 	m_decorManagerFront.update(frameTime, camera);
 }
