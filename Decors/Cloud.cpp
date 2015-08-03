@@ -2,6 +2,8 @@
 #include "ABiome.hpp"
 #include "SkyCycle.hpp"
 #include <Interpolations.hpp>
+#include <Application.hpp>
+#include <Camera.hpp>
 
 Cloud::Cloud(void) :
 	Cloud(nullptr)
@@ -12,7 +14,8 @@ Cloud::Cloud(SkyCycle * cycle) :
 	m_partCount(1u),
 	m_animator(4.f, 5.f, 4.f, 0.1f),
 	m_animation(1.f),
-	m_cycle(cycle)
+	m_cycle(cycle),
+	m_lightning(200000)
 {
 }
 
@@ -69,6 +72,17 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 		createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
 }
 
+void Cloud::setupLightning(void)
+{
+	octo::Camera& camera = octo::Application::getCamera();
+
+	m_lightning.addArc(camera.getCenter(), camera.getCenter(), 2.f);
+	m_lightning.addArc(camera.getCenter(), camera.getCenter(), 4.f);
+	m_lightning.addArc(camera.getCenter(), camera.getCenter(), 6.f);
+	m_lightning.addArc(camera.getCenter(), camera.getCenter(), 4.f);
+	m_lightning.addArc(camera.getCenter(), camera.getCenter(), 2.f);
+}
+
 void Cloud::setup(ABiome& biome)
 {
 	m_color = biome.getCloudColor();
@@ -81,6 +95,7 @@ void Cloud::setup(ABiome& biome)
 		m_rain[i] = new RainSystem();
 
 	newCloud(biome);
+	setupLightning();
 }
 
 void Cloud::newCloud(ABiome & biome)
@@ -102,9 +117,23 @@ void Cloud::newCloud(ABiome & biome)
 
 void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
-	//TODO: To improve: Replace rain rect just top of screen, dont update rain all time
 	sf::Vector2f const & position = getPosition();
 	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue();
+	float thunder = m_cycle == nullptr ? 0.f : m_cycle->getThunderValue();
+
+	if (thunder)
+	{
+		m_p0 = position;
+		m_p1 = sf::Vector2f(position.x, position.y + 1000.f * thunder);
+		for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+			m_lightning.setArc(i, m_p0, m_p1);
+		for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+			m_lightning.setArc(i, m_p0, m_p1);
+
+		m_lightning.update(frameTime, builder);
+	}
+
+	//TODO: To improve: Replace rain rect just top of screen, dont update rain all time
 	if (biome.canRain())
 	{
 		sf::Vector2f size(0.f, biome.getMapSizeFloat().y);

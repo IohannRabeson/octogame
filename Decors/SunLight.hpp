@@ -22,6 +22,9 @@ public:
 private:
 	void createSunLight(sf::Vector2f const & size,
 						sf::Vector2f const & origin,
+						sf::Color const & colorDay,
+						sf::Color const & colorSunset,
+						sf::Color const & colorNight,
 						octo::VertexBuilder& builder);
 
 	void createBicolorQuad(sf::Vector2f const & upLeft,

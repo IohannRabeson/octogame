@@ -20,6 +20,8 @@ public:
 	sf::Color	getSkyColorUp(void) const;
 
 	float		getWeatherValue(void) const;
+	std::size_t	getDropPerSecond(void) const;
+	float		getThunderValue(void) const;
 
 	bool		isDay(void) const;
 	bool		isNight(void) const;
@@ -32,7 +34,10 @@ public:
 
 private:
 	void		computeDayNight(sf::Time frameTime);
+	void		newThunderCycle(ABiome & biome);
 	void		newRainCycle(ABiome & biome);
+	void		computeThunder(sf::Time frameTime,
+							ABiome & biome);
 	void		computeRain(sf::Time frameTime,
 							ABiome & biome);
 
@@ -53,6 +58,10 @@ private:
 	sf::Time	m_rainingTimer;
 	sf::Time	m_rainingTimerMax;
 	bool		m_rainAppear;
+	float		m_thunder;
+	sf::Time	m_thunderTimer;
+	sf::Time	m_thunderTimerMax;
+	bool		m_thunderAppear;
 
 	sf::Color	m_colorUpDay;
 	sf::Color	m_colorUpNight;

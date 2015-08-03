@@ -41,16 +41,18 @@ Lightning::Lightning(std::size_t maxVertices) :
 	m_vertices(new sf::Vertex[maxVertices]),
 	m_verticeCount(maxVertices),
 	m_builder(m_vertices.get(), m_verticeCount),
-	m_defaultMiddleOffsetFactor(200.f),
+	m_defaultMiddleOffsetFactor(150.f),
 	m_defaultBranchProbability(0.5f),
 	m_defaultBranchMaxAngle(45.f),
 	m_defaultBranchMaxLenght(0.7f),
 	m_defaultColor(sf::Color::White),
-	m_defaultFractalLevel(8u),
+	m_defaultFractalLevel(3u),
 	m_defaultCycleTime(sf::seconds(1.f / 3.f)),
 	m_currentArc(0u),
 	m_triggerTime(sf::seconds(1.f / 6.f))
 {
+	std::random_device rd;
+	m_engine.seed(rd());
 }
 
 void	Lightning::update(sf::Time frameTime)
@@ -71,6 +73,28 @@ void	Lightning::update(sf::Time frameTime)
 		{
 			arc->update(frameTime);
 			arc->buildVertices(m_builder);
+		}
+	}
+}
+
+void	Lightning::update(sf::Time frameTime, octo::VertexBuilder & builder)
+{
+	ArcPtr	arc;
+
+	m_currentTime += frameTime;
+	if (m_currentTime >= m_triggerTime)
+	{
+		m_arcs.at(m_currentArc)->restart();
+		m_currentArc = (m_currentArc + 1) % m_arcs.size();
+		m_currentTime -= m_triggerTime;
+	}
+	m_builder.clear();
+	for (auto& arc : m_arcs)
+	{
+		if (arc->isExpired() == false)
+		{
+			arc->update(frameTime);
+			arc->buildVertices(builder);
 		}
 	}
 }

@@ -4,6 +4,7 @@
 # include "ADecor.hpp"
 # include "DecorAnimator.hpp"
 # include "RainSystem.hpp"
+# include "Lightning.hpp"
 # include <SFML/Graphics/Color.hpp>
 
 class SkyCycle;
@@ -41,6 +42,8 @@ private:
 					sf::Color const & color,
 					octo::VertexBuilder& builder);
 
+	void setupLightning(void);
+
 	void newCloud(ABiome & biome);
 
 	sf::Vector2f				m_size;
@@ -55,6 +58,10 @@ private:
 	std::vector<sf::Vector2f>	m_rainUpLeft;
 
 	SkyCycle *					m_cycle;
+
+	Lightning					m_lightning;
+	sf::Vector2f				m_p0;
+	sf::Vector2f				m_p1;
 };
 
 #endif
