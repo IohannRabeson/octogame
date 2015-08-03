@@ -63,7 +63,6 @@ void	Game::loadLevel(std::string const& fileName)
 void	Game::update(sf::Time frameTime)
 {
 	m_skyCycle.update(frameTime, m_biomeManager.getCurrentBiome());
-	m_skyManager.update(frameTime);
 	m_octo.update(frameTime);
 	m_npc.update(frameTime);
 	m_bnpc.update(frameTime);
@@ -71,6 +70,7 @@ void	Game::update(sf::Time frameTime)
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
 	m_physicsEngine.update(frameTime.asSeconds());
+	m_skyManager.update(frameTime);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
