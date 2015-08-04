@@ -42,7 +42,7 @@ private:
 					sf::Color const & color,
 					octo::VertexBuilder& builder);
 
-	void setupLightning(void);
+	void setupLightning(ABiome & biome);
 
 	void newCloud(ABiome & biome);
 
@@ -57,11 +57,13 @@ private:
 	std::vector<RainSystem *>	m_rain;
 	std::vector<sf::Vector2f>	m_rainUpLeft;
 
-	SkyCycle *					m_cycle;
-
+	bool						m_thunderCloud;
 	Lightning					m_lightning;
+	float						m_lightningSize;
 	sf::Vector2f				m_p0;
 	sf::Vector2f				m_p1;
+
+	SkyCycle *					m_cycle;
 };
 
 #endif

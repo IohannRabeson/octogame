@@ -59,9 +59,10 @@ private:
 	sf::Time	m_rainingTimerMax;
 	bool		m_rainAppear;
 	float		m_thunder;
+	sf::Time	m_thunderTimerStart;
 	sf::Time	m_thunderTimer;
 	sf::Time	m_thunderTimerMax;
-	bool		m_thunderAppear;
+	std::size_t	m_thunderState;
 
 	sf::Color	m_colorUpDay;
 	sf::Color	m_colorUpNight;

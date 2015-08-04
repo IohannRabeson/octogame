@@ -51,10 +51,12 @@ public:
 	virtual sf::Color		getSunsetLightColor() = 0;
 
 	virtual float			getWind() = 0;
-	virtual bool			canRain() = 0;
+	virtual bool			canCreateRain() = 0;
 	virtual std::size_t		getRainDropPerSecond() = 0;
 	virtual sf::Time		getSunnyTime() = 0;
 	virtual sf::Time		getRainingTime() = 0;
+	virtual bool			canCreateThunder() = 0;
+	virtual float			getLightningSize() = 0;
 
 	virtual std::size_t		getRockCount() = 0;
 	virtual std::size_t		getTreeCount() = 0;

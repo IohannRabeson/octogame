@@ -14,8 +14,10 @@ Cloud::Cloud(SkyCycle * cycle) :
 	m_partCount(1u),
 	m_animator(4.f, 5.f, 4.f, 0.1f),
 	m_animation(1.f),
-	m_cycle(cycle),
-	m_lightning(200000)
+	m_thunderCloud(false),
+	m_lightning(1),
+	m_lightningSize(0.f),
+	m_cycle(cycle)
 {
 }
 
@@ -72,7 +74,7 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 		createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
 }
 
-void Cloud::setupLightning(void)
+void Cloud::setupLightning(ABiome & biome)
 {
 	octo::Camera& camera = octo::Application::getCamera();
 
@@ -81,6 +83,9 @@ void Cloud::setupLightning(void)
 	m_lightning.addArc(camera.getCenter(), camera.getCenter(), 6.f);
 	m_lightning.addArc(camera.getCenter(), camera.getCenter(), 4.f);
 	m_lightning.addArc(camera.getCenter(), camera.getCenter(), 2.f);
+
+	m_thunderCloud = biome.randomBool(0.6);
+	m_lightningSize = biome.getLightningSize();
 }
 
 void Cloud::setup(ABiome& biome)
@@ -95,7 +100,7 @@ void Cloud::setup(ABiome& biome)
 		m_rain[i] = new RainSystem();
 
 	newCloud(biome);
-	setupLightning();
+	setupLightning(biome);
 }
 
 void Cloud::newCloud(ABiome & biome)
@@ -121,10 +126,10 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue();
 	float thunder = m_cycle == nullptr ? 0.f : m_cycle->getThunderValue();
 
-	if (thunder)
+	if (m_thunderCloud && biome.canCreateThunder() && thunder && biome.randomBool(0.3))
 	{
 		m_p0 = position;
-		m_p1 = sf::Vector2f(position.x, position.y + 1000.f * thunder);
+		m_p1 = sf::Vector2f(position.x, position.y + m_lightningSize * thunder);
 		for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
 			m_lightning.setArc(i, m_p0, m_p1);
 		for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
@@ -134,7 +139,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	}
 
 	//TODO: To improve: Replace rain rect just top of screen, dont update rain all time
-	if (biome.canRain())
+	if (biome.canCreateRain())
 	{
 		sf::Vector2f size(0.f, biome.getMapSizeFloat().y);
 		for (std::size_t i = 0; i < m_partCount; i++)

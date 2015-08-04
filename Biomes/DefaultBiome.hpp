@@ -47,10 +47,12 @@ public:
 
 	virtual float										getWind();
 	virtual void										setWind(float wind);
-	virtual bool										canRain();
+	virtual bool										canCreateRain();
 	virtual std::size_t									getRainDropPerSecond();
 	virtual sf::Time									getSunnyTime();
 	virtual sf::Time									getRainingTime();
+	virtual bool										canCreateThunder();
+	virtual float										getLightningSize();
 
 	virtual std::size_t									getRockCount();
 	virtual std::size_t									getTreeCount();
@@ -146,6 +148,7 @@ private:
 	static constexpr std::size_t		m_rainDropPerSecondMax = 100u;
 	Range<sf::Time>						m_sunnyTime;
 	Range<sf::Time>						m_rainingTime;
+	Range<float>						m_lightningSize;
 
 	Range<std::size_t>					m_rockCount;
 	Range<std::size_t>					m_treeCount;
@@ -159,6 +162,7 @@ private:
 	Range<std::size_t>					m_groundRockCount;
 
 	bool								m_canRain;
+	bool								m_canThunder;
 	bool								m_canCreateRock;
 	bool								m_canCreateTree;
 	bool								m_canCreateLeaf;

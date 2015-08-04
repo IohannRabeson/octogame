@@ -94,7 +94,7 @@ void SunLight::computeDayColorValue(sf::Time frameTime, ABiome &)
 void SunLight::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	sf::Vector2f position = getPosition();
-	if (biome.canRain())
+	if (biome.canCreateRain())
 		computeDayColorValue(frameTime, biome);
 	float dayValue = m_cycle->getDayValue();
 	float nightValue = m_cycle->getNightValue();
@@ -103,6 +103,14 @@ void SunLight::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& 
 	else if (m_cycle->isNight())
 		position -= octo::linearInterpolation(m_sunsetPos, m_nightPos, nightValue);
 	
-	if (m_cycle->getThunderValue() == 0.f)
+	float thunderValue = m_cycle->getThunderValue();
+	if (thunderValue == 0.f)
 		createSunLight(m_cameraSize, position, m_colorDay, m_colorSunset, m_colorNight, builder);
+	else
+	{
+		sf::Color colorDay = octo::linearInterpolation(m_colorDay, sf::Color::Transparent, thunderValue);
+		sf::Color colorSunset = octo::linearInterpolation(m_colorSunset, sf::Color::Transparent, thunderValue);
+		sf::Color colorNight = octo::linearInterpolation(m_colorNight, sf::Color::Transparent, thunderValue);
+		createSunLight(m_cameraSize, position, colorDay, colorSunset, colorNight, builder);
+	}
 }

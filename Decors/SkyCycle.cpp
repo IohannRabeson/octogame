@@ -10,8 +10,7 @@ SkyCycle::SkyCycle(void) :
 	m_rainDropPerSecond(0u),
 	m_rainAppear(true),
 	m_thunder(0.f),
-	m_thunderTimerMax(sf::seconds(0.5f)),
-	m_thunderAppear(true)
+	m_thunderState(0u)
 {
 }
 
@@ -74,6 +73,7 @@ void SkyCycle::setup(ABiome & biome)
 	m_timerDayMax = m_timerMax / 4.f;
 	m_timerNightMax = m_timerMax / 4.f;
 	newRainCycle(biome);
+	newThunderCycle(biome);
 
 	m_colorUpDay = biome.getSkyDayColor();
 	m_colorUpNight = biome.getSkyNightColor();
@@ -128,11 +128,11 @@ void SkyCycle::computeDayNight(sf::Time frameTime)
 
 void SkyCycle::newThunderCycle(ABiome & biome)
 {
-	(void)biome;
 	m_thunder = 0.f;
-	//m_thunderAppear = true;
+	m_thunderState = 0u;
 	m_thunderTimer = sf::Time::Zero;
 	m_thunderTimerMax = sf::seconds(0.5f);
+	m_thunderTimerStart = sf::seconds(biome.randomFloat(0.f, m_rainingTimerMax.asSeconds()));
 }
 
 void SkyCycle::newRainCycle(ABiome & biome)
@@ -148,20 +148,51 @@ void SkyCycle::newRainCycle(ABiome & biome)
 
 void SkyCycle::computeThunder(sf::Time frameTime, ABiome & biome)
 {
-	(void)biome;
-	if (m_thunderTimer <= m_thunderTimerMax && m_thunderAppear)
+	if (m_thunderState == 0u)
 	{
 		m_thunderTimer += frameTime;
-		m_thunder = m_thunderTimer / m_thunderTimerMax;
+		if (m_thunderTimer >= m_thunderTimerStart)
+		{
+			m_thunderState = 1u;
+			m_thunderTimer = sf::Time::Zero;
+		}
 	}
-	else if (m_thunderTimer >= sf::Time::Zero)
+	if (m_thunderState == 1u)
 	{
-		m_thunderAppear = false;
-		m_thunder = m_thunderTimer / m_thunderTimerMax;
+		m_thunderTimer += frameTime;
+		if (m_thunderTimer >= m_thunderTimerMax)
+		{
+			m_thunderTimer = m_thunderTimerMax;
+			m_thunderState = 2u;
+		}
+	}
+	else if (m_thunderState == 2u)
+	{
 		m_thunderTimer -= frameTime;
+		if (m_thunderTimer < m_thunderTimerMax / 2.f)
+			m_thunderState = 3u;
+	}
+	else if (m_thunderState == 3u)
+	{
+		m_thunderTimer += frameTime;
+		if (m_thunderTimer >= m_thunderTimerMax)
+		{
+			m_thunderTimer = m_thunderTimerMax;
+			m_thunderState = 4u;
+		}
+	}
+	else if (m_thunderState == 4u)
+	{
+		m_thunderTimer -= frameTime;
+		if (m_thunderTimer <= sf::Time::Zero)
+		{
+			m_thunderTimer = sf::Time::Zero;
+			m_thunderState = 5u;
+		}
 	}
 	else
 		newThunderCycle(biome);
+	m_thunder = m_thunderTimer / m_thunderTimerMax;
 }
 
 void SkyCycle::computeRain(sf::Time frameTime, ABiome & biome)
@@ -175,9 +206,6 @@ void SkyCycle::computeRain(sf::Time frameTime, ABiome & biome)
 	}
 	else if (m_rainingTimer >= sf::Time::Zero)
 	{
-		//TODO: To moove
-		computeThunder(frameTime, biome);
-
 		m_rainAppear = false;
 		m_weather = m_rainingTimer / m_rainingTimerMax * m_rainDropPerSecond;
 		m_rainingTimer -= frameTime;
@@ -189,7 +217,10 @@ void SkyCycle::computeRain(sf::Time frameTime, ABiome & biome)
 void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 {
 	computeDayNight(frameTime);
-	computeRain(frameTime, biome);
+	if (biome.canCreateRain())
+		computeRain(frameTime, biome);
+	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
+		computeThunder(frameTime, biome);
 	float interpolateValue = getNightValue() * 2.f;
 	if (interpolateValue > 1.f)
 		interpolateValue = 1.f;
