@@ -20,9 +20,8 @@ CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_pixelSecond(320.f),
 	m_numberOfJump(0),
-	m_canDoubleJump(false),
+	m_onGround(false),
 	m_doubleJump(false),
-	m_onGround(true),
 	m_afterJump(false),
 	m_keyLeft(false),
 	m_keyRight(false),
@@ -200,6 +199,8 @@ void	CharacterOcto::setupMachine()
 
 	machine.addTransition(Dance, state0, state6);
 
+	machine.addTransition(Umbrella, state1, state7);
+	machine.addTransition(Umbrella, state2, state7);
 	machine.addTransition(Umbrella, state3, state7);
 	machine.addTransition(Umbrella, state4, state7);
 	machine.addTransition(Umbrella, state5, state7);
@@ -234,12 +235,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Idle, state6, state0, clockAFKRestart);
 	machine.addTransition(Idle, state7, state0, clockAFKRestart);
 	machine.addTransition(Idle, state10, state0, clockAFKRestart);
-	/*
-	   std::ofstream ms;
-	   ms.open("octoDot.dot");
-	   machine.exportDot(ms, "octo");
-	   ms.close();
-	   */
+
 	m_clockCollision.restart();
 	m_sprite.setMachine(machine);
 }
@@ -261,15 +257,15 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	CharacterOcto::onCollision(GameObjectType type)
 {
-	if (type == GameObjectType::Tile){
+	if (type == GameObjectType::Tile)
 		m_clockCollision.restart();
-	}
 }
 
 void	CharacterOcto::collisionUpdate(sf::Time frameTime)
 {
 	if (m_clockCollision.getElapsedTime() > frameTime){
-		if (m_box->getGlobalBounds().top > m_prevY && m_sprite.getCurrentEvent() != Fall){
+		if (m_box->getGlobalBounds().top > m_previousTop
+				&& m_sprite.getCurrentEvent() != Fall){
 			m_afterJump = true;
 			m_afterJumpVelocity = -10.f;
 			if (!m_doubleJump && m_sprite.getCurrentEvent() != Umbrella){
@@ -280,7 +276,8 @@ void	CharacterOcto::collisionUpdate(sf::Time frameTime)
 		}
 	}
 	else{
-		if (m_sprite.getCurrentEvent() == Fall || m_sprite.getCurrentEvent() == Umbrella){
+		if (m_sprite.getCurrentEvent() == Fall
+				|| m_sprite.getCurrentEvent() == Umbrella){
 			m_sprite.restart();
 			m_clockAFK.restart();
 			if (m_keyLeft)
@@ -290,7 +287,6 @@ void	CharacterOcto::collisionUpdate(sf::Time frameTime)
 			else
 				m_sprite.setNextEvent(Idle);
 			m_onGround = true;
-			m_canDoubleJump = false;
 			m_afterJump = false;
 			m_numberOfJump = 0;
 		}
@@ -299,7 +295,8 @@ void	CharacterOcto::collisionUpdate(sf::Time frameTime)
 
 void	CharacterOcto::dance()
 {
-	if (m_sprite.getCurrentEvent() == Idle && m_clockAFK.getElapsedTime().asSeconds() > 2.4f)
+	if (m_sprite.getCurrentEvent() == Idle
+			&& m_clockAFK.getElapsedTime().asSeconds() > 2.4f)
 		m_sprite.setNextEvent(Dance);
 }
 
@@ -309,12 +306,13 @@ void	CharacterOcto::commitPhysicsToGraphics()
 
 	// TODO fix that
 	m_sprite.setPosition(bounds.left - 50, bounds.top);
-	m_prevY = bounds.top;
+	m_previousTop = bounds.top;
 }
 
 void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
+
 	if (m_keyLeft)
 	{
 		velocity.x = (-1 * m_pixelSecond) * frameTime.asSeconds();
@@ -324,7 +322,8 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 		velocity.x = m_pixelSecond * frameTime.asSeconds();
 	}
 
-	if (m_keySpace && !m_onGround && m_numberOfJump <= 2 && m_sprite.getCurrentEvent() != Fall)
+	if (m_keySpace && !m_onGround && m_numberOfJump <= 2
+			&& m_sprite.getCurrentEvent() != Fall)
 	{
 		if (m_jumpVelocity == -35.f)
 			m_numberOfJump++;
@@ -335,7 +334,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 		velocity.y = -5.f;
 	}
 	else if (m_afterJump && m_afterJumpVelocity < 0 ){
-		m_afterJumpVelocity = m_afterJumpVelocity + 0.5f;
+		m_afterJumpVelocity += 0.5f;
 		velocity.y = m_afterJumpVelocity;
 	}
 	m_box->setVelocity(velocity);
@@ -399,13 +398,11 @@ void	CharacterOcto::caseSpace()
 		if (m_onGround && m_sprite.canGetEvent(Jump)){
 			m_onGround = false;
 			m_sprite.setNextEvent(Jump);
-			m_canDoubleJump = true;
 		}
-		else if (m_canDoubleJump && m_sprite.canGetEvent(DoubleJump)){
+		else if (m_numberOfJump == 1 && m_sprite.canGetEvent(DoubleJump)){
 			m_doubleJump = true;
 			m_sprite.setNextEvent(DoubleJump);
 			m_afterJump = false;
-			m_canDoubleJump = false;
 		}
 		else if (!m_onGround){
 			m_sprite.setNextEvent(Umbrella);
@@ -438,7 +435,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	return (true);
 }
 
-sf::Vector2f	CharacterOcto::getPosition()const
+sf::Vector2f	CharacterOcto::getPosition() const
 {
 	//TODO fix center
 	return (m_box->getBaryCenter() + sf::Vector2f(0.f, -300.f));

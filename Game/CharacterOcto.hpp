@@ -47,7 +47,7 @@ public:
 
 	bool			onPressed(sf::Event::KeyEvent const& event);
 	bool			onReleased(sf::Event::KeyEvent const& event);
-	sf::Vector2f	getPosition()const;
+	sf::Vector2f	getPosition() const;
 	void			onCollision(GameObjectType type);
 private:
 	void	setupAnimation();
@@ -71,22 +71,21 @@ private:
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
+
 	float						m_jumpVelocity;
 	float						m_afterJumpVelocity;
 	sf::Clock					m_clockAFK;
 	sf::Clock					m_clockCollision;
 	float						m_pixelSecond;
 	std::size_t					m_numberOfJump;
-	float						m_prevY;
+	float						m_previousTop;
 	bool						m_originMoove;
-	bool						m_canDoubleJump;
-	bool						m_doubleJump;
 	bool						m_onGround;
+	bool						m_doubleJump;
 	bool						m_afterJump;
 	bool						m_keyLeft;
 	bool						m_keyRight;
 	bool						m_keySpace;
-	std::map<std::string, bool>		m_controls;
 };
 
 #endif
