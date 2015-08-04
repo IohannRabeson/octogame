@@ -116,9 +116,9 @@ void			DropSystem::createDrop()
 {
 	sf::Vector2f		pos;
 
-	pos.x = m_dropRect.left + m_floatDistribution(m_engine) * (m_dropRect.width * 2.f);
+	pos.x = m_dropRect.left + m_floatDistribution(m_engine) * m_dropRect.width;
 
-	pos.y = m_dropRect.top * m_floatDistribution(m_engine);
+	pos.y = m_dropRect.top + m_floatDistribution(m_engine) * m_dropRect.height;
 	emplace(m_color, pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
 }
 
