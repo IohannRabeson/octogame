@@ -127,7 +127,7 @@ void Cloud::newCloud(ABiome & biome)
 		m_values[i].origin.x = biome.randomFloat(-m_size.x / 2.f, m_size.x / 2.f);
 		m_values[i].origin.y = biome.randomFloat(-m_size.y / 2.f, m_size.y / 2.f);
 
-		m_dropUpLeft[i] = sf::Vector2f(m_values[i].origin.x - m_values[i].size.x, m_values[i].origin.y + m_values[i].size.y);
+		m_dropUpLeft[i] = sf::Vector2f(m_values[i].origin.x - m_values[i].size.x, m_values[i].origin.y);
 		if (biome.canCreateRain() || biome.canCreateSnow())
 		{
 			m_drop[i]->setDropSize(dropSize);
@@ -141,9 +141,10 @@ void Cloud::newCloud(ABiome & biome)
 void Cloud::updateThunder(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position)
 {
 	float thunder = m_cycle == nullptr ? 0.f : m_cycle->getThunderValue();
-	if (m_thunderCloud && thunder && biome.randomBool(0.3))
+	if (m_thunderCloud && thunder && biome.randomBool(0.6))
 	{
-		m_p0 = position;
+		std::size_t cloudNumber = biome.randomInt(0, m_partCount - 1);
+		m_p0 = position + m_values[cloudNumber].origin;
 		m_p1 = sf::Vector2f(position.x, position.y + m_lightningSize * thunder);
 		for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
 			m_lightning.setArc(i, m_p0, m_p1);
