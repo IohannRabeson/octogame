@@ -116,7 +116,7 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.4f), {38, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {39, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			});
-	m_deathAnimation.setLoop(octo::LoopMode::Loop);
+	m_deathAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_drinkAnimation.setFrames({
 			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
@@ -167,6 +167,11 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Left, state6, state1);
 	machine.addTransition(Left, state7, state1);
 	machine.addTransition(Left, state10, state1);
+
+	//TODO REMOVE
+	machine.addTransition(Left, state9, state1);
+	machine.addTransition(Right, state9, state2);
+	machine.addTransition(Jump, state9, state3);
 
 	machine.addTransition(Right, state0, state2);
 	machine.addTransition(Right, state1, state2);
@@ -221,6 +226,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Death, state6, state9);
 	machine.addTransition(Death, state7, state9);
 	machine.addTransition(Death, state8, state9);
+	machine.addTransition(Death, state10, state9);
 
 	machine.addTransition(Drink, state0, state10);
 	machine.addTransition(Drink, state1, state10);
@@ -270,6 +276,7 @@ void	CharacterOcto::collisionUpdate(sf::Time frameTime)
 			m_afterJumpVelocity = -10.f;
 			if (!m_doubleJump && m_sprite.getCurrentEvent() != Umbrella){
 				m_sprite.setNextEvent(Fall);
+				m_clockFall.restart();
 			}
 			else
 				m_doubleJump = false;
@@ -284,13 +291,21 @@ void	CharacterOcto::collisionUpdate(sf::Time frameTime)
 				m_sprite.setNextEvent(Left);
 			else if (m_keyRight)
 				m_sprite.setNextEvent(Right);
-			else
-				m_sprite.setNextEvent(Idle);
 			m_onGround = true;
 			m_afterJump = false;
 			m_numberOfJump = 0;
+			dieFall();
 		}
 	}
+}
+
+void	CharacterOcto::dieFall()
+{
+	if (m_clockFall.getElapsedTime().asSeconds() > 1.0f && m_sprite.getCurrentEvent() != Umbrella){
+		m_sprite.setNextEvent(Death);
+	}
+	else
+		m_sprite.setNextEvent(Idle);
 }
 
 void	CharacterOcto::dance()
@@ -400,8 +415,8 @@ void	CharacterOcto::caseSpace()
 			m_sprite.setNextEvent(Jump);
 		}
 		else if (m_numberOfJump == 1 && m_sprite.canGetEvent(DoubleJump)){
-			m_doubleJump = true;
 			m_sprite.setNextEvent(DoubleJump);
+			m_doubleJump = true;
 			m_afterJump = false;
 		}
 		else if (!m_onGround){
@@ -427,10 +442,11 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 				m_afterJumpVelocity = -20.f;
 			}
 			m_sprite.setNextEvent(Fall);
+			m_clockFall.restart();
 		default:
 			break;
 	}
-	if (m_sprite.canGetEvent(Idle) && m_onGround && !m_keyLeft && !m_keyRight)
+	if (m_sprite.canGetEvent(Idle) && m_onGround && !m_keyLeft && !m_keyRight && m_sprite.getCurrentEvent() != Death)
 		m_sprite.setNextEvent(Idle);
 	return (true);
 }
