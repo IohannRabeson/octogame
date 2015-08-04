@@ -34,6 +34,7 @@ void	ResourceLoadingScreen::start()
 {
 	// TODO: definir les packages a charger ici
 	// exemple: pushLoading("sounds.pck");
+	pushLoading("default.pck");
 	AbstractResourceLoadingState::start();
 }
 
