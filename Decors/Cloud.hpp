@@ -3,7 +3,7 @@
 
 # include "ADecor.hpp"
 # include "DecorAnimator.hpp"
-# include "RainSystem.hpp"
+# include "DropSystem.hpp"
 # include "Lightning.hpp"
 # include <SFML/Graphics/Color.hpp>
 
@@ -29,6 +29,7 @@ public:
 						ABiome& biome);
 
 	virtual bool isDisabledIfOutOfScreen()const;
+
 private:
 	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & sizeCorner,
@@ -46,6 +47,21 @@ private:
 
 	void newCloud(ABiome & biome);
 
+	void updateThunder(sf::Time frameTime,
+						ABiome & biome,
+						octo::VertexBuilder & builder,
+						sf::Vector2f const & position);
+
+	void updateRain(sf::Time frameTime,
+					ABiome & biome,
+					octo::VertexBuilder & builder,
+					sf::Vector2f const & position);
+
+	void updateSnow(sf::Time frameTime,
+					ABiome & biome,
+					octo::VertexBuilder & builder,
+					sf::Vector2f const & position);
+
 	sf::Vector2f				m_size;
 	std::size_t					m_partCount;
 	sf::Color					m_color;
@@ -54,8 +70,8 @@ private:
 	DecorAnimator				m_animator;
 	float						m_animation;
 
-	std::vector<RainSystem *>	m_rain;
-	std::vector<sf::Vector2f>	m_rainUpLeft;
+	std::vector<DropSystem *>	m_drop;
+	std::vector<sf::Vector2f>	m_dropUpLeft;
 
 	bool						m_thunderCloud;
 	Lightning					m_lightning;

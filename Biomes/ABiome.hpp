@@ -57,6 +57,7 @@ public:
 	virtual sf::Time		getRainingTime() = 0;
 	virtual bool			canCreateThunder() = 0;
 	virtual float			getLightningSize() = 0;
+	virtual bool			canCreateSnow() = 0;
 
 	virtual std::size_t		getRockCount() = 0;
 	virtual std::size_t		getTreeCount() = 0;

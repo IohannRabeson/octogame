@@ -24,7 +24,7 @@ Cloud::Cloud(SkyCycle * cycle) :
 Cloud::~Cloud(void)
 {
 	for (std::size_t i = 0; i < m_partCount; i++)
-		delete m_rain[i];
+		delete m_drop[i];
 }
 
 bool Cloud::isDisabledIfOutOfScreen()const
@@ -93,11 +93,11 @@ void Cloud::setup(ABiome& biome)
 	m_color = biome.getCloudColor();
 	m_partCount = biome.getCloudPartCount();
 	m_values.resize(m_partCount);
-	m_rain.resize(m_partCount);
-	m_rainUpLeft.resize(m_partCount);
+	m_drop.resize(m_partCount);
+	m_dropUpLeft.resize(m_partCount);
 
 	for (std::size_t i = 0; i < m_partCount; i++)
-		m_rain[i] = new RainSystem();
+		m_drop[i] = new DropSystem();
 
 	newCloud(biome);
 	setupLightning(biome);
@@ -106,6 +106,19 @@ void Cloud::setup(ABiome& biome)
 void Cloud::newCloud(ABiome & biome)
 {
 	m_size = biome.getCloudSize();
+	sf::Vector2f dropSize;
+	float dropSpeed;
+	if (biome.canCreateRain())
+	{
+		dropSize = sf::Vector2f(0.5f, 50.f);
+		dropSpeed = 1024.f;
+	}
+	else if (biome.canCreateSnow())
+	{
+		dropSize = sf::Vector2f(5.f, 5.f);
+		dropSpeed = 256.f;
+	}
+
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		m_values[i].size.x = biome.getCloudSize().x / 5.f;
@@ -114,19 +127,21 @@ void Cloud::newCloud(ABiome & biome)
 		m_values[i].origin.x = biome.randomFloat(-m_size.x / 2.f, m_size.x / 2.f);
 		m_values[i].origin.y = biome.randomFloat(-m_size.y / 2.f, m_size.y / 2.f);
 
-		m_rainUpLeft[i] = sf::Vector2f(m_values[i].origin.x - m_values[i].size.x, m_values[i].origin.y + m_values[i].size.y);
+		m_dropUpLeft[i] = sf::Vector2f(m_values[i].origin.x - m_values[i].size.x, m_values[i].origin.y + m_values[i].size.y);
+		if (biome.canCreateRain() || biome.canCreateSnow())
+		{
+			m_drop[i]->setDropSize(dropSize);
+			m_drop[i]->setDropSpeed(dropSpeed);
+		}
 	}
 
 	m_animator.setup(biome.getCloudLifeTime());
 }
 
-void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
+void Cloud::updateThunder(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position)
 {
-	sf::Vector2f const & position = getPosition();
-	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue();
 	float thunder = m_cycle == nullptr ? 0.f : m_cycle->getThunderValue();
-
-	if (m_thunderCloud && biome.canCreateThunder() && thunder && biome.randomBool(0.3))
+	if (m_thunderCloud && thunder && biome.randomBool(0.3))
 	{
 		m_p0 = position;
 		m_p1 = sf::Vector2f(position.x, position.y + m_lightningSize * thunder);
@@ -134,24 +149,51 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 			m_lightning.setArc(i, m_p0, m_p1);
 		for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
 			m_lightning.setArc(i, m_p0, m_p1);
-
 		m_lightning.update(frameTime, builder);
 	}
+}
 
-	//TODO: To improve: Replace rain rect just top of screen, dont update rain all time
-	if (biome.canCreateRain())
+void Cloud::updateRain(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position)
+{
+	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue();
+	sf::Vector2f size(0.f, biome.getMapSizeFloat().y);
+	for (std::size_t i = 0; i < m_partCount; i++)
 	{
-		sf::Vector2f size(0.f, biome.getMapSizeFloat().y);
-		for (std::size_t i = 0; i < m_partCount; i++)
-		{
-			size.x = m_values[i].size.x * 2.f;
-			sf::FloatRect rect(m_rainUpLeft[i] + position, size * m_animation);
-			m_rain[i]->setDropAngle(biome.getWind() / 4.f);
-			m_rain[i]->setRainRect(rect);
-			m_rain[i]->setDropPerSecond(weather);
-			m_rain[i]->update(frameTime, builder);
-		}
+		size.x = m_values[i].size.x * 2.f;
+		sf::FloatRect rect(m_dropUpLeft[i] + position, size * m_animation);
+		m_drop[i]->setDropAngle(biome.getWind() / 4.f + biome.randomFloat(-5.f, 5.f));
+		m_drop[i]->setDropRect(rect);
+		m_drop[i]->setDropPerSecond(weather);
+		m_drop[i]->update(frameTime, builder);
 	}
+}
+
+void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position)
+{
+	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue() / 4.f;
+	sf::Vector2f size(0.f, biome.getMapSizeFloat().y);
+	for (std::size_t i = 0; i < m_partCount; i++)
+	{
+		size.x = m_values[i].size.x * 2.f;
+		sf::FloatRect rect(m_dropUpLeft[i] + position, size * m_animation);
+		m_drop[i]->setDropAngle(biome.randomFloat(-45.f, 45.f));
+		m_drop[i]->setDropRect(rect);
+		m_drop[i]->setDropPerSecond(weather);
+		m_drop[i]->update(frameTime, builder);
+	}
+}
+
+void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
+{
+	sf::Vector2f const & position = getPosition();
+
+	if (biome.canCreateThunder())
+		updateThunder(frameTime, biome, builder, position);
+
+	if (biome.canCreateRain())
+		updateRain(frameTime, biome, builder, position);
+	else if (biome.canCreateSnow())
+		updateSnow(frameTime, biome, builder, position);
 
 	if (m_animator.update(frameTime))
 		newCloud(biome);

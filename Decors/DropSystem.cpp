@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   RainSystem.cpp                                     :+:      :+:    :+:   */
+/*   DropSystem.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,36 +10,72 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "RainSystem.hpp"
+#include "DropSystem.hpp"
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <Math.hpp>
 
 #include <iostream>
 
-RainSystem::RainSystem() :
+DropSystem::DropSystem() :
 	m_engine(std::time(0) ^ 0xB38421),
 	m_floatDistribution(0.f, 1.f),
 	m_cameraBottom(0.f),
 	m_initialRotation(0.f),
 	m_dropPerSeconds(0),
 	m_canCreateDrop(true),
-	m_margin(0.f)
+	m_color(255, 255, 255, 200)
 {
-	sf::Vector2f const	DropSize{0.6f, 25.f};
+}
 
-	reset({-DropSize, {0.f, -DropSize.y}, DropSize},
+void	DropSystem::setDropRect(sf::FloatRect const& dropRect)
+{
+	m_dropRect = dropRect;
+}
+
+void	DropSystem::setDropColor(sf::Color const & color)
+{
+	m_color = color;
+}
+
+void	DropSystem::setDropSize(sf::Vector2f const & dropSize)
+{
+	reset({{-dropSize.x, 0.f}, {0.f, -dropSize.y}, {dropSize.x, 0.f}},
 		   sf::Triangles, 1000u);
-	setDropSpeed(1024.f);
-	setDropPerSecond(20);
 }
 
-void	RainSystem::setRainRect(sf::FloatRect const& rainRect)
+void	DropSystem::setDropPerSecond(float count)
 {
-	m_rainRect = rainRect;
+	m_dropPerSeconds = count;
+	if (count == 0.f)
+		m_canCreateDrop = false;
+	else
+	{
+		m_dropInterval = sf::seconds(1.f / count);
+		m_canCreateDrop = true;
+	}
 }
 
-void	RainSystem::update(sf::Time frameTime)
+void	DropSystem::setDropSpeed(float speed)
+{
+	sf::Vector2f	normalized;
+	float			radRotation = 0.f;
+
+	m_initialVelocity.y = speed;
+	normalized = octo::normalized(m_initialVelocity);
+	radRotation = std::atan2(normalized.y, normalized.x) - (octo::PiDiv2);
+	m_initialRotation = octo::rad2Deg(radRotation);
+}
+
+void	DropSystem::setDropAngle(float angle)
+{
+	float const	angleRad = octo::deg2Rad(angle);
+
+	m_initialVelocity.x = m_initialVelocity.y * std::tan(angleRad);
+	m_initialRotation = -angle;
+}
+
+void	DropSystem::update(sf::Time frameTime)
 {
 	m_dropTimer += frameTime;
 	while (getCapacity() > 0 && m_dropTimer > m_dropInterval)
@@ -50,7 +86,7 @@ void	RainSystem::update(sf::Time frameTime)
 	ParticleSystem::update(frameTime);
 }
 
-void	RainSystem::update(sf::Time frameTime, octo::VertexBuilder & builder)
+void	DropSystem::update(sf::Time frameTime, octo::VertexBuilder & builder)
 {
 	m_dropTimer += frameTime;
 	octo::Camera const & camera = octo::Application::getCamera();
@@ -63,48 +99,12 @@ void	RainSystem::update(sf::Time frameTime, octo::VertexBuilder & builder)
 	ParticleSystem::update(frameTime, builder);
 }
 
-void	RainSystem::setDropPerSecond(float count)
-{
-	m_dropPerSeconds = count;
-	if (count == 0.f)
-		m_canCreateDrop = false;
-	else
-	{
-		m_dropInterval = sf::seconds(1.f / count);
-		m_canCreateDrop = true;
-	}
-}
-
-void	RainSystem::setDropSpeed(float speed)
-{
-	sf::Vector2f	normalized;
-	float			radRotation = 0.f;
-
-	m_initialVelocity.y = speed;
-	normalized = octo::normalized(m_initialVelocity);
-	radRotation = std::atan2(normalized.y, normalized.x) - (octo::PiDiv2);
-	m_initialRotation = octo::rad2Deg(radRotation);
-}
-
-void	RainSystem::setDropAngle(float angle)
-{
-	float const	angleRad = octo::deg2Rad(angle);
-
-	m_initialVelocity.x = m_initialVelocity.y * std::tan(angleRad);
-	m_initialRotation = -angle;
-}
-
-void	RainSystem::setMargin(float margin)
-{
-	m_margin = margin;
-}
-
-void	RainSystem::updateParticle(sf::Time frameTime, Particle& particle)
+void	DropSystem::updateParticle(sf::Time frameTime, Particle& particle)
 {
 	std::get<Component::Position>(particle) += std::get<Velocity>(particle) * frameTime.asSeconds();
 }
 
-bool	RainSystem::isDeadParticle(Particle const& particle)
+bool	DropSystem::isDeadParticle(Particle const& particle)
 {
 	static float const	BottomMargin{64.f};
 	float				bottom = m_cameraBottom + BottomMargin;
@@ -112,15 +112,13 @@ bool	RainSystem::isDeadParticle(Particle const& particle)
 	return (std::get<Component::Position>(particle).y > bottom);
 }
 
-void			RainSystem::createDrop()
+void			DropSystem::createDrop()
 {
-	static float const	TopMargin{64.f};
 	sf::Vector2f		pos;
 
-	pos.x = m_rainRect.left - m_margin +
-			m_floatDistribution(m_engine) *	(m_rainRect.width + m_margin * 2.f);
+	pos.x = m_dropRect.left + m_floatDistribution(m_engine) * (m_dropRect.width * 2.f);
 
-	pos.y = m_rainRect.top - TopMargin * m_floatDistribution(m_engine);
-	emplace(sf::Color(255, 255, 255), pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
+	pos.y = m_dropRect.top * m_floatDistribution(m_engine);
+	emplace(m_color, pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
 }
 

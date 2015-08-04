@@ -53,6 +53,7 @@ public:
 	virtual sf::Time									getRainingTime();
 	virtual bool										canCreateThunder();
 	virtual float										getLightningSize();
+	virtual bool										canCreateSnow();
 
 	virtual std::size_t									getRockCount();
 	virtual std::size_t									getTreeCount();
@@ -161,8 +162,9 @@ private:
 	Range<std::size_t>					m_cloudCount;
 	Range<std::size_t>					m_groundRockCount;
 
-	bool								m_canRain;
-	bool								m_canThunder;
+	bool								m_canCreateRain;
+	bool								m_canCreateThunder;
+	bool								m_canCreateSnow;
 	bool								m_canCreateRock;
 	bool								m_canCreateTree;
 	bool								m_canCreateLeaf;

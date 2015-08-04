@@ -7,8 +7,8 @@ SkyCycle::SkyCycle(void) :
 	m_isMidDay(false),
 	m_isMidNight(false),
 	m_weather(0.f),
-	m_rainDropPerSecond(0u),
-	m_rainAppear(true),
+	m_dropPerSecond(0u),
+	m_dropAppear(true),
 	m_thunder(0.f),
 	m_thunderState(0u)
 {
@@ -36,7 +36,7 @@ float SkyCycle::getWeatherValue(void) const
 
 std::size_t SkyCycle::getDropPerSecond(void) const
 {
-	return m_rainDropPerSecond;
+	return m_dropPerSecond;
 }
 
 float SkyCycle::getThunderValue(void) const
@@ -72,7 +72,7 @@ void SkyCycle::setup(ABiome & biome)
 	m_timerMax = biome.getDayDuration();
 	m_timerDayMax = m_timerMax / 4.f;
 	m_timerNightMax = m_timerMax / 4.f;
-	newRainCycle(biome);
+	newDropCycle(biome);
 	newThunderCycle(biome);
 
 	m_colorUpDay = biome.getSkyDayColor();
@@ -132,18 +132,18 @@ void SkyCycle::newThunderCycle(ABiome & biome)
 	m_thunderState = 0u;
 	m_thunderTimer = sf::Time::Zero;
 	m_thunderTimerMax = sf::seconds(0.5f);
-	m_thunderTimerStart = sf::seconds(biome.randomFloat(0.f, m_rainingTimerMax.asSeconds()));
+	m_thunderTimerStart = sf::seconds(biome.randomFloat(0.f, m_dropTimerMax.asSeconds()));
 }
 
-void SkyCycle::newRainCycle(ABiome & biome)
+void SkyCycle::newDropCycle(ABiome & biome)
 {
 	m_weather = 0.f;
 	m_sunnyTimer = sf::Time::Zero;
 	m_sunnyTimerMax = biome.getSunnyTime();
-	m_rainingTimer = sf::Time::Zero;
-	m_rainingTimerMax = biome.getRainingTime() / 2.f;
-	m_rainAppear = true;
-	m_rainDropPerSecond = biome.getRainDropPerSecond();
+	m_dropTimer = sf::Time::Zero;
+	m_dropTimerMax = biome.getRainingTime() / 2.f;
+	m_dropAppear = true;
+	m_dropPerSecond = biome.getRainDropPerSecond();
 }
 
 void SkyCycle::computeThunder(sf::Time frameTime, ABiome & biome)
@@ -195,30 +195,30 @@ void SkyCycle::computeThunder(sf::Time frameTime, ABiome & biome)
 	m_thunder = m_thunderTimer / m_thunderTimerMax;
 }
 
-void SkyCycle::computeRain(sf::Time frameTime, ABiome & biome)
+void SkyCycle::computeDrop(sf::Time frameTime, ABiome & biome)
 {
 	if (m_sunnyTimer <= m_sunnyTimerMax)
 		m_sunnyTimer += frameTime;
-	else if (m_rainingTimer <= m_rainingTimerMax && m_rainAppear)
+	else if (m_dropTimer <= m_dropTimerMax && m_dropAppear)
 	{
-		m_rainingTimer += frameTime;
-		m_weather = m_rainingTimer / m_rainingTimerMax * m_rainDropPerSecond;
+		m_dropTimer += frameTime;
+		m_weather = m_dropTimer / m_dropTimerMax * m_dropPerSecond;
 	}
-	else if (m_rainingTimer >= sf::Time::Zero)
+	else if (m_dropTimer >= sf::Time::Zero)
 	{
-		m_rainAppear = false;
-		m_weather = m_rainingTimer / m_rainingTimerMax * m_rainDropPerSecond;
-		m_rainingTimer -= frameTime;
+		m_dropAppear = false;
+		m_weather = m_dropTimer / m_dropTimerMax * m_dropPerSecond;
+		m_dropTimer -= frameTime;
 	}
 	else
-		newRainCycle(biome);
+		newDropCycle(biome);
 }
 
 void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 {
 	computeDayNight(frameTime);
-	if (biome.canCreateRain())
-		computeRain(frameTime, biome);
+	if (biome.canCreateRain() || biome.canCreateSnow())
+		computeDrop(frameTime, biome);
 	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
 		computeThunder(frameTime, biome);
 	float interpolateValue = getNightValue() * 2.f;
