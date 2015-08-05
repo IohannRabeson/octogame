@@ -80,14 +80,16 @@ void	ParticleDemoScreen::start()
 	octo::Console&		console = octo::Application::getConsole();
 	TestSystem::Prototype	prototype;
 
+	m_rainSystem.setDropSize(sf::Vector2f(0.5f, 50.f));
+	m_rainSystem.setDropSpeed(1024.f);
 	prototype.emplace_back(-Size, Size);
 	prototype.emplace_back(Size, -Size);
 	prototype.emplace_back(-Size, -Size);
 	m_system.reset(prototype, sf::Triangles, 2000);
 	octo::Application::getGraphicsManager().addMouseListener(&m_system);
-	console.addCommand(L"demo.setDropPerSecond", m_rainSystem, &RainSystem::setDropPerSecond);
-	console.addCommand(L"demo.setDropAngle", m_rainSystem, &RainSystem::setDropAngle);
-	console.addCommand(L"demo.setDropSpeed", m_rainSystem, &RainSystem::setDropSpeed);
+	console.addCommand(L"demo.setDropPerSecond", m_rainSystem, &DropSystem::setDropPerSecond);
+	console.addCommand(L"demo.setDropAngle", m_rainSystem, &DropSystem::setDropAngle);
+	console.addCommand(L"demo.setDropSpeed", m_rainSystem, &DropSystem::setDropSpeed);
 }
 
 void	ParticleDemoScreen::pause()
@@ -108,7 +110,7 @@ void	ParticleDemoScreen::stop()
 void	ParticleDemoScreen::update(sf::Time frameTime)
 {
 	m_system.update(frameTime);
-	m_rainSystem.setRainRect(octo::Application::getCamera().getRectangle());
+	m_rainSystem.setDropRect(octo::Application::getCamera().getRectangle());
 	m_rainSystem.update(frameTime);
 }
 
