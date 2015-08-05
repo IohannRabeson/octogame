@@ -59,7 +59,9 @@ private:
 	void	caseRight();
 	void	caseSpace();
 	void	dieFall();
+	void	endDeath();
 	void	dance();
+
 private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
@@ -77,6 +79,7 @@ private:
 	float						m_afterJumpVelocity;
 	sf::Clock					m_clockAFK;
 	sf::Clock					m_clockFall;
+	sf::Clock					m_clockDeath;
 	sf::Clock					m_clockCollision;
 	float						m_pixelSecond;
 	std::size_t					m_numberOfJump;
