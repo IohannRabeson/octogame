@@ -22,8 +22,8 @@
 # include <array>
 
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
-					  public octo::DefaultKeyboardListener,
-					  public sf::Drawable
+	public octo::DefaultKeyboardListener,
+	public sf::Drawable
 {
 	enum Events
 	{
@@ -39,7 +39,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Death,
 		Drink,
 	};
-public:
+	public:
 	CharacterOcto();
 
 	void			update(sf::Time frameTime);
@@ -49,10 +49,11 @@ public:
 	bool			onReleased(sf::Event::KeyEvent const& event);
 	sf::Vector2f	getPosition() const;
 	void			onCollision(GameObjectType type);
-private:
+	private:
 	void	setupAnimation();
 	void	setupMachine();
-	void	collisionUpdate(sf::Time frameTime);
+	void	collisionTileUpdate(sf::Time frameTime);
+	void	collisionElevatorUpdate(sf::Time frameTime);
 	void	commitControlsToPhysics(sf::Time frameTime);
 	void	commitPhysicsToGraphics();
 	void	caseLeft();
@@ -62,7 +63,7 @@ private:
 	void	endDeath();
 	void	dance();
 
-private:
+	private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
@@ -80,12 +81,14 @@ private:
 	sf::Clock					m_clockAFK;
 	sf::Clock					m_clockFall;
 	sf::Clock					m_clockDeath;
-	sf::Clock					m_clockCollision;
+	sf::Clock					m_clockCollisionTile;
+	sf::Clock					m_clockCollisionElevator;
 	float						m_pixelSecond;
 	std::size_t					m_numberOfJump;
 	float						m_previousTop;
 	bool						m_originMoove;
 	bool						m_onGround;
+	bool						m_onElevator;
 	bool						m_doubleJump;
 	bool						m_afterJump;
 	bool						m_keyLeft;

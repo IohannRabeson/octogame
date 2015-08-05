@@ -21,6 +21,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecond(320.f),
 	m_numberOfJump(0),
 	m_onGround(true),
+	m_onElevator(false),
 	m_doubleJump(false),
 	m_afterJump(false),
 	m_keyLeft(false),
@@ -82,6 +83,7 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {26, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()})
 			});
+	m_jumpAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_fallAnimation.setFrames({
 			Frame(sf::seconds(0.2f), {27, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
@@ -102,7 +104,7 @@ void	CharacterOcto::setupAnimation()
 	m_umbrellaAnimation.setFrames({
 			Frame(sf::seconds(0.4f), {28, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			});
-	m_umbrellaAnimation.setLoop(octo::LoopMode::Loop);
+	m_umbrellaAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_elevatorAnimation.setFrames({
 			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
@@ -166,7 +168,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Left, state4, state1);
 	machine.addTransition(Left, state5, state1);
 	machine.addTransition(Left, state6, state1);
-	machine.addTransition(Left, state7, state1);
 	machine.addTransition(Left, state10, state1);
 
 	machine.addTransition(Right, state0, state2);
@@ -212,8 +213,12 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Elevator, state0, state8);
 	machine.addTransition(Elevator, state1, state8);
 	machine.addTransition(Elevator, state2, state8);
+	machine.addTransition(Elevator, state3, state8);
+	machine.addTransition(Elevator, state4, state8);
 	machine.addTransition(Elevator, state5, state8);
+	machine.addTransition(Elevator, state6, state8);
 	machine.addTransition(Elevator, state7, state8);
+	machine.addTransition(Elevator, state8, state8);
 
 	machine.addTransition(Death, state0, state9, clockDeadRestart);
 	machine.addTransition(Death, state1, state9, clockDeadRestart);
@@ -242,19 +247,21 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Idle, state9, state0, clockAFKRestart);
 	machine.addTransition(Idle, state10, state0, clockAFKRestart);
 
-	m_clockCollision.restart();
+	m_clockCollisionTile.restart();
+	m_clockCollisionElevator.restart();
 	m_sprite.setMachine(machine);
 }
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	endDeath();
-	collisionUpdate(frameTime);
+	collisionElevatorUpdate(frameTime);
+	collisionTileUpdate(frameTime);
 	m_sprite.update(frameTime);
+	dance();
 	PhysicsEngine::getInstance().update(frameTime.asSeconds());
 	commitControlsToPhysics(frameTime);
 	commitPhysicsToGraphics();
-	dance();
 }
 
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
@@ -264,13 +271,21 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	CharacterOcto::onCollision(GameObjectType type)
 {
-	if (type == GameObjectType::Tile)
-		m_clockCollision.restart();
+	switch(type){
+		case GameObjectType::Tile:
+			m_clockCollisionTile.restart();
+			break;
+		case GameObjectType::Elevator:
+			m_clockCollisionElevator.restart();
+			break;
+		default:
+			break;
+	}
 }
 
-void	CharacterOcto::collisionUpdate(sf::Time frameTime)
+void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 {
-	if (m_clockCollision.getElapsedTime() > frameTime){
+	if (m_clockCollisionTile.getElapsedTime() > frameTime){
 		if (m_box->getGlobalBounds().top > m_previousTop
 				&& m_sprite.getCurrentEvent() != Fall){
 			m_afterJump = true;
@@ -301,6 +316,18 @@ void	CharacterOcto::collisionUpdate(sf::Time frameTime)
 	}
 }
 
+void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
+{
+	m_onElevator = true;
+	if (m_clockCollisionElevator.getElapsedTime() <= frameTime && !m_onElevator){
+		m_onElevator = true;
+	}
+	else{
+		if (m_onElevator)
+			m_onElevator = false;
+	}
+
+}
 void	CharacterOcto::dieFall()
 {
 	if (m_clockFall.getElapsedTime().asSeconds() > 0.8f){
