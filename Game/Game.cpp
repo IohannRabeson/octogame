@@ -16,7 +16,6 @@
 Game::Game() :
 	m_physicsEngine(PhysicsEngine::getInstance())
 {
-			m_npc.setup(sf::Vector2f(0, -200), sf::FloatRect(0, -200, 400 , 0));
 }
 
 void	Game::setup()
@@ -64,8 +63,6 @@ void	Game::update(sf::Time frameTime)
 {
 	m_skyCycle.update(frameTime, m_biomeManager.getCurrentBiome());
 	m_octo.update(frameTime);
-	m_npc.update(frameTime);
-	m_bnpc.update(frameTime);
 	followPlayer();
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
@@ -109,8 +106,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_groundManager.getDecorsBack(), states);
 	// Draw pnj
 	render.draw(m_octo, states);
-	render.draw(m_npc, states);
-	render.draw(m_bnpc, states);
 	render.draw(m_groundManager.getDecorsFront(), states);
 	render.draw(m_groundManager, states);
 	render.draw(m_groundManager.getDecorsGround(), states);

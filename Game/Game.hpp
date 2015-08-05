@@ -7,8 +7,6 @@
 # include "GroundManager.hpp"
 # include "ParallaxScrolling.hpp"
 # include "CharacterOcto.hpp"
-# include "CharacterNpc.hpp"
-# include "CharacterBasicNpc.hpp"
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
 
@@ -36,8 +34,6 @@ private:
 	GroundManager		m_groundManager;
 	ParallaxScrolling	m_parallaxScrolling;
 	CharacterOcto		m_octo;
-	CharacterNpc		m_npc;
-	CharacterBasicNpc	m_bnpc;
 
 	bool onPressed(sf::Event::KeyEvent const & event);
 	void onShapeCollision(AShape * shapeA, AShape * shapeB);

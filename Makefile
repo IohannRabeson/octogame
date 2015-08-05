@@ -41,8 +41,6 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
 				Game/AGameObject.cpp					\
 				Game/CharacterOcto.cpp					\
-				Game/CharacterBasicNpc.cpp				\
-				Game/CharacterNpc.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
