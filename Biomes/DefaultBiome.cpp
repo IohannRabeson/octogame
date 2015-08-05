@@ -34,7 +34,7 @@ DefaultBiome::DefaultBiome() :
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
-	m_canCreateRain(true),
+	m_canCreateRain(false),
 	m_canCreateThunder(true),
 	m_canCreateSnow(true),
 	m_canCreateRock(true),

@@ -20,7 +20,6 @@
 DropSystem::DropSystem() :
 	m_engine(std::time(0) ^ 0xB38421),
 	m_floatDistribution(0.f, 1.f),
-	m_cameraBottom(0.f),
 	m_initialRotation(0.f),
 	m_dropPerSeconds(0),
 	m_canCreateDrop(true),
@@ -47,7 +46,7 @@ void	DropSystem::setDropSize(sf::Vector2f const & dropSize)
 void	DropSystem::setDropPerSecond(float count)
 {
 	m_dropPerSeconds = count;
-	if (count == 0.f)
+	if (count <= 0.f)
 		m_canCreateDrop = false;
 	else
 	{
@@ -89,8 +88,6 @@ void	DropSystem::update(sf::Time frameTime)
 void	DropSystem::update(sf::Time frameTime, octo::VertexBuilder & builder)
 {
 	m_dropTimer += frameTime;
-	octo::Camera const & camera = octo::Application::getCamera();
-	m_cameraBottom = camera.getRectangle().top + camera.getSize().y;
 	while (m_canCreateDrop && getCapacity() > 0 && m_dropTimer > m_dropInterval)
 	{
 		createDrop();
@@ -106,8 +103,10 @@ void	DropSystem::updateParticle(sf::Time frameTime, Particle& particle)
 
 bool	DropSystem::isDeadParticle(Particle const& particle)
 {
-	static float const	BottomMargin{64.f};
-	float				bottom = m_cameraBottom + BottomMargin;
+	static float const		BottomMargin{64.f};
+	octo::Camera const &	camera = octo::Application::getCamera();
+	float					cameraBottom = camera.getRectangle().top + camera.getSize().y;
+	float					bottom = cameraBottom + BottomMargin;
 
 	return (std::get<Component::Position>(particle).y > bottom);
 }

@@ -165,9 +165,15 @@ void Cloud::updateRain(sf::Time frameTime, ABiome & biome, octo::VertexBuilder &
 	{
 		sf::Vector2f size(m_values[i].size.x * 2.f, m_values[i].size.y);
 		sf::FloatRect rect(m_dropUpLeft[i] + position, size * m_animation);
-		m_drop[i]->setDropAngle(biome.getWind() / 4.f);
+		float angle = biome.getWind() / 4.f + biome.randomFloat(-5.f, 5.f);
+		if (angle > 45.f)
+			angle = 45.f;
+		else if (angle < -45.f)
+			angle = -45.f;
+		m_drop[i]->setDropAngle(angle);
 		m_drop[i]->setDropRect(rect);
-		m_drop[i]->setDropPerSecond(weather);
+		// -i create 1 second of delay and avoid one line of drop a the begining
+		m_drop[i]->setDropPerSecond(weather - i);
 		m_drop[i]->update(frameTime, builder);
 	}
 }
@@ -181,7 +187,7 @@ void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder &
 		sf::FloatRect rect(m_dropUpLeft[i] + position, size * m_animation);
 		m_drop[i]->setDropAngle(biome.randomFloat(-45.f, 45.f));
 		m_drop[i]->setDropRect(rect);
-		m_drop[i]->setDropPerSecond(weather);
+		m_drop[i]->setDropPerSecond(weather - i);
 		m_drop[i]->update(frameTime, builder);
 	}
 }
@@ -190,7 +196,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 {
 	sf::Vector2f const & position = getPosition();
 
-	if (biome.canCreateThunder())
+	if (biome.canCreateThunder() && m_animator.getState() == DecorAnimator::State::Life)
 		updateThunder(frameTime, biome, builder, position);
 
 	if (biome.canCreateRain())

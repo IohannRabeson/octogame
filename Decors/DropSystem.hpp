@@ -26,8 +26,14 @@ class DropSystem : public octo::ParticleSystem<sf::Vector2f>
 public:
 	DropSystem();
 
+	/*!	Define the rectangle where the drops will appears. Drops are destroy when their y position is lower than the bottom of camera.
+	 *
+	 */
 	void			setDropRect(sf::FloatRect const& dropRect);
 
+	/*!	Define the color of drops.
+	 *
+	 */
 	void			setDropColor(sf::Color const& color);
 
 	/*!	Define the size of drops.
@@ -67,7 +73,6 @@ private:
 
 	std::mt19937				m_engine;
 	FDist						m_floatDistribution;
-	float						m_cameraBottom;
 	sf::FloatRect				m_dropRect;
 	sf::Vector2f				m_initialVelocity;
 	float						m_initialRotation;
