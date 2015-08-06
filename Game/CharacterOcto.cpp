@@ -254,12 +254,12 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
+	PhysicsEngine::getInstance().update(frameTime.asSeconds());
 	endDeath();
 	collisionElevatorUpdate(frameTime);
 	collisionTileUpdate(frameTime);
 	m_sprite.update(frameTime);
 	dance();
-	PhysicsEngine::getInstance().update(frameTime.asSeconds());
 	commitControlsToPhysics(frameTime);
 	commitPhysicsToGraphics();
 }
@@ -285,29 +285,34 @@ void	CharacterOcto::onCollision(GameObjectType type)
 
 void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 {
-	if (m_clockCollisionTile.getElapsedTime() > frameTime){
+	if (m_clockCollisionTile.getElapsedTime().asSeconds() > frameTime.asSeconds()){
+		m_onGround = false;
 		if (m_box->getGlobalBounds().top > m_previousTop
 				&& m_sprite.getCurrentEvent() != Fall){
 			m_afterJump = true;
 			m_afterJumpVelocity = -10.f;
 			if (!m_doubleJump
 					&& m_sprite.getCurrentEvent() != Umbrella && m_sprite.getCurrentEvent() != Fall){
+				if (!m_numberOfJump)
+					m_numberOfJump = 1;
 				m_sprite.setNextEvent(Fall);
 				m_clockFall.restart();
 			}
 			else
 				m_doubleJump = false;
 		}
+		else if (m_sprite.getCurrentEvent() != Fall)
+			m_clockFall.restart();
 	}
 	else{
-		if (m_sprite.getCurrentEvent() == Fall
-				|| m_sprite.getCurrentEvent() == Umbrella){
+		if (!m_onGround){
 			m_sprite.restart();
-			m_clockAFK.restart();
 			if (m_keyLeft)
 				m_sprite.setNextEvent(Left);
 			else if (m_keyRight)
 				m_sprite.setNextEvent(Right);
+			else
+				m_sprite.setNextEvent(Idle);
 			m_onGround = true;
 			m_afterJump = false;
 			m_numberOfJump = 0;
@@ -333,8 +338,6 @@ void	CharacterOcto::dieFall()
 	if (m_clockFall.getElapsedTime().asSeconds() > 0.8f){
 		m_sprite.setNextEvent(Death);
 	}
-	else
-		m_sprite.setNextEvent(Idle);
 }
 
 void	CharacterOcto::endDeath()
@@ -374,8 +377,8 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 		velocity.x = m_pixelSecond * frameTime.asSeconds();
 	}
 
-	if (m_keySpace && !m_onGround && m_numberOfJump <= 2 && m_jumpVelocity < 0.f
-			&& m_sprite.getCurrentEvent() != Fall)
+	if (m_keySpace &&  m_jumpVelocity < 0.f
+			&& (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
 	{
 		if (m_jumpVelocity == -35.f)
 			m_numberOfJump++;
@@ -452,8 +455,7 @@ void	CharacterOcto::caseSpace()
 	{
 		m_jumpVelocity = -35.f;
 		m_keySpace = true;
-		if (m_onGround && m_sprite.canGetEvent(Jump)){
-			m_onGround = false;
+		if (m_onGround){
 			m_sprite.setNextEvent(Jump);
 		}
 		else if (m_numberOfJump == 1){
@@ -492,7 +494,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	}
 	if (m_sprite.getCurrentEvent() == Death)
 		return true;
-	if (m_sprite.canGetEvent(Idle) && m_onGround && !m_keyLeft && !m_keyRight)
+	if (m_onGround && !m_keyLeft && !m_keyRight)
 		m_sprite.setNextEvent(Idle);
 	return (true);
 }
