@@ -35,6 +35,9 @@ public:
 	inline void setIsEmpty(bool isEmpty) { m_isEmpty = isEmpty; }
 	inline bool isEmpty(void) const { return m_isEmpty; }
 
+	inline void setTileType(int tileType) { m_tileType = tileType; }
+	inline int getTileType(void) const { return m_tileType; }
+
 	inline void setStartTransition(std::size_t index, sf::Vector2f && startTransition) { setStartTransition(index, startTransition.x, startTransition.y); }
 	inline void setStartTransition(std::size_t index, float x, float y) { m_startTransition[index].x = x; m_startTransition[index].y = y; }
 	inline void setStartTransitionY(std::size_t index, float y) { m_startTransition[index].y = y; }
@@ -45,6 +48,7 @@ private:
 	ETransitionType		m_transitionType;
 	sf::Color			m_startColor;
 	bool				m_isEmpty;
+	int					m_tileType;
 	//TODO: add instance enumtiletype
 
 };
