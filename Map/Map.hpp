@@ -13,6 +13,9 @@ class MapInstance;
 class Map : public IMapTransformable
 {
 public:
+	static constexpr float OffsetX = Tile::DoubleTileSize;
+	static constexpr float OffsetY = Tile::DoubleTileSize;
+
 	typedef std::vector<std::pair<int, sf::Vector2f>>			Decors;
 	typedef octo::Array2D<Tile*>								TileMap;
 
