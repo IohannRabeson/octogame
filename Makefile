@@ -65,7 +65,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/RandomGenerator.cpp				\
 				Decors/DecorAnimator.cpp				\
 				Decors/Crystal.cpp						\
-				Decors/ShineBuilder.cpp					\
+				Decors/AShineBuilder.cpp				\
 				Decors/ShineEffect.cpp					\
 				Decors/Star.cpp							\
 				Decors/Rainbow.cpp						\

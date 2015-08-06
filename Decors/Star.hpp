@@ -1,12 +1,12 @@
 #ifndef STAR_HPP
 # define STAR_HPP
 
-# include "ShineBuilder.hpp"
+# include "AShineBuilder.hpp"
 # include "DecorAnimator.hpp"
 
 class SkyCycle;
 
-class Star : public ShineBuilder
+class Star : public AShineBuilder
 {
 public:
 	Star(void);

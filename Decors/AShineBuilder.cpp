@@ -1,11 +1,11 @@
-#include "ShineBuilder.hpp"
+#include "AShineBuilder.hpp"
 #include "ABiome.hpp"
 
-ShineBuilder::ShineBuilder()
+AShineBuilder::AShineBuilder()
 {
 }
 
-void ShineBuilder::createStar(sf::Vector2f const & size, sf::Vector2f const & sizeHeart, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder, float const angle, float const cosAngle, float const sinAngle)
+void AShineBuilder::createStar(sf::Vector2f const & size, sf::Vector2f const & sizeHeart, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder, float const angle, float const cosAngle, float const sinAngle)
 {
 	sf::Vector2f left(-size.x / 2.f - sizeHeart.x, 0.f);
 	sf::Vector2f right(size.x / 2.f + sizeHeart.x, 0.f);
@@ -44,7 +44,7 @@ void ShineBuilder::createStar(sf::Vector2f const & size, sf::Vector2f const & si
 	builder.createQuad(heartLeftUp, heartRightUp, heartRightDown, heartLeftDown, color);
 }
 
-void ShineBuilder::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder, float const angle, float const cosAngle, float const sinAngle)
+void AShineBuilder::createGlow(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder, float const angle, float const cosAngle, float const sinAngle)
 {
 	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
 	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
@@ -124,7 +124,7 @@ void ShineBuilder::createGlow(sf::Vector2f const & size, sf::Vector2f const & si
 	builder.createVertex(origin, color);
 }
 
-void ShineBuilder::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
+void AShineBuilder::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
 {
 	float x = vector.x * cosAngle - vector.y * sinAngle;
 	vector.y = vector.y * cosAngle + vector.x * sinAngle;

@@ -1,10 +1,10 @@
 #ifndef SHINEEFFECT_HPP
 # define SHINEEFFECT_HPP
 
-# include "ShineBuilder.hpp"
+# include "AShineBuilder.hpp"
 # include "DecorAnimator.hpp"
 
-class ShineEffect : public ShineBuilder
+class ShineEffect : public AShineBuilder
 {
 public:
 	ShineEffect(void);
