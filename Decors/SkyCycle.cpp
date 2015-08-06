@@ -157,41 +157,51 @@ void SkyCycle::computeThunder(sf::Time frameTime, ABiome & biome)
 			m_thunderTimer = sf::Time::Zero;
 		}
 	}
-	if (m_thunderState == 1u)
+	switch (m_thunderState)
 	{
-		m_thunderTimer += frameTime;
-		if (m_thunderTimer >= m_thunderTimerMax)
+		case 1u:
 		{
-			m_thunderTimer = m_thunderTimerMax;
-			m_thunderState = 2u;
+			m_thunderTimer += frameTime;
+			if (m_thunderTimer >= m_thunderTimerMax)
+			{
+				m_thunderTimer = m_thunderTimerMax;
+				m_thunderState = 2u;
+			}
+			break;
+		}
+		case 2u:
+		{
+			m_thunderTimer -= frameTime;
+			if (m_thunderTimer < m_thunderTimerMax / 2.f)
+				m_thunderState = 3u;
+			break;
+		}
+		case 3u:
+		{
+			m_thunderTimer += frameTime;
+			if (m_thunderTimer >= m_thunderTimerMax)
+			{
+				m_thunderTimer = m_thunderTimerMax;
+				m_thunderState = 4u;
+			}
+			break;
+		}
+		case 4u:
+		{
+			m_thunderTimer -= frameTime;
+			if (m_thunderTimer <= sf::Time::Zero)
+			{
+				m_thunderTimer = sf::Time::Zero;
+				m_thunderState = 5u;
+			}
+			break;
+		}
+		default:
+		{
+			newThunderCycle(biome);
+			break;
 		}
 	}
-	else if (m_thunderState == 2u)
-	{
-		m_thunderTimer -= frameTime;
-		if (m_thunderTimer < m_thunderTimerMax / 2.f)
-			m_thunderState = 3u;
-	}
-	else if (m_thunderState == 3u)
-	{
-		m_thunderTimer += frameTime;
-		if (m_thunderTimer >= m_thunderTimerMax)
-		{
-			m_thunderTimer = m_thunderTimerMax;
-			m_thunderState = 4u;
-		}
-	}
-	else if (m_thunderState == 4u)
-	{
-		m_thunderTimer -= frameTime;
-		if (m_thunderTimer <= sf::Time::Zero)
-		{
-			m_thunderTimer = sf::Time::Zero;
-			m_thunderState = 5u;
-		}
-	}
-	else
-		newThunderCycle(biome);
 	m_thunder = m_thunderTimer / m_thunderTimerMax;
 }
 
