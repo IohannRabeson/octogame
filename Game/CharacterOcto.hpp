@@ -83,7 +83,9 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	sf::Clock					m_clockDeath;
 	sf::Clock					m_clockCollisionTile;
 	sf::Clock					m_clockCollisionElevator;
-	float						m_pixelSecond;
+	float						m_pixelSecondJump;
+	float						m_pixelSecondUmbrella;
+	float						m_pixelSecondWalk;
 	std::size_t					m_numberOfJump;
 	float						m_previousTop;
 	bool						m_originMoove;

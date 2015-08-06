@@ -18,7 +18,9 @@
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
-	m_pixelSecond(320.f),
+	m_pixelSecondJump(-1700.f),
+	m_pixelSecondUmbrella(-400.f),
+	m_pixelSecondWalk(320.f),
 	m_numberOfJump(0),
 	m_onGround(true),
 	m_onElevator(false),
@@ -35,7 +37,7 @@ CharacterOcto::CharacterOcto() :
 	setupAnimation();
 	setupMachine();
 	m_sprite.restart();
-	m_box->setSize(sf::Vector2f(177.f / 2.f,152.f));
+	m_box->setSize(sf::Vector2f(145.f / 2.f,150.f));
 	m_originMoove = false;
 	m_sprite.setNextEvent(Idle);
 }
@@ -290,13 +292,17 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 		if (m_box->getGlobalBounds().top > m_previousTop
 				&& m_sprite.getCurrentEvent() != Fall){
 			m_afterJump = true;
-			m_afterJumpVelocity = -10.f;
+			m_afterJumpVelocity = -485.f;
 			if (!m_doubleJump
 					&& m_sprite.getCurrentEvent() != Umbrella && m_sprite.getCurrentEvent() != Fall){
 				if (!m_numberOfJump)
 					m_numberOfJump = 1;
 				m_sprite.setNextEvent(Fall);
 				m_clockFall.restart();
+			}
+			else if (m_sprite.getCurrentEvent() != Fall){
+				m_clockFall.restart();
+				m_doubleJump = false;
 			}
 			else
 				m_doubleJump = false;
@@ -370,28 +376,30 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 
 	if (m_keyLeft && m_sprite.getCurrentEvent() != Death)
 	{
-		velocity.x = (-1 * m_pixelSecond) * frameTime.asSeconds();
+		velocity.x = (-1 * m_pixelSecondWalk) * frameTime.asSeconds();
 	}
 	else if (m_keyRight && m_sprite.getCurrentEvent() != Death)
 	{
-		velocity.x = m_pixelSecond * frameTime.asSeconds();
+		velocity.x = m_pixelSecondWalk * frameTime.asSeconds();
 	}
 
 	if (m_keySpace &&  m_jumpVelocity < 0.f
 			&& (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
 	{
-		if (m_jumpVelocity == -35.f)
+		if (m_jumpVelocity == m_pixelSecondJump)
 			m_numberOfJump++;
-		if (m_numberOfJump <= 2)
-			velocity.y = m_jumpVelocity++;
+		if (m_numberOfJump <= 2){
+			velocity.y = m_jumpVelocity++ * frameTime.asSeconds();
+			m_jumpVelocity += 25.f;
+		}
 	}
 	else if (m_keySpace && m_sprite.getCurrentEvent() == Umbrella){
 		m_clockFall.restart();
-		velocity.y = -5.f;
+		velocity.y = m_pixelSecondUmbrella * frameTime.asSeconds();
 	}
 	else if (m_afterJump && m_afterJumpVelocity < 0 ){
-		m_afterJumpVelocity += 0.5f;
-		velocity.y = m_afterJumpVelocity;
+		velocity.y = m_afterJumpVelocity * frameTime.asSeconds();
+		m_afterJumpVelocity += 25.f;
 	}
 	m_box->setVelocity(velocity);
 }
@@ -453,7 +461,7 @@ void	CharacterOcto::caseSpace()
 {
 	if (!m_keySpace)
 	{
-		m_jumpVelocity = -35.f;
+		m_jumpVelocity = m_pixelSecondJump;
 		m_keySpace = true;
 		if (m_onGround){
 			m_sprite.setNextEvent(Jump);
@@ -483,7 +491,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			m_keySpace = false;
 			if (!m_afterJump && !m_onGround){
 				m_afterJump = true;
-				m_afterJumpVelocity = -20.f;
+				m_afterJumpVelocity = -970.f;
 			}
 			else if (!m_onGround && m_sprite.getCurrentEvent() != Fall){
 				m_sprite.setNextEvent(Fall);
