@@ -1,7 +1,7 @@
 #ifndef BUBBLEMANAGER_HPP
 # define BUBBLEMANAGER_HPP
 
-#include "ABubble.hpp"
+#include "BubbleNPC.hpp"
 
 //TODO: Check if all are necessary
 # include <VertexBuilder.hpp>
@@ -29,7 +29,11 @@ private:
 	std::size_t						m_used;
 	octo::VertexBuilder				m_builder;
 
-	ABubble							m_bubble;
+	BubbleNPC						m_bubble1;
+	BubbleNPC						m_bubble2;
+	BubbleNPC						m_bubble3;
+
+	float m_timer;
 };
 
 #endif

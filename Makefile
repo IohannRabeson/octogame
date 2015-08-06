@@ -42,6 +42,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
 				Game/BubbleManager.cpp					\
 				Game/ABubble.cpp						\
+				Game/BubbleNPC.cpp						\
 				Game/FiniteStateMachine.cpp				\
 				Game/AGameObject.cpp					\
 				Game/ACharacter.cpp
