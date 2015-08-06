@@ -118,7 +118,7 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.4f), {36, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {37, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {38, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {39, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(1.4f), {39, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
 			});
 	m_deathAnimation.setLoop(octo::LoopMode::NoLoop);
 
@@ -257,12 +257,15 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	endDeath();
-	collisionElevatorUpdate(frameTime);
-	collisionTileUpdate(frameTime);
+	if (m_sprite.getCurrentEvent() != Death){
+		collisionElevatorUpdate(frameTime);
+		collisionTileUpdate(frameTime);
+	}
 	m_sprite.update(frameTime);
 	dance();
 	PhysicsEngine::getInstance().update(frameTime.asSeconds());
-	commitControlsToPhysics(frameTime);
+	if (m_sprite.getCurrentEvent() != Death)
+		commitControlsToPhysics(frameTime);
 	commitPhysicsToGraphics();
 }
 
@@ -300,14 +303,10 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 				m_sprite.setNextEvent(Fall);
 				m_clockFall.restart();
 			}
-			else if (m_sprite.getCurrentEvent() != Fall){
-				m_clockFall.restart();
-				m_doubleJump = false;
-			}
 			else
 				m_doubleJump = false;
 		}
-		else if (m_sprite.getCurrentEvent() != Fall)
+		if (m_sprite.getCurrentEvent() != Fall)
 			m_clockFall.restart();
 	}
 	else{
@@ -317,11 +316,9 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 				m_sprite.setNextEvent(Left);
 			else if (m_keyRight)
 				m_sprite.setNextEvent(Right);
-			else
-				m_sprite.setNextEvent(Idle);
-			m_onGround = true;
 			m_afterJump = false;
 			m_numberOfJump = 0;
+			m_onGround = true;
 			dieFall();
 		}
 	}
@@ -349,9 +346,8 @@ void	CharacterOcto::dieFall()
 void	CharacterOcto::endDeath()
 {
 	if (m_sprite.getCurrentEvent() == Death
-			&& m_clockDeath.getElapsedTime().asSeconds() > 3.0f){
+			&& m_clockDeath.getElapsedTime().asSeconds() > 3.0f)
 		m_sprite.setNextEvent(Idle);
-	}
 }
 
 void	CharacterOcto::dance()
@@ -373,12 +369,11 @@ void	CharacterOcto::commitPhysicsToGraphics()
 void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
-
-	if (m_keyLeft && m_sprite.getCurrentEvent() != Death)
+	if (m_keyLeft)
 	{
 		velocity.x = (-1 * m_pixelSecondWalk) * frameTime.asSeconds();
 	}
-	else if (m_keyRight && m_sprite.getCurrentEvent() != Death)
+	else if (m_keyRight)
 	{
 		velocity.x = m_pixelSecondWalk * frameTime.asSeconds();
 	}
