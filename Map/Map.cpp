@@ -114,11 +114,14 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			m_tiles.get(x, y)->setStartTransition(1u, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize));
 			m_tiles.get(x, y)->setStartTransition(2u, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
 			m_tiles.get(x, y)->setStartTransition(3u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
+			m_tiles.get(x, y)->setTileType(0);
 
 			if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
 			{
-				//TODO: if we are in an instance, we set the startTransition
-				m_tiles.get(x, y)->setIsEmpty(curInstance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top).isEmpty());
+				Tile const & tileInstance = curInstance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top);
+				m_tiles.get(x, y)->setIsEmpty(tileInstance.isEmpty());
+				m_tiles.get(x, y)->setTileType(tileInstance.getTileType());
+				MapInstance::setTransitionType(*m_tiles.get(x, y));
 			}
 			else if (offsetY < height)
 			{
