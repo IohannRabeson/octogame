@@ -148,6 +148,8 @@ void SkyCycle::newDropCycle(ABiome & biome)
 
 void SkyCycle::computeThunder(sf::Time frameTime, ABiome & biome)
 {
+	//TODO: Create a potion: If the thunderState == 0u is in the switch we have a big storm
+	// Find a proper way to do it when the potion system will be ther
 	if (m_thunderState == 0u)
 	{
 		m_thunderTimer += frameTime;
