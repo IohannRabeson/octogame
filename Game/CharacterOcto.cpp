@@ -18,7 +18,7 @@
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
-	m_pixelSecondJump(-1700.f),
+	m_pixelSecondJump(-1600.f),
 	m_pixelSecondUmbrella(-400.f),
 	m_pixelSecondWalk(320.f),
 	m_numberOfJump(0),
@@ -295,7 +295,7 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 		if (m_box->getGlobalBounds().top > m_previousTop
 				&& m_sprite.getCurrentEvent() != Fall){
 			m_afterJump = true;
-			m_afterJumpVelocity = -485.f;
+			m_afterJumpVelocity = -385.f;
 			if (!m_doubleJump
 					&& m_sprite.getCurrentEvent() != Umbrella && m_sprite.getCurrentEvent() != Fall){
 				if (!m_numberOfJump)
@@ -385,7 +385,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 			m_numberOfJump++;
 		if (m_numberOfJump <= 2){
 			velocity.y = m_jumpVelocity++ * frameTime.asSeconds();
-			m_jumpVelocity += 25.f;
+			m_jumpVelocity += (1200.f * frameTime.asSeconds());
 		}
 	}
 	else if (m_keySpace && m_sprite.getCurrentEvent() == Umbrella){
@@ -394,7 +394,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 	}
 	else if (m_afterJump && m_afterJumpVelocity < 0 ){
 		velocity.y = m_afterJumpVelocity * frameTime.asSeconds();
-		m_afterJumpVelocity += 25.f;
+		m_afterJumpVelocity += (1200.f * frameTime.asSeconds());
 	}
 	m_box->setVelocity(velocity);
 }
@@ -422,7 +422,7 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 
 void	CharacterOcto::caseLeft()
 {
-	if (!m_keyLeft && m_sprite.canGetEvent(Left))
+	if (!m_keyLeft)
 	{
 		m_keyLeft = true;
 		m_keyRight = false;
@@ -438,7 +438,7 @@ void	CharacterOcto::caseLeft()
 
 void	CharacterOcto::caseRight()
 {
-	if (!m_keyRight && m_sprite.canGetEvent(Right))
+	if (!m_keyRight)
 	{
 		m_keyRight = true;
 		m_keyLeft = false;
@@ -486,7 +486,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			m_keySpace = false;
 			if (!m_afterJump && !m_onGround){
 				m_afterJump = true;
-				m_afterJumpVelocity = -970.f;
+				m_afterJumpVelocity = -870.f;
 			}
 			else if (!m_onGround && m_sprite.getCurrentEvent() != Fall){
 				m_sprite.setNextEvent(Fall);
