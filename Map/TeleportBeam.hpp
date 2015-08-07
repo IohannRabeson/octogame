@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 03:53:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/07 11:42:05 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/07 12:27:08 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@ public:
 	void	draw(sf::RenderTarget& render)const;
 private:
 	std::shared_ptr<BeamParticle>	m_particles;
-	std::array<sf::Vertex, 6u>		m_vertices;
+	std::shared_ptr<BeamParticle>	m_particlesInv;
 	sf::Shader						m_shaders;
 	octo::VertexBuilder				m_builder;
 	sf::Color						m_color;
+	sf::Time						m_waveCycle;
+	sf::Time						m_waveCycleDuration;
 	float							m_thickness;
 };
 

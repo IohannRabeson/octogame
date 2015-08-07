@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/07 11:43:40 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/07 12:32:10 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ public:
 		m_distanceFactor(0.2f),
 		m_thickness(150.f),
 		m_height(300.f),
-		m_emitInterval(sf::seconds(0.1f)),
+		m_emitInterval(sf::seconds(0.025f)),
 		m_distri(0.f, 1.f)
 	{
 		octo::ResourceManager&	resources = octo::Application::getResourceManager();
@@ -45,8 +45,6 @@ public:
 			   sf::Vertex({0.f, 16.f}, {texSize.x, 0.f})},
 			   sf::Quads, 1000u);
 		setTexture(texture);
-		for (auto i = 0; i < 80; ++i)
-			createParticle();
 	}
 
 	void	setThickness(float thickness)
@@ -97,8 +95,8 @@ public:
 
 	void	createParticle()
 	{
-		emplace(sf::Color(255, 255, 255),
-				sf::Vector2f(0, m_distri(m_random) * -200.f),
+		emplace(sf::Color(100, 180, 255),
+				sf::Vector2f(0, 0),
 				sf::Vector2f(1.f, 1.f), 0.f,
 				sf::seconds(m_distri(m_random) * m_cycleTime.asSeconds()),
 				m_speedUp);
@@ -125,24 +123,27 @@ private:
 TeleportBeam::TeleportBeam() :
 	m_particles(new BeamParticle),
 	m_color(sf::Color::Blue),
+	m_waveCycleDuration(sf::seconds(0.5)),
 	m_thickness(150.f)
 {
-	m_builder = octo::VertexBuilder(m_vertices.data(), 6u);
+	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 
 	m_particles->setThickness(m_thickness);
+	m_shaders.loadFromMemory(resources.getText(TELEPORTBEAM_VERT), sf::Shader::Vertex);
+	m_shaders.setParameter("wave_amplitude", 10.f);
 }
 
 void	TeleportBeam::setPoints(sf::Vector2f const& top, sf::Vector2f const& bottom)
 {
 	m_particles->setPosition(bottom);
 	m_particles->setHeight(bottom.y - top.y);
-	m_builder.clear();
-	//m_builder.createLine(top, bottom, m_thickness, sf::Color::Red);
 }
 
 void	TeleportBeam::update(sf::Time frameTime)
 {
 	m_particles->update(frameTime);
+	m_waveCycle += frameTime;
+	m_shaders.setParameter("wave_phase", m_waveCycle.asSeconds());
 }
 
 void	TeleportBeam::draw(sf::RenderTarget& render)const
@@ -150,6 +151,5 @@ void	TeleportBeam::draw(sf::RenderTarget& render)const
 	sf::RenderStates	states;
 
 	states.shader = &m_shaders;
-	//render.draw(m_vertices.data(), m_builder.getUsed(), sf::Triangles, states);
 	m_particles->draw(render, states);
 }

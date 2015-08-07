@@ -181,6 +181,8 @@ fclean_core_library:
 
 package: $(PACKAGE_FILE)
 	
+repackage:
+	$(PACKAGER) $(PACKAGE_FILE) -h Main/ResourceDefinitions.hpp ./resources/*
 
 $(PACKAGE_FILE):
 	$(PACKAGER) $(PACKAGE_FILE) -h Main/ResourceDefinitions.hpp ./resources/*
