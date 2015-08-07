@@ -25,7 +25,7 @@ public:
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
 
 private:
-	void			followPlayer();
+
 private:
 	PhysicsEngine &		m_physicsEngine;
 	SkyCycle			m_skyCycle;
@@ -34,9 +34,12 @@ private:
 	GroundManager		m_groundManager;
 	ParallaxScrolling	m_parallaxScrolling;
 	CharacterOcto		m_octo;
+	sf::Vector2f		m_cameraPos;
+	sf::Vector2f		m_octoPos;
 
-	bool onPressed(sf::Event::KeyEvent const & event);
-	void onShapeCollision(AShape * shapeA, AShape * shapeB);
+	bool			onPressed(sf::Event::KeyEvent const & event);
+	void			onShapeCollision(AShape * shapeA, AShape * shapeB);
+	void			followPlayer();
 
 };
 
