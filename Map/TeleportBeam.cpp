@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/07 11:27:44 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/07 11:43:40 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ public:
 		m_distanceFactor(0.2f),
 		m_thickness(150.f),
 		m_height(300.f),
+		m_emitInterval(sf::seconds(0.1f)),
 		m_distri(0.f, 1.f)
 	{
 		octo::ResourceManager&	resources = octo::Application::getResourceManager();
@@ -79,6 +80,21 @@ public:
 		std::get<Component::Scale>(particle) = sf::Vector2f(scaleFactor, scaleFactor);
 	}
 
+	void	update(sf::Time frameTime)
+	{
+		bool	emitParticle = false;
+
+		m_emitTimer += frameTime;
+		while (m_emitTimer > m_emitInterval)
+		{
+			emitParticle = true;
+			m_emitTimer -= m_emitInterval;
+		}
+		if (emitParticle)
+			createParticle();
+		ParticleSystem::update(frameTime);
+	}
+
 	void	createParticle()
 	{
 		emplace(sf::Color(255, 255, 255),
@@ -100,6 +116,8 @@ private:
 	float			m_distanceFactor;
 	float			m_thickness;
 	float			m_height;
+	sf::Time		m_emitTimer;
+	sf::Time		m_emitInterval;
 	std::mt19937	m_random;
 	Distri			m_distri;
 };
