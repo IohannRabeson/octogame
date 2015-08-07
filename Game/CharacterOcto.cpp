@@ -28,7 +28,8 @@ CharacterOcto::CharacterOcto() :
 	m_afterJump(false),
 	m_keyLeft(false),
 	m_keyRight(false),
-	m_keySpace(false)
+	m_keySpace(false),
+	m_keyUp(false)
 {
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
 
@@ -388,7 +389,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 			m_jumpVelocity += (1200.f * frameTime.asSeconds());
 		}
 	}
-	else if (m_keySpace && m_sprite.getCurrentEvent() == Umbrella){
+	else if (m_keyUp && m_sprite.getCurrentEvent() == Umbrella){
 		m_clockFall.restart();
 		velocity.y = m_pixelSecondUmbrella * frameTime.asSeconds();
 	}
@@ -413,6 +414,9 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Space:
 			caseSpace();
+			break;
+		case sf::Keyboard::Up:
+			caseUp();
 			break;
 		default:
 			break;
@@ -466,9 +470,15 @@ void	CharacterOcto::caseSpace()
 			m_doubleJump = true;
 			m_afterJump = false;
 		}
-		else if (!m_onGround){
-			m_sprite.setNextEvent(Umbrella);
-		}
+	}
+}
+
+void CharacterOcto::caseUp()
+{
+	if (!m_keyUp && !m_onGround)
+	{
+		m_keyUp = true;
+m_sprite.setNextEvent(Umbrella);
 	}
 }
 
@@ -492,12 +502,15 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 				m_sprite.setNextEvent(Fall);
 				m_clockFall.restart();
 			}
+			break;
+		case sf::Keyboard::Up:
+			m_keyUp = false;
 		default:
 			break;
 	}
 	if (m_sprite.getCurrentEvent() == Death)
 		return true;
-	if (m_onGround && !m_keyLeft && !m_keyRight)
+	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp)
 		m_sprite.setNextEvent(Idle);
 	return (true);
 }

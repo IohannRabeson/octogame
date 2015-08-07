@@ -59,6 +59,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	caseLeft();
 	void	caseRight();
 	void	caseSpace();
+	void	caseUp();
 	void	dieFall();
 	void	endDeath();
 	void	dance();
@@ -96,6 +97,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool						m_keyLeft;
 	bool						m_keyRight;
 	bool						m_keySpace;
+	bool						m_keyUp;
 };
 
 #endif
