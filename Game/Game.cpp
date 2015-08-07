@@ -117,5 +117,11 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 void	Game::followPlayer()
 {
 	octo::Camera&	camera = octo::Application::getCamera();
-	camera.setCenter(m_octo.getPosition());
+	m_cameraPos = camera.getCenter();
+	m_octoPos = m_octo.getPosition();
+	sf::Vector2f cameraPos;
+	cameraPos.x = octo::linearInterpolation(m_octoPos.x, m_cameraPos.x, 0.98);
+	cameraPos.y = octo::linearInterpolation(m_octoPos.y, m_cameraPos.y, 0.9);
+
+	camera.setCenter(cameraPos);
 }
