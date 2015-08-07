@@ -1,5 +1,5 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Decors Physics Game Biomes
+DIRS = Main Firefly Screens Map Decors Physics Game Biomes Package
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -92,7 +92,11 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/AShape.cpp
 
 # package files
-PACKAGE_FILE = default.pck
+DEFAULT_PCK		= ToClassify
+SOUNDS_PCK		= Sounds
+IMAGES_PCK		= Images
+COLORS_PCK		= Colors
+LOADING_PCK		= Loading
 
 # compiler
 COMPILER = $(CXX)
@@ -177,11 +181,18 @@ clean_core_library:
 fclean_core_library:
 	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
 
-package: $(PACKAGE_FILE)
-	
+package: $(DEFAULT_PCK) $(SOUNDS_PCK) $(IMAGES_PCK) $(COLORS_PCK) $(LOADING_PCK) $(INSTANCES_PCK)
 
-$(PACKAGE_FILE):
-	$(PACKAGER) $(PACKAGE_FILE) -h Main/ResourceDefinitions.hpp ./resources/*
+$(DEFAULT_PCK):
+	$(PACKAGER) Package/$(DEFAULT_PCK).pck -h Package/$(DEFAULT_PCK)Definitions.hpp ./resources/$(DEFAULT_PCK)/*
+$(SOUNDS_PCK):
+	$(PACKAGER) Package/$(SOUNDS_PCK).pck -h Package/$(SOUNDS_PCK)Definitions.hpp ./resources/$(SOUNDS_PCK)/*
+$(IMAGES_PCK):
+	$(PACKAGER) Package/$(IMAGES_PCK).pck -h Package/$(IMAGES_PCK)Definitions.hpp ./resources/$(IMAGES_PCK)/*
+$(COLORS_PCK):
+	$(PACKAGER) Package/$(COLORS_PCK).pck -h Package/$(COLORS_PCK)Definitions.hpp ./resources/$(COLORS_PCK)/*
+$(LOADING_PCK):
+	$(PACKAGER) Package/$(LOADING_PCK).pck -h Package/$(LOADING_PCK)Definitions.hpp ./resources/$(LOADING_PCK)/*
 
 complete:
 	make complete -C octolib/ MODE=$(MODE)

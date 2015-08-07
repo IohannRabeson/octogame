@@ -35,6 +35,8 @@ private:
 private:
 	sf::Texture			m_startTexture;
 	sf::Sprite			m_startSprite;
+	sf::Font			m_font;
+	std::string			m_string;
 	sf::Text			m_message;
 	sf::RectangleShape	m_borders;
 	sf::RectangleShape	m_bar;
