@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/19 06:00:19 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 06:26:03 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/07 10:49:48 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,9 @@ void	ParticleDemoScreen::start()
 	octo::Console&		console = octo::Application::getConsole();
 	TestSystem::Prototype	prototype;
 
-	prototype.emplace_back(-Size, Size);
-	prototype.emplace_back(Size, -Size);
-	prototype.emplace_back(-Size, -Size);
+	prototype.emplace_back(sf::Vertex({-Size, Size}));
+	prototype.emplace_back(sf::Vertex({Size, -Size}));
+	prototype.emplace_back(sf::Vertex({-Size, -Size}));
 	m_system.reset(prototype, sf::Triangles, 2000);
 	octo::Application::getGraphicsManager().addMouseListener(&m_system);
 	console.addCommand(L"demo.setDropPerSecond", m_rainSystem, &RainSystem::setDropPerSecond);

@@ -35,7 +35,8 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/ParticleDemoScreen.cpp			\
 				Screens/ResourceLoadingScreen.cpp		\
-				Screens/FsmDemoScreen.cpp
+				Screens/FsmDemoScreen.cpp				\
+				Screens/TeleportBeamDemo.cpp
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
@@ -53,7 +54,8 @@ SRC_MAP =		Map/Map.cpp								\
 				Map/ParallaxScrolling.cpp				\
 				Map/GenerativeLayer.cpp					\
 				Map/Tile.cpp							\
-				Map/MapInstance.cpp
+				Map/MapInstance.cpp						\
+				Map/TeleportBeam.cpp
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/DefaultBiome.cpp
