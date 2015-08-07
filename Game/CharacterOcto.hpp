@@ -77,8 +77,6 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
 
-	float						m_jumpVelocity;
-	float						m_afterJumpVelocity;
 	sf::Clock					m_clockAFK;
 	sf::Clock					m_clockFall;
 	sf::Clock					m_clockDeath;
@@ -87,12 +85,13 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	float						m_pixelSecondJump;
 	float						m_pixelSecondUmbrella;
 	float						m_pixelSecondWalk;
-	std::size_t					m_numberOfJump;
+	float						m_jumpVelocity;
+	float						m_afterJumpVelocity;
 	float						m_previousTop;
+	std::size_t					m_numberOfJump;
 	bool						m_originMoove;
 	bool						m_onGround;
 	bool						m_onElevator;
-	bool						m_doubleJump;
 	bool						m_afterJump;
 	bool						m_keyLeft;
 	bool						m_keyRight;
