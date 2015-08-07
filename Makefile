@@ -36,13 +36,14 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/ParticleDemoScreen.cpp			\
 				Screens/ResourceLoadingScreen.cpp		\
 				Screens/FsmDemoScreen.cpp				\
-				Screens/TeleportBeamDemo.cpp
+				Screens/ElevatorStreamDemo.cpp
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
 				Game/FiniteStateMachine.cpp				\
-				Game/AGameObject.cpp			\
-				Game/ACharacter.cpp
+				Game/AGameObject.cpp					\
+				Game/ACharacter.cpp						\
+				Game/ElevatorStream.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -54,8 +55,7 @@ SRC_MAP =		Map/Map.cpp								\
 				Map/ParallaxScrolling.cpp				\
 				Map/GenerativeLayer.cpp					\
 				Map/Tile.cpp							\
-				Map/MapInstance.cpp						\
-				Map/TeleportBeam.cpp
+				Map/MapInstance.cpp
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/DefaultBiome.cpp

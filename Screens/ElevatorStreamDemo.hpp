@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   TeleportBeamDemo.hpp                               :+:      :+:    :+:   */
+/*   ElevatorStreamDemo.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:24:26 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/01 04:27:15 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/07 16:38:42 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TELEPORTBEAMDEMO_HPP
-# define TELEPORTBEAMDEMO_HPP
+#ifndef ELEVATORSTREAMDEMO_HPP
+# define ELEVATORSTREAMDEMO_HPP
 # include <AbstractState.hpp>
 
-# include "TeleportBeam.hpp"
+# include "ElevatorStream.hpp"
 
-class TeleportBeamDemo : public octo::AbstractState
+class ElevatorStreamDemo : public octo::AbstractState
 {
 public:
 	virtual void	start();
@@ -27,7 +27,7 @@ public:
 	virtual void	update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render)const;
 private:
-	TeleportBeam	m_teleportBeam;
+	ElevatorStream	m_teleportBeam;
 };
 
 #endif

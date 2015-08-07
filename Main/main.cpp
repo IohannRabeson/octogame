@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/07 09:32:26 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/07 16:39:39 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 #include "ParticleDemoScreen.hpp"
 #include "FsmDemoScreen.hpp"
 #include "AGameObject.hpp"
-#include "TeleportBeamDemo.hpp"
+#include "ElevatorStreamDemo.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
@@ -49,7 +49,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<LightningDemoScreen>("lightning");
 	manager.registerState<DecorManagerDemoScreen>("decor");
 	manager.registerState<FsmDemoScreen>("tamagotchi");
-	manager.registerState<TeleportBeamDemo>("teleport_beam");
+	manager.registerState<ElevatorStreamDemo>("elevator");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 

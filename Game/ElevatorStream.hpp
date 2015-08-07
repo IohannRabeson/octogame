@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   TeleportBeam.hpp                                   :+:      :+:    :+:   */
+/*   ElevatorStream.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 03:53:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/07 12:27:08 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/07 16:29:47 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@
 # include <cmath>
 # include <iostream>
 
-class TeleportBeam
+class ElevatorStream
 {
 	class BeamParticle;
 public:
-	TeleportBeam();
+	ElevatorStream();
 
 	void	setPoints(sf::Vector2f const& top, sf::Vector2f const& bottom);
 	void	update(sf::Time frameTime);
