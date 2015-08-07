@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:41:14 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 04:32:55 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/07 11:31:08 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ RainSystem::RainSystem() :
 {
 	sf::Vector2f const	DropSize{0.6f, 25.f};
 
-	reset({-DropSize, {0.f, -DropSize.y}, DropSize},
+	reset({sf::Vertex({-DropSize}),
+		   sf::Vertex({0.f, -DropSize.y}),
+		   sf::Vertex({DropSize})},
 		   sf::Triangles, 1000u);
 	setDropSpeed(1024.f);
 	setDropPerSecond(20);
@@ -52,12 +54,18 @@ void	RainSystem::update(sf::Time frameTime)
 
 void	RainSystem::update(sf::Time frameTime, octo::VertexBuilder & builder)
 {
+	bool	dropped = false;
+
 	m_dropTimer += frameTime;
 	octo::Camera const & camera = octo::Application::getCamera();
 	m_cameraBottom = camera.getRectangle().top + camera.getSize().y;
 	while (m_canCreateDrop && getCapacity() > 0 && m_dropTimer > m_dropInterval)
 	{
-		createDrop();
+		if (dropped == false)
+		{
+			createDrop();
+			dropped = true;
+		}
 		m_dropTimer -= m_dropInterval;
 	}
 	ParticleSystem::update(frameTime, builder);
