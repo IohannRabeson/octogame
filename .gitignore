@@ -32,7 +32,6 @@ doc/generated/
 
 # Generated files in examples and tests
 **/*.pck
-**/ResourceDefinitions.hpp
 
 # Vim files
 *.swp
