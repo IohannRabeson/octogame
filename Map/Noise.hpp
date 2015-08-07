@@ -2,6 +2,7 @@
 # define NOISE_H
 
 # include <vector>
+# include <functional>
 
 /*!
  * \ingroup Math
@@ -12,6 +13,8 @@
 class Noise
 {
 public:
+	typedef std::function<float(float x, float y)>	DistanceFunc;
+
 	Noise(void);
 	Noise(std::size_t seed);
 	~Noise(void) = default;
@@ -31,13 +34,13 @@ public:
 	 * \param octaves Define the number of time we compute the noise
 	 * \param persistence Define the influence of each consecutiv octave
 	 */
-	float perlinNoise(float x, float y, std::size_t octaves, float persistence);
+	float perlin(float x, float y, std::size_t octaves, float persistence);
 
 	/*! The real perlin noise
 	 * \param octaves Define the number of time we compute the noise
 	 * \param persistence Define the influence of each consecutiv octave
 	 */
-	float perlinNoise(float x, float y, float z, std::size_t octaves, float persistence);
+	float perlin(float x, float y, float z, std::size_t octaves, float persistence);
 
 	/*! The Fractional Brownian Motion
 	 * The images gain more detail with each octave
@@ -49,9 +52,40 @@ public:
 	 */
 	float fBm(float x, float y, float z, std::size_t octaves, float lacunarity, float gain);
 
+	/*! The voronoi noise also called CellNoise or WorleyNoise
+	 * The returned value is not always between 0 - 1
+	 * \param F The n closest point, F < maxClosest */
+	float voronoi3(float x, float y, float z, std::size_t F);
+
+	/*! The voronoi noise also called CellNoise or WorleyNoise
+	 * The returned value is not always between 0 - 1
+	 */
+	float voronoi3(float x, float y, float z);
+
+	/*! The voronoi noise also called CellNoise or WorleyNoise
+	 * The returned value is not always between 0 - 1
+	 * \param F The n closest point, F < maxClosest */
+	float voronoi2(float x, float y, std::size_t F);
+
+	/*! The voronoi noise also called CellNoise or WorleyNoise
+	 * The returned value is not always between 0 - 1
+	 */
+	float voronoi2(float x, float y);
+
+	/*! The number of points used to find the closest distance
+	 * The higher the value is, the greater the performances will decrease and details will increase */
+	inline void setVoronoiMaxPoint(std::size_t maxPoint) { m_maxPoint = maxPoint; }
+
+	/*! Get the number of points used to find the closest distance */
+	inline std::size_t getVoronoiMaxPoint(void) const { return m_maxPoint; }
+
 private:
-	std::vector<int>	m_permutation;
-	std::size_t			m_seed;
+	static constexpr std::size_t	MaxClosest = 100u;
+
+	std::vector<int>				m_permutation;
+	std::vector<float>				m_closest;
+	std::size_t						m_seed;
+	std::size_t						m_maxPoint;
 
 	float fade(float t);
 	float lerp(float t, float a, float b);
