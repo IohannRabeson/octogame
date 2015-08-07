@@ -27,6 +27,7 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 			for (std::size_t y = 0; y < m_tiles[i].rows(); y++)
 			{
 				m_tiles[i](x, y) = new Tile();
+				m_tiles[i](x, y)->setTileType(map[y * m_tiles[i].columns() + x]);
 				if (map[y * m_tiles[i].columns() + x] == 0)
 					m_tiles[i](x, y)->setIsEmpty(true);
 				else
@@ -77,13 +78,18 @@ void MapInstance::previousStep(void)
 
 void MapInstance::setTransitionType(Tile & tile)
 {
-	(void)tile;
-	/*
-	switch (tile.tileType)
+	switch (tile.getTileType())
 	{
-		case 0:
+		case 2:
+			tile.setStartTransition(3u, tile.getStartTransition(3u) + sf::Vector2f(0.f, -Tile::TileSize));
 			break;
+		case 3:
+			tile.setStartTransition(2u, tile.getStartTransition(2u) + sf::Vector2f(0.f, -Tile::TileSize));
+			break;
+		case 4:
+		case 5:
+		case 1:
 		default:
 			break;
-	}*/
+	}
 }
