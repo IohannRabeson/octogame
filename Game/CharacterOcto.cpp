@@ -186,6 +186,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Jump, state1, state3);
 	machine.addTransition(Jump, state2, state3);
 	machine.addTransition(Jump, state6, state3);
+	machine.addTransition(Jump, state7, state3);
 	machine.addTransition(Jump, state8, state3);
 
 	machine.addTransition(DoubleJump, state1, state4);
@@ -331,7 +332,7 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 
 void	CharacterOcto::dieFall()
 {
-	if (m_clockFall.getElapsedTime().asSeconds() > 1.f){
+	if (m_clockFall.getElapsedTime().asSeconds() > 1.5f){
 		m_sprite.setNextEvent(Death);
 	}
 }
