@@ -91,12 +91,18 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp
 
+
 # package files
-DEFAULT_PCK		= ToClassify
-SOUNDS_PCK		= Sounds
-IMAGES_PCK		= Images
-COLORS_PCK		= Colors
-LOADING_PCK		= Loading
+LOADING_PCK_FILE = loading.pck
+DEFAULT_PCK_FILE = default.pck
+TARGET_HPP_FILE  = Main/ResourceDefinitions.hpp
+LOADING_HPP_FILE = $(BUILD_DIR)/LoadingDefinitions.hpp
+DEFAULT_HPP_FILE = $(BUILD_DIR)/DefaultDefinitions.hpp
+# resources directory
+SRC_DIR = ./resources/
+# resources sub directory
+LOADING_SRC = $(SRC_DIR)Loading/*
+DEFAULT_SRC = $(SRC_DIR)Sounds/* $(SRC_DIR)Images/* $(SRC_DIR)Colors/* $(SRC_DIR)ToClassify/*
 
 # compiler
 COMPILER = $(CXX)
@@ -152,6 +158,8 @@ endif
 fclean: clean
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(TARGET)$(COLOR_OFF)"
 	@rm -f $(COMPLETE_TARGET)
+	@rm -f $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE)
+	@rm -f $(TARGET_HPP_FILE)
 	
 clean:
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(addprefix "\\n\\t", $(notdir $(OBJS)))$(COLOR_OFF)"
@@ -159,7 +167,6 @@ clean:
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
 	@rm -fr $(BUILD_DIR)
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(PACKAGE_FILE)$(COLOR_OFF)"
-	@rm -f $(PACKAGE_FILE)
 
 $(BUILD_DIR):
 	@echo " - $(COLOR_ACTION)creating directory$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
@@ -181,18 +188,19 @@ clean_core_library:
 fclean_core_library:
 	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
 
-package: Package/$(DEFAULT_PCK).pck Package/$(SOUNDS_PCK).pck Package/$(IMAGES_PCK).pck Package/$(COLORS_PCK).pck Package/$(LOADING_PCK).pck
 
-$(DEFAULT_PCK):
-	$(PACKAGER) Package/$(DEFAULT_PCK).pck -h Package/$(DEFAULT_PCK)Definitions.hpp ./resources/$(DEFAULT_PCK)/*
-$(SOUNDS_PCK):
-	$(PACKAGER) Package/$(SOUNDS_PCK).pck -h Package/$(SOUNDS_PCK)Definitions.hpp ./resources/$(SOUNDS_PCK)/*
-$(IMAGES_PCK):
-	$(PACKAGER) Package/$(IMAGES_PCK).pck -h Package/$(IMAGES_PCK)Definitions.hpp ./resources/$(IMAGES_PCK)/*
-$(COLORS_PCK):
-	$(PACKAGER) Package/$(COLORS_PCK).pck -h Package/$(COLORS_PCK)Definitions.hpp ./resources/$(COLORS_PCK)/*
-$(LOADING_PCK):
-	$(PACKAGER) Package/$(LOADING_PCK).pck -h Package/$(LOADING_PCK)Definitions.hpp ./resources/$(LOADING_PCK)/*
+package: $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE) $(TARGET_HPP_FILE)
+
+$(LOADING_PCK_FILE):
+	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(LOADING_PCK_FILE)"
+	$(PACKAGER) $(LOADING_PCK_FILE) -h $(LOADING_HPP_FILE) $(LOADING_SRC)
+$(DEFAULT_PCK_FILE):
+	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(DEFAULT_PCK_FILE)"
+	$(PACKAGER) $(DEFAULT_PCK_FILE) -h $(DEFAULT_HPP_FILE) $(DEFAULT_SRC)
+$(TARGET_HPP_FILE):
+	@echo " - $(COLOR_ACTION)creating file $(COLOR_OFF): $(TARGET_HPP_FILE)"
+	@cat $(DEFAULT_HPP_FILE) >> $(TARGET_HPP_FILE)
+	@cat $(LOADING_HPP_FILE) >> $(TARGET_HPP_FILE)
 
 complete:
 	make complete -C octolib/ MODE=$(MODE)

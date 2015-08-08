@@ -16,6 +16,7 @@
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
+#include <Options.hpp>
 
 #include "ResourceDefinitions.hpp"
 
@@ -40,10 +41,7 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 
 void	ResourceLoadingScreen::start()
 {
-	pushLoading("Package/ToClassify.pck");
-	pushLoading("Package/Sounds.pck");
-	pushLoading("Package/Images.pck");
-	pushLoading("Package/Color.pck");
+	pushLoading("Default.pck");
 	AbstractResourceLoadingState::start();
 }
 
@@ -80,11 +78,7 @@ void	ResourceLoadingScreen::draw(sf::RenderTarget& render)const
 	render.draw(m_bar);
 }
 
-#include <unistd.h>
-#include <Options.hpp>
 void	ResourceLoadingScreen::onNoMoreLoading()
 {
-	// TODO: definir l'etat suivant
 	octo::Application::getStateManager().change(octo::Application::getOptions().getValue<std::string>("second_state", "game"));
-	sleep(3);
 }
