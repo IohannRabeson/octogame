@@ -181,7 +181,7 @@ clean_core_library:
 fclean_core_library:
 	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
 
-package: $(DEFAULT_PCK) $(SOUNDS_PCK) $(IMAGES_PCK) $(COLORS_PCK) $(LOADING_PCK) $(INSTANCES_PCK)
+package: Package/$(DEFAULT_PCK).pck Package/$(SOUNDS_PCK).pck Package/$(IMAGES_PCK).pck Package/$(COLORS_PCK).pck Package/$(LOADING_PCK).pck
 
 $(DEFAULT_PCK):
 	$(PACKAGER) Package/$(DEFAULT_PCK).pck -h Package/$(DEFAULT_PCK)Definitions.hpp ./resources/$(DEFAULT_PCK)/*

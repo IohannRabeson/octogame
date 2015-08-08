@@ -81,9 +81,10 @@ void	ResourceLoadingScreen::draw(sf::RenderTarget& render)const
 }
 
 #include <unistd.h>
+#include <Options.hpp>
 void	ResourceLoadingScreen::onNoMoreLoading()
 {
 	// TODO: definir l'etat suivant
-	octo::Application::getStateManager().change("game");
+	octo::Application::getStateManager().change(octo::Application::getOptions().getValue<std::string>("second_state", "game"));
 	sleep(3);
 }
