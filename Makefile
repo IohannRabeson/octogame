@@ -1,5 +1,5 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Decors Physics Game Biomes
+DIRS = Main Firefly Screens Map Decors Physics Game Biomes Package
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -91,8 +91,18 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp
 
+
 # package files
-PACKAGE_FILE = default.pck
+LOADING_PCK_FILE = loading.pck
+DEFAULT_PCK_FILE = default.pck
+TARGET_HPP_FILE  = Main/ResourceDefinitions.hpp
+LOADING_HPP_FILE = $(BUILD_DIR)/LoadingDefinitions.hpp
+DEFAULT_HPP_FILE = $(BUILD_DIR)/DefaultDefinitions.hpp
+# resources directory
+SRC_DIR = ./resources/
+# resources sub directory
+LOADING_SRC = $(SRC_DIR)Loading/*
+DEFAULT_SRC = $(SRC_DIR)Sound/* $(SRC_DIR)Image/* $(SRC_DIR)Color/* $(SRC_DIR)Map/* $(SRC_DIR)SpriteSheet/* $(SRC_DIR)Other/*
 
 # compiler
 COMPILER = $(CXX)
@@ -148,6 +158,8 @@ endif
 fclean: clean
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(TARGET)$(COLOR_OFF)"
 	@rm -f $(COMPLETE_TARGET)
+	@rm -f $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE)
+	@rm -f $(TARGET_HPP_FILE)
 	
 clean:
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(addprefix "\\n\\t", $(notdir $(OBJS)))$(COLOR_OFF)"
@@ -155,7 +167,6 @@ clean:
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
 	@rm -fr $(BUILD_DIR)
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(PACKAGE_FILE)$(COLOR_OFF)"
-	@rm -f $(PACKAGE_FILE)
 
 $(BUILD_DIR):
 	@echo " - $(COLOR_ACTION)creating directory$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
@@ -177,11 +188,19 @@ clean_core_library:
 fclean_core_library:
 	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
 
-package: $(PACKAGE_FILE)
-	
 
-$(PACKAGE_FILE):
-	$(PACKAGER) $(PACKAGE_FILE) -h Main/ResourceDefinitions.hpp ./resources/*
+package: $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE) $(TARGET_HPP_FILE)
+
+$(LOADING_PCK_FILE):
+	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(LOADING_PCK_FILE)"
+	$(PACKAGER) $(LOADING_PCK_FILE) -h $(LOADING_HPP_FILE) $(LOADING_SRC)
+$(DEFAULT_PCK_FILE):
+	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(DEFAULT_PCK_FILE)"
+	$(PACKAGER) $(DEFAULT_PCK_FILE) -h $(DEFAULT_HPP_FILE) $(DEFAULT_SRC)
+$(TARGET_HPP_FILE):
+	@echo " - $(COLOR_ACTION)creating file $(COLOR_OFF): $(TARGET_HPP_FILE)"
+	@cat $(DEFAULT_HPP_FILE) >> $(TARGET_HPP_FILE)
+	@cat $(LOADING_HPP_FILE) >> $(TARGET_HPP_FILE)
 
 complete:
 	make complete -C octolib/ MODE=$(MODE)

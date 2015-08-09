@@ -31,6 +31,7 @@
 #include "DecorManagerDemoScreen.hpp"
 #include "ParticleDemoScreen.hpp"
 #include "FsmDemoScreen.hpp"
+#include "ResourceLoadingScreen.hpp"
 #include "AGameObject.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
@@ -48,6 +49,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<ParticleDemoScreen>("particles");
 	manager.registerState<DecorManagerDemoScreen>("decor");
 	manager.registerState<FsmDemoScreen>("tamagotchi");
+	manager.registerState<ResourceLoadingScreen>("loading");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
