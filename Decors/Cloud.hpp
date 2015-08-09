@@ -70,7 +70,8 @@ private:
 	DecorAnimator				m_animator;
 	float						m_animation;
 
-	std::vector<DropSystem *>	m_drop;
+	std::vector<DropSystem *>	m_rain;
+	std::vector<DropSystem *>	m_snow;
 	std::vector<sf::Vector2f>	m_dropUpLeft;
 
 	bool						m_thunderCloud;
