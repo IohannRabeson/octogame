@@ -102,7 +102,7 @@ DEFAULT_HPP_FILE = $(BUILD_DIR)/DefaultDefinitions.hpp
 SRC_DIR = ./resources/
 # resources sub directory
 LOADING_SRC = $(SRC_DIR)Loading/*
-DEFAULT_SRC = $(SRC_DIR)Sounds/* $(SRC_DIR)Images/* $(SRC_DIR)Colors/* $(SRC_DIR)ToClassify/*
+DEFAULT_SRC = $(SRC_DIR)Sound/* $(SRC_DIR)Image/* $(SRC_DIR)Color/* $(SRC_DIR)Map/* $(SRC_DIR)SpriteSheet/* $(SRC_DIR)Other/*
 
 # compiler
 COMPILER = $(CXX)
