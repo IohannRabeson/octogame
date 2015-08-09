@@ -186,13 +186,13 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Jump, state1, state3);
 	machine.addTransition(Jump, state2, state3);
 	machine.addTransition(Jump, state6, state3);
-	machine.addTransition(Jump, state7, state3);
 	machine.addTransition(Jump, state8, state3);
 
 	machine.addTransition(DoubleJump, state1, state4);
 	machine.addTransition(DoubleJump, state2, state4);
 	machine.addTransition(DoubleJump, state3, state4);
 	machine.addTransition(DoubleJump, state5, state4);
+	machine.addTransition(DoubleJump, state7, state4);
 
 	machine.addTransition(Fall, state0, state5);
 	machine.addTransition(Fall, state1, state5);
@@ -295,8 +295,7 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 				&& m_sprite.getCurrentEvent() != Fall){
 			m_afterJump = true;
 			m_afterJumpVelocity = -485.f;
-			if (m_numberOfJump != 2
-					&& m_sprite.getCurrentEvent() != Umbrella && m_sprite.getCurrentEvent() != Fall){
+			if (m_sprite.getCurrentEvent() != Umbrella){
 				m_sprite.setNextEvent(Fall);
 				m_clockFall.restart();
 			}
@@ -305,6 +304,7 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 			m_clockFall.restart();
 	}
 	else{
+		// TODO fix jump first time
 		if (!m_onGround){
 			m_sprite.restart();
 			if (m_keyLeft)
@@ -332,7 +332,7 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 
 void	CharacterOcto::dieFall()
 {
-	if (m_clockFall.getElapsedTime().asSeconds() > 1.5f){
+	if (m_clockFall.getElapsedTime().asSeconds() > 1.2f){
 		m_sprite.setNextEvent(Death);
 	}
 }
@@ -457,6 +457,8 @@ void	CharacterOcto::caseSpace()
 		}
 		else if (m_numberOfJump == 1){
 			m_sprite.setNextEvent(DoubleJump);
+			// TODO doubleJump after Fall
+			m_previousTop = m_box->getGlobalBounds().top;
 			m_afterJump = false;
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 2;
