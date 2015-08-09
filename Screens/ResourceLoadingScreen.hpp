@@ -21,6 +21,7 @@
 
 # include <SFML/Graphics/Text.hpp>
 # include <SFML/Graphics/RectangleShape.hpp>
+# include <SFML/Graphics/Sprite.hpp>
 
 class ResourceLoadingScreen : public octo::AbstractResourceLoadingState
 {
@@ -32,6 +33,10 @@ private:
 	virtual void	draw(sf::RenderTarget& render)const;
 	virtual void	onNoMoreLoading();	
 private:
+	sf::Texture			m_startTexture;
+	sf::Sprite			m_startSprite;
+	sf::Font			m_font;
+	std::string			m_string;
 	sf::Text			m_message;
 	sf::RectangleShape	m_borders;
 	sf::RectangleShape	m_bar;
