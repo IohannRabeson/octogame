@@ -27,7 +27,7 @@ void SunLight::createBicolorQuad(sf::Vector2f const & upLeft, sf::Vector2f const
 	builder.createVertex(downRight, colorDown);
 }
 
-void SunLight::createSunLight(sf::Vector2f const & cameraSize, sf::Vector2f const & origin, octo::VertexBuilder& builder)
+void SunLight::createSunLight(sf::Vector2f const & cameraSize, sf::Vector2f const & origin, sf::Color const & colorDay, sf::Color const & colorSunset, sf::Color const & colorNight, octo::VertexBuilder& builder)
 {
 	sf::Vector2f nightUpLeft(-cameraSize.x, -cameraSize.y * 5);
 	sf::Vector2f nightUpRight(cameraSize.x, -cameraSize.y * 5);
@@ -55,10 +55,10 @@ void SunLight::createSunLight(sf::Vector2f const & cameraSize, sf::Vector2f cons
 	dayDownLeft += origin;
 	dayDownRight += origin;
 
-	createBicolorQuad(dayUpLeft, dayUpRight, dayDownRight, dayDownLeft, m_colorDay, m_colorDay, builder);
-	createBicolorQuad(sunsetLeft, sunsetRight, dayUpRight, dayUpLeft, m_colorSunset, m_colorDay, builder);
-	createBicolorQuad(nightDownLeft, nightDownRight, sunsetRight, sunsetLeft, m_colorNight, m_colorSunset, builder);
-	createBicolorQuad(nightUpLeft, nightUpRight, nightDownRight, nightDownLeft, m_colorNight, m_colorNight, builder);
+	createBicolorQuad(dayUpLeft, dayUpRight, dayDownRight, dayDownLeft, colorDay, colorDay, builder);
+	createBicolorQuad(sunsetLeft, sunsetRight, dayUpRight, dayUpLeft, colorSunset, colorDay, builder);
+	createBicolorQuad(nightDownLeft, nightDownRight, sunsetRight, sunsetLeft, colorNight, colorSunset, builder);
+	createBicolorQuad(nightUpLeft, nightUpRight, nightDownRight, nightDownLeft, colorNight, colorNight, builder);
 }
 
 void SunLight::setup(ABiome& biome)
@@ -94,7 +94,7 @@ void SunLight::computeDayColorValue(sf::Time frameTime, ABiome &)
 void SunLight::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	sf::Vector2f position = getPosition();
-	if (biome.canRain())
+	if (biome.canCreateRain())
 		computeDayColorValue(frameTime, biome);
 	float dayValue = m_cycle->getDayValue();
 	float nightValue = m_cycle->getNightValue();
@@ -102,5 +102,15 @@ void SunLight::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& 
 		position -= octo::linearInterpolation(m_sunsetPos, m_dayPos, dayValue);
 	else if (m_cycle->isNight())
 		position -= octo::linearInterpolation(m_sunsetPos, m_nightPos, nightValue);
-	createSunLight(m_cameraSize, position, builder);
+	
+	float thunderValue = m_cycle->getThunderValue();
+	if (thunderValue == 0.f)
+		createSunLight(m_cameraSize, position, m_colorDay, m_colorSunset, m_colorNight, builder);
+	else
+	{
+		sf::Color colorDay = octo::linearInterpolation(m_colorDay, sf::Color::Transparent, thunderValue);
+		sf::Color colorSunset = octo::linearInterpolation(m_colorSunset, sf::Color::Transparent, thunderValue);
+		sf::Color colorNight = octo::linearInterpolation(m_colorNight, sf::Color::Transparent, thunderValue);
+		createSunLight(m_cameraSize, position, colorDay, colorSunset, colorNight, builder);
+	}
 }

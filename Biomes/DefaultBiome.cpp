@@ -15,12 +15,13 @@ DefaultBiome::DefaultBiome() :
 	m_dayDuration(sf::seconds(40.f)),
 	m_skyDayColor(188, 200, 206),
 	m_skyNightColor(8, 20, 26),
-	m_nightLightColor(0, 197, 255, 100),
-	m_SunsetLightColor(238, 173, 181, 100),
+	m_nightLightColor(0, 197, 255, 130),
+	m_SunsetLightColor(238, 173, 181, 130),
 	m_wind(100.f),
-	m_rainDropPerSecond(20u, 60u),
-	m_sunnyTime(sf::seconds(20.f), sf::seconds(40.f)),
+	m_rainDropPerSecond(10u, 30u),
+	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
+	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(10u, 20u),
 	m_treeCount(5u, 10u),
@@ -33,7 +34,9 @@ DefaultBiome::DefaultBiome() :
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
-	m_canRain(true),
+	m_canCreateRain(true),
+	m_canCreateThunder(true),
+	m_canCreateSnow(true),
 	m_canCreateRock(true),
 	m_canCreateTree(true),
 	m_canCreateLeaf(true),
@@ -216,9 +219,9 @@ void			DefaultBiome::setWind(float wind)
 	m_wind = wind;
 }
 
-bool			DefaultBiome::canRain()
+bool			DefaultBiome::canCreateRain()
 {
-	return (m_canRain);
+	return (m_canCreateRain);
 }
 
 std::size_t		DefaultBiome::getRainDropPerSecond()
@@ -238,6 +241,21 @@ sf::Time		DefaultBiome::getSunnyTime()
 sf::Time		DefaultBiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
+}
+
+bool			DefaultBiome::canCreateThunder()
+{
+	return (m_canCreateThunder);
+}
+
+float			DefaultBiome::getLightningSize()
+{
+	return (randomRangeFloat(m_lightningSize));
+}
+
+bool			DefaultBiome::canCreateSnow()
+{
+	return (m_canCreateSnow);
 }
 
 std::size_t		DefaultBiome::getRockCount()
