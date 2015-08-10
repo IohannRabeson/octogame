@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/20 02:41:14 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/24 04:32:55 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/10 18:50:31 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ RainSystem::RainSystem() :
 {
 	sf::Vector2f const	DropSize{0.6f, 25.f};
 
-	reset({-DropSize, {0.f, -DropSize.y}, DropSize},
-		   sf::Triangles, 1000u);
+	reset({sf::Vertex({0.f, -DropSize.y}),
+				sf::Vertex({DropSize})},
+				sf::Triangles, 1000u);
 	setDropSpeed(1024.f);
 	setDropPerSecond(20);
 }
