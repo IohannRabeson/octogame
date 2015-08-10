@@ -15,16 +15,15 @@
 #include <Camera.hpp>
 #include <Math.hpp>
 
-#include <iostream>
-
 DropSystem::DropSystem() :
 	m_engine(std::time(0) ^ 0xB38421),
 	m_floatDistribution(0.f, 1.f),
-	m_initialRotation(0.f),
+	m_maxDropCount(80u),
+	m_color(255, 255, 255, 200),
 	m_dropPerSeconds(0),
-	m_canCreateDrop(true),
-	m_color(255, 255, 255, 200)
+	m_canCreateDrop(true)
 {
+	m_particles.resize(m_maxDropCount);
 }
 
 void	DropSystem::setDropRect(sf::FloatRect const& dropRect)
@@ -32,15 +31,13 @@ void	DropSystem::setDropRect(sf::FloatRect const& dropRect)
 	m_dropRect = dropRect;
 }
 
-void	DropSystem::setDropColor(sf::Color const & color)
+void	DropSystem::setDrop(sf::Vector2f const & dropSize, float speed, sf::Color const & color)
 {
+	for (auto &particle : m_particles)
+		particle.isAlive = false;
+	m_size = dropSize;
+	m_speed = speed;
 	m_color = color;
-}
-
-void	DropSystem::setDropSize(sf::Vector2f const & dropSize)
-{
-	reset({{-dropSize.x, 0.f}, {0.f, -dropSize.y}, {dropSize.x, 0.f}},
-		   sf::Triangles, 1000u);
 }
 
 void	DropSystem::setDropPerSecond(float count)
@@ -55,68 +52,62 @@ void	DropSystem::setDropPerSecond(float count)
 	}
 }
 
-void	DropSystem::setDropSpeed(float speed)
-{
-	sf::Vector2f	normalized;
-	float			radRotation = 0.f;
-
-	m_initialVelocity.y = speed;
-	normalized = octo::normalized(m_initialVelocity);
-	radRotation = std::atan2(normalized.y, normalized.x) - (octo::PiDiv2);
-	m_initialRotation = octo::rad2Deg(radRotation);
-}
-
-void	DropSystem::setDropAngle(float angle)
-{
-	float const	angleRad = octo::deg2Rad(angle);
-
-	m_initialVelocity.x = m_initialVelocity.y * std::tan(angleRad);
-	m_initialRotation = -angle;
-}
-
-void	DropSystem::update(sf::Time frameTime)
-{
-	m_dropTimer += frameTime;
-	while (getCapacity() > 0 && m_dropTimer > m_dropInterval)
-	{
-		createDrop();
-		m_dropTimer -= m_dropInterval;
-	}
-	ParticleSystem::update(frameTime);
-}
-
-void	DropSystem::update(sf::Time frameTime, octo::VertexBuilder & builder)
-{
-	m_dropTimer += frameTime;
-	while (m_canCreateDrop && getCapacity() > 0 && m_dropTimer > m_dropInterval)
-	{
-		createDrop();
-		m_dropTimer -= m_dropInterval;
-	}
-	ParticleSystem::update(frameTime, builder);
-}
-
-void	DropSystem::updateParticle(sf::Time frameTime, Particle& particle)
-{
-	std::get<Component::Position>(particle) += std::get<Velocity>(particle) * frameTime.asSeconds();
-}
-
-bool	DropSystem::isDeadParticle(Particle const& particle)
+void	DropSystem::update(sf::Time frameTime, float angle, octo::VertexBuilder & builder)
 {
 	static float const		BottomMargin{64.f};
 	octo::Camera const &	camera = octo::Application::getCamera();
 	float					cameraBottom = camera.getRectangle().top + camera.getSize().y;
 	float					bottom = cameraBottom + BottomMargin;
 
-	return (std::get<Component::Position>(particle).y > bottom);
+	m_dropTimer += frameTime;
+	float velocityY = m_speed * frameTime.asSeconds();
+	for (auto &particle : m_particles)
+	{
+		if (particle.isAlive)
+		{
+			particle.position.x += particle.velocity.x * frameTime.asSeconds();
+			particle.position.y += velocityY;
+			builder.createTriangle(particle.p1 + particle.position, particle.p2 + particle.position, particle.p3 + particle.position, m_color);
+		}
+		else if (particle.isAlive == false && m_canCreateDrop && m_dropTimer > m_dropInterval)
+		{
+			createDrop(particle, angle);
+			m_dropTimer -= m_dropInterval;
+		}
+
+		if (isDeadParticle(particle, bottom))
+			particle.isAlive = false;
+	}
 }
 
-void			DropSystem::createDrop()
+bool	DropSystem::isDeadParticle(Particle const& particle, float bottom)
 {
-	sf::Vector2f		pos;
+	return (particle.position.y > bottom);
+}
 
-	pos.x = m_dropRect.left + m_floatDistribution(m_engine) * m_dropRect.width;
-	pos.y = m_dropRect.top + m_floatDistribution(m_engine) * m_dropRect.height;
-	emplace(m_color, pos, sf::Vector2f(1.f, 1.f), m_initialRotation, m_initialVelocity);
+void			DropSystem::createDrop(Particle & particle, float angle)
+{
+	particle.p1 = sf::Vector2f(-m_size.x, 0.f);
+	particle.p2 = sf::Vector2f(m_size.x, 0.f);
+	particle.p1 = sf::Vector2f(0.f, -m_size.y);
+	float radAngle = angle * octo::Deg2Rad;
+	float cosAngle = std::cos(-radAngle);
+	float sinAngle = std::sin(-radAngle);
+	rotateVec(particle.p1, cosAngle, sinAngle);
+	rotateVec(particle.p2, cosAngle, sinAngle);
+	rotateVec(particle.p3, cosAngle, sinAngle);
+
+	particle.position.x = m_dropRect.left + m_floatDistribution(m_engine) * m_dropRect.width;
+	particle.position.y = m_dropRect.top + m_floatDistribution(m_engine) * m_dropRect.height;
+	particle.velocity.y = m_speed;
+	particle.velocity.x = particle.velocity.y * std::tan(radAngle);
+	particle.isAlive = true;
+}
+
+void DropSystem::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
+{
+	float x = vector.x * cosAngle - vector.y * sinAngle;
+	vector.y = vector.y * cosAngle + vector.x * sinAngle;
+	vector.x = x;
 }
 

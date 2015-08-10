@@ -107,11 +107,9 @@ void Cloud::setup(ABiome& biome)
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		m_rain[i] = new DropSystem();
-		m_rain[i]->setDropSize(sf::Vector2f(0.5f, 50.f));
-		m_rain[i]->setDropSpeed(1024.f);
+		m_rain[i]->setDrop(sf::Vector2f(0.8f, 50.f), 1024.f, m_color);
 		m_snow[i] = new DropSystem();
-		m_snow[i]->setDropSize(sf::Vector2f(5.f, 5.f));
-		m_snow[i]->setDropSpeed(256.f);
+		m_snow[i]->setDrop(sf::Vector2f(5.f, 5.f), 256.f, m_color);
 	}
 
 	newCloud(biome);
@@ -164,11 +162,10 @@ void Cloud::updateRain(sf::Time frameTime, ABiome & biome, octo::VertexBuilder &
 			angle = 45.f;
 		else if (angle < -45.f)
 			angle = -45.f;
-		m_rain[i]->setDropAngle(angle);
 		m_rain[i]->setDropRect(rect);
 		// -i create 1 second of delay and avoid one line of drop a the begining
 		m_rain[i]->setDropPerSecond(weather - i);
-		m_rain[i]->update(frameTime, builder);
+		m_rain[i]->update(frameTime, angle, builder);
 	}
 }
 
@@ -179,10 +176,9 @@ void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder &
 	{
 		sf::Vector2f size(m_values[i].size.x * 2.f, m_values[i].size.y);
 		sf::FloatRect rect(m_dropUpLeft[i] + position, size * m_animation);
-		m_snow[i]->setDropAngle(biome.randomFloat(-45.f, 45.f));
 		m_snow[i]->setDropRect(rect);
 		m_snow[i]->setDropPerSecond(weather - i);
-		m_snow[i]->update(frameTime, builder);
+		m_snow[i]->update(frameTime, biome.randomFloat(-45.f, 45.f), builder);
 	}
 }
 

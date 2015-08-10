@@ -146,7 +146,7 @@ private:
 	sf::Color							m_SunsetLightColor;
 	float								m_wind;
 	Range<std::size_t>					m_rainDropPerSecond;
-	static constexpr std::size_t		m_rainDropPerSecondMax = 100u;
+	static constexpr std::size_t		m_rainDropPerSecondMax = 127u;
 	Range<sf::Time>						m_sunnyTime;
 	Range<sf::Time>						m_rainingTime;
 	Range<float>						m_lightningSize;
