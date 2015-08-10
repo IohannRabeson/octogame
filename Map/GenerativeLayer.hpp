@@ -23,10 +23,6 @@ public:
 	void setup(void);
 	void setColor(sf::Color const & color);
 
-	//TODO: use bool to manage this
-	/*! Set the transition duration
-	 * If transitionDuration < 0.f, the map won't move
-	 */
 	inline void setTransitionDuration(float transitionDuration) { m_transitionTimerDuration = transitionDuration; }
 	void setBackgroundSurfaceGenerator(BackgroundSurfaceGenerator mapSurface);
 	inline void setMapSize(sf::Vector2u const & mapSize) { m_mapSize = mapSize; }
@@ -44,7 +40,6 @@ private:
 	std::vector<sf::Vector2f>			m_positionsPrev;
 	sf::Vector2u						m_mapSize;
 	sf::Color							m_color;
-	sf::Color							m_opacityColor;
 	Noise								m_noise;
 	float								m_tileSize;
 	float								m_depth;

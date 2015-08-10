@@ -1,4 +1,5 @@
 #include "GenerativeLayer.hpp"
+#include "SkyCycle.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -16,7 +17,6 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	m_positionsPrev(0u),
 	m_mapSize(mapSize),
 	m_color(color),
-	m_opacityColor(sf::Color::Black),
 	m_tileSize(tileSize),
 	m_depth(0.f),
 	m_transitionTimer(0.f),
@@ -31,7 +31,7 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	// Initialize mapSurface pointer
 	setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 	{
-		return noise.perlinNoise(x, y, 3, 2.f, 5.0f);
+		return noise.perlin(x, y, 3, 2.f, 5.0f);
 	});
 }
 
@@ -58,7 +58,6 @@ void GenerativeLayer::setup(void)
 
 void GenerativeLayer::computeVertices(std::vector<sf::Vector2f> & positions)
 {
-	//TODO: limit
 	m_highestY = std::numeric_limits<float>::max();
 	// Compute value to manage start/end transition
 	float start = getHeightValue((getMapSize().x - 5) * 4);
@@ -155,23 +154,19 @@ void GenerativeLayer::update(float deltatime, ABiome &)
 		m_vertices[(i * 4u) + 3u].position.x = i * m_tileSize + rect.left - offsetX - m_tileSize * 2;
 	}
 
-	//TODO
-/*	sf::Color m_colorUpDay = sf::Color(255, 255, 255);//m_biomeManager.getCurrentBiome().getSkyDayColor();
-	sf::Color m_colorUpNight = sf::Color(50, 50, 50);//m_biomeManager.getCurrentBiome().getSkyNightColor();
-	float interpolateValue = m_gameClock.getNightValue() * 2.f >= 1.f ? 1.f : m_gameClock.getNightValue() * 2.f;
-	m_opacityColor = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
-*/
+	sf::Color opacityColor = getOwner().getSkyCycle().getSkyColorDown();
+
 	float max = m_vertices[3u].position.y - m_highestY;
 	float t;
 	for (std::size_t i = 0u; i < m_widthScreen; i++)
 	{
 		t = octo::linearInterpolation(m_topOpacity, m_botOpacity, (m_vertices[(i * 4u) + 0u].position.y - m_highestY) / max);
-		m_vertices[(i * 4u) + 0u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, t));
+		m_vertices[(i * 4u) + 0u].color = std::move(octo::linearInterpolation(m_color, opacityColor, t));
 
 		t = octo::linearInterpolation(m_topOpacity, m_botOpacity, (m_vertices[(i * 4u) + 1u].position.y - m_highestY) / max);
-		m_vertices[(i * 4u) + 1u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, t));
+		m_vertices[(i * 4u) + 1u].color = std::move(octo::linearInterpolation(m_color, opacityColor, t));
 
-		m_vertices[(i * 4u) + 2u].color = std::move(octo::linearInterpolation(m_color, m_opacityColor, m_botOpacity));
+		m_vertices[(i * 4u) + 2u].color = std::move(octo::linearInterpolation(m_color, opacityColor, m_botOpacity));
 		m_vertices[(i * 4u) + 3u].color = m_vertices[(i * 4u) + 2u].color;
 
 		m_vertices[(i * 4u) + 0u].position.y += offsetY;
