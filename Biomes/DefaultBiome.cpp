@@ -15,12 +15,13 @@ DefaultBiome::DefaultBiome() :
 	m_dayDuration(sf::seconds(40.f)),
 	m_skyDayColor(188, 200, 206),
 	m_skyNightColor(8, 20, 26),
-	m_nightLightColor(0, 197, 255, 100),
-	m_SunsetLightColor(238, 173, 181, 100),
+	m_nightLightColor(0, 197, 255, 130),
+	m_SunsetLightColor(238, 173, 181, 130),
 	m_wind(100.f),
-	m_rainDropPerSecond(20u, 60u),
-	m_sunnyTime(sf::seconds(20.f), sf::seconds(40.f)),
+	m_rainDropPerSecond(10u, 30u),
+	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
+	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(10u, 20u),
 	m_treeCount(5u, 10u),
@@ -33,7 +34,9 @@ DefaultBiome::DefaultBiome() :
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
-	m_canRain(true),
+	m_canCreateRain(true),
+	m_canCreateThunder(true),
+	m_canCreateSnow(true),
 	m_canCreateRock(true),
 	m_canCreateTree(true),
 	m_canCreateLeaf(true),
@@ -60,7 +63,7 @@ DefaultBiome::DefaultBiome() :
 	m_leafColor(143, 208, 202),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
-	m_mushroomColor(107, 172, 166),
+	m_mushroomColor(77, 142, 126),
 	m_mushroomLifeTime(sf::seconds(20), sf::seconds(60)),
 
 	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 100.f)),
@@ -143,13 +146,13 @@ std::vector<ParallaxScrolling::ALayer *> DefaultBiome::getLayers()
 	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlinNoise(x * 10.f, y, 2, 2.f);
+			return noise.perlin(x * 10.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
 	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlinNoise(x, y, 3, 2.f);
+			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
 	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
@@ -216,9 +219,9 @@ void			DefaultBiome::setWind(float wind)
 	m_wind = wind;
 }
 
-bool			DefaultBiome::canRain()
+bool			DefaultBiome::canCreateRain()
 {
-	return (m_canRain);
+	return (m_canCreateRain);
 }
 
 std::size_t		DefaultBiome::getRainDropPerSecond()
@@ -238,6 +241,21 @@ sf::Time		DefaultBiome::getSunnyTime()
 sf::Time		DefaultBiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
+}
+
+bool			DefaultBiome::canCreateThunder()
+{
+	return (m_canCreateThunder);
+}
+
+float			DefaultBiome::getLightningSize()
+{
+	return (randomRangeFloat(m_lightningSize));
+}
+
+bool			DefaultBiome::canCreateSnow()
+{
+	return (m_canCreateSnow);
 }
 
 std::size_t		DefaultBiome::getRockCount()
