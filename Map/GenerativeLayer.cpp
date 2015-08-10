@@ -31,7 +31,7 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	// Initialize mapSurface pointer
 	setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 	{
-		return noise.perlinNoise(x, y, 3, 2.f, 5.0f);
+		return noise.perlin(x, y, 3, 2.f, 5.0f);
 	});
 }
 

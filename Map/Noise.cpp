@@ -2,9 +2,10 @@
 #include <cmath>
 #include <random>
 #include <algorithm>
+#include <limits>
 
 Noise::Noise(void) :
-	m_seed(0u)
+	Noise(0u)
 {
 	m_permutation = {
 	151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,
@@ -34,9 +35,16 @@ Noise::Noise(void) :
 }
 
 Noise::Noise(std::size_t seed) :
-	m_seed(seed)
+	m_distanceFun3(nullptr),
+	m_distanceFun2(nullptr),
+	m_seed(seed),
+	m_maxPoint(1u),
+	m_distanceType(DistanceType::Euclidean),
+	m_minkowskiCoeff(4.f)
 {
 	setSeed(seed);
+	setDistanceType(m_distanceType);
+	m_closest.resize(MaxClosest, std::numeric_limits<float>::max());
 }
 
 void Noise::setSeed(std::size_t seed)
@@ -94,9 +102,9 @@ float Noise::noise(float x, float y, float z)
 	z -= static_cast<float>(Z);
 
 	// Get the 8 last bit
-	X &= 255;
-	Y &= 255;
-	Z &= 255;
+	X &= 0xFF;
+	Y &= 0xFF;
+	Z &= 0xFF;
 
 	// Compute fade curves for each of x, y, z
 	float u = fade(x);
@@ -129,7 +137,7 @@ float Noise::noise(float x, float y, float z)
 	return xyz;
 }
 
-float Noise::perlinNoise(float x, float y, std::size_t octaves, float persistence)
+float Noise::perlin(float x, float y, std::size_t octaves, float persistence)
 {
 	float amplitude = 1.f;
 	float frequency = 1.f;
@@ -145,7 +153,7 @@ float Noise::perlinNoise(float x, float y, std::size_t octaves, float persistenc
 	return (sum / max);
 }
 
-float Noise::perlinNoise(float x, float y, float z, std::size_t octaves, float persistence)
+float Noise::perlin(float x, float y, float z, std::size_t octaves, float persistence)
 {
 	float amplitude = 1.f;
 	float frequency = 1.f;
@@ -192,6 +200,224 @@ float Noise::fBm(float x, float y, float z, std::size_t octaves, float lacunarit
 		frequency *= lacunarity;
 	}
 	return sum;
+}
+
+float Noise::voronoi2(float x, float y, std::size_t F)
+{
+	std::size_t maxClosest = F + 1u;
+	std::size_t points;
+	float tmpDist;
+	float tmpX;
+	float tmpY;
+	int lastRand;
+
+	// Get the integer part
+	int X = x < 0 ? static_cast<int>(x) - 1 : static_cast<int>(x);
+	int Y = y < 0 ? static_cast<int>(y) - 1 : static_cast<int>(y);
+
+	// Get the fractionnal part
+	x -= static_cast<float>(X);
+	y -= static_cast<float>(Y);
+
+	// Get the 8 last bit
+	X &= 0xFF;
+	Y &= 0xFF;
+
+	// Init the closest distances
+	for (std::size_t i = 0u; i < maxClosest; i++)
+		m_closest[i] = std::numeric_limits<float>::max();
+
+	for (int i = -1; i < 2; i++)
+	{
+		for (int j = -1; j < 2; j++)
+		{
+			lastRand = m_permutation[X + i + 1] + Y + j + 1;
+			points = lastRand % m_maxPoint + 1;
+			for (std::size_t k = 0u; k < points; k++)
+			{
+				lastRand = m_permutation[lastRand];
+				tmpX = static_cast<float>(lastRand) / 256.f;
+				lastRand = m_permutation[lastRand];
+				tmpY = static_cast<float>(lastRand) / 256.f;
+				tmpDist = m_distanceFun2(tmpX + i, tmpY + j, x, y);
+
+				// Sorted insert, to get the closest point at index 0
+				for (std::size_t l = 0u; l < maxClosest; l++)
+				{
+					if (tmpDist < m_closest[l])
+					{
+						for (std::size_t m = l; m < maxClosest - 1u; m++)
+							m_closest[m + 1u] = m_closest[m];
+						m_closest[l] = tmpDist;
+						break;
+					}
+				}
+			}
+		}
+	}
+	return m_closest[F];
+}
+
+float Noise::voronoi2(float x, float y)
+{
+	std::size_t points;
+	float closest = std::numeric_limits<float>::max();
+	float tmpDist;
+	float tmpX;
+	float tmpY;
+	int lastRand;
+
+	// Get the integer part
+	int X = x < 0 ? static_cast<int>(x) - 1 : static_cast<int>(x);
+	int Y = y < 0 ? static_cast<int>(y) - 1 : static_cast<int>(y);
+
+	// Get the fractionnal part
+	x -= static_cast<float>(X);
+	y -= static_cast<float>(Y);
+
+	// Get the 8 last bit
+	X &= 0xFF;
+	Y &= 0xFF;
+
+	for (int i = -1; i < 2; i++)
+	{
+		for (int j = -1; j < 2; j++)
+		{
+			lastRand = m_permutation[X + i + 1] + Y + j + 1;
+			points = lastRand % m_maxPoint + 1;
+			for (std::size_t k = 0u; k < points; k++)
+			{
+				lastRand = m_permutation[lastRand];
+				tmpX = static_cast<float>(lastRand) / 256.f;
+				lastRand = m_permutation[lastRand];
+				tmpY = static_cast<float>(lastRand) / 256.f;
+				tmpDist = m_distanceFun2(tmpX + i, tmpY + j, x, y);
+
+				// Get the closest point
+				if (tmpDist < closest)
+					closest = tmpDist;
+			}
+		}
+	}
+	return closest;
+}
+
+float Noise::voronoi3(float x, float y, float z, std::size_t F)
+{
+	std::size_t maxClosest = F + 1u;
+	std::size_t points;
+	float tmpDist;
+	float tmpX;
+	float tmpY;
+	float tmpZ;
+	int lastRand;
+
+	// Get the integer part
+	int X = x < 0 ? static_cast<int>(x) - 1 : static_cast<int>(x);
+	int Y = y < 0 ? static_cast<int>(y) - 1 : static_cast<int>(y);
+	int Z = z < 0 ? static_cast<int>(z) - 1 : static_cast<int>(z);
+
+	// Get the fractionnal part
+	x -= static_cast<float>(X);
+	y -= static_cast<float>(Y);
+	z -= static_cast<float>(Z);
+
+	// Get the 8 last bit
+	X &= 0xFF;
+	Y &= 0xFF;
+	Z &= 0xFF;
+
+	// Init the closest distances
+	for (std::size_t i = 0u; i < maxClosest; i++)
+		m_closest[i] = std::numeric_limits<float>::max();
+
+	for (int i = -1; i < 2; i++)
+	{
+		for (int j = -1; j < 2; j++)
+		{
+			for (int d = -1; d < 2; d++)
+			{
+				lastRand = m_permutation[m_permutation[X + i + 1] + Y + j + 1] + Z + d + 1;
+				points = lastRand % m_maxPoint + 1;
+				for (std::size_t k = 0u; k < points; k++)
+				{
+					lastRand = m_permutation[lastRand];
+					tmpX = static_cast<float>(lastRand) / 256.f;
+					lastRand = m_permutation[lastRand];
+					tmpY = static_cast<float>(lastRand) / 256.f;
+					lastRand = m_permutation[lastRand];
+					tmpZ = static_cast<float>(lastRand) / 256.f;
+					tmpDist = m_distanceFun3(tmpX + i, tmpY + j, tmpZ + d, x, y, z);
+
+					// Sorted insert, to get the closest point at index 0
+					for (std::size_t l = 0u; l < maxClosest; l++)
+					{
+						if (tmpDist < m_closest[l])
+						{
+							for (std::size_t m = l; m < maxClosest - 1u; m++)
+								m_closest[m + 1u] = m_closest[m];
+							m_closest[l] = tmpDist;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	return m_closest[F];
+}
+
+float Noise::voronoi3(float x, float y, float z)
+{
+	std::size_t points;
+	float closest = std::numeric_limits<float>::max();
+	float tmpDist;
+	float tmpX;
+	float tmpY;
+	float tmpZ;
+	int lastRand;
+
+	// Get the integer part
+	int X = x < 0 ? static_cast<int>(x) - 1 : static_cast<int>(x);
+	int Y = y < 0 ? static_cast<int>(y) - 1 : static_cast<int>(y);
+	int Z = z < 0 ? static_cast<int>(z) - 1 : static_cast<int>(z);
+
+	// Get the fractionnal part
+	x -= static_cast<float>(X);
+	y -= static_cast<float>(Y);
+	z -= static_cast<float>(Z);
+
+	// Get the 8 last bit
+	X &= 0xFF;
+	Y &= 0xFF;
+	Z &= 0xFF;
+
+	for (int i = -1; i < 2; i++)
+	{
+		for (int j = -1; j < 2; j++)
+		{
+			for (int d = -1; d < 2; d++)
+			{
+				lastRand = m_permutation[m_permutation[X + i + 1] + Y + j + 1] + Z + d + 1;
+				points = lastRand % m_maxPoint + 1;
+				for (std::size_t k = 0u; k < points; k++)
+				{
+					lastRand = m_permutation[lastRand];
+					tmpX = static_cast<float>(lastRand) / 256.f;
+					lastRand = m_permutation[lastRand];
+					tmpY = static_cast<float>(lastRand) / 256.f;
+					lastRand = m_permutation[lastRand];
+					tmpZ = static_cast<float>(lastRand) / 256.f;
+					tmpDist = m_distanceFun3(tmpX + i, tmpY + j, tmpZ + d, x, y, z);
+
+					// Get the closest point
+					if (tmpDist < closest)
+						closest = tmpDist;
+				}
+			}
+		}
+	}
+	return closest;
 }
 
 float Noise::fade(float t)
@@ -252,4 +478,143 @@ float Noise::grad(int hash, float x, float y, float z)
 		case 0xF: return -y - z;
 		default: return 0.f; // never happens
 	}
+}
+
+void Noise::setDistanceType(DistanceType distanceType)
+{
+	using namespace std;
+	using namespace std::placeholders;
+	m_distanceType = distanceType;
+	switch (distanceType)
+	{
+		case DistanceType::Euclidean:
+			m_distanceFun2 = euclidean2;
+			m_distanceFun3 = euclidean3;
+			break;
+		case DistanceType::EuclideanSquared:
+			m_distanceFun2 = euclideanSquared2;
+			m_distanceFun3 = euclideanSquared3;
+			break;
+		case DistanceType::Manhattan:
+			m_distanceFun2 = manhattan2;
+			m_distanceFun3 = manhattan3;
+			break;
+		case DistanceType::Chebychev:
+			m_distanceFun2 = chebychev2;
+			m_distanceFun3 = chebychev3;
+			break;
+		case DistanceType::Quadratic:
+			m_distanceFun2 = quadratic2;
+			m_distanceFun3 = quadratic3;
+			break;
+		case DistanceType::Minkowski:
+			m_distanceFun2 = std::bind(&Noise::minkowski2, m_minkowskiCoeff, _1, _2, _3, _4);
+			m_distanceFun3 = std::bind(&Noise::minkowski3, m_minkowskiCoeff, _1, _2, _3, _4, _5, _6);
+			break;
+		default:
+			m_distanceFun2 = euclidean2;
+			m_distanceFun3 = euclidean3;
+			break;
+	}
+}
+
+float Noise::euclidean2(float x1, float y1, float x2, float y2)
+{
+	float difX = x1 - x2;
+	float difY = y1 - y2;
+
+	return pow(difX * difX + difY * difY, 0.5f);
+}
+
+float Noise::euclidean3(float x1, float y1, float z1, float x2, float y2, float z2)
+{
+	float difX = x1 - x2;
+	float difY = y1 - y2;
+	float difZ = z1 - z2;
+
+	return pow(difX * difX + difY * difY + difZ * difZ, 0.5f);
+}
+
+float Noise::euclideanSquared2(float x1, float y1, float x2, float y2)
+{
+	float difX = x1 - x2;
+	float difY = y1 - y2;
+
+	return (difX * difX + difY * difY);
+}
+
+float Noise::euclideanSquared3(float x1, float y1, float z1, float x2, float y2, float z2)
+{
+	float difX = x1 - x2;
+	float difY = y1 - y2;
+	float difZ = z1 - z2;
+
+	return (difX * difX + difY * difY + difZ * difZ);
+}
+
+float Noise::manhattan2(float x1, float y1, float x2, float y2)
+{
+	return (std::fabs(x1 - x2) + std::fabs(y1 - y2));
+}
+
+float Noise::manhattan3(float x1, float y1, float z1, float x2, float y2, float z2)
+{
+	return (std::fabs(x1 - x2) + std::fabs(y1 - y2) + std::fabs(z1 - z2));
+}
+
+float Noise::chebychev2(float x1, float y1, float x2, float y2)
+{
+	float difX = fabs(x1 - x2);
+	float difY = fabs(y1 - y2);
+
+	if (difX > difY)
+		return (difX);
+	return (difY);
+}
+
+float Noise::chebychev3(float x1, float y1, float z1, float x2, float y2, float z2)
+{
+	float difX = fabs(x1 - x2);
+	float difY = fabs(y1 - y2);
+	float difZ = fabs(z1 - z2);
+
+	if (difX > difY && difX > difZ)
+		return (difX);
+	else if (difY > difX && difY > difZ)
+		return (difY);
+	return (difZ);
+}
+
+float Noise::quadratic2(float x1, float y1, float x2, float y2)
+{
+	float dif_x = x1 - x2;
+	float dif_y = y1 - y2;
+
+	return (dif_x * dif_x + dif_y * dif_y + dif_x * dif_y);
+}
+
+float Noise::quadratic3(float x1, float y1, float z1, float x2, float y2, float z2)
+{
+	float dif_x = x1 - x2;
+	float dif_y = y1 - y2;
+	float dif_z = z1 - z2;
+
+	return (dif_x * dif_x + dif_y * dif_y + dif_z * dif_z + dif_x * dif_y + dif_x * dif_z + dif_y * dif_z);
+}
+
+float Noise::minkowski2(float minkowskiCoeff, float x1, float y1, float x2, float y2)
+{
+	float ddx = pow(fabs(x1 - x2), minkowskiCoeff);
+	float ddy = pow(fabs(y1 - y2), minkowskiCoeff);
+
+	return (pow(ddx + ddy, 1.0f / minkowskiCoeff));
+}
+
+float Noise::minkowski3(float minkowskiCoeff, float x1, float y1, float z1, float x2, float y2, float z2)
+{
+	float ddx = pow(fabs(x1 - x2), minkowskiCoeff);
+	float ddy = pow(fabs(y1 - y2), minkowskiCoeff);
+	float ddz = pow(fabs(z1 - z2), minkowskiCoeff);
+
+	return (pow(ddx + ddy + ddz, 1.0f / minkowskiCoeff));
 }
