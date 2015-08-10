@@ -46,12 +46,14 @@ public:
 
 	void init(ABiome & biome);
 
+	void computeMapRange(int startX, int endX, int startY, int endY);
+	void computeDecor(void);
+	float computeYDecor(std::size_t x);
+
 	virtual void swapDepth(void);
 	virtual void registerDepth(void);
 	virtual void nextStep(void);
 	virtual void previousStep(void);
-	virtual void computeMapRange(int startX, int endX, int startY, int endY);
-	virtual void computeDecor(void);
 
 private:
 	typedef std::function<float(float x, float y)>				MapSurfaceGeneratorBind;

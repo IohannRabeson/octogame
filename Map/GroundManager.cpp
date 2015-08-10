@@ -74,6 +74,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 {
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
 
+	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
 	{
@@ -81,6 +82,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
+			//TODO: create NPC instead of just physics rect
 			RectangleShape * rect = builder.createRectangle();
 			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize - Map::OffsetX, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y - Map::OffsetY));
 			rect->setSize(spriteTrigger.trigger.getSize());
@@ -88,6 +90,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			rect->setType(AShape::Type::e_trigger);
 		}
 	}
+
+	// Other gameobjects on the ground
 }
 
 void GroundManager::setupDecors(ABiome & biome)

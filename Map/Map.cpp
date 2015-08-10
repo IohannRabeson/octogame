@@ -165,6 +165,33 @@ void Map::computeDecor(void)
 	}
 }
 
+float Map::computeYDecor(std::size_t x)
+{
+	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
+	int height;
+	//int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+
+	assert(m_mapSurface);
+
+	// Check if we are at the transition between 0 and m_mapSize.x
+	if (x < m_mapJoinHalfWidth || static_cast<int>(x) >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
+	{
+		float startTransitionX = (m_mapSurface((static_cast<float>(m_mapSize.x) - m_mapJoinHalfWidth) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+		float endTransitionX = (m_mapSurface(m_mapJoinHalfWidth / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+		float transition = x < m_mapJoinHalfWidth ? static_cast<float>(x) + m_mapJoinHalfWidth : m_mapJoinHalfWidth - static_cast<float>(m_mapSize.x) + static_cast<float>(x);
+		height =  octo::cosinusInterpolation(startTransitionX, endTransitionX, transition / m_mapJoinWidth);
+	}
+	else
+	{
+		// mapSurface return a value between -1 & 1
+		// we normalize it betwen 0 & max_height
+		height = static_cast<int>((m_mapSurface(static_cast<float>(x) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
+	}
+	//it->second.x = Tile::TileSize * static_cast<float>(getCircleOffset(curOffsetX, x, static_cast<int>(m_tiles.columns()), static_cast<int>(m_mapSize.x)));
+	//it->second.y = Tile::TileSize * static_cast<float>(height);
+	return height;
+}
+
 void Map::registerDecor(int x)
 {
 	m_decorPositions.emplace_back(std::pair<int, sf::Vector2f>(x, sf::Vector2f()));
