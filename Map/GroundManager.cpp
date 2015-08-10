@@ -1,13 +1,17 @@
 #include "GroundManager.hpp"
 #include "TileShape.hpp"
+#include "RectangleShape.hpp"
 #include "PhysicsEngine.hpp"
 #include "ADecor.hpp"
 #include "ABiome.hpp"
 #include "Rainbow.hpp"
 #include "SkyCycle.hpp"
+#include "MapInstance.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
+#include <LevelMap.hpp>
+#include <ResourceManager.hpp>
 
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
@@ -60,7 +64,30 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	// Init decors
 	setupDecors(biome);
 
+	// Init game objects
+	setupGameObjects(biome);
+
 	swapMap();
+}
+
+void GroundManager::setupGameObjects(ABiome & biome)
+{
+	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
+
+	auto const & instances = biome.getInstances();
+	for (auto & instance : instances)
+	{
+		octo::LevelMap const & levelMap = octo::Application::getResourceManager().getLevelMap(instance.second);
+		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
+		{
+			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
+			RectangleShape * rect = builder.createRectangle();
+			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize - Map::OffsetX, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y - Map::OffsetY));
+			rect->setSize(spriteTrigger.trigger.getSize());
+			rect->setApplyGravity(false);
+			rect->setType(AShape::Type::e_trigger);
+		}
+	}
 }
 
 void GroundManager::setupDecors(ABiome & biome)
@@ -278,7 +305,6 @@ void GroundManager::computeDecor(void)
 	m_tiles->computeDecor();
 }
 
-#include <iostream>
 void GroundManager::updateTransition(void)
 {
 	if (m_transitionTimer > m_transitionTimerMax)

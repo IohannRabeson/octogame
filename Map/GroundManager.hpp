@@ -58,6 +58,7 @@ private:
 	void setTransitionModify(int x, int y);
 
 	void setupDecors(ABiome & biome);
+	void setupGameObjects(ABiome & biome);
 	void updateDecors(sf::Time deltatime);
 	void updateOffset(float deltatime);
 	void updateTransition(void);
