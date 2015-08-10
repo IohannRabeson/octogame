@@ -38,6 +38,7 @@ void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & or
 	builder.createQuad(m_leftFinal[0], m_leftFinal[4], m_rightFinal[4], m_rightFinal[0], sf::Color(255, 255, 255));
 	builder.createQuad(m_leftFinal[1], m_leftFinal[2], m_rightFinal[2], m_rightFinal[1], color);
 	builder.createQuad(m_leftFinal[2], m_leftFinal[3], m_rightFinal[3], m_rightFinal[2], color);
+	builder.createTriangle(m_leftFinal[4], m_rightFinal[4], sf::Vector2f(0.f, unit) + origin, sf::Color(255, 255, 255));
 }
 
 void Mushroom::setup(ABiome& biome)
