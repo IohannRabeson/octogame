@@ -34,7 +34,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_skyCycle.setup(m_biomeManager.getCurrentBiome());
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
 	m_groundManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
-	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome());
+	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
 
 	m_physicsEngine.setIterationCount(4u);
 	m_physicsEngine.setTileCollision(true);
