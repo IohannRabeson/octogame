@@ -60,7 +60,7 @@ DefaultBiome::DefaultBiome() :
 	m_leafColor(143, 208, 202),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
-	m_mushroomColor(107, 172, 166),
+	m_mushroomColor(77, 142, 126),
 	m_mushroomLifeTime(sf::seconds(20), sf::seconds(60)),
 
 	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 100.f)),
