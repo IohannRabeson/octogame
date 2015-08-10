@@ -99,10 +99,10 @@ TARGET_HPP_FILE  = Main/ResourceDefinitions.hpp
 LOADING_HPP_FILE = $(BUILD_DIR)/LoadingDefinitions.hpp
 DEFAULT_HPP_FILE = $(BUILD_DIR)/DefaultDefinitions.hpp
 # resources directory
-SRC_DIR = ./resources/
+RESOURCES_DIR = ./resources/
 # resources sub directory
-LOADING_SRC = $(SRC_DIR)Loading/*
-DEFAULT_SRC = $(SRC_DIR)Sound/* $(SRC_DIR)Image/* $(SRC_DIR)Color/* $(SRC_DIR)Map/* $(SRC_DIR)SpriteSheet/* $(SRC_DIR)Other/*
+LOADING_SRC = $(RESOURCES_DIR)Loading/*
+DEFAULT_SRC = $(RESOURCES_DIR)Sound/* $(RESOURCES_DIR)Image/* $(RESOURCES_DIR)Color/* $(RESOURCES_DIR)Map/* $(RESOURCES_DIR)SpriteSheet/* $(RESOURCES_DIR)Other/*
 
 # compiler
 COMPILER = $(CXX)
