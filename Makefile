@@ -79,7 +79,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/Sky.cpp							\
 				Decors/SunLight.cpp						\
 				Decors/Lightning.cpp					\
-				Decors/RainSystem.cpp
+				Decors/DropSystem.cpp
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\

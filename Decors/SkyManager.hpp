@@ -17,6 +17,7 @@ public:
 	void update(sf::Time frameTime);
 	DecorManager const & getDecorsBack(void) const;
 	DecorManager const & getDecorsFront(void) const;
+	DecorManager const & getFilter(void) const;
 
 private:
 	sf::Vector2f setRotatePosition(DecorManager::Iterator decor,
@@ -40,6 +41,7 @@ private:
 
 	DecorManager				m_decorManagerBack;
 	DecorManager				m_decorManagerFront;
+	DecorManager				m_decorManagerFilter;
 	float						m_wind;
 	sf::Vector2f				m_mapSizeFloat;
 

@@ -45,8 +45,8 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<GameScreen>("game");
 	manager.registerState<EngineScreen>("engine");
 	manager.registerState<PhysicsMapScreen>("physics_map");
-	manager.registerState<ParticleDemoScreen>("particles");
 	manager.registerState<LightningDemoScreen>("lightning");
+	manager.registerState<ParticleDemoScreen>("particles");
 	manager.registerState<DecorManagerDemoScreen>("decor");
 	manager.registerState<FsmDemoScreen>("tamagotchi");
 	manager.registerState<ResourceLoadingScreen>("loading");

@@ -35,6 +35,7 @@ public:
 	explicit Lightning(std::size_t maxVertices);
 
 	void			update(sf::Time frameTime);
+	void			update(sf::Time frameTime, octo::VertexBuilder & builder);
 	void			draw(sf::RenderTarget& render)const;
 
 	std::size_t		addArc(sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
@@ -49,7 +50,7 @@ private:
 	std::unique_ptr<sf::Vertex[]>			m_vertices;
 	std::size_t								m_verticeCount;
 	octo::VertexBuilder						m_builder;
-	std::mt19937							m_engine{3294};
+	std::mt19937							m_engine;
 	std::uniform_real_distribution<float>	m_dist{-1.f, 1.f};
 	std::vector<ArcPtr>						m_arcs;
 	float									m_defaultMiddleOffsetFactor;

@@ -15,6 +15,7 @@ SkyManager::SkyManager(void) :
 	//TODO:Estimate how much vertex we need
 	m_decorManagerBack(200000),
 	m_decorManagerFront(200000),
+	m_decorManagerFilter(40),
 	m_wind(0.f),
 	m_cycle(nullptr),
 	m_sunCount(0u),
@@ -110,6 +111,7 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 {
 	m_decorManagerBack.setup(&biome);
 	m_decorManagerFront.setup(&biome);
+	m_decorManagerFilter.setup(&biome);
 	m_cycle = &cycle;
 
 	octo::Camera const & camera = octo::Application::getCamera();
@@ -123,7 +125,7 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 	setupStars(biome, cameraSize);
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
 	setupClouds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
-	m_decorManagerFront.add(new SunLight(m_cycle));
+	m_decorManagerFilter.add(new SunLight(m_cycle));
 }
 
 void SkyManager::update(sf::Time frameTime)
@@ -138,7 +140,7 @@ void SkyManager::update(sf::Time frameTime)
 	float sin = std::sin(angle);
 
 	DecorManager::Iterator decorBack = m_decorManagerBack.begin();
-	(*decorBack)->setPosition(camera.getCenter());
+	(*decorBack)->setPosition(cameraCenter);
 	decorBack++;
 	for (auto it = m_originStars.begin(); it != m_originStars.end(); it++)
 		setRotatePosition(decorBack++, *it + m_originRotateStar, m_originRotateStar, offsetCamera, cos, sin);
@@ -161,9 +163,10 @@ void SkyManager::update(sf::Time frameTime)
 		(*decorFront)->setPosition(*it);
 		decorFront++;
 	}
-	(*decorFront)->setPosition(camera.getCenter());
+	(*m_decorManagerFilter.begin())->setPosition(cameraCenter);
 	m_decorManagerBack.update(frameTime, camera);
 	m_decorManagerFront.update(frameTime, camera);
+	m_decorManagerFilter.update(frameTime, camera);
 }
 
 DecorManager const & SkyManager::getDecorsBack(void) const
@@ -174,6 +177,11 @@ DecorManager const & SkyManager::getDecorsBack(void) const
 DecorManager const & SkyManager::getDecorsFront(void) const
 {
 	return m_decorManagerFront;
+}
+
+DecorManager const & SkyManager::getFilter(void) const
+{
+	return m_decorManagerFilter;
 }
 
 void SkyManager::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)

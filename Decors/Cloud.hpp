@@ -3,7 +3,8 @@
 
 # include "ADecor.hpp"
 # include "DecorAnimator.hpp"
-# include "RainSystem.hpp"
+# include "DropSystem.hpp"
+# include "Lightning.hpp"
 # include <SFML/Graphics/Color.hpp>
 
 class SkyCycle;
@@ -27,6 +28,8 @@ public:
 						octo::VertexBuilder& builder,
 						ABiome& biome);
 
+	virtual bool isDisabledIfOutOfScreen()const;
+
 private:
 	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & sizeCorner,
@@ -40,7 +43,24 @@ private:
 					sf::Color const & color,
 					octo::VertexBuilder& builder);
 
+	void setupLightning(ABiome & biome);
+
 	void newCloud(ABiome & biome);
+
+	void updateThunder(sf::Time frameTime,
+						ABiome & biome,
+						octo::VertexBuilder & builder,
+						sf::Vector2f const & position);
+
+	void updateRain(sf::Time frameTime,
+					ABiome & biome,
+					octo::VertexBuilder & builder,
+					sf::Vector2f const & position);
+
+	void updateSnow(sf::Time frameTime,
+					ABiome & biome,
+					octo::VertexBuilder & builder,
+					sf::Vector2f const & position);
 
 	sf::Vector2f				m_size;
 	std::size_t					m_partCount;
@@ -50,8 +70,15 @@ private:
 	DecorAnimator				m_animator;
 	float						m_animation;
 
-	std::vector<RainSystem *>	m_rain;
-	std::vector<sf::Vector2f>	m_rainUpLeft;
+	std::vector<DropSystem *>	m_rain;
+	std::vector<DropSystem *>	m_snow;
+	std::vector<sf::Vector2f>	m_dropUpLeft;
+
+	bool						m_thunderCloud;
+	Lightning					m_lightning;
+	float						m_lightningSize;
+	sf::Vector2f				m_p0;
+	sf::Vector2f				m_p1;
 
 	SkyCycle *					m_cycle;
 };
