@@ -482,6 +482,8 @@ float Noise::grad(int hash, float x, float y, float z)
 
 void Noise::setDistanceType(DistanceType distanceType)
 {
+	using namespace std;
+	using namespace std::placeholders;
 	m_distanceType = distanceType;
 	switch (distanceType)
 	{
@@ -506,8 +508,8 @@ void Noise::setDistanceType(DistanceType distanceType)
 			m_distanceFun3 = quadratic3;
 			break;
 		case DistanceType::Minkowski:
-			m_distanceFun2 = std::bind(&Noise::minkowski2, m_minkowskiCoeff, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-			m_distanceFun3 = std::bind(&Noise::minkowski3, m_minkowskiCoeff, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6);
+			m_distanceFun2 = std::bind(&Noise::minkowski2, m_minkowskiCoeff, _1, _2, _3, _4);
+			m_distanceFun3 = std::bind(&Noise::minkowski3, m_minkowskiCoeff, _1, _2, _3, _4, _5, _6);
 			break;
 		default:
 			m_distanceFun2 = euclidean2;
