@@ -19,6 +19,7 @@ DropSystem::DropSystem() :
 	m_engine(std::time(0) ^ 0xB38421),
 	m_floatDistribution(0.f, 1.f),
 	m_maxDropCount(80u),
+	m_speed(0.f),
 	m_color(255, 255, 255, 200),
 	m_dropPerSeconds(0),
 	m_canCreateDrop(true)
