@@ -107,7 +107,7 @@ void Cloud::setup(ABiome& biome)
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		m_rain[i] = new DropSystem();
-		m_rain[i]->setDrop(sf::Vector2f(0.8f, 50.f), 1024.f, m_color);
+		m_rain[i]->setDrop(sf::Vector2f(0.5f, 50.f), 1024.f, m_color);
 		m_snow[i] = new DropSystem();
 		m_snow[i]->setDrop(sf::Vector2f(5.f, 5.f), 256.f, m_color);
 	}

@@ -89,7 +89,7 @@ void			DropSystem::createDrop(Particle & particle, float angle)
 {
 	particle.p1 = sf::Vector2f(-m_size.x, 0.f);
 	particle.p2 = sf::Vector2f(m_size.x, 0.f);
-	particle.p1 = sf::Vector2f(0.f, -m_size.y);
+	particle.p3 = sf::Vector2f(0.f, -m_size.y);
 	float radAngle = angle * octo::Deg2Rad;
 	float cosAngle = std::cos(-radAngle);
 	float sinAngle = std::sin(-radAngle);
