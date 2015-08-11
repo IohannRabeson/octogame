@@ -3,9 +3,11 @@
 
 # include "Map.hpp"
 # include "DecorManager.hpp"
+#include "RectangleShape.hpp"
 
 class ADecor;
 class ABiome;
+class AGameObject;
 class TileShape;
 class ABiome;
 class SkyCycle;
@@ -33,6 +35,13 @@ public:
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 
 private:
+	struct GameObjectPosition
+	{
+		std::size_t			m_requestedPosition;
+		std::size_t			m_width;
+		AGameObjectBase *	m_gameObject;
+	};
+
 	std::unique_ptr<Map>				m_tiles;
 	std::unique_ptr<Map>				m_tilesPrev;
 	float								m_transitionTimer;
@@ -43,11 +52,13 @@ private:
 	sf::Vector2i						m_oldOffset;
 	std::vector<TileShape *>			m_tileShapes;
 	std::vector<sf::Vector2f>			m_decorPositions;
+	std::vector<GameObjectPosition>		m_gameObjectPositions;
 	DecorManager						m_decorManagerBack;
 	DecorManager						m_decorManagerFront;
 	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
+	RectangleShape *					m_testRect;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);

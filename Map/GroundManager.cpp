@@ -92,6 +92,17 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	}
 
 	// Other gameobjects on the ground
+	m_testRect = builder.createRectangle();
+	m_testRect->setPosition(sf::Vector2f(15 * 16.f, 0));
+	m_testRect->setSize(100.f, 100.f);
+	m_testRect->setApplyGravity(false);
+	m_testRect->setType(AShape::Type::e_trigger);
+
+	for (std::size_t i = 0u; i < m_testRect->getSize().x / Tile::TileSize; i++)
+	{
+		m_tiles->registerWideDecor(15 + i);
+		m_tilesPrev->registerWideDecor(15 + i);
+	}
 }
 
 void GroundManager::setupDecors(ABiome & biome)
@@ -307,6 +318,7 @@ void GroundManager::swapMap(void)
 void GroundManager::computeDecor(void)
 {
 	m_tiles->computeDecor();
+	m_tiles->computeWideDecor();
 }
 
 void GroundManager::updateTransition(void)
@@ -382,6 +394,18 @@ void GroundManager::updateTransition(void)
 		m_decorPositions[i].y = octo::linearInterpolation(prev[i].second.y, current[i].second.y, transition);
 		m_decorPositions[i].x = current[i].second.x - Tile::DoubleTileSize;
 	}
+
+	// Update wide decors
+	Map::WideDecors const & currentWide = m_tiles->getWideDecorsPosition();
+	Map::WideDecors const & prevWide = m_tilesPrev->getWideDecorsPosition();
+	float min = 0;
+	for (int i = 15; i < 15 + m_testRect->getSize().x / Tile::TileSize; i++)
+	{
+		float tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
+		if (tmp > min)
+			min = tmp;
+	}
+	m_testRect->setPosition(currentWide[15].second.x - Tile::DoubleTileSize, min - m_testRect->getSize().y - Tile::TileSize);
 }
 
 void GroundManager::defineTransitionBorderTileRange(int startX, int endX, int startY, int endY)

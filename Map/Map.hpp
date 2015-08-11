@@ -17,6 +17,7 @@ public:
 	static constexpr float OffsetY = Tile::DoubleTileSize;
 
 	typedef std::vector<std::pair<int, sf::Vector2f>>			Decors;
+	typedef std::vector<std::pair<bool, sf::Vector2f>>			WideDecors;
 	typedef octo::Array2D<Tile*>								TileMap;
 
 	typedef std::function<float(Noise & noise, float x, float y)>				MapSurfaceGenerator;
@@ -38,17 +39,19 @@ public:
 	inline void setCameraView(sf::Vector2f const * offset) { m_offset = offset; }
 	inline void registerOffset(void) { m_curOffset = *m_offset; }
 	inline Decors const & getDecorsPosition(void) const { return m_decorPositions; }
+	inline WideDecors const & getWideDecorsPosition(void) const { return m_wideDecorPositions; }
 
-	void registerDecor(int x);
 
 	void addOffsetX(int offsetX);
 	void addOffsetY(int offsetY);
 
 	void init(ABiome & biome);
 
+	void registerDecor(int x);
+	void registerWideDecor(std::size_t x);
 	void computeMapRange(int startX, int endX, int startY, int endY);
 	void computeDecor(void);
-	float computeYDecor(std::size_t x);
+	void computeWideDecor(void);
 
 	virtual void swapDepth(void);
 	virtual void registerDepth(void);
@@ -70,6 +73,7 @@ private:
 	sf::Vector2f								m_curOffset;
 	std::vector<std::unique_ptr<MapInstance>>	m_instances;
 	Decors										m_decorPositions;
+	WideDecors									m_wideDecorPositions;
 	sf::Vector2u								m_mapSize;
 	Noise										m_noise;
 	MapSurfaceGeneratorBind						m_mapSurface;
