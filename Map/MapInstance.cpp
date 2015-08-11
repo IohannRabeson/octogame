@@ -14,24 +14,24 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_cornerPositions.top = -m_levelMap.getMapSize().y + MapInstance::HeightOffset;
 	m_cornerPositions.width = m_cornerPositions.left + m_levelMap.getMapSize().x;
 	m_cornerPositions.height = m_cornerPositions.top + m_levelMap.getMapSize().y;
-	// Init 3D TileMap
-	m_tiles = new octo::Array2D<Tile*>[m_maxDepth];
-	for (std::size_t i = 0; i < m_maxDepth; i++)
-		m_tiles[i].resize(m_levelMap.getMapSize().x, m_levelMap.getMapSize().y, nullptr);
 
-	for (std::size_t i = 0; i < m_maxDepth; i++)
+	// Init 3D TileMap
+	m_tiles.resize(m_levelMap.getMapSize().x, m_levelMap.getMapSize().y, m_maxDepth, nullptr);
+
+	octo::Array3D<octo::LevelMap::TileType> const & map = m_levelMap.getMap();
+	for (std::size_t z = 0; z < m_tiles.depth(); z++)
 	{
-		int * map = m_levelMap.getMap(i);
-		for (std::size_t x = 0; x < m_tiles[i].columns(); x++)
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 		{
-			for (std::size_t y = 0; y < m_tiles[i].rows(); y++)
+			for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			{
-				m_tiles[i](x, y) = new Tile();
-				m_tiles[i](x, y)->setTileType(map[y * m_tiles[i].columns() + x]);
-				if (map[y * m_tiles[i].columns() + x] == 0)
-					m_tiles[i](x, y)->setIsEmpty(true);
+				m_tiles(x, y, z) = new Tile();
+				//TODO use TileType in Tile
+				m_tiles(x, y, z)->setTileType(static_cast<int>(map(x, y, z)));
+				if (map(x, y, z) == octo::LevelMap::TileType::Empty)
+					m_tiles(x, y, z)->setIsEmpty(true);
 				else
-					m_tiles[i](x, y)->setIsEmpty(false);
+					m_tiles(x, y, z)->setIsEmpty(false);
 			}
 		}
 	}
@@ -39,15 +39,15 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 
 MapInstance::~MapInstance(void)
 {
-	for (std::size_t i = 0; i < m_maxDepth; i++)
-	{
-		for (std::size_t x = 0; x < m_tiles[i].columns(); x++)
-		{
-			for (std::size_t y = 0; y < m_tiles[i].rows(); y++)
-				delete m_tiles[i](x, y);
-		}
-	}
-	delete [] m_tiles;
+	//for (std::size_t x = 0; x < m_maxDepth; x++)
+	//{
+	//	for (std::size_t x = 0; x < m_tiles[i].columns(); x++)
+	//	{
+	//		for (std::size_t y = 0; y < m_tiles[i].rows(); y++)
+	//			delete m_tiles[i](x, y);
+	//	}
+	//}
+	//delete [] m_tiles;
 }
 
 void MapInstance::swapDepth(void)

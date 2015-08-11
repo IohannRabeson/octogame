@@ -40,22 +40,6 @@ void	Game::loadLevel(std::string const& fileName)
 	m_physicsEngine.setIterationCount(4u);
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
-
-	//TODO: put in a function or class NPCManager ?
-	auto const & instances = m_biomeManager.getCurrentBiome().getInstances();
-	for (auto & instance : instances)
-	{
-		octo::LevelMap const & levelMap = octo::Application::getResourceManager().getLevelMap(instance.second);
-		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
-		{
-			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			RectangleShape * rect = m_physicsEngine.createRectangle();
-			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize - Map::OffsetX, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y - Map::OffsetY));
-			rect->setSize(spriteTrigger.trigger.getSize());
-			rect->setApplyGravity(false);
-			rect->setType(AShape::Type::e_trigger);
-		}
-	}
 }
 
 void	Game::update(sf::Time frameTime)
