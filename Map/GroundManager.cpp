@@ -84,8 +84,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
 			//TODO: create NPC instead of just physics rect
 			RectangleShape * rect = builder.createRectangle();
-			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.getPosition().x + instance.first * Tile::TileSize - Map::OffsetX, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.getPosition().y - Map::OffsetY));
-			rect->setSize(spriteTrigger.trigger.getSize());
+			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY));
+			rect->setSize(sf::Vector2f(spriteTrigger.trigger.width, spriteTrigger.trigger.height));
 			rect->setApplyGravity(false);
 			rect->setType(AShape::Type::e_trigger);
 		}
