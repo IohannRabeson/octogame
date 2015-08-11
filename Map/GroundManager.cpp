@@ -320,7 +320,7 @@ void GroundManager::updateTransition(void)
 			}
 
 			// This case is here to manage bottom transition from instance
-			if (tile->getTileType() == 1)
+			if (tile->getTileType() == octo::LevelMap::TileType::Square)
 				m_vertices[m_verticesCount + 3u].position.y = m_vertices[m_verticesCount + 2u].position.y;
 			else
 				m_vertices[m_verticesCount + 3u].position.y = octo::linearInterpolation(tilePrev->getStartTransition(3u).y, tile->getStartTransition(3u).y, transition) - Map::OffsetY;
