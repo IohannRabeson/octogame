@@ -79,7 +79,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/Sky.cpp							\
 				Decors/SunLight.cpp						\
 				Decors/Lightning.cpp					\
-				Decors/RainSystem.cpp
+				Decors/DropSystem.cpp
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
@@ -99,10 +99,15 @@ TARGET_HPP_FILE  = Main/ResourceDefinitions.hpp
 LOADING_HPP_FILE = $(BUILD_DIR)/LoadingDefinitions.hpp
 DEFAULT_HPP_FILE = $(BUILD_DIR)/DefaultDefinitions.hpp
 # resources directory
-SRC_DIR = ./resources/
+RESOURCES_DIR = ./resources
 # resources sub directory
-LOADING_SRC = $(SRC_DIR)Loading/*
-DEFAULT_SRC = $(SRC_DIR)Sound/* $(SRC_DIR)Image/* $(SRC_DIR)Color/* $(SRC_DIR)Map/* $(SRC_DIR)SpriteSheet/* $(SRC_DIR)Other/*
+LOADING_SRC = $(RESOURCES_DIR)/Loading/*
+DEFAULT_SRC = $(RESOURCES_DIR)/Sound/*			\
+			  $(RESOURCES_DIR)/Image/*			\
+			  $(RESOURCES_DIR)/Color/*			\
+			  $(RESOURCES_DIR)/Map/*			\
+			  $(RESOURCES_DIR)/SpriteSheet/*	\
+			  $(RESOURCES_DIR)/Shader/*
 
 # compiler
 COMPILER = $(CXX)
@@ -166,7 +171,6 @@ clean:
 	@rm -f $(OBJS)
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
 	@rm -fr $(BUILD_DIR)
-	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(PACKAGE_FILE)$(COLOR_OFF)"
 
 $(BUILD_DIR):
 	@echo " - $(COLOR_ACTION)creating directory$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
@@ -194,9 +198,11 @@ package: $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE) $(TARGET_HPP_FILE)
 $(LOADING_PCK_FILE):
 	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(LOADING_PCK_FILE)"
 	$(PACKAGER) $(LOADING_PCK_FILE) -h $(LOADING_HPP_FILE) $(LOADING_SRC)
+
 $(DEFAULT_PCK_FILE):
 	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(DEFAULT_PCK_FILE)"
 	$(PACKAGER) $(DEFAULT_PCK_FILE) -h $(DEFAULT_HPP_FILE) $(DEFAULT_SRC)
+
 $(TARGET_HPP_FILE):
 	@echo " - $(COLOR_ACTION)creating file $(COLOR_OFF): $(TARGET_HPP_FILE)"
 	@cat $(DEFAULT_HPP_FILE) >> $(TARGET_HPP_FILE)

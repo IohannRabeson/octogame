@@ -16,7 +16,7 @@
 # include <DefaultGraphicsListeners.hpp>
 # include <ParticleSystem.hpp>
 
-# include "RainSystem.hpp"
+# include "DropSystem.hpp"
 
 # include <random>
 
@@ -62,7 +62,7 @@ private:
 	virtual void	draw(sf::RenderTarget& render)const;
 private:
 	TestSystem	m_system;
-	RainSystem	m_rainSystem;
+	DropSystem	m_rainSystem;
 };
 
 #endif

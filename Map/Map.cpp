@@ -160,7 +160,7 @@ void Map::computeDecor(void)
 			// we normalize it betwen 0 & max_height
 			height = static_cast<int>((m_mapSurface(static_cast<float>(it->first) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
 		}
-		it->second.x = Tile::TileSize * static_cast<float>(getCircleOffset(curOffsetX, it->first, static_cast<int>(m_tiles.columns()), static_cast<int>(m_mapSize.x)));
+		it->second.x = Tile::TileSize * static_cast<float>(getCircleOffset(curOffsetX, it->first, static_cast<int>(m_mapSize.x)));
 		it->second.y = Tile::TileSize * static_cast<float>(height);
 	}
 }

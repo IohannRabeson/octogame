@@ -41,7 +41,7 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 
 void	ResourceLoadingScreen::start()
 {
-	pushLoading("Default.pck");
+	pushLoading("default.pck");
 	AbstractResourceLoadingState::start();
 }
 
