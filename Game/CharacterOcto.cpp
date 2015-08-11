@@ -304,10 +304,10 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 			m_clockFall.restart();
 	}
 	else{
-		// TODO fix jump first time
 		if (!m_onGround){
 			m_sprite.restart();
-			if (m_keyLeft)
+			if (m_keySpace);
+			else if (m_keyLeft)
 				m_sprite.setNextEvent(Left);
 			else if (m_keyRight)
 				m_sprite.setNextEvent(Right);
@@ -378,7 +378,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 		velocity.y = m_jumpVelocity * frameTime.asSeconds();
 		m_jumpVelocity += (1200.f * frameTime.asSeconds());
 	}
-	else if (m_afterJump && m_afterJumpVelocity < 0 ){
+	else if (m_afterJump && m_afterJumpVelocity < 0.f ){
 		velocity.y = m_afterJumpVelocity * frameTime.asSeconds();
 		m_afterJumpVelocity += (1200.f * frameTime.asSeconds());
 	}
@@ -457,7 +457,6 @@ void	CharacterOcto::caseSpace()
 		}
 		else if (m_numberOfJump == 1){
 			m_sprite.setNextEvent(DoubleJump);
-			// TODO doubleJump after Fall
 			m_previousTop = m_box->getGlobalBounds().top;
 			m_afterJump = false;
 			m_jumpVelocity = m_pixelSecondJump;
