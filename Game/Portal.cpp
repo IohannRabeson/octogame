@@ -11,7 +11,7 @@ Portal::Portal(void) :
 	m_shaderIndex(0u),
 	m_radius(50.f),
 	m_timer(0.f),
-	m_timerMax(3.5f),
+	m_timerMax(1.0f),
 	m_side(true)
 {
 	octo::ResourceManager& resources = octo::Application::getResourceManager();
@@ -25,7 +25,7 @@ Portal::Portal(void) :
 
 	PortalParticle::Prototype	prototype;
 
-	static float const	Size = 8.f;
+	static float const	Size = 6.f;
 	prototype.emplace_back(sf::Vertex({-Size, Size}));
 	prototype.emplace_back(sf::Vertex({Size, -Size}));
 	prototype.emplace_back(sf::Vertex({-Size, -Size}));
@@ -55,7 +55,7 @@ void Portal::update(sf::Time frametime)
 		if (m_position.y + m_radius > screen.top && m_position.y - m_radius < screen.top + screen.height)
 		{
 			postEffect.enableShader(m_shaderIndex, true);
-			m_shader.setParameter("time", m_timer);
+			m_shader.setParameter("time", m_timerMax);
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
 			m_shader.setParameter("center", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
 		}

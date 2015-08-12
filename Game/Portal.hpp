@@ -7,6 +7,7 @@
 
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
+# include <Interpolations.hpp>
 
 # include "AGameObject.hpp"
 
@@ -16,46 +17,51 @@
 class Portal : public AGameObject<GameObjectType::Portal>
 {
 private:
-	class PortalParticle : public octo::ParticleSystem<sf::Time, sf::Time, float>
+	class PortalParticle : public octo::ParticleSystem<sf::Time, sf::Time, sf::Vector2f, sf::Vector2f>
 	{
 	public:
 		enum MyComponent
 		{
 			Time = User,
 			Life,
-			Direction
+			Start,
+			End
 		};
 
 		PortalParticle() :
+			m_maxParticle(20u),
 			m_engine(std::time(0)),
-			m_lifeTimeDistri(0.5f, 2.f),
-			m_directionDistri(0.f, octo::Pi2)
+			m_lifeTimeDistri(1.f, 2.f),
+			m_directionDistri(0.f, octo::Pi2),
+			m_distanceDistri(96.f, 128.f)
 		{}
 
 		void setEmitter(sf::Vector2f const & emitter) { m_emitter = emitter; }
+		void setMaxParticle(std::size_t maxParticle) { m_maxParticle = maxParticle; }
 
 		void update(sf::Time frameTime)
 		{
 			ParticleSystem::update(frameTime);
-			if (ParticleSystem::getCount() < 20)
-			emplace(sf::Color(84, 42, 94), m_emitter, sf::Vector2f(1.f, 1.f), m_directionDistri(m_engine) * 180,
-					sf::Time::Zero,
-					sf::seconds(m_lifeTimeDistri(m_engine)),
-					m_directionDistri(m_engine));
+			if (ParticleSystem::getCount() < m_maxParticle)
+			{
+				float direction = m_directionDistri(m_engine);
+				float distance = m_distanceDistri(m_engine);
+				emplace(sf::Color(84, 42, 94), m_emitter, sf::Vector2f(1.f, 1.f), m_directionDistri(m_engine) * 180.f,
+						sf::Time::Zero,
+						sf::seconds(m_lifeTimeDistri(m_engine)),
+						m_emitter + sf::Vector2f(std::sin(direction) * distance, std::cos(direction) * distance), m_emitter);
+			}
 		}
 
 	private:
 		virtual void updateParticle(sf::Time frameTime, Particle& particle)
 		{
-			static float const			Velocity = 64.f;
 			static float const			AngularVelocity = 30.f;
-			sf::Vector2f	direction(std::sin(std::get<MyComponent::Direction>(particle)) * Velocity,
-									  std::cos(std::get<MyComponent::Direction>(particle)) * Velocity);
 
-			std::get<Component::Position>(particle) = std::get<Component::Position>(particle) + direction * frameTime.asSeconds();
-			std::get<Component::Rotation>(particle) = std::get<Component::Rotation>(particle) + AngularVelocity * frameTime.asSeconds();
-			std::get<MyComponent::Time>(particle) = std::get<MyComponent::Time>(particle) + frameTime;
-			std::get<Component::Color>(particle).a = 255 * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds()));
+			std::get<Component::Position>(particle) = octo::linearInterpolation(std::get<MyComponent::Start>(particle), std::get<MyComponent::End>(particle), std::get<MyComponent::Time>(particle) / std::get<MyComponent::Life>(particle));
+			std::get<Component::Rotation>(particle) += AngularVelocity * frameTime.asSeconds();
+			std::get<MyComponent::Time>(particle) += frameTime;
+			std::get<Component::Color>(particle).a = 255 - 255 * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds()));
 		}
 
 		virtual bool isDeadParticle(Particle const& particle)
@@ -66,9 +72,11 @@ private:
 		typedef std::uniform_real_distribution<float>	Dist;
 
 		sf::Vector2f	m_emitter;
+		std::size_t		m_maxParticle;
 		std::mt19937	m_engine;
 		Dist			m_lifeTimeDistri;
 		Dist			m_directionDistri;
+		Dist			m_distanceDistri;
 	};
 
 public:
