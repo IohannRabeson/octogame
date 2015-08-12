@@ -95,16 +95,16 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		ElevatorStream * elevator = new ElevatorStream();
 		//TODO: use correct size from elevator (static ocnstexpr in elevator ?
 		elevator->setPoints(sf::Vector2f((instance.first - 10) * Tile::TileSize, -levelMap.getMapSize().y + MapInstance::HeightOffset), sf::Vector2f(0.f, 400.f));
-		m_gameObjectPositions.emplace_back(instance.first - 10, 10, elevator);
+		m_elevators.emplace_back(instance.first - 10, 10, elevator);
 	}
 
 	// Other gameobjects on the ground
-	for (auto const & gameObject : m_gameObjectPositions)
+	for (auto const & elevator : m_elevators)
 	{
-		for (std::size_t i = 0u; i < gameObject.m_width; i++)
+		for (std::size_t i = 0u; i < elevator.m_width; i++)
 		{
-			m_tiles->registerWideDecor(gameObject.m_position + i);
-			m_tilesPrev->registerWideDecor(gameObject.m_position + i);
+			m_tiles->registerWideDecor(elevator.m_position + i);
+			m_tilesPrev->registerWideDecor(elevator.m_position + i);
 		}
 	}
 }
@@ -403,17 +403,16 @@ void GroundManager::updateTransition(void)
 	Map::WideDecors const & currentWide = m_tiles->getWideDecorsPosition();
 	Map::WideDecors const & prevWide = m_tilesPrev->getWideDecorsPosition();
 	float min = 0;
-	for (auto const & gameObject : m_gameObjectPositions)
+	for (auto const & elevator : m_elevators)
 	{
-		for (std::size_t i = gameObject.m_position; i < gameObject.m_position + gameObject.m_width; i++)
+		for (std::size_t i = elevator.m_position; i < elevator.m_position + elevator.m_width; i++)
 		{
 			float tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
 			if (tmp > min)
 				min = tmp;
 		}
-		ElevatorStream * elevator = gameObjectCast<ElevatorStream>(gameObject.m_gameObject);
 		//TODO change 15 by something else (it's the height of the instance
-		elevator->setPoints(sf::Vector2f(0.f, (MapInstance::HeightOffset - 15) * Tile::TileSize), sf::Vector2f(currentWide[gameObject.m_position].second.x + Tile::DoubleTileSize, min));
+		elevator.m_gameObject->setPoints(sf::Vector2f(0.f, (MapInstance::HeightOffset - 15) * Tile::TileSize), sf::Vector2f(currentWide[elevator.m_position].second.x + Tile::DoubleTileSize, min));
 	}
 }
 
@@ -575,11 +574,8 @@ void GroundManager::updateDecors(sf::Time deltatime)
 
 void GroundManager::updateGameObjects(float deltatime)
 {
-	for (auto & gameObject : m_gameObjectPositions)
-	{
-		ElevatorStream * elevator = gameObjectCast<ElevatorStream>(gameObject.m_gameObject);
-		elevator->update(sf::seconds(deltatime));
-	}
+	for (auto & elevator : m_elevators)
+		elevator.m_gameObject->update(sf::seconds(deltatime));
 }
 
 void GroundManager::update(float deltatime)
@@ -624,11 +620,8 @@ void GroundManager::update(float deltatime)
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	for (auto & gameObject : m_gameObjectPositions)
-	{
-		ElevatorStream * elevator = gameObjectCast<ElevatorStream>(gameObject.m_gameObject);
-		elevator->draw(render);
-	}
+	for (auto & elevator : m_elevators)
+		elevator.m_gameObject->draw(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 

@@ -3,14 +3,13 @@
 
 # include "Map.hpp"
 # include "DecorManager.hpp"
-#include "RectangleShape.hpp"
 
 class ADecor;
 class ABiome;
-class AGameObjectBase;
 class TileShape;
 class ABiome;
 class SkyCycle;
+class ElevatorStream;
 
 class GroundManager : public sf::Drawable
 {
@@ -35,13 +34,14 @@ public:
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 
 private:
+	template<class T>
 	struct GameObjectPosition
 	{
 		std::size_t			m_position;
 		std::size_t			m_width;
-		AGameObjectBase *	m_gameObject;
+		T *					m_gameObject;
 
-		GameObjectPosition(std::size_t position, std::size_t width, AGameObjectBase * gameObject) :
+		GameObjectPosition(std::size_t position, std::size_t width, T * gameObject) :
 			m_position(position),
 			m_width(width),
 			m_gameObject(gameObject)
@@ -58,12 +58,14 @@ private:
 	sf::Vector2i						m_oldOffset;
 	std::vector<TileShape *>			m_tileShapes;
 	std::vector<sf::Vector2f>			m_decorPositions;
-	std::vector<GameObjectPosition>		m_gameObjectPositions;
 	DecorManager						m_decorManagerBack;
 	DecorManager						m_decorManagerFront;
 	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
+
+	// Game objects
+	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
