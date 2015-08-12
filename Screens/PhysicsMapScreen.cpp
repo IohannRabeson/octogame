@@ -125,6 +125,13 @@ void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)
 	m_nbCollision++;
 }
 
+void PhysicsMapScreen::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+{
+	(void)tileShape;
+	(void)shape;
+	m_nbCollision++;
+}
+
 bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const & event)
 {
 	switch (event.code)
