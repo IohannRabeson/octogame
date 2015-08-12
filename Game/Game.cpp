@@ -40,7 +40,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
 
-	m_npc.setup(sf::FloatRect(25, 0, 500, 0));
+	m_npc.setup(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 800, 0));
 }
 
 void	Game::update(sf::Time frameTime)
