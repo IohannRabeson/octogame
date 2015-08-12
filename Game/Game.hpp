@@ -33,6 +33,7 @@ private:
 
 	bool onPressed(sf::Event::KeyEvent const & event);
 	void onShapeCollision(AShape * shapeA, AShape * shapeB);
+	void onTileShapeCollision(TileShape * tileShape, AShape * shape);
 
 };
 
