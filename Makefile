@@ -43,6 +43,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/FiniteStateMachine.cpp				\
 				Game/AGameObject.cpp					\
 				Game/ACharacter.cpp						\
+				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
