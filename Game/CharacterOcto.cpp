@@ -259,7 +259,8 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	endDeath();
-	if (m_sprite.getCurrentEvent() != Death){
+	if (m_sprite.getCurrentEvent() != Death)
+	{
 		collisionTileUpdate(frameTime);
 		collisionElevatorUpdate(frameTime);
 	}
@@ -292,7 +293,8 @@ void	CharacterOcto::onCollision(GameObjectType type)
 
 void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 {
-	if (m_clockCollisionTile.getElapsedTime() > frameTime){
+	if (m_clockCollisionTile.getElapsedTime() > frameTime)
+	{
 		m_onGround = false;
 		if (m_box->getGlobalBounds().top > m_previousTop
 				&& m_sprite.getCurrentEvent() != Fall){
@@ -306,8 +308,10 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 		if (m_sprite.getCurrentEvent() != Fall)
 			m_clockFall.restart();
 	}
-	else{
-		if (!m_onGround){
+	else
+	{
+		if (!m_onGround)
+		{
 			if (m_keyLeft)
 				m_sprite.setNextEvent(Left);
 			else if (m_keyRight)
@@ -324,10 +328,12 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 {
 	m_onElevator = true;
-	if (m_clockCollisionElevator.getElapsedTime() <= frameTime && !m_onElevator){
+	if (m_clockCollisionElevator.getElapsedTime() <= frameTime && !m_onElevator)
+	{
 		m_onElevator = true;
 	}
-	else{
+	else
+	{
 		if (m_onElevator)
 			m_onElevator = false;
 	}
@@ -335,25 +341,32 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 
 void	CharacterOcto::dieFall()
 {
-	if (m_clockFall.getElapsedTime().asSeconds() > 1.2f){
+	if (m_clockFall.getElapsedTime() > sf::seconds(1.2f))
+	{
 		m_sprite.setNextEvent(Death);
 	}
 	else
+	{
 		m_clockFall.restart();
+	}
 }
 
 void	CharacterOcto::endDeath()
 {
 	if (m_sprite.getCurrentEvent() == Death
-			&& m_clockDeath.getElapsedTime().asSeconds() > 3.0f)
+			&& m_clockDeath.getElapsedTime() > sf::seconds(3.0f))
+	{
 		m_sprite.setNextEvent(Idle);
+	}
 }
 
 void	CharacterOcto::dance()
 {
 	if (m_sprite.getCurrentEvent() == Idle
-			&& m_clockAFK.getElapsedTime().asSeconds() > 2.5f)
+			&& m_clockAFK.getElapsedTime() > sf::seconds(2.5f))
+	{
 		m_sprite.setNextEvent(Dance);
+	}
 }
 
 void	CharacterOcto::commitPhysicsToGraphics()
@@ -370,7 +383,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 	sf::Vector2f	velocity = m_box->getVelocity();
 	if (m_keyLeft)
 	{
-		velocity.x = (-1 * m_pixelSecondWalk) * frameTime.asSeconds();
+		velocity.x = (-1.f * m_pixelSecondWalk) * frameTime.asSeconds();
 	}
 	else if (m_keyRight)
 	{
@@ -381,11 +394,13 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 		velocity.y = m_jumpVelocity * frameTime.asSeconds();
 		m_jumpVelocity += (m_pixelSecondMultiplier * frameTime.asSeconds());
 	}
-	else if (m_afterJump && m_afterJumpVelocity < 0.f ){
+	else if (m_afterJump && m_afterJumpVelocity < 0.f )
+	{
 		velocity.y = m_afterJumpVelocity * frameTime.asSeconds();
 		m_afterJumpVelocity += (m_pixelSecondMultiplier * frameTime.asSeconds());
 	}
-	if (m_keyUp && m_sprite.getCurrentEvent() == Umbrella){
+	if (m_keyUp && m_sprite.getCurrentEvent() == Umbrella)
+	{
 		m_clockFall.restart();
 		velocity.y = m_pixelSecondUmbrella * frameTime.asSeconds();
 	}
@@ -424,7 +439,8 @@ void	CharacterOcto::caseLeft()
 		m_keyRight = false;
 		if (m_onGround)
 			m_sprite.setNextEvent(Left);
-		if (!m_originMove){
+		if (!m_originMove)
+		{
 			m_sprite.setScale(-1, 1);
 			m_sprite.setOrigin(m_sprite.getOrigin().x + 177, 0);
 			m_originMove = true;
@@ -440,7 +456,8 @@ void	CharacterOcto::caseRight()
 		m_keyLeft = false;
 		if (m_onGround)
 			m_sprite.setNextEvent(Right);
-		if (m_originMove){
+		if (m_originMove)
+		{
 			m_sprite.setScale(1, 1);
 			m_sprite.setOrigin(m_sprite.getOrigin().x - 177, 0);
 			m_originMove = false;
@@ -453,12 +470,14 @@ void	CharacterOcto::caseSpace()
 	if (!m_keySpace)
 	{
 		m_keySpace = true;
-		if (m_onGround){
+		if (m_onGround)
+		{
 			m_sprite.setNextEvent(Jump);
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 1;
 		}
-		else if (m_numberOfJump == 1){
+		else if (m_numberOfJump == 1)
+		{
 			m_sprite.setNextEvent(DoubleJump);
 			m_afterJump = false;
 			m_jumpVelocity = m_pixelSecondJump;
@@ -502,8 +521,10 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	}
 	if (m_sprite.getCurrentEvent() == Death)
 		return true;
-	if (!m_onGround && !m_keyUp){
-		if (m_sprite.getCurrentEvent() != Fall){
+	if (!m_onGround && !m_keyUp)
+	{
+		if (m_sprite.getCurrentEvent() != Fall)
+		{
 			m_sprite.setNextEvent(Fall);
 			m_clockFall.restart();
 		}
