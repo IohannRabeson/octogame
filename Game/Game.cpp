@@ -58,6 +58,14 @@ void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
 	(void)shapeB;
 }
 
+void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+{
+	// don't forget to check if shapeA->getGameObject() != nullptr
+	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
+	(void)tileShape;
+	(void)shape;
+}
+
 bool Game::onPressed(sf::Event::KeyEvent const & event)
 {
 	switch (event.code)

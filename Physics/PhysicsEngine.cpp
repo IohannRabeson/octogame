@@ -401,7 +401,7 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 				}
 			}
 			if (collide && m_contactListener)
-				m_contactListener->onShapeCollision(pair.m_shapeA, pair.m_shapeB);
+				m_contactListener->onTileShapeCollision(pair.m_shapeA, pair.m_shapeB);
 		}
 	}
 }
