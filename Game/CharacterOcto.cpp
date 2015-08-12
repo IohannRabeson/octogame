@@ -25,6 +25,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondAfterFullJump(-485.f),
 	m_pixelSecondMultiplier(1200.f),
 	m_numberOfJump(1),
+	m_originMove(false),
 	m_onGround(false),
 	m_onElevator(false),
 	m_afterJump(false),
@@ -41,7 +42,6 @@ CharacterOcto::CharacterOcto() :
 	setupMachine();
 	m_sprite.restart();
 	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
-	m_originMoove = false;
 }
 
 void	CharacterOcto::setupAnimation()
@@ -424,10 +424,10 @@ void	CharacterOcto::caseLeft()
 		m_keyRight = false;
 		if (m_onGround)
 			m_sprite.setNextEvent(Left);
-		if (!m_originMoove){
+		if (!m_originMove){
 			m_sprite.setScale(-1, 1);
 			m_sprite.setOrigin(m_sprite.getOrigin().x + 177, 0);
-			m_originMoove = true;
+			m_originMove = true;
 		}
 	}
 }
@@ -440,10 +440,10 @@ void	CharacterOcto::caseRight()
 		m_keyLeft = false;
 		if (m_onGround)
 			m_sprite.setNextEvent(Right);
-		if (m_originMoove){
+		if (m_originMove){
 			m_sprite.setScale(1, 1);
 			m_sprite.setOrigin(m_sprite.getOrigin().x - 177, 0);
-			m_originMoove = false;
+			m_originMove = false;
 		}
 	}
 }
