@@ -5,7 +5,6 @@
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
 #include <Camera.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
 
 Portal::Portal(void) :
 	m_position(200.f, 200.f),
@@ -23,10 +22,20 @@ Portal::Portal(void) :
 	m_shader.setParameter("center", m_position.x, m_position.y);
 	m_shader.setParameter("time_max", m_timerMax);
 	m_shaderIndex = postEffect.addShader(m_shader, true);
+
+	PortalParticle::Prototype	prototype;
+
+	static float const	Size = 8.f;
+	prototype.emplace_back(sf::Vertex({-Size, Size}));
+	prototype.emplace_back(sf::Vertex({Size, -Size}));
+	prototype.emplace_back(sf::Vertex({-Size, -Size}));
+	m_particles.reset(prototype, sf::Triangles, 1000);
+	m_particles.setEmitter(m_position);
 }
 
 void Portal::update(sf::Time frametime)
 {
+	m_particles.update(frametime);
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 
 	if (m_timer > m_timerMax)
@@ -53,6 +62,7 @@ void Portal::update(sf::Time frametime)
 	}
 }
 
-void Portal::draw(sf::RenderTarget & ) const
+void Portal::draw(sf::RenderTarget & render) const
 {
+	m_particles.draw(render);
 }
