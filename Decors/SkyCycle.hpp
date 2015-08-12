@@ -40,6 +40,7 @@ private:
 							ABiome & biome);
 	void		computeDrop(sf::Time frameTime,
 							ABiome & biome);
+	void		playSound(ABiome & biome);
 
 	sf::Time	m_timer;
 	sf::Time	m_timerMax;
@@ -71,6 +72,8 @@ private:
 	sf::Time	m_thunderTimer;
 	sf::Time	m_thunderTimerMax;
 	std::size_t	m_thunderState;
+
+	bool		m_sound;
 };
 
 #endif
