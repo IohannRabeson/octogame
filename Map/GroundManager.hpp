@@ -3,13 +3,13 @@
 
 # include "Map.hpp"
 # include "DecorManager.hpp"
+# include "ElevatorStream.hpp"
 
 class ADecor;
 class ABiome;
 class TileShape;
 class ABiome;
 class SkyCycle;
-class ElevatorStream;
 
 class GroundManager : public sf::Drawable
 {
@@ -37,15 +37,17 @@ private:
 	template<class T>
 	struct GameObjectPosition
 	{
-		std::size_t			m_position;
-		std::size_t			m_width;
-		T *					m_gameObject;
+		std::size_t				m_position;
+		std::size_t				m_width;
+		std::unique_ptr<T>		m_gameObject;
 
 		GameObjectPosition(std::size_t position, std::size_t width, T * gameObject) :
 			m_position(position),
 			m_width(width),
-			m_gameObject(gameObject)
-		{}
+			m_gameObject(nullptr)
+		{
+			m_gameObject.reset(gameObject);
+		}
 	};
 
 	std::unique_ptr<Map>				m_tiles;

@@ -7,7 +7,6 @@
 #include "Rainbow.hpp"
 #include "SkyCycle.hpp"
 #include "MapInstance.hpp"
-#include "ElevatorStream.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -98,7 +97,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		m_elevators.emplace_back(instance.first - 10, 10, elevator);
 	}
 
-	// Other gameobjects on the ground
+	// Register position for gameobjects on the ground
+	// TODO: template function to manage this for each vector
 	for (auto const & elevator : m_elevators)
 	{
 		for (std::size_t i = 0u; i < elevator.m_width; i++)
