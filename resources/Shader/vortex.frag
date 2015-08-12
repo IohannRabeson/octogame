@@ -22,19 +22,18 @@ void main()
 {
 	vec2 textureCoord = gl_TexCoord[0].xy;
 	float distFromCenter = length(center - gl_FragCoord.xy);
-	center.x = center.x / resolution.x;
-	center.y = center.y / resolution.y;
+	vec2 position = center/ resolution;
 	float opacity = 0;
 
 	if (distFromCenter <= radius)
 	{
-		vec2 distCenter = gl_TexCoord[0].xy - center;
+		vec2 distCenter = gl_TexCoord[0].xy - position;
 		opacity = abs(distFromCenter / radius);
 		float dist = lerp(-time * PI, 0.0, opacity);
 		float cosV = cos(dist);
 		float sinV = sin(dist);
-		textureCoord.x = center.x + distCenter.x * cosV - distCenter.y * sinV;
-		textureCoord.y = center.y + distCenter.x * sinV + distCenter.y * cosV;
+		textureCoord.x = position.x + distCenter.x * cosV - distCenter.y * sinV;
+		textureCoord.y = position.y + distCenter.x * sinV + distCenter.y * cosV;
 		opacity = cerp(0, 1 - opacity, time / time_max);
 	}
 	gl_FragColor = gl_Color * texture2D(texture, textureCoord);

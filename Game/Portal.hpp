@@ -99,7 +99,7 @@ private:
 	float				m_timerMax;
 	bool				m_side;
 	//TODO trigger physic box
-	//TODO add particule going inside the hole
+	//TODO add spawnPortal, and disappearPortal
 
 };
 

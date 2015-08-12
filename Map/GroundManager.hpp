@@ -49,6 +49,7 @@ private:
 	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
+	//TODO: delete
 	Portal			m_test;
 
 	void defineTransition(void);
