@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 14:48:16 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/29 12:53:26 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/08/12 10:09:39 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ enum class GameObjectType
 	Portal,
 	Potion,
 	Decor,
-	Tile
+	Tile,
+	Elevator
 };
 
 /*!
