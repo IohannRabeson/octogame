@@ -25,8 +25,6 @@ public:
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
 
 private:
-
-private:
 	PhysicsEngine &		m_physicsEngine;
 	SkyCycle			m_skyCycle;
 	BiomeManager		m_biomeManager;
@@ -39,8 +37,8 @@ private:
 
 	bool			onPressed(sf::Event::KeyEvent const & event);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB);
+	void			onTileShapeCollision(TileShape * tileShape, AShape * shape);
 	void			followPlayer();
-
 };
 
 #endif

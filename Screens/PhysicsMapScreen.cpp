@@ -6,6 +6,7 @@
 #include "GenerativeLayer.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+#include <Options.hpp>
 
 PhysicsMapScreen::PhysicsMapScreen(void) :
 	m_engine(PhysicsEngine::getInstance()),
@@ -22,7 +23,7 @@ void	PhysicsMapScreen::start()
 
 	m_groundManager.setup(m_biome, m_cycle);
 
-	m_engine.setIterationCount(4u);
+	m_engine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count"));
 	m_engine.setTileCollision(true);
 	m_engine.setContactListener(this);
 
@@ -122,6 +123,13 @@ void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)
 {
 	(void)shapeA;
 	(void)shapeB;
+	m_nbCollision++;
+}
+
+void PhysicsMapScreen::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+{
+	(void)tileShape;
+	(void)shape;
 	m_nbCollision++;
 }
 
