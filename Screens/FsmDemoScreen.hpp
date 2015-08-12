@@ -12,8 +12,8 @@
 
 #ifndef FSMDEMOSCREEN_HPP
 # define FSMDEMOSCREEN_HPP
-# include "FiniteStateMachine.hpp"
 
+# include <FiniteStateMachine.hpp>
 # include <AnimatedSprite.hpp>
 # include <AbstractState.hpp>
 
@@ -22,7 +22,7 @@
 
 class Tamagotshi
 {
-	typedef FiniteStateMachine::EventId	EventId;
+	typedef octo::FiniteStateMachine::EventId	EventId;
 public:
 	enum Event
 	{
@@ -39,15 +39,15 @@ public:
 	void					trigger(EventId eventId);
 	void					update(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render)const;
-private:	
-	FiniteStateMachine		m_machine;
-	octo::AnimatedSprite	m_animatedSprite;
-	octo::SpriteAnimation	m_anim0;
-	octo::SpriteAnimation	m_anim1;
-	octo::SpriteAnimation	m_anim2;
-	octo::SpriteAnimation	m_anim3;
-	sf::Time				m_elasped;
-	sf::Text				m_text;
+private:
+	octo::FiniteStateMachine		m_machine;
+	octo::AnimatedSprite			m_animatedSprite;
+	octo::SpriteAnimation			m_anim0;
+	octo::SpriteAnimation			m_anim1;
+	octo::SpriteAnimation			m_anim2;
+	octo::SpriteAnimation			m_anim3;
+	sf::Time						m_elasped;
+	sf::Text						m_text;
 };
 
 class FsmDemoScreen : public octo::AbstractState

@@ -18,7 +18,7 @@
 #include <Camera.hpp>
 #include <random>
 
-class TamagotshiState : public FiniteStateMachine::AState
+class TamagotshiState : public octo::FiniteStateMachine::AState
 {
 public:
 	TamagotshiState(std::string const& name, octo::AnimatedSprite& sprite, octo::SpriteAnimation const& animation) :
@@ -50,8 +50,8 @@ private:
 
 Tamagotshi::Tamagotshi()
 {
-	typedef octo::SpriteAnimation::Frame	Frame;
-	typedef FiniteStateMachine::StatePtr	StatePtr;
+	typedef octo::SpriteAnimation::Frame		Frame;
+	typedef octo::FiniteStateMachine::StatePtr	StatePtr;
 
 	octo::ResourceManager& 					resources = octo::Application::getResourceManager();
 	octo::Camera&							camera = octo::Application::getCamera();
