@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 03:53:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/07 16:29:47 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/12 10:51:59 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,17 @@
 # include <SFML/Graphics/Shader.hpp>
 # include <SFML/System/Time.hpp>
 
-# include <array>
-
 # include <VertexBuilder.hpp>
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
 
+# include <array>
 # include <cmath>
 # include <iostream>
 
-class ElevatorStream
+# include "AGameObject.hpp"
+
+class ElevatorStream : public AGameObject<GameObjectType::Elevator>
 {
 	class BeamParticle;
 public:

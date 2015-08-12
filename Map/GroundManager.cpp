@@ -7,6 +7,7 @@
 #include "Rainbow.hpp"
 #include "SkyCycle.hpp"
 #include "MapInstance.hpp"
+#include "ElevatorStream.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -89,19 +90,22 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			rect->setApplyGravity(false);
 			rect->setType(AShape::Type::e_trigger);
 		}
+
+		// For each instance, create an elevator stream
+		ElevatorStream * elevator = new ElevatorStream();
+		//TODO: use correct size from elevator (static ocnstexpr in elevator ?
+		elevator->setPoints(sf::Vector2f((instance.first - 10) * Tile::TileSize, -levelMap.getMapSize().y + MapInstance::HeightOffset), sf::Vector2f(0.f, 400.f));
+		m_gameObjectPositions.emplace_back(instance.first - 10, 10, elevator);
 	}
 
 	// Other gameobjects on the ground
-	m_testRect = builder.createRectangle();
-	m_testRect->setPosition(sf::Vector2f(15 * 16.f, 0));
-	m_testRect->setSize(100.f, 100.f);
-	m_testRect->setApplyGravity(false);
-	m_testRect->setType(AShape::Type::e_trigger);
-
-	for (std::size_t i = 0u; i < m_testRect->getSize().x / Tile::TileSize; i++)
+	for (auto const & gameObject : m_gameObjectPositions)
 	{
-		m_tiles->registerWideDecor(15 + i);
-		m_tilesPrev->registerWideDecor(15 + i);
+		for (std::size_t i = 0u; i < gameObject.m_width; i++)
+		{
+			m_tiles->registerWideDecor(gameObject.m_position + i);
+			m_tilesPrev->registerWideDecor(gameObject.m_position + i);
+		}
 	}
 }
 
@@ -399,13 +403,18 @@ void GroundManager::updateTransition(void)
 	Map::WideDecors const & currentWide = m_tiles->getWideDecorsPosition();
 	Map::WideDecors const & prevWide = m_tilesPrev->getWideDecorsPosition();
 	float min = 0;
-	for (int i = 15; i < 15 + m_testRect->getSize().x / Tile::TileSize; i++)
+	for (auto const & gameObject : m_gameObjectPositions)
 	{
-		float tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
-		if (tmp > min)
-			min = tmp;
+		for (std::size_t i = gameObject.m_position; i < gameObject.m_position + gameObject.m_width; i++)
+		{
+			float tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
+			if (tmp > min)
+				min = tmp;
+		}
+		ElevatorStream * elevator = gameObjectCast<ElevatorStream>(gameObject.m_gameObject);
+		//TODO change 15 by something else (it's the height of the instance
+		elevator->setPoints(sf::Vector2f(0.f, (MapInstance::HeightOffset - 15) * Tile::TileSize), sf::Vector2f(currentWide[gameObject.m_position].second.x + Tile::DoubleTileSize, min));
 	}
-	m_testRect->setPosition(currentWide[15].second.x - Tile::DoubleTileSize, min - m_testRect->getSize().y - Tile::TileSize);
 }
 
 void GroundManager::defineTransitionBorderTileRange(int startX, int endX, int startY, int endY)
@@ -564,6 +573,15 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerGround.update(deltatime, camera);
 }
 
+void GroundManager::updateGameObjects(float deltatime)
+{
+	for (auto & gameObject : m_gameObjectPositions)
+	{
+		ElevatorStream * elevator = gameObjectCast<ElevatorStream>(gameObject.m_gameObject);
+		elevator->update(sf::seconds(deltatime));
+	}
+}
+
 void GroundManager::update(float deltatime)
 {
 	m_transitionTimer += deltatime;
@@ -601,10 +619,16 @@ void GroundManager::update(float deltatime)
 	updateOffset(deltatime);
 	updateTransition();
 	updateDecors(sf::seconds(deltatime));
+	updateGameObjects(deltatime);
 }
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	for (auto & gameObject : m_gameObjectPositions)
+	{
+		ElevatorStream * elevator = gameObjectCast<ElevatorStream>(gameObject.m_gameObject);
+		elevator->draw(render);
+	}
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 

@@ -7,7 +7,7 @@
 
 class ADecor;
 class ABiome;
-class AGameObject;
+class AGameObjectBase;
 class TileShape;
 class ABiome;
 class SkyCycle;
@@ -37,9 +37,15 @@ public:
 private:
 	struct GameObjectPosition
 	{
-		std::size_t			m_requestedPosition;
+		std::size_t			m_position;
 		std::size_t			m_width;
 		AGameObjectBase *	m_gameObject;
+
+		GameObjectPosition(std::size_t position, std::size_t width, AGameObjectBase * gameObject) :
+			m_position(position),
+			m_width(width),
+			m_gameObject(gameObject)
+		{}
 	};
 
 	std::unique_ptr<Map>				m_tiles;
@@ -58,7 +64,6 @@ private:
 	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
-	RectangleShape *					m_testRect;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
@@ -70,9 +75,10 @@ private:
 
 	void setupDecors(ABiome & biome);
 	void setupGameObjects(ABiome & biome);
-	void updateDecors(sf::Time deltatime);
 	void updateOffset(float deltatime);
 	void updateTransition(void);
+	void updateDecors(sf::Time deltatime);
+	void updateGameObjects(float deltatime);
 	void computeDecor(void);
 	void swapMap(void);
 
