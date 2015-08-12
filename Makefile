@@ -35,12 +35,14 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/ParticleDemoScreen.cpp			\
 				Screens/ResourceLoadingScreen.cpp		\
-				Screens/FsmDemoScreen.cpp
+				Screens/FsmDemoScreen.cpp				\
+				Screens/ElevatorStreamDemo.cpp
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
 				Game/AGameObject.cpp					\
 				Game/CharacterOcto.cpp					\
+				Game/ElevatorStream.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\

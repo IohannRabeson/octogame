@@ -1,29 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AudioDemoScreen.hpp                                :+:      :+:    :+:   */
+/*   ElevatorStreamDemo.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/25 22:06:12 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/11 21:51:38 by irabeson         ###   ########.fr       */
+/*   Created: 2015/08/01 04:24:26 by irabeson          #+#    #+#             */
+/*   Updated: 2015/08/07 16:38:42 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AUDIODEMOSCREEN_HPP
-# define AUDIODEMOSCREEN_HPP
+#ifndef ELEVATORSTREAMDEMO_HPP
+# define ELEVATORSTREAMDEMO_HPP
 # include <AbstractState.hpp>
-# include <DefaultGraphicsListeners.hpp>
 
-# include "PointHandle.hpp"
+# include "ElevatorStream.hpp"
 
-class AudioDemoScreen : public octo::AbstractState,
-						public octo::DefaultMouseListener
+class ElevatorStreamDemo : public octo::AbstractState
 {
 public:
-	AudioDemoScreen();
-	~AudioDemoScreen();
-
 	virtual void	start();
 	virtual void	pause();
 	virtual void	resume();
@@ -31,12 +26,8 @@ public:
 
 	virtual void	update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render)const;
-
-	virtual void	onMoved(sf::Event::MouseMoveEvent const& event);
-	virtual void	onPressed(sf::Event::MouseButtonEvent const&);
-	virtual void	onReleased(sf::Event::MouseButtonEvent const&);
 private:
-	PointHandle	m_listenerPoint;
+	ElevatorStream	m_teleportBeam;
 };
 
 #endif
