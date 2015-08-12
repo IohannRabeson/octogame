@@ -37,9 +37,8 @@ CharacterOcto::CharacterOcto() :
 	setupAnimation();
 	setupMachine();
 	m_sprite.restart();
-	m_box->setSize(sf::Vector2f(145.f / 2.f,150.f));
+	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
 	m_originMoove = false;
-	m_sprite.setNextEvent(Idle);
 }
 
 void	CharacterOcto::setupAnimation()
@@ -170,6 +169,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Left, state4, state1);
 	machine.addTransition(Left, state5, state1);
 	machine.addTransition(Left, state6, state1);
+	machine.addTransition(Left, state7, state1);
 	machine.addTransition(Left, state10, state1);
 
 	machine.addTransition(Right, state0, state2);
@@ -305,12 +305,12 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 	}
 	else{
 		if (!m_onGround){
-			m_sprite.restart();
-			if (m_keySpace);
-			else if (m_keyLeft)
+			if (m_keyLeft)
 				m_sprite.setNextEvent(Left);
 			else if (m_keyRight)
 				m_sprite.setNextEvent(Right);
+			else
+				m_sprite.setNextEvent(Idle);
 			m_afterJump = false;
 			m_onGround = true;
 			dieFall();
@@ -335,6 +335,8 @@ void	CharacterOcto::dieFall()
 	if (m_clockFall.getElapsedTime().asSeconds() > 1.2f){
 		m_sprite.setNextEvent(Death);
 	}
+	else
+		m_clockFall.restart();
 }
 
 void	CharacterOcto::endDeath()
@@ -356,7 +358,7 @@ void	CharacterOcto::commitPhysicsToGraphics()
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
 	// TODO fix that
-	m_sprite.setPosition(bounds.left - 50, bounds.top);
+	m_sprite.setPosition(bounds.left - 65, bounds.top);
 	m_previousTop = bounds.top;
 }
 
@@ -371,9 +373,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 	{
 		velocity.x = m_pixelSecondWalk * frameTime.asSeconds();
 	}
-
-	if (m_keySpace &&  m_jumpVelocity < 0.f
-			&& (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
+	if (m_keySpace && m_jumpVelocity < 0.f && m_numberOfJump < 3)
 	{
 		velocity.y = m_jumpVelocity * frameTime.asSeconds();
 		m_jumpVelocity += (1200.f * frameTime.asSeconds());
@@ -462,6 +462,8 @@ void	CharacterOcto::caseSpace()
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 2;
 		}
+		else 
+			m_numberOfJump = 3;
 	}
 }
 

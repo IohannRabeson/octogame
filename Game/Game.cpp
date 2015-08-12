@@ -45,11 +45,11 @@ void	Game::loadLevel(std::string const& fileName)
 void	Game::update(sf::Time frameTime)
 {
 	m_skyCycle.update(frameTime, m_biomeManager.getCurrentBiome());
-	m_octo.update(frameTime);
-	followPlayer();
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
 	m_physicsEngine.update(frameTime.asSeconds());
+	m_octo.update(frameTime);
+	followPlayer();
 	m_skyManager.update(frameTime);
 }
 
@@ -88,6 +88,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_parallaxScrolling, states);
 	render.draw(m_groundManager.getDecorsBack(), states);
 	// Draw pnj
+//	m_physicsEngine.debugDraw(render);
 	render.draw(m_octo, states);
 	render.draw(m_groundManager.getDecorsFront(), states);
 	render.draw(m_skyManager.getDecorsFront(), states);
@@ -95,7 +96,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_groundManager.getDecorsGround(), states);
 	render.draw(m_skyManager.getFilter(), states);
 
-	//m_physicsEngine.debugDraw(render);
 }
 
 void	Game::followPlayer()
