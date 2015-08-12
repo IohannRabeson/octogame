@@ -21,6 +21,9 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondJump(-1500.f),
 	m_pixelSecondUmbrella(-500.f),
 	m_pixelSecondWalk(320.f),
+	m_pixelSecondAfterJump(-970.f),
+	m_pixelSecondAfterFullJump(-485.f),
+	m_pixelSecondMultiplier(1200.f),
 	m_numberOfJump(1),
 	m_onGround(false),
 	m_onElevator(false),
@@ -294,7 +297,7 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 		if (m_box->getGlobalBounds().top > m_previousTop
 				&& m_sprite.getCurrentEvent() != Fall){
 			m_afterJump = true;
-			m_afterJumpVelocity = -485.f;
+			m_afterJumpVelocity = m_pixelSecondAfterFullJump;
 			if (m_sprite.getCurrentEvent() != Umbrella){
 				m_sprite.setNextEvent(Fall);
 				m_clockFall.restart();
@@ -376,11 +379,11 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 	if (m_keySpace && m_jumpVelocity < 0.f && m_numberOfJump < 3)
 	{
 		velocity.y = m_jumpVelocity * frameTime.asSeconds();
-		m_jumpVelocity += (1200.f * frameTime.asSeconds());
+		m_jumpVelocity += (m_pixelSecondMultiplier * frameTime.asSeconds());
 	}
 	else if (m_afterJump && m_afterJumpVelocity < 0.f ){
 		velocity.y = m_afterJumpVelocity * frameTime.asSeconds();
-		m_afterJumpVelocity += (1200.f * frameTime.asSeconds());
+		m_afterJumpVelocity += (m_pixelSecondMultiplier * frameTime.asSeconds());
 	}
 	if (m_keyUp && m_sprite.getCurrentEvent() == Umbrella){
 		m_clockFall.restart();
@@ -489,7 +492,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			m_keySpace = false;
 			if (!m_afterJump && !m_onGround){
 				m_afterJump = true;
-				m_afterJumpVelocity = -970.f;
+				m_afterJumpVelocity = m_pixelSecondAfterJump;
 			}
 			break;
 		case sf::Keyboard::Up:

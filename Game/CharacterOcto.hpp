@@ -85,6 +85,9 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	float						m_pixelSecondJump;
 	float						m_pixelSecondUmbrella;
 	float						m_pixelSecondWalk;
+	float						m_pixelSecondAfterJump;
+	float						m_pixelSecondAfterFullJump;
+	float						m_pixelSecondMultiplier;
 	float						m_jumpVelocity;
 	float						m_afterJumpVelocity;
 	float						m_previousTop;
