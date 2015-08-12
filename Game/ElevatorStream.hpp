@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 03:53:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/12 10:51:59 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/08/12 19:28:39 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ class ElevatorStream : public AGameObject<GameObjectType::Elevator>
 public:
 	ElevatorStream();
 
-	void	setPoints(sf::Vector2f const& top, sf::Vector2f const& bottom);
+	void	setPosX(float x);
+	void	setPosY(float y);
+	void	setHeight(float height);
 	void	setWidth(float width);
 	void	setColor(sf::Color const& color);
 

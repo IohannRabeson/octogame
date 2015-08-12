@@ -93,7 +93,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		// For each instance, create an elevator stream
 		ElevatorStream * elevator = new ElevatorStream();
 		//TODO: use correct size from elevator (static ocnstexpr in elevator ?
-		elevator->setPoints(sf::Vector2f((instance.first - 10) * Tile::TileSize, -levelMap.getMapSize().y + MapInstance::HeightOffset), sf::Vector2f(0.f, 400.f));
+		elevator->setPosX((instance.first - 10.f) * Tile::TileSize);
+		elevator->setPosY(-levelMap.getMapSize().y + MapInstance::HeightOffset);
+		elevator->setHeight(400.f);
 		m_elevators.emplace_back(instance.first - 10, 10, elevator);
 	}
 
@@ -412,7 +414,9 @@ void GroundManager::updateTransition(void)
 				min = tmp;
 		}
 		//TODO change 15 by something else (it's the height of the instance
-		elevator.m_gameObject->setPoints(sf::Vector2f(0.f, (MapInstance::HeightOffset - 15) * Tile::TileSize), sf::Vector2f(currentWide[elevator.m_position].second.x + Tile::DoubleTileSize, min));
+		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x + Tile::DoubleTileSize);
+		elevator.m_gameObject->setPosY(min);
+		elevator.m_gameObject->setHeight(min - ((MapInstance::HeightOffset - 15) * Tile::TileSize));
 	}
 }
 

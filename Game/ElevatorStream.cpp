@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/12 10:52:04 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/08/12 19:28:54 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ public:
 	BeamParticle() :
 		m_cycleTime(sf::seconds(4)),
 		m_speedUp(512.f),
-		m_distanceFactor(0.2f),
 		m_width(200.f),
 		m_height(300.f),
 		m_emitInterval(sf::seconds(0.025f)),
@@ -69,14 +68,12 @@ public:
 		sf::Vector2f	position = std::get<Component::Position>(particle);
 		sf::Time		currentTime = std::get<MyComponent::ElapsedTime>(particle) + frameTime;
 		sf::Color&		color = std::get<Component::Color>(particle);
-		float			scaleFactor;
 		float			cycle = currentTime / m_cycleTime;
 		float			heightPos = 0.f;
 
 		position.y -= frameTime.asSeconds() * std::get<MyComponent::UpSpeed>(particle);
 		heightPos = (position.y / m_height);
 		position.x = std::cos(cycle * octo::Pi2) * m_width * 0.5f;
-		scaleFactor = 1.f + std::sin(cycle * octo::Pi2) * m_distanceFactor;
 		color.a = heightPos * 255;
 		if (currentTime >= m_cycleTime)
 		{
@@ -84,7 +81,6 @@ public:
 		}
 		std::get<MyComponent::ElapsedTime>(particle) = currentTime;
 		std::get<Component::Position>(particle) = position;
-		std::get<Component::Scale>(particle) = sf::Vector2f(scaleFactor, scaleFactor);
 		std::get<MyComponent::UpSpeed>(particle) *= 1.0001f;
 	}
 
@@ -121,7 +117,6 @@ private:
 
 	sf::Time		m_cycleTime;
 	float			m_speedUp;
-	float			m_distanceFactor;
 	float			m_width;
 	float			m_height;
 	sf::Time		m_emitTimer;
@@ -143,10 +138,25 @@ ElevatorStream::ElevatorStream() :
 	m_shaders.setParameter("wave_amplitude", 5.f);
 }
 
-void	ElevatorStream::setPoints(sf::Vector2f const& top, sf::Vector2f const& bottom)
+void	ElevatorStream::setPosX(float x)
 {
-	m_particles->setPosition(bottom);
-	m_particles->setHeight(bottom.y - top.y);
+	sf::Vector2f	pos = m_particles->getPosition();
+
+	pos.x = x;
+	m_particles->setPosition(pos);
+}
+
+void	ElevatorStream::setPosY(float y)
+{
+	sf::Vector2f	pos = m_particles->getPosition();
+
+	pos.y = y;
+	m_particles->setPosition(pos);
+}
+
+void	ElevatorStream::setHeight(float height)
+{
+	m_particles->setHeight(height);
 }
 
 void	ElevatorStream::setWidth(float width)
