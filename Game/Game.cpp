@@ -12,6 +12,7 @@
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
 #include <Interpolations.hpp>
+#include <Options.hpp>
 
 Game::Game() :
 	m_physicsEngine(PhysicsEngine::getInstance())
@@ -36,7 +37,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_groundManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
 	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
 
-	m_physicsEngine.setIterationCount(4u);
+	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count"));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
 }
