@@ -22,7 +22,13 @@ public:
 private:
 	sf::Vector2f		m_position;
 	sf::Shader			m_shader;
+	std::size_t			m_shaderIndex;
 	float				m_radius;
+	float				m_timer;
+	float				m_timerMax;
+	bool				m_side;
+	//TODO trigger physic box
+	//TODO add particule going inside the hole
 
 };
 

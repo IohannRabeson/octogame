@@ -3,6 +3,7 @@
 
 # include "Map.hpp"
 # include "DecorManager.hpp"
+# include "Portal.hpp"
 
 class ADecor;
 class ABiome;
@@ -48,6 +49,7 @@ private:
 	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
+	Portal			m_test;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);

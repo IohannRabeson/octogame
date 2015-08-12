@@ -547,11 +547,13 @@ void GroundManager::update(float deltatime)
 	updateOffset(deltatime);
 	updateTransition();
 	updateDecors(sf::seconds(deltatime));
+	m_test.update(sf::seconds(deltatime));
 }
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
+	m_test.draw(render);
 }
 
 DecorManager const & GroundManager::getDecorsBack(void) const
