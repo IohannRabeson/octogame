@@ -457,12 +457,11 @@ void	CharacterOcto::caseSpace()
 		}
 		else if (m_numberOfJump == 1){
 			m_sprite.setNextEvent(DoubleJump);
-			m_previousTop = m_box->getGlobalBounds().top;
 			m_afterJump = false;
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 2;
 		}
-		else 
+		else
 			m_numberOfJump = 3;
 	}
 }
