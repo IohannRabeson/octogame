@@ -259,16 +259,12 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	endDeath();
-	if (m_sprite.getCurrentEvent() != Death)
-	{
-		collisionTileUpdate(frameTime);
-		collisionElevatorUpdate(frameTime);
-	}
+	collisionTileUpdate(frameTime);
+	collisionElevatorUpdate(frameTime);
 	m_sprite.update(frameTime);
 	dance();
 	PhysicsEngine::getInstance().update(frameTime.asSeconds());
-	if (m_sprite.getCurrentEvent() != Death)
-		commitControlsToPhysics(frameTime);
+	commitControlsToPhysics(frameTime);
 	commitPhysicsToGraphics();
 }
 
@@ -380,6 +376,8 @@ void	CharacterOcto::commitPhysicsToGraphics()
 
 void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 {
+	if (m_sprite.getCurrentEvent() == Death)
+		return;
 	sf::Vector2f	velocity = m_box->getVelocity();
 	if (m_keyLeft)
 	{
