@@ -56,22 +56,21 @@ void	Game::update(sf::Time frameTime)
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
 {
-	if (shapeB->getGameObject() != nullptr
-			&& gameObjectCast<CharacterOcto>(shapeB->getGameObject()) != nullptr
-	 && shapeA->getGameObject() != nullptr
-			&& gameObjectCast<AGameObject<GameObjectType::Tile>>(shapeA->getGameObject()) != nullptr){
-		m_octo.onCollision(GameObjectType::Tile);
-	}
+	(void) shapeA;
+	(void) shapeB;
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 }
 
 void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape)
 {
+	if (shape->getGameObject() != nullptr
+			&& gameObjectCast<CharacterOcto>(shape->getGameObject()) != nullptr)
+		m_octo.onCollision(GameObjectType::Tile);
+
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 	(void)tileShape;
-	(void)shape;
 }
 
 bool Game::onPressed(sf::Event::KeyEvent const & event)
