@@ -6,13 +6,28 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:24:03 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/07 16:33:19 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/12 18:26:55 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ElevatorStreamDemo.hpp"
 #include <Application.hpp>
+#include <Console.hpp>
 #include <Camera.hpp>
+
+ElevatorStreamDemo::ElevatorStreamDemo()
+{
+	octo::Console&	console = octo::Application::getConsole();
+
+	console.addCommand(L"demo.setWidth", [this](float width)
+			{
+				m_teleportBeam.setWidth(width);
+			});
+	console.addCommand(L"demo.setColor", [this](sf::Color const& color)
+			{
+				m_teleportBeam.setColor(color);
+			});
+}
 
 void	ElevatorStreamDemo::start()
 {

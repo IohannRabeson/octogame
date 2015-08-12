@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/11 01:37:17 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/12 18:29:23 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ public:
 		m_cycleTime(sf::seconds(4)),
 		m_speedUp(512.f),
 		m_distanceFactor(0.2f),
-		m_thickness(200.f),
+		m_width(200.f),
 		m_height(300.f),
 		m_emitInterval(sf::seconds(0.025f)),
 		m_random(std::time(0)),
@@ -49,14 +49,19 @@ public:
 		setTexture(texture);
 	}
 
-	void	setThickness(float thickness)
+	void	setWidth(float width)
 	{
-		m_thickness = thickness;
+		m_width = width;
 	}
 
 	void	setHeight(float height)
 	{
 		m_height = height;
+	}
+
+	void	setColor(sf::Color const& color)
+	{
+		m_color = color;
 	}
 
 	void	updateParticle(sf::Time frameTime, Particle& particle)
@@ -70,7 +75,7 @@ public:
 
 		position.y -= frameTime.asSeconds() * std::get<MyComponent::UpSpeed>(particle);
 		heightPos = (position.y / m_height);
-		position.x = std::cos(cycle * octo::Pi2) * m_thickness * 0.5f;
+		position.x = std::cos(cycle * octo::Pi2) * m_width * 0.5f;
 		scaleFactor = 1.f + std::sin(cycle * octo::Pi2) * m_distanceFactor;
 		color.a = heightPos * 255;
 		if (currentTime >= m_cycleTime)
@@ -100,7 +105,7 @@ public:
 
 	void	createParticle()
 	{
-		emplace(sf::Color(120, 200, 255),
+		emplace(m_color,
 				sf::Vector2f(0, 0),
 				sf::Vector2f(1.f, 1.f), 0.f,
 				sf::seconds(m_distri(m_random) * m_cycleTime.asSeconds()),
@@ -117,23 +122,23 @@ private:
 	sf::Time		m_cycleTime;
 	float			m_speedUp;
 	float			m_distanceFactor;
-	float			m_thickness;
+	float			m_width;
 	float			m_height;
 	sf::Time		m_emitTimer;
 	sf::Time		m_emitInterval;
 	std::mt19937	m_random;
 	Distri			m_distri;
+	sf::Color		m_color;
 };
 
 ElevatorStream::ElevatorStream() :
 	m_particles(new BeamParticle),
-	m_color(sf::Color::Blue),
-	m_waveCycleDuration(sf::seconds(0.5)),
-	m_thickness(150.f)
+	m_waveCycleDuration(sf::seconds(0.5))
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 
-	m_particles->setThickness(m_thickness);
+	m_particles->setWidth(150.f);
+	m_particles->setColor(sf::Color::White);
 	m_shaders.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shaders.setParameter("wave_amplitude", 5.f);
 }
@@ -142,6 +147,16 @@ void	ElevatorStream::setPoints(sf::Vector2f const& top, sf::Vector2f const& bott
 {
 	m_particles->setPosition(bottom);
 	m_particles->setHeight(bottom.y - top.y);
+}
+
+void	ElevatorStream::setWidth(float width)
+{
+	m_particles->setWidth(width);
+}
+
+void	ElevatorStream::setColor(sf::Color const& color)
+{
+	m_particles->setColor(color);
 }
 
 void	ElevatorStream::update(sf::Time frameTime)
