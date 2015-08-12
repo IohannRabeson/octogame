@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/25 22:06:12 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/11 21:51:38 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/12 09:59:15 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define AUDIODEMOSCREEN_HPP
 # include <AbstractState.hpp>
 # include <DefaultGraphicsListeners.hpp>
+
+# include <functional>
 
 # include "PointHandle.hpp"
 
