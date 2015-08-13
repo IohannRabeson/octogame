@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:24:03 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/12 19:29:43 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/13 21:50:00 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ ElevatorStreamDemo::ElevatorStreamDemo()
 			{
 				m_teleportBeam.setWidth(width);
 			});
-	console.addCommand(L"demo.setColor", [this](sf::Color const& color)
+	console.addCommand(L"demo.setParticleColor", [this](sf::Color const& color)
 			{
-				m_teleportBeam.setColor(color);
+				m_teleportBeam.setParticleColor(color);
 			});
 }
 

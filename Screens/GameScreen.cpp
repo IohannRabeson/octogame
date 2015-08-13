@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 06:03:08 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/11 00:10:40 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/13 22:00:48 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ void	GameScreen::start()
 	m_game.setup();
 	m_game.loadLevel("TODO");
 
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	octo::ResourceManager& resources = octo::Application::getResourceManager();
-	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+	octo::GraphicsManager &		graphics = octo::Application::getGraphicsManager();
+	octo::ResourceManager&		resources = octo::Application::getResourceManager();
+	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 
 	graphics.addKeyboardListener(this);
 	m_shader0.loadFromMemory(resources.getText(PIXELATE_FRAG), sf::Shader::Fragment);

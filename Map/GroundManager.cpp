@@ -12,6 +12,7 @@
 #include <Camera.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
+#include <Console.hpp>
 
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
@@ -72,8 +73,25 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 
 void GroundManager::setupGameObjects(ABiome & biome)
 {
+	octo::Console&				console = octo::Application::getConsole();
+
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
 
+	// Setup somes console commands
+	console.addCommand(L"test.elevators.setParticleColor", [this](sf::Color const& color)
+			{
+				for(auto& elevator : m_elevators)
+				{
+					elevator.m_gameObject->setParticleColor(color);
+				}
+			});
+	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
+			{
+				for(auto& elevator : m_elevators)
+				{
+					elevator.m_gameObject->setRotationFactor(factor);
+				}
+			});
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)

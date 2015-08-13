@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 03:53:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/12 19:28:39 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/13 22:27:34 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@ public:
 	void	setPosY(float y);
 	void	setHeight(float height);
 	void	setWidth(float width);
-	void	setColor(sf::Color const& color);
+	void	setRotationFactor(float factor);
+	void	setParticleColor(sf::Color const& color);
 
 	void	update(sf::Time frameTime);
 	void	draw(sf::RenderTarget& render)const;
 private:
 	std::shared_ptr<BeamParticle>	m_particles;
-	sf::Shader						m_shaders;
+	sf::Shader						m_shader;
 	octo::VertexBuilder				m_builder;
 	sf::Color						m_color;
 	sf::Time						m_waveCycle;
