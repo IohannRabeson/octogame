@@ -20,6 +20,7 @@ enum class GameObjectType
 	Player,
 	Npc,
 	Portal,
+	Elevator,
 	Potion,
 	Decor,
 	Tile
