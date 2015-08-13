@@ -21,6 +21,7 @@ void	Game::setup()
 	m_biomeManager.registerBiome<DefaultBiome>("test");
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
+	graphics.addKeyboardListener(&m_octo);
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -45,23 +46,28 @@ void	Game::update(sf::Time frameTime)
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
 	m_physicsEngine.update(frameTime.asSeconds());
+	m_octo.update(frameTime);
+	followPlayer();
 	m_skyManager.update(frameTime);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
 {
+	(void) shapeA;
+	(void) shapeB;
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
-	(void)shapeA;
-	(void)shapeB;
 }
 
 void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape)
 {
+	if (shape->getGameObject() != nullptr
+			&& gameObjectCast<CharacterOcto>(shape->getGameObject()) != nullptr)
+		m_octo.onCollision(GameObjectType::Tile);
+
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 	(void)tileShape;
-	(void)shape;
 }
 
 bool Game::onPressed(sf::Event::KeyEvent const & event)
@@ -86,11 +92,25 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager.getDecorsBack(), states);
 	render.draw(m_parallaxScrolling, states);
 	render.draw(m_groundManager.getDecorsBack(), states);
-	// Draw Octo and pnj
+	// Draw pnj
+//	m_physicsEngine.debugDraw(render);
+	render.draw(m_octo, states);
 	render.draw(m_groundManager.getDecorsFront(), states);
 	render.draw(m_skyManager.getDecorsFront(), states);
 	render.draw(m_groundManager, states);
 	render.draw(m_groundManager.getDecorsGround(), states);
 	render.draw(m_skyManager.getFilter(), states);
-	m_physicsEngine.debugDraw(render);
+
+}
+
+void	Game::followPlayer()
+{
+	octo::Camera&	camera = octo::Application::getCamera();
+	m_cameraPos = camera.getCenter();
+	m_octoPos = m_octo.getPosition();
+	sf::Vector2f cameraPos;
+	cameraPos.x = octo::linearInterpolation(m_octoPos.x, m_cameraPos.x, 0.98);
+	cameraPos.y = octo::linearInterpolation(m_octoPos.y, m_cameraPos.y, 0.9);
+
+	camera.setCenter(cameraPos);
 }
