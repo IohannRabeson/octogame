@@ -3,7 +3,6 @@
 #include "PhysicsEngine.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
-#include <LevelMap.hpp>
 
 CharacterNpc::CharacterNpc() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -22,7 +21,7 @@ CharacterNpc::CharacterNpc() :
 	m_area = sf::FloatRect(0, 0, 0, 0);
 }
 
-void	CharacterNpc::setup(sf::Vector2f pos, sf::FloatRect rect)
+void	CharacterNpc::setup(sf::Vector2f const & pos, sf::FloatRect const & rect)
 {
 	m_sprite.setPosition(pos);
 	m_area = rect;

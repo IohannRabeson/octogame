@@ -18,13 +18,13 @@ class CharacterNpc : public AGameObject<GameObjectType::Npc>,
 		Idle,
 		Right
 	};
-	public:
+public:
 	CharacterNpc();
-	void			setup(sf::Vector2f pos, sf::FloatRect rect);
+	void			setup(sf::Vector2f const & pos, sf::FloatRect const & rect);
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 
-	private:
+private:
 	bool		canWalk();
 	void		setupAnimation();
 	void		setupMachine();
@@ -32,7 +32,7 @@ class CharacterNpc : public AGameObject<GameObjectType::Npc>,
 	void		updatePhysics(sf::Time frameTime);
 	void		commitPhysicsToGraphics();
 
-	private:
+private:
 	RectangleShape*				m_box;
 	sf::Clock					m_clock;
 	sf::FloatRect				m_area;
