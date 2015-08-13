@@ -1,5 +1,14 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Decors Physics Game Biomes
+DIRS = Main			\
+	   Firefly 		\
+	   Screens 		\
+	   Map 			\
+	   Decors		\
+	   Physics		\
+	   Game			\
+	   Biomes		\
+	   Glitch
+
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -42,7 +51,8 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
 				Game/AGameObject.cpp					\
 				Game/CharacterOcto.cpp					\
-				Game/ElevatorStream.cpp
+				Game/ElevatorStream.cpp					\
+				Game/GlitchManager.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -91,7 +101,6 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/ShapeBuilder.cpp				\
 				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp
-
 
 # package files
 LOADING_PCK_FILE = loading.pck

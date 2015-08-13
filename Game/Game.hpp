@@ -7,6 +7,7 @@
 # include "GroundManager.hpp"
 # include "ParallaxScrolling.hpp"
 # include "CharacterOcto.hpp"
+# include "GlitchManager.hpp"
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
 
@@ -32,6 +33,7 @@ private:
 	GroundManager		m_groundManager;
 	ParallaxScrolling	m_parallaxScrolling;
 	CharacterOcto		m_octo;
+	GlitchManager		m_glitchManager;
 	sf::Vector2f		m_cameraPos;
 	sf::Vector2f		m_octoPos;
 
