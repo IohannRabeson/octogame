@@ -66,11 +66,10 @@ private:
 	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
-	//TODO: delete
-	Portal			m_test;
 
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
+	std::vector<GameObjectPosition<Portal>>				m_portals;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
@@ -80,6 +79,8 @@ private:
 	void setTransitionDisappear(int x, int y);
 	void setTransitionModify(int x, int y);
 
+	template<class T>
+	void setupGameObjectPosition(std::vector<GameObjectPosition<T>> const & gameObjectPosition);
 	void setupDecors(ABiome & biome);
 	void setupGameObjects(ABiome & biome);
 	void updateOffset(float deltatime);
