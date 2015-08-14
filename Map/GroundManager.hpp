@@ -3,6 +3,7 @@
 
 # include "Map.hpp"
 # include "DecorManager.hpp"
+# include "Portal.hpp"
 # include "ElevatorStream.hpp"
 
 class ADecor;
@@ -65,6 +66,8 @@ private:
 	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
+	//TODO: delete
+	Portal			m_test;
 
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
