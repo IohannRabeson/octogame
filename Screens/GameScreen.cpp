@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 06:03:08 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 00:26:58 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 04:30:52 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
-#include <ResourceManager.hpp>
 
 void	GameScreen::start()
 {
