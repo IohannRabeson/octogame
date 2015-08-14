@@ -1,6 +1,10 @@
 #include "Tree.hpp"
 #include "ABiome.hpp"
 #include <Math.hpp>
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <AudioManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 Tree::Tree(void) :
 	m_depth(0u),
@@ -14,7 +18,8 @@ Tree::Tree(void) :
 	m_leafCornerCoef(2.f),
 	m_countLeaf(0u),
 	m_setLeaf(true),
-	m_leafMaxCount(0u)
+	m_leafMaxCount(0u),
+	m_sound(true)
 {
 }
 
@@ -230,6 +235,18 @@ void Tree::newTree(ABiome& biome)
 		m_leafSize[i] = biome.getLeafSize();
 	m_leafColor = biome.getLeafColor();
 	m_animator.setup(biome.getTreeLifeTime());
+	m_sound = true;
+}
+
+void Tree::playSound(ABiome & biome, sf::Vector2f const & position)
+{
+	if (m_sound && m_animation)
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+		audio.playSound(resources.getSound(TREE_WAV), 1.f, biome.randomFloat(0.8, 1.f), sf::Vector3f(position.x, position.y, 0.f), 100.f, 0.5f);
+		m_sound = false;
+	}
 }
 
 void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
@@ -239,8 +256,10 @@ void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biom
 	if (m_animator.update(frameTime))
 		newTree(biome);
 	m_animation = m_animator.getAnimation();
-
 	sf::Vector2f const & position = getPosition();
+
+	playSound(biome, position);
+
 	float positionY = position.y + (m_size.y - m_size.y * m_animation) / 2 - m_size.y / 2.f;
 	pythagorasTree(sf::Vector2f(position.x, positionY), sf::Vector2f(m_size.x, m_size.y * m_animation), builder);
 }

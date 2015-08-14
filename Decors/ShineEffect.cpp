@@ -2,12 +2,17 @@
 #include "ABiome.hpp"
 #include <Math.hpp>
 #include <cmath>
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <AudioManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 ShineEffect::ShineEffect() :
 	m_angle(0.f),
 	m_animator(3.f, 3.f, 0.f, 0.1f, 0.f),
 	m_animation(1.f),
-	m_isShineEffect(true)
+	m_isShineEffect(true),
+	m_isSound(true)
 {
 }
 
@@ -24,6 +29,19 @@ void ShineEffect::setup(ABiome& biome)
 	m_animator.setup(sf::Time::Zero);
 }
 
+void ShineEffect::playSound(ABiome & biome, sf::Vector2f const & position)
+{
+		if (m_animator.getState() == DecorAnimator::State::Grow && m_isSound == false)
+			m_isSound = true;
+		else if (m_animator.getState() == DecorAnimator::State::Die && m_isSound == true)
+		{
+			octo::AudioManager& audio = octo::Application::getAudioManager();
+			octo::ResourceManager& resources = octo::Application::getResourceManager();
+			audio.playSound(resources.getSound(CRYSTAL_WAV), 1.f, biome.randomFloat(0.2f, 1.f), sf::Vector3f(position.x, position.y, 0.f), 100.f, 0.5f);
+			m_isSound = false;
+		}
+}
+
 void ShineEffect::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	m_isShineEffect = biome.canCreateShineEffect();
@@ -36,6 +54,8 @@ void ShineEffect::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiom
 		float angle = m_angle * m_animation * octo::Deg2Rad;
 		float cosAngle = std::cos(angle);
 		float sinAngle = std::sin(angle);
+
+		playSound(biome, position);
 
 		sf::Color animationColor(m_color.r, m_color.g, m_color.b, m_color.a * (m_animation > 1.f ? 1.f : m_animation));
 		ShineBuilder::createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, builder, m_angle, cosAngle, sinAngle);
