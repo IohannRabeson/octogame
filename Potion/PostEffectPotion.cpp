@@ -6,19 +6,23 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 12:42:31 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 13:01:32 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 17:22:15 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PostEffectPotion.hpp"
 
-# include <PostEffectManager.hpp>
-# include <Application.hpp>
-# include <ResourceManager.hpp>
+#include <PostEffectManager.hpp>
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+
+#include <limits>
+
+std::size_t const	PostEffectPotion::NullShaderIndex = std::numeric_limits<std::size_t>::max();
 
 PostEffectPotion::PostEffectPotion(std::string const& shaderResourceKey, sf::Time duration) :
 	APotion(duration),
-	m_shaderIndex(0u)
+	m_shaderIndex(NullShaderIndex)
 {
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 	octo::ResourceManager& 		resources = octo::Application::getResourceManager();
@@ -33,7 +37,10 @@ PostEffectPotion::~PostEffectPotion()
 {
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 	
-	postEffect.removeShader(m_shaderIndex);
+	if (m_shaderIndex != NullShaderIndex)
+	{
+		postEffect.removeShader(m_shaderIndex);
+	}
 }
 
 sf::Shader&	PostEffectPotion::getShader()
@@ -48,20 +55,29 @@ sf::Shader const&	PostEffectPotion::getShader()const
 
 void	PostEffectPotion::updatePotion(sf::Time frameTime, float relativeTime)
 {
-	updateShader(frameTime, relativeTime, m_shader);
+	if (m_shaderIndex != NullShaderIndex)
+	{
+		updateShader(frameTime, relativeTime, m_shader);
+	}
 }
 
 void	PostEffectPotion::startPotion()
 {
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 	
-	setupShader(m_shader);
-	postEffect.enableShader(m_shaderIndex, true);
+	if (m_shaderIndex != NullShaderIndex)
+	{
+		setupShader(m_shader);
+		postEffect.enableShader(m_shaderIndex, true);
+	}
 }
 
 void	PostEffectPotion::stopPotion()
 {
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 
-	postEffect.enableShader(m_shaderIndex, false);
+	if (m_shaderIndex != NullShaderIndex)
+	{
+		postEffect.enableShader(m_shaderIndex, false);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 03:49:33 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 13:02:37 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 17:21:44 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 class PostEffectPotion : public PotionEffectManager::APotion
 {
 public:
+	static std::size_t const	NullShaderIndex;
+
 	explicit PostEffectPotion(std::string const& shaderResourceKey, sf::Time duration);
 
 	~PostEffectPotion();

@@ -6,17 +6,32 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 01:54:52 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 14:57:01 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 16:31:28 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PotionEffectManager.hpp"
 #include <algorithm>
 
+namespace
+{
+	static float	clamp(float value, float min, float max)
+	{
+		if (value < min)
+		{
+			value = min;
+		}
+		else if (value > max)
+		{
+			value = max;
+		}
+		return (value);
+	}
+}
+
 //
 // class PotionEffectManager::APotion
 //
-
 PotionEffectManager::APotion::APotion(sf::Time duration) :
 	m_duration(duration)
 {
@@ -67,7 +82,7 @@ void		PotionEffectManager::startPotion(std::string const& key)
 	if (it != m_prototypes.end())
 	{
 		it->second->start();
-		m_potions.push_back(it->second.get());
+		m_potions.emplace_back(it->second.get());
 	}
 }
 

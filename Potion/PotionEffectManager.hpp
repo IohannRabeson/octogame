@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 01:35:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 14:45:50 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 16:31:11 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,6 @@
 
 class PotionEffectManager
 {
-	static float	clamp(float value, float min, float max)
-	{
-		if (value < min)
-		{
-			value = min;
-		}
-		else if (value > max)
-		{
-			value = max;
-		}
-		return (value);
-	}
 public:
 	/*!
 	 *	\brief Abstract potion
@@ -65,6 +53,7 @@ public:
 private:
 	typedef std::map<std::string, std::unique_ptr<APotion>>	PrototypeBank;
 
+	// TODO: replace by a map to check if the potions is already used
 	std::vector<APotion*>	m_potions;
 	PrototypeBank			m_prototypes;
 };
