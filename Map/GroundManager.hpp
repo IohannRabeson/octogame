@@ -42,12 +42,12 @@ private:
 		std::size_t				m_width;
 		std::unique_ptr<T>		m_gameObject;
 
-		GameObjectPosition(std::size_t position, std::size_t width, T * gameObject) :
+		GameObjectPosition(std::size_t position, std::size_t width, std::unique_ptr<T> & gameObject) :
 			m_position(position),
 			m_width(width),
 			m_gameObject(nullptr)
 		{
-			m_gameObject.reset(gameObject);
+			m_gameObject = std::move(gameObject);
 		}
 	};
 

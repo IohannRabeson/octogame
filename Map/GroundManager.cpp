@@ -91,7 +91,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		}
 
 		// For each instance, create an elevator stream
-		ElevatorStream * elevator = new ElevatorStream();
+		std::unique_ptr<ElevatorStream> elevator;
+		elevator.reset(new ElevatorStream());
 		//TODO: use correct size from elevator (static ocnstexpr in elevator ?
 		elevator->setPosX((instance.first - 10.f) * Tile::TileSize);
 		elevator->setPosY(-levelMap.getMapSize().y + MapInstance::HeightOffset);
