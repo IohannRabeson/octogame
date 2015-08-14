@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 03:36:56 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 04:07:00 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 13:00:33 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ PixelPotion::PixelPotion(sf::Time duration, float cycles, float factor) :
 {
 }
 
-void	PixelPotion::updatePotion(sf::Time, float relativeTime)
+void	PixelPotion::updateShader(sf::Time, float relativeTime, sf::Shader& shader)
 {
 	float	x = (std::sin(relativeTime * octo::Pi * m_cycle) * 0.5f + 1.f) * m_factor;
 	float	t = 1.f - relativeTime;
 
-	getShader().setParameter("pixel_threshold", x * t);
+	shader.setParameter("pixel_threshold", x * t);
 }
 
 void	PixelPotion::setupShader(sf::Shader& shader)

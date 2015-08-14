@@ -6,17 +6,13 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 03:49:33 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 12:45:28 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 13:02:37 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef POSTEFFECTPOTION_HPP
 # define POSTEFFECTPOTION_HPP
 # include "PotionEffectManager.hpp"
-
-# include <PostEffectManager.hpp>
-# include <Application.hpp>
-# include <ResourceManager.hpp>
 
 # include <SFML/Graphics/Shader.hpp>
 
@@ -33,7 +29,8 @@ private:
 	virtual void		startPotion();
 	virtual void		stopPotion();
 
-	virtual void		updatePotion(sf::Time, float relativeTime) = 0;
+	virtual void		updatePotion(sf::Time frameTime, float relativeTime);
+	virtual void		updateShader(sf::Time frameTime, float relativeTime, sf::Shader& shader) = 0;
 	virtual void		setupShader(sf::Shader& shader) = 0;
 private:
 	sf::Shader	m_shader;

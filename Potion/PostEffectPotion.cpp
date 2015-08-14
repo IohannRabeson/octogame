@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 12:42:31 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 12:47:55 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 13:01:32 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@ sf::Shader&	PostEffectPotion::getShader()
 sf::Shader const&	PostEffectPotion::getShader()const
 {
 	return (m_shader);
+}
+
+void	PostEffectPotion::updatePotion(sf::Time frameTime, float relativeTime)
+{
+	updateShader(frameTime, relativeTime, m_shader);
 }
 
 void	PostEffectPotion::startPotion()

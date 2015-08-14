@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 02:45:15 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 04:04:50 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 13:02:17 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	PixelPotion(sf::Time duration = sf::seconds(20.f), float cycle = 16.f, float factor = 0.01f);
 
 private:
-	void	updatePotion(sf::Time frameTime, float relativeTime);
+	void	updateShader(sf::Time frameTime, float relativeTime, sf::Shader& shader);
 	void	setupShader(sf::Shader& shader);
 private:
 	float 	m_cycle;
