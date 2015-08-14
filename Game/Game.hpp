@@ -7,7 +7,7 @@
 # include "GroundManager.hpp"
 # include "ParallaxScrolling.hpp"
 # include "CharacterOcto.hpp"
-# include "GlitchManager.hpp"
+# include "GlitchEffectManager.hpp"
 # include "PotionEffectManager.hpp"
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
@@ -34,7 +34,7 @@ private:
 	GroundManager		m_groundManager;
 	ParallaxScrolling	m_parallaxScrolling;
 	CharacterOcto		m_octo;
-	GlitchManager		m_glitchManager;
+	GlitchEffectManager	m_glitchManager;
 	PotionEffectManager	m_potionManager;
 	sf::Vector2f		m_cameraPos;
 	sf::Vector2f		m_octoPos;

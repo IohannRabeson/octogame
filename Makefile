@@ -30,6 +30,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_DECORS)										\
 	  $(SRC_POTION)										\
 	  $(SRC_GAME)										\
+	  $(SRC_GLITCH)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp
 
@@ -54,8 +55,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
 				Game/CharacterOcto.cpp					\
 				Game/ElevatorStream.cpp					\
-				Game/Portal.cpp							\
-				Game/GlitchManager.cpp
+				Game/Portal.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -109,6 +109,10 @@ SRC_POTION  = 	Potion/PotionEffectManager.cpp			\
 				Potion/PostEffectPotion.cpp				\
 				Potion/PixelPotion.cpp					\
 				Potion/GrayPotion.cpp
+				
+SRC_GLITCH =	Glitch/GlitchEffectManager.cpp			\
+				Glitch/PostEffectGlitch.cpp				\
+				Glitch/PixelGlitch.cpp
 
 # package files
 LOADING_PCK_FILE = loading.pck

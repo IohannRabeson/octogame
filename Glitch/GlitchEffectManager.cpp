@@ -1,25 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   GlitchManager.cpp                                  :+:      :+:    :+:   */
+/*   GlitchEffectManager.cpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/13 23:55:53 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 01:16:26 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 15:57:49 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "GlitchManager.hpp"
+#include "GlitchEffectManager.hpp"
 
 #include <limits>
+#include <ctime>
 
-GlitchManager::GlitchManager() :
+// 
+// class GlitchEffectManager::AGlitch
+//
+GlitchEffectManager::AGlitch::~AGlitch()
+{
+}
+
+//
+// class GlitchEffectManager
+// 
+GlitchEffectManager::GlitchEffectManager() :
+	m_rnd(std::time(0)),
 	m_glitch(nullptr)
 {
 }
 
-std::size_t	GlitchManager::addGlitch(std::unique_ptr<AGlitch>&& glitch)
+std::size_t	GlitchEffectManager::addGlitch(std::unique_ptr<AGlitch>&& glitch)
 {
 	std::size_t	index = m_prototypes.size();
 
@@ -28,7 +40,7 @@ std::size_t	GlitchManager::addGlitch(std::unique_ptr<AGlitch>&& glitch)
 	return (index);
 }
 
-void	GlitchManager::startRandomGlitch(sf::Time duration)
+void	GlitchEffectManager::startRandomGlitch(sf::Time duration)
 {
 	auto	key = m_randomKey(m_rnd);
 
@@ -38,7 +50,7 @@ void	GlitchManager::startRandomGlitch(sf::Time duration)
 	m_glitch->start();
 }
 
-void	GlitchManager::update(sf::Time frameTime)
+void	GlitchEffectManager::update(sf::Time frameTime)
 {
 	if (m_glitch)
 	{

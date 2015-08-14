@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   GlitchManager.hpp                                  :+:      :+:    :+:   */
+/*   GlitchEffectManager.hpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/13 23:41:12 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 00:51:23 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 15:58:01 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,26 @@
 
 # include <ResourceManager.hpp>
 
-class GlitchManager
+class GlitchEffectManager
 {
 public:
 	class AGlitch
 	{
 	public:
-		virtual ~AGlitch()
-		{
-		}
+		virtual ~AGlitch();
 
 		virtual void	start() = 0;
 		virtual void	stop() = 0;
 	};
 
-	GlitchManager();
+	GlitchEffectManager();
 
+	/*!	Add a new glitch prototype */
 	std::size_t	addGlitch(std::unique_ptr<AGlitch>&& glitch);
+
+	/*!	Start a random glitch */
 	void		startRandomGlitch(sf::Time duration);
+
 	void		update(sf::Time frameTime);
 private:
 	typedef std::vector<std::unique_ptr<AGlitch>>		PrototypeBank;
