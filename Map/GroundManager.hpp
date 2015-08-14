@@ -4,6 +4,7 @@
 # include "Map.hpp"
 # include "DecorManager.hpp"
 # include "Portal.hpp"
+# include "ElevatorStream.hpp"
 
 class ADecor;
 class ABiome;
@@ -34,6 +35,22 @@ public:
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 
 private:
+	template<class T>
+	struct GameObjectPosition
+	{
+		std::size_t				m_position;
+		std::size_t				m_width;
+		std::unique_ptr<T>		m_gameObject;
+
+		GameObjectPosition(std::size_t position, std::size_t width, T * gameObject) :
+			m_position(position),
+			m_width(width),
+			m_gameObject(nullptr)
+		{
+			m_gameObject.reset(gameObject);
+		}
+	};
+
 	std::unique_ptr<Map>				m_tiles;
 	std::unique_ptr<Map>				m_tilesPrev;
 	float								m_transitionTimer;
@@ -52,6 +69,9 @@ private:
 	//TODO: delete
 	Portal			m_test;
 
+	// Game objects
+	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
+
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
 	void defineTransition(int x, int y);
@@ -61,9 +81,11 @@ private:
 	void setTransitionModify(int x, int y);
 
 	void setupDecors(ABiome & biome);
-	void updateDecors(sf::Time deltatime);
+	void setupGameObjects(ABiome & biome);
 	void updateOffset(float deltatime);
 	void updateTransition(void);
+	void updateDecors(sf::Time deltatime);
+	void updateGameObjects(float deltatime);
 	void computeDecor(void);
 	void swapMap(void);
 

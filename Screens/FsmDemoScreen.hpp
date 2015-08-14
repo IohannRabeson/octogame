@@ -6,14 +6,13 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/03 16:22:20 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/03 18:29:31 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/07/20 17:25:28 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FSMDEMOSCREEN_HPP
 # define FSMDEMOSCREEN_HPP
-# include "FiniteStateMachine.hpp"
-
+# include <FiniteStateMachine.hpp>
 # include <AnimatedSprite.hpp>
 # include <AbstractState.hpp>
 
@@ -22,7 +21,7 @@
 
 class Tamagotshi
 {
-	typedef FiniteStateMachine::EventId	EventId;
+	typedef octo::FiniteStateMachine::EventId	EventId;
 public:
 	enum Event
 	{
@@ -40,14 +39,14 @@ public:
 	void					update(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render)const;
 private:	
-	FiniteStateMachine		m_machine;
-	octo::AnimatedSprite	m_animatedSprite;
-	octo::SpriteAnimation	m_anim0;
-	octo::SpriteAnimation	m_anim1;
-	octo::SpriteAnimation	m_anim2;
-	octo::SpriteAnimation	m_anim3;
-	sf::Time				m_elasped;
-	sf::Text				m_text;
+	octo::FiniteStateMachine	m_machine;
+	octo::AnimatedSprite		m_animatedSprite;
+	octo::SpriteAnimation		m_anim0;
+	octo::SpriteAnimation		m_anim1;
+	octo::SpriteAnimation		m_anim2;
+	octo::SpriteAnimation		m_anim3;
+	sf::Time					m_elasped;
+	sf::Text					m_text;
 };
 
 class FsmDemoScreen : public octo::AbstractState
