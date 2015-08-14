@@ -14,6 +14,8 @@
 # include <random>
 # include <ctime>
 
+class CircleShape;
+
 class Portal : public AGameObject<GameObjectType::Portal>
 {
 private:
@@ -71,8 +73,7 @@ public:
 	void draw(sf::RenderTarget& render)const;
 
 private:
-	// TODO: info du biome vers lequel on va
-	// possibility to had portal moving with the ground, and portal not moving
+	// TODO: info du biome vers lequel on va se téléporter
 	PortalParticle		m_particles;
 	sf::Vector2f		m_position;
 	sf::Shader			m_shader;
@@ -81,8 +82,7 @@ private:
 	float				m_radius;
 	float				m_timer;
 	float				m_timerMax;
-	//TODO trigger physic box
-	//TODO add spawnPortal, and disappearPortal
+	CircleShape *		m_box;
 
 };
 

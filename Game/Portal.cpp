@@ -1,5 +1,7 @@
 #include "Portal.hpp"
 #include "ResourceDefinitions.hpp"
+#include "CircleShape.hpp"
+#include "PhysicsEngine.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
@@ -12,7 +14,8 @@ Portal::Portal(void) :
 	m_state(State::Appear),
 	m_radius(50.f),
 	m_timer(0.f),
-	m_timerMax(1.0f)
+	m_timerMax(1.0f),
+	m_box(PhysicsEngine::getShapeBuilder().createCircle())
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
@@ -20,8 +23,13 @@ Portal::Portal(void) :
 	m_shader.loadFromMemory(resources.getText(VORTEX_FRAG), sf::Shader::Fragment);
 	m_shaderIndex = postEffect.addShader(m_shader, true);
 	m_shader.setParameter("time_max", m_timerMax);
-	setPosition(m_position);
+
+	m_box->setGameObject(this);
+	m_box->setApplyGravity(false);
+	m_box->setType(AShape::Type::e_trigger);
+
 	setRadius(m_radius);
+	setPosition(m_position);
 
 	static float const	Size = 6.f;
 	PortalParticle::Prototype	prototype;
@@ -58,7 +66,6 @@ void Portal::update(sf::Time frametime)
 		default:
 			break;
 	}
-	m_timer += frametime.asSeconds();
 
 	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 	if (m_position.x + m_radius > screen.left && m_position.x - m_radius < screen.left + screen.width)
@@ -77,6 +84,7 @@ void Portal::setPosition(sf::Vector2f const & position)
 {
 	m_position = position;
 	m_particles.setEmitter(m_position);
+	m_box->setPosition(sf::Vector2f(m_position.x - m_radius, m_position.y - m_radius));
 }
 
 void Portal::setRadius(float radius)
@@ -84,6 +92,7 @@ void Portal::setRadius(float radius)
 	m_radius = radius;
 	m_shader.setParameter("radius", m_radius);
 	m_particles.setRadius(m_radius);
+	m_box->setRadius(m_radius);
 }
 
 void Portal::draw(sf::RenderTarget & render) const

@@ -443,7 +443,7 @@ void GroundManager::updateTransition(void)
 			if (tmp < max)
 				max = tmp;
 		}
-		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x + Tile::DoubleTileSize, max - portal.m_gameObject->getRadius() * 2.f));
+		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x + Tile::DoubleTileSize, max - portal.m_gameObject->getRadius() - Tile::TripleTileSize));
 	}
 }
 
