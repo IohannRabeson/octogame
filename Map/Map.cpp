@@ -47,6 +47,8 @@ void Map::init(ABiome & biome)
 		}
 	}
 
+	m_wideDecorPositions.resize(biome.getMapSize().x);
+
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
 		m_instances.push_back(std::unique_ptr<MapInstance>(new MapInstance(instance.first, instance.second)));
@@ -165,9 +167,47 @@ void Map::computeDecor(void)
 	}
 }
 
+void Map::computeWideDecor(void)
+{
+	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
+	int height;
+	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+
+	assert(m_mapSurface);
+
+	float startTransitionX = (m_mapSurface((static_cast<float>(m_mapSize.x) - m_mapJoinHalfWidth) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+	float endTransitionX = (m_mapSurface(m_mapJoinHalfWidth / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+
+	for (int x = 0; x < static_cast<int>(m_wideDecorPositions.size()); x++)
+	{
+		if (!m_wideDecorPositions[x].first)
+			continue;
+		// Check if we are at the transition between 0 and m_mapSize.x
+		if (x < static_cast<int>(m_mapJoinHalfWidth) || x >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
+		{
+			float transition = x < static_cast<int>(m_mapJoinHalfWidth) ? static_cast<float>(x) + m_mapJoinHalfWidth : m_mapJoinHalfWidth - static_cast<float>(m_mapSize.x) + static_cast<float>(x);
+			height =  octo::cosinusInterpolation(startTransitionX, endTransitionX, transition / m_mapJoinWidth);
+		}
+		else
+		{
+			// mapSurface return a value between -1 & 1
+			// we normalize it betwen 0 & max_height
+			height = static_cast<int>((m_mapSurface(static_cast<float>(x) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
+		}
+		m_wideDecorPositions[x].second.x = Tile::TileSize * static_cast<float>(getCircleOffset(curOffsetX, x, static_cast<int>(m_mapSize.x)));
+		m_wideDecorPositions[x].second.y = Tile::TileSize * static_cast<float>(height);
+	}
+}
+
 void Map::registerDecor(int x)
 {
 	m_decorPositions.emplace_back(std::pair<int, sf::Vector2f>(x, sf::Vector2f()));
+}
+
+void Map::registerWideDecor(std::size_t x)
+{
+	assert(x < m_mapSize.x);
+	m_wideDecorPositions[x].first = true;
 }
 
 void Map::swapDepth(void)

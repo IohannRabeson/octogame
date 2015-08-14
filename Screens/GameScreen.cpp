@@ -50,19 +50,7 @@ void	GameScreen::stop()
 
 void	GameScreen::update(sf::Time frameTime)
 {
-	float cameraSpeed = 500.f * frameTime.asSeconds();
-	octo::Camera & camera = octo::Application::getCamera();
-
 	m_game.update(frameTime);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		camera.move(-cameraSpeed, 0.f);
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		camera.move(cameraSpeed, 0.f);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		camera.move(0.f, -cameraSpeed);
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		camera.move(0.f, cameraSpeed);
 }
 
 bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
