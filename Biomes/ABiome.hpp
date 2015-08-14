@@ -38,6 +38,8 @@ public:
 	virtual sf::Vector2f	getMapSizeFloat() = 0;
 	virtual float			getTransitionDuration() = 0;
 	virtual int				getBossInstancePosX() = 0;
+	virtual sf::Color		getTileStartColor() = 0;
+	virtual sf::Color		getTileEndColor() = 0;
 
 	virtual std::map<std::size_t, std::string>	const & getInstances() = 0;
 	virtual std::vector<ParallaxScrolling::ALayer *> getLayers() = 0;

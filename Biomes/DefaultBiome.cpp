@@ -11,6 +11,8 @@ DefaultBiome::DefaultBiome() :
 	m_mapSize(sf::Vector2f(512u, 128u)),
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
+	m_tileStartColor(230.f, 168.f, 0.f),
+	m_tileEndColor(254.f, 231.f, 170.f),
 
 	m_dayDuration(sf::seconds(40.f)),
 	m_skyDayColor(188, 200, 206),
@@ -174,13 +176,10 @@ Map::MapSurfaceGenerator DefaultBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DefaultBiome::getTileColorGenerator()
 {
-	return [](Noise & noise, float x, float y, float z)
+	return [*](Noise & noise, float x, float y, float z)
 	{
-		static const sf::Color end = sf::Color(254, 231, 170);
-		static const sf::Color start = sf::Color(230, 168, 0);
-
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		return octo::linearInterpolation(start, end, transition);
+		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
 
