@@ -31,20 +31,20 @@ class ABiome : public octo::NonCopyable
 public:
 	virtual ~ABiome();
 
-	virtual void			setup(std::size_t seed) = 0;
-	virtual std::string		getName()const = 0;
+	virtual void										setup(std::size_t seed) = 0;
+	virtual std::string									getName()const = 0;
 
-	virtual sf::Vector2u	getMapSize() = 0;
-	virtual sf::Vector2f	getMapSizeFloat() = 0;
-	virtual float			getTransitionDuration() = 0;
-	virtual int				getBossInstancePosX() = 0;
-	virtual sf::Color		getTileStartColor() = 0;
-	virtual sf::Color		getTileEndColor() = 0;
+	virtual sf::Vector2u								getMapSize() = 0;
+	virtual sf::Vector2f								getMapSizeFloat() = 0;
+	virtual float										getTransitionDuration() = 0;
+	virtual int											getBossInstancePosX() = 0;
 
-	virtual std::map<std::size_t, std::string>	const & getInstances() = 0;
-	virtual std::vector<ParallaxScrolling::ALayer *> getLayers() = 0;
-	virtual Map::MapSurfaceGenerator getMapSurfaceGenerator() = 0;
-	virtual Map::TileColorGenerator getTileColorGenerator() = 0;
+	virtual std::map<std::size_t, std::string>			const & getInstances() = 0;
+	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers() = 0;
+	virtual Map::MapSurfaceGenerator					getMapSurfaceGenerator() = 0;
+	virtual Map::TileColorGenerator						getTileColorGenerator() = 0;
+	virtual sf::Color									getTileStartColor() = 0;
+	virtual sf::Color									getTileEndColor() = 0;
 
 	virtual sf::Time		getDayDuration() = 0;
 	virtual sf::Color		getSkyDayColor() = 0;

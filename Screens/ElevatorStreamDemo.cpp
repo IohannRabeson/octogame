@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "ElevatorStreamDemo.hpp"
+#include "DefaultBiome.hpp"
+#include "BiomeManager.hpp"
 #include <Application.hpp>
 #include <Console.hpp>
 #include <Camera.hpp>
@@ -23,10 +25,6 @@ ElevatorStreamDemo::ElevatorStreamDemo()
 			{
 				m_teleportBeam.setWidth(width);
 			});
-	console.addCommand(L"demo.setParticleColor", [this](sf::Color const& color)
-			{
-				m_teleportBeam.setParticleColor(color);
-			});
 }
 
 void	ElevatorStreamDemo::start()
@@ -34,7 +32,12 @@ void	ElevatorStreamDemo::start()
 	m_teleportBeam.setPosX(0.f);
 	m_teleportBeam.setPosY(-400.f);
 	m_teleportBeam.setHeight(800.f);
-	octo::Application::getCamera().setCenter(sf::Vector2f());	
+	octo::Application::getCamera().setCenter(sf::Vector2f());
+
+	BiomeManager manager;
+	manager.registerBiome<DefaultBiome>("test");
+	manager.changeBiome("test", 0);
+	m_teleportBeam.setParticleColor(manager.getCurrentBiome());
 }
 
 void	ElevatorStreamDemo::pause()

@@ -78,13 +78,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
 
 	// Setup somes console commands
-	console.addCommand(L"test.elevators.setParticleColor", [this](sf::Color const& color)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setParticleColor(color);
-				}
-			});
 	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
 			{
 				for(auto& elevator : m_elevators)
@@ -114,6 +107,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		elevator->setPosX((instance.first - 10.f) * Tile::TileSize);
 		elevator->setPosY(-levelMap.getMapSize().y + MapInstance::HeightOffset);
 		elevator->setHeight(400.f);
+		elevator->setParticleColor(biome);
 		m_elevators.emplace_back(instance.first - 10, 10, elevator);
 	}
 

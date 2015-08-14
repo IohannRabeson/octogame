@@ -33,13 +33,13 @@ public:
 	virtual sf::Vector2f								getMapSizeFloat();
 	virtual float										getTransitionDuration();
 	virtual int											getBossInstancePosX();
-	virtual sf::Color									getTileStartColor();
-	virtual sf::Color									getTileEndColor();
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
 	virtual Map::MapSurfaceGenerator					getMapSurfaceGenerator();
 	virtual Map::TileColorGenerator						getTileColorGenerator();
+	virtual sf::Color									getTileStartColor();
+	virtual sf::Color									getTileEndColor();
 
 	virtual sf::Time									getDayDuration();
 	virtual sf::Color									getSkyDayColor();

@@ -11,11 +11,13 @@
 /* ************************************************************************** */
 
 #include "ElevatorStream.hpp"
+#include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <Math.hpp>
+#include <Interpolations.hpp>
 
 #include <random>
 #include <ctime>
@@ -39,12 +41,13 @@ public:
 		m_random(std::time(0)),
 		m_distri(0.f, 1.f)
 	{
-		float const	size = 12.f;
+		float const	size = 16.f;
 
 		reset({sf::Vertex({0.f, 0.f}),
 			   sf::Vertex({size, 0.f}),
 			   sf::Vertex({size, size})},
 			   sf::Triangles, 1000u);
+
 	}
 
 	void	setWidth(float width)
@@ -57,9 +60,18 @@ public:
 		m_height = height;
 	}
 
-	void	setParticleColor(sf::Color const& color)
+	void	setParticleColor(ABiome & biome)
 	{
-		m_color = color;
+		std::size_t colorCount = 20;
+		float interpolateDelta = 1.f / 20.f;
+		m_colors.resize(colorCount);
+		sf::Color start = biome.getTileStartColor();
+		sf::Color end = biome.getTileEndColor();
+		m_colors[0] = biome.getRockColor();
+		for (std::size_t i = 1; i < colorCount; i++)
+		{
+			m_colors[i] = octo::linearInterpolation(start, end, i * interpolateDelta);
+		}
 	}
 
 	void	setRotationFactor(float factor)
@@ -106,7 +118,8 @@ public:
 
 	void	createParticle()
 	{
-		emplace(m_color,
+		std::size_t colorIndex = static_cast<std::size_t>(m_distri(m_random) * 20);
+		emplace(m_colors[colorIndex],
 				sf::Vector2f(0, 0),
 				sf::Vector2f(1.f, 1.f),
 				m_distri(m_random) * 360.f,
@@ -123,26 +136,25 @@ private:
 private:
 	typedef std::uniform_real_distribution<float>	Distri;
 
-	sf::Time		m_cycleTime;
-	float			m_speedUp;
-	float			m_width;
-	float			m_height;
-	float			m_rotationFactor;
-	sf::Time		m_emitTimer;
-	sf::Time		m_emitInterval;
-	std::mt19937	m_random;
-	Distri			m_distri;
-	sf::Color		m_color;
+	sf::Time				m_cycleTime;
+	float					m_speedUp;
+	float					m_width;
+	float					m_height;
+	float					m_rotationFactor;
+	sf::Time				m_emitTimer;
+	sf::Time				m_emitInterval;
+	std::mt19937			m_random;
+	Distri					m_distri;
+	std::vector<sf::Color>	m_colors;
 };
 
 ElevatorStream::ElevatorStream() :
-	m_particles(new BeamParticle),
+	m_particles(new BeamParticle()),
 	m_waveCycleDuration(sf::seconds(0.5))
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 
 	m_particles->setWidth(150.f);
-	m_particles->setParticleColor(sf::Color::White);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
 }
@@ -179,9 +191,9 @@ void	ElevatorStream::setRotationFactor(float factor)
 	m_particles->setRotationFactor(factor);
 }
 
-void	ElevatorStream::setParticleColor(sf::Color const& color)
+void	ElevatorStream::setParticleColor(ABiome & biome)
 {
-	m_particles->setParticleColor(color);
+	m_particles->setParticleColor(biome);
 }
 
 void	ElevatorStream::update(sf::Time frameTime)
