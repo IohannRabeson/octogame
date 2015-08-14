@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 01:35:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 03:46:40 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 14:45:50 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,49 +33,29 @@ class PotionEffectManager
 		}
 		return (value);
 	}
-
+public:
+	/*!
+	 *	\brief Abstract potion
+	 */
+	class APotion
+	{
 	public:
-		class APotion
-		{
-		public:
-			APotion(sf::Time duration) :
-				m_duration(duration)
-			{
-			}
+		explicit		APotion(sf::Time duration);
+		virtual 		~APotion();
 
-			virtual 		~APotion()
-			{
-			}
-
-			void			start()
-			{
-				m_elapsedTime = sf::Time::Zero;
-				startPotion();
-			}
-
-			void			stop()
-			{
-				stopPotion();
-			}
-
-			void			update(sf::Time frameTime)
-			{
-				m_elapsedTime += frameTime;
-				updatePotion(frameTime, clamp(m_elapsedTime / m_duration, 0.f, 1.f));
-			}
-
-			bool			isActive()const
-			{
-				return (m_elapsedTime < m_duration);
-			}
-		private:
-			virtual void	startPotion() = 0;
-			virtual void	updatePotion(sf::Time, float relativeTime) = 0;
-			virtual void	stopPotion() = 0;
-		private:
-			sf::Time	m_duration;
-			sf::Time	m_elapsedTime;
-		};
+		void			start();
+		void			stop();
+		void			update(sf::Time frameTime);
+		bool			isActive()const;
+	private:
+		/*!	Called when the potion is started */
+		virtual void	startPotion() = 0;
+		virtual void	updatePotion(sf::Time, float relativeTime) = 0;
+		virtual void	stopPotion() = 0;
+	private:
+		sf::Time	m_duration;
+		sf::Time	m_elapsedTime;
+	};
 
 	PotionEffectManager();
 
