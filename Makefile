@@ -107,7 +107,8 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 
 SRC_POTION  = 	Potion/PotionEffectManager.cpp			\
 				Potion/PostEffectPotion.cpp				\
-				Potion/PixelPotion.cpp
+				Potion/PixelPotion.cpp					\
+				Potion/GrayPotion.cpp
 
 # package files
 LOADING_PCK_FILE = loading.pck

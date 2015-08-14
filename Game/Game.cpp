@@ -8,6 +8,7 @@
 #include "PixelGlitch.hpp"
 
 #include "PixelPotion.hpp"
+#include "GrayPotion.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -35,6 +36,7 @@ void	Game::setup()
 
 	// Register potions
 	m_potionManager.addPotion("pixels", std::unique_ptr<PixelPotion>(new PixelPotion()));
+	m_potionManager.addPotion("xfade_gray", std::unique_ptr<GrayPotion>(new GrayPotion()));
 
 	// Register commands
 	console.addCommand(L"test.potion.spawn", [this](std::string const& key)
