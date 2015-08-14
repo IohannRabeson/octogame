@@ -110,6 +110,7 @@ public:
 
 	void	createParticle()
 	{
+		//TODO : Voir avec Iohann si on ne devrait pas avoir une instance du biome accessible partout pour eviter ce genre de chose
 		sf::Color color;
 		if (m_biome)
 			color = m_biome->getParticleColorGround();
