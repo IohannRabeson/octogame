@@ -52,6 +52,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
 				Game/CharacterOcto.cpp					\
 				Game/ElevatorStream.cpp					\
+				Game/Portal.cpp							\
 				Game/GlitchManager.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
