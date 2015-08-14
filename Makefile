@@ -105,6 +105,7 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/AShape.cpp
 
 SRC_POTION  = 	Potion/PotionEffectManager.cpp			\
+				Potion/PostEffectPotion.cpp				\
 				Potion/PixelPotion.cpp
 
 # package files
