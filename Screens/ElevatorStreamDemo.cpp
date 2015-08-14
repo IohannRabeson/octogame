@@ -37,7 +37,7 @@ void	ElevatorStreamDemo::start()
 	BiomeManager manager;
 	manager.registerBiome<DefaultBiome>("test");
 	manager.changeBiome("test", 0);
-	m_teleportBeam.setParticleColor(manager.getCurrentBiome());
+	m_teleportBeam.setBiome(manager.getCurrentBiome());
 }
 
 void	ElevatorStreamDemo::pause()

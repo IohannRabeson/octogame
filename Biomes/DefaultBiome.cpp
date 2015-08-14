@@ -100,6 +100,14 @@ DefaultBiome::DefaultBiome() :
 {
 	m_generator.setSeed(m_name);
 
+	// Create a set a 20 colors for particles
+	std::size_t colorCount = 20;
+	float interpolateDelta = 1.f / 20.f;
+	m_particleColor.resize(colorCount);
+	m_particleColor[0] = m_rockColor;
+	for (std::size_t i = 1; i < colorCount; i++)
+		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
+
 	m_instances[12] = MINIMAP_OMP;
 	m_instances[86] = TEST_MAP2_OMP;
 }
@@ -176,14 +184,17 @@ Map::MapSurfaceGenerator DefaultBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DefaultBiome::getTileColorGenerator()
 {
-	sf::Color const & start = m_tileStartColor;
-	sf::Color const & end = m_tileEndColor;
-
-	return [start, end](Noise & noise, float x, float y, float z)
+	return [this](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		return octo::linearInterpolation(start, end, transition);
+		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
+}
+
+sf::Color		DefaultBiome::getParticleColorGround()
+{
+	std::size_t colorIndex = randomInt(0u, 19u);
+	return (m_particleColor[colorIndex]);
 }
 
 sf::Color		DefaultBiome::getTileStartColor()

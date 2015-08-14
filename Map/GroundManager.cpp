@@ -107,7 +107,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		elevator->setPosX((instance.first - 10.f) * Tile::TileSize);
 		elevator->setPosY(-levelMap.getMapSize().y + MapInstance::HeightOffset);
 		elevator->setHeight(400.f);
-		elevator->setParticleColor(biome);
+		elevator->setBiome(biome);
 		m_elevators.emplace_back(instance.first - 10, 10, elevator);
 	}
 

@@ -39,7 +39,8 @@ public:
 		m_rotationFactor(0.f),
 		m_emitInterval(sf::seconds(0.025f)),
 		m_random(std::time(0)),
-		m_distri(0.f, 1.f)
+		m_distri(0.f, 1.f),
+		m_biome(nullptr)
 	{
 		float const	size = 16.f;
 
@@ -60,23 +61,14 @@ public:
 		m_height = height;
 	}
 
-	void	setParticleColor(ABiome & biome)
-	{
-		std::size_t colorCount = 20;
-		float interpolateDelta = 1.f / 20.f;
-		m_colors.resize(colorCount);
-		sf::Color start = biome.getTileStartColor();
-		sf::Color end = biome.getTileEndColor();
-		m_colors[0] = biome.getRockColor();
-		for (std::size_t i = 1; i < colorCount; i++)
-		{
-			m_colors[i] = octo::linearInterpolation(start, end, i * interpolateDelta);
-		}
-	}
-
 	void	setRotationFactor(float factor)
 	{
 		m_rotationFactor = factor;
+	}
+
+	void	setBiome(ABiome & biome)
+	{
+		m_biome = &biome;
 	}
 
 	void	updateParticle(sf::Time frameTime, Particle& particle)
@@ -118,8 +110,12 @@ public:
 
 	void	createParticle()
 	{
-		std::size_t colorIndex = static_cast<std::size_t>(m_distri(m_random) * 20);
-		emplace(m_colors[colorIndex],
+		sf::Color color;
+		if (m_biome)
+			color = m_biome->getParticleColorGround();
+		else
+			color = sf::Color::White;
+		emplace(color,
 				sf::Vector2f(0, 0),
 				sf::Vector2f(1.f, 1.f),
 				m_distri(m_random) * 360.f,
@@ -145,7 +141,7 @@ private:
 	sf::Time				m_emitInterval;
 	std::mt19937			m_random;
 	Distri					m_distri;
-	std::vector<sf::Color>	m_colors;
+	ABiome *				m_biome;
 };
 
 ElevatorStream::ElevatorStream() :
@@ -191,9 +187,9 @@ void	ElevatorStream::setRotationFactor(float factor)
 	m_particles->setRotationFactor(factor);
 }
 
-void	ElevatorStream::setParticleColor(ABiome & biome)
+void	ElevatorStream::setBiome(ABiome & biome)
 {
-	m_particles->setParticleColor(biome);
+	m_particles->setBiome(biome);
 }
 
 void	ElevatorStream::update(sf::Time frameTime)

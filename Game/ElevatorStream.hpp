@@ -39,7 +39,7 @@ public:
 	void	setHeight(float height);
 	void	setWidth(float width);
 	void	setRotationFactor(float factor);
-	void	setParticleColor(ABiome & biome);
+	void	setBiome(ABiome & biome);
 
 	void	update(sf::Time frameTime);
 	void	draw(sf::RenderTarget& render)const;

@@ -38,6 +38,7 @@ public:
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
 	virtual Map::MapSurfaceGenerator					getMapSurfaceGenerator();
 	virtual Map::TileColorGenerator						getTileColorGenerator();
+	virtual sf::Color									getParticleColorGround();
 	virtual sf::Color									getTileStartColor();
 	virtual sf::Color									getTileEndColor();
 
@@ -132,106 +133,107 @@ public:
 	virtual bool										randomBool(float percent);
 
 private:
-	RandomGenerator						m_generator;
-	std::string							m_name;
+	RandomGenerator										m_generator;
+	std::string											m_name;
 
-	sf::Vector2u						m_mapSize;
-	float								m_transitionDuration;
-	std::size_t							m_bossInstancePosX;
-	sf::Color							m_tileStartColor;
-	sf::Color							m_tileEndColor;
+	sf::Vector2u										m_mapSize;
+	float												m_transitionDuration;
+	std::size_t											m_bossInstancePosX;
+	std::vector<sf::Color>								m_particleColor;
+	sf::Color											m_tileStartColor;
+	sf::Color											m_tileEndColor;
 
-	std::map<std::size_t, std::string>	m_instances;
+	std::map<std::size_t, std::string>					m_instances;
 
-	sf::Time							m_dayDuration;
-	sf::Color							m_skyDayColor;
-	sf::Color							m_skyNightColor;
-	sf::Color							m_nightLightColor;
-	sf::Color							m_SunsetLightColor;
-	float								m_wind;
-	Range<std::size_t>					m_rainDropPerSecond;
-	static constexpr std::size_t		m_rainDropPerSecondMax = 127u;
-	Range<sf::Time>						m_sunnyTime;
-	Range<sf::Time>						m_rainingTime;
-	Range<float>						m_lightningSize;
+	sf::Time											m_dayDuration;
+	sf::Color											m_skyDayColor;
+	sf::Color											m_skyNightColor;
+	sf::Color											m_nightLightColor;
+	sf::Color											m_SunsetLightColor;
+	float												m_wind;
+	Range<std::size_t>									m_rainDropPerSecond;
+	static constexpr std::size_t						m_rainDropPerSecondMax = 127u;
+	Range<sf::Time>										m_sunnyTime;
+	Range<sf::Time>										m_rainingTime;
+	Range<float>										m_lightningSize;
 
-	Range<std::size_t>					m_rockCount;
-	Range<std::size_t>					m_treeCount;
-	Range<std::size_t>					m_mushroomCount;
-	Range<std::size_t>					m_crystalCount;
-	Range<std::size_t>					m_starCount;
-	Range<std::size_t>					m_sunCount;
-	Range<std::size_t>					m_moonCount;
-	Range<std::size_t>					m_rainbowCount;
-	Range<std::size_t>					m_cloudCount;
-	Range<std::size_t>					m_groundRockCount;
+	Range<std::size_t>									m_rockCount;
+	Range<std::size_t>									m_treeCount;
+	Range<std::size_t>									m_mushroomCount;
+	Range<std::size_t>									m_crystalCount;
+	Range<std::size_t>									m_starCount;
+	Range<std::size_t>									m_sunCount;
+	Range<std::size_t>									m_moonCount;
+	Range<std::size_t>									m_rainbowCount;
+	Range<std::size_t>									m_cloudCount;
+	Range<std::size_t>									m_groundRockCount;
 
-	bool								m_canCreateRain;
-	bool								m_canCreateThunder;
-	bool								m_canCreateSnow;
-	bool								m_canCreateRock;
-	bool								m_canCreateTree;
-	bool								m_canCreateLeaf;
-	bool								m_treeIsMoving;
-	bool								m_canCreateMushroom;
-	bool								m_canCreateCrystal;
-	bool								m_canCreateShineEffect;
-	bool								m_canCreateCloud;
-	bool								m_canCreateStar;
-	bool								m_canCreateSun;
-	bool								m_canCreateMoon;
-	bool								m_canCreateRainbow;
+	bool												m_canCreateRain;
+	bool												m_canCreateThunder;
+	bool												m_canCreateSnow;
+	bool												m_canCreateRock;
+	bool												m_canCreateTree;
+	bool												m_canCreateLeaf;
+	bool												m_treeIsMoving;
+	bool												m_canCreateMushroom;
+	bool												m_canCreateCrystal;
+	bool												m_canCreateShineEffect;
+	bool												m_canCreateCloud;
+	bool												m_canCreateStar;
+	bool												m_canCreateSun;
+	bool												m_canCreateMoon;
+	bool												m_canCreateRainbow;
 
-	Range<sf::Vector2f>					m_rockSize;
-	Range<std::size_t>					m_rockPartCount;
-	sf::Color							m_rockColor;
+	Range<sf::Vector2f>									m_rockSize;
+	Range<std::size_t>									m_rockPartCount;
+	sf::Color											m_rockColor;
 
-	Range<std::size_t>					m_treeDepth;
-	Range<sf::Vector2f>					m_treeSize;
-	Range<sf::Time>						m_treeLifeTime;
-	sf::Color							m_treeColor;
-	Range<float>						m_treeAngle;
-	Range<sf::Vector2f>					m_leafSize;
-	sf::Color							m_leafColor;
+	Range<std::size_t>									m_treeDepth;
+	Range<sf::Vector2f>									m_treeSize;
+	Range<sf::Time>										m_treeLifeTime;
+	sf::Color											m_treeColor;
+	Range<float>										m_treeAngle;
+	Range<sf::Vector2f>									m_leafSize;
+	sf::Color											m_leafColor;
 
-	Range<sf::Vector2f>					m_mushroomSize;
-	sf::Color							m_mushroomColor;
-	Range<sf::Time>						m_mushroomLifeTime;
+	Range<sf::Vector2f>									m_mushroomSize;
+	sf::Color											m_mushroomColor;
+	Range<sf::Time>										m_mushroomLifeTime;
 
-	Range<sf::Vector2f>					m_crystalSize;
-	Range<std::size_t>					m_crystalPartCount;
-	sf::Color							m_crystalColor;
-	Range<sf::Vector2f>					m_shineEffectSize;
-	sf::Color							m_shineEffectColor;
-	Range<float>						m_shineEffectRotateAngle;
+	Range<sf::Vector2f>									m_crystalSize;
+	Range<std::size_t>									m_crystalPartCount;
+	sf::Color											m_crystalColor;
+	Range<sf::Vector2f>									m_shineEffectSize;
+	sf::Color											m_shineEffectColor;
+	Range<float>										m_shineEffectRotateAngle;
 
-	Range<sf::Vector2f>					m_cloudSize;
-	Range<std::size_t>					m_cloudPartCount;
-	Range<sf::Time>						m_cloudLifeTime;
-	sf::Color							m_cloudColor;
+	Range<sf::Vector2f>									m_cloudSize;
+	Range<std::size_t>									m_cloudPartCount;
+	Range<sf::Time>										m_cloudLifeTime;
+	sf::Color											m_cloudColor;
 
-	Range<sf::Vector2f>					m_starSize;
-	sf::Color							m_starColor;
-	Range<sf::Time>						m_starLifeTime;
+	Range<sf::Vector2f>									m_starSize;
+	sf::Color											m_starColor;
+	Range<sf::Time>										m_starLifeTime;
 
-	Range<sf::Vector2f>					m_sunSize;
-	Range<std::size_t>					m_sunPartCount;
-	sf::Color							m_sunColor;
+	Range<sf::Vector2f>									m_sunSize;
+	Range<std::size_t>									m_sunPartCount;
+	sf::Color											m_sunColor;
 
-	Range<sf::Vector2f>					m_moonSize;
-	sf::Color							m_moonColor;
-	Range<sf::Time>						m_moonLifeTime;
+	Range<sf::Vector2f>									m_moonSize;
+	sf::Color											m_moonColor;
+	Range<sf::Time>										m_moonLifeTime;
 
-	Range<float>						m_rainbowThickness;
-	Range<float>						m_rainbowPartSize;
-	Range<std::size_t>					m_rainbowLoopCount;
-	Range<sf::Time>						m_rainbowLifeTime;
-	Range<sf::Time>						m_rainbowIntervalTime;
+	Range<float>										m_rainbowThickness;
+	Range<float>										m_rainbowPartSize;
+	Range<std::size_t>									m_rainbowLoopCount;
+	Range<sf::Time>										m_rainbowLifeTime;
+	Range<sf::Time>										m_rainbowIntervalTime;
 
-	float								randomRangeFloat(Range<float> const & range);
-	int									randomRangeSizeT(Range<std::size_t> const & range);
-	sf::Vector2f						randomRangeVector2f(Range<sf::Vector2f> const & range);
-	sf::Time							randomRangeTime(Range<sf::Time> const & range);
+	float												randomRangeFloat(Range<float> const & range);
+	int													randomRangeSizeT(Range<std::size_t> const & range);
+	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
+	sf::Time											randomRangeTime(Range<sf::Time> const & range);
 };
 
 #endif
