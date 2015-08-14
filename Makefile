@@ -7,7 +7,8 @@ DIRS = Main			\
 	   Physics		\
 	   Game			\
 	   Biomes		\
-	   Glitch
+	   Glitch		\
+	   Potion
 
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
@@ -27,6 +28,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_OCTO)										\
 	  $(SRC_BIOMES)										\
 	  $(SRC_DECORS)										\
+	  $(SRC_POTION)										\
 	  $(SRC_GAME)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp
@@ -101,6 +103,9 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/ShapeBuilder.cpp				\
 				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp
+
+SRC_POTION  = 	Potion/PotionEffectManager.cpp			\
+				Potion/PixelPotion.cpp
 
 # package files
 LOADING_PCK_FILE = loading.pck

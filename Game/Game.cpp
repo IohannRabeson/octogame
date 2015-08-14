@@ -8,6 +8,8 @@
 
 #include "PixelGlitch.hpp"
 
+#include "PixelPotion.hpp"
+
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -15,6 +17,7 @@
 #include <ResourceManager.hpp>
 #include <Interpolations.hpp>
 #include <Options.hpp>
+#include <Console.hpp>
 
 Game::Game() :
 	m_physicsEngine(PhysicsEngine::getInstance())
@@ -24,10 +27,33 @@ Game::Game() :
 void	Game::setup()
 {
 	m_biomeManager.registerBiome<DefaultBiome>("test");
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
+	octo::Console&			console = octo::Application::getConsole();
+
 	graphics.addKeyboardListener(this);
 	graphics.addKeyboardListener(&m_octo);
+	
+	// Register glitches
 	m_glitchManager.addGlitch(std::unique_ptr<PixelGlitch>(new PixelGlitch()));
+
+	// Register potions
+	m_potionManager.addPotion("pixels", std::unique_ptr<PixelPotion>(new PixelPotion()));
+
+	// Register commands
+	console.addCommand(L"test.potion.spawn", [this](std::string const& key)
+			{
+				try
+				{
+					m_potionManager.startPotion(key);
+				}
+				catch (std::exception const& e)
+				{
+					octo::Console&	console = octo::Application::getConsole();
+
+					console.printError(e);
+				}
+					
+			});
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -56,6 +82,7 @@ void	Game::update(sf::Time frameTime)
 	followPlayer();
 	m_skyManager.update(frameTime);
 	m_glitchManager.update(frameTime);
+	m_potionManager.update(frameTime);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
