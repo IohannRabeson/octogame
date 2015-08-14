@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:54:08 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/10 23:58:01 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 04:30:33 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,6 @@ private:
 	Game			m_game;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
-
-private:
-	sf::Shader	m_shader0;
-	sf::Shader	m_shader1;
-	sf::Shader	m_shader2;
 };
 
 #endif

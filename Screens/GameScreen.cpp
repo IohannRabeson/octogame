@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 06:03:08 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/13 22:00:48 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/14 04:30:52 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,15 @@
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
-#include <ResourceManager.hpp>
-#include <PostEffectManager.hpp>
 
 void	GameScreen::start()
 {
 	m_game.setup();
 	m_game.loadLevel("TODO");
 
-	octo::GraphicsManager &		graphics = octo::Application::getGraphicsManager();
-	octo::ResourceManager&		resources = octo::Application::getResourceManager();
-	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 
 	graphics.addKeyboardListener(this);
-	m_shader0.loadFromMemory(resources.getText(PIXELATE_FRAG), sf::Shader::Fragment);
-	m_shader0.setParameter("pixel_threshold", 0.005f);
-	m_shader1.loadFromMemory(resources.getText(GRAY_FRAG), sf::Shader::Fragment);
-	postEffect.addShader(m_shader0, false);
-	postEffect.addShader(m_shader1, false);
 }
 
 void	GameScreen::pause()
@@ -55,16 +46,8 @@ void	GameScreen::update(sf::Time frameTime)
 
 bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 {
-	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-
 	switch (event.code)
 	{
-		case sf::Keyboard::F1:
-			postEffect.enableShader(0, !postEffect.isShaderEnabled(0));
-			break;
-		case sf::Keyboard::F2:
-			postEffect.enableShader(1, !postEffect.isShaderEnabled(1));
-			break;
 		default:
 			break;
 	}	
