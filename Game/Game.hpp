@@ -9,6 +9,7 @@
 # include "CharacterOcto.hpp"
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
+# include "MusicPlayer.hpp"
 
 class PhysicsEngine;
 class AShape;
@@ -31,6 +32,7 @@ private:
 	SkyManager			m_skyManager;
 	GroundManager		m_groundManager;
 	ParallaxScrolling	m_parallaxScrolling;
+	MusicPlayer			m_musicPlayer;
 	CharacterOcto		m_octo;
 	sf::Vector2f		m_cameraPos;
 	sf::Vector2f		m_octoPos;

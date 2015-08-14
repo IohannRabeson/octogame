@@ -42,7 +42,8 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
 				Game/CharacterOcto.cpp					\
 				Game/Portal.cpp							\
-				Game/ElevatorStream.cpp
+				Game/ElevatorStream.cpp					\
+				Game/MusicPlayer.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\

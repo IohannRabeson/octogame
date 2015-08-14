@@ -18,7 +18,7 @@
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
-	m_pixelSecondJump(-1500.f),
+	m_pixelSecondJump(-3500.f),
 	m_pixelSecondUmbrella(-500.f),
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-970.f),

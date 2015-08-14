@@ -43,9 +43,8 @@ void	Game::loadLevel(std::string const& fileName)
 
 void	Game::update(sf::Time frameTime)
 {
-	sf::Vector2f cameraCenter = octo::Application::getCamera().getCenter();
-	//TODO: Change cameraCenter by m_octo.getPosition()
-	sf::Listener::setPosition(sf::Vector3f(cameraCenter.x, cameraCenter.y, 0.f));
+	sf::Vector2f const & octoPos = m_octo.getPosition();
+	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
 	m_skyCycle.update(frameTime, m_biomeManager.getCurrentBiome());
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
@@ -53,6 +52,7 @@ void	Game::update(sf::Time frameTime)
 	m_octo.update(frameTime);
 	followPlayer();
 	m_skyManager.update(frameTime);
+	m_musicPlayer.update(m_octo);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
