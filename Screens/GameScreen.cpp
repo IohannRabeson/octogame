@@ -18,6 +18,8 @@
 #include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
+#include <AudioManager.hpp>
+#include <Options.hpp>
 
 void	GameScreen::start()
 {
@@ -27,6 +29,8 @@ void	GameScreen::start()
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	octo::ResourceManager& resources = octo::Application::getResourceManager();
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+	octo::AudioManager& audio = octo::Application::getAudioManager();
+	octo::Options& option = octo::Application::getOptions();
 
 	graphics.addKeyboardListener(this);
 	m_shader0.loadFromMemory(resources.getText(PIXELATE_FRAG), sf::Shader::Fragment);
@@ -34,6 +38,9 @@ void	GameScreen::start()
 	m_shader1.loadFromMemory(resources.getText(GRAY_FRAG), sf::Shader::Fragment);
 	postEffect.addShader(m_shader0, false);
 	postEffect.addShader(m_shader1, false);
+	//TODO: To remove when menu will be implement
+	audio.setSoundVolume(option.getValue("sound", 0u));
+	audio.setMusicVolume(option.getValue("music", 0u));
 }
 
 void	GameScreen::pause()
