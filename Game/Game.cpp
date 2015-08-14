@@ -4,15 +4,12 @@
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
-#include "MapInstance.hpp"
 
 #include "PixelGlitch.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
-#include <LevelMap.hpp>
-#include <ResourceManager.hpp>
 #include <Interpolations.hpp>
 #include <Options.hpp>
 
