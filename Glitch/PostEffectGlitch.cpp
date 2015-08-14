@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 16:03:43 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 16:11:41 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/16 15:55:03 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,15 @@
 #include <Application.hpp>
 #include <PostEffectManager.hpp>
 #include <ResourceDefinitions.hpp>
+#include <PostEffect.hpp>
 
 #include <limits>
 
-std::size_t const	PostEffectGlitch::NullShaderKey = std::numeric_limits<std::size_t>::max();
+std::size_t const	PostEffectGlitch::NullShaderIndex = std::numeric_limits<std::size_t>::max();
 
 PostEffectGlitch::PostEffectGlitch(std::string const& shaderResourceKey) :
 	m_shaderResourceKey(shaderResourceKey),
-	m_shaderKey(NullShaderKey)
+	m_shaderIndex(NullShaderIndex)
 {
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 	octo::ResourceManager& 		resources = octo::Application::getResourceManager();
@@ -30,7 +31,7 @@ PostEffectGlitch::PostEffectGlitch(std::string const& shaderResourceKey) :
 
 	if (m_shader.loadFromMemory(resources.getText(shaderResourceKey), sf::Shader::Fragment))
 	{
-		m_shaderKey = postEffect.addShader(m_shader);
+		m_shaderIndex = postEffect.addEffect(octo::PostEffect(m_shader, false));
 	}
 }
 
@@ -38,9 +39,9 @@ PostEffectGlitch::~PostEffectGlitch()
 {
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 	
-	if (m_shaderKey != NullShaderKey)
+	if (m_shaderIndex != NullShaderIndex)
 	{
-		postEffect.removeShader(m_shaderKey);
+		postEffect.removeEffect(m_shaderIndex);
 	}
 }
 
@@ -48,10 +49,10 @@ void	PostEffectGlitch::start()
 {
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 	
-	if (m_shaderKey != NullShaderKey)
+	if (m_shaderIndex != NullShaderIndex)
 	{
 		setupShader(m_shader);
-		postEffect.enableShader(m_shaderKey, true);
+		postEffect.enableEffect(m_shaderIndex, true);
 	}
 }
 
@@ -59,8 +60,8 @@ void	PostEffectGlitch::stop()
 {
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 
-	if (m_shaderKey != NullShaderKey)
+	if (m_shaderIndex != NullShaderIndex)
 	{
-		postEffect.enableShader(m_shaderKey, false);
+		postEffect.enableEffect(m_shaderIndex, false);
 	}
 }

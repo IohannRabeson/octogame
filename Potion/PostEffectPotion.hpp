@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 03:49:33 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 17:21:44 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/16 18:36:40 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 # define POSTEFFECTPOTION_HPP
 # include "PotionEffectManager.hpp"
 
+# include <PostEffect.hpp>
+
 # include <SFML/Graphics/Shader.hpp>
 
 class PostEffectPotion : public PotionEffectManager::APotion
 {
 public:
-	static std::size_t const	NullShaderIndex;
+	static std::size_t const	NullEffectIndex;
 
 	explicit PostEffectPotion(std::string const& shaderResourceKey, sf::Time duration);
 
@@ -33,10 +35,10 @@ private:
 
 	virtual void		updatePotion(sf::Time frameTime, float relativeTime);
 	virtual void		updateShader(sf::Time frameTime, float relativeTime, sf::Shader& shader) = 0;
-	virtual void		setupShader(sf::Shader& shader) = 0;
+	virtual void		setupShader(sf::Shader& effect) = 0;
 private:
 	sf::Shader	m_shader;
-	std::size_t	m_shaderIndex;
+	std::size_t	m_effectIndex;
 };
 
 #endif

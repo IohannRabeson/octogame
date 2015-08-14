@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/14 01:14:02 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 16:10:17 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/16 18:43:23 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,22 @@
 class PostEffectGlitch : public GlitchEffectManager::AGlitch
 {
 public:
-	static std::size_t const	NullShaderKey;
+	static std::size_t const	NullShaderIndex;
 
 	PostEffectGlitch(std::string const& shaderResourceKey);
 	~PostEffectGlitch();
 
 	virtual void	start();
 	virtual void	stop();
+protected:
+	void					setBlendMode(std::size_t effectIndex, sf::BlendMode const& blendMode);
+	sf::BlendMode const&	getBlendMode(std::size_t effectIndex)const;
 private:
-	virtual void	setupShader(sf::Shader& shader) = 0;
+	virtual void			setupShader(sf::Shader& shader) = 0;
 private:
 	sf::Shader			m_shader;
 	std::string const	m_shaderResourceKey;
-	std::size_t			m_shaderKey;
+	std::size_t			m_shaderIndex;
 };
 
 #endif
