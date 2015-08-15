@@ -15,7 +15,6 @@ class BubbleManager : public sf::Drawable,
 					  public sf::Transformable
 {
 public:
-	//TODO:: Add explicit in front of constructor
 	BubbleManager(std::size_t maxVertexCount);
 	~BubbleManager(void) = default;
 
@@ -29,9 +28,8 @@ private:
 	std::size_t						m_used;
 	octo::VertexBuilder				m_builder;
 
-	BubbleNPC						m_bubble1;
-	BubbleNPC						m_bubble2;
-	BubbleNPC						m_bubble3;
+	std::vector<BubbleNPC>			m_bubbles;
+	BubbleNPC						bubble;
 
 	float m_timer;
 };

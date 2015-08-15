@@ -30,15 +30,11 @@ private:
 	static constexpr std::size_t	m_characterSize = 30u;
 
 	std::string						m_phrase;
-	sf::Color						m_color;
 	sf::Vector2f					m_size;
 	sf::Font						m_font;
 	sf::Text						m_text;
 	std::size_t						m_characterPerLine;
 	std::size_t						m_lineCount;
-
-	DecorAnimator					m_animator;
-	float							m_animation;
 
 	void setupBlocString(void);
 };

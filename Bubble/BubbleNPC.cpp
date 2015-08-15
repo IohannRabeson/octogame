@@ -6,9 +6,8 @@
 #include "ResourceDefinitions.hpp"
 
 BubbleNPC::BubbleNPC(void) :
-	m_lineCount(1u),
-	m_animator(1.f, 0.f, 4.f, 0.1f),
-	m_animation(1.f)
+	m_characterPerLine(0u),
+	m_lineCount(1u)
 {
 }
 
@@ -17,10 +16,10 @@ void BubbleNPC::createExtension(sf::Vector2f const & position, octo::VertexBuild
 	sf::Vector2f rightUp(m_sizeCorner, 0.f);
 	sf::Vector2f down(m_sizeCorner, m_sizeCorner);
 
-	rightUp = rightUp * m_animation + position;
-	down = down * m_animation + position;
+	rightUp = rightUp + position;
+	down = down + position;
 
-	builder.createTriangle(position, rightUp, down, m_color);
+	builder.createTriangle(position, rightUp, down, ABubble::getColor());
 }
 
 void BubbleNPC::setupBlocString(void)
@@ -48,7 +47,7 @@ void BubbleNPC::setup(std::string const & phrase, sf::Color const & color, std::
 	if (characterSize == 0u)
 		characterSize = m_characterSize;
 	m_phrase = phrase;
-	m_color = color;
+	ABubble::setColor(color);
 	m_size.x = m_bubbleWidth;
 
 	octo::ResourceManager& resources = octo::Application::getResourceManager();
@@ -66,20 +65,17 @@ void BubbleNPC::setup(std::string const & phrase, sf::Color const & color, std::
 	if (m_lineCount == 1u)
 		m_size.x = widthTotalText + m_font.getGlyph(m_phrase[m_phrase.size() - 1], characterSize, 0).advance;
 	m_text.setString(m_phrase);
-
-	m_animator.setup();
 }
 
-void BubbleNPC::update(sf::Time frameTime, octo::VertexBuilder& builder)
+void BubbleNPC::update(sf::Time, octo::VertexBuilder& builder)
 {
-	m_animator.update(frameTime);
-	m_animation = m_animator.getAnimation();
-
-	sf::Vector2f position = ABubble::getPosition();
-	position.y -= (m_size.y / 2.f + m_sizeCorner * 2.f) * m_animation;
-	m_text.setScale(1.f, m_animation);
-	ABubble::createOctogon(sf::Vector2f(m_size.x / 2.f, m_size.y / 2.f * m_animation), m_sizeCorner * m_animation, position, m_color, builder);
-	m_text.setPosition(ABubble::getTextUpLeft());
+	if (ABubble::isActive())
+	{
+		sf::Vector2f position = ABubble::getPosition();
+		position.y -= (m_size.y / 2.f + m_sizeCorner * 2.f);
+		ABubble::createOctogon(m_size / 2.f, m_sizeCorner, position, ABubble::getColor(), builder);
+		m_text.setPosition(ABubble::getTextUpLeft());
+	}
 }
 
 sf::Text BubbleNPC::getText(void) const

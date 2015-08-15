@@ -1,6 +1,8 @@
 #include "ABubble.hpp"
 
-ABubble::ABubble(void)
+ABubble::ABubble(void) :
+	m_color(255, 255, 255, 200),
+	m_isActive(false)
 {
 }
 
@@ -47,8 +49,27 @@ sf::Vector2f ABubble::getPosition(void) const
 	return m_position;
 }
 
+sf::Color ABubble::getColor(void) const
+{
+	return m_color;
+}
+
+bool ABubble::isActive(void) const
+{
+	return m_isActive;
+}
+
 void ABubble::setPosition(sf::Vector2f const & position)
 {
 	m_position = position;
 }
 
+void ABubble::setColor(sf::Color const & color)
+{
+	m_color = color;
+}
+
+void ABubble::setActive(bool isActive)
+{
+	m_isActive = isActive;
+}

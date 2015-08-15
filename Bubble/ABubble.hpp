@@ -21,7 +21,11 @@ public:
 
 	sf::Vector2f		getTextUpLeft(void) const;
 	sf::Vector2f		getPosition(void) const;
+	sf::Color			getColor(void) const;
+	bool				isActive(void) const;
 	void				setPosition(sf::Vector2f const & position);
+	void				setColor(sf::Color const & color);
+	void				setActive(bool isActive);
 
 	void				createOctogon(sf::Vector2f const & size,
 										float sizeCorner,
@@ -32,6 +36,8 @@ public:
 private:
 	sf::Vector2f	m_textUpLeft;
 	sf::Vector2f	m_position;
+	sf::Color		m_color;
+	bool			m_isActive;
 };
 
 #endif

@@ -115,7 +115,8 @@ DEFAULT_SRC = $(RESOURCES_DIR)/Sound/*			\
 			  $(RESOURCES_DIR)/Color/*			\
 			  $(RESOURCES_DIR)/Map/*			\
 			  $(RESOURCES_DIR)/SpriteSheet/*	\
-			  $(RESOURCES_DIR)/Shader/*
+			  $(RESOURCES_DIR)/Shader/*			\
+			  $(RESOURCES_DIR)/Text/*			\
 
 # compiler
 COMPILER = $(CXX)

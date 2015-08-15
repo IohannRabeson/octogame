@@ -1,5 +1,9 @@
 #include "BubbleManager.hpp"
 
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include "ResourceDefinitions.hpp"
+
 BubbleManager::BubbleManager(std::size_t maxVertexCount) :
 	m_vertices(new sf::Vertex[maxVertexCount]),
 	m_count(maxVertexCount),
@@ -8,16 +12,22 @@ BubbleManager::BubbleManager(std::size_t maxVertexCount) :
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 }
 
-void BubbleManager::setup(void)
+//TODO: Add NPC array in setup
+void BubbleManager::setup(void)//(std::vector<NPC> npc)
 {
-	std::string phrase = "Hello! Je suis Octo, un aventurier de l'espace. Je passe mon temps a visiter l'univers.";
-	m_bubble1.setup(phrase, sf::Color(200, 0, 0, 200));
+	octo::ResourceManager const & resource = octo::Application::getResourceManager();
+	std::size_t bubbleCount = 3;//npc.size;
+	m_bubbles.resize(bubbleCount);
 
-	phrase = "Salut Octo! Ravi de te rencontrer, tu as vraiment l'air super sympa comme Poulpe! Tu veux gouter une des boissons du coin?";
-	m_bubble2.setup(phrase, sf::Color(255, 255, 255, 200));
-
-	phrase = "WAAOUU!";
-	m_bubble3.setup(phrase, sf::Color(200, 0, 0, 200), 80);
+	for (auto bubble : m_bubbles)
+	{
+		std::string phrase = resource.getText(NPC_TEST_TXT);
+		bubble.setup(phrase, sf::Color(200, 0, 0, 200));
+		bubble.setActive(true);
+	}
+		std::string phrase = resource.getText(NPC_TEST_TXT);
+		bubble.setup(phrase, sf::Color(200, 0, 0, 200));
+		bubble.setActive(true);
 }
 
 void BubbleManager::update(sf::Time frameTime)
@@ -26,16 +36,13 @@ void BubbleManager::update(sf::Time frameTime)
 
 	m_timer += frameTime.asSeconds();
 
-	m_bubble1.update(frameTime, m_builder);
-	m_bubble1.setPosition(sf::Vector2f(400.f, 500.f));
-
-	if (m_timer > 4)
-		m_bubble2.update(frameTime, m_builder);
-	m_bubble2.setPosition(sf::Vector2f(700.f, 800.f));
-
-	if (m_timer > 6)
-		m_bubble3.update(frameTime, m_builder);
-	m_bubble3.setPosition(sf::Vector2f(1200.f, 1000.f));
+	for (auto bubble : m_bubbles)
+	{
+		bubble.update(frameTime, m_builder);
+		bubble.setPosition(sf::Vector2f(400.f, 500.f));
+	}
+		bubble.update(frameTime, m_builder);
+		bubble.setPosition(sf::Vector2f(400.f, 500.f));
 
 	m_used = m_builder.getUsed();
 }
@@ -43,8 +50,12 @@ void BubbleManager::update(sf::Time frameTime)
 void BubbleManager::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
-	render.draw(m_bubble1.getText());
-	render.draw(m_bubble2.getText());
-	render.draw(m_bubble3.getText());
+	for (auto bubble : m_bubbles)
+	{
+		if (bubble.isActive())
+			render.draw(bubble.getText());
+	}
+		if (bubble.isActive())
+			render.draw(bubble.getText());
 }
 
