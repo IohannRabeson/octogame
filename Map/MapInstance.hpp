@@ -2,7 +2,7 @@
 # define MAPINSTANCE_HPP
 
 # include <SFML/Graphics.hpp>
-# include <Array2D.hpp>
+# include <Array3D.hpp>
 # include "IMapTransformable.hpp"
 
 class Tile;
@@ -17,15 +17,15 @@ public:
 	static constexpr int		HeightOffset = -70;
 
 	MapInstance(std::size_t position, std::string const & resourceId);
-	virtual ~MapInstance(void);
+	virtual ~MapInstance(void) = default;
 
 	void swapDepth(void);
 	void registerDepth(void);
 	void nextStep(void);
 	void previousStep(void);
-	inline Tile const & get(std::size_t x, std::size_t y) const { return *m_tiles[m_depth](x, y); }
-	inline std::size_t getWidth(void) const { return m_tiles[0].columns(); }
-	inline std::size_t getHeight(void) const { return m_tiles[0].rows(); }
+	inline Tile const & get(std::size_t x, std::size_t y) const { return m_tiles(x, y, m_depth); }
+	inline std::size_t getWidth(void) const { return m_tiles.columns(); }
+	inline std::size_t getHeight(void) const { return m_tiles.rows(); }
 	inline sf::IntRect const & getCornerPositions(void) const { return m_cornerPositions; }
 
 	static void setTransitionType(Tile & tile);
@@ -34,10 +34,9 @@ private:
 	MapInstance(void) = delete;
 	void setStartTransition(int transitionType, Tile & tile, int x, int y);
 
-	octo::Array2D<Tile *> *	m_tiles;
+	octo::Array3D<Tile>		m_tiles;
 	octo::LevelMap const &	m_levelMap;
 	sf::IntRect				m_cornerPositions;
-	std::size_t				m_maxDepth;
 	int						m_depth;
 	int						m_oldDepth;
 

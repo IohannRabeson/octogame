@@ -1,8 +1,10 @@
 #include "ParallaxScrolling.hpp"
 #include "ABiome.hpp"
+#include "SkyCycle.hpp"
 
 ParallaxScrolling::ParallaxScrolling(void) :
-	m_biome(nullptr)
+	m_biome(nullptr),
+	m_skyCycle(nullptr)
 {}
 
 ParallaxScrolling::~ParallaxScrolling(void)
@@ -10,9 +12,11 @@ ParallaxScrolling::~ParallaxScrolling(void)
 	removeAllLayers();
 }
 
-void ParallaxScrolling::setup(ABiome & biome)
+void ParallaxScrolling::setup(ABiome & biome, SkyCycle & skyCycle)
 {
 	m_biome = &biome;
+	m_skyCycle = &skyCycle;
+
 	// Clean existing layers
 	removeAllLayers();
 	// Add new layers
@@ -24,6 +28,7 @@ void ParallaxScrolling::addLayer(ALayer * layer)
 	if (!layer)
 		return;
 	layer->setup();
+	layer->setOwner(this);
 	m_layers.push_back(std::unique_ptr<ALayer>(layer));
 }
 

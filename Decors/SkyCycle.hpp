@@ -20,6 +20,8 @@ public:
 	sf::Color	getSkyColorUp(void) const;
 
 	float		getWeatherValue(void) const;
+	std::size_t	getDropPerSecond(void) const;
+	float		getThunderValue(void) const;
 
 	bool		isDay(void) const;
 	bool		isNight(void) const;
@@ -32,8 +34,11 @@ public:
 
 private:
 	void		computeDayNight(sf::Time frameTime);
-	void		newRainCycle(ABiome & biome);
-	void		computeRain(sf::Time frameTime,
+	void		newThunderCycle(ABiome & biome);
+	void		newDropCycle(ABiome & biome);
+	void		computeThunder(sf::Time frameTime,
+							ABiome & biome);
+	void		computeDrop(sf::Time frameTime,
 							ABiome & biome);
 
 	sf::Time	m_timer;
@@ -46,20 +51,26 @@ private:
 	sf::Time	m_timerNight;
 	sf::Time	m_timerNightMax;
 
-	float		m_weather;
-	std::size_t	m_rainDropPerSecond;
-	sf::Time	m_sunnyTimer;
-	sf::Time	m_sunnyTimerMax;
-	sf::Time	m_rainingTimer;
-	sf::Time	m_rainingTimerMax;
-	bool		m_rainAppear;
-
 	sf::Color	m_colorUpDay;
 	sf::Color	m_colorUpNight;
 	sf::Color	m_colorDownDay;
 	sf::Color	m_colorDownNight;
 	sf::Color	m_colorSkyUp;
 	sf::Color	m_colorSkyDown;
+
+	float		m_weather;
+	std::size_t	m_dropPerSecond;
+	sf::Time	m_sunnyTimer;
+	sf::Time	m_sunnyTimerMax;
+	sf::Time	m_dropTimer;
+	sf::Time	m_dropTimerMax;
+	bool		m_dropAppear;
+
+	float		m_thunder;
+	sf::Time	m_thunderTimerStart;
+	sf::Time	m_thunderTimer;
+	sf::Time	m_thunderTimerMax;
+	std::size_t	m_thunderState;
 };
 
 #endif

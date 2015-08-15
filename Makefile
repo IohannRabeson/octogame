@@ -1,5 +1,5 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Decors Physics Game Biomes
+DIRS = Main Firefly Screens Map Decors Physics Game Biomes Bubble
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -18,6 +18,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_OCTO)										\
 	  $(SRC_BIOMES)										\
 	  $(SRC_DECORS)										\
+	  $(SRC_BUBBLE)										\
 	  $(SRC_GAME)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp
@@ -36,16 +37,19 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/ParticleDemoScreen.cpp			\
 				Screens/ResourceLoadingScreen.cpp		\
 				Screens/BubbleScreen.cpp				\
-				Screens/FsmDemoScreen.cpp
+				Screens/FsmDemoScreen.cpp				\
+				Screens/ElevatorStreamDemo.cpp
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
-				Game/BubbleManager.cpp					\
-				Game/ABubble.cpp						\
-				Game/BubbleNPC.cpp						\
-				Game/FiniteStateMachine.cpp				\
 				Game/AGameObject.cpp					\
-				Game/ACharacter.cpp
+				Game/CharacterOcto.cpp					\
+				Game/Portal.cpp							\
+				Game/ElevatorStream.cpp					\
+
+SRC_BUBBLE =	Bubble/ABubble.cpp						\
+				Bubble/BubbleManager.cpp				\
+				Bubble/BubbleNPC.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -83,7 +87,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/Sky.cpp							\
 				Decors/SunLight.cpp						\
 				Decors/Lightning.cpp					\
-				Decors/RainSystem.cpp
+				Decors/DropSystem.cpp
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
@@ -95,8 +99,23 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp
 
+
 # package files
-PACKAGE_FILE = default.pck
+LOADING_PCK_FILE = loading.pck
+DEFAULT_PCK_FILE = default.pck
+TARGET_HPP_FILE  = Main/ResourceDefinitions.hpp
+LOADING_HPP_FILE = $(BUILD_DIR)/LoadingDefinitions.hpp
+DEFAULT_HPP_FILE = $(BUILD_DIR)/DefaultDefinitions.hpp
+# resources directory
+RESOURCES_DIR = ./resources
+# resources sub directory
+LOADING_SRC = $(RESOURCES_DIR)/Loading/*
+DEFAULT_SRC = $(RESOURCES_DIR)/Sound/*			\
+			  $(RESOURCES_DIR)/Image/*			\
+			  $(RESOURCES_DIR)/Color/*			\
+			  $(RESOURCES_DIR)/Map/*			\
+			  $(RESOURCES_DIR)/SpriteSheet/*	\
+			  $(RESOURCES_DIR)/Shader/*
 
 # compiler
 COMPILER = $(CXX)
@@ -152,14 +171,14 @@ endif
 fclean: clean
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(TARGET)$(COLOR_OFF)"
 	@rm -f $(COMPLETE_TARGET)
+	@rm -f $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE)
+	@rm -f $(TARGET_HPP_FILE)
 	
 clean:
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(addprefix "\\n\\t", $(notdir $(OBJS)))$(COLOR_OFF)"
 	@rm -f $(OBJS)
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
 	@rm -fr $(BUILD_DIR)
-	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(PACKAGE_FILE)$(COLOR_OFF)"
-	@rm -f $(PACKAGE_FILE)
 
 $(BUILD_DIR):
 	@echo " - $(COLOR_ACTION)creating directory$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
@@ -173,22 +192,32 @@ else
 endif
 
 core_library:
-	@make -s -C $(CORE_DIR) MODE=$(MODE)
+	@make -s -C $(CORE_DIR) MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 clean_core_library:
-	@make -s -C $(CORE_DIR) clean MODE=$(MODE)
+	@make -s -C $(CORE_DIR) clean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 fclean_core_library:
-	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
+	@make -s -C $(CORE_DIR) fclean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
-package: $(PACKAGE_FILE)
-	
 
-$(PACKAGE_FILE):
-	$(PACKAGER) $(PACKAGE_FILE) -h Main/ResourceDefinitions.hpp ./resources/*
+package: $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE) $(TARGET_HPP_FILE)
+
+$(LOADING_PCK_FILE):
+	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(LOADING_PCK_FILE)"
+	$(PACKAGER) $(LOADING_PCK_FILE) -h $(LOADING_HPP_FILE) $(LOADING_SRC)
+
+$(DEFAULT_PCK_FILE):
+	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(DEFAULT_PCK_FILE)"
+	$(PACKAGER) $(DEFAULT_PCK_FILE) -h $(DEFAULT_HPP_FILE) $(DEFAULT_SRC)
+
+$(TARGET_HPP_FILE):
+	@echo " - $(COLOR_ACTION)creating file $(COLOR_OFF): $(TARGET_HPP_FILE)"
+	@cat $(DEFAULT_HPP_FILE) >> $(TARGET_HPP_FILE)
+	@cat $(LOADING_HPP_FILE) >> $(TARGET_HPP_FILE)
 
 complete:
-	make complete -C octolib/ MODE=$(MODE)
+	make complete -C octolib/ MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 	make re
 
 static-check:

@@ -3,6 +3,7 @@
 
 # include <SFML/Graphics.hpp>
 # include <utility>
+# include <LevelMap.hpp>
 # include "AGameObject.hpp"
 
 class Tile : public AGameObject<GameObjectType::Tile>
@@ -35,8 +36,8 @@ public:
 	inline void setIsEmpty(bool isEmpty) { m_isEmpty = isEmpty; }
 	inline bool isEmpty(void) const { return m_isEmpty; }
 
-	inline void setTileType(int tileType) { m_tileType = tileType; }
-	inline int getTileType(void) const { return m_tileType; }
+	inline void setTileType(octo::LevelMap::TileType tileType) { m_tileType = tileType; }
+	inline octo::LevelMap::TileType getTileType(void) const { return m_tileType; }
 
 	inline void setStartTransition(std::size_t index, sf::Vector2f && startTransition) { setStartTransition(index, startTransition.x, startTransition.y); }
 	inline void setStartTransition(std::size_t index, float x, float y) { m_startTransition[index].x = x; m_startTransition[index].y = y; }
@@ -44,12 +45,11 @@ public:
 	inline sf::Vector2f const & getStartTransition(std::size_t index) const { return m_startTransition[index]; }
 
 private:
-	sf::Vector2f		m_startTransition[4];
-	ETransitionType		m_transitionType;
-	sf::Color			m_startColor;
-	bool				m_isEmpty;
-	int					m_tileType;
-	//TODO: add instance enumtiletype
+	sf::Vector2f				m_startTransition[4];
+	ETransitionType				m_transitionType;
+	sf::Color					m_startColor;
+	bool						m_isEmpty;
+	octo::LevelMap::TileType	m_tileType;
 
 };
 
