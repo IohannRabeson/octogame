@@ -7,6 +7,7 @@
 # include "SkyManager.hpp"
 # include "GroundManager.hpp"
 # include "ParallaxScrolling.hpp"
+# include "CharacterOcto.hpp"
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
 
@@ -21,8 +22,8 @@ public:
 	void	setup();
 	void	loadLevel(std::string const& fileName);
 
-	void	update(sf::Time frameTime);
-	void	draw(sf::RenderTarget& render, sf::RenderStates states)const;
+	void			update(sf::Time frameTime);
+	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
 
 private:
 	PhysicsEngine &		m_physicsEngine;
@@ -31,12 +32,15 @@ private:
 	SkyManager			m_skyManager;
 	GroundManager		m_groundManager;
 	ParallaxScrolling	m_parallaxScrolling;
+	CharacterOcto		m_octo;
+	sf::Vector2f		m_cameraPos;
+	sf::Vector2f		m_octoPos;
 	CharacterNpc		m_npc;
 
-	bool onPressed(sf::Event::KeyEvent const & event);
-	void onShapeCollision(AShape * shapeA, AShape * shapeB);
-	void onTileShapeCollision(TileShape * tileShape, AShape * shape);
-
+	bool			onPressed(sf::Event::KeyEvent const & event);
+	void			onShapeCollision(AShape * shapeA, AShape * shapeB);
+	void			onTileShapeCollision(TileShape * tileShape, AShape * shape);
+	void			followPlayer();
 };
 
 #endif

@@ -40,10 +40,10 @@ SRC_STATES =	Screens/StateTest.cpp					\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
-				Game/FiniteStateMachine.cpp				\
 				Game/AGameObject.cpp					\
-				Game/ACharacter.cpp						\
 				Game/CharacterNpc.cpp					\
+				Game/CharacterOcto.cpp					\
+				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
@@ -187,13 +187,13 @@ else
 endif
 
 core_library:
-	@make -s -C $(CORE_DIR) MODE=$(MODE)
+	@make -s -C $(CORE_DIR) MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 clean_core_library:
-	@make -s -C $(CORE_DIR) clean MODE=$(MODE)
+	@make -s -C $(CORE_DIR) clean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 fclean_core_library:
-	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
+	@make -s -C $(CORE_DIR) fclean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 
 package: $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE) $(TARGET_HPP_FILE)
@@ -212,7 +212,7 @@ $(TARGET_HPP_FILE):
 	@cat $(LOADING_HPP_FILE) >> $(TARGET_HPP_FILE)
 
 complete:
-	make complete -C octolib/ MODE=$(MODE)
+	make complete -C octolib/ MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 	make re
 
 static-check:
