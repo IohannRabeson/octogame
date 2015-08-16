@@ -23,7 +23,7 @@ void BubbleManager::setup()//(std::vector<NPC> npc)
 	{
 		std::string phrase = resource.getText(NPC_TEST_TXT);
 		bubble.setup(phrase, sf::Color(255, 255, 255, 200));
-		bubble.setActive(true);
+		bubble.setActive(false);
 	}
 }
 

@@ -65,9 +65,12 @@ void BubbleNPC::setup(std::string const & phrase, sf::Color const & color, std::
 	if (m_lineCount == 1u)
 		m_size.x = widthTotalText + m_font.getGlyph(m_phrase[m_phrase.size() - 1], characterSize, 0).advance;
 	m_text.setString(m_phrase);
+
+	m_inactive.setup("put state here", color);
+	m_inactive.setActive(true);
 }
 
-void BubbleNPC::update(sf::Time, octo::VertexBuilder& builder)
+void BubbleNPC::update(sf::Time frameTime, octo::VertexBuilder& builder)
 {
 	if (ABubble::isActive())
 	{
@@ -75,6 +78,12 @@ void BubbleNPC::update(sf::Time, octo::VertexBuilder& builder)
 		position.y -= (m_size.y / 2.f + m_sizeCorner * 2.f);
 		ABubble::createOctogon(m_size / 2.f, m_sizeCorner, position, ABubble::getColor(), true, builder);
 		m_text.setPosition(ABubble::getTextUpLeft());
+	}
+	else
+	{
+		sf::Vector2f const & position = ABubble::getPosition();
+		m_inactive.setPosition(position);
+		m_inactive.update(frameTime, builder);
 	}
 }
 

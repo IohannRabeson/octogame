@@ -2,6 +2,7 @@
 # define BUBBLENPC_HPP
 
 # include "ABubble.hpp"
+# include "BubbleInactive.hpp"
 # include "DecorAnimator.hpp"
 # include <SFML/Graphics/Color.hpp>
 # include <SFML/Graphics/Text.hpp>
@@ -27,14 +28,16 @@ public:
 	std::string						m_phrase;
 private:
 	static constexpr float			m_bubbleWidth = 500.f;
-	static constexpr float			m_sizeCorner = 50.f;
-	static constexpr std::size_t	m_characterSize = 30u;
+	static constexpr float			m_sizeCorner = 30.f;
+	static constexpr std::size_t	m_characterSize = 20u;
 
 	sf::Vector2f					m_size;
 	sf::Font						m_font;
 	sf::Text						m_text;
 	std::size_t						m_characterPerLine;
 	std::size_t						m_lineCount;
+
+	BubbleInactive					m_inactive;
 
 	void setupBlocString(void);
 };

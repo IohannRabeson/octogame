@@ -2,6 +2,7 @@
 # define BUBBLEMANAGER_HPP
 
 #include "BubbleNPC.hpp"
+#include "BubbleMenu.hpp"
 
 //TODO: Check if all are necessary
 # include <VertexBuilder.hpp>
