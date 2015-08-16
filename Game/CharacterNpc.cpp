@@ -11,6 +11,7 @@ CharacterNpc::CharacterNpc() :
 {
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
 	m_box->setGameObject(this);
+	m_box->setType(AShape::Type::e_static);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	setupAnimation();
 	setupMachine();
