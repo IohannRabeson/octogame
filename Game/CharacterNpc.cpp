@@ -155,3 +155,9 @@ bool	CharacterNpc::canWalk()
 		return true;
 	return false;
 }
+
+sf::Vector2f	CharacterNpc::getBubblePosition() const
+{
+	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -40.f));
+}
+

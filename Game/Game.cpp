@@ -54,7 +54,8 @@ void	Game::update(sf::Time frameTime)
 	m_octo.update(frameTime);
 	followPlayer();
 	m_skyManager.update(frameTime);
-	m_bubble.update(frameTime, m_octo.getBubblePosition());
+	m_bubble.update(frameTime, m_npc.getBubblePosition());
+	m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)

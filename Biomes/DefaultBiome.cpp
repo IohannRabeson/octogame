@@ -8,7 +8,7 @@
 
 DefaultBiome::DefaultBiome() :
 	m_name("Default Biome"),
-	m_mapSize(sf::Vector2f(512u, 128u)),
+	m_mapSize(sf::Vector2f(2512u, 128u)),
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 
