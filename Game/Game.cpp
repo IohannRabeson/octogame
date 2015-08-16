@@ -5,11 +5,17 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 
+#include "PixelGlitch.hpp"
+
+#include "PixelPotion.hpp"
+#include "GrayPotion.hpp"
+
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
 #include <Options.hpp>
+#include <Console.hpp>
 
 Game::Game() :
 	m_physicsEngine(PhysicsEngine::getInstance())
@@ -19,9 +25,34 @@ Game::Game() :
 void	Game::setup()
 {
 	m_biomeManager.registerBiome<DefaultBiome>("test");
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	octo::GraphicsManager&	graphics = octo::Application::getGraphicsManager();
+	octo::Console&			console = octo::Application::getConsole();
+
 	graphics.addKeyboardListener(this);
 	graphics.addKeyboardListener(&m_octo);
+	
+	// Register glitches
+	m_glitchManager.addGlitch(std::unique_ptr<PixelGlitch>(new PixelGlitch()));
+
+	// Register potions
+	m_potionManager.addPotion("pixels", std::unique_ptr<PixelPotion>(new PixelPotion()));
+	m_potionManager.addPotion("xfade_gray", std::unique_ptr<GrayPotion>(new GrayPotion()));
+
+	// Register commands
+	console.addCommand(L"test.potion.spawn", [this](std::string const& key)
+			{
+				try
+				{
+					m_potionManager.startPotion(key);
+				}
+				catch (std::exception const& e)
+				{
+					octo::Console&	console = octo::Application::getConsole();
+
+					console.printError(e);
+				}
+					
+			});
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -52,6 +83,8 @@ void	Game::update(sf::Time frameTime)
 	m_octo.update(frameTime);
 	followPlayer();
 	m_skyManager.update(frameTime);
+	m_glitchManager.update(frameTime);
+	m_potionManager.update(frameTime);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
@@ -79,10 +112,13 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	{
 		case sf::Keyboard::E:
 			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next);
-		break;
+			break;
 		case sf::Keyboard::R:
 			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Previous);
-		break;
+			break;
+		case sf::Keyboard::F1:
+			m_glitchManager.startRandomGlitch(sf::seconds(0.15f));
+			break;
 		default:
 		break;
 	}

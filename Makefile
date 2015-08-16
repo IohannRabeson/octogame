@@ -1,5 +1,15 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Decors Physics Game Biomes
+DIRS = Main			\
+	   Firefly 		\
+	   Screens 		\
+	   Map 			\
+	   Decors		\
+	   Physics		\
+	   Game			\
+	   Biomes		\
+	   Glitch		\
+	   Potion
+
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -18,6 +28,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_OCTO)										\
 	  $(SRC_BIOMES)										\
 	  $(SRC_DECORS)										\
+	  $(SRC_POTION)										\
 	  $(SRC_GAME)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp
@@ -43,8 +54,9 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
 				Game/CharacterNpc.cpp					\
 				Game/CharacterOcto.cpp					\
+				Game/ElevatorStream.cpp					\
 				Game/Portal.cpp							\
-				Game/ElevatorStream.cpp
+				Game/GlitchManager.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
@@ -94,6 +106,10 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp
 
+SRC_POTION  = 	Potion/PotionEffectManager.cpp			\
+				Potion/PostEffectPotion.cpp				\
+				Potion/PixelPotion.cpp					\
+				Potion/GrayPotion.cpp
 
 # package files
 LOADING_PCK_FILE = loading.pck
