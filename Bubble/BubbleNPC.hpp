@@ -24,12 +24,12 @@ public:
 	virtual void		createExtension(sf::Vector2f const & position,
 										octo::VertexBuilder & builder);
 
+	std::string						m_phrase;
 private:
 	static constexpr float			m_bubbleWidth = 500.f;
 	static constexpr float			m_sizeCorner = 50.f;
 	static constexpr std::size_t	m_characterSize = 30u;
 
-	std::string						m_phrase;
 	sf::Vector2f					m_size;
 	sf::Font						m_font;
 	sf::Text						m_text;

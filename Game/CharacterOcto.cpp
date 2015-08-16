@@ -534,7 +534,11 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 
 sf::Vector2f	CharacterOcto::getPosition() const
 {
-	//TODO fix center
-	return (m_box->getBaryCenter() + sf::Vector2f(0.f, -300.f));
+	return (m_box->getBaryCenter());
+}
+
+sf::Vector2f	CharacterOcto::getBubblePosition() const
+{
+	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -40.f));
 }
 

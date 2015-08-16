@@ -6,7 +6,7 @@ ABubble::ABubble(void) :
 {
 }
 
-void ABubble::createOctogon(sf::Vector2f const & size, float sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
+void ABubble::createOctogon(sf::Vector2f const & size, float sizeCorner, sf::Vector2f const & origin, sf::Color const & color, bool isExtension, octo::VertexBuilder& builder)
 {
 	sf::Vector2f upLeft(-size.x, -size.y - sizeCorner);
 	sf::Vector2f upRight(size.x, -size.y - sizeCorner);
@@ -17,26 +17,39 @@ void ABubble::createOctogon(sf::Vector2f const & size, float sizeCorner, sf::Vec
 	sf::Vector2f downMidLeft(-size.x - sizeCorner, size.y);
 	sf::Vector2f downMidRight(size.x + sizeCorner, size.y);
 
-	upLeft += origin;
-	upRight += origin;
-	upMidLeft += origin;
-	upMidRight += origin;
-	downLeft += origin;
-	downRight += origin;
-	downMidLeft += origin;
-	downMidRight += origin;
+	if (isExtension)
+	{
+		m_textUpLeft = sf::Vector2f(-size.x, -size.y);
+		sf::Vector2f extensionPos = origin + sf::Vector2f(-sizeCorner, size.y + sizeCorner);
+		createExtension(extensionPos, builder);
+		if (extensionPos.x <= m_relativePos.x + downLeft.x)
+			m_relativePos.x = extensionPos.x + downRight.x;
+		else if (extensionPos.x >= m_relativePos.x + downRight.x - sizeCorner)
+			m_relativePos.x = extensionPos.x + downLeft.x + sizeCorner;
+		m_relativePos.y = origin.y;
+	}
+	else
+		m_relativePos = origin;
 
-	builder.createTriangle(origin, upLeft, upRight, color);
-	builder.createTriangle(origin, upRight, upMidRight, color);
-	builder.createTriangle(origin, upMidRight, downMidRight, color);
-	builder.createTriangle(origin, downMidRight, downRight, color);
-	builder.createTriangle(origin, downRight, downLeft, color);
-	builder.createTriangle(origin, downLeft, downMidLeft, color);
-	builder.createTriangle(origin, downMidLeft, upMidLeft, color);
-	builder.createTriangle(origin, upMidLeft, upLeft, color);
+	upLeft += m_relativePos;
+	upRight += m_relativePos;
+	upMidLeft += m_relativePos;
+	upMidRight += m_relativePos;
+	downLeft += m_relativePos;
+	downRight += m_relativePos;
+	downMidLeft += m_relativePos;
+	downMidRight += m_relativePos;
+	m_textUpLeft += m_relativePos;
 
-	m_textUpLeft = sf::Vector2f(-size.x, -size.y) + origin;
-	createExtension(downLeft, builder);
+	builder.createTriangle(m_relativePos, upLeft, upRight, color);
+	builder.createTriangle(m_relativePos, upRight, upMidRight, color);
+	builder.createTriangle(m_relativePos, upMidRight, downMidRight, color);
+	builder.createTriangle(m_relativePos, downMidRight, downRight, color);
+	builder.createTriangle(m_relativePos, downRight, downLeft, color);
+	builder.createTriangle(m_relativePos, downLeft, downMidLeft, color);
+	builder.createTriangle(m_relativePos, downMidLeft, upMidLeft, color);
+	builder.createTriangle(m_relativePos, upMidLeft, upLeft, color);
+
 }
 
 sf::Vector2f ABubble::getTextUpLeft(void) const

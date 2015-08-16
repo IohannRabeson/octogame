@@ -12,7 +12,8 @@
 #include <Options.hpp>
 
 Game::Game() :
-	m_physicsEngine(PhysicsEngine::getInstance())
+	m_physicsEngine(PhysicsEngine::getInstance()),
+	m_bubble(100000)
 {
 }
 
@@ -34,6 +35,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
 	m_groundManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
 	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
+	m_bubble.setup();
 
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count"));
 	m_physicsEngine.setTileCollision(true);
@@ -49,6 +51,7 @@ void	Game::update(sf::Time frameTime)
 	m_octo.update(frameTime);
 	followPlayer();
 	m_skyManager.update(frameTime);
+	m_bubble.update(frameTime, m_octo.getBubblePosition());
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
@@ -100,6 +103,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_groundManager, states);
 	render.draw(m_groundManager.getDecorsGround(), states);
 	render.draw(m_skyManager.getFilter(), states);
+	render.draw(m_bubble);
 
 }
 
@@ -110,7 +114,7 @@ void	Game::followPlayer()
 	m_octoPos = m_octo.getPosition();
 	sf::Vector2f cameraPos;
 	cameraPos.x = octo::linearInterpolation(m_octoPos.x, m_cameraPos.x, 0.98);
-	cameraPos.y = octo::linearInterpolation(m_octoPos.y, m_cameraPos.y, 0.9);
+	cameraPos.y = octo::linearInterpolation(m_octoPos.y - 300.f, m_cameraPos.y, 0.9);
 
 	camera.setCenter(cameraPos);
 }

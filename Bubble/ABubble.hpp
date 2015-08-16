@@ -31,11 +31,13 @@ public:
 										float sizeCorner,
 										sf::Vector2f const & origin,
 										sf::Color const & color,
+										bool isExtension,
 										octo::VertexBuilder& builder);
 
 private:
 	sf::Vector2f	m_textUpLeft;
 	sf::Vector2f	m_position;
+	sf::Vector2f	m_relativePos;
 	sf::Color		m_color;
 	bool			m_isActive;
 };

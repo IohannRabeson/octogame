@@ -19,7 +19,7 @@ public:
 	~BubbleManager(void) = default;
 
 	void setup(void);
-	void update(sf::Time frameTime);
+	void update(sf::Time frameTime, sf::Vector2f const & octoPos);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
@@ -29,9 +29,6 @@ private:
 	octo::VertexBuilder				m_builder;
 
 	std::vector<BubbleNPC>			m_bubbles;
-	BubbleNPC						bubble;
-
-	float m_timer;
 };
 
 #endif

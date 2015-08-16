@@ -48,6 +48,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool			onPressed(sf::Event::KeyEvent const& event);
 	bool			onReleased(sf::Event::KeyEvent const& event);
 	sf::Vector2f	getPosition() const;
+	sf::Vector2f	getBubblePosition() const;
 	void			onCollision(GameObjectType type);
 	private:
 	void	setupAnimation();

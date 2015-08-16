@@ -24,7 +24,7 @@ void	BubbleScreen::stop()
 
 void	BubbleScreen::update(sf::Time frameTime)
 {
-	m_bubbleManager.update(frameTime);
+	m_bubbleManager.update(frameTime, sf::Vector2f(400, 600));
 }
 
 void	BubbleScreen::draw(sf::RenderTarget& render)const

@@ -73,7 +73,7 @@ void BubbleNPC::update(sf::Time, octo::VertexBuilder& builder)
 	{
 		sf::Vector2f position = ABubble::getPosition();
 		position.y -= (m_size.y / 2.f + m_sizeCorner * 2.f);
-		ABubble::createOctogon(m_size / 2.f, m_sizeCorner, position, ABubble::getColor(), builder);
+		ABubble::createOctogon(m_size / 2.f, m_sizeCorner, position, ABubble::getColor(), true, builder);
 		m_text.setPosition(ABubble::getTextUpLeft());
 	}
 }

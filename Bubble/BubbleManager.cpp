@@ -13,36 +13,29 @@ BubbleManager::BubbleManager(std::size_t maxVertexCount) :
 }
 
 //TODO: Add NPC array in setup
-void BubbleManager::setup(void)//(std::vector<NPC> npc)
+void BubbleManager::setup()//(std::vector<NPC> npc)
 {
 	octo::ResourceManager const & resource = octo::Application::getResourceManager();
-	std::size_t bubbleCount = 3;//npc.size;
+	std::size_t bubbleCount = 1;//npc.size;
 	m_bubbles.resize(bubbleCount);
 
-	for (auto bubble : m_bubbles)
+	for (auto &bubble : m_bubbles)
 	{
 		std::string phrase = resource.getText(NPC_TEST_TXT);
-		bubble.setup(phrase, sf::Color(200, 0, 0, 200));
+		bubble.setup(phrase, sf::Color(255, 255, 255, 200));
 		bubble.setActive(true);
 	}
-		std::string phrase = resource.getText(NPC_TEST_TXT);
-		bubble.setup(phrase, sf::Color(200, 0, 0, 200));
-		bubble.setActive(true);
 }
 
-void BubbleManager::update(sf::Time frameTime)
+void BubbleManager::update(sf::Time frameTime, sf::Vector2f const & octoPos)
 {
 	m_builder.clear();
 
-	m_timer += frameTime.asSeconds();
-
-	for (auto bubble : m_bubbles)
+	for (auto &bubble : m_bubbles)
 	{
 		bubble.update(frameTime, m_builder);
-		bubble.setPosition(sf::Vector2f(400.f, 500.f));
+		bubble.setPosition(octoPos);
 	}
-		bubble.update(frameTime, m_builder);
-		bubble.setPosition(sf::Vector2f(400.f, 500.f));
 
 	m_used = m_builder.getUsed();
 }
@@ -52,10 +45,9 @@ void BubbleManager::draw(sf::RenderTarget & render, sf::RenderStates states) con
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 	for (auto bubble : m_bubbles)
 	{
+		//TODO: Potion idea, put sf::Blendultiply on tex, it create illisible effect
 		if (bubble.isActive())
 			render.draw(bubble.getText());
 	}
-		if (bubble.isActive())
-			render.draw(bubble.getText());
 }
 
