@@ -3,6 +3,7 @@
 #include "PhysicsEngine.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <Camera.hpp>
 
 CharacterNpc::CharacterNpc() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -11,7 +12,7 @@ CharacterNpc::CharacterNpc() :
 {
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
 	m_box->setGameObject(this);
-	m_box->setType(AShape::Type::e_static);
+	m_box->setType(AShape::Type::e_kinematic);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	setupAnimation();
 	setupMachine();
@@ -85,6 +86,12 @@ void	CharacterNpc::update(sf::Time frameTime)
 	updatePhysics(frameTime);
 	commitPhysicsToGraphics();
 	m_sprite.update(frameTime);
+
+	//TODO: To remove, avoid pnj to fall
+	float limit = octo::Application::getCamera().getCenter().y + octo::Application::getCamera().getSize().y / 2.f;
+	sf::Vector2f const & position = m_box->getPosition();
+	if (position.y > limit - 100.f)
+		m_box->setPosition(sf::Vector2f(position.x, limit - 100.f));
 }
 
 void	CharacterNpc::draw(sf::RenderTarget& render, sf::RenderStates states)const

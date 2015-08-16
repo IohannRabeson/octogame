@@ -351,17 +351,14 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 			if ((pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_static)
 				&& (pairs[i].m_shapeB->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeB->getType() == AShape::Type::e_static))
 			{
-				if (!pairs[i].m_shapeA->isType(AShape::Type::e_trigger) && !pairs[i].m_shapeB->isType(AShape::Type::e_trigger))
-				{
-					m_mtv /= 2.f;
-					if (pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic)
-						pairs[i].m_shapeA->addVelocity(m_mtv.x, m_mtv.y);
-					if (pairs[i].m_shapeA->getType() == AShape::Type::e_static)
-						pairs[i].m_shapeB->addVelocity(-m_mtv.x, -m_mtv.y);
-				}
-				if (m_contactListener)
-					m_contactListener->onShapeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB);
+				m_mtv /= 2.f;
+				if (pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic)
+					pairs[i].m_shapeA->addVelocity(m_mtv.x, m_mtv.y);
+				if (pairs[i].m_shapeB->getType() == AShape::Type::e_dynamic)
+					pairs[i].m_shapeB->addVelocity(-m_mtv.x, -m_mtv.y);
 			}
+			if (m_contactListener)
+				m_contactListener->onShapeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB);
 		}
 	}
 }
