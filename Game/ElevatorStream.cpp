@@ -15,6 +15,7 @@
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include "PhysicsEngine.hpp"
 
 #include <random>
 #include <ctime>
@@ -128,14 +129,27 @@ private:
 
 ElevatorStream::ElevatorStream() :
 	m_particles(new BeamParticle),
-	m_waveCycleDuration(sf::seconds(0.5))
+	m_waveCycleDuration(sf::seconds(0.5)),
+	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false))
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
-
+	m_box->setGameObject(this);
+	m_box->setType(AShape::Type::e_trigger);
+	m_box->setApplyGravity(false);
 	m_particles->setWidth(150.f);
 	m_particles->setColor(sf::Color::White);
 	m_shaders.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shaders.setParameter("wave_amplitude", 5.f);
+}
+
+void ElevatorStream::setPosBox(sf::Vector2f pos)
+{
+	m_box->setPosition(pos);
+}
+
+void ElevatorStream::setSizeBox(sf::Vector2f size)
+{
+	m_box->setSize(size);
 }
 
 void	ElevatorStream::setPosX(float x)

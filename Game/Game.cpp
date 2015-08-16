@@ -4,7 +4,7 @@
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
-
+#include "ElevatorStream.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -42,10 +42,10 @@ void	Game::loadLevel(std::string const& fileName)
 
 void	Game::update(sf::Time frameTime)
 {
+	m_physicsEngine.update(frameTime.asSeconds());
 	m_skyCycle.update(frameTime, m_biomeManager.getCurrentBiome());
 	m_groundManager.update(frameTime.asSeconds());
 	m_parallaxScrolling.update(frameTime.asSeconds());
-	m_physicsEngine.update(frameTime.asSeconds());
 	m_octo.update(frameTime);
 	followPlayer();
 	m_skyManager.update(frameTime);
@@ -53,8 +53,13 @@ void	Game::update(sf::Time frameTime)
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
 {
-	(void) shapeA;
-	(void) shapeB;
+	if (shapeA->getGameObject() != nullptr
+			&& gameObjectCast<CharacterOcto>(shapeA->getGameObject()) != nullptr
+			&& shapeB->getGameObject() != nullptr
+			&& gameObjectCast<ElevatorStream>(shapeB->getGameObject()) != nullptr)
+	{
+		m_octo.onCollision(GameObjectType::Elevator);
+	}
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 }
@@ -63,7 +68,9 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape)
 {
 	if (shape->getGameObject() != nullptr
 			&& gameObjectCast<CharacterOcto>(shape->getGameObject()) != nullptr)
+	{
 		m_octo.onCollision(GameObjectType::Tile);
+	}
 
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()

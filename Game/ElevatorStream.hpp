@@ -20,6 +20,7 @@
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
 
+# include "RectangleShape.hpp"
 # include <array>
 # include <cmath>
 # include <iostream>
@@ -32,6 +33,8 @@ class ElevatorStream : public AGameObject<GameObjectType::Elevator>
 public:
 	ElevatorStream();
 
+	void	setPosBox(sf::Vector2f pos);
+	void	setSizeBox(sf::Vector2f size);
 	void	setPosX(float x);
 	void	setPosY(float y);
 	void	setHeight(float height);
@@ -47,6 +50,7 @@ private:
 	sf::Color						m_color;
 	sf::Time						m_waveCycle;
 	sf::Time						m_waveCycleDuration;
+	RectangleShape*				m_box;
 };
 
 #endif

@@ -50,6 +50,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	sf::Vector2f	getPosition() const;
 	void			onCollision(GameObjectType type);
 	private:
+	bool	dieFall();
 	void	setupAnimation();
 	void	setupMachine();
 	void	collisionTileUpdate(sf::Time frameTime);
@@ -60,7 +61,6 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	caseRight();
 	void	caseSpace();
 	void	caseUp();
-	void	dieFall();
 	void	endDeath();
 	void	dance();
 
@@ -87,8 +87,10 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	float						m_pixelSecondWalk;
 	float						m_pixelSecondAfterJump;
 	float						m_pixelSecondAfterFullJump;
+	float						m_pixelSecondElevator;
 	float						m_pixelSecondMultiplier;
 	float						m_jumpVelocity;
+	float						m_elevatorVelocity;
 	float						m_afterJumpVelocity;
 	float						m_previousTop;
 	std::size_t					m_numberOfJump;
