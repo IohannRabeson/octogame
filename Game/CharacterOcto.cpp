@@ -42,6 +42,7 @@ CharacterOcto::CharacterOcto() :
 	setupMachine();
 	m_sprite.restart();
 	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
+	m_box->setType(AShape::Type::e_dynamic);
 }
 
 void	CharacterOcto::setupAnimation()
