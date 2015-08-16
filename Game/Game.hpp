@@ -1,6 +1,7 @@
 #ifndef GAME_HPP
 # define GAME_HPP
 
+# include "CharacterNpc.hpp"
 # include "SkyCycle.hpp"
 # include "BiomeManager.hpp"
 # include "SkyManager.hpp"
@@ -36,6 +37,7 @@ private:
 	CharacterOcto		m_octo;
 	sf::Vector2f		m_cameraPos;
 	sf::Vector2f		m_octoPos;
+	CharacterNpc		m_npc;
 
 	bool			onPressed(sf::Event::KeyEvent const & event);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB);
