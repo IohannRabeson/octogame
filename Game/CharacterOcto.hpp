@@ -97,6 +97,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool						m_originMove;
 	bool						m_onGround;
 	bool						m_onElevator;
+	bool						m_onTopElevator;
 	bool						m_afterJump;
 	bool						m_keyLeft;
 	bool						m_keyRight;

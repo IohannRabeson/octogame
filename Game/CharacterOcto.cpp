@@ -19,7 +19,7 @@
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_pixelSecondJump(-1000.f),
-	m_pixelSecondUmbrella(-150.f),
+	m_pixelSecondUmbrella(-250.f),
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
@@ -338,12 +338,15 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 	float posElevator = -1400.f;
 	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
 	{
+		if (top <= (posElevator + 200.f))
+			m_onTopElevator = true;
+		else
+			m_onTopElevator = false;
 		if (!m_onElevator)
 		{
 			m_onElevator = true;
-			if (m_sprite.getCurrentEvent() != Umbrella)
+			if (m_sprite.getCurrentEvent() != Umbrella || m_onTopElevator)
 				m_sprite.setNextEvent(Elevator);
-			m_elevatorVelocity = m_pixelSecondElevator;
 			m_numberOfJump = 3;
 			maxHeight = false;
 			m_box->setApplyGravity(false);
@@ -353,22 +356,24 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 			sf::Vector2f	velocity = m_box->getVelocity();
 			if (top <= posElevator)
 			{
+				m_elevatorVelocity = -100.f;
 				maxHeight = true;
 			}
-			if (top <= (posElevator + 200.f)
-					&& maxHeight)
+			if (m_onTopElevator && maxHeight)
 			{
-				if (top <= posElevator
-						&& m_sprite.getCurrentEvent() == Umbrella)
-					m_sprite.setNextEvent(Elevator);
-				else
-					velocity.y = (-1.f * m_elevatorVelocity) * frameTime.asSeconds();
+				velocity.y = (-1.f * m_elevatorVelocity) * frameTime.asSeconds();
+				//				m_elevatorVelocity += (80.f * frameTime.asSeconds());
 			}
 			else
 			{
-				m_box->setApplyGravity(false);
 				maxHeight = false;
-				velocity.y = m_elevatorVelocity * frameTime.asSeconds();
+				if (m_onTopElevator &&  bounds.top < m_previousTop){
+					if (m_sprite.getCurrentEvent() == Umbrella)
+						m_sprite.setNextEvent(Elevator);
+					velocity.y = -150.f * frameTime.asSeconds();
+				}
+				else
+					velocity.y = m_pixelSecondElevator * frameTime.asSeconds();
 			}
 			m_box->setVelocity(velocity);
 		}
@@ -380,6 +385,7 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 			if (m_sprite.getCurrentEvent() != Umbrella)
 				m_sprite.setNextEvent(Fall);
 			m_onElevator = false;
+			m_onTopElevator = false;
 			m_box->setApplyGravity(true);
 		}
 	}
@@ -545,7 +551,7 @@ void	CharacterOcto::caseSpace()
 
 void CharacterOcto::caseUp()
 {
-	if (!m_keyUp && !m_onGround)
+	if (!m_keyUp && !m_onGround && !m_onTopElevator)
 	{
 		m_keyUp = true;
 		m_sprite.setNextEvent(Umbrella);
