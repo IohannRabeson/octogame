@@ -5,6 +5,8 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 
+#include "PixelGlitch.hpp"
+
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -22,6 +24,7 @@ void	Game::setup()
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 	graphics.addKeyboardListener(&m_octo);
+	m_glitchManager.addGlitch(std::unique_ptr<PixelGlitch>(new PixelGlitch()));
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -52,6 +55,7 @@ void	Game::update(sf::Time frameTime)
 	m_octo.update(frameTime);
 	followPlayer();
 	m_skyManager.update(frameTime);
+	m_glitchManager.update(frameTime);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
@@ -79,10 +83,13 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	{
 		case sf::Keyboard::E:
 			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next);
-		break;
+			break;
 		case sf::Keyboard::R:
 			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Previous);
-		break;
+			break;
+		case sf::Keyboard::F1:
+			m_glitchManager.startRandomGlitch(sf::seconds(0.15f));
+			break;
 		default:
 		break;
 	}
