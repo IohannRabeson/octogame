@@ -41,7 +41,9 @@ SRC_STATES =	Screens/StateTest.cpp					\
 SRC_GAME =		Game/Game.cpp							\
 				Game/BiomeManager.cpp					\
 				Game/AGameObject.cpp					\
+				Game/CharacterNpc.cpp					\
 				Game/CharacterOcto.cpp					\
+				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\

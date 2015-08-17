@@ -12,6 +12,7 @@
 
 #ifndef FSMDEMOSCREEN_HPP
 # define FSMDEMOSCREEN_HPP
+
 # include <FiniteStateMachine.hpp>
 # include <AnimatedSprite.hpp>
 # include <AbstractState.hpp>

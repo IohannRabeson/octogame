@@ -624,6 +624,7 @@ void GroundManager::update(float deltatime)
 	updateTransition();
 	updateDecors(sf::seconds(deltatime));
 	updateGameObjects(deltatime);
+	m_test.update(sf::seconds(deltatime));
 }
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
@@ -631,6 +632,7 @@ void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) cons
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->draw(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
+	m_test.draw(render);
 }
 
 DecorManager const & GroundManager::getDecorsBack(void) const
