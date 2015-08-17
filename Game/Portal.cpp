@@ -4,6 +4,7 @@
 #include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
+#include <PostEffect.hpp>
 #include <Camera.hpp>
 
 Portal::Portal(void) :
@@ -21,7 +22,7 @@ Portal::Portal(void) :
 	m_shader.setParameter("radius", m_radius);
 	m_shader.setParameter("center", m_position.x, m_position.y);
 	m_shader.setParameter("time_max", m_timerMax);
-	m_shaderIndex = postEffect.addShader(m_shader, true);
+	m_shaderIndex = postEffect.addEffect(octo::PostEffect(m_shader, true));
 
 	PortalParticle::Prototype	prototype;
 
@@ -48,13 +49,13 @@ void Portal::update(sf::Time frametime)
 	else
 		m_timer -= frametime.asSeconds();
 
-	postEffect.enableShader(m_shaderIndex, false);
+	postEffect.enableEffect(m_shaderIndex, false);
 	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 	if (m_position.x + m_radius > screen.left && m_position.x - m_radius < screen.left + screen.width)
 	{
 		if (m_position.y + m_radius > screen.top && m_position.y - m_radius < screen.top + screen.height)
 		{
-			postEffect.enableShader(m_shaderIndex, true);
+			postEffect.enableEffect(m_shaderIndex, true);
 			m_shader.setParameter("time", m_timerMax);
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
 			m_shader.setParameter("center", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
