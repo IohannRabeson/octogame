@@ -15,8 +15,8 @@ CharacterNpc::CharacterNpc() :
 	setupAnimation();
 	setupMachine();
 	m_sprite.restart();
+	m_sprite.setNextEvent(Idle);
 	m_sprite.setColor(sf::Color::Green);
-	m_clock.restart();
 	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
 	m_area = sf::FloatRect(0, 0, 0, 0);
 }
@@ -58,6 +58,7 @@ void	CharacterNpc::setupMachine(){
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
 
+	std::function<void()> clockRestart = [this]{ m_clock.restart();};
 	octo::FiniteStateMachine	machine;
 	StatePtr					state0;
 	StatePtr					state1;
@@ -68,9 +69,9 @@ void	CharacterNpc::setupMachine(){
 	state2 = std::make_shared<State>("2", m_walkAnimation, m_sprite);
 
 	machine.setStart(state0);
-	machine.addTransition(Idle, state0, state0);
-	machine.addTransition(Idle, state1, state0);
-	machine.addTransition(Idle, state2, state0);
+	machine.addTransition(Idle, state0, state0, clockRestart);
+	machine.addTransition(Idle, state1, state0, clockRestart);
+	machine.addTransition(Idle, state2, state0, clockRestart);
 
 	machine.addTransition(Left, state0, state1);
 
@@ -82,8 +83,8 @@ void	CharacterNpc::update(sf::Time frameTime)
 {
 	updateState();
 	updatePhysics(frameTime);
-	commitPhysicsToGraphics();
 	m_sprite.update(frameTime);
+	commitPhysicsToGraphics();
 }
 
 void	CharacterNpc::draw(sf::RenderTarget& render, sf::RenderStates states)const
@@ -115,7 +116,6 @@ void	CharacterNpc::updateState()
 	else if ((bounds.left <= m_area.left || bounds.left >= (m_area.left + m_area.width))
 			&& m_sprite.getCurrentEvent() != Idle && canWalk()){
 		m_sprite.setNextEvent(Idle);
-		m_clock.restart();
 	}
 }
 
@@ -124,7 +124,7 @@ void	CharacterNpc::updatePhysics(sf::Time frameTime)
 	sf::Vector2f	velocity = m_box->getVelocity();
 	if (m_sprite.getCurrentEvent() == Left)
 	{
-		velocity.x = (-1 * m_pixelSecondWalk) * frameTime.asSeconds();
+		velocity.x = (-1.f * m_pixelSecondWalk) * frameTime.asSeconds();
 	}
 	else if (m_sprite.getCurrentEvent() == Right)
 	{
@@ -143,7 +143,7 @@ void	CharacterNpc::commitPhysicsToGraphics()
 
 bool	CharacterNpc::canWalk()
 {
-	if (m_clock.getElapsedTime().asSeconds() > 2.4f)
+	if (m_clock.getElapsedTime() > sf::seconds(1.4f))
 		return true;
 	return false;
 }
