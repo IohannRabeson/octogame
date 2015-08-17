@@ -26,6 +26,8 @@
 
 # include "AGameObject.hpp"
 
+class ABiome;
+
 class ElevatorStream : public AGameObject<GameObjectType::Elevator>
 {
 	class BeamParticle;
@@ -37,7 +39,7 @@ public:
 	void	setHeight(float height);
 	void	setWidth(float width);
 	void	setRotationFactor(float factor);
-	void	setParticleColor(sf::Color const& color);
+	void	setBiome(ABiome & biome);
 
 	void	update(sf::Time frameTime);
 	void	draw(sf::RenderTarget& render)const;
@@ -45,7 +47,6 @@ private:
 	std::shared_ptr<BeamParticle>	m_particles;
 	sf::Shader						m_shader;
 	octo::VertexBuilder				m_builder;
-	sf::Color						m_color;
 	sf::Time						m_waveCycle;
 	sf::Time						m_waveCycleDuration;
 };

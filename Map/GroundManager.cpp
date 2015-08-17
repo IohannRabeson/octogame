@@ -78,13 +78,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
 
 	// Setup somes console commands
-	console.addCommand(L"test.elevators.setParticleColor", [this](sf::Color const& color)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setParticleColor(color);
-				}
-			});
 	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
 			{
 				for(auto& elevator : m_elevators)
@@ -121,6 +114,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		elevator->setPosX((instance.first - 10.f) * Tile::TileSize);
 		elevator->setPosY(-levelMap.getMapSize().y + MapInstance::HeightOffset);
 		elevator->setHeight(400.f);
+		elevator->setBiome(biome);
 		m_elevators.emplace_back(instance.first - 10, 10, elevator);
 	}
 
@@ -645,6 +639,7 @@ void GroundManager::update(float deltatime)
 	updateTransition();
 	updateDecors(sf::seconds(deltatime));
 	updateGameObjects(deltatime);
+	m_test.update(sf::seconds(deltatime));
 }
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
@@ -652,6 +647,7 @@ void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) cons
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->draw(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
+	m_test.draw(render);
 }
 
 DecorManager const & GroundManager::getDecorsBack(void) const
