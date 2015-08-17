@@ -231,6 +231,8 @@ private:
 	bool findAxisLeastPenetration(PolygonShape * polygonA, PolygonShape * polygonB);
 	bool findAxisLeastPenetration(TileShape * tile, PolygonShape * polygon);
 
+	static bool intersect(AShape * shapeA, AShape * shapeB);
+
 	IContactListener *		m_contactListener;
 
 };

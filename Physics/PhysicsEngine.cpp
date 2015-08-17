@@ -245,7 +245,7 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<std::v
 				{ return vectorA[0u].m_shapeA->getGlobalBounds().top > vectorB[0u].m_shapeA->getGlobalBounds().top; });
 }
 
-bool intersect(AShape * shapeA, AShape * shapeB)
+bool PhysicsEngine::intersect(AShape * shapeA, AShape * shapeB)
 {
 	if (!shapeA->isColliding(shapeB) && !shapeB->isColliding(shapeA))
 		return false;
