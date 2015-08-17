@@ -54,7 +54,6 @@ void	Game::update(sf::Time frameTime)
 	m_skyManager.update(frameTime);
 }
 
-#include <iostream>
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
 {
 	if (shapeA->getGameObject() != nullptr
@@ -64,7 +63,7 @@ void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
 	{
 		m_octo.onCollision(GameObjectType::Elevator);
 	}
-	std::cout << shapeA->getCollisionType() << " " << shapeB->getCollisionType() << "|";
+	// std::cout << shapeA->getCollisionType() << " " << shapeB->getCollisionType() << "|";
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 }
