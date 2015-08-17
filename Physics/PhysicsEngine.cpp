@@ -245,6 +245,15 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<std::v
 				{ return vectorA[0u].m_shapeA->getGlobalBounds().top > vectorB[0u].m_shapeA->getGlobalBounds().top; });
 }
 
+bool intersect(AShape * shapeA, AShape * shapeB)
+{
+	if (!shapeA->isColliding(shapeB) && !shapeB->isColliding(shapeA))
+		return false;
+	if (shapeA->getGlobalBounds().intersects(shapeB->getGlobalBounds()))
+		return true;
+	return false;
+}
+
 template<class T, class U>
 void PhysicsEngine::broadPhase(std::vector<T> const & vectorA, std::vector<U> const & vectorB, std::vector<Pair<T, U>> & pairs, bool cullingDuplicate)
 {
@@ -258,7 +267,7 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vectorA, std::vector<U> co
 				continue;
 			else if (static_cast<AShape *>(vectorA[i]) == static_cast<AShape *>(vectorB[k]))
 				continue;
-			if (vectorA[i]->getGlobalBounds().intersects(vectorB[k]->getGlobalBounds()))
+			if (intersect(vectorA[i], vectorB[k]))
 			{
 				pairs.emplace_back(vectorA[i], vectorB[k]);
 			}
@@ -275,7 +284,7 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vector, CircleShape * shap
 			continue;
 		else if (static_cast<AShape *>(vector[i]) == static_cast<AShape *>(shape))
 			continue;
-		if (vector[i]->getGlobalBounds().intersects(shape->getGlobalBounds()))
+		if (intersect(vector[i], shape))
 		{
 			pairs.emplace_back(vector[i], shape);
 		}
@@ -291,7 +300,7 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vector, PolygonShape * sha
 			continue;
 		else if (static_cast<AShape *>(vector[i]) == static_cast<AShape *>(shape))
 			continue;
-		if (vector[i]->getGlobalBounds().intersects(shape->getGlobalBounds()))
+		if (intersect(vector[i], shape))
 		{
 			pairs.emplace_back(shape, vector[i]);
 		}
