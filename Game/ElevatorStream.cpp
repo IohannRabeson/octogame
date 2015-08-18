@@ -166,13 +166,13 @@ ElevatorStream::ElevatorStream() :
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	sf::Vector2f	sizeBox = m_box->getSize();
 
-	sizeBox.x = 200.f;
-	m_box->setSize(sizeBox);
 	m_box->setGameObject(this);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setApplyGravity(false);
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Elevator));
 	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
+	sizeBox.x = 150.f;
+	m_box->setSize(sizeBox);
 	m_particles->setWidth(150.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
@@ -184,7 +184,7 @@ void	ElevatorStream::setPosX(float x)
 	sf::Vector2f	posBox = m_box->getPosition();
 
 	pos.x = x;
-	posBox.x = x;
+	posBox.x = x - (getWidth() / 2.f);
 	m_particles->setPosition(pos);
 	m_box->setPosition(posBox);
 }

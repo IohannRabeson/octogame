@@ -47,6 +47,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	setupMachine();
 	void	collisionTileUpdate(sf::Time frameTime);
 	void	collisionElevatorUpdate(sf::Time frameTime);
+	void	commitElevatorPhysics(sf::Time frameTime);
 	void	commitControlsToPhysics(sf::Time frameTime);
 	void	commitPhysicsToGraphics();
 	void	caseLeft();
@@ -80,6 +81,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	float						m_pixelSecondAfterJump;
 	float						m_pixelSecondAfterFullJump;
 	float						m_pixelSecondElevator;
+	float						m_pixelSecondOnTopElevator;
 	float						m_pixelSecondMultiplier;
 	float						m_jumpVelocity;
 	float						m_elevatorVelocity;

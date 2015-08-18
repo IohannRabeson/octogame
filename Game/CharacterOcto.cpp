@@ -13,6 +13,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
 	m_pixelSecondElevator(-250.f),
+	m_pixelSecondOnTopElevator(-120.f),
 	m_pixelSecondMultiplier(800.f),
 	m_numberOfJump(1),
 	m_originMove(false),
@@ -39,7 +40,7 @@ void	CharacterOcto::setup(void)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
-	m_box->setSize(sf::Vector2f(177.f / 2.f, 150.f));
+	m_box->setSize(sf::Vector2f(177.f / 5.f, 150.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
@@ -273,6 +274,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	collisionTileUpdate(frameTime);
 	collisionElevatorUpdate(frameTime);
 	m_sprite.update(frameTime);
+	commitElevatorPhysics(frameTime);
 	commitControlsToPhysics(frameTime);
 	commitPhysicsToGraphics();
 }
@@ -340,62 +342,64 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 
 void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 {
-	sf::FloatRect const& bounds = m_box->getGlobalBounds();
-	static bool maxHeight;
-	float top = bounds.top + (bounds.height / 2.f);
-	float posElevator = m_topElevator;
 	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
 	{
-		if (top <= (posElevator + 200.f))
-			m_onTopElevator = true;
-		else
-			m_onTopElevator = false;
 		if (!m_onElevator)
 		{
 			m_onElevator = true;
-			if (m_sprite.getCurrentEvent() != Umbrella || m_onTopElevator)
-				m_sprite.setNextEvent(Elevator);
+			m_sprite.setNextEvent(Elevator);
 			m_numberOfJump = 3;
-			maxHeight = false;
 			m_box->setApplyGravity(false);
-		}
-		if (m_onElevator)
-		{
-			sf::Vector2f	velocity = m_box->getVelocity();
-			if (top <= posElevator)
-			{
-				m_elevatorVelocity = -100.f;
-				maxHeight = true;
-			}
-			if (m_onTopElevator && maxHeight)
-			{
-				velocity.y = (-1.f * m_elevatorVelocity) * frameTime.asSeconds();
-				//				m_elevatorVelocity += (80.f * frameTime.asSeconds());
-			}
-			else
-			{
-				maxHeight = false;
-				if (m_onTopElevator &&  bounds.top < m_previousTop){
-					if (m_sprite.getCurrentEvent() == Umbrella)
-						m_sprite.setNextEvent(Elevator);
-					velocity.y = -150.f * frameTime.asSeconds();
-				}
-				else
-					velocity.y = m_pixelSecondElevator * frameTime.asSeconds();
-			}
-			m_box->setVelocity(velocity);
 		}
 	}
 	else
 	{
 		if (m_onElevator)
 		{
-			if (m_sprite.getCurrentEvent() != Umbrella)
-				m_sprite.setNextEvent(Fall);
+			m_sprite.setNextEvent(Fall);
 			m_onElevator = false;
 			m_onTopElevator = false;
 			m_box->setApplyGravity(true);
 		}
+	}
+}
+
+void	CharacterOcto::commitElevatorPhysics(sf::Time frameTime)
+{
+	sf::Vector2f			velocity = m_box->getVelocity();
+	sf::FloatRect const&	bounds = m_box->getGlobalBounds();
+	float					top = bounds.top + (bounds.height / 2.f);
+	static bool				maxHeight = false;
+
+	if (m_onElevator)
+	{
+		if (top <= (m_topElevator + 100.f))
+			m_onTopElevator = true;
+		else
+			m_onTopElevator = false;
+
+		if (top <= m_topElevator)
+		{
+			m_elevatorVelocity = m_pixelSecondOnTopElevator * -1.f;
+			maxHeight = true;
+		}
+		if (m_onTopElevator && maxHeight)
+		{
+			velocity.y = m_elevatorVelocity * frameTime.asSeconds();
+			m_elevatorVelocity += (80.f * frameTime.asSeconds());
+		}
+		else
+		{
+			maxHeight = false;
+			if (m_onTopElevator &&  bounds.top < m_previousTop){
+				if (m_sprite.getCurrentEvent() == Umbrella)
+					m_sprite.setNextEvent(Elevator);
+				velocity.y =  m_pixelSecondOnTopElevator * frameTime.asSeconds();
+			}
+			else
+				velocity.y = m_pixelSecondElevator * frameTime.asSeconds();
+		}
+		m_box->setVelocity(velocity);
 	}
 }
 
@@ -433,8 +437,8 @@ void	CharacterOcto::commitPhysicsToGraphics()
 {
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
-	// TODO fix that - 65.f
-	m_sprite.setPosition(bounds.left, bounds.top);
+	// TODO ???
+	m_sprite.setPosition(bounds.left - (177.f / 2.5f), bounds.top);
 	m_previousTop = bounds.top;
 }
 
