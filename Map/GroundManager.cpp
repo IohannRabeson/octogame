@@ -112,17 +112,14 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		// For each instance, create an elevator stream
 		std::unique_ptr<ElevatorStream> elevator;
 		elevator.reset(new ElevatorStream());
-		//TODO: use correct size from elevator (static ocnstexpr in elevator ?
-		elevator->setPosX((instance.first - 14.f) * Tile::TileSize);
-		elevator->setPosY(-levelMap.getMapSize().y + MapInstance::HeightOffset);
+		elevator->setPosX(instance.first * Tile::TileSize - elevator->getWidth());
+		elevator->setTopY((-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize);
 		elevator->setHeight(400.f);
-		// fix init recShape
-		elevator->setPosBox(sf::Vector2f((instance.first - 12.f) * Tile::TileSize,
-					-levelMap.getMapSize().y + MapInstance::HeightOffset - 1400.f));
-		elevator->setSizeBox(sf::Vector2f(150.f, 2400.f));
 		elevator->setBiome(biome);
-		m_elevators.emplace_back(instance.first - 10, 10, elevator);
+		std::size_t width = elevator->getWidth() / Tile::TileSize + 1u;
+		m_elevators.emplace_back(instance.first - width, width, elevator);
 	}
+	// TODO: to remove, it's just an example
 	std::unique_ptr<Portal> portal;
 	portal.reset(new Portal());
 	portal->setRadius(100.f);
@@ -451,10 +448,9 @@ void GroundManager::updateTransition(void)
 			if (tmp > min)
 				min = tmp;
 		}
-		//TODO change 15 by something else (it's the height of the instance
 		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x + Tile::DoubleTileSize);
 		elevator.m_gameObject->setPosY(min);
-		elevator.m_gameObject->setHeight(min - ((MapInstance::HeightOffset - 15) * Tile::TileSize));
+		elevator.m_gameObject->setHeight(min - elevator.m_gameObject->getTopY());
 	}
 
 	for (auto const & portal : m_portals)

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/13 22:27:23 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/18 11:38:01 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,16 @@ public:
 	void	setBiome(ABiome & biome)
 	{
 		m_biome = &biome;
+	}
+
+	float	getHeight(void) const
+	{
+		return m_height;
+	}
+
+	float	getWidth(void) const
+	{
+		return m_width;
 	}
 
 	void	updateParticle(sf::Time frameTime, Particle& particle)
@@ -153,6 +163,10 @@ ElevatorStream::ElevatorStream() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false))
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
+	sf::Vector2f	sizeBox = m_box->getSize();
+
+	sizeBox.x = 200.f;
+	m_box->setSize(sizeBox);
 	m_box->setGameObject(this);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setApplyGravity(false);
@@ -163,22 +177,15 @@ ElevatorStream::ElevatorStream() :
 	m_shader.setParameter("wave_amplitude", 5.f);
 }
 
-void ElevatorStream::setPosBox(sf::Vector2f pos)
-{
-	m_box->setPosition(pos);
-}
-
-void ElevatorStream::setSizeBox(sf::Vector2f size)
-{
-	m_box->setSize(size);
-}
-
 void	ElevatorStream::setPosX(float x)
 {
 	sf::Vector2f	pos = m_particles->getPosition();
+	sf::Vector2f	posBox = m_box->getPosition();
 
 	pos.x = x;
+	posBox.x = x;
 	m_particles->setPosition(pos);
+	m_box->setPosition(posBox);
 }
 
 void	ElevatorStream::setPosY(float y)
@@ -191,11 +198,28 @@ void	ElevatorStream::setPosY(float y)
 
 void	ElevatorStream::setHeight(float height)
 {
+	sf::Vector2f	sizeBox = m_box->getSize();
+
+	sizeBox.y = height;
+	m_box->setSize(sizeBox);
 	m_particles->setHeight(height);
+}
+
+void	ElevatorStream::setTopY(float topY)
+{
+	sf::Vector2f	posBox = m_box->getPosition();
+
+	posBox.y = topY;
+	m_box->setPosition(posBox);
+	m_topY = topY;
 }
 
 void	ElevatorStream::setWidth(float width)
 {
+	sf::Vector2f	sizeBox = m_box->getSize();
+
+	sizeBox.x = width;
+	m_box->setSize(sizeBox);
 	m_particles->setWidth(width);
 }
 
@@ -208,6 +232,26 @@ void	ElevatorStream::setRotationFactor(float factor)
 void	ElevatorStream::setBiome(ABiome & biome)
 {
 	m_particles->setBiome(biome);
+}
+
+float	ElevatorStream::getHeight(void) const
+{
+	return m_particles->getHeight();
+}
+
+float	ElevatorStream::getWidth(void) const
+{
+	return m_particles->getWidth();
+}
+
+float	ElevatorStream::getPosY(void) const
+{
+	return m_particles->getPosition().y;
+}
+
+float	ElevatorStream::getTopY(void) const
+{
+	return m_topY;
 }
 
 void	ElevatorStream::update(sf::Time frameTime)

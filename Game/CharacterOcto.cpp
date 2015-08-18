@@ -296,6 +296,11 @@ void	CharacterOcto::onCollision(GameObjectType type)
 	}
 }
 
+void	CharacterOcto::setTopElevator(float top)
+{
+	m_topElevator = top;
+}
+
 void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 {
 	if (m_clockCollisionTile.getElapsedTime() > frameTime)
@@ -337,9 +342,8 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 {
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 	static bool maxHeight;
-	float top = bounds.top + bounds.height;
-	//TODO top pos elevator - 80.f
-	float posElevator = -1400.f;
+	float top = bounds.top + (bounds.height / 2.f);
+	float posElevator = m_topElevator;
 	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
 	{
 		if (top <= (posElevator + 200.f))
@@ -429,8 +433,8 @@ void	CharacterOcto::commitPhysicsToGraphics()
 {
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
-	// TODO fix that
-	m_sprite.setPosition(bounds.left - 65.f, bounds.top);
+	// TODO fix that - 65.f
+	m_sprite.setPosition(bounds.left, bounds.top);
 	m_previousTop = bounds.top;
 }
 

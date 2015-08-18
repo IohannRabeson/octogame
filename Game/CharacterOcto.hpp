@@ -39,6 +39,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool			onReleased(sf::Event::KeyEvent const& event);
 	sf::Vector2f	getPosition() const;
 	void			onCollision(GameObjectType type);
+	void			setTopElevator(float top);
+
 	private:
 	bool	dieFall();
 	void	setupAnimation();
@@ -83,6 +85,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	float						m_elevatorVelocity;
 	float						m_afterJumpVelocity;
 	float						m_previousTop;
+	float						m_topElevator;
 	std::size_t					m_numberOfJump;
 	bool						m_originMove;
 	bool						m_onGround;
