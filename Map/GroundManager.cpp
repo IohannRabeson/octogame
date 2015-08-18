@@ -12,6 +12,7 @@
 #include <Camera.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
+#include <Console.hpp>
 
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
@@ -72,8 +73,25 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 
 void GroundManager::setupGameObjects(ABiome & biome)
 {
+	octo::Console&				console = octo::Application::getConsole();
+
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
 
+	// Setup somes console commands
+	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
+			{
+				for(auto& elevator : m_elevators)
+				{
+					elevator.m_gameObject->setRotationFactor(factor);
+				}
+			});
+	console.addCommand(L"test.elevators.setWidth", [this](float width)
+			{
+				for(auto& elevator : m_elevators)
+				{
+					elevator.m_gameObject->setWidth(width);
+				}
+			});
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
@@ -96,6 +114,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		elevator->setPosX((instance.first - 10.f) * Tile::TileSize);
 		elevator->setPosY(-levelMap.getMapSize().y + MapInstance::HeightOffset);
 		elevator->setHeight(400.f);
+		elevator->setBiome(biome);
 		m_elevators.emplace_back(instance.first - 10, 10, elevator);
 	}
 

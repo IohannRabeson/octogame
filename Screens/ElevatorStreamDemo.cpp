@@ -6,11 +6,13 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:24:03 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/12 19:29:43 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/13 21:50:00 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ElevatorStreamDemo.hpp"
+#include "DefaultBiome.hpp"
+#include "BiomeManager.hpp"
 #include <Application.hpp>
 #include <Console.hpp>
 #include <Camera.hpp>
@@ -23,10 +25,6 @@ ElevatorStreamDemo::ElevatorStreamDemo()
 			{
 				m_teleportBeam.setWidth(width);
 			});
-	console.addCommand(L"demo.setColor", [this](sf::Color const& color)
-			{
-				m_teleportBeam.setColor(color);
-			});
 }
 
 void	ElevatorStreamDemo::start()
@@ -34,7 +32,12 @@ void	ElevatorStreamDemo::start()
 	m_teleportBeam.setPosX(0.f);
 	m_teleportBeam.setPosY(-400.f);
 	m_teleportBeam.setHeight(800.f);
-	octo::Application::getCamera().setCenter(sf::Vector2f());	
+	octo::Application::getCamera().setCenter(sf::Vector2f());
+
+	BiomeManager manager;
+	manager.registerBiome<DefaultBiome>("test");
+	manager.changeBiome("test", 0);
+	m_teleportBeam.setBiome(manager.getCurrentBiome());
 }
 
 void	ElevatorStreamDemo::pause()
