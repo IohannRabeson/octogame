@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   CharacterOcto.cpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/23 00:33:57 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/17 15:56:57 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   CharacterOcto.hpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/23 00:32:59 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/23 03:25:42 by irabeson         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef CHARACTEROCTO_HPP
 # define CHARACTEROCTO_HPP
 # include <CharacterSprite.hpp>

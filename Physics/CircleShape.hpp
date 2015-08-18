@@ -26,7 +26,7 @@ public:
 	 *
 	 * \param radius The new radius
 	 */
-	inline void setRadius(float radius) { m_radius = radius; }
+	void setRadius(float radius);
 
 	/*! Get the radius */
 	inline float getRadius(void) const { return m_radius; }
@@ -52,7 +52,7 @@ private:
 	sf::Vector2f		m_baryCenter;
 	sf::Vector2f		m_initialBaryCenter;
 	sf::Rect<float>		m_globalBounds;
-	float			m_radius;
+	float				m_radius;
 
 	/*! Compute the shape once per frame */
 	virtual void computeShape(void);

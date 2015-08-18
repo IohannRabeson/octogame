@@ -75,6 +75,10 @@ void	PhysicsMapScreen::start()
 	c->setRadius(10.f);
 	c->setPosition(120.f, 60.f);
 
+	CircleShape * circle = m_engine.createCircle();
+	circle->setRadius(260.f);
+	circle->setPosition(100.f, 300.f);
+
 	m_engine.unregisterShape(m_shapes[5]);
 }
 
