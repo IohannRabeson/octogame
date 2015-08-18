@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/13 22:27:23 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/18 11:38:01 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,16 @@ public:
 	void	setBiome(ABiome & biome)
 	{
 		m_biome = &biome;
+	}
+
+	float	getHeight(void) const
+	{
+		return m_height;
+	}
+
+	float	getWidth(void) const
+	{
+		return m_width;
 	}
 
 	void	updateParticle(sf::Time frameTime, Particle& particle)
@@ -177,6 +187,11 @@ void	ElevatorStream::setHeight(float height)
 	m_particles->setHeight(height);
 }
 
+void	ElevatorStream::setTopY(float topY)
+{
+	m_topY = topY;
+}
+
 void	ElevatorStream::setWidth(float width)
 {
 	m_particles->setWidth(width);
@@ -191,6 +206,26 @@ void	ElevatorStream::setRotationFactor(float factor)
 void	ElevatorStream::setBiome(ABiome & biome)
 {
 	m_particles->setBiome(biome);
+}
+
+float	ElevatorStream::getHeight(void) const
+{
+	return m_particles->getHeight();
+}
+
+float	ElevatorStream::getWidth(void) const
+{
+	return m_particles->getWidth();
+}
+
+float	ElevatorStream::getPosY(void) const
+{
+	return m_particles->getPosition().y;
+}
+
+float	ElevatorStream::getTopY(void) const
+{
+	return m_topY;
 }
 
 void	ElevatorStream::update(sf::Time frameTime)
