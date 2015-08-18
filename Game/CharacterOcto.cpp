@@ -346,8 +346,9 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 	{
 		if (!m_onElevator)
 		{
+			if (m_sprite.getCurrentEvent() != Umbrella)
+				m_sprite.setNextEvent(Elevator);
 			m_onElevator = true;
-			m_sprite.setNextEvent(Elevator);
 			m_numberOfJump = 3;
 			m_box->setApplyGravity(false);
 		}
@@ -356,7 +357,8 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 	{
 		if (m_onElevator)
 		{
-			m_sprite.setNextEvent(Fall);
+			if (m_sprite.getCurrentEvent() != Umbrella)
+				m_sprite.setNextEvent(Fall);
 			m_onElevator = false;
 			m_onTopElevator = false;
 			m_box->setApplyGravity(true);
