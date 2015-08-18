@@ -7,6 +7,7 @@
 #include "Rainbow.hpp"
 #include "SkyCycle.hpp"
 #include "MapInstance.hpp"
+#include <limits>
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -109,7 +110,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		}
 
 		// For each instance, create an elevator stream
-		ElevatorStream * elevator = new ElevatorStream();
+		std::unique_ptr<ElevatorStream> elevator;
+		elevator.reset(new ElevatorStream());
 		//TODO: use correct size from elevator (static ocnstexpr in elevator ?
 		elevator->setPosX((instance.first - 10.f) * Tile::TileSize);
 		elevator->setPosY(-levelMap.getMapSize().y + MapInstance::HeightOffset);
@@ -117,15 +119,25 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		elevator->setBiome(biome);
 		m_elevators.emplace_back(instance.first - 10, 10, elevator);
 	}
+	std::unique_ptr<Portal> portal;
+	portal.reset(new Portal());
+	portal->setRadius(100.f);
+	m_portals.emplace_back(15, portal->getRadius() * 2.f / Tile::TileSize, portal);
 
 	// Register position for gameobjects on the ground
-	// TODO: template function to manage this for each vector
-	for (auto const & elevator : m_elevators)
+	setupGameObjectPosition(m_elevators);
+	setupGameObjectPosition(m_portals);
+}
+
+template<class T>
+void GroundManager::setupGameObjectPosition(std::vector<GameObjectPosition<T>> const & gameObjectPosition)
+{
+	for (auto & gameObject : gameObjectPosition)
 	{
-		for (std::size_t i = 0u; i < elevator.m_width; i++)
+		for (std::size_t i = 0u; i < gameObject.m_width; i++)
 		{
-			m_tiles->registerWideDecor(elevator.m_position + i);
-			m_tilesPrev->registerWideDecor(elevator.m_position + i);
+			m_tiles->registerWideDecor(gameObject.m_position + i);
+			m_tilesPrev->registerWideDecor(gameObject.m_position + i);
 		}
 	}
 }
@@ -423,12 +435,15 @@ void GroundManager::updateTransition(void)
 	// Update wide decors
 	Map::WideDecors const & currentWide = m_tiles->getWideDecorsPosition();
 	Map::WideDecors const & prevWide = m_tilesPrev->getWideDecorsPosition();
-	float min = 0;
+	float min;
+	float max;
+	float tmp;
 	for (auto const & elevator : m_elevators)
 	{
+		min = 0.f;
 		for (std::size_t i = elevator.m_position; i < elevator.m_position + elevator.m_width; i++)
 		{
-			float tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
+			tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
 			if (tmp > min)
 				min = tmp;
 		}
@@ -436,6 +451,18 @@ void GroundManager::updateTransition(void)
 		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x + Tile::DoubleTileSize);
 		elevator.m_gameObject->setPosY(min);
 		elevator.m_gameObject->setHeight(min - ((MapInstance::HeightOffset - 15) * Tile::TileSize));
+	}
+
+	for (auto const & portal : m_portals)
+	{
+		max = std::numeric_limits<float>::max();
+		for (std::size_t i = portal.m_position; i < portal.m_position + portal.m_width; i++)
+		{
+			tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
+			if (tmp < max)
+				max = tmp;
+		}
+		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x + Tile::DoubleTileSize, max - portal.m_gameObject->getRadius() - Tile::TripleTileSize));
 	}
 }
 
@@ -588,7 +615,6 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	for (auto it = m_decorManagerGround.begin(); it != m_decorManagerGround.end(); it++, i++)
 		(*it)->setPosition(m_decorPositions[i]);
 
-
 	octo::Camera& camera = octo::Application::getCamera();
 	m_decorManagerBack.update(deltatime, camera);
 	m_decorManagerFront.update(deltatime, camera);
@@ -599,6 +625,8 @@ void GroundManager::updateGameObjects(float deltatime)
 {
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->update(sf::seconds(deltatime));
+	for (auto & portal : m_portals)
+		portal.m_gameObject->update(sf::seconds(deltatime));
 }
 
 void GroundManager::update(float deltatime)
@@ -639,15 +667,15 @@ void GroundManager::update(float deltatime)
 	updateTransition();
 	updateDecors(sf::seconds(deltatime));
 	updateGameObjects(deltatime);
-	m_test.update(sf::seconds(deltatime));
 }
 
 void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->draw(render);
+	for (auto & portal : m_portals)
+		portal.m_gameObject->draw(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
-	m_test.draw(render);
 }
 
 DecorManager const & GroundManager::getDecorsBack(void) const
