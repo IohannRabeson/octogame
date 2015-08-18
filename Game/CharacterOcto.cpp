@@ -3,6 +3,7 @@
 #include "PhysicsEngine.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -22,7 +23,19 @@ CharacterOcto::CharacterOcto() :
 	m_keySpace(false),
 	m_keyUp(false)
 {
-	octo::ResourceManager&		resources = octo::Application::getResourceManager();
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.addKeyboardListener(this);
+}
+
+CharacterOcto::~CharacterOcto(void)
+{
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
+}
+
+void	CharacterOcto::setup(void)
+{
+	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));

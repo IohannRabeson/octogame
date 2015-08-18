@@ -29,7 +29,9 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	};
 	public:
 	CharacterOcto();
+	~CharacterOcto();
 
+	void			setup(void);
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 
