@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/18 11:38:01 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/08/18 13:08:29 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,8 @@ private:
 ElevatorStream::ElevatorStream() :
 	m_particles(new BeamParticle()),
 	m_waveCycleDuration(sf::seconds(0.5)),
-	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false))
+	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
+	m_topY(0.f)
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	sf::Vector2f	sizeBox = m_box->getSize();
