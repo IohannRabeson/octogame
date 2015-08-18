@@ -267,11 +267,11 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
-	m_sprite.update(frameTime);
 	endDeath();
 	dance();
 	collisionTileUpdate(frameTime);
 	collisionElevatorUpdate(frameTime);
+	m_sprite.update(frameTime);
 	commitControlsToPhysics(frameTime);
 	commitPhysicsToGraphics();
 }

@@ -105,8 +105,8 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_groundManager.getDecorsBack(), states);
 	m_physicsEngine.debugDraw(render);
 	// Draw Octo and pnj
-	render.draw(m_octo, states);
 	render.draw(m_npc, states);
+	render.draw(m_octo, states);
 	render.draw(m_groundManager.getDecorsFront(), states);
 	render.draw(m_skyManager.getDecorsFront(), states);
 	render.draw(m_groundManager, states);
