@@ -40,7 +40,7 @@ void	CharacterOcto::setup(void)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
-	m_box->setSize(sf::Vector2f(177.f / 5.f, 150.f));
+	m_box->setSize(sf::Vector2f(177.f / 5.f, 150.f / 2.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
@@ -55,83 +55,83 @@ void	CharacterOcto::setupAnimation()
 	typedef octo::CharacterAnimation::Frame			Frame;
 
 	m_idleAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {10, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {12, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {13, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {14, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {12, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {13, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {14, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			});
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_walkAnimation.setFrames({
-			Frame(sf::seconds(0.2f), {0, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {1, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {2, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {3, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {4, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {5, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {6, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {7, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {8, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {9, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {10, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {11, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {12, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {13, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {14, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {15, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {16, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {17, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {18, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {19, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {20, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()})
+			Frame(sf::seconds(0.2f), {0, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {1, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {2, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {3, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {4, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {5, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {6, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {7, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {8, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {9, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {10, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {11, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {12, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {13, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {14, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {15, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {16, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {17, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {18, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {19, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {20, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()})
 	});
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_jumpAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {26, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()})
+			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {26, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()})
 			});
 	m_jumpAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_fallAnimation.setFrames({
-			Frame(sf::seconds(0.2f), {27, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {28, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {27, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {28, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			});
 	m_fallAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_danceAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {10, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {12, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {13, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {14, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {12, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {13, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {14, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			});
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_umbrellaAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {28, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {28, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			});
 	m_umbrellaAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_elevatorAnimation.setFrames({
-			Frame(sf::seconds(1.f), {23, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(1.f), {23, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			});
 	m_elevatorAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_deathAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {35, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {36, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {37, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {38, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(1.4f), {39, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {35, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {36, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {37, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {38, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(1.4f), {39, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			});
 	m_deathAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_drinkAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			});
 	m_drinkAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -438,7 +438,7 @@ void	CharacterOcto::commitPhysicsToGraphics()
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
 	// TODO ???
-	m_sprite.setPosition(bounds.left - (177.f / 2.5f), bounds.top);
+	m_sprite.setPosition(bounds.left - (177.f / 2.5f), bounds.top - (150.f / 2.f));
 	m_previousTop = bounds.top;
 }
 
@@ -474,8 +474,9 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 	{
 		if (m_onElevator)
 			velocity.y = (3.f * m_pixelSecondUmbrella) * frameTime.asSeconds();
-		else
+		else{
 			velocity.y = m_pixelSecondUmbrella * frameTime.asSeconds();
+		}
 	}
 	m_box->setVelocity(velocity);
 }
