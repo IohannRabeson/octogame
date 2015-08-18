@@ -52,7 +52,7 @@ private:
 	octo::VertexBuilder				m_builder;
 	sf::Time						m_waveCycle;
 	sf::Time						m_waveCycleDuration;
-	RectangleShape*				m_box;
+	RectangleShape*					m_box;
 };
 
 #endif
