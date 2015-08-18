@@ -39,7 +39,7 @@ void	CharacterOcto::setup(void)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
-	m_box->setSize(sf::Vector2f(80.f / 2.f, 150.f));
+	m_box->setSize(sf::Vector2f(177.f / 2.f, 150.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
