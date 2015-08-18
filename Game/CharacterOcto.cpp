@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   CharacterOcto.cpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/23 00:33:57 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 13:55:38 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
@@ -37,11 +25,14 @@ CharacterOcto::CharacterOcto() :
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
+	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
+	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
+	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
+	m_box->setCollisionMask(mask);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	setupAnimation();
 	setupMachine();
 	m_sprite.restart();
-	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
 }
 
 void	CharacterOcto::setupAnimation()
