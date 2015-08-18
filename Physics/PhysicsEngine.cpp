@@ -632,11 +632,6 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 		for (auto const & pair : m_tilePolyPairs[i])
 			pair.m_shapeA->debugDraw(render);
 	}
-	for (std::size_t i = 0u; i < m_tileCirclePairs.size(); i++)
-	{
-		for (auto const & pair : m_tileCirclePairs[i])
-			pair.m_shapeA->debugDraw(render);
-	}
 	for (auto const & shape : m_shapes)
 		shape->debugDraw(render);
 }

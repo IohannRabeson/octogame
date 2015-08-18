@@ -1,20 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   CharacterOcto.cpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/23 00:33:57 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/17 15:56:57 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -35,7 +24,19 @@ CharacterOcto::CharacterOcto() :
 	m_keySpace(false),
 	m_keyUp(false)
 {
-	octo::ResourceManager&		resources = octo::Application::getResourceManager();
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.addKeyboardListener(this);
+}
+
+CharacterOcto::~CharacterOcto(void)
+{
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
+}
+
+void	CharacterOcto::setup(void)
+{
+	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(80.f / 2.f, 150.f));
