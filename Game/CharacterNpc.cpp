@@ -10,14 +10,17 @@ CharacterNpc::CharacterNpc() :
 	m_originMove(false)
 {
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
+
 	m_box->setGameObject(this);
+	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Npc));
+	m_box->setCollisionMask(0u);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	setupAnimation();
 	setupMachine();
 	m_sprite.restart();
 	m_sprite.setColor(sf::Color::Green);
 	m_clock.restart();
-	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
 	m_area = sf::FloatRect(0, 0, 0, 0);
 }
 
