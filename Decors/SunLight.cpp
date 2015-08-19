@@ -2,12 +2,15 @@
 #include "ABiome.hpp"
 #include "SkyCycle.hpp"
 #include <Application.hpp>
+#include <ResourceManager.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
 
+#include "ResourceDefinitions.hpp"
+
 SunLight::SunLight(void) :
-	m_vertices(new sf::Vertex[40]),
-	m_count(40),
+	m_vertices(new sf::Vertex[24]),
+	m_count(24),
 	m_used(0u),
 	m_canCreateRain(false),
 	m_timerRain(sf::Time::Zero),
@@ -61,6 +64,22 @@ void SunLight::createSunLight(sf::Vector2f const & cameraSize, sf::Vector2f cons
 	createBicolorQuad(nightUpLeft, nightUpRight, nightDownRight, nightDownLeft, colorNight, colorNight, builder);
 }
 
+void SunLight::setupLights(void)
+{
+	lightMapTexture.create(m_cameraSize.x * 1.2f, m_cameraSize.y * 1.2f);
+	lightMap.setTexture(lightMapTexture.getTexture());
+	lightTexture = octo::Application::getResourceManager().getTexture(LIGHT_PNG);
+	//TODO: Check with and without
+	lightTexture.setSmooth(true);
+	light.setTexture(lightTexture);
+	light.setTextureRect(sf::IntRect(0, 0, 512, 512));
+	light.setOrigin(256.f, 256.f);
+
+	//TODO: Know max light, implement it
+//	lights.resize(40);
+	lights.push_back(Light(octo::Application::getCamera().getCenter() + sf::Vector2f(0.f, m_cameraSize.y / 4.f), sf::Vector2f(0.9f, 0.9f),  sf::Color(255, 255, 200, 150)));
+}
+
 void SunLight::setup(ABiome& biome, SkyCycle & skyCycle)
 {
 	m_cycle = &skyCycle;
@@ -74,6 +93,7 @@ void SunLight::setup(ABiome& biome, SkyCycle & skyCycle)
 	m_colorDay = sf::Color::Transparent;
 	m_colorDayRaining = sf::Color(100, 100, 100, 100);
 	m_canCreateRain = biome.canCreateRain();
+	setupLights();
 }
 
 void SunLight::computeDayColorValue(sf::Time frameTime)
@@ -93,11 +113,32 @@ void SunLight::computeDayColorValue(sf::Time frameTime)
 	m_colorDay = octo::linearInterpolation(sf::Color::Transparent, m_colorDayRaining, m_timerRain / m_timerRainMax);
 }
 
+void SunLight::updateLights(void)
+{
+	sf::FloatRect cameraRect = octo::Application::getCamera().getRectangle();
+	sf::Vector2f position(cameraRect.left - m_cameraSize.x * 0.1f, cameraRect.top - m_cameraSize.y * 0.1f);
+
+	lightMapTexture.clear(sf::Color::White);
+	lightMap.setTexture(lightMapTexture.getTexture());
+	lightMapTexture.draw(m_vertices.get(), m_used, sf::Triangles);
+	for (std::size_t i = 0; i < lights.size(); ++i)
+	{
+		light.setScale(lights[i].scale);
+		light.setColor(lights[i].color);
+		light.setPosition(lights[i].position);
+		lightMapTexture.draw(light, sf::BlendAdd);
+	}
+	lightMapTexture.display();
+	lightMap.setTextureRect(sf::IntRect(0.f, 0.f, m_cameraSize.x * 1.2f, m_cameraSize.y * 1.2f));
+	//lights[0].position = position;
+	lightMap.setPosition(position);
+}
+
 void SunLight::update(sf::Time frameTime)
 {
 	m_builder.clear();
 
-	sf::Vector2f position = octo::Application::getCamera().getCenter();
+	sf::Vector2f position(m_cameraSize.x * 0.6, m_cameraSize.y * 0.6);
 	if (m_canCreateRain)
 		computeDayColorValue(frameTime);
 	float dayValue = m_cycle->getDayValue();
@@ -106,7 +147,7 @@ void SunLight::update(sf::Time frameTime)
 		position -= octo::linearInterpolation(m_sunsetPos, m_dayPos, dayValue);
 	else if (m_cycle->isNight())
 		position -= octo::linearInterpolation(m_sunsetPos, m_nightPos, nightValue);
-	
+
 	float thunderValue = m_cycle->getThunderValue();
 	if (thunderValue == 0.f)
 		createSunLight(m_cameraSize, position, m_colorDay, m_colorSunset, m_colorNight, m_builder);
@@ -119,9 +160,11 @@ void SunLight::update(sf::Time frameTime)
 	}
 
 	m_used = m_builder.getUsed();
+	updateLights();
 }
 
 void SunLight::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
+	states.blendMode = sf::BlendMultiply;
+	render.draw(lightMap, states);
 }

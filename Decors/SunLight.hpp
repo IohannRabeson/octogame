@@ -11,6 +11,9 @@
 # include <SFML/Graphics/Transformable.hpp>
 # include <SFML/System/Time.hpp>
 # include <SFML/Graphics/Color.hpp>
+# include <SFML/Graphics/RenderTexture.hpp>
+# include <SFML/Graphics/Texture.hpp>
+# include <SFML/Graphics/Sprite.hpp>
 
 class SkyCycle;
 
@@ -42,6 +45,29 @@ private:
 
 	void computeDayColorValue(sf::Time frameTime);
 
+	void setupLights(void);
+	void updateLights(void);
+
+	struct Light
+	{
+		sf::Vector2f	position;
+		sf::Vector2f	scale;
+		sf::Color		color;
+
+		Light(void) :
+			scale(1.f, 1.f),
+			color(255, 255, 255, 255)
+		{
+		}
+
+		Light(sf::Vector2f position, sf::Vector2f scale, sf::Color color) :
+			position(position),
+			scale(scale),
+			color(color)
+		{
+		}
+	};
+
 	std::unique_ptr<sf::Vertex[]>	m_vertices;
 	std::size_t						m_count;
 	std::size_t						m_used;
@@ -60,6 +86,12 @@ private:
 
 	sf::Time						m_timerRain;
 	sf::Time						m_timerRainMax;
+
+	sf::Texture						lightTexture;
+	sf::Sprite						light;
+	sf::RenderTexture				lightMapTexture;
+	sf::Sprite						lightMap;
+	std::vector<Light>				lights;
 
 	SkyCycle *						m_cycle;
 };
