@@ -108,10 +108,12 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 SRC_POTION  = 	Potion/PotionEffectManager.cpp			\
 				Potion/PostEffectPotion.cpp				\
 				Potion/PixelPotion.cpp					\
+				Potion/PersistancePotion.cpp			\
 				Potion/GrayPotion.cpp
 				
 SRC_GLITCH =	Glitch/GlitchEffectManager.cpp			\
 				Glitch/PostEffectGlitch.cpp				\
+				Glitch/PersistanceGlitch.cpp			\
 				Glitch/PixelGlitch.cpp
 
 # package files
