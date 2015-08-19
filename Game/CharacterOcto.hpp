@@ -43,6 +43,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 
 	private:
 	bool	dieFall();
+	void	timeEvent(sf::Time frameTime);
 	void	setupAnimation();
 	void	setupMachine();
 	void	collisionTileUpdate(sf::Time frameTime);
@@ -70,11 +71,11 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
 
-	sf::Clock					m_clockAFK;
-	sf::Clock					m_clockFall;
-	sf::Clock					m_clockDeath;
 	sf::Clock					m_clockCollisionTile;
 	sf::Clock					m_clockCollisionElevator;
+	sf::Time					m_timeEventFall;
+	sf::Time					m_timeEventIdle;
+	sf::Time					m_timeEventDeath;
 	float						m_pixelSecondJump;
 	float						m_pixelSecondUmbrella;
 	float						m_pixelSecondWalk;

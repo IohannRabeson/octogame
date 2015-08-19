@@ -13,7 +13,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
 	m_pixelSecondElevator(-250.f),
-	m_pixelSecondOnTopElevator(-120.f),
+	m_pixelSecondOnTopElevator(-80.f),
 	m_pixelSecondMultiplier(800.f),
 	m_numberOfJump(1),
 	m_originMove(false),
@@ -45,6 +45,9 @@ void	CharacterOcto::setup(void)
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
+	m_timeEventFall = sf::Time::Zero;
+	m_timeEventIdle = sf::Time::Zero;
+	m_timeEventDeath = sf::Time::Zero;
 	setupAnimation();
 	setupMachine();
 	m_sprite.restart();
@@ -56,11 +59,11 @@ void	CharacterOcto::setupAnimation()
 
 	m_idleAnimation.setFrames({
 			Frame(sf::seconds(0.4f), {10, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+/*			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {12, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {13, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {14, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),*/
 			});
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -142,9 +145,7 @@ void	CharacterOcto::setupMachine()
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
 
-	std::function<void()> clockAFKRestart = [this]{ m_clockAFK.restart();};
-	std::function<void()> clockDeadRestart = [this]{ m_clockDeath.restart();};
-	std::function<void()> clockFallRestart = [this]{ m_clockFall.restart();};
+//	std::function<void()> clockDeadRestart = [this]{ m_clockDeath.restart();};
 	octo::FiniteStateMachine	machine;
 	StatePtr					state0;
 	StatePtr					state1;
@@ -207,15 +208,15 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(DoubleJump, state7, state4);
 	machine.addTransition(DoubleJump, state8, state4);
 
-	machine.addTransition(Fall, state0, state5, clockFallRestart);
-	machine.addTransition(Fall, state1, state5, clockFallRestart);
-	machine.addTransition(Fall, state2, state5, clockFallRestart);
-	machine.addTransition(Fall, state3, state5, clockFallRestart);
-	machine.addTransition(Fall, state4, state5, clockFallRestart);
-	machine.addTransition(Fall, state5, state5, clockFallRestart);
-	machine.addTransition(Fall, state6, state5, clockFallRestart);
-	machine.addTransition(Fall, state7, state5, clockFallRestart);
-	machine.addTransition(Fall, state8, state5, clockFallRestart);
+	machine.addTransition(Fall, state0, state5);
+	machine.addTransition(Fall, state1, state5);
+	machine.addTransition(Fall, state2, state5);
+	machine.addTransition(Fall, state3, state5);
+	machine.addTransition(Fall, state4, state5);
+	machine.addTransition(Fall, state5, state5);
+	machine.addTransition(Fall, state6, state5);
+	machine.addTransition(Fall, state7, state5);
+	machine.addTransition(Fall, state8, state5);
 
 	machine.addTransition(Dance, state0, state6);
 
@@ -237,38 +238,39 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Elevator, state7, state8);
 	machine.addTransition(Elevator, state8, state8);
 
-	machine.addTransition(Death, state0, state9, clockDeadRestart);
-	machine.addTransition(Death, state1, state9, clockDeadRestart);
-	machine.addTransition(Death, state2, state9, clockDeadRestart);
-	machine.addTransition(Death, state3, state9, clockDeadRestart);
-	machine.addTransition(Death, state4, state9, clockDeadRestart);
-	machine.addTransition(Death, state5, state9, clockDeadRestart);
-	machine.addTransition(Death, state6, state9, clockDeadRestart);
-	machine.addTransition(Death, state7, state9, clockDeadRestart);
-	machine.addTransition(Death, state8, state9, clockDeadRestart);
-	machine.addTransition(Death, state10, state9, clockDeadRestart);
+	machine.addTransition(Death, state0, state9);
+	machine.addTransition(Death, state1, state9);
+	machine.addTransition(Death, state2, state9);
+	machine.addTransition(Death, state3, state9);
+	machine.addTransition(Death, state4, state9);
+	machine.addTransition(Death, state5, state9);
+	machine.addTransition(Death, state6, state9);
+	machine.addTransition(Death, state7, state9);
+	machine.addTransition(Death, state8, state9);
+	machine.addTransition(Death, state10, state9);
 
 	machine.addTransition(Drink, state0, state10);
 	machine.addTransition(Drink, state1, state10);
 	machine.addTransition(Drink, state2, state10);
 
 	machine.addTransition(Idle, state0, state0);
-	machine.addTransition(Idle, state1, state0, clockAFKRestart);
-	machine.addTransition(Idle, state2, state0, clockAFKRestart);
-	machine.addTransition(Idle, state3, state0, clockAFKRestart);
-	machine.addTransition(Idle, state4, state0, clockAFKRestart);
-	machine.addTransition(Idle, state5, state0, clockAFKRestart);
-	machine.addTransition(Idle, state6, state0, clockAFKRestart);
-	machine.addTransition(Idle, state7, state0, clockAFKRestart);
-	machine.addTransition(Idle, state8, state0, clockAFKRestart);
-	machine.addTransition(Idle, state9, state0, clockAFKRestart);
-	machine.addTransition(Idle, state10, state0, clockAFKRestart);
+	machine.addTransition(Idle, state1, state0);
+	machine.addTransition(Idle, state2, state0);
+	machine.addTransition(Idle, state3, state0);
+	machine.addTransition(Idle, state4, state0);
+	machine.addTransition(Idle, state5, state0);
+	machine.addTransition(Idle, state6, state0);
+	machine.addTransition(Idle, state7, state0);
+	machine.addTransition(Idle, state8, state0);
+	machine.addTransition(Idle, state9, state0);
+	machine.addTransition(Idle, state10, state0);
 
 	m_sprite.setMachine(machine);
 }
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
+	timeEvent(frameTime);
 	endDeath();
 	dance();
 	collisionTileUpdate(frameTime);
@@ -279,6 +281,27 @@ void	CharacterOcto::update(sf::Time frameTime)
 	commitPhysicsToGraphics();
 }
 
+void	CharacterOcto::timeEvent(sf::Time frameTime)
+{
+	switch (m_sprite.getCurrentEvent())
+	{
+		case Fall:
+			m_timeEventFall += frameTime;
+			break;
+		case Idle:
+			m_timeEventIdle += frameTime;
+			break;
+		case Death:
+			m_timeEventDeath += frameTime;
+			break;
+		default:
+			m_timeEventFall = sf::Time::Zero;
+			m_timeEventIdle = sf::Time::Zero;
+			m_timeEventDeath = sf::Time::Zero;
+			break;
+	}
+}
+
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	m_sprite.draw(render, states);
@@ -286,7 +309,8 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	CharacterOcto::onCollision(GameObjectType type)
 {
-	switch(type){
+	switch(type)
+	{
 		case GameObjectType::Tile:
 			m_clockCollisionTile.restart();
 			break;
@@ -342,6 +366,9 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 
 void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 {
+	sf::FloatRect const&	bounds = m_box->getGlobalBounds();
+	float					top = bounds.top + (bounds.height / 2.f);
+
 	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
 	{
 		if (!m_onElevator)
@@ -352,6 +379,15 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 			m_numberOfJump = 3;
 			m_box->setApplyGravity(false);
 		}
+		if (top <= (m_topElevator + 50.f))
+		{
+			m_onTopElevator = true;
+			if (bounds.top > m_previousTop
+					&& m_sprite.getCurrentEvent() == Umbrella)
+				m_sprite.setNextEvent(Elevator);
+		}
+		else
+			m_onTopElevator = false;
 	}
 	else
 	{
@@ -361,6 +397,7 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 				m_sprite.setNextEvent(Fall);
 			m_onElevator = false;
 			m_onTopElevator = false;
+			m_numberOfJump = 1;
 			m_box->setApplyGravity(true);
 		}
 	}
@@ -375,11 +412,6 @@ void	CharacterOcto::commitElevatorPhysics(sf::Time frameTime)
 
 	if (m_onElevator)
 	{
-		if (top <= (m_topElevator + 100.f))
-			m_onTopElevator = true;
-		else
-			m_onTopElevator = false;
-
 		if (top <= m_topElevator)
 		{
 			m_elevatorVelocity = m_pixelSecondOnTopElevator * -1.f;
@@ -390,16 +422,14 @@ void	CharacterOcto::commitElevatorPhysics(sf::Time frameTime)
 			velocity.y = m_elevatorVelocity * frameTime.asSeconds();
 			m_elevatorVelocity += (80.f * frameTime.asSeconds());
 		}
+		else if (m_onTopElevator)
+		{
+			velocity.y =  m_pixelSecondOnTopElevator * frameTime.asSeconds();
+		}
 		else
 		{
 			maxHeight = false;
-			if (m_onTopElevator &&  bounds.top < m_previousTop){
-				if (m_sprite.getCurrentEvent() == Umbrella)
-					m_sprite.setNextEvent(Elevator);
-				velocity.y =  m_pixelSecondOnTopElevator * frameTime.asSeconds();
-			}
-			else
-				velocity.y = m_pixelSecondElevator * frameTime.asSeconds();
+			velocity.y = m_pixelSecondElevator * frameTime.asSeconds();
 		}
 		m_box->setVelocity(velocity);
 	}
@@ -407,8 +437,7 @@ void	CharacterOcto::commitElevatorPhysics(sf::Time frameTime)
 
 bool	CharacterOcto::dieFall()
 {
-	if (m_sprite.getCurrentEvent() == Fall
-			&& m_clockFall.getElapsedTime() > sf::seconds(2.0f))
+	if (m_timeEventFall > sf::seconds(2.0f))
 	{
 		m_sprite.setNextEvent(Death);
 		return true;
@@ -418,8 +447,7 @@ bool	CharacterOcto::dieFall()
 
 void	CharacterOcto::endDeath()
 {
-	if (m_sprite.getCurrentEvent() == Death
-			&& m_clockDeath.getElapsedTime() > sf::seconds(3.0f))
+	if (m_timeEventDeath > sf::seconds(3.0f))
 	{
 		m_sprite.setNextEvent(Idle);
 	}
@@ -427,9 +455,7 @@ void	CharacterOcto::endDeath()
 
 void	CharacterOcto::dance()
 {
-	if (m_sprite.getCurrentEvent() == Idle
-			&& m_clockAFK.getElapsedTime() < sf::seconds(5.0f)
-			&& m_clockAFK.getElapsedTime() > sf::seconds(4.0f))
+	if (m_timeEventIdle > sf::seconds(3.0f))
 	{
 		m_sprite.setNextEvent(Dance);
 	}
