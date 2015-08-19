@@ -154,7 +154,7 @@ void	Game::followPlayer(sf::Time frameTime)
 	if (octoDownPos.y >= cameraPos.y)
 		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 5.f);
 	else if (octoUpPos.y <= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds);
+		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 2.f);
 
 	camera.setCenter(cameraPos);
 }
