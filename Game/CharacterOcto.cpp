@@ -225,6 +225,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Umbrella, state3, state7);
 	machine.addTransition(Umbrella, state4, state7);
 	machine.addTransition(Umbrella, state5, state7);
+	machine.addTransition(Umbrella, state6, state7);
 	machine.addTransition(Umbrella, state7, state7);
 	machine.addTransition(Umbrella, state8, state7);
 
@@ -601,6 +602,7 @@ void CharacterOcto::caseUp()
 
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {
+	bool otherKeyReleased = false;
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
@@ -618,12 +620,14 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Up:
 			m_keyUp = false;
+			break;
 		default:
+			otherKeyReleased = true;
 			break;
 	}
-	if (m_sprite.getCurrentEvent() == Death)
+	if (m_sprite.getCurrentEvent() == Death || otherKeyReleased)
 		return true;
-	if (m_onElevator)
+	if (m_onElevator && !m_keyUp)
 	{
 		m_sprite.setNextEvent(Elevator);
 	}
@@ -635,10 +639,9 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 		}
 	}
 	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp){
-		m_sprite.restart();
 		m_sprite.setNextEvent(Idle);
 	}
-	return (true);
+	return true;
 }
 
 sf::Vector2f	CharacterOcto::getPosition() const
