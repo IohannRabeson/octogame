@@ -5,6 +5,7 @@
 # include "SkyCycle.hpp"
 # include "BiomeManager.hpp"
 # include "SkyManager.hpp"
+# include "SunLight.hpp"
 # include "GroundManager.hpp"
 # include "ParallaxScrolling.hpp"
 # include "CharacterOcto.hpp"
@@ -32,6 +33,7 @@ private:
 	BiomeManager						m_biomeManager;
 	std::unique_ptr<SkyCycle>			m_skyCycle;
 	std::unique_ptr<SkyManager>			m_skyManager;
+	std::unique_ptr<SunLight>			m_sunLight;
 	std::unique_ptr<GroundManager>		m_groundManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
 	std::unique_ptr<CharacterOcto>		m_octo;

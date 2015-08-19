@@ -50,6 +50,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 	m_skyCycle.reset(new SkyCycle());
 	m_skyManager.reset(new SkyManager());
+	m_sunLight.reset(new SunLight());
 	m_groundManager.reset(new GroundManager());
 	m_parallaxScrolling.reset(new ParallaxScrolling());
 	m_octo.reset(new CharacterOcto());
@@ -57,6 +58,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 	m_skyCycle->setup(m_biomeManager.getCurrentBiome());
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
+	m_sunLight->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup();
@@ -72,6 +74,7 @@ void	Game::update(sf::Time frameTime)
 	m_octo->update(frameTime);
 	followPlayer();
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
+	m_sunLight->update(frameTime);
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_npc->update(frameTime);
@@ -130,7 +133,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(*m_groundManager, states);
 	render.draw(m_groundManager->getDecorsGround(), states);
-	render.draw(m_skyManager->getFilter(), states);
+	render.draw(*m_sunLight, states);
 }
 
 void	Game::followPlayer()
