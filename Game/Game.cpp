@@ -70,7 +70,7 @@ void	Game::update(sf::Time frameTime)
 {
 	m_physicsEngine.update(frameTime.asSeconds());
 	m_octo->update(frameTime);
-	followPlayer();
+	followPlayer(frameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
@@ -133,13 +133,21 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 }
 
-void	Game::followPlayer()
+void	Game::followPlayer(sf::Time frameTime)
 {
-	octo::Camera&	camera = octo::Application::getCamera();
+	float frameTimeSeconds = frameTime.asSeconds();
+	octo::Camera & camera = octo::Application::getCamera();
+	sf::Vector2f const & cameraSize = camera.getSize();
 	sf::Vector2f cameraPos = camera.getCenter();
-	sf::Vector2f const & octoPos = m_octo->getPosition();
-	cameraPos.x = octo::linearInterpolation(octoPos.x, cameraPos.x, 0.98);
-	cameraPos.y = octo::linearInterpolation(octoPos.y, cameraPos.y, 0.9);
+	sf::Vector2f octoUpPos = m_octo->getPosition();
+	sf::Vector2f octoDownPos = octoUpPos;
+
+	octoDownPos.y -= cameraSize.y / 4.f;
+	cameraPos.x = octo::linearInterpolation(octoUpPos.x, cameraPos.x, 1.f - frameTimeSeconds);
+	if (octoDownPos.y >= cameraPos.y)
+		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 5.f);
+	else if (octoUpPos.y <= cameraPos.y)
+		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 2.f);
 
 	camera.setCenter(cameraPos);
 }
