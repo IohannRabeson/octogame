@@ -21,7 +21,8 @@ SkyManager::SkyManager(void) :
 	m_sunCount(0u),
 	m_moonCount(0u),
 	m_starCount(0u),
-	m_cloudCount(0u)
+	m_cloudCount(0u),
+	m_parallaxSpeedY(0.7f)
 {
 }
 
@@ -134,7 +135,7 @@ void SkyManager::update(sf::Time frameTime)
 	sf::FloatRect const & rec = camera.getRectangle();
 	sf::Vector2f cameraCenter = camera.getCenter();
 	sf::Vector2f cameraSize = camera.getSize();
-	sf::Vector2f offsetCamera(rec.left, rec.top * 0.7f);
+	sf::Vector2f offsetCamera(rec.left, rec.top * m_parallaxSpeedY);
 	float angle = m_cycle->getCycleValue() * 360.f * octo::Deg2Rad;
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);
