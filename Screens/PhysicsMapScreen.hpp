@@ -38,8 +38,8 @@ private:
 	SkyCycle						m_cycle;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
-	virtual void onShapeCollision(AShape * shapeA, AShape * shapeB);
-	virtual void onTileShapeCollision(TileShape * tileShape, AShape * shape);
+	virtual void onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);
+	virtual void onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection);
 
 };
 

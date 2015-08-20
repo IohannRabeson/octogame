@@ -123,17 +123,19 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 	m_engine.update(deltatime.asSeconds());
 }
 
-void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)
+void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
 {
 	(void)shapeA;
 	(void)shapeB;
+	(void)collisionDirection;
 	m_nbCollision++;
 }
 
-void PhysicsMapScreen::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+void PhysicsMapScreen::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection)
 {
 	(void)tileShape;
 	(void)shape;
+	(void)collisionDirection;
 	m_nbCollision++;
 }
 

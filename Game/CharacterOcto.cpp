@@ -308,12 +308,13 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_sprite.draw(render, states);
 }
 
-void	CharacterOcto::onCollision(GameObjectType type)
+void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisionDirection)
 {
 	switch(type)
 	{
 		case GameObjectType::Tile:
-			m_clockCollisionTile.restart();
+			if (collisionDirection.x == 0 && collisionDirection.y < 0)
+				m_clockCollisionTile.restart();
 			break;
 		case GameObjectType::Elevator:
 			m_clockCollisionElevator.restart();
