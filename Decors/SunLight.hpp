@@ -86,14 +86,20 @@ private:
 
 	sf::Time						m_timerRain;
 	sf::Time						m_timerRainMax;
+	DecorAnimator					m_animator;
+	float							m_animation;
 
-	sf::Texture						lightTexture;
-	sf::Sprite						light;
-	sf::RenderTexture				lightMapTexture;
-	sf::Sprite						lightMap;
-	std::vector<Light>				lights;
+	sf::Texture						m_lightTexture;
+	sf::Sprite						m_lightSprite;
+	sf::RenderTexture				m_lightMapTexture;
+	sf::Sprite						m_lightMap;
+	std::vector<Light>				m_rotateLights;
 
 	SkyCycle *						m_cycle;
+
+private:
+	static void rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle);
+	static void rotateVec(sf::Vector2f & vector, sf::Vector2f const & origin, float const cosAngle, float const sinAngle);
 };
 
 #endif

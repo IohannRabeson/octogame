@@ -5,6 +5,7 @@
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
+#include <Math.hpp>
 
 #include "ResourceDefinitions.hpp"
 
@@ -15,6 +16,8 @@ SunLight::SunLight(void) :
 	m_canCreateRain(false),
 	m_timerRain(sf::Time::Zero),
 	m_timerRainMax(sf::seconds(2.f)),
+	m_animator(5.f, 0.f, 3.f, 0.4f),
+	m_animation(1.f),
 	m_cycle(nullptr)
 {
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
@@ -66,18 +69,28 @@ void SunLight::createSunLight(sf::Vector2f const & cameraSize, sf::Vector2f cons
 
 void SunLight::setupLights(void)
 {
-	lightMapTexture.create(m_cameraSize.x * 1.2f, m_cameraSize.y * 1.2f);
-	lightMap.setTexture(lightMapTexture.getTexture());
-	lightTexture = octo::Application::getResourceManager().getTexture(LIGHT_PNG);
+	m_lightMapTexture.create(m_cameraSize.x * 1.2f, m_cameraSize.y * 1.2f);
+	m_lightMap.setTexture(m_lightMapTexture.getTexture());
+	m_lightTexture = octo::Application::getResourceManager().getTexture(LIGHT_PNG);
 	//TODO: Check with and without
-	lightTexture.setSmooth(true);
-	light.setTexture(lightTexture);
-	light.setTextureRect(sf::IntRect(0, 0, 512, 512));
-	light.setOrigin(256.f, 256.f);
+	m_lightTexture.setSmooth(true);
+	m_lightSprite.setTexture(m_lightTexture);
+	m_lightSprite.setTextureRect(sf::IntRect(0, 0, 512, 512));
+	m_lightSprite.setOrigin(256.f, 256.f);
 
 	//TODO: Know max light, implement it
-//	lights.resize(40);
-	lights.push_back(Light(octo::Application::getCamera().getCenter() + sf::Vector2f(0.f, m_cameraSize.y / 4.f), sf::Vector2f(0.9f, 0.9f),  sf::Color(255, 255, 200, 150)));
+	m_rotateLights.resize(18);
+	
+	for (std::size_t i = 0; i < m_rotateLights.size(); i++)
+	{
+		m_rotateLights[i].position.x += 100.f;
+		float angle = i * 20 * octo::Deg2Rad;
+		float cos = std::cos(angle);
+		float sin = std::sin(angle);
+		rotateVec(m_rotateLights[i].position, sin, cos);
+		m_rotateLights[i].position += octo::Application::getCamera().getCenter() + sf::Vector2f(200.f, 400.f);
+	}
+	//m_rotateLights.push_back(Light(octo::Application::getCamera().getCenter() + sf::Vector2f(0.f, m_cameraSize.y / 4.f), sf::Vector2f(0.9f, 0.9f),  sf::Color(255, 255, 200, 150)));
 }
 
 void SunLight::setup(ABiome& biome, SkyCycle & skyCycle)
@@ -93,6 +106,7 @@ void SunLight::setup(ABiome& biome, SkyCycle & skyCycle)
 	m_colorDay = sf::Color::Transparent;
 	m_colorDayRaining = sf::Color(100, 100, 100, 100);
 	m_canCreateRain = biome.canCreateRain();
+	m_animator.setup();
 	setupLights();
 }
 
@@ -118,25 +132,27 @@ void SunLight::updateLights(void)
 	sf::FloatRect cameraRect = octo::Application::getCamera().getRectangle();
 	sf::Vector2f position(cameraRect.left - m_cameraSize.x * 0.1f, cameraRect.top - m_cameraSize.y * 0.1f);
 
-	lightMapTexture.clear(sf::Color::White);
-	lightMap.setTexture(lightMapTexture.getTexture());
-	lightMapTexture.draw(m_vertices.get(), m_used, sf::Triangles);
-	for (std::size_t i = 0; i < lights.size(); ++i)
+	m_lightMapTexture.clear(sf::Color::White);
+	m_lightMap.setTexture(m_lightMapTexture.getTexture());
+	m_lightMapTexture.draw(m_vertices.get(), m_used, sf::Triangles);
+	for (std::size_t i = 0; i < m_rotateLights.size(); ++i)
 	{
-		light.setScale(lights[i].scale);
-		light.setColor(lights[i].color);
-		light.setPosition(lights[i].position);
-		lightMapTexture.draw(light, sf::BlendAdd);
+		m_lightSprite.setScale(m_rotateLights[i].scale * m_animation);
+		m_lightSprite.setColor(m_rotateLights[i].color);
+		m_lightSprite.setPosition(m_rotateLights[i].position);
+		m_lightMapTexture.draw(m_lightSprite, sf::BlendAdd);
 	}
-	lightMapTexture.display();
-	lightMap.setTextureRect(sf::IntRect(0.f, 0.f, m_cameraSize.x * 1.2f, m_cameraSize.y * 1.2f));
-	//lights[0].position = position;
-	lightMap.setPosition(position);
+	m_lightMapTexture.display();
+	m_lightMap.setTextureRect(sf::IntRect(0.f, 0.f, m_cameraSize.x * 1.2f, m_cameraSize.y * 1.2f));
+	//m_rotateLights[0].position = position;
+	m_lightMap.setPosition(position);
 }
 
 void SunLight::update(sf::Time frameTime)
 {
 	m_builder.clear();
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f position(m_cameraSize.x * 0.6, m_cameraSize.y * 0.6);
 	if (m_canCreateRain)
@@ -166,5 +182,19 @@ void SunLight::update(sf::Time frameTime)
 void SunLight::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	states.blendMode = sf::BlendMultiply;
-	render.draw(lightMap, states);
+	render.draw(m_lightMap, states);
+}
+
+void SunLight::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
+{
+	float x = vector.x * cosAngle - vector.y * sinAngle;
+	vector.y = vector.y * cosAngle + vector.x * sinAngle;
+	vector.x = x;
+}
+
+void SunLight::rotateVec(sf::Vector2f & vector, sf::Vector2f const & origin, float const cosAngle, float const sinAngle)
+{
+	vector -= origin;
+	rotateVec(vector, cosAngle, sinAngle);
+	vector += origin;
 }
