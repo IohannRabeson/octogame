@@ -12,7 +12,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
-	m_pixelSecondElevator(-250.f),
+	m_pixelSecondElevator(250.f),
 	m_pixelSecondOnTopElevator(-80.f),
 	m_pixelSecondMultiplier(800.f),
 	m_numberOfJump(1),
@@ -220,6 +220,7 @@ void	CharacterOcto::setupMachine()
 
 	machine.addTransition(Dance, state0, state6);
 
+	machine.addTransition(Umbrella, state0, state7);
 	machine.addTransition(Umbrella, state1, state7);
 	machine.addTransition(Umbrella, state2, state7);
 	machine.addTransition(Umbrella, state3, state7);
@@ -274,8 +275,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 	timeEvent(frameTime);
 	endDeath();
 	dance();
-	collisionTileUpdate(frameTime);
 	collisionElevatorUpdate(frameTime);
+	collisionTileUpdate(frameTime);
 	m_sprite.update(frameTime);
 	commitElevatorPhysics(frameTime);
 	commitControlsToPhysics(frameTime);
@@ -372,14 +373,14 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 
 	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
 	{
-		if (!m_onElevator && m_keyUp)
-		{
-			if (m_sprite.getCurrentEvent() != Umbrella)
+			if (m_onGround && m_keyUp)
+				m_sprite.setNextEvent(Umbrella);
+			else if (!m_onGround && m_sprite.getCurrentEvent() != Elevator
+					&& m_sprite.getCurrentEvent() != Umbrella)
 				m_sprite.setNextEvent(Elevator);
 			m_onElevator = true;
 			m_numberOfJump = 3;
 			m_box->setApplyGravity(false);
-		}
 		if (top <= (m_topElevator + 50.f))
 		{
 			m_onTopElevator = true;
@@ -394,7 +395,7 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 	{
 		if (m_onElevator)
 		{
-			if (m_sprite.getCurrentEvent() != Umbrella)
+			if (m_sprite.getCurrentEvent() != Umbrella && !m_onGround)
 				m_sprite.setNextEvent(Fall);
 			m_onElevator = false;
 			m_onTopElevator = false;
