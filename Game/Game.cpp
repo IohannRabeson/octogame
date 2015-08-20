@@ -75,15 +75,16 @@ void	Game::update(sf::Time frameTime)
 	m_skyManager->update(frameTime);
 }
 
-void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
+void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
 {
-	(void) shapeA;
-	(void) shapeB;
+	(void)shapeA;
+	(void)shapeB;
+	(void)collisionDirection;
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 }
 
-void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection)
 {
 	if (shape->getGameObject() != nullptr
 			&& gameObjectCast<CharacterOcto>(shape->getGameObject()) != nullptr)
@@ -92,6 +93,8 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape)
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 	(void)tileShape;
+	(void)collisionDirection;
+	std::cout << collisionDirection.x << " " << collisionDirection.y << std::endl;
 }
 
 bool Game::onPressed(sf::Event::KeyEvent const & event)
