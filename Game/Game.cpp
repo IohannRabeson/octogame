@@ -45,6 +45,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count"));
+	m_physicsEngine.setGravity(sf::Vector2f(0.f, 600.f));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
 
@@ -61,9 +62,6 @@ void	Game::loadLevel(std::string const& fileName)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup();
 	m_npc->setup(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 800, 0));
-
-	octo::Camera & camera = octo::Application::getCamera();
-	camera.setCenter(m_octo->getPosition());
 }
 
 void	Game::update(sf::Time frameTime)
@@ -78,7 +76,7 @@ void	Game::update(sf::Time frameTime)
 	m_physicsEngine.update(frameTime.asSeconds());
 }
 
-void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
+void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
 {
 	if (shapeA->getGameObject() != nullptr
 			&& gameObjectCast<CharacterOcto>(shapeA->getGameObject()) != nullptr
@@ -86,22 +84,17 @@ void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
 			&& gameObjectCast<ElevatorStream>(shapeB->getGameObject()) != nullptr)
 	{
 		m_octo->setTopElevator(gameObjectCast<ElevatorStream>(shapeB->getGameObject())->getTopY());
-		m_octo->onCollision(GameObjectType::Elevator);
+		m_octo->onCollision(GameObjectType::Elevator, collisionDirection);
 	}
-	// std::cout << shapeA->getCollisionType() << " " << shapeB->getCollisionType() << "|";
-	// don't forget to check if shapeA->getGameObject() != nullptr
-	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 }
 
-void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection)
 {
 	if (shape->getGameObject() != nullptr
 			&& gameObjectCast<CharacterOcto>(shape->getGameObject()) != nullptr)
 	{
-		m_octo->onCollision(GameObjectType::Tile);
+		m_octo->onCollision(GameObjectType::Tile, collisionDirection);
 	}
-	// don't forget to check if shapeA->getGameObject() != nullptr
-	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 	(void)tileShape;
 }
 

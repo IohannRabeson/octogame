@@ -112,11 +112,11 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		// For each instance, create an elevator stream
 		std::unique_ptr<ElevatorStream> elevator;
 		elevator.reset(new ElevatorStream());
-		elevator->setPosX(instance.first * Tile::TileSize - elevator->getWidth());
+		elevator->setPosX(instance.first * Tile::TileSize - elevator->getWidth() - 20.f);
 		elevator->setTopY((-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize);
 		elevator->setHeight(400.f);
 		elevator->setBiome(biome);
-		std::size_t width = elevator->getWidth() / Tile::TileSize + 1u;
+		std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
 		m_elevators.emplace_back(instance.first - width, width, elevator);
 	}
 	// TODO: to remove, it's just an example
