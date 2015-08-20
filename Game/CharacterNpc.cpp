@@ -26,8 +26,12 @@ CharacterNpc::CharacterNpc() :
 
 void	CharacterNpc::setup(sf::Vector2f const & pos, sf::FloatRect const & rect)
 {
-	m_sprite.setPosition(pos);
 	m_area = rect;
+	sf::Vector2f position = pos;
+	position.y -= m_box->getSize().y;
+	m_box->setPosition(position);
+	//m_box->setType(AShape::Type::e_trigger);
+	//m_box->setApplyGravity(false);
 }
 
 void	CharacterNpc::setupAnimation()
@@ -57,7 +61,8 @@ void	CharacterNpc::setupAnimation()
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 }
 
-void	CharacterNpc::setupMachine(){
+void	CharacterNpc::setupMachine()
+{
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
 
@@ -91,32 +96,40 @@ void	CharacterNpc::update(sf::Time frameTime)
 
 void	CharacterNpc::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
+	sf::RectangleShape rect;
+	rect.setFillColor(sf::Color::Blue);
+	rect.setPosition(sf::Vector2f(m_area.left, m_area.top));
+	rect.setSize(sf::Vector2f(m_area.width, m_area.height));
+	render.draw(rect);
 	m_sprite.draw(render, states);
 }
 
 void	CharacterNpc::updateState()
 {
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
-	if (bounds.left <= (m_area.left + m_area.width)
-			&& m_sprite.getCurrentEvent() == Idle && canWalk()){
+	if ((bounds.left + bounds.width) <= (m_area.left + m_area.width) && m_sprite.getCurrentEvent() == Idle && canWalk())
+	{
 		m_sprite.setNextEvent(Right);
-		if (m_originMove){
+		if (m_originMove)
+		{
 			m_sprite.setScale(1, 1);
 			m_sprite.setOrigin(m_sprite.getOrigin().x - 177, 0);
 			m_originMove = false;
 		}
 	}
-	else if (bounds.left >= m_area.left
-			&& m_sprite.getCurrentEvent() == Idle && canWalk()){
+	else if (bounds.left >= m_area.left && m_sprite.getCurrentEvent() == Idle && canWalk())
+	{
 		m_sprite.setNextEvent(Left);
-		if (!m_originMove){
+		if (!m_originMove)
+		{
 			m_sprite.setScale(-1, 1);
 			m_sprite.setOrigin(m_sprite.getOrigin().x + 177, 0);
 			m_originMove = true;
 		}
 	}
-	else if ((bounds.left <= m_area.left || bounds.left >= (m_area.left + m_area.width))
-			&& m_sprite.getCurrentEvent() != Idle && canWalk()){
+	else if ((bounds.left <= m_area.left || (bounds.left + bounds.width) >= (m_area.left + m_area.width))
+			&& m_sprite.getCurrentEvent() != Idle && canWalk())
+	{
 		m_sprite.setNextEvent(Idle);
 		m_clock.restart();
 	}

@@ -101,12 +101,21 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			//TODO: create NPC instead of just physics rect
-			RectangleShape * rect = builder.createRectangle();
-			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY));
-			rect->setSize(sf::Vector2f(spriteTrigger.trigger.width, spriteTrigger.trigger.height));
-			rect->setApplyGravity(false);
-			rect->setType(AShape::Type::e_trigger);
+			//TODO: use resource to load good npc
+			std::unique_ptr<CharacterNpc> npc;
+			npc.reset(new CharacterNpc());
+			sf::FloatRect rect;
+			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
+			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
+			rect.width = spriteTrigger.trigger.width;
+			rect.height = spriteTrigger.trigger.height;
+			sf::Vector2f position;
+			position.x = rect.left;
+			position.y = rect.top + rect.height;
+			//position.x = spriteTrigger.positionSprite.x + instance.first * Tile::TileSize - Map::OffsetX;
+			//position.y = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.positionSprite.y - Map::OffsetY - Tile::TileSize;
+			npc->setup(position, rect);
+			m_npcs.push_back(std::move(npc));
 		}
 
 		// For each instance, create an elevator stream
@@ -598,7 +607,7 @@ void GroundManager::updateOffset(float)
 		{
 			m_tiles->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
 			m_tilesPrev->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
-			defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 10, m_tiles->getRows());
+			defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 20, m_tiles->getRows());
 		}
 		m_tilesPrev->swapDepth();
 		m_oldOffset.y = newOfY;
@@ -627,6 +636,8 @@ void GroundManager::updateGameObjects(float deltatime)
 		elevator.m_gameObject->update(sf::seconds(deltatime));
 	for (auto & portal : m_portals)
 		portal.m_gameObject->update(sf::seconds(deltatime));
+	for (auto & npc : m_npcs)
+		npc->update(sf::seconds(deltatime));
 }
 
 void GroundManager::update(float deltatime)
@@ -675,6 +686,8 @@ void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) cons
 		elevator.m_gameObject->draw(render);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render);
+	for (auto & npc : m_npcs)
+		npc->draw(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 
