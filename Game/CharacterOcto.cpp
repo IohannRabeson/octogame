@@ -372,7 +372,7 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 
 	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
 	{
-		if (!m_onElevator)
+		if (!m_onElevator && m_keyUp)
 		{
 			if (m_sprite.getCurrentEvent() != Umbrella)
 				m_sprite.setNextEvent(Elevator);
@@ -593,10 +593,11 @@ void	CharacterOcto::caseSpace()
 
 void CharacterOcto::caseUp()
 {
-	if (!m_keyUp && !m_onGround && !m_onTopElevator)
+	if (!m_keyUp)
 	{
 		m_keyUp = true;
-		m_sprite.setNextEvent(Umbrella);
+		if (!m_onGround && !m_onTopElevator)
+			m_sprite.setNextEvent(Umbrella);
 	}
 }
 
@@ -639,7 +640,10 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 		}
 	}
 	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp){
-		m_sprite.setNextEvent(Idle);
+		if (m_sprite.getCurrentEvent() != Dance)
+		{
+			m_sprite.setNextEvent(Idle);
+		}
 	}
 	return true;
 }
