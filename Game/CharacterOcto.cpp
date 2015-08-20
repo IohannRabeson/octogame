@@ -7,8 +7,8 @@
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
-	m_pixelSecondJump(-1000.f),
-	m_pixelSecondUmbrella(-250.f),
+	m_pixelSecondJump(-1300.f),
+	m_pixelSecondUmbrella(-300.f),
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
@@ -466,7 +466,6 @@ void	CharacterOcto::commitPhysicsToGraphics()
 {
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
-	// TODO ???
 	m_sprite.setPosition(bounds.left - (177.f / 2.5f), bounds.top - (150.f / 2.f));
 	m_previousTop = bounds.top;
 }
@@ -504,6 +503,7 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 		if (m_onElevator)
 			velocity.y = (3.f * m_pixelSecondUmbrella) * frameTime.asSeconds();
 		else{
+			velocity.x *= 1.3f;
 			velocity.y = m_pixelSecondUmbrella * frameTime.asSeconds();
 		}
 	}
@@ -544,8 +544,8 @@ void	CharacterOcto::caseLeft()
 			m_sprite.setNextEvent(Left);
 		if (!m_originMove)
 		{
-			m_sprite.setScale(-1, 1);
-			m_sprite.setOrigin(m_sprite.getOrigin().x + 177.f, 0);
+			m_sprite.setScale(-1.f, 1.f);
+			m_sprite.setOrigin(m_sprite.getOrigin().x + 177.f, 0.f);
 			m_originMove = true;
 		}
 	}
@@ -561,8 +561,8 @@ void	CharacterOcto::caseRight()
 			m_sprite.setNextEvent(Right);
 		if (m_originMove)
 		{
-			m_sprite.setScale(1, 1);
-			m_sprite.setOrigin(m_sprite.getOrigin().x - 177.f, 0);
+			m_sprite.setScale(1.f, 1.f);
+			m_sprite.setOrigin(m_sprite.getOrigin().x - 177.f, 0.f);
 			m_originMove = false;
 		}
 	}

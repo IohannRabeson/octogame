@@ -45,6 +45,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count"));
+	m_physicsEngine.setGravity(sf::Vector2f(0.f, 600.f));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
 
