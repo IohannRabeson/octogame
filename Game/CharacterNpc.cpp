@@ -12,7 +12,7 @@ CharacterNpc::CharacterNpc() :
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
-	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
+	m_box->setSize(sf::Vector2f(100.f / 2.f, 150.f));
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Npc));
 	m_box->setCollisionMask(0u);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
@@ -27,11 +27,7 @@ CharacterNpc::CharacterNpc() :
 void	CharacterNpc::setup(sf::Vector2f const & pos, sf::FloatRect const & rect)
 {
 	m_area = rect;
-	sf::Vector2f position = pos;
-	position.y -= m_box->getSize().y;
-	m_box->setPosition(position);
-	//m_box->setType(AShape::Type::e_trigger);
-	//m_box->setApplyGravity(false);
+	m_box->setPosition(pos.x, pos.y - m_box->getSize().y);
 }
 
 void	CharacterNpc::setupAnimation()
