@@ -20,14 +20,16 @@
 class PersistancePotion : public PostEffectPotion
 {
 public:
-	PersistancePotion(sf::Time duration = sf::seconds(20.f), float cycle = 10.f, float factor = 1.f);
+	PersistancePotion(sf::Time duration = sf::seconds(30.f), float cycle = 15.f, float factor = 0.03f);
 
 private:
 	void	updateShader(sf::Time frameTime, float relativeTime, sf::Shader& shader);
 	void	setupShader(sf::Shader& shader);
 private:
-	float 	m_cycle;
-	float	m_factor;
+	float		m_duration;
+	float		m_cycle;
+	float		m_factor;
+	float		m_intensity;
 };
 
 #endif

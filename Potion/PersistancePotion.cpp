@@ -20,21 +20,36 @@
 
 PersistancePotion::PersistancePotion(sf::Time duration, float cycles, float factor) :
 	PostEffectPotion(PERSISTANCE_FRAG, duration),
+	m_duration(duration.asSeconds()),
 	m_cycle(cycles),
-	m_factor(factor)
+	m_factor(factor),
+	m_intensity(1.f)
 {
 }
 
 void	PersistancePotion::updateShader(sf::Time, float relativeTime, sf::Shader& shader)
 {
-	float	x = (std::sin(relativeTime * octo::Pi * m_cycle) * 0.5f + 1.f) * m_factor;
-	float	t = 1.f - relativeTime;
+	(void)m_cycle;
+	float stepTime = m_duration / (3.f * m_duration);
+	float stepTime2 = 2.f * stepTime;
 
-	shader.setParameter("intensity", x * t);
+	if (relativeTime < stepTime)
+		m_intensity = (stepTime - relativeTime) * (2.f - stepTime) + m_factor;
+	else if (relativeTime < stepTime2)
+		m_intensity = m_factor + (1 + sin(relativeTime * 100)) * m_factor;
+	else
+		m_intensity = (relativeTime - stepTime2) / (1.f - stepTime2) + m_factor;
+
+	if (m_intensity >= 1.f)
+		m_intensity = 1.f;
+	else if (m_intensity <= m_factor)
+		m_intensity = m_factor;
+	shader.setParameter("intensity", m_intensity);
 }
 
 void	PersistancePotion::setupShader(sf::Shader& shader)
 {
-	shader.setParameter("intensity", 0.f);
+	m_intensity = 1.f;
+	shader.setParameter("intensity", m_intensity);
 }
 

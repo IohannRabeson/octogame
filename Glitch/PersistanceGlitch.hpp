@@ -21,7 +21,7 @@
 class PersistanceGlitch : public PostEffectGlitch
 {
 public:
-	explicit	PersistanceGlitch(float intensity = 0.1f);
+	explicit	PersistanceGlitch(float intensity = 0.05f);
 
 	void		setupShader(sf::Shader& shader);
 private:
