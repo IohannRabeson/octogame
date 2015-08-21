@@ -12,8 +12,6 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
-	m_pixelSecondElevator(250.f),
-	m_pixelSecondOnTopElevator(-80.f),
 	m_pixelSecondMultiplier(800.f),
 	m_numberOfJump(1),
 	m_originMove(false),
@@ -374,32 +372,35 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 
 	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
 	{
-			if (m_onGround && m_keyUp)
-				m_sprite.setNextEvent(Umbrella);
-			else if (!m_onGround && m_sprite.getCurrentEvent() != Elevator
-					&& m_sprite.getCurrentEvent() != Umbrella)
-				m_sprite.setNextEvent(Elevator);
-			m_onElevator = true;
-			m_numberOfJump = 3;
-			m_box->setApplyGravity(false);
-		if (top <= (m_topElevator + 50.f))
+		if (!m_onElevator)
 		{
-			m_onTopElevator = true;
-			if (bounds.top > m_previousTop
-					&& m_sprite.getCurrentEvent() == Umbrella)
-				m_sprite.setNextEvent(Elevator);
+			if (m_keyUp)
+			{
+				m_onTopElevator = false;
+				m_onElevator = true;
+				m_numberOfJump = 3;
+				m_box->setApplyGravity(false);
+			}
+		}
+		if (m_keyUp)
+		{
+			if (m_sprite.getCurrentEvent() != Umbrella)
+				m_sprite.setNextEvent(Umbrella);
 		}
 		else
-			m_onTopElevator = false;
+		{
+				m_onElevator = false;
+				m_box->setApplyGravity(true);
+		}
+		if (top <= (m_topElevator + 50.f))
+			m_onTopElevator = true;
 	}
 	else
 	{
 		if (m_onElevator)
 		{
-			if (m_sprite.getCurrentEvent() != Umbrella && !m_onGround)
-				m_sprite.setNextEvent(Fall);
-			m_onElevator = false;
 			m_onTopElevator = false;
+			m_onElevator = false;
 			m_numberOfJump = 1;
 			m_box->setApplyGravity(true);
 		}
@@ -409,33 +410,8 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 void	CharacterOcto::commitElevatorPhysics(sf::Time frameTime)
 {
 	sf::Vector2f			velocity = m_box->getVelocity();
-	sf::FloatRect const&	bounds = m_box->getGlobalBounds();
-	float					top = bounds.top + (bounds.height / 2.f);
-	static bool				maxHeight = false;
-
-	if (m_onElevator)
-	{
-		if (top <= m_topElevator)
-		{
-			m_elevatorVelocity = m_pixelSecondOnTopElevator * -1.f;
-			maxHeight = true;
-		}
-		if (m_onTopElevator && maxHeight)
-		{
-			velocity.y = m_elevatorVelocity * frameTime.asSeconds();
-			m_elevatorVelocity += (80.f * frameTime.asSeconds());
-		}
-		else if (m_onTopElevator)
-		{
-			velocity.y =  m_pixelSecondOnTopElevator * frameTime.asSeconds();
-		}
-		else
-		{
-			maxHeight = false;
-			velocity.y = m_pixelSecondElevator * frameTime.asSeconds();
-		}
-		m_box->setVelocity(velocity);
-	}
+	(void) frameTime;
+	m_box->setVelocity(velocity);
 }
 
 bool	CharacterOcto::dieFall()
@@ -503,8 +479,12 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 	if (m_keyUp && m_sprite.getCurrentEvent() == Umbrella)
 	{
 		if (m_onElevator)
-			velocity.y = (3.f * m_pixelSecondUmbrella) * frameTime.asSeconds();
-		else{
+		{
+			if (!m_onTopElevator)
+				velocity.y = (3.f * m_pixelSecondUmbrella) * frameTime.asSeconds();
+		}
+		else
+		{
 			velocity.x *= 1.3f;
 			velocity.y = m_pixelSecondUmbrella * frameTime.asSeconds();
 		}
@@ -598,7 +578,7 @@ void CharacterOcto::caseUp()
 	if (!m_keyUp)
 	{
 		m_keyUp = true;
-		if (!m_onGround && !m_onTopElevator)
+		if (!m_onGround)
 			m_sprite.setNextEvent(Umbrella);
 	}
 }
@@ -630,11 +610,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	}
 	if (m_sprite.getCurrentEvent() == Death || otherKeyReleased)
 		return true;
-	if (m_onElevator && !m_keyUp)
-	{
-		m_sprite.setNextEvent(Elevator);
-	}
-	if (!m_onGround && !m_keyUp && !m_onElevator)
+	if (!m_onGround && !m_keyUp)
 	{
 		if (m_sprite.getCurrentEvent() != Fall)
 		{
