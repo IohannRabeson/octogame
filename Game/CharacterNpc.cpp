@@ -10,14 +10,18 @@ CharacterNpc::CharacterNpc() :
 	m_originMove(false)
 {
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
+
 	m_box->setGameObject(this);
+	m_box->setSize(sf::Vector2f(100.f / 2.f, 150.f));
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Npc));
+	m_box->setCollisionMask(0u);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	setupAnimation();
 	setupMachine();
+	m_timeEventIdle = sf::Time::Zero;
 	m_sprite.restart();
 	m_sprite.setNextEvent(Idle);
 	m_sprite.setColor(sf::Color::Green);
-	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
 	m_area = sf::FloatRect(0, 0, 0, 0);
 }
 
@@ -58,7 +62,6 @@ void	CharacterNpc::setupMachine(){
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
 
-	std::function<void()> clockRestart = [this]{ m_clock.restart();};
 	octo::FiniteStateMachine	machine;
 	StatePtr					state0;
 	StatePtr					state1;
@@ -69,9 +72,9 @@ void	CharacterNpc::setupMachine(){
 	state2 = std::make_shared<State>("2", m_walkAnimation, m_sprite);
 
 	machine.setStart(state0);
-	machine.addTransition(Idle, state0, state0, clockRestart);
-	machine.addTransition(Idle, state1, state0, clockRestart);
-	machine.addTransition(Idle, state2, state0, clockRestart);
+	machine.addTransition(Idle, state0, state0);
+	machine.addTransition(Idle, state1, state0);
+	machine.addTransition(Idle, state2, state0);
 
 	machine.addTransition(Left, state0, state1);
 
@@ -81,6 +84,7 @@ void	CharacterNpc::setupMachine(){
 
 void	CharacterNpc::update(sf::Time frameTime)
 {
+	timeEvent(frameTime);
 	updateState();
 	updatePhysics(frameTime);
 	m_sprite.update(frameTime);
@@ -92,15 +96,28 @@ void	CharacterNpc::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_sprite.draw(render, states);
 }
 
+void	CharacterNpc::timeEvent(sf::Time frameTime)
+{
+	switch (m_sprite.getCurrentEvent())
+	{
+		case Idle:
+			m_timeEventIdle += frameTime;
+			break;
+		default:
+			m_timeEventIdle = sf::Time::Zero;
+	}
+}
+
 void	CharacterNpc::updateState()
 {
-	sf::FloatRect const& bounds = m_box->getGlobalBounds();
-	if (bounds.left <= (m_area.left + m_area.width)
+	sf::FloatRect const&	bounds = m_box->getGlobalBounds();
+	float					length = m_area.left + m_area.width;
+	if (bounds.left <= length
 			&& m_sprite.getCurrentEvent() == Idle && canWalk()){
 		m_sprite.setNextEvent(Right);
 		if (m_originMove){
-			m_sprite.setScale(1, 1);
-			m_sprite.setOrigin(m_sprite.getOrigin().x - 177, 0);
+			m_sprite.setScale(1.f, 1.f);
+			m_sprite.setOrigin(m_sprite.getOrigin().x - 177.f, 0.f);
 			m_originMove = false;
 		}
 	}
@@ -108,12 +125,12 @@ void	CharacterNpc::updateState()
 			&& m_sprite.getCurrentEvent() == Idle && canWalk()){
 		m_sprite.setNextEvent(Left);
 		if (!m_originMove){
-			m_sprite.setScale(-1, 1);
-			m_sprite.setOrigin(m_sprite.getOrigin().x + 177, 0);
+			m_sprite.setScale(-1.f, 1.f);
+			m_sprite.setOrigin(m_sprite.getOrigin().x + 177.f, 0.f);
 			m_originMove = true;
 		}
 	}
-	else if ((bounds.left <= m_area.left || bounds.left >= (m_area.left + m_area.width))
+	else if ((bounds.left <= m_area.left || bounds.left >= length)
 			&& m_sprite.getCurrentEvent() != Idle && canWalk()){
 		m_sprite.setNextEvent(Idle);
 	}
@@ -143,7 +160,7 @@ void	CharacterNpc::commitPhysicsToGraphics()
 
 bool	CharacterNpc::canWalk()
 {
-	if (m_clock.getElapsedTime() > sf::seconds(1.4f))
+	if (m_timeEventIdle > sf::seconds(1.4f) || m_timeEventIdle == sf::Time::Zero)
 		return true;
 	return false;
 }
