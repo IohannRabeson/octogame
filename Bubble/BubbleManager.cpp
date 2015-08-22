@@ -30,11 +30,14 @@ void BubbleManager::setup()//(std::vector<NPC> npc)
 void BubbleManager::update(sf::Time frameTime, sf::Vector2f const & octoPos)
 {
 	m_builder.clear();
+	m_timer += frameTime;
 
 	for (auto &bubble : m_bubbles)
 	{
 		bubble.update(frameTime, m_builder);
 		bubble.setPosition(octoPos);
+		if (m_timer >= sf::seconds(7.f))
+			bubble.setActive(true);
 	}
 
 	m_used = m_builder.getUsed();

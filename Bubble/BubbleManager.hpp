@@ -29,6 +29,7 @@ private:
 	octo::VertexBuilder				m_builder;
 
 	std::vector<BubbleNPC>			m_bubbles;
+	sf::Time						m_timer;
 };
 
 #endif
