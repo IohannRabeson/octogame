@@ -57,11 +57,11 @@ void	CharacterOcto::setupAnimation()
 
 	m_idleAnimation.setFrames({
 			Frame(sf::seconds(0.4f), {10, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
-/*			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {12, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {13, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {14, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),*/
+			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177.f / 2.f, 0.f, 177.f, 152.f), sf::Vector2f()}),
 			});
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -143,7 +143,6 @@ void	CharacterOcto::setupMachine()
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
 
-//	std::function<void()> clockDeadRestart = [this]{ m_clockDeath.restart();};
 	octo::FiniteStateMachine	machine;
 	StatePtr					state0;
 	StatePtr					state1;
@@ -312,6 +311,7 @@ void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisi
 	switch(type)
 	{
 		case GameObjectType::Tile:
+			// TODO
 			if (collisionDirection.x == 0 && collisionDirection.y < 0)
 				m_clockCollisionTile.restart();
 			break;
@@ -372,25 +372,17 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 
 	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
 	{
-		if (!m_onElevator)
+		if (!m_onElevator && m_keyUp)
 		{
-			if (m_keyUp)
-			{
-				m_onTopElevator = false;
-				m_onElevator = true;
-				m_numberOfJump = 3;
-				m_box->setApplyGravity(false);
-			}
+			m_onTopElevator = false;
+			m_onElevator = true;
+			m_numberOfJump = 3;
+			m_box->setApplyGravity(false);
 		}
-		if (m_keyUp)
+		if (!m_keyUp)
 		{
-			if (m_sprite.getCurrentEvent() != Umbrella)
-				m_sprite.setNextEvent(Umbrella);
-		}
-		else
-		{
-				m_onElevator = false;
-				m_box->setApplyGravity(true);
+			m_onElevator = false;
+			m_box->setApplyGravity(true);
 		}
 		if (top <= (m_topElevator + 50.f))
 			m_onTopElevator = true;
@@ -410,6 +402,7 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 void	CharacterOcto::commitElevatorPhysics(sf::Time frameTime)
 {
 	sf::Vector2f			velocity = m_box->getVelocity();
+	// TODO
 	(void) frameTime;
 	m_box->setVelocity(velocity);
 }
@@ -578,8 +571,7 @@ void CharacterOcto::caseUp()
 	if (!m_keyUp)
 	{
 		m_keyUp = true;
-		if (!m_onGround)
-			m_sprite.setNextEvent(Umbrella);
+		m_sprite.setNextEvent(Umbrella);
 	}
 }
 
