@@ -53,7 +53,7 @@ void Map::init(ABiome & biome)
 	for (auto & instance : instances)
 		m_instances.push_back(std::unique_ptr<MapInstance>(new MapInstance(instance.first, instance.second)));
 
-	m_noise.setSeed(42);
+	m_noise.setSeed(biome.getMapSeed());
 
 	// Initialize mapSurface pointer
 	setMapSurfaceGenerator(biome.getMapSurfaceGenerator());
