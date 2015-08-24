@@ -38,6 +38,7 @@ void	CharacterOcto::setup(void)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
+	//TODO
 	m_box->setSize(sf::Vector2f(177.f / 5.f, 150.f / 2.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
@@ -245,7 +246,11 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	timeEvent(frameTime);
-	endDeath();
+	if (!endDeath())
+	{
+		m_sprite.update(frameTime);
+		return;
+	}
 	dance();
 	collisionElevatorUpdate(frameTime);
 	collisionTileUpdate(frameTime);
@@ -385,12 +390,15 @@ bool	CharacterOcto::dieFall()
 	return false;
 }
 
-void	CharacterOcto::endDeath()
+bool	CharacterOcto::endDeath()
 {
 	if (m_timeEventDeath > sf::seconds(3.0f))
 	{
 		m_sprite.setNextEvent(Idle);
 	}
+	else if (m_sprite.getCurrentEvent() == Death)
+		return false;
+	return true;
 }
 
 void	CharacterOcto::dance()
@@ -405,15 +413,13 @@ void	CharacterOcto::commitPhysicsToGraphics()
 {
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
+	// TODO
 	m_sprite.setPosition(bounds.left - (177.f / 2.5f), bounds.top - (150.f / 2.f));
 	m_previousTop = bounds.top;
 }
 
 void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 {
-	if (m_sprite.getCurrentEvent() == Death)
-		return;
-
 	sf::Vector2f	velocity = m_box->getVelocity();
 
 	if (m_keyLeft)

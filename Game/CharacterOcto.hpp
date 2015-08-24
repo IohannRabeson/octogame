@@ -42,6 +42,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 
 	private:
 	bool	dieFall();
+	bool	endDeath();
 	void	timeEvent(sf::Time frameTime);
 	void	setupAnimation();
 	void	setupMachine();
@@ -53,7 +54,6 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	caseRight();
 	void	caseSpace();
 	void	caseUp();
-	void	endDeath();
 	void	dance();
 
 	private:
