@@ -319,9 +319,8 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 			{
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterFullJump;
-				if (m_sprite.getCurrentEvent() != Umbrella){
+				if (m_sprite.getCurrentEvent() != Umbrella)
 					m_sprite.setNextEvent(Fall);
-				}
 			}
 		}
 	}
@@ -365,7 +364,7 @@ void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
 			m_onElevator = false;
 			m_box->setApplyGravity(true);
 		}
-		if (top <= (m_topElevator + 50.f))
+		if (top <= m_topElevator)
 			m_onTopElevator = true;
 	}
 	else
@@ -584,7 +583,8 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			m_sprite.setNextEvent(Fall);
 		}
 	}
-	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp){
+	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp)
+	{
 		if (m_sprite.getCurrentEvent() != Dance)
 		{
 			m_sprite.setNextEvent(Idle);
