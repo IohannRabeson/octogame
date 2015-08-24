@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/07/17 14:48:16 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/13 19:00:31 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/08/17 13:20:19 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 
 enum class GameObjectType
 {
-	Boss,
-	Player,
-	Npc,
-	Portal,
-	Potion,
-	Decor,
-	Tile,
-	Elevator
+	Boss = 0u,
+	Player = 1u,
+	Npc = 2u,
+	Portal = 4u,
+	Potion = 8u,
+	Decor = 16u,
+	Tile = 32u,
+	Elevator = 64u
 };
 
 /*!

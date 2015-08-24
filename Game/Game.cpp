@@ -10,9 +10,16 @@
 #include <Camera.hpp>
 #include <Interpolations.hpp>
 #include <Options.hpp>
+#include <PostEffectManager.hpp>
 
 Game::Game() :
 	m_physicsEngine(PhysicsEngine::getInstance()),
+	m_skyCycle(nullptr),
+	m_skyManager(nullptr),
+	m_groundManager(nullptr),
+	m_parallaxScrolling(nullptr),
+	m_octo(nullptr),
+	m_npc(nullptr),
 	m_bubble(100000)
 {
 }
@@ -20,9 +27,9 @@ Game::Game() :
 void	Game::setup()
 {
 	m_biomeManager.registerBiome<DefaultBiome>("test");
+
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
-	graphics.addKeyboardListener(&m_octo);
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -31,50 +38,63 @@ void	Game::loadLevel(std::string const& fileName)
 	// TODO
 	m_biomeManager.changeBiome("test", 0x12345);
 
-	m_skyCycle.setup(m_biomeManager.getCurrentBiome());
-	m_skyManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
-	m_groundManager.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
-	m_parallaxScrolling.setup(m_biomeManager.getCurrentBiome(), m_skyCycle);
-	m_bubble.setup();
+	// Reset last values
+	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+	postEffect.removeShaders();
 
+	// Reset PhysycsEngine
+	m_physicsEngine.unregisterAllShapes();
+	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count"));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
 
-	m_npc.setup(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 800, 0));
+	m_skyCycle.reset(new SkyCycle());
+	m_skyManager.reset(new SkyManager());
+	m_groundManager.reset(new GroundManager());
+	m_parallaxScrolling.reset(new ParallaxScrolling());
+	m_octo.reset(new CharacterOcto());
+	m_npc.reset(new CharacterNpc());
+
+	m_skyCycle->setup(m_biomeManager.getCurrentBiome());
+	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
+	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
+	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
+	m_octo->setup();
+	m_npc->setup(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 800, 0));
 }
 
 void	Game::update(sf::Time frameTime)
 {
-	m_skyCycle.update(frameTime, m_biomeManager.getCurrentBiome());
-	m_groundManager.update(frameTime.asSeconds());
-	m_parallaxScrolling.update(frameTime.asSeconds());
-	m_physicsEngine.update(frameTime.asSeconds());
-	m_npc.update(frameTime);
-	m_octo.update(frameTime);
-	followPlayer();
-	m_skyManager.update(frameTime);
-	m_bubble.update(frameTime, m_npc.getBubblePosition());
-	m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next);
+	m_octo->update(frameTime);
+	followPlayer(frameTime);
+	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
+	m_groundManager->update(frameTime.asSeconds());
+	m_parallaxScrolling->update(frameTime.asSeconds());
+	m_npc->update(frameTime);
+	m_skyManager->update(frameTime);
+	m_bubble.update(frameTime, m_npc->getBubblePosition());
 }
 
-void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
+void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
 {
-	(void) shapeA;
-	(void) shapeB;
+	(void)shapeA;
+	(void)shapeB;
+	(void)collisionDirection;
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 }
 
-void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection)
 {
 	if (shape->getGameObject() != nullptr
 			&& gameObjectCast<CharacterOcto>(shape->getGameObject()) != nullptr)
-		m_octo.onCollision(GameObjectType::Tile);
+		m_octo->onCollision(GameObjectType::Tile);
 
 	// don't forget to check if shapeA->getGameObject() != nullptr
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 	(void)tileShape;
+	(void)collisionDirection;
 }
 
 bool Game::onPressed(sf::Event::KeyEvent const & event)
@@ -82,10 +102,13 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	switch (event.code)
 	{
 		case sf::Keyboard::E:
-			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next);
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 		break;
 		case sf::Keyboard::R:
-			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Previous);
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+		break;
+		case sf::Keyboard::L:
+			loadLevel("new_biome");
 		break;
 		default:
 		break;
@@ -96,29 +119,35 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	render.clear();
-	render.draw(m_skyManager.getDecorsBack(), states);
-	render.draw(m_parallaxScrolling, states);
-	render.draw(m_groundManager.getDecorsBack(), states);
-	// Draw Octo and pnj
-	render.draw(m_octo, states);
-	render.draw(m_npc, states);
+	render.draw(m_skyManager->getDecorsBack(), states);
+	render.draw(*m_parallaxScrolling, states);
+	render.draw(m_groundManager->getDecorsBack(), states);
 //	m_physicsEngine.debugDraw(render);
-	render.draw(m_groundManager.getDecorsFront(), states);
-	render.draw(m_skyManager.getDecorsFront(), states);
-	render.draw(m_groundManager, states);
-	render.draw(m_groundManager.getDecorsGround(), states);
-	render.draw(m_skyManager.getFilter(), states);
+	render.draw(*m_octo, states);
+	render.draw(*m_npc, states);
+	render.draw(m_groundManager->getDecorsFront(), states);
+	render.draw(m_skyManager->getDecorsFront(), states);
+	render.draw(*m_groundManager, states);
+	render.draw(m_groundManager->getDecorsGround(), states);
+	render.draw(m_skyManager->getFilter(), states);
 	render.draw(m_bubble);
 }
 
-void	Game::followPlayer()
+void	Game::followPlayer(sf::Time frameTime)
 {
-	octo::Camera&	camera = octo::Application::getCamera();
-	m_cameraPos = camera.getCenter();
-	m_octoPos = m_octo.getPosition();
-	sf::Vector2f cameraPos;
-	cameraPos.x = octo::linearInterpolation(m_octoPos.x, m_cameraPos.x, 0.98);
-	cameraPos.y = octo::linearInterpolation(m_octoPos.y - 300.f, m_cameraPos.y, 0.9);
+	float frameTimeSeconds = frameTime.asSeconds();
+	octo::Camera & camera = octo::Application::getCamera();
+	sf::Vector2f const & cameraSize = camera.getSize();
+	sf::Vector2f cameraPos = camera.getCenter();
+	sf::Vector2f octoUpPos = m_octo->getPosition();
+	sf::Vector2f octoDownPos = octoUpPos;
+
+	octoDownPos.y -= cameraSize.y / 4.f;
+	cameraPos.x = octo::linearInterpolation(octoUpPos.x, cameraPos.x, 1.f - frameTimeSeconds);
+	if (octoDownPos.y >= cameraPos.y)
+		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 5.f);
+	else if (octoUpPos.y <= cameraPos.y)
+		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 2.f);
 
 	camera.setCenter(cameraPos);
 }

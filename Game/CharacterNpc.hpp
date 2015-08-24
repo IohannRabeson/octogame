@@ -29,13 +29,14 @@ private:
 	bool		canWalk();
 	void		setupAnimation();
 	void		setupMachine();
+	void		timeEvent(sf::Time frameTime);
 	void		updateState();
 	void		updatePhysics(sf::Time frameTime);
 	void		commitPhysicsToGraphics();
 
 private:
 	RectangleShape*				m_box;
-	sf::Clock					m_clock;
+	sf::Time					m_timeEventIdle;
 	sf::FloatRect				m_area;
 	float						m_pixelSecondWalk;
 	bool						m_originMove;

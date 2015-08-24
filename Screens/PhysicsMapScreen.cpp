@@ -75,6 +75,10 @@ void	PhysicsMapScreen::start()
 	c->setRadius(10.f);
 	c->setPosition(120.f, 60.f);
 
+	CircleShape * circle = m_engine.createCircle();
+	circle->setRadius(260.f);
+	circle->setPosition(100.f, 300.f);
+
 	m_engine.unregisterShape(m_shapes[5]);
 }
 
@@ -119,17 +123,19 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 	m_engine.update(deltatime.asSeconds());
 }
 
-void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)
+void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
 {
 	(void)shapeA;
 	(void)shapeB;
+	(void)collisionDirection;
 	m_nbCollision++;
 }
 
-void PhysicsMapScreen::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+void PhysicsMapScreen::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection)
 {
 	(void)tileShape;
 	(void)shape;
+	(void)collisionDirection;
 	m_nbCollision++;
 }
 

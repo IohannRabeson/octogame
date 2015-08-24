@@ -141,7 +141,7 @@ public:
 	 *
 	 * \param collisionType The collision type to compare
 	 */
-	inline bool isColliding(std::uint32_t collisionType) { return (m_collisionMask & collisionType); }
+	inline bool isColliding(AShape * shape) { return (m_collisionMask & shape->getCollisionType()); }
 
 	/*! Determine wheter the object is the same type or not
 	 *

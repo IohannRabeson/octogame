@@ -7,7 +7,7 @@ CircleShape::CircleShape(void) :
 	m_initialBaryCenter(),
 	m_globalBounds(),
 	m_radius(0.f)
-{ }
+{}
 
 void CircleShape::computeShape(void)
 {
@@ -28,6 +28,12 @@ void CircleShape::computeShape(void)
 	m_globalBounds.top = m_baryCenter.y - m_radius;
 	m_globalBounds.width = 2.f * m_radius;
 	m_globalBounds.height = 2.f * m_radius;
+}
+
+void CircleShape::setRadius(float radius)
+{
+	m_radius = radius;
+	computeShape();
 }
 
 void CircleShape::debugDraw(sf::RenderTarget & render)

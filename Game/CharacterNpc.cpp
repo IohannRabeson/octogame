@@ -11,15 +11,18 @@ CharacterNpc::CharacterNpc() :
 	m_originMove(false)
 {
 	octo::ResourceManager&		resources = octo::Application::getResourceManager();
+
 	m_box->setGameObject(this);
-	m_box->setType(AShape::Type::e_kinematic);
+	m_box->setSize(sf::Vector2f(100.f / 2.f, 150.f));
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Npc));
+	m_box->setCollisionMask(0u);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	setupAnimation();
 	setupMachine();
+	m_timeEventIdle = sf::Time::Zero;
 	m_sprite.restart();
+	m_sprite.setNextEvent(Idle);
 	m_sprite.setColor(sf::Color::Green);
-	m_clock.restart();
-	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
 	m_area = sf::FloatRect(0, 0, 0, 0);
 }
 
@@ -82,16 +85,11 @@ void	CharacterNpc::setupMachine(){
 
 void	CharacterNpc::update(sf::Time frameTime)
 {
+	timeEvent(frameTime);
 	updateState();
 	updatePhysics(frameTime);
-	commitPhysicsToGraphics();
 	m_sprite.update(frameTime);
-
-	//TODO: To remove, avoid pnj to fall
-	float limit = octo::Application::getCamera().getCenter().y + octo::Application::getCamera().getSize().y / 2.f;
-	sf::Vector2f const & position = m_box->getPosition();
-	if (position.y > limit - 100.f)
-		m_box->setPosition(sf::Vector2f(position.x, limit - 100.f));
+	commitPhysicsToGraphics();
 }
 
 void	CharacterNpc::draw(sf::RenderTarget& render, sf::RenderStates states)const
@@ -99,15 +97,28 @@ void	CharacterNpc::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_sprite.draw(render, states);
 }
 
+void	CharacterNpc::timeEvent(sf::Time frameTime)
+{
+	switch (m_sprite.getCurrentEvent())
+	{
+		case Idle:
+			m_timeEventIdle += frameTime;
+			break;
+		default:
+			m_timeEventIdle = sf::Time::Zero;
+	}
+}
+
 void	CharacterNpc::updateState()
 {
-	sf::FloatRect const& bounds = m_box->getGlobalBounds();
-	if (bounds.left <= (m_area.left + m_area.width)
+	sf::FloatRect const&	bounds = m_box->getGlobalBounds();
+	float					length = m_area.left + m_area.width;
+	if (bounds.left <= length
 			&& m_sprite.getCurrentEvent() == Idle && canWalk()){
 		m_sprite.setNextEvent(Right);
 		if (m_originMove){
-			m_sprite.setScale(1, 1);
-			m_sprite.setOrigin(m_sprite.getOrigin().x - 177, 0);
+			m_sprite.setScale(1.f, 1.f);
+			m_sprite.setOrigin(m_sprite.getOrigin().x - 177.f, 0.f);
 			m_originMove = false;
 		}
 	}
@@ -115,15 +126,14 @@ void	CharacterNpc::updateState()
 			&& m_sprite.getCurrentEvent() == Idle && canWalk()){
 		m_sprite.setNextEvent(Left);
 		if (!m_originMove){
-			m_sprite.setScale(-1, 1);
-			m_sprite.setOrigin(m_sprite.getOrigin().x + 177, 0);
+			m_sprite.setScale(-1.f, 1.f);
+			m_sprite.setOrigin(m_sprite.getOrigin().x + 177.f, 0.f);
 			m_originMove = true;
 		}
 	}
-	else if ((bounds.left <= m_area.left || bounds.left >= (m_area.left + m_area.width))
+	else if ((bounds.left <= m_area.left || bounds.left >= length)
 			&& m_sprite.getCurrentEvent() != Idle && canWalk()){
 		m_sprite.setNextEvent(Idle);
-		m_clock.restart();
 	}
 }
 
@@ -132,7 +142,7 @@ void	CharacterNpc::updatePhysics(sf::Time frameTime)
 	sf::Vector2f	velocity = m_box->getVelocity();
 	if (m_sprite.getCurrentEvent() == Left)
 	{
-		velocity.x = (-1 * m_pixelSecondWalk) * frameTime.asSeconds();
+		velocity.x = (-1.f * m_pixelSecondWalk) * frameTime.asSeconds();
 	}
 	else if (m_sprite.getCurrentEvent() == Right)
 	{
@@ -151,7 +161,7 @@ void	CharacterNpc::commitPhysicsToGraphics()
 
 bool	CharacterNpc::canWalk()
 {
-	if (m_clock.getElapsedTime().asSeconds() > 2.4f)
+	if (m_timeEventIdle > sf::seconds(1.4f) || m_timeEventIdle == sf::Time::Zero)
 		return true;
 	return false;
 }
