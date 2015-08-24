@@ -122,9 +122,9 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(*m_parallaxScrolling, states);
 	render.draw(m_groundManager->getDecorsBack(), states);
 	// Draw Octo and pnj
+//	m_physicsEngine.debugDraw(render);
 	render.draw(*m_octo, states);
 	render.draw(*m_npc, states);
-//	m_physicsEngine.debugDraw(render);
 	render.draw(m_groundManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(*m_groundManager, states);
