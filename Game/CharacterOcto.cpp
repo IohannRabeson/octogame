@@ -172,6 +172,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Left, state5, state1);
 	machine.addTransition(Left, state6, state1);
 	machine.addTransition(Left, state7, state1);
+	machine.addTransition(Left, state9, state1);
 	machine.addTransition(Left, state10, state1);
 
 	machine.addTransition(Right, state0, state2);
@@ -182,6 +183,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Right, state5, state2);
 	machine.addTransition(Right, state6, state2);
 	machine.addTransition(Right, state7, state2);
+	machine.addTransition(Right, state9, state2);
 	machine.addTransition(Right, state10, state2);
 
 	machine.addTransition(Jump, state0, state3);
@@ -393,7 +395,12 @@ bool	CharacterOcto::endDeath()
 {
 	if (m_timeEventDeath > sf::seconds(3.0f))
 	{
-		m_sprite.setNextEvent(Idle);
+		if (m_keyLeft)
+			m_sprite.setNextEvent(Left);
+		else if (m_keyRight)
+			m_sprite.setNextEvent(Right);
+		else
+			m_sprite.setNextEvent(Idle);
 	}
 	else if (m_sprite.getCurrentEvent() == Death)
 		return false;
