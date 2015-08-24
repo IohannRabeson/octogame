@@ -12,6 +12,8 @@
 # include "IContactListener.hpp"
 # include "MusicPlayer.hpp"
 
+# include <memory>
+
 class PhysicsEngine;
 class AShape;
 
@@ -27,22 +29,20 @@ public:
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
 
 private:
-	PhysicsEngine &		m_physicsEngine;
-	SkyCycle			m_skyCycle;
-	BiomeManager		m_biomeManager;
-	SkyManager			m_skyManager;
-	GroundManager		m_groundManager;
-	ParallaxScrolling	m_parallaxScrolling;
-	MusicPlayer			m_musicPlayer;
-	CharacterOcto		m_octo;
-	sf::Vector2f		m_cameraPos;
-	sf::Vector2f		m_octoPos;
-	CharacterNpc		m_npc;
+	PhysicsEngine &						m_physicsEngine;
+	BiomeManager						m_biomeManager;
+	std::unique_ptr<SkyCycle>			m_skyCycle;
+	std::unique_ptr<SkyManager>			m_skyManager;
+	std::unique_ptr<GroundManager>		m_groundManager;
+	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
+	MusicPlayer							m_musicPlayer;
+	std::unique_ptr<CharacterOcto>		m_octo;
+	std::unique_ptr<CharacterNpc>		m_npc; //TODO: remove
 
 	bool			onPressed(sf::Event::KeyEvent const & event);
-	void			onShapeCollision(AShape * shapeA, AShape * shapeB);
-	void			onTileShapeCollision(TileShape * tileShape, AShape * shape);
-	void			followPlayer();
+	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);
+	void			onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection);
+	void			followPlayer(sf::Time frameTime);
 };
 
 #endif

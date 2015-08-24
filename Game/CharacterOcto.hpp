@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   CharacterOcto.hpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/23 00:32:59 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/23 03:25:42 by irabeson         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef CHARACTEROCTO_HPP
 # define CHARACTEROCTO_HPP
 # include <CharacterSprite.hpp>
@@ -41,7 +29,9 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	};
 	public:
 	CharacterOcto();
+	~CharacterOcto();
 
+	void			setup(void);
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 

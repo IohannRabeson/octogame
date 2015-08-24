@@ -1,20 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   CharacterOcto.cpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/23 00:33:57 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/23 13:19:58 by irabeson         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -34,14 +23,29 @@ CharacterOcto::CharacterOcto() :
 	m_keySpace(false),
 	m_keyUp(false)
 {
-	octo::ResourceManager&		resources = octo::Application::getResourceManager();
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.addKeyboardListener(this);
+}
+
+CharacterOcto::~CharacterOcto(void)
+{
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
+}
+
+void	CharacterOcto::setup(void)
+{
+	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
+	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
+	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
+	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
+	m_box->setCollisionMask(mask);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	setupAnimation();
 	setupMachine();
 	m_sprite.restart();
-	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
 }
 
 void	CharacterOcto::setupAnimation()
@@ -534,7 +538,6 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 
 sf::Vector2f	CharacterOcto::getPosition() const
 {
-	//TODO fix center
-	return (m_box->getBaryCenter() + sf::Vector2f(0.f, -300.f));
+	return (m_box->getBaryCenter());
 }
 
