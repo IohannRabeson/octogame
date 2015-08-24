@@ -23,7 +23,6 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Fall,
 		Dance,
 		Umbrella,
-		Elevator,
 		Death,
 		Drink,
 	};
@@ -48,7 +47,6 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	setupMachine();
 	void	collisionTileUpdate(sf::Time frameTime);
 	void	collisionElevatorUpdate(sf::Time frameTime);
-	void	commitElevatorPhysics(sf::Time frameTime);
 	void	commitControlsToPhysics(sf::Time frameTime);
 	void	commitPhysicsToGraphics();
 	void	caseLeft();
@@ -66,7 +64,6 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	octo::CharacterAnimation	m_fallAnimation;
 	octo::CharacterAnimation	m_danceAnimation;
 	octo::CharacterAnimation	m_umbrellaAnimation;
-	octo::CharacterAnimation	m_elevatorAnimation;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
