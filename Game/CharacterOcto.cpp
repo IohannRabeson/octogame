@@ -571,7 +571,8 @@ void CharacterOcto::caseUp()
 	if (!m_keyUp)
 	{
 		m_keyUp = true;
-		m_sprite.setNextEvent(Umbrella);
+		if (!m_onGround)
+			m_sprite.setNextEvent(Umbrella);
 	}
 }
 
