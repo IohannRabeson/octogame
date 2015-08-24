@@ -101,7 +101,7 @@ DefaultBiome::DefaultBiome() :
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_name);
-#ifndef DNDEBUG
+#ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
 	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
