@@ -94,7 +94,6 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
 	(void)tileShape;
 	(void)collisionDirection;
-	std::cout << collisionDirection.x << " " << collisionDirection.y << std::endl;
 }
 
 bool Game::onPressed(sf::Event::KeyEvent const & event)
