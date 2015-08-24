@@ -20,7 +20,6 @@
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
 
-# include "RectangleShape.hpp"
 # include <array>
 # include <cmath>
 # include <iostream>
@@ -28,6 +27,7 @@
 # include "AGameObject.hpp"
 
 class ABiome;
+class RectangleShape;
 
 class ElevatorStream : public AGameObject<GameObjectType::Elevator>
 {

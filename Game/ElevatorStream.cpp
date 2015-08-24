@@ -16,6 +16,7 @@
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include "RectangleShape.hpp"
 #include "PhysicsEngine.hpp"
 
 #include <Math.hpp>
@@ -164,15 +165,13 @@ ElevatorStream::ElevatorStream() :
 	m_topY(0.f)
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
-	sf::Vector2f	sizeBox = m_box->getSize();
 
 	m_box->setGameObject(this);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setApplyGravity(false);
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Elevator));
 	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
-	sizeBox.x = 150.f;
-	m_box->setSize(sizeBox);
+	m_box->setSize(150.f, 0.f);
 	m_particles->setWidth(150.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
@@ -180,13 +179,12 @@ ElevatorStream::ElevatorStream() :
 
 void	ElevatorStream::setPosX(float x)
 {
-	sf::Vector2f	pos = m_particles->getPosition();
-	sf::Vector2f	posBox = m_box->getPosition();
+	sf::Vector2f			pos = m_particles->getPosition();
+	sf::Vector2f const &	posBox = m_box->getPosition();
 
 	pos.x = x;
-	posBox.x = x - (getWidth() / 2.f);
 	m_particles->setPosition(pos);
-	m_box->setPosition(posBox);
+	m_box->setPosition(x - (getWidth() / 2.f), posBox.y);
 }
 
 void	ElevatorStream::setPosY(float y)
@@ -199,28 +197,25 @@ void	ElevatorStream::setPosY(float y)
 
 void	ElevatorStream::setHeight(float height)
 {
-	sf::Vector2f	sizeBox = m_box->getSize();
+	sf::Vector2f const &	sizeBox = m_box->getSize();
 
-	sizeBox.y = height;
-	m_box->setSize(sizeBox);
+	m_box->setSize(sizeBox.x, height);
 	m_particles->setHeight(height);
 }
 
 void	ElevatorStream::setTopY(float topY)
 {
-	sf::Vector2f	posBox = m_box->getPosition();
+	sf::Vector2f const &	posBox = m_box->getPosition();
 
-	posBox.y = topY;
-	m_box->setPosition(posBox);
+	m_box->setPosition(posBox.x, topY);
 	m_topY = topY;
 }
 
 void	ElevatorStream::setWidth(float width)
 {
-	sf::Vector2f	sizeBox = m_box->getSize();
+	sf::Vector2f const &	sizeBox = m_box->getSize();
 
-	sizeBox.x = width;
-	m_box->setSize(sizeBox);
+	m_box->setSize(width, sizeBox.y);
 	m_particles->setWidth(width);
 }
 
