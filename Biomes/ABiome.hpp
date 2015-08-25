@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/10 02:17:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/30 17:12:25 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/08/18 10:15:58 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ public:
 
 	virtual sf::Vector2u								getMapSize() = 0;
 	virtual sf::Vector2f								getMapSizeFloat() = 0;
+	virtual std::size_t									getMapSeed() = 0;
 	virtual float										getTransitionDuration() = 0;
 	virtual int											getBossInstancePosX() = 0;
 

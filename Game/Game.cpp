@@ -4,11 +4,12 @@
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
-
+#include "ElevatorStream.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
+#include <SFML/Audio/Listener.hpp>
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
 
@@ -45,6 +46,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count"));
+	m_physicsEngine.setGravity(sf::Vector2f(0.f, 600.f));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
 
@@ -65,7 +67,8 @@ void	Game::loadLevel(std::string const& fileName)
 
 void	Game::update(sf::Time frameTime)
 {
-	m_physicsEngine.update(frameTime.asSeconds());
+	sf::Vector2f const & octoPos = m_octo->getPosition();
+	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
 	m_octo->update(frameTime);
 	followPlayer(frameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
@@ -73,24 +76,29 @@ void	Game::update(sf::Time frameTime)
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_npc->update(frameTime);
 	m_skyManager->update(frameTime);
+	m_musicPlayer.update(frameTime, m_octo->getPosition());
+	m_physicsEngine.update(frameTime.asSeconds());
 }
 
-void Game::onShapeCollision(AShape * shapeA, AShape * shapeB)
+void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
 {
-	(void) shapeA;
-	(void) shapeB;
-	// don't forget to check if shapeA->getGameObject() != nullptr
-	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
+	if (shapeA->getGameObject() != nullptr
+			&& gameObjectCast<CharacterOcto>(shapeA->getGameObject()) != nullptr
+			&& shapeB->getGameObject() != nullptr
+			&& gameObjectCast<ElevatorStream>(shapeB->getGameObject()) != nullptr)
+	{
+		m_octo->setTopElevator(gameObjectCast<ElevatorStream>(shapeB->getGameObject())->getTopY());
+		m_octo->onCollision(GameObjectType::Elevator, collisionDirection);
+	}
 }
 
-void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection)
 {
 	if (shape->getGameObject() != nullptr
 			&& gameObjectCast<CharacterOcto>(shape->getGameObject()) != nullptr)
-		m_octo->onCollision(GameObjectType::Tile);
-
-	// don't forget to check if shapeA->getGameObject() != nullptr
-	// Utiliser gameObjectCast pour réupérer le bon objet avec shapeA->getGameObject()
+	{
+		m_octo->onCollision(GameObjectType::Tile, collisionDirection);
+	}
 	(void)tileShape;
 }
 
@@ -119,10 +127,9 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
 	render.draw(m_groundManager->getDecorsBack(), states);
-	// Draw Octo and pnj
+//	m_physicsEngine.debugDraw(render);
 	render.draw(*m_octo, states);
 	render.draw(*m_npc, states);
-//	m_physicsEngine.debugDraw(render);
 	render.draw(m_groundManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(*m_groundManager, states);

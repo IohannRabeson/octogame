@@ -10,6 +10,7 @@
 # include "CharacterOcto.hpp"
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
+# include "MusicPlayer.hpp"
 
 # include <memory>
 
@@ -34,12 +35,13 @@ private:
 	std::unique_ptr<SkyManager>			m_skyManager;
 	std::unique_ptr<GroundManager>		m_groundManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
+	MusicPlayer							m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<CharacterNpc>		m_npc; //TODO: remove
 
 	bool			onPressed(sf::Event::KeyEvent const & event);
-	void			onShapeCollision(AShape * shapeA, AShape * shapeB);
-	void			onTileShapeCollision(TileShape * tileShape, AShape * shape);
+	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);
+	void			onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection);
 	void			followPlayer(sf::Time frameTime);
 };
 
