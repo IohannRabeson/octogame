@@ -4,6 +4,9 @@
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
+#include <ResourceManager.hpp>
+
+#include "ResourceDefinitions.hpp"
 
 Cloud::Cloud(void) :
 	Cloud(nullptr)

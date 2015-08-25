@@ -30,6 +30,7 @@ private:
 	sf::Time					m_bouncingTimer;
 	sf::Time					m_bouncingTimerMax;
 	bool						m_bouncingBool;
+	bool						m_sound;
 
 	void createMushroom(sf::Vector2f const & size,
 					sf::Vector2f const & origin,
@@ -38,8 +39,8 @@ private:
 					octo::VertexBuilder& builder);
 
 	void newMushroom(ABiome & biome);
-
 	float computeBouncingValue(sf::Time frameTime);
+	void playSound(ABiome & biome, sf::Vector2f const & position);
 };
 
 #endif
