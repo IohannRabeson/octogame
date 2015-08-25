@@ -31,8 +31,8 @@ void Map::init(ABiome & biome)
 	m_mapJoinWidth = static_cast<float>(m_mapSize.y) / 4.f;
 	m_mapJoinHalfWidth = m_mapJoinWidth / 2.f;
 
-	m_width = octo::Application::getGraphicsManager().getVideoMode().width / Tile::TileSize + 4u; // 4 tiles to add margin at left and right
-	m_height  = octo::Application::getGraphicsManager().getVideoMode().height / Tile::TileSize + 6u; // 6 tiles to add margin at top and bottom
+	m_width = octo::Application::getGraphicsManager().getVideoMode().width / Tile::TileSize + OffsetTileX * 2u; // 4 tiles to add margin at left and right
+	m_height  = octo::Application::getGraphicsManager().getVideoMode().height / Tile::TileSize + OffsetTileY * 2u; // 6 tiles to add margin at top and bottom
 
 	m_tiles.resize(m_width, m_height, nullptr);
 	for (std::size_t x = 0; x < m_tiles.columns(); x++)

@@ -5,6 +5,7 @@
 #include "CircleShape.hpp"
 #include "Tile.hpp"
 #include "TileShape.hpp"
+#include "Map.hpp"
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <Math.hpp>
@@ -208,8 +209,8 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<std::v
 		sf::FloatRect const & rect = shape->getGlobalBounds();
 		float offX = rect.left - camRect.left;
 		float w = rect.width + offX;
-		int offsetX = static_cast<int>(offX / Tile::TileSize) + 2 - 1;
-		int width = static_cast<int>(w / Tile::TileSize) + 2 + 1;
+		int offsetX = static_cast<int>(offX / Tile::TileSize) + static_cast<int>(Map::OffsetTileX) - 1;
+		int width = static_cast<int>(w / Tile::TileSize) + static_cast<int>(Map::OffsetTileX) + 1;
 		for (int x = width; x >= offsetX; x--)
 		{
 			if (x < 0 || x >= static_cast<int>(m_tileShapes.columns()))
@@ -634,6 +635,8 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 	}
 	for (auto const & shape : m_shapes)
 		shape->debugDraw(render);
+	//for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
+	//	m_tileShapes(i, 0u)->debugDraw(render);
 }
 
 // Nested Class Projection
