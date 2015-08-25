@@ -86,7 +86,7 @@ private:
 	void setupDecors(ABiome & biome);
 	void setupGameObjects(ABiome & biome);
 	void updateOffset(float deltatime);
-	void updateTransition(void);
+	void updateTransition(sf::FloatRect const & cameraRect);
 	void updateDecors(sf::Time deltatime);
 	void updateGameObjects(float deltatime);
 	void computeDecor(void);

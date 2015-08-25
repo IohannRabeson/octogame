@@ -368,11 +368,13 @@ void GroundManager::computeDecor(void)
 	m_tiles->computeWideDecor();
 }
 
-void GroundManager::updateTransition(void)
+void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 {
 	if (m_transitionTimer > m_transitionTimerMax)
 		m_transitionTimer = m_transitionTimerMax;
 	float transition = m_transitionTimer / m_transitionTimerMax;
+	float bottomBorder = cameraRect.top + cameraRect.height;
+	float rightBorder = cameraRect.left + cameraRect.width + Map::OffsetX;
 	Tile * tile;
 	Tile * tilePrev;
 	TileShape * first;
@@ -397,6 +399,12 @@ void GroundManager::updateTransition(void)
 					isComputed = true;
 				}
 				continue;
+			}
+			else if (first)
+			{
+				// Avoid to compute A LOT of transition under the screen
+				if (tile->getStartTransition(0u).y > bottomBorder || tile->getStartTransition(1u).x < cameraRect.left || tile->getStartTransition(0u).x > rightBorder)
+					break;
 			}
 			tilePrev = &m_tilesPrev->get(x, y);
 
@@ -675,7 +683,7 @@ void GroundManager::update(float deltatime)
 		}
 	}
 	updateOffset(deltatime);
-	updateTransition();
+	updateTransition(rect);
 	updateDecors(sf::seconds(deltatime));
 	updateGameObjects(deltatime);
 }

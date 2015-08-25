@@ -13,7 +13,7 @@ class MapInstance;
 class Map : public IMapTransformable
 {
 public:
-	static constexpr float OffsetTileX = 5.f;
+	static constexpr float OffsetTileX = 10.f;
 	static constexpr float OffsetTileY = 3.f;
 	static constexpr float OffsetX = Tile::TileSize * OffsetTileX;
 	static constexpr float OffsetY = Tile::TileSize * OffsetTileY;
