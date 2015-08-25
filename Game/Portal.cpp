@@ -9,7 +9,7 @@
 #include <Camera.hpp>
 
 Portal::Portal(void) :
-	m_position(200.f, 200.f),
+	m_position(40.f, 0.f),
 	m_shaderIndex(0u),
 	m_state(State::Appear),
 	m_radius(50.f),

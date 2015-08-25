@@ -38,8 +38,8 @@ private:
 	std::unique_ptr<CharacterNpc>		m_npc; //TODO: remove
 
 	bool			onPressed(sf::Event::KeyEvent const & event);
-	void			onShapeCollision(AShape * shapeA, AShape * shapeB);
-	void			onTileShapeCollision(TileShape * tileShape, AShape * shape);
+	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);
+	void			onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection);
 	void			followPlayer(sf::Time frameTime);
 };
 

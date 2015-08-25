@@ -18,9 +18,10 @@ CharacterNpc::CharacterNpc() :
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	setupAnimation();
 	setupMachine();
+	m_timeEventIdle = sf::Time::Zero;
 	m_sprite.restart();
+	m_sprite.setNextEvent(Idle);
 	m_sprite.setColor(sf::Color::Green);
-	m_clock.restart();
 	m_area = sf::FloatRect(0, 0, 0, 0);
 }
 
@@ -84,10 +85,11 @@ void	CharacterNpc::setupMachine()
 
 void	CharacterNpc::update(sf::Time frameTime)
 {
+	timeEvent(frameTime);
 	updateState();
 	updatePhysics(frameTime);
-	commitPhysicsToGraphics();
 	m_sprite.update(frameTime);
+	commitPhysicsToGraphics();
 }
 
 void	CharacterNpc::draw(sf::RenderTarget& render, sf::RenderStates states)const
@@ -98,6 +100,18 @@ void	CharacterNpc::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	rect.setSize(sf::Vector2f(m_area.width, m_area.height));
 	render.draw(rect);
 	m_sprite.draw(render, states);
+}
+
+void	CharacterNpc::timeEvent(sf::Time frameTime)
+{
+	switch (m_sprite.getCurrentEvent())
+	{
+		case Idle:
+			m_timeEventIdle += frameTime;
+			break;
+		default:
+			m_timeEventIdle = sf::Time::Zero;
+	}
 }
 
 void	CharacterNpc::updateState()
@@ -127,7 +141,6 @@ void	CharacterNpc::updateState()
 			&& m_sprite.getCurrentEvent() != Idle && canWalk())
 	{
 		m_sprite.setNextEvent(Idle);
-		m_clock.restart();
 	}
 }
 
@@ -136,7 +149,7 @@ void	CharacterNpc::updatePhysics(sf::Time frameTime)
 	sf::Vector2f	velocity = m_box->getVelocity();
 	if (m_sprite.getCurrentEvent() == Left)
 	{
-		velocity.x = (-1 * m_pixelSecondWalk) * frameTime.asSeconds();
+		velocity.x = (-1.f * m_pixelSecondWalk) * frameTime.asSeconds();
 	}
 	else if (m_sprite.getCurrentEvent() == Right)
 	{
@@ -155,7 +168,7 @@ void	CharacterNpc::commitPhysicsToGraphics()
 
 bool	CharacterNpc::canWalk()
 {
-	if (m_clock.getElapsedTime().asSeconds() > 2.4f)
+	if (m_timeEventIdle > sf::seconds(1.4f) || m_timeEventIdle == sf::Time::Zero)
 		return true;
 	return false;
 }

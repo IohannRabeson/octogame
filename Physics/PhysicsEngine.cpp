@@ -356,6 +356,7 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 {
 	for (std::size_t i = 0u; i < pairs.size(); i++)
 	{
+		sf::Vector2f collisionDirection;
 		if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
 		{
 			// TODO: manage type kinematic static, ...
@@ -364,12 +365,13 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 				if (pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_kinematic)
 				{
 					m_mtv /= 2.f;
+					collisionDirection += m_mtv;
 					pairs[i].m_shapeA->addVelocity(m_mtv.x, m_mtv.y);
 					pairs[i].m_shapeB->addVelocity(-m_mtv.x, -m_mtv.y);
 				}
 			}
 			if (m_contactListener)
-				m_contactListener->onShapeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB);
+				m_contactListener->onShapeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB, collisionDirection);
 		}
 	}
 }
@@ -386,6 +388,7 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 			sf::Vector2f vel = pair.m_shapeB->getVelocity() / static_cast<float>(m_iterationCount);
 			pair.m_shapeB->setVelocity(0.f, 0.f);
 			collide = false;
+			sf::Vector2f collisionDirection;
 			for (std::size_t j = 0u; j < m_iterationCount; j++)
 			{
 				pair.m_shapeB->addVelocity(vel);
@@ -395,14 +398,18 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 					{
 						if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
 						{
+							collisionDirection.x -= m_mtv.x;
 							pair.m_shapeB->addVelocity(-m_mtv.x, 0.f);
 						}
 						else if (std::fabs(m_mtv.x) > std::numeric_limits<float>::epsilon())
 						{
-							pair.m_shapeB->addVelocity(0.f, -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y)));
+							float y = -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
+							collisionDirection.y += y;
+							pair.m_shapeB->addVelocity(0.f, y);
 						}
 						else
 						{
+							collisionDirection.y -= m_mtv.y;
 							pair.m_shapeB->addVelocity(0.f, -m_mtv.y);
 						}
 						pair.m_shapeB->update();
@@ -411,7 +418,7 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 				}
 			}
 			if (collide && m_contactListener)
-				m_contactListener->onTileShapeCollision(pair.m_shapeA, pair.m_shapeB);
+				m_contactListener->onTileShapeCollision(pair.m_shapeA, pair.m_shapeB, collisionDirection);
 		}
 	}
 }

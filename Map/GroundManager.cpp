@@ -125,7 +125,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		elevator->setTopY((-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize);
 		elevator->setHeight(400.f);
 		elevator->setBiome(biome);
-		std::size_t width = elevator->getWidth() / Tile::TileSize + 1u;
+		std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
 		m_elevators.emplace_back(instance.first - width, width, elevator);
 	}
 	// TODO: to remove, it's just an example

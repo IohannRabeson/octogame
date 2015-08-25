@@ -31,6 +31,7 @@ public:
 
 	virtual sf::Vector2u								getMapSize();
 	virtual sf::Vector2f								getMapSizeFloat();
+	virtual std::size_t									getMapSeed();
 	virtual float										getTransitionDuration();
 	virtual int											getBossInstancePosX();
 
@@ -137,6 +138,7 @@ private:
 	std::string											m_name;
 
 	sf::Vector2u										m_mapSize;
+	std::size_t											m_mapSeed;
 	float												m_transitionDuration;
 	std::size_t											m_bossInstancePosX;
 	std::vector<sf::Color>								m_particleColor;
