@@ -76,7 +76,7 @@ void	Game::update(sf::Time frameTime)
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_npc->update(frameTime);
 	m_skyManager->update(frameTime);
-	m_musicPlayer.update(*m_octo);
+	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	m_physicsEngine.update(frameTime.asSeconds());
 }
 
