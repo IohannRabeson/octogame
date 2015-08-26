@@ -51,11 +51,6 @@ private:
 	void createCrystal(std::vector<CrystalValue> const & values,
 						sf::Vector2f const & origin,
 						octo::VertexBuilder & builder);
-
-private:
-	static void rotateVec(sf::Vector2f & vector,
-							float const cosAngle,
-							float const sinAngle);
 };
 
 #endif

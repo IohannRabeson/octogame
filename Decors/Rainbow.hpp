@@ -103,9 +103,7 @@ private:
 	SkyCycle *					m_cycle;
 
 private:
-	static void rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle);
 	static sf::Vector2f rotateVecCopy(sf::Vector2f const & vector, sf::Vector2f const & origin, float const cosAngle, float const sinAngle);
-
 };
 
 #endif

@@ -32,11 +32,6 @@ public:
 					float const angle = 0.f,
 					float const cosAngle = 0.f,
 					float const sinAngle = 0.f);
-
-private:
-	static void rotateVec(sf::Vector2f & vector,
-							float const cosAngle,
-							float const sinAngle);
 };
 
 #endif
