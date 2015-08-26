@@ -1,7 +1,6 @@
 #include "BubbleScreen.hpp"
 
-BubbleScreen::BubbleScreen(void) :
-	m_bubbleManager(2000)
+BubbleScreen::BubbleScreen(void)
 {
 }
 

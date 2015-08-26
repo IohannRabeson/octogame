@@ -4,9 +4,9 @@
 #include <ResourceManager.hpp>
 #include "ResourceDefinitions.hpp"
 
-BubbleManager::BubbleManager(std::size_t maxVertexCount) :
-	m_vertices(new sf::Vertex[maxVertexCount]),
-	m_count(maxVertexCount),
+BubbleManager::BubbleManager(void) :
+	m_vertices(new sf::Vertex[10000]),
+	m_count(10000),
 	m_used(0u)
 {
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
@@ -23,7 +23,7 @@ void BubbleManager::setup()//(std::vector<NPC> npc)
 	{
 		std::string phrase = resource.getText(NPC_TEST_TXT);
 		bubble.setup(phrase, sf::Color(255, 255, 255, 200));
-		bubble.setActive(false);
+		bubble.setActive(true);
 	}
 }
 

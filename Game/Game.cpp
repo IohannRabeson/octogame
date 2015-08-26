@@ -19,9 +19,10 @@ Game::Game() :
 	m_skyManager(nullptr),
 	m_groundManager(nullptr),
 	m_parallaxScrolling(nullptr),
+	m_musicPlayer(nullptr),
 	m_octo(nullptr),
 	m_npc(nullptr),
-	m_bubble(100000)
+	m_bubble(nullptr)
 {
 }
 
@@ -55,6 +56,8 @@ void	Game::loadLevel(std::string const& fileName)
 	m_skyManager.reset(new SkyManager());
 	m_groundManager.reset(new GroundManager());
 	m_parallaxScrolling.reset(new ParallaxScrolling());
+	m_musicPlayer.reset(new MusicPlayer());
+	m_bubble.reset(new BubbleManager());
 	m_octo.reset(new CharacterOcto());
 	m_npc.reset(new CharacterNpc());
 
@@ -62,6 +65,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
+	m_bubble->setup();
 	m_octo->setup();
 	m_npc->setup(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 800, 0));
 }
@@ -77,8 +81,8 @@ void	Game::update(sf::Time frameTime)
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_npc->update(frameTime);
 	m_skyManager->update(frameTime);
-	m_bubble.update(frameTime, m_npc->getBubblePosition());
-	m_musicPlayer.update(frameTime, m_octo->getPosition());
+	m_bubble->update(frameTime, m_octo->getBubblePosition());
+	m_musicPlayer->update(frameTime, m_octo->getPosition());
 	m_physicsEngine.update(frameTime.asSeconds());
 }
 
@@ -137,7 +141,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(*m_groundManager, states);
 	render.draw(m_groundManager->getDecorsGround(), states);
 	render.draw(m_skyManager->getFilter(), states);
-	render.draw(m_bubble);
+	render.draw(*m_bubble);
 }
 
 void	Game::followPlayer(sf::Time frameTime)

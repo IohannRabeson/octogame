@@ -15,7 +15,7 @@ class BubbleManager : public sf::Drawable,
 					  public sf::Transformable
 {
 public:
-	BubbleManager(std::size_t maxVertexCount);
+	BubbleManager(void);
 	~BubbleManager(void) = default;
 
 	void setup(void);
