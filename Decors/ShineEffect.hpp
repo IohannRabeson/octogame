@@ -25,10 +25,12 @@ private:
 	DecorAnimator	m_animator;
 	float			m_animation;
 	bool			m_isShineEffect;
+	bool			m_isSound;
 
 	sf::Vector2f	m_glowSize;
 	sf::Vector2f	m_glowSizeCorner;
 
+	void playSound(ABiome & biome, sf::Vector2f const & position);
 };
 
 #endif

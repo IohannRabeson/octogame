@@ -1,6 +1,10 @@
 #include "Mushroom.hpp"
 #include "ABiome.hpp"
 #include <Interpolations.hpp>
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <AudioManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 Mushroom::Mushroom(void) :
 	m_pointCount(5u),
@@ -8,7 +12,8 @@ Mushroom::Mushroom(void) :
 	m_animation(1.f),
 	m_bouncingTimer(sf::Time::Zero),
 	m_bouncingTimerMax(sf::seconds(1.f)),
-	m_bouncingBool(true)
+	m_bouncingBool(true),
+	m_sound(true)
 {
 }
 
@@ -55,6 +60,7 @@ void Mushroom::newMushroom(ABiome & biome)
 	m_size = biome.getMushroomSize();
 	m_color = biome.getMushroomColor();
 	m_animator.setup(biome.getMushroomLifeTime());
+	m_sound = true;
 }
 
 float Mushroom::computeBouncingValue(sf::Time frameTime)
@@ -74,13 +80,28 @@ float Mushroom::computeBouncingValue(sf::Time frameTime)
 	return m_bouncingTimer / m_bouncingTimerMax;
 }
 
+void Mushroom::playSound(ABiome & biome, sf::Vector2f const & position)
+{
+		if (m_animator.getState() == DecorAnimator::State::Grow && m_sound == false)
+			m_sound = true;
+		else if (m_animator.getState() == DecorAnimator::State::Life && m_sound == true)
+		{
+			octo::AudioManager& audio = octo::Application::getAudioManager();
+			octo::ResourceManager& resources = octo::Application::getResourceManager();
+			audio.playSound(resources.getSound(MUSHROOM_TMP_WAV), 0.8f, biome.randomFloat(3.f, 4.f), sf::Vector3f(position.x, position.y, 0.f), 100.f, 0.8f);
+			m_sound = false;
+		}
+}
+
 void Mushroom::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	if (m_animator.update(frameTime))
 		newMushroom(biome);
 	m_animation = m_animator.getAnimation();
-
 	sf::Vector2f const & position = getPosition();
+
+	playSound(biome, position);
+
 	float bouncingValue = computeBouncingValue(frameTime);
 	createMushroom(m_size * m_animation, position, m_color, bouncingValue, builder);
 }

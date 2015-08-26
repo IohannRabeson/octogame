@@ -5,6 +5,7 @@
 # include "DecorAnimator.hpp"
 # include "DropSystem.hpp"
 # include "Lightning.hpp"
+# include <AudioManager.hpp>
 # include <SFML/Graphics/Color.hpp>
 
 class SkyCycle;
@@ -62,25 +63,26 @@ private:
 					octo::VertexBuilder & builder,
 					sf::Vector2f const & position);
 
-	sf::Vector2f				m_size;
-	std::size_t					m_partCount;
-	sf::Color					m_color;
-	std::vector<OctogonValue>	m_values;
+	sf::Vector2f					m_size;
+	std::size_t						m_partCount;
+	sf::Color						m_color;
+	std::vector<OctogonValue>		m_values;
 
-	DecorAnimator				m_animator;
-	float						m_animation;
+	DecorAnimator					m_animator;
+	float							m_animation;
 
-	std::vector<DropSystem *>	m_rain;
-	std::vector<DropSystem *>	m_snow;
-	std::vector<sf::Vector2f>	m_dropUpLeft;
+	std::vector<DropSystem *>		m_rain;
+	std::vector<DropSystem *>		m_snow;
+	std::vector<sf::Vector2f>		m_dropUpLeft;
 
-	bool						m_thunderCloud;
-	Lightning					m_lightning;
-	float						m_lightningSize;
-	sf::Vector2f				m_p0;
-	sf::Vector2f				m_p1;
+	bool							m_thunderCloud;
+	Lightning						m_lightning;
+	float							m_lightningSize;
+	sf::Vector2f					m_p0;
+	sf::Vector2f					m_p1;
 
-	SkyCycle *					m_cycle;
+	octo::AudioManager::SoundPtr	m_rainSound;
+	SkyCycle *						m_cycle;
 };
 
 #endif

@@ -9,6 +9,7 @@
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
+#include <SFML/Audio/Listener.hpp>
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
 
@@ -69,6 +70,8 @@ void	Game::loadLevel(std::string const& fileName)
 
 void	Game::update(sf::Time frameTime)
 {
+	sf::Vector2f const & octoPos = m_octo->getPosition();
+	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
 	m_octo->update(frameTime);
 	followPlayer(frameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
@@ -76,6 +79,7 @@ void	Game::update(sf::Time frameTime)
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_npc->update(frameTime);
 	m_skyManager->update(frameTime);
+	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	m_physicsEngine.update(frameTime.asSeconds());
 }
 
