@@ -41,12 +41,12 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/ElevatorStreamDemo.cpp
 
 SRC_GAME =		Game/Game.cpp							\
-				Game/BiomeManager.cpp					\
 				Game/AGameObject.cpp					\
 				Game/CharacterNpc.cpp					\
 				Game/CharacterOcto.cpp					\
 				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp					\
+				Game/MusicPlayer.cpp
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleManager.cpp				\
@@ -66,6 +66,7 @@ SRC_MAP =		Map/Map.cpp								\
 				Map/MapInstance.cpp
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
+				Biomes/BiomeManager.cpp					\
 				Biomes/DefaultBiome.cpp
 
 SRC_DECORS =	Decors/DecorManager.cpp					\

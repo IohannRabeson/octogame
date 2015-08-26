@@ -16,6 +16,8 @@
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+#include <AudioManager.hpp>
+#include <Options.hpp>
 
 void	GameScreen::start()
 {
@@ -23,6 +25,13 @@ void	GameScreen::start()
 	m_game.loadLevel("TODO");
 
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	octo::AudioManager& audio = octo::Application::getAudioManager();
+	octo::Options& option = octo::Application::getOptions();
+
+	graphics.addKeyboardListener(this);
+	//TODO: To remove when menu will be implement
+	audio.setSoundVolume(option.getValue("sound", 0u));
+	audio.setMusicVolume(option.getValue("music", 0u));
 
 	graphics.addKeyboardListener(this);
 }

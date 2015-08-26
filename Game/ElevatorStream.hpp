@@ -27,6 +27,7 @@
 # include "AGameObject.hpp"
 
 class ABiome;
+class RectangleShape;
 
 class ElevatorStream : public AGameObject<GameObjectType::Elevator>
 {
@@ -55,6 +56,7 @@ private:
 	octo::VertexBuilder				m_builder;
 	sf::Time						m_waveCycle;
 	sf::Time						m_waveCycleDuration;
+	RectangleShape*					m_box;
 	float							m_topY;
 };
 

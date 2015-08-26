@@ -4,8 +4,8 @@
 # include <SFML/Graphics.hpp>
 # include <Array3D.hpp>
 # include "IMapTransformable.hpp"
+# include "Tile.hpp"
 
-class Tile;
 namespace octo
 {
 	class LevelMap;
