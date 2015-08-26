@@ -447,7 +447,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	for (std::size_t i = 0u; i < m_tiles->getDecorsPosition().size(); i++)
 	{
 		m_decorPositions[i].y = octo::linearInterpolation(prev[i].second.y, current[i].second.y, transition);
-		m_decorPositions[i].x = current[i].second.x - Tile::DoubleTileSize;
+		m_decorPositions[i].x = current[i].second.x - Map::OffsetX;
 	}
 
 	// Update wide decors
@@ -465,7 +465,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			if (tmp > min)
 				min = tmp;
 		}
-		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x + Tile::DoubleTileSize);
+		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x - Map::OffsetX + elevator.m_gameObject->getWidth() / 2.f + Tile::TileSize);
 		elevator.m_gameObject->setPosY(min);
 		elevator.m_gameObject->setHeight(min - elevator.m_gameObject->getTopY());
 	}
@@ -479,7 +479,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			if (tmp < max)
 				max = tmp;
 		}
-		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x + Tile::DoubleTileSize, max - portal.m_gameObject->getRadius() - Tile::TripleTileSize));
+		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TileSize));
 	}
 }
 
