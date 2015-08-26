@@ -353,7 +353,10 @@ void	CharacterOcto::onSky(Events event)
 		case Fall:
 			break;
 		default:
-			m_sprite.setNextEvent(Fall);
+			if (m_keyUp)
+				m_sprite.setNextEvent(Umbrella);
+			else
+				m_sprite.setNextEvent(Fall);
 			break;
 	}
 }
