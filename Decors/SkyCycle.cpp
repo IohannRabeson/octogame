@@ -1,6 +1,9 @@
 #include "SkyCycle.hpp"
 #include "ABiome.hpp"
 #include <Interpolations.hpp>
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 SkyCycle::SkyCycle(void) :
 	m_isDay(true),
@@ -10,7 +13,8 @@ SkyCycle::SkyCycle(void) :
 	m_dropPerSecond(0u),
 	m_dropAppear(true),
 	m_thunder(0.f),
-	m_thunderState(0u)
+	m_thunderState(0u),
+	m_boolThunder(false)
 {
 }
 
@@ -79,6 +83,10 @@ void SkyCycle::setup(ABiome & biome)
 	m_colorUpNight = biome.getSkyNightColor();
 	m_colorDownDay = sf::Color(255, 255, 255);
 	m_colorDownNight = sf::Color(50, 50, 50);
+
+	octo::ResourceManager const & resource = octo::Application::getResourceManager();
+	m_rainSound = octo::Application::getAudioManager().playSound(resource.getSound(RAIN_STEREO_TMP_WAV), 0.f, 1.f);
+	m_rainSound->setLoop(true);
 }
 
 void SkyCycle::computeDayNight(sf::Time frameTime)
@@ -133,6 +141,7 @@ void SkyCycle::newThunderCycle(ABiome & biome)
 	m_thunderTimer = sf::Time::Zero;
 	m_thunderTimerMax = sf::seconds(0.5f);
 	m_thunderTimerStart = sf::seconds(biome.randomFloat(0.f, m_dropTimerMax.asSeconds()));
+	m_boolThunder = true;
 }
 
 void SkyCycle::newDropCycle(ABiome & biome)
@@ -226,13 +235,29 @@ void SkyCycle::computeDrop(sf::Time frameTime, ABiome & biome)
 		newDropCycle(biome);
 }
 
+void SkyCycle::playSound(ABiome & biome)
+{
+	if (m_boolThunder && m_thunder)
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+		audio.playSound(resources.getSound(THUNDER_STEREO_TMP_WAV), 0.2, biome.randomFloat(0.5, 1.5f));
+		m_boolThunder = false;
+	}
+}
+
 void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 {
 	computeDayNight(frameTime);
 	if (biome.canCreateRain() || biome.canCreateSnow())
 		computeDrop(frameTime, biome);
+	if (biome.canCreateRain())
+		m_rainSound->setVolume(m_weather / m_dropTimerMax.asSeconds());
 	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
+	{
 		computeThunder(frameTime, biome);
+		playSound(biome);
+	}
 	float interpolateValue = getNightValue() * 2.f;
 	if (interpolateValue > 1.f)
 		interpolateValue = 1.f;

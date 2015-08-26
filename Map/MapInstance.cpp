@@ -1,5 +1,4 @@
 #include "MapInstance.hpp"
-#include "Tile.hpp"
 #include <Application.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
