@@ -444,7 +444,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	Map::Decors const & prev = m_tilesPrev->getDecorsPosition();
 	for (std::size_t i = 0u; i < m_tiles->getDecorsPosition().size(); i++)
 	{
-		m_decorPositions[i].y = octo::linearInterpolation(prev[i].second.y, current[i].second.y, transition);
+		m_decorPositions[i].y = octo::linearInterpolation(prev[i].second.y, current[i].second.y, transition) - Map::OffsetY + Tile::TileSize;
 		m_decorPositions[i].x = current[i].second.x - Map::OffsetX;
 	}
 
