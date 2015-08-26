@@ -76,8 +76,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 {
 	octo::Console&				console = octo::Application::getConsole();
 
-	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
-
 	// Setup somes console commands
 	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
 			{
