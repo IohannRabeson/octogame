@@ -5,6 +5,7 @@
 # include "DecorManager.hpp"
 # include "Portal.hpp"
 # include "ElevatorStream.hpp"
+# include "CharacterNpc.hpp"
 
 class ADecor;
 class ABiome;
@@ -70,6 +71,7 @@ private:
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
 	std::vector<GameObjectPosition<Portal>>				m_portals;
+	std::vector<std::unique_ptr<CharacterNpc>>			m_npcs;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
@@ -84,7 +86,7 @@ private:
 	void setupDecors(ABiome & biome);
 	void setupGameObjects(ABiome & biome);
 	void updateOffset(float deltatime);
-	void updateTransition(void);
+	void updateTransition(sf::FloatRect const & cameraRect);
 	void updateDecors(sf::Time deltatime);
 	void updateGameObjects(float deltatime);
 	void computeDecor(void);

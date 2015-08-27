@@ -68,6 +68,9 @@ void	Game::loadLevel(std::string const& fileName)
 	m_bubble->setup();
 	m_octo->setup();
 	m_npc->setup(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 800, 0));
+
+	// TODO: fix, for npcs, if we dont update once, value are not initialized well, and npc go through instance map
+	update(sf::seconds(0.f));
 }
 
 void	Game::update(sf::Time frameTime)
@@ -133,7 +136,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
 	render.draw(m_groundManager->getDecorsBack(), states);
-//	m_physicsEngine.debugDraw(render);
+	m_physicsEngine.debugDraw(render);
 	render.draw(*m_octo, states);
 	render.draw(*m_npc, states);
 	render.draw(m_groundManager->getDecorsFront(), states);
