@@ -252,18 +252,11 @@ void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& b
 		newRainbow(biome);
 }
 
-void Rainbow::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
-{
-	float x = vector.x * cosAngle - vector.y * sinAngle;
-	vector.y = vector.y * cosAngle + vector.x * sinAngle;
-	vector.x = x;
-}
-
 sf::Vector2f Rainbow::rotateVecCopy(sf::Vector2f const & vector, sf::Vector2f const & origin, float const cosAngle, float const sinAngle)
 {
 	sf::Vector2f result = vector;
 	result -= origin;
-	rotateVec(result, cosAngle, sinAngle);
+	octo::rotateVector(result, cosAngle, sinAngle);
 	result += origin;
 	return result;
 }
