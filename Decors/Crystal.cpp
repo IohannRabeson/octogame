@@ -29,14 +29,14 @@ void Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & orig
 	float cosA = std::cos(radianAngle);
 	float sinA = std::sin(radianAngle);
 
-	rotateVec(up, cosA, sinA);
-	rotateVec(upLeft, cosA, sinA);
-	rotateVec(upMid, cosA, sinA);
-	rotateVec(upRight, cosA, sinA);
-	rotateVec(down, cosA, sinA);
-	rotateVec(downLeft, cosA, sinA);
-	rotateVec(downMid, cosA, sinA);
-	rotateVec(downRight, cosA, sinA);
+	octo::rotateVector(up, cosA, sinA);
+	octo::rotateVector(upLeft, cosA, sinA);
+	octo::rotateVector(upMid, cosA, sinA);
+	octo::rotateVector(upRight, cosA, sinA);
+	octo::rotateVector(down, cosA, sinA);
+	octo::rotateVector(downLeft, cosA, sinA);
+	octo::rotateVector(downMid, cosA, sinA);
+	octo::rotateVector(downRight, cosA, sinA);
 
 	upMid += origin;
 	upRight += origin;
@@ -117,12 +117,5 @@ void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& b
 		m_shine.setPosition(shinePosition + position);
 		m_shine.update(frameTime, builder, biome);
 	}
-}
-
-void Crystal::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
-{
-	float x = vector.x * cosAngle - vector.y * sinAngle;
-	vector.y = vector.y * cosAngle + vector.x * sinAngle;
-	vector.x = x;
 }
 

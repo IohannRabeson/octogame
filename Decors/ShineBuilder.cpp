@@ -1,5 +1,6 @@
 #include "ShineBuilder.hpp"
 #include "ABiome.hpp"
+#include <Math.hpp>
 
 ShineBuilder::ShineBuilder()
 {
@@ -18,14 +19,14 @@ void ShineBuilder::createStar(sf::Vector2f const & size, sf::Vector2f const & si
 
 	if (angle != 0.f)
 	{
-		rotateVec(left, cosAngle, sinAngle);
-		rotateVec(right, cosAngle, sinAngle);
-		rotateVec(up, cosAngle, sinAngle);
-		rotateVec(down, cosAngle, sinAngle);
-		rotateVec(heartLeftUp, cosAngle, sinAngle);
-		rotateVec(heartRightUp, cosAngle, sinAngle);
-		rotateVec(heartLeftDown, cosAngle, sinAngle);
-		rotateVec(heartRightDown, cosAngle, sinAngle);
+		octo::rotateVector(left, cosAngle, sinAngle);
+		octo::rotateVector(right, cosAngle, sinAngle);
+		octo::rotateVector(up, cosAngle, sinAngle);
+		octo::rotateVector(down, cosAngle, sinAngle);
+		octo::rotateVector(heartLeftUp, cosAngle, sinAngle);
+		octo::rotateVector(heartRightUp, cosAngle, sinAngle);
+		octo::rotateVector(heartLeftDown, cosAngle, sinAngle);
+		octo::rotateVector(heartRightDown, cosAngle, sinAngle);
 	}
 
 	left += origin;
@@ -61,18 +62,18 @@ void ShineBuilder::createGlow(sf::Vector2f const & size, sf::Vector2f const & si
 
 	if (angle != 0.f)
 	{
-		rotateVec(upLeft, cosAngle, sinAngle);
-		rotateVec(upRight, cosAngle, sinAngle);
-		rotateVec(cornerUpLeft, cosAngle, sinAngle);
-		rotateVec(cornerUpRight, cosAngle, sinAngle);
-		rotateVec(upMidLeft, cosAngle, sinAngle);
-		rotateVec(upMidRight, cosAngle, sinAngle);
-		rotateVec(downLeft, cosAngle, sinAngle);
-		rotateVec(downRight, cosAngle, sinAngle);
-		rotateVec(cornerDownLeft, cosAngle, sinAngle);
-		rotateVec(cornerDownRight, cosAngle, sinAngle);
-		rotateVec(downMidLeft, cosAngle, sinAngle);
-		rotateVec(downMidRight, cosAngle, sinAngle);
+		octo::rotateVector(upLeft, cosAngle, sinAngle);
+		octo::rotateVector(upRight, cosAngle, sinAngle);
+		octo::rotateVector(cornerUpLeft, cosAngle, sinAngle);
+		octo::rotateVector(cornerUpRight, cosAngle, sinAngle);
+		octo::rotateVector(upMidLeft, cosAngle, sinAngle);
+		octo::rotateVector(upMidRight, cosAngle, sinAngle);
+		octo::rotateVector(downLeft, cosAngle, sinAngle);
+		octo::rotateVector(downRight, cosAngle, sinAngle);
+		octo::rotateVector(cornerDownLeft, cosAngle, sinAngle);
+		octo::rotateVector(cornerDownRight, cosAngle, sinAngle);
+		octo::rotateVector(downMidLeft, cosAngle, sinAngle);
+		octo::rotateVector(downMidRight, cosAngle, sinAngle);
 	}
 
 	upLeft += origin;
@@ -124,9 +125,3 @@ void ShineBuilder::createGlow(sf::Vector2f const & size, sf::Vector2f const & si
 	builder.createVertex(origin, color);
 }
 
-void ShineBuilder::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
-{
-	float x = vector.x * cosAngle - vector.y * sinAngle;
-	vector.y = vector.y * cosAngle + vector.x * sinAngle;
-	vector.x = x;
-}

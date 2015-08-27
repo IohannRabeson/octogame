@@ -94,21 +94,14 @@ void			DropSystem::createDrop(Particle & particle, float angle)
 	float radAngle = angle * octo::Deg2Rad;
 	float cosAngle = std::cos(-radAngle);
 	float sinAngle = std::sin(-radAngle);
-	rotateVec(particle.p1, cosAngle, sinAngle);
-	rotateVec(particle.p2, cosAngle, sinAngle);
-	rotateVec(particle.p3, cosAngle, sinAngle);
+	octo::rotateVector(particle.p1, cosAngle, sinAngle);
+	octo::rotateVector(particle.p2, cosAngle, sinAngle);
+	octo::rotateVector(particle.p3, cosAngle, sinAngle);
 
 	particle.position.x = m_dropRect.left + m_floatDistribution(m_engine) * m_dropRect.width;
 	particle.position.y = m_dropRect.top + m_floatDistribution(m_engine) * m_dropRect.height;
 	particle.velocity.y = m_speed;
 	particle.velocity.x = particle.velocity.y * std::tan(radAngle);
 	particle.isAlive = true;
-}
-
-void DropSystem::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
-{
-	float x = vector.x * cosAngle - vector.y * sinAngle;
-	vector.y = vector.y * cosAngle + vector.x * sinAngle;
-	vector.x = x;
 }
 

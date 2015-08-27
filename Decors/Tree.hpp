@@ -103,11 +103,6 @@ private:
 
 	void newTree(ABiome& biome);
 	void playSound(ABiome & biome, sf::Vector2f const & position);
-
-private:
-	static void rotateVec(sf::Vector2f & vector,
-							float const cosAngle,
-							float const sinAngle);
 };
 
 #endif
