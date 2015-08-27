@@ -13,8 +13,10 @@ class MapInstance;
 class Map : public IMapTransformable
 {
 public:
-	static constexpr float OffsetX = Tile::DoubleTileSize;
-	static constexpr float OffsetY = Tile::DoubleTileSize;
+	static constexpr float OffsetTileX = 10.f;
+	static constexpr float OffsetTileY = 3.f;
+	static constexpr float OffsetX = Tile::TileSize * OffsetTileX;
+	static constexpr float OffsetY = Tile::TileSize * OffsetTileY;
 
 	typedef std::vector<std::pair<int, sf::Vector2f>>			Decors;
 	typedef std::vector<std::pair<bool, sf::Vector2f>>			WideDecors;
