@@ -204,6 +204,13 @@ public:
 	 */
 	virtual void update(void);
 
+	/*! Apply the deltatime to the shape
+	 * The deltatime is given by the PhysicsEngine
+	 */
+	void updateVelocity(float deltatime);
+
+	void resetVelocity(void);
+
 	/*! Use to draw debug information
 	 */
 	virtual void debugDraw(sf::RenderTarget & render);
@@ -236,6 +243,7 @@ private:
 	bool					m_sleep;
 	bool					m_applyGravity;
 	bool					m_outOfScreen;
+	bool					m_isUpdated;
 	Type					m_type;
 	std::uint32_t			m_collisionType;
 	std::uint32_t			m_collisionMask;

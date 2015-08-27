@@ -424,30 +424,28 @@ void	CharacterOcto::commitPhysicsToGraphics()
 	m_previousTop = bounds.top;
 }
 
-void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
+void	CharacterOcto::commitControlsToPhysics(sf::Time)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
-	float			frameTimeSecond = frameTime.asSeconds();
 
 	if (m_keyLeft)
 	{
-		velocity.x = (-1.f * m_pixelSecondWalk) * frameTimeSecond;
+		velocity.x = (-1.f * m_pixelSecondWalk);
 	}
 	else if (m_keyRight)
 	{
-		velocity.x = m_pixelSecondWalk * frameTimeSecond;
+		velocity.x = m_pixelSecondWalk;
 	}
 
-	if (m_keySpace
-			&& (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
+	if (m_keySpace && (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
 	{
-		velocity.y = m_jumpVelocity * frameTimeSecond;
-		m_jumpVelocity += (m_pixelSecondMultiplier * frameTimeSecond);
+		velocity.y = m_jumpVelocity;
+		m_jumpVelocity += m_pixelSecondMultiplier;
 	}
 	else if (m_afterJump && m_afterJumpVelocity < 0.f && !m_onElevator)
 	{
-		velocity.y = m_afterJumpVelocity * frameTimeSecond;
-		m_afterJumpVelocity += (m_pixelSecondMultiplier * frameTimeSecond);
+		velocity.y = m_afterJumpVelocity;
+		m_afterJumpVelocity += m_pixelSecondMultiplier;
 	}
 
 	if (m_keyUp && m_sprite.getCurrentEvent() == Umbrella)
@@ -455,12 +453,12 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 		if (m_onElevator)
 		{
 			if (!m_onTopElevator)
-				velocity.y = (3.f * m_pixelSecondUmbrella) * frameTimeSecond;
+				velocity.y = (3.f * m_pixelSecondUmbrella);
 		}
 		else
 		{
 			velocity.x *= 1.3f;
-			velocity.y = m_pixelSecondUmbrella * frameTimeSecond;
+			velocity.y = m_pixelSecondUmbrella;
 		}
 	}
 	m_box->setVelocity(velocity);

@@ -143,34 +143,54 @@ void PhysicsEngine::unregisterAllTiles(void)
 	m_tileCollision = false;
 }
 
+#include <iostream>
 void PhysicsEngine::update(float deltatime)
 {
-	// Check if shape is out of screen
+	static float accumulator = 0.f;
+	static const float dt = 1.f / 60.f;
+
+	if (deltatime > 0.2f)
+		deltatime = 0.2f;
+	accumulator += deltatime;
+
 	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
-	sf::Vector2f gravity = m_gravity * deltatime;
-	for (auto & shape : m_shapes)
+	while (accumulator > dt)
 	{
-		shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));
-		// Add gravity
-		if (!shape->getSleep() && shape->getApplyGravity())
-			shape->addVelocity(gravity);
+		std::cout << "===================" << std::endl;
+		accumulator -= dt;
+		// Check if shape is out of screen
+		for (auto & shape : m_shapes)
+		{
+			shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));
+			// Add gravity
+			if (!shape->getSleep())
+			{
+				shape->updateVelocity(dt);
+				if (shape->getApplyGravity())
+					shape->addVelocity(m_gravity * dt);
+			}
+		}
+		// Tile don't move so we update them now
+		for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
+		{
+			if (!m_tileShapes.get(i, 0u)->getSleep())
+				m_tileShapes.get(i, 0u)->update();
+		}
+		// Determine which pairs of objects might be colliding
+		broadPhase();
+		// Determine if pairs are colliding
+		narrowPhase();
+		for (auto & shape : m_shapes)
+		{
+			if (!shape->getSleep())
+				shape->update();
+		}
 	}
-	// Tile don't move so we update them now
+	// Si on a pas update au dessus //TODO if
+	for (auto & shape : m_shapes)
+		shape->resetVelocity();
 	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
-	{
-		if (!m_tileShapes.get(i, 0u)->getSleep())
-			m_tileShapes.get(i, 0u)->update();
-	}
-	// Determine which pairs of objects might be colliding
-	broadPhase();
-	// Determine if pairs are colliding
-	narrowPhase();
-	// Apply the transformation computed by the collision manager
-	for (auto & shape : m_shapes)
-	{
-		if (!shape->getSleep())
-			shape->update();
-	}
+		m_tileShapes.get(i, 0u)->resetVelocity();
 }
 
 void PhysicsEngine::broadPhase(void)
@@ -412,6 +432,7 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 							pair.m_shapeB->addVelocity(0.f, -m_mtv.y);
 						}
 						pair.m_shapeB->update();
+						pair.m_shapeB->setVelocity(0.f, 0.f);
 					}
 					collide = true;
 				}

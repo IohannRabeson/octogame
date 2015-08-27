@@ -9,6 +9,7 @@ AShape::AShape(void) :
 	m_sleep(false),
 	m_applyGravity(true),
 	m_outOfScreen(false),
+	m_isUpdated(false),
 	m_type(AShape::Type::e_dynamic),
 	m_collisionType(0u),
 	m_collisionMask(std::numeric_limits<std::uint32_t>::max()),
@@ -18,9 +19,21 @@ AShape::AShape(void) :
 void AShape::update(void)
 {
 	move(m_velocity);
+	computeShape();
+}
+
+void AShape::updateVelocity(float deltatime)
+{
+	if (!m_isUpdated)
+		m_velocity *= deltatime;
+	m_isUpdated = true;
+}
+
+void AShape::resetVelocity(void)
+{
 	m_velocity.x = 0.f;
 	m_velocity.y = 0.f;
-	computeShape();
+	m_isUpdated = false;
 }
 
 void AShape::drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color)
