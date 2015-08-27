@@ -53,7 +53,6 @@ private:
 	void			updateParticle(sf::Time frameTime, Particle& particle);
 	bool			isDeadParticle(Particle const& particle, float bottom);
 	void			createDrop(Particle & particle, float angle);
-	void			rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle);
 private:
 	typedef std::uniform_real_distribution<float>		FDist;
 
