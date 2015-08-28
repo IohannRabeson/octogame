@@ -133,10 +133,10 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	//m_physicsEngine.debugDraw(render);
 	render.draw(*m_octo, states);
 	render.draw(*m_npc, states);
-	render.draw(m_groundManager->getDecorsFront(), states);
-	render.draw(m_skyManager->getDecorsFront(), states);
-	render.draw(*m_groundManager, states);
 	render.draw(m_groundManager->getDecorsGround(), states);
+	render.draw(m_groundManager->getDecorsFront(), states);
+	render.draw(*m_groundManager, states);
+	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);
 }
 
