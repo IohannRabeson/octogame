@@ -65,6 +65,8 @@ void	Game::loadLevel(std::string const& fileName)
 
 void	Game::update(sf::Time frameTime)
 {
+	// update the PhysicsEngine as first
+	m_physicsEngine.update(frameTime.asSeconds());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
 	m_octo->update(frameTime);
@@ -74,8 +76,6 @@ void	Game::update(sf::Time frameTime)
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
 	m_musicPlayer.update(frameTime, m_octo->getPosition());
-	// update the PhysicsEngine as last
-	m_physicsEngine.update(frameTime.asSeconds());
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
@@ -131,7 +131,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(*m_groundManager, states);
 	render.draw(m_groundManager->getDecorsGround(), states);
 	render.draw(m_skyManager->getFilter(), states);
-	m_physicsEngine.debugDraw(render);
+//	m_physicsEngine.debugDraw(render);
 }
 
 void	Game::followPlayer(sf::Time frameTime)

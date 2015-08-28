@@ -143,7 +143,6 @@ void PhysicsEngine::unregisterAllTiles(void)
 	m_tileCollision = false;
 }
 
-#include <iostream>
 void PhysicsEngine::update(float deltatime)
 {
 	static float accumulator = 0.f;
@@ -156,7 +155,6 @@ void PhysicsEngine::update(float deltatime)
 	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
 	while (accumulator > dt)
 	{
-		std::cout << "===================" << std::endl;
 		accumulator -= dt;
 		// Check if shape is out of screen
 		for (auto & shape : m_shapes)
@@ -167,7 +165,7 @@ void PhysicsEngine::update(float deltatime)
 			{
 				shape->updateVelocity(dt);
 				if (shape->getApplyGravity())
-					shape->addVelocity(m_gravity * dt);
+					shape->addEngineVelocity(m_gravity * dt);
 			}
 		}
 		// Tile don't move so we update them now
@@ -189,8 +187,6 @@ void PhysicsEngine::update(float deltatime)
 	// Si on a pas update au dessus //TODO if
 	for (auto & shape : m_shapes)
 		shape->resetVelocity();
-	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
-		m_tileShapes.get(i, 0u)->resetVelocity();
 }
 
 void PhysicsEngine::broadPhase(void)
@@ -237,8 +233,8 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<std::v
 			if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
 				continue;
 			shapeAABB = shape->getGlobalBounds();
-			shapeAABB.left += shape->getVelocity().x;
-			shapeAABB.top += shape->getVelocity().y;
+			shapeAABB.left += shape->getEngineVelocity().x;
+			shapeAABB.top += shape->getEngineVelocity().y;
 			if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds(), shapeAABB))
 			{
 				std::size_t i;
@@ -385,8 +381,8 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 				{
 					m_mtv /= 2.f;
 					collisionDirection += m_mtv;
-					pairs[i].m_shapeA->addVelocity(m_mtv.x, m_mtv.y);
-					pairs[i].m_shapeB->addVelocity(-m_mtv.x, -m_mtv.y);
+					pairs[i].m_shapeA->addEngineVelocity(m_mtv.x, m_mtv.y);
+					pairs[i].m_shapeB->addEngineVelocity(-m_mtv.x, -m_mtv.y);
 				}
 			}
 			if (m_contactListener)
@@ -404,13 +400,13 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 		for (auto & pair : pairs[i])
 		{
 			// The shape A is the tile, the shapeB is the other one
-			sf::Vector2f vel = pair.m_shapeB->getVelocity() / static_cast<float>(m_iterationCount);
-			pair.m_shapeB->setVelocity(0.f, 0.f);
+			sf::Vector2f vel = pair.m_shapeB->getEngineVelocity() / static_cast<float>(m_iterationCount);
+			pair.m_shapeB->setEngineVelocity(0.f, 0.f);
 			collide = false;
 			sf::Vector2f collisionDirection;
 			for (std::size_t j = 0u; j < m_iterationCount; j++)
 			{
-				pair.m_shapeB->addVelocity(vel);
+				pair.m_shapeB->addEngineVelocity(vel);
 				if (computeCollision(pair.m_shapeA, pair.m_shapeB))
 				{
 					if (!pair.m_shapeB->isType(AShape::Type::e_trigger))
@@ -418,21 +414,20 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 						if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
 						{
 							collisionDirection.x -= m_mtv.x;
-							pair.m_shapeB->addVelocity(-m_mtv.x, 0.f);
+							pair.m_shapeB->addEngineVelocity(-m_mtv.x, 0.f);
 						}
 						else if (std::fabs(m_mtv.x) > std::numeric_limits<float>::epsilon())
 						{
 							float y = -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
 							collisionDirection.y += y;
-							pair.m_shapeB->addVelocity(0.f, y);
+							pair.m_shapeB->addEngineVelocity(0.f, y);
 						}
 						else
 						{
 							collisionDirection.y -= m_mtv.y;
-							pair.m_shapeB->addVelocity(0.f, -m_mtv.y);
+							pair.m_shapeB->addEngineVelocity(0.f, -m_mtv.y);
 						}
 						pair.m_shapeB->update();
-						pair.m_shapeB->setVelocity(0.f, 0.f);
 					}
 					collide = true;
 				}
@@ -452,7 +447,7 @@ bool PhysicsEngine::findAxisLeastPenetration(TileShape * tile, PolygonShape * po
 		// On récupère le supportPoint dans le sens inverse de l'axe
 		sf::Vector2f const & s = tile->getSupportVertex(-m_axis);
 		// On récupère chaque vertex
-		sf::Vector2f const & v = polygon->getVertex(i) + polygon->getVelocity();
+		sf::Vector2f const & v = polygon->getVertex(i) + polygon->getEngineVelocity();
 		// Projection de s - v sur l'axe, si d < 0.f, il y a une possible collision
 		float d = octo::dotProduct(m_axis, s - v);
 		// Il y a un axe separateur
@@ -471,7 +466,7 @@ bool PhysicsEngine::findAxisLeastPenetration(TileShape * tile, PolygonShape * po
 	{
 		octo::normalize(m_axis);
 		// On récupère le supportPoint dans le sens inverse de l'axe
-		sf::Vector2f const & s = polygon->getSupportVertex(-m_axis) + polygon->getVelocity();
+		sf::Vector2f const & s = polygon->getSupportVertex(-m_axis) + polygon->getEngineVelocity();
 		// On récupère chaque vertex
 		sf::Vector2f v = tile->getVertex(0u);
 		// Projection de s - v sur l'axe, si d < 0.f, il y a une possible collision
@@ -510,8 +505,8 @@ bool PhysicsEngine::findAxisLeastPenetration(PolygonShape * polygonA, PolygonSha
 		if (d >= 0.f)
 			return false;
 
-		float vel = octo::dotProduct(m_axis, polygonA->getVelocity());
-		float vell = octo::dotProduct(m_axis, polygonB->getVelocity());
+		float vel = octo::dotProduct(m_axis, polygonA->getEngineVelocity());
+		float vell = octo::dotProduct(m_axis, polygonB->getEngineVelocity());
 
 		float dd = d;
 		if (vel > 0.f)
@@ -706,7 +701,7 @@ void PhysicsEngine::Projection::project(sf::Vector2f const & axis, CircleShape *
 
 void PhysicsEngine::Projection::swept(sf::Vector2f const & axis, AShape const * shape)
 {
-	float vel = octo::dotProduct(axis, shape->getVelocity());
+	float vel = octo::dotProduct(axis, shape->getEngineVelocity());
 	min += vel;
 	max += vel;
 }
