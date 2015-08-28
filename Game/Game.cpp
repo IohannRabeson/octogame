@@ -61,6 +61,9 @@ void	Game::loadLevel(std::string const& fileName)
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup();
+
+	// TODO: fix, for npcs, if we dont update once, value are not initialized well, and npc go through instance map
+	update(sf::seconds(0.f));
 }
 
 void	Game::update(sf::Time frameTime)

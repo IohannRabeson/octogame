@@ -76,8 +76,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 {
 	octo::Console&				console = octo::Application::getConsole();
 
-	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
-
 	// Setup somes console commands
 	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
 			{
@@ -101,12 +99,21 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			//TODO: create NPC instead of just physics rect
-			RectangleShape * rect = builder.createRectangle();
-			rect->setPosition(sf::Vector2f(spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX, (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY));
-			rect->setSize(sf::Vector2f(spriteTrigger.trigger.width, spriteTrigger.trigger.height));
-			rect->setApplyGravity(false);
-			rect->setType(AShape::Type::e_trigger);
+			//TODO: use resource to load good npc
+			std::unique_ptr<CharacterNpc> npc;
+			npc.reset(new CharacterNpc());
+			sf::FloatRect rect;
+			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
+			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
+			rect.width = spriteTrigger.trigger.width;
+			rect.height = spriteTrigger.trigger.height;
+			sf::Vector2f position;
+			position.x = rect.left;
+			position.y = rect.top + rect.height;
+			//position.x = spriteTrigger.positionSprite.x + instance.first * Tile::TileSize - Map::OffsetX;
+			//position.y = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.positionSprite.y - Map::OffsetY - Tile::TileSize;
+			npc->setup(position, rect);
+			m_npcs.push_back(std::move(npc));
 		}
 
 		// For each instance, create an elevator stream
@@ -359,11 +366,13 @@ void GroundManager::computeDecor(void)
 	m_tiles->computeWideDecor();
 }
 
-void GroundManager::updateTransition(void)
+void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 {
 	if (m_transitionTimer > m_transitionTimerMax)
 		m_transitionTimer = m_transitionTimerMax;
 	float transition = m_transitionTimer / m_transitionTimerMax;
+	float bottomBorder = cameraRect.top + cameraRect.height + Map::OffsetY;
+	float rightBorder = cameraRect.left + cameraRect.width + Map::OffsetX;
 	Tile * tile;
 	Tile * tilePrev;
 	TileShape * first;
@@ -388,6 +397,12 @@ void GroundManager::updateTransition(void)
 					isComputed = true;
 				}
 				continue;
+			}
+			else if (first)
+			{
+				// Avoid to compute A LOT of transition under the screen
+				if (tile->getStartTransition(0u).y > bottomBorder || tile->getStartTransition(1u).x < cameraRect.left || tile->getStartTransition(0u).x > rightBorder)
+					break;
 			}
 			tilePrev = &m_tilesPrev->get(x, y);
 
@@ -429,8 +444,8 @@ void GroundManager::updateTransition(void)
 	Map::Decors const & prev = m_tilesPrev->getDecorsPosition();
 	for (std::size_t i = 0u; i < m_tiles->getDecorsPosition().size(); i++)
 	{
-		m_decorPositions[i].y = octo::linearInterpolation(prev[i].second.y, current[i].second.y, transition);
-		m_decorPositions[i].x = current[i].second.x - Tile::DoubleTileSize;
+		m_decorPositions[i].y = octo::linearInterpolation(prev[i].second.y, current[i].second.y, transition) - Map::OffsetY + Tile::TileSize;
+		m_decorPositions[i].x = current[i].second.x - Map::OffsetX;
 	}
 
 	// Update wide decors
@@ -448,7 +463,7 @@ void GroundManager::updateTransition(void)
 			if (tmp > min)
 				min = tmp;
 		}
-		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x + Tile::DoubleTileSize);
+		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x - Map::OffsetX + elevator.m_gameObject->getWidth() / 2.f + Tile::TileSize);
 		elevator.m_gameObject->setPosY(min);
 		elevator.m_gameObject->setHeight(min - elevator.m_gameObject->getTopY());
 	}
@@ -462,7 +477,7 @@ void GroundManager::updateTransition(void)
 			if (tmp < max)
 				max = tmp;
 		}
-		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x + Tile::DoubleTileSize, max - portal.m_gameObject->getRadius() - Tile::TripleTileSize));
+		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TileSize));
 	}
 }
 
@@ -598,7 +613,7 @@ void GroundManager::updateOffset(float)
 		{
 			m_tiles->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
 			m_tilesPrev->computeMapRangeY(m_tiles->getRows() - ofY, m_tiles->getRows());
-			defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 10, m_tiles->getRows());
+			defineTransitionBorderTileRange(0, m_tiles->getColumns(), m_tiles->getRows() - 20, m_tiles->getRows());
 		}
 		m_tilesPrev->swapDepth();
 		m_oldOffset.y = newOfY;
@@ -627,6 +642,8 @@ void GroundManager::updateGameObjects(float deltatime)
 		elevator.m_gameObject->update(sf::seconds(deltatime));
 	for (auto & portal : m_portals)
 		portal.m_gameObject->update(sf::seconds(deltatime));
+	for (auto & npc : m_npcs)
+		npc->update(sf::seconds(deltatime));
 }
 
 void GroundManager::update(float deltatime)
@@ -664,7 +681,7 @@ void GroundManager::update(float deltatime)
 		}
 	}
 	updateOffset(deltatime);
-	updateTransition();
+	updateTransition(rect);
 	updateDecors(sf::seconds(deltatime));
 	updateGameObjects(deltatime);
 }
@@ -675,6 +692,8 @@ void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) cons
 		elevator.m_gameObject->draw(render);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render);
+	for (auto & npc : m_npcs)
+		npc->draw(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 

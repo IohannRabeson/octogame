@@ -4,6 +4,7 @@
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <AudioManager.hpp>
+#include <Math.hpp>
 #include "ResourceDefinitions.hpp"
 
 Tree::Tree(void) :
@@ -33,10 +34,10 @@ void Tree::computeQuad(sf::Vector2f const & size, sf::Vector2f const & center, f
 	quad.rightDown = sf::Vector2f(x, y);
 	quad.rightUp = sf::Vector2f(x, -y);
 
-	rotateVec(quad.leftDown, cosAngle, sinAngle);
-	rotateVec(quad.leftUp, cosAngle, sinAngle);
-	rotateVec(quad.rightDown, cosAngle, sinAngle);
-	rotateVec(quad.rightUp, cosAngle, sinAngle);
+	octo::rotateVector(quad.leftDown, cosAngle, sinAngle);
+	octo::rotateVector(quad.leftUp, cosAngle, sinAngle);
+	octo::rotateVector(quad.rightDown, cosAngle, sinAngle);
+	octo::rotateVector(quad.rightUp, cosAngle, sinAngle);
 
 	quad.center = center;
 }
@@ -61,14 +62,14 @@ void Tree::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCor
 	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
 	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
 
-	rotateVec(upLeft, cos, sin);
-	rotateVec(upRight, cos, sin);
-	rotateVec(upMidLeft, cos, sin);
-	rotateVec(upMidRight, cos, sin);
-	rotateVec(downLeft, cos, sin);
-	rotateVec(downRight, cos, sin);
-	rotateVec(downMidLeft, cos, sin);
-	rotateVec(downMidRight, cos, sin);
+	octo::rotateVector(upLeft, cos, sin);
+	octo::rotateVector(upRight, cos, sin);
+	octo::rotateVector(upMidLeft, cos, sin);
+	octo::rotateVector(upMidRight, cos, sin);
+	octo::rotateVector(downLeft, cos, sin);
+	octo::rotateVector(downRight, cos, sin);
+	octo::rotateVector(downMidLeft, cos, sin);
+	octo::rotateVector(downMidRight, cos, sin);
 
 	upLeft += origin;
 	upRight += origin;
@@ -156,7 +157,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	leftSizeY *= m_animation;
 	sf::Vector2f leftSize(leftSizeX, leftSizeY);
 	sf::Vector2f leftCenter(leftSize.x / 2.f, -leftSize.y / 2.f);
-	rotateVec(leftCenter, cosLeft, sinLeft);
+	octo::rotateVector(leftCenter, cosLeft, sinLeft);
 	leftCenter += center + root.leftUp;
 
 	// Compute right branch
@@ -170,7 +171,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	rightSizeY *= m_animation;
 	sf::Vector2f rightSize(rightSizeX, rightSizeY);
 	sf::Vector2f rightCenter(-rightSize.x / 2.f, -rightSize.y / 2.f);
-	rotateVec(rightCenter, cosRight, sinRight);
+	octo::rotateVector(rightCenter, cosRight, sinRight);
 	rightCenter += center + root.rightUp;
 
 	// Create leaf
@@ -199,7 +200,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	// Fill empty space with triangle
 	color += sf::Color(5, 5, 5);
 	sf::Vector2f upTriangle(-rightSize.x, 0.f);
-	rotateVec(upTriangle, cosRight, sinRight);
+	octo::rotateVector(upTriangle, cosRight, sinRight);
 	builder.createTriangle(root.rightUp + center, root.leftUp + center, upTriangle + center + root.rightUp, color);
 
 }
@@ -262,12 +263,5 @@ void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biom
 
 	float positionY = position.y + (m_size.y - m_size.y * m_animation) / 2 - m_size.y / 2.f;
 	pythagorasTree(sf::Vector2f(position.x, positionY), sf::Vector2f(m_size.x, m_size.y * m_animation), builder);
-}
-
-void Tree::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
-{
-	float x = vector.x * cosAngle - vector.y * sinAngle;
-	vector.y = vector.y * cosAngle + vector.x * sinAngle;
-	vector.x = x;
 }
 
