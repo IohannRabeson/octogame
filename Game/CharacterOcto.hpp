@@ -46,10 +46,10 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	timeEvent(sf::Time frameTime);
 	void	setupAnimation();
 	void	setupMachine();
-	void	collisionTileUpdate(sf::Time frameTime);
+	void	collisionTileUpdate();
 	void	onSky(Events event);
-	void	collisionElevatorUpdate(sf::Time frameTime);
-	void	commitControlsToPhysics(sf::Time frameTime);
+	void	collisionElevatorUpdate();
+	void	commitControlsToPhysics();
 	void	commitPhysicsToGraphics();
 	void	caseLeft();
 	void	caseRight();
@@ -69,8 +69,6 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
 
-	sf::Clock					m_clockCollisionTile;
-	sf::Clock					m_clockCollisionElevator;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventDeath;
@@ -94,6 +92,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool						m_keyRight;
 	bool						m_keySpace;
 	bool						m_keyUp;
+	bool						m_collisionTile;
+	bool						m_collisionElevator;
 };
 
 #endif

@@ -21,7 +21,9 @@ CharacterOcto::CharacterOcto() :
 	m_keyLeft(false),
 	m_keyRight(false),
 	m_keySpace(false),
-	m_keyUp(false)
+	m_keyUp(false),
+	m_collisionTile(false),
+	m_collisionElevator(false)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -254,11 +256,13 @@ void	CharacterOcto::update(sf::Time frameTime)
 		return;
 	}
 	dance();
-	collisionElevatorUpdate(frameTime);
-	collisionTileUpdate(frameTime);
+	collisionElevatorUpdate();
+	collisionTileUpdate();
 	m_sprite.update(frameTime);
-	commitControlsToPhysics(frameTime);
+	commitControlsToPhysics();
 	commitPhysicsToGraphics();
+	m_collisionTile = false;
+	m_collisionElevator = false;
 }
 
 void	CharacterOcto::timeEvent(sf::Time frameTime)
@@ -294,10 +298,10 @@ void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisi
 		case GameObjectType::Tile:
 			// TODO
 			if (collisionDirection.x == 0 && collisionDirection.y < 0)
-				m_clockCollisionTile.restart();
+				m_collisionTile = true;
 			break;
 		case GameObjectType::Elevator:
-			m_clockCollisionElevator.restart();
+			m_collisionElevator = true;
 			break;
 		default:
 			break;
@@ -309,9 +313,9 @@ void	CharacterOcto::setTopElevator(float top)
 	m_topElevator = top;
 }
 
-void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
+void	CharacterOcto::collisionTileUpdate()
 {
-	if (m_clockCollisionTile.getElapsedTime() > frameTime)
+	if (!m_collisionTile)
 	{
 		m_onGround = false;
 		onSky(static_cast<Events>(m_sprite.getCurrentEvent()));
@@ -361,12 +365,12 @@ void	CharacterOcto::onSky(Events event)
 	}
 }
 
-void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
+void	CharacterOcto::collisionElevatorUpdate()
 {
 	sf::FloatRect const&	bounds = m_box->getGlobalBounds();
 	float					top = bounds.top + (bounds.height / 2.f);
 
-	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
+	if (m_collisionElevator)
 	{
 		if (!m_onElevator && m_keyUp)
 		{
@@ -440,7 +444,7 @@ void	CharacterOcto::commitPhysicsToGraphics()
 	m_previousTop = bounds.top;
 }
 
-void	CharacterOcto::commitControlsToPhysics(sf::Time)
+void	CharacterOcto::commitControlsToPhysics()
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
 
