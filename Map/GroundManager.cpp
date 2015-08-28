@@ -7,6 +7,7 @@
 #include "Rainbow.hpp"
 #include "SkyCycle.hpp"
 #include "MapInstance.hpp"
+//#include "FunctionsOffset.hpp"
 #include <limits>
 #include <Interpolations.hpp>
 #include <Application.hpp>
@@ -35,6 +36,7 @@ GroundManager::GroundManager(void) :
 void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 {
 	m_cycle = &cycle;
+	m_mapSize = biome.getMapSize();
 
 	// Init maps
 	m_tiles.reset(new Map());
@@ -107,11 +109,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
 			rect.width = spriteTrigger.trigger.width;
 			rect.height = spriteTrigger.trigger.height;
-			sf::Vector2f position;
-			position.x = rect.left;
-			position.y = rect.top + rect.height;
-			//position.x = spriteTrigger.positionSprite.x + instance.first * Tile::TileSize - Map::OffsetX;
-			//position.y = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.positionSprite.y - Map::OffsetY - Tile::TileSize;
+			sf::Vector2f position(rect.left, rect.top + rect.height);
 			npc->setup(position, rect);
 			m_npcs.push_back(std::move(npc));
 		}
@@ -478,6 +476,16 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 				max = tmp;
 		}
 		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TileSize));
+	}
+
+	for (auto const & npc : m_npcs)
+	{
+		float mapSizeX = m_mapSize.x * Tile::TileSize;
+
+		if (npc->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			npc->addMapOffset(mapSizeX, 0.f);
+		else if (npc->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			npc->addMapOffset(-mapSizeX, 0.f);
 	}
 }
 

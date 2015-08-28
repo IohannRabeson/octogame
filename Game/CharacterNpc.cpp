@@ -31,6 +31,19 @@ void	CharacterNpc::setup(sf::Vector2f const & pos, sf::FloatRect const & rect)
 	m_box->setPosition(pos.x, pos.y - m_box->getSize().y);
 }
 
+void	CharacterNpc::addMapOffset(float x, float y)
+{
+	m_box->setPosition(m_box->getPosition().x + x, m_box->getPosition().y + y);
+	m_box->update(); // We must update ourselves because the box is out of the screen, and the engine didn't update shape out of the screen
+	m_area.left += x;
+	m_area.top += y;
+}
+
+sf::Vector2f const & CharacterNpc::getPosition(void) const
+{
+	return m_box->getPosition();
+}
+
 void	CharacterNpc::setupAnimation()
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
