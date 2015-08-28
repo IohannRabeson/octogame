@@ -12,7 +12,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
-	m_pixelSecondMultiplier(20.f),
+	m_pixelSecondMultiplier(800.f),
 	m_numberOfJump(1),
 	m_originMove(false),
 	m_onGround(false),
@@ -250,7 +250,7 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	timeEvent(frameTime);
-	if (!endDeath())
+	if (!endDeath()) // TODO ce truc doit faire des bug à mon avis
 	{
 		m_sprite.update(frameTime);
 		return;
@@ -259,7 +259,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	collisionElevatorUpdate();
 	collisionTileUpdate();
 	m_sprite.update(frameTime);
-	commitControlsToPhysics();
+	commitControlsToPhysics(frameTime.asSeconds());
 	commitPhysicsToGraphics();
 	m_collisionTile = false;
 	m_collisionElevator = false;
@@ -444,7 +444,7 @@ void	CharacterOcto::commitPhysicsToGraphics()
 	m_previousTop = bounds.top;
 }
 
-void	CharacterOcto::commitControlsToPhysics()
+void	CharacterOcto::commitControlsToPhysics(float frametime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
 
@@ -460,12 +460,12 @@ void	CharacterOcto::commitControlsToPhysics()
 	if (m_keySpace && (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
 	{
 		velocity.y = m_jumpVelocity;
-		m_jumpVelocity += m_pixelSecondMultiplier;
+		m_jumpVelocity += m_pixelSecondMultiplier * frametime;
 	}
 	else if (m_afterJump && m_afterJumpVelocity < 0.f && !m_onElevator)
 	{
 		velocity.y = m_afterJumpVelocity;
-		m_afterJumpVelocity += m_pixelSecondMultiplier;
+		m_afterJumpVelocity += m_pixelSecondMultiplier * frametime;
 	}
 
 	if (m_keyUp && m_sprite.getCurrentEvent() == Umbrella)
@@ -477,7 +477,7 @@ void	CharacterOcto::commitControlsToPhysics()
 		}
 		else
 		{
-			velocity.x *= 1.3f;
+			velocity.x *= 1.3f; // TODO fix, not frametime dependant
 			velocity.y = m_pixelSecondUmbrella;
 		}
 	}
