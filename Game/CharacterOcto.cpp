@@ -12,7 +12,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
-	m_pixelSecondMultiplier(800.f),
+	m_pixelSecondMultiplier(20.f),
 	m_numberOfJump(1),
 	m_originMove(false),
 	m_onGround(false),
