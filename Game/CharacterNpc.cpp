@@ -94,11 +94,12 @@ void	CharacterNpc::update(sf::Time frameTime)
 
 void	CharacterNpc::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
-	sf::RectangleShape rect;
+	//TODO 
+/*	sf::RectangleShape rect;
 	rect.setFillColor(sf::Color::Blue);
 	rect.setPosition(sf::Vector2f(m_area.left, m_area.top));
 	rect.setSize(sf::Vector2f(m_area.width, m_area.height));
-	render.draw(rect);
+	render.draw(rect);*/
 	m_sprite.draw(render, states);
 }
 
