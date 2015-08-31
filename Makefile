@@ -49,9 +49,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/MusicPlayer.cpp
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
-				Bubble/BubbleManager.cpp				\
-				Bubble/BubbleNPC.cpp					\
-				Bubble/BubbleInactive.cpp
+				Bubble/BubbleText.cpp					\
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\

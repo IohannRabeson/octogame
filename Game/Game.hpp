@@ -10,7 +10,6 @@
 # include "CharacterOcto.hpp"
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
-# include "BubbleManager.hpp"
 # include "MusicPlayer.hpp"
 
 # include <memory>
@@ -39,7 +38,6 @@ private:
 	std::unique_ptr<MusicPlayer>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<CharacterNpc>		m_npc; //TODO: remove
-	std::unique_ptr<BubbleManager>		m_bubble;
 
 	bool			onPressed(sf::Event::KeyEvent const & event);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);

@@ -1,7 +1,7 @@
 #ifndef BUBBLESCREEN_HPP
 # define BUBBLESCREEN_HPP
 
-# include "BubbleManager.hpp"
+#include "BubbleText.hpp"
 
 # include <AbstractState.hpp>
 class BubbleScreen : public octo::AbstractState
@@ -17,7 +17,8 @@ public:
 	virtual void	draw(sf::RenderTarget& render)const;
 
 private:
-	BubbleManager	m_bubbleManager;
+	BubbleText	m_bubble;
+	float x = 700;
 };
 
 #endif
