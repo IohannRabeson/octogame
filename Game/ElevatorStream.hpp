@@ -48,6 +48,8 @@ public:
 	float		getPosY(void) const;
 	float		getTopY(void) const;
 
+	void		createRay(void);
+
 	void		update(sf::Time frameTime);
 	void		draw(sf::RenderTarget& render)const;
 private:
@@ -58,6 +60,11 @@ private:
 	sf::Time						m_waveCycleDuration;
 	RectangleShape*					m_box;
 	float							m_topY;
+	std::size_t						m_rayCountVertex;
+	std::unique_ptr<sf::Vertex[]>	m_ray;
+	sf::Color						m_borderColor;
+	sf::Color						m_centerColor;
+	sf::Color						m_upColor;
 };
 
 #endif
