@@ -70,6 +70,11 @@ void	Game::loadLevel(std::string const& fileName)
 	update(sf::seconds(0.f));
 }
 
+sf::Vector2f	Game::getOctoBubblePosition(void) const
+{
+	return m_octo->getBubblePosition();
+}
+
 void	Game::update(sf::Time frameTime)
 {
 	sf::Vector2f const & octoPos = m_octo->getPosition();

@@ -608,6 +608,6 @@ sf::Vector2f	CharacterOcto::getPosition() const
 
 sf::Vector2f	CharacterOcto::getBubblePosition() const
 {
-	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -40.f));
+	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -80.f));
 }
 

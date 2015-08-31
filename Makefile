@@ -50,6 +50,7 @@ SRC_GAME =		Game/Game.cpp							\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
+				Bubble/BubbleMenu.cpp					\
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\

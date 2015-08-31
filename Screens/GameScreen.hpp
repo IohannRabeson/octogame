@@ -17,17 +17,21 @@
 # include <Camera.hpp>
 
 # include "Game.hpp"
+# include "BubbleMenu.hpp"
 
 class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
-	virtual void	start();
-	virtual void	pause();
-	virtual void	resume();
-	virtual void	stop();
-	virtual void	update(sf::Time frameTime);
-	virtual void	draw(sf::RenderTarget& render)const;
+	virtual void		start();
+	virtual void		pause();
+	virtual void		resume();
+	virtual void		stop();
+	virtual void		update(sf::Time frameTime);
+	virtual void		draw(sf::RenderTarget& render)const;
 private:
-	Game			m_game;
+	Game				m_game;
+	BubbleMenu			m_menu;
+	bool				m_isMenu;
+	sf::RectangleShape	m_filter;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 };

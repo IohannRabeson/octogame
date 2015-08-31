@@ -1,17 +1,17 @@
-#include "BubbleText.hpp"
+#include "BubbleMenu.hpp"
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
 #include "ResourceDefinitions.hpp"
 
-BubbleText::BubbleText(void) :
+BubbleMenu::BubbleMenu(void) :
 	m_characterPerLine(0u),
 	m_lineCount(1u)
 {
 }
 
-void BubbleText::setupBlocString(void)
+void BubbleMenu::setupBlocString(void)
 {
 	std::size_t j = 0u;
 	m_lineCount = 1u;
@@ -32,7 +32,7 @@ void BubbleText::setupBlocString(void)
 	}
 }
 
-void BubbleText::setup(std::string const & phrase, sf::Color const & color, std::size_t characterSize)
+void BubbleMenu::setup(std::string const & phrase, sf::Color const & color, std::size_t characterSize)
 {
 	if (characterSize == 0u)
 		characterSize = m_characterSize;
@@ -57,18 +57,18 @@ void BubbleText::setup(std::string const & phrase, sf::Color const & color, std:
 	m_text.setString(m_phrase);
 }
 
-sf::Vector2f BubbleText::getContentSize() const
+sf::Vector2f BubbleMenu::getContentSize() const
 {
 	return m_contentSize;
 }
 
-void BubbleText::updateContent(sf::Time frameTime, sf::Vector2f const & position)
+void BubbleMenu::updateContent(sf::Time frameTime, sf::Vector2f const & position)
 {
 	(void)frameTime;
 	m_text.setPosition(position);
 }
 
-void BubbleText::drawContent(sf::RenderTarget & render, sf::RenderStates states) const
+void BubbleMenu::drawContent(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	render.draw(m_text, states);
 }

@@ -22,8 +22,9 @@ class Game : public octo::DefaultKeyboardListener, public IContactListener
 public:
 	Game();
 
-	void	setup();
-	void	loadLevel(std::string const& fileName);
+	void			setup();
+	void			loadLevel(std::string const& fileName);
+	sf::Vector2f	getOctoBubblePosition(void) const;
 
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;

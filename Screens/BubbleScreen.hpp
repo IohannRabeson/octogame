@@ -19,6 +19,7 @@ public:
 private:
 	BubbleText	m_bubble;
 	float x = 700;
+	float timer = 0.f;
 };
 
 #endif
