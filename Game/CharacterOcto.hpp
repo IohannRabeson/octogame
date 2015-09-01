@@ -36,7 +36,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 
 	bool			onPressed(sf::Event::KeyEvent const& event);
 	bool			onReleased(sf::Event::KeyEvent const& event);
-	sf::Vector2f	getPosition() const;
+	sf::Vector2f const &	getPosition() const;
 	void			onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
 	void			setTopElevator(float top);
 
@@ -50,7 +50,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	onSky(Events event);
 	void	collisionElevatorUpdate();
 	void	commitControlsToPhysics(float frametime);
-	void	commitPhysicsToGraphics();
+	void	commitPhysicsToGraphics(sf::Time framtime);
 	void	caseLeft();
 	void	caseRight();
 	void	caseSpace();

@@ -258,9 +258,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 	dance();
 	collisionElevatorUpdate();
 	collisionTileUpdate();
-	m_sprite.update(frameTime);
 	commitControlsToPhysics(frameTime.asSeconds());
-	commitPhysicsToGraphics();
+	commitPhysicsToGraphics(frameTime);
 	m_collisionTile = false;
 	m_collisionElevator = false;
 }
@@ -435,12 +434,14 @@ void	CharacterOcto::dance()
 	}
 }
 
-void	CharacterOcto::commitPhysicsToGraphics()
+void	CharacterOcto::commitPhysicsToGraphics(sf::Time frameTime)
 {
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
 	// TODO
-	m_sprite.setPosition(bounds.left - (177.f / 2.5f), bounds.top - (150.f / 2.f));
+	sf::Vector2f const & current = sf::Vector2f(bounds.left - (177.f / 2.5f), bounds.top - (150.f / 2.f));
+	m_sprite.setPosition(current);
+	m_sprite.update(frameTime);
 	m_previousTop = bounds.top;
 }
 
@@ -619,8 +620,9 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	return true;
 }
 
-sf::Vector2f	CharacterOcto::getPosition() const
+sf::Vector2f const &	CharacterOcto::getPosition() const
 {
+	return m_sprite.getPosition();
 	return (m_box->getBaryCenter());
 }
 
