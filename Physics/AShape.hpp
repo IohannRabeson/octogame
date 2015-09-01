@@ -222,6 +222,19 @@ public:
 	 */
 	virtual sf::Vector2f const & getBaryCenter(void) const = 0;
 
+	// Only used by the physics engine
+	/*! Apply the deltatime to the shape
+	 * The deltatime is given by the PhysicsEngine
+	 */
+	void updateVelocity(float deltatime);
+
+	void resetVelocity(void);
+
+	void addEngineVelocity(sf::Vector2f const & velocity);
+	void addEngineVelocity(float x, float y);
+	sf::Vector2f const & getEngineVelocity(void) const { return m_engineVelocity; }
+	void setEngineVelocity(float x, float y);
+
 protected:
 	void drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color);
 
@@ -230,6 +243,7 @@ protected:
 
 private:
 	sf::Vector2f			m_velocity;
+	sf::Vector2f			m_engineVelocity;
 	sf::Vector2f			m_origin;
 	sf::Vector2f			m_position;
 	float					m_rotation;

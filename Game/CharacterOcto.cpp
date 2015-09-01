@@ -21,7 +21,9 @@ CharacterOcto::CharacterOcto() :
 	m_keyLeft(false),
 	m_keyRight(false),
 	m_keySpace(false),
-	m_keyUp(false)
+	m_keyUp(false),
+	m_collisionTile(false),
+	m_collisionElevator(false)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -248,17 +250,18 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	timeEvent(frameTime);
-	if (!endDeath())
+	if (!endDeath()) // TODO ce truc doit faire des bug à mon avis
 	{
 		m_sprite.update(frameTime);
 		return;
 	}
 	dance();
-	collisionElevatorUpdate(frameTime);
-	collisionTileUpdate(frameTime);
-	m_sprite.update(frameTime);
-	commitControlsToPhysics(frameTime);
-	commitPhysicsToGraphics();
+	collisionElevatorUpdate();
+	collisionTileUpdate();
+	commitControlsToPhysics(frameTime.asSeconds());
+	commitPhysicsToGraphics(frameTime);
+	m_collisionTile = false;
+	m_collisionElevator = false;
 }
 
 void	CharacterOcto::timeEvent(sf::Time frameTime)
@@ -294,10 +297,10 @@ void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisi
 		case GameObjectType::Tile:
 			// TODO
 			if (collisionDirection.x == 0 && collisionDirection.y < 0)
-				m_clockCollisionTile.restart();
+				m_collisionTile = true;
 			break;
 		case GameObjectType::Elevator:
-			m_clockCollisionElevator.restart();
+			m_collisionElevator = true;
 			break;
 		default:
 			break;
@@ -309,9 +312,9 @@ void	CharacterOcto::setTopElevator(float top)
 	m_topElevator = top;
 }
 
-void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
+void	CharacterOcto::collisionTileUpdate()
 {
-	if (m_clockCollisionTile.getElapsedTime() > frameTime)
+	if (!m_collisionTile)
 	{
 		m_onGround = false;
 		onSky(static_cast<Events>(m_sprite.getCurrentEvent()));
@@ -361,12 +364,12 @@ void	CharacterOcto::onSky(Events event)
 	}
 }
 
-void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
+void	CharacterOcto::collisionElevatorUpdate()
 {
 	sf::FloatRect const&	bounds = m_box->getGlobalBounds();
 	float					top = bounds.top + (bounds.height / 2.f);
 
-	if (m_clockCollisionElevator.getElapsedTime() < frameTime)
+	if (m_collisionElevator)
 	{
 		if (!m_onElevator && m_keyUp)
 		{
@@ -431,39 +434,39 @@ void	CharacterOcto::dance()
 	}
 }
 
-void	CharacterOcto::commitPhysicsToGraphics()
+void	CharacterOcto::commitPhysicsToGraphics(sf::Time frameTime)
 {
 	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
 	// TODO
-	m_sprite.setPosition(bounds.left - (177.f / 2.5f), bounds.top - (150.f / 2.f));
+	sf::Vector2f const & current = sf::Vector2f(bounds.left - (177.f / 2.5f), bounds.top - (150.f / 2.f));
+	m_sprite.setPosition(current);
+	m_sprite.update(frameTime);
 	m_previousTop = bounds.top;
 }
 
-void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
+void	CharacterOcto::commitControlsToPhysics(float frametime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
-	float			frameTimeSecond = frameTime.asSeconds();
 
 	if (m_keyLeft)
 	{
-		velocity.x = (-1.f * m_pixelSecondWalk) * frameTimeSecond;
+		velocity.x = (-1.f * m_pixelSecondWalk);
 	}
 	else if (m_keyRight)
 	{
-		velocity.x = m_pixelSecondWalk * frameTimeSecond;
+		velocity.x = m_pixelSecondWalk;
 	}
 
-	if (m_keySpace
-			&& (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
+	if (m_keySpace && (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
 	{
-		velocity.y = m_jumpVelocity * frameTimeSecond;
-		m_jumpVelocity += (m_pixelSecondMultiplier * frameTimeSecond);
+		velocity.y = m_jumpVelocity;
+		m_jumpVelocity += m_pixelSecondMultiplier * frametime;
 	}
 	else if (m_afterJump && m_afterJumpVelocity < 0.f && !m_onElevator)
 	{
-		velocity.y = m_afterJumpVelocity * frameTimeSecond;
-		m_afterJumpVelocity += (m_pixelSecondMultiplier * frameTimeSecond);
+		velocity.y = m_afterJumpVelocity;
+		m_afterJumpVelocity += m_pixelSecondMultiplier * frametime;
 	}
 
 	if (m_keyUp && m_sprite.getCurrentEvent() == Umbrella)
@@ -471,12 +474,12 @@ void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
 		if (m_onElevator)
 		{
 			if (!m_onTopElevator)
-				velocity.y = (3.f * m_pixelSecondUmbrella) * frameTimeSecond;
+				velocity.y = (3.f * m_pixelSecondUmbrella);
 		}
 		else
 		{
-			velocity.x *= 1.3f;
-			velocity.y = m_pixelSecondUmbrella * frameTimeSecond;
+			velocity.x *= 1.3f; // TODO fix, not frametime dependant
+			velocity.y = m_pixelSecondUmbrella;
 		}
 	}
 	m_box->setVelocity(velocity);
@@ -617,8 +620,9 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	return true;
 }
 
-sf::Vector2f	CharacterOcto::getPosition() const
+sf::Vector2f const &	CharacterOcto::getPosition() const
 {
+	return m_sprite.getPosition();
 	return (m_box->getBaryCenter());
 }
 
