@@ -30,15 +30,15 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	CharacterOcto();
 	~CharacterOcto();
 
-	void			setup(void);
-	void			update(sf::Time frameTime);
-	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+	void					setup(void);
+	void					update(sf::Time frameTime);
+	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 
-	bool			onPressed(sf::Event::KeyEvent const& event);
-	bool			onReleased(sf::Event::KeyEvent const& event);
+	bool					onPressed(sf::Event::KeyEvent const& event);
+	bool					onReleased(sf::Event::KeyEvent const& event);
 	sf::Vector2f const &	getPosition() const;
-	void			onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
-	void			setTopElevator(float top);
+	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
+	void					setTopElevator(float top);
 
 	private:
 	bool	dieFall();
@@ -50,7 +50,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	onSky(Events event);
 	void	collisionElevatorUpdate();
 	void	commitControlsToPhysics(float frametime);
-	void	commitPhysicsToGraphics(sf::Time framtime);
+	void	commitPhysicsToGraphics();
 	void	caseLeft();
 	void	caseRight();
 	void	caseSpace();
