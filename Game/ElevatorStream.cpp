@@ -40,7 +40,7 @@ public:
 		m_width(200.f),
 		m_height(300.f),
 		m_rotationFactor(0.f),
-		m_emitInterval(sf::seconds(0.025f)),
+		m_emitInterval(sf::seconds(0.07f)),
 		m_random(std::time(0)),
 		m_distri(0.f, 1.f),
 		m_biome(nullptr)
@@ -162,7 +162,13 @@ ElevatorStream::ElevatorStream() :
 	m_particles(new BeamParticle()),
 	m_waveCycleDuration(sf::seconds(0.5)),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
-	m_topY(0.f)
+	m_topY(0.f),
+	m_rayCountVertex(12),
+	m_ray(new sf::Vertex[m_rayCountVertex]),
+	m_borderColor(255, 255, 255, 150),
+	m_centerColor(255, 255, 255, 50),
+	m_upColor(255, 255, 255, 0)
+
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 
@@ -250,11 +256,36 @@ float	ElevatorStream::getTopY(void) const
 	return m_topY;
 }
 
+void	ElevatorStream::createRay()
+{
+	float height = getHeight();
+	float unit = getWidth() / 6.f;
+
+	m_ray[0] = sf::Vertex(sf::Vector2f(-unit * 2.f, -height), m_upColor);
+	m_ray[1] = sf::Vertex(sf::Vector2f(-unit, -height), m_upColor);
+	m_ray[2] = sf::Vertex(sf::Vector2f(-unit, 0), m_centerColor);
+	m_ray[3] = sf::Vertex(sf::Vector2f(-unit * 2.f, 0), m_borderColor);
+
+	m_ray[4] = sf::Vertex(sf::Vector2f(-unit, -height), m_upColor);
+	m_ray[5] = sf::Vertex(sf::Vector2f(unit, -height), m_upColor);
+	m_ray[6] = sf::Vertex(sf::Vector2f(unit, 0), m_centerColor);
+	m_ray[7] = sf::Vertex(sf::Vector2f(-unit, 0), m_centerColor);
+
+	m_ray[8] = sf::Vertex(sf::Vector2f(unit * 2.f, -height), m_upColor);
+	m_ray[9] = sf::Vertex(sf::Vector2f(unit, -height), m_upColor);
+	m_ray[10] = sf::Vertex(sf::Vector2f(unit, 0), m_centerColor);
+	m_ray[11] = sf::Vertex(sf::Vector2f(unit * 2.f, 0), m_borderColor);
+
+	for (std::size_t i = 0; i < m_rayCountVertex; i++)
+		m_ray[i].position += m_particles->getPosition();
+}
+
 void	ElevatorStream::update(sf::Time frameTime)
 {
 	m_particles->update(frameTime);
 	m_waveCycle += frameTime;
 	m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
+	createRay();
 }
 
 void	ElevatorStream::draw(sf::RenderTarget& render)const
@@ -263,4 +294,5 @@ void	ElevatorStream::draw(sf::RenderTarget& render)const
 
 	states.shader = &m_shader;
 	m_particles->draw(render, states);
+	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
 }

@@ -60,6 +60,7 @@ private:
 	std::unique_ptr<sf::Vertex[]>		m_vertices;
 	std::size_t							m_verticesCount;
 	sf::Vector2i						m_oldOffset;
+	sf::Vector2u						m_mapSize;
 	std::vector<TileShape *>			m_tileShapes;
 	std::vector<sf::Vector2f>			m_decorPositions;
 	DecorManager						m_decorManagerBack;
