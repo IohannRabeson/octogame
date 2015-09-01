@@ -9,6 +9,7 @@
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <Math.hpp>
+#include <Interpolations.hpp>
 #include <cassert>
 #include <limits>
 
@@ -168,6 +169,7 @@ void PhysicsEngine::update(float deltatime)
 				if (shape->getApplyGravity())
 					shape->addEngineVelocity(m_gravity * dt);
 			}
+			shape->registerPreviousPosition();
 		}
 		// Tile don't move so we update them now
 		for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
@@ -185,9 +187,12 @@ void PhysicsEngine::update(float deltatime)
 				shape->update();
 		}
 	}
-	// Si on a pas update au dessus //TODO if
+	float alpha = accumulator / dt;
 	for (auto & shape : m_shapes)
+	{
 		shape->resetVelocity();
+		shape->setRenderPosition(octo::linearInterpolation(shape->getPreviousPosition(), shape->getPosition(), alpha));
+	}
 
 	// Send collision event
 	if (m_contactListener)
