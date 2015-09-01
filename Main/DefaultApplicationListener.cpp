@@ -35,6 +35,7 @@ bool	DefaultApplicationListener::onPressed(sf::Event::KeyEvent const& event)
 {
 	switch (event.code)
 	{
+		//TODO: Dont forget to change that
 		case sf::Keyboard::Escape:
 			octo::Application::stop();
 			break;

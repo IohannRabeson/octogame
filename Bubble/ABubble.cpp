@@ -118,6 +118,11 @@ ABubble::Type ABubble::getType(void) const
 	return m_currentType;
 }
 
+float ABubble::getSizeCorner(void) const
+{
+	return m_sizeCorner;
+}
+
 void ABubble::setPosition(sf::Vector2f const & position)
 {
 	m_position = position;

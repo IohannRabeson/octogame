@@ -33,6 +33,7 @@ enum Type
 	sf::Vector2f			getContentUpLeft(void) const;
 	sf::Vector2f			getPosition(void) const;
 	sf::Color				getColor(void) const;
+	float					getSizeCorner(void) const;
 	void					setType(Type type);
 	void					setPosition(sf::Vector2f const & position);
 	void					setColor(sf::Color const & color);

@@ -48,6 +48,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	setupAnimation();
 	void	setupMachine();
 	void	collisionTileUpdate(sf::Time frameTime);
+	void	onSky(Events event);
 	void	collisionElevatorUpdate(sf::Time frameTime);
 	void	commitControlsToPhysics(sf::Time frameTime);
 	void	commitPhysicsToGraphics();

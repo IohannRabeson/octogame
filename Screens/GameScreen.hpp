@@ -14,10 +14,9 @@
 # define GAMESCREEN_HPP
 # include <AbstractState.hpp>
 # include <GraphicsListeners.hpp>
-# include <Camera.hpp>
 
 # include "Game.hpp"
-# include "BubbleMenu.hpp"
+# include "Menu.hpp"
 
 class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
@@ -28,10 +27,9 @@ class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListe
 	virtual void		update(sf::Time frameTime);
 	virtual void		draw(sf::RenderTarget& render)const;
 private:
-	Game				m_game;
-	BubbleMenu			m_menu;
+	Menu				m_menu;
 	bool				m_isMenu;
-	sf::RectangleShape	m_filter;
+	Game				m_game;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 };

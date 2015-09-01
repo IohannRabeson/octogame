@@ -21,7 +21,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_BUBBLE)										\
 	  $(SRC_GAME)										\
 	  Main/DefaultApplicationListener.cpp				\
-	  Main/main.cpp
+	  Main/main.cpp										\
 
 SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/FireflyTestScreen.cpp			\
@@ -38,7 +38,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/ResourceLoadingScreen.cpp		\
 				Screens/BubbleScreen.cpp				\
 				Screens/FsmDemoScreen.cpp				\
-				Screens/ElevatorStreamDemo.cpp
+				Screens/ElevatorStreamDemo.cpp			\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
@@ -46,15 +46,16 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp					\
-				Game/MusicPlayer.cpp
+				Game/MusicPlayer.cpp					\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
 				Bubble/BubbleMenu.cpp					\
+				Bubble/Menu.cpp							\
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
-				Firefly/FireflyPositionBehaviors.cpp
+				Firefly/FireflyPositionBehaviors.cpp	\
 
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\
@@ -62,11 +63,11 @@ SRC_MAP =		Map/Map.cpp								\
 				Map/ParallaxScrolling.cpp				\
 				Map/GenerativeLayer.cpp					\
 				Map/Tile.cpp							\
-				Map/MapInstance.cpp
+				Map/MapInstance.cpp						\
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
-				Biomes/DefaultBiome.cpp
+				Biomes/DefaultBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
@@ -89,7 +90,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/Sky.cpp							\
 				Decors/SunLight.cpp						\
 				Decors/Lightning.cpp					\
-				Decors/DropSystem.cpp
+				Decors/DropSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
@@ -99,7 +100,7 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/PhysicsEngine.cpp				\
 				Physics/ShapeBuilder.cpp				\
 				Physics/GroupShape.cpp					\
-				Physics/AShape.cpp
+				Physics/AShape.cpp						\
 
 
 # package files

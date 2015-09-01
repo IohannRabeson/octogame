@@ -314,17 +314,7 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 	if (m_clockCollisionTile.getElapsedTime() > frameTime)
 	{
 		m_onGround = false;
-		if (m_box->getGlobalBounds().top > m_previousTop
-				&& m_sprite.getCurrentEvent() != Fall && !m_onElevator)
-		{
-			if (m_jumpVelocity != m_pixelSecondJump)
-			{
-				m_afterJump = true;
-				m_afterJumpVelocity = m_pixelSecondAfterFullJump;
-				if (m_sprite.getCurrentEvent() != Umbrella)
-					m_sprite.setNextEvent(Fall);
-			}
-		}
+		onSky(static_cast<Events>(m_sprite.getCurrentEvent()));
 	}
 	else
 	{
@@ -342,6 +332,32 @@ void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
 			else
 				m_sprite.setNextEvent(Idle);
 		}
+	}
+}
+
+void	CharacterOcto::onSky(Events event)
+{
+	switch (event)
+	{
+		case Jump:
+		case DoubleJump:
+			if (m_box->getGlobalBounds().top > m_previousTop
+					&& m_jumpVelocity != m_pixelSecondJump)
+			{
+				m_afterJump = true;
+				m_afterJumpVelocity = m_pixelSecondAfterFullJump;
+				m_sprite.setNextEvent(Fall);
+			}
+			break;
+		case Umbrella:
+		case Fall:
+			break;
+		default:
+			if (m_keyUp)
+				m_sprite.setNextEvent(Umbrella);
+			else
+				m_sprite.setNextEvent(Fall);
+			break;
 	}
 }
 
