@@ -188,6 +188,39 @@ void PhysicsEngine::update(float deltatime)
 	// Si on a pas update au dessus //TODO if
 	for (auto & shape : m_shapes)
 		shape->resetVelocity();
+
+	// Send collision event
+	if (m_contactListener)
+	{
+		sendTileEvent(m_tilePolyPairs);
+		sendTileEvent(m_tileCirclePairs);
+		sendEvent(m_polyPolyPairs);
+		sendEvent(m_polyCirclePairs);
+		sendEvent(m_circleCirclePairs);
+	}
+}
+
+template<class T, class U>
+void PhysicsEngine::sendEvent(std::vector<Pair<T, U>> & pairs)
+{
+	for (std::size_t i = 0u; i < pairs.size(); i++)
+	{
+		if (pairs[i].m_isColliding)
+			m_contactListener->onShapeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB, pairs[i].m_collisionDirection);
+	}
+}
+
+template<class T>
+void PhysicsEngine::sendTileEvent(std::vector<std::vector<Pair<TileShape *, T>>> & pairs)
+{
+	for (std::size_t i = 0u; i < pairs.size(); i++)
+	{
+		for (auto & pair : pairs[i])
+		{
+			if (pair.m_isColliding)
+				m_contactListener->onTileShapeCollision(pair.m_shapeA, pair.m_shapeB, pair.m_collisionDirection);
+		}
+	}
 }
 
 void PhysicsEngine::broadPhase(void)
@@ -372,7 +405,6 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 {
 	for (std::size_t i = 0u; i < pairs.size(); i++)
 	{
-		sf::Vector2f collisionDirection;
 		if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
 		{
 			// TODO: manage type kinematic static, ...
@@ -381,13 +413,12 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 				if (pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_kinematic)
 				{
 					m_mtv /= 2.f;
-					collisionDirection += m_mtv;
+					pairs[i].m_collisionDirection = m_mtv;
 					pairs[i].m_shapeA->addEngineVelocity(m_mtv.x, m_mtv.y);
 					pairs[i].m_shapeB->addEngineVelocity(-m_mtv.x, -m_mtv.y);
 				}
 			}
-			if (m_contactListener)
-				m_contactListener->onShapeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB, collisionDirection);
+			pairs[i].m_isColliding = true;
 		}
 	}
 }
@@ -395,7 +426,6 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 template<class T>
 void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>>> & pairs)
 {
-	bool collide;
 	for (std::size_t i = 0u; i < pairs.size(); i++)
 	{
 		for (auto & pair : pairs[i])
@@ -403,8 +433,6 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 			// The shape A is the tile, the shapeB is the other one
 			sf::Vector2f vel = pair.m_shapeB->getEngineVelocity() / static_cast<float>(m_iterationCount);
 			pair.m_shapeB->setEngineVelocity(0.f, 0.f);
-			collide = false;
-			sf::Vector2f collisionDirection;
 			for (std::size_t j = 0u; j < m_iterationCount; j++)
 			{
 				pair.m_shapeB->addEngineVelocity(vel);
@@ -414,27 +442,25 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 					{
 						if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
 						{
-							collisionDirection.x -= m_mtv.x;
+							pair.m_collisionDirection.x -= m_mtv.x;
 							pair.m_shapeB->addEngineVelocity(-m_mtv.x, 0.f);
 						}
 						else if (std::fabs(m_mtv.x) > std::numeric_limits<float>::epsilon())
 						{
 							float y = -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
-							collisionDirection.y += y;
+							pair.m_collisionDirection.y += y;
 							pair.m_shapeB->addEngineVelocity(0.f, y);
 						}
 						else
 						{
-							collisionDirection.y -= m_mtv.y;
+							pair.m_collisionDirection.y -= m_mtv.y;
 							pair.m_shapeB->addEngineVelocity(0.f, -m_mtv.y);
 						}
 						pair.m_shapeB->update();
 					}
-					collide = true;
+					pair.m_isColliding = true;
 				}
 			}
-			if (collide && m_contactListener)
-				m_contactListener->onTileShapeCollision(pair.m_shapeA, pair.m_shapeB, collisionDirection);
 		}
 	}
 }
