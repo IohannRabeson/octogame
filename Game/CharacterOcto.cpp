@@ -590,7 +590,8 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Space:
 			m_keySpace = false;
-			if (state == Jump || state == DoubleJump){
+			if (state == Jump || state == DoubleJump)
+			{
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterJump;
 			}
