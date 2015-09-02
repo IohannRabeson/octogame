@@ -23,7 +23,6 @@ void	GameScreen::start()
 	m_game.setup();
 	m_game.loadLevel("TODO");
 
-	m_isMenu = false;
 	m_menu.setup();
 
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
@@ -44,7 +43,7 @@ void	GameScreen::stop()
 
 void	GameScreen::update(sf::Time frameTime)
 {
-	if (m_isMenu)
+	if (m_menu.isActive())
 		m_menu.update(frameTime, m_game.getOctoBubblePosition());
 	else
 		m_game.update(frameTime);
@@ -56,10 +55,10 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 	{
 		case sf::Keyboard::M:
 		{
-			if (m_isMenu == false)
-				m_isMenu = true;
-			else if (m_isMenu == true)
-				m_isMenu = false;
+			if (m_menu.isActive() == false)
+				m_menu.setActive(true);
+			else if (m_menu.isActive() == true)
+				m_menu.setActive(false);
 			break;
 		}
 		default:
@@ -71,6 +70,6 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 void	GameScreen::draw(sf::RenderTarget& render)const
 {
 	m_game.draw(render, sf::RenderStates());
-	if (m_isMenu)
+	if (m_menu.isActive())
 		render.draw(m_menu);
 }

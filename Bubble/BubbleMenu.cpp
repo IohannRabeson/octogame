@@ -41,7 +41,7 @@ void BubbleMenu::setup(std::vector<std::string> const & subMenuTitle, sf::Color 
 	{
 		//TODO: Check the getSizeCorner * 2.f;
 		m_cursorPosition[i].x = m_contentSize.x + getSizeCorner() * 2.f;
-		m_cursorPosition[i].y = m_subMenus[i].position.y - m_font.getLineSpacing(characterSize) / 2.f;
+		m_cursorPosition[i].y = m_subMenus[i].position.y + m_font.getLineSpacing(characterSize) / 2.f;
 		m_subMenus[i].position.x = (m_contentSize.x - m_subMenus[i].size.x) / 2.f;
 	}
 }

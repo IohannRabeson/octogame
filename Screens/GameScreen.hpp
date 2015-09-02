@@ -16,7 +16,7 @@
 # include <GraphicsListeners.hpp>
 
 # include "Game.hpp"
-# include "Menu.hpp"
+# include "MainMenu.hpp"
 
 class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
@@ -27,8 +27,7 @@ class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListe
 	virtual void		update(sf::Time frameTime);
 	virtual void		draw(sf::RenderTarget& render)const;
 private:
-	Menu				m_menu;
-	bool				m_isMenu;
+	MainMenu			m_menu;
 	Game				m_game;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);

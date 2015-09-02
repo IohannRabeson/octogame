@@ -15,9 +15,9 @@ public:
 enum Type
 {
 	None,
-	Inactive,
 	Speak,
-	Think
+	Think,
+	Left
 };
 	ABubble(void);
 	virtual ~ABubble(void) = default;
@@ -34,22 +34,34 @@ enum Type
 	sf::Vector2f			getPosition(void) const;
 	sf::Color				getColor(void) const;
 	float					getSizeCorner(void) const;
+	bool					isActive(void) const;
 	void					setType(Type type);
 	void					setPosition(sf::Vector2f const & position);
 	void					setColor(sf::Color const & color);
+	void					setActive(bool isActive);
 
 private:
-	void					createBubble(sf::Vector2f const & size,
+	void					createOctogon(sf::Vector2f const & size,
 										float sizeCorner,
 										sf::Vector2f origin,
 										sf::Color const & color,
-										Type type,
 										octo::VertexBuilder& builder);
 
 	void					createExtension(sf::Vector2f const & position,
 											sf::Color const & color,
 											Type type,
 											octo::VertexBuilder& builder);
+
+	void					createExtensionSpeak(sf::Vector2f const & position,
+												 sf::Color const & color,
+												 octo::VertexBuilder& builder);
+
+	void					createExtensionThink(sf::Vector2f const & position,
+												 sf::Color const & color,
+												 octo::VertexBuilder& builder);
+
+	void					computePositionBubble(Type type,
+												  sf::Vector2f const & position);
 
 	static constexpr float			m_sizeCorner = 20.f;
 
@@ -62,8 +74,9 @@ private:
 	sf::Vector2f					m_size;
 	sf::Vector2f					m_contentUpLeft;
 	sf::Vector2f					m_position;
-	sf::Vector2f					m_relativePos;
+	sf::Vector2f					m_positionBubble;
 	sf::Color						m_color;
+	bool							m_isActive;
 };
 
 #endif
