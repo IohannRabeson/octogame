@@ -577,7 +577,9 @@ void CharacterOcto::caseUp()
 
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {
+	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
 	bool otherKeyReleased = false;
+
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
@@ -588,7 +590,8 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Space:
 			m_keySpace = false;
-			if (!m_afterJump && !m_onGround){
+			if (state == Jump || state == DoubleJump)
+			{
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterJump;
 			}
@@ -600,18 +603,18 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			otherKeyReleased = true;
 			break;
 	}
-	if (m_sprite.getCurrentEvent() == Death || otherKeyReleased)
+	if (state == Death || otherKeyReleased)
 		return true;
 	if (!m_onGround && !m_keyUp)
 	{
-		if (m_sprite.getCurrentEvent() != Fall)
+		if (state != Fall)
 		{
 			m_sprite.setNextEvent(Fall);
 		}
 	}
 	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp)
 	{
-		if (m_sprite.getCurrentEvent() != Dance)
+		if (state != Dance)
 		{
 			m_sprite.setNextEvent(Idle);
 		}
