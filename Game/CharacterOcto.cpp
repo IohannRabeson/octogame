@@ -255,9 +255,9 @@ void	CharacterOcto::update(sf::Time frameTime)
 		dance();
 		collisionElevatorUpdate();
 		collisionTileUpdate();
+		commitPhysicsToGraphics();
 		m_sprite.update(frameTime);
 		commitControlsToPhysics(frameTime.asSeconds());
-		commitPhysicsToGraphics();
 	}
 	else
 		m_sprite.update(frameTime);
