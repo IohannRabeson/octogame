@@ -2,9 +2,6 @@
 #include <limits>
 
 AShape::AShape(void) :
-	m_velocity(),
-	m_origin(),
-	m_position(),
 	m_rotation(0.f),
 	m_sleep(false),
 	m_applyGravity(true),

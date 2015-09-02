@@ -127,13 +127,15 @@ private:
 		Pair(void) :
 				m_shapeA(),
 				m_shapeB(),
-				m_area(0.f)
+				m_area(0.f),
+				m_isColliding(false)
 			{}
 
 		Pair(T shapeA, U shapeB) :
 				m_shapeA(shapeA),
 				m_shapeB(shapeB),
-				m_area(0.f)
+				m_area(0.f),
+				m_isColliding(false)
 			{}
 
 		Pair(T shapeA, U shapeB, float area) :

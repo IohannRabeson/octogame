@@ -256,9 +256,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 		collisionElevatorUpdate();
 		collisionTileUpdate();
 		commitControlsToPhysics(frameTime.asSeconds());
-		commitPhysicsToGraphics();
 	}
-	m_sprite.update(frameTime);
+	commitPhysicsToGraphics();
 	m_collisionTile = false;
 	m_collisionElevator = false;
 }
@@ -286,7 +285,6 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
-//	m_box->debugDraw(render);
 	m_sprite.draw(render, states);
 }
 
@@ -436,12 +434,12 @@ void	CharacterOcto::dance()
 
 void	CharacterOcto::commitPhysicsToGraphics()
 {
-	sf::FloatRect const& bounds = m_box->getGlobalBounds();
+	sf::Vector2f const& pos = m_box->getRenderPosition();
 
 	// TODO
-	sf::Vector2f const & current = sf::Vector2f(bounds.left - (177.f / 2.5f), bounds.top - (150.f / 2.f));
-	m_sprite.setPosition(current);
-	m_previousTop = bounds.top;
+	m_sprite.setPosition(sf::Vector2f(pos.x - (177.f / 2.5f), pos.y - (150.f / 2.f)));
+	m_sprite.update(frameTime);
+	m_previousTop = pos.y;
 }
 
 void	CharacterOcto::commitControlsToPhysics(float frametime)
@@ -577,7 +575,9 @@ void CharacterOcto::caseUp()
 
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {
+	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
 	bool otherKeyReleased = false;
+
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
@@ -588,7 +588,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Space:
 			m_keySpace = false;
-			if (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump){
+			if (state == Jump || state == DoubleJump){
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterJump;
 			}
@@ -600,18 +600,18 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			otherKeyReleased = true;
 			break;
 	}
-	if (m_sprite.getCurrentEvent() == Death || otherKeyReleased)
+	if (state == Death || otherKeyReleased)
 		return true;
 	if (!m_onGround && !m_keyUp)
 	{
-		if (m_sprite.getCurrentEvent() != Fall)
+		if (state != Fall)
 		{
 			m_sprite.setNextEvent(Fall);
 		}
 	}
 	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp)
 	{
-		if (m_sprite.getCurrentEvent() != Dance)
+		if (state != Dance)
 		{
 			m_sprite.setNextEvent(Idle);
 		}
@@ -621,7 +621,6 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 
 sf::Vector2f const &	CharacterOcto::getPosition() const
 {
-	return m_sprite.getPosition();
 	return (m_box->getBaryCenter());
 }
 
