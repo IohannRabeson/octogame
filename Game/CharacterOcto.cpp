@@ -255,9 +255,12 @@ void	CharacterOcto::update(sf::Time frameTime)
 		dance();
 		collisionElevatorUpdate();
 		collisionTileUpdate();
+		m_sprite.update(frameTime);
 		commitControlsToPhysics(frameTime.asSeconds());
+		commitPhysicsToGraphics();
 	}
-	commitPhysicsToGraphics();
+	else
+		m_sprite.update(frameTime);
 	m_collisionTile = false;
 	m_collisionElevator = false;
 }
@@ -438,7 +441,6 @@ void	CharacterOcto::commitPhysicsToGraphics()
 
 	// TODO
 	m_sprite.setPosition(sf::Vector2f(pos.x - (177.f / 2.5f), pos.y - (150.f / 2.f)));
-	m_sprite.update(frameTime);
 	m_previousTop = pos.y;
 }
 
