@@ -436,13 +436,12 @@ void	CharacterOcto::dance()
 
 void	CharacterOcto::commitPhysicsToGraphics(sf::Time frameTime)
 {
-	sf::FloatRect const& bounds = m_box->getGlobalBounds();
+	sf::Vector2f const& pos = m_box->getRenderPosition();
 
 	// TODO
-	sf::Vector2f const & current = sf::Vector2f(bounds.left - (177.f / 2.5f), bounds.top - (150.f / 2.f));
-	m_sprite.setPosition(current);
+	m_sprite.setPosition(sf::Vector2f(pos.x - (177.f / 2.5f), pos.y - (150.f / 2.f)));
 	m_sprite.update(frameTime);
-	m_previousTop = bounds.top;
+	m_previousTop = pos.y;
 }
 
 void	CharacterOcto::commitControlsToPhysics(float frametime)
@@ -622,7 +621,6 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 
 sf::Vector2f const &	CharacterOcto::getPosition() const
 {
-	return m_sprite.getPosition();
 	return (m_box->getBaryCenter());
 }
 

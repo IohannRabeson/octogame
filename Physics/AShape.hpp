@@ -234,6 +234,10 @@ public:
 	void addEngineVelocity(float x, float y);
 	sf::Vector2f const & getEngineVelocity(void) const { return m_engineVelocity; }
 	void setEngineVelocity(float x, float y);
+	sf::Vector2f const & getPreviousPosition(void) const { return m_previousPosition; }
+	void setRenderPosition(sf::Vector2f const & renderPosition) { m_renderPosition = renderPosition; }
+	sf::Vector2f const & getRenderPosition(void) const { return m_renderPosition; }
+	void registerPreviousPosition(void) { m_previousPosition = m_position; }
 
 protected:
 	void drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color);
@@ -246,6 +250,8 @@ private:
 	sf::Vector2f			m_engineVelocity;
 	sf::Vector2f			m_origin;
 	sf::Vector2f			m_position;
+	sf::Vector2f			m_previousPosition;
+	sf::Vector2f			m_renderPosition;
 	float					m_rotation;
 	bool					m_sleep;
 	bool					m_applyGravity;
