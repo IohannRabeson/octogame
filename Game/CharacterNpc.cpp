@@ -159,16 +159,16 @@ void	CharacterNpc::updateState()
 	}
 }
 
-void	CharacterNpc::updatePhysics(sf::Time frameTime)
+void	CharacterNpc::updatePhysics(sf::Time)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
 	if (m_sprite.getCurrentEvent() == Left)
 	{
-		velocity.x = (-1.f * m_pixelSecondWalk) * frameTime.asSeconds();
+		velocity.x = (-1.f * m_pixelSecondWalk);
 	}
 	else if (m_sprite.getCurrentEvent() == Right)
 	{
-		velocity.x = m_pixelSecondWalk * frameTime.asSeconds();
+		velocity.x = m_pixelSecondWalk;
 	}
 	m_box->setVelocity(velocity);
 }

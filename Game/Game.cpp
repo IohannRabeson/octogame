@@ -57,14 +57,12 @@ void	Game::loadLevel(std::string const& fileName)
 	m_parallaxScrolling.reset(new ParallaxScrolling());
 	m_musicPlayer.reset(new MusicPlayer());
 	m_octo.reset(new CharacterOcto());
-	m_npc.reset(new CharacterNpc());
 
 	m_skyCycle->setup(m_biomeManager.getCurrentBiome());
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup();
-	m_npc->setup(sf::Vector2f(0, 0), sf::FloatRect(0, 0, 800, 0));
 
 	// TODO: fix, for npcs, if we dont update once, value are not initialized well, and npc go through instance map
 	update(sf::seconds(0.f));
@@ -77,6 +75,8 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	// update the PhysicsEngine as first
+	m_physicsEngine.update(frameTime.asSeconds());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
 	m_octo->update(frameTime);
@@ -84,10 +84,8 @@ void	Game::update(sf::Time frameTime)
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
-	m_npc->update(frameTime);
 	m_skyManager->update(frameTime);
 	m_musicPlayer->update(frameTime, m_octo->getPosition());
-	m_physicsEngine.update(frameTime.asSeconds());
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
@@ -137,14 +135,13 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
 	render.draw(m_groundManager->getDecorsBack(), states);
-//	m_physicsEngine.debugDraw(render);
 	render.draw(*m_octo, states);
-	render.draw(*m_npc, states);
 	render.draw(m_groundManager->getDecorsGround(), states);
 	render.draw(m_groundManager->getDecorsFront(), states);
 	render.draw(*m_groundManager, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);
+	//m_physicsEngine.debugDraw(render);
 }
 
 void	Game::followPlayer(sf::Time frameTime)

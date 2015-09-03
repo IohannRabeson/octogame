@@ -30,16 +30,16 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	CharacterOcto();
 	~CharacterOcto();
 
-	void			setup(void);
-	void			update(sf::Time frameTime);
-	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+	void					setup(void);
+	void					update(sf::Time frameTime);
+	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 
-	bool			onPressed(sf::Event::KeyEvent const& event);
-	bool			onReleased(sf::Event::KeyEvent const& event);
-	sf::Vector2f	getPosition() const;
-	sf::Vector2f	getBubblePosition() const;
-	void			onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
-	void			setTopElevator(float top);
+	bool					onPressed(sf::Event::KeyEvent const& event);
+	bool					onReleased(sf::Event::KeyEvent const& event);
+	sf::Vector2f const &	getPosition() const;
+	sf::Vector2f			getBubblePosition() const;
+	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
+	void					setTopElevator(float top);
 
 	private:
 	bool	dieFall();
@@ -47,11 +47,11 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	timeEvent(sf::Time frameTime);
 	void	setupAnimation();
 	void	setupMachine();
-	void	collisionTileUpdate(sf::Time frameTime);
+	void	collisionTileUpdate();
 	void	onSky(Events event);
-	void	collisionElevatorUpdate(sf::Time frameTime);
-	void	commitControlsToPhysics(sf::Time frameTime);
-	void	commitPhysicsToGraphics();
+	void	collisionElevatorUpdate();
+	void	commitControlsToPhysics(float frametime);
+	void	commitPhysicsToGraphics(sf::Time framtime);
 	void	caseLeft();
 	void	caseRight();
 	void	caseSpace();
@@ -70,8 +70,6 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
 
-	sf::Clock					m_clockCollisionTile;
-	sf::Clock					m_clockCollisionElevator;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventDeath;
@@ -95,6 +93,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool						m_keyRight;
 	bool						m_keySpace;
 	bool						m_keyUp;
+	bool						m_collisionTile;
+	bool						m_collisionElevator;
 };
 
 #endif

@@ -2,9 +2,6 @@
 #include <limits>
 
 AShape::AShape(void) :
-	m_velocity(),
-	m_origin(),
-	m_position(),
 	m_rotation(0.f),
 	m_sleep(false),
 	m_applyGravity(true),
@@ -17,10 +14,38 @@ AShape::AShape(void) :
 
 void AShape::update(void)
 {
-	move(m_velocity);
+	move(m_engineVelocity);
+	computeShape();
+	m_engineVelocity.x = 0.f;
+	m_engineVelocity.y = 0.f;
+}
+
+void AShape::updateVelocity(float deltatime)
+{
+	m_engineVelocity = m_velocity * deltatime;
+}
+
+void AShape::resetVelocity(void)
+{
 	m_velocity.x = 0.f;
 	m_velocity.y = 0.f;
-	computeShape();
+}
+
+void AShape::addEngineVelocity(sf::Vector2f const & velocity)
+{
+	m_engineVelocity += velocity;
+}
+
+void AShape::addEngineVelocity(float x, float y)
+{
+	m_engineVelocity.x += x;
+	m_engineVelocity.y += y;
+}
+
+void AShape::setEngineVelocity(float x, float y)
+{
+	m_engineVelocity.x = x;
+	m_engineVelocity.y = y;
 }
 
 void AShape::drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color)
