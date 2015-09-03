@@ -9,7 +9,7 @@ MainMenu::MainMenu(void)
 void MainMenu::createMenus(void)
 {
 	addMenu("Settings", new OptionMenu());
-	addMenu("Quit", new ControlMenu());
+	addMenu("Quit", new YesNoMenu());
 	setCharacterSize(40);
 	setBubbleType(ABubble::Type::Think);
 }

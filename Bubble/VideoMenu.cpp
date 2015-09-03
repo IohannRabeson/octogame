@@ -1,5 +1,5 @@
 #include "VideoMenu.hpp"
-#include "ControlMenu.hpp"
+#include "YesNoMenu.hpp"
 
 VideoMenu::VideoMenu(void)
 {
@@ -7,9 +7,9 @@ VideoMenu::VideoMenu(void)
 
 void VideoMenu::createMenus(void)
 {
-	addMenu("Fullscreen", new ControlMenu());
-	addMenu("Vertical Synchronisation", new ControlMenu());
-	addMenu("Antialiasing", new ControlMenu());
-	addMenu("Resolution", new ControlMenu());
+	addMenu("Fullscreen", new YesNoMenu());
+	addMenu("Vertical Synchronisation", new YesNoMenu());
+	addMenu("Antialiasing", new YesNoMenu());
+	addMenu("Resolution", new YesNoMenu());
 }
 

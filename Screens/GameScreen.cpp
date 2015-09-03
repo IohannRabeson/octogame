@@ -47,7 +47,10 @@ void	GameScreen::update(sf::Time frameTime)
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 		m_menu.update(frameTime, m_game.getOctoBubblePosition());
 	else
+	{
+		m_menu.setKeyboard(false);
 		m_game.update(frameTime);
+	}
 }
 
 bool GameScreen::onPressed(sf::Event::KeyEvent const &event)

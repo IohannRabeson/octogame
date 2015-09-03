@@ -2,7 +2,6 @@
 # define VIDEOMENU_HPP
 
 # include "AMenuSelection.hpp"
-# include "BubbleMenu.hpp"
 
 class VideoMenu : public AMenuSelection
 {

@@ -2,9 +2,8 @@
 # define MENU_HPP
 
 # include "AMenuSelection.hpp"
-# include "BubbleMenu.hpp"
 # include "OptionMenu.hpp"
-# include "ControlMenu.hpp"
+# include "YesNoMenu.hpp"
 
 # include <SFML/Graphics/RectangleShape.hpp>
 

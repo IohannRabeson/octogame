@@ -1,7 +1,5 @@
 #include "AudioMenu.hpp"
-
-//TODO: Remove
-#include "ControlMenu.hpp"
+#include "YesNoMenu.hpp"
 
 AudioMenu::AudioMenu(void)
 {
@@ -9,7 +7,7 @@ AudioMenu::AudioMenu(void)
 
 void AudioMenu::createMenus(void)
 {
-	addMenu("Music", new ControlMenu());
-	addMenu("Sound", new ControlMenu());
+	addMenu("Music", new YesNoMenu());
+	addMenu("Sound", new YesNoMenu());
 }
 

@@ -152,3 +152,13 @@ void AMenuSelection::setBubbleType(ABubble::Type type)
 {
 	m_type = type;
 }
+
+std::size_t AMenuSelection::getIndexCursor(void)
+{
+	return m_indexCursor;
+}
+
+std::string AMenuSelection::getTitleCursor(void)
+{
+	return m_menuTitles[m_indexCursor];
+}

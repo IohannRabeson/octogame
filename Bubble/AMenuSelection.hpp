@@ -28,6 +28,9 @@ public:
 	void				setCharacterSize(std::size_t size);
 	void				setBubbleType(ABubble::Type type);
 
+	std::size_t			getIndexCursor(void);
+	std::string			getTitleCursor(void);
+
 private:
 	BubbleMenu					m_bubble;
 	ABubble::Type				m_type;
