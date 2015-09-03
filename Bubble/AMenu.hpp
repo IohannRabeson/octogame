@@ -26,7 +26,6 @@ public:
 
 	void			setState(State state);
 	State			getState(void) const;
-	void			setBackMenuActive(void);
 	AMenu *			getBackMenu(void);
 
 private:

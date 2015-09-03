@@ -22,12 +22,6 @@ AMenu::State AMenu::getState(void) const
 	return m_currentState;
 }
 
-void AMenu::setBackMenuActive(void)
-{
-	if (m_backMenu)
-		setState(State::Active);
-}
-
 AMenu * AMenu::getBackMenu(void)
 {
 	return m_backMenu;
