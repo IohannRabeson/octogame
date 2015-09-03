@@ -6,64 +6,95 @@ AMenuSelection::AMenuSelection(void) :
 	m_type(ABubble::Type::Left),
 	m_characterSize(20u),
 	m_indexCursor(0),
-	m_isKeyboardListening(false)
+	m_isKeyboard(false)
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(this);
 }
 
-std::size_t AMenuSelection::addMenu(std::string const & name, AMenu * menu)
+void AMenuSelection::addMenu(std::string const & name, AMenu * menu)
 {
 	m_menuTitles.push_back(name);
-	m_menus.push_back(menu);
-	return (m_menus.size() - 1u);
+	if (menu)
+		m_menus.push_back(menu);
 }
 
 void AMenuSelection::setup(void)
 {
 	createMenus();
-	assert(m_menus.size() > 0);
 	m_bubble.setup(m_menuTitles, sf::Color(255, 255, 255, 255), m_characterSize);
-	m_bubble.setType(m_type);
+	m_bubble.setType(ABubble::None);
 
 	for (std::size_t i = 0; i < m_menus.size(); i++)
-		m_menus[i]->setup();
+		m_menus[i]->setup(this);
 
+	m_cursor.setRadius(10);
+	m_cursor.setPointCount(8);
+	m_cursor.setOrigin(10, 10);
 	m_cursorPosition = m_bubble.getCursorPosition();
+}
+
+void AMenuSelection::setKeyboard(bool isKeyboard)
+{
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	if (m_isKeyboard == false && isKeyboard == true)
+	{
+		graphics.addKeyboardListener(this);
+		m_isKeyboard = true;
+	}
+	else if (m_isKeyboard == true && isKeyboard == false)
+	{
+		graphics.removeKeyboardListener(this);
+		m_isKeyboard = false;
+	}
 }
 
 void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 {
-	m_bubble.setPosition(position);
-	m_bubble.update(frameTime);
-	m_bubble.setActive(isActive());
-
 	sf::Vector2f const & contentPosition = m_bubble.getContentUpLeft();
-	m_isKeyboardListening = true;
 	for (std::size_t i = 0; i < m_menus.size(); i++)
+		m_menus[i]->update(frameTime, m_cursorPosition[i] + contentPosition);
+
+	if (getState() == AMenu::State::Active)
 	{
-		if (m_indexCursor == i)
-			m_menus[i]->update(frameTime, m_cursorPosition[i] + contentPosition);
-		if (m_menus[i]->isActive())
-			m_isKeyboardListening = false;
+		m_bubble.setType(m_type);
+		m_bubble.setPosition(position);
+		m_bubble.setActive(true);
+		m_bubble.update(frameTime);
+		m_cursor.setPosition(m_cursorPosition[m_indexCursor] + contentPosition);
+		setKeyboard(true);
 	}
+	else
+		setKeyboard(false);
 }
 
 
 void AMenuSelection::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	render.draw(m_bubble, states);
 	for (std::size_t i = 0; i < m_menus.size(); i++)
-	{
-		if (m_indexCursor == i)
-			render.draw(*m_menus[i]);
-	}
+		render.draw(*m_menus[i]);
+	AMenu::State const & state = getState();
+	if (state == AMenu::State::Active || state == AMenu::State::Draw)
+		render.draw(m_bubble, states);
+	if (state == AMenu::State::Active && m_menus.size())
+		render.draw(m_cursor);
 }
-
 
 bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
 {
-	if (m_isKeyboardListening)
+	switch (event.code)
+	{
+		case sf::Keyboard::Left:
+		{
+			setState(AMenu::State::Hide);
+			AMenu * backMenu = getBackMenu();
+			if (backMenu)
+				backMenu->setState(AMenu::State::Active);
+			break;
+		}
+		default:
+			break;
+	}
+
+	if (m_menus.size())
 	{
 		switch (event.code)
 		{
@@ -93,11 +124,6 @@ bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
 				onSelection();
 				break;
 			}
-			case sf::Keyboard::Left:
-			{
-				setActive(false);
-				break;
-			}
 			default:
 				break;
 		}
@@ -110,9 +136,9 @@ void AMenuSelection::onSelection(void)
 	for (std::size_t i = 0; i < m_menus.size(); i++)
 	{
 		if (m_indexCursor == i)
-			m_menus[i]->setActive(true);
+			m_menus[i]->setState(AMenu::State::Active);
 	}
-	m_isKeyboardListening = false;
+	setState(AMenu::State::Draw);
 }
 
 void AMenuSelection::setCharacterSize(std::size_t size)

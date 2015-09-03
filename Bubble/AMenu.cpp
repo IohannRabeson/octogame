@@ -1,16 +1,34 @@
 #include "AMenu.hpp"
 
 AMenu::AMenu(void) :
-	m_isActive(false)
+	m_currentState(State::Hide),
+	m_backMenu(nullptr)
 {
 }
 
-bool AMenu::isActive(void) const
+void	AMenu::setup(AMenu * menu)
 {
-	return m_isActive;
+	m_backMenu = menu;
+	setup();
 }
 
-void AMenu::setActive(bool isActive)
+void AMenu::setState(State state)
 {
-	m_isActive = isActive;
+	m_currentState = state;
+}
+
+AMenu::State AMenu::getState(void) const
+{
+	return m_currentState;
+}
+
+void AMenu::setBackMenuActive(void)
+{
+	if (m_backMenu)
+		setState(State::Active);
+}
+
+AMenu * AMenu::getBackMenu(void)
+{
+	return m_backMenu;
 }

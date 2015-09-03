@@ -5,6 +5,7 @@
 # include "BubbleMenu.hpp"
 # include <GraphicsManager.hpp>
 # include <DefaultGraphicsListeners.hpp>
+# include <SFML/Graphics/CircleShape.hpp>
 
 class AMenuSelection : public AMenu,
 					   public octo::DefaultKeyboardListener
@@ -14,10 +15,11 @@ public:
 	~AMenuSelection(void) = default;
 
 	void				setup(void);
+	void				setKeyboard(bool isKeyboard);
 	void				update(sf::Time frameTime, sf::Vector2f const & position);
 	void				draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
-	std::size_t			addMenu(std::string const & name, AMenu * menu);
+	void				addMenu(std::string const & name, AMenu * menu);
 	virtual bool		onPressed(sf::Event::KeyEvent const & event);
 
 	virtual void		createMenus(void) = 0;
@@ -35,7 +37,9 @@ private:
 
 	std::vector<sf::Vector2f>	m_cursorPosition;
 	std::size_t					m_indexCursor;
-	bool						m_isKeyboardListening;
+	bool						m_isKeyboard;
+
+	sf::CircleShape				m_cursor;
 };
 
 #endif

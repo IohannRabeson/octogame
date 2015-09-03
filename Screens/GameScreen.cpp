@@ -43,7 +43,8 @@ void	GameScreen::stop()
 
 void	GameScreen::update(sf::Time frameTime)
 {
-	if (m_menu.isActive())
+	AMenu::State state = m_menu.getState();
+	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 		m_menu.update(frameTime, m_game.getOctoBubblePosition());
 	else
 		m_game.update(frameTime);
@@ -55,10 +56,9 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 	{
 		case sf::Keyboard::M:
 		{
-			if (m_menu.isActive() == false)
-				m_menu.setActive(true);
-			else if (m_menu.isActive() == true)
-				m_menu.setActive(false);
+			AMenu::State state = m_menu.getState();
+			if (state == AMenu::State::Hide)
+				m_menu.setState(AMenu::State::Active);
 			break;
 		}
 		default:
@@ -70,6 +70,6 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 void	GameScreen::draw(sf::RenderTarget& render)const
 {
 	m_game.draw(render, sf::RenderStates());
-	if (m_menu.isActive())
+	if (m_menu.getState() == AMenu::State::Active || m_menu.getState() == AMenu::State::Draw)
 		render.draw(m_menu);
 }
