@@ -153,12 +153,14 @@ void AMenuSelection::setBubbleType(ABubble::Type type)
 	m_type = type;
 }
 
+void AMenuSelection::setIndexCursor(std::size_t index)
+{
+	if (index < m_menus.size())
+		m_indexCursor = index;
+}
+
 std::size_t AMenuSelection::getIndexCursor(void)
 {
 	return m_indexCursor;
 }
 
-std::string AMenuSelection::getTitleCursor(void)
-{
-	return m_menuTitles[m_indexCursor];
-}

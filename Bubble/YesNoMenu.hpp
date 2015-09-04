@@ -12,6 +12,10 @@ public:
 
 	void createMenus(void);
 	void onSelection(void);
+
+	// Will be virtual pure
+	void setIndex(std::size_t index);
+	void action(void);
 };
 
 #endif
