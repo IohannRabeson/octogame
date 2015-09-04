@@ -9,28 +9,20 @@ void YesNoMenu::createMenus(void)
 {
 	addMenu("No", new EmptyMenu());
 	addMenu("Yes", new EmptyMenu());
+	setIndex();
 	//setCharacterSize();
 }
 
 void YesNoMenu::onSelection(void)
 {
 	if (getIndexCursor() == 0u)
-	{
-		setState(AMenu::State::Hide);
-		AMenu * backMenu = getBackMenu();
-		if (backMenu)
-			backMenu->setState(AMenu::State::Active);
-	}
+		actionNo();
 	else if (getIndexCursor() == 1u)
-		action();
+		actionYes();
+
+	setState(AMenu::State::Hide);
+	AMenu * backMenu = getBackMenu();
+	if (backMenu)
+		backMenu->setState(AMenu::State::Active);
 }
 
-void YesNoMenu::setIndex(std::size_t index)
-{
-	setIndexCursor(index);
-}
-
-void YesNoMenu::action(void)
-{
-	octo::Application::stop();
-}

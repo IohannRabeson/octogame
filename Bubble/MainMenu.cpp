@@ -1,7 +1,17 @@
 #include "MainMenu.hpp"
-#include <Application.hpp>
+#include "YesNoMenu.hpp"
 #include <Camera.hpp>
+#include <Application.hpp>
 
+//Sub Menu
+class YesNoQuit : public YesNoMenu
+{
+	inline void setIndex(void) { setIndexCursor(0); }
+	inline void actionYes(void) { octo::Application::stop(); }
+	inline void actionNo(void) { }
+};
+
+//MainMenu
 MainMenu::MainMenu(void)
 {
 }
@@ -9,7 +19,7 @@ MainMenu::MainMenu(void)
 void MainMenu::createMenus(void)
 {
 	addMenu("Settings", new OptionMenu());
-	addMenu("Quit", new YesNoMenu());
+	addMenu("Quit", new YesNoQuit());
 	setCharacterSize(40);
 	setBubbleType(ABubble::Type::Think);
 }

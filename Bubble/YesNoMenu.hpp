@@ -14,8 +14,9 @@ public:
 	void onSelection(void);
 
 	// Will be virtual pure
-	void setIndex(std::size_t index);
-	void action(void);
+	virtual void setIndex(void) = 0;
+	virtual void actionYes(void) = 0;
+	virtual void actionNo(void) = 0;
 };
 
 #endif

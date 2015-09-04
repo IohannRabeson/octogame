@@ -3,7 +3,6 @@
 
 # include "AMenuSelection.hpp"
 # include "OptionMenu.hpp"
-# include "YesNoMenu.hpp"
 
 # include <SFML/Graphics/RectangleShape.hpp>
 
@@ -22,6 +21,5 @@ public:
 private:
 	sf::RectangleShape			m_filter;
 };
-
 
 #endif
