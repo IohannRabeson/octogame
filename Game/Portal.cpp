@@ -38,6 +38,19 @@ Portal::Portal(void) :
 	prototype.emplace_back(sf::Vertex({Size, -Size}));
 	prototype.emplace_back(sf::Vertex({-Size, -Size}));
 	m_particles.reset(prototype, sf::Triangles, 1000);
+
+
+	octo::SpriteAnimation::FrameList	frames;
+	frames.emplace_back(sf::seconds(0.4), 0);
+	frames.emplace_back(sf::seconds(0.4), 1);
+	frames.emplace_back(sf::seconds(0.4), 2);
+	frames.emplace_back(sf::seconds(0.4), 3);
+	m_animation.setFrames(frames);
+	m_animation.setLoop(octo::LoopMode::Loop);
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(PORTAL_OSS));
+	m_sprite.setAnimation(m_animation);
+	m_sprite.setScale(sf::Vector2f(0.8f, 0.8f));
+	m_sprite.play();
 }
 
 Portal::~Portal(void)
@@ -78,6 +91,9 @@ void Portal::update(sf::Time frametime)
 			m_shader.setParameter("center", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
 		}
 	}
+
+	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 58.f));
+	m_sprite.update(frametime);
 }
 
 void Portal::setPosition(sf::Vector2f const & position)
@@ -98,6 +114,7 @@ void Portal::setRadius(float radius)
 void Portal::draw(sf::RenderTarget & render) const
 {
 	m_particles.draw(render);
+	render.draw(m_sprite);
 }
 
 Portal::PortalParticle::PortalParticle(void) :

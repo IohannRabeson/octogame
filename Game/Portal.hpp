@@ -5,6 +5,7 @@
 # include <SFML/Graphics/Shader.hpp>
 # include <SFML/System/Time.hpp>
 
+# include <AnimatedSprite.hpp>
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
 # include <Interpolations.hpp>
@@ -84,6 +85,8 @@ private:
 	float				m_timerMax;
 	CircleShape *		m_box;
 
+	octo::SpriteAnimation			m_animation;
+	octo::AnimatedSprite			m_sprite;
 };
 
 #endif

@@ -189,10 +189,10 @@ void	ElevatorStream::setupSprite(void)
 {
 	octo::ResourceManager&				resources = octo::Application::getResourceManager();
 	octo::SpriteAnimation::FrameList	frames;
-	frames.emplace_back(sf::seconds(0.1), 0);
-	frames.emplace_back(sf::seconds(0.1), 1);
-	frames.emplace_back(sf::seconds(0.1), 2);
-	frames.emplace_back(sf::seconds(0.1), 3);
+	frames.emplace_back(sf::seconds(0.2), 0);
+	frames.emplace_back(sf::seconds(0.2), 1);
+	frames.emplace_back(sf::seconds(0.2), 2);
+	frames.emplace_back(sf::seconds(0.2), 3);
 	m_animation.setFrames(frames);
 	m_animation.setLoop(octo::LoopMode::Loop);
 	m_spriteBottomFront.setSpriteSheet(resources.getSpriteSheet(ELEVATOR_BOTTOM_FRONT_OSS));
