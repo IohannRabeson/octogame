@@ -16,6 +16,7 @@
 # include <SFML/Graphics/Shader.hpp>
 # include <SFML/System/Time.hpp>
 
+# include <AnimatedSprite.hpp>
 # include <VertexBuilder.hpp>
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
@@ -35,6 +36,7 @@ class ElevatorStream : public AGameObject<GameObjectType::Elevator>
 public:
 	ElevatorStream();
 
+	void		setupSprite(void);
 	void		setPosX(float x);
 	void		setPosY(float y);
 	void		setHeight(float height);
@@ -65,6 +67,12 @@ private:
 	sf::Color						m_borderColor;
 	sf::Color						m_centerColor;
 	sf::Color						m_upColor;
+
+	octo::SpriteAnimation			m_animation;
+	octo::AnimatedSprite			m_spriteBottomFront;
+	octo::AnimatedSprite			m_spriteBottomBack;
+	octo::AnimatedSprite			m_spriteTopFront;
+	octo::AnimatedSprite			m_spriteTopBack;
 };
 
 #endif

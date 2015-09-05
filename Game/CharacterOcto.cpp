@@ -6,6 +6,7 @@
 #include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
+	m_spriteScale(1.f),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondUmbrella(-300.f),
@@ -116,7 +117,14 @@ void	CharacterOcto::setupAnimation()
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_umbrellaAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {28, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {42, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {43, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {44, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {45, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {49, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {50, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {51, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {52, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_umbrellaAnimation.setLoop(octo::LoopMode::NoLoop);
 
@@ -518,7 +526,7 @@ void	CharacterOcto::caseLeft()
 			m_sprite.setNextEvent(Left);
 		if (!m_originMove)
 		{
-			m_sprite.setScale(-1.f, 1.f);
+			m_sprite.setScale(-1.f * m_spriteScale, 1.f * m_spriteScale);
 			m_sprite.setOrigin(m_sprite.getOrigin().x + 177.f, 0.f);
 			m_originMove = true;
 		}
@@ -535,7 +543,7 @@ void	CharacterOcto::caseRight()
 			m_sprite.setNextEvent(Right);
 		if (m_originMove)
 		{
-			m_sprite.setScale(1.f, 1.f);
+			m_sprite.setScale(1.f * m_spriteScale, 1.f * m_spriteScale);
 			m_sprite.setOrigin(m_sprite.getOrigin().x - 177.f, 0.f);
 			m_originMove = false;
 		}
