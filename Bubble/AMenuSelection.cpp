@@ -92,6 +92,14 @@ bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
 				backMenu->setState(AMenu::State::Active);
 			break;
 		}
+		case sf::Keyboard::Escape:
+		{
+			setState(AMenu::State::Hide);
+			AMenu * backMenu = getBackMenu();
+			if (backMenu)
+				backMenu->setState(AMenu::State::Active);
+			break;
+		}
 		default:
 			break;
 	}

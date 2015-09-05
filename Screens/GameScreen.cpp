@@ -57,7 +57,7 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 {
 	switch (event.code)
 	{
-		case sf::Keyboard::M:
+		case sf::Keyboard::Escape:
 		{
 			AMenu::State state = m_menu.getState();
 			if (state == AMenu::State::Hide)

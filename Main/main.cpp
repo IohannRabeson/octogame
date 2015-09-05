@@ -33,6 +33,7 @@
 #include "FsmDemoScreen.hpp"
 #include "BubbleScreen.hpp"
 #include "ResourceLoadingScreen.hpp"
+#include "QuitScreen.hpp"
 #include "ElevatorStreamDemo.hpp"
 #include "AGameObject.hpp"
 
@@ -54,6 +55,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<BubbleScreen>("bubble");
 	manager.registerState<ElevatorStreamDemo>("elevator");
 	manager.registerState<ResourceLoadingScreen>("loading");
+	manager.registerState<QuitScreen>("quit");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
@@ -75,7 +77,7 @@ int main(int argc, char **argv)
 		DefaultApplicationListener					listener;
 
 		graphics.addWindowListener(&listener);
-		graphics.addKeyboardListener(&listener);
+		//graphics.addKeyboardListener(&listener);
 		setupStateManager(states);
 		setupConsole(console);
 		octo::Application::run("");

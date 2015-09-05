@@ -36,6 +36,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/ParticleDemoScreen.cpp			\
 				Screens/ResourceLoadingScreen.cpp		\
+				Screens/QuitScreen.cpp					\
 				Screens/BubbleScreen.cpp				\
 				Screens/FsmDemoScreen.cpp				\
 				Screens/ElevatorStreamDemo.cpp			\

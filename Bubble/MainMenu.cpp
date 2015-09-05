@@ -7,7 +7,7 @@
 class YesNoQuit : public YesNoMenu
 {
 	inline void setIndex(void) { setIndexCursor(0); }
-	inline void actionYes(void) { octo::Application::stop(); }
+	inline void actionYes(void) { octo::Application::getStateManager().change("quit"); }
 	inline void actionNo(void) { }
 };
 
