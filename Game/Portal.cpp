@@ -31,7 +31,7 @@ Portal::Portal(void) :
 	setRadius(m_radius);
 	setPosition(m_position);
 
-	static float const	Size = 6.f;
+	static float const	Size = 8.f;
 	PortalParticle::Prototype	prototype;
 
 	prototype.emplace_back(sf::Vertex({-Size, Size}));
@@ -92,7 +92,7 @@ void Portal::update(sf::Time frametime)
 		}
 	}
 
-	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 58.f));
+	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 52.f));
 	m_sprite.update(frametime);
 }
 
@@ -111,10 +111,15 @@ void Portal::setRadius(float radius)
 	m_box->setRadius(m_radius);
 }
 
+void Portal::setBiome(ABiome & biome)
+{
+	m_particles.setBiome(biome);
+}
+
 void Portal::draw(sf::RenderTarget & render) const
 {
-	m_particles.draw(render);
 	render.draw(m_sprite);
+	m_particles.draw(render);
 }
 
 Portal::PortalParticle::PortalParticle(void) :
@@ -124,7 +129,8 @@ Portal::PortalParticle::PortalParticle(void) :
 	m_engine(std::time(0)),
 	m_lifeTimeDistri(1.f, 2.f),
 	m_directionDistri(0.f, octo::Pi2),
-	m_distanceDistri(m_radius, m_radius * 1.3f)
+	m_distanceDistri(m_radius, m_radius * 2.f),
+	m_biome(nullptr)
 {}
 
 void Portal::PortalParticle::update(sf::Time frameTime)
@@ -134,7 +140,9 @@ void Portal::PortalParticle::update(sf::Time frameTime)
 	{
 		float direction = m_directionDistri(m_engine);
 		float distance = m_distanceDistri(m_engine);
-		emplace(m_color, m_emitter, sf::Vector2f(1.f, 1.f), m_directionDistri(m_engine) * 180.f,
+		if (m_biome)
+			m_color = m_biome->getParticleColorGround();
+		emplace(m_color, m_emitter, sf::Vector2f(1.f, 1.f), direction * 180.f,
 				sf::Time::Zero,
 				sf::seconds(m_lifeTimeDistri(m_engine)),
 				m_emitter + sf::Vector2f(std::sin(direction) * distance, std::cos(direction) * distance), m_emitter);
@@ -144,7 +152,12 @@ void Portal::PortalParticle::update(sf::Time frameTime)
 void Portal::PortalParticle::setRadius(float radius)
 {
 	m_radius = radius;
-	m_distanceDistri.param(std::uniform_real_distribution<float>::param_type(m_radius * 1.3f, m_radius * 1.8f));
+	m_distanceDistri.param(std::uniform_real_distribution<float>::param_type(m_radius * 2.3f, m_radius * 2.8f));
+}
+
+void Portal::PortalParticle::setBiome(ABiome & biome)
+{
+	m_biome = &biome;
 }
 
 void Portal::PortalParticle::updateParticle(sf::Time frameTime, Particle& particle)
