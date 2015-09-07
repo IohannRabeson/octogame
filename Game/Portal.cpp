@@ -49,7 +49,6 @@ Portal::Portal(void) :
 	m_animation.setLoop(octo::LoopMode::Loop);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(PORTAL_OSS));
 	m_sprite.setAnimation(m_animation);
-	m_sprite.setScale(sf::Vector2f(0.8f, 0.8f));
 	m_sprite.play();
 }
 

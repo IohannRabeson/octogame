@@ -15,13 +15,15 @@ CharacterNpc::CharacterNpc() :
 	m_box->setSize(sf::Vector2f(100.f / 2.f, 150.f));
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Npc));
 	m_box->setCollisionMask(0u);
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
+	//m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(NPC_PUNK_OSS));
 	setupAnimation();
 	setupMachine();
 	m_timeEventIdle = sf::Time::Zero;
 	m_sprite.restart();
 	m_sprite.setNextEvent(Idle);
-	m_sprite.setColor(sf::Color::Green);
+	m_sprite.setScale(0.8, 0.8);
+	//m_sprite.setColor(sf::Color::Green);
 	m_area = sf::FloatRect(0, 0, 0, 0);
 }
 
@@ -49,13 +51,7 @@ void	CharacterNpc::setupAnimation()
 	typedef octo::CharacterAnimation::Frame			Frame;
 
 	m_idleAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {12, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {13, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {14, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {16, sf::FloatRect(), sf::Vector2f()})
+			Frame(sf::seconds(0.4f), {0, sf::FloatRect(), sf::Vector2f()})
 			});
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -65,8 +61,6 @@ void	CharacterNpc::setupAnimation()
 			Frame(sf::seconds(0.4f), {2, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {3, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {4, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {6, sf::FloatRect(), sf::Vector2f()})
 			});
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 }
