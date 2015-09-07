@@ -11,11 +11,12 @@
 Portal::Portal(void) :
 	m_position(40.f, 0.f),
 	m_shaderIndex(0u),
-	m_state(State::Appear),
+	m_state(State::Disappear),
 	m_radius(50.f),
 	m_timer(0.f),
 	m_timerMax(1.0f),
-	m_box(PhysicsEngine::getShapeBuilder().createCircle())
+	m_box(PhysicsEngine::getShapeBuilder().createCircle()),
+	m_activationBox(PhysicsEngine::getShapeBuilder().createCircle())
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
@@ -27,6 +28,16 @@ Portal::Portal(void) :
 	m_box->setGameObject(this);
 	m_box->setApplyGravity(false);
 	m_box->setType(AShape::Type::e_trigger);
+	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Portal));
+	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
+
+	m_portalActivation.m_portal = this;
+	m_portalActivation.m_radius = 400.f;
+	m_activationBox->setGameObject(&m_portalActivation);
+	m_activationBox->setApplyGravity(false);
+	m_activationBox->setType(AShape::Type::e_trigger);
+	m_activationBox->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Portal));
+	m_activationBox->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
 
 	setRadius(m_radius);
 	setPosition(m_position);
@@ -38,7 +49,6 @@ Portal::Portal(void) :
 	prototype.emplace_back(sf::Vertex({Size, -Size}));
 	prototype.emplace_back(sf::Vertex({-Size, -Size}));
 	m_particles.reset(prototype, sf::Triangles, 1000);
-
 
 	octo::SpriteAnimation::FrameList	frames;
 	frames.emplace_back(sf::seconds(0.4), 0);
@@ -67,11 +77,20 @@ void Portal::update(sf::Time frametime)
 	switch (m_state)
 	{
 		case Appear:
+			m_particles.setMaxParticle(m_timer / m_timerMax * 20.f);
 			m_timer += frametime.asSeconds();
 			if (m_timer >= m_timerMax)
+			{
+				m_state = Activated;
 				m_timer = m_timerMax;
+			}
+			break;
+		case Activated:
+			m_particles.setMaxParticle(20u);
 			break;
 		case Disappear:
+			m_particles.setMaxParticle(0u);
+			m_particles.clear();
 			m_timer -= frametime.asSeconds();
 			if (m_timer <= 0.f)
 				m_timer = 0.f;
@@ -94,6 +113,7 @@ void Portal::update(sf::Time frametime)
 
 	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 58.f));
 	m_sprite.update(frametime);
+	m_state = Disappear;
 }
 
 void Portal::setPosition(sf::Vector2f const & position)
@@ -101,6 +121,7 @@ void Portal::setPosition(sf::Vector2f const & position)
 	m_position = position;
 	m_particles.setEmitter(m_position);
 	m_box->setPosition(sf::Vector2f(m_position.x - m_radius, m_position.y - m_radius));
+	m_activationBox->setPosition(sf::Vector2f(m_position.x - m_radius - m_portalActivation.m_radius, m_position.y - m_radius - m_portalActivation.m_radius));
 }
 
 void Portal::setRadius(float radius)
@@ -108,7 +129,14 @@ void Portal::setRadius(float radius)
 	m_radius = radius;
 	m_shader.setParameter("radius", m_radius);
 	m_particles.setRadius(m_radius);
-	m_box->setRadius(m_radius);
+	m_activationBox->setRadius(m_radius + m_portalActivation.m_radius);
+}
+
+void Portal::appear(void)
+{
+	if (m_state == Activated)
+		return;
+	m_state = State::Appear;
 }
 
 void Portal::draw(sf::RenderTarget & render) const

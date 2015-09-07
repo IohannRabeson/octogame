@@ -83,20 +83,31 @@ void	Game::update(sf::Time frameTime)
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
 {
-	if (shapeA->getGameObject() != nullptr
-			&& gameObjectCast<CharacterOcto>(shapeA->getGameObject()) != nullptr
-			&& shapeB->getGameObject() != nullptr
-			&& gameObjectCast<ElevatorStream>(shapeB->getGameObject()) != nullptr)
+	if (shapeA->getGameObject() == nullptr || shapeB->getGameObject() == nullptr)
+		return;
+
+	if (gameObjectCast<CharacterOcto>(shapeA->getGameObject()))
+		onCollision(gameObjectCast<CharacterOcto>(shapeA->getGameObject()), shapeB->getGameObject(), collisionDirection);
+	else if (gameObjectCast<CharacterOcto>(shapeB->getGameObject()))
+		onCollision(gameObjectCast<CharacterOcto>(shapeB->getGameObject()), shapeA->getGameObject(), collisionDirection);
+}
+
+void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
+{
+	if (gameObjectCast<ElevatorStream>(gameObject))
 	{
-		m_octo->setTopElevator(gameObjectCast<ElevatorStream>(shapeB->getGameObject())->getTopY());
-		m_octo->onCollision(GameObjectType::Elevator, collisionDirection);
+		octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
+		octo->onCollision(GameObjectType::Elevator, collisionDirection);
+	}
+	else if (gameObjectCast<Portal::PortalActivation>(gameObject))
+	{
+		gameObjectCast<Portal::PortalActivation>(gameObject)->activate();
 	}
 }
 
 void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection)
 {
-	if (shape->getGameObject() != nullptr
-			&& gameObjectCast<CharacterOcto>(shape->getGameObject()) != nullptr)
+	if (shape->getGameObject() && gameObjectCast<CharacterOcto>(shape->getGameObject()))
 	{
 		m_octo->onCollision(GameObjectType::Tile, collisionDirection);
 	}

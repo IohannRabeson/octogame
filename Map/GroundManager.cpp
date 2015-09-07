@@ -124,7 +124,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			if (map(0, y, 0) != octo::LevelMap::TileType::Empty)
 			{
 				elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + MapInstance::HeightOffset - 9) * Tile::TileSize);
-				std::cout << y << std::endl;
 				break;
 			}
 		}
