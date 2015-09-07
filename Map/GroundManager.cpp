@@ -118,7 +118,16 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		std::unique_ptr<ElevatorStream> elevator;
 		elevator.reset(new ElevatorStream());
 		elevator->setPosX(instance.first * Tile::TileSize - elevator->getWidth());
-		elevator->setTopY((-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize);
+		octo::Array3D<octo::LevelMap::TileType> const & map = levelMap.getMap();
+		for (std::size_t y = 0; y < map.rows(); y++)
+		{
+			if (map(0, y, 0) != octo::LevelMap::TileType::Empty)
+			{
+				elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + MapInstance::HeightOffset - 9) * Tile::TileSize);
+				std::cout << y << std::endl;
+				break;
+			}
+		}
 		elevator->setHeight(400.f);
 		elevator->setBiome(biome);
 		std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
