@@ -471,7 +471,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 				min = tmp;
 		}
 		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x - Map::OffsetX + elevator.m_gameObject->getWidth() / 2.f + Tile::TileSize);
-		elevator.m_gameObject->setPosY(min);
+		elevator.m_gameObject->setPosY(min - Tile::TileSize);
 		elevator.m_gameObject->setHeight(min - elevator.m_gameObject->getTopY());
 	}
 
@@ -484,7 +484,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			if (tmp < max)
 				max = tmp;
 		}
-		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TileSize));
+		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TripleTileSize));
 	}
 
 	for (auto const & npc : m_npcs)
