@@ -117,10 +117,6 @@ void	CharacterOcto::setupAnimation()
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_umbrellaAnimation.setFrames({
-			Frame(sf::seconds(0.1f), {42, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.1f), {43, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.1f), {44, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.1f), {45, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {49, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {50, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {51, sf::FloatRect(), sf::Vector2f()}),

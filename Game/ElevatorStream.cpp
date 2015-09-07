@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/26 09:59:33 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/09/07 15:52:38 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,7 +328,7 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_spriteTopBack.update(frameTime);
 }
 
-void	ElevatorStream::draw(sf::RenderTarget& render)const
+void	ElevatorStream::drawBack(sf::RenderTarget& render)const
 {
 	sf::RenderStates	states;
 
@@ -337,6 +337,10 @@ void	ElevatorStream::draw(sf::RenderTarget& render)const
 	states.shader = &m_shader;
 	m_particles->draw(render, states);
 	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
+}
+
+void	ElevatorStream::drawFront(sf::RenderTarget& render)const
+{
 	render.draw(m_spriteBottomFront);
 	render.draw(m_spriteTopFront);
 }

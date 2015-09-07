@@ -694,28 +694,23 @@ void GroundManager::update(float deltatime)
 	updateGameObjects(deltatime);
 }
 
-void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
+void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	render.draw(m_decorManagerBack, states);
 	for (auto & elevator : m_elevators)
-		elevator.m_gameObject->draw(render);
+		elevator.m_gameObject->drawBack(render);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render);
-	for (auto & npc : m_npcs)
-		npc->draw(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 
-DecorManager const & GroundManager::getDecorsBack(void) const
+void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	return m_decorManagerBack;
-}
-
-DecorManager const & GroundManager::getDecorsFront(void) const
-{
-	return m_decorManagerFront;
-}
-
-DecorManager const & GroundManager::getDecorsGround(void) const
-{
-	return m_decorManagerGround;
+	render.draw(m_decorManagerGround, states);
+	render.draw(m_decorManagerFront, states);
+	for (auto & elevator : m_elevators)
+		elevator.m_gameObject->drawFront(render);
+	for (auto & npc : m_npcs)
+		npc->draw(render);
+	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }

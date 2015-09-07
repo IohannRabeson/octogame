@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 03:53:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/18 11:38:02 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/09/07 15:51:45 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ public:
 	void		createRay(void);
 
 	void		update(sf::Time frameTime);
-	void		draw(sf::RenderTarget& render)const;
+	void		drawBack(sf::RenderTarget& render)const;
+	void		drawFront(sf::RenderTarget& render)const;
+
 private:
 	std::shared_ptr<BeamParticle>	m_particles;
 	sf::Shader						m_shader;
