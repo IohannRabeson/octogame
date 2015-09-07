@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   GameScreen.cpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/24 06:03:08 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 04:30:52 by irabeson         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "GameScreen.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
@@ -22,7 +10,7 @@
 void	GameScreen::start()
 {
 	m_game.setup();
-	m_game.loadLevel("TODO");
+	m_game.loadLevel("default");
 
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	octo::AudioManager& audio = octo::Application::getAudioManager();

@@ -26,7 +26,8 @@ Game::Game() :
 
 void	Game::setup()
 {
-	m_biomeManager.registerBiome<DefaultBiome>("test");
+	m_biomeManager.registerBiome<DefaultBiome>("default");
+	m_biomeManager.registerBiome<DefaultBiome>("default1");
 
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -34,9 +35,7 @@ void	Game::setup()
 
 void	Game::loadLevel(std::string const& fileName)
 {
-	(void)fileName;
-	// TODO
-	m_biomeManager.changeBiome("test", 0x12345);
+	m_biomeManager.changeBiome(fileName, 0x12345);
 
 	// Reset last values
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
@@ -98,6 +97,12 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 	{
 		octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
 		octo->onCollision(GameObjectType::Elevator, collisionDirection);
+	}
+	else if (gameObjectCast<Portal>(gameObject))
+	{
+		//octo->onCollision(GameObjectType::Elevator, collisionDirection);
+		std::cout << "change" << std::endl;
+		//loadLevel("default1");
 	}
 	else if (gameObjectCast<Portal::PortalActivation>(gameObject))
 	{
