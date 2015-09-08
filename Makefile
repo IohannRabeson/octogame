@@ -44,6 +44,8 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp					\
+				Game/ANpc.cpp							\
+				Game/ClassicNpc.cpp						\
 				Game/MusicPlayer.cpp
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
