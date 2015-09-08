@@ -82,6 +82,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	float						m_afterJumpVelocity;
 	float						m_previousTop;
 	float						m_topElevator;
+	float						m_deltaPositionY;
 	std::size_t					m_numberOfJump;
 	bool						m_originMove;
 	bool						m_onGround;
