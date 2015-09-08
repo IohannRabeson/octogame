@@ -46,6 +46,8 @@ void	CharacterOcto::setup(void)
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
+	//TODO:
+	//m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	m_timeEventFall = sf::Time::Zero;
 	m_timeEventIdle = sf::Time::Zero;
