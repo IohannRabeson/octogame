@@ -288,7 +288,6 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
-	m_box->debugDraw(render);
 	m_sprite.draw(render, states);
 }
 
