@@ -37,6 +37,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool					onPressed(sf::Event::KeyEvent const& event);
 	bool					onReleased(sf::Event::KeyEvent const& event);
 	sf::Vector2f const &	getPosition() const;
+	sf::Vector2f			getBubblePosition() const;
 	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
 	void					setTopElevator(float top);
 

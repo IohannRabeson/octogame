@@ -58,8 +58,8 @@ void ShineEffect::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiom
 		playSound(biome, position);
 
 		sf::Color animationColor(m_color.r, m_color.g, m_color.b, m_color.a * (m_animation > 1.f ? 1.f : m_animation));
-		ShineBuilder::createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, builder, m_angle, cosAngle, sinAngle);
-		ShineBuilder::createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, builder, m_angle, cosAngle, sinAngle);
+		AShineBuilder::createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, builder, m_angle, cosAngle, sinAngle);
+		AShineBuilder::createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, builder, m_angle, cosAngle, sinAngle);
 	}
 }
 

@@ -25,6 +25,7 @@ public:
 	void					setup(sf::Vector2f const & pos, sf::FloatRect const & rect);
 	void					update(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+	sf::Vector2f	getBubblePosition() const;
 
 private:
 	bool		canWalk();
