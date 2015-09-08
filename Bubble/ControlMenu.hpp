@@ -3,8 +3,7 @@
 
 # include "AMenuSelection.hpp"
 
-class ControlMenu : public AMenuSelection,
-					public octo::DefaultKeyboardListener
+class ControlMenu : public AMenuSelection
 
 {
 public:
