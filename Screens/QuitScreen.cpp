@@ -22,7 +22,6 @@
 QuitScreen::QuitScreen() :
 	AbstractState()
 {
-
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 

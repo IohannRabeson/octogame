@@ -36,9 +36,9 @@ bool	DefaultApplicationListener::onPressed(sf::Event::KeyEvent const& event)
 	switch (event.code)
 	{
 		//TODO: Dont forget to change that
-		case sf::Keyboard::Escape:
-			octo::Application::stop();
-			break;
+//		case sf::Keyboard::Escape:
+//			octo::Application::stop();
+//			break;
 		case sf::Keyboard::F5:
 			octo::Application::getConsole().setEnabled(true);
 			break;

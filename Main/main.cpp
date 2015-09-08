@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 		DefaultApplicationListener					listener;
 
 		graphics.addWindowListener(&listener);
-		//graphics.addKeyboardListener(&listener);
+		graphics.addKeyboardListener(&listener);
 		setupStateManager(states);
 		setupConsole(console);
 		octo::Application::run("");
