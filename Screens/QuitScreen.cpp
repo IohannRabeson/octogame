@@ -49,8 +49,8 @@ void	QuitScreen::resume()
 
 void	QuitScreen::stop()
 {
-	//octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	//graphics.removeKeyboardListener(this);
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
 	octo::Application::stop();
 }
 

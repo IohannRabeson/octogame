@@ -51,7 +51,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	onSky(Events event);
 	void	collisionElevatorUpdate();
 	void	commitControlsToPhysics(float frametime);
-	void	commitPhysicsToGraphics(sf::Time framtime);
+	void	commitPhysicsToGraphics();
 	void	caseLeft();
 	void	caseRight();
 	void	caseSpace();

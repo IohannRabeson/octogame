@@ -69,27 +69,27 @@ void	CharacterOcto::setupAnimation()
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_walkAnimation.setFrames({
-			Frame(sf::seconds(0.2f), {0, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {1, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {0, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {1, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {2, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {3, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {4, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {5, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {4, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {6, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {7, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {8, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {9, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {10, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {8, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {10, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {11, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {12, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {13, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {14, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {12, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {13, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {14, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {15, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {16, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {17, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {18, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {16, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {17, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {18, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {19, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {20, sf::FloatRect(), sf::Vector2f()})
+			Frame(sf::seconds(0.4f), {20, sf::FloatRect(), sf::Vector2f()})
 	});
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -100,8 +100,8 @@ void	CharacterOcto::setupAnimation()
 	m_jumpAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_fallAnimation.setFrames({
-			Frame(sf::seconds(0.2f), {27, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {28, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {27, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {28, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_fallAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -250,16 +250,17 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	timeEvent(frameTime);
-	if (!endDeath()) // TODO ce truc doit faire des bug à mon avis
+	if (endDeath())
 	{
+		dance();
+		collisionElevatorUpdate();
+		collisionTileUpdate();
+		commitPhysicsToGraphics();
 		m_sprite.update(frameTime);
-		return;
+		commitControlsToPhysics(frameTime.asSeconds());
 	}
-	dance();
-	collisionElevatorUpdate();
-	collisionTileUpdate();
-	commitControlsToPhysics(frameTime.asSeconds());
-	commitPhysicsToGraphics(frameTime);
+	else
+		m_sprite.update(frameTime);
 	m_collisionTile = false;
 	m_collisionElevator = false;
 }
@@ -434,13 +435,12 @@ void	CharacterOcto::dance()
 	}
 }
 
-void	CharacterOcto::commitPhysicsToGraphics(sf::Time frameTime)
+void	CharacterOcto::commitPhysicsToGraphics()
 {
 	sf::Vector2f const& pos = m_box->getRenderPosition();
 
 	// TODO
 	m_sprite.setPosition(sf::Vector2f(pos.x - (177.f / 2.5f), pos.y - (150.f / 2.f)));
-	m_sprite.update(frameTime);
 	m_previousTop = pos.y;
 }
 
@@ -473,7 +473,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 		if (m_onElevator)
 		{
 			if (!m_onTopElevator)
-				velocity.y = (3.f * m_pixelSecondUmbrella);
+				velocity.y = (2.5f * m_pixelSecondUmbrella);
 		}
 		else
 		{
