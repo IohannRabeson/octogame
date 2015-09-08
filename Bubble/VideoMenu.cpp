@@ -62,7 +62,7 @@ void VideoMenu::createMenus(void)
 {
 	addMenu("Fullscreen", new YesNoFullscreen());
 	addMenu("Vertical Synchronisation", new YesNoVsync());
-	addMenu("Antialiasing", new EmptyMenu());
-	addMenu("Resolution", new EmptyMenu());
+	//TODO:
+	//addMenu("Resolution", new EmptyMenu());
 }
 
