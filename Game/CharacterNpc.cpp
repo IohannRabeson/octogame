@@ -3,6 +3,7 @@
 #include "PhysicsEngine.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <Camera.hpp>
 
 CharacterNpc::CharacterNpc() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -186,3 +187,9 @@ bool	CharacterNpc::canWalk()
 		return true;
 	return false;
 }
+
+sf::Vector2f	CharacterNpc::getBubblePosition() const
+{
+	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -40.f));
+}
+

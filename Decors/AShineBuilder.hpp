@@ -1,14 +1,14 @@
-#ifndef SHINEBUILDER_HPP
-# define SHINEBUILDER_HPP
+#ifndef ASHINEBUILDER_HPP
+# define ASHINEBUILDER_HPP
 
 # include "ADecor.hpp"
 # include <VertexBuilder.hpp>
 
-class ShineBuilder : public ADecor
+class AShineBuilder : public ADecor
 {
 public:
-	ShineBuilder(void);
-	virtual ~ShineBuilder(void) = default;
+	AShineBuilder(void);
+	virtual ~AShineBuilder(void) = default;
 
 	virtual void setup(ABiome& biome) = 0;
 	virtual void update(sf::Time frameTime,

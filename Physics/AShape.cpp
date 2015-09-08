@@ -6,7 +6,7 @@ AShape::AShape(void) :
 	m_sleep(false),
 	m_applyGravity(true),
 	m_outOfScreen(false),
-	m_type(AShape::Type::e_dynamic),
+	m_type(AShape::Type::e_kinematic),
 	m_collisionType(0u),
 	m_collisionMask(std::numeric_limits<std::uint32_t>::max()),
 	m_gameObject(nullptr)

@@ -32,6 +32,7 @@
 #include "ParticleDemoScreen.hpp"
 #include "FsmDemoScreen.hpp"
 #include "ResourceLoadingScreen.hpp"
+#include "QuitScreen.hpp"
 #include "ElevatorStreamDemo.hpp"
 #include "AGameObject.hpp"
 
@@ -52,6 +53,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<FsmDemoScreen>("tamagotchi");
 	manager.registerState<ElevatorStreamDemo>("elevator");
 	manager.registerState<ResourceLoadingScreen>("loading");
+	manager.registerState<QuitScreen>("quit");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
