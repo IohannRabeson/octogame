@@ -19,6 +19,7 @@ Game::Game() :
 	m_skyManager(nullptr),
 	m_groundManager(nullptr),
 	m_parallaxScrolling(nullptr),
+	m_musicPlayer(nullptr),
 	m_octo(nullptr),
 	m_npc(nullptr)
 {
@@ -54,6 +55,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_skyManager.reset(new SkyManager());
 	m_groundManager.reset(new GroundManager());
 	m_parallaxScrolling.reset(new ParallaxScrolling());
+	m_musicPlayer.reset(new MusicPlayer());
 	m_octo.reset(new CharacterOcto());
 
 	m_skyCycle->setup(m_biomeManager.getCurrentBiome());
@@ -64,6 +66,11 @@ void	Game::loadLevel(std::string const& fileName)
 
 	// TODO: fix, for npcs, if we dont update once, value are not initialized well, and npc go through instance map
 	update(sf::seconds(0.f));
+}
+
+sf::Vector2f	Game::getOctoBubblePosition(void) const
+{
+	return m_octo->getBubblePosition();
 }
 
 void	Game::update(sf::Time frameTime)
@@ -78,7 +85,7 @@ void	Game::update(sf::Time frameTime)
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
-	m_musicPlayer.update(frameTime, m_octo->getPosition());
+	m_musicPlayer->update(frameTime, m_octo->getPosition());
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)

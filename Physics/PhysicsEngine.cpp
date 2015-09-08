@@ -108,6 +108,27 @@ void PhysicsEngine::unregisterShape(PolygonShape * shape)
 		return;
 	m_polygonShapes.erase(std::remove(m_polygonShapes.begin(), m_polygonShapes.end(), shape), m_polygonShapes.end());
 	m_shapes.erase(std::remove(m_shapes.begin(), m_shapes.end(), shape), m_shapes.end());
+
+	auto endPolyPoly = std::remove_if(m_polyPolyPairs.begin(), m_polyPolyPairs.end(), [shape](Pair<PolygonShape *, PolygonShape *> pair)
+			{
+				return (pair.m_shapeA == shape || pair.m_shapeB == shape);
+			});
+	m_polyPolyPairs.erase(endPolyPoly, m_polyPolyPairs.end());
+
+	auto endPolyCircle = std::remove_if(m_polyCirclePairs.begin(), m_polyCirclePairs.end(), [shape](Pair<PolygonShape *, CircleShape *> pair)
+			{
+				return (pair.m_shapeA == shape);
+			});
+	m_polyCirclePairs.erase(endPolyCircle, m_polyCirclePairs.end());
+
+	for (std::size_t i = 0u; i < m_tilePolyPairs.size(); i++)
+	{
+		auto endTilePoly = std::remove_if(m_tilePolyPairs[i].begin(), m_tilePolyPairs[i].end(), [shape](Pair<TileShape *, PolygonShape *> pair)
+				{
+					return (pair.m_shapeB == shape);
+				});
+		m_tilePolyPairs[i].erase(endTilePoly, m_tilePolyPairs[i].end());
+	}
 	delete shape;
 }
 
@@ -117,6 +138,27 @@ void PhysicsEngine::unregisterShape(CircleShape * shape)
 		return;
 	m_circleShapes.erase(std::remove(m_circleShapes.begin(), m_circleShapes.end(), shape), m_circleShapes.end());
 	m_shapes.erase(std::remove(m_shapes.begin(), m_shapes.end(), shape), m_shapes.end());
+
+	auto endCircleCircle = std::remove_if(m_circleCirclePairs.begin(), m_circleCirclePairs.end(), [shape](Pair<CircleShape *, CircleShape *> pair)
+			{
+				return (pair.m_shapeA == shape || pair.m_shapeB == shape);
+			});
+	m_circleCirclePairs.erase(endCircleCircle, m_circleCirclePairs.end());
+
+	auto endPolyCircle = std::remove_if(m_polyCirclePairs.begin(), m_polyCirclePairs.end(), [shape](Pair<PolygonShape *, CircleShape *> pair)
+			{
+				return (pair.m_shapeB == shape);
+			});
+	m_polyCirclePairs.erase(endPolyCircle, m_polyCirclePairs.end());
+
+	for (std::size_t i = 0u; i < m_tileCirclePairs.size(); i++)
+	{
+		auto endTileCircle = std::remove_if(m_tileCirclePairs[i].begin(), m_tileCirclePairs[i].end(), [shape](Pair<TileShape *, CircleShape *> pair)
+				{
+					return (pair.m_shapeB == shape);
+				});
+		m_tileCirclePairs[i].erase(endTileCircle, m_tileCirclePairs[i].end());
+	}
 	delete shape;
 }
 
@@ -128,6 +170,13 @@ void PhysicsEngine::unregisterAllShapes(void)
 	m_polygonShapes.clear();
 	m_circleShapes.clear();
 	m_groupShapes.clear();
+	m_polyPolyPairs.clear();
+	m_polyCirclePairs.clear();
+	m_circleCirclePairs.clear();
+	for (std::size_t i = 0u; i < m_tilePolyPairs.size(); i++)
+		m_tilePolyPairs[i].clear();
+	for (std::size_t i = 0u; i < m_tileCirclePairs.size(); i++)
+		m_tileCirclePairs[i].clear();
 }
 
 void PhysicsEngine::unregisterAllTiles(void)
@@ -141,6 +190,10 @@ void PhysicsEngine::unregisterAllTiles(void)
 			m_tileShapes.get(x, y) = nullptr;
 		}
 	}
+	for (std::size_t i = 0u; i < m_tilePolyPairs.size(); i++)
+		m_tilePolyPairs[i].clear();
+	for (std::size_t i = 0u; i < m_tileCirclePairs.size(); i++)
+		m_tileCirclePairs[i].clear();
 	m_tileShapes.resize(0, 0);
 	m_tileCollision = false;
 }
@@ -412,8 +465,8 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 	{
 		if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
 		{
-			// TODO: manage type kinematic static, ...
-			if (!pairs[i].m_shapeA->isType(AShape::Type::e_trigger) && !pairs[i].m_shapeB->isType(AShape::Type::e_trigger))
+			if ((pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_static)
+				&& (pairs[i].m_shapeB->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeB->getType() == AShape::Type::e_static))
 			{
 				if (pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_kinematic)
 				{
