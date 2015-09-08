@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ElevatorStream.cpp                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/08 14:35:48 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "ElevatorStream.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"

@@ -7,6 +7,7 @@
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
 #include <Camera.hpp>
+#include <cassert>
 
 Portal::Portal(void) :
 	m_position(40.f, 0.f),
@@ -135,7 +136,7 @@ Portal::PortalParticle::PortalParticle(void) :
 
 void Portal::PortalParticle::update(sf::Time frameTime)
 {
-	cassert(m_biome);
+	assert(m_biome);
 	ParticleSystem::update(frameTime);
 	if (ParticleSystem::getCount() < m_maxParticle)
 	{
