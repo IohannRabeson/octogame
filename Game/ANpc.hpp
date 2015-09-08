@@ -41,6 +41,7 @@ protected:
 
 	ANpc(ResourceKey const & npcId);
 
+	void setVelocity(float velocity);
 	void setBoxCollision(std::size_t type, std::size_t mask);
 	void setupIdleAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode);
 	void setupWalkAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode);
@@ -62,6 +63,7 @@ private:
 	RectangleShape *			m_box;
 	sf::FloatRect				m_area;
 	sf::Vector2f				m_origin;
+	float						m_velocity;
 
 	static void setupAnimation(octo::CharacterAnimation & animation, std::initializer_list<FramePair> list, octo::LoopMode loopMode);
 

@@ -6,6 +6,7 @@
 
 ANpc::ANpc(ResourceKey const & npcId) :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false))
+	m_velocity(200.f)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -110,6 +111,11 @@ void ANpc::setPosition(sf::Vector2f const & position)
 	m_box->setPosition(position.x, position.y - m_box->getSize().y);
 }
 
+void ANpc::setVelocity(float velocity)
+{
+	m_velocity = velocity;
+}
+
 void ANpc::setBoxCollision(std::size_t type, std::size_t mask)
 {
 	m_box->setCollisionType(type);
@@ -176,11 +182,11 @@ void ANpc::updatePhysics(void)
 	sf::Vector2f velocity;
 	if (m_sprite.getCurrentEvent() == Left)
 	{
-		velocity.x = (-1.f * 200.f);
+		velocity.x = (-1.f * m_velocity);
 	}
 	else if (m_sprite.getCurrentEvent() == Right)
 	{
-		velocity.x = 200.f;
+		velocity.x = m_velocity;
 	}
 	m_box->setVelocity(velocity);
 }
