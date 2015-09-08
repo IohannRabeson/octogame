@@ -73,7 +73,6 @@ void ABubble::computePositionBubble(Type type, sf::Vector2f const & position)
 {
 	if (type == Type::Speak || type == Type::Think)
 	{
-		//TODO: Create follow effect
 		if (m_positionBubble.x >= position.x + m_size.x / 2.f)
 			m_positionBubble.x = position.x - m_sizeCorner + m_size.x / 2.f;
 		else if (m_positionBubble.x <= position.x - m_size.x / 2.f)

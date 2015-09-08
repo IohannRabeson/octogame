@@ -29,7 +29,6 @@ void AMenuSelection::setup(void)
 	m_cursor.setRadius(10);
 	m_cursor.setPointCount(8);
 	m_cursor.setOrigin(10, 10);
-	//TODO: Investigate this, should be 360.f / 8.f
 	m_cursor.setRotation(360.f / 16.f);
 	m_cursorPosition = m_bubble.getCursorPosition();
 }
