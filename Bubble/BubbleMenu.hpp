@@ -24,7 +24,7 @@ public:
 											  sf::Color const & color,
 											  std::size_t characterSize = 0u);
 
-	virtual sf::Vector2f				getContentSize(void) const;
+	virtual sf::Vector2f const &		getContentSize(void) const;
 	std::vector<sf::Vector2f> const &	getCursorPosition(void);
 	virtual void						updateContent(sf::Time frameTime, sf::Vector2f const & position);
 	virtual void						drawContent(sf::RenderTarget & render, sf::RenderStates states) const;

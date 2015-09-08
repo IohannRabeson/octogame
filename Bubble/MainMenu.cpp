@@ -18,8 +18,8 @@ MainMenu::MainMenu(void)
 
 void MainMenu::createMenus(void)
 {
-	addMenu("Settings", new OptionMenu());
-	addMenu("Quit", new YesNoQuit());
+	addMenu("Settings", std::unique_ptr<OptionMenu>(new OptionMenu()));
+	addMenu("Quit", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 	setCharacterSize(40);
 	setBubbleType(ABubble::Type::Think);
 }

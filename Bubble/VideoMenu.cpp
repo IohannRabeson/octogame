@@ -12,8 +12,7 @@ public:
 	void setIndex(void)
 	{
 		octo::GraphicsManager const & graphics = octo::Application::getGraphicsManager();
-		m_isFullscreen = graphics.isFullscreen();
-		setIndexCursor(m_isFullscreen);
+		setIndexCursor(graphics.isFullscreen());
 	}
 	void actionYes(void)
 	{
@@ -25,8 +24,6 @@ public:
 		octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 		graphics.setFullscreen(false);
 	}
-private:
-	bool	m_isFullscreen;
 };
 
 class YesNoVsync : public YesNoMenu
@@ -35,8 +32,7 @@ public:
 	void setIndex(void)
 	{
 		octo::GraphicsManager const & graphics = octo::Application::getGraphicsManager();
-		m_isVsync = graphics.isVerticalSyncEnabled();
-		setIndexCursor(m_isVsync);
+		setIndexCursor(graphics.isVerticalSyncEnabled());
 	}
 	void actionYes(void)
 	{
@@ -48,8 +44,6 @@ public:
 		octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 		graphics.setVerticalSyncEnabled(false);
 	}
-private:
-	bool	m_isVsync;
 };
 
 
@@ -60,8 +54,8 @@ VideoMenu::VideoMenu(void)
 
 void VideoMenu::createMenus(void)
 {
-	addMenu("Fullscreen", new YesNoFullscreen());
-	addMenu("Vertical Synchronisation", new YesNoVsync());
+	addMenu("Fullscreen", std::unique_ptr<YesNoFullscreen>(new YesNoFullscreen()));
+	addMenu("Vertical Synchronisation", std::unique_ptr<YesNoVsync>(new YesNoVsync()));
 	//TODO:
 	//addMenu("Resolution", new EmptyMenu());
 }

@@ -24,46 +24,46 @@ enum Type
 	ABubble(void);
 	virtual ~ABubble(void) = default;
 
-	void					update(sf::Time frameTime);
-	void					draw(sf::RenderTarget & render, sf::RenderStates states = sf::RenderStates()) const;
+	void							update(sf::Time frameTime);
+	void							draw(sf::RenderTarget & render, sf::RenderStates states = sf::RenderStates()) const;
 	
-	virtual sf::Vector2f	getContentSize() const = 0;
-	virtual void			updateContent(sf::Time frameTime, sf::Vector2f const & position) = 0;
-	virtual void			drawContent(sf::RenderTarget & render, sf::RenderStates states) const = 0;
+	virtual sf::Vector2f const &	getContentSize() const = 0;
+	virtual void					updateContent(sf::Time frameTime, sf::Vector2f const & position) = 0;
+	virtual void					drawContent(sf::RenderTarget & render, sf::RenderStates states) const = 0;
 
-	Type					getType(void) const;
-	sf::Vector2f			getContentUpLeft(void) const;
-	sf::Vector2f			getPosition(void) const;
-	sf::Color				getColor(void) const;
-	float					getSizeCorner(void) const;
-	bool					isActive(void) const;
-	void					setType(Type type);
-	void					setPosition(sf::Vector2f const & position);
-	void					setColor(sf::Color const & color);
-	void					setActive(bool isActive);
+	Type							getType(void) const;
+	sf::Vector2f const &			getContentUpLeft(void) const;
+	sf::Vector2f const &			getPosition(void) const;
+	sf::Color const &				getColor(void) const;
+	float							getSizeCorner(void) const;
+	bool							isActive(void) const;
+	void							setType(Type type);
+	void							setPosition(sf::Vector2f const & position);
+	void							setColor(sf::Color const & color);
+	void							setActive(bool isActive);
 
 private:
-	void					createOctogon(sf::Vector2f const & size,
-										float sizeCorner,
-										sf::Vector2f origin,
-										sf::Color const & color,
-										octo::VertexBuilder& builder);
+	void							createOctogon(sf::Vector2f const & size,
+												float sizeCorner,
+												sf::Vector2f const & origin,
+												sf::Color const & color,
+												octo::VertexBuilder& builder);
 
-	void					createExtension(sf::Vector2f const & position,
-											sf::Color const & color,
-											Type type,
-											octo::VertexBuilder& builder);
+	void							createExtension(sf::Vector2f const & position,
+													sf::Color const & color,
+													Type type,
+													octo::VertexBuilder& builder);
 
-	void					createExtensionSpeak(sf::Vector2f const & position,
-												 sf::Color const & color,
-												 octo::VertexBuilder& builder);
+	void							createExtensionSpeak(sf::Vector2f const & position,
+														 sf::Color const & color,
+														 octo::VertexBuilder& builder);
 
-	void					createExtensionThink(sf::Vector2f const & position,
-												 sf::Color const & color,
-												 octo::VertexBuilder& builder);
+	void							createExtensionThink(sf::Vector2f const & position,
+														 sf::Color const & color,
+														 octo::VertexBuilder& builder);
 
-	void					computePositionBubble(Type type,
-												  sf::Vector2f const & position);
+	void							computePositionBubble(Type type,
+														  sf::Vector2f const & position);
 
 	static constexpr float			m_sizeCorner = 20.f;
 

@@ -7,6 +7,8 @@
 # include <DefaultGraphicsListeners.hpp>
 # include <SFML/Graphics/CircleShape.hpp>
 
+# include <memory>
+
 class AMenuSelection : public AMenu,
 					   public octo::DefaultKeyboardListener
 {
@@ -19,7 +21,7 @@ public:
 	void				update(sf::Time frameTime, sf::Vector2f const & position);
 	void				draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
-	void				addMenu(std::string const & name, AMenu * menu);
+	void				addMenu(std::string const & name, std::unique_ptr<AMenu>&& menu);
 	virtual bool		onPressed(sf::Event::KeyEvent const & event);
 
 	virtual void		createMenus(void) = 0;
@@ -32,17 +34,17 @@ public:
 	std::size_t			getIndexCursor(void);
 
 private:
-	BubbleMenu					m_bubble;
-	ABubble::Type				m_type;
-	std::size_t					m_characterSize;
-	std::vector<std::string>	m_menuTitles;
-	std::vector<AMenu *>		m_menus;
+	BubbleMenu									m_bubble;
+	ABubble::Type								m_type;
+	std::size_t									m_characterSize;
+	std::vector<std::string>					m_menuTitles;
+	std::vector<std::unique_ptr<AMenu>>			m_menus;
 
-	std::vector<sf::Vector2f>	m_cursorPosition;
-	std::size_t					m_indexCursor;
-	bool						m_isKeyboard;
+	std::vector<sf::Vector2f>					m_cursorPosition;
+	std::size_t									m_indexCursor;
+	bool										m_isKeyboard;
 
-	sf::CircleShape				m_cursor;
+	sf::CircleShape								m_cursor;
 };
 
 #endif

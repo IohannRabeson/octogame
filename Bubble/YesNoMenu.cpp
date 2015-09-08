@@ -7,8 +7,8 @@ YesNoMenu::YesNoMenu(void)
 
 void YesNoMenu::createMenus(void)
 {
-	addMenu("No", new EmptyMenu());
-	addMenu("Yes", new EmptyMenu());
+	addMenu("No", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu("Yes", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	setIndex();
 	//setCharacterSize();
 }

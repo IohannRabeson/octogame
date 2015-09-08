@@ -57,7 +57,7 @@ void BubbleText::setup(std::string const & phrase, sf::Color const & color, std:
 	m_text.setString(m_phrase);
 }
 
-sf::Vector2f BubbleText::getContentSize() const
+sf::Vector2f const & BubbleText::getContentSize() const
 {
 	return m_contentSize;
 }

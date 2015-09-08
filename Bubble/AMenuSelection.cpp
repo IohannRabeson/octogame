@@ -10,11 +10,11 @@ AMenuSelection::AMenuSelection(void) :
 {
 }
 
-void AMenuSelection::addMenu(std::string const & name, AMenu * menu)
+void AMenuSelection::addMenu(std::string const & name, std::unique_ptr<AMenu>&& menu)
 {
 	m_menuTitles.push_back(name);
 	if (menu)
-		m_menus.push_back(menu);
+		m_menus.push_back(std::move(menu));
 }
 
 void AMenuSelection::setup(void)

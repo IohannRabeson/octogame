@@ -39,7 +39,7 @@ void ABubble::createExtension(sf::Vector2f const & position, sf::Color const & c
 		createExtensionThink(position, color, builder);
 }
 
-void ABubble::createOctogon(sf::Vector2f const & size, float sizeCorner, sf::Vector2f origin, sf::Color const & color, octo::VertexBuilder& builder)
+void ABubble::createOctogon(sf::Vector2f const & size, float sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
 	sf::Vector2f upLeft(-size.x, -size.y - sizeCorner);
 	sf::Vector2f upRight(size.x, -size.y - sizeCorner);
@@ -111,17 +111,17 @@ void ABubble::draw(sf::RenderTarget & render, sf::RenderStates states) const
 	}
 }
 
-sf::Vector2f ABubble::getContentUpLeft(void) const
+sf::Vector2f const & ABubble::getContentUpLeft(void) const
 {
 	return m_contentUpLeft;
 }
 
-sf::Vector2f ABubble::getPosition(void) const
+sf::Vector2f const & ABubble::getPosition(void) const
 {
 	return m_position;
 }
 
-sf::Color ABubble::getColor(void) const
+sf::Color const & ABubble::getColor(void) const
 {
 	return m_color;
 }

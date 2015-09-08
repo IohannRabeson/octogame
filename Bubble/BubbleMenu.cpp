@@ -51,7 +51,7 @@ std::vector<sf::Vector2f> const & BubbleMenu::getCursorPosition(void)
 	return m_cursorPosition;
 }
 
-sf::Vector2f BubbleMenu::getContentSize() const
+sf::Vector2f const & BubbleMenu::getContentSize() const
 {
 	return m_contentSize;
 }

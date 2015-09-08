@@ -13,13 +13,13 @@ public:
 	BubbleText(void);
 	virtual ~BubbleText(void) = default;
 
-	virtual void			setup(std::string const & phrase,
-									sf::Color const & color,
-									std::size_t characterSize = 0u);
+	virtual void					setup(std::string const & phrase,
+											sf::Color const & color,
+											std::size_t characterSize = 0u);
 
-	virtual sf::Vector2f	getContentSize(void) const;
-	virtual void			updateContent(sf::Time frameTime, sf::Vector2f const & position);
-	virtual void			drawContent(sf::RenderTarget & render, sf::RenderStates states) const;
+	virtual sf::Vector2f const &	getContentSize(void) const;
+	virtual void					updateContent(sf::Time frameTime, sf::Vector2f const & position);
+	virtual void					drawContent(sf::RenderTarget & render, sf::RenderStates states) const;
 
 private:
 	void setupBlocString(void);
