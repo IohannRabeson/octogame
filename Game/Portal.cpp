@@ -7,6 +7,7 @@
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
 #include <Camera.hpp>
+#include <cassert>
 
 Portal::Portal(void) :
 	m_position(40.f, 0.f),
@@ -134,13 +135,14 @@ Portal::PortalParticle::PortalParticle(void) :
 
 void Portal::PortalParticle::update(sf::Time frameTime)
 {
+	assert(m_biome);
 	ParticleSystem::update(frameTime);
 	if (ParticleSystem::getCount() < m_maxParticle)
 	{
 		float direction = m_directionDistri(m_engine);
 		float distance = m_distanceDistri(m_engine);
-		if (m_biome)
-			m_color = m_biome->getParticleColorGround();
+
+		m_color = m_biome->getParticleColorGround();
 		emplace(m_color, m_emitter, sf::Vector2f(1.f, 1.f), direction * 180.f,
 				sf::Time::Zero,
 				sf::seconds(m_lifeTimeDistri(m_engine)),

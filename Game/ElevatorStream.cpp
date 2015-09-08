@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ElevatorStream.cpp                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/07 15:52:38 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "ElevatorStream.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
@@ -317,7 +305,7 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
 	createRay();
 
-	sf::Vector2f position = m_particles->getPosition();
+	sf::Vector2f const & position = m_particles->getPosition();
 	m_spriteBottomFront.setPosition(position + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
 	m_spriteBottomBack.setPosition(position + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
 	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
