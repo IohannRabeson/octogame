@@ -5,11 +5,13 @@
 # include <SFML/Graphics/Shader.hpp>
 # include <SFML/System/Time.hpp>
 
+# include <AnimatedSprite.hpp>
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
 # include <Interpolations.hpp>
 
 # include "AGameObject.hpp"
+# include "ABiome.hpp"
 
 # include <random>
 # include <ctime>
@@ -33,6 +35,7 @@ private:
 		//TODO: getColor particle from next biome
 		PortalParticle(void);
 		void setRadius(float radius);
+		void setBiome(ABiome & biome);
 		inline void setColor(sf::Color const & color) { m_color = color; }
 		inline void setEmitter(sf::Vector2f const & emitter) { m_emitter = emitter; }
 		inline void setMaxParticle(std::size_t maxParticle) { m_maxParticle = maxParticle; }
@@ -51,6 +54,7 @@ private:
 		Dist			m_lifeTimeDistri;
 		Dist			m_directionDistri;
 		Dist			m_distanceDistri;
+		ABiome *		m_biome;
 	};
 
 public:
@@ -65,6 +69,7 @@ public:
 
 	void setPosition(sf::Vector2f const & position);
 	void setRadius(float radius);
+	void setBiome(ABiome & biome);
 	inline float getRadius(void) const { return m_radius; }
 	inline void appear(void) { m_state = State::Appear; }
 	inline void disappear(void) { m_state = State::Disappear; }
@@ -84,6 +89,8 @@ private:
 	float				m_timerMax;
 	CircleShape *		m_box;
 
+	octo::SpriteAnimation			m_animation;
+	octo::AnimatedSprite			m_sprite;
 };
 
 #endif

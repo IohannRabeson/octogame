@@ -1,21 +1,10 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ElevatorStream.hpp                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/08/01 03:53:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/18 11:38:02 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#ifndef TELEPORTBEAM_HPP
-# define TELEPORTBEAM_HPP
+#ifndef ELEVATORBEAM_HPP
+# define ELEVATORBEAM_HPP
 # include <SFML/Graphics/RectangleShape.hpp>
 # include <SFML/Graphics/Shader.hpp>
 # include <SFML/System/Time.hpp>
 
+# include <AnimatedSprite.hpp>
 # include <VertexBuilder.hpp>
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
@@ -35,6 +24,7 @@ class ElevatorStream : public AGameObject<GameObjectType::Elevator>
 public:
 	ElevatorStream();
 
+	void		setupSprite(void);
 	void		setPosX(float x);
 	void		setPosY(float y);
 	void		setHeight(float height);
@@ -51,7 +41,9 @@ public:
 	void		createRay(void);
 
 	void		update(sf::Time frameTime);
-	void		draw(sf::RenderTarget& render)const;
+	void		drawBack(sf::RenderTarget& render)const;
+	void		drawFront(sf::RenderTarget& render)const;
+
 private:
 	std::shared_ptr<BeamParticle>	m_particles;
 	sf::Shader						m_shader;
@@ -65,6 +57,12 @@ private:
 	sf::Color						m_borderColor;
 	sf::Color						m_centerColor;
 	sf::Color						m_upColor;
+
+	octo::SpriteAnimation			m_animation;
+	octo::AnimatedSprite			m_spriteBottomFront;
+	octo::AnimatedSprite			m_spriteBottomBack;
+	octo::AnimatedSprite			m_spriteTopFront;
+	octo::AnimatedSprite			m_spriteTopBack;
 };
 
 #endif

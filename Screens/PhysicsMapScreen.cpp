@@ -163,6 +163,7 @@ void	PhysicsMapScreen::draw(sf::RenderTarget& render)const
 {
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
-	render.draw(m_groundManager);
+	m_groundManager.drawBack(render, states);
+	m_groundManager.drawFront(render, states);
 	m_engine.debugDraw(render);
 }
