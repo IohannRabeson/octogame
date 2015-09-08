@@ -2,11 +2,13 @@
 # define ABUBBLE_HPP
 
 # include "DecorAnimator.hpp"
+# include <VertexBuilder.hpp>
 # include <SFML/Graphics/Text.hpp>
 # include <SFML/Graphics/RenderTarget.hpp>
-# include <VertexBuilder.hpp>
 # include <SFML/Graphics/Drawable.hpp>
 # include <SFML/Graphics/Transformable.hpp>
+
+# include <memory>
 
 class ABubble : public sf::Drawable,
 				public sf::Transformable
