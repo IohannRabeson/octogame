@@ -101,16 +101,17 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			//TODO: use resource to load good npc
-			std::unique_ptr<CharacterNpc> npc;
-			npc.reset(new CharacterNpc());
+			//TODO: factory to instanciate the good npc
+			std::unique_ptr<ClassicNpc> npc;
+			npc.reset(new ClassicNpc(spriteTrigger.name.c_str()));
 			sf::FloatRect rect;
 			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
 			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
 			rect.width = spriteTrigger.trigger.width;
 			rect.height = spriteTrigger.trigger.height;
 			sf::Vector2f position(rect.left, rect.top + rect.height);
-			npc->setup(position, rect);
+			npc->setArea(rect);
+			npc->setPosition(position);
 			m_npcs.push_back(std::move(npc));
 		}
 
@@ -701,7 +702,7 @@ void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) cons
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render);
 	for (auto & npc : m_npcs)
-		npc->draw(render);
+		npc->draw(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 
