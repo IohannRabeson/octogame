@@ -46,7 +46,9 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp					\
-				Game/MusicPlayer.cpp					\
+				Game/ANpc.cpp							\
+				Game/ClassicNpc.cpp						\
+				Game/MusicPlayer.cpp
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

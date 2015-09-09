@@ -14,7 +14,6 @@
 #include <Camera.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
-#include <Console.hpp>
 
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
@@ -76,23 +75,6 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 
 void GroundManager::setupGameObjects(ABiome & biome)
 {
-	octo::Console&				console = octo::Application::getConsole();
-
-	// Setup somes console commands
-	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setRotationFactor(factor);
-				}
-			});
-	console.addCommand(L"test.elevators.setWidth", [this](float width)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setWidth(width);
-				}
-			});
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
@@ -101,16 +83,17 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			//TODO: use resource to load good npc
-			std::unique_ptr<CharacterNpc> npc;
-			npc.reset(new CharacterNpc());
+			//TODO: factory to instanciate the good npc
+			std::unique_ptr<ClassicNpc> npc;
+			npc.reset(new ClassicNpc(spriteTrigger.name.c_str()));
 			sf::FloatRect rect;
 			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
 			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
 			rect.width = spriteTrigger.trigger.width;
 			rect.height = spriteTrigger.trigger.height;
 			sf::Vector2f position(rect.left, rect.top + rect.height);
-			npc->setup(position, rect);
+			npc->setArea(rect);
+			npc->setPosition(position);
 			m_npcs.push_back(std::move(npc));
 		}
 
@@ -710,6 +693,8 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 		elevator.m_gameObject->drawBack(render);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render);
+	for (auto & npc : m_npcs)
+		npc->draw(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 
@@ -719,7 +704,5 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerFront, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render);
-	for (auto & npc : m_npcs)
-		npc->draw(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
