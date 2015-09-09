@@ -15,7 +15,6 @@
 #include <Camera.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
-#include <Console.hpp>
 
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
@@ -77,23 +76,6 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 
 void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
-	octo::Console&				console = octo::Application::getConsole();
-
-	// Setup somes console commands
-	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setRotationFactor(factor);
-				}
-			});
-	console.addCommand(L"test.elevators.setWidth", [this](float width)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setWidth(width);
-				}
-			});
 
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 
@@ -125,7 +107,15 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		std::unique_ptr<ElevatorStream> elevator;
 		elevator.reset(new ElevatorStream());
 		elevator->setPosX(instance.first * Tile::TileSize - elevator->getWidth());
-		elevator->setTopY((-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize);
+		octo::Array3D<octo::LevelMap::TileType> const & map = levelMap.getMap();
+		for (std::size_t y = 0; y < map.rows(); y++)
+		{
+			if (map(0, y, 0) != octo::LevelMap::TileType::Empty)
+			{
+				elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + MapInstance::HeightOffset - 9) * Tile::TileSize);
+				break;
+			}
+		}
 		elevator->setHeight(400.f);
 		elevator->setBiome(biome);
 		std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
@@ -135,6 +125,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	std::unique_ptr<Portal> portal;
 	portal.reset(new Portal());
 	portal->setRadius(100.f);
+	portal->setBiome(biome);
 	m_portals.emplace_back(15, portal->getRadius() * 2.f / Tile::TileSize, portal);
 
 	// Register position for gameobjects on the ground
@@ -469,7 +460,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 				min = tmp;
 		}
 		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x - Map::OffsetX + elevator.m_gameObject->getWidth() / 2.f + Tile::TileSize);
-		elevator.m_gameObject->setPosY(min);
+		elevator.m_gameObject->setPosY(min - Tile::TileSize);
 		elevator.m_gameObject->setHeight(min - elevator.m_gameObject->getTopY());
 	}
 
@@ -482,7 +473,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			if (tmp < max)
 				max = tmp;
 		}
-		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TileSize));
+		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TripleTileSize));
 	}
 
 	for (auto const & npc : m_npcs)
@@ -701,10 +692,11 @@ void GroundManager::update(float deltatime)
 	updateGameObjects(deltatime);
 }
 
-void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
+void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	render.draw(m_decorManagerBack, states);
 	for (auto & elevator : m_elevators)
-		elevator.m_gameObject->draw(render);
+		elevator.m_gameObject->drawBack(render);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render);
 	for (auto & npc : m_npcs)
@@ -712,17 +704,11 @@ void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) cons
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 
-DecorManager const & GroundManager::getDecorsBack(void) const
+void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	return m_decorManagerBack;
-}
-
-DecorManager const & GroundManager::getDecorsFront(void) const
-{
-	return m_decorManagerFront;
-}
-
-DecorManager const & GroundManager::getDecorsGround(void) const
-{
-	return m_decorManagerGround;
+	render.draw(m_decorManagerGround, states);
+	render.draw(m_decorManagerFront, states);
+	for (auto & elevator : m_elevators)
+		elevator.m_gameObject->drawFront(render);
+	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }

@@ -14,7 +14,7 @@ class TileShape;
 class ABiome;
 class SkyCycle;
 
-class GroundManager : public sf::Drawable
+class GroundManager
 {
 public:
 	enum GenerationState
@@ -29,10 +29,8 @@ public:
 
 	void setup(ABiome & biome, SkyCycle & cycle);
 	void update(float deltatime);
-	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
-	DecorManager const & getDecorsBack(void) const;
-	DecorManager const & getDecorsFront(void) const;
-	DecorManager const & getDecorsGround(void) const;
+	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
+	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 

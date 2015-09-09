@@ -134,12 +134,9 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
-	//m_physicsEngine.debugDraw(render);
-	render.draw(m_groundManager->getDecorsBack(), states);
+	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
-	render.draw(m_groundManager->getDecorsGround(), states);
-	render.draw(m_groundManager->getDecorsFront(), states);
-	render.draw(*m_groundManager, states);
+	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);
 }
