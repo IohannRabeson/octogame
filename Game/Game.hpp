@@ -22,8 +22,9 @@ class Game : public octo::DefaultKeyboardListener, public IContactListener
 public:
 	Game();
 
-	void	setup();
-	void	loadLevel(std::string const& fileName);
+	void			setup();
+	void			loadLevel(std::string const& fileName);
+	sf::Vector2f	getOctoBubblePosition(void) const;
 
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
@@ -35,7 +36,7 @@ private:
 	std::unique_ptr<SkyManager>			m_skyManager;
 	std::unique_ptr<GroundManager>		m_groundManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
-	MusicPlayer							m_musicPlayer;
+	std::unique_ptr<MusicPlayer>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<CharacterNpc>		m_npc; //TODO: remove
 

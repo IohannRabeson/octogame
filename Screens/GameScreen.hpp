@@ -14,20 +14,21 @@
 # define GAMESCREEN_HPP
 # include <AbstractState.hpp>
 # include <GraphicsListeners.hpp>
-# include <Camera.hpp>
 
 # include "Game.hpp"
+# include "MainMenu.hpp"
 
 class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
-	virtual void	start();
-	virtual void	pause();
-	virtual void	resume();
-	virtual void	stop();
-	virtual void	update(sf::Time frameTime);
-	virtual void	draw(sf::RenderTarget& render)const;
+	virtual void		start();
+	virtual void		pause();
+	virtual void		resume();
+	virtual void		stop();
+	virtual void		update(sf::Time frameTime);
+	virtual void		draw(sf::RenderTarget& render)const;
 private:
-	Game			m_game;
+	MainMenu			m_menu;
+	Game				m_game;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 };
