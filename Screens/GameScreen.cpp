@@ -4,7 +4,6 @@
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
-#include <AudioManager.hpp>
 #include <Options.hpp>
 
 void	GameScreen::start()
@@ -12,15 +11,9 @@ void	GameScreen::start()
 	m_game.setup();
 	m_game.loadLevel("default");
 
+	m_menu.setup();
+
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	octo::AudioManager& audio = octo::Application::getAudioManager();
-	octo::Options& option = octo::Application::getOptions();
-
-	graphics.addKeyboardListener(this);
-	//TODO: To remove when menu will be implement
-	audio.setSoundVolume(option.getValue("sound", 0u));
-	audio.setMusicVolume(option.getValue("music", 0u));
-
 	graphics.addKeyboardListener(this);
 }
 
@@ -38,13 +31,27 @@ void	GameScreen::stop()
 
 void	GameScreen::update(sf::Time frameTime)
 {
-	m_game.update(frameTime);
+	AMenu::State state = m_menu.getState();
+	if (state == AMenu::State::Active || state == AMenu::State::Draw)
+		m_menu.update(frameTime, m_game.getOctoBubblePosition());
+	else
+	{
+		m_menu.setKeyboard(false);
+		m_game.update(frameTime);
+	}
 }
 
 bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 {
 	switch (event.code)
 	{
+		case sf::Keyboard::Escape:
+		{
+			AMenu::State state = m_menu.getState();
+			if (state == AMenu::State::Hide)
+				m_menu.setState(AMenu::State::Active);
+			break;
+		}
 		default:
 			break;
 	}	
@@ -54,4 +61,6 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 void	GameScreen::draw(sf::RenderTarget& render)const
 {
 	m_game.draw(render, sf::RenderStates());
+	if (m_menu.getState() == AMenu::State::Active || m_menu.getState() == AMenu::State::Draw)
+		render.draw(m_menu);
 }

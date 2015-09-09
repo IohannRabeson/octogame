@@ -7,14 +7,14 @@
 #include "Rainbow.hpp"
 #include "SkyCycle.hpp"
 #include "MapInstance.hpp"
-//#include "FunctionsOffset.hpp"
+#include "ClassicNpc.hpp"
+#include "CedricNpc.hpp"
 #include <limits>
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
-#include <Console.hpp>
 
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
@@ -69,30 +69,16 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	setupDecors(biome);
 
 	// Init game objects
-	setupGameObjects(biome);
+	setupGameObjects(biome, cycle);
 
 	swapMap();
 }
 
-void GroundManager::setupGameObjects(ABiome & biome)
+void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
-	octo::Console&				console = octo::Application::getConsole();
 
-	// Setup somes console commands
-	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setRotationFactor(factor);
-				}
-			});
-	console.addCommand(L"test.elevators.setWidth", [this](float width)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setWidth(width);
-				}
-			});
+	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
+
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
@@ -101,16 +87,19 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			//TODO: use resource to load good npc
-			std::unique_ptr<CharacterNpc> npc;
-			npc.reset(new CharacterNpc());
+			std::unique_ptr<ANpc> npc;
+			if (!spriteTrigger.name.compare(CEDRIC_OSS)) //C'est moche mais la generic factory ne permet pas de donner une variable au constructeur
+				npc.reset(new CedricNpc(skyCycle));
+			else
+				npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
 			sf::FloatRect rect;
 			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
 			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
 			rect.width = spriteTrigger.trigger.width;
 			rect.height = spriteTrigger.trigger.height;
 			sf::Vector2f position(rect.left, rect.top + rect.height);
-			npc->setup(position, rect);
+			npc->setArea(rect);
+			npc->setPosition(position);
 			m_npcs.push_back(std::move(npc));
 		}
 
@@ -136,6 +125,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	std::unique_ptr<Portal> portal;
 	portal.reset(new Portal());
 	portal->setRadius(100.f);
+	portal->setBiome(biome);
 	m_portals.emplace_back(15, portal->getRadius() * 2.f / Tile::TileSize, portal);
 
 	// Register position for gameobjects on the ground
@@ -709,6 +699,8 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 		elevator.m_gameObject->drawBack(render);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render);
+	for (auto & npc : m_npcs)
+		npc->draw(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 
@@ -718,7 +710,5 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerFront, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render);
-	for (auto & npc : m_npcs)
-		npc->draw(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }

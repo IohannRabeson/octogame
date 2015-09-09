@@ -1,17 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ElevatorStream.hpp                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/08/01 03:53:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/07 15:51:45 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#ifndef TELEPORTBEAM_HPP
-# define TELEPORTBEAM_HPP
+#ifndef ELEVATORBEAM_HPP
+# define ELEVATORBEAM_HPP
 # include <SFML/Graphics/RectangleShape.hpp>
 # include <SFML/Graphics/Shader.hpp>
 # include <SFML/System/Time.hpp>

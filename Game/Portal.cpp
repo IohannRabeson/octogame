@@ -7,6 +7,7 @@
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
 #include <Camera.hpp>
+#include <cassert>
 
 Portal::Portal(void) :
 	m_position(40.f, 0.f),
@@ -42,7 +43,7 @@ Portal::Portal(void) :
 	setRadius(m_radius);
 	setPosition(m_position);
 
-	static float const	Size = 6.f;
+	static float const	Size = 8.f;
 	PortalParticle::Prototype	prototype;
 
 	prototype.emplace_back(sf::Vertex({-Size, Size}));
@@ -57,9 +58,8 @@ Portal::Portal(void) :
 	frames.emplace_back(sf::seconds(0.4), 3);
 	m_animation.setFrames(frames);
 	m_animation.setLoop(octo::LoopMode::Loop);
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(PORTAL_OSS));
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(OBJECT_PORTAL_OSS));
 	m_sprite.setAnimation(m_animation);
-	m_sprite.setScale(sf::Vector2f(0.8f, 0.8f));
 	m_sprite.play();
 }
 
@@ -111,7 +111,7 @@ void Portal::update(sf::Time frametime)
 		}
 	}
 
-	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 58.f));
+	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 52.f));
 	m_sprite.update(frametime);
 	m_state = Disappear;
 }
@@ -139,10 +139,15 @@ void Portal::appear(void)
 	m_state = State::Appear;
 }
 
+void Portal::setBiome(ABiome & biome)
+{
+	m_particles.setBiome(biome);
+}
+
 void Portal::draw(sf::RenderTarget & render) const
 {
-	m_particles.draw(render);
 	render.draw(m_sprite);
+	m_particles.draw(render);
 }
 
 Portal::PortalParticle::PortalParticle(void) :
@@ -152,17 +157,21 @@ Portal::PortalParticle::PortalParticle(void) :
 	m_engine(std::time(0)),
 	m_lifeTimeDistri(1.f, 2.f),
 	m_directionDistri(0.f, octo::Pi2),
-	m_distanceDistri(m_radius, m_radius * 1.3f)
+	m_distanceDistri(m_radius, m_radius * 2.f),
+	m_biome(nullptr)
 {}
 
 void Portal::PortalParticle::update(sf::Time frameTime)
 {
+	assert(m_biome);
 	ParticleSystem::update(frameTime);
 	if (ParticleSystem::getCount() < m_maxParticle)
 	{
 		float direction = m_directionDistri(m_engine);
 		float distance = m_distanceDistri(m_engine);
-		emplace(m_color, m_emitter, sf::Vector2f(1.f, 1.f), m_directionDistri(m_engine) * 180.f,
+
+		m_color = m_biome->getParticleColorGround();
+		emplace(m_color, m_emitter, sf::Vector2f(1.f, 1.f), direction * 180.f,
 				sf::Time::Zero,
 				sf::seconds(m_lifeTimeDistri(m_engine)),
 				m_emitter + sf::Vector2f(std::sin(direction) * distance, std::cos(direction) * distance), m_emitter);
@@ -172,7 +181,12 @@ void Portal::PortalParticle::update(sf::Time frameTime)
 void Portal::PortalParticle::setRadius(float radius)
 {
 	m_radius = radius;
-	m_distanceDistri.param(std::uniform_real_distribution<float>::param_type(m_radius * 1.3f, m_radius * 1.8f));
+	m_distanceDistri.param(std::uniform_real_distribution<float>::param_type(m_radius * 2.3f, m_radius * 2.8f));
+}
+
+void Portal::PortalParticle::setBiome(ABiome & biome)
+{
+	m_biome = &biome;
 }
 
 void Portal::PortalParticle::updateParticle(sf::Time frameTime, Particle& particle)

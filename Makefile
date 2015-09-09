@@ -1,5 +1,5 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Decors Physics Game Biomes
+DIRS = Main Firefly Screens Map Decors Physics Game Biomes Bubble
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -18,9 +18,10 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_OCTO)										\
 	  $(SRC_BIOMES)										\
 	  $(SRC_DECORS)										\
+	  $(SRC_BUBBLE)										\
 	  $(SRC_GAME)										\
 	  Main/DefaultApplicationListener.cpp				\
-	  Main/main.cpp
+	  Main/main.cpp										\
 
 SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/FireflyTestScreen.cpp			\
@@ -35,8 +36,9 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/DecorManagerDemoScreen.cpp		\
 				Screens/ParticleDemoScreen.cpp			\
 				Screens/ResourceLoadingScreen.cpp		\
+				Screens/QuitScreen.cpp					\
 				Screens/FsmDemoScreen.cpp				\
-				Screens/ElevatorStreamDemo.cpp
+				Screens/ElevatorStreamDemo.cpp			\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
@@ -44,11 +46,27 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp					\
+				Game/ANpc.cpp							\
+				Game/ClassicNpc.cpp						\
+				Game/CedricNpc.cpp						\
 				Game/MusicPlayer.cpp
+
+SRC_BUBBLE =	Bubble/ABubble.cpp						\
+				Bubble/BubbleText.cpp					\
+				Bubble/BubbleMenu.cpp					\
+				Bubble/AMenu.cpp						\
+				Bubble/AMenuSelection.cpp				\
+				Bubble/MainMenu.cpp						\
+				Bubble/OptionMenu.cpp					\
+				Bubble/VideoMenu.cpp					\
+				Bubble/AudioMenu.cpp					\
+				Bubble/ControlMenu.cpp					\
+				Bubble/YesNoMenu.cpp					\
+				Bubble/EmptyMenu.cpp					\
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
 				Firefly/FireflyPopulation.cpp			\
-				Firefly/FireflyPositionBehaviors.cpp
+				Firefly/FireflyPositionBehaviors.cpp	\
 
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\
@@ -56,11 +74,11 @@ SRC_MAP =		Map/Map.cpp								\
 				Map/ParallaxScrolling.cpp				\
 				Map/GenerativeLayer.cpp					\
 				Map/Tile.cpp							\
-				Map/MapInstance.cpp
+				Map/MapInstance.cpp						\
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
-				Biomes/DefaultBiome.cpp
+				Biomes/DefaultBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
@@ -69,7 +87,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/RandomGenerator.cpp				\
 				Decors/DecorAnimator.cpp				\
 				Decors/Crystal.cpp						\
-				Decors/ShineBuilder.cpp					\
+				Decors/AShineBuilder.cpp				\
 				Decors/ShineEffect.cpp					\
 				Decors/Star.cpp							\
 				Decors/Rainbow.cpp						\
@@ -83,7 +101,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/Sky.cpp							\
 				Decors/SunLight.cpp						\
 				Decors/Lightning.cpp					\
-				Decors/DropSystem.cpp
+				Decors/DropSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
@@ -93,7 +111,7 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/PhysicsEngine.cpp				\
 				Physics/ShapeBuilder.cpp				\
 				Physics/GroupShape.cpp					\
-				Physics/AShape.cpp
+				Physics/AShape.cpp						\
 
 
 # package files
@@ -111,7 +129,8 @@ DEFAULT_SRC = $(RESOURCES_DIR)/Sound/*			\
 			  $(RESOURCES_DIR)/Color/*			\
 			  $(RESOURCES_DIR)/Map/*			\
 			  $(RESOURCES_DIR)/SpriteSheet/*	\
-			  $(RESOURCES_DIR)/Shader/*
+			  $(RESOURCES_DIR)/Shader/*			\
+			  $(RESOURCES_DIR)/Text/*			\
 
 # compiler
 COMPILER = $(CXX)
