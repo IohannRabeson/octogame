@@ -6,6 +6,7 @@
 # include <CharacterAnimation.hpp>
 # include "AGameObject.hpp"
 # include "ResourceDefinitions.hpp"
+# include "BubbleText.hpp"
 
 class RectangleShape;
 
@@ -18,6 +19,7 @@ public:
 	void setPosition(sf::Vector2f const & position);
 	void setOrigin(sf::Vector2f const & origin);
 	void setSize(sf::Vector2f const & size);
+	void setTexts(std::vector<std::string> const & texts);
 	void addMapOffset(float x, float y);
 	sf::Vector2f const & getPosition(void) const;
 
@@ -43,6 +45,7 @@ protected:
 
 	void setVelocity(float velocity);
 	void setBoxCollision(std::size_t type, std::size_t mask);
+	void setCurrentText(std::size_t index);
 	void setupIdleAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode);
 	void setupWalkAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode);
 
@@ -57,13 +60,15 @@ protected:
 	virtual void updatePhysics(void);
 
 private:
-	octo::CharacterSprite		m_sprite;
-	octo::CharacterAnimation	m_idleAnimation;
-	octo::CharacterAnimation	m_walkAnimation;
-	RectangleShape *			m_box;
-	sf::FloatRect				m_area;
-	sf::Vector2f				m_origin;
-	float						m_velocity;
+	std::vector<std::unique_ptr<BubbleText>>	m_texts;
+	octo::CharacterSprite						m_sprite;
+	octo::CharacterAnimation					m_idleAnimation;
+	octo::CharacterAnimation					m_walkAnimation;
+	RectangleShape *							m_box;
+	sf::FloatRect								m_area;
+	sf::Vector2f								m_origin;
+	float										m_velocity;
+	std::size_t									m_currentText;
 
 	static void setupAnimation(octo::CharacterAnimation & animation, std::initializer_list<FramePair> list, octo::LoopMode loopMode);
 

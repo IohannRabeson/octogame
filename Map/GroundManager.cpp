@@ -7,7 +7,6 @@
 #include "Rainbow.hpp"
 #include "SkyCycle.hpp"
 #include "MapInstance.hpp"
-//#include "FunctionsOffset.hpp"
 #include <limits>
 #include <Interpolations.hpp>
 #include <Application.hpp>
@@ -76,7 +75,18 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 
 void GroundManager::setupGameObjects(ABiome & biome)
 {
-	octo::Console&				console = octo::Application::getConsole();
+	octo::Console &				console = octo::Application::getConsole();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+	std::map<ResourceKey, std::vector<std::string>>	npcTexts;
+	std::istringstream f(resources.getText(DIALOGS_TXT).toAnsiString());
+	std::string key;
+	std::string line;
+	while (std::getline(f, key, '='))
+	{
+		std::getline(f, line);
+		npcTexts[key.c_str()].push_back(line);
+	}
 
 	// Setup somes console commands
 	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
@@ -97,7 +107,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
 	{
-		octo::LevelMap const & levelMap = octo::Application::getResourceManager().getLevelMap(instance.second);
+		octo::LevelMap const & levelMap = resources.getLevelMap(instance.second);
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
@@ -112,6 +122,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			sf::Vector2f position(rect.left, rect.top + rect.height);
 			npc->setArea(rect);
 			npc->setPosition(position);
+			npc->setTexts(npcTexts[spriteTrigger.name.c_str()]);
 			m_npcs.push_back(std::move(npc));
 		}
 

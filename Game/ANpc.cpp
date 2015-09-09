@@ -6,7 +6,8 @@
 
 ANpc::ANpc(ResourceKey const & npcId) :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
-	m_velocity(200.f)
+	m_velocity(200.f),
+	m_currentText(0u)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -122,9 +123,25 @@ void ANpc::setBoxCollision(std::size_t type, std::size_t mask)
 	m_box->setCollisionMask(mask);
 }
 
+void ANpc::setCurrentText(std::size_t index)
+{
+	m_currentText = index;
+}
+
 void ANpc::setSize(sf::Vector2f const & size)
 {
 	m_box->setSize(size);
+}
+
+void ANpc::setTexts(std::vector<std::string> const & texts)
+{
+	for (std::size_t i = 0u; i < texts.size(); i++)
+	{
+		std::unique_ptr<BubbleText> bubble;
+		bubble.reset(new BubbleText());
+		bubble->setup(texts[i], sf::Color::White);
+		m_texts.push_back(std::move(bubble));
+	}
 }
 
 void ANpc::addMapOffset(float x, float y)
