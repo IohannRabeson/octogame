@@ -60,6 +60,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 
 	private:
 	octo::CharacterSprite		m_sprite;
+	float						m_spriteScale;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
 	octo::CharacterAnimation	m_jumpAnimation;

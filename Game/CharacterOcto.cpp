@@ -6,6 +6,7 @@
 #include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
+	m_spriteScale(1.f),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondUmbrella(-300.f),
@@ -45,6 +46,8 @@ void	CharacterOcto::setup(void)
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
+	//TODO:
+	//m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
 	m_timeEventFall = sf::Time::Zero;
 	m_timeEventIdle = sf::Time::Zero;
@@ -116,7 +119,10 @@ void	CharacterOcto::setupAnimation()
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_umbrellaAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {28, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {49, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {50, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {51, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {52, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_umbrellaAnimation.setLoop(octo::LoopMode::NoLoop);
 
@@ -520,7 +526,7 @@ void	CharacterOcto::caseLeft()
 			m_sprite.setNextEvent(Left);
 		if (!m_originMove)
 		{
-			m_sprite.setScale(-1.f, 1.f);
+			m_sprite.setScale(-1.f * m_spriteScale, 1.f * m_spriteScale);
 			m_sprite.setOrigin(m_sprite.getOrigin().x + 177.f, 0.f);
 			m_originMove = true;
 		}
@@ -537,7 +543,7 @@ void	CharacterOcto::caseRight()
 			m_sprite.setNextEvent(Right);
 		if (m_originMove)
 		{
-			m_sprite.setScale(1.f, 1.f);
+			m_sprite.setScale(1.f * m_spriteScale, 1.f * m_spriteScale);
 			m_sprite.setOrigin(m_sprite.getOrigin().x - 177.f, 0.f);
 			m_originMove = false;
 		}
