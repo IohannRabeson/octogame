@@ -5,7 +5,7 @@
 #include <ResourceManager.hpp>
 
 ANpc::ANpc(ResourceKey const & npcId) :
-	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false))
+	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_velocity(200.f)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
