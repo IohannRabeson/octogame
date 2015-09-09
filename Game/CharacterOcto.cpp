@@ -261,6 +261,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	}
 	else
 		m_sprite.update(frameTime);
+	m_previousTop = m_box->getGlobalBounds().top;
 	m_collisionTile = false;
 	m_collisionElevator = false;
 }
@@ -437,12 +438,12 @@ void	CharacterOcto::dance()
 
 void	CharacterOcto::commitPhysicsToGraphics()
 {
-	sf::Vector2f const&	pos = m_box->getBaryCenter();
+
+	sf::Vector2f const&	pos = m_box->getRenderCenter();
 	float				xPos = pos.x - (m_sprite.getLocalSize().x / 2.f);
 	float				yPos =  pos.y - (m_sprite.getLocalSize().y - (m_box->getSize().y / 2.f));
 
 	m_sprite.setPosition(sf::Vector2f(xPos, yPos + m_deltaPositionY));
-	m_previousTop = m_box->getGlobalBounds().top;
 }
 
 void	CharacterOcto::commitControlsToPhysics(float frametime)

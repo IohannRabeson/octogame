@@ -223,6 +223,7 @@ void PhysicsEngine::update(float deltatime)
 					shape->addEngineVelocity(m_gravity * dt);
 			}
 			shape->registerPreviousPosition();
+			shape->registerPreviousCenter();
 		}
 		// Tile don't move so we update them now
 		for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
@@ -245,6 +246,7 @@ void PhysicsEngine::update(float deltatime)
 	{
 		shape->resetVelocity();
 		shape->setRenderPosition(octo::linearInterpolation(shape->getPreviousPosition(), shape->getPosition(), alpha));
+		shape->setRenderCenter(octo::linearInterpolation(shape->getPreviousCenter(), shape->getBaryCenter(), alpha));
 	}
 
 	// Send collision event
