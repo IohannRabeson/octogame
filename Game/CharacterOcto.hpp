@@ -23,7 +23,6 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Fall,
 		Dance,
 		Umbrella,
-		Elevator,
 		Death,
 		Drink,
 	};
@@ -31,47 +30,50 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	CharacterOcto();
 	~CharacterOcto();
 
-	void			setup(void);
-	void			update(sf::Time frameTime);
-	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+	void					setup(void);
+	void					update(sf::Time frameTime);
+	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 
-	bool			onPressed(sf::Event::KeyEvent const& event);
-	bool			onReleased(sf::Event::KeyEvent const& event);
-	sf::Vector2f	getPosition() const;
-	void			onCollision(GameObjectType type);
+	bool					onPressed(sf::Event::KeyEvent const& event);
+	bool					onReleased(sf::Event::KeyEvent const& event);
+	sf::Vector2f const &	getPosition() const;
+	sf::Vector2f			getBubblePosition() const;
+	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
+	void					setTopElevator(float top);
+
 	private:
+	bool	dieFall();
+	bool	endDeath();
+	void	timeEvent(sf::Time frameTime);
 	void	setupAnimation();
 	void	setupMachine();
-	void	collisionTileUpdate(sf::Time frameTime);
-	void	collisionElevatorUpdate(sf::Time frameTime);
-	void	commitControlsToPhysics(sf::Time frameTime);
+	void	collisionTileUpdate();
+	void	onSky(Events event);
+	void	collisionElevatorUpdate();
+	void	commitControlsToPhysics(float frametime);
 	void	commitPhysicsToGraphics();
 	void	caseLeft();
 	void	caseRight();
 	void	caseSpace();
 	void	caseUp();
-	void	dieFall();
-	void	endDeath();
 	void	dance();
 
 	private:
 	octo::CharacterSprite		m_sprite;
+	float						m_spriteScale;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
 	octo::CharacterAnimation	m_danceAnimation;
 	octo::CharacterAnimation	m_umbrellaAnimation;
-	octo::CharacterAnimation	m_elevatorAnimation;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
 
-	sf::Clock					m_clockAFK;
-	sf::Clock					m_clockFall;
-	sf::Clock					m_clockDeath;
-	sf::Clock					m_clockCollisionTile;
-	sf::Clock					m_clockCollisionElevator;
+	sf::Time					m_timeEventFall;
+	sf::Time					m_timeEventIdle;
+	sf::Time					m_timeEventDeath;
 	float						m_pixelSecondJump;
 	float						m_pixelSecondUmbrella;
 	float						m_pixelSecondWalk;
@@ -81,15 +83,20 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	float						m_jumpVelocity;
 	float						m_afterJumpVelocity;
 	float						m_previousTop;
+	float						m_topElevator;
+	float						m_deltaPositionY;
 	std::size_t					m_numberOfJump;
 	bool						m_originMove;
 	bool						m_onGround;
 	bool						m_onElevator;
+	bool						m_onTopElevator;
 	bool						m_afterJump;
 	bool						m_keyLeft;
 	bool						m_keyRight;
 	bool						m_keySpace;
 	bool						m_keyUp;
+	bool						m_collisionTile;
+	bool						m_collisionElevator;
 };
 
 #endif

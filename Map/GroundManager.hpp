@@ -1,10 +1,12 @@
 #ifndef TERRAINMANAGER_HPP
 # define TERRAINMANAGER_HPP
 
+# include <GenericFactory.hpp>
 # include "Map.hpp"
 # include "DecorManager.hpp"
 # include "Portal.hpp"
 # include "ElevatorStream.hpp"
+# include "ANpc.hpp"
 
 class ADecor;
 class ABiome;
@@ -12,7 +14,7 @@ class TileShape;
 class ABiome;
 class SkyCycle;
 
-class GroundManager : public sf::Drawable
+class GroundManager
 {
 public:
 	enum GenerationState
@@ -27,10 +29,8 @@ public:
 
 	void setup(ABiome & biome, SkyCycle & cycle);
 	void update(float deltatime);
-	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
-	DecorManager const & getDecorsBack(void) const;
-	DecorManager const & getDecorsFront(void) const;
-	DecorManager const & getDecorsGround(void) const;
+	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
+	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 
@@ -51,6 +51,9 @@ private:
 		}
 	};
 
+	typedef octo::GenericFactory<std::string, ANpc>	NpcFactory;
+
+	NpcFactory							m_npcFactory;
 	std::unique_ptr<Map>				m_tiles;
 	std::unique_ptr<Map>				m_tilesPrev;
 	float								m_transitionTimer;
@@ -59,6 +62,7 @@ private:
 	std::unique_ptr<sf::Vertex[]>		m_vertices;
 	std::size_t							m_verticesCount;
 	sf::Vector2i						m_oldOffset;
+	sf::Vector2u						m_mapSize;
 	std::vector<TileShape *>			m_tileShapes;
 	std::vector<sf::Vector2f>			m_decorPositions;
 	DecorManager						m_decorManagerBack;
@@ -70,6 +74,7 @@ private:
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
 	std::vector<GameObjectPosition<Portal>>				m_portals;
+	std::vector<std::unique_ptr<ANpc>>					m_npcs;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
@@ -82,9 +87,9 @@ private:
 	template<class T>
 	void setupGameObjectPosition(std::vector<GameObjectPosition<T>> const & gameObjectPosition);
 	void setupDecors(ABiome & biome);
-	void setupGameObjects(ABiome & biome);
+	void setupGameObjects(ABiome & biome, SkyCycle & skyCycle);
 	void updateOffset(float deltatime);
-	void updateTransition(void);
+	void updateTransition(sf::FloatRect const & cameraRect);
 	void updateDecors(sf::Time deltatime);
 	void updateGameObjects(float deltatime);
 	void computeDecor(void);

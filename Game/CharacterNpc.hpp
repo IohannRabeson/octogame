@@ -20,21 +20,25 @@ class CharacterNpc : public AGameObject<GameObjectType::Npc>,
 	};
 public:
 	CharacterNpc();
-	void			setup(sf::Vector2f const & pos, sf::FloatRect const & rect);
-	void			update(sf::Time frameTime);
-	void			draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+	void					addMapOffset(float x, float y);
+	sf::Vector2f const &	getPosition(void) const;
+	void					setup(sf::Vector2f const & pos, sf::FloatRect const & rect);
+	void					update(sf::Time frameTime);
+	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+	sf::Vector2f	getBubblePosition() const;
 
 private:
 	bool		canWalk();
 	void		setupAnimation();
 	void		setupMachine();
+	void		timeEvent(sf::Time frameTime);
 	void		updateState();
 	void		updatePhysics(sf::Time frameTime);
 	void		commitPhysicsToGraphics();
 
 private:
 	RectangleShape*				m_box;
-	sf::Clock					m_clock;
+	sf::Time					m_timeEventIdle;
 	sf::FloatRect				m_area;
 	float						m_pixelSecondWalk;
 	bool						m_originMove;

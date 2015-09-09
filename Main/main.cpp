@@ -32,6 +32,7 @@
 #include "ParticleDemoScreen.hpp"
 #include "FsmDemoScreen.hpp"
 #include "ResourceLoadingScreen.hpp"
+#include "QuitScreen.hpp"
 #include "ElevatorStreamDemo.hpp"
 #include "AGameObject.hpp"
 
@@ -52,6 +53,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<FsmDemoScreen>("tamagotchi");
 	manager.registerState<ElevatorStreamDemo>("elevator");
 	manager.registerState<ResourceLoadingScreen>("loading");
+	manager.registerState<QuitScreen>("quit");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
@@ -66,7 +68,7 @@ int main(int argc, char **argv)
 {
 	try
 	{
-		octo::Application::initialize("Demo tests", "default.conf", argc, argv);
+		octo::Application::initialize("L'Odyssee Octonaute", "default.conf", argc, argv);
 		octo::StateManager&							states = octo::Application::getStateManager();
 		octo::Console&								console = octo::Application::getConsole();
 		octo::GraphicsManager&						graphics = octo::Application::getGraphicsManager();

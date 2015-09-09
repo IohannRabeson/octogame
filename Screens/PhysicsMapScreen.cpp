@@ -37,6 +37,8 @@ void	PhysicsMapScreen::start()
 	m_shape->setVertex(1u, sf::Vector2f(40.f, 0.f));
 	m_shape->setVertex(2u, sf::Vector2f(40.f, 60.f));
 	m_shape->setVertex(3u, sf::Vector2f(0.f, 60.f));
+	m_shape->setCollisionMask(2u);
+	m_shape->setCollisionType(1u);
 
 	for (std::size_t i = 0u; i < 10; i++)
 	{
@@ -55,6 +57,8 @@ void	PhysicsMapScreen::start()
 	m_groupShape->setApplyGravity(false);
 	m_groupShape->setPosition(100.f, 500.f);
 	m_groupShape->setOrigin(sf::Vector2f(30.f, 15.f));
+	m_groupShape->setCollisionMask(1u);
+	m_groupShape->setCollisionType(2u);
 	RectangleShape * r = m_groupShape->addRectangleShape();
 	r->setSize(20.f, 20.f);
 	r->setPosition(-20.f, -20.f);
@@ -96,7 +100,7 @@ void	PhysicsMapScreen::stop()
 
 void	PhysicsMapScreen::update(sf::Time deltatime)
 {
-	float speed = 200.f * deltatime.asSeconds();
+	float speed = 200.f;
 	float cameraSpeed = 500.f * deltatime.asSeconds();
 
 	m_nbCollision = 0u;
@@ -123,17 +127,19 @@ void	PhysicsMapScreen::update(sf::Time deltatime)
 	m_engine.update(deltatime.asSeconds());
 }
 
-void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB)
+void PhysicsMapScreen::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
 {
 	(void)shapeA;
 	(void)shapeB;
+	(void)collisionDirection;
 	m_nbCollision++;
 }
 
-void PhysicsMapScreen::onTileShapeCollision(TileShape * tileShape, AShape * shape)
+void PhysicsMapScreen::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection)
 {
 	(void)tileShape;
 	(void)shape;
+	(void)collisionDirection;
 	m_nbCollision++;
 }
 
@@ -157,6 +163,7 @@ void	PhysicsMapScreen::draw(sf::RenderTarget& render)const
 {
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
-	render.draw(m_groundManager);
+	m_groundManager.drawBack(render, states);
+	m_groundManager.drawFront(render, states);
 	m_engine.debugDraw(render);
 }

@@ -11,6 +11,7 @@
 # include "CharacterOcto.hpp"
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
+# include "MusicPlayer.hpp"
 
 # include <memory>
 
@@ -22,8 +23,9 @@ class Game : public octo::DefaultKeyboardListener, public IContactListener
 public:
 	Game();
 
-	void	setup();
-	void	loadLevel(std::string const& fileName);
+	void			setup();
+	void			loadLevel(std::string const& fileName);
+	sf::Vector2f	getOctoBubblePosition(void) const;
 
 	void			update(sf::Time frameTime);
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
@@ -36,13 +38,14 @@ private:
 	std::unique_ptr<SunLight>			m_sunLight;
 	std::unique_ptr<GroundManager>		m_groundManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
+	std::unique_ptr<MusicPlayer>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<CharacterNpc>		m_npc; //TODO: remove
 
 	bool			onPressed(sf::Event::KeyEvent const & event);
-	void			onShapeCollision(AShape * shapeA, AShape * shapeB);
-	void			onTileShapeCollision(TileShape * tileShape, AShape * shape);
-	void			followPlayer();
+	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);
+	void			onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection);
+	void			followPlayer(sf::Time frameTime);
 };
 
 #endif

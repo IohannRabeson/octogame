@@ -57,6 +57,8 @@ private:
 	bool						m_setLeaf;
 	std::size_t					m_leafMaxCount;
 
+	bool						m_sound;
+
 	void computeQuad(sf::Vector2f const & size,
 					sf::Vector2f const & center,
 					float const cosAngle,
@@ -100,11 +102,7 @@ private:
 						std::size_t const currentDepth = 0u);
 
 	void newTree(ABiome& biome);
-
-private:
-	static void rotateVec(sf::Vector2f & vector,
-							float const cosAngle,
-							float const sinAngle);
+	void playSound(ABiome & biome, sf::Vector2f const & position);
 };
 
 #endif

@@ -4,17 +4,19 @@
 #include "ResourceDefinitions.hpp"
 #include <Interpolations.hpp>
 
+#include <limits>
 #include <iostream>
 
 DefaultBiome::DefaultBiome() :
 	m_name("Default Biome"),
 	m_mapSize(sf::Vector2u(512u, 128u)),
+	m_mapSeed(42u),
 	m_transitionDuration(0.5f),
 	m_bossInstancePosX(m_mapSize.x / 2.f),
 	m_tileStartColor(230.f, 168.f, 0.f),
 	m_tileEndColor(254.f, 231.f, 170.f),
 
-	m_dayDuration(sf::seconds(40.f)),
+	m_dayDuration(sf::seconds(20.f)),
 	m_skyDayColor(188, 200, 206),
 	m_skyNightColor(8, 20, 26),
 	m_nightLightColor(39, 25, 95, 250),
@@ -99,6 +101,11 @@ DefaultBiome::DefaultBiome() :
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_name);
+#ifndef NDEBUG
+	m_mapSeed = 42u;
+#else
+	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
+#endif
 
 	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;
@@ -108,8 +115,10 @@ DefaultBiome::DefaultBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	// TODO define map position and number of map
 	m_instances[12] = MINIMAP_OMP;
 	m_instances[86] = TEST_MAP2_OMP;
+	m_instances[450] = NEWMAP_OMP;
 }
 
 void			DefaultBiome::setup(std::size_t seed)
@@ -126,6 +135,11 @@ std::string		DefaultBiome::getName()const
 sf::Vector2u	DefaultBiome::getMapSize()
 {
 	return (m_mapSize);
+}
+
+std::size_t		DefaultBiome::getMapSeed()
+{
+	return m_mapSeed;
 }
 
 sf::Vector2f	DefaultBiome::getMapSizeFloat()

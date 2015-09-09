@@ -121,23 +121,28 @@ private:
 		T				m_shapeA;
 		U				m_shapeB;
 		float			m_area;
+		bool			m_isColliding;
+		sf::Vector2f	m_collisionDirection;
 
 		Pair(void) :
 				m_shapeA(),
 				m_shapeB(),
-				m_area(0.f)
+				m_area(0.f),
+				m_isColliding(false)
 			{}
 
 		Pair(T shapeA, U shapeB) :
 				m_shapeA(shapeA),
 				m_shapeB(shapeB),
-				m_area(0.f)
+				m_area(0.f),
+				m_isColliding(false)
 			{}
 
 		Pair(T shapeA, U shapeB, float area) :
 				m_shapeA(shapeA),
 				m_shapeB(shapeB),
-				m_area(area)
+				m_area(area),
+				m_isColliding(false)
 			{}
 	};
 
@@ -221,6 +226,14 @@ private:
 	/*! Determine if pairs are colliding with tiles */
 	template<class T>
 	void narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>>> & pairs);
+
+	/*! Send all the tile collision event at the end of the update */
+	template<class T>
+	void sendTileEvent(std::vector<std::vector<Pair<TileShape *, T>>> & pairs);
+
+	/*! Send all the collision event at the end of the update */
+	template<class T, class U>
+	void sendEvent(std::vector<Pair<T, U>> & pairs);
 
 	/*! Compute collision between different shape */
 	bool computeCollision(PolygonShape * polygonA, PolygonShape * polygonB);

@@ -6,13 +6,15 @@
 #include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
+	m_spriteScale(0.6f),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
-	m_pixelSecondJump(-1500.f),
-	m_pixelSecondUmbrella(-500.f),
+	m_pixelSecondJump(-1300.f),
+	m_pixelSecondUmbrella(-300.f),
 	m_pixelSecondWalk(320.f),
-	m_pixelSecondAfterJump(-970.f),
-	m_pixelSecondAfterFullJump(-485.f),
-	m_pixelSecondMultiplier(1200.f),
+	m_pixelSecondAfterJump(-500.f),
+	m_pixelSecondAfterFullJump(-400.f),
+	m_pixelSecondMultiplier(800.f),
+	m_deltaPositionY(27.f),
 	m_numberOfJump(1),
 	m_originMove(false),
 	m_onGround(false),
@@ -21,7 +23,9 @@ CharacterOcto::CharacterOcto() :
 	m_keyLeft(false),
 	m_keyRight(false),
 	m_keySpace(false),
-	m_keyUp(false)
+	m_keyUp(false),
+	m_collisionTile(false),
+	m_collisionElevator(false)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -38,13 +42,17 @@ void	CharacterOcto::setup(void)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_box->setGameObject(this);
-	m_box->setSize(sf::Vector2f(100.f / 2.f,150.f));
+	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
+	m_timeEventFall = sf::Time::Zero;
+	m_timeEventIdle = sf::Time::Zero;
+	m_timeEventDeath = sf::Time::Zero;
 	setupAnimation();
 	setupMachine();
+	m_sprite.setScale(m_spriteScale, m_spriteScale);
 	m_sprite.restart();
 }
 
@@ -53,83 +61,81 @@ void	CharacterOcto::setupAnimation()
 	typedef octo::CharacterAnimation::Frame			Frame;
 
 	m_idleAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {10, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {12, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {13, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {14, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {12, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {13, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {14, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_walkAnimation.setFrames({
-			Frame(sf::seconds(0.2f), {0, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {1, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {2, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {3, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {4, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {5, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {6, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {7, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {8, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {9, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {10, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {11, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {12, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {13, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {14, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {15, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {16, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {17, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {18, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {19, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {20, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()})
+			Frame(sf::seconds(0.3f), {0, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {1, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {2, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {3, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {4, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {6, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {7, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {8, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {10, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {11, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {12, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {13, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {14, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {15, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {16, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {17, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {18, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {19, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {20, sf::FloatRect(), sf::Vector2f()})
 	});
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_jumpAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {26, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()})
+			Frame(sf::seconds(0.4f), {25, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {26, sf::FloatRect(), sf::Vector2f()})
 			});
 	m_jumpAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_fallAnimation.setFrames({
-			Frame(sf::seconds(0.2f), {27, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {28, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {27, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {28, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_fallAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_danceAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {10, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {12, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {13, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {14, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {12, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {13, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {14, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_umbrellaAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {28, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {49, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {50, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {51, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {52, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_umbrellaAnimation.setLoop(octo::LoopMode::NoLoop);
 
-	m_elevatorAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			});
-	m_elevatorAnimation.setLoop(octo::LoopMode::Loop);
-
 	m_deathAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {35, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {36, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {37, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {38, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
-			Frame(sf::seconds(1.4f), {39, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {35, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {36, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {37, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {38, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(1.4f), {39, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_deathAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_drinkAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {25, sf::FloatRect(177 / 2, 0, 177, 152), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {25, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_drinkAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -140,8 +146,6 @@ void	CharacterOcto::setupMachine()
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
 
-	std::function<void()> clockAFKRestart = [this]{ m_clockAFK.restart();};
-	std::function<void()> clockDeadRestart = [this]{ m_clockDeath.restart();};
 	octo::FiniteStateMachine	machine;
 	StatePtr					state0;
 	StatePtr					state1;
@@ -151,7 +155,6 @@ void	CharacterOcto::setupMachine()
 	StatePtr					state5;
 	StatePtr					state6;
 	StatePtr					state7;
-	StatePtr					state8;
 	StatePtr					state9;
 	StatePtr					state10;
 
@@ -163,7 +166,6 @@ void	CharacterOcto::setupMachine()
 	state5 = std::make_shared<State>("Fall", m_fallAnimation, m_sprite);
 	state6 = std::make_shared<State>("Dance", m_danceAnimation, m_sprite);
 	state7 = std::make_shared<State>("Umbrella", m_umbrellaAnimation, m_sprite);
-	state8 = std::make_shared<State>("Elevator", m_elevatorAnimation, m_sprite);
 	state9 = std::make_shared<State>("Death", m_deathAnimation, m_sprite);
 	state10 = std::make_shared<State>("Drink", m_drinkAnimation, m_sprite);
 
@@ -177,6 +179,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Left, state5, state1);
 	machine.addTransition(Left, state6, state1);
 	machine.addTransition(Left, state7, state1);
+	machine.addTransition(Left, state9, state1);
 	machine.addTransition(Left, state10, state1);
 
 	machine.addTransition(Right, state0, state2);
@@ -187,13 +190,13 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Right, state5, state2);
 	machine.addTransition(Right, state6, state2);
 	machine.addTransition(Right, state7, state2);
+	machine.addTransition(Right, state9, state2);
 	machine.addTransition(Right, state10, state2);
 
 	machine.addTransition(Jump, state0, state3);
 	machine.addTransition(Jump, state1, state3);
 	machine.addTransition(Jump, state2, state3);
 	machine.addTransition(Jump, state6, state3);
-	machine.addTransition(Jump, state8, state3);
 
 	machine.addTransition(DoubleJump, state1, state4);
 	machine.addTransition(DoubleJump, state2, state4);
@@ -209,67 +212,84 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Fall, state5, state5);
 	machine.addTransition(Fall, state6, state5);
 	machine.addTransition(Fall, state7, state5);
-	machine.addTransition(Fall, state8, state5);
 
 	machine.addTransition(Dance, state0, state6);
 
+	machine.addTransition(Umbrella, state0, state7);
 	machine.addTransition(Umbrella, state1, state7);
 	machine.addTransition(Umbrella, state2, state7);
 	machine.addTransition(Umbrella, state3, state7);
 	machine.addTransition(Umbrella, state4, state7);
 	machine.addTransition(Umbrella, state5, state7);
+	machine.addTransition(Umbrella, state6, state7);
 	machine.addTransition(Umbrella, state7, state7);
 
-	machine.addTransition(Elevator, state0, state8);
-	machine.addTransition(Elevator, state1, state8);
-	machine.addTransition(Elevator, state2, state8);
-	machine.addTransition(Elevator, state3, state8);
-	machine.addTransition(Elevator, state4, state8);
-	machine.addTransition(Elevator, state5, state8);
-	machine.addTransition(Elevator, state6, state8);
-	machine.addTransition(Elevator, state7, state8);
-	machine.addTransition(Elevator, state8, state8);
-
-	machine.addTransition(Death, state0, state9, clockDeadRestart);
-	machine.addTransition(Death, state1, state9, clockDeadRestart);
-	machine.addTransition(Death, state2, state9, clockDeadRestart);
-	machine.addTransition(Death, state3, state9, clockDeadRestart);
-	machine.addTransition(Death, state4, state9, clockDeadRestart);
-	machine.addTransition(Death, state5, state9, clockDeadRestart);
-	machine.addTransition(Death, state6, state9, clockDeadRestart);
-	machine.addTransition(Death, state7, state9, clockDeadRestart);
-	machine.addTransition(Death, state8, state9, clockDeadRestart);
-	machine.addTransition(Death, state10, state9, clockDeadRestart);
+	machine.addTransition(Death, state0, state9);
+	machine.addTransition(Death, state1, state9);
+	machine.addTransition(Death, state2, state9);
+	machine.addTransition(Death, state3, state9);
+	machine.addTransition(Death, state4, state9);
+	machine.addTransition(Death, state5, state9);
+	machine.addTransition(Death, state6, state9);
+	machine.addTransition(Death, state7, state9);
+	machine.addTransition(Death, state10, state9);
 
 	machine.addTransition(Drink, state0, state10);
 	machine.addTransition(Drink, state1, state10);
 	machine.addTransition(Drink, state2, state10);
 
 	machine.addTransition(Idle, state0, state0);
-	machine.addTransition(Idle, state1, state0, clockAFKRestart);
-	machine.addTransition(Idle, state2, state0, clockAFKRestart);
-	machine.addTransition(Idle, state3, state0, clockAFKRestart);
-	machine.addTransition(Idle, state4, state0, clockAFKRestart);
-	machine.addTransition(Idle, state5, state0, clockAFKRestart);
-	machine.addTransition(Idle, state6, state0, clockAFKRestart);
-	machine.addTransition(Idle, state7, state0, clockAFKRestart);
-	machine.addTransition(Idle, state8, state0, clockAFKRestart);
-	machine.addTransition(Idle, state9, state0, clockAFKRestart);
-	machine.addTransition(Idle, state10, state0, clockAFKRestart);
+	machine.addTransition(Idle, state1, state0);
+	machine.addTransition(Idle, state2, state0);
+	machine.addTransition(Idle, state3, state0);
+	machine.addTransition(Idle, state4, state0);
+	machine.addTransition(Idle, state5, state0);
+	machine.addTransition(Idle, state6, state0);
+	machine.addTransition(Idle, state7, state0);
+	machine.addTransition(Idle, state9, state0);
+	machine.addTransition(Idle, state10, state0);
 
 	m_sprite.setMachine(machine);
 }
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
-	endDeath();
-	collisionTileUpdate(frameTime);
-	collisionElevatorUpdate(frameTime);
-	m_sprite.update(frameTime);
-	dance();
-	PhysicsEngine::getInstance().update(frameTime.asSeconds());
-	commitControlsToPhysics(frameTime);
-	commitPhysicsToGraphics();
+	timeEvent(frameTime);
+	if (endDeath())
+	{
+		dance();
+		collisionElevatorUpdate();
+		collisionTileUpdate();
+		commitPhysicsToGraphics();
+		m_sprite.update(frameTime);
+		commitControlsToPhysics(frameTime.asSeconds());
+	}
+	else
+		m_sprite.update(frameTime);
+	m_previousTop = m_box->getGlobalBounds().top;
+	m_collisionTile = false;
+	m_collisionElevator = false;
+}
+
+void	CharacterOcto::timeEvent(sf::Time frameTime)
+{
+	switch (m_sprite.getCurrentEvent())
+	{
+		case Fall:
+			m_timeEventFall += frameTime;
+			break;
+		case Idle:
+			m_timeEventIdle += frameTime;
+			break;
+		case Death:
+			m_timeEventDeath += frameTime;
+			break;
+		default:
+			m_timeEventFall = sf::Time::Zero;
+			m_timeEventIdle = sf::Time::Zero;
+			m_timeEventDeath = sf::Time::Zero;
+			break;
+	}
 }
 
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
@@ -277,93 +297,145 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_sprite.draw(render, states);
 }
 
-void	CharacterOcto::onCollision(GameObjectType type)
+void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisionDirection)
 {
-	switch(type){
+	switch(type)
+	{
 		case GameObjectType::Tile:
-			m_clockCollisionTile.restart();
+			// TODO
+			if (collisionDirection.x == 0 && collisionDirection.y < 0)
+				m_collisionTile = true;
 			break;
 		case GameObjectType::Elevator:
-			m_clockCollisionElevator.restart();
+			m_collisionElevator = true;
 			break;
 		default:
 			break;
 	}
 }
 
-void	CharacterOcto::collisionTileUpdate(sf::Time frameTime)
+void	CharacterOcto::setTopElevator(float top)
 {
-	if (m_clockCollisionTile.getElapsedTime() > frameTime)
+	m_topElevator = top;
+}
+
+void	CharacterOcto::collisionTileUpdate()
+{
+	if (!m_collisionTile)
 	{
 		m_onGround = false;
-		if (m_box->getGlobalBounds().top > m_previousTop
-				&& m_sprite.getCurrentEvent() != Fall){
-			m_afterJump = true;
-			m_afterJumpVelocity = m_pixelSecondAfterFullJump;
-			if (m_sprite.getCurrentEvent() != Umbrella){
-				m_sprite.setNextEvent(Fall);
-				m_clockFall.restart();
-			}
-		}
-		if (m_sprite.getCurrentEvent() != Fall)
-			m_clockFall.restart();
+		onSky(static_cast<Events>(m_sprite.getCurrentEvent()));
 	}
 	else
 	{
 		if (!m_onGround)
 		{
+			m_afterJump = false;
+			m_onGround = true;
+			m_numberOfJump = 1;
+			if (dieFall())
+				return;
 			if (m_keyLeft)
 				m_sprite.setNextEvent(Left);
 			else if (m_keyRight)
 				m_sprite.setNextEvent(Right);
 			else
 				m_sprite.setNextEvent(Idle);
-			m_afterJump = false;
-			m_onGround = true;
-			dieFall();
 		}
 	}
 }
 
-void	CharacterOcto::collisionElevatorUpdate(sf::Time frameTime)
+void	CharacterOcto::onSky(Events event)
 {
-	m_onElevator = true;
-	if (m_clockCollisionElevator.getElapsedTime() <= frameTime && !m_onElevator)
+	switch (event)
 	{
-		m_onElevator = true;
+		case Jump:
+		case DoubleJump:
+			if (m_box->getGlobalBounds().top > m_previousTop
+					&& m_jumpVelocity != m_pixelSecondJump)
+			{
+				m_afterJump = true;
+				m_afterJumpVelocity = m_pixelSecondAfterFullJump;
+				m_sprite.setNextEvent(Fall);
+			}
+			break;
+		case Umbrella:
+		case Fall:
+			break;
+		default:
+			if (m_keyUp)
+				m_sprite.setNextEvent(Umbrella);
+			else
+				m_sprite.setNextEvent(Fall);
+			break;
+	}
+}
+
+void	CharacterOcto::collisionElevatorUpdate()
+{
+	sf::FloatRect const&	bounds = m_box->getGlobalBounds();
+	float					top = bounds.top + (bounds.height / 2.f);
+
+	if (m_collisionElevator)
+	{
+		if (!m_onElevator && m_keyUp)
+		{
+			m_onTopElevator = false;
+			m_onElevator = true;
+			m_numberOfJump = 3;
+			if (m_sprite.getCurrentEvent() != Umbrella)
+				m_sprite.setNextEvent(Umbrella);
+			m_box->setApplyGravity(false);
+		}
+		if (!m_keyUp)
+		{
+			m_onElevator = false;
+			m_box->setApplyGravity(true);
+		}
+		if (top <= m_topElevator)
+			m_onTopElevator = true;
 	}
 	else
 	{
 		if (m_onElevator)
+		{
+			m_onTopElevator = false;
 			m_onElevator = false;
+			m_numberOfJump = 1;
+			m_box->setApplyGravity(true);
+		}
 	}
 }
 
-void	CharacterOcto::dieFall()
+bool	CharacterOcto::dieFall()
 {
-	if (m_clockFall.getElapsedTime() > sf::seconds(1.2f))
+	if (m_timeEventFall > sf::seconds(2.0f))
 	{
 		m_sprite.setNextEvent(Death);
+		return true;
 	}
-	else
-	{
-		m_clockFall.restart();
-	}
+	return false;
 }
 
-void	CharacterOcto::endDeath()
+bool	CharacterOcto::endDeath()
 {
-	if (m_sprite.getCurrentEvent() == Death
-			&& m_clockDeath.getElapsedTime() > sf::seconds(3.0f))
+	if (m_timeEventDeath > sf::seconds(3.0f))
 	{
-		m_sprite.setNextEvent(Idle);
+		if (m_keyLeft)
+			m_sprite.setNextEvent(Left);
+		else if (m_keyRight)
+			m_sprite.setNextEvent(Right);
+		else
+			m_sprite.setNextEvent(Idle);
 	}
+	else if (m_sprite.getCurrentEvent() == Death)
+		return false;
+	return true;
 }
 
 void	CharacterOcto::dance()
 {
-	if (m_sprite.getCurrentEvent() == Idle
-			&& m_clockAFK.getElapsedTime() > sf::seconds(2.5f))
+	if (m_timeEventIdle > sf::seconds(3.0f))
 	{
 		m_sprite.setNextEvent(Dance);
 	}
@@ -371,40 +443,50 @@ void	CharacterOcto::dance()
 
 void	CharacterOcto::commitPhysicsToGraphics()
 {
-	sf::FloatRect const& bounds = m_box->getGlobalBounds();
 
-	// TODO fix that
-	m_sprite.setPosition(bounds.left - 65, bounds.top);
-	m_previousTop = bounds.top;
+	sf::Vector2f const&	pos = m_box->getRenderCenter();
+	float				xPos = pos.x - ((m_sprite.getLocalSize().x  * m_spriteScale) / 2.f);
+	float				yPos =  pos.y - ((m_sprite.getLocalSize().y * m_spriteScale) - (m_box->getSize().y / 2.f));
+
+	m_sprite.setPosition(sf::Vector2f(xPos, yPos + m_deltaPositionY));
 }
 
-void	CharacterOcto::commitControlsToPhysics(sf::Time frameTime)
+void	CharacterOcto::commitControlsToPhysics(float frametime)
 {
-	if (m_sprite.getCurrentEvent() == Death)
-		return;
 	sf::Vector2f	velocity = m_box->getVelocity();
+
 	if (m_keyLeft)
 	{
-		velocity.x = (-1.f * m_pixelSecondWalk) * frameTime.asSeconds();
+		velocity.x = (-1.f * m_pixelSecondWalk);
 	}
 	else if (m_keyRight)
 	{
-		velocity.x = m_pixelSecondWalk * frameTime.asSeconds();
+		velocity.x = m_pixelSecondWalk;
 	}
-	if (m_keySpace && m_jumpVelocity < 0.f && m_numberOfJump < 3)
+
+	if (m_keySpace && (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump))
 	{
-		velocity.y = m_jumpVelocity * frameTime.asSeconds();
-		m_jumpVelocity += (m_pixelSecondMultiplier * frameTime.asSeconds());
+		velocity.y = m_jumpVelocity;
+		m_jumpVelocity += m_pixelSecondMultiplier * frametime;
 	}
-	else if (m_afterJump && m_afterJumpVelocity < 0.f )
+	else if (m_afterJump && m_afterJumpVelocity < 0.f && !m_onElevator)
 	{
-		velocity.y = m_afterJumpVelocity * frameTime.asSeconds();
-		m_afterJumpVelocity += (m_pixelSecondMultiplier * frameTime.asSeconds());
+		velocity.y = m_afterJumpVelocity;
+		m_afterJumpVelocity += m_pixelSecondMultiplier * frametime;
 	}
+
 	if (m_keyUp && m_sprite.getCurrentEvent() == Umbrella)
 	{
-		m_clockFall.restart();
-		velocity.y = m_pixelSecondUmbrella * frameTime.asSeconds();
+		if (m_onElevator)
+		{
+			if (!m_onTopElevator)
+				velocity.y = (2.5f * m_pixelSecondUmbrella);
+		}
+		else
+		{
+			velocity.x *= 1.3f; // TODO fix, not frametime dependant
+			velocity.y = m_pixelSecondUmbrella;
+		}
 	}
 	m_box->setVelocity(velocity);
 }
@@ -443,8 +525,8 @@ void	CharacterOcto::caseLeft()
 			m_sprite.setNextEvent(Left);
 		if (!m_originMove)
 		{
-			m_sprite.setScale(-1, 1);
-			m_sprite.setOrigin(m_sprite.getOrigin().x + 177, 0);
+			m_sprite.setScale(-1.f * m_spriteScale, 1.f * m_spriteScale);
+			m_sprite.setOrigin(m_sprite.getOrigin().x + m_sprite.getLocalSize().x, 0.f);
 			m_originMove = true;
 		}
 	}
@@ -460,8 +542,8 @@ void	CharacterOcto::caseRight()
 			m_sprite.setNextEvent(Right);
 		if (m_originMove)
 		{
-			m_sprite.setScale(1, 1);
-			m_sprite.setOrigin(m_sprite.getOrigin().x - 177, 0);
+			m_sprite.setScale(1.f * m_spriteScale, 1.f * m_spriteScale);
+			m_sprite.setOrigin(m_sprite.getOrigin().x - m_sprite.getLocalSize().x, 0.f);
 			m_originMove = false;
 		}
 	}
@@ -492,15 +574,19 @@ void	CharacterOcto::caseSpace()
 
 void CharacterOcto::caseUp()
 {
-	if (!m_keyUp && !m_onGround)
+	if (!m_keyUp)
 	{
 		m_keyUp = true;
-		m_sprite.setNextEvent(Umbrella);
+		if (!m_onGround)
+			m_sprite.setNextEvent(Umbrella);
 	}
 }
 
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {
+	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
+	bool otherKeyReleased = false;
+
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
@@ -511,34 +597,45 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Space:
 			m_keySpace = false;
-			if (!m_afterJump && !m_onGround){
+			if (state == Jump || state == DoubleJump)
+			{
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterJump;
 			}
 			break;
 		case sf::Keyboard::Up:
 			m_keyUp = false;
+			break;
 		default:
+			otherKeyReleased = true;
 			break;
 	}
-	if (m_sprite.getCurrentEvent() == Death)
+	if (state == Death || otherKeyReleased)
 		return true;
 	if (!m_onGround && !m_keyUp)
 	{
-		if (m_sprite.getCurrentEvent() != Fall)
+		if (state != Fall)
 		{
 			m_sprite.setNextEvent(Fall);
-			m_clockFall.restart();
 		}
 	}
 	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp)
-		m_sprite.setNextEvent(Idle);
-	return (true);
+	{
+		if (state != Dance)
+		{
+			m_sprite.setNextEvent(Idle);
+		}
+	}
+	return true;
 }
 
-sf::Vector2f	CharacterOcto::getPosition() const
+sf::Vector2f const &	CharacterOcto::getPosition() const
 {
-	//TODO fix center
-	return (m_box->getBaryCenter() + sf::Vector2f(0.f, -300.f));
+	return (m_box->getBaryCenter());
+}
+
+sf::Vector2f	CharacterOcto::getBubblePosition() const
+{
+	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -80.f));
 }
 

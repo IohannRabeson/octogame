@@ -1,21 +1,12 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ElevatorStream.cpp                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/13 22:27:23 by irabeson         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "ElevatorStream.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include "RectangleShape.hpp"
+#include "PhysicsEngine.hpp"
+
 #include <Math.hpp>
 #include <Interpolations.hpp>
 
@@ -37,7 +28,7 @@ public:
 		m_width(200.f),
 		m_height(300.f),
 		m_rotationFactor(0.f),
-		m_emitInterval(sf::seconds(0.025f)),
+		m_emitInterval(sf::seconds(0.07f)),
 		m_random(std::time(0)),
 		m_distri(0.f, 1.f),
 		m_biome(nullptr)
@@ -69,6 +60,16 @@ public:
 	void	setBiome(ABiome & biome)
 	{
 		m_biome = &biome;
+	}
+
+	float	getHeight(void) const
+	{
+		return m_height;
+	}
+
+	float	getWidth(void) const
+	{
+		return m_width;
 	}
 
 	void	updateParticle(sf::Time frameTime, Particle& particle)
@@ -147,21 +148,67 @@ private:
 
 ElevatorStream::ElevatorStream() :
 	m_particles(new BeamParticle()),
-	m_waveCycleDuration(sf::seconds(0.5))
+	m_waveCycleDuration(sf::seconds(0.5)),
+	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
+	m_topY(0.f),
+	m_rayCountVertex(12),
+	m_ray(new sf::Vertex[m_rayCountVertex]),
+	m_borderColor(255, 255, 255, 150),
+	m_centerColor(255, 255, 255, 50),
+	m_upColor(255, 255, 255, 0)
+
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 
+	m_box->setGameObject(this);
+	m_box->setType(AShape::Type::e_trigger);
+	m_box->setApplyGravity(false);
+	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Elevator));
+	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
+	m_box->setSize(150.f, 0.f);
 	m_particles->setWidth(150.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
+
+	setupSprite();
+}
+
+void	ElevatorStream::setupSprite(void)
+{
+	octo::ResourceManager&				resources = octo::Application::getResourceManager();
+	octo::SpriteAnimation::FrameList	frames;
+	frames.emplace_back(sf::seconds(0.2), 0);
+	frames.emplace_back(sf::seconds(0.2), 1);
+	frames.emplace_back(sf::seconds(0.2), 2);
+	frames.emplace_back(sf::seconds(0.2), 3);
+	m_animation.setFrames(frames);
+	m_animation.setLoop(octo::LoopMode::Loop);
+	m_spriteBottomFront.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_BOTTOM_FRONT_OSS));
+	m_spriteBottomFront.setAnimation(m_animation);
+	m_spriteBottomFront.setScale(sf::Vector2f(0.8f, 0.8f));
+	m_spriteBottomFront.play();
+	m_spriteBottomBack.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_BOTTOM_BACK_OSS));
+	m_spriteBottomBack.setAnimation(m_animation);
+	m_spriteBottomBack.setScale(sf::Vector2f(0.8f, 0.8f));
+	m_spriteBottomBack.play();
+	m_spriteTopFront.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_TOP_FRONT_OSS));
+	m_spriteTopFront.setAnimation(m_animation);
+	m_spriteTopFront.setScale(sf::Vector2f(0.8f, 0.8f));
+	m_spriteTopFront.play();
+	m_spriteTopBack.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_TOP_BACK_OSS));
+	m_spriteTopBack.setAnimation(m_animation);
+	m_spriteTopBack.setScale(sf::Vector2f(0.8f, 0.8f));
+	m_spriteTopBack.play();
 }
 
 void	ElevatorStream::setPosX(float x)
 {
-	sf::Vector2f	pos = m_particles->getPosition();
+	sf::Vector2f			pos = m_particles->getPosition();
+	sf::Vector2f const &	posBox = m_box->getPosition();
 
 	pos.x = x;
 	m_particles->setPosition(pos);
+	m_box->setPosition(x - (getWidth() / 2.f), posBox.y);
 }
 
 void	ElevatorStream::setPosY(float y)
@@ -174,11 +221,25 @@ void	ElevatorStream::setPosY(float y)
 
 void	ElevatorStream::setHeight(float height)
 {
+	sf::Vector2f const &	sizeBox = m_box->getSize();
+
+	m_box->setSize(sizeBox.x, height);
 	m_particles->setHeight(height);
+}
+
+void	ElevatorStream::setTopY(float topY)
+{
+	sf::Vector2f const &	posBox = m_box->getPosition();
+
+	m_box->setPosition(posBox.x, topY);
+	m_topY = topY;
 }
 
 void	ElevatorStream::setWidth(float width)
 {
+	sf::Vector2f const &	sizeBox = m_box->getSize();
+
+	m_box->setSize(width, sizeBox.y);
 	m_particles->setWidth(width);
 }
 
@@ -193,17 +254,81 @@ void	ElevatorStream::setBiome(ABiome & biome)
 	m_particles->setBiome(biome);
 }
 
+float	ElevatorStream::getHeight(void) const
+{
+	return m_particles->getHeight();
+}
+
+float	ElevatorStream::getWidth(void) const
+{
+	return m_particles->getWidth();
+}
+
+float	ElevatorStream::getPosY(void) const
+{
+	return m_particles->getPosition().y;
+}
+
+float	ElevatorStream::getTopY(void) const
+{
+	return m_topY;
+}
+
+void	ElevatorStream::createRay()
+{
+	float height = getHeight();
+	float unit = getWidth() / 6.f;
+
+	m_ray[0] = sf::Vertex(sf::Vector2f(-unit * 2.f, -height), m_upColor);
+	m_ray[1] = sf::Vertex(sf::Vector2f(-unit, -height), m_upColor);
+	m_ray[2] = sf::Vertex(sf::Vector2f(-unit, 0), m_centerColor);
+	m_ray[3] = sf::Vertex(sf::Vector2f(-unit * 2.f, 0), m_borderColor);
+
+	m_ray[4] = sf::Vertex(sf::Vector2f(-unit, -height), m_upColor);
+	m_ray[5] = sf::Vertex(sf::Vector2f(unit, -height), m_upColor);
+	m_ray[6] = sf::Vertex(sf::Vector2f(unit, 0), m_centerColor);
+	m_ray[7] = sf::Vertex(sf::Vector2f(-unit, 0), m_centerColor);
+
+	m_ray[8] = sf::Vertex(sf::Vector2f(unit * 2.f, -height), m_upColor);
+	m_ray[9] = sf::Vertex(sf::Vector2f(unit, -height), m_upColor);
+	m_ray[10] = sf::Vertex(sf::Vector2f(unit, 0), m_centerColor);
+	m_ray[11] = sf::Vertex(sf::Vector2f(unit * 2.f, 0), m_borderColor);
+
+	for (std::size_t i = 0; i < m_rayCountVertex; i++)
+		m_ray[i].position += m_particles->getPosition();
+}
+
 void	ElevatorStream::update(sf::Time frameTime)
 {
 	m_particles->update(frameTime);
 	m_waveCycle += frameTime;
 	m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
+	createRay();
+
+	sf::Vector2f const & position = m_particles->getPosition();
+	m_spriteBottomFront.setPosition(position + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
+	m_spriteBottomBack.setPosition(position + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
+	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+	m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + position.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+	m_spriteBottomFront.update(frameTime);
+	m_spriteBottomBack.update(frameTime);
+	m_spriteTopFront.update(frameTime);
+	m_spriteTopBack.update(frameTime);
 }
 
-void	ElevatorStream::draw(sf::RenderTarget& render)const
+void	ElevatorStream::drawBack(sf::RenderTarget& render)const
 {
 	sf::RenderStates	states;
 
+	render.draw(m_spriteBottomBack);
+	render.draw(m_spriteTopBack);
 	states.shader = &m_shader;
 	m_particles->draw(render, states);
+	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
+}
+
+void	ElevatorStream::drawFront(sf::RenderTarget& render)const
+{
+	render.draw(m_spriteBottomFront);
+	render.draw(m_spriteTopFront);
 }

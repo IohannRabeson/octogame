@@ -19,13 +19,14 @@ SkyManager::SkyManager(void) :
 	m_sunCount(0u),
 	m_moonCount(0u),
 	m_starCount(0u),
-	m_cloudCount(0u)
+	m_cloudCount(0u),
+	m_parallaxSpeedY(0.7f)
 {
 }
 
 sf::Vector2f SkyManager::setRotatePosition(DecorManager::Iterator decor, sf::Vector2f origin, sf::Vector2f const & originRotate, sf::Vector2f const & offsetCamera, float cos, float sin)
 {
-	rotateVec(origin, originRotate, cos, sin);
+	octo::rotateVector(origin, originRotate, cos, sin);
 	(*decor)->setPosition(origin + offsetCamera);
 	return origin;
 }
@@ -46,7 +47,7 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f const & cameraSize)
 			float angle = biome.randomFloat(0.f, 360.f) * octo::Deg2Rad;
 			float cos = std::cos(angle);
 			float sin = std::sin(angle);
-			rotateVec(m_originStars[i], cos, sin);
+			octo::rotateVector(m_originStars[i], cos, sin);
 		}
 	}
 }
@@ -68,7 +69,7 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 			float angle = biome.randomFloat(-20.f, 20.f) * octo::Deg2Rad;
 			float cos = std::cos(angle);
 			float sin = std::sin(angle);
-			rotateVec(m_originSuns[i], m_originRotate, cos, sin);
+			octo::rotateVector(m_originSuns[i], m_originRotate, cos, sin);
 		}
 	}
 	if (biome.canCreateMoon())
@@ -83,7 +84,7 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 			float angle = biome.randomFloat(-20.f, 20.f) * octo::Deg2Rad;
 			float cos = std::cos(angle);
 			float sin = std::sin(angle);
-			rotateVec(m_originMoons[i], m_originRotate, cos, sin);
+			octo::rotateVector(m_originMoons[i], m_originRotate, cos, sin);
 		}
 	}
 }
@@ -130,7 +131,7 @@ void SkyManager::update(sf::Time frameTime)
 	sf::FloatRect const & rec = camera.getRectangle();
 	sf::Vector2f cameraCenter = camera.getCenter();
 	sf::Vector2f cameraSize = camera.getSize();
-	sf::Vector2f offsetCamera(rec.left, rec.top);
+	sf::Vector2f offsetCamera(rec.left, rec.top * m_parallaxSpeedY);
 	float angle = m_cycle->getCycleValue() * 360.f * octo::Deg2Rad;
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);
@@ -173,16 +174,3 @@ DecorManager const & SkyManager::getDecorsFront(void) const
 	return m_decorManagerFront;
 }
 
-void SkyManager::rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle)
-{
-	float x = vector.x * cosAngle - vector.y * sinAngle;
-	vector.y = vector.y * cosAngle + vector.x * sinAngle;
-	vector.x = x;
-}
-
-void SkyManager::rotateVec(sf::Vector2f & vector, sf::Vector2f const & origin, float const cosAngle, float const sinAngle)
-{
-	vector -= origin;
-	rotateVec(vector, cosAngle, sinAngle);
-	vector += origin;
-}

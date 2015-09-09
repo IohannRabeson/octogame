@@ -58,9 +58,7 @@ private:
 	std::vector<sf::Vector2f>	m_originCloudsBack;
 	std::vector<sf::Vector2f>	m_originCloudsFront;
 
-private:
-	static void rotateVec(sf::Vector2f & vector, float const cosAngle, float const sinAngle);
-	static void rotateVec(sf::Vector2f & vector, sf::Vector2f const & origin, float const cosAngle, float const sinAngle);
+	float						m_parallaxSpeedY;
 };
 
 #endif
