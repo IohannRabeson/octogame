@@ -48,6 +48,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/ElevatorStream.cpp					\
 				Game/ANpc.cpp							\
 				Game/ClassicNpc.cpp						\
+				Game/CedricNpc.cpp						\
 				Game/MusicPlayer.cpp
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\

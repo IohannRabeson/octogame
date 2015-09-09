@@ -1,11 +1,12 @@
 #ifndef TERRAINMANAGER_HPP
 # define TERRAINMANAGER_HPP
 
+# include <GenericFactory.hpp>
 # include "Map.hpp"
 # include "DecorManager.hpp"
 # include "Portal.hpp"
 # include "ElevatorStream.hpp"
-# include "ClassicNpc.hpp"
+# include "ANpc.hpp"
 
 class ADecor;
 class ABiome;
@@ -50,6 +51,9 @@ private:
 		}
 	};
 
+	typedef octo::GenericFactory<std::string, ANpc>	NpcFactory;
+
+	NpcFactory							m_npcFactory;
 	std::unique_ptr<Map>				m_tiles;
 	std::unique_ptr<Map>				m_tilesPrev;
 	float								m_transitionTimer;
@@ -70,7 +74,7 @@ private:
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
 	std::vector<GameObjectPosition<Portal>>				m_portals;
-	std::vector<std::unique_ptr<ClassicNpc>>			m_npcs;
+	std::vector<std::unique_ptr<ANpc>>					m_npcs;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
@@ -83,7 +87,7 @@ private:
 	template<class T>
 	void setupGameObjectPosition(std::vector<GameObjectPosition<T>> const & gameObjectPosition);
 	void setupDecors(ABiome & biome);
-	void setupGameObjects(ABiome & biome);
+	void setupGameObjects(ABiome & biome, SkyCycle & skyCycle);
 	void updateOffset(float deltatime);
 	void updateTransition(sf::FloatRect const & cameraRect);
 	void updateDecors(sf::Time deltatime);

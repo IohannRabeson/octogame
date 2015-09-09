@@ -7,7 +7,8 @@
 #include "Rainbow.hpp"
 #include "SkyCycle.hpp"
 #include "MapInstance.hpp"
-//#include "FunctionsOffset.hpp"
+#include "ClassicNpc.hpp"
+#include "CedricNpc.hpp"
 #include <limits>
 #include <Interpolations.hpp>
 #include <Application.hpp>
@@ -68,13 +69,16 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	setupDecors(biome);
 
 	// Init game objects
-	setupGameObjects(biome);
+	setupGameObjects(biome, cycle);
 
 	swapMap();
 }
 
-void GroundManager::setupGameObjects(ABiome & biome)
+void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
+
+	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
+
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
@@ -83,9 +87,11 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			//TODO: factory to instanciate the good npc
-			std::unique_ptr<ClassicNpc> npc;
-			npc.reset(new ClassicNpc(spriteTrigger.name.c_str()));
+			std::unique_ptr<ANpc> npc;
+			if (!spriteTrigger.name.compare(CEDRIC_OSS)) //C'est moche mais la generic factory ne permet pas de donner une variable au constructeur
+				npc.reset(new CedricNpc(skyCycle));
+			else
+				npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
 			sf::FloatRect rect;
 			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
 			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;

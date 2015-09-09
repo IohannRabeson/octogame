@@ -6,7 +6,8 @@
 
 ANpc::ANpc(ResourceKey const & npcId) :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
-	m_velocity(200.f)
+	m_velocity(200.f),
+	m_scale(1.f)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -29,6 +30,16 @@ void ANpc::setupIdleAnimation(std::initializer_list<FramePair> list, octo::LoopM
 void ANpc::setupWalkAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode)
 {
 	setupAnimation(m_walkAnimation, list, loopMode);
+}
+
+void ANpc::setupSpecial1Animation(std::initializer_list<FramePair> list, octo::LoopMode loopMode)
+{
+	setupAnimation(m_special1Animation, list, loopMode);
+}
+
+void ANpc::setupSpecial2Animation(std::initializer_list<FramePair> list, octo::LoopMode loopMode)
+{
+	setupAnimation(m_special2Animation, list, loopMode);
 }
 
 void ANpc::setupAnimation(octo::CharacterAnimation & animation, std::initializer_list<FramePair> list, octo::LoopMode loopMode)
@@ -65,8 +76,7 @@ void ANpc::setupMachine(void)
 
 	machine.addTransition(Right, idleState, walkRightState);
 
-	m_sprite.setMachine(machine);
-	m_sprite.restart();
+	setMachine(machine);
 	m_sprite.setNextEvent(Idle);
 }
 
@@ -106,9 +116,26 @@ void ANpc::setOrigin(sf::Vector2f const & origin)
 	m_sprite.setOrigin(origin);
 }
 
+void ANpc::setScale(float scale)
+{
+	m_scale = scale;
+	m_sprite.setScale(scale, scale);
+}
+
 void ANpc::setPosition(sf::Vector2f const & position)
 {
 	m_box->setPosition(position.x, position.y - m_box->getSize().y);
+}
+
+void ANpc::setNextEvent(Events event)
+{
+	m_sprite.setNextEvent(event);
+}
+
+void ANpc::setMachine(octo::FiniteStateMachine const & machine)
+{
+	m_sprite.setMachine(machine);
+	m_sprite.restart();
 }
 
 void ANpc::setVelocity(float velocity)
@@ -125,6 +152,56 @@ void ANpc::setBoxCollision(std::size_t type, std::size_t mask)
 void ANpc::setSize(sf::Vector2f const & size)
 {
 	m_box->setSize(size);
+}
+
+float ANpc::getScale(void) const
+{
+	return m_scale;
+}
+
+float ANpc::getVelocity(void) const
+{
+	return m_velocity;
+}
+
+sf::Vector2f const & ANpc::getOrigin(void) const
+{
+	return m_origin;
+}
+
+sf::FloatRect const & ANpc::getArea(void) const
+{
+	return m_area;
+}
+
+RectangleShape * ANpc::getBox(void)
+{
+	return m_box;
+}
+
+octo::CharacterSprite & ANpc::getSprite(void)
+{
+	return m_sprite;
+}
+
+octo::CharacterAnimation & ANpc::getIdleAnimation(void)
+{
+	return m_idleAnimation;
+}
+
+octo::CharacterAnimation & ANpc::getWalkAnimation(void)
+{
+	return m_walkAnimation;
+}
+
+octo::CharacterAnimation & ANpc::getSpecial1Animation(void)
+{
+	return m_special1Animation;
+}
+
+octo::CharacterAnimation & ANpc::getSpecial2Animation(void)
+{
+	return m_special2Animation;
 }
 
 void ANpc::addMapOffset(float x, float y)
@@ -160,15 +237,15 @@ void ANpc::updateState(void)
 	if ((bounds.left + bounds.width) <= (m_area.left + m_area.width) && m_sprite.getCurrentEvent() == Idle && canWalk())
 	{
 		m_sprite.setNextEvent(Right);
-		m_sprite.setOrigin(m_origin.x, 0.f);
-		m_sprite.setScale(1, 1);
+		m_sprite.setOrigin(m_origin.x, m_origin.y);
+		m_sprite.setScale(m_scale, m_scale);
 	}
 	else if (bounds.left >= m_area.left && m_sprite.getCurrentEvent() == Idle && canWalk())
 	{
 		m_sprite.setNextEvent(Left);
 		sf::Vector2f const & size = m_sprite.getLocalSize();
-		m_sprite.setOrigin(size.x - m_origin.x, 0.f);
-		m_sprite.setScale(-1, 1);
+		m_sprite.setOrigin(size.x - m_origin.x, m_origin.y);
+		m_sprite.setScale(-m_scale, m_scale);
 	}
 	else if ((bounds.left <= m_area.left || (bounds.left + bounds.width) >= (m_area.left + m_area.width))
 			&& m_sprite.getCurrentEvent() != Idle)
