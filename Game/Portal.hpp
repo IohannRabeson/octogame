@@ -97,6 +97,7 @@ private:
 	sf::Vector2f			m_position;
 	sf::Shader				m_shader;
 	std::size_t				m_shaderIndex;
+	std::size_t				m_maxParticle;
 	State					m_state;
 	float					m_radius;
 	float					m_timer;

@@ -12,6 +12,7 @@
 Portal::Portal(void) :
 	m_position(40.f, 0.f),
 	m_shaderIndex(0u),
+	m_maxParticle(40u),
 	m_state(State::Disappear),
 	m_radius(50.f),
 	m_timer(0.f),
@@ -77,7 +78,7 @@ void Portal::update(sf::Time frametime)
 	switch (m_state)
 	{
 		case Appear:
-			m_particles.setMaxParticle(m_timer / m_timerMax * 20.f);
+			m_particles.setMaxParticle(m_timer / m_timerMax * static_cast<float>(m_maxParticle));
 			m_timer += frametime.asSeconds();
 			if (m_timer >= m_timerMax)
 			{
@@ -86,7 +87,7 @@ void Portal::update(sf::Time frametime)
 			}
 			break;
 		case Activated:
-			m_particles.setMaxParticle(20u);
+			m_particles.setMaxParticle(m_maxParticle);
 			break;
 		case Disappear:
 			m_particles.setMaxParticle(0u);
