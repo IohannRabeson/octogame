@@ -59,6 +59,7 @@ SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/AudioMenu.cpp					\
 				Bubble/ControlMenu.cpp					\
 				Bubble/YesNoMenu.cpp					\
+				Bubble/ResolutionMenu.cpp				\
 				Bubble/EmptyMenu.cpp					\
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
