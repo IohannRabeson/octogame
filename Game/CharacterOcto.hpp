@@ -69,6 +69,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	octo::CharacterAnimation	m_umbrellaAnimation;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
+	octo::CharacterAnimation	m_answerWolfAnimation;
 	RectangleShape*				m_box;
 
 	sf::Time					m_timeEventFall;

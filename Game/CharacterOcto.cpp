@@ -139,6 +139,22 @@ void	CharacterOcto::setupAnimation()
 			});
 	m_drinkAnimation.setLoop(octo::LoopMode::Loop);
 
+	m_answerWolfAnimation.setFrames({
+			Frame(sf::seconds(0.4f), {56, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {57, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {58, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {59, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {60, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(1.5f), {61, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {62, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {63, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {64, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {65, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {66, sf::FloatRect(), sf::Vector2f()}),
+			});
+	m_answerWolfAnimation.setLoop(octo::LoopMode::Loop);
+
+
 }
 
 void	CharacterOcto::setupMachine()
