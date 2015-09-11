@@ -60,6 +60,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 
 	private:
 	octo::CharacterSprite		m_sprite;
+	float						m_spriteScale;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
 	octo::CharacterAnimation	m_jumpAnimation;
@@ -83,6 +84,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	float						m_afterJumpVelocity;
 	float						m_previousTop;
 	float						m_topElevator;
+	float						m_deltaPositionY;
 	std::size_t					m_numberOfJump;
 	bool						m_originMove;
 	bool						m_onGround;

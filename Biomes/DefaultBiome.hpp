@@ -34,6 +34,7 @@ public:
 	virtual std::size_t									getMapSeed();
 	virtual float										getTransitionDuration();
 	virtual int											getBossInstancePosX();
+	virtual std::map<std::size_t, GameObjectType> const & getGameObjects();
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -146,6 +147,7 @@ private:
 	sf::Color											m_tileEndColor;
 
 	std::map<std::size_t, std::string>					m_instances;
+	std::map<std::size_t, GameObjectType>				m_gameObjects;
 
 	sf::Time											m_dayDuration;
 	sf::Color											m_skyDayColor;

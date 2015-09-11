@@ -2,6 +2,7 @@
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
+#include "AGameObject.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -16,7 +17,7 @@ DefaultBiome::DefaultBiome() :
 	m_tileStartColor(230.f, 168.f, 0.f),
 	m_tileEndColor(254.f, 231.f, 170.f),
 
-	m_dayDuration(sf::seconds(40.f)),
+	m_dayDuration(sf::seconds(20.f)),
 	m_skyDayColor(188, 200, 206),
 	m_skyNightColor(8, 20, 26),
 	m_nightLightColor(0, 197, 255, 130),
@@ -118,6 +119,11 @@ DefaultBiome::DefaultBiome() :
 	// TODO define map position and number of map
 	m_instances[12] = MINIMAP_OMP;
 	m_instances[86] = TEST_MAP2_OMP;
+	m_instances[450] = NEWMAP_OMP;
+
+	// Define game objects
+	m_gameObjects[50] = GameObjectType::Portal;
+	m_gameObjects[0] = GameObjectType::NpcCedric;
 }
 
 void			DefaultBiome::setup(std::size_t seed)
@@ -154,6 +160,11 @@ float			DefaultBiome::getTransitionDuration()
 int				DefaultBiome::getBossInstancePosX()
 {
 	return (m_bossInstancePosX);
+}
+
+std::map<std::size_t, GameObjectType> const &	DefaultBiome::getGameObjects()
+{
+	return m_gameObjects;
 }
 
 std::map<std::size_t, std::string> const & DefaultBiome::getInstances()

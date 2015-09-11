@@ -7,14 +7,14 @@
 #include "Rainbow.hpp"
 #include "SkyCycle.hpp"
 #include "MapInstance.hpp"
-//#include "FunctionsOffset.hpp"
+#include "ClassicNpc.hpp"
+#include "CedricNpc.hpp"
 #include <limits>
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
-#include <Console.hpp>
 
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
@@ -69,30 +69,16 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	setupDecors(biome);
 
 	// Init game objects
-	setupGameObjects(biome);
+	setupGameObjects(biome, cycle);
 
 	swapMap();
 }
 
-void GroundManager::setupGameObjects(ABiome & biome)
+void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
-	octo::Console&				console = octo::Application::getConsole();
 
-	// Setup somes console commands
-	console.addCommand(L"test.elevators.setRotationFactor", [this](float factor)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setRotationFactor(factor);
-				}
-			});
-	console.addCommand(L"test.elevators.setWidth", [this](float width)
-			{
-				for(auto& elevator : m_elevators)
-				{
-					elevator.m_gameObject->setWidth(width);
-				}
-			});
+	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
+
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
@@ -101,16 +87,19 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			//TODO: use resource to load good npc
-			std::unique_ptr<CharacterNpc> npc;
-			npc.reset(new CharacterNpc());
+			std::unique_ptr<ANpc> npc;
+			if (!spriteTrigger.name.compare(CEDRIC_OSS)) //C'est moche mais la generic factory ne permet pas de donner une variable au constructeur
+				npc.reset(new CedricNpc(skyCycle));
+			else
+				npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
 			sf::FloatRect rect;
 			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
 			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
 			rect.width = spriteTrigger.trigger.width;
 			rect.height = spriteTrigger.trigger.height;
 			sf::Vector2f position(rect.left, rect.top + rect.height);
-			npc->setup(position, rect);
+			npc->setArea(rect);
+			npc->setPosition(position);
 			m_npcs.push_back(std::move(npc));
 		}
 
@@ -118,21 +107,49 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		std::unique_ptr<ElevatorStream> elevator;
 		elevator.reset(new ElevatorStream());
 		elevator->setPosX(instance.first * Tile::TileSize - elevator->getWidth());
-		elevator->setTopY((-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize);
+		octo::Array3D<octo::LevelMap::TileType> const & map = levelMap.getMap();
+		for (std::size_t y = 0; y < map.rows(); y++)
+		{
+			if (map(0, y, 0) != octo::LevelMap::TileType::Empty)
+			{
+				elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + MapInstance::HeightOffset - 9) * Tile::TileSize);
+				break;
+			}
+		}
 		elevator->setHeight(400.f);
 		elevator->setBiome(biome);
 		std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
 		m_elevators.emplace_back(instance.first - width, width, elevator);
 	}
-	// TODO: to remove, it's just an example
-	std::unique_ptr<Portal> portal;
-	portal.reset(new Portal());
-	portal->setRadius(100.f);
-	m_portals.emplace_back(15, portal->getRadius() * 2.f / Tile::TileSize, portal);
+
+	auto & gameObjects = biome.getGameObjects();
+	for (auto & gameObject : gameObjects)
+	{
+		switch (gameObject.second)
+		{
+			case GameObjectType::Portal:
+				{
+					std::unique_ptr<Portal> portal(new Portal());
+					portal->setBiome(biome);
+					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+				}
+				break;
+			case GameObjectType::NpcCedric:
+				{
+					CedricNpc * cedric = new CedricNpc(skyCycle);
+					cedric->activatePhysics(false);
+					m_npcsOnFloor.emplace_back(gameObject.first, 2, cedric);
+				}
+				break;
+			default:
+				break;
+		}
+	}
 
 	// Register position for gameobjects on the ground
 	setupGameObjectPosition(m_elevators);
 	setupGameObjectPosition(m_portals);
+	setupGameObjectPosition(m_npcsOnFloor);
 }
 
 template<class T>
@@ -399,7 +416,9 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			else if (first)
 			{
 				// Avoid to compute A LOT of transition under the screen
-				if (tile->getStartTransition(0u).y > bottomBorder || tile->getStartTransition(1u).x < cameraRect.left || tile->getStartTransition(0u).x > rightBorder)
+				if ((tile->getStartTransition(0u).y > bottomBorder && tilePrev->getStartTransition(0u).y > bottomBorder)
+						|| (tilePrev->getStartTransition(1u).x < cameraRect.left && tile->getStartTransition(1u).x < cameraRect.left)
+						|| (tilePrev->getStartTransition(0u).x > rightBorder && tile->getStartTransition(0u).x > rightBorder))
 					break;
 			}
 			tilePrev = &m_tilesPrev->get(x, y);
@@ -462,7 +481,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 				min = tmp;
 		}
 		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x - Map::OffsetX + elevator.m_gameObject->getWidth() / 2.f + Tile::TileSize);
-		elevator.m_gameObject->setPosY(min);
+		elevator.m_gameObject->setPosY(min - Tile::TileSize);
 		elevator.m_gameObject->setHeight(min - elevator.m_gameObject->getTopY());
 	}
 
@@ -475,7 +494,30 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			if (tmp < max)
 				max = tmp;
 		}
-		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TileSize));
+		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TripleTileSize));
+	}
+
+	for (auto const & npc : m_npcsOnFloor)
+	{
+		max = std::numeric_limits<float>::max();
+		for (std::size_t i = npc.m_position; i < npc.m_position + npc.m_width; i++)
+		{
+			tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
+			if (tmp < max)
+				max = tmp;
+		}
+		npc.m_gameObject->setPosition(sf::Vector2f(currentWide[npc.m_position].second.x - Map::OffsetX, max - npc.m_gameObject->getHeight() - Map::OffsetY));
+	}
+
+	// Replace npc around the map
+	for (auto const & npc : m_npcsOnFloor)
+	{
+		float mapSizeX = m_mapSize.x * Tile::TileSize;
+
+		if (npc.m_gameObject->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			npc.m_gameObject->addMapOffset(mapSizeX, 0.f);
+		else if (npc.m_gameObject->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			npc.m_gameObject->addMapOffset(-mapSizeX, 0.f);
 	}
 
 	for (auto const & npc : m_npcs)
@@ -650,6 +692,8 @@ void GroundManager::updateGameObjects(float deltatime)
 		elevator.m_gameObject->update(sf::seconds(deltatime));
 	for (auto & portal : m_portals)
 		portal.m_gameObject->update(sf::seconds(deltatime));
+	for (auto & npc : m_npcsOnFloor)
+		npc.m_gameObject->update(sf::seconds(deltatime));
 	for (auto & npc : m_npcs)
 		npc->update(sf::seconds(deltatime));
 }
@@ -694,28 +738,25 @@ void GroundManager::update(float deltatime)
 	updateGameObjects(deltatime);
 }
 
-void GroundManager::draw(sf::RenderTarget& render, sf::RenderStates states) const
+void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	render.draw(m_decorManagerBack, states);
 	for (auto & elevator : m_elevators)
-		elevator.m_gameObject->draw(render);
+		elevator.m_gameObject->drawBack(render);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render);
+	for (auto & npc : m_npcsOnFloor)
+		npc.m_gameObject->draw(render, states);
 	for (auto & npc : m_npcs)
-		npc->draw(render);
+		npc->draw(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 
-DecorManager const & GroundManager::getDecorsBack(void) const
+void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	return m_decorManagerBack;
-}
-
-DecorManager const & GroundManager::getDecorsFront(void) const
-{
-	return m_decorManagerFront;
-}
-
-DecorManager const & GroundManager::getDecorsGround(void) const
-{
-	return m_decorManagerGround;
+	render.draw(m_decorManagerGround, states);
+	render.draw(m_decorManagerFront, states);
+	for (auto & elevator : m_elevators)
+		elevator.m_gameObject->drawFront(render);
+	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
