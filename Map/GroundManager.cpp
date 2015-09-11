@@ -121,16 +121,35 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
 		m_elevators.emplace_back(instance.first - width, width, elevator);
 	}
-	// TODO: to remove, it's just an example
-	std::unique_ptr<Portal> portal;
-	portal.reset(new Portal());
-	portal->setRadius(100.f);
-	portal->setBiome(biome);
-	m_portals.emplace_back(15, portal->getRadius() * 2.f / Tile::TileSize, portal);
+
+	auto & gameObjects = biome.getGameObjects();
+	for (auto & gameObject : gameObjects)
+	{
+		switch (gameObject.second)
+		{
+			case GameObjectType::Portal:
+				{
+					std::unique_ptr<Portal> portal(new Portal());
+					portal->setBiome(biome);
+					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+				}
+				break;
+			case GameObjectType::NpcCedric:
+				{
+					CedricNpc * cedric = new CedricNpc(skyCycle);
+					cedric->activatePhysics(false);
+					m_npcsOnFloor.emplace_back(gameObject.first, 2, cedric);
+				}
+				break;
+			default:
+				break;
+		}
+	}
 
 	// Register position for gameobjects on the ground
 	setupGameObjectPosition(m_elevators);
 	setupGameObjectPosition(m_portals);
+	setupGameObjectPosition(m_npcsOnFloor);
 }
 
 template<class T>
@@ -397,7 +416,9 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			else if (first)
 			{
 				// Avoid to compute A LOT of transition under the screen
-				if (tile->getStartTransition(0u).y > bottomBorder || tile->getStartTransition(1u).x < cameraRect.left || tile->getStartTransition(0u).x > rightBorder)
+				if ((tile->getStartTransition(0u).y > bottomBorder && tilePrev->getStartTransition(0u).y > bottomBorder)
+						|| (tilePrev->getStartTransition(1u).x < cameraRect.left && tile->getStartTransition(1u).x < cameraRect.left)
+						|| (tilePrev->getStartTransition(0u).x > rightBorder && tile->getStartTransition(0u).x > rightBorder))
 					break;
 			}
 			tilePrev = &m_tilesPrev->get(x, y);
@@ -474,6 +495,29 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 				max = tmp;
 		}
 		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TripleTileSize));
+	}
+
+	for (auto const & npc : m_npcsOnFloor)
+	{
+		max = std::numeric_limits<float>::max();
+		for (std::size_t i = npc.m_position; i < npc.m_position + npc.m_width; i++)
+		{
+			tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
+			if (tmp < max)
+				max = tmp;
+		}
+		npc.m_gameObject->setPosition(sf::Vector2f(currentWide[npc.m_position].second.x - Map::OffsetX, max - npc.m_gameObject->getHeight() - Map::OffsetY));
+	}
+
+	// Replace npc around the map
+	for (auto const & npc : m_npcsOnFloor)
+	{
+		float mapSizeX = m_mapSize.x * Tile::TileSize;
+
+		if (npc.m_gameObject->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			npc.m_gameObject->addMapOffset(mapSizeX, 0.f);
+		else if (npc.m_gameObject->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			npc.m_gameObject->addMapOffset(-mapSizeX, 0.f);
 	}
 
 	for (auto const & npc : m_npcs)
@@ -648,6 +692,8 @@ void GroundManager::updateGameObjects(float deltatime)
 		elevator.m_gameObject->update(sf::seconds(deltatime));
 	for (auto & portal : m_portals)
 		portal.m_gameObject->update(sf::seconds(deltatime));
+	for (auto & npc : m_npcsOnFloor)
+		npc.m_gameObject->update(sf::seconds(deltatime));
 	for (auto & npc : m_npcs)
 		npc->update(sf::seconds(deltatime));
 }
@@ -699,6 +745,8 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 		elevator.m_gameObject->drawBack(render);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render);
+	for (auto & npc : m_npcsOnFloor)
+		npc.m_gameObject->draw(render, states);
 	for (auto & npc : m_npcs)
 		npc->draw(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);

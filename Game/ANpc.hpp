@@ -20,12 +20,14 @@ public:
 	void setSize(sf::Vector2f const & size);
 	void setScale(float scale);
 	void addMapOffset(float x, float y);
+	void activatePhysics(bool active);
 	sf::Vector2f const & getPosition(void) const;
 
 	virtual void setup(void) = 0;
 	virtual void update(sf::Time frametime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual void doSpecialAction(void);
+	virtual float getHeight(void) const;
 
 protected:
 	enum Events
