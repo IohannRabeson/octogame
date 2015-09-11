@@ -13,7 +13,7 @@ Portal::Portal(void) :
 	m_position(40.f, 0.f),
 	m_shaderIndex(0u),
 	m_state(State::Appear),
-	m_radius(50.f),
+	m_radius(100.f),
 	m_timer(0.f),
 	m_timerMax(1.0f),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle())
