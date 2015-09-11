@@ -56,7 +56,7 @@ VideoMenu::VideoMenu(void)
 void VideoMenu::createMenus(void)
 {
 	addMenu("Fullscreen", std::unique_ptr<YesNoFullscreen>(new YesNoFullscreen()));
-	addMenu("VSync", std::unique_ptr<YesNoVsync>(new YesNoVsync()));
+	addMenu("V-Sync", std::unique_ptr<YesNoVsync>(new YesNoVsync()));
 	//TODO: Make resolution work
 	//addMenu("Resolution", std::unique_ptr<ResolutionMenu>(new ResolutionMenu()));
 }
