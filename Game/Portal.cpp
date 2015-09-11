@@ -21,8 +21,9 @@ Portal::Portal(void) :
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 
 	m_shader.loadFromMemory(resources.getText(VORTEX_FRAG), sf::Shader::Fragment);
-	m_postEffect.resetShader(&m_shader);
-	m_shaderIndex = postEffect.addEffect(std::move(m_postEffect));
+	octo::PostEffect postEffectShader;
+	postEffectShader.resetShader(&m_shader);
+	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
 	m_shader.setParameter("time_max", m_timerMax);
 
 	m_box->setGameObject(this);
