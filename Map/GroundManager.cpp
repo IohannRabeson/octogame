@@ -126,7 +126,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	portal.reset(new Portal());
 	portal->setRadius(100.f);
 	portal->setBiome(biome);
-	m_portals.emplace_back(15, portal->getRadius() * 2.f / Tile::TileSize, portal);
+	m_portals.emplace_back(450, portal->getRadius() * 2.f / Tile::TileSize, portal);
 
 	// Register position for gameobjects on the ground
 	setupGameObjectPosition(m_elevators);

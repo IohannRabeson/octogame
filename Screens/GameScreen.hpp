@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   GameScreen.hpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/24 05:54:08 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/14 04:30:33 by irabeson         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef GAMESCREEN_HPP
 # define GAMESCREEN_HPP
 # include <AbstractState.hpp>
@@ -20,6 +8,9 @@
 
 class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
+public:
+	GameScreen(void);
+
 	virtual void		start();
 	virtual void		pause();
 	virtual void		resume();
@@ -27,8 +18,9 @@ class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListe
 	virtual void		update(sf::Time frameTime);
 	virtual void		draw(sf::RenderTarget& render)const;
 private:
-	MainMenu			m_menu;
-	Game				m_game;
+	MainMenu				m_menu;
+	std::unique_ptr<Game>	m_game;
+	bool					m_changeLevel;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 };
