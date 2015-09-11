@@ -17,7 +17,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position) :
 	m_swarm.setTexture(resources.getTexture(FIREFLY01_PNG));
 	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
 
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(NANO1_OSS));
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(NANO5_OSS));
 	m_sprite.setScale(0.6f, 0.6f);
 
 	octo::SpriteAnimation::FrameList	frames;
@@ -25,6 +25,10 @@ NanoRobot::NanoRobot(sf::Vector2f const & position) :
 	frames.emplace_back(sf::seconds(0.2f), 1);
 	frames.emplace_back(sf::seconds(0.2f), 2);
 	frames.emplace_back(sf::seconds(0.2f), 3);
+	frames.emplace_back(sf::seconds(0.2f), 4);
+	frames.emplace_back(sf::seconds(0.2f), 5);
+	frames.emplace_back(sf::seconds(0.2f), 6);
+	frames.emplace_back(sf::seconds(0.2f), 7);
 
 	m_animation.setFrames(frames);
 	m_animation.setLoop(octo::LoopMode::Loop);
