@@ -15,16 +15,21 @@ NanoRobot::NanoRobot(sf::Vector2f const & position) :
 
 	m_swarm.setPositionBehavior(new FireflySwarm::CirclePositionBehavior(2345, 50.f));
 	m_swarm.setTexture(resources.getTexture(FIREFLY01_PNG));
-	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 1.f);
+	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
 
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(NANOROBOT_OSS));
-	m_sprite.setScale(0.1f, 0.1f);
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(NANO1_OSS));
+	m_sprite.setScale(0.6f, 0.6f);
 
 	octo::SpriteAnimation::FrameList	frames;
 	frames.emplace_back(sf::seconds(0.2f), 0);
+	frames.emplace_back(sf::seconds(0.2f), 1);
+	frames.emplace_back(sf::seconds(0.2f), 2);
+	frames.emplace_back(sf::seconds(0.2f), 3);
 
 	m_animation.setFrames(frames);
 	m_animation.setLoop(octo::LoopMode::Loop);
+	m_sprite.setAnimation(m_animation);
+	m_sprite.play();
 }
 
 NanoRobot::~NanoRobot(void)
@@ -38,6 +43,7 @@ void NanoRobot::setPosition(sf::Vector2f const & position)
 void NanoRobot::update(sf::Time frametime)
 {
 	m_swarm.update(frametime);
+	m_sprite.update(frametime);
 	m_sprite.setPosition(m_swarm.getFirefly(0u).position - sf::Vector2f(32.f, 32.f));
 }
 
