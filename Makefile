@@ -78,6 +78,7 @@ SRC_MAP =		Map/Map.cpp								\
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
+				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\

@@ -189,7 +189,7 @@ void GroundManager::setupDecors(ABiome & biome)
 	{
 		for (std::size_t i = 0; i < treeCount; i++)
 		{
-			int x = biome.randomInt(1u, mapSizeX);
+			int x = biome.getTreePositionX();
 			m_decorManagerBack.add(DecorManager::DecorTypes::Tree);
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);

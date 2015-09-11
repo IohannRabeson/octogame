@@ -89,6 +89,7 @@ public:
 	virtual bool										canCreateLeaf() = 0;
 	virtual sf::Vector2f								getLeafSize() = 0;
 	virtual sf::Color									getLeafColor() = 0;
+	virtual std::size_t									getTreePositionX() = 0;
 
 	virtual sf::Vector2f								getMushroomSize() = 0;
 	virtual sf::Color									getMushroomColor() = 0;
