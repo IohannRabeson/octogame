@@ -123,7 +123,8 @@ DefaultBiome::DefaultBiome() :
 
 	// Define game objects
 	m_gameObjects[50] = GameObjectType::Portal;
-	m_gameObjects[0] = GameObjectType::NpcCedric;
+	m_gameObjects[100] = GameObjectType::NpcCedric;
+	m_gameObjects[0] = GameObjectType::NanoRobot;
 }
 
 void			DefaultBiome::setup(std::size_t seed)

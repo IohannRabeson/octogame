@@ -12,7 +12,8 @@ enum class GameObjectType
 	Decor = 16u,
 	Tile = 32u,
 	Elevator = 64u,
-	NpcCedric = 128u
+	NpcCedric = 128u,
+	NanoRobot = 256u
 };
 
 /*!
