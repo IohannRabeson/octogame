@@ -20,9 +20,10 @@ class AShape;
 class Game : public octo::DefaultKeyboardListener, public IContactListener
 {
 public:
-	Game();
+	Game(void);
+	virtual ~Game(void);
 
-	void			setup();
+	void			setup(void);
 	void			loadLevel(std::string const& fileName);
 	sf::Vector2f	getOctoBubblePosition(void) const;
 
@@ -38,7 +39,6 @@ private:
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
 	std::unique_ptr<MusicPlayer>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
-	std::unique_ptr<CharacterNpc>		m_npc; //TODO: remove
 
 	bool			onPressed(sf::Event::KeyEvent const & event);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);

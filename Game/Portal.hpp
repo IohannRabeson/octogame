@@ -102,8 +102,8 @@ private:
 	float					m_radius;
 	float					m_timer;
 	float					m_timerMax;
-	CircleShape *			m_box;
 	CircleShape *			m_activationBox;
+	CircleShape *			m_box;
 	PortalActivation		m_portalActivation;
 
 	octo::SpriteAnimation	m_animation;

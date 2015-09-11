@@ -17,8 +17,8 @@ Portal::Portal(void) :
 	m_radius(50.f),
 	m_timer(0.f),
 	m_timerMax(1.0f),
-	m_box(PhysicsEngine::getShapeBuilder().createCircle()),
-	m_activationBox(PhysicsEngine::getShapeBuilder().createCircle())
+	m_activationBox(PhysicsEngine::getShapeBuilder().createCircle()),
+	m_box(PhysicsEngine::getShapeBuilder().createCircle())
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
@@ -38,7 +38,7 @@ Portal::Portal(void) :
 	m_activationBox->setGameObject(&m_portalActivation);
 	m_activationBox->setApplyGravity(false);
 	m_activationBox->setType(AShape::Type::e_trigger);
-	m_activationBox->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Portal));
+	m_activationBox->setCollisionType(static_cast<std::uint32_t>(GameObjectType::PortalActivation));
 	m_activationBox->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
 
 	setRadius(m_radius);
@@ -130,6 +130,7 @@ void Portal::setRadius(float radius)
 	m_radius = radius;
 	m_shader.setParameter("radius", m_radius);
 	m_particles.setRadius(m_radius);
+	m_box->setRadius(m_radius);
 	m_activationBox->setRadius(m_radius + m_portalActivation.m_radius);
 }
 

@@ -5,6 +5,7 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
+#include "AGameObject.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -13,25 +14,29 @@
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
 
-Game::Game() :
+Game::Game(void) :
 	m_physicsEngine(PhysicsEngine::getInstance()),
 	m_skyCycle(nullptr),
 	m_skyManager(nullptr),
 	m_groundManager(nullptr),
 	m_parallaxScrolling(nullptr),
 	m_musicPlayer(nullptr),
-	m_octo(nullptr),
-	m_npc(nullptr)
+	m_octo(nullptr)
 {
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.addKeyboardListener(this);
 }
 
-void	Game::setup()
+Game::~Game(void)
+{
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
+}
+
+void	Game::setup(void)
 {
 	m_biomeManager.registerBiome<DefaultBiome>("default");
 	m_biomeManager.registerBiome<DefaultBiome>("default1");
-
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(this);
 }
 
 void	Game::loadLevel(std::string const& fileName)
@@ -62,9 +67,9 @@ void	Game::loadLevel(std::string const& fileName)
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup();
+	m_octo->setPosition(sf::Vector2f(0.f, 800.f));
 
-	// TODO: fix, for npcs, if we dont update once, value are not initialized well, and npc go through instance map
-	update(sf::seconds(0.f));
+	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 800.f));
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -107,9 +112,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 	}
 	else if (gameObjectCast<Portal>(gameObject))
 	{
-		//octo->onCollision(GameObjectType::Elevator, collisionDirection);
-		std::cout << "change" << std::endl;
-		//loadLevel("default1");
+		//TODO
 	}
 	else if (gameObjectCast<Portal::PortalActivation>(gameObject))
 	{
@@ -152,6 +155,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(*m_parallaxScrolling, states);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);

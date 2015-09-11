@@ -1,16 +1,17 @@
 #include "GameScreen.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
-
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+#include <StateManager.hpp>
 #include <Options.hpp>
+
+GameScreen::GameScreen(void) :
+	m_changeLevel(true)
+{}
 
 void	GameScreen::start()
 {
-	m_game.setup();
-	m_game.loadLevel("default");
-
 	m_menu.setup();
 
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
@@ -31,13 +32,22 @@ void	GameScreen::stop()
 
 void	GameScreen::update(sf::Time frameTime)
 {
+	if (m_changeLevel)
+	{
+		m_game.reset(new Game());
+		m_game->setup();
+		m_game->loadLevel("default");
+		m_changeLevel = false;
+		return;
+	}
+
 	AMenu::State state = m_menu.getState();
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
-		m_menu.update(frameTime, m_game.getOctoBubblePosition());
+		m_menu.update(frameTime, m_game->getOctoBubblePosition());
 	else
 	{
 		m_menu.setKeyboard(false);
-		m_game.update(frameTime);
+		m_game->update(frameTime);
 	}
 }
 
@@ -52,15 +62,24 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 				m_menu.setState(AMenu::State::Active);
 			break;
 		}
+		case sf::Keyboard::F:
+		{
+			m_changeLevel = true;
+			octo::StateManager & states = octo::Application::getStateManager();
+			states.push("game", "default");
+			break;
+		}
 		default:
 			break;
-	}	
+	}
 	return (true);
 }
 
 void	GameScreen::draw(sf::RenderTarget& render)const
 {
-	m_game.draw(render, sf::RenderStates());
+	if (m_changeLevel)
+		return;
+	m_game->draw(render, sf::RenderStates());
 	if (m_menu.getState() == AMenu::State::Active || m_menu.getState() == AMenu::State::Draw)
 		render.draw(m_menu);
 }
