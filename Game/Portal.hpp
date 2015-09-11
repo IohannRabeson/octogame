@@ -8,6 +8,7 @@
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
 # include <Interpolations.hpp>
+# include <PostEffect.hpp>
 
 # include "AGameObject.hpp"
 
@@ -77,6 +78,7 @@ private:
 	PortalParticle		m_particles;
 	sf::Vector2f		m_position;
 	sf::Shader			m_shader;
+	octo::PostEffect	m_postEffect;
 	std::size_t			m_shaderIndex;
 	State				m_state;
 	float				m_radius;

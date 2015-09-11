@@ -41,7 +41,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 	// Reset last values
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	postEffect.removeShaders();
+	postEffect.removeEffects();
 
 	// Reset PhysycsEngine
 	m_physicsEngine.unregisterAllShapes();
