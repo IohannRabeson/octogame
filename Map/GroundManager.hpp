@@ -6,6 +6,7 @@
 # include "DecorManager.hpp"
 # include "Portal.hpp"
 # include "ElevatorStream.hpp"
+# include "NanoRobot.hpp"
 # include "ANpc.hpp"
 
 class ADecor;
@@ -82,6 +83,7 @@ private:
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
 	std::vector<GameObjectPosition<Portal>>				m_portals;
+	std::vector<GameObjectPosition<NanoRobot>>			m_nanoRobots;
 	std::vector<GameObjectPosition<ANpc>>				m_npcsOnFloor;
 	std::vector<std::unique_ptr<ANpc>>					m_npcs;
 

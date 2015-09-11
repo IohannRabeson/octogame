@@ -138,7 +138,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					CedricNpc * cedric = new CedricNpc(skyCycle);
 					cedric->activatePhysics(false);
-					m_npcsOnFloor.emplace_back(gameObject.first, 2, cedric);
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, cedric);
+				}
+				break;
+			case GameObjectType::NanoRobot:
+				{
+					m_nanoRobots.emplace_back(gameObject.first, 3, new NanoRobot(sf::Vector2f(gameObject.first * Tile::TileSize, 500.f)));
 				}
 				break;
 			default:
@@ -150,6 +155,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	setupGameObjectPosition(m_elevators);
 	setupGameObjectPosition(m_portals);
 	setupGameObjectPosition(m_npcsOnFloor);
+	setupGameObjectPosition(m_nanoRobots);
 }
 
 template<class T>
@@ -497,6 +503,18 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TripleTileSize));
 	}
 
+	for (auto const & nano : m_nanoRobots)
+	{
+		max = std::numeric_limits<float>::max();
+		for (std::size_t i = nano.m_position; i < nano.m_position + nano.m_width; i++)
+		{
+			tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
+			if (tmp < max)
+				max = tmp;
+		}
+		nano.m_gameObject->setPosition(sf::Vector2f(currentWide[nano.m_position].second.x - Map::OffsetX, max - Map::OffsetY - Tile::TripleTileSize * 2.f));
+	}
+
 	for (auto const & npc : m_npcsOnFloor)
 	{
 		max = std::numeric_limits<float>::max();
@@ -692,6 +710,8 @@ void GroundManager::updateGameObjects(float deltatime)
 		elevator.m_gameObject->update(sf::seconds(deltatime));
 	for (auto & portal : m_portals)
 		portal.m_gameObject->update(sf::seconds(deltatime));
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->update(sf::seconds(deltatime));
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->update(sf::seconds(deltatime));
 	for (auto & npc : m_npcs)
@@ -759,4 +779,6 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->draw(render);
 }
