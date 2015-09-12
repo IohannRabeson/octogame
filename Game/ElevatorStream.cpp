@@ -201,24 +201,6 @@ void	ElevatorStream::setupSprite(void)
 	m_spriteTopBack.play();
 }
 
-void	ElevatorStream::setPosX(float x)
-{
-	sf::Vector2f			pos = m_particles->getPosition();
-	sf::Vector2f const &	posBox = m_box->getPosition();
-
-	pos.x = x;
-	m_particles->setPosition(pos);
-	m_box->setPosition(x - (getWidth() / 2.f), posBox.y);
-}
-
-void	ElevatorStream::setPosY(float y)
-{
-	sf::Vector2f	pos = m_particles->getPosition();
-
-	pos.y = y;
-	m_particles->setPosition(pos);
-}
-
 void	ElevatorStream::setHeight(float height)
 {
 	sf::Vector2f const &	sizeBox = m_box->getSize();
@@ -254,6 +236,19 @@ void	ElevatorStream::setBiome(ABiome & biome)
 	m_particles->setBiome(biome);
 }
 
+void	ElevatorStream::setPosition(sf::Vector2f const & position)
+{
+	m_position = position;
+	m_position.x += getWidth() / 2.f + Tile::TileSize;
+	m_position.y -= Tile::TileSize - Map::OffsetY;
+
+	sf::Vector2f const &	posBox = m_box->getPosition();
+
+	m_box->setPosition(m_position.x - (getWidth() / 2.f), posBox.y);
+	m_particles->setPosition(m_position);
+	setHeight(m_position.y - getTopY());
+}
+
 float	ElevatorStream::getHeight(void) const
 {
 	return m_particles->getHeight();
@@ -272,6 +267,11 @@ float	ElevatorStream::getPosY(void) const
 float	ElevatorStream::getTopY(void) const
 {
 	return m_topY;
+}
+
+sf::Vector2f const & ElevatorStream::getPosition(void) const
+{
+	return m_position;
 }
 
 void	ElevatorStream::createRay()
@@ -316,7 +316,7 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_spriteTopBack.update(frameTime);
 }
 
-void	ElevatorStream::drawBack(sf::RenderTarget& render)const
+void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	sf::RenderStates	states;
 
@@ -327,7 +327,7 @@ void	ElevatorStream::drawBack(sf::RenderTarget& render)const
 	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
 }
 
-void	ElevatorStream::drawFront(sf::RenderTarget& render)const
+void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_spriteBottomFront);
 	render.draw(m_spriteTopFront);

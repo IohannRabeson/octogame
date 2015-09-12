@@ -6,9 +6,10 @@
 # include "AGameObject.hpp"
 # include "FireflySwarm.hpp"
 # include "FireflyPopulation.hpp"
+# include "IPlaceable.hpp"
 
 //TODO NanoRobo n'héritera pas de game Object, mais les sous classes en hériteront
-class NanoRobot : public AGameObject<GameObjectType::NanoRobot>
+class NanoRobot : public AGameObject<GameObjectType::NanoRobot>, public IPlaceable
 {
 public:
 	NanoRobot(sf::Vector2f const & position);
@@ -17,7 +18,7 @@ public:
 	void setPosition(sf::Vector2f const & position);
 
 	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render) const;
+	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	// TODO: add CircleShape

@@ -143,12 +143,18 @@ void ANpc::setScale(float scale)
 
 void ANpc::setPosition(sf::Vector2f const & position)
 {
-	m_box->setPosition(position.x, position.y - m_box->getSize().y);
-	m_eventBox->setPosition(position.x - m_eventBox->getRadius(), position.y - m_eventBox->getRadius());
+
 	if (m_box->getSleep())
 	{
+		m_box->setPosition(position.x, position.y - m_box->getSize().y - getHeight());
+		m_eventBox->setPosition(position.x - m_eventBox->getRadius(), position.y - m_eventBox->getRadius() - getHeight());
 		m_box->update();
 		m_eventBox->update();
+	}
+	else
+	{
+		m_eventBox->setPosition(position.x - m_eventBox->getRadius(), position.y - m_eventBox->getRadius());
+		m_box->setPosition(position.x, position.y - m_box->getSize().y);
 	}
 }
 

@@ -140,6 +140,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);
+	m_groundManager->drawText(render, states);
 }
 
 void	Game::followPlayer(sf::Time frameTime)
