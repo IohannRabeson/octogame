@@ -49,7 +49,9 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/ANpc.cpp							\
 				Game/ClassicNpc.cpp						\
 				Game/CedricNpc.cpp						\
-				Game/MusicPlayer.cpp
+				Game/MusicPlayer.cpp					\
+				Game/Progress.cpp						\
+
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
