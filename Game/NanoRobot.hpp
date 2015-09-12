@@ -18,7 +18,7 @@ public:
 	void setPosition(sf::Vector2f const & position);
 
 	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render) const;
+	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	// TODO: add CircleShape

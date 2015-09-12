@@ -316,7 +316,7 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_spriteTopBack.update(frameTime);
 }
 
-void	ElevatorStream::drawBack(sf::RenderTarget& render)const
+void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	sf::RenderStates	states;
 
@@ -327,7 +327,7 @@ void	ElevatorStream::drawBack(sf::RenderTarget& render)const
 	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
 }
 
-void	ElevatorStream::drawFront(sf::RenderTarget& render)const
+void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_spriteBottomFront);
 	render.draw(m_spriteTopFront);

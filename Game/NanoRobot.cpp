@@ -54,7 +54,7 @@ void NanoRobot::update(sf::Time frametime)
 	m_sprite.setPosition(m_swarm.getFirefly(0u).position - sf::Vector2f(32.f, 32.f));
 }
 
-void NanoRobot::draw(sf::RenderTarget& render) const
+void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	//m_swarm.draw(render);
 	render.draw(m_sprite);

@@ -13,6 +13,15 @@ SpaceShip::SpaceShip(SpaceShipEvents event)
 	typedef octo::CharacterAnimation::Frame		Frame;
 	std::vector<Frame>							frames;
 	frames.push_back(Frame(sf::seconds(0.2f), { 0, sf::FloatRect(), sf::Vector2f() }));
+	frames.push_back(Frame(sf::seconds(0.2f), { 1, sf::FloatRect(), sf::Vector2f() }));
+	frames.push_back(Frame(sf::seconds(0.2f), { 2, sf::FloatRect(), sf::Vector2f() }));
+	frames.push_back(Frame(sf::seconds(0.2f), { 3, sf::FloatRect(), sf::Vector2f() }));
+	m_brokenAnimation.setFrames(frames);
+	m_brokenAnimation.setLoop(octo::LoopMode::Loop);
+
+	frames.clear();
+	frames.push_back(Frame(sf::seconds(0.2f), { 0, sf::FloatRect(), sf::Vector2f() }));
+	frames.push_back(Frame(sf::seconds(0.2f), { 3, sf::FloatRect(), sf::Vector2f() }));
 	m_flyingAnimation.setFrames(frames);
 	m_flyingAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -26,7 +35,7 @@ SpaceShip::SpaceShip(SpaceShipEvents event)
 	flyingState = std::make_shared<State>("0", m_flyingAnimation, m_sprite);
 	brokenState = std::make_shared<State>("1", m_brokenAnimation, m_sprite);
 
-	machine.setStart(flyingState);
+	machine.setStart(brokenState);
 	machine.addTransition(Flying, flyingState, flyingState);
 	machine.addTransition(Flying, brokenState, flyingState);
 
@@ -34,6 +43,7 @@ SpaceShip::SpaceShip(SpaceShipEvents event)
 	machine.addTransition(Broken, flyingState, brokenState);
 
 	m_sprite.setMachine(machine);
+	m_sprite.restart();
 	m_sprite.setNextEvent(event);
 }
 
@@ -42,14 +52,9 @@ void SpaceShip::setNextEvent(SpaceShipEvents event)
 	m_sprite.setNextEvent(event);
 }
 
-sf::Vector2f SpaceShip::getSize(void) const
+void SpaceShip::setPosition(sf::Vector2f const & position)
 {
-	return m_sprite.getLocalSize();
-}
-
-sf::Vector2f const & SpaceShip::getPosition(void) const
-{
-	return m_sprite.getPosition();
+	m_sprite.setPosition(position.x, position.y - m_sprite.getLocalSize().y * 0.6f);
 }
 
 void SpaceShip::update(sf::Time frameTime)
@@ -57,7 +62,7 @@ void SpaceShip::update(sf::Time frameTime)
 	m_sprite.update(frameTime);
 }
 
-void SpaceShip::draw(sf::RenderTarget& render) const
+void SpaceShip::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_sprite);
 }

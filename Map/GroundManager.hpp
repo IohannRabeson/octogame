@@ -86,6 +86,7 @@ private:
 	std::vector<GameObjectPosition<Portal>>				m_portals;
 	std::vector<GameObjectPosition<NanoRobot>>			m_nanoRobots;
 	std::vector<GameObjectPosition<ANpc>>				m_npcsOnFloor;
+	std::vector<GameObjectPosition<IPlaceable>>			m_otherObjects;
 	std::vector<std::unique_ptr<ANpc>>					m_npcs;
 
 	template<class T>
@@ -109,7 +110,7 @@ private:
 	void updateOffset(float deltatime);
 	void updateTransition(sf::FloatRect const & cameraRect);
 	void updateDecors(sf::Time deltatime);
-	void updateGameObjects(float deltatime);
+	void updateGameObjects(sf::Time deltatime);
 	void computeDecor(void);
 	void swapMap(void);
 

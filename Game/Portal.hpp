@@ -76,7 +76,7 @@ public:
 	inline void disappear(void) { m_state = State::Disappear; }
 
 	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render)const;
+	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	// TODO: info du biome vers lequel on va se téléporter

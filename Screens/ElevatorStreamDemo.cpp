@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:24:03 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/11 20:59:09 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/09/12 13:35:04 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ void	ElevatorStreamDemo::update(sf::Time frameTime)
 
 void	ElevatorStreamDemo::draw(sf::RenderTarget& render)const
 {
+	sf::RenderStates states;
 	render.clear();
-	m_teleportBeam.drawBack(render);
-	m_teleportBeam.drawFront(render);
+	m_teleportBeam.draw(render, states);
+	m_teleportBeam.drawFront(render, states);
 }

@@ -5,8 +5,9 @@
 # include <CharacterAnimation.hpp>
 
 # include "AGameObject.hpp"
+# include "IPlaceable.hpp"
 
-class SpaceShip : public AGameObject<GameObjectType::SpaceShip>
+class SpaceShip : public AGameObject<GameObjectType::SpaceShip>, public IPlaceable
 {
 public:
 	enum SpaceShipEvents
@@ -19,11 +20,10 @@ public:
 	virtual ~SpaceShip(void) = default;
 
 	void setNextEvent(SpaceShipEvents event);
-	sf::Vector2f getSize(void) const;
-	sf::Vector2f const & getPosition(void) const;
+	void setPosition(sf::Vector2f const & position);
 
 	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render) const;
+	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	octo::CharacterSprite		m_sprite;

@@ -42,8 +42,8 @@ public:
 	void		createRay(void);
 
 	void		update(sf::Time frameTime);
-	void		drawBack(sf::RenderTarget& render)const;
-	void		drawFront(sf::RenderTarget& render)const;
+	void		draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	void		drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	std::shared_ptr<BeamParticle>	m_particles;

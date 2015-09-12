@@ -118,7 +118,7 @@ void Portal::setBiome(ABiome & biome)
 	m_particles.setBiome(biome);
 }
 
-void Portal::draw(sf::RenderTarget & render) const
+void Portal::draw(sf::RenderTarget & render, sf::RenderStates) const
 {
 	render.draw(m_sprite);
 	m_particles.draw(render);

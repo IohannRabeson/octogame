@@ -9,6 +9,7 @@
 #include "MapInstance.hpp"
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
+#include "SpaceShip.hpp"
 #include <limits>
 #include <Interpolations.hpp>
 #include <Application.hpp>
@@ -147,6 +148,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_nanoRobots.emplace_back(gameObject.first, 3, new NanoRobot(sf::Vector2f(gameObject.first * Tile::TileSize, 500.f)));
 				}
 				break;
+			case GameObjectType::SpaceShip:
+				{
+					SpaceShip * spaceship = new SpaceShip(SpaceShip::SpaceShipEvents::Broken);
+					m_otherObjects.emplace_back(gameObject.first, 15, spaceship);
+				}
+				break;
 			default:
 				break;
 		}
@@ -157,6 +164,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	setupGameObjectPosition(m_portals);
 	setupGameObjectPosition(m_npcsOnFloor);
 	setupGameObjectPosition(m_nanoRobots);
+	setupGameObjectPosition(m_otherObjects);
 }
 
 template<class T>
@@ -480,6 +488,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	placeMax(m_portals, currentWide, prevWide, transition);
 	placeMax(m_nanoRobots, currentWide, prevWide, transition);
 	placeMax(m_npcsOnFloor, currentWide, prevWide, transition);
+	placeMax(m_otherObjects, currentWide, prevWide, transition);
 
 	// Replace npc around the map
 	for (auto const & npc : m_npcsOnFloor)
@@ -694,18 +703,20 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerGround.update(deltatime, camera);
 }
 
-void GroundManager::updateGameObjects(float deltatime)
+void GroundManager::updateGameObjects(sf::Time frametime)
 {
+	for (auto & object : m_otherObjects)
+		object.m_gameObject->update(frametime);
 	for (auto & elevator : m_elevators)
-		elevator.m_gameObject->update(sf::seconds(deltatime));
+		elevator.m_gameObject->update(frametime);
 	for (auto & portal : m_portals)
-		portal.m_gameObject->update(sf::seconds(deltatime));
+		portal.m_gameObject->update(frametime);
 	for (auto & nano : m_nanoRobots)
-		nano.m_gameObject->update(sf::seconds(deltatime));
+		nano.m_gameObject->update(frametime);
 	for (auto & npc : m_npcsOnFloor)
-		npc.m_gameObject->update(sf::seconds(deltatime));
+		npc.m_gameObject->update(frametime);
 	for (auto & npc : m_npcs)
-		npc->update(sf::seconds(deltatime));
+		npc->update(frametime);
 }
 
 void GroundManager::update(float deltatime)
@@ -745,16 +756,18 @@ void GroundManager::update(float deltatime)
 	updateOffset(deltatime);
 	updateTransition(rect);
 	updateDecors(sf::seconds(deltatime));
-	updateGameObjects(deltatime);
+	updateGameObjects(sf::seconds(deltatime));
 }
 
 void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	render.draw(m_decorManagerBack, states);
+	for (auto & object : m_otherObjects)
+		object.m_gameObject->draw(render, states);
 	for (auto & elevator : m_elevators)
-		elevator.m_gameObject->drawBack(render);
+		elevator.m_gameObject->draw(render, states);
 	for (auto & portal : m_portals)
-		portal.m_gameObject->draw(render);
+		portal.m_gameObject->draw(render, states);
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->draw(render, states);
 	for (auto & npc : m_npcs)
@@ -765,10 +778,10 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	for (auto & elevator : m_elevators)
-		elevator.m_gameObject->drawFront(render);
+		elevator.m_gameObject->drawFront(render, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
 	for (auto & nano : m_nanoRobots)
-		nano.m_gameObject->draw(render);
+		nano.m_gameObject->draw(render, states);
 	render.draw(m_decorManagerFront, states);
 }
