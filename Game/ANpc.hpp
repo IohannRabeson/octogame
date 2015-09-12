@@ -6,10 +6,11 @@
 # include <CharacterAnimation.hpp>
 # include "AGameObject.hpp"
 # include "ResourceDefinitions.hpp"
+# include "IPlaceable.hpp"
 
 class RectangleShape;
 
-class ANpc : public AGameObject<GameObjectType::Npc>, sf::Drawable
+class ANpc : public AGameObject<GameObjectType::Npc>, public sf::Drawable, public IPlaceable
 {
 public:
 	virtual ~ANpc(void);
