@@ -3,6 +3,7 @@
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
+# include "HSL.hpp"
 
 # include <cstddef>
 
@@ -34,6 +35,7 @@ public:
 	virtual std::size_t									getMapSeed();
 	virtual float										getTransitionDuration();
 	virtual int											getBossInstancePosX();
+	virtual std::map<std::size_t, GameObjectType> const & getGameObjects();
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -85,6 +87,7 @@ public:
 	virtual bool										canCreateLeaf();
 	virtual sf::Vector2f								getLeafSize();
 	virtual sf::Color									getLeafColor();
+	virtual std::size_t									getTreePositionX();
 
 	virtual sf::Vector2f								getMushroomSize();
 	virtual sf::Color									getMushroomColor();
@@ -146,6 +149,7 @@ private:
 	sf::Color											m_tileEndColor;
 
 	std::map<std::size_t, std::string>					m_instances;
+	std::map<std::size_t, GameObjectType>				m_gameObjects;
 
 	sf::Time											m_dayDuration;
 	sf::Color											m_skyDayColor;
@@ -236,6 +240,7 @@ private:
 	int													randomRangeSizeT(Range<std::size_t> const & range);
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
+	sf::Color											randomColor(sf::Color const & color);
 };
 
 #endif

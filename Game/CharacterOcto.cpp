@@ -6,7 +6,7 @@
 #include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
-	m_spriteScale(1.f),
+	m_spriteScale(0.6f),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondUmbrella(-300.f),
@@ -14,7 +14,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
 	m_pixelSecondMultiplier(800.f),
-	m_deltaPositionY(4.f),
+	m_deltaPositionY(27.f),
 	m_numberOfJump(1),
 	m_originMove(false),
 	m_onGround(false),
@@ -46,14 +46,13 @@ void	CharacterOcto::setup(void)
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::PortalActivation) | static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
-	//TODO:
-	//m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_COMPLETE_OSS));
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
 	m_timeEventFall = sf::Time::Zero;
 	m_timeEventIdle = sf::Time::Zero;
 	m_timeEventDeath = sf::Time::Zero;
 	setupAnimation();
 	setupMachine();
+	m_sprite.setScale(m_spriteScale, m_spriteScale);
 	m_sprite.restart();
 }
 
@@ -451,8 +450,8 @@ void	CharacterOcto::commitPhysicsToGraphics()
 {
 
 	sf::Vector2f const&	pos = m_box->getRenderCenter();
-	float				xPos = pos.x - (m_sprite.getLocalSize().x / 2.f);
-	float				yPos =  pos.y - (m_sprite.getLocalSize().y - (m_box->getSize().y / 2.f));
+	float				xPos = pos.x - ((m_sprite.getLocalSize().x  * m_spriteScale) / 2.f);
+	float				yPos =  pos.y - ((m_sprite.getLocalSize().y * m_spriteScale) - (m_box->getSize().y / 2.f));
 
 	m_sprite.setPosition(sf::Vector2f(xPos, yPos + m_deltaPositionY));
 }
@@ -532,7 +531,7 @@ void	CharacterOcto::caseLeft()
 		if (!m_originMove)
 		{
 			m_sprite.setScale(-1.f * m_spriteScale, 1.f * m_spriteScale);
-			m_sprite.setOrigin(m_sprite.getOrigin().x + 177.f, 0.f);
+			m_sprite.setOrigin(m_sprite.getOrigin().x + m_sprite.getLocalSize().x, 0.f);
 			m_originMove = true;
 		}
 	}
@@ -549,7 +548,7 @@ void	CharacterOcto::caseRight()
 		if (m_originMove)
 		{
 			m_sprite.setScale(1.f * m_spriteScale, 1.f * m_spriteScale);
-			m_sprite.setOrigin(m_sprite.getOrigin().x - 177.f, 0.f);
+			m_sprite.setOrigin(m_sprite.getOrigin().x - m_sprite.getLocalSize().x, 0.f);
 			m_originMove = false;
 		}
 	}

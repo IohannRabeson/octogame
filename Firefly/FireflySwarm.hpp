@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:07:48 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/19 20:24:56 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/09/11 17:51:39 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,13 @@ public:
 
 	std::size_t			getCount()const;
 	std::size_t			getCapacity()const;
+	Firefly&			getFirefly(std::size_t id);
+	Firefly const&		getFirefly(std::size_t id)const;
+	sf::Vector2f const &	getPositionById(std::size_t id);
+
 private:
 	std::size_t			consumeId();
-	void				commitFirefly(std::size_t id, Firefly const& fly);
+	void				commitFirefly(std::size_t id, Firefly & fly);
 	void				spawnFirefly(Firefly& fly,
 									 SpawnMode spawnMode,
 									 sf::Vector2f const& position);
@@ -90,8 +94,6 @@ private:
 	Firefly&			createFirefly(std::size_t id, AbstractPopulation& population);
 
 	void				killFirefly(std::size_t id, Firefly& fly);
-	Firefly&			getFirefly(std::size_t id);
-	Firefly const&		getFirefly(std::size_t id)const;
 	void				setupQuad(std::size_t id, Firefly& fly);
 	void				destroyQuad(std::size_t id);
 private:
@@ -111,15 +113,16 @@ struct FireflySwarm::Firefly
 {
 	Firefly();
 
-	BSpline		path;
-	sf::Color	color;
-	float		speed;
-	float		radius;
-	float		haloRadius;
-	float		pathPosition;
-	sf::Time	time;
-	sf::Time	maxTime;
-	bool		alive;
+	BSpline			path;
+	sf::Color		color;
+	float			speed;
+	float			radius;
+	float			haloRadius;
+	float			pathPosition;
+	sf::Time		time;
+	sf::Time		maxTime;
+	sf::Vector2f	position;
+	bool			alive;
 };
 
 #endif

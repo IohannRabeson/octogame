@@ -49,6 +49,8 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/ANpc.cpp							\
 				Game/ClassicNpc.cpp						\
 				Game/CedricNpc.cpp						\
+				Game/NanoRobot.cpp						\
+				Game/SpaceShip.cpp						\
 				Game/MusicPlayer.cpp
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
@@ -62,6 +64,7 @@ SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/AudioMenu.cpp					\
 				Bubble/ControlMenu.cpp					\
 				Bubble/YesNoMenu.cpp					\
+				Bubble/ResolutionMenu.cpp				\
 				Bubble/EmptyMenu.cpp					\
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
@@ -78,6 +81,7 @@ SRC_MAP =		Map/Map.cpp								\
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
+				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
@@ -102,6 +106,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SunLight.cpp						\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
+				Decors/SmokeSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\

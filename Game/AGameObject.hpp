@@ -12,7 +12,10 @@ enum class GameObjectType
 	Potion = 16u,
 	Decor = 32u,
 	Tile = 64u,
-	Elevator = 128u
+	Elevator = 128u,
+	NpcCedric = 256u,
+	NanoRobot = 512u,
+	SpaceShip = 1024u
 };
 
 /*!

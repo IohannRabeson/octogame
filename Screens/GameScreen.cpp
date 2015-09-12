@@ -5,6 +5,7 @@
 #include <GraphicsManager.hpp>
 #include <StateManager.hpp>
 #include <Options.hpp>
+#include <PostEffectManager.hpp>
 
 GameScreen::GameScreen(void) :
 	m_changeLevel(true)
@@ -42,10 +43,16 @@ void	GameScreen::update(sf::Time frameTime)
 	}
 
 	AMenu::State state = m_menu.getState();
+	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
+	{
 		m_menu.update(frameTime, m_game->getOctoBubblePosition());
+		postEffect.setAllShaderEnabled(false);
+	}
 	else
 	{
+		postEffect.setAllShaderEnabled(true);
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
 	}

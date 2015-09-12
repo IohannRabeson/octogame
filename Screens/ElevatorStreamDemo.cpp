@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:24:03 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/07 15:59:52 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/09/12 13:35:04 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ ElevatorStreamDemo::ElevatorStreamDemo()
 
 void	ElevatorStreamDemo::start()
 {
-	m_teleportBeam.setPosX(0.f);
-	m_teleportBeam.setPosY(-400.f);
+	m_teleportBeam.setPosition(sf::Vector2f(0.f, -400.f));
 	m_teleportBeam.setHeight(800.f);
 	octo::Application::getCamera().setCenter(sf::Vector2f());
 
@@ -62,7 +61,8 @@ void	ElevatorStreamDemo::update(sf::Time frameTime)
 
 void	ElevatorStreamDemo::draw(sf::RenderTarget& render)const
 {
+	sf::RenderStates states;
 	render.clear();
-	m_teleportBeam.drawBack(render);
-	m_teleportBeam.drawFront(render);
+	m_teleportBeam.draw(render, states);
+	m_teleportBeam.drawFront(render, states);
 }

@@ -17,6 +17,7 @@
 # include <ParticleSystem.hpp>
 
 # include "DropSystem.hpp"
+# include "SmokeSystem.hpp"
 
 # include <random>
 
@@ -63,6 +64,7 @@ private:
 private:
 	TestSystem	m_system;
 	DropSystem	m_rainSystem;
+	SmokeSystem m_smokeSystem;
 };
 
 #endif

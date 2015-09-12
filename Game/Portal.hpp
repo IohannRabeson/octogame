@@ -12,13 +12,14 @@
 
 # include "AGameObject.hpp"
 # include "ABiome.hpp"
+# include "IPlaceable.hpp"
 
 # include <random>
 # include <ctime>
 
 class CircleShape;
 
-class Portal : public AGameObject<GameObjectType::Portal>
+class Portal : public AGameObject<GameObjectType::Portal>, public IPlaceable
 {
 private:
 	class PortalParticle : public octo::ParticleSystem<sf::Time, sf::Time, sf::Vector2f, sf::Vector2f>
@@ -89,7 +90,7 @@ public:
 	inline bool isActivated(void) const { return (m_state == Activated); }
 
 	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render)const;
+	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	// TODO: info du biome vers lequel on va se téléporter
