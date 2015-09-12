@@ -17,6 +17,7 @@
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Options.hpp>
+#include <PostEffectManager.hpp>
 
 void	GameScreen::start()
 {
@@ -44,10 +45,16 @@ void	GameScreen::stop()
 void	GameScreen::update(sf::Time frameTime)
 {
 	AMenu::State state = m_menu.getState();
+	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
+	{
+		postEffect.setAllShaderEnabled(false);
 		m_menu.update(frameTime, m_game.getOctoBubblePosition());
+	}
 	else
 	{
+		postEffect.setAllShaderEnabled(true);
 		m_menu.setKeyboard(false);
 		m_game.update(frameTime);
 	}

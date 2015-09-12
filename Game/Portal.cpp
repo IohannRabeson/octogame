@@ -13,7 +13,7 @@ Portal::Portal(void) :
 	m_position(40.f, 0.f),
 	m_shaderIndex(0u),
 	m_state(State::Appear),
-	m_radius(50.f),
+	m_radius(100.f),
 	m_timer(0.f),
 	m_timerMax(1.0f),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle())
@@ -22,7 +22,9 @@ Portal::Portal(void) :
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 
 	m_shader.loadFromMemory(resources.getText(VORTEX_FRAG), sf::Shader::Fragment);
-	m_shaderIndex = postEffect.addShader(m_shader, true);
+	octo::PostEffect postEffectShader;
+	postEffectShader.resetShader(&m_shader);
+	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
 	m_shader.setParameter("time_max", m_timerMax);
 
 	m_box->setGameObject(this);
@@ -55,14 +57,14 @@ Portal::Portal(void) :
 
 Portal::~Portal(void)
 {
-	octo::Application::getPostEffectManager().enableShader(m_shaderIndex, false);
+	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
 }
 
 void Portal::update(sf::Time frametime)
 {
 	m_particles.update(frametime);
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	postEffect.enableShader(m_shaderIndex, false);
+	postEffect.enableEffect(m_shaderIndex, false);
 
 	switch (m_state)
 	{
@@ -85,7 +87,7 @@ void Portal::update(sf::Time frametime)
 	{
 		if (m_position.y + m_radius > screen.top && m_position.y - m_radius < screen.top + screen.height)
 		{
-			postEffect.enableShader(m_shaderIndex, true);
+			postEffect.enableEffect(m_shaderIndex, true);
 			m_shader.setParameter("time", m_timer);
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
 			m_shader.setParameter("center", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
@@ -99,6 +101,8 @@ void Portal::update(sf::Time frametime)
 void Portal::setPosition(sf::Vector2f const & position)
 {
 	m_position = position;
+	m_position.x += getRadius();
+	m_position.y -= getRadius() + Tile::TripleTileSize;
 	m_particles.setEmitter(m_position);
 	m_box->setPosition(sf::Vector2f(m_position.x - m_radius, m_position.y - m_radius));
 }
@@ -116,7 +120,7 @@ void Portal::setBiome(ABiome & biome)
 	m_particles.setBiome(biome);
 }
 
-void Portal::draw(sf::RenderTarget & render) const
+void Portal::draw(sf::RenderTarget & render, sf::RenderStates) const
 {
 	render.draw(m_sprite);
 	m_particles.draw(render);

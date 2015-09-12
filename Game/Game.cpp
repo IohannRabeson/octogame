@@ -41,7 +41,7 @@ void	Game::loadLevel(std::string const& fileName)
 
 	// Reset last values
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	postEffect.removeShaders();
+	postEffect.removeEffects();
 
 	// Reset PhysycsEngine
 	m_physicsEngine.unregisterAllShapes();
@@ -134,11 +134,13 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);
+	m_groundManager->drawText(render, states);
 }
 
 void	Game::followPlayer(sf::Time frameTime)

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   AGameObject.hpp                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/17 14:48:16 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/17 13:20:19 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef AGAMEOBJECT_HPP
 # define AGAMEOBJECT_HPP
 # include <type_traits>
@@ -23,7 +11,10 @@ enum class GameObjectType
 	Potion = 8u,
 	Decor = 16u,
 	Tile = 32u,
-	Elevator = 64u
+	Elevator = 64u,
+	NpcCedric = 128u,
+	GroundTransformNanoRobot = 256u,
+	SpaceShip = 512u
 };
 
 /*!

@@ -5,7 +5,7 @@
 
 class SkyCycle;
 
-class CedricNpc : public ANpc
+class CedricNpc : public ANpc, AGameObject<GameObjectType::NpcCedric>
 {
 public:
 	CedricNpc(SkyCycle const & skyCycle);
@@ -13,6 +13,7 @@ public:
 
 	virtual void setup(void);
 	virtual void update(sf::Time frametime);
+	virtual float getHeight(void) const { return 0.f; }
 
 protected:
 	enum CedricEvents

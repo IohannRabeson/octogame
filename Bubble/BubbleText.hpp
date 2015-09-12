@@ -24,7 +24,7 @@ public:
 private:
 	void setupBlocString(void);
 
-	static constexpr float			m_bubbleWidth = 500.f;
+	static constexpr float			m_bubbleWidth = 350.f;
 	static constexpr std::size_t	m_characterSize = 20u;
 
 	sf::Vector2f					m_contentSize;
