@@ -110,9 +110,10 @@ void	ParticleDemoScreen::stop()
 void	ParticleDemoScreen::update(sf::Time frameTime)
 {
 	m_system.update(frameTime);
-	sf::FloatRect rect = octo::Application::getCamera().getRectangle();
-	rect.top -= octo::Application::getCamera().getSize().y;
-	m_rainSystem.setDropRect(rect);
+	m_smokeSystem.update(frameTime);
+	//sf::FloatRect rect = octo::Application::getCamera().getRectangle();
+	//rect.top -= octo::Application::getCamera().getSize().y;
+	//m_rainSystem.setDropRect(rect);
 //	m_rainSystem.update(frameTime);
 }
 
@@ -120,5 +121,6 @@ void	ParticleDemoScreen::draw(sf::RenderTarget& render)const
 {
 	render.clear();
 	m_system.draw(render);
+	m_smokeSystem.draw(render);
 //	m_rainSystem.draw(render);
 }

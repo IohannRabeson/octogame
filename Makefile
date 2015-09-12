@@ -104,6 +104,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SunLight.cpp						\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
+				Decors/SmokeSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
