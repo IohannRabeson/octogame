@@ -16,8 +16,6 @@ public:
 private:
 	sf::Time			m_timer;
 	sf::Time			m_timerMax;
-	bool				m_appear;
-
 };
 
 #endif
