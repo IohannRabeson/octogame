@@ -13,8 +13,8 @@ ABubble::ABubble(void) :
 
 void ABubble::createExtensionSpeak(sf::Vector2f const & position, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	sf::Vector2f leftUp(m_sizeCorner, m_sizeCorner);
-	sf::Vector2f rightUp(0.f, m_sizeCorner);
+	sf::Vector2f leftUp(-m_sizeCorner, -m_sizeCorner);
+	sf::Vector2f rightUp(0.f, -m_sizeCorner);
 	sf::Vector2f down(0.f, 0.f);
 
 	leftUp += position;

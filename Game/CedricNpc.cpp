@@ -1,6 +1,7 @@
 #include "CedricNpc.hpp"
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
+#include "CircleShape.hpp"
 
 CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	ANpc(CEDRIC_OSS),
@@ -12,6 +13,7 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	setOrigin(sf::Vector2f(75.f, 68.f));
 	setScale(0.6f);
 	setVelocity(50.f);
+	setTextOffset(sf::Vector2f(0.f, -50.f));
 	setup();
 }
 
@@ -242,6 +244,8 @@ void CedricNpc::update(sf::Time frametime)
 	sprite.update(frametime);
 	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
 	sprite.setPosition(bounds.left, bounds.top);
+
+	updateText(frametime);
 }
 
 void CedricNpc::updateState(void)
@@ -272,6 +276,7 @@ void CedricNpc::updateState(void)
 void CedricNpc::updatePhysics(void)
 {
 	RectangleShape * box = getBox();
+	CircleShape * eventBox = getEventBox();
 	octo::CharacterSprite & sprite = getSprite();
 	sf::Vector2f velocity;
 
@@ -284,4 +289,5 @@ void CedricNpc::updatePhysics(void)
 		velocity.x = getVelocity();
 	}
 	box->setVelocity(velocity);
+	eventBox->setPosition(sprite.getPosition().x - eventBox->getRadius(), sprite.getPosition().y - eventBox->getRadius());
 }

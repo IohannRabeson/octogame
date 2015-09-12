@@ -15,7 +15,6 @@
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
 #include <limits>
-#include <sstream>
 
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
@@ -79,16 +78,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 
-	std::map<ResourceKey, std::vector<std::string>>	npcTexts;
-	std::istringstream f(resources.getText(DIALOGS_TXT).toAnsiString());
-	std::string key;
-	std::string line;
-	while (std::getline(f, key, '='))
-	{
-		std::getline(f, line);
-		npcTexts[key.c_str()].push_back(line);
-	}
-
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 
 	// Get all the gameobjects from instances
@@ -112,7 +101,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			sf::Vector2f position(rect.left, rect.top + rect.height);
 			npc->setArea(rect);
 			npc->setPosition(position);
-			npc->setTexts(npcTexts[spriteTrigger.name.c_str()]);
 			m_npcs.push_back(std::move(npc));
 		}
 
@@ -794,4 +782,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render);
+	for (auto & npc : m_npcsOnFloor)
+		npc.m_gameObject->drawText(render, states);
+	for (auto & npc : m_npcs)
+		npc->drawText(render, states);
 }
