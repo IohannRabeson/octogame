@@ -51,8 +51,9 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/ClassicNpc.cpp						\
 				Game/CedricNpc.cpp						\
 				Game/NanoRobot.cpp						\
+				Game/GroundTransformNanoRobot.cpp		\
 				Game/SpaceShip.cpp						\
-				Game/MusicPlayer.cpp
+				Game/MusicPlayer.cpp					\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
