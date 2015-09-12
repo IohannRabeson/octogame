@@ -7,6 +7,7 @@
 # include "FireflySwarm.hpp"
 # include "FireflyPopulation.hpp"
 # include "IPlaceable.hpp"
+# include "BubbleText.hpp"
 
 class CircleShape;
 
@@ -25,7 +26,6 @@ protected:
 	void setup(AGameObjectBase * gameObject);
 
 private:
-	// TODO: add Bubble
 	FireflySwarm					m_swarm;
 	FireflySwarm::UniformPopulation	m_uniformPopulation;
 	FireflySwarm::SpawnMode			m_spawnMode;
@@ -34,6 +34,7 @@ private:
 	octo::SpriteAnimation			m_animation;
 
 	CircleShape *					m_box;
+	std::unique_ptr<BubbleText>		m_text;
 
 };
 

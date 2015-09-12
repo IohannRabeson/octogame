@@ -6,6 +6,7 @@
 #include "CircleShape.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <sstream>
 
 NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames) :
 	m_swarm(1),
@@ -37,6 +38,19 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t 
 	m_animation.setLoop(octo::LoopMode::Loop);
 	m_sprite.setAnimation(m_animation);
 	m_sprite.play();
+
+	std::map<std::string, std::vector<std::string>>	npcTexts;
+	std::istringstream f(resources.getText(DIALOGS_TXT).toAnsiString());
+	std::string key;
+	std::string line;
+	while (std::getline(f, key, '='))
+	{
+		std::getline(f, line);
+		npcTexts[key].push_back(line);
+	}
+	m_text.reset(new BubbleText());
+	m_text->setup(npcTexts[id][0u], sf::Color::White);
+	m_text->setType(ABubble::Type::Speak);
 }
 
 NanoRobot::~NanoRobot(void)
@@ -63,9 +77,14 @@ void NanoRobot::update(sf::Time frametime)
 	sf::Vector2f pos = m_swarm.getFirefly(0u).position;
 	m_sprite.setPosition(pos - sf::Vector2f(32.f, 32.f));
 	m_box->setPosition(pos.x - m_box->getRadius(), pos.y - m_box->getRadius());
+
+	m_text->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
+	m_text->update(frametime);
+	m_text->setActive(true);
 }
 
 void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_sprite);
+	m_text->draw(render);
 }
