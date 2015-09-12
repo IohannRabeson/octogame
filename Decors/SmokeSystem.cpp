@@ -7,19 +7,32 @@
 #include <ctime>
 
 SmokeSystem::SmokeSystem() :
-	m_emit(false),
+	m_size(10.f, 10.f),
+	m_color(255, 255, 255, 150),
+	m_velocity(0.f, -256.f),
+	m_lifeScaleFactor(10.f),
 	m_engine(std::time(0)),
-	m_lifeTimeDistri(0.5f, 1.f),
-	m_directionDistri(0.f, 2.f * octo::Pi)
+	m_emitIntervalDistri(0.01f, 0.2f),
+	m_growTimeDistri(0.5f, 1.5f),
+	m_lifeTimeDistri(2.5f, 4.f),
+	m_sideDistri(0, 3),
+	m_scaleDistri(1.f, 2.5f)
 {
 	SmokeSystem::Prototype prototype;
-	createOctogon(sf::Vector2f(10.f, 10.f), sf::Vector2f(5.f, 5.f), prototype);
-	reset(prototype, sf::TrianglesFan, 2000);
-	octo::Application::getGraphicsManager().addMouseListener(this);
+	createOctogon(m_size, m_size / 2.f, prototype);
+	reset(prototype, sf::Triangles, 2000);
+}
+
+void SmokeSystem::createTriangle(sf::Vertex const & p1, sf::Vertex const & p2, sf::Vertex const & p3, SmokeSystem::Prototype & prototype)
+{
+	prototype.emplace_back(p1);
+	prototype.emplace_back(p2);
+	prototype.emplace_back(p3);
 }
 
 void SmokeSystem::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, SmokeSystem::Prototype & prototype)
 {
+	sf::Vertex origin({0.f, 0.f});
 	sf::Vertex upLeft({-size.x + sizeCorner.x, -size.y});
 	sf::Vertex upRight({size.x - sizeCorner.x, -size.y});
 	sf::Vertex upMidLeft({-size.x, -size.y + sizeCorner.y});
@@ -31,64 +44,131 @@ void SmokeSystem::createOctogon(sf::Vector2f const & size, sf::Vector2f const & 
 
 	sf::Vertex recDownRight({0.f, -size.y + sizeCorner.y});
 
-	prototype.emplace_back(upLeft);
-	prototype.emplace_back(upRight);
-	prototype.emplace_back(upMidRight);
-	prototype.emplace_back(downMidRight);
-	prototype.emplace_back(downRight);
-	prototype.emplace_back(downLeft);
-	prototype.emplace_back(downMidLeft);
-	prototype.emplace_back(upLeft);
-	prototype.emplace_back(upRight);
-	prototype.emplace_back(recDownRight);
-	prototype.emplace_back(upMidLeft);
+	createTriangle(origin, upLeft, upRight, prototype);
+	createTriangle(origin, upRight, upMidRight, prototype);
+	createTriangle(origin, upMidRight, downMidRight, prototype);
+	createTriangle(origin, downMidRight, downRight, prototype);
+	createTriangle(origin, downRight, downLeft, prototype);
+	createTriangle(origin, downLeft, downMidLeft, prototype);
+	createTriangle(origin, downMidLeft, upMidLeft, prototype);
+	createTriangle(origin, upMidLeft, upLeft, prototype);
+
+	createTriangle(upLeft, upRight, recDownRight, prototype);
+	createTriangle(recDownRight, upMidLeft, upLeft, prototype);
 }
 
-
-void	SmokeSystem::onMoved(sf::Event::MouseMoveEvent const& event)
+void	SmokeSystem::createParticle(void)
 {
-	octo::Camera&	camera = octo::Application::getCamera();
+	float scale = m_scaleDistri(m_engine);
 
-	m_emitter = camera.mapPixelToCoords(sf::Vector2i(event.x, event.y));
-}
-
-void	SmokeSystem::onPressed(sf::Event::MouseButtonEvent const&)
-{
-	m_emit = true;
-}
-
-void	SmokeSystem::onReleased(sf::Event::MouseButtonEvent const&)
-{
-	m_emit = false;
-}
-
-void	SmokeSystem::update(sf::Time frameTime)
-{
-	ParticleSystem::update(frameTime);
-	if (m_emit)
-	{
-		emplace(sf::Color::Green, m_emitter, sf::Vector2f(1.f, 1.f), m_directionDistri(m_engine) * 180,
-				sf::Time::Zero,
-				sf::seconds(m_lifeTimeDistri(m_engine)),
-				m_directionDistri(m_engine));
-	}
+	emplace(m_color, m_emitter, sf::Vector2f(scale, scale), 0.f,
+			sf::Time::Zero,
+			sf::seconds(m_growTimeDistri(m_engine)),
+			sf::Time::Zero,
+			sf::seconds(m_lifeTimeDistri(m_engine)),
+			m_sideDistri(m_engine));
 }
 
 void	SmokeSystem::updateParticle(sf::Time frameTime, Particle& particle)
 {
-	static float const			Velocity = 256.f;
-	static float const			AngularVelocity = 30.f;
-	sf::Vector2f	direction(std::sin(std::get<MyComponent::Direction>(particle)) * Velocity,
-							  std::cos(std::get<MyComponent::Direction>(particle)) * Velocity);
+	sf::Vector2f &		position = std::get<Component::Position>(particle);
+	sf::Color &			color = std::get<Component::Color>(particle);
+	sf::Vector2f &		scale = std::get<Component::Scale>(particle);
 
-	std::get<Component::Position>(particle) = std::get<Component::Position>(particle) + direction * frameTime.asSeconds();
-	std::get<Component::Rotation>(particle) = std::get<Component::Rotation>(particle) + AngularVelocity * frameTime.asSeconds();
-	std::get<MyComponent::Time>(particle) = std::get<MyComponent::Time>(particle) + frameTime;
-	std::get<Component::Color>(particle).a = 255 * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds()));
+	sf::Time &			lifeTimer = std::get<MyComponent::LifeTimer>(particle);
+	sf::Time const &	lifeTimerMax = std::get<MyComponent::LifeTimerMax>(particle);
+	sf::Time &			growTimer = std::get<MyComponent::GrowTimer>(particle);
+	sf::Time const &	growTimerMax = std::get<MyComponent::GrowTimerMax>(particle);
+	int const &			behaviour = std::get<MyComponent::Behaviour>(particle);
+
+	float const &		frameTimeSeconds = frameTime.asSeconds();
+
+	float scaleFactor = 1.f;
+	float velocityFactor = 1.f;
+	if (growTimer < growTimerMax)
+	{
+		growTimer += frameTime;
+		float growCycle = growTimer / growTimerMax;
+		color.a = m_color.a * (growCycle);
+		switch (behaviour)
+		{
+			case 0:
+				position.x += std::sin(growCycle * octo::Pi2) * (0.3f * growCycle);
+				break;
+			case 1:
+				position.x -= std::sin(growCycle * octo::Pi2) * (0.3f * growCycle);
+				break;
+			case 2:
+				position.x += std::cos(growCycle * octo::Pi2) * (0.3f * growCycle);
+				break;
+			case 3:
+				position.x -= std::cos(growCycle * octo::Pi2) * (0.3f * growCycle);
+				break;
+			default:
+				break;
+		}
+	}
+	else
+	{
+		lifeTimer += frameTime;
+		float lifeCycle = lifeTimer / lifeTimerMax;
+		color.a = m_color.a * std::max(0.f, (1.f - lifeCycle));
+		scaleFactor = 1.f * (1.f + (m_lifeScaleFactor * lifeCycle));
+		velocityFactor = 1.f - lifeCycle;
+		switch (behaviour)
+		{
+			case 0:
+				position.x += std::sin(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 1.f + 0.3f);
+				break;
+			case 1:
+				position.x -= std::sin(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 1.f + 0.3f);
+				break;
+			case 2:
+				position.x += std::cos(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 1.f + 0.3f);
+				break;
+			case 3:
+				position.x -= std::cos(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 1.f + 0.3f);
+				break;
+			default:
+				break;
+		}
+	}
+	position = position + m_velocity * velocityFactor * frameTimeSeconds;
+	scale = scale + sf::Vector2f(frameTimeSeconds * scaleFactor, frameTimeSeconds * scaleFactor);
 }
 
 bool	SmokeSystem::isDeadParticle(Particle const& particle)
 {
-	return (std::get<MyComponent::Time>(particle) >= std::get<MyComponent::Life>(particle));
+	return (std::get<MyComponent::LifeTimer>(particle) >= std::get<MyComponent::LifeTimerMax>(particle));
 }
 
+void	SmokeSystem::update(sf::Time frameTime)
+{
+	bool	emitParticle = false;
+
+	m_emitTimer += frameTime;
+	while (m_emitTimer > m_emitInterval)
+	{
+		emitParticle = true;
+		m_emitTimer -= m_emitInterval;
+		m_emitInterval = sf::seconds(m_emitIntervalDistri(m_engine));
+	}
+	if (emitParticle)
+		createParticle();
+	ParticleSystem::update(frameTime);
+}
+
+void	SmokeSystem::setPosition(sf::Vector2f const & position)
+{
+	m_emitter = position;
+}
+
+void	SmokeSystem::setVelocity(sf::Vector2f const & velocity)
+{
+	m_velocity = velocity;
+}
+
+void	SmokeSystem::setEmitTimeMax(float min, float max)
+{
+	m_emitIntervalDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
+}

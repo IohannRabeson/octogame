@@ -14,7 +14,6 @@
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <GraphicsManager.hpp>
-#include <Console.hpp>
 #include <Math.hpp>
 
 #include <ctime>
@@ -31,7 +30,7 @@ void	TestSystem::onMoved(sf::Event::MouseMoveEvent const& event)
 {
 	octo::Camera&	camera = octo::Application::getCamera();
 
-	m_emitter = camera.mapPixelToCoords(sf::Vector2i(event.x, event.y));	
+	m_emitter = camera.mapPixelToCoords(sf::Vector2i(event.x, event.y));
 }
 
 void	TestSystem::onPressed(sf::Event::MouseButtonEvent const&)
@@ -77,19 +76,14 @@ bool	TestSystem::isDeadParticle(Particle const& particle)
 void	ParticleDemoScreen::start()
 {
 	static float const	Size = 8.f;
-	octo::Console&		console = octo::Application::getConsole();
 	TestSystem::Prototype	prototype;
 
-	//m_rainSystem.setDropSize(sf::Vector2f(0.5f, 50.f));
-	//m_rainSystem.setDropSpeed(1024.f);
 	prototype.emplace_back(sf::Vertex({-Size, Size}));
 	prototype.emplace_back(sf::Vertex({Size, -Size}));
 	prototype.emplace_back(sf::Vertex({-Size, -Size}));
 	m_system.reset(prototype, sf::Triangles, 2000);
 	octo::Application::getGraphicsManager().addMouseListener(&m_system);
-	console.addCommand(L"demo.setDropPerSecond", m_rainSystem, &DropSystem::setDropPerSecond);
-	//console.addCommand(L"demo.setDropAngle", m_rainSystem, &DropSystem::setDropAngle);
-	//console.addCommand(L"demo.setDropSpeed", m_rainSystem, &DropSystem::setDropSpeed);
+	m_smokeSystem.setPosition(octo::Application::getCamera().getCenter() + sf::Vector2f(0.f, octo::Application::getCamera().getSize().y / 2.f));
 }
 
 void	ParticleDemoScreen::pause()
@@ -111,10 +105,6 @@ void	ParticleDemoScreen::update(sf::Time frameTime)
 {
 	m_system.update(frameTime);
 	m_smokeSystem.update(frameTime);
-	//sf::FloatRect rect = octo::Application::getCamera().getRectangle();
-	//rect.top -= octo::Application::getCamera().getSize().y;
-	//m_rainSystem.setDropRect(rect);
-//	m_rainSystem.update(frameTime);
 }
 
 void	ParticleDemoScreen::draw(sf::RenderTarget& render)const
@@ -122,5 +112,4 @@ void	ParticleDemoScreen::draw(sf::RenderTarget& render)const
 	render.clear();
 	m_system.draw(render);
 	m_smokeSystem.draw(render);
-//	m_rainSystem.draw(render);
 }
