@@ -7,8 +7,7 @@
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
 
-GameScreen::GameScreen(void) :
-	m_changeLevel(true)
+GameScreen::GameScreen(void)
 {}
 
 void	GameScreen::start()
@@ -17,6 +16,10 @@ void	GameScreen::start()
 
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
+
+	m_game.reset(new Game());
+	m_game->setup();
+	m_game->loadLevel("default");
 }
 
 void	GameScreen::pause()
@@ -25,6 +28,9 @@ void	GameScreen::pause()
 
 void	GameScreen::resume()
 {
+	m_game.reset(new Game());
+	m_game->setup();
+	m_game->loadLevel("default");
 }
 
 void	GameScreen::stop()
@@ -33,15 +39,6 @@ void	GameScreen::stop()
 
 void	GameScreen::update(sf::Time frameTime)
 {
-	if (m_changeLevel)
-	{
-		m_game.reset(new Game());
-		m_game->setup();
-		m_game->loadLevel("default");
-		m_changeLevel = false;
-		return;
-	}
-
 	AMenu::State state = m_menu.getState();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 
@@ -71,9 +68,8 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 		}
 		case sf::Keyboard::F:
 		{
-			m_changeLevel = true;
 			octo::StateManager & states = octo::Application::getStateManager();
-			states.push("game", "default");
+			states.push("transition");
 			break;
 		}
 		default:
@@ -84,8 +80,6 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 
 void	GameScreen::draw(sf::RenderTarget& render)const
 {
-	if (m_changeLevel)
-		return;
 	m_game->draw(render, sf::RenderStates());
 	if (m_menu.getState() == AMenu::State::Active || m_menu.getState() == AMenu::State::Draw)
 		render.draw(m_menu);

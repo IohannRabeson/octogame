@@ -39,7 +39,7 @@ void	Game::setup(void)
 	m_biomeManager.registerBiome<DefaultBiome>("default1");
 }
 
-void	Game::loadLevel(std::string const& fileName)
+void	Game::loadLevel(std::string const & fileName)
 {
 	m_biomeManager.changeBiome(fileName, 0x12345);
 
@@ -50,7 +50,7 @@ void	Game::loadLevel(std::string const& fileName)
 	// Reset PhysycsEngine
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
-	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count"));
+	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count")); // TODO : remove from default
 	m_physicsEngine.setGravity(sf::Vector2f(0.f, 600.f));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
@@ -67,7 +67,7 @@ void	Game::loadLevel(std::string const& fileName)
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup();
-	m_octo->setPosition(sf::Vector2f(0.f, 800.f));
+	m_octo->setPosition(sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
 
 	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 800.f));
 }
@@ -153,7 +153,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
-	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	//m_physicsEngine.debugDraw(render);
