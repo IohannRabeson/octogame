@@ -179,19 +179,19 @@ std::vector<ParallaxScrolling::ALayer *> DefaultBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(sf::Color(185, 185, 30), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 10.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(sf::Color(170, 170, 70), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(sf::Color(180, 180, 110), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 1.1f, y);
@@ -374,7 +374,7 @@ sf::Time		DefaultBiome::getTreeLifeTime()
 
 sf::Color		DefaultBiome::getTreeColor()
 {
-	return (m_treeColor);
+	return (randomColor(m_treeColor));
 }
 
 float			DefaultBiome::getTreeAngle()
@@ -405,7 +405,12 @@ sf::Vector2f	DefaultBiome::getLeafSize()
 
 sf::Color		DefaultBiome::getLeafColor()
 {
-	return (m_leafColor);
+	return (randomColor(m_leafColor));
+}
+
+std::size_t		DefaultBiome::getTreePositionX()
+{
+	return randomInt(1, m_mapSize.x);
 }
 
 sf::Vector2f	DefaultBiome::getCrystalSize()
@@ -420,7 +425,7 @@ std::size_t		DefaultBiome::getCrystalPartCount()
 
 sf::Color		DefaultBiome::getCrystalColor()
 {
-	return (m_crystalColor);
+	return (randomColor(m_crystalColor));
 }
 
 int				DefaultBiome::getCrystalPosX()
@@ -446,7 +451,7 @@ sf::Vector2f	DefaultBiome::getShineEffectSize()
 
 sf::Color		DefaultBiome::getShineEffectColor()
 {
-	return (m_shineEffectColor);
+	return (randomColor(m_shineEffectColor));
 }
 
 float			DefaultBiome::getShineEffectRotateAngle()
@@ -471,7 +476,7 @@ std::size_t		DefaultBiome::getRockPartCount()
 
 sf::Color		DefaultBiome::getRockColor()
 {
-	return (m_rockColor);
+	return (randomColor(m_rockColor));
 }
 
 bool			DefaultBiome::canCreateRock()
@@ -486,7 +491,7 @@ sf::Vector2f	DefaultBiome::getMushroomSize()
 
 sf::Color		DefaultBiome::getMushroomColor()
 {
-	return (m_mushroomColor);
+	return (randomColor(m_mushroomColor));
 }
 
 sf::Time		DefaultBiome::getMushroomLifeTime()
@@ -516,7 +521,7 @@ sf::Time		DefaultBiome::getCloudLifeTime()
 
 sf::Color		DefaultBiome::getCloudColor()
 {
-	return (m_cloudColor);
+	return (randomColor(m_cloudColor));
 }
 
 bool			DefaultBiome::canCreateCloud()
@@ -531,7 +536,7 @@ sf::Vector2f	DefaultBiome::getStarSize()
 
 sf::Color		DefaultBiome::getStarColor()
 {
-	return (m_starColor);
+	return (randomColor(m_starColor));
 }
 
 sf::Time		DefaultBiome::getStarLifeTime()
@@ -557,7 +562,7 @@ std::size_t		DefaultBiome::getSunPartCount()
 
 sf::Color		DefaultBiome::getSunColor()
 {
-	return (m_sunColor);
+	return (randomColor(m_sunColor));
 }
 
 bool			DefaultBiome::canCreateSun()
@@ -573,7 +578,7 @@ sf::Vector2f 	DefaultBiome::getMoonSize()
 
 sf::Color		DefaultBiome::getMoonColor()
 {
-	return (m_moonColor);
+	return (randomColor(m_moonColor));
 }
 
 sf::Time		DefaultBiome::getMoonLifeTime()
@@ -654,4 +659,16 @@ sf::Time		DefaultBiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
+}
+
+sf::Color		DefaultBiome::randomColor(sf::Color const & color)
+{
+	//TODO: Take time to make something good here. This is shit
+	HSL tmp = TurnToHSL(color);
+	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);
+	tmp.Luminance += m_generator.randomFloat(-10.f, 10.f);
+	sf::Color newColor = tmp.TurnToRGB();
+	newColor.a = color.a;
+	return (newColor);
+
 }

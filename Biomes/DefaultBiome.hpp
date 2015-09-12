@@ -3,6 +3,7 @@
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
+# include "HSL.hpp"
 
 # include <cstddef>
 
@@ -86,6 +87,7 @@ public:
 	virtual bool										canCreateLeaf();
 	virtual sf::Vector2f								getLeafSize();
 	virtual sf::Color									getLeafColor();
+	virtual std::size_t									getTreePositionX();
 
 	virtual sf::Vector2f								getMushroomSize();
 	virtual sf::Color									getMushroomColor();
@@ -238,6 +240,7 @@ private:
 	int													randomRangeSizeT(Range<std::size_t> const & range);
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
+	sf::Color											randomColor(sf::Color const & color);
 };
 
 #endif
