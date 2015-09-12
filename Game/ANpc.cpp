@@ -1,11 +1,15 @@
 #include "ANpc.hpp"
 #include "RectangleShape.hpp"
+#include "CircleShape.hpp"
 #include "PhysicsEngine.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <sstream>
 
 ANpc::ANpc(ResourceKey const & npcId) :
-	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
+	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
+	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle()),
+	m_currentText(-1),
 	m_velocity(200.f),
 	m_scale(1.f)
 {
@@ -14,7 +18,22 @@ ANpc::ANpc(ResourceKey const & npcId) :
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
 	m_box->setGameObject(this);
+	m_eventBox->setGameObject(this);
+	m_eventBox->setRadius(200.f);
+	m_eventBox->setApplyGravity(false);
+	m_eventBox->setType(AShape::Type::e_trigger);
 	setBoxCollision(static_cast<std::size_t>(GameObjectType::Npc), 0u);
+
+	std::map<std::string, std::vector<std::string>>	npcTexts;
+	std::istringstream f(resources.getText(DIALOGS_TXT).toAnsiString());
+	std::string key;
+	std::string line;
+	while (std::getline(f, key, '='))
+	{
+		std::getline(f, line);
+		npcTexts[key].push_back(line);
+	}
+	setTexts(npcTexts[npcId]);
 }
 
 ANpc::~ANpc(void)
@@ -124,13 +143,19 @@ void ANpc::setScale(float scale)
 
 void ANpc::setPosition(sf::Vector2f const & position)
 {
+
 	if (m_box->getSleep())
 	{
-		m_box->update();
 		m_box->setPosition(position.x, position.y - m_box->getSize().y - getHeight());
+		m_eventBox->setPosition(position.x - m_eventBox->getRadius(), position.y - m_eventBox->getRadius() - getHeight());
+		m_box->update();
+		m_eventBox->update();
 	}
 	else
+	{
+		m_eventBox->setPosition(position.x - m_eventBox->getRadius(), position.y - m_eventBox->getRadius());
 		m_box->setPosition(position.x, position.y - m_box->getSize().y);
+	}
 }
 
 void ANpc::setNextEvent(Events event)
@@ -153,11 +178,42 @@ void ANpc::setBoxCollision(std::size_t type, std::size_t mask)
 {
 	m_box->setCollisionType(type);
 	m_box->setCollisionMask(mask);
+	m_eventBox->setCollisionType(type);
+	m_eventBox->setCollisionMask(mask);
+}
+
+void ANpc::setCurrentText(std::size_t index)
+{
+	m_currentText = index;
+}
+
+void ANpc::setTextOffset(sf::Vector2f const & offset)
+{
+	m_textOffset = offset;
 }
 
 void ANpc::setSize(sf::Vector2f const & size)
 {
 	m_box->setSize(size);
+}
+
+void ANpc::setTexts(std::vector<std::string> const & texts)
+{
+	for (std::size_t i = 0u; i < texts.size(); i++)
+	{
+		std::unique_ptr<BubbleText> bubble;
+		bubble.reset(new BubbleText());
+		bubble->setup(texts[i], sf::Color::White);
+		bubble->setType(ABubble::Type::Speak);
+		m_texts.push_back(std::move(bubble));
+		setCurrentText(i);
+	}
+}
+
+void ANpc::setCurrentText(int index)
+{
+	assert(index < static_cast<int>(m_texts.size()));
+	m_currentText = index;
 }
 
 float ANpc::getScale(void) const
@@ -183,6 +239,11 @@ sf::FloatRect const & ANpc::getArea(void) const
 RectangleShape * ANpc::getBox(void)
 {
 	return m_box;
+}
+
+CircleShape * ANpc::getEventBox(void)
+{
+	return m_eventBox;
 }
 
 octo::CharacterSprite & ANpc::getSprite(void)
@@ -214,6 +275,8 @@ void ANpc::addMapOffset(float x, float y)
 {
 	m_box->setPosition(m_box->getPosition().x + x, m_box->getPosition().y + y);
 	m_box->update(); // We must update ourselves because the box is out of the screen, and the engine didn't update shape out of the screen
+	m_eventBox->setPosition(m_eventBox->getPosition().x + x, m_eventBox->getPosition().y + y);
+	m_eventBox->update(); // We must update ourselves because the box is out of the screen, and the engine didn't update shape out of the screen
 	m_area.left += x;
 	m_area.top += y;
 }
@@ -233,10 +296,6 @@ sf::Vector2f const & ANpc::getPosition(void) const
 	return m_box->getPosition();
 }
 
-void ANpc::doSpecialAction(void)
-{
-}
-
 void ANpc::update(sf::Time frametime)
 {
 	updateState();
@@ -245,6 +304,8 @@ void ANpc::update(sf::Time frametime)
 	m_sprite.update(frametime);
 	sf::FloatRect const & bounds = m_box->getGlobalBounds();
 	m_sprite.setPosition(bounds.left, bounds.top);
+
+	updateText(frametime);
 }
 
 void ANpc::updateState(void)
@@ -282,9 +343,26 @@ void ANpc::updatePhysics(void)
 		velocity.x = m_velocity;
 	}
 	m_box->setVelocity(velocity);
+	m_eventBox->setPosition(m_sprite.getPosition().x - m_eventBox->getRadius(), m_sprite.getPosition().y - m_eventBox->getRadius());
+}
+
+void ANpc::updateText(sf::Time frametime)
+{
+	if (m_currentText >= 0)
+	{
+		m_texts[m_currentText]->setPosition(m_sprite.getPosition() + m_textOffset);
+		m_texts[m_currentText]->update(frametime);
+		m_texts[m_currentText]->setActive(true);
+	}
 }
 
 void ANpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	m_sprite.draw(render, states);
+}
+
+void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
+{
+	if (m_currentText >= 0)
+		m_texts[m_currentText]->draw(render);
 }
