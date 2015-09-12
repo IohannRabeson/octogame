@@ -33,6 +33,7 @@ public:
 	void update(float deltatime);
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
+	void drawText(sf::RenderTarget& render, sf::RenderStates states) const;
 
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 

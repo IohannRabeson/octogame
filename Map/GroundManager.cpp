@@ -10,12 +10,12 @@
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 #include "SpaceShip.hpp"
-#include <limits>
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
+#include <limits>
 
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
@@ -77,6 +77,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 
 void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 
@@ -84,7 +85,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
 	{
-		octo::LevelMap const & levelMap = octo::Application::getResourceManager().getLevelMap(instance.second);
+		octo::LevelMap const & levelMap = resources.getLevelMap(instance.second);
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
@@ -772,7 +773,6 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 		npc.m_gameObject->draw(render, states);
 	for (auto & npc : m_npcs)
 		npc->draw(render, states);
-	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 }
 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
@@ -784,4 +784,12 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
 	render.draw(m_decorManagerFront, states);
+}
+
+void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) const
+{
+	for (auto & npc : m_npcsOnFloor)
+		npc.m_gameObject->drawText(render, states);
+	for (auto & npc : m_npcs)
+		npc->drawText(render, states);
 }
