@@ -13,7 +13,7 @@ enum class GameObjectType
 	Tile = 32u,
 	Elevator = 64u,
 	NpcCedric = 128u,
-	NanoRobot = 256u,
+	GroundTransformNanoRobot = 256u,
 	SpaceShip = 512u
 };
 

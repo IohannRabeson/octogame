@@ -10,6 +10,7 @@
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 #include "SpaceShip.hpp"
+#include "GroundTransformNanoRobot.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -78,7 +79,6 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
-
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 
 	// Get all the gameobjects from instances
@@ -144,9 +144,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, cedric);
 				}
 				break;
-			case GameObjectType::NanoRobot:
+			case GameObjectType::GroundTransformNanoRobot:
 				{
-					m_nanoRobots.emplace_back(gameObject.first, 3, new NanoRobot(sf::Vector2f(gameObject.first * Tile::TileSize, 500.f)));
+					m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
 				}
 				break;
 			case GameObjectType::SpaceShip:
@@ -779,11 +779,11 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 {
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render, states);
+	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
-	render.draw(m_decorManagerFront, states);
 }
 
 void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) const
