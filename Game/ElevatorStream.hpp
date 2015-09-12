@@ -14,29 +14,30 @@
 # include <iostream>
 
 # include "AGameObject.hpp"
+# include "IPlaceable.hpp"
 
 class ABiome;
 class RectangleShape;
 
-class ElevatorStream : public AGameObject<GameObjectType::Elevator>
+class ElevatorStream : public AGameObject<GameObjectType::Elevator>, public IPlaceable
 {
 	class BeamParticle;
 public:
 	ElevatorStream();
 
 	void		setupSprite(void);
-	void		setPosX(float x);
-	void		setPosY(float y);
 	void		setHeight(float height);
 	void		setTopY(float topY);
 	void		setWidth(float width);
 	void		setRotationFactor(float factor);
 	void		setBiome(ABiome & biome);
+	void		setPosition(sf::Vector2f const & position);
 
 	float		getHeight(void) const;
 	float		getWidth(void) const;
 	float		getPosY(void) const;
 	float		getTopY(void) const;
+	sf::Vector2f const & getPosition(void) const;
 
 	void		createRay(void);
 
@@ -57,6 +58,7 @@ private:
 	sf::Color						m_borderColor;
 	sf::Color						m_centerColor;
 	sf::Color						m_upColor;
+	sf::Vector2f					m_position;
 
 	octo::SpriteAnimation			m_animation;
 	octo::AnimatedSprite			m_spriteBottomFront;

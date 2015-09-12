@@ -106,7 +106,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		// For each instance, create an elevator stream
 		std::unique_ptr<ElevatorStream> elevator;
 		elevator.reset(new ElevatorStream());
-		elevator->setPosX(instance.first * Tile::TileSize - elevator->getWidth());
+		elevator->setPosition(sf::Vector2f(instance.first * Tile::TileSize - elevator->getWidth(), 0.f));
 		octo::Array3D<octo::LevelMap::TileType> const & map = levelMap.getMap();
 		for (std::size_t y = 0; y < map.rows(); y++)
 		{
@@ -132,6 +132,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					std::unique_ptr<Portal> portal(new Portal());
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					//m_highObjects.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 				}
 				break;
 			case GameObjectType::NpcCedric:
@@ -474,58 +475,11 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	// Update wide decors
 	Map::WideDecors const & currentWide = m_tiles->getWideDecorsPosition();
 	Map::WideDecors const & prevWide = m_tilesPrev->getWideDecorsPosition();
-	float min;
-	float max;
-	float tmp;
-	for (auto const & elevator : m_elevators)
-	{
-		min = 0.f;
-		for (std::size_t i = elevator.m_position; i < elevator.m_position + elevator.m_width; i++)
-		{
-			tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
-			if (tmp > min)
-				min = tmp;
-		}
-		elevator.m_gameObject->setPosX(currentWide[elevator.m_position].second.x - Map::OffsetX + elevator.m_gameObject->getWidth() / 2.f + Tile::TileSize);
-		elevator.m_gameObject->setPosY(min - Tile::TileSize);
-		elevator.m_gameObject->setHeight(min - elevator.m_gameObject->getTopY());
-	}
 
-	for (auto const & portal : m_portals)
-	{
-		max = std::numeric_limits<float>::max();
-		for (std::size_t i = portal.m_position; i < portal.m_position + portal.m_width; i++)
-		{
-			tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
-			if (tmp < max)
-				max = tmp;
-		}
-		portal.m_gameObject->setPosition(sf::Vector2f(currentWide[portal.m_position].second.x - Map::OffsetX + portal.m_gameObject->getRadius(), max - portal.m_gameObject->getRadius() - Map::OffsetY - Tile::TripleTileSize));
-	}
-
-	for (auto const & nano : m_nanoRobots)
-	{
-		max = std::numeric_limits<float>::max();
-		for (std::size_t i = nano.m_position; i < nano.m_position + nano.m_width; i++)
-		{
-			tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
-			if (tmp < max)
-				max = tmp;
-		}
-		nano.m_gameObject->setPosition(sf::Vector2f(currentWide[nano.m_position].second.x - Map::OffsetX, max - Map::OffsetY - Tile::TripleTileSize * 2.f));
-	}
-
-	for (auto const & npc : m_npcsOnFloor)
-	{
-		max = std::numeric_limits<float>::max();
-		for (std::size_t i = npc.m_position; i < npc.m_position + npc.m_width; i++)
-		{
-			tmp = octo::linearInterpolation(prevWide[i].second.y, currentWide[i].second.y, transition);
-			if (tmp < max)
-				max = tmp;
-		}
-		npc.m_gameObject->setPosition(sf::Vector2f(currentWide[npc.m_position].second.x - Map::OffsetX, max - npc.m_gameObject->getHeight() - Map::OffsetY));
-	}
+	placeMin(m_elevators, currentWide, prevWide, transition);
+	placeMax(m_portals, currentWide, prevWide, transition);
+	placeMax(m_nanoRobots, currentWide, prevWide, transition);
+	placeMax(m_npcsOnFloor, currentWide, prevWide, transition);
 
 	// Replace npc around the map
 	for (auto const & npc : m_npcsOnFloor)
@@ -546,6 +500,42 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			npc->addMapOffset(mapSizeX, 0.f);
 		else if (npc->getPosition().x > m_offset.x + mapSizeX / 2.f)
 			npc->addMapOffset(-mapSizeX, 0.f);
+	}
+}
+
+template<class T>
+void GroundManager::placeMin(std::vector<GameObjectPosition<T>> & objects, Map::WideDecors const & currentDecors, Map::WideDecors const & prevDecors, float transition)
+{
+	float min;
+	float tmp = 0.f;
+	for (auto const & object : objects)
+	{
+		min = 0.f;
+		for (std::size_t i = object.m_position; i < object.m_position + object.m_width; i++)
+		{
+			tmp = octo::linearInterpolation(prevDecors[i].second.y, currentDecors[i].second.y, transition);
+			if (tmp > min)
+				min = tmp;
+		}
+		object.m_gameObject->setPosition(sf::Vector2f(currentDecors[object.m_position].second.x - Map::OffsetX, min - Map::OffsetY));
+	}
+}
+
+template<class T>
+void GroundManager::placeMax(std::vector<GameObjectPosition<T>> & objects, Map::WideDecors const & currentDecors, Map::WideDecors const & prevDecors, float transition)
+{
+	float max;
+	float tmp = 0.f;
+	for (auto const & object : objects)
+	{
+		max = std::numeric_limits<float>::max();
+		for (std::size_t i = object.m_position; i < object.m_position + object.m_width; i++)
+		{
+			tmp = octo::linearInterpolation(prevDecors[i].second.y, currentDecors[i].second.y, transition);
+			if (tmp < max)
+				max = tmp;
+		}
+		object.m_gameObject->setPosition(sf::Vector2f(currentDecors[object.m_position].second.x - Map::OffsetX, max - Map::OffsetY));
 	}
 }
 
@@ -774,11 +764,11 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	render.draw(m_decorManagerGround, states);
-	render.draw(m_decorManagerFront, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
+	render.draw(m_decorManagerGround, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render);
+	render.draw(m_decorManagerFront, states);
 }

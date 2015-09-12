@@ -99,6 +99,8 @@ void Portal::update(sf::Time frametime)
 void Portal::setPosition(sf::Vector2f const & position)
 {
 	m_position = position;
+	m_position.x += getRadius();
+	m_position.y -= getRadius() + Tile::TripleTileSize;
 	m_particles.setEmitter(m_position);
 	m_box->setPosition(sf::Vector2f(m_position.x - m_radius, m_position.y - m_radius));
 }

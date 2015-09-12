@@ -8,6 +8,7 @@
 # include "ElevatorStream.hpp"
 # include "NanoRobot.hpp"
 # include "ANpc.hpp"
+# include "IPlaceable.hpp"
 
 class ADecor;
 class ABiome;
@@ -86,6 +87,12 @@ private:
 	std::vector<GameObjectPosition<NanoRobot>>			m_nanoRobots;
 	std::vector<GameObjectPosition<ANpc>>				m_npcsOnFloor;
 	std::vector<std::unique_ptr<ANpc>>					m_npcs;
+
+	template<class T>
+	void placeMax(std::vector<GameObjectPosition<T>> & objects, Map::WideDecors const & currentDecors, Map::WideDecors const & prevDecors, float transition);
+
+	template<class T>
+	void placeMin(std::vector<GameObjectPosition<T>> & objects, Map::WideDecors const & currentDecors, Map::WideDecors const & prevDecors, float transition);
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
