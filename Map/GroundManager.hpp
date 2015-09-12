@@ -6,7 +6,9 @@
 # include "DecorManager.hpp"
 # include "Portal.hpp"
 # include "ElevatorStream.hpp"
+# include "NanoRobot.hpp"
 # include "ANpc.hpp"
+# include "IPlaceable.hpp"
 
 class ADecor;
 class ABiome;
@@ -29,8 +31,8 @@ public:
 
 	void setup(ABiome & biome, SkyCycle & cycle);
 	void update(float deltatime);
-	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
+	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
 
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 
@@ -38,9 +40,9 @@ private:
 	template<class T>
 	struct GameObjectPosition
 	{
-		std::size_t				m_position;
-		std::size_t				m_width;
-		std::unique_ptr<T>		m_gameObject;
+		std::size_t							m_position;
+		std::size_t							m_width;
+		std::unique_ptr<T>					m_gameObject;
 
 		GameObjectPosition(std::size_t position, std::size_t width, std::unique_ptr<T> & gameObject) :
 			m_position(position),
@@ -48,6 +50,14 @@ private:
 			m_gameObject(nullptr)
 		{
 			m_gameObject = std::move(gameObject);
+		}
+
+		GameObjectPosition(std::size_t position, std::size_t width, T * gameObject) :
+			m_position(position),
+			m_width(width),
+			m_gameObject(nullptr)
+		{
+			m_gameObject.reset(gameObject);
 		}
 	};
 
@@ -74,7 +84,16 @@ private:
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
 	std::vector<GameObjectPosition<Portal>>				m_portals;
+	std::vector<GameObjectPosition<NanoRobot>>			m_nanoRobots;
+	std::vector<GameObjectPosition<ANpc>>				m_npcsOnFloor;
+	std::vector<GameObjectPosition<IPlaceable>>			m_otherObjects;
 	std::vector<std::unique_ptr<ANpc>>					m_npcs;
+
+	template<class T>
+	void placeMax(std::vector<GameObjectPosition<T>> & objects, Map::WideDecors const & currentDecors, Map::WideDecors const & prevDecors, float transition);
+
+	template<class T>
+	void placeMin(std::vector<GameObjectPosition<T>> & objects, Map::WideDecors const & currentDecors, Map::WideDecors const & prevDecors, float transition);
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
@@ -91,7 +110,7 @@ private:
 	void updateOffset(float deltatime);
 	void updateTransition(sf::FloatRect const & cameraRect);
 	void updateDecors(sf::Time deltatime);
-	void updateGameObjects(float deltatime);
+	void updateGameObjects(sf::Time deltatime);
 	void computeDecor(void);
 	void swapMap(void);
 

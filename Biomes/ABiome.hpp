@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ABiome.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/10 02:17:18 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/18 10:15:58 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef ABIOME_HPP
 # define ABIOME_HPP
 # include <NonCopyable.hpp>
@@ -26,6 +14,8 @@
 # include <map>
 # include <vector>
 
+class AGameObjectBase;
+
 class ABiome : public octo::NonCopyable
 {
 public:
@@ -39,6 +29,7 @@ public:
 	virtual std::size_t									getMapSeed() = 0;
 	virtual float										getTransitionDuration() = 0;
 	virtual int											getBossInstancePosX() = 0;
+	virtual std::map<std::size_t, GameObjectType> const & getGameObjects() = 0;
 
 	virtual std::map<std::size_t, std::string>			const & getInstances() = 0;
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers() = 0;

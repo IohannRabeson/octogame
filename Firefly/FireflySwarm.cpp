@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:09:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/04/19 20:25:18 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/09/11 17:49:42 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,11 @@ std::size_t		FireflySwarm::getCapacity()const
 	return (m_capacity);
 }
 
+sf::Vector2f const &	FireflySwarm::getPositionById(std::size_t id)
+{
+	return getFirefly(id).position;
+}
+
 std::size_t		FireflySwarm::consumeId()
 {
 	std::size_t	newId = m_count;
@@ -197,26 +202,26 @@ void	FireflySwarm::spawnFirefly(Firefly& fly, SpawnMode spawnMode, sf::Vector2f 
 	}
 }
 
-void	FireflySwarm::commitFirefly(std::size_t id, Firefly const& fly)
+void	FireflySwarm::commitFirefly(std::size_t id, Firefly & fly)
 {
 	static sf::Vector2f const	TopLeft = {-1.f, -1.f};
 	static sf::Vector2f const	TopRight = {1.f, -1.f};
 	static sf::Vector2f const	BottomRight = {1.f, 1.f};
 	static sf::Vector2f const	BottomLeft = {-1.f, 1.f};
-	sf::Vector2f const			position = fly.path.compute(fly.pathPosition);
 	std::size_t	const			Offset = id * 8u;
 	sf::Color					haloColor = fly.color;
+	fly.position = fly.path.compute(fly.pathPosition);
 
 	// Quad du centre
-	m_vertices[Offset + 0].position = position + TopLeft * fly.radius;
-	m_vertices[Offset + 1].position = position + TopRight * fly.radius;
-	m_vertices[Offset + 2].position = position + BottomRight * fly.radius;
-	m_vertices[Offset + 3].position = position + BottomLeft * fly.radius;
+	m_vertices[Offset + 0].position = fly.position + TopLeft * fly.radius;
+	m_vertices[Offset + 1].position = fly.position + TopRight * fly.radius;
+	m_vertices[Offset + 2].position = fly.position + BottomRight * fly.radius;
+	m_vertices[Offset + 3].position = fly.position + BottomLeft * fly.radius;
 	// Quad du halo
-	m_vertices[Offset + 4].position = position + TopLeft * fly.haloRadius;
-	m_vertices[Offset + 5].position = position + TopRight * fly.haloRadius;
-	m_vertices[Offset + 6].position = position + BottomRight * fly.haloRadius;
-	m_vertices[Offset + 7].position = position + BottomLeft * fly.haloRadius;
+	m_vertices[Offset + 4].position = fly.position + TopLeft * fly.haloRadius;
+	m_vertices[Offset + 5].position = fly.position + TopRight * fly.haloRadius;
+	m_vertices[Offset + 6].position = fly.position + BottomRight * fly.haloRadius;
+	m_vertices[Offset + 7].position = fly.position + BottomLeft * fly.haloRadius;
 	// Couleurs
 	haloColor.a = 100;
 	m_vertices[Offset + 0].color = fly.color;

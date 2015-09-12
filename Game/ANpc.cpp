@@ -124,7 +124,13 @@ void ANpc::setScale(float scale)
 
 void ANpc::setPosition(sf::Vector2f const & position)
 {
-	m_box->setPosition(position.x, position.y - m_box->getSize().y);
+	if (m_box->getSleep())
+	{
+		m_box->update();
+		m_box->setPosition(position.x, position.y - m_box->getSize().y - getHeight());
+	}
+	else
+		m_box->setPosition(position.x, position.y - m_box->getSize().y);
 }
 
 void ANpc::setNextEvent(Events event)
@@ -210,6 +216,16 @@ void ANpc::addMapOffset(float x, float y)
 	m_box->update(); // We must update ourselves because the box is out of the screen, and the engine didn't update shape out of the screen
 	m_area.left += x;
 	m_area.top += y;
+}
+
+void ANpc::activatePhysics(bool activate)
+{
+	m_box->setSleep(!activate);
+}
+
+float ANpc::getHeight(void) const
+{
+	return 100.f;
 }
 
 sf::Vector2f const & ANpc::getPosition(void) const
