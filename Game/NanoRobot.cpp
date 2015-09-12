@@ -1,8 +1,9 @@
 #include "NanoRobot.hpp"
 #include "FireflyPositionBehaviors.hpp"
+#include "ResourceDefinitions.hpp"
+#include "Tile.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
-#include "ResourceDefinitions.hpp"
 
 NanoRobot::NanoRobot(sf::Vector2f const & position) :
 	m_swarm(1),
@@ -41,7 +42,9 @@ NanoRobot::~NanoRobot(void)
 
 void NanoRobot::setPosition(sf::Vector2f const & position)
 {
-	m_swarm.setTarget(position);
+	sf::Vector2f	pos = position;
+	pos.y -= Tile::TripleTileSize * 2.f;
+	m_swarm.setTarget(pos);
 }
 
 void NanoRobot::update(sf::Time frametime)
@@ -51,7 +54,7 @@ void NanoRobot::update(sf::Time frametime)
 	m_sprite.setPosition(m_swarm.getFirefly(0u).position - sf::Vector2f(32.f, 32.f));
 }
 
-void NanoRobot::draw(sf::RenderTarget& render) const
+void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	//m_swarm.draw(render);
 	render.draw(m_sprite);
