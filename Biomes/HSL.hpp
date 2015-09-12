@@ -16,10 +16,10 @@ struct HSL
 
 	sf::Color TurnToRGB();
 
+	static constexpr float Epsilon = 0.00000000000001;
+
 	private:
-
 	float HueToRGB(float arg1, float arg2, float H);
-
 };
 
 HSL TurnToHSL(const sf::Color& C);

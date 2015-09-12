@@ -1,47 +1,67 @@
 #include "HSL.hpp"
-const float D_EPSILON = 0.00000000000001; 
-///Feel free to move this to your constants .h file or use it as a static constant if you don't like it here.
+//https://github.com/SFML/SFML/wiki/Source%3A-HSL-Color
 
-HSL::HSL() :Hue(0) ,Saturation(0) ,Luminance(0) {}
+HSL::HSL() :
+	Hue(0),
+	Saturation(0),
+	Luminance(0)
+{
+}
 
 HSL::HSL(int H, int S, int L)
 {
 	///Range control for Hue.
-	if (H <= 360 && H >= 0) {Hue = H;}
+	if (H <= 360 && H >= 0)
+		Hue = H;
 	else
 	{
-		if(H > 360) { Hue = H%360; }
-		else if(H < 0 && H > -360) { Hue = -H; }
-		else if(H < 0 && H < -360) { Hue = -(H%360); }
+		if (H > 360)
+			Hue = H % 360;
+		else if (H < 0 && H > -360)
+			Hue = -H;
+		else if (H < 0 && H < -360)
+			Hue = -(H % 360);
 	}
 
 	///Range control for Saturation.
-	if (S <= 100 && S >= 0) {Saturation = S;}
+	if (S <= 100 && S >= 0)
+		Saturation = S;
 	else
 	{
-		if(S > 100) { Saturation = S%100;}
-		else if(S < 0 && S > -100) { Saturation = -S; }
-		else if(S < 0 && S < -100) { Saturation = -(S%100); }
+		if (S > 100)
+			Saturation = S % 100;
+		else if (S < 0 && S > -100)
+			Saturation = -S;
+		else if (S < 0 && S < -100)
+			Saturation = -(S % 100);
 	}
 
 	///Range control for Luminance
-	if (L <= 100 && L >= 0) {Luminance = L;}
+	if (L <= 100 && L >= 0)
+		Luminance = L;
 	else
 	{
-		if(L > 100) { Luminance = L%100;}
-		if(L < 0 && L > -100) { Luminance = -L; }
-		if(L < 0 && L < -100) { Luminance = -(L%100); }
+		if (L > 100)
+			Luminance = L % 100;
+		if (L < 0 && L > -100)
+			Luminance = -L;
+		if (L < 0 && L < -100)
+			Luminance = -(L % 100);
 	}
-
 }
 
 float HSL::HueToRGB(float arg1, float arg2, float H)
 {
-	if ( H < 0 ) H += 1;
-	if ( H > 1 ) H -= 1;
-	if ( ( 6 * H ) < 1 ) { return (arg1 + ( arg2 - arg1 ) * 6 * H); }
-	if ( ( 2 * H ) < 1 ) { return arg2; }
-	if ( ( 3 * H ) < 2 ) { return ( arg1 + ( arg2 - arg1 ) * ( ( 2.0 / 3.0 ) - H ) * 6 ); }
+	if (H < 0)
+		H += 1;
+	if (H > 1)
+		H -= 1;
+	if ((6 * H) < 1)
+		return (arg1 + (arg2 - arg1) * 6 * H);
+	if ((2 * H) < 1)
+		return arg2;
+	if ((3 * H) < 2)
+		return (arg1 + (arg2 - arg1) * ((2.f / 3.f) - H) * 6);
 	return arg1;
 }
 
@@ -60,27 +80,30 @@ sf::Color HSL::TurnToRGB()
 		Hue = static_cast<int>(Hue) % 360;
 	else if (Hue < 0.f)
 		Hue += static_cast<int>(Hue) % 360 + 360.f;
+
 	///Reconvert to range [0,1]
-	float H = Hue/360.0;
-	float S = Saturation/100.0;
-	float L = Luminance/100.0;
+	float H = Hue / 360.f;
+	float S = Saturation / 100.f;
+	float L = Luminance / 100.f;
 
 	float arg1, arg2;
 
-	if (S <= D_EPSILON)
+	if (S <= Epsilon)
 	{
-		sf::Color C(L*255, L*255, L*255);
+		sf::Color C(L * 255, L * 255, L * 255);
 		return C;
 	}
 	else
 	{
-		if ( L < 0.5 ) { arg2 = L * ( 1 + S ); }
-		else { arg2 = ( L + S ) - ( S * L ); }
+		if (L < 0.5)
+			arg2 = L * (1 + S);
+		else
+			arg2 = (L + S) - (S * L);
 		arg1 = 2 * L - arg2;
 
-		sf::Uint8 r =( 255 * HueToRGB( arg1, arg2, (H + 1.0/3.0 ) ) );
-		sf::Uint8 g =( 255 * HueToRGB( arg1, arg2, H ) );
-		sf::Uint8 b =( 255 * HueToRGB( arg1, arg2, (H - 1.0/3.0 ) ) );
+		sf::Uint8 r = (255 * HueToRGB(arg1, arg2, (H + 1.f / 3.f)));
+		sf::Uint8 g = (255 * HueToRGB(arg1, arg2, H));
+		sf::Uint8 b = (255 * HueToRGB(arg1, arg2, (H - 1.f / 3.f)));
 		sf::Color C(r,g,b);
 		return C;
 	}
@@ -90,34 +113,34 @@ sf::Color HSL::TurnToRGB()
 HSL TurnToHSL(const sf::Color& C)
 {
 	///Trivial cases.
-	if(C == sf::Color::White)
-	{ return HSL(0, 0, 100); }
+	if (C == sf::Color::White)
+		return HSL(0, 0, 100);
 
-	if(C == sf::Color::Black)
-	{ return HSL(0, 0, 0); } 
+	if (C == sf::Color::Black)
+		return HSL(0, 0, 0);
 
-	if(C == sf::Color::Red)
-	{ return HSL(0, 100, 50); }
+	if (C == sf::Color::Red)
+		return HSL(0, 100, 50);
 
-	if(C == sf::Color::Yellow)
-	{ return HSL(60, 100, 50); }
+	if (C == sf::Color::Yellow)
+		return HSL(60, 100, 50);
 
-	if(C == sf::Color::Green)
-	{ return HSL(120, 100, 50); }
+	if (C == sf::Color::Green)
+		return HSL(120, 100, 50);
 
-	if(C == sf::Color::Cyan)
+	if (C == sf::Color::Cyan)
 	{ return HSL(180, 100, 50); }
 
-	if(C == sf::Color::Blue)
-	{ return HSL(240, 100, 50); }
+	if (C == sf::Color::Blue)
+		return HSL(240, 100, 50);
 
-	if(C == sf::Color::Cyan)
-	{ return HSL(300, 100, 50); }
+	if (C == sf::Color::Cyan)
+		return HSL(300, 100, 50);
 
 	float R, G, B;
-	R = C.r/255.0;
-	G = C.g/255.0;
-	B = C.b/255.0;
+	R = C.r / 255.f;
+	G = C.g / 255.f;
+	B = C.b / 255.f;
 	///Casos no triviales.
 	float max, min, l, s = 0.f;
 
@@ -129,9 +152,9 @@ HSL TurnToHSL(const sf::Color& C)
 
 
 	HSL A;
-	l = ((max + min)/2.0);
+	l = ((max + min) / 2.f);
 
-	if (max - min <= D_EPSILON )
+	if (max - min <= HSL::Epsilon)
 	{
 		A.Hue = 0;
 		A.Saturation = 0;
@@ -140,21 +163,28 @@ HSL TurnToHSL(const sf::Color& C)
 	{
 		float diff = max - min;
 
-		if(A.Luminance < 0.5)
-		{ s = diff/(max + min); }
+		if (A.Luminance < 0.5)
+			s = diff/(max + min);
 		else
-		{ s = diff/(2 - max - min); }
+			s = diff/(2 - max - min);
 
-		float diffR = ( (( max - R ) * 60) + (diff/2.0) ) / diff;
-		float diffG = ( (( max - G ) * 60) + (diff/2.0) ) / diff;
-		float diffB = ( (( max - B ) * 60) + (diff/2.0) ) / diff;
+		float diffR = ((( max - R) * 60) + (diff / 2.f)) / diff;
+		float diffG = ((( max - G) * 60) + (diff / 2.f)) / diff;
+		float diffB = ((( max - B) * 60) + (diff / 2.f)) / diff;
 
 
-		if (max - R <= D_EPSILON) { A.Hue = diffB - diffG; }
-		else if ( max - G <= D_EPSILON ) { A.Hue = (1*360)/3.0 + (diffR - diffB); }
-		else if ( max - B <= D_EPSILON ) { A.Hue = (2*360)/3.0 + (diffG - diffR); }
+		if (max - R <= HSL::Epsilon)
+			A.Hue = diffB - diffG;
+		else if (max - G <= HSL::Epsilon)
+			A.Hue = (1 * 360) / 3.f + (diffR - diffB);
+		else if (max - B <= HSL::Epsilon)
+			A.Hue = (2 * 360) / 3.f + (diffG - diffR);
 
-		if (A.Hue <= 0 || A.Hue >= 360) { float r = fmod(A.Hue, 360); (void)r; }
+		if (A.Hue <= 0 || A.Hue >= 360)
+		{
+			float r = fmod(A.Hue, 360);
+			(void)r;
+		}
 
 		s *= 100;
 	}
