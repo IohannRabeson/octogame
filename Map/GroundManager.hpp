@@ -1,11 +1,13 @@
 #ifndef TERRAINMANAGER_HPP
 # define TERRAINMANAGER_HPP
 
+# include <GenericFactory.hpp>
 # include "Map.hpp"
 # include "DecorManager.hpp"
 # include "Portal.hpp"
 # include "ElevatorStream.hpp"
-# include "ClassicNpc.hpp"
+# include "NanoRobot.hpp"
+# include "ANpc.hpp"
 
 class ADecor;
 class ABiome;
@@ -13,7 +15,7 @@ class TileShape;
 class ABiome;
 class SkyCycle;
 
-class GroundManager : public sf::Drawable
+class GroundManager
 {
 public:
 	enum GenerationState
@@ -28,10 +30,8 @@ public:
 
 	void setup(ABiome & biome, SkyCycle & cycle);
 	void update(float deltatime);
-	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
-	DecorManager const & getDecorsBack(void) const;
-	DecorManager const & getDecorsFront(void) const;
-	DecorManager const & getDecorsGround(void) const;
+	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
+	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
 
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 
@@ -39,9 +39,9 @@ private:
 	template<class T>
 	struct GameObjectPosition
 	{
-		std::size_t				m_position;
-		std::size_t				m_width;
-		std::unique_ptr<T>		m_gameObject;
+		std::size_t							m_position;
+		std::size_t							m_width;
+		std::unique_ptr<T>					m_gameObject;
 
 		GameObjectPosition(std::size_t position, std::size_t width, std::unique_ptr<T> & gameObject) :
 			m_position(position),
@@ -50,8 +50,19 @@ private:
 		{
 			m_gameObject = std::move(gameObject);
 		}
+
+		GameObjectPosition(std::size_t position, std::size_t width, T * gameObject) :
+			m_position(position),
+			m_width(width),
+			m_gameObject(nullptr)
+		{
+			m_gameObject.reset(gameObject);
+		}
 	};
 
+	typedef octo::GenericFactory<std::string, ANpc>	NpcFactory;
+
+	NpcFactory							m_npcFactory;
 	std::unique_ptr<Map>				m_tiles;
 	std::unique_ptr<Map>				m_tilesPrev;
 	float								m_transitionTimer;
@@ -72,7 +83,9 @@ private:
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
 	std::vector<GameObjectPosition<Portal>>				m_portals;
-	std::vector<std::unique_ptr<ClassicNpc>>			m_npcs;
+	std::vector<GameObjectPosition<NanoRobot>>			m_nanoRobots;
+	std::vector<GameObjectPosition<ANpc>>				m_npcsOnFloor;
+	std::vector<std::unique_ptr<ANpc>>					m_npcs;
 
 	void defineTransition(void);
 	void defineTransitionRange(int startX, int endX, int startY, int endY);
@@ -85,7 +98,7 @@ private:
 	template<class T>
 	void setupGameObjectPosition(std::vector<GameObjectPosition<T>> const & gameObjectPosition);
 	void setupDecors(ABiome & biome);
-	void setupGameObjects(ABiome & biome);
+	void setupGameObjects(ABiome & biome, SkyCycle & skyCycle);
 	void updateOffset(float deltatime);
 	void updateTransition(sf::FloatRect const & cameraRect);
 	void updateDecors(sf::Time deltatime);

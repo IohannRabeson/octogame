@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ElevatorStream.cpp                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/08/01 04:30:42 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/26 09:59:33 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "ElevatorStream.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
@@ -181,6 +169,36 @@ ElevatorStream::ElevatorStream() :
 	m_particles->setWidth(150.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
+
+	setupSprite();
+}
+
+void	ElevatorStream::setupSprite(void)
+{
+	octo::ResourceManager&				resources = octo::Application::getResourceManager();
+	octo::SpriteAnimation::FrameList	frames;
+	frames.emplace_back(sf::seconds(0.2), 0);
+	frames.emplace_back(sf::seconds(0.2), 1);
+	frames.emplace_back(sf::seconds(0.2), 2);
+	frames.emplace_back(sf::seconds(0.2), 3);
+	m_animation.setFrames(frames);
+	m_animation.setLoop(octo::LoopMode::Loop);
+	m_spriteBottomFront.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_BOTTOM_FRONT_OSS));
+	m_spriteBottomFront.setAnimation(m_animation);
+	m_spriteBottomFront.setScale(sf::Vector2f(0.8f, 0.8f));
+	m_spriteBottomFront.play();
+	m_spriteBottomBack.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_BOTTOM_BACK_OSS));
+	m_spriteBottomBack.setAnimation(m_animation);
+	m_spriteBottomBack.setScale(sf::Vector2f(0.8f, 0.8f));
+	m_spriteBottomBack.play();
+	m_spriteTopFront.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_TOP_FRONT_OSS));
+	m_spriteTopFront.setAnimation(m_animation);
+	m_spriteTopFront.setScale(sf::Vector2f(0.8f, 0.8f));
+	m_spriteTopFront.play();
+	m_spriteTopBack.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_TOP_BACK_OSS));
+	m_spriteTopBack.setAnimation(m_animation);
+	m_spriteTopBack.setScale(sf::Vector2f(0.8f, 0.8f));
+	m_spriteTopBack.play();
 }
 
 void	ElevatorStream::setPosX(float x)
@@ -286,13 +304,31 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_waveCycle += frameTime;
 	m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
 	createRay();
+
+	sf::Vector2f const & position = m_particles->getPosition();
+	m_spriteBottomFront.setPosition(position + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
+	m_spriteBottomBack.setPosition(position + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
+	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+	m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + position.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+	m_spriteBottomFront.update(frameTime);
+	m_spriteBottomBack.update(frameTime);
+	m_spriteTopFront.update(frameTime);
+	m_spriteTopBack.update(frameTime);
 }
 
-void	ElevatorStream::draw(sf::RenderTarget& render)const
+void	ElevatorStream::drawBack(sf::RenderTarget& render)const
 {
 	sf::RenderStates	states;
 
+	render.draw(m_spriteBottomBack);
+	render.draw(m_spriteTopBack);
 	states.shader = &m_shader;
 	m_particles->draw(render, states);
 	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
+}
+
+void	ElevatorStream::drawFront(sf::RenderTarget& render)const
+{
+	render.draw(m_spriteBottomFront);
+	render.draw(m_spriteTopFront);
 }

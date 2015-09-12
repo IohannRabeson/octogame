@@ -48,6 +48,8 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/ElevatorStream.cpp					\
 				Game/ANpc.cpp							\
 				Game/ClassicNpc.cpp						\
+				Game/CedricNpc.cpp						\
+				Game/NanoRobot.cpp						\
 				Game/MusicPlayer.cpp
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
@@ -61,6 +63,7 @@ SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/AudioMenu.cpp					\
 				Bubble/ControlMenu.cpp					\
 				Bubble/YesNoMenu.cpp					\
+				Bubble/ResolutionMenu.cpp				\
 				Bubble/EmptyMenu.cpp					\
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\

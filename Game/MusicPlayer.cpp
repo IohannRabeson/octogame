@@ -51,7 +51,7 @@ bool MusicPlayer::getEvent(sf::Vector2f const & octoPos)
 
 void MusicPlayer::playMainMusic(sf::Time frameTime, std::vector<MusicValue> & musics, bool & startStateOn, bool & endStateOn, ResourceKey & current)
 {
-	MusicValue * musicToPlay;
+	MusicValue * musicToPlay = nullptr;
 
 	endStateOn = false;
 	for (auto &music : musics)
