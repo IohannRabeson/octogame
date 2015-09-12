@@ -484,7 +484,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	Map::WideDecors const & currentWide = m_tiles->getWideDecorsPosition();
 	Map::WideDecors const & prevWide = m_tilesPrev->getWideDecorsPosition();
 
-	placeMin(m_elevators, currentWide, prevWide, transition);
+	placeMax(m_elevators, currentWide, prevWide, transition);
 	placeMax(m_portals, currentWide, prevWide, transition);
 	placeMax(m_nanoRobots, currentWide, prevWide, transition);
 	placeMax(m_npcsOnFloor, currentWide, prevWide, transition);
