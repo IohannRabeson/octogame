@@ -28,7 +28,7 @@ public:
 	virtual sf::Vector2f								getMapSizeFloat() = 0;
 	virtual std::size_t									getMapSeed() = 0;
 	virtual float										getTransitionDuration() = 0;
-	virtual int											getBossInstancePosX() = 0;
+	virtual int											getInterestPointPosX() = 0;
 	virtual std::map<std::size_t, GameObjectType> const & getGameObjects() = 0;
 
 	virtual std::map<std::size_t, std::string>			const & getInstances() = 0;
@@ -40,6 +40,7 @@ public:
 	virtual sf::Color									getTileEndColor() = 0;
 
 	virtual sf::Time									getDayDuration() = 0;
+	virtual sf::Time									getStartDayDuration() = 0;
 	virtual sf::Color									getSkyDayColor() = 0;
 	virtual sf::Color									getSkyNightColor() = 0;
 	virtual sf::Color									getNightLightColor() = 0;

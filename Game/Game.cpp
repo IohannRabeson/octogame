@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "DefaultBiome.hpp"
+#include "LevelOneBiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -28,6 +29,7 @@ Game::Game() :
 void	Game::setup()
 {
 	m_biomeManager.registerBiome<DefaultBiome>("test");
+	m_biomeManager.registerBiome<LevelOneBiome>("One");
 
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -37,7 +39,7 @@ void	Game::loadLevel(std::string const& fileName)
 {
 	(void)fileName;
 	// TODO
-	m_biomeManager.changeBiome("test", 0x12345);
+	m_biomeManager.changeBiome("One", 0x12345);
 
 	// Reset last values
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();

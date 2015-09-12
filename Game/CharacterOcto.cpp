@@ -41,6 +41,8 @@ void	CharacterOcto::setup(void)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
+	//TODO: This values are only for the first level
+	m_box->setPosition(sf::Vector2f(300.f, 870.f));
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
