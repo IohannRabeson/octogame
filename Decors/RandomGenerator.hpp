@@ -2,6 +2,7 @@
 # define RANDOMGENERATOR_HPP
 
 # include <random>
+# include <boost/random.hpp>
 
 class RandomGenerator
 {
@@ -16,11 +17,11 @@ public:
 	std::size_t randomPiecewise(std::size_t max);
 
 private:
-	std::mt19937							m_engine;
-	std::uniform_real_distribution<float>	m_distributionFloat;
-	std::uniform_int_distribution<int>		m_distributionInt;
-	std::bernoulli_distribution				m_distributionBool;
-	std::piecewise_linear_distribution<>	m_distributionPiecewise;
+	boost::random::mt19937							m_engine;
+	boost::random::uniform_real_distribution<float>	m_distributionFloat;
+	boost::random::uniform_int_distribution<int>		m_distributionInt;
+	boost::random::bernoulli_distribution<float>				m_distributionBool;
+	boost::random::piecewise_linear_distribution<>	m_distributionPiecewise;
 };
 
 #endif
