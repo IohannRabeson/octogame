@@ -14,7 +14,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_mapSeed(42u),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(154, 211, 222),
+	m_tileStartColor(227, 227, 227),
 	m_tileEndColor(137, 189, 211),
 
 	m_dayDuration(sf::seconds(45.f)),
@@ -212,10 +212,10 @@ Map::MapSurfaceGenerator LevelOneBiome::getMapSurfaceGenerator()
 		if (isBlock && x > 5.f / static_cast<float>(m_mapSize.x) && x < 150.f / static_cast<float>(m_mapSize.x))
 		{
 			if (x == 6.f / static_cast<float>(m_mapSize.x))
-				return 0.25f + 112.f / 16.f;
+				return 0.15f + 112.f / 16.f;
 			else if (x == 149.f / static_cast<float>(m_mapSize.x))
-				return 0.25f + 112.f / 16.f;
-			return 0.5f + 112.f / 16.f;
+				return 0.15f + 112.f / 16.f;
+			return 0.3f + 112.f / 16.f;
 		}
 		return noise.fBm(x, y, 3, 3.f, 0.3f) + 112.f / 16.f;
 		//return 0.f + 112.f / 16.f;

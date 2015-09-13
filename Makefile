@@ -39,6 +39,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/QuitScreen.cpp					\
 				Screens/FsmDemoScreen.cpp				\
 				Screens/ElevatorStreamDemo.cpp			\
+				Screens/TransitionScreen.cpp			\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\

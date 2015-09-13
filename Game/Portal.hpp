@@ -62,36 +62,53 @@ public:
 	enum State
 	{
 		Appear,
+		Activated,
 		Disappear
 	};
 
 	Portal(void);
 	virtual ~Portal(void);
 
+	class PortalActivation : public AGameObject<GameObjectType::PortalActivation>
+	{
+	public:
+		Portal *	m_portal;
+		float		m_radius;
+
+		void activate(void)
+		{
+			m_portal->appear();
+		}
+	};
+
 	void setPosition(sf::Vector2f const & position);
 	void setRadius(float radius);
 	void setBiome(ABiome & biome);
 	inline float getRadius(void) const { return m_radius; }
-	inline void appear(void) { m_state = State::Appear; }
+	void appear(void);
 	inline void disappear(void) { m_state = State::Disappear; }
+	inline bool isActivated(void) const { return (m_state == Activated); }
 
 	void update(sf::Time frameTime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	// TODO: info du biome vers lequel on va se téléporter
-	PortalParticle		m_particles;
-	sf::Vector2f		m_position;
-	sf::Shader			m_shader;
-	std::size_t			m_shaderIndex;
-	State				m_state;
-	float				m_radius;
-	float				m_timer;
-	float				m_timerMax;
-	CircleShape *		m_box;
+	PortalParticle			m_particles;
+	sf::Vector2f			m_position;
+	sf::Shader				m_shader;
+	std::size_t				m_shaderIndex;
+	std::size_t				m_maxParticle;
+	State					m_state;
+	float					m_radius;
+	float					m_timer;
+	float					m_timerMax;
+	CircleShape *			m_activationBox;
+	CircleShape *			m_box;
+	PortalActivation		m_portalActivation;
 
-	octo::SpriteAnimation			m_animation;
-	octo::AnimatedSprite			m_sprite;
+	octo::SpriteAnimation	m_animation;
+	octo::AnimatedSprite	m_sprite;
 };
 
 #endif

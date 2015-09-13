@@ -21,7 +21,7 @@
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
 	m_tilesPrev(nullptr),
-	m_transitionTimer(1.f),
+	m_transitionTimer(0.f),
 	m_transitionTimerMax(0.4f),
 	m_offset(),
 	m_vertices(nullptr),
@@ -66,6 +66,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	}
 
 	m_transitionTimerMax = biome.getTransitionDuration();
+	m_transitionTimer = m_transitionTimerMax;
 
 	// Init decors
 	setupDecors(biome);

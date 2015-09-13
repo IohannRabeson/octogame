@@ -38,7 +38,6 @@ ANpc::ANpc(ResourceKey const & npcId) :
 
 ANpc::~ANpc(void)
 {
-	PhysicsEngine::getInstance().unregisterShape(m_box);
 }
 
 void ANpc::setupIdleAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode)
