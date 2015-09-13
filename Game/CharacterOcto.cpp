@@ -109,13 +109,23 @@ void	CharacterOcto::setupAnimation()
 
 	m_danceAnimation.setFrames({
 			Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
+/*			Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {12, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {13, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {14, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),*/
 			});
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
+
+	m_danceWithMusicAnimation.setFrames({
+/*			Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {12, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {13, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {14, sf::FloatRect(), sf::Vector2f()}),*/
+			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
+			});
+	m_danceWithMusicAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_umbrellaAnimation.setFrames({
 			Frame(sf::seconds(0.2f), {49, sf::FloatRect(), sf::Vector2f()}),

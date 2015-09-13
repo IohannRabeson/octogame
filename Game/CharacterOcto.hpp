@@ -67,6 +67,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
 	octo::CharacterAnimation	m_danceAnimation;
+	octo::CharacterAnimation	m_danceWithMusicAnimation;
 	octo::CharacterAnimation	m_umbrellaAnimation;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
