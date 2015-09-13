@@ -32,5 +32,5 @@ void	TransitionScreen::update(sf::Time frameTime)
 
 void	TransitionScreen::draw(sf::RenderTarget & render) const
 {
-	render.clear(sf::Color::Red);
+	render.clear(sf::Color::Black);
 }

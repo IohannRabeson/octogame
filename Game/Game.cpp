@@ -139,9 +139,6 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 		case sf::Keyboard::R:
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
 		break;
-		case sf::Keyboard::L:
-			loadLevel("new_biome");
-		break;
 		default:
 		break;
 	}
