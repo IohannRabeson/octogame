@@ -6,6 +6,7 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
+#include "Progress.hpp"
 #include "AGameObject.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -24,6 +25,9 @@ Game::Game(void) :
 	m_musicPlayer(nullptr),
 	m_octo(nullptr)
 {
+	//TODO remove
+	Progress::getInstance().setCanWalk(true);
+
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 }
