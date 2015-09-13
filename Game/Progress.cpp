@@ -2,11 +2,13 @@
 #include "CharacterOcto.hpp"
 #include <Application.hpp>
 #include <console.hpp>
+#include <iostream>
+#include <fstream>
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
-	m_filename("qwer.osv"),
+	m_filename("save.osv"),
 	m_action(false),
 	m_walk(false),
 	m_jump(false),
@@ -53,12 +55,27 @@ Progress & Progress::getInstance()
 
 void	Progress::load(std::string const &filename)
 {
+	std::ifstream filestream(filename, std::ios::in | std::ios::binary);
+	if(!filestream)
+		return ;
 	m_filename = filename;
+	filestream.read((char *) &m_data, sizeof(struct data));
+	filestream.close();
 }
 
 void	Progress::save()
 {
 	m_data.octoPos = m_octo->getPhysicsPosition();
+	saveToFile();
+}
+
+void	Progress::saveToFile()
+{
+	std::ofstream filestream(m_filename, std::ios::out | std::ios::binary);
+	if(!filestream)
+		return;
+	filestream.write((char *) &m_data, sizeof(struct data));
+	filestream.close();
 }
 
 void	Progress::setCharacterOcto(CharacterOcto * octo)

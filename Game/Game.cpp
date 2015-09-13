@@ -74,7 +74,8 @@ void	Game::loadLevel(std::string const & fileName)
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup();
-	m_octo->setPosition(sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
+	// TODO comment test progress
+//	m_octo->setPosition(sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const

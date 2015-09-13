@@ -32,6 +32,7 @@ public:
 
 private:
 	Progress();
+	void	saveToFile();
 	struct data{
 		data() :
 			nb_nanoRobot(0u)
@@ -40,6 +41,7 @@ private:
 		data(std::size_t nb_nanoRobot, sf::Vector2f position) :
 			nb_nanoRobot(nb_nanoRobot),
 			octoPos(position)
+			//TODO add level
 			//TODO add elevator
 		{
 		}
@@ -57,7 +59,6 @@ private:
 	bool									m_doubleJump;
 	bool									m_slowFall;
 	bool									m_elevator;
-
 };
 
 #endif

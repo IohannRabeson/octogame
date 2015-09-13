@@ -16,7 +16,7 @@
 #include <Console.hpp>
 #include <DefaultTransition.hpp>
 #include "DefaultApplicationListener.hpp"
-
+#include "Progress.hpp"
 // Ecran de jeu
 #include "StateTest.hpp"
 #include "FireflyTestScreen.hpp"
@@ -80,12 +80,16 @@ int main(int argc, char **argv)
 		graphics.addKeyboardListener(&listener);
 		setupStateManager(states);
 		setupConsole(console);
+		//TODO remove
+		Progress::getInstance().load("save.osv");
 		octo::Application::run("");
 	}
 	catch (std::exception const& e)
 	{
 		std::cerr << "exception: " << e.what() << std::endl;
 	}
+	//TODO remove
+	Progress::getInstance().save();
 	octo::Application::destroy();
     return (0);
 }
