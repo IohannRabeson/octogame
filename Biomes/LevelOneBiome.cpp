@@ -202,7 +202,6 @@ Map::MapSurfaceGenerator LevelOneBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		(void)noise;
 		static float saveY = y;
 		static bool isBlock = true;
 		if (saveY != y)
@@ -218,7 +217,8 @@ Map::MapSurfaceGenerator LevelOneBiome::getMapSurfaceGenerator()
 				return 0.25f + 112.f / 16.f;
 			return 0.5f + 112.f / 16.f;
 		}
-		return 0.f + 112.f / 16.f;
+		return noise.fBm(x, y, 3, 3.f, 0.3f) + 112.f / 16.f;
+		//return 0.f + 112.f / 16.f;
 	};
 }
 
