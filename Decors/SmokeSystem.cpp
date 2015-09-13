@@ -93,16 +93,16 @@ void	SmokeSystem::updateParticle(sf::Time frameTime, Particle& particle)
 		switch (behaviour)
 		{
 			case 0:
-				position.x += std::sin(growCycle * octo::Pi2) * (0.3f * growCycle);
+				position.x += std::sin(growCycle * octo::Pi2) * frameTimeSeconds * (30.f * growCycle);
 				break;
 			case 1:
-				position.x -= std::sin(growCycle * octo::Pi2) * (0.3f * growCycle);
+				position.x -= std::sin(growCycle * octo::Pi2) * frameTimeSeconds * (30.f * growCycle);
 				break;
 			case 2:
-				position.x += std::cos(growCycle * octo::Pi2) * (0.3f * growCycle);
+				position.x += std::cos(growCycle * octo::Pi2) * frameTimeSeconds * (30.f * growCycle);
 				break;
 			case 3:
-				position.x -= std::cos(growCycle * octo::Pi2) * (0.3f * growCycle);
+				position.x -= std::cos(growCycle * octo::Pi2) * frameTimeSeconds * (30.f * growCycle);
 				break;
 			default:
 				break;
@@ -118,16 +118,16 @@ void	SmokeSystem::updateParticle(sf::Time frameTime, Particle& particle)
 		switch (behaviour)
 		{
 			case 0:
-				position.x += std::sin(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 3.f + 0.3f);
+				position.x += std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * 300.f);
 				break;
 			case 1:
-				position.x -= std::sin(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 3.f + 0.3f);
+				position.x -= std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * 300.f);
 				break;
 			case 2:
-				position.x += std::cos(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 3.f + 0.3f);
+				position.x += std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * 300.f);
 				break;
 			case 3:
-				position.x -= std::cos(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 3.f + 0.3f);
+				position.x -= std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * 300.f);
 				break;
 			default:
 				break;

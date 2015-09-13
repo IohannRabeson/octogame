@@ -9,7 +9,7 @@
 #include <iostream>
 
 LevelOneBiome::LevelOneBiome() :
-	m_name("Level-One"),
+	m_name("Level One"),
 	m_mapSize(sf::Vector2u(400u, 16u)),
 	m_mapSeed(42u),
 	m_transitionDuration(0.5f),
@@ -203,7 +203,7 @@ Map::MapSurfaceGenerator LevelOneBiome::getMapSurfaceGenerator()
 	return [this](Noise & noise, float x, float y)
 	{
 		static float saveY = y;
-		static bool isBlock = true;
+		static bool isBlock = false;
 		if (saveY != y)
 		{
 			saveY = y;
@@ -212,10 +212,10 @@ Map::MapSurfaceGenerator LevelOneBiome::getMapSurfaceGenerator()
 		if (isBlock && x > 5.f / static_cast<float>(m_mapSize.x) && x < 150.f / static_cast<float>(m_mapSize.x))
 		{
 			if (x == 6.f / static_cast<float>(m_mapSize.x))
-				return 0.15f + 112.f / 16.f;
+				return 0.25f + 112.f / 16.f;
 			else if (x == 149.f / static_cast<float>(m_mapSize.x))
-				return 0.15f + 112.f / 16.f;
-			return 0.3f + 112.f / 16.f;
+				return 0.25f + 112.f / 16.f;
+			return 0.5f + 112.f / 16.f;
 		}
 		return noise.fBm(x, y, 3, 3.f, 0.3f) + 112.f / 16.f;
 		//return 0.f + 112.f / 16.f;
