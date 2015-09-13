@@ -5,6 +5,7 @@
 # include <CharacterAnimation.hpp>
 
 # include "AGameObject.hpp"
+# include "SmokeSystem.hpp"
 # include "IPlaceable.hpp"
 
 class SpaceShip : public AGameObject<GameObjectType::SpaceShip>, public IPlaceable
@@ -29,7 +30,7 @@ private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_flyingAnimation;
 	octo::CharacterAnimation	m_brokenAnimation;
-
+	SmokeSystem					m_smoke;
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/11 01:39:16 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/09/12 20:12:05 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 #include "ResourceLoadingScreen.hpp"
 #include "QuitScreen.hpp"
 #include "ElevatorStreamDemo.hpp"
+#include "TransitionScreen.hpp"
 #include "AGameObject.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
@@ -54,6 +55,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<ElevatorStreamDemo>("elevator");
 	manager.registerState<ResourceLoadingScreen>("loading");
 	manager.registerState<QuitScreen>("quit");
+	manager.registerState<TransitionScreen>("transition");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 

@@ -44,6 +44,7 @@ public:
 	sf::Vector2f const &	getPhysicsPosition() const;
 	sf::Vector2f const &	getPosition() const;
 	sf::Vector2f			getBubblePosition() const;
+	void					setPosition(sf::Vector2f const & position);
 
 private:
 	bool	dieFall();

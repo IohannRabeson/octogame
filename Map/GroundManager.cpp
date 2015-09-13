@@ -21,7 +21,7 @@
 GroundManager::GroundManager(void) :
 	m_tiles(nullptr),
 	m_tilesPrev(nullptr),
-	m_transitionTimer(1.f),
+	m_transitionTimer(0.f),
 	m_transitionTimerMax(0.4f),
 	m_offset(),
 	m_vertices(nullptr),
@@ -31,7 +31,7 @@ GroundManager::GroundManager(void) :
 	m_decorManagerBack(200000),
 	m_decorManagerFront(200000),
 	m_decorManagerGround(200000),
-	m_nextState(GenerationState::None),
+	m_nextState(GenerationState::Next),
 	m_cycle(nullptr)
 {}
 
@@ -66,6 +66,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	}
 
 	m_transitionTimerMax = biome.getTransitionDuration();
+	m_transitionTimer = m_transitionTimerMax;
 
 	// Init decors
 	setupDecors(biome);
@@ -74,6 +75,10 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	setupGameObjects(biome, cycle);
 
 	swapMap();
+	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
+	m_offset.x = rect.left;
+	m_offset.y = rect.top;
+	updateOffset(0.f);
 }
 
 void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)

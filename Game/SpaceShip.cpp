@@ -45,6 +45,7 @@ SpaceShip::SpaceShip(SpaceShipEvents event)
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
 	m_sprite.setNextEvent(event);
+
 }
 
 void SpaceShip::setNextEvent(SpaceShipEvents event)
@@ -54,15 +55,18 @@ void SpaceShip::setNextEvent(SpaceShipEvents event)
 
 void SpaceShip::setPosition(sf::Vector2f const & position)
 {
-	m_sprite.setPosition(position.x, position.y - m_sprite.getLocalSize().y * 0.6f);
+	m_sprite.setPosition(position.x, position.y - m_sprite.getLocalSize().y * 0.467f);
+	m_smoke.setPosition(position + sf::Vector2f(140.f, -110.f));
 }
 
 void SpaceShip::update(sf::Time frameTime)
 {
 	m_sprite.update(frameTime);
+	m_smoke.update(frameTime);
 }
 
 void SpaceShip::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_sprite);
+	m_smoke.draw(render);
 }

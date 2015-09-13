@@ -10,7 +10,7 @@ SmokeSystem::SmokeSystem() :
 	m_size(10.f, 10.f),
 	m_color(255, 255, 255, 150),
 	m_velocity(0.f, -256.f),
-	m_lifeScaleFactor(10.f),
+	m_lifeScaleFactor(15.f),
 	m_engine(std::time(0)),
 	m_emitIntervalDistri(0.01f, 0.2f),
 	m_growTimeDistri(0.5f, 1.5f),
@@ -118,16 +118,16 @@ void	SmokeSystem::updateParticle(sf::Time frameTime, Particle& particle)
 		switch (behaviour)
 		{
 			case 0:
-				position.x += std::sin(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 1.f + 0.3f);
+				position.x += std::sin(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 3.f + 0.3f);
 				break;
 			case 1:
-				position.x -= std::sin(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 1.f + 0.3f);
+				position.x -= std::sin(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 3.f + 0.3f);
 				break;
 			case 2:
-				position.x += std::cos(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 1.f + 0.3f);
+				position.x += std::cos(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 3.f + 0.3f);
 				break;
 			case 3:
-				position.x -= std::cos(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 1.f + 0.3f);
+				position.x -= std::cos(lifeCycle * 0.5f * octo::Pi2) * (lifeCycle * 3.f + 0.3f);
 				break;
 			default:
 				break;

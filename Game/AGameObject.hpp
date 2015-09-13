@@ -8,13 +8,15 @@ enum class GameObjectType
 	Player = 1u,
 	Npc = 2u,
 	Portal = 4u,
-	Potion = 8u,
-	Decor = 16u,
-	Tile = 32u,
-	Elevator = 64u,
-	NpcCedric = 128u,
-	GroundTransformNanoRobot = 256u,
-	SpaceShip = 512u
+	PortalActivation = 8u,
+	Potion = 16u,
+	Decor = 32u,
+	Tile = 64u,
+	Elevator = 128u,
+	NpcCedric = 256u,
+	GroundTransformNanoRobot = 512u,
+	NanoRobot = 1024u,
+	SpaceShip = 2048u
 };
 
 /*!

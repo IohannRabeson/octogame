@@ -35,7 +35,7 @@ void GroundRock::createGroundRock(std::size_t type, sf::Vector2f const & origin,
 void GroundRock::setup(ABiome& biome)
 {
 	m_type = biome.randomInt(0u, 4u);
-	m_deep = biome.randomFloat(0.f, octo::Camera().getSize().y);
+	m_deep = biome.randomFloat(0.f, octo::Camera().getSize().y / 2.f);
 	m_color = biome.getRockColor();
 }
 

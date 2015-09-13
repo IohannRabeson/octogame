@@ -39,6 +39,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/QuitScreen.cpp					\
 				Screens/FsmDemoScreen.cpp				\
 				Screens/ElevatorStreamDemo.cpp			\
+				Screens/TransitionScreen.cpp			\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
@@ -85,6 +86,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
 				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
+				Biomes/LevelOneBiome.cpp				\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\

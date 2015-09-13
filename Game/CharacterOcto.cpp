@@ -48,7 +48,7 @@ void	CharacterOcto::setup(void)
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
-	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
+	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::PortalActivation) | static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
 	m_timeEventStartElevator = sf::Time::Zero;
@@ -359,6 +359,11 @@ void	CharacterOcto::setTopElevator(float top)
 	m_topElevator = top;
 }
 
+void	CharacterOcto::setPosition(sf::Vector2f const & position)
+{
+	m_box->setPosition(position);
+}
+
 void	CharacterOcto::collisionTileUpdate()
 {
 	if (!m_collisionTile)
@@ -652,6 +657,7 @@ void CharacterOcto::caseAction()
 	if (!m_keyAction)
 	{
 		m_keyAction = true;
+		//TODO
 		if (m_progress.canUseAction())return;
 		//		m_sprite.setNextEvent(Action);
 	}
