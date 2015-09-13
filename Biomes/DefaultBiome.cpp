@@ -119,7 +119,6 @@ DefaultBiome::DefaultBiome() :
 	// TODO define map position and number of map
 	m_instances[12] = MINIMAP_OMP;
 	m_instances[86] = TEST_MAP2_OMP;
-	m_instances[450] = NEWMAP_OMP;
 
 	// Define game objects
 	m_gameObjects[50] = GameObjectType::Portal;

@@ -5,6 +5,7 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
+#include "AGameObject.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -13,31 +14,34 @@
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
 
-Game::Game() :
+Game::Game(void) :
 	m_physicsEngine(PhysicsEngine::getInstance()),
 	m_skyCycle(nullptr),
 	m_skyManager(nullptr),
 	m_groundManager(nullptr),
 	m_parallaxScrolling(nullptr),
 	m_musicPlayer(nullptr),
-	m_octo(nullptr),
-	m_npc(nullptr)
+	m_octo(nullptr)
 {
-}
-
-void	Game::setup()
-{
-	m_biomeManager.registerBiome<DefaultBiome>("test");
-
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 }
 
-void	Game::loadLevel(std::string const& fileName)
+Game::~Game(void)
 {
-	(void)fileName;
-	// TODO
-	m_biomeManager.changeBiome("test", 0x12345);
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
+}
+
+void	Game::setup(void)
+{
+	m_biomeManager.registerBiome<DefaultBiome>("default");
+	m_biomeManager.registerBiome<DefaultBiome>("default1");
+}
+
+void	Game::loadLevel(std::string const & fileName)
+{
+	m_biomeManager.changeBiome(fileName, 0x12345);
 
 	// Reset last values
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
@@ -46,7 +50,7 @@ void	Game::loadLevel(std::string const& fileName)
 	// Reset PhysycsEngine
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
-	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count"));
+	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count")); // TODO : remove from default
 	m_physicsEngine.setGravity(sf::Vector2f(0.f, 600.f));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
@@ -63,9 +67,9 @@ void	Game::loadLevel(std::string const& fileName)
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup();
+	m_octo->setPosition(sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
 
-	// TODO: fix, for npcs, if we dont update once, value are not initialized well, and npc go through instance map
-	update(sf::seconds(0.f));
+	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 800.f));
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -90,20 +94,35 @@ void	Game::update(sf::Time frameTime)
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
 {
-	if (shapeA->getGameObject() != nullptr
-			&& gameObjectCast<CharacterOcto>(shapeA->getGameObject()) != nullptr
-			&& shapeB->getGameObject() != nullptr
-			&& gameObjectCast<ElevatorStream>(shapeB->getGameObject()) != nullptr)
+	if (shapeA->getGameObject() == nullptr || shapeB->getGameObject() == nullptr)
+		return;
+
+	if (gameObjectCast<CharacterOcto>(shapeA->getGameObject()))
+		onCollision(gameObjectCast<CharacterOcto>(shapeA->getGameObject()), shapeB->getGameObject(), collisionDirection);
+	else if (gameObjectCast<CharacterOcto>(shapeB->getGameObject()))
+		onCollision(gameObjectCast<CharacterOcto>(shapeB->getGameObject()), shapeA->getGameObject(), collisionDirection);
+}
+
+void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
+{
+	if (gameObjectCast<ElevatorStream>(gameObject))
 	{
-		m_octo->setTopElevator(gameObjectCast<ElevatorStream>(shapeB->getGameObject())->getTopY());
-		m_octo->onCollision(GameObjectType::Elevator, collisionDirection);
+		octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
+		octo->onCollision(GameObjectType::Elevator, collisionDirection);
+	}
+	else if (gameObjectCast<Portal>(gameObject))
+	{
+		//TODO
+	}
+	else if (gameObjectCast<Portal::PortalActivation>(gameObject))
+	{
+		gameObjectCast<Portal::PortalActivation>(gameObject)->activate();
 	}
 }
 
 void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection)
 {
-	if (shape->getGameObject() != nullptr
-			&& gameObjectCast<CharacterOcto>(shape->getGameObject()) != nullptr)
+	if (shape->getGameObject() && gameObjectCast<CharacterOcto>(shape->getGameObject()))
 	{
 		m_octo->onCollision(GameObjectType::Tile, collisionDirection);
 	}
@@ -120,9 +139,6 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 		case sf::Keyboard::R:
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
 		break;
-		case sf::Keyboard::L:
-			loadLevel("new_biome");
-		break;
 		default:
 		break;
 	}
@@ -134,9 +150,9 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
-	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);
