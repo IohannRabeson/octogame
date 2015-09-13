@@ -13,8 +13,8 @@ ABubble::ABubble(void) :
 
 void ABubble::createExtensionSpeak(sf::Vector2f const & position, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	sf::Vector2f leftUp(m_sizeCorner, m_sizeCorner);
-	sf::Vector2f rightUp(0.f, m_sizeCorner);
+	sf::Vector2f leftUp(-m_sizeCorner, -m_sizeCorner);
+	sf::Vector2f rightUp(0.f, -m_sizeCorner);
 	sf::Vector2f down(0.f, 0.f);
 
 	leftUp += position;
@@ -73,7 +73,7 @@ void ABubble::computePositionBubble(Type type, sf::Vector2f const & position)
 {
 	if (type == Type::Speak || type == Type::Think)
 	{
-		if (m_positionBubble.x >= position.x + m_size.x / 2.f)
+		if (m_positionBubble.x >= position.x + m_size.x / 2.f - m_sizeCorner)
 			m_positionBubble.x = position.x - m_sizeCorner + m_size.x / 2.f;
 		else if (m_positionBubble.x <= position.x - m_size.x / 2.f)
 			m_positionBubble.x = position.x - m_size.x / 2.f;

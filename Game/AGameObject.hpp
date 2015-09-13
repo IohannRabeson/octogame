@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   AGameObject.hpp                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/07/17 14:48:16 by irabeson          #+#    #+#             */
-/*   Updated: 2015/08/17 13:20:19 by jbalestr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef AGAMEOBJECT_HPP
 # define AGAMEOBJECT_HPP
 # include <type_traits>
@@ -20,10 +8,15 @@ enum class GameObjectType
 	Player = 1u,
 	Npc = 2u,
 	Portal = 4u,
-	Potion = 8u,
-	Decor = 16u,
-	Tile = 32u,
-	Elevator = 64u
+	PortalActivation = 8u,
+	Potion = 16u,
+	Decor = 32u,
+	Tile = 64u,
+	Elevator = 128u,
+	NpcCedric = 256u,
+	GroundTransformNanoRobot = 512u,
+	NanoRobot = 1024u,
+	SpaceShip = 2048u
 };
 
 /*!

@@ -39,6 +39,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/QuitScreen.cpp					\
 				Screens/FsmDemoScreen.cpp				\
 				Screens/ElevatorStreamDemo.cpp			\
+				Screens/TransitionScreen.cpp			\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
@@ -49,7 +50,10 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/ANpc.cpp							\
 				Game/ClassicNpc.cpp						\
 				Game/CedricNpc.cpp						\
-				Game/MusicPlayer.cpp
+				Game/NanoRobot.cpp						\
+				Game/GroundTransformNanoRobot.cpp		\
+				Game/SpaceShip.cpp						\
+				Game/MusicPlayer.cpp					\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
@@ -62,6 +66,7 @@ SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/AudioMenu.cpp					\
 				Bubble/ControlMenu.cpp					\
 				Bubble/YesNoMenu.cpp					\
+				Bubble/ResolutionMenu.cpp				\
 				Bubble/EmptyMenu.cpp					\
 
 SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
@@ -78,7 +83,9 @@ SRC_MAP =		Map/Map.cpp								\
 
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
+				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
+				Biomes/LevelOneBiome.cpp				\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
@@ -102,6 +109,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SunLight.cpp						\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
+				Decors/SmokeSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\

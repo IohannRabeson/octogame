@@ -1,5 +1,5 @@
-#ifndef DEFAULTBIOME_HPP
-# define DEFAULTBIOME_HPP
+#ifndef LEVELONEBIOME_HPP
+# define LEVELONEBIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -10,7 +10,7 @@
 # include <SFML/System/Vector2.hpp>
 
 
-class DefaultBiome : public ABiome
+class LevelOneBiome : public ABiome
 {
 template<class T>
 struct Range
@@ -25,7 +25,7 @@ struct Range
 };
 
 public:
-	DefaultBiome();
+	LevelOneBiome();
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;
@@ -157,7 +157,7 @@ private:
 	sf::Color											m_skyDayColor;
 	sf::Color											m_skyNightColor;
 	sf::Color											m_nightLightColor;
-	sf::Color											m_SunsetLightColor;
+	sf::Color											m_sunsetLightColor;
 	float												m_wind;
 	Range<std::size_t>									m_rainDropPerSecond;
 	static constexpr std::size_t						m_rainDropPerSecondMax = 127u;

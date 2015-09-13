@@ -40,6 +40,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	sf::Vector2f			getBubblePosition() const;
 	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
 	void					setTopElevator(float top);
+	void					setPosition(sf::Vector2f const & position);
 
 	private:
 	bool	dieFall();
