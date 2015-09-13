@@ -14,6 +14,7 @@
 # include <SFML/Graphics/RenderTexture.hpp>
 # include <SFML/Graphics/Texture.hpp>
 # include <SFML/Graphics/Sprite.hpp>
+# include <memory>
 
 class SkyCycle;
 
