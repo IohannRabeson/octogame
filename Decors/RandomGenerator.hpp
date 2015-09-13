@@ -19,8 +19,8 @@ public:
 private:
 	boost::random::mt19937							m_engine;
 	boost::random::uniform_real_distribution<float>	m_distributionFloat;
-	boost::random::uniform_int_distribution<int>		m_distributionInt;
-	boost::random::bernoulli_distribution<float>				m_distributionBool;
+	boost::random::uniform_int_distribution<int>	m_distributionInt;
+	boost::random::bernoulli_distribution<float>	m_distributionBool;
 	boost::random::piecewise_linear_distribution<>	m_distributionPiecewise;
 };
 

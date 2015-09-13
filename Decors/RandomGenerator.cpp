@@ -24,7 +24,7 @@ void RandomGenerator::setSeed(std::string const & string)
 float RandomGenerator::randomFloat(float min, float max)
 {
 	if (min >= max)
-		return 0.f;
+		return max;
 	m_distributionFloat.param(boost::random::uniform_real_distribution<float>::param_type(min, max));
 	return m_distributionFloat(m_engine);
 }
@@ -32,7 +32,7 @@ float RandomGenerator::randomFloat(float min, float max)
 int RandomGenerator::randomInt(int min, int max)
 {
 	if (min >= max)
-		return 0;
+		return max;
 	m_distributionInt.param(boost::random::uniform_int_distribution<int>::param_type(min, max));
 	return m_distributionInt(m_engine);
 }
