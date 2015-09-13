@@ -43,6 +43,8 @@ void	CharacterOcto::setup(void)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
+	m_progress.setCharacterOcto(this);
+	m_box->setPosition(m_progress.getOctoPos());
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
@@ -294,6 +296,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		collisionElevatorUpdate();
 		collisionTileUpdate();
 		commitPhysicsToGraphics();
+		commitEventToGraphics();
 		m_sprite.update(frameTime);
 		commitControlsToPhysics(frameTime.asSeconds());
 	}
@@ -494,6 +497,23 @@ void	CharacterOcto::commitPhysicsToGraphics()
 	m_sprite.setPosition(sf::Vector2f(xPos, yPos + m_deltaPositionY));
 }
 
+void	CharacterOcto::commitEventToGraphics()
+{
+	if (m_keyLeft && !m_originMove)
+	{
+		m_sprite.setScale(-1.f * m_spriteScale, 1.f * m_spriteScale);
+		m_sprite.setOrigin(m_sprite.getOrigin().x + m_sprite.getLocalSize().x, 0.f);
+		m_originMove = true;
+	}
+	else if (m_keyRight && m_originMove)
+	{
+		m_sprite.setScale(1.f * m_spriteScale, 1.f * m_spriteScale);
+		m_sprite.setOrigin(m_sprite.getOrigin().x - m_sprite.getLocalSize().x, 0.f);
+		m_originMove = false;
+	}
+}
+
+
 void	CharacterOcto::commitControlsToPhysics(float frametime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
@@ -572,13 +592,9 @@ void	CharacterOcto::caseLeft()
 	{
 		m_keyLeft = true;
 		m_keyRight = false;
-		if (!m_originMove && m_progress.canWalk())
+		if (m_onGround && m_progress.canWalk())
 		{
-			if (m_onGround)
-				m_sprite.setNextEvent(Left);
-			m_sprite.setScale(-1.f * m_spriteScale, 1.f * m_spriteScale);
-			m_sprite.setOrigin(m_sprite.getOrigin().x + m_sprite.getLocalSize().x, 0.f);
-			m_originMove = true;
+			m_sprite.setNextEvent(Left);
 		}
 	}
 }
@@ -589,13 +605,9 @@ void	CharacterOcto::caseRight()
 	{
 		m_keyRight = true;
 		m_keyLeft = false;
-		if (m_originMove && m_progress.canWalk())
+		if (m_onGround && m_progress.canWalk())
 		{
-			if (m_onGround)
-				m_sprite.setNextEvent(Right);
-			m_sprite.setScale(1.f * m_spriteScale, 1.f * m_spriteScale);
-			m_sprite.setOrigin(m_sprite.getOrigin().x - m_sprite.getLocalSize().x, 0.f);
-			m_originMove = false;
+			m_sprite.setNextEvent(Right);
 		}
 	}
 }
@@ -695,9 +707,14 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	return true;
 }
 
+sf::Vector2f const &	CharacterOcto::getPhysicsPosition() const
+{
+	return m_box->getPosition();
+}
+
 sf::Vector2f const &	CharacterOcto::getPosition() const
 {
-	return (m_box->getBaryCenter());
+	return m_box->getRenderCenter();
 }
 
 sf::Vector2f	CharacterOcto::getBubblePosition() const

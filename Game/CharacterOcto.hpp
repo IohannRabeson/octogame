@@ -29,7 +29,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		StartElevator,
 		Elevator,
 	};
-	public:
+public:
 	CharacterOcto();
 	~CharacterOcto();
 
@@ -39,12 +39,13 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 
 	bool					onPressed(sf::Event::KeyEvent const& event);
 	bool					onReleased(sf::Event::KeyEvent const& event);
-	sf::Vector2f const &	getPosition() const;
-	sf::Vector2f			getBubblePosition() const;
 	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
 	void					setTopElevator(float top);
+	sf::Vector2f const &	getPhysicsPosition() const;
+	sf::Vector2f const &	getPosition() const;
+	sf::Vector2f			getBubblePosition() const;
 
-	private:
+private:
 	bool	dieFall();
 	bool	endDeath();
 	void	timeEvent(sf::Time frameTime);
@@ -55,6 +56,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	collisionElevatorUpdate();
 	void	commitControlsToPhysics(float frametime);
 	void	commitPhysicsToGraphics();
+	void	commitEventToGraphics();
 	void	caseLeft();
 	void	caseRight();
 	void	caseSpace();
@@ -62,7 +64,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	caseAction();
 	void	dance();
 
-	private:
+private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;

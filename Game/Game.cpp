@@ -5,6 +5,7 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -23,6 +24,10 @@ Game::Game() :
 	m_octo(nullptr),
 	m_npc(nullptr)
 {
+	//TODO remove
+	Progress::getInstance().setCanWalk(true);
+	Progress::getInstance().setCanUseElevator(true);
+	Progress::getInstance().setCanJump(true);
 }
 
 void	Game::setup()
