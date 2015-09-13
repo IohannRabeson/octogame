@@ -173,7 +173,6 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.4f), {73, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_elevatorAnimation.setLoop(octo::LoopMode::Loop);
-
 }
 
 void	CharacterOcto::setupMachine()
