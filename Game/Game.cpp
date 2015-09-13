@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "DefaultBiome.hpp"
+#include "LevelOneBiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -35,6 +36,7 @@ Game::~Game(void)
 
 void	Game::setup(void)
 {
+	m_biomeManager.registerBiome<LevelOneBiome>("one");
 	m_biomeManager.registerBiome<DefaultBiome>("default");
 	m_biomeManager.registerBiome<DefaultBiome>("default1");
 }
@@ -47,6 +49,7 @@ void	Game::loadLevel(std::string const & fileName)
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	postEffect.removeEffects();
 
+	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 800.f));
 	// Reset PhysycsEngine
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
@@ -68,8 +71,6 @@ void	Game::loadLevel(std::string const & fileName)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup();
 	m_octo->setPosition(sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
-
-	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 800.f));
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
