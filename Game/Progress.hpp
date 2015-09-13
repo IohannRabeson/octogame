@@ -15,6 +15,7 @@ public:
 	void			setCharacterOcto(CharacterOcto * octo);
 	inline void		setOctoPos(sf::Vector2f position){ m_data.octoPos = position; }
 	sf::Vector2f	getOctoPos();
+	inline sf::Vector2f const &getCameraPos(){ return m_data.cameraPos; }
 
 	inline void		setCanUseAction(bool action){ m_action = action; }
 	inline void		setCanWalk(bool walk){ m_walk = walk; }
@@ -32,15 +33,18 @@ public:
 
 private:
 	Progress();
+	void	init();
 	void	saveToFile();
 	struct data{
 		data() :
-			nb_nanoRobot(0u)
+			nb_nanoRobot(0u),
+			octoPos(sf::Vector2f(0.f, 800.f))
 		{
 		}
-		data(std::size_t nb_nanoRobot, sf::Vector2f position) :
+		data(std::size_t nb_nanoRobot, sf::Vector2f octoPos, sf::Vector2f cameraPos) :
 			nb_nanoRobot(nb_nanoRobot),
-			octoPos(position)
+			octoPos(octoPos),
+			cameraPos(cameraPos)
 			//TODO add level
 			//TODO add elevator
 		{
@@ -48,6 +52,7 @@ private:
 
 		std::size_t		nb_nanoRobot;
 		sf::Vector2f	octoPos;
+		sf::Vector2f	cameraPos;
 	};
 	static std::unique_ptr<Progress>		m_instance;
 	CharacterOcto *							m_octo;

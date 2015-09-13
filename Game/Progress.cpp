@@ -1,6 +1,7 @@
 #include "Progress.hpp"
 #include "CharacterOcto.hpp"
 #include <Application.hpp>
+#include <Camera.hpp>
 #include <console.hpp>
 #include <iostream>
 #include <fstream>
@@ -61,11 +62,18 @@ void	Progress::load(std::string const &filename)
 	m_filename = filename;
 	filestream.read((char *) &m_data, sizeof(struct data));
 	filestream.close();
+	init();
+}
+
+void	Progress::init()
+{
+	//TODO
 }
 
 void	Progress::save()
 {
 	m_data.octoPos = m_octo->getPhysicsPosition();
+	m_data.cameraPos = octo::Application::getCamera().getCenter();
 	saveToFile();
 }
 

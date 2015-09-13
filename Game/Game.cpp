@@ -27,7 +27,6 @@ Game::Game(void) :
 {
 	//TODO remove
 	Progress::getInstance().setCanWalk(true);
-
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 }
@@ -53,6 +52,7 @@ void	Game::loadLevel(std::string const & fileName)
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	postEffect.removeEffects();
 
+//	octo::Application::getCamera().setCenter(Progress::getInstance().getCameraPos());
 	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 800.f));
 	// Reset PhysycsEngine
 	m_physicsEngine.unregisterAllShapes();
