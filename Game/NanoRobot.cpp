@@ -3,6 +3,7 @@
 #include "Tile.hpp"
 #include "PhysicsEngine.hpp"
 #include "CircleShape.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <sstream>
@@ -73,7 +74,7 @@ void NanoRobot::transfertToOcto(void)
 	m_swarm.getFirefly(0u).speed = 1.f;
 	m_text->setActive(true);
 	m_state = Speak;
-	// TODO: get the Progress instance and add nanorobot to the count
+	Progress::getInstance().addNanoRobot();
 }
 
 void NanoRobot::setPosition(sf::Vector2f const & position)

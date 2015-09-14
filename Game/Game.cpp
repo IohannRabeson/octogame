@@ -40,7 +40,8 @@ Game::~Game(void)
 
 void	Game::setup(void)
 {
-	m_biomeManager.registerBiome<LevelOneBiome>("Level-One");
+	//TODO name == biome name;
+	m_biomeManager.registerBiome<LevelOneBiome>("Level_One");
 	m_biomeManager.registerBiome<DefaultBiome>("default");
 	m_biomeManager.registerBiome<DefaultBiome>("default1");
 }
@@ -149,10 +150,12 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	switch (event.code)
 	{
 		case sf::Keyboard::E:
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+			if (Progress::getInstance().getNanoRobotCount())
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 		break;
 		case sf::Keyboard::R:
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			if (Progress::getInstance().getNanoRobotCount())
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
 		break;
 		default:
 		break;

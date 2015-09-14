@@ -52,14 +52,16 @@ Progress & Progress::getInstance()
 
 void	Progress::setup()
 {
+	m_mapSize = sf::Vector2u(0u, 0u);
+	m_octo = nullptr;
 	m_filename = "save.osv";
+	m_data = data();
 	m_action = false;
 	m_walk = false;
 	m_jump = false;
 	m_doubleJump = false;
 	m_slowFall = false;
 	m_elevator = false;
-	m_data = data();
 }
 
 void	Progress::load(std::string const &filename)
@@ -88,8 +90,6 @@ void	Progress::save()
 	m_data.cameraPos = octo::Application::getCamera().getCenter();
 	std::cout << "camera:" << m_data.cameraPos.x << "|" << m_data.cameraPos.y << std::endl;
 	std::cout << "octo:" << m_data.octoPos.x << "|" << m_data.octoPos.y << std::endl;
-	//TODO REMOVE offset
-	m_data.octoPos.y -= 150.f;
 	//TODO clean
 	if (m_data.octoPos.x < 0){
 		while (m_data.octoPos.x < 0)

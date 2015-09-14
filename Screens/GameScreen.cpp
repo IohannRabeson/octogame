@@ -18,7 +18,7 @@ void	GameScreen::start()
 	Progress &				progress = Progress::getInstance();
 	graphics.addKeyboardListener(this);
 
-	progress.setDefaultBiome("Level-One");
+	progress.setDefaultBiome("Level_One");
 	progress.load("save.osv");
 	m_game.reset(new Game());
 	m_game->setup();

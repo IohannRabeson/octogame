@@ -22,12 +22,15 @@ public:
 	sf::Vector2f const&			getOctoPos();
 	inline sf::Vector2f const&	getCameraPos(){ return m_data.cameraPos; }
 
-	inline void		setCanUseAction(bool action){ m_action = action; }
-	inline void		setCanWalk(bool walk){ m_walk = walk; }
-	inline void		setCanJump(bool jump){ m_jump = jump; }
-	inline void		setCanDoubleJump(bool doubleJump){ m_doubleJump = doubleJump; }
-	inline void		setCanSlowFall(bool slowFall){ m_slowFall = slowFall; }
-	inline void		setCanUseElevator(bool Elevator){ m_elevator = Elevator; }
+	inline void				addNanoRobot(){ m_data.nanoRobotCount++; }
+	inline std::size_t		getNanoRobotCount(){ return m_data.nanoRobotCount; }
+
+	inline void				setCanUseAction(bool action){ m_action = action; }
+	inline void				setCanWalk(bool walk){ m_walk = walk; }
+	inline void				setCanJump(bool jump){ m_jump = jump; }
+	inline void				setCanDoubleJump(bool doubleJump){ m_doubleJump = doubleJump; }
+	inline void				setCanSlowFall(bool slowFall){ m_slowFall = slowFall; }
+	inline void				setCanUseElevator(bool Elevator){ m_elevator = Elevator; }
 
 	bool			canUseAction();
 	bool			canWalk();
