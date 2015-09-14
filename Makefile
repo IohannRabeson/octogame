@@ -45,6 +45,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
 				Game/CharacterNpc.cpp					\
 				Game/CharacterOcto.cpp					\
+				Game/OctoSound.cpp						\
 				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp					\
 				Game/ANpc.cpp							\

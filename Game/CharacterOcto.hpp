@@ -6,7 +6,7 @@
 # include "AGameObject.hpp"
 # include "RectangleShape.hpp"
 # include "NanoRobot.hpp"
-
+# include "OctoSound.hpp"
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 

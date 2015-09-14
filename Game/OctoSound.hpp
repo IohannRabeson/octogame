@@ -9,3 +9,5 @@ public:
 	OctoSound();
 private:
 };
+
+#endif
