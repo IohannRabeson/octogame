@@ -8,7 +8,7 @@ SpaceShip::SpaceShip(SpaceShipEvents event)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(SPACESHIP_OSS));
-	m_sprite.setScale(0.6f, 0.6f);
+	m_sprite.setScale(1.f, 1.f);
 
 	typedef octo::CharacterAnimation::Frame		Frame;
 	std::vector<Frame>							frames;
@@ -46,6 +46,7 @@ SpaceShip::SpaceShip(SpaceShipEvents event)
 	m_sprite.restart();
 	m_sprite.setNextEvent(event);
 
+	m_smoke.setVelocity(sf::Vector2f(0.f, -140.f));
 }
 
 void SpaceShip::setNextEvent(SpaceShipEvents event)
@@ -55,8 +56,8 @@ void SpaceShip::setNextEvent(SpaceShipEvents event)
 
 void SpaceShip::setPosition(sf::Vector2f const & position)
 {
-	m_sprite.setPosition(position.x, position.y - m_sprite.getLocalSize().y * 0.467f);
-	m_smoke.setPosition(position + sf::Vector2f(140.f, -110.f));
+	m_sprite.setPosition(position.x, position.y - m_sprite.getLocalSize().y * 0.775f);
+	m_smoke.setPosition(position + sf::Vector2f(220.f, -200.f));
 }
 
 void SpaceShip::update(sf::Time frameTime)

@@ -23,6 +23,7 @@ public:
 	void			setPosition(sf::Vector2f const & position);
 	void			setVelocity(sf::Vector2f const & direction);
 	void			setEmitTimeMax(float min, float max);
+	void			setColor(sf::Color const & color);
 
 private:
 	void			createOctogon(sf::Vector2f const & size,
