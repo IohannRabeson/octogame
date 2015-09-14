@@ -13,8 +13,8 @@ SmokeSystem::SmokeSystem() :
 	m_lifeScaleFactor(15.f),
 	m_engine(std::time(0)),
 	m_emitIntervalDistri(0.01f, 0.2f),
-	m_growTimeDistri(0.5f, 1.5f),
-	m_lifeTimeDistri(2.5f, 4.f),
+	m_growTimeDistri(1.5f, 2.5f),
+	m_lifeTimeDistri(2.5f, 4.5f),
 	m_sideDistri(0, 3),
 	m_scaleDistri(1.f, 2.5f)
 {
@@ -171,4 +171,9 @@ void	SmokeSystem::setVelocity(sf::Vector2f const & velocity)
 void	SmokeSystem::setEmitTimeMax(float min, float max)
 {
 	m_emitIntervalDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
+}
+
+void	SmokeSystem::setColor(sf::Color const & color)
+{
+	m_color = color;
 }
