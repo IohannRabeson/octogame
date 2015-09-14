@@ -4,6 +4,7 @@
 # include <string>
 # include <memory>
 
+class ABiome;
 class CharacterOcto;
 class Progress
 {
@@ -11,11 +12,15 @@ public:
 	static Progress & getInstance(void);
 	void	load(std::string const & filename);
 	void	save();
+	void	reset();
 
-	void			setCharacterOcto(CharacterOcto * octo);
-	inline void		setOctoPos(sf::Vector2f position){ m_data.octoPos = position; }
-	sf::Vector2f	getOctoPos();
-	inline sf::Vector2f const &getCameraPos(){ return m_data.cameraPos; }
+	inline void					setDefaultBiome(std::string name){ m_data.biomeName = name; }
+	inline std::string const&	getLevelName(){ return m_data.biomeName; }
+	void						setupInfoLevel(ABiome & biome, sf::Vector2f octoPos);
+	void						setCharacterOcto(CharacterOcto * octo);
+	inline void					setOctoPos(sf::Vector2f position){ m_data.octoPos = position; }
+	sf::Vector2f const&			getOctoPos();
+	inline sf::Vector2f const&	getCameraPos(){ return m_data.cameraPos; }
 
 	inline void		setCanUseAction(bool action){ m_action = action; }
 	inline void		setCanWalk(bool walk){ m_walk = walk; }
@@ -35,26 +40,31 @@ private:
 	Progress();
 	void	init();
 	void	saveToFile();
+	void	setup();
 	struct data{
 		data() :
-			nb_nanoRobot(0u),
-			octoPos(sf::Vector2f(0.f, 800.f))
+			nanoRobotCount(0u),
+			octoPos(sf::Vector2f(0.f, 800.f)),
+			cameraPos(sf::Vector2f(0.f, 800.f)),
+			biomeName("")
 		{
 		}
-		data(std::size_t nb_nanoRobot, sf::Vector2f octoPos, sf::Vector2f cameraPos) :
-			nb_nanoRobot(nb_nanoRobot),
+		data(std::size_t nanoRobot, sf::Vector2f octoPos, sf::Vector2f cameraPos, std::string biomeName) :
+			nanoRobotCount(nanoRobot),
 			octoPos(octoPos),
-			cameraPos(cameraPos)
+			cameraPos(cameraPos),
+			biomeName(biomeName)
 			//TODO add level
 			//TODO add elevator
 		{
 		}
-
-		std::size_t		nb_nanoRobot;
+		std::size_t		nanoRobotCount;
 		sf::Vector2f	octoPos;
 		sf::Vector2f	cameraPos;
+		std::string		biomeName;
 	};
 	static std::unique_ptr<Progress>		m_instance;
+	sf::Vector2u							m_mapSize;
 	CharacterOcto *							m_octo;
 	std::string								m_filename;
 	data									m_data;
