@@ -44,7 +44,7 @@ void	CharacterOcto::setup(void)
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
-	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::PortalActivation) | static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::Elevator);
+	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::PortalActivation) | static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot) | static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
 	m_timeEventFall = sf::Time::Zero;
@@ -269,6 +269,12 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_collisionTile = false;
 	m_collisionElevator = false;
+
+	for (auto & robot : m_nanoRobots)
+	{
+		robot->update(frameTime);
+		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
+	}
 }
 
 void	CharacterOcto::timeEvent(sf::Time frameTime)
@@ -295,6 +301,9 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	m_sprite.draw(render, states);
+
+	for (auto & robot : m_nanoRobots)
+		robot->draw(render, states);
 }
 
 void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisionDirection)
@@ -322,6 +331,11 @@ void	CharacterOcto::setTopElevator(float top)
 void	CharacterOcto::setPosition(sf::Vector2f const & position)
 {
 	m_box->setPosition(position);
+}
+
+void	CharacterOcto::giveNanoRobot(NanoRobot * robot)
+{
+	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
 }
 
 void	CharacterOcto::collisionTileUpdate()
