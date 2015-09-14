@@ -1,7 +1,6 @@
 #ifndef GAME_HPP
 # define GAME_HPP
 
-# include "CharacterNpc.hpp"
 # include "SkyCycle.hpp"
 # include "BiomeManager.hpp"
 # include "SkyManager.hpp"
