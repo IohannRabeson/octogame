@@ -6,6 +6,7 @@
 # include "AGameObject.hpp"
 # include "Progress.hpp"
 # include "RectangleShape.hpp"
+# include "NanoRobot.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -45,6 +46,7 @@ public:
 	sf::Vector2f const &	getPosition() const;
 	sf::Vector2f			getBubblePosition() const;
 	void					setPosition(sf::Vector2f const & position);
+	void					giveNanoRobot(NanoRobot * robot);
 
 private:
 	bool	dieFall();
@@ -79,6 +81,7 @@ private:
 	octo::CharacterAnimation	m_elevatorAnimation;
 	RectangleShape*				m_box;
 	Progress &					m_progress;
+	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
 
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
