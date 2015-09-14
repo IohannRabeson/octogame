@@ -246,6 +246,11 @@ void	ElevatorStream::setPosition(sf::Vector2f const & position)
 
 	m_box->setPosition(m_position.x - (getWidth() / 2.f), posBox.y);
 	m_particles->setPosition(m_position);
+	sf::Vector2f const & pos = m_particles->getPosition();
+	m_spriteBottomFront.setPosition(pos + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
+	m_spriteBottomBack.setPosition(pos + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
+	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + pos.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+	m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + pos.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
 	setHeight(m_position.y - getTopY());
 }
 
@@ -305,11 +310,6 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
 	createRay();
 
-	sf::Vector2f const & position = m_particles->getPosition();
-	m_spriteBottomFront.setPosition(position + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
-	m_spriteBottomBack.setPosition(position + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
-	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
-	m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + position.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
 	m_spriteBottomFront.update(frameTime);
 	m_spriteBottomBack.update(frameTime);
 	m_spriteTopFront.update(frameTime);
