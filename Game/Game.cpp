@@ -7,6 +7,7 @@
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
 #include "AGameObject.hpp"
+#include "GroundTransformNanoRobot.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -104,6 +105,13 @@ void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const
 		onCollision(gameObjectCast<CharacterOcto>(shapeB->getGameObject()), shapeA->getGameObject(), collisionDirection);
 }
 
+void Game::transfertNanoRobot(NanoRobot * robot)
+{
+	NanoRobot * ptr = m_groundManager->getNanoRobot(robot);
+	ptr->transfertToOcto();
+	m_octo->giveNanoRobot(ptr);
+}
+
 void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
 {
 	if (gameObjectCast<ElevatorStream>(gameObject))
@@ -118,6 +126,10 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 	else if (gameObjectCast<Portal::PortalActivation>(gameObject))
 	{
 		gameObjectCast<Portal::PortalActivation>(gameObject)->activate();
+	}
+	else if (gameObjectCast<GroundTransformNanoRobot>(gameObject))
+	{
+		transfertNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
 	}
 }
 
