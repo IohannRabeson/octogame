@@ -50,21 +50,20 @@ Noise::Noise(std::size_t seed) :
 	m_closest.resize(MaxClosest, std::numeric_limits<float>::max());
 }
 
+#include <iostream>
+#include <boost/range/algorithm.hpp>
 void Noise::setSeed(std::size_t seed)
 {
 	m_seed = seed;
 	m_permutation.resize(256);
 	std::iota(m_permutation.begin(), m_permutation.end(), 0);
-	/*
-	std::default_random_engine engine(seed);
-	std::shuffle(m_permutation.begin(), m_permutation.end(), engine);
-	*/
 	boost::mt19937 generator(seed);
-	boost::uniform_int<> uni_dist;
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > randomNumber(generator, uni_dist);
+	boost::uniform_int<int> uni_dist;
+	boost::variate_generator<boost::mt19937&, boost::uniform_int<int> > randomNumber(generator, uni_dist);
 
-	random_shuffle(m_permutation.begin(), m_permutation.end(), randomNumber);
+	boost::random_shuffle(m_permutation, randomNumber);
 	m_permutation.insert(m_permutation.end(), m_permutation.begin(), m_permutation.end());
+	std::cout << m_permutation[0] << std::endl;
 }
 
 float Noise::noise(float x, float y)
