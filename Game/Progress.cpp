@@ -4,7 +4,7 @@
 #include "ABiome.hpp"
 #include <Application.hpp>
 #include <Camera.hpp>
-#include <console.hpp>
+#include <Console.hpp>
 #include <iostream>
 #include <fstream>
 
