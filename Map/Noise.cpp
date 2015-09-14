@@ -4,6 +4,9 @@
 #include <algorithm>
 #include <limits>
 
+//TODO: use only necessary includes
+#include <boost/random.hpp>
+
 Noise::Noise(void) :
 	Noise(0u)
 {
@@ -52,8 +55,11 @@ void Noise::setSeed(std::size_t seed)
 	m_seed = seed;
 	m_permutation.resize(256);
 	std::iota(m_permutation.begin(), m_permutation.end(), 0);
-	std::default_random_engine engine(seed);
-	std::shuffle(m_permutation.begin(), m_permutation.end(), engine);
+	boost::random::mt19937 generator(seed);
+	boost::random::uniform_int_distribution<int> uni_dist(0, 255);
+	for (std::size_t i = 0; i < 1500; i++)
+		std::swap(m_permutation[uni_dist(generator)], m_permutation[uni_dist(generator)]);
+
 	m_permutation.insert(m_permutation.end(), m_permutation.begin(), m_permutation.end());
 }
 
