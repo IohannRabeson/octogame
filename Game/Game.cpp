@@ -109,19 +109,15 @@ void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const
 		onCollisionEvent(gameObjectCast<CharacterOcto::OctoEvent>(shapeA->getGameObject())->m_octo, shapeB->getGameObject(), collisionDirection);
 }
 
-void Game::transfertNanoRobot(NanoRobot * robot)
-{
-	NanoRobot * ptr = m_groundManager->getNanoRobot(robot);
-	ptr->transfertToOcto();
-	m_octo->giveNanoRobot(ptr);
-}
-
 void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
 {
 	if (gameObjectCast<ElevatorStream>(gameObject))
 	{
-		octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
-		octo->onCollision(GameObjectType::Elevator, collisionDirection);
+		if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
+		{
+			octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
+			octo->onCollision(GameObjectType::Elevator, collisionDirection);
+		}
 	}
 	else if (gameObjectCast<Portal>(gameObject))
 	{
@@ -130,12 +126,20 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 	else if (gameObjectCast<GroundTransformNanoRobot>(gameObject))
 	{
 		if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
-			transfertNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
+		{
+			NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
+			ptr->transfertToOcto();
+			m_octo->giveNanoRobot(ptr);
+		}
 	}
 	else if (gameObjectCast<RepairNanoRobot>(gameObject))
 	{
 		if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling())
-			transfertNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
+		{
+			NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
+			ptr->transfertToOcto();
+			m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
+		}
 	}
 }
 
@@ -145,7 +149,7 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 	(void)collisionDirection;
 	if (gameObjectCast<ElevatorStream>(gameObject))
 	{
-		gameObjectCast<ElevatorStream>(gameObject)->activate();
+		octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
 	}
 	else if (gameObjectCast<Portal>(gameObject))
 	{

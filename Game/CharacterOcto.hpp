@@ -11,6 +11,9 @@
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 
+class ElevatorStream;
+class RepairNanoRobot;
+
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	public octo::DefaultKeyboardListener,
 	public sf::Drawable
@@ -52,6 +55,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void					setTopElevator(float top);
 	void					setPosition(sf::Vector2f const & position);
 	void					giveNanoRobot(NanoRobot * robot);
+	void					giveRepairNanoRobot(RepairNanoRobot * robot);
+	void					repairElevator(ElevatorStream & elevator);
 
 	private:
 	bool	dieFall();
@@ -85,6 +90,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	CircleShape *				m_eventBox;
 	OctoEvent					m_octoEvent;
 	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
+	RepairNanoRobot *			m_repairNanoRobot;
 
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
@@ -112,6 +118,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool						m_keyUp;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
+	bool						m_collisionElevatorEvent;
 };
 
 #endif

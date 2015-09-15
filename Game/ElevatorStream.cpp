@@ -266,13 +266,13 @@ void	ElevatorStream::setPosition(sf::Vector2f const & position)
 	sf::Vector2f const &	posBox = m_box->getPosition();
 
 	m_box->setPosition(m_position.x - (getWidth() / 2.f), posBox.y);
-	m_particles->setPosition(m_position);
-	sf::Vector2f const & pos = m_particles->getPosition();
-	m_spriteBottomFront.setPosition(pos + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
-	m_spriteBottomBack.setPosition(pos + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
-	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + pos.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
-	m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + pos.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
-	setHeight(m_position.y - getTopY());
+	m_spriteBottomFront.setPosition(m_position + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
+	m_spriteBottomBack.setPosition(m_position + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
+	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+	m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+
+	m_particles->setPosition(m_position - sf::Vector2f(0.f, 100.f));
+	setHeight(m_position.y - getTopY() - 100.f);
 }
 
 float	ElevatorStream::getHeight(void) const
@@ -300,6 +300,11 @@ sf::Vector2f const & ElevatorStream::getPosition(void) const
 	return m_position;
 }
 
+float ElevatorStream::getRepairAdvancement(void) const
+{
+	return m_timer.asSeconds() / m_timerMax.asSeconds();
+}
+
 bool ElevatorStream::isActivated(void) const
 {
 	return (m_state == Activated);
@@ -307,7 +312,7 @@ bool ElevatorStream::isActivated(void) const
 
 void	ElevatorStream::activate(void)
 {
-	if (m_state == Disappear)
+	if (m_state != Activated)
 		m_state = Appear;
 }
 
@@ -355,6 +360,9 @@ void	ElevatorStream::update(sf::Time frameTime)
 			m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
 			break;
 		case Disappear:
+			m_timer -= frameTime;
+			if (m_timer < sf::Time::Zero)
+				m_timer = sf::Time::Zero;
 			break;
 		default:
 			break;
@@ -366,6 +374,9 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_spriteBottomBack.update(frameTime);
 	m_spriteTopFront.update(frameTime);
 	m_spriteTopBack.update(frameTime);
+
+	if (m_state != Activated)
+		m_state = Disappear;
 }
 
 void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
@@ -377,8 +388,7 @@ void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 	states.shader = &m_shader;
 	if (m_state == Activated)
 		m_particles->draw(render, states);
-	if (m_state == Activated || m_state == Appear)
-		render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
+	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
 }
 
 void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
