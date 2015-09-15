@@ -50,7 +50,6 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/ANpc.cpp							\
 				Game/ClassicNpc.cpp						\
 				Game/CedricNpc.cpp						\
-				Game/Progress.cpp						\
 				Game/NanoRobot.cpp						\
 				Game/GroundTransformNanoRobot.cpp		\
 				Game/SpaceShip.cpp						\
