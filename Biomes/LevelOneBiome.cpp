@@ -10,7 +10,7 @@
 
 LevelOneBiome::LevelOneBiome() :
 	m_name("Level One"),
-	m_mapSize(sf::Vector2u(400u, 16u)),
+	m_mapSize(sf::Vector2u(700u, 16u)),
 	m_mapSeed(42u),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
@@ -30,7 +30,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(7u, 8u),
-	m_treeCount(1u, 1u),
+	m_treeCount(10u, 10u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(4u, 8u),
 	m_starCount(500u, 800u),
@@ -100,7 +100,8 @@ LevelOneBiome::LevelOneBiome() :
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
-	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
+	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f)),
+	m_indexTreePos(0u)
 {
 	m_generator.setSeed(m_name);
 #ifndef NDEBUG
@@ -117,11 +118,13 @@ LevelOneBiome::LevelOneBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[300] = GameObjectType::Portal;
-	m_gameObjects[270] = GameObjectType::FranfranNpc;
+	m_gameObjects[550] = GameObjectType::Portal;
+	m_gameObjects[520] = GameObjectType::FranfranNpc;
 	m_gameObjects[135] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 135;
 	m_gameObjects[8] = GameObjectType::SpaceShip;
+
+	m_treePos = {30, 400, 406, 409, 420, 429, 440, 454, 459, 475};
 }
 
 void			LevelOneBiome::setup(std::size_t seed)
@@ -429,7 +432,8 @@ sf::Color		LevelOneBiome::getLeafColor()
 
 std::size_t		LevelOneBiome::getTreePositionX()
 {
-	return (25);
+	m_indexTreePos++;
+	return (m_treePos[m_indexTreePos]);
 }
 
 sf::Vector2f	LevelOneBiome::getCrystalSize()
