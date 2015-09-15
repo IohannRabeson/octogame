@@ -57,7 +57,6 @@ private:
 			octoPos(octoPos),
 			cameraPos(cameraPos),
 			biomeName(biomeName)
-			//TODO add level
 			//TODO add elevator
 		{
 		}
