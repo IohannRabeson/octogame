@@ -2,6 +2,7 @@
 # define SPARKSYSTEM_HPP
 
 # include <ParticleSystem.hpp>
+# include <random>
 
 class SparkSystem : public octo::ParticleSystem<sf::Time, sf::Time, float>
 {
