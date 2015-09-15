@@ -1,8 +1,8 @@
 cedric.oss=Si tu bois une potion je bois une potion !
-cedric.oss=Tu connais Tru Blood ?
+cedric.oss=Tu connais True Blood ?
 cedric.oss=Day men ohohoh fighter of the Night men ohoho, champion of the sun...
 octo_complete.oss=bonjour
 lucien.oss=Tant pis pour tout
-franfran.oss=J'ai pas faim !
+franfran.oss=Avec les portails tu peux aller visiter de nouveaux horizons. Peace.
 julien.oss=Le violet c'est cool
-nano_ground_transform.oss=Maintenant tu peux bouger la map !
+nano_ground_transform.oss=Bienvenue jeune cephalopode. Grace a moi tu peux maintenant manipuler ton environement avec les touches E et R.

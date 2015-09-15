@@ -10,7 +10,7 @@
 
 LevelOneBiome::LevelOneBiome() :
 	m_name("Level One"),
-	m_mapSize(sf::Vector2u(700u, 16u)),
+	m_mapSize(sf::Vector2u(600u, 16u)),
 	m_mapSeed(42u),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
@@ -63,7 +63,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_treeDepth(5u, 5u),
 	m_treeSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
-	m_treeColor(201, 201, 201),
+	m_treeColor(188, 206, 213),
 	m_treeAngle(15.f, 75.f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(143, 208, 202),
@@ -118,13 +118,13 @@ LevelOneBiome::LevelOneBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[550] = GameObjectType::Portal;
-	m_gameObjects[520] = GameObjectType::FranfranNpc;
+	m_gameObjects[450] = GameObjectType::Portal;
+	m_gameObjects[435] = GameObjectType::FranfranNpc;
 	m_gameObjects[135] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 135;
 	m_gameObjects[8] = GameObjectType::SpaceShip;
 
-	m_treePos = {30, 400, 406, 409, 420, 429, 440, 454, 459, 475};
+	m_treePos = {36, 300, 306, 309, 320, 329, 340, 354, 359, 375};
 }
 
 void			LevelOneBiome::setup(std::size_t seed)
@@ -432,8 +432,7 @@ sf::Color		LevelOneBiome::getLeafColor()
 
 std::size_t		LevelOneBiome::getTreePositionX()
 {
-	m_indexTreePos++;
-	return (m_treePos[m_indexTreePos]);
+	return (m_treePos[m_indexTreePos++]);
 }
 
 sf::Vector2f	LevelOneBiome::getCrystalSize()

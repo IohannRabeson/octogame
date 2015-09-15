@@ -17,14 +17,14 @@ FranfranNpc::FranfranNpc(void) :
 void FranfranNpc::setup(void)
 {
 	setupIdleAnimation({
-			FramePair(0.5f, 0u),
-			FramePair(0.5f, 1u),
-			FramePair(0.5f, 2u),
-			FramePair(0.5f, 3u),
-			FramePair(0.5f, 4u),
-			FramePair(0.5f, 3u),
-			FramePair(0.5f, 2u),
-			FramePair(0.5f, 1u)}, octo::LoopMode::Loop);
+			FramePair(0.3f, 0u),
+			FramePair(0.3f, 1u),
+			FramePair(0.3f, 2u),
+			FramePair(0.3f, 3u),
+			FramePair(0.3f, 4u),
+			FramePair(0.3f, 3u),
+			FramePair(0.3f, 2u),
+			FramePair(0.3f, 1u)}, octo::LoopMode::Loop);
 
 	setupWalkAnimation({
 			FramePair(0.5f, 0u),
@@ -37,16 +37,18 @@ void FranfranNpc::setup(void)
 			FramePair(0.5f, 1u)}, octo::LoopMode::Loop);
 
 	setupSpecial1Animation({
-			FramePair(0.5f, 6u),
-			FramePair(0.5f, 7u),
-			FramePair(0.5f, 8u),
-			FramePair(0.5f, 9u),
-			FramePair(0.5f, 10u),
-			FramePair(0.5f, 11u),
-			FramePair(0.5f, 10u),
-			FramePair(0.5f, 9u),
-			FramePair(0.5f, 8u),
-			FramePair(0.5f, 7u)}, octo::LoopMode::NoLoop);
+			FramePair(0.3f, 6u),
+			FramePair(0.3f, 7u),
+			FramePair(0.3f, 8u),
+			FramePair(0.3f, 9u),
+			FramePair(0.3f, 10u),
+			FramePair(0.3f, 11u),
+			FramePair(0.3f, 12u),
+			FramePair(0.3f, 13u),
+			FramePair(0.3f, 14u),
+			FramePair(0.3f, 15u),
+			FramePair(0.3f, 16u),
+			FramePair(0.3f, 17u)}, octo::LoopMode::NoLoop);
 
 	setupMachine();
 }
@@ -93,7 +95,7 @@ void FranfranNpc::update(sf::Time frametime)
 	octo::CharacterSprite & sprite = getSprite();
 
 	m_timer += frametime;
-	if (m_timer > sf::seconds(12.f))
+	if (m_timer > sf::seconds(10.f))
 	{
 		m_canSmoke = true;
 		m_timer = sf::Time::Zero;
@@ -127,7 +129,7 @@ void FranfranNpc::updateState(void)
 
 	if (sprite.getCurrentEvent() == Idle && m_canSmoke)
 		sprite.setNextEvent(Special1);
-	else if (sprite.getCurrentEvent() == Special1 && sprite.getStatus() != octo::PlayStatus::Play)
+	else if (sprite.getCurrentEvent() == Special1 && sprite.isTerminated())
 		sprite.setNextEvent(Idle);
 
 	if (canWalk())
