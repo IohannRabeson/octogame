@@ -83,11 +83,11 @@ void	Progress::load(std::string const &filename)
 void	Progress::init()
 {
 	//TODO
-	std::cout << "name:" << m_data.biomeName << std::endl;
+	/*std::cout << "name:" << m_data.biomeName << std::endl;
 	std::cout << "robot:" << m_data.nanoRobotCount << std::endl;
 	std::cout << "octo:" << m_data.octoPos.x << "|" << m_data.octoPos.y << std::endl;
 	std::cout << "camera:" << m_data.cameraPos.x << "|" << m_data.cameraPos.y << std::endl;
-	std::cout << "depth:" << m_data.depthMap << std::endl;
+	std::cout << "depth:" << m_data.depthMap << std::endl;*/
 }
 
 void	Progress::save()
