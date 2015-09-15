@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:07:48 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/11 17:51:39 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/09/14 16:11:54 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ public:
 	std::size_t			getCapacity()const;
 	Firefly&			getFirefly(std::size_t id);
 	Firefly const&		getFirefly(std::size_t id)const;
-	sf::Vector2f const &	getPositionById(std::size_t id);
+	sf::Vector2f const &	getPositionById(std::size_t id) const;
+	sf::Vector2f const &	getTarget(void) const;
 
 private:
 	std::size_t			consumeId();

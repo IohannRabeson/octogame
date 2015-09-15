@@ -56,10 +56,20 @@ void	CharacterOcto::setup(void)
 	m_timeEventFall = sf::Time::Zero;
 	m_timeEventIdle = sf::Time::Zero;
 	m_timeEventDeath = sf::Time::Zero;
+	m_timeEventInk = sf::Time::Zero;
 	setupAnimation();
 	setupMachine();
 	m_sprite.setScale(m_spriteScale, m_spriteScale);
 	m_sprite.restart();
+
+	m_ink.setCanEmit(false);
+	m_ink.setup(sf::Vector2f(3.f, 3.f));
+	m_ink.setVelocity(sf::Vector2f(0.f, 100.f));
+	m_ink.setEmitTimeRange(0.005f, 0.01f);
+	m_ink.setGrowTimeRange(0.1f, 0.2f);
+	m_ink.setLifeTimeRange(0.4f, 0.5f);
+	m_ink.setScaleFactor(30.f);
+	m_ink.setColor(sf::Color(0, 0, 0));
 }
 
 void	CharacterOcto::setupAnimation()
@@ -307,6 +317,15 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_collisionTile = false;
 	m_collisionElevator = false;
 
+	m_ink.update(frameTime);
+	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
+	{
+		m_ink.setCanEmit(true);
+		m_ink.setPosition(m_box->getBaryCenter());
+	}
+	else
+		m_ink.setCanEmit(false);
+
 	for (auto & robot : m_nanoRobots)
 	{
 		robot->update(frameTime);
@@ -330,17 +349,22 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 		case Death:
 			m_timeEventDeath += frameTime;
 			break;
+		case DoubleJump:
+			m_timeEventInk += frameTime;
+			break;
 		default:
 			m_timeEventStartElevator = sf::Time::Zero;
 			m_timeEventFall = sf::Time::Zero;
 			m_timeEventIdle = sf::Time::Zero;
 			m_timeEventDeath = sf::Time::Zero;
+			m_timeEventInk = sf::Time::Zero;
 			break;
 	}
 }
 
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
+	m_ink.draw(render);
 	m_sprite.draw(render, states);
 
 	for (auto & robot : m_nanoRobots)

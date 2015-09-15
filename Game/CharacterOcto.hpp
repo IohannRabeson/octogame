@@ -7,6 +7,7 @@
 # include "Progress.hpp"
 # include "RectangleShape.hpp"
 # include "NanoRobot.hpp"
+# include "SmokeSystem.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -88,6 +89,7 @@ private:
 	sf::Time					m_timeEventDeath;
 	sf::Time					m_timeEventStartElevator;
 	float						m_spriteScale;
+	sf::Time					m_timeEventInk;
 	float						m_pixelSecondJump;
 	float						m_pixelSecondSlowFall;
 	float						m_pixelSecondWalk;
@@ -113,6 +115,8 @@ private:
 	bool						m_keyAction;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
+
+	SmokeSystem					m_ink;
 };
 
 #endif

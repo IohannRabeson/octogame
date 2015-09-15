@@ -26,6 +26,7 @@ public:
 
 	void transfertToOcto(void);
 	void setPosition(sf::Vector2f const & position);
+	bool isTravelling(void) const;
 
 	void update(sf::Time frameTime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
@@ -49,6 +50,8 @@ private:
 	State									m_state;
 	sf::Time								m_timer;
 	sf::Time								m_timerMax;
+
+	bool									m_isTravelling;
 
 };
 
