@@ -11,7 +11,6 @@
 #include "CedricNpc.hpp"
 #include "SpaceShip.hpp"
 #include "GroundTransformNanoRobot.hpp"
-#include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -38,7 +37,6 @@ GroundManager::GroundManager(void) :
 
 void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 {
-	Progress::getInstance().setGroundManager(this);
 	m_cycle = &cycle;
 	m_mapSize = biome.getMapSize();
 

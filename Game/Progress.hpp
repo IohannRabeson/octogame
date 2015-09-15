@@ -27,8 +27,6 @@ public:
 	inline void				addNanoRobot(){ m_data.nanoRobotCount++; }
 	inline std::size_t		getNanoRobotCount(){ return m_data.nanoRobotCount; }
 
-	inline float			getDepthMap(){ return m_data.depthMap; }
-
 	inline void				setCanUseAction(bool action){ m_action = action; }
 	inline void				setCanWalk(bool walk){ m_walk = walk; }
 	inline void				setCanJump(bool jump){ m_jump = jump; }
@@ -53,24 +51,21 @@ private:
 			nanoRobotCount(0u),
 			octoPos(sf::Vector2f(0.f, 0.f)),
 			cameraPos(sf::Vector2f(0.f, 0.f)),
-			biomeName(""),
-			depthMap(0.f)
+			biomeName("")
 		{
 		}
-		data(std::size_t nanoRobot, sf::Vector2f octoPos, sf::Vector2f cameraPos, std::string biomeName, float depthMap) :
+		data(std::size_t nanoRobot, sf::Vector2f octoPos, sf::Vector2f cameraPos, std::string biomeName) :
 			nanoRobotCount(nanoRobot),
 			octoPos(octoPos),
 			cameraPos(cameraPos),
-			biomeName(biomeName),
-			depthMap(depthMap)
-			//TODO add elevator
+			biomeName(biomeName)
 		{
+			//TODO add elevator
 		}
 		std::size_t		nanoRobotCount;
 		sf::Vector2f	octoPos;
 		sf::Vector2f	cameraPos;
 		std::string		biomeName;
-		float			depthMap;
 	};
 	static std::unique_ptr<Progress>		m_instance;
 	sf::Vector2u							m_mapSize;
