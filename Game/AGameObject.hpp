@@ -74,7 +74,7 @@ static T*	gameObjectCast(O* object)
 
 	if (T::ObjectType == object->getObjectType())
 	{
-		result = static_cast<T*>(object);
+		result = static_cast<T*>(object);	
 	}
 	return (result);
 }
