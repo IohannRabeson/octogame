@@ -46,7 +46,9 @@ SRC_STATES =	Screens/StateTest.cpp					\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
+				Game/RepairNanoRobot.cpp				\
 				Game/MusicPlayer.cpp					\
+				Game/SparkSystem.cpp					\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\

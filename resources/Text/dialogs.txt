@@ -6,3 +6,4 @@ lucien.oss=Tant pis pour tout
 franfran.oss=Avec les portails tu peux aller visiter de nouveaux horizons. Peace.
 julien.oss=Le violet c'est cool
 nano_ground_transform.oss=Bienvenue jeune cephalopode. Grace a moi tu peux maintenant manipuler ton environement avec les touches E et R.
+nano_repair.oss=On répare des élévateur pour voir ce que ça fait ?

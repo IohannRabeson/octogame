@@ -27,9 +27,11 @@ public:
 	void transfertToOcto(void);
 	void setPosition(sf::Vector2f const & position);
 	bool isTravelling(void) const;
+	sf::Vector2f const & getPosition(void) const;
+	NanoRobot::State getState(void) const;
 
-	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	virtual void update(sf::Time frameTime);
+	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
 	NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames);

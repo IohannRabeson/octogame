@@ -70,18 +70,6 @@ public:
 	Portal(void);
 	virtual ~Portal(void);
 
-	class PortalActivation : public AGameObject<GameObjectType::PortalActivation>
-	{
-	public:
-		Portal *	m_portal;
-		float		m_radius;
-
-		void activate(void)
-		{
-			m_portal->appear();
-		}
-	};
-
 	void setPosition(sf::Vector2f const & position);
 	void setRadius(float radius);
 	void setBiome(ABiome & biome);
@@ -104,9 +92,7 @@ private:
 	float					m_radius;
 	float					m_timer;
 	float					m_timerMax;
-	CircleShape *			m_activationBox;
 	CircleShape *			m_box;
-	PortalActivation		m_portalActivation;
 
 	octo::SpriteAnimation	m_animation;
 	octo::AnimatedSprite	m_sprite;

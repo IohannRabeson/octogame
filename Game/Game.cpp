@@ -8,6 +8,7 @@
 #include "ElevatorStream.hpp"
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
+#include "RepairNanoRobot.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -39,7 +40,6 @@ void	Game::setup(void)
 {
 	m_biomeManager.registerBiome<LevelOneBiome>("one");
 	m_biomeManager.registerBiome<DefaultBiome>("default");
-	m_biomeManager.registerBiome<DefaultBiome>("default1");
 }
 
 void	Game::loadLevel(std::string const & fileName)
@@ -104,34 +104,57 @@ void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const
 		onCollision(gameObjectCast<CharacterOcto>(shapeA->getGameObject()), shapeB->getGameObject(), collisionDirection);
 	else if (gameObjectCast<CharacterOcto>(shapeB->getGameObject()))
 		onCollision(gameObjectCast<CharacterOcto>(shapeB->getGameObject()), shapeA->getGameObject(), collisionDirection);
-}
-
-void Game::transfertNanoRobot(NanoRobot * robot)
-{
-	NanoRobot * ptr = m_groundManager->getNanoRobot(robot);
-	ptr->transfertToOcto();
-	m_octo->giveNanoRobot(ptr);
+	else if (gameObjectCast<CharacterOcto::OctoEvent>(shapeB->getGameObject()))
+		onCollisionEvent(gameObjectCast<CharacterOcto::OctoEvent>(shapeB->getGameObject())->m_octo, shapeA->getGameObject(), collisionDirection);
+	else if (gameObjectCast<CharacterOcto::OctoEvent>(shapeA->getGameObject()))
+		onCollisionEvent(gameObjectCast<CharacterOcto::OctoEvent>(shapeA->getGameObject())->m_octo, shapeB->getGameObject(), collisionDirection);
 }
 
 void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
 {
 	if (gameObjectCast<ElevatorStream>(gameObject))
 	{
-		octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
-		octo->onCollision(GameObjectType::Elevator, collisionDirection);
+		if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
+		{
+			octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
+			octo->onCollision(GameObjectType::Elevator, collisionDirection);
+		}
 	}
 	else if (gameObjectCast<Portal>(gameObject))
 	{
 		//TODO
 	}
-	else if (gameObjectCast<Portal::PortalActivation>(gameObject))
-	{
-		gameObjectCast<Portal::PortalActivation>(gameObject)->activate();
-	}
 	else if (gameObjectCast<GroundTransformNanoRobot>(gameObject))
 	{
 		if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
-			transfertNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
+		{
+			NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
+			ptr->transfertToOcto();
+			m_octo->giveNanoRobot(ptr);
+		}
+	}
+	else if (gameObjectCast<RepairNanoRobot>(gameObject))
+	{
+		if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling())
+		{
+			NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
+			ptr->transfertToOcto();
+			m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
+		}
+	}
+}
+
+void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
+{
+	(void)octo;
+	(void)collisionDirection;
+	if (gameObjectCast<ElevatorStream>(gameObject))
+	{
+		octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
+	}
+	else if (gameObjectCast<Portal>(gameObject))
+	{
+		gameObjectCast<Portal>(gameObject)->appear();
 	}
 }
 
@@ -163,9 +186,9 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	render.clear();
-	//m_physicsEngine.debugDraw(render);
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	m_groundManager->drawFront(render, states);
 	render.draw(*m_octo, states);
