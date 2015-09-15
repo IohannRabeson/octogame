@@ -45,17 +45,18 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/TransitionScreen.cpp			\
 
 SRC_GAME =		Game/Game.cpp							\
-				Game/AGameObject.cpp					\
 				Game/CharacterOcto.cpp					\
 				Game/MusicPlayer.cpp					\
 
-SRC_GAMEOBJ =	GameObjects/Portal.cpp					\
+SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
+				GameObjects/Portal.cpp					\
 				GameObjects/ElevatorStream.cpp			\
 				GameObjects/SpaceShip.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
-				Npcs/CedricNpc.cpp						\
 				Npcs/ClassicNpc.cpp						\
+				Npcs/CedricNpc.cpp						\
+				Npcs/FranfranNpc.cpp					\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

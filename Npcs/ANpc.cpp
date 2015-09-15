@@ -118,7 +118,12 @@ bool ANpc::canDance(void) const
 	return false;
 }
 
-bool ANpc::canSpecial(void) const
+bool ANpc::canSpecial1(void) const
+{
+	return false;
+}
+
+bool ANpc::canSpecial2(void) const
 {
 	return false;
 }

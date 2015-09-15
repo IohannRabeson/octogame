@@ -77,7 +77,8 @@ protected:
 	virtual bool canJump(void) const;
 	virtual bool canDoubleJump(void) const;
 	virtual bool canDance(void) const;
-	virtual bool canSpecial(void) const;
+	virtual bool canSpecial1(void) const;
+	virtual bool canSpecial2(void) const;
 
 	virtual void setupMachine(void);
 	virtual void updateState(void);

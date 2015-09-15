@@ -13,10 +13,11 @@ enum class GameObjectType
 	Decor = 32u,
 	Tile = 64u,
 	Elevator = 128u,
-	NpcCedric = 256u,
+	CedricNpc = 256u,
 	GroundTransformNanoRobot = 512u,
 	NanoRobot = 1024u,
-	SpaceShip = 2048u
+	SpaceShip = 2048u,
+	FranfranNpc = 4096u
 };
 
 /*!
