@@ -9,6 +9,7 @@
 #include "MapInstance.hpp"
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
+#include "FranfranNpc.hpp"
 #include "SpaceShip.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -142,11 +143,18 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 				}
 				break;
-			case GameObjectType::NpcCedric:
+			case GameObjectType::CedricNpc:
 				{
 					CedricNpc * cedric = new CedricNpc(skyCycle);
 					cedric->activatePhysics(false);
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, cedric);
+				}
+				break;
+			case GameObjectType::FranfranNpc:
+				{
+					FranfranNpc * franfran = new FranfranNpc();
+					franfran->activatePhysics(false);
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, franfran);
 				}
 				break;
 			case GameObjectType::RepairNanoRobot:

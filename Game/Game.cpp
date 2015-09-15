@@ -70,6 +70,7 @@ void	Game::loadLevel(std::string const & fileName)
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
+	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup();
 	m_octo->setPosition(sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
 }
