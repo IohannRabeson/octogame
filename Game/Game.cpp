@@ -54,7 +54,7 @@ void	Game::loadLevel(std::string const & fileName)
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	postEffect.removeEffects();
 	// Reset PhysycsEngine
-	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome(), sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
+	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome(), sf::Vector2f(0.f, 700.f)); // TODO: get position in the portal information
 //	octo::Application::getCamera().setCenter(Progress::getInstance().getCameraPos());
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
