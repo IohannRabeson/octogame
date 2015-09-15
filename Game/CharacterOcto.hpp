@@ -5,6 +5,8 @@
 # include <DefaultGraphicsListeners.hpp>
 # include "AGameObject.hpp"
 # include "RectangleShape.hpp"
+# include "NanoRobot.hpp"
+# include "SmokeSystem.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -41,6 +43,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
 	void					setTopElevator(float top);
 	void					setPosition(sf::Vector2f const & position);
+	void					giveNanoRobot(NanoRobot * robot);
 
 	private:
 	bool	dieFall();
@@ -71,10 +74,12 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
 	RectangleShape*				m_box;
+	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
 
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventDeath;
+	sf::Time					m_timeEventInk;
 	float						m_pixelSecondJump;
 	float						m_pixelSecondUmbrella;
 	float						m_pixelSecondWalk;
@@ -98,6 +103,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool						m_keyUp;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
+
+	SmokeSystem					m_ink;
 };
 
 #endif

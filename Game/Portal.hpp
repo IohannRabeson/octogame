@@ -21,6 +21,14 @@ class CircleShape;
 
 class Portal : public AGameObject<GameObjectType::Portal>, public IPlaceable
 {
+public:
+	enum State
+	{
+		Appear,
+		Activated,
+		Disappear
+	};
+
 private:
 	class PortalParticle : public octo::ParticleSystem<sf::Time, sf::Time, sf::Vector2f, sf::Vector2f>
 	{
@@ -59,13 +67,6 @@ private:
 	};
 
 public:
-	enum State
-	{
-		Appear,
-		Activated,
-		Disappear
-	};
-
 	Portal(void);
 	virtual ~Portal(void);
 

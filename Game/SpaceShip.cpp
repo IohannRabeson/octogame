@@ -46,6 +46,7 @@ SpaceShip::SpaceShip(SpaceShipEvents event)
 	m_sprite.restart();
 	m_sprite.setNextEvent(event);
 
+	m_smoke.setup(sf::Vector2f(10.f, 10.f));
 }
 
 void SpaceShip::setNextEvent(SpaceShipEvents event)
