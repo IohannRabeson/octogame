@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/16 17:09:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/11 17:49:42 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/09/14 16:12:10 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,14 @@ std::size_t		FireflySwarm::getCapacity()const
 	return (m_capacity);
 }
 
-sf::Vector2f const &	FireflySwarm::getPositionById(std::size_t id)
+sf::Vector2f const &	FireflySwarm::getPositionById(std::size_t id) const
 {
 	return getFirefly(id).position;
+}
+
+sf::Vector2f const &	FireflySwarm::getTarget(void) const
+{
+	return m_target;
 }
 
 std::size_t		FireflySwarm::consumeId()

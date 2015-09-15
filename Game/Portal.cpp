@@ -114,7 +114,6 @@ void Portal::update(sf::Time frametime)
 		}
 	}
 
-	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 52.f));
 	m_sprite.update(frametime);
 	m_state = Disappear;
 }
@@ -127,6 +126,9 @@ void Portal::setPosition(sf::Vector2f const & position)
 	m_particles.setEmitter(m_position);
 	m_box->setPosition(sf::Vector2f(m_position.x - m_radius, m_position.y - m_radius));
 	m_activationBox->setPosition(sf::Vector2f(m_position.x - m_radius - m_portalActivation.m_radius, m_position.y - m_radius - m_portalActivation.m_radius));
+	m_box->update();
+	m_activationBox->update();
+	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 52.f));
 }
 
 void Portal::setRadius(float radius)

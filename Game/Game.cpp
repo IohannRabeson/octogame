@@ -8,6 +8,7 @@
 #include "ElevatorStream.hpp"
 #include "Progress.hpp"
 #include "AGameObject.hpp"
+#include "GroundTransformNanoRobot.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -108,6 +109,13 @@ void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const
 		onCollision(gameObjectCast<CharacterOcto>(shapeB->getGameObject()), shapeA->getGameObject(), collisionDirection);
 }
 
+void Game::transfertNanoRobot(NanoRobot * robot)
+{
+	NanoRobot * ptr = m_groundManager->getNanoRobot(robot);
+	ptr->transfertToOcto();
+	m_octo->giveNanoRobot(ptr);
+}
+
 void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
 {
 	if (gameObjectCast<ElevatorStream>(gameObject))
@@ -122,6 +130,11 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 	else if (gameObjectCast<Portal::PortalActivation>(gameObject))
 	{
 		gameObjectCast<Portal::PortalActivation>(gameObject)->activate();
+	}
+	else if (gameObjectCast<GroundTransformNanoRobot>(gameObject))
+	{
+		if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
+			transfertNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
 	}
 }
 
@@ -153,12 +166,12 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	render.clear();
+	//m_physicsEngine.debugDraw(render);
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
 	m_groundManager->drawBack(render, states);
-	render.draw(*m_octo, states);
-	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawFront(render, states);
+	render.draw(*m_octo, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);

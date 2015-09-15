@@ -139,7 +139,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					std::unique_ptr<Portal> portal(new Portal());
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
-					//m_highObjects.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 				}
 				break;
 			case GameObjectType::NpcCedric:
@@ -300,6 +299,18 @@ void GroundManager::setupDecors(ABiome & biome)
 
 	m_decorPositions.resize(totalCount);
 }
+
+NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
+{
+	auto ptr = std::remove_if(m_nanoRobots.begin(), m_nanoRobots.end(), [robot](GameObjectPosition<NanoRobot> const & nanoRobot)
+			{
+				return (nanoRobot.m_gameObject.get() == robot);
+			});
+	NanoRobot * newPtr = ptr->m_gameObject.release();
+	m_nanoRobots.erase(ptr);
+	return newPtr;
+}
+
 
 void GroundManager::setTransitionAppear(int x, int y)
 {
