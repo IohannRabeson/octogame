@@ -51,7 +51,7 @@ private:
 	octo::VertexBuilder				m_builder;
 	sf::Time						m_waveCycle;
 	sf::Time						m_waveCycleDuration;
-	RectangleShape*					m_box;
+	RectangleShape *				m_box;
 	float							m_topY;
 	std::size_t						m_rayCountVertex;
 	std::unique_ptr<sf::Vertex[]>	m_ray;

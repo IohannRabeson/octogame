@@ -52,6 +52,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/CedricNpc.cpp						\
 				Game/NanoRobot.cpp						\
 				Game/GroundTransformNanoRobot.cpp		\
+				Game/RepairNanoRobot.cpp		\
 				Game/SpaceShip.cpp						\
 				Game/MusicPlayer.cpp					\
 

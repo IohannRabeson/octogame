@@ -19,7 +19,7 @@ void	GameScreen::start()
 
 	m_game.reset(new Game());
 	m_game->setup();
-	m_game->loadLevel("one");
+	m_game->loadLevel("default");
 }
 
 void	GameScreen::pause()

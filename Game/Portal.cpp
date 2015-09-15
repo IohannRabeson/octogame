@@ -17,7 +17,6 @@ Portal::Portal(void) :
 	m_radius(100.f),
 	m_timer(0.f),
 	m_timerMax(1.0f),
-	m_activationBox(PhysicsEngine::getShapeBuilder().createCircle()),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle())
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
@@ -33,15 +32,7 @@ Portal::Portal(void) :
 	m_box->setApplyGravity(false);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Portal));
-	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
-
-	m_portalActivation.m_portal = this;
-	m_portalActivation.m_radius = 400.f;
-	m_activationBox->setGameObject(&m_portalActivation);
-	m_activationBox->setApplyGravity(false);
-	m_activationBox->setType(AShape::Type::e_trigger);
-	m_activationBox->setCollisionType(static_cast<std::uint32_t>(GameObjectType::PortalActivation));
-	m_activationBox->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
+	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player) | static_cast<std::uint32_t>(GameObjectType::PlayerEvent));
 
 	setRadius(m_radius);
 	setPosition(m_position);
@@ -125,9 +116,7 @@ void Portal::setPosition(sf::Vector2f const & position)
 	m_position.y -= getRadius() + Tile::TripleTileSize;
 	m_particles.setEmitter(m_position);
 	m_box->setPosition(sf::Vector2f(m_position.x - m_radius, m_position.y - m_radius));
-	m_activationBox->setPosition(sf::Vector2f(m_position.x - m_radius - m_portalActivation.m_radius, m_position.y - m_radius - m_portalActivation.m_radius));
 	m_box->update();
-	m_activationBox->update();
 	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 52.f));
 }
 
@@ -137,7 +126,6 @@ void Portal::setRadius(float radius)
 	m_shader.setParameter("radius", m_radius);
 	m_particles.setRadius(m_radius);
 	m_box->setRadius(m_radius);
-	m_activationBox->setRadius(m_radius + m_portalActivation.m_radius);
 }
 
 void Portal::appear(void)

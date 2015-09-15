@@ -5,6 +5,7 @@
 # include <DefaultGraphicsListeners.hpp>
 # include "AGameObject.hpp"
 # include "RectangleShape.hpp"
+# include "CircleShape.hpp"
 # include "NanoRobot.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
@@ -28,8 +29,16 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Drink,
 	};
 	public:
+	friend class OctoEvent;
+
+	class OctoEvent : public AGameObject<GameObjectType::PlayerEvent>
+	{
+	public:
+		CharacterOcto *	m_octo;
+	};
+
 	CharacterOcto();
-	~CharacterOcto();
+	virtual ~CharacterOcto();
 
 	void					setup(void);
 	void					update(sf::Time frameTime);
@@ -72,7 +81,9 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	octo::CharacterAnimation	m_umbrellaAnimation;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
-	RectangleShape*				m_box;
+	RectangleShape *			m_box;
+	CircleShape *				m_eventBox;
+	OctoEvent					m_octoEvent;
 	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
 
 	sf::Time					m_timeEventFall;

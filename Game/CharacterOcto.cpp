@@ -8,6 +8,7 @@
 CharacterOcto::CharacterOcto() :
 	m_spriteScale(0.6f),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
+	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondUmbrella(-300.f),
 	m_pixelSecondWalk(320.f),
@@ -44,8 +45,24 @@ void	CharacterOcto::setup(void)
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
-	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::PortalActivation) | static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot) | static_cast<std::uint32_t>(GameObjectType::Elevator);
+	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal)
+		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
+		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
+		| static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
+
+	m_octoEvent.m_octo = this;
+	m_eventBox->setGameObject(&m_octoEvent);
+	m_eventBox->setRadius(400.f);
+	m_eventBox->setCollisionType(static_cast<std::uint32_t>(GameObjectType::PlayerEvent));
+	std::uint32_t maskEvent = static_cast<std::uint32_t>(GameObjectType::Portal)
+		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
+		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
+		| static_cast<std::uint32_t>(GameObjectType::Elevator);
+	m_eventBox->setCollisionMask(maskEvent);
+	m_eventBox->setApplyGravity(false);
+	m_eventBox->setType(AShape::Type::e_trigger);
+
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
 	m_timeEventFall = sf::Time::Zero;
 	m_timeEventIdle = sf::Time::Zero;
@@ -468,6 +485,7 @@ void	CharacterOcto::commitPhysicsToGraphics()
 	float				yPos =  pos.y - ((m_sprite.getLocalSize().y * m_spriteScale) - (m_box->getSize().y / 2.f));
 
 	m_sprite.setPosition(sf::Vector2f(xPos, yPos + m_deltaPositionY));
+	m_eventBox->setPosition(pos.x - m_eventBox->getRadius(), pos.y - m_eventBox->getRadius());
 }
 
 void	CharacterOcto::commitControlsToPhysics(float frametime)

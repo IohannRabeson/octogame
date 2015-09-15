@@ -6,3 +6,4 @@ lucien.oss=Tant pis pour tout
 franfran.oss=J'ai pas faim !
 julien.oss=Le violet c'est cool
 nano_ground_transform.oss=Maintenant tu peux bouger la map !
+nano_repair.oss=On répare des élévateur pour voir ce que ça fait ?
