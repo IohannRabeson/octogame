@@ -111,7 +111,6 @@ public:
 
 	void	createParticle()
 	{
-		//TODO : Voir avec Iohann si on ne devrait pas avoir une instance du biome accessible partout pour eviter ce genre de chose
 		sf::Color color;
 		if (m_biome)
 			color = m_biome->getParticleColorGround();
@@ -155,7 +154,10 @@ ElevatorStream::ElevatorStream() :
 	m_ray(new sf::Vertex[m_rayCountVertex]),
 	m_borderColor(255, 255, 255, 150),
 	m_centerColor(255, 255, 255, 50),
-	m_upColor(255, 255, 255, 0)
+	m_upColor(255, 255, 255, 0),
+	m_state(Disappear),
+	m_timer(sf::Time::Zero),
+	m_timerMax(sf::seconds(1.5f))
 
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
@@ -164,11 +166,30 @@ ElevatorStream::ElevatorStream() :
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setApplyGravity(false);
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Elevator));
-	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
+	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player) | static_cast<std::uint32_t>(GameObjectType::PlayerEvent));
 	m_box->setSize(150.f, 0.f);
 	m_particles->setWidth(150.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
+
+	float height = getHeight();
+	float unit = getWidth() / 6.f;
+
+	m_ray[0] = sf::Vertex(sf::Vector2f(-unit * 2.f, -height), m_upColor);
+	m_ray[1] = sf::Vertex(sf::Vector2f(-unit, -height), m_upColor);
+	m_ray[2] = sf::Vertex(sf::Vector2f(-unit, 0), m_centerColor);
+	m_ray[3] = sf::Vertex(sf::Vector2f(-unit * 2.f, 0), m_borderColor);
+
+	m_ray[4] = sf::Vertex(sf::Vector2f(-unit, -height), m_upColor);
+	m_ray[5] = sf::Vertex(sf::Vector2f(unit, -height), m_upColor);
+	m_ray[6] = sf::Vertex(sf::Vector2f(unit, 0), m_centerColor);
+	m_ray[7] = sf::Vertex(sf::Vector2f(-unit, 0), m_centerColor);
+
+	m_ray[8] = sf::Vertex(sf::Vector2f(unit * 2.f, -height), m_upColor);
+	m_ray[9] = sf::Vertex(sf::Vector2f(unit, -height), m_upColor);
+	m_ray[10] = sf::Vertex(sf::Vector2f(unit, 0), m_centerColor);
+	m_ray[11] = sf::Vertex(sf::Vector2f(unit * 2.f, 0), m_borderColor);
+
 
 	setupSprite();
 }
@@ -279,25 +300,38 @@ sf::Vector2f const & ElevatorStream::getPosition(void) const
 	return m_position;
 }
 
+bool ElevatorStream::isActivated(void) const
+{
+	return (m_state == Activated);
+}
+
+void	ElevatorStream::activate(void)
+{
+	if (m_state == Disappear)
+		m_state = Appear;
+}
+
 void	ElevatorStream::createRay()
 {
-	float height = getHeight();
-	float unit = getWidth() / 6.f;
+	static const float unit = getWidth() / 6.f;
+	float const height = getHeight();
 
-	m_ray[0] = sf::Vertex(sf::Vector2f(-unit * 2.f, -height), m_upColor);
-	m_ray[1] = sf::Vertex(sf::Vector2f(-unit, -height), m_upColor);
-	m_ray[2] = sf::Vertex(sf::Vector2f(-unit, 0), m_centerColor);
-	m_ray[3] = sf::Vertex(sf::Vector2f(-unit * 2.f, 0), m_borderColor);
+	float ratio = m_timer.asSeconds() / m_timerMax.asSeconds();
 
-	m_ray[4] = sf::Vertex(sf::Vector2f(-unit, -height), m_upColor);
-	m_ray[5] = sf::Vertex(sf::Vector2f(unit, -height), m_upColor);
-	m_ray[6] = sf::Vertex(sf::Vector2f(unit, 0), m_centerColor);
-	m_ray[7] = sf::Vertex(sf::Vector2f(-unit, 0), m_centerColor);
+	m_ray[0].position = sf::Vector2f(-unit * 2.f * ratio, -height);
+	m_ray[1].position = sf::Vector2f(-unit * ratio, -height);
+	m_ray[2].position = sf::Vector2f(-unit * ratio, 0.f);
+	m_ray[3].position = sf::Vector2f(-unit * 2.f * ratio, 0.f);
 
-	m_ray[8] = sf::Vertex(sf::Vector2f(unit * 2.f, -height), m_upColor);
-	m_ray[9] = sf::Vertex(sf::Vector2f(unit, -height), m_upColor);
-	m_ray[10] = sf::Vertex(sf::Vector2f(unit, 0), m_centerColor);
-	m_ray[11] = sf::Vertex(sf::Vector2f(unit * 2.f, 0), m_borderColor);
+	m_ray[4].position = sf::Vector2f(-unit * ratio, -height);
+	m_ray[5].position = sf::Vector2f(unit * ratio, -height);
+	m_ray[6].position = sf::Vector2f(unit * ratio, 0.f);
+	m_ray[7].position = sf::Vector2f(-unit * ratio, 0.f);
+
+	m_ray[8].position = sf::Vector2f(unit * 2.f * ratio, -height);
+	m_ray[9].position = sf::Vector2f(unit * ratio, -height);
+	m_ray[10].position = sf::Vector2f(unit * ratio, 0.f);
+	m_ray[11].position = sf::Vector2f(unit * 2.f * ratio, 0.f);
 
 	for (std::size_t i = 0; i < m_rayCountVertex; i++)
 		m_ray[i].position += m_particles->getPosition();
@@ -305,9 +339,27 @@ void	ElevatorStream::createRay()
 
 void	ElevatorStream::update(sf::Time frameTime)
 {
-	m_particles->update(frameTime);
-	m_waveCycle += frameTime;
-	m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
+	switch (m_state)
+	{
+		case Appear:
+			m_timer += frameTime;
+			if (m_timer >= m_timerMax)
+			{
+				m_timer = m_timerMax;
+				m_state = Activated;
+			}
+			break;
+		case Activated:
+			m_particles->update(frameTime);
+			m_waveCycle += frameTime;
+			m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
+			break;
+		case Disappear:
+			break;
+		default:
+			break;
+	}
+
 	createRay();
 
 	m_spriteBottomFront.update(frameTime);
@@ -323,8 +375,10 @@ void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 	render.draw(m_spriteBottomBack);
 	render.draw(m_spriteTopBack);
 	states.shader = &m_shader;
-	m_particles->draw(render, states);
-	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
+	if (m_state == Activated)
+		m_particles->draw(render, states);
+	if (m_state == Activated || m_state == Appear)
+		render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
 }
 
 void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
