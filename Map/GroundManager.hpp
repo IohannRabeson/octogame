@@ -36,7 +36,6 @@ public:
 	void drawText(sf::RenderTarget& render, sf::RenderStates states) const;
 	NanoRobot * getNanoRobot(NanoRobot * robot);
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
-	inline float getDepth(){ return m_tiles->getDepth(); }
 
 private:
 	template<class T>

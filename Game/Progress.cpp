@@ -92,7 +92,6 @@ void	Progress::init()
 
 void	Progress::save()
 {
-	m_data.depthMap = m_map->getDepth();
 	m_data.octoPos = m_octo->getPhysicsPosition();
 	m_data.cameraPos = octo::Application::getCamera().getCenter();
 	if (m_data.octoPos.x < 0){
