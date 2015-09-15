@@ -2,6 +2,7 @@
 #include "ABiome.hpp"
 #include "MapInstance.hpp"
 #include "FunctionsOffset.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Interpolations.hpp>
@@ -16,7 +17,9 @@ Map::Map(void) :
 	m_height(0u),
 	m_offset(nullptr),
 	m_mapSurface(nullptr)
-{}
+{
+	m_depth = Progress::getInstance().getDepthMap();
+}
 
 Map::~Map(void)
 {

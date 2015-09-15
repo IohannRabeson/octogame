@@ -14,7 +14,7 @@ void	GameScreen::start()
 {
 	m_menu.setup();
 
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
 	Progress &				progress = Progress::getInstance();
 	graphics.addKeyboardListener(this);
 

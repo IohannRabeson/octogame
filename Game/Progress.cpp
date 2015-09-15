@@ -52,8 +52,10 @@ Progress & Progress::getInstance()
 
 void	Progress::setup()
 {
+	m_newSave = false;
 	m_mapSize = sf::Vector2u(0u, 0u);
 	m_octo = nullptr;
+	m_map = nullptr;
 	m_filename = "save.osv";
 	m_data = data();
 	m_action = false;
@@ -68,7 +70,10 @@ void	Progress::load(std::string const &filename)
 {
 	std::ifstream filestream(filename, std::ios::in | std::ios::binary);
 	if(!filestream)
+	{
+		m_newSave = true;
 		return;
+	}
 	m_filename = filename;
 	filestream.read(reinterpret_cast<char*>(&m_data), sizeof(struct data));
 	filestream.close();
@@ -82,15 +87,14 @@ void	Progress::init()
 	std::cout << "robot:" << m_data.nanoRobotCount << std::endl;
 	std::cout << "octo:" << m_data.octoPos.x << "|" << m_data.octoPos.y << std::endl;
 	std::cout << "camera:" << m_data.cameraPos.x << "|" << m_data.cameraPos.y << std::endl;
+	std::cout << "depth:" << m_data.depthMap << std::endl;
 }
 
 void	Progress::save()
 {
+	m_data.depthMap = m_map->getDepth();
 	m_data.octoPos = m_octo->getPhysicsPosition();
 	m_data.cameraPos = octo::Application::getCamera().getCenter();
-	std::cout << "camera:" << m_data.cameraPos.x << "|" << m_data.cameraPos.y << std::endl;
-	std::cout << "octo:" << m_data.octoPos.x << "|" << m_data.octoPos.y << std::endl;
-	//TODO clean
 	if (m_data.octoPos.x < 0){
 		while (m_data.octoPos.x < 0)
 			m_data.octoPos.x += m_mapSize.x * Tile::TileSize;
@@ -128,19 +132,22 @@ void	Progress::reset()
 
 void	Progress::setupInfoLevel(ABiome & biome, sf::Vector2f octoPos)
 {
-	if (m_data.biomeName != biome.getName())
+	if (m_data.biomeName != biome.getName() || m_newSave)
 	{
 		m_data.octoPos = octoPos;
 		m_data.cameraPos = octoPos;
 	}
 	m_data.biomeName = biome.getName();
 	m_mapSize = biome.getMapSize();
-	std::cout << "c: " << m_mapSize.x << "|" << m_mapSize.y << std::endl;
 }
 
 void	Progress::setCharacterOcto(CharacterOcto * octo)
 {
 	m_octo = octo;
+}
+void	Progress::setGroundManager(GroundManager * manager)
+{
+	m_map = manager;
 }
 
 sf::Vector2f const&	Progress::getOctoPos()
