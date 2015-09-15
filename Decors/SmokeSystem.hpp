@@ -20,10 +20,15 @@ public:
 	SmokeSystem();
 
 	void			update(sf::Time frameTime);
+	void			setup(sf::Vector2f const & sizeParticle);
 	void			setPosition(sf::Vector2f const & position);
-	void			setVelocity(sf::Vector2f const & direction);
-	void			setEmitTimeMax(float min, float max);
 	void			setColor(sf::Color const & color);
+	void			setVelocity(sf::Vector2f const & direction);
+	void			setScaleFactor(float scaleFactor);
+	void			setEmitTimeRange(float min, float max);
+	void			setGrowTimeRange(float min, float max);
+	void			setLifeTimeRange(float min, float max);
+	void			setCanEmit(bool canEmit);
 
 private:
 	void			createOctogon(sf::Vector2f const & size,
@@ -41,15 +46,16 @@ private:
 	typedef std::uniform_real_distribution<float>	DistReal;
 	typedef std::uniform_int_distribution<int>		DistInt;
 
-	sf::Vector2f	m_size;
+	sf::Vector2f	m_sizeParticle;
 	sf::Color		m_color;
 	sf::Vector2f	m_velocity;
 	sf::Vector2f	m_emitter;
 	sf::Time		m_emitTimer;
-	sf::Time		m_emitInterval;
+	sf::Time		m_emitTime;
+	bool			m_canEmit;
 	float			m_lifeScaleFactor;
 	std::mt19937	m_engine;
-	DistReal		m_emitIntervalDistri;
+	DistReal		m_emitTimeDistri;
 	DistReal		m_growTimeDistri;
 	DistReal		m_lifeTimeDistri;
 	DistInt			m_sideDistri;
