@@ -8,7 +8,6 @@
 # include "RectangleShape.hpp"
 # include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
-
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 
@@ -68,7 +67,9 @@ private:
 	void	caseAction();
 	void	dance();
 
-private:
+	private:
+	class OctoSound;
+	OctoSound *					m_sound;
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;

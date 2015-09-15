@@ -55,6 +55,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/GroundTransformNanoRobot.cpp		\
 				Game/SpaceShip.cpp						\
 				Game/MusicPlayer.cpp					\
+				Game/OctoSound.cpp						\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

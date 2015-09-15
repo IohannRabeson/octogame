@@ -1,11 +1,13 @@
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
+#include "OctoSound.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
+	m_sound(new OctoSound()),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_progress(Progress::getInstance()),
 	m_spriteScale(0.6f),
@@ -35,6 +37,7 @@ CharacterOcto::CharacterOcto() :
 
 CharacterOcto::~CharacterOcto(void)
 {
+	delete m_sound;
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.removeKeyboardListener(this);
 }
@@ -312,10 +315,10 @@ void	CharacterOcto::update(sf::Time frameTime)
 	}
 	else
 		m_sprite.update(frameTime);
+	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()));
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_collisionTile = false;
 	m_collisionElevator = false;
-
 	m_ink.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
 	{
