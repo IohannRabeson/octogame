@@ -54,6 +54,8 @@ void	Game::loadLevel(std::string const & fileName)
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	postEffect.removeEffects();
 	// Reset PhysycsEngine
+	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome(), sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
+//	octo::Application::getCamera().setCenter(Progress::getInstance().getCameraPos());
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count")); // TODO : remove from default
@@ -72,8 +74,6 @@ void	Game::loadLevel(std::string const & fileName)
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
-	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome(), sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
-	octo::Application::getCamera().setCenter(Progress::getInstance().getCameraPos());
 	m_octo->setup();
 }
 
@@ -175,7 +175,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
-//	m_physicsEngine.debugDraw(render);
 }
 
 void	Game::followPlayer(sf::Time frameTime)
