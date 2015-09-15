@@ -45,7 +45,6 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/AGameObject.cpp					\
 				Game/CharacterNpc.cpp					\
 				Game/CharacterOcto.cpp					\
-				Game/OctoSound.cpp						\
 				Game/Portal.cpp							\
 				Game/ElevatorStream.cpp					\
 				Game/ANpc.cpp							\
@@ -55,6 +54,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/GroundTransformNanoRobot.cpp		\
 				Game/SpaceShip.cpp						\
 				Game/MusicPlayer.cpp					\
+				Game/OctoSound.cpp						\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

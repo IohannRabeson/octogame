@@ -1,11 +1,13 @@
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
+#include "OctoSound.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
+	m_sound(new OctoSound()),
 	m_spriteScale(0.6f),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_pixelSecondJump(-1300.f),
@@ -33,6 +35,7 @@ CharacterOcto::CharacterOcto() :
 
 CharacterOcto::~CharacterOcto(void)
 {
+	delete m_sound;
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.removeKeyboardListener(this);
 }
@@ -266,10 +269,10 @@ void	CharacterOcto::update(sf::Time frameTime)
 	}
 	else
 		m_sprite.update(frameTime);
+	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()));
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_collisionTile = false;
 	m_collisionElevator = false;
-
 	for (auto & robot : m_nanoRobots)
 	{
 		robot->update(frameTime);

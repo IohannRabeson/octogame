@@ -6,7 +6,6 @@
 # include "AGameObject.hpp"
 # include "RectangleShape.hpp"
 # include "NanoRobot.hpp"
-# include "OctoSound.hpp"
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 
@@ -62,6 +61,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void	dance();
 
 	private:
+	class OctoSound;
+	OctoSound *					m_sound;
 	octo::CharacterSprite		m_sprite;
 	float						m_spriteScale;
 	octo::CharacterAnimation	m_idleAnimation;
