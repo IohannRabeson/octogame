@@ -6,6 +6,7 @@
 # include "AGameObject.hpp"
 # include "RectangleShape.hpp"
 # include "NanoRobot.hpp"
+# include "SmokeSystem.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -78,6 +79,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventDeath;
+	sf::Time					m_timeEventInk;
 	float						m_pixelSecondJump;
 	float						m_pixelSecondUmbrella;
 	float						m_pixelSecondWalk;
@@ -101,6 +103,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	bool						m_keyUp;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
+
+	SmokeSystem					m_ink;
 };
 
 #endif

@@ -7,19 +7,26 @@
 #include <ctime>
 
 SmokeSystem::SmokeSystem() :
-	m_size(10.f, 10.f),
+	m_sizeParticle(10.f, 10.f),
 	m_color(255, 255, 255, 150),
 	m_velocity(0.f, -256.f),
+	m_canEmit(true),
 	m_lifeScaleFactor(15.f),
 	m_engine(std::time(0)),
-	m_emitIntervalDistri(0.01f, 0.2f),
+	m_emitTimeDistri(0.01f, 0.2f),
 	m_growTimeDistri(0.5f, 1.5f),
 	m_lifeTimeDistri(2.5f, 4.f),
 	m_sideDistri(0, 3),
 	m_scaleDistri(1.f, 2.5f)
 {
+}
+
+void SmokeSystem::setup(sf::Vector2f const & sizeParticle)
+{
+	m_sizeParticle = sizeParticle;
+
 	SmokeSystem::Prototype prototype;
-	createOctogon(m_size, m_size / 2.f, prototype);
+	createOctogon(m_sizeParticle, m_sizeParticle / 2.f, prototype);
 	reset(prototype, sf::Triangles, 2000);
 }
 
@@ -144,17 +151,16 @@ bool	SmokeSystem::isDeadParticle(Particle const& particle)
 
 void	SmokeSystem::update(sf::Time frameTime)
 {
-	bool	emitParticle = false;
-
-	m_emitTimer += frameTime;
-	while (m_emitTimer > m_emitInterval)
+	if (m_canEmit)
 	{
-		emitParticle = true;
-		m_emitTimer -= m_emitInterval;
-		m_emitInterval = sf::seconds(m_emitIntervalDistri(m_engine));
+		m_emitTimer += frameTime;
+		while (m_emitTimer > m_emitTime)
+		{
+			createParticle();
+			m_emitTimer -= m_emitTime;
+			m_emitTime = sf::seconds(m_emitTimeDistri(m_engine));
+		}
 	}
-	if (emitParticle)
-		createParticle();
 	ParticleSystem::update(frameTime);
 }
 
@@ -163,12 +169,38 @@ void	SmokeSystem::setPosition(sf::Vector2f const & position)
 	m_emitter = position;
 }
 
+void	SmokeSystem::setColor(sf::Color const & color)
+{
+	m_color = color;
+}
+
 void	SmokeSystem::setVelocity(sf::Vector2f const & velocity)
 {
 	m_velocity = velocity;
 }
 
-void	SmokeSystem::setEmitTimeMax(float min, float max)
+void	SmokeSystem::setScaleFactor(float scaleFactor)
 {
-	m_emitIntervalDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
+	m_lifeScaleFactor = scaleFactor;
 }
+
+void	SmokeSystem::setEmitTimeRange(float min, float max)
+{
+	m_emitTimeDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
+}
+
+void	SmokeSystem::setGrowTimeRange(float min, float max)
+{
+	m_growTimeDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
+}
+
+void	SmokeSystem::setLifeTimeRange(float min, float max)
+{
+	m_lifeTimeDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
+}
+
+void	SmokeSystem::setCanEmit(bool canEmit)
+{
+	m_canEmit = canEmit;
+}
+
