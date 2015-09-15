@@ -17,7 +17,8 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t 
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_state(Idle),
 	m_timer(sf::Time::Zero),
-	m_timerMax(sf::seconds(7.f))
+	m_timerMax(sf::seconds(7.f)),
+	m_isTravelling(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -69,6 +70,7 @@ void NanoRobot::setup(AGameObjectBase * gameObject)
 void NanoRobot::transfertToOcto(void)
 {
 	PhysicsEngine::getInstance().unregisterShape(m_box);
+	m_box = nullptr;
 	m_positionBehavior->setRadius(300.f);
 	m_swarm.getFirefly(0u).speed = 1.f;
 	m_text->setActive(true);
@@ -78,9 +80,18 @@ void NanoRobot::transfertToOcto(void)
 
 void NanoRobot::setPosition(sf::Vector2f const & position)
 {
+	if (std::abs(position.x - m_sprite.getPosition().x) > 400.f)
+		m_isTravelling = true;
+	else
+		m_isTravelling = false;
 	sf::Vector2f	pos = position;
 	pos.y -= Tile::TripleTileSize * 2.f;
 	m_swarm.setTarget(pos);
+}
+
+bool NanoRobot::isTravelling(void) const
+{
+	return m_isTravelling;
 }
 
 void NanoRobot::update(sf::Time frametime)
@@ -90,7 +101,11 @@ void NanoRobot::update(sf::Time frametime)
 
 	sf::Vector2f const & pos = m_swarm.getFirefly(0u).position;
 	m_sprite.setPosition(pos - sf::Vector2f(32.f, 32.f));
-	m_box->setPosition(pos.x - m_box->getRadius(), pos.y - m_box->getRadius());
+	if (m_box)
+	{
+		m_box->setPosition(pos.x - m_box->getRadius(), pos.y - m_box->getRadius());
+		m_box->update();
+	}
 
 	if (m_state == Idle || m_state == Speak)
 	{
@@ -110,7 +125,10 @@ void NanoRobot::update(sf::Time frametime)
 
 void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
-	render.draw(m_sprite);
-	if (m_state == Idle || m_state == Speak)
-		m_text->draw(render);
+	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak)
+	{
+		render.draw(m_sprite);
+		if (m_state == Idle || m_state == Speak)
+			m_text->draw(render);
+	}
 }
