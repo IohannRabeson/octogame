@@ -31,6 +31,7 @@
 doc/generated/
 
 # Generated files in examples and tests
+*.osv
 *.pck
 *Definitions.hpp
 
