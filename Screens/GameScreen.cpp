@@ -1,12 +1,12 @@
 #include "GameScreen.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <StateManager.hpp>
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
-
 GameScreen::GameScreen(void)
 {}
 
@@ -15,11 +15,14 @@ void	GameScreen::start()
 	m_menu.setup();
 
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	Progress &				progress = Progress::getInstance();
 	graphics.addKeyboardListener(this);
 
+	progress.setDefaultBiome("Level_One");
+	progress.load("save.osv");
 	m_game.reset(new Game());
 	m_game->setup();
-	m_game->loadLevel("one");
+	m_game->loadLevel(progress.getLevelName());
 }
 
 void	GameScreen::pause()
@@ -35,6 +38,7 @@ void	GameScreen::resume()
 
 void	GameScreen::stop()
 {
+	Progress::getInstance().save();
 }
 
 void	GameScreen::update(sf::Time frameTime)

@@ -45,7 +45,8 @@ void	CharacterOcto::setup(void)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_progress.setCharacterOcto(this);
-	m_box->setPosition(m_progress.getOctoPos());
+	//TODO FIX -200
+	m_box->setPosition(m_progress.getOctoPos().x, m_progress.getOctoPos().y - 200.f);
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
