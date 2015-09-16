@@ -1,6 +1,7 @@
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
+#include "OctoSound.hpp"
 #include "ElevatorStream.hpp"
 #include "RepairNanoRobot.hpp"
 #include <Application.hpp>
@@ -35,6 +36,7 @@ CharacterOcto::CharacterOcto() :
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false)
 {
+	m_sound.reset(new OctoSound());
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 }
@@ -361,6 +363,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	}
 	else
 		m_sprite.update(frameTime);
+	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()));
 	m_previousTop = m_box->getGlobalBounds().top;
 
 	if (!m_collisionElevatorEvent && m_repairNanoRobot) //TODO remove
@@ -368,7 +371,6 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionElevatorEvent = false;
-
 	m_ink.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
 	{

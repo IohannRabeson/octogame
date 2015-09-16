@@ -64,18 +64,18 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 	switch (event.code)
 	{
 		case sf::Keyboard::Escape:
-		{
-			AMenu::State state = m_menu.getState();
-			if (state == AMenu::State::Hide)
-				m_menu.setState(AMenu::State::Active);
-			break;
-		}
+			{
+				AMenu::State state = m_menu.getState();
+				if (state == AMenu::State::Hide)
+					m_menu.setState(AMenu::State::Active);
+				break;
+			}
 		case sf::Keyboard::F:
-		{
-			octo::StateManager & states = octo::Application::getStateManager();
-			states.push("transition");
-			break;
-		}
+			{
+				octo::StateManager & states = octo::Application::getStateManager();
+				states.push("transition");
+				break;
+			}
 		default:
 			break;
 	}

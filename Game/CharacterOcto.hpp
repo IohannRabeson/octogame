@@ -9,7 +9,6 @@
 # include "CircleShape.hpp"
 # include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
-
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 
@@ -36,7 +35,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		StartElevator,
 		Elevator,
 	};
-	public:
+public:
 	friend class OctoEvent;
 
 	class OctoEvent : public AGameObject<GameObjectType::PlayerEvent>
@@ -83,6 +82,8 @@ private:
 	void	dance();
 
 private:
+	class OctoSound;
+	std::unique_ptr<OctoSound>	m_sound;
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
