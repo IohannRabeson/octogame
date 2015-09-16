@@ -12,7 +12,7 @@ DefaultBiome::DefaultBiome() :
 	m_name("Default"),
 	m_mapSize(sf::Vector2u(512u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(0.f, 800.f),
+	m_octoStartPosition(0.f, 400.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(230.f, 168.f, 0.f),
