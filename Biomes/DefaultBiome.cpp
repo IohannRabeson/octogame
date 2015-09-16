@@ -12,7 +12,7 @@ DefaultBiome::DefaultBiome() :
 	m_name("Default"),
 	m_mapSize(sf::Vector2u(512u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(0.f, 800.f),
+	m_octoStartPosition(0.f, 400.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(230.f, 168.f, 0.f),
@@ -36,8 +36,8 @@ DefaultBiome::DefaultBiome() :
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
-	m_sunCount(1u, 3u),
-	m_moonCount(1u, 3u),
+	m_sunCount(3u, 5u),
+	m_moonCount(2u, 3u),
 	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
@@ -92,7 +92,7 @@ DefaultBiome::DefaultBiome() :
 
 	m_sunSize(sf::Vector2f(60.f, 60.f), sf::Vector2f(150.f, 150.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 255, 200),
+	m_sunColor(255, 255, 255),
 
 	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 100.f)),
 	m_moonColor(200, 200, 200),
@@ -584,6 +584,8 @@ std::size_t		DefaultBiome::getSunPartCount()
 
 sf::Color		DefaultBiome::getSunColor()
 {
+	if (m_sunColor == sf::Color(255, 255, 255))
+		return m_sunColor;
 	return (randomColor(m_sunColor));
 }
 
