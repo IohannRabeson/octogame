@@ -5,7 +5,7 @@
 
 class SkyCycle;
 
-class CedricNpc : public ANpc, AGameObject<GameObjectType::CedricNpc>
+class CedricNpc : public ANpc, public AGameObject<GameObjectType::CedricNpc>
 {
 public:
 	CedricNpc(SkyCycle const & skyCycle);
