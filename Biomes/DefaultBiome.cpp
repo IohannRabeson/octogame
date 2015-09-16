@@ -9,7 +9,7 @@
 #include <iostream>
 
 DefaultBiome::DefaultBiome() :
-	m_name("random"),
+	m_name("Default"),
 	m_mapSize(sf::Vector2u(512u, 128u)),
 	m_mapSeed(42u),
 	m_transitionDuration(0.5f),

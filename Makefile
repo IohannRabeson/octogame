@@ -50,6 +50,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/MusicPlayer.cpp					\
 				Game/OctoSound.cpp						\
 				Game/SparkSystem.cpp					\
+				Game/Progress.cpp						\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\

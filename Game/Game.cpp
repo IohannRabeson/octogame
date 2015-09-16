@@ -9,6 +9,7 @@
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -38,8 +39,9 @@ Game::~Game(void)
 
 void	Game::setup(void)
 {
-	m_biomeManager.registerBiome<LevelOneBiome>("one");
-	m_biomeManager.registerBiome<DefaultBiome>("default");
+	//TODO name == biome name;
+	m_biomeManager.registerBiome<LevelOneBiome>("Level_One");
+	m_biomeManager.registerBiome<DefaultBiome>("Default");
 }
 
 void	Game::loadLevel(std::string const & fileName)
@@ -50,6 +52,7 @@ void	Game::loadLevel(std::string const & fileName)
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	postEffect.removeEffects();
 
+	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome());
 	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 800.f));
 	// Reset PhysycsEngine
 	m_physicsEngine.unregisterAllShapes();
