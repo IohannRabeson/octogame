@@ -30,6 +30,7 @@ CharacterOcto::CharacterOcto() :
 	m_keyRight(false),
 	m_keySpace(false),
 	m_keyUp(false),
+	m_keyAction(false),
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false)
@@ -333,8 +334,9 @@ void	CharacterOcto::update(sf::Time frameTime)
 		m_sprite.update(frameTime);
 	m_previousTop = m_box->getGlobalBounds().top;
 
-	if (!m_collisionElevatorEvent && m_repairNanoRobot) //TODO remove
+	if (!m_collisionElevatorEvent && m_progress.canRepair())
 		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
+
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionElevatorEvent = false;
@@ -436,22 +438,23 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot)
 
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
-	//TODO: check if octo is pushing action key and canRepair()
-	if (/*canRepair*/true && sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+	if (m_progress.canRepair() && m_keyAction)
 	{
-		if (!elevator.isActivated())
 		{
-			elevator.activate();
-			m_repairNanoRobot->setState(RepairNanoRobot::State::Repair);
-			sf::Vector2f target = elevator.getPosition();
-			target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
-			target.y -= 50.f;
-			m_repairNanoRobot->setTarget(target);
+			if (!elevator.isActivated())
+			{
+				elevator.activate();
+				m_repairNanoRobot->setState(RepairNanoRobot::State::Repair);
+				sf::Vector2f target = elevator.getPosition();
+				target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
+				target.y -= 50.f;
+				m_repairNanoRobot->setTarget(target);
+			}
+			else
+				m_repairNanoRobot->setState(RepairNanoRobot::State::Done);
 		}
-		else
-			m_repairNanoRobot->setState(RepairNanoRobot::State::Done);
 	}
-	else if (m_repairNanoRobot)//TODO: remove when canRepair is up
+	else if (m_progress.canRepair())
 		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
 	m_collisionElevatorEvent = true;
 }
