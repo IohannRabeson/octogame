@@ -127,7 +127,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_gameObjects[8] = GameObjectType::SpaceShip;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::LevelTwo);
 
 	m_treePos = {36, 300, 306, 309, 320, 329, 340, 354, 359, 375};
 }
