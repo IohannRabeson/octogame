@@ -27,6 +27,9 @@ private:
 	sf::Time	m_timer;
 	bool		m_canSmoke;
 	SmokeSystem	m_smoke;
+	SmokeSystem m_puff;
+	sf::Time	m_puffTimer;
+	sf::Time	m_puffTimerMax;
 };
 
 #endif
