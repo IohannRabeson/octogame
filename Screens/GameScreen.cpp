@@ -33,7 +33,7 @@ void	GameScreen::resume()
 {
 	m_game.reset(new Game());
 	m_game->setup();
-	m_game->loadLevel("default");
+	m_game->loadLevel("Default");
 }
 
 void	GameScreen::stop()

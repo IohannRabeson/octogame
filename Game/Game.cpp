@@ -43,7 +43,7 @@ void	Game::setup(void)
 {
 	//TODO name == biome name;
 	m_biomeManager.registerBiome<LevelOneBiome>("Level_One");
-	m_biomeManager.registerBiome<DefaultBiome>("default");
+	m_biomeManager.registerBiome<DefaultBiome>("Default");
 }
 
 void	Game::loadLevel(std::string const & fileName)
@@ -54,8 +54,8 @@ void	Game::loadLevel(std::string const & fileName)
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	postEffect.removeEffects();
 	// Reset PhysycsEngine
-	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome(), sf::Vector2f(0.f, 700.f)); // TODO: get position in the portal information
-//	octo::Application::getCamera().setCenter(Progress::getInstance().getCameraPos());
+	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome());
+	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 700.f));
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count")); // TODO : remove from default
@@ -76,6 +76,7 @@ void	Game::loadLevel(std::string const & fileName)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup();
+	m_octo->setPosition(sf::Vector2f(0.f, 700.f)); // TODO: get position in the portal information
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
