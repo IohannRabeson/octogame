@@ -140,5 +140,5 @@ bool	Progress::canSlowFall()
 
 bool	Progress::canUseElevator()
 {
-	return m_elevator;
+	return (m_data.nanoRobotCount > 1);
 }
