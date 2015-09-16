@@ -9,7 +9,7 @@
 #include <iostream>
 
 LevelOneBiome::LevelOneBiome() :
-	m_name("Level One"),
+	m_name("Level_One"),
 	m_mapSize(sf::Vector2u(600u, 16u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(700.f, 900.f),

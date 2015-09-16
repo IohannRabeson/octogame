@@ -16,7 +16,6 @@
 #include <Console.hpp>
 #include <DefaultTransition.hpp>
 #include "DefaultApplicationListener.hpp"
-
 // Ecran de jeu
 #include "StateTest.hpp"
 #include "FireflyTestScreen.hpp"
