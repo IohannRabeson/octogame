@@ -29,6 +29,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		DoubleJump,
 		Fall,
 		Dance,
+		DanceWithMusic,
 		SlowFall,
 		Death,
 		Drink,
@@ -89,6 +90,8 @@ private:
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
 	octo::CharacterAnimation	m_danceAnimation;
+	octo::CharacterAnimation	m_danceWithMusicAnimation;
+	octo::CharacterAnimation	m_answerWolfAnimation;
 	octo::CharacterAnimation	m_slowFallAnimation;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;

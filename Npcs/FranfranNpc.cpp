@@ -6,7 +6,7 @@
 FranfranNpc::FranfranNpc(void) :
 	ANpc(FRANFRAN_OSS)
 {
-	setSize(sf::Vector2f(35.f, 75.f));
+	setSize(sf::Vector2f(45.f, 95.f));
 	setOrigin(sf::Vector2f(75.f, 170.f));
 	setScale(0.6f);
 	setVelocity(50.f);
@@ -14,6 +14,7 @@ FranfranNpc::FranfranNpc(void) :
 	setup();
 
 	m_puffTimerMax = sf::seconds(0.8f);
+	setupBox(this, static_cast<std::size_t>(GameObjectType::FranfranNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void FranfranNpc::setup(void)
@@ -103,8 +104,8 @@ void FranfranNpc::update(sf::Time frametime)
 	updatePhysics();
 
 	sprite.update(frametime);
-	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
-	sprite.setPosition(bounds.left, bounds.top);
+	sf::Vector2f const & center = getBox()->getRenderPosition();
+	sprite.setPosition(center);
 	if (sprite.getCurrentEvent() == Idle)
 	{
 		m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(-30.f, -10.f));
@@ -127,6 +128,7 @@ void FranfranNpc::update(sf::Time frametime)
 	m_puff.update(frametime);
 
 	updateText(frametime);
+	resetVariables();
 }
 
 bool FranfranNpc::canSpecial1(void) const
@@ -148,10 +150,6 @@ void FranfranNpc::updateState(void)
 
 void FranfranNpc::updatePhysics(void)
 {
-	CircleShape * eventBox = getEventBox();
-	octo::CharacterSprite & sprite = getSprite();
-
-	eventBox->setPosition(sprite.getPosition().x - eventBox->getRadius(), sprite.getPosition().y - eventBox->getRadius());
 }
 
 void FranfranNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
