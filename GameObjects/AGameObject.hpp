@@ -17,7 +17,8 @@ enum class GameObjectType
 	SpaceShip = 1024u,
 	GroundTransformNanoRobot = 2048u,
 	RepairNanoRobot = 4096u,
-	FranfranNpc = 8192u
+	FranfranNpc = 8192u,
+	JuNpc = 16384u,
 };
 
 /*!

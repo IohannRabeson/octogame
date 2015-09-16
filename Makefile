@@ -60,6 +60,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
 				Npcs/CedricNpc.cpp						\
 				Npcs/FranfranNpc.cpp					\
+				Npcs/JuNpc.cpp							\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
