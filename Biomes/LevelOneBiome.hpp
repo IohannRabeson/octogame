@@ -32,6 +32,7 @@ public:
 
 	virtual sf::Vector2u								getMapSize();
 	virtual sf::Vector2f								getMapSizeFloat();
+	virtual sf::Vector2f								getOctoStartPosition();
 	virtual std::size_t									getMapSeed();
 	virtual float										getTransitionDuration();
 	virtual int											getInterestPointPosX();
@@ -143,6 +144,7 @@ private:
 
 	sf::Vector2u										m_mapSize;
 	std::size_t											m_mapSeed;
+	sf::Vector2f										m_octoStartPosition;
 	float												m_transitionDuration;
 	std::size_t											m_interestPointPosX;
 	std::vector<sf::Color>								m_particleColor;
