@@ -51,7 +51,7 @@ void	Game::loadLevel(std::string const & fileName)
 	m_biomeManager.changeBiome(fileName, 0x12345);
 
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	sf::Vector2f startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
 
 	// Reset last values
 	postEffect.removeEffects();
