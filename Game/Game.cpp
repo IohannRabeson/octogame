@@ -51,7 +51,6 @@ void	Game::loadLevel(void)
 	// Reset last values
 	postEffect.removeEffects();
 	// Reset PhysycsEngine
-	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome());
 	octo::Application::getCamera().setCenter(startPosition);
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();

@@ -11,7 +11,7 @@
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
-	m_destination(Level::LevelOne),
+	m_newSave(false),
 	m_changeLevel(false)
 {
 	setup();
@@ -51,8 +51,8 @@ void	Progress::load(std::string const &filename)
 void	Progress::init()
 {
 	//TODO
-	std::cout << "name:" << m_data.biomeName << std::endl;
-	//std::cout << "robot:" << m_data.nanoRobotCount << std::endl;
+	std::cout << "name:" << static_cast<std::size_t>(m_data.destination) << std::endl;
+	std::cout << "robot:" << m_data.nanoRobotCount << std::endl;
 }
 
 void	Progress::save()
@@ -74,20 +74,15 @@ void	Progress::reset()
 	setup();
 }
 
-void	Progress::setupInfoLevel(ABiome & biome)
-{
-	m_data.biomeName = biome.getName();
-}
-
 void	Progress::setNextDestination(Level destination)
 {
-	m_destination = destination;
+	m_data.destination = destination;
 	m_changeLevel = true;
 }
 
 Level	Progress::getNextDestination(void) const
 {
-	return m_destination;
+	return m_data.destination;
 }
 
 bool	Progress::canMoveMap()

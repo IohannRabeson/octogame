@@ -10,29 +10,27 @@ class Progress
 {
 public:
 	static Progress & getInstance(void);
-	void	load(std::string const & filename);
-	void	save();
-	void	reset();
 
-	inline std::string const&	getLevelName(){ return m_data.biomeName; }
-	void						setupInfoLevel(ABiome & biome);
+	inline void			addNanoRobot() { m_data.nanoRobotCount++; }
+	inline void			removeNanoRobot() { m_data.nanoRobotCount--; }
+	inline std::size_t	getNanoRobotCount() { return m_data.nanoRobotCount; }
 
-	inline void					addNanoRobot(){ m_data.nanoRobotCount++; }
-	inline void					removeNanoRobot(){ m_data.nanoRobotCount--; }
-	inline std::size_t			getNanoRobotCount(){ return m_data.nanoRobotCount; }
+	void				setNextDestination(Level destination);
+	Level				getNextDestination(void) const;
 
-	void						setNextDestination(Level destination);
-	Level						getNextDestination(void) const;
+	bool				canMoveMap();
+	bool				canRepair();
+	bool				canWalk();
+	bool				canJump();
+	bool				canDoubleJump();
+	bool				canSlowFall();
+	bool				canUseElevator();
+	bool				changeLevel() const;
+	void				levelChanged();
 
-	bool			canMoveMap();
-	bool			canRepair();
-	bool			canWalk();
-	bool			canJump();
-	bool			canDoubleJump();
-	bool			canSlowFall();
-	bool			canUseElevator();
-	bool			changeLevel() const;
-	void			levelChanged();
+	void				load(std::string const & filename);
+	void				save();
+	void				reset();
 
 private:
 	Progress();
@@ -42,21 +40,21 @@ private:
 	struct data{
 		data() :
 			nanoRobotCount(0u),
-			biomeName("")
+			destination(Level::LevelOne)
 		{
 		}
-		data(std::size_t nanoRobot, std::string biomeName) :
+		data(std::size_t nanoRobot, Level biome) :
 			nanoRobotCount(nanoRobot),
-			biomeName(biomeName)
-		{
-			//TODO add elevator
-		}
+			destination(biome)
+		{}
+
 		std::size_t		nanoRobotCount;
-		std::string		biomeName;
+		Level			destination;
+
 	};
+
 	static std::unique_ptr<Progress>		m_instance;
 	std::string								m_filename;
-	Level									m_destination;
 	data									m_data;
 	bool									m_newSave;
 	bool									m_changeLevel;
