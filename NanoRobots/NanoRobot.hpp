@@ -27,6 +27,7 @@ public:
 	void transfertToOcto(void);
 	void setPosition(sf::Vector2f const & position);
 	bool isTravelling(void) const;
+	void setState(NanoRobot::State state);
 	sf::Vector2f const & getPosition(void) const;
 	NanoRobot::State getState(void) const;
 

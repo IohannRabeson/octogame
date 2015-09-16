@@ -19,6 +19,7 @@ enum class GameObjectType
 	RepairNanoRobot = 4096u,
 	FranfranNpc = 8192u,
 	JuNpc = 16384u,
+	GuiNpc = 32768u,
 };
 
 /*!

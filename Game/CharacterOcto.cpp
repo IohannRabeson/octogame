@@ -2,6 +2,7 @@
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
 #include "ElevatorStream.hpp"
+#include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
@@ -38,6 +39,19 @@ CharacterOcto::CharacterOcto() :
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
+
+	if (m_progress.canMoveMap())
+		giveNanoRobot(new GroundTransformNanoRobot());
+	if (m_progress.canRepair())
+		giveRepairNanoRobot(new RepairNanoRobot());
+
+	for (auto & robot : m_nanoRobots)
+	{
+		robot->setPosition(getPosition());
+		robot->transfertToOcto();
+		m_progress.removeNanoRobot();
+		robot->setState(NanoRobot::State::FollowOcto);
+	}
 }
 
 CharacterOcto::~CharacterOcto(void)
@@ -489,6 +503,14 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 	m_collisionElevatorEvent = true;
 }
 
+void	CharacterOcto::usePortal(Portal & portal)
+{
+	if (m_keyAction)
+	{
+		m_progress.setNextDestination(portal.getDestination());
+	}
+}
+
 void	CharacterOcto::collisionTileUpdate()
 {
 	if (!m_collisionTile)
@@ -789,9 +811,6 @@ void CharacterOcto::caseAction()
 	if (!m_keyAction)
 	{
 		m_keyAction = true;
-		//TODO
-		if (m_progress.canUseAction())return;
-		//		m_sprite.setNextEvent(Action);
 	}
 }
 

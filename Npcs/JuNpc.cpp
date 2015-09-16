@@ -6,8 +6,8 @@
 JuNpc::JuNpc(void) :
 	ANpc(JU_OSS)
 {
-	setSize(sf::Vector2f(45.f, 95.f));
-	setOrigin(sf::Vector2f(75.f, 170.f));
+	setSize(sf::Vector2f(35.f, 75.f));
+	setOrigin(sf::Vector2f(75.f, 68.f));
 	setScale(0.6f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
@@ -26,18 +26,21 @@ void JuNpc::setup(void)
 			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()})
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()})
 			});
-	getIdleAnimation().setLoop(octo::LoopMode::Loop);
+	getIdleAnimation().setLoop(octo::LoopMode::NoLoop);
 
 	getSpecial1Animation().setFrames({
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.6f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()})
+			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.6f), {11u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {12u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {13u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {14u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {16u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {17u, sf::FloatRect(), sf::Vector2f()})
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
@@ -102,7 +105,7 @@ void JuNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (sprite.getCurrentEvent() == Idle && m_canSpecial)
+	if (sprite.getCurrentEvent() == Idle && sprite.isTerminated())
 		sprite.setNextEvent(Special1);
 	else if (sprite.getCurrentEvent() == Special1 && sprite.isTerminated())
 		sprite.setNextEvent(Idle);

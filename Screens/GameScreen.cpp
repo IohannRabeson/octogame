@@ -7,6 +7,7 @@
 #include <StateManager.hpp>
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
+
 GameScreen::GameScreen(void)
 {}
 
@@ -18,11 +19,9 @@ void	GameScreen::start()
 	Progress &				progress = Progress::getInstance();
 	graphics.addKeyboardListener(this);
 
-	progress.setDefaultBiome("Level_One");
 	progress.load("save.osv");
 	m_game.reset(new Game());
-	m_game->setup();
-	m_game->loadLevel(progress.getLevelName());
+	m_game->loadLevel();
 }
 
 void	GameScreen::pause()
@@ -31,9 +30,9 @@ void	GameScreen::pause()
 
 void	GameScreen::resume()
 {
+	Progress::getInstance().levelChanged();
 	m_game.reset(new Game());
-	m_game->setup();
-	m_game->loadLevel("Default");
+	m_game->loadLevel();
 }
 
 void	GameScreen::stop()
@@ -56,6 +55,11 @@ void	GameScreen::update(sf::Time frameTime)
 		postEffect.setAllShaderEnabled(true);
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
+		if (Progress::getInstance().changeLevel())
+		{
+			octo::StateManager & states = octo::Application::getStateManager();
+			states.push("transition");
+		}
 	}
 }
 
