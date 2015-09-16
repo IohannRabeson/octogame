@@ -99,7 +99,7 @@ bool	Progress::canWalk()
 
 bool	Progress::canJump()
 {
-	return false;
+	return true;
 }
 
 bool	Progress::canDoubleJump()
