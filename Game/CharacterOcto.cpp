@@ -606,7 +606,7 @@ void	CharacterOcto::dance()
 {
 	if (m_timeEventIdle > sf::seconds(3.0f))
 	{
-		if (octo::Application::getAudioManager().getMusicEnabled())
+		if (octo::Application::getAudioManager().getMusicVolume())
 			m_sprite.setNextEvent(DanceWithMusic);
 		else
 			m_sprite.setNextEvent(Dance);
