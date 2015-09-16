@@ -47,6 +47,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/RepairNanoRobot.cpp				\
+				Game/Progress.cpp						\
 				Game/MusicPlayer.cpp					\
 				Game/SparkSystem.cpp					\
 
@@ -70,6 +71,8 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/OptionMenu.cpp						\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
+				Menu/SoundVolumeMenu.cpp				\
+				Menu/MusicVolumeMenu.cpp				\
 				Menu/ControlMenu.cpp					\
 				Menu/YesNoMenu.cpp						\
 				Menu/ResolutionMenu.cpp					\

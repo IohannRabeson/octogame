@@ -6,6 +6,7 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
+#include "Progress.hpp"
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -27,6 +28,8 @@ Game::Game(void) :
 	m_musicPlayer(nullptr),
 	m_octo(nullptr)
 {
+	//TODO remove
+	Progress::getInstance().setCanWalk(true);
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 }
@@ -39,8 +42,9 @@ Game::~Game(void)
 
 void	Game::setup(void)
 {
-	m_biomeManager.registerBiome<LevelOneBiome>("one");
-	m_biomeManager.registerBiome<DefaultBiome>("default");
+	//TODO name == biome name;
+	m_biomeManager.registerBiome<LevelOneBiome>("Level_One");
+	m_biomeManager.registerBiome<DefaultBiome>("Default");
 }
 
 void	Game::loadLevel(std::string const & fileName)
@@ -50,9 +54,9 @@ void	Game::loadLevel(std::string const & fileName)
 	// Reset last values
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	postEffect.removeEffects();
-
-	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 800.f));
 	// Reset PhysycsEngine
+	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome());
+	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 700.f));
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count")); // TODO : remove from default
@@ -179,10 +183,12 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	switch (event.code)
 	{
 		case sf::Keyboard::E:
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+			if (Progress::getInstance().getNanoRobotCount())
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 		break;
 		case sf::Keyboard::R:
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			if (Progress::getInstance().getNanoRobotCount())
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
 		break;
 		default:
 		break;
