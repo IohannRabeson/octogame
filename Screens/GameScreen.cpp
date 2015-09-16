@@ -7,7 +7,6 @@
 #include <StateManager.hpp>
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
-
 GameScreen::GameScreen(void)
 {}
 

@@ -241,7 +241,7 @@ void SkyCycle::playSound(ABiome & biome)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		audio.playSound(resources.getSound(THUNDER_STEREO_TMP_WAV), 0.2, biome.randomFloat(0.5, 1.5f));
+		audio.playSound(resources.getSound(THUNDER_STEREO_TMP_WAV), 0.1f, biome.randomFloat(0.5, 1.5f));
 		m_boolThunder = false;
 	}
 }
