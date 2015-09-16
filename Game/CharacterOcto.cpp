@@ -438,21 +438,19 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot)
 
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
-	if (m_progress.canRepair() && m_keyAction)
+	if (m_progress.canRepair() && m_keyAction && getPosition().y > 100.f)
 	{
+		if (!elevator.isActivated())
 		{
-			if (!elevator.isActivated())
-			{
-				elevator.activate();
-				m_repairNanoRobot->setState(RepairNanoRobot::State::Repair);
-				sf::Vector2f target = elevator.getPosition();
-				target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
-				target.y -= 50.f;
-				m_repairNanoRobot->setTarget(target);
-			}
-			else
-				m_repairNanoRobot->setState(RepairNanoRobot::State::Done);
+			elevator.activate();
+			m_repairNanoRobot->setState(RepairNanoRobot::State::Repair);
+			sf::Vector2f target = elevator.getPosition();
+			target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
+			target.y -= 50.f;
+			m_repairNanoRobot->setTarget(target);
 		}
+		else
+			m_repairNanoRobot->setState(RepairNanoRobot::State::Done);
 	}
 	else if (m_progress.canRepair())
 		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
