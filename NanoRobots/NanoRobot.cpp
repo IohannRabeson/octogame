@@ -95,6 +95,11 @@ bool NanoRobot::isTravelling(void) const
 	return m_isTravelling;
 }
 
+void NanoRobot::setState(NanoRobot::State state)
+{
+	m_state = state;
+}
+
 sf::Vector2f const & NanoRobot::getPosition(void) const
 {
 	return m_swarm.getFirefly(0u).position;

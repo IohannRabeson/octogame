@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/24 05:16:51 by irabeson          #+#    #+#             */
-/*   Updated: 2015/07/01 13:31:36 by pciavald         ###   ########.fr       */
+/*   Updated: 2015/09/16 17:53:20 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,27 @@
 # define BIOMEMANAGER_HPP
 # include <NonCopyable.hpp>
 # include <GenericFactory.hpp>
-# include <string>
 # include <memory>
-
-class ABiome;
+# include "ABiome.hpp"
 
 class BiomeManager : public octo::NonCopyable
 {
 public:
-	void	changeBiome(std::string const& key, std::size_t seed);
+	void	changeBiome(Level key, std::size_t seed);
 	
 	template <class T>
-	void	registerBiome(std::string const& key);
+	void	registerBiome(Level key);
 
 	ABiome&	getCurrentBiome();
 private:
-	typedef octo::GenericFactory<std::string, ABiome>	BiomeFactory;
+	typedef octo::GenericFactory<Level, ABiome>	BiomeFactory;
 
 	BiomeFactory			m_factory;
 	std::unique_ptr<ABiome>	m_biome;
 };
 
 template <class T>
-void	BiomeManager::registerBiome(std::string const& key)
+void	BiomeManager::registerBiome(Level key)
 {
 	m_factory.registerCreator<T>(key);
 }

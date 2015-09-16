@@ -37,6 +37,7 @@ public:
 	virtual float										getTransitionDuration();
 	virtual int											getInterestPointPosX();
 	virtual std::map<std::size_t, GameObjectType> const & getGameObjects();
+	virtual Level										getDestination();
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -153,6 +154,8 @@ private:
 
 	std::map<std::size_t, std::string>					m_instances;
 	std::map<std::size_t, GameObjectType>				m_gameObjects;
+	std::vector<Level>									m_destinations;
+	std::size_t											m_destinationIndex;
 
 	sf::Time											m_dayDuration;
 	sf::Time											m_startDayDuration;

@@ -9,7 +9,8 @@
 #include <Camera.hpp>
 #include <cassert>
 
-Portal::Portal(void) :
+Portal::Portal(Level destination) :
+	m_destination(destination),
 	m_position(40.f, 0.f),
 	m_shaderIndex(0u),
 	m_maxParticle(40u),

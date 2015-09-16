@@ -13,6 +13,7 @@
 #include "SpaceShip.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -138,7 +139,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		{
 			case GameObjectType::Portal:
 				{
-					std::unique_ptr<Portal> portal(new Portal());
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 				}
@@ -158,10 +159,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				}
 				break;
 			case GameObjectType::RepairNanoRobot:
-					m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
+					if (!Progress::getInstance().canRepair())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
 				break;
 			case GameObjectType::GroundTransformNanoRobot:
-					m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
+					if (!Progress::getInstance().canMoveMap())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
 				break;
 			case GameObjectType::SpaceShip:
 				{
