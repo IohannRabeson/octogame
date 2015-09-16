@@ -34,7 +34,6 @@ public:
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawText(sf::RenderTarget& render, sf::RenderStates states) const;
-
 	NanoRobot * getNanoRobot(NanoRobot * robot);
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
 

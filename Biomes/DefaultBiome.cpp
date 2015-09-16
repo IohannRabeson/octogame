@@ -123,9 +123,8 @@ DefaultBiome::DefaultBiome() :
 
 	// Define game objects
 	m_gameObjects[50] = GameObjectType::Portal;
-	m_gameObjects[150] = GameObjectType::CedricNpc;
+	m_gameObjects[150] = GameObjectType::NpcCedric;
 	m_gameObjects[0] = GameObjectType::GroundTransformNanoRobot;
-	m_gameObjects[450] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[100] = GameObjectType::SpaceShip;
 }
 

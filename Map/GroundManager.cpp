@@ -9,10 +9,8 @@
 #include "MapInstance.hpp"
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
-#include "FranfranNpc.hpp"
 #include "SpaceShip.hpp"
 #include "GroundTransformNanoRobot.hpp"
-#include "RepairNanoRobot.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -143,25 +141,17 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 				}
 				break;
-			case GameObjectType::CedricNpc:
+			case GameObjectType::NpcCedric:
 				{
 					CedricNpc * cedric = new CedricNpc(skyCycle);
 					cedric->activatePhysics(false);
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, cedric);
 				}
 				break;
-			case GameObjectType::FranfranNpc:
-				{
-					FranfranNpc * franfran = new FranfranNpc();
-					franfran->activatePhysics(false);
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, franfran);
-				}
-				break;
-			case GameObjectType::RepairNanoRobot:
-					m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
-				break;
 			case GameObjectType::GroundTransformNanoRobot:
+				{
 					m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
+				}
 				break;
 			case GameObjectType::SpaceShip:
 				{
@@ -312,16 +302,13 @@ void GroundManager::setupDecors(ABiome & biome)
 
 NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 {
-	for (auto it = m_nanoRobots.begin(); it != m_nanoRobots.end(); it++)
-	{
-		if (it->m_gameObject.get() == robot)
-		{
-			it->m_gameObject.release();
-			m_nanoRobots.erase(it);
-			break;
-		}
-	}
-	return robot;
+	auto ptr = std::remove_if(m_nanoRobots.begin(), m_nanoRobots.end(), [robot](GameObjectPosition<NanoRobot> const & nanoRobot)
+			{
+				return (nanoRobot.m_gameObject.get() == robot);
+			});
+	NanoRobot * newPtr = ptr->m_gameObject.release();
+	m_nanoRobots.erase(ptr);
+	return newPtr;
 }
 
 

@@ -9,8 +9,8 @@
 #include <iostream>
 
 LevelOneBiome::LevelOneBiome() :
-	m_name("Level One"),
-	m_mapSize(sf::Vector2u(600u, 16u)),
+	m_name("Level_One"),
+	m_mapSize(sf::Vector2u(400u, 16u)),
 	m_mapSeed(42u),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
@@ -30,7 +30,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(7u, 8u),
-	m_treeCount(10u, 10u),
+	m_treeCount(1u, 1u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(4u, 8u),
 	m_starCount(500u, 800u),
@@ -63,7 +63,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_treeDepth(5u, 5u),
 	m_treeSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
-	m_treeColor(188, 206, 213),
+	m_treeColor(201, 201, 201),
 	m_treeAngle(15.f, 75.f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(143, 208, 202),
@@ -100,8 +100,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
-	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f)),
-	m_indexTreePos(0u)
+	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_name);
 #ifndef NDEBUG
@@ -118,13 +117,11 @@ LevelOneBiome::LevelOneBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[450] = GameObjectType::Portal;
-	m_gameObjects[425] = GameObjectType::FranfranNpc;
+	m_gameObjects[300] = GameObjectType::Portal;
+	m_gameObjects[270] = GameObjectType::NpcCedric;
 	m_gameObjects[135] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 135;
 	m_gameObjects[8] = GameObjectType::SpaceShip;
-
-	m_treePos = {36, 300, 306, 309, 320, 329, 340, 354, 359, 375};
 }
 
 void			LevelOneBiome::setup(std::size_t seed)
@@ -432,7 +429,7 @@ sf::Color		LevelOneBiome::getLeafColor()
 
 std::size_t		LevelOneBiome::getTreePositionX()
 {
-	return (m_treePos[m_indexTreePos++]);
+	return (25);
 }
 
 sf::Vector2f	LevelOneBiome::getCrystalSize()

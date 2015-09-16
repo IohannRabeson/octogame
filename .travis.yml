@@ -10,7 +10,6 @@ matrix:
 before_install:
 - chmod u=rx ./scripts/travis/*.sh
 install:
-- sudo ./scripts/travis/install_boost.sh
 - sudo ./scripts/travis/install_compiler.sh
 - if [ "$MODE" = "debug" ]; then sudo ./scripts/travis/install_cppcheck.sh; fi
 - sudo ./scripts/travis/install_sfml.sh

@@ -12,7 +12,6 @@ SmokeSystem::SmokeSystem() :
 	m_velocity(0.f, -256.f),
 	m_canEmit(true),
 	m_lifeScaleFactor(15.f),
-	m_dispersion(300.f),
 	m_engine(std::time(0)),
 	m_emitTimeDistri(0.01f, 0.2f),
 	m_growTimeDistri(0.5f, 1.5f),
@@ -126,16 +125,16 @@ void	SmokeSystem::updateParticle(sf::Time frameTime, Particle& particle)
 		switch (behaviour)
 		{
 			case 0:
-				position.x += std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion);
+				position.x += std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * 300.f);
 				break;
 			case 1:
-				position.x -= std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion);
+				position.x -= std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * 300.f);
 				break;
 			case 2:
-				position.x += std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion);
+				position.x += std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * 300.f);
 				break;
 			case 3:
-				position.x -= std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion);
+				position.x -= std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * 300.f);
 				break;
 			default:
 				break;
@@ -178,11 +177,6 @@ void	SmokeSystem::setColor(sf::Color const & color)
 void	SmokeSystem::setVelocity(sf::Vector2f const & velocity)
 {
 	m_velocity = velocity;
-}
-
-void	SmokeSystem::setDispersion(float dispersion)
-{
-	m_dispersion = dispersion;
 }
 
 void	SmokeSystem::setScaleFactor(float scaleFactor)
