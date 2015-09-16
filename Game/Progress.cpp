@@ -53,9 +53,6 @@ Progress & Progress::getInstance()
 void	Progress::setup()
 {
 	m_newSave = false;
-	m_mapSize = sf::Vector2u(0u, 0u);
-	m_octo = nullptr;
-	m_map = nullptr;
 	m_filename = "save.osv";
 	m_data = data();
 	m_action = false;
@@ -83,35 +80,12 @@ void	Progress::load(std::string const &filename)
 void	Progress::init()
 {
 	//TODO
-	/*std::cout << "name:" << m_data.biomeName << std::endl;
-	std::cout << "robot:" << m_data.nanoRobotCount << std::endl;
-	std::cout << "octo:" << m_data.octoPos.x << "|" << m_data.octoPos.y << std::endl;
-	std::cout << "camera:" << m_data.cameraPos.x << "|" << m_data.cameraPos.y << std::endl;
-	std::cout << "depth:" << m_data.depthMap << std::endl;*/
+	std::cout << "name:" << m_data.biomeName << std::endl;
+	//std::cout << "robot:" << m_data.nanoRobotCount << std::endl;
 }
 
 void	Progress::save()
 {
-	m_data.octoPos = m_octo->getPhysicsPosition();
-	m_data.cameraPos = octo::Application::getCamera().getCenter();
-	if (m_data.octoPos.x < 0){
-		while (m_data.octoPos.x < 0)
-			m_data.octoPos.x += m_mapSize.x * Tile::TileSize;
-	}
-	else
-	{
-		while (m_data.octoPos.x > m_mapSize.x * Tile::TileSize)
-			m_data.octoPos.x -= m_mapSize.x * Tile::TileSize;
-	}
-	if (m_data.cameraPos.x < 0){
-		while (m_data.cameraPos.x < 0)
-			m_data.cameraPos.x += m_mapSize.x * Tile::TileSize;
-	}
-	else
-	{
-		while (m_data.cameraPos.x > (m_mapSize.x * Tile::TileSize))
-			m_data.cameraPos.x -= m_mapSize.x * Tile::TileSize;
-	}
 	saveToFile();
 }
 
@@ -129,29 +103,9 @@ void	Progress::reset()
 	setup();
 }
 
-void	Progress::setupInfoLevel(ABiome & biome, sf::Vector2f octoPos)
+void	Progress::setupInfoLevel(ABiome & biome)
 {
-	if (m_data.biomeName != biome.getName() || m_newSave)
-	{
-		m_data.octoPos = octoPos;
-		m_data.cameraPos = octoPos;
-	}
 	m_data.biomeName = biome.getName();
-	m_mapSize = biome.getMapSize();
-}
-
-void	Progress::setCharacterOcto(CharacterOcto * octo)
-{
-	m_octo = octo;
-}
-void	Progress::setGroundManager(GroundManager * manager)
-{
-	m_map = manager;
-}
-
-sf::Vector2f const&	Progress::getOctoPos()
-{
-	return m_data.octoPos;
 }
 
 bool	Progress::canUseAction()
