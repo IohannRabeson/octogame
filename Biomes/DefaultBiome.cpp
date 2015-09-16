@@ -9,9 +9,10 @@
 #include <iostream>
 
 DefaultBiome::DefaultBiome() :
-	m_name("Default Biome"),
+	m_name("Default"),
 	m_mapSize(sf::Vector2u(512u, 128u)),
 	m_mapSeed(42u),
+	m_octoStartPosition(0.f, 800.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(230.f, 168.f, 0.f),
@@ -70,7 +71,7 @@ DefaultBiome::DefaultBiome() :
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
 	m_mushroomColor(77, 142, 126),
-	m_mushroomLifeTime(sf::seconds(20), sf::seconds(60)),
+	m_mushroomLifeTime(sf::seconds(10), sf::seconds(30)),
 
 	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 100.f)),
 	m_crystalPartCount(2u, 8u),
@@ -123,8 +124,10 @@ DefaultBiome::DefaultBiome() :
 
 	// Define game objects
 	m_gameObjects[50] = GameObjectType::Portal;
-	m_gameObjects[150] = GameObjectType::NpcCedric;
+	m_gameObjects[150] = GameObjectType::CedricNpc;
+	m_gameObjects[170] = GameObjectType::FranfranNpc;
 	m_gameObjects[0] = GameObjectType::GroundTransformNanoRobot;
+	m_gameObjects[450] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[100] = GameObjectType::SpaceShip;
 }
 
@@ -152,6 +155,11 @@ std::size_t		DefaultBiome::getMapSeed()
 sf::Vector2f	DefaultBiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
+}
+
+sf::Vector2f	DefaultBiome::getOctoStartPosition()
+{
+	return m_octoStartPosition;
 }
 
 float			DefaultBiome::getTransitionDuration()

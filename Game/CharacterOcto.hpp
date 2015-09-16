@@ -6,11 +6,15 @@
 # include "AGameObject.hpp"
 # include "Progress.hpp"
 # include "RectangleShape.hpp"
+# include "CircleShape.hpp"
 # include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
+
+class ElevatorStream;
+class RepairNanoRobot;
 
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	public octo::DefaultKeyboardListener,
@@ -32,9 +36,16 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		StartElevator,
 		Elevator,
 	};
-public:
+	public:
+	friend class OctoEvent;
+
+	class OctoEvent : public AGameObject<GameObjectType::PlayerEvent>
+	{
+	public:
+		CharacterOcto *	m_octo;
+	};
 	CharacterOcto();
-	~CharacterOcto();
+	virtual ~CharacterOcto();
 
 	void					setup(void);
 	void					update(sf::Time frameTime);
@@ -49,6 +60,8 @@ public:
 	sf::Vector2f			getBubblePosition() const;
 	void					setPosition(sf::Vector2f const & position);
 	void					giveNanoRobot(NanoRobot * robot);
+	void					giveRepairNanoRobot(RepairNanoRobot * robot);
+	void					repairElevator(ElevatorStream & elevator);
 
 private:
 	bool	dieFall();
@@ -83,9 +96,12 @@ private:
 	octo::CharacterAnimation	m_drinkAnimation;
 	octo::CharacterAnimation	m_startElevatorAnimation;
 	octo::CharacterAnimation	m_elevatorAnimation;
-	RectangleShape*				m_box;
-	Progress &					m_progress;
+	RectangleShape *			m_box;
+	CircleShape *				m_eventBox;
+	OctoEvent					m_octoEvent;
 	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
+	RepairNanoRobot *			m_repairNanoRobot;
+	Progress &					m_progress;
 
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
@@ -118,7 +134,7 @@ private:
 	bool						m_keyAction;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
-
+	bool						m_collisionElevatorEvent;
 	SmokeSystem					m_ink;
 };
 

@@ -1,6 +1,8 @@
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
+#include "ElevatorStream.hpp"
+#include "RepairNanoRobot.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
@@ -8,6 +10,8 @@
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
+	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle(false)),
+	m_repairNanoRobot(nullptr),
 	m_progress(Progress::getInstance()),
 	m_spriteScale(0.6f),
 	m_pixelSecondJump(-1300.f),
@@ -28,7 +32,8 @@ CharacterOcto::CharacterOcto() :
 	m_keySpace(false),
 	m_keyUp(false),
 	m_collisionTile(false),
-	m_collisionElevator(false)
+	m_collisionElevator(false),
+	m_collisionElevatorEvent(false)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -44,13 +49,27 @@ void	CharacterOcto::setup(void)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
-	m_progress.setCharacterOcto(this);
-	m_box->setPosition(m_progress.getOctoPos().x, m_progress.getOctoPos().y);
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
-	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::PortalActivation) | static_cast<std::uint32_t>(GameObjectType::Portal) | static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot) | static_cast<std::uint32_t>(GameObjectType::Elevator);
+	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal)
+		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
+		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
+		| static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
+
+	m_octoEvent.m_octo = this;
+	m_eventBox->setGameObject(&m_octoEvent);
+	m_eventBox->setRadius(400.f);
+	m_eventBox->setCollisionType(static_cast<std::uint32_t>(GameObjectType::PlayerEvent));
+	std::uint32_t maskEvent = static_cast<std::uint32_t>(GameObjectType::Portal)
+		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
+		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
+		| static_cast<std::uint32_t>(GameObjectType::Elevator);
+	m_eventBox->setCollisionMask(maskEvent);
+	m_eventBox->setApplyGravity(false);
+	m_eventBox->setType(AShape::Type::e_trigger);
+
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
 	m_timeEventStartElevator = sf::Time::Zero;
 	m_timeEventFall = sf::Time::Zero;
@@ -342,8 +361,12 @@ void	CharacterOcto::update(sf::Time frameTime)
 	else
 		m_sprite.update(frameTime);
 	m_previousTop = m_box->getGlobalBounds().top;
+
+	if (!m_collisionElevatorEvent && m_repairNanoRobot) //TODO remove
+		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
 	m_collisionTile = false;
 	m_collisionElevator = false;
+	m_collisionElevatorEvent = false;
 
 	m_ink.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
@@ -429,6 +452,34 @@ void	CharacterOcto::setPosition(sf::Vector2f const & position)
 void	CharacterOcto::giveNanoRobot(NanoRobot * robot)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+}
+
+void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot)
+{
+	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+	m_repairNanoRobot = robot;
+}
+
+void	CharacterOcto::repairElevator(ElevatorStream & elevator)
+{
+	//TODO: check if octo is pushing action key and canRepair()
+	if (/*canRepair*/true && sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+	{
+		if (!elevator.isActivated())
+		{
+			elevator.activate();
+			m_repairNanoRobot->setState(RepairNanoRobot::State::Repair);
+			sf::Vector2f target = elevator.getPosition();
+			target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
+			target.y -= 50.f;
+			m_repairNanoRobot->setTarget(target);
+		}
+		else
+			m_repairNanoRobot->setState(RepairNanoRobot::State::Done);
+	}
+	else if (m_repairNanoRobot)//TODO: remove when canRepair is up
+		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
+	m_collisionElevatorEvent = true;
 }
 
 void	CharacterOcto::collisionTileUpdate()
@@ -570,6 +621,7 @@ void	CharacterOcto::commitPhysicsToGraphics()
 	float				yPos =  pos.y - ((m_sprite.getLocalSize().y * m_spriteScale) - (m_box->getSize().y / 2.f));
 
 	m_sprite.setPosition(sf::Vector2f(xPos, yPos + m_deltaPositionY));
+	m_eventBox->setPosition(pos.x - m_eventBox->getRadius(), pos.y - m_eventBox->getRadius());
 }
 
 void	CharacterOcto::commitEventToGraphics()
