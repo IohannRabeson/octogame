@@ -150,6 +150,7 @@ void	CharacterOcto::setupAnimation()
 
 	//TODO define frame
 	m_danceWithMusicAnimation.setFrames({
+			Frame(sf::seconds(0.4f), {35, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_danceWithMusicAnimation.setLoop(octo::LoopMode::Loop);
@@ -606,7 +607,7 @@ void	CharacterOcto::dance()
 {
 	if (m_timeEventIdle > sf::seconds(3.0f))
 	{
-		if (octo::Application::getAudioManager().getMusicVolume())
+		if (octo::Application::getAudioManager().getMusicVolume() > 0.f)
 			m_sprite.setNextEvent(DanceWithMusic);
 		else
 			m_sprite.setNextEvent(Dance);
