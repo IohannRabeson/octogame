@@ -9,6 +9,7 @@
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "FranfranNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -148,13 +149,19 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 {
 	(void)octo;
 	(void)collisionDirection;
-	if (gameObjectCast<ElevatorStream>(gameObject))
+	switch (gameObject->getObjectType())
 	{
-		octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
-	}
-	else if (gameObjectCast<Portal>(gameObject))
-	{
-		gameObjectCast<Portal>(gameObject)->appear();
+		case GameObjectType::Elevator:
+			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
+			break;
+		case GameObjectType::Portal:
+			gameObjectCast<Portal>(gameObject)->appear();
+			break;
+		case GameObjectType::FranfranNpc:
+			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		default:
+			break;
 	}
 }
 
