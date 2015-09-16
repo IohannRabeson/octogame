@@ -63,6 +63,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void					giveNanoRobot(NanoRobot * robot);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot);
 	void					repairElevator(ElevatorStream & elevator);
+	void					usePortal(Portal & portal);
 
 private:
 	bool	dieFall();

@@ -41,7 +41,6 @@ private:
 			End
 		};
 
-		//TODO: getColor particle from next biome
 		PortalParticle(void);
 		void setRadius(float radius);
 		void setBiome(ABiome & biome);
@@ -67,7 +66,7 @@ private:
 	};
 
 public:
-	Portal(void);
+	Portal(Level destination);
 	virtual ~Portal(void);
 
 	void setPosition(sf::Vector2f const & position);
@@ -77,6 +76,7 @@ public:
 	void appear(void);
 	inline void disappear(void) { m_state = State::Disappear; }
 	inline bool isActivated(void) const { return (m_state == Activated); }
+	inline Level getDestination(void) const { return m_destination; }
 
 	void update(sf::Time frameTime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
@@ -84,6 +84,7 @@ public:
 private:
 	// TODO: info du biome vers lequel on va se téléporter
 	PortalParticle			m_particles;
+	Level					m_destination;
 	sf::Vector2f			m_position;
 	sf::Shader				m_shader;
 	std::size_t				m_shaderIndex;

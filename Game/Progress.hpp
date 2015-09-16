@@ -14,27 +14,25 @@ public:
 	void	save();
 	void	reset();
 
-	inline void					setDefaultBiome(std::string name){ m_data.biomeName = name; }
 	inline std::string const&	getLevelName(){ return m_data.biomeName; }
 	void						setupInfoLevel(ABiome & biome);
 
-	inline void				addNanoRobot(){ m_data.nanoRobotCount++; }
-	inline std::size_t		getNanoRobotCount(){ return m_data.nanoRobotCount; }
+	inline void					addNanoRobot(){ m_data.nanoRobotCount++; }
+	inline void					removeNanoRobot(){ m_data.nanoRobotCount--; }
+	inline std::size_t			getNanoRobotCount(){ return m_data.nanoRobotCount; }
 
-	inline void				setCanUseAction(bool action){ m_action = action; }
-	inline void				setCanWalk(bool walk){ m_walk = walk; }
-	inline void				setCanJump(bool jump){ m_jump = jump; }
-	inline void				setCanDoubleJump(bool doubleJump){ m_doubleJump = doubleJump; }
-	inline void				setCanSlowFall(bool slowFall){ m_slowFall = slowFall; }
-	inline void				setCanUseElevator(bool Elevator){ m_elevator = Elevator; }
+	void						setNextDestination(Level destination);
+	Level						getNextDestination(void) const;
 
-	bool			canUseAction();
+	bool			canMoveMap();
 	bool			canRepair();
 	bool			canWalk();
 	bool			canJump();
 	bool			canDoubleJump();
 	bool			canSlowFall();
 	bool			canUseElevator();
+	bool			changeLevel() const;
+	void			levelChanged();
 
 private:
 	Progress();
@@ -58,14 +56,11 @@ private:
 	};
 	static std::unique_ptr<Progress>		m_instance;
 	std::string								m_filename;
+	Level									m_destination;
 	data									m_data;
 	bool									m_newSave;
-	bool									m_action;
-	bool									m_walk;
-	bool									m_jump;
-	bool									m_doubleJump;
-	bool									m_slowFall;
-	bool									m_elevator;
+	bool									m_changeLevel;
+
 };
 
 #endif

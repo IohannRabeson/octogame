@@ -28,10 +28,11 @@ Game::Game(void) :
 	m_musicPlayer(nullptr),
 	m_octo(nullptr)
 {
-	//TODO remove
-	Progress::getInstance().setCanWalk(true);
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
+
+	m_biomeManager.registerBiome<LevelOneBiome>(Level::LevelOne);
+	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
 }
 
 Game::~Game(void)
@@ -40,16 +41,9 @@ Game::~Game(void)
 	graphics.removeKeyboardListener(this);
 }
 
-void	Game::setup(void)
+void	Game::loadLevel(void)
 {
-	//TODO name == biome name;
-	m_biomeManager.registerBiome<LevelOneBiome>("Level_One");
-	m_biomeManager.registerBiome<DefaultBiome>("Default");
-}
-
-void	Game::loadLevel(std::string const & fileName)
-{
-	m_biomeManager.changeBiome(fileName, 0x12345);
+	m_biomeManager.changeBiome(Progress::getInstance().getNextDestination(), 0x12345);
 
 	// Reset last values
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
@@ -117,35 +111,36 @@ void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const
 
 void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
 {
-	if (gameObjectCast<ElevatorStream>(gameObject))
+	switch (gameObject->getObjectType())
 	{
-		if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
-		{
-			octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
-			octo->onCollision(GameObjectType::Elevator, collisionDirection);
-		}
-	}
-	else if (gameObjectCast<Portal>(gameObject))
-	{
-		//TODO
-	}
-	else if (gameObjectCast<GroundTransformNanoRobot>(gameObject))
-	{
-		if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
-		{
-			NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
-			ptr->transfertToOcto();
-			m_octo->giveNanoRobot(ptr);
-		}
-	}
-	else if (gameObjectCast<RepairNanoRobot>(gameObject))
-	{
-		if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling())
-		{
-			NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
-			ptr->transfertToOcto();
-			m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
-		}
+		case GameObjectType::Elevator:
+			if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
+			{
+				octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
+				octo->onCollision(GameObjectType::Elevator, collisionDirection);
+			}
+			break;
+		case GameObjectType::Portal:
+				octo->usePortal(*gameObjectCast<Portal>(gameObject));
+			break;
+		case GameObjectType::GroundTransformNanoRobot:
+			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(ptr);
+			}
+			break;
+		case GameObjectType::RepairNanoRobot:
+			if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
+			}
+			break;
+		default:
+			break;
 	}
 }
 
@@ -183,11 +178,11 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	switch (event.code)
 	{
 		case sf::Keyboard::E:
-			if (Progress::getInstance().getNanoRobotCount())
+			if (Progress::getInstance().canMoveMap()) //TODO: move into octo
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 		break;
 		case sf::Keyboard::R:
-			if (Progress::getInstance().getNanoRobotCount())
+			if (Progress::getInstance().canMoveMap())
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
 		break;
 		default:

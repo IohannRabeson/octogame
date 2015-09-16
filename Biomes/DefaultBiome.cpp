@@ -17,6 +17,7 @@ DefaultBiome::DefaultBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(230.f, 168.f, 0.f),
 	m_tileEndColor(254.f, 231.f, 170.f),
+	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(20.f)),
 	m_startDayDuration(sf::seconds(15.f)),
@@ -129,6 +130,9 @@ DefaultBiome::DefaultBiome() :
 	m_gameObjects[0] = GameObjectType::GroundTransformNanoRobot;
 	m_gameObjects[450] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[100] = GameObjectType::SpaceShip;
+
+	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::LevelOne);
 }
 
 void			DefaultBiome::setup(std::size_t seed)
@@ -175,6 +179,11 @@ int				DefaultBiome::getInterestPointPosX()
 std::map<std::size_t, GameObjectType> const &	DefaultBiome::getGameObjects()
 {
 	return m_gameObjects;
+}
+
+Level	DefaultBiome::getDestination()
+{
+	return m_destinations[m_destinationIndex++];
 }
 
 std::map<std::size_t, std::string> const & DefaultBiome::getInstances()

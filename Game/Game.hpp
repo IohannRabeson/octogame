@@ -22,8 +22,7 @@ public:
 	Game(void);
 	virtual ~Game(void);
 
-	void			setup(void);
-	void			loadLevel(std::string const& fileName);
+	void			loadLevel(void);
 	sf::Vector2f	getOctoBubblePosition(void) const;
 
 	void			update(sf::Time frameTime);
