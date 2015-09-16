@@ -627,6 +627,9 @@ void	CharacterOcto::commitPhysicsToGraphics()
 
 void	CharacterOcto::commitEventToGraphics()
 {
+	//TODO handle transition lvl;
+	if (m_box->getSleep())
+		return;
 	if (m_keyLeft && !m_originMove)
 	{
 		m_sprite.setScale(-1.f * m_spriteScale, 1.f * m_spriteScale);
