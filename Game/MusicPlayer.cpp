@@ -15,8 +15,14 @@ MusicPlayer::MusicPlayer(void) :
 	initMusicValue(m_mainMusics[1], MENU_OPUS_II_WAV);
 	initMusicValue(m_mainMusics[2], MENU_OPUS_III_WAV);
 
-	m_eventMusics.resize(1);
+	m_eventMusics.resize(2);
 	initMusicValue(m_eventMusics[0], BALLADE_MENTALE_WAV);
+	initMusicValue(m_eventMusics[1], SPACE_SHIP_WAV);
+}
+
+void MusicPlayer::setup(ABiome const & biome)
+{
+	m_biomeName = biome.getName();
 }
 
 void MusicPlayer::initMusicValue(MusicValue & music, ResourceKey key)
@@ -46,6 +52,11 @@ bool MusicPlayer::getEvent(sf::Vector2f const & octoPos)
 		m_currentEventKey = BALLADE_MENTALE_WAV;
 		return true;
 	}
+	else if (m_biomeName == "Level One")
+	{
+		m_currentEventKey = SPACE_SHIP_WAV;
+		return true;
+	}
 	return false;
 }
 
@@ -65,7 +76,7 @@ void MusicPlayer::playMainMusic(sf::Time frameTime, std::vector<MusicValue> & mu
 				music.offset = sf::Time::Zero;
 				startStateOn = false;
 				//TODO: Find another way to put more events without listing them here
-				if (current != BALLADE_MENTALE_WAV)
+				if (current != BALLADE_MENTALE_WAV && current != SPACE_SHIP_WAV)
 					current = getOpusMusic(music.key);
 			}
 		}

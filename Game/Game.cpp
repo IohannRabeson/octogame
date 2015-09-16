@@ -6,9 +6,9 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
-#include "Progress.hpp"
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
+#include "RepairNanoRobot.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -26,8 +26,6 @@ Game::Game(void) :
 	m_musicPlayer(nullptr),
 	m_octo(nullptr)
 {
-	//TODO remove
-	Progress::getInstance().setCanWalk(true);
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 }
@@ -52,9 +50,10 @@ void	Game::loadLevel(std::string const & fileName)
 	// Reset last values
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	postEffect.removeEffects();
-	// Reset PhysycsEngine
+
 	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome());
-	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 700.f));
+	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 800.f));
+	// Reset PhysycsEngine
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count")); // TODO : remove from default
@@ -73,8 +72,9 @@ void	Game::loadLevel(std::string const & fileName)
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
+	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup();
-	m_octo->setPosition(sf::Vector2f(0.f, 700.f)); // TODO: get position in the portal information
+	m_octo->setPosition(sf::Vector2f(0.f, 800.f)); // TODO: get position in the portal information
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -106,34 +106,57 @@ void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const
 		onCollision(gameObjectCast<CharacterOcto>(shapeA->getGameObject()), shapeB->getGameObject(), collisionDirection);
 	else if (gameObjectCast<CharacterOcto>(shapeB->getGameObject()))
 		onCollision(gameObjectCast<CharacterOcto>(shapeB->getGameObject()), shapeA->getGameObject(), collisionDirection);
-}
-
-void Game::transfertNanoRobot(NanoRobot * robot)
-{
-	NanoRobot * ptr = m_groundManager->getNanoRobot(robot);
-	ptr->transfertToOcto();
-	m_octo->giveNanoRobot(ptr);
+	else if (gameObjectCast<CharacterOcto::OctoEvent>(shapeB->getGameObject()))
+		onCollisionEvent(gameObjectCast<CharacterOcto::OctoEvent>(shapeB->getGameObject())->m_octo, shapeA->getGameObject(), collisionDirection);
+	else if (gameObjectCast<CharacterOcto::OctoEvent>(shapeA->getGameObject()))
+		onCollisionEvent(gameObjectCast<CharacterOcto::OctoEvent>(shapeA->getGameObject())->m_octo, shapeB->getGameObject(), collisionDirection);
 }
 
 void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
 {
 	if (gameObjectCast<ElevatorStream>(gameObject))
 	{
-		octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
-		octo->onCollision(GameObjectType::Elevator, collisionDirection);
+		if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
+		{
+			octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
+			octo->onCollision(GameObjectType::Elevator, collisionDirection);
+		}
 	}
 	else if (gameObjectCast<Portal>(gameObject))
 	{
 		//TODO
 	}
-	else if (gameObjectCast<Portal::PortalActivation>(gameObject))
-	{
-		gameObjectCast<Portal::PortalActivation>(gameObject)->activate();
-	}
 	else if (gameObjectCast<GroundTransformNanoRobot>(gameObject))
 	{
 		if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
-			transfertNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
+		{
+			NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
+			ptr->transfertToOcto();
+			m_octo->giveNanoRobot(ptr);
+		}
+	}
+	else if (gameObjectCast<RepairNanoRobot>(gameObject))
+	{
+		if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling())
+		{
+			NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
+			ptr->transfertToOcto();
+			m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
+		}
+	}
+}
+
+void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
+{
+	(void)octo;
+	(void)collisionDirection;
+	if (gameObjectCast<ElevatorStream>(gameObject))
+	{
+		octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
+	}
+	else if (gameObjectCast<Portal>(gameObject))
+	{
+		gameObjectCast<Portal>(gameObject)->appear();
 	}
 }
 
@@ -151,12 +174,10 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	switch (event.code)
 	{
 		case sf::Keyboard::E:
-			if (Progress::getInstance().getNanoRobotCount())
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 		break;
 		case sf::Keyboard::R:
-			if (Progress::getInstance().getNanoRobotCount())
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
 		break;
 		default:
 		break;
@@ -167,9 +188,9 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	render.clear();
-	//m_physicsEngine.debugDraw(render);
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	m_groundManager->drawFront(render, states);
 	render.draw(*m_octo, states);

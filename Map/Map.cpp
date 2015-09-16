@@ -16,8 +16,7 @@ Map::Map(void) :
 	m_height(0u),
 	m_offset(nullptr),
 	m_mapSurface(nullptr)
-{
-}
+{}
 
 Map::~Map(void)
 {

@@ -1,7 +1,6 @@
 #ifndef GAME_HPP
 # define GAME_HPP
 
-# include "CharacterNpc.hpp"
 # include "SkyCycle.hpp"
 # include "BiomeManager.hpp"
 # include "SkyManager.hpp"
@@ -40,12 +39,12 @@ private:
 	std::unique_ptr<MusicPlayer>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
 
-	void			transfertNanoRobot(NanoRobot * nanorobot);
 	bool			onPressed(sf::Event::KeyEvent const & event);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);
 	void			onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection);
 	void			followPlayer(sf::Time frameTime);
 	void			onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection);
+	void			onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection);
 };
 
 #endif
