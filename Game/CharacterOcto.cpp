@@ -388,7 +388,10 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	m_ink.draw(render);
 	m_sprite.draw(render, states);
+}
 
+void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
+{
 	for (auto & robot : m_nanoRobots)
 		robot->draw(render, states);
 }

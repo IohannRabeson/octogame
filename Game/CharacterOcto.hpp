@@ -49,6 +49,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	void					setup(void);
 	void					update(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+	void					drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states)const;
 
 	bool					onPressed(sf::Event::KeyEvent const& event);
 	bool					onReleased(sf::Event::KeyEvent const& event);
