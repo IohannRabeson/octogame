@@ -56,8 +56,9 @@ void SkyManager::setupStars(ABiome & biome, sf::Vector2f const & cameraSize)
 
 void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & cameraCenter)
 {
-	m_originRotate = sf::Vector2f(cameraCenter.x, cameraSize.y);
-	float deltaPos = cameraSize.y / 3;
+	(void)cameraCenter;
+	m_originRotate = sf::Vector2f(cameraSize.x / 2.f, cameraSize.y);
+	float deltaPos = cameraSize.y / 5.f;
 
 	if (biome.canCreateSun())
 	{
@@ -66,9 +67,9 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 		for (std::size_t i = 0u; i < m_sunCount; i++)
 		{
 			m_decorManagerBack.add(DecorManager::DecorTypes::Sun);
-			m_originSuns[i].x = 0.f + biome.randomFloat(0.f, deltaPos);
+			m_originSuns[i].x = 0.f + biome.randomFloat(-deltaPos, 0.f);
 			m_originSuns[i].y = cameraSize.y;
-			float angle = biome.randomFloat(-20.f, 20.f) * octo::Deg2Rad;
+			float angle = biome.randomFloat(-40.f, 40.f) * octo::Deg2Rad;
 			float cos = std::cos(angle);
 			float sin = std::sin(angle);
 			octo::rotateVector(m_originSuns[i], m_originRotate, cos, sin);
@@ -81,9 +82,9 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 		for (std::size_t i = 0u; i < m_moonCount; i++)
 		{
 			m_decorManagerBack.add(DecorManager::DecorTypes::Moon);
-			m_originMoons[i].x = cameraSize.x + biome.randomFloat(-deltaPos, 0.f);
+			m_originMoons[i].x = cameraSize.x + biome.randomFloat(0.f, deltaPos);
 			m_originMoons[i].y = cameraSize.y;
-			float angle = biome.randomFloat(-20.f, 20.f) * octo::Deg2Rad;
+			float angle = biome.randomFloat(-40.f, 40.f) * octo::Deg2Rad;
 			float cos = std::cos(angle);
 			float sin = std::sin(angle);
 			octo::rotateVector(m_originMoons[i], m_originRotate, cos, sin);
@@ -117,7 +118,7 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 
 	octo::Camera const & camera = octo::Application::getCamera();
 	sf::Vector2f const & cameraSize = camera.getSize();
-	sf::Vector2f const & cameraCenter = camera.getCenter();
+	sf::Vector2f const & cameraCenter = cameraSize / 2.f;
 
 	m_mapSizeFloat = biome.getMapSizeFloat();
 	m_wind = biome.getWind();
