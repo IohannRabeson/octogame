@@ -18,9 +18,9 @@ class AGameObjectBase;
 
 enum class Level : std::size_t
 {
-	Default = 3,
-	LevelOne = 12354,
-	LevelTwo = 522
+	Default,
+	LevelOne,
+	LevelTwo
 };
 
 class ABiome : public octo::NonCopyable

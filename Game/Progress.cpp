@@ -50,9 +50,6 @@ void	Progress::load(std::string const &filename)
 
 void	Progress::init()
 {
-	//TODO
-	std::cout << "name:" << static_cast<std::size_t>(m_data.destination) << std::endl;
-	std::cout << "robot:" << m_data.nanoRobotCount << std::endl;
 }
 
 void	Progress::save()
