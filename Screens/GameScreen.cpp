@@ -1,7 +1,6 @@
 #include "GameScreen.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
-#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <StateManager.hpp>
@@ -15,15 +14,12 @@ void	GameScreen::start()
 {
 	m_menu.setup();
 
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-	Progress &				progress = Progress::getInstance();
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 
-	progress.setDefaultBiome("Level_One");
-	progress.load("save.osv");
 	m_game.reset(new Game());
 	m_game->setup();
-	m_game->loadLevel(progress.getLevelName());
+	m_game->loadLevel("default");
 }
 
 void	GameScreen::pause()
@@ -39,7 +35,6 @@ void	GameScreen::resume()
 
 void	GameScreen::stop()
 {
-	Progress::getInstance().save();
 }
 
 void	GameScreen::update(sf::Time frameTime)
@@ -65,18 +60,18 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 	switch (event.code)
 	{
 		case sf::Keyboard::Escape:
-			{
-				AMenu::State state = m_menu.getState();
-				if (state == AMenu::State::Hide)
-					m_menu.setState(AMenu::State::Active);
-				break;
-			}
+		{
+			AMenu::State state = m_menu.getState();
+			if (state == AMenu::State::Hide)
+				m_menu.setState(AMenu::State::Active);
+			break;
+		}
 		case sf::Keyboard::F:
-			{
-				octo::StateManager & states = octo::Application::getStateManager();
-				states.push("transition");
-				break;
-			}
+		{
+			octo::StateManager & states = octo::Application::getStateManager();
+			states.push("transition");
+			break;
+		}
 		default:
 			break;
 	}

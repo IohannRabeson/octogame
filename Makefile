@@ -49,7 +49,6 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/RepairNanoRobot.cpp				\
 				Game/MusicPlayer.cpp					\
 				Game/SparkSystem.cpp					\
-				Game/Progress.cpp						\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\
