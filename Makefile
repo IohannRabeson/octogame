@@ -1,5 +1,5 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Decors Physics Game Biomes Bubble
+DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -13,13 +13,16 @@ LIBS = octo sfml-system sfml-window sfml-graphics sfml-audio
 # sources
 SRC = $(SRC_PHYSICS)									\
 	  $(SRC_STATES)										\
-	  $(SRC_FIREFLY)									\
+	  $(SRC_GAME)										\
+	  $(SRC_GAMEOBJ)									\
+	  $(SRC_NPCS)										\
+	  $(SRC_NAROBOT)									\
 	  $(SRC_MAP)										\
 	  $(SRC_OCTO)										\
 	  $(SRC_BIOMES)										\
 	  $(SRC_DECORS)										\
 	  $(SRC_BUBBLE)										\
-	  $(SRC_GAME)										\
+	  $(SRC_MENU)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp										\
 
@@ -42,38 +45,42 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/TransitionScreen.cpp			\
 
 SRC_GAME =		Game/Game.cpp							\
-				Game/AGameObject.cpp					\
-				Game/CharacterNpc.cpp					\
 				Game/CharacterOcto.cpp					\
-				Game/Portal.cpp							\
-				Game/ElevatorStream.cpp					\
-				Game/ANpc.cpp							\
-				Game/ClassicNpc.cpp						\
-				Game/CedricNpc.cpp						\
-				Game/Progress.cpp						\
-				Game/NanoRobot.cpp						\
-				Game/GroundTransformNanoRobot.cpp		\
-				Game/SpaceShip.cpp						\
+				Game/RepairNanoRobot.cpp				\
 				Game/MusicPlayer.cpp					\
 				Game/OctoSound.cpp						\
+				Game/SparkSystem.cpp					\
+
+SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
+				GameObjects/Portal.cpp					\
+				GameObjects/ElevatorStream.cpp			\
+				GameObjects/SpaceShip.cpp				\
+
+SRC_NPCS =		Npcs/ANpc.cpp							\
+				Npcs/ClassicNpc.cpp						\
+				Npcs/CedricNpc.cpp						\
+				Npcs/FranfranNpc.cpp					\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
 				Bubble/BubbleMenu.cpp					\
-				Bubble/AMenu.cpp						\
-				Bubble/AMenuSelection.cpp				\
-				Bubble/MainMenu.cpp						\
-				Bubble/OptionMenu.cpp					\
-				Bubble/VideoMenu.cpp					\
-				Bubble/AudioMenu.cpp					\
-				Bubble/ControlMenu.cpp					\
-				Bubble/YesNoMenu.cpp					\
-				Bubble/ResolutionMenu.cpp				\
-				Bubble/EmptyMenu.cpp					\
 
-SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
-				Firefly/FireflyPopulation.cpp			\
-				Firefly/FireflyPositionBehaviors.cpp	\
+SRC_MENU =		Menu/AMenu.cpp							\
+				Menu/AMenuSelection.cpp					\
+				Menu/MainMenu.cpp						\
+				Menu/OptionMenu.cpp						\
+				Menu/VideoMenu.cpp						\
+				Menu/AudioMenu.cpp						\
+				Menu/ControlMenu.cpp					\
+				Menu/YesNoMenu.cpp						\
+				Menu/ResolutionMenu.cpp					\
+				Menu/EmptyMenu.cpp						\
+
+SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
+				NanoRobots/FireflyPopulation.cpp		\
+				NanoRobots/FireflyPositionBehaviors.cpp	\
+				NanoRobots/NanoRobot.cpp				\
+				NanoRobots/GroundTransformNanoRobot.cpp	\
 
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\

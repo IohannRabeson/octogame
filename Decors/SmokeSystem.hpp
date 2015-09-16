@@ -25,6 +25,7 @@ public:
 	void			setColor(sf::Color const & color);
 	void			setVelocity(sf::Vector2f const & direction);
 	void			setScaleFactor(float scaleFactor);
+	void			setDispersion(float dispersion);
 	void			setEmitTimeRange(float min, float max);
 	void			setGrowTimeRange(float min, float max);
 	void			setLifeTimeRange(float min, float max);
@@ -54,6 +55,7 @@ private:
 	sf::Time		m_emitTime;
 	bool			m_canEmit;
 	float			m_lifeScaleFactor;
+	float			m_dispersion;
 	std::mt19937	m_engine;
 	DistReal		m_emitTimeDistri;
 	DistReal		m_growTimeDistri;
