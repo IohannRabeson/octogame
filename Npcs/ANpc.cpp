@@ -2,6 +2,7 @@
 #include "RectangleShape.hpp"
 #include "CircleShape.hpp"
 #include "PhysicsEngine.hpp"
+#include "CharacterOcto.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <sstream>

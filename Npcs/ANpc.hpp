@@ -8,9 +8,9 @@
 # include "ResourceDefinitions.hpp"
 # include "BubbleText.hpp"
 # include "IPlaceable.hpp"
-# include "CharacterOcto.hpp"
 
 class RectangleShape;
+class CharacterOcto;
 
 class ANpc : public sf::Drawable, public IPlaceable
 {
