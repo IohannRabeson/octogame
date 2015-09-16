@@ -31,7 +31,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(7u, 8u),
-	m_treeCount(10u, 10u),
+	m_treeCount(9u, 9u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(4u, 8u),
 	m_starCount(500u, 800u),
