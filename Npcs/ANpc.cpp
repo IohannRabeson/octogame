@@ -2,27 +2,22 @@
 #include "RectangleShape.hpp"
 #include "CircleShape.hpp"
 #include "PhysicsEngine.hpp"
+#include "CharacterOcto.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <sstream>
 
 ANpc::ANpc(ResourceKey const & npcId) :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
-	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle()),
-	m_currentText(-1),
+	m_currentText(0),
 	m_velocity(200.f),
-	m_scale(1.f)
+	m_scale(1.f),
+	m_displayText(false),
+	m_collideOctoEvent(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
-
-	m_box->setGameObject(this);
-	m_eventBox->setGameObject(this);
-	m_eventBox->setRadius(200.f);
-	m_eventBox->setApplyGravity(false);
-	m_eventBox->setType(AShape::Type::e_trigger);
-	setBoxCollision(static_cast<std::size_t>(GameObjectType::Npc), 0u);
 
 	std::map<std::string, std::vector<std::string>>	npcTexts;
 	std::istringstream f(resources.getText(DIALOGS_TXT).toAnsiString());
@@ -33,7 +28,11 @@ ANpc::ANpc(ResourceKey const & npcId) :
 		std::getline(f, line);
 		npcTexts[key].push_back(line);
 	}
-	setTexts(npcTexts[npcId]);
+	if (npcTexts.find(npcId) != npcTexts.end())
+	{
+		m_displayText = true;
+		setTexts(npcTexts[npcId]);
+	}
 }
 
 ANpc::~ANpc(void)
@@ -151,15 +150,10 @@ void ANpc::setPosition(sf::Vector2f const & position)
 	if (m_box->getSleep())
 	{
 		m_box->setPosition(position.x, position.y - m_box->getSize().y - getHeight());
-		m_eventBox->setPosition(position.x - m_eventBox->getRadius(), position.y - m_eventBox->getRadius() - getHeight());
 		m_box->update();
-		m_eventBox->update();
 	}
 	else
-	{
-		m_eventBox->setPosition(position.x - m_eventBox->getRadius(), position.y - m_eventBox->getRadius());
 		m_box->setPosition(position.x, position.y - m_box->getSize().y);
-	}
 }
 
 void ANpc::setNextEvent(Events event)
@@ -178,17 +172,11 @@ void ANpc::setVelocity(float velocity)
 	m_velocity = velocity;
 }
 
-void ANpc::setBoxCollision(std::size_t type, std::size_t mask)
+void ANpc::setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask)
 {
+	m_box->setGameObject(gameObject);
 	m_box->setCollisionType(type);
 	m_box->setCollisionMask(mask);
-	m_eventBox->setCollisionType(type);
-	m_eventBox->setCollisionMask(mask);
-}
-
-void ANpc::setCurrentText(std::size_t index)
-{
-	m_currentText = index;
 }
 
 void ANpc::setTextOffset(sf::Vector2f const & offset)
@@ -210,7 +198,6 @@ void ANpc::setTexts(std::vector<std::string> const & texts)
 		bubble->setup(texts[i], sf::Color::White);
 		bubble->setType(ABubble::Type::Speak);
 		m_texts.push_back(std::move(bubble));
-		setCurrentText(i);
 	}
 }
 
@@ -245,11 +232,6 @@ RectangleShape * ANpc::getBox(void)
 	return m_box;
 }
 
-CircleShape * ANpc::getEventBox(void)
-{
-	return m_eventBox;
-}
-
 octo::CharacterSprite & ANpc::getSprite(void)
 {
 	return m_sprite;
@@ -279,15 +261,14 @@ void ANpc::addMapOffset(float x, float y)
 {
 	m_box->setPosition(m_box->getPosition().x + x, m_box->getPosition().y + y);
 	m_box->update(); // We must update ourselves because the box is out of the screen, and the engine didn't update shape out of the screen
-	m_eventBox->setPosition(m_eventBox->getPosition().x + x, m_eventBox->getPosition().y + y);
-	m_eventBox->update(); // We must update ourselves because the box is out of the screen, and the engine didn't update shape out of the screen
 	m_area.left += x;
 	m_area.top += y;
 }
 
-void ANpc::activatePhysics(bool activate)
+void ANpc::onTheFloor(void)
 {
-	m_box->setSleep(!activate);
+	m_box->setType(AShape::Type::e_trigger);
+	m_box->setApplyGravity(false);
 }
 
 float ANpc::getHeight(void) const
@@ -300,6 +281,11 @@ sf::Vector2f const & ANpc::getPosition(void) const
 	return m_box->getPosition();
 }
 
+void ANpc::resetVariables(void)
+{
+	m_collideOctoEvent = false;
+}
+
 void ANpc::update(sf::Time frametime)
 {
 	updateState();
@@ -310,6 +296,13 @@ void ANpc::update(sf::Time frametime)
 	m_sprite.setPosition(bounds.left, bounds.top);
 
 	updateText(frametime);
+	resetVariables();
+}
+
+void ANpc::collideOctoEvent(CharacterOcto * octo)
+{
+	(void)octo;
+	m_collideOctoEvent = true;
 }
 
 void ANpc::updateState(void)
@@ -347,16 +340,18 @@ void ANpc::updatePhysics(void)
 		velocity.x = m_velocity;
 	}
 	m_box->setVelocity(velocity);
-	m_eventBox->setPosition(m_sprite.getPosition().x - m_eventBox->getRadius(), m_sprite.getPosition().y - m_eventBox->getRadius());
 }
 
 void ANpc::updateText(sf::Time frametime)
 {
-	if (m_currentText >= 0)
+	if (m_displayText)
 	{
 		m_texts[m_currentText]->setPosition(m_sprite.getPosition() + m_textOffset);
 		m_texts[m_currentText]->update(frametime);
-		m_texts[m_currentText]->setActive(true);
+		if (m_collideOctoEvent)
+			m_texts[m_currentText]->setActive(true);
+		else
+			m_texts[m_currentText]->setActive(false);
 	}
 }
 
@@ -367,6 +362,6 @@ void ANpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 
 void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
 {
-	if (m_currentText >= 0)
+	if (m_displayText)
 		m_texts[m_currentText]->draw(render);
 }

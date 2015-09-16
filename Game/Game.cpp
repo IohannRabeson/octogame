@@ -10,6 +10,7 @@
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "FranfranNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -50,12 +51,14 @@ void	Game::loadLevel(std::string const & fileName)
 {
 	m_biomeManager.changeBiome(fileName, 0x12345);
 
-	// Reset last values
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+
+	// Reset last values
 	postEffect.removeEffects();
 	// Reset PhysycsEngine
 	Progress::getInstance().setupInfoLevel(m_biomeManager.getCurrentBiome());
-	octo::Application::getCamera().setCenter(sf::Vector2f(0.f, 700.f));
+	octo::Application::getCamera().setCenter(startPosition);
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count")); // TODO : remove from default
@@ -76,7 +79,7 @@ void	Game::loadLevel(std::string const & fileName)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup();
-	m_octo->setPosition(m_biomeManager.getCurrentBiome().getOctoStartPosition());
+	m_octo->setPosition(startPosition);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -152,13 +155,19 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 {
 	(void)octo;
 	(void)collisionDirection;
-	if (gameObjectCast<ElevatorStream>(gameObject))
+	switch (gameObject->getObjectType())
 	{
-		octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
-	}
-	else if (gameObjectCast<Portal>(gameObject))
-	{
-		gameObjectCast<Portal>(gameObject)->appear();
+		case GameObjectType::Elevator:
+			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
+			break;
+		case GameObjectType::Portal:
+			gameObjectCast<Portal>(gameObject)->appear();
+			break;
+		case GameObjectType::FranfranNpc:
+			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		default:
+			break;
 	}
 }
 
@@ -196,10 +205,11 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(*m_parallaxScrolling, states);
 	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
-	m_groundManager->drawFront(render, states);
 	render.draw(*m_octo, states);
+	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	render.draw(m_skyManager->getFilter(), states);
+	m_octo->drawNanoRobot(render, states);
 	m_groundManager->drawText(render, states);
 }
 

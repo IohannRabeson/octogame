@@ -113,6 +113,11 @@ bool	Progress::canUseAction()
 	return m_action;
 }
 
+bool	Progress::canRepair()
+{
+	return (m_data.nanoRobotCount > 1);
+}
+
 bool	Progress::canWalk()
 {
 	return m_walk;
@@ -135,5 +140,5 @@ bool	Progress::canSlowFall()
 
 bool	Progress::canUseElevator()
 {
-	return m_elevator;
+	return (m_data.nanoRobotCount > 1);
 }

@@ -146,14 +146,14 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::CedricNpc:
 				{
 					CedricNpc * cedric = new CedricNpc(skyCycle);
-					cedric->activatePhysics(false);
+					cedric->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, cedric);
 				}
 				break;
 			case GameObjectType::FranfranNpc:
 				{
 					FranfranNpc * franfran = new FranfranNpc();
-					franfran->activatePhysics(false);
+					franfran->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, franfran);
 				}
 				break;
