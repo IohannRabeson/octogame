@@ -10,6 +10,8 @@
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 #include "FranfranNpc.hpp"
+#include "JuNpc.hpp"
+#include "GuiNpc.hpp"
 #include "SpaceShip.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -156,6 +158,20 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					FranfranNpc * franfran = new FranfranNpc();
 					franfran->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, franfran);
+				}
+				break;
+			case GameObjectType::JuNpc:
+				{
+					JuNpc * ju = new JuNpc();
+					ju->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, ju);
+				}
+				break;
+			case GameObjectType::GuiNpc:
+				{
+					GuiNpc * gui = new GuiNpc();
+					gui->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, gui);
 				}
 				break;
 			case GameObjectType::RepairNanoRobot:

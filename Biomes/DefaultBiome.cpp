@@ -125,11 +125,13 @@ DefaultBiome::DefaultBiome() :
 
 	// Define game objects
 	m_gameObjects[50] = GameObjectType::Portal;
-	m_gameObjects[150] = GameObjectType::CedricNpc;
-	m_gameObjects[170] = GameObjectType::FranfranNpc;
 	m_gameObjects[0] = GameObjectType::GroundTransformNanoRobot;
 	m_gameObjects[450] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[100] = GameObjectType::SpaceShip;
+	m_gameObjects[150] = GameObjectType::CedricNpc;
+	m_gameObjects[170] = GameObjectType::FranfranNpc;
+	m_gameObjects[190] = GameObjectType::JuNpc;
+	m_gameObjects[210] = GameObjectType::GuiNpc;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelOne);

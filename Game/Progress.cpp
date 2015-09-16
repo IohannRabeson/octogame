@@ -15,7 +15,6 @@ Progress::Progress() :
 	m_changeLevel(false)
 {
 	setup();
-	octo::Console&				console = octo::Application::getConsole();
 }
 
 Progress & Progress::getInstance()
