@@ -12,6 +12,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_name("Level One"),
 	m_mapSize(sf::Vector2u(600u, 16u)),
 	m_mapSeed(42u),
+	m_octoStartPosition(700.f, 900.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -151,6 +152,11 @@ std::size_t		LevelOneBiome::getMapSeed()
 sf::Vector2f	LevelOneBiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
+}
+
+sf::Vector2f	LevelOneBiome::getOctoStartPosition()
+{
+	return m_octoStartPosition;
 }
 
 float			LevelOneBiome::getTransitionDuration()

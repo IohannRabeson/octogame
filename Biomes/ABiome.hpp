@@ -27,6 +27,7 @@ public:
 	virtual sf::Vector2u								getMapSize() = 0;
 	virtual sf::Vector2f								getMapSizeFloat() = 0;
 	virtual std::size_t									getMapSeed() = 0;
+	virtual sf::Vector2f								getOctoStartPosition() = 0;
 	virtual float										getTransitionDuration() = 0;
 	virtual int											getInterestPointPosX() = 0;
 	virtual std::map<std::size_t, GameObjectType> const & getGameObjects() = 0;
