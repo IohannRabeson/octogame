@@ -21,6 +21,8 @@ enum Type
 	Think,
 	Left
 };
+
+
 	ABubble(void);
 	virtual ~ABubble(void) = default;
 
@@ -49,6 +51,18 @@ private:
 												sf::Color const & color,
 												octo::VertexBuilder& builder);
 
+	void							createQuotePart(sf::Vector2f const & size,
+													sf::Vector2f const & origin,
+													sf::Color const & color,
+													octo::VertexBuilder & builder);
+	/*
+	void							createInactive(sf::Vector2f const & size,
+												   float sizeCorner,
+												   sf::Vector2f const & origin,
+												   sf::Color const & color,
+												   octo::VertexBuilder& builder);
+	*/
+
 	void							createExtension(sf::Vector2f const & position,
 													sf::Color const & color,
 													Type type,
@@ -66,7 +80,6 @@ private:
 														  sf::Vector2f const & position);
 
 	static constexpr float			m_sizeCorner = 20.f;
-
 	std::unique_ptr<sf::Vertex[]>	m_vertices;
 	std::size_t						m_count;
 	std::size_t						m_used;

@@ -12,6 +12,8 @@ FranfranNpc::FranfranNpc(void) :
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();
+
+	m_puffTimerMax = sf::seconds(0.8f);
 }
 
 void FranfranNpc::setup(void)
@@ -42,12 +44,22 @@ void FranfranNpc::setup(void)
 	setupMachine();
 
 	m_smoke.setup(sf::Vector2f(2.f, 2.f));
-	m_smoke.setVelocity(sf::Vector2f(0.f, -10.f));
-	m_smoke.setGrowTimeRange(0.3f, 0.6f);
+	m_smoke.setVelocity(sf::Vector2f(0.f, -50.f));
+	m_smoke.setEmitTimeRange(0.2f, 0.3f);
+	m_smoke.setGrowTimeRange(0.4f, 0.6f);
 	m_smoke.setLifeTimeRange(0.6f, 0.8f);
-	m_smoke.setScaleFactor(2.f);
-	m_smoke.setDispersion(30.f);
+	m_smoke.setScaleFactor(10.f);
+	m_smoke.setDispersion(80.f);
 	m_smoke.setColor(sf::Color(255, 255, 255, 150));
+
+	m_puff.setup(sf::Vector2f(2.f, 2.f));
+	m_puff.setVelocity(sf::Vector2f(50.f, -60.f));
+	m_puff.setEmitTimeRange(0.05f, 0.1f);
+	m_puff.setGrowTimeRange(0.4f, 0.6f);
+	m_puff.setLifeTimeRange(0.6f, 0.8f);
+	m_puff.setScaleFactor(15.f);
+	m_puff.setDispersion(120.f);
+	m_puff.setColor(sf::Color(255, 255, 255, 150));
 }
 
 void FranfranNpc::setupMachine(void)
@@ -78,6 +90,7 @@ void FranfranNpc::update(sf::Time frametime)
 	octo::CharacterSprite & sprite = getSprite();
 
 	m_timer += frametime;
+	m_puffTimer += frametime;
 	if (m_timer > sf::seconds(10.f))
 	{
 		m_canSmoke = true;
@@ -92,8 +105,26 @@ void FranfranNpc::update(sf::Time frametime)
 	sprite.update(frametime);
 	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
 	sprite.setPosition(bounds.left, bounds.top);
-	m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(-15.f, -10.f));
+	if (sprite.getCurrentEvent() == Idle)
+	{
+		m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(-30.f, -10.f));
+		m_smoke.setVelocity(sf::Vector2f(0.f, -30.f));
+	}
+	else
+	{
+		m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(0.f, -30.f));
+		m_smoke.setVelocity(sf::Vector2f(50.f, 0.f));
+	}
+	if (sprite.isTerminated())
+		m_puffTimer = sf::Time::Zero;
 	m_smoke.update(frametime);
+
+	if (m_puffTimer <= m_puffTimerMax)
+		m_puff.setCanEmit(true);
+	else
+		m_puff.setCanEmit(false);
+	m_puff.setPosition(ANpc::getPosition() + sf::Vector2f(20.f, -14.f));
+	m_puff.update(frametime);
 
 	updateText(frametime);
 }
@@ -125,7 +156,8 @@ void FranfranNpc::updatePhysics(void)
 
 void FranfranNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	m_smoke.draw(render);
 	ANpc::draw(render, states);
+	m_smoke.draw(render);
+	m_puff.draw(render);
 }
 

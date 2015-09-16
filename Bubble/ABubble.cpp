@@ -69,15 +69,46 @@ void ABubble::createOctogon(sf::Vector2f const & size, float sizeCorner, sf::Vec
 	builder.createTriangle(origin, upMidLeft, upLeft, color);
 }
 
+void ABubble::createQuotePart(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder & builder)
+{
+	sf::Vector2f leftUp(-size.x, -size.y);
+	sf::Vector2f rightUp(size.x, -size.y);
+	sf::Vector2f leftDown(-size.x, size.y);
+	sf::Vector2f rightDown(size.x, size.y);
+	sf::Vector2f leftUpTriangle(0.f, size.y);
+	sf::Vector2f downTriangle(0.f, size.y + size.y);
+
+	leftUp += origin;
+	rightUp += origin;
+	leftDown += origin;
+	rightDown += origin;
+	leftUpTriangle += origin;
+	downTriangle += origin;
+
+	builder.createQuad(leftUp, rightUp, rightDown, leftDown, color);
+	builder.createTriangle(rightDown, leftUpTriangle, downTriangle, color);
+}
+/*
+void ABubble::createInactive(sf::Vector2f const & size, float sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
+{
+	//Create exclamation dot
+}
+*/
+
 void ABubble::computePositionBubble(Type type, sf::Vector2f const & position)
 {
 	if (type == Type::Speak || type == Type::Think)
 	{
-		if (m_positionBubble.x >= position.x + m_size.x / 2.f - m_sizeCorner)
-			m_positionBubble.x = position.x - m_sizeCorner + m_size.x / 2.f;
-		else if (m_positionBubble.x <= position.x - m_size.x / 2.f)
-			m_positionBubble.x = position.x - m_size.x / 2.f;
-		m_positionBubble.y = position.y - m_sizeCorner * 2.f - m_size.y / 2.f;
+		if (m_isActive)
+		{
+			if (m_positionBubble.x >= position.x + m_size.x / 2.f - m_sizeCorner)
+				m_positionBubble.x = position.x - m_sizeCorner + m_size.x / 2.f;
+			else if (m_positionBubble.x <= position.x - m_size.x / 2.f)
+				m_positionBubble.x = position.x - m_size.x / 2.f;
+			m_positionBubble.y = position.y - m_sizeCorner * 2.f - m_size.y / 2.f;
+		}
+		else
+			m_positionBubble = sf::Vector2f(position.x - m_sizeCorner / 2.f, position.y - m_sizeCorner * 2.f - m_sizeCorner / 2.f);
 	}
 	else if (type == Type::Left)
 		m_positionBubble = position + sf::Vector2f(m_sizeCorner * 2.f + m_size.x / 2.f, 0.f);
@@ -96,6 +127,14 @@ void ABubble::update(sf::Time frameTime)
 			m_contentUpLeft = m_positionBubble - m_size / 2.f;
 			updateContent(frameTime, m_contentUpLeft);
 			createOctogon(m_size / 2.f, m_sizeCorner, m_positionBubble, m_color, m_builder);
+		}
+		else
+		{
+			sf::Vector2f sizeInactive(m_sizeCorner / 2.f, m_sizeCorner / 2.f);
+			createOctogon(sizeInactive, m_sizeCorner, m_positionBubble, m_color, m_builder);
+			createQuotePart(sizeInactive / 2.f, m_positionBubble - sf::Vector2f(sizeInactive.x, 0.f), sf::Color(0, 0, 0), m_builder);
+			createQuotePart(sizeInactive / 2.f, m_positionBubble + sf::Vector2f(sizeInactive.x, 0.f), sf::Color(0, 0, 0), m_builder);
+			//createInactive(sizeInactive, m_sizeCorner, m_positionBubble, m_color, m_builder);
 		}
 	}
 	m_used = m_builder.getUsed();
