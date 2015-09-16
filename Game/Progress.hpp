@@ -29,6 +29,7 @@ public:
 	inline void				setCanUseElevator(bool Elevator){ m_elevator = Elevator; }
 
 	bool			canUseAction();
+	bool			canRepair();
 	bool			canWalk();
 	bool			canJump();
 	bool			canDoubleJump();

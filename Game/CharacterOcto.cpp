@@ -31,6 +31,7 @@ CharacterOcto::CharacterOcto() :
 	m_keyRight(false),
 	m_keySpace(false),
 	m_keyUp(false),
+	m_keyAction(false),
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false)
@@ -365,8 +366,9 @@ void	CharacterOcto::update(sf::Time frameTime)
 		m_sprite.update(frameTime);
 	m_previousTop = m_box->getGlobalBounds().top;
 
-	if (!m_collisionElevatorEvent && m_repairNanoRobot) //TODO remove
+	if (!m_collisionElevatorEvent && m_progress.canRepair())
 		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
+
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionElevatorEvent = false;
@@ -420,7 +422,10 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	m_ink.draw(render);
 	m_sprite.draw(render, states);
+}
 
+void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
+{
 	for (auto & robot : m_nanoRobots)
 		robot->draw(render, states);
 }
@@ -465,8 +470,7 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot)
 
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
-	//TODO: check if octo is pushing action key and canRepair()
-	if (/*canRepair*/true && sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+	if (m_progress.canRepair() && m_keyAction && getPosition().y > 100.f)
 	{
 		if (!elevator.isActivated())
 		{
@@ -480,7 +484,7 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 		else
 			m_repairNanoRobot->setState(RepairNanoRobot::State::Done);
 	}
-	else if (m_repairNanoRobot)//TODO: remove when canRepair is up
+	else if (m_progress.canRepair())
 		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
 	m_collisionElevatorEvent = true;
 }
