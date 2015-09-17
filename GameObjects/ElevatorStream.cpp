@@ -190,8 +190,16 @@ ElevatorStream::ElevatorStream() :
 	m_ray[10] = sf::Vertex(sf::Vector2f(unit, 0), m_centerColor);
 	m_ray[11] = sf::Vertex(sf::Vector2f(unit * 2.f, 0), m_borderColor);
 
-
 	setupSprite();
+
+	m_smoke.setup(sf::Vector2f(4.f, 4.f));
+	m_smoke.setVelocity(sf::Vector2f(0.f, -80.f));
+	m_smoke.setEmitTimeRange(0.2f, 0.3f);
+	m_smoke.setGrowTimeRange(0.4f, 0.6f);
+	m_smoke.setLifeTimeRange(0.6f, 0.8f);
+	m_smoke.setScaleFactor(10.f);
+	m_smoke.setDispersion(80.f);
+	m_smoke.setColor(sf::Color(205, 205, 205, 200));
 }
 
 void	ElevatorStream::setupSprite(void)
@@ -271,7 +279,8 @@ void	ElevatorStream::setPosition(sf::Vector2f const & position)
 	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
 	m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
 
-	m_particles->setPosition(m_position - sf::Vector2f(0.f, 100.f));
+	m_smoke.setPosition(m_position + sf::Vector2f(-getWidth() / 2.f, -50.f));
+	m_particles->setPosition(m_position + sf::Vector2f(0.f, -100.f));
 	setHeight(m_position.y - getTopY() - 100.f);
 }
 
@@ -347,6 +356,7 @@ void	ElevatorStream::update(sf::Time frameTime)
 	switch (m_state)
 	{
 		case Appear:
+			m_smoke.setCanEmit(true);
 			m_timer += frameTime;
 			if (m_timer >= m_timerMax)
 			{
@@ -355,11 +365,13 @@ void	ElevatorStream::update(sf::Time frameTime)
 			}
 			break;
 		case Activated:
+			m_smoke.setCanEmit(false);
 			m_particles->update(frameTime);
 			m_waveCycle += frameTime;
 			m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
 			break;
 		case Disappear:
+			m_smoke.setCanEmit(true);
 			m_timer -= frameTime;
 			if (m_timer < sf::Time::Zero)
 				m_timer = sf::Time::Zero;
@@ -374,6 +386,8 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_spriteBottomBack.update(frameTime);
 	m_spriteTopFront.update(frameTime);
 	m_spriteTopBack.update(frameTime);
+
+	m_smoke.update(frameTime);
 
 	if (m_state != Activated)
 		m_state = Disappear;
@@ -395,4 +409,5 @@ void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_spriteBottomFront);
 	render.draw(m_spriteTopFront);
+	m_smoke.draw(render);
 }
