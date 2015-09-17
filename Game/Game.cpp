@@ -2,6 +2,7 @@
 #include "DefaultBiome.hpp"
 #include "LevelOneBiome.hpp"
 #include "LevelTwoBiome.hpp"
+#include "LevelThreeBiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -37,6 +38,7 @@ Game::Game(void) :
 
 	m_biomeManager.registerBiome<LevelOneBiome>(Level::LevelOne);
 	m_biomeManager.registerBiome<LevelTwoBiome>(Level::LevelTwo);
+	m_biomeManager.registerBiome<LevelThreeBiome>(Level::LevelThree);
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
 }
 
