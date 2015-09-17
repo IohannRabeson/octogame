@@ -25,6 +25,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Idle,
 		Right,
 		Left,
+		StartJump,
 		Jump,
 		DoubleJump,
 		Fall,
@@ -36,7 +37,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		StartElevator,
 		Elevator,
 	};
-	public:
+public:
 	friend class OctoEvent;
 
 	class OctoEvent : public AGameObject<GameObjectType::PlayerEvent>
@@ -83,11 +84,13 @@ private:
 	void	caseUp();
 	void	caseAction();
 	void	dance();
+	void	randomJumpAnimation();
 
 private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
+	octo::CharacterAnimation	m_startJumpAnimation;
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
 	octo::CharacterAnimation	m_danceAnimation;
@@ -104,9 +107,13 @@ private:
 	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
 	RepairNanoRobot *			m_repairNanoRobot;
 	Progress &					m_progress;
+	std::mt19937				m_engine;
+	std::uniform_int_distribution<std::size_t>		m_jumpDistribution;
+	std::uniform_real_distribution<float>			m_danceDistribution;
 
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
+	sf::Time					m_timeEventIdleMax;
 	sf::Time					m_timeEventDeath;
 	sf::Time					m_timeEventInk;
 	float						m_spriteScale;
