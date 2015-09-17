@@ -128,11 +128,12 @@ LevelTwoBiome::LevelTwoBiome() :
 	//m_instances[86] = TEST_MAP2_OMP;
 
 	// Define game objects
+	m_gameObjects[5] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[740] = GameObjectType::Portal;
-	m_gameObjects[5] = GameObjectType::JuNpc;
-	m_gameObjects[600] = GameObjectType::RepairNanoRobot;
 	m_instances[400] = TEST_MAP2_OMP;
+	m_gameObjects[600] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[658] = GameObjectType::Bouibouik;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 801};

@@ -20,7 +20,7 @@ CharacterOcto::CharacterOcto() :
 	m_spriteScale(0.6f),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondSlowFall(-300.f),
-	m_pixelSecondWalk(320.f),
+	m_pixelSecondWalk(1020.f),
 	m_pixelSecondAfterJump(-500.f),
 	m_pixelSecondAfterFullJump(-400.f),
 	m_pixelSecondMultiplier(800.f),

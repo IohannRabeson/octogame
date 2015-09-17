@@ -13,8 +13,8 @@ public:
 
 	virtual void setPosition(sf::Vector2f const & position);
 
-	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	virtual void update(sf::Time frameTime);
+	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 protected:
 	SimpleObject(ResourceKey key);
