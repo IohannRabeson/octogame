@@ -4,6 +4,9 @@
 #include "ElevatorStream.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "JumpNanoRobot.hpp"
+#include "DoubleJumpNanoRobot.hpp"
+#include "SlowFallNanoRobot.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
@@ -44,6 +47,12 @@ CharacterOcto::CharacterOcto() :
 		giveNanoRobot(new GroundTransformNanoRobot());
 	if (m_progress.canRepair())
 		giveRepairNanoRobot(new RepairNanoRobot());
+	if (m_progress.canJump())
+		giveNanoRobot(new JumpNanoRobot());
+	if (m_progress.canDoubleJump())
+		giveNanoRobot(new DoubleJumpNanoRobot());
+	if (m_progress.canSlowFall())
+		giveNanoRobot(new SlowFallNanoRobot());
 
 	for (auto & robot : m_nanoRobots)
 	{

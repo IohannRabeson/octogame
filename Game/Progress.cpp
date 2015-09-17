@@ -98,17 +98,17 @@ bool	Progress::canWalk()
 
 bool	Progress::canJump()
 {
-	return true;
+	return (m_data.nanoRobotCount > 2);
 }
 
 bool	Progress::canDoubleJump()
 {
-	return false;
+	return (m_data.nanoRobotCount > 3);
 }
 
 bool	Progress::canSlowFall()
 {
-	return false;
+	return (m_data.nanoRobotCount > 4);
 }
 
 bool	Progress::canUseElevator()

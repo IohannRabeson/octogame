@@ -15,6 +15,9 @@
 #include "SpaceShip.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "JumpNanoRobot.hpp"
+#include "DoubleJumpNanoRobot.hpp"
+#include "SlowFallNanoRobot.hpp"
 #include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
@@ -181,6 +184,18 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::GroundTransformNanoRobot:
 					if (!Progress::getInstance().canMoveMap())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
+				break;
+			case GameObjectType::JumpNanoRobot:
+					if (!Progress::getInstance().canJump())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new JumpNanoRobot());
+				break;
+			case GameObjectType::DoubleJumpNanoRobot:
+					if (!Progress::getInstance().canDoubleJump())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new DoubleJumpNanoRobot());
+				break;
+			case GameObjectType::SlowFallNanoRobot:
+					if (!Progress::getInstance().canSlowFall())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new SlowFallNanoRobot());
 				break;
 			case GameObjectType::SpaceShip:
 				{
