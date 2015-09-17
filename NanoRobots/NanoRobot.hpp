@@ -35,7 +35,7 @@ public:
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
-	NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames);
+	NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames, int seed);
 	void setup(AGameObjectBase * gameObject);
 
 private:

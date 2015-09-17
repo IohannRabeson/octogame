@@ -5,7 +5,7 @@
 #include <Math.hpp>
 
 RepairNanoRobot::RepairNanoRobot(void) :
-	NanoRobot(sf::Vector2f(200.f, 800.f), NANO_REPAIR_OSS, 8),
+	NanoRobot(sf::Vector2f(200.f, 800.f), NANO_REPAIR_OSS, 8, 12542),
 	m_ray(new sf::Vertex[16]),
 	m_texture(nullptr),
 	m_state(None)
