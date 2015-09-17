@@ -17,8 +17,9 @@ public:
 	~AMenuSelection(void) = default;
 
 	void				setup(void);
+	void				setupBubble(void);
 	void				setKeyboard(bool isKeyboard);
-	void				update(sf::Time frameTime, sf::Vector2f const & position);
+	virtual void		update(sf::Time frameTime, sf::Vector2f const & position);
 	void				draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 	void				addMenu(std::string const & name, std::unique_ptr<AMenu>&& menu);

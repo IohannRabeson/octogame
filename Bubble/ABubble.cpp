@@ -88,12 +88,6 @@ void ABubble::createQuotePart(sf::Vector2f const & size, sf::Vector2f const & or
 	builder.createQuad(leftUp, rightUp, rightDown, leftDown, color);
 	builder.createTriangle(rightDown, leftUpTriangle, downTriangle, color);
 }
-/*
-void ABubble::createInactive(sf::Vector2f const & size, float sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
-{
-	//Create exclamation dot
-}
-*/
 
 void ABubble::computePositionBubble(Type type, sf::Vector2f const & position)
 {
@@ -134,7 +128,6 @@ void ABubble::update(sf::Time frameTime)
 			createOctogon(sizeInactive, m_sizeCorner, m_positionBubble, m_color, m_builder);
 			createQuotePart(sizeInactive / 2.f, m_positionBubble - sf::Vector2f(sizeInactive.x, 0.f), sf::Color(0, 0, 0), m_builder);
 			createQuotePart(sizeInactive / 2.f, m_positionBubble + sf::Vector2f(sizeInactive.x, 0.f), sf::Color(0, 0, 0), m_builder);
-			//createInactive(sizeInactive, m_sizeCorner, m_positionBubble, m_color, m_builder);
 		}
 	}
 	m_used = m_builder.getUsed();
