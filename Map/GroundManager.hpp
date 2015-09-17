@@ -9,6 +9,7 @@
 # include "NanoRobot.hpp"
 # include "ANpc.hpp"
 # include "IPlaceable.hpp"
+# include "Water.hpp"
 
 class ADecor;
 class ABiome;
@@ -81,6 +82,7 @@ private:
 	DecorManager						m_decorManagerGround;
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
+	std::unique_ptr<Water>				m_water;
 
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;

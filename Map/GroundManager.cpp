@@ -14,6 +14,7 @@
 #include "GuiNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
@@ -41,7 +42,8 @@ GroundManager::GroundManager(void) :
 	m_decorManagerFront(200000),
 	m_decorManagerGround(200000),
 	m_nextState(GenerationState::Next),
-	m_cycle(nullptr)
+	m_cycle(nullptr),
+	m_water(nullptr)
 {}
 
 void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
@@ -224,6 +226,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	setupGameObjectPosition(m_npcsOnFloor);
 	setupGameObjectPosition(m_nanoRobots);
 	setupGameObjectPosition(m_otherObjects);
+
+	//TODO: if biome want water
+	m_water.reset(new Water(biome));
 }
 
 template<class T>
@@ -565,10 +570,9 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	placeMax(m_otherObjects, currentWide, prevWide, transition);
 
 	// Replace npc around the map
+	float mapSizeX = m_mapSize.x * Tile::TileSize;
 	for (auto const & npc : m_npcsOnFloor)
 	{
-		float mapSizeX = m_mapSize.x * Tile::TileSize;
-
 		if (npc.m_gameObject->getPosition().x < m_offset.x - mapSizeX / 2.f)
 			npc.m_gameObject->addMapOffset(mapSizeX, 0.f);
 		else if (npc.m_gameObject->getPosition().x > m_offset.x + mapSizeX / 2.f)
@@ -577,12 +581,18 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 
 	for (auto const & npc : m_npcs)
 	{
-		float mapSizeX = m_mapSize.x * Tile::TileSize;
-
 		if (npc->getPosition().x < m_offset.x - mapSizeX / 2.f)
 			npc->addMapOffset(mapSizeX, 0.f);
 		else if (npc->getPosition().x > m_offset.x + mapSizeX / 2.f)
 			npc->addMapOffset(-mapSizeX, 0.f);
+	}
+
+	if (m_water)
+	{
+		if (m_water->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			m_water->addMapOffset(mapSizeX);
+		else if (m_water->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			m_water->addMapOffset(-mapSizeX);
 	}
 }
 
@@ -791,6 +801,7 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 		npc.m_gameObject->update(frametime);
 	for (auto & npc : m_npcs)
 		npc->update(frametime);
+	m_water->update(frametime);
 }
 
 void GroundManager::update(float deltatime)
@@ -857,6 +868,7 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerGround, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
+	render.draw(*m_water, states);
 }
 
 void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) const
