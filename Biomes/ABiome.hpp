@@ -20,7 +20,8 @@ enum class Level : std::size_t
 {
 	Default,
 	LevelOne,
-	LevelTwo
+	LevelTwo,
+	LevelThree
 };
 
 class ABiome : public octo::NonCopyable
