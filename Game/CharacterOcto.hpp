@@ -25,6 +25,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Idle,
 		Right,
 		Left,
+		StartJump,
 		Jump,
 		DoubleJump,
 		Fall,
@@ -36,7 +37,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		StartElevator,
 		Elevator,
 	};
-	public:
+public:
 	friend class OctoEvent;
 
 	class OctoEvent : public AGameObject<GameObjectType::PlayerEvent>
@@ -83,11 +84,13 @@ private:
 	void	caseUp();
 	void	caseAction();
 	void	dance();
+	void	randomJumpAnimation();
 
 private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
+	octo::CharacterAnimation	m_startJumpAnimation;
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
 	octo::CharacterAnimation	m_danceAnimation;
