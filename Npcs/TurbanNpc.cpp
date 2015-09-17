@@ -7,8 +7,8 @@ TurbanNpc::TurbanNpc(void) :
 	ANpc(NPC_TURBAN_OSS)
 {
 	setSize(sf::Vector2f(1.f, 75.f));
-	setOrigin(sf::Vector2f(110.f, 130.f));
-	setScale(0.6f);
+	setOrigin(sf::Vector2f(100.f, 162.f));
+	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();

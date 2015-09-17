@@ -6,9 +6,9 @@
 FannyNpc::FannyNpc(void) :
 	ANpc(FANNY_OSS)
 {
-	setSize(sf::Vector2f(35.f, 75.f));
-	setOrigin(sf::Vector2f(75.f, 68.f));
-	setScale(0.6f);
+	setSize(sf::Vector2f(1.f, 75.f));
+	setOrigin(sf::Vector2f(90.f, 93.f));
+	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();
@@ -25,8 +25,6 @@ void FannyNpc::setup(void)
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()})
 			});
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
@@ -37,7 +35,6 @@ void FannyNpc::setup(void)
 			Frame(sf::seconds(0.6f), {7u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()})
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
