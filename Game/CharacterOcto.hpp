@@ -108,9 +108,8 @@ private:
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventDeath;
-	sf::Time					m_timeEventStartElevator;
-	float						m_spriteScale;
 	sf::Time					m_timeEventInk;
+	float						m_spriteScale;
 	float						m_pixelSecondJump;
 	float						m_pixelSecondSlowFall;
 	float						m_pixelSecondWalk;

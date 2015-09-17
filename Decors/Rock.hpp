@@ -15,6 +15,7 @@ struct OctogonValue
 	float					sizeLeft;
 	float					sizeRight;
 	float					sizeRec;
+	sf::Color				color;
 };
 
 public:
