@@ -157,10 +157,11 @@ void	CharacterOcto::setupAnimation()
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_jumpAnimation.setFrames({
-			Frame(sf::seconds(0.3f), {25, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {26, sf::FloatRect(), sf::Vector2f()})
+			Frame(sf::seconds(0.3f), {26, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {27, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {28, sf::FloatRect(), sf::Vector2f()}),
 			});
-	m_jumpAnimation.setLoop(octo::LoopMode::Loop);
+	m_jumpAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_fallAnimation.setFrames({
 			Frame(sf::seconds(0.3f), {27, sf::FloatRect(), sf::Vector2f()}),
