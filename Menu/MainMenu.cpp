@@ -1,4 +1,5 @@
 #include "MainMenu.hpp"
+#include "ControlMenu.hpp"
 #include "YesNoMenu.hpp"
 #include <Camera.hpp>
 #include <Application.hpp>
@@ -18,9 +19,10 @@ MainMenu::MainMenu(void)
 
 void MainMenu::createMenus(void)
 {
-	addMenu("Settings", std::unique_ptr<OptionMenu>(new OptionMenu()));
-	addMenu("Quit", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
-	setCharacterSize(40);
+	addMenu("Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
+	addMenu("Controles", std::unique_ptr<ControlMenu>(new ControlMenu()));
+	addMenu("Quitter", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+	setCharacterSize(30);
 	setBubbleType(ABubble::Type::Think);
 }
 

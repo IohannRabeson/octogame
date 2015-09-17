@@ -4,7 +4,6 @@
 # include "AMenuSelection.hpp"
 # include "VideoMenu.hpp"
 # include "AudioMenu.hpp"
-# include "ControlMenu.hpp"
 
 class OptionMenu : public AMenuSelection
 {
