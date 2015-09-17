@@ -132,7 +132,9 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[740] = GameObjectType::Portal;
 	m_instances[400] = TEST_MAP2_OMP;
-	m_gameObjects[600] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[375] = GameObjectType::TurbanNpc;
+	m_gameObjects[592] = GameObjectType::FannyNpc;
+	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[658] = GameObjectType::Bouibouik;
 	m_interestPointPosX = 500;
 

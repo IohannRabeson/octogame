@@ -11,7 +11,9 @@
 #include "CedricNpc.hpp"
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
+#include "FannyNpc.hpp"
 #include "GuiNpc.hpp"
+#include "TurbanNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "GroundTransformNanoRobot.hpp"
@@ -181,6 +183,21 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, gui);
 				}
 				break;
+			case GameObjectType::FannyNpc:
+				{
+					FannyNpc * fanny = new FannyNpc();
+					fanny->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, fanny);
+				}
+				break;
+			case GameObjectType::TurbanNpc:
+				{
+					TurbanNpc * turban = new TurbanNpc();
+					turban->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, turban);
+				}
+				break;
+
 			case GameObjectType::RepairNanoRobot:
 					if (!Progress::getInstance().canRepair())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
