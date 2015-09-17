@@ -10,6 +10,8 @@
 
 LevelOneBiome::LevelOneBiome() :
 	m_name("Level_One"),
+	m_id(Level::LevelOne),
+	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(600u, 16u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(250.f, 800.f),
@@ -105,7 +107,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f)),
 	m_indexTreePos(0u)
 {
-	m_generator.setSeed(m_name);
+	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
@@ -135,6 +137,11 @@ LevelOneBiome::LevelOneBiome() :
 void			LevelOneBiome::setup(std::size_t seed)
 {
 	(void)seed;
+}
+
+Level			LevelOneBiome::getId()const
+{
+	return m_id;
 }
 
 std::string		LevelOneBiome::getName()const

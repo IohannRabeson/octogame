@@ -22,7 +22,7 @@ MusicPlayer::MusicPlayer(void) :
 
 void MusicPlayer::setup(ABiome const & biome)
 {
-	m_biomeName = biome.getName();
+	m_biomeId = biome.getId();
 }
 
 void MusicPlayer::initMusicValue(MusicValue & music, ResourceKey key)
@@ -52,7 +52,7 @@ bool MusicPlayer::getEvent(sf::Vector2f const & octoPos)
 		m_currentEventKey = BALLADE_MENTALE_WAV;
 		return true;
 	}
-	else if (m_biomeName == "Level One")
+	else if (m_biomeId == Level::LevelOne)
 	{
 		m_currentEventKey = SPACE_SHIP_WAV;
 		return true;

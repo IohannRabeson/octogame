@@ -9,7 +9,9 @@
 #include <iostream>
 
 LevelTwoBiome::LevelTwoBiome() :
-	m_name("Level_Two"),
+	m_name("LevelTwo"),
+	m_id(Level::LevelTwo),
+	m_seed("LevelTwo"),
 	m_mapSize(sf::Vector2u(900u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(50.f * 16.f, 650.f),
@@ -106,7 +108,7 @@ LevelTwoBiome::LevelTwoBiome() :
 
 	m_indexTreePos(0u)
 {
-	m_generator.setSeed(m_name);
+	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
@@ -148,6 +150,11 @@ void			LevelTwoBiome::setup(std::size_t seed)
 std::string		LevelTwoBiome::getName()const
 {
 	return (m_name);
+}
+
+Level			LevelTwoBiome::getId()const
+{
+	return m_id;
 }
 
 //TODO:: We'll probably need a setter for mapSize
