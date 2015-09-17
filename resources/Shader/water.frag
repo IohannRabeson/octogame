@@ -44,8 +44,8 @@ void main()
 		// to tell us how "high up" we are and damp accordingly
 		// Remember, OpenGL 0 is at the bottom
 		float factor = (offset_limit - gl_TexCoord[0].y) / height;
-		if (factor > 0.1)
-			factor = 0.1;
+		if (factor > max_factor)
+			factor = max_factor;
 		distortionPositionOffset *= factor;
 
 		vec2 distortedTextureCoordinate = gl_TexCoord[0].st + distortionPositionOffset;

@@ -34,7 +34,7 @@ Water::Water(ABiome & biome) :
 	m_distorsionTexture.setSmooth(true);
 
 	m_shader.setParameter("distortionMapTexture", m_distorsionTexture);
-	m_shader.setParameter("max_factor", 0.1f);
+	m_shader.setParameter("max_factor", 0.15f);
 
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 	octo::PostEffect postEffectShader;
@@ -67,8 +67,8 @@ void Water::update(sf::Time frameTime)
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
 	m_waveCycle += frameTime;
 	m_shader.setParameter("time", m_waveCycle.asSeconds());
-	m_shader.setParameter("distortionFactor", 0.05f);
-	m_shader.setParameter("riseFactor", 0.2f);
+	m_shader.setParameter("distortionFactor", 0.15f);
+	m_shader.setParameter("riseFactor", 0.1f);
 	float limit = rect.height - (1000.f - rect.top);
 	m_shader.setParameter("limit", limit);
 	m_shader.setParameter("offset_limit", limit / rect.height);
