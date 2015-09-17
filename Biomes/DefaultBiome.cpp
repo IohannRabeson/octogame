@@ -129,6 +129,7 @@ DefaultBiome::DefaultBiome() :
 	m_gameObjects[50] = GameObjectType::Portal;
 	m_gameObjects[0] = GameObjectType::GroundTransformNanoRobot;
 	m_gameObjects[450] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[400] = GameObjectType::Bouibouik;
 	m_gameObjects[100] = GameObjectType::SpaceShip;
 	m_gameObjects[150] = GameObjectType::CedricNpc;
 	m_gameObjects[170] = GameObjectType::FranfranNpc;

@@ -13,6 +13,7 @@
 #include "JuNpc.hpp"
 #include "GuiNpc.hpp"
 #include "SpaceShip.hpp"
+#include "Bouibouik.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
@@ -201,6 +202,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					SpaceShip * spaceship = new SpaceShip(SpaceShip::SpaceShipEvents::Broken);
 					m_otherObjects.emplace_back(gameObject.first, 15, spaceship);
+				}
+				break;
+			case GameObjectType::Bouibouik:
+				{
+					Bouibouik * simple = new Bouibouik();
+					m_otherObjects.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
 			default:
