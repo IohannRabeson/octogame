@@ -88,7 +88,6 @@ void	CharacterOcto::setup(void)
 	m_eventBox->setType(AShape::Type::e_trigger);
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(NEW_OCTO_OSS));
-	m_timeEventStartElevator = sf::Time::Zero;
 	m_timeEventFall = sf::Time::Zero;
 	m_timeEventIdle = sf::Time::Zero;
 	m_timeEventDeath = sf::Time::Zero;
@@ -165,10 +164,14 @@ void	CharacterOcto::setupAnimation()
 			});
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
-	//TODO define frame
 	m_danceWithMusicAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {35, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.35f), {77, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.35f), {78, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.35f), {79, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.35f), {80, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {81, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.35f), {82, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.35f), {83, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_danceWithMusicAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -407,9 +410,6 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 {
 	switch (m_sprite.getCurrentEvent())
 	{
-		case StartElevator:
-			m_timeEventStartElevator += frameTime;
-			break;
 		case Fall:
 			m_timeEventFall += frameTime;
 			break;
@@ -423,7 +423,6 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 			m_timeEventInk += frameTime;
 			break;
 		default:
-			m_timeEventStartElevator = sf::Time::Zero;
 			m_timeEventFall = sf::Time::Zero;
 			m_timeEventIdle = sf::Time::Zero;
 			m_timeEventDeath = sf::Time::Zero;
@@ -579,7 +578,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 				m_numberOfJump = 3;
 				m_box->setApplyGravity(false);
 			}
-			if (m_timeEventStartElevator >= sf::seconds(0.2f))
+			if (m_sprite.isTerminated())
 				m_sprite.setNextEvent(Elevator);
 		}
 		if (!m_keyUp)
@@ -617,17 +616,20 @@ bool	CharacterOcto::dieFall()
 
 bool	CharacterOcto::endDeath()
 {
-	if (m_timeEventDeath > sf::seconds(3.0f))
+	if (m_sprite.getCurrentEvent() == Death)
 	{
-		if (m_keyLeft)
-			m_sprite.setNextEvent(Left);
-		else if (m_keyRight)
-			m_sprite.setNextEvent(Right);
+		if (m_timeEventDeath > sf::seconds(3.0f))
+		{
+			if (m_keyLeft)
+				m_sprite.setNextEvent(Left);
+			else if (m_keyRight)
+				m_sprite.setNextEvent(Right);
+			else
+				m_sprite.setNextEvent(Idle);
+		}
 		else
-			m_sprite.setNextEvent(Idle);
+			return false;
 	}
-	else if (m_sprite.getCurrentEvent() == Death)
-		return false;
 	return true;
 }
 
@@ -856,7 +858,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	}
 	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp)
 	{
-		if (state != Dance)
+		if (state != Dance || state != DanceWithMusic)
 		{
 			m_sprite.setNextEvent(Idle);
 		}
