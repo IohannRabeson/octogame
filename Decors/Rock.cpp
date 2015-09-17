@@ -52,9 +52,11 @@ void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin,
 	builder.createQuad(midLeft, midRight, downMidRight, downMidLeft, color);
 	builder.createQuad(left, midLeft, downMidLeft, downLeft, color);
 	builder.createQuad(right, midRight, downMidRight, downRight, color);
+	builder.createTriangle(left, midLeft, upLeft, color);
+	builder.createQuad(upLeft, recUp, recRight, recLeft, color);
 
-	builder.createTriangle(left, midLeft, upLeft, color + sf::Color(100, 100, 100));
-	builder.createQuad(upLeft, recUp, recRight, recLeft, color + sf::Color(100, 100, 100));
+	builder.createTriangle(left, midLeft, upLeft, sf::Color(255, 255, 255, 100));
+	builder.createQuad(upLeft, recUp, recRight, recLeft, sf::Color(255, 255, 255, 100));
 
 	// Compute last left point
 	if (downLeft.x - rockOrigin.x < m_left.x && origin.x < rockOrigin.x)
@@ -67,7 +69,7 @@ void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin,
 void Rock::createRock(std::vector<OctogonValue> const & values, sf::Vector2f const & originRock, sf::Color const & color, octo::VertexBuilder& builder)
 {
 	for (std::size_t i = 0u; i < m_partCount; i++)
-		createOctogon(sf::Vector2f(values[i].size.x, values[i].size.y * m_animation), values[i].origin + originRock, color,
+		createOctogon(sf::Vector2f(values[i].size.x, values[i].size.y * m_animation), values[i].origin + originRock, m_values[i].color,
 						values[i].sizeLeft, values[i].sizeRight, values[i].sizeRec, originRock, builder);
 	builder.createTriangle(m_left + originRock, m_right + originRock, sf::Vector2f(m_left.x + (m_right.x - m_left.x) / 2.f, ((m_right.x - m_left.x) / 2.f) * m_animation) + originRock, color);
 }
@@ -100,6 +102,7 @@ void Rock::setup(ABiome& biome)
 			m_values[i].sizeLeft = biome.randomFloat(size.x, size.x * 2.f);
 			m_values[i].sizeRight = biome.randomFloat(size.x, size.x * 2.f);
 			m_values[i].sizeRec = biome.randomFloat(0.f, size.x * 2.f);
+			m_values[i].color = biome.getRockColor();
 		}
 		else
 			break;
@@ -124,6 +127,7 @@ void Rock::setup(ABiome& biome)
 			m_values[i].sizeLeft = biome.randomFloat(size.x, size.x * 2.f);
 			m_values[i].sizeRight = biome.randomFloat(size.x, size.x * 2.f);
 			m_values[i].sizeRec = biome.randomFloat(10.f, size.x * 2.f);
+			m_values[i].color = biome.getRockColor();
 		}
 		i++;
 	}

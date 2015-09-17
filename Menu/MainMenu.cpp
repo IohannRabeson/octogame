@@ -28,7 +28,7 @@ void MainMenu::setup(void)
 {
 	AMenuSelection::setup();
 	m_filter.setSize(octo::Application::getCamera().getSize());
-	m_filter.setFillColor(sf::Color(255, 255, 255, 100));
+	m_filter.setFillColor(sf::Color(0, 0, 0, 50));
 }
 
 void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePosition)

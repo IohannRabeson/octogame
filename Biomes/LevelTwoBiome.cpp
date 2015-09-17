@@ -9,19 +9,19 @@
 #include <iostream>
 
 LevelTwoBiome::LevelTwoBiome() :
-	m_name("LevelTwo"),
-	m_mapSize(sf::Vector2u(512u, 128u)),
+	m_name("Level_Two"),
+	m_mapSize(sf::Vector2u(900u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(0.f, 0.f),
+	m_octoStartPosition(50.f * 16.f, 650.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(230.f, 168.f, 0.f),
-	m_tileEndColor(254.f, 231.f, 170.f),
+	m_tileStartColor(255, 245, 217),
+	m_tileEndColor(255, 252, 181),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(20.f)),
+	m_dayDuration(sf::seconds(100.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(188, 200, 206),
+	m_skyDayColor(255,156,103),
 	m_skyNightColor(8, 20, 26),
 	m_nightLightColor(0, 197, 255, 130),
 	m_SunsetLightColor(238, 173, 181, 130),
@@ -32,43 +32,43 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(10u, 20u),
-	m_treeCount(5u, 10u),
+	m_treeCount(13u, 13u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
-	m_sunCount(3u, 5u),
+	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
 	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
-	m_canCreateRain(true),
-	m_canCreateThunder(true),
-	m_canCreateSnow(true),
+	m_canCreateRain(false),
+	m_canCreateThunder(false),
+	m_canCreateSnow(false),
 	m_canCreateRock(true),
 	m_canCreateTree(true),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
-	m_canCreateMushroom(true),
+	m_canCreateMushroom(false),
 	m_canCreateCrystal(true),
 	m_canCreateShineEffect(true),
-	m_canCreateCloud(true),
+	m_canCreateCloud(false),
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
-	m_canCreateRainbow(true),
+	m_canCreateRainbow(false),
 
-	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(40.f, 200.f)),
-	m_rockPartCount(2.f, 10.f),
-	m_rockColor(107, 172, 166),
+	m_rockSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 400.f)),
+	m_rockPartCount(50.f, 80.f),
+	m_rockColor(240, 110, 110),
 
 	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 150.f)),
+	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 200.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
-	m_treeColor(30, 30, 30),
+	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
-	m_leafColor(143, 208, 202),
+	m_leafColor(46, 133, 84),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
 	m_mushroomColor(77, 142, 126),
@@ -76,7 +76,7 @@ LevelTwoBiome::LevelTwoBiome() :
 
 	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 100.f)),
 	m_crystalPartCount(2u, 8u),
-	m_crystalColor(230, 168, 0, 150),
+	m_crystalColor(18, 14, 66, 150),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
@@ -90,7 +90,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
-	m_sunSize(sf::Vector2f(60.f, 60.f), sf::Vector2f(150.f, 150.f)),
+	m_sunSize(sf::Vector2f(300.f, 300.f), sf::Vector2f(350.f, 350.f)),
 	m_sunPartCount(2u, 4u),
 	m_sunColor(255, 255, 255),
 
@@ -102,7 +102,9 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
-	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
+	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f)),
+
+	m_indexTreePos(0u)
 {
 	m_generator.setSeed(m_name);
 #ifndef NDEBUG
@@ -120,19 +122,22 @@ LevelTwoBiome::LevelTwoBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// TODO define map position and number of map
-	m_instances[12] = MINIMAP_OMP;
-	m_instances[86] = TEST_MAP2_OMP;
+	//m_instances[12] = MINIMAP_OMP;
+	//m_instances[86] = TEST_MAP2_OMP;
 
 	// Define game objects
-	m_gameObjects[50] = GameObjectType::Portal;
-	m_gameObjects[150] = GameObjectType::CedricNpc;
-	m_gameObjects[170] = GameObjectType::FranfranNpc;
-	m_gameObjects[0] = GameObjectType::GroundTransformNanoRobot;
-	m_gameObjects[450] = GameObjectType::RepairNanoRobot;
-	m_gameObjects[100] = GameObjectType::SpaceShip;
+	m_gameObjects[40] = GameObjectType::Portal;
+	m_gameObjects[740] = GameObjectType::Portal;
+	m_gameObjects[5] = GameObjectType::JuNpc;
+	m_gameObjects[600] = GameObjectType::RepairNanoRobot;
+	m_instances[400] = TEST_MAP2_OMP;
+	m_interestPointPosX = 500;
+
+	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 801};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelOne);
+	m_destinations.push_back(Level::Default);
 }
 
 void			LevelTwoBiome::setup(std::size_t seed)
@@ -199,7 +204,7 @@ std::vector<ParallaxScrolling::ALayer *> LevelTwoBiome::getLayers()
 	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 10.f, y, 2, 2.f);
+			return noise.perlin(x * 1.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
 	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
@@ -221,17 +226,19 @@ Map::MapSurfaceGenerator LevelTwoBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		if (x > 90.f / static_cast<float>(m_mapSize.x) && x <= 210.f / static_cast<float>(m_mapSize.x))
-		{
-			float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-			if (x > 90.f / static_cast<float>(m_mapSize.x) && x <= 100.f / static_cast<float>(m_mapSize.x))
-				return octo::cosinusInterpolation(n, n / 3.f - 0.9f, (x - (90.f / static_cast<float>(m_mapSize.x))) / (10.f / static_cast<float>(m_mapSize.x)));
-			else if (x > 100.f / static_cast<float>(m_mapSize.x) && x <= 200.f / static_cast<float>(m_mapSize.x))
-				return n / 3.f - 0.9f;
-			else if (x > 200.f / static_cast<float>(m_mapSize.x) && x <= 210.f / static_cast<float>(m_mapSize.x))
-				return octo::cosinusInterpolation(n, n / 3.f - 0.9f, ((10.f / static_cast<float>(m_mapSize.x)) - x - (200.f / static_cast<float>(m_mapSize.x))) / (10.f / static_cast<float>(m_mapSize.x)));
-		}
-		return noise.fBm(x, y, 3, 3.f, 0.3f);
+		float start = 680.f / static_cast<float>(m_mapSize.x);
+		float end = 800.f / static_cast<float>(m_mapSize.x);
+		float offset = 10.f / static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+
+		if (x > start - offset && x <= start)
+			return octo::cosinusInterpolation(n, n / 3.f - 0.9f, (x - start + offset) / offset);
+		else if (x > start && x <= end)
+			return n / 3.f - 0.9f;
+		else if (x > end && x <= end + offset)
+			return octo::cosinusInterpolation(n, n / 3.f - 0.9f, (offset - x - end) / offset);
+		else
+			return n;
 	};
 }
 
@@ -442,7 +449,7 @@ sf::Color		LevelTwoBiome::getLeafColor()
 
 std::size_t		LevelTwoBiome::getTreePositionX()
 {
-	return randomInt(1, m_mapSize.x);
+	return m_treePos[m_indexTreePos++];
 }
 
 sf::Vector2f	LevelTwoBiome::getCrystalSize()

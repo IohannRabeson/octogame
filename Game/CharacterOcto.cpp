@@ -504,7 +504,7 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 
 void	CharacterOcto::usePortal(Portal & portal)
 {
-	if (m_keyAction)
+	if (m_keyUp)
 	{
 		m_progress.setNextDestination(portal.getDestination());
 	}
