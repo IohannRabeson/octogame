@@ -12,6 +12,9 @@
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "FranfranNpc.hpp"
+#include "JuNpc.hpp"
+#include "FannyNpc.hpp"
+#include "TurbanNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -161,6 +164,15 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::FranfranNpc:
 			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::JuNpc:
+			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::FannyNpc:
+			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::TurbanNpc:
+			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		default:
 			break;

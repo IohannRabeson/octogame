@@ -11,7 +11,9 @@
 #include "CedricNpc.hpp"
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
+#include "FannyNpc.hpp"
 #include "GuiNpc.hpp"
+#include "TurbanNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "GroundTransformNanoRobot.hpp"
@@ -181,6 +183,21 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, gui);
 				}
 				break;
+			case GameObjectType::FannyNpc:
+				{
+					FannyNpc * fanny = new FannyNpc();
+					fanny->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, fanny);
+				}
+				break;
+			case GameObjectType::TurbanNpc:
+				{
+					TurbanNpc * turban = new TurbanNpc();
+					turban->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, turban);
+				}
+				break;
+
 			case GameObjectType::RepairNanoRobot:
 					if (!Progress::getInstance().canRepair())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
@@ -204,13 +221,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::SpaceShip:
 				{
 					SpaceShip * spaceship = new SpaceShip(SpaceShip::SpaceShipEvents::Broken);
-					m_otherObjects.emplace_back(gameObject.first, 15, spaceship);
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, spaceship);
 				}
 				break;
 			case GameObjectType::Bouibouik:
 				{
 					Bouibouik * simple = new Bouibouik();
-					m_otherObjects.emplace_back(gameObject.first, 15, simple);
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
 			default:
@@ -223,7 +240,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	setupGameObjectPosition(m_portals);
 	setupGameObjectPosition(m_npcsOnFloor);
 	setupGameObjectPosition(m_nanoRobots);
-	setupGameObjectPosition(m_otherObjects);
+	setupGameObjectPosition(m_otherObjectsHigh);
+	setupGameObjectPosition(m_otherObjectsLow);
 }
 
 template<class T>
@@ -562,7 +580,8 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	placeMax(m_portals, currentWide, prevWide, transition);
 	placeMax(m_nanoRobots, currentWide, prevWide, transition);
 	placeMax(m_npcsOnFloor, currentWide, prevWide, transition);
-	placeMax(m_otherObjects, currentWide, prevWide, transition);
+	placeMax(m_otherObjectsHigh, currentWide, prevWide, transition);
+	placeMin(m_otherObjectsLow, currentWide, prevWide, transition);
 
 	// Replace npc around the map
 	for (auto const & npc : m_npcsOnFloor)
@@ -779,7 +798,9 @@ void GroundManager::updateDecors(sf::Time deltatime)
 
 void GroundManager::updateGameObjects(sf::Time frametime)
 {
-	for (auto & object : m_otherObjects)
+	for (auto & object : m_otherObjectsHigh)
+		object.m_gameObject->update(frametime);
+	for (auto & object : m_otherObjectsLow)
 		object.m_gameObject->update(frametime);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->update(frametime);
@@ -850,8 +871,10 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 {
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render, states);
-	for (auto & object : m_otherObjects)
-		object.m_gameObject->draw(render, states);
+	for (auto & objectHigh : m_otherObjectsHigh)
+		objectHigh.m_gameObject->draw(render, states);
+	for (auto & objectLow : m_otherObjectsLow)
+		objectLow.m_gameObject->draw(render, states);
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);

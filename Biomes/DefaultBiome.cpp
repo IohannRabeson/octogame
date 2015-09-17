@@ -135,6 +135,8 @@ DefaultBiome::DefaultBiome() :
 	m_gameObjects[170] = GameObjectType::FranfranNpc;
 	m_gameObjects[190] = GameObjectType::JuNpc;
 	m_gameObjects[210] = GameObjectType::GuiNpc;
+	m_gameObjects[230] = GameObjectType::FannyNpc;
+	m_gameObjects[250] = GameObjectType::TurbanNpc;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelOne);

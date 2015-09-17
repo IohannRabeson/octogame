@@ -87,7 +87,8 @@ private:
 	std::vector<GameObjectPosition<Portal>>				m_portals;
 	std::vector<GameObjectPosition<NanoRobot>>			m_nanoRobots;
 	std::vector<GameObjectPosition<ANpc>>				m_npcsOnFloor;
-	std::vector<GameObjectPosition<IPlaceable>>			m_otherObjects;
+	std::vector<GameObjectPosition<IPlaceable>>			m_otherObjectsHigh;
+	std::vector<GameObjectPosition<IPlaceable>>			m_otherObjectsLow;
 	std::vector<std::unique_ptr<ANpc>>					m_npcs;
 
 	template<class T>

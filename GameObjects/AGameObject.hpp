@@ -20,7 +20,9 @@ enum class GameObjectType
 	FranfranNpc = 8192u,
 	JuNpc = 16384u,
 	GuiNpc = 32768u,
-	Bouibouik = 65535u
+	Bouibouik = 65535u,
+	FannyNpc = 131070u,
+	TurbanNpc = 524280,
 };
 
 /*!
