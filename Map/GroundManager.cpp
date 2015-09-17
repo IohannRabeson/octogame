@@ -811,8 +811,6 @@ void GroundManager::update(float deltatime)
 void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	render.draw(m_decorManagerBack, states);
-	for (auto & object : m_otherObjects)
-		object.m_gameObject->draw(render, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->draw(render, states);
 	for (auto & portal : m_portals)
@@ -827,6 +825,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 {
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render, states);
+	for (auto & object : m_otherObjects)
+		object.m_gameObject->draw(render, states);
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);

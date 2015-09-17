@@ -46,10 +46,8 @@ SRC_STATES =	Screens/StateTest.cpp					\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
-				Game/RepairNanoRobot.cpp				\
 				Game/Progress.cpp						\
 				Game/MusicPlayer.cpp					\
-				Game/SparkSystem.cpp					\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\
@@ -85,6 +83,7 @@ SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/FireflyPositionBehaviors.cpp	\
 				NanoRobots/NanoRobot.cpp				\
 				NanoRobots/GroundTransformNanoRobot.cpp	\
+				NanoRobots/RepairNanoRobot.cpp			\
 
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\
@@ -124,6 +123,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
 				Decors/SmokeSystem.cpp					\
+				Decors/SparkSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
