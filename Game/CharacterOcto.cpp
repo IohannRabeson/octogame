@@ -91,7 +91,9 @@ void	CharacterOcto::setup(void)
 		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
 		| static_cast<std::uint32_t>(GameObjectType::Elevator)
 		| static_cast<std::uint32_t>(GameObjectType::CedricNpc)
-		| static_cast<std::uint32_t>(GameObjectType::FranfranNpc);
+		| static_cast<std::uint32_t>(GameObjectType::FannyNpc)
+		| static_cast<std::uint32_t>(GameObjectType::JuNpc)
+		| static_cast<std::uint32_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
 	m_eventBox->setType(AShape::Type::e_trigger);
