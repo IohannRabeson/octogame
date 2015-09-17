@@ -53,6 +53,8 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\
 				GameObjects/ElevatorStream.cpp			\
 				GameObjects/SpaceShip.cpp				\
+				GameObjects/SimpleObject.cpp			\
+				GameObjects/Bouibouik.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
