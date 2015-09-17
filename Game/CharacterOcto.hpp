@@ -107,9 +107,13 @@ private:
 	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
 	RepairNanoRobot *			m_repairNanoRobot;
 	Progress &					m_progress;
+	std::mt19937				m_engine;
+	std::uniform_int_distribution<std::size_t>		m_jumpDistribution;
+	std::uniform_real_distribution<float>			m_danceDistribution;
 
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
+	sf::Time					m_timeEventIdleMax;
 	sf::Time					m_timeEventDeath;
 	sf::Time					m_timeEventInk;
 	float						m_spriteScale;

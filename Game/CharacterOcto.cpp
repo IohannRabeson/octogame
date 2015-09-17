@@ -17,6 +17,10 @@ CharacterOcto::CharacterOcto() :
 	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_repairNanoRobot(nullptr),
 	m_progress(Progress::getInstance()),
+	m_engine(std::time(0)),
+	m_jumpDistribution(0, 4),
+	m_danceDistribution(2.f, 6.f),
+	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_spriteScale(0.6f),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondSlowFall(-300.f),
@@ -184,7 +188,7 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.35f), {82, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.35f), {83, sf::FloatRect(), sf::Vector2f()}),
 			});
-	m_danceWithMusicAnimation.setLoop(octo::LoopMode::Loop);
+	m_danceWithMusicAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_slowFallAnimation.setFrames({
 			Frame(sf::seconds(0.2f), {49, sf::FloatRect(), sf::Vector2f()}),
@@ -666,23 +670,21 @@ bool	CharacterOcto::endDeath()
 
 void	CharacterOcto::dance()
 {
-	if (m_timeEventIdle > sf::seconds(3.0f))
+	if (m_timeEventIdle > m_timeEventIdleMax)
 	{
+		m_timeEventIdleMax = sf::seconds(m_danceDistribution(m_engine));
 		if (octo::Application::getAudioManager().getMusicVolume() > 0.f)
 			m_sprite.setNextEvent(DanceWithMusic);
-		else
-			m_sprite.setNextEvent(Dance);
 	}
+	if (m_sprite.getCurrentEvent() == DanceWithMusic && m_sprite.isTerminated())
+		m_sprite.setNextEvent(Idle);
 }
 
 void	CharacterOcto::randomJumpAnimation()
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
-	std::random_device								rd;
-	std::mt19937									mt(rd());
-	std::uniform_int_distribution<std::size_t>		dist(0, 4);
 
-	if(!dist(mt))
+	if(!m_jumpDistribution(m_engine))
 	{
 		m_startJumpAnimation.setFrames({
 				Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
@@ -703,7 +705,6 @@ void	CharacterOcto::randomJumpAnimation()
 		m_startJumpAnimation.setLoop(octo::LoopMode::NoLoop);
 	}
 }
-
 
 void	CharacterOcto::commitPhysicsToGraphics()
 {
