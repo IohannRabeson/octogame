@@ -858,7 +858,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	}
 	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp)
 	{
-		if (state != Dance)
+		if (state != Dance || state != DanceWithMusic)
 		{
 			m_sprite.setNextEvent(Idle);
 		}
