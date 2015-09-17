@@ -98,6 +98,8 @@ private:
 	sf::FloatRect								m_area;
 	sf::Vector2f								m_origin;
 	sf::Vector2f								m_textOffset;
+	sf::Time									m_timer;
+	sf::Time									m_timerMax;
 	int											m_currentText;
 	float										m_velocity;
 	float										m_scale;

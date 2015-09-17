@@ -9,6 +9,8 @@
 
 ANpc::ANpc(ResourceKey const & npcId) :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
+	m_timer(sf::Time::Zero),
+	m_timerMax(sf::seconds(5.f)),
 	m_currentText(0),
 	m_velocity(200.f),
 	m_scale(1.f),
@@ -90,8 +92,12 @@ void ANpc::setupMachine(void)
 	machine.addTransition(Idle, walkRightState, idleState);
 
 	machine.addTransition(Left, idleState, walkLeftState);
+	machine.addTransition(Left, walkLeftState, walkLeftState);
+	machine.addTransition(Left, walkRightState, walkLeftState);
 
 	machine.addTransition(Right, idleState, walkRightState);
+	machine.addTransition(Right, walkLeftState, walkRightState);
+	machine.addTransition(Right, walkRightState, walkRightState);
 
 	setMachine(machine);
 	m_sprite.setNextEvent(Idle);
@@ -291,6 +297,7 @@ void ANpc::update(sf::Time frametime)
 	updateState();
 	updatePhysics();
 
+	m_timer += frametime;
 	m_sprite.update(frametime);
 	sf::FloatRect const & bounds = m_box->getGlobalBounds();
 	m_sprite.setPosition(bounds.left, bounds.top);
@@ -308,23 +315,37 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 void ANpc::updateState(void)
 {
 	sf::FloatRect const & bounds = m_box->getGlobalBounds();
-	if ((bounds.left + bounds.width) <= (m_area.left + m_area.width) && m_sprite.getCurrentEvent() == Idle && canWalk())
+	if (bounds.left <= m_area.left && canWalk() && m_sprite.getCurrentEvent() == Left)
 	{
 		m_sprite.setNextEvent(Right);
 		m_sprite.setOrigin(m_origin.x, m_origin.y);
 		m_sprite.setScale(m_scale, m_scale);
 	}
-	else if (bounds.left >= m_area.left && m_sprite.getCurrentEvent() == Idle && canWalk())
+	else if ((bounds.left + bounds.width) >= (m_area.left + m_area.width) && canWalk() && m_sprite.getCurrentEvent() == Right)
 	{
 		m_sprite.setNextEvent(Left);
 		sf::Vector2f const & size = m_sprite.getLocalSize();
 		m_sprite.setOrigin(size.x - m_origin.x, m_origin.y);
 		m_sprite.setScale(-m_scale, m_scale);
 	}
-	else if ((bounds.left <= m_area.left || (bounds.left + bounds.width) >= (m_area.left + m_area.width))
-			&& m_sprite.getCurrentEvent() != Idle)
+	else if (m_sprite.getCurrentEvent() != Idle)
 	{
-		m_sprite.setNextEvent(Idle);
+		if (m_timer >= m_timerMax)
+		{
+			m_sprite.setNextEvent(Idle);
+			m_timer -= m_timerMax;
+		}
+	}
+	else if (m_sprite.getCurrentEvent() == Idle)
+	{
+		if (m_timer >= m_timerMax)
+		{
+			m_sprite.setNextEvent(Left);
+			sf::Vector2f const & size = m_sprite.getLocalSize();
+			m_sprite.setOrigin(size.x - m_origin.x, m_origin.y);
+			m_sprite.setScale(-m_scale, m_scale);
+			m_timer -= m_timerMax;
+		}
 	}
 }
 
