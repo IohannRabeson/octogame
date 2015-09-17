@@ -29,6 +29,7 @@ public:
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;
+	virtual Level										getId()const;
 
 	virtual sf::Vector2u								getMapSize();
 	virtual sf::Vector2f								getMapSizeFloat();
@@ -142,6 +143,8 @@ public:
 private:
 	RandomGenerator										m_generator;
 	std::string											m_name;
+	Level												m_id;
+	std::string											m_seed;
 
 	sf::Vector2u										m_mapSize;
 	std::size_t											m_mapSeed;
@@ -248,6 +251,9 @@ private:
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
 	sf::Color											randomColor(sf::Color const & color);
+
+	std::vector<int>									m_treePos;
+	std::size_t											m_indexTreePos;
 };
 
 #endif

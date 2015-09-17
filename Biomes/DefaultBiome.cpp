@@ -10,6 +10,8 @@
 
 DefaultBiome::DefaultBiome() :
 	m_name("Default"),
+	m_id(Level::Default),
+	m_seed("Default"),
 	m_mapSize(sf::Vector2u(512u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(0.f, 400.f),
@@ -104,7 +106,7 @@ DefaultBiome::DefaultBiome() :
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
-	m_generator.setSeed(m_name);
+	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
@@ -145,6 +147,11 @@ void			DefaultBiome::setup(std::size_t seed)
 std::string		DefaultBiome::getName()const
 {
 	return (m_name);
+}
+
+Level			DefaultBiome::getId()const
+{
+	return (m_id);
 }
 
 //TODO:: We'll probably need a setter for mapSize

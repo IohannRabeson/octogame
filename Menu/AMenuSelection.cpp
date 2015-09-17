@@ -20,6 +20,11 @@ void AMenuSelection::addMenu(std::string const & name, std::unique_ptr<AMenu>&& 
 void AMenuSelection::setup(void)
 {
 	createMenus();
+	setupBubble();
+}
+
+void AMenuSelection::setupBubble(void)
+{
 	m_bubble.setup(m_menuTitles, sf::Color(255, 255, 255, 255), m_characterSize);
 	m_bubble.setType(ABubble::None);
 

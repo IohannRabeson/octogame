@@ -13,7 +13,6 @@ public:
 	void createMenus(void);
 	void onSelection(void);
 
-	// Will be virtual pure
 	virtual void setIndex(void) = 0;
 	virtual void actionYes(void) = 0;
 	virtual void actionNo(void) = 0;

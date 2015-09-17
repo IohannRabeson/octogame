@@ -10,9 +10,11 @@
 
 LevelOneBiome::LevelOneBiome() :
 	m_name("Level_One"),
+	m_id(Level::LevelOne),
+	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(600u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(700.f, 800.f),
+	m_octoStartPosition(250.f, 800.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -32,7 +34,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(7u, 8u),
-	m_treeCount(9u, 9u),
+	m_treeCount(19u, 19u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(4u, 8u),
 	m_starCount(500u, 800u),
@@ -105,7 +107,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f)),
 	m_indexTreePos(0u)
 {
-	m_generator.setSeed(m_name);
+	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
@@ -120,21 +122,26 @@ LevelOneBiome::LevelOneBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[450] = GameObjectType::Portal;
-	m_gameObjects[425] = GameObjectType::FranfranNpc;
-	m_gameObjects[135] = GameObjectType::GroundTransformNanoRobot;
-	m_interestPointPosX = 135;
+	m_gameObjects[320] = GameObjectType::Portal;
+	m_gameObjects[295] = GameObjectType::FranfranNpc;
+	m_gameObjects[30] = GameObjectType::GroundTransformNanoRobot;
+	m_interestPointPosX = 320;
 	m_gameObjects[8] = GameObjectType::SpaceShip;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::LevelTwo);
 
-	m_treePos = {36, 300, 306, 309, 320, 329, 340, 354, 359, 375};
+	m_treePos = {36, 200, 206, 209, 220, 229, 240, 254, 259, 275, 350, 359, 363, 369, 385, 401, 410, 423, 450};
 }
 
 void			LevelOneBiome::setup(std::size_t seed)
 {
 	(void)seed;
+}
+
+Level			LevelOneBiome::getId()const
+{
+	return m_id;
 }
 
 std::string		LevelOneBiome::getName()const
@@ -227,11 +234,11 @@ Map::MapSurfaceGenerator LevelOneBiome::getMapSurfaceGenerator()
 			saveY = y;
 			isBlock = !isBlock;
 		}
-		if (isBlock && x > 5.f / static_cast<float>(m_mapSize.x) && x < 150.f / static_cast<float>(m_mapSize.x))
+		if (isBlock && x > 5.f / static_cast<float>(m_mapSize.x) && x < 47.f / static_cast<float>(m_mapSize.x))
 		{
 			if (x == 6.f / static_cast<float>(m_mapSize.x))
 				return 0.25f + 112.f / 16.f;
-			else if (x == 149.f / static_cast<float>(m_mapSize.x))
+			else if (x == 46.f / static_cast<float>(m_mapSize.x))
 				return 0.25f + 112.f / 16.f;
 			return 0.5f + 112.f / 16.f;
 		}
