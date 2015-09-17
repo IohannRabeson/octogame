@@ -11,6 +11,7 @@ public:
 	{
 		None,
 		Repair,
+		RepairRandom,
 		Done
 	};
 
@@ -29,6 +30,9 @@ private:
 	sf::Texture const *				m_texture;
 	State							m_state;
 	SparkSystem						m_particles;
+	sf::Time						m_timer;
+	sf::Time						m_timerMax;
+	bool							m_wait;
 
 	void makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
 

@@ -7,8 +7,12 @@
 RepairNanoRobot::RepairNanoRobot(void) :
 	NanoRobot(sf::Vector2f(200.f, 800.f), NANO_REPAIR_OSS, 8, 12542),
 	m_ray(new sf::Vertex[16]),
+	m_target(200.f, 800.f),
 	m_texture(nullptr),
-	m_state(None)
+	m_state(RepairRandom),
+	m_timer(sf::Time::Zero),
+	m_timerMax(sf::seconds(1.f)),
+	m_wait(false)
 {
 	setup(this);
 	m_texture = &octo::Application::getResourceManager().getTexture(STARGRADIENT_PNG);
@@ -86,6 +90,14 @@ void RepairNanoRobot::update(sf::Time frameTime)
 {
 	NanoRobot::update(frameTime);
 
+	static bool wait = true;
+	m_timer += frameTime;
+	if (m_timer >= m_timerMax)
+	{
+		wait = !wait;
+		m_timerMax -= m_timerMax;
+	}
+
 	m_particles.canEmit(false);
 	if (m_state == Repair)
 	{
@@ -93,13 +105,22 @@ void RepairNanoRobot::update(sf::Time frameTime)
 		m_particles.canEmit(true);
 		m_particles.setPosition(m_target);
 	}
+	else if (m_state == RepairRandom)
+	{
+		if (wait)
+		{
+			makeLaser(m_ray.get(), getPosition() + sf::Vector2f(-2.f, 16.f), m_target, 4.f);
+			m_particles.canEmit(true);
+			m_particles.setPosition(m_target);
+		}
+	}
 	m_particles.update(frameTime);
 }
 
 void RepairNanoRobot::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	NanoRobot::draw(render, states);
-	if ((m_state == Repair) && (!isTravelling() || getState() == FollowOcto || getState() == Speak))
+	if ((m_state == Repair || m_state == RepairRandom) && (!isTravelling() || getState() == FollowOcto || getState() == Speak))
 	{
 		render.draw(m_ray.get(), 8, sf::Quads);
 		render.draw(m_ray.get() + 8, 8u, sf::Quads, m_texture);
