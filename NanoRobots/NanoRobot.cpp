@@ -8,13 +8,13 @@
 #include <ResourceManager.hpp>
 #include <sstream>
 
-NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames) :
+NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames, int seed) :
 	m_swarm(1),
 	m_uniformPopulation(1234u, &octo::Application::getResourceManager().getPalette(FROM_SEA1_OPA),
 						1.2f, 2.f, 6.f, 10.f, 32.f, 50.f,
 						sf::Time::Zero, sf::Time::Zero),
 	m_spawnMode(FireflySwarm::SpawnMode::Normal),
-	m_positionBehavior(new FireflySwarm::CirclePositionBehavior(2345, 50.f)),
+	m_positionBehavior(new FireflySwarm::CirclePositionBehavior(seed, 50.f)),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_state(Idle),
 	m_timer(sf::Time::Zero),
