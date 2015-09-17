@@ -9,10 +9,10 @@
 #include <iostream>
 
 LevelTwoBiome::LevelTwoBiome() :
-	m_name("LevelTwo"),
+	m_name("Level_Two"),
 	m_mapSize(sf::Vector2u(900u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(34.f * 16.f, 0.f),
+	m_octoStartPosition(50.f * 16.f, 650.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
@@ -32,7 +32,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(10u, 20u),
-	m_treeCount(5u, 10u),
+	m_treeCount(13u, 13u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
@@ -63,7 +63,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_rockColor(240, 110, 110),
 
 	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 150.f)),
+	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 200.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
@@ -102,7 +102,9 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
-	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
+	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f)),
+
+	m_indexTreePos(0u)
 {
 	m_generator.setSeed(m_name);
 #ifndef NDEBUG
@@ -127,6 +129,11 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[740] = GameObjectType::Portal;
 	m_gameObjects[5] = GameObjectType::JuNpc;
+	m_gameObjects[600] = GameObjectType::RepairNanoRobot;
+	m_instances[400] = TEST_MAP2_OMP;
+	m_interestPointPosX = 500;
+
+	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 801};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelOne);
@@ -442,7 +449,7 @@ sf::Color		LevelTwoBiome::getLeafColor()
 
 std::size_t		LevelTwoBiome::getTreePositionX()
 {
-	return randomInt(1, m_mapSize.x);
+	return m_treePos[m_indexTreePos++];
 }
 
 sf::Vector2f	LevelTwoBiome::getCrystalSize()
