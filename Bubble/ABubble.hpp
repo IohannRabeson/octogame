@@ -55,13 +55,6 @@ private:
 													sf::Vector2f const & origin,
 													sf::Color const & color,
 													octo::VertexBuilder & builder);
-	/*
-	void							createInactive(sf::Vector2f const & size,
-												   float sizeCorner,
-												   sf::Vector2f const & origin,
-												   sf::Color const & color,
-												   octo::VertexBuilder& builder);
-	*/
 
 	void							createExtension(sf::Vector2f const & position,
 													sf::Color const & color,
