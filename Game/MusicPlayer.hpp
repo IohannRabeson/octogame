@@ -48,7 +48,7 @@ struct MusicValue
 	std::vector<MusicValue>	m_eventMusics;
 	bool					m_eventMusicOn;
 	ResourceKey				m_currentEventKey;
-	std::string				m_biomeName;
+	Level					m_biomeId;
 };
 
 #endif

@@ -10,6 +10,8 @@
 
 LevelTwoBiome::LevelTwoBiome() :
 	m_name("LevelTwo"),
+	m_id(Level::LevelTwo),
+	m_seed("LevelTwo"),
 	m_mapSize(sf::Vector2u(512u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(0.f, 0.f),
@@ -104,7 +106,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
-	m_generator.setSeed(m_name);
+	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
@@ -143,6 +145,11 @@ void			LevelTwoBiome::setup(std::size_t seed)
 std::string		LevelTwoBiome::getName()const
 {
 	return (m_name);
+}
+
+Level			LevelTwoBiome::getId()const
+{
+	return m_id;
 }
 
 //TODO:: We'll probably need a setter for mapSize

@@ -30,6 +30,7 @@ public:
 
 	virtual void										setup(std::size_t seed) = 0;
 	virtual std::string									getName()const = 0;
+	virtual Level										getId()const = 0;
 
 	virtual sf::Vector2u								getMapSize() = 0;
 	virtual sf::Vector2f								getMapSizeFloat() = 0;
