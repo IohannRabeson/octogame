@@ -44,7 +44,7 @@ void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_isCreatedDoubleJump = true;
 		setupBubble();
 	}
-	if (progress.canSlowFall())
+	if (progress.canSlowFall() && m_isCreatedSlowFall == false)
 	{
 		addMenu("Chutte lente : Up", nullptr);
 		m_isCreatedSlowFall = true;
