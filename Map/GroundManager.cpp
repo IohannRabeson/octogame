@@ -12,7 +12,6 @@
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
-#include "GuiNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
@@ -98,7 +97,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
-	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -192,9 +190,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				break;
 			case GameObjectType::GuiNpc:
 				{
-					GuiNpc * gui = new GuiNpc();
-					gui->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, gui);
 				}
 				break;
 			case GameObjectType::FannyNpc:
