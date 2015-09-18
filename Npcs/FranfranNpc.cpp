@@ -6,9 +6,9 @@
 FranfranNpc::FranfranNpc(void) :
 	ANpc(FRANFRAN_OSS)
 {
-	setSize(sf::Vector2f(45.f, 95.f));
-	setOrigin(sf::Vector2f(75.f, 170.f));
-	setScale(0.6f);
+	setSize(sf::Vector2f(1.f, 145.f));
+	setOrigin(sf::Vector2f(90.f, 100.f));
+	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();
@@ -44,7 +44,7 @@ void FranfranNpc::setup(void)
 
 	setupMachine();
 
-	m_smoke.setup(sf::Vector2f(2.f, 2.f));
+	m_smoke.setup(sf::Vector2f(2.5f, 2.5f));
 	m_smoke.setVelocity(sf::Vector2f(0.f, -50.f));
 	m_smoke.setEmitTimeRange(0.2f, 0.3f);
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
@@ -53,7 +53,7 @@ void FranfranNpc::setup(void)
 	m_smoke.setDispersion(80.f);
 	m_smoke.setColor(sf::Color(255, 255, 255, 150));
 
-	m_puff.setup(sf::Vector2f(2.f, 2.f));
+	m_puff.setup(sf::Vector2f(2.5f, 2.5f));
 	m_puff.setVelocity(sf::Vector2f(50.f, -60.f));
 	m_puff.setEmitTimeRange(0.05f, 0.1f);
 	m_puff.setGrowTimeRange(0.4f, 0.6f);
@@ -108,12 +108,12 @@ void FranfranNpc::update(sf::Time frametime)
 	sprite.setPosition(center);
 	if (sprite.getCurrentEvent() == Idle)
 	{
-		m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(-30.f, -10.f));
+		m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(-50.f, 40.f));
 		m_smoke.setVelocity(sf::Vector2f(0.f, -30.f));
 	}
 	else
 	{
-		m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(0.f, -30.f));
+		m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(-20.f, 50.f));
 		m_smoke.setVelocity(sf::Vector2f(50.f, 0.f));
 	}
 	if (sprite.isTerminated())
@@ -124,7 +124,7 @@ void FranfranNpc::update(sf::Time frametime)
 		m_puff.setCanEmit(true);
 	else
 		m_puff.setCanEmit(false);
-	m_puff.setPosition(ANpc::getPosition() + sf::Vector2f(20.f, -14.f));
+	m_puff.setPosition(ANpc::getPosition() + sf::Vector2f(15.f, 40.f));
 	m_puff.update(frametime);
 
 	updateText(frametime);
