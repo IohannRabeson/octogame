@@ -248,6 +248,7 @@ void CedricNpc::update(sf::Time frametime)
 	sprite.setPosition(bounds.left, bounds.top);
 
 	updateText(frametime);
+	resetVariables();
 }
 
 void CedricNpc::updateState(void)
