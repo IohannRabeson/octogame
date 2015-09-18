@@ -123,7 +123,7 @@ LevelOneBiome::LevelOneBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	m_gameObjects[320] = GameObjectType::Portal;
-	m_gameObjects[295] = GameObjectType::FranfranNpc;
+	m_gameObjects[300] = GameObjectType::FranfranNpc;
 	m_gameObjects[30] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 320;
 	m_gameObjects[8] = GameObjectType::SpaceShip;

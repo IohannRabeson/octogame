@@ -9,9 +9,9 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	m_prevDayState(skyCycle.isDay()),
 	m_timerSwitchDayNight(0.f)
 {
-	setSize(sf::Vector2f(35.f, 75.f));
+	setSize(sf::Vector2f(35.f, 100.f));
 	setOrigin(sf::Vector2f(75.f, 68.f));
-	setScale(0.6f);
+	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(0.f, -50.f));
 	setup();
@@ -248,6 +248,7 @@ void CedricNpc::update(sf::Time frametime)
 	sprite.setPosition(bounds.left, bounds.top);
 
 	updateText(frametime);
+	resetVariables();
 }
 
 void CedricNpc::updateState(void)

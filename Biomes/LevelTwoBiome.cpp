@@ -131,7 +131,8 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[5] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[740] = GameObjectType::Portal;
-	m_instances[400] = TEST_MAP2_OMP;
+	m_instances[353] = MAP_WAVE_DESERT_OMP;
+	m_instances[585] = MAP_JUMP_FIXE_OMP;
 	m_gameObjects[375] = GameObjectType::TurbanNpc;
 	m_gameObjects[592] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
@@ -240,13 +241,14 @@ Map::MapSurfaceGenerator LevelTwoBiome::getMapSurfaceGenerator()
 		float end = 800.f / static_cast<float>(m_mapSize.x);
 		float offset = 10.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		float mapHigh = n / 3.f - 1.9f;
 
 		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, n / 3.f - 0.9f, (x - start + offset) / offset);
+			return octo::cosinusInterpolation(n, mapHigh, (x - start + offset) / offset);
 		else if (x > start && x <= end)
-			return n / 3.f - 0.9f;
+			return mapHigh;
 		else if (x > end && x <= end + offset)
-			return octo::cosinusInterpolation(n, n / 3.f - 0.9f, (offset - x - end) / offset);
+			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
 		else
 			return n;
 	};
