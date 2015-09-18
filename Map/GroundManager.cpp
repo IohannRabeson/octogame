@@ -100,6 +100,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 
+	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
+	m_decorFactory.registerCreator(HOUSE_PUSSY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_PUSSY_OSS, scale, position, 4u);
+			});
+
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
@@ -108,20 +114,44 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			std::unique_ptr<ANpc> npc;
-			if (!spriteTrigger.name.compare(CEDRIC_OSS)) //C'est moche mais la generic factory ne permet pas de donner une variable au constructeur
-				npc.reset(new CedricNpc(skyCycle));
-			else
-				npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
 			sf::FloatRect rect;
 			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
 			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
 			rect.width = spriteTrigger.trigger.width;
 			rect.height = spriteTrigger.trigger.height;
 			sf::Vector2f position(rect.left, rect.top + rect.height);
-			npc->setArea(rect);
-			npc->setPosition(position);
-			m_npcs.push_back(std::move(npc));
+			if (!spriteTrigger.name.compare(NANO_JUMP_OSS))
+			{
+				if (!Progress::getInstance().canJump())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new JumpNanoRobot());
+					position.y += Tile::TileSize;
+					ptr->setPosition(position);
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
+			else
+			{
+				std::unique_ptr<ANpc> npc;
+				if (!spriteTrigger.name.compare(CEDRIC_OSS)) //C'est moche mais la generic factory ne permet pas de donner une variable au constructeur
+					npc.reset(new CedricNpc(skyCycle));
+				else
+					npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
+				npc->setArea(rect);
+				npc->setPosition(position);
+				m_npcs.push_back(std::move(npc));
+			}
+		}
+
+		// Get all decors
+		for (std::size_t i = 0u; i < resources.getLevelMap(instance.second).getDecorCount(); i++)
+		{
+			octo::LevelMap::Decor decor = resources.getLevelMap(instance.second).getDecor(i);
+			sf::Vector2f position = decor.position;
+			position.x += instance.first * Tile::TileSize - Map::OffsetY;
+			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
+			m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
 
 		// For each instance, create an elevator stream
@@ -205,10 +235,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::GroundTransformNanoRobot:
 					if (!Progress::getInstance().canMoveMap())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
-				break;
-			case GameObjectType::JumpNanoRobot:
-					if (!Progress::getInstance().canJump())
-						m_nanoRobots.emplace_back(gameObject.first, 3, new JumpNanoRobot());
 				break;
 			case GameObjectType::DoubleJumpNanoRobot:
 					if (!Progress::getInstance().canDoubleJump())
@@ -386,6 +412,15 @@ NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 		{
 			it->m_gameObject.release();
 			m_nanoRobots.erase(it);
+			break;
+		}
+	}
+	for (auto it = m_nanoRobotOnInstance.begin(); it != m_nanoRobotOnInstance.end(); it++)
+	{
+		if ((*it).get() == robot)
+		{
+			(*it).release();
+			m_nanoRobotOnInstance.erase(it);
 			break;
 		}
 	}
@@ -589,11 +624,11 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	placeMax(m_otherObjectsHigh, currentWide, prevWide, transition);
 	placeMin(m_otherObjectsLow, currentWide, prevWide, transition);
 
+
 	// Replace npc around the map
+	float mapSizeX = m_mapSize.x * Tile::TileSize;
 	for (auto const & npc : m_npcsOnFloor)
 	{
-		float mapSizeX = m_mapSize.x * Tile::TileSize;
-
 		if (npc.m_gameObject->getPosition().x < m_offset.x - mapSizeX / 2.f)
 			npc.m_gameObject->addMapOffset(mapSizeX, 0.f);
 		else if (npc.m_gameObject->getPosition().x > m_offset.x + mapSizeX / 2.f)
@@ -602,12 +637,26 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 
 	for (auto const & npc : m_npcs)
 	{
-		float mapSizeX = m_mapSize.x * Tile::TileSize;
-
 		if (npc->getPosition().x < m_offset.x - mapSizeX / 2.f)
 			npc->addMapOffset(mapSizeX, 0.f);
 		else if (npc->getPosition().x > m_offset.x + mapSizeX / 2.f)
 			npc->addMapOffset(-mapSizeX, 0.f);
+	}
+	
+	for (auto const & decor : m_instanceDecors)
+	{
+		if (decor->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			decor->addMapOffset(mapSizeX, 0.f);
+		else if (decor->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			decor->addMapOffset(-mapSizeX, 0.f);
+	}
+
+	for (auto const & robot : m_nanoRobotOnInstance)
+	{
+		if (robot->getTargetPosition().x < m_offset.x - mapSizeX / 2.f)
+			robot->addMapOffset(mapSizeX, 0.f);
+		else if (robot->getTargetPosition().x > m_offset.x + mapSizeX / 2.f)
+			robot->addMapOffset(-mapSizeX, 0.f);
 	}
 }
 
@@ -804,6 +853,8 @@ void GroundManager::updateDecors(sf::Time deltatime)
 
 void GroundManager::updateGameObjects(sf::Time frametime)
 {
+	for (auto & decor : m_instanceDecors)
+		decor->update(frametime);
 	for (auto & object : m_otherObjectsHigh)
 		object.m_gameObject->update(frametime);
 	for (auto & object : m_otherObjectsLow)
@@ -818,6 +869,8 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 		npc.m_gameObject->update(frametime);
 	for (auto & npc : m_npcs)
 		npc->update(frametime);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->update(frametime);
 }
 
 void GroundManager::update(float deltatime)
@@ -863,6 +916,8 @@ void GroundManager::update(float deltatime)
 void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	render.draw(m_decorManagerBack, states);
+	for (auto & decor : m_instanceDecors)
+		decor->draw(render, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->draw(render, states);
 	for (auto & portal : m_portals)
@@ -886,6 +941,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerGround, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->draw(render, states);
 }
 
 void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) const

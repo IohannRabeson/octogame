@@ -8,6 +8,7 @@
 # include "ElevatorStream.hpp"
 # include "NanoRobot.hpp"
 # include "ANpc.hpp"
+# include "InstanceDecor.hpp"
 # include "IPlaceable.hpp"
 
 class ADecor;
@@ -62,7 +63,7 @@ private:
 		}
 	};
 
-	typedef octo::GenericFactory<std::string, ANpc>	NpcFactory;
+	typedef octo::GenericFactory<std::string, ANpc>				NpcFactory;
 
 	NpcFactory							m_npcFactory;
 	std::unique_ptr<Map>				m_tiles;
@@ -89,7 +90,9 @@ private:
 	std::vector<GameObjectPosition<ANpc>>				m_npcsOnFloor;
 	std::vector<GameObjectPosition<IPlaceable>>			m_otherObjectsHigh;
 	std::vector<GameObjectPosition<IPlaceable>>			m_otherObjectsLow;
+	std::vector<std::unique_ptr<InstanceDecor>>			m_instanceDecors;
 	std::vector<std::unique_ptr<ANpc>>					m_npcs;
+	std::vector<std::unique_ptr<NanoRobot>>				m_nanoRobotOnInstance;
 
 	template<class T>
 	void placeMax(std::vector<GameObjectPosition<T>> & objects, Map::WideDecors const & currentDecors, Map::WideDecors const & prevDecors, float transition);

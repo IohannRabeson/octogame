@@ -68,6 +68,11 @@ void NanoRobot::setup(AGameObjectBase * gameObject)
 	m_box->setCollisionType(static_cast<std::uint32_t>(gameObject->getObjectType()));
 }
 
+void NanoRobot::addMapOffset(float x, float y)
+{
+	setPosition(sf::Vector2f(getPosition().x + x, getPosition().y + y));
+}
+
 void NanoRobot::transfertToOcto(void)
 {
 	PhysicsEngine::getInstance().unregisterShape(m_box);
@@ -81,12 +86,12 @@ void NanoRobot::transfertToOcto(void)
 
 void NanoRobot::setPosition(sf::Vector2f const & position)
 {
-	if (std::abs(position.x - m_sprite.getPosition().x) > 400.f)
+	sf::Vector2f	pos = position;
+	pos.y -= Tile::TripleTileSize * 2.f;
+	if (std::abs(pos.x - m_swarm.getFirefly(0u).position.x) > 400.f)
 		m_isTravelling = true;
 	else
 		m_isTravelling = false;
-	sf::Vector2f	pos = position;
-	pos.y -= Tile::TripleTileSize * 2.f;
 	m_swarm.setTarget(pos);
 }
 
@@ -103,6 +108,15 @@ void NanoRobot::setState(NanoRobot::State state)
 sf::Vector2f const & NanoRobot::getPosition(void) const
 {
 	return m_swarm.getFirefly(0u).position;
+}
+
+sf::Vector2f const & NanoRobot::getTargetPosition(void)
+{
+	if (std::abs(m_swarm.getTarget().x - m_swarm.getFirefly(0u).position.x) > 400.f)
+		m_isTravelling = true;
+	else
+		m_isTravelling = false;
+	return m_swarm.getTarget();
 }
 
 NanoRobot::State NanoRobot::getState(void) const
@@ -131,7 +145,6 @@ void NanoRobot::update(sf::Time frametime)
 	if (m_state == Speak)
 	{
 		m_timer += frametime;
-
 		if (m_timer > m_timerMax)
 		{
 			m_state = FollowOcto;
