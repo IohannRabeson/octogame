@@ -98,6 +98,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 
+	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
+	m_decorFactory.registerCreator(HOUSE_PUSSY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_PUSSY_OSS, scale, position, 4u);
+			});
+
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
@@ -134,6 +140,16 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				npc->setPosition(position);
 				m_npcs.push_back(std::move(npc));
 			}
+		}
+
+		// Get all decors
+		for (std::size_t i = 0u; i < resources.getLevelMap(instance.second).getDecorCount(); i++)
+		{
+			octo::LevelMap::Decor decor = resources.getLevelMap(instance.second).getDecor(i);
+			sf::Vector2f position = decor.position;
+			position.x += instance.first * Tile::TileSize - Map::OffsetY;
+			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
+			m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
 
 		// For each instance, create an elevator stream
@@ -206,7 +222,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, turban);
 				}
 				break;
-
 			case GameObjectType::RepairNanoRobot:
 					if (!Progress::getInstance().canRepair())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
@@ -597,6 +612,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	placeMax(m_otherObjectsHigh, currentWide, prevWide, transition);
 	placeMin(m_otherObjectsLow, currentWide, prevWide, transition);
 
+
 	// Replace npc around the map
 	float mapSizeX = m_mapSize.x * Tile::TileSize;
 	for (auto const & npc : m_npcsOnFloor)
@@ -613,6 +629,14 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			npc->addMapOffset(mapSizeX, 0.f);
 		else if (npc->getPosition().x > m_offset.x + mapSizeX / 2.f)
 			npc->addMapOffset(-mapSizeX, 0.f);
+	}
+	
+	for (auto const & decor : m_instanceDecors)
+	{
+		if (decor->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			decor->addMapOffset(mapSizeX, 0.f);
+		else if (decor->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			decor->addMapOffset(-mapSizeX, 0.f);
 	}
 
 	for (auto const & robot : m_nanoRobotOnInstance)
@@ -817,6 +841,8 @@ void GroundManager::updateDecors(sf::Time deltatime)
 
 void GroundManager::updateGameObjects(sf::Time frametime)
 {
+	for (auto & decor : m_instanceDecors)
+		decor->update(frametime);
 	for (auto & object : m_otherObjectsHigh)
 		object.m_gameObject->update(frametime);
 	for (auto & object : m_otherObjectsLow)
@@ -878,6 +904,8 @@ void GroundManager::update(float deltatime)
 void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	render.draw(m_decorManagerBack, states);
+	for (auto & decor : m_instanceDecors)
+		decor->draw(render, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->draw(render, states);
 	for (auto & portal : m_portals)
