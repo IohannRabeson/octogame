@@ -12,6 +12,8 @@ SkyCycle::SkyCycle(void) :
 	m_weather(0.f),
 	m_dropPerSecond(0u),
 	m_dropAppear(true),
+	m_engine(std::time(0)),
+	m_distriThunder(0u, 2u),
 	m_thunder(0.f),
 	m_thunderState(0u),
 	m_boolThunder(false)
@@ -241,7 +243,13 @@ void SkyCycle::playSound(ABiome & biome)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		audio.playSound(resources.getSound(THUNDER1_STEREO_WAV), 0.1f, biome.randomFloat(0.5, 1.5f));
+		std::size_t thunderType = m_distriThunder(m_engine);
+		if (thunderType == 0u)
+			audio.playSound(resources.getSound(THUNDER1_STEREO_WAV), 0.5f, biome.randomFloat(0.8, 1.2f));
+		else if (thunderType == 1u)
+			audio.playSound(resources.getSound(THUNDER1_STEREO_WAV), 0.5f, biome.randomFloat(0.8, 1.2f));
+		else
+			audio.playSound(resources.getSound(THUNDER1_STEREO_WAV), 0.5f, biome.randomFloat(0.8, 1.2f));
 		m_boolThunder = false;
 	}
 }
