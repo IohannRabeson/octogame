@@ -192,7 +192,7 @@ Level	LevelOneBiome::getDestination()
 
 float	LevelOneBiome::getWaterLevel()
 {
-	return 1000.f;
+	return -1.f;
 }
 
 std::map<std::size_t, std::string> const & LevelOneBiome::getInstances()
