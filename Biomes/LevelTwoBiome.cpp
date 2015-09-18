@@ -201,6 +201,11 @@ Level	LevelTwoBiome::getDestination()
 	return m_destinations[m_destinationIndex++];
 }
 
+float	LevelTwoBiome::getWaterLevel()
+{
+	return -1.f;
+}
+
 std::map<std::size_t, std::string> const & LevelTwoBiome::getInstances()
 {
 	return m_instances;

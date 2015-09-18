@@ -198,6 +198,11 @@ Level	LevelThreeBiome::getDestination()
 	return m_destinations[m_destinationIndex++];
 }
 
+float	LevelThreeBiome::getWaterLevel()
+{
+	return 1000.f;
+}
+
 std::map<std::size_t, std::string> const & LevelThreeBiome::getInstances()
 {
 	return m_instances;

@@ -15,6 +15,7 @@
 #include "TurbanNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
@@ -42,7 +43,8 @@ GroundManager::GroundManager(void) :
 	m_decorManagerFront(200000),
 	m_decorManagerGround(200000),
 	m_nextState(GenerationState::Next),
-	m_cycle(nullptr)
+	m_cycle(nullptr),
+	m_water(nullptr)
 {}
 
 void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
@@ -262,6 +264,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	setupGameObjectPosition(m_nanoRobots);
 	setupGameObjectPosition(m_otherObjectsHigh);
 	setupGameObjectPosition(m_otherObjectsLow);
+	
+	// If water level < 0.f, there is no water
+	if (biome.getWaterLevel() > 0.f)
+		m_water.reset(new Water(biome));
 }
 
 template<class T>
@@ -631,6 +637,14 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			npc->addMapOffset(-mapSizeX, 0.f);
 	}
 	
+	if (m_water)
+	{
+		if (m_water->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			m_water->addMapOffset(mapSizeX);
+		else if (m_water->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			m_water->addMapOffset(-mapSizeX);
+	}
+
 	for (auto const & decor : m_instanceDecors)
 	{
 		if (decor->getPosition().x < m_offset.x - mapSizeX / 2.f)
@@ -859,6 +873,8 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 		npc->update(frametime);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->update(frametime);
+	if (m_water)
+		m_water->update(frametime);
 }
 
 void GroundManager::update(float deltatime)
@@ -931,6 +947,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 		nano.m_gameObject->draw(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->draw(render, states);
+	if (m_water)
+		render.draw(*m_water, states);
 }
 
 void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) const

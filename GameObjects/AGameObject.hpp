@@ -22,7 +22,8 @@ enum class GameObjectType
 	GuiNpc = 32768u,
 	Bouibouik = 65535u,
 	FannyNpc = 131070u,
-	TurbanNpc = 524280,
+	Water = 123u,
+	TurbanNpc = 524280
 };
 
 /*!

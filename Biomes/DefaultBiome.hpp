@@ -39,6 +39,7 @@ public:
 	virtual int											getInterestPointPosX();
 	virtual std::map<std::size_t, GameObjectType> const & getGameObjects();
 	virtual Level										getDestination();
+	virtual float										getWaterLevel();
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();

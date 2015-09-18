@@ -55,6 +55,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/SpaceShip.cpp				\
 				GameObjects/SimpleObject.cpp			\
 				GameObjects/Bouibouik.cpp				\
+				GameObjects/Water.cpp					\
 				GameObjects/InstanceDecor.cpp			\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
