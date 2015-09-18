@@ -130,13 +130,14 @@ LevelTwoBiome::LevelTwoBiome() :
 	// Define game objects
 	m_gameObjects[5] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[740] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
-	m_instances[585] = MAP_JUMP_FIXE_OMP;
+	m_instances[585] = MAP_NANO_JUMP_DESERT_OMP;
 	m_gameObjects[375] = GameObjectType::TurbanNpc;
 	m_gameObjects[592] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[658] = GameObjectType::Bouibouik;
+	m_gameObjects[720] = GameObjectType::OldDesertStaticNpc;
+	m_gameObjects[740] = GameObjectType::Portal;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 801};

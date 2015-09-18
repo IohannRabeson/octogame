@@ -19,7 +19,7 @@ enum class GameObjectType
 	GroundTransformNanoRobot = 4096u,
 	FranfranNpc = 8192u,
 	JuNpc = 16384u,
-	GuiNpc = 32768u,
+	OldDesertStaticNpc = 32768u,
 	Bouibouik = 65535u,
 	FannyNpc = 131070u,
 	TurbanNpc = 524280,

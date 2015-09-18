@@ -12,8 +12,8 @@
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
-#include "GuiNpc.hpp"
 #include "TurbanNpc.hpp"
+#include "OldDesertStaticNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "GroundTransformNanoRobot.hpp"
@@ -98,7 +98,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
-	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -176,13 +175,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, ju);
 				}
 				break;
-			case GameObjectType::GuiNpc:
-				{
-					GuiNpc * gui = new GuiNpc();
-					gui->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, gui);
-				}
-				break;
 			case GameObjectType::FannyNpc:
 				{
 					FannyNpc * fanny = new FannyNpc();
@@ -195,6 +187,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					TurbanNpc * turban = new TurbanNpc();
 					turban->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, turban);
+				}
+				break;
+			case GameObjectType::OldDesertStaticNpc:
+				{
+					OldDesertStaticNpc * oldDesertStatic = new OldDesertStaticNpc();
+					oldDesertStatic->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, oldDesertStatic);
 				}
 				break;
 
