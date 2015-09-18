@@ -24,12 +24,14 @@ public:
 
 	virtual ~NanoRobot(void);
 
+	void addMapOffset(float x, float y);
 	void transfertToOcto(void);
 	void setPosition(sf::Vector2f const & position);
-	bool isTravelling(void) const;
 	void setState(NanoRobot::State state);
 	sf::Vector2f const & getPosition(void) const;
+	sf::Vector2f const & getTargetPosition(void);
 	NanoRobot::State getState(void) const;
+	bool isTravelling(void) const;
 
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;

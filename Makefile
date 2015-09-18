@@ -62,7 +62,8 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/CedricNpc.cpp						\
 				Npcs/FranfranNpc.cpp					\
 				Npcs/JuNpc.cpp							\
-				Npcs/GuiNpc.cpp							\
+				Npcs/FannyNpc.cpp						\
+				Npcs/TurbanNpc.cpp						\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
@@ -105,6 +106,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/DefaultBiome.cpp					\
 				Biomes/LevelOneBiome.cpp				\
 				Biomes/LevelTwoBiome.cpp				\
+				Biomes/LevelThreeBiome.cpp				\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
@@ -222,7 +224,6 @@ clean:
 	@rm -f $(OBJS)
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
 	@rm -fr $(BUILD_DIR)
-	@rm save.osv
 
 $(BUILD_DIR):
 	@echo " - $(COLOR_ACTION)creating directory$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"

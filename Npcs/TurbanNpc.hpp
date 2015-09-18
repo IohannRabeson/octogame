@@ -1,15 +1,15 @@
-#ifndef GUINPC_HPP
-# define GUINPC_HPP
+#ifndef TURBANNPC_HPP
+# define TURBANNPC_HPP
 
 # include "ANpc.hpp"
 
 class SkyCycle;
 
-class GuiNpc : public ANpc, public AGameObject<GameObjectType::GuiNpc>
+class TurbanNpc : public ANpc, public AGameObject<GameObjectType::TurbanNpc>
 {
 public:
-	GuiNpc(void);
-	virtual ~GuiNpc(void) = default;
+	TurbanNpc(void);
+	virtual ~TurbanNpc(void) = default;
 
 	virtual void setup(void);
 	virtual void update(sf::Time frametime);
@@ -20,11 +20,6 @@ protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
 	virtual void updatePhysics(void);
-	virtual bool canSpecial1(void) const;
-
-private:
-	sf::Time	m_timer;
-	bool		m_canSpecial;
 };
 
 #endif

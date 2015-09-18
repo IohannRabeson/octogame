@@ -11,7 +11,8 @@
 #include "CedricNpc.hpp"
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
-#include "GuiNpc.hpp"
+#include "FannyNpc.hpp"
+#include "TurbanNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "Water.hpp"
@@ -98,7 +99,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
-	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -108,20 +108,34 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		for (std::size_t i = 0u; i < levelMap.getSpriteCount(); i++)
 		{
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
-			std::unique_ptr<ANpc> npc;
-			if (!spriteTrigger.name.compare(CEDRIC_OSS)) //C'est moche mais la generic factory ne permet pas de donner une variable au constructeur
-				npc.reset(new CedricNpc(skyCycle));
-			else
-				npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
 			sf::FloatRect rect;
 			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
 			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
 			rect.width = spriteTrigger.trigger.width;
 			rect.height = spriteTrigger.trigger.height;
 			sf::Vector2f position(rect.left, rect.top + rect.height);
-			npc->setArea(rect);
-			npc->setPosition(position);
-			m_npcs.push_back(std::move(npc));
+			if (!spriteTrigger.name.compare(NANO_JUMP_OSS))
+			{
+				if (!Progress::getInstance().canJump())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new JumpNanoRobot());
+					position.y += Tile::TileSize;
+					ptr->setPosition(position);
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
+			else
+			{
+				std::unique_ptr<ANpc> npc;
+				if (!spriteTrigger.name.compare(CEDRIC_OSS)) //C'est moche mais la generic factory ne permet pas de donner une variable au constructeur
+					npc.reset(new CedricNpc(skyCycle));
+				else
+					npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
+				npc->setArea(rect);
+				npc->setPosition(position);
+				m_npcs.push_back(std::move(npc));
+			}
 		}
 
 		// For each instance, create an elevator stream
@@ -178,11 +192,23 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				break;
 			case GameObjectType::GuiNpc:
 				{
-					GuiNpc * gui = new GuiNpc();
-					gui->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, gui);
 				}
 				break;
+			case GameObjectType::FannyNpc:
+				{
+					FannyNpc * fanny = new FannyNpc();
+					fanny->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, fanny);
+				}
+				break;
+			case GameObjectType::TurbanNpc:
+				{
+					TurbanNpc * turban = new TurbanNpc();
+					turban->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, turban);
+				}
+				break;
+
 			case GameObjectType::RepairNanoRobot:
 					if (!Progress::getInstance().canRepair())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
@@ -190,10 +216,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::GroundTransformNanoRobot:
 					if (!Progress::getInstance().canMoveMap())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
-				break;
-			case GameObjectType::JumpNanoRobot:
-					if (!Progress::getInstance().canJump())
-						m_nanoRobots.emplace_back(gameObject.first, 3, new JumpNanoRobot());
 				break;
 			case GameObjectType::DoubleJumpNanoRobot:
 					if (!Progress::getInstance().canDoubleJump())
@@ -206,13 +228,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::SpaceShip:
 				{
 					SpaceShip * spaceship = new SpaceShip(SpaceShip::SpaceShipEvents::Broken);
-					m_otherObjects.emplace_back(gameObject.first, 15, spaceship);
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, spaceship);
 				}
 				break;
 			case GameObjectType::Bouibouik:
 				{
 					Bouibouik * simple = new Bouibouik();
-					m_otherObjects.emplace_back(gameObject.first, 15, simple);
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
 			default:
@@ -225,8 +247,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	setupGameObjectPosition(m_portals);
 	setupGameObjectPosition(m_npcsOnFloor);
 	setupGameObjectPosition(m_nanoRobots);
-	setupGameObjectPosition(m_otherObjects);
-
+	setupGameObjectPosition(m_otherObjectsHigh);
+	setupGameObjectPosition(m_otherObjectsLow);
+	
 	// If water level < 0.f, there is no water
 	if (biome.getWaterLevel() > 0.f)
 		m_water.reset(new Water(biome));
@@ -368,6 +391,15 @@ NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 		{
 			it->m_gameObject.release();
 			m_nanoRobots.erase(it);
+			break;
+		}
+	}
+	for (auto it = m_nanoRobotOnInstance.begin(); it != m_nanoRobotOnInstance.end(); it++)
+	{
+		if ((*it).get() == robot)
+		{
+			(*it).release();
+			m_nanoRobotOnInstance.erase(it);
 			break;
 		}
 	}
@@ -568,7 +600,8 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	placeMax(m_portals, currentWide, prevWide, transition);
 	placeMax(m_nanoRobots, currentWide, prevWide, transition);
 	placeMax(m_npcsOnFloor, currentWide, prevWide, transition);
-	placeMax(m_otherObjects, currentWide, prevWide, transition);
+	placeMax(m_otherObjectsHigh, currentWide, prevWide, transition);
+	placeMin(m_otherObjectsLow, currentWide, prevWide, transition);
 
 	// Replace npc around the map
 	float mapSizeX = m_mapSize.x * Tile::TileSize;
@@ -587,13 +620,20 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		else if (npc->getPosition().x > m_offset.x + mapSizeX / 2.f)
 			npc->addMapOffset(-mapSizeX, 0.f);
 	}
-
+	
 	if (m_water)
 	{
 		if (m_water->getPosition().x < m_offset.x - mapSizeX / 2.f)
 			m_water->addMapOffset(mapSizeX);
 		else if (m_water->getPosition().x > m_offset.x + mapSizeX / 2.f)
 			m_water->addMapOffset(-mapSizeX);
+	}
+	for (auto const & robot : m_nanoRobotOnInstance)
+	{
+		if (robot->getTargetPosition().x < m_offset.x - mapSizeX / 2.f)
+			robot->addMapOffset(mapSizeX, 0.f);
+		else if (robot->getTargetPosition().x > m_offset.x + mapSizeX / 2.f)
+			robot->addMapOffset(-mapSizeX, 0.f);
 	}
 }
 
@@ -790,7 +830,9 @@ void GroundManager::updateDecors(sf::Time deltatime)
 
 void GroundManager::updateGameObjects(sf::Time frametime)
 {
-	for (auto & object : m_otherObjects)
+	for (auto & object : m_otherObjectsHigh)
+		object.m_gameObject->update(frametime);
+	for (auto & object : m_otherObjectsLow)
 		object.m_gameObject->update(frametime);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->update(frametime);
@@ -802,7 +844,10 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 		npc.m_gameObject->update(frametime);
 	for (auto & npc : m_npcs)
 		npc->update(frametime);
-	m_water->update(frametime);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->update(frametime);
+	if (m_water)
+		m_water->update(frametime);
 }
 
 void GroundManager::update(float deltatime)
@@ -862,14 +907,19 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 {
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render, states);
-	for (auto & object : m_otherObjects)
-		object.m_gameObject->draw(render, states);
+	for (auto & objectHigh : m_otherObjectsHigh)
+		objectHigh.m_gameObject->draw(render, states);
+	for (auto & objectLow : m_otherObjectsLow)
+		objectLow.m_gameObject->draw(render, states);
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
-	render.draw(*m_water, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->draw(render, states);
+	if (m_water)
+		render.draw(*m_water, states);
 }
 
 void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) const

@@ -1,22 +1,22 @@
-#include "GuiNpc.hpp"
+#include "FannyNpc.hpp"
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
 
-GuiNpc::GuiNpc(void) :
-	ANpc(GUILLAUME_OSS)
+FannyNpc::FannyNpc(void) :
+	ANpc(FANNY_OSS)
 {
-	setSize(sf::Vector2f(35.f, 75.f));
-	setOrigin(sf::Vector2f(75.f, 68.f));
-	setScale(0.6f);
+	setSize(sf::Vector2f(1.f, 75.f));
+	setOrigin(sf::Vector2f(90.f, 93.f));
+	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::GuiNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::FannyNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
-void GuiNpc::setup(void)
+void FannyNpc::setup(void)
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
 
@@ -25,23 +25,23 @@ void GuiNpc::setup(void)
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()})
 			});
-	getIdleAnimation().setLoop(octo::LoopMode::NoLoop);
+	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
 	getSpecial1Animation().setFrames({
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.6f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.6f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.6f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()})
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
 }
 
-void GuiNpc::setupMachine(void)
+void FannyNpc::setupMachine(void)
 {
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
@@ -64,7 +64,7 @@ void GuiNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-void GuiNpc::update(sf::Time frametime)
+void FannyNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
@@ -88,28 +88,28 @@ void GuiNpc::update(sf::Time frametime)
 	resetVariables();
 }
 
-bool GuiNpc::canSpecial1(void) const
+bool FannyNpc::canSpecial1(void) const
 {
 	if (m_canSpecial == true)
 		return true;
 	return false;
 }
 
-void GuiNpc::updateState(void)
+void FannyNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (sprite.getCurrentEvent() == Idle && sprite.isTerminated())
+	if (sprite.getCurrentEvent() == Idle && m_canSpecial)
 		sprite.setNextEvent(Special1);
 	else if (sprite.getCurrentEvent() == Special1 && sprite.isTerminated())
 		sprite.setNextEvent(Idle);
 }
 
-void GuiNpc::updatePhysics(void)
+void FannyNpc::updatePhysics(void)
 {
 }
 
-void GuiNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
+void FannyNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	ANpc::draw(render, states);
 }

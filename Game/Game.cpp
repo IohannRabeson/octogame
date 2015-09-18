@@ -2,6 +2,7 @@
 #include "DefaultBiome.hpp"
 #include "LevelOneBiome.hpp"
 #include "LevelTwoBiome.hpp"
+#include "LevelThreeBiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -11,7 +12,11 @@
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "JumpNanoRobot.hpp"
 #include "FranfranNpc.hpp"
+#include "JuNpc.hpp"
+#include "FannyNpc.hpp"
+#include "TurbanNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -34,6 +39,7 @@ Game::Game(void) :
 
 	m_biomeManager.registerBiome<LevelOneBiome>(Level::LevelOne);
 	m_biomeManager.registerBiome<LevelTwoBiome>(Level::LevelTwo);
+	m_biomeManager.registerBiome<LevelThreeBiome>(Level::LevelThree);
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
 }
 
@@ -126,6 +132,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 		case GameObjectType::Portal:
 				octo->usePortal(*gameObjectCast<Portal>(gameObject));
 			break;
+		case GameObjectType::JumpNanoRobot:
+			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<JumpNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(ptr);
+			}
+			break;
 		case GameObjectType::GroundTransformNanoRobot:
 			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
 			{
@@ -161,6 +175,15 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::FranfranNpc:
 			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::JuNpc:
+			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::FannyNpc:
+			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::TurbanNpc:
+			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		default:
 			break;
