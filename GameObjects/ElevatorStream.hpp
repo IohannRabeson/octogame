@@ -74,6 +74,7 @@ private:
 	SmokeSystem						m_smoke;
 
 	octo::SpriteAnimation			m_animation;
+	octo::SpriteAnimation			m_brokenAnimation;
 	octo::AnimatedSprite			m_spriteBottomFront;
 	octo::AnimatedSprite			m_spriteBottomBack;
 	octo::AnimatedSprite			m_spriteTopFront;
