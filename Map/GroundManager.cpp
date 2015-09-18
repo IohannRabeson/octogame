@@ -99,6 +99,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
+	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(HOUSE_PUSSY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
@@ -134,10 +135,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			else
 			{
 				std::unique_ptr<ANpc> npc;
-				if (!spriteTrigger.name.compare(CEDRIC_OSS)) //C'est moche mais la generic factory ne permet pas de donner une variable au constructeur
-					npc.reset(new CedricNpc(skyCycle));
-				else
-					npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
+				npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
 				npc->setArea(rect);
 				npc->setPosition(position);
 				m_npcs.push_back(std::move(npc));
