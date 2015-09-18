@@ -83,6 +83,7 @@ void	CharacterOcto::setup(void)
 	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal)
 		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
 		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
+		| static_cast<std::uint32_t>(GameObjectType::JumpNanoRobot)
 		| static_cast<std::uint32_t>(GameObjectType::Elevator);
 	m_box->setCollisionMask(mask);
 
@@ -91,8 +92,6 @@ void	CharacterOcto::setup(void)
 	m_eventBox->setRadius(400.f);
 	m_eventBox->setCollisionType(static_cast<std::uint32_t>(GameObjectType::PlayerEvent));
 	std::uint32_t maskEvent = static_cast<std::uint32_t>(GameObjectType::Portal)
-		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
-		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
 		| static_cast<std::uint32_t>(GameObjectType::Elevator)
 		| static_cast<std::uint32_t>(GameObjectType::CedricNpc)
 		| static_cast<std::uint32_t>(GameObjectType::FannyNpc)

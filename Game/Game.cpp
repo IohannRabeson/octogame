@@ -12,6 +12,7 @@
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "JumpNanoRobot.hpp"
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
@@ -130,6 +131,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			break;
 		case GameObjectType::Portal:
 				octo->usePortal(*gameObjectCast<Portal>(gameObject));
+			break;
+		case GameObjectType::JumpNanoRobot:
+			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<JumpNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(ptr);
+			}
 			break;
 		case GameObjectType::GroundTransformNanoRobot:
 			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())

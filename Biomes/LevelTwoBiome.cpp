@@ -132,7 +132,6 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[740] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
-	m_instances[585] = MAP_JUMP_FIXE_OMP;
 	m_gameObjects[375] = GameObjectType::TurbanNpc;
 	m_gameObjects[592] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
