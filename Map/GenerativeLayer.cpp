@@ -33,6 +33,8 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	{
 		return noise.perlin(x, y, 3, 2.f, 5.0f);
 	});
+	m_bottomLeft.setSize(sf::Vector2f(m_mapSize) * 16.f);
+	m_bottomRight.setSize(sf::Vector2f(m_mapSize) * 16.f);
 }
 
 void GenerativeLayer::setup(void)
@@ -174,9 +176,17 @@ void GenerativeLayer::update(float deltatime, ABiome &)
 		m_vertices[(i * 4u) + 2u].position.y += offsetY;
 		m_vertices[(i * 4u) + 3u].position.y += offsetY;
 	}
+
+	m_bottomLeft.setPosition(sf::Vector2f(m_vertices[0u].position.x, m_vertices[((m_widthScreen - 1) * 4u) + 2u].position.y));
+	m_bottomRight.setPosition(m_bottomLeft.getPosition() - sf::Vector2f(m_mapSize.x, 0.f));
+
+	m_bottomLeft.setFillColor(opacityColor);
+	m_bottomRight.setFillColor(opacityColor);
 }
 
 void GenerativeLayer::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
+	render.draw(m_bottomLeft, states);
+	render.draw(m_bottomRight, states);
 }
