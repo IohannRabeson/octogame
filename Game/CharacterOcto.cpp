@@ -678,9 +678,8 @@ void	CharacterOcto::dance()
 	if (m_timeEventIdle > m_timeEventIdleMax)
 	{
 		m_timeEventIdleMax = sf::seconds(m_danceDistribution(m_engine));
-		if (octo::Application::getAudioManager().getMusicVolume() > 0.f){
+		if (octo::Application::getAudioManager().getMusicVolume() > 0.f)
 			m_sprite.setNextEvent(DanceWithMusic);
-		}
 	}
 	if (m_sprite.getCurrentEvent() == DanceWithMusic && m_sprite.isTerminated())
 		m_sprite.setNextEvent(Idle);
