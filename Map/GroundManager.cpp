@@ -145,7 +145,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		}
 
 		// Get all decors
-		for (std::size_t i = 0u; i < resources.getLevelMap(instance.second).getDecorCount(); i++)
+		for (std::size_t i = 0u; i < levelMap.getDecorCount(); i++)
 		{
 			octo::LevelMap::Decor decor = resources.getLevelMap(instance.second).getDecor(i);
 			sf::Vector2f position = decor.position;
@@ -154,23 +154,30 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
 
-		// For each instance, create an elevator stream
-		std::unique_ptr<ElevatorStream> elevator;
-		elevator.reset(new ElevatorStream());
-		elevator->setPosition(sf::Vector2f(instance.first * Tile::TileSize - elevator->getWidth(), 0.f));
+		bool spawnInstance = false;
+		std::size_t y;
 		octo::Array3D<octo::LevelMap::TileType> const & map = levelMap.getMap();
-		for (std::size_t y = 0; y < map.rows(); y++)
+		for (y = 0u; y < map.rows(); y++)
 		{
 			if (map(0, y, 0) != octo::LevelMap::TileType::Empty)
 			{
-				elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + MapInstance::HeightOffset - 9) * Tile::TileSize);
+				spawnInstance = true;
 				break;
 			}
 		}
-		elevator->setHeight(400.f);
-		elevator->setBiome(biome);
-		std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
-		m_elevators.emplace_back(instance.first - width, width, elevator);
+
+		// For each instance, create an elevator stream
+		if (spawnInstance)
+		{
+			std::unique_ptr<ElevatorStream> elevator;
+			elevator.reset(new ElevatorStream());
+			elevator->setPosition(sf::Vector2f(instance.first * Tile::TileSize - elevator->getWidth(), 0.f));
+			elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + MapInstance::HeightOffset - 9) * Tile::TileSize);
+			elevator->setHeight(400.f);
+			elevator->setBiome(biome);
+			std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
+			m_elevators.emplace_back(instance.first - width, width, elevator);
+		}
 	}
 
 	auto & gameObjects = biome.getGameObjects();
