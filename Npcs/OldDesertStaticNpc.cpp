@@ -53,27 +53,11 @@ void OldDesertStaticNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	updateState();
-	updatePhysics();
-
 	sprite.update(frametime);
 	sf::Vector2f const & center = getBox()->getRenderPosition();
 	sprite.setPosition(center);
 
 	updateText(frametime);
 	resetVariables();
-}
-
-void OldDesertStaticNpc::updateState(void)
-{
-}
-
-void OldDesertStaticNpc::updatePhysics(void)
-{
-}
-
-void OldDesertStaticNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
-{
-	ANpc::draw(render, states);
 }
 
