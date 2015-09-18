@@ -52,6 +52,8 @@ private:
 	std::size_t							m_widthScreen;
 	std::size_t							m_verticesCount;
 	BackgroundSurfaceGeneratorBind		m_backgroundSurface;
+	sf::RectangleShape					m_bottomLeft;
+	sf::RectangleShape					m_bottomRight;
 
 	void computeVertices(std::vector<sf::Vector2f> & positions);
 	void swap(void);
