@@ -55,6 +55,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/SpaceShip.cpp				\
 				GameObjects/SimpleObject.cpp			\
 				GameObjects/Bouibouik.cpp				\
+				GameObjects/Tent.cpp					\
 				GameObjects/Water.cpp					\
 				GameObjects/InstanceDecor.cpp			\
 
@@ -65,6 +66,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/JuNpc.cpp							\
 				Npcs/FannyNpc.cpp						\
 				Npcs/TurbanNpc.cpp						\
+				Npcs/OldDesertStaticNpc.cpp				\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

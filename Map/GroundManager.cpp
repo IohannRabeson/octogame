@@ -13,8 +13,10 @@
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "TurbanNpc.hpp"
+#include "OldDesertStaticNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "Tent.hpp"
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -127,7 +129,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new JumpNanoRobot());
-					position.y += Tile::TileSize;
 					ptr->setPosition(position);
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
@@ -211,10 +212,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, ju);
 				}
 				break;
-			case GameObjectType::GuiNpc:
-				{
-				}
-				break;
 			case GameObjectType::FannyNpc:
 				{
 					FannyNpc * fanny = new FannyNpc();
@@ -229,6 +226,14 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, turban);
 				}
 				break;
+			case GameObjectType::OldDesertStaticNpc:
+				{
+					OldDesertStaticNpc * oldDesertStatic = new OldDesertStaticNpc();
+					oldDesertStatic->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, oldDesertStatic);
+				}
+				break;
+
 			case GameObjectType::RepairNanoRobot:
 					if (!Progress::getInstance().canRepair())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
@@ -255,6 +260,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					Bouibouik * simple = new Bouibouik();
 					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::Tent:
+				{
+					Tent * simple = new Tent();
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
 			default:
