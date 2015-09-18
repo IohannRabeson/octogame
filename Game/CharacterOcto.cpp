@@ -816,8 +816,9 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 		switch (state)
 		{
 			case SlowFall:
-				velocity.x *= 0.8f;
-				velocity.y *= -0.7f;
+				velocity.x *= 1.4f;
+				velocity.y *= 1.5f;
+				break;
 			case Fall:
 				velocity.x *= 0.7f;
 				velocity.y = m_pixelSecondSlowFall;
