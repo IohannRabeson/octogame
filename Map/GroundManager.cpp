@@ -17,6 +17,7 @@
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
+#include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
@@ -44,7 +45,8 @@ GroundManager::GroundManager(void) :
 	m_decorManagerFront(200000),
 	m_decorManagerGround(200000),
 	m_nextState(GenerationState::Next),
-	m_cycle(nullptr)
+	m_cycle(nullptr),
+	m_water(nullptr)
 {}
 
 void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
@@ -99,6 +101,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
+	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(HOUSE_PUSSY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
@@ -134,10 +137,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			else
 			{
 				std::unique_ptr<ANpc> npc;
-				if (!spriteTrigger.name.compare(CEDRIC_OSS)) //C'est moche mais la generic factory ne permet pas de donner une variable au constructeur
-					npc.reset(new CedricNpc(skyCycle));
-				else
-					npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
+				npc.reset(m_npcFactory.create(spriteTrigger.name.c_str()));
 				npc->setArea(rect);
 				npc->setPosition(position);
 				m_npcs.push_back(std::move(npc));
@@ -145,7 +145,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		}
 
 		// Get all decors
-		for (std::size_t i = 0u; i < resources.getLevelMap(instance.second).getDecorCount(); i++)
+		for (std::size_t i = 0u; i < levelMap.getDecorCount(); i++)
 		{
 			octo::LevelMap::Decor decor = resources.getLevelMap(instance.second).getDecor(i);
 			sf::Vector2f position = decor.position;
@@ -154,23 +154,30 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
 
-		// For each instance, create an elevator stream
-		std::unique_ptr<ElevatorStream> elevator;
-		elevator.reset(new ElevatorStream());
-		elevator->setPosition(sf::Vector2f(instance.first * Tile::TileSize - elevator->getWidth(), 0.f));
+		bool spawnInstance = false;
+		std::size_t y;
 		octo::Array3D<octo::LevelMap::TileType> const & map = levelMap.getMap();
-		for (std::size_t y = 0; y < map.rows(); y++)
+		for (y = 0u; y < map.rows(); y++)
 		{
 			if (map(0, y, 0) != octo::LevelMap::TileType::Empty)
 			{
-				elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + MapInstance::HeightOffset - 9) * Tile::TileSize);
+				spawnInstance = true;
 				break;
 			}
 		}
-		elevator->setHeight(400.f);
-		elevator->setBiome(biome);
-		std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
-		m_elevators.emplace_back(instance.first - width, width, elevator);
+
+		// For each instance, create an elevator stream
+		if (spawnInstance)
+		{
+			std::unique_ptr<ElevatorStream> elevator;
+			elevator.reset(new ElevatorStream());
+			elevator->setPosition(sf::Vector2f(instance.first * Tile::TileSize - elevator->getWidth(), 0.f));
+			elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + MapInstance::HeightOffset - 9) * Tile::TileSize);
+			elevator->setHeight(400.f);
+			elevator->setBiome(biome);
+			std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
+			m_elevators.emplace_back(instance.first - width, width, elevator);
+		}
 	}
 
 	auto & gameObjects = biome.getGameObjects();
@@ -274,6 +281,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	setupGameObjectPosition(m_nanoRobots);
 	setupGameObjectPosition(m_otherObjectsHigh);
 	setupGameObjectPosition(m_otherObjectsLow);
+	
+	// If water level < 0.f, there is no water
+	if (biome.getWaterLevel() > 0.f)
+		m_water.reset(new Water(biome));
 }
 
 template<class T>
@@ -643,6 +654,14 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			npc->addMapOffset(-mapSizeX, 0.f);
 	}
 	
+	if (m_water)
+	{
+		if (m_water->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			m_water->addMapOffset(mapSizeX);
+		else if (m_water->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			m_water->addMapOffset(-mapSizeX);
+	}
+
 	for (auto const & decor : m_instanceDecors)
 	{
 		if (decor->getPosition().x < m_offset.x - mapSizeX / 2.f)
@@ -871,6 +890,8 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 		npc->update(frametime);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->update(frametime);
+	if (m_water)
+		m_water->update(frametime);
 }
 
 void GroundManager::update(float deltatime)
@@ -943,6 +964,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 		nano.m_gameObject->draw(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->draw(render, states);
+	if (m_water)
+		render.draw(*m_water, states);
 }
 
 void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) const

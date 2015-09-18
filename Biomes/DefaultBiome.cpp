@@ -200,6 +200,11 @@ Level	DefaultBiome::getDestination()
 	return m_destinations[m_destinationIndex++];
 }
 
+float	DefaultBiome::getWaterLevel()
+{
+	return 1000.f;
+}
+
 std::map<std::size_t, std::string> const & DefaultBiome::getInstances()
 {
 	return m_instances;
