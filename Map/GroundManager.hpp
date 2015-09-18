@@ -92,6 +92,7 @@ private:
 	std::vector<GameObjectPosition<IPlaceable>>			m_otherObjectsLow;
 	std::vector<std::unique_ptr<InstanceDecor>>			m_instanceDecors;
 	std::vector<std::unique_ptr<ANpc>>					m_npcs;
+	std::vector<std::unique_ptr<NanoRobot>>				m_nanoRobotOnInstance;
 
 	template<class T>
 	void placeMax(std::vector<GameObjectPosition<T>> & objects, Map::WideDecors const & currentDecors, Map::WideDecors const & prevDecors, float transition);

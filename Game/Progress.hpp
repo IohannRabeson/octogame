@@ -39,7 +39,7 @@ private:
 	void	setup();
 	struct data{
 		data() :
-			nanoRobotCount(4u),
+			nanoRobotCount(2u),
 			destination(Level::Default)
 		{
 		}

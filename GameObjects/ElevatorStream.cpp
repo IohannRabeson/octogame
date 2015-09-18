@@ -208,24 +208,31 @@ void	ElevatorStream::setupSprite(void)
 	octo::SpriteAnimation::FrameList	frames;
 	frames.emplace_back(sf::seconds(0.2), 0);
 	frames.emplace_back(sf::seconds(0.2), 1);
+	m_brokenAnimation.setFrames(frames);
+	m_brokenAnimation.setLoop(octo::LoopMode::Loop);
+
+	frames.clear();
 	frames.emplace_back(sf::seconds(0.2), 2);
 	frames.emplace_back(sf::seconds(0.2), 3);
+	frames.emplace_back(sf::seconds(0.2), 4);
+	frames.emplace_back(sf::seconds(0.2), 5);
 	m_animation.setFrames(frames);
 	m_animation.setLoop(octo::LoopMode::Loop);
+
 	m_spriteBottomFront.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_BOTTOM_FRONT_OSS));
-	m_spriteBottomFront.setAnimation(m_animation);
+	m_spriteBottomFront.setAnimation(m_brokenAnimation);
 	m_spriteBottomFront.setScale(sf::Vector2f(0.8f, 0.8f));
 	m_spriteBottomFront.play();
 	m_spriteBottomBack.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_BOTTOM_BACK_OSS));
-	m_spriteBottomBack.setAnimation(m_animation);
+	m_spriteBottomBack.setAnimation(m_brokenAnimation);
 	m_spriteBottomBack.setScale(sf::Vector2f(0.8f, 0.8f));
 	m_spriteBottomBack.play();
 	m_spriteTopFront.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_TOP_FRONT_OSS));
-	m_spriteTopFront.setAnimation(m_animation);
+	m_spriteTopFront.setAnimation(m_brokenAnimation);
 	m_spriteTopFront.setScale(sf::Vector2f(0.8f, 0.8f));
 	m_spriteTopFront.play();
 	m_spriteTopBack.setSpriteSheet(resources.getSpriteSheet(OBJECT_ELEVATOR_TOP_BACK_OSS));
-	m_spriteTopBack.setAnimation(m_animation);
+	m_spriteTopBack.setAnimation(m_brokenAnimation);
 	m_spriteTopBack.setScale(sf::Vector2f(0.8f, 0.8f));
 	m_spriteTopBack.play();
 }
@@ -362,6 +369,10 @@ void	ElevatorStream::update(sf::Time frameTime)
 			{
 				m_timer = m_timerMax;
 				m_state = Activated;
+				m_spriteTopBack.setAnimation(m_animation);
+				m_spriteTopFront.setAnimation(m_animation);
+				m_spriteBottomBack.setAnimation(m_animation);
+				m_spriteBottomFront.setAnimation(m_animation);
 			}
 			break;
 		case Activated:
