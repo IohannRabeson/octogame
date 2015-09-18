@@ -691,7 +691,7 @@ void	CharacterOcto::dance()
 
 bool	CharacterOcto::inWater()
 {
-	if (m_box->getBaryCenter().y > m_waterLevel)
+	if (m_waterLevel != -1.f && m_box->getBaryCenter().y > m_waterLevel)
 	{
 		return true;
 	}
