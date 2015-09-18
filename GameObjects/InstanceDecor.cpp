@@ -7,8 +7,7 @@ InstanceDecor::InstanceDecor(ResourceKey key, sf::Vector2f const & scale, sf::Ve
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(key));
-	m_sprite.setScale(sf::Vector2f(1.f, 1.f));
-	(void)scale;
+	m_sprite.setScale(scale);
 	m_sprite.setPosition(position);
 
 	octo::SpriteAnimation::FrameList	frames;
