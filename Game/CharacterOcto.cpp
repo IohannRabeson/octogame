@@ -472,7 +472,6 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	m_ink.draw(render);
 	m_sprite.draw(render, states);
-	m_box->debugDraw(render);
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
