@@ -143,6 +143,7 @@ private:
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
 	bool						m_collisionElevatorEvent;
+	bool						m_doScale;
 	SmokeSystem					m_ink;
 };
 
