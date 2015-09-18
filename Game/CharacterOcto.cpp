@@ -42,7 +42,8 @@ CharacterOcto::CharacterOcto() :
 	m_keyAction(false),
 	m_collisionTile(false),
 	m_collisionElevator(false),
-	m_collisionElevatorEvent(false)
+	m_collisionElevatorEvent(false),
+	m_doScale(false)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -413,7 +414,10 @@ void	CharacterOcto::update(sf::Time frameTime)
 		commitControlsToPhysics(frameTime.asSeconds());
 	}
 	else
+	{
+		commitPhysicsToGraphics();
 		m_sprite.update(frameTime);
+	}
 	m_previousTop = m_box->getGlobalBounds().top;
 
 	if (!m_collisionElevatorEvent && m_progress.canRepair())
@@ -468,6 +472,7 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	m_ink.draw(render);
 	m_sprite.draw(render, states);
+	m_box->debugDraw(render);
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
@@ -721,8 +726,7 @@ void	CharacterOcto::commitPhysicsToGraphics()
 
 void	CharacterOcto::commitEventToGraphics()
 {
-	//TODO handle transition lvl;
-	if (m_box->getSleep())
+	if (!m_doScale || m_box->getSleep())
 		return;
 	if (m_keyLeft && !m_originMove)
 	{
@@ -736,6 +740,7 @@ void	CharacterOcto::commitEventToGraphics()
 		m_sprite.setOrigin(m_sprite.getOrigin().x - m_sprite.getLocalSize().x, 0.f);
 		m_originMove = false;
 	}
+	m_doScale = false;
 }
 
 
@@ -817,6 +822,7 @@ void	CharacterOcto::caseLeft()
 	{
 		m_keyLeft = true;
 		m_keyRight = false;
+		m_doScale = true;
 		if (m_onGround && m_progress.canWalk())
 		{
 			m_sprite.setNextEvent(Left);
@@ -830,6 +836,7 @@ void	CharacterOcto::caseRight()
 	{
 		m_keyRight = true;
 		m_keyLeft = false;
+		m_doScale = true;
 		if (m_onGround && m_progress.canWalk())
 		{
 			m_sprite.setNextEvent(Right);
