@@ -35,7 +35,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Death,
 		Drink,
 		StartElevator,
-		Elevator,
+		Elevator = 13,
 	};
 public:
 	friend class OctoEvent;
