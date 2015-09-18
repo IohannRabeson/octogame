@@ -27,7 +27,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Left,
 		StartJump,
 		Jump,
-		DoubleJump,
+		DoubleJump = 5,
 		Fall,
 		Dance,
 		DanceWithMusic,
@@ -48,7 +48,7 @@ public:
 	CharacterOcto();
 	virtual ~CharacterOcto();
 
-	void					setup(void);
+	void					setup(ABiome & biome);
 	void					update(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 	void					drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states)const;
@@ -69,6 +69,9 @@ public:
 private:
 	bool	dieFall();
 	bool	endDeath();
+	void	dance();
+	bool	inWater();
+	void	randomJumpAnimation();
 	void	timeEvent(sf::Time frameTime);
 	void	setupAnimation();
 	void	setupMachine();
@@ -76,6 +79,7 @@ private:
 	void	onSky(Events event);
 	void	collisionElevatorUpdate();
 	void	commitControlsToPhysics(float frametime);
+	void	commitEnvironmentToPhysics();
 	void	commitPhysicsToGraphics();
 	void	commitEventToGraphics();
 	void	caseLeft();
@@ -83,8 +87,6 @@ private:
 	void	caseSpace();
 	void	caseUp();
 	void	caseAction();
-	void	dance();
-	void	randomJumpAnimation();
 
 private:
 	octo::CharacterSprite		m_sprite;
@@ -128,6 +130,7 @@ private:
 	float						m_previousTop;
 	float						m_topElevator;
 	float						m_deltaPositionY;
+	float						m_waterLevel;
 	std::size_t					m_numberOfJump;
 	bool						m_originMove;
 	bool						m_onGround;

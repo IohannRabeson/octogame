@@ -29,7 +29,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondAfterFullJump(-400.f),
 	m_pixelSecondMultiplier(800.f),
 	m_deltaPositionY(27.f),
-	m_numberOfJump(1),
+	m_numberOfJump(0),
 	m_originMove(false),
 	m_onGround(false),
 	m_onElevator(false),
@@ -74,10 +74,11 @@ CharacterOcto::~CharacterOcto(void)
 	graphics.removeKeyboardListener(this);
 }
 
-void	CharacterOcto::setup(void)
+void	CharacterOcto::setup(ABiome & biome)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
+	m_waterLevel = biome.getWaterLevel();
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
@@ -311,7 +312,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state0, state13);
 	machine.addTransition(StartJump, state1, state13);
 	machine.addTransition(StartJump, state2, state13);
-	machine.addTransition(StartJump, state6, state13);
+	machine.addTransition(StartJump, state4, state13);
+	machine.addTransition(StartJump, state5, state13);
 	machine.addTransition(StartJump, state12, state13);
 
 	machine.addTransition(Jump, state13, state3);
@@ -319,9 +321,9 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(DoubleJump, state1, state4);
 	machine.addTransition(DoubleJump, state2, state4);
 	machine.addTransition(DoubleJump, state3, state4);
-	machine.addTransition(DoubleJump, state13, state4);
 	machine.addTransition(DoubleJump, state5, state4);
 	machine.addTransition(DoubleJump, state7, state4);
+	machine.addTransition(DoubleJump, state13, state4);
 
 	machine.addTransition(Fall, state0, state5);
 	machine.addTransition(Fall, state1, state5);
@@ -411,6 +413,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		commitEventToGraphics();
 		m_sprite.update(frameTime);
 		commitControlsToPhysics(frameTime.asSeconds());
+		commitEnvironmentToPhysics();
 	}
 	else
 	{
@@ -457,6 +460,7 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 			break;
 		case DoubleJump:
 			m_timeEventInk += frameTime;
+			m_timeEventFall = sf::Time::Zero;
 			break;
 		default:
 			m_timeEventFall = sf::Time::Zero;
@@ -559,7 +563,7 @@ void	CharacterOcto::collisionTileUpdate()
 		{
 			m_afterJump = false;
 			m_onGround = true;
-			m_numberOfJump = 1;
+			m_numberOfJump = 0;
 			if (dieFall())
 				return;
 			if (m_keyLeft)
@@ -636,7 +640,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 		if (m_useElevator)
 		{
 			m_useElevator = false;
-			m_numberOfJump = 1;
+			m_numberOfJump = 0;
 			m_box->setApplyGravity(true);
 			if (m_keyUp)
 				m_sprite.setNextEvent(Fall);
@@ -646,7 +650,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 bool	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > sf::seconds(2.0f))
+	if (m_timeEventFall > sf::seconds(2.0f) && !inWater())
 	{
 		m_sprite.setNextEvent(Death);
 		return true;
@@ -683,6 +687,15 @@ void	CharacterOcto::dance()
 	}
 	if (m_sprite.getCurrentEvent() == DanceWithMusic && m_sprite.isTerminated())
 		m_sprite.setNextEvent(Idle);
+}
+
+bool	CharacterOcto::inWater()
+{
+	if (m_box->getBaryCenter().y > m_waterLevel)
+	{
+		return true;
+	}
+	return false;
 }
 
 void	CharacterOcto::randomJumpAnimation()
@@ -788,6 +801,22 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 	m_box->setVelocity(velocity);
 }
 
+void	CharacterOcto::commitEnvironmentToPhysics()
+{
+	sf::Vector2f	velocity = m_box->getVelocity();
+
+	if (inWater())
+	{
+		velocity.y *= 0.7;
+		velocity.x *= 0.7;
+		if (m_sprite.getCurrentEvent() == Fall)
+		{
+			velocity.y = m_pixelSecondSlowFall;
+		}
+	}
+	m_box->setVelocity(velocity);
+}
+
 bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 {
 	if (m_sprite.getCurrentEvent() == Death)
@@ -849,7 +878,7 @@ void	CharacterOcto::caseSpace()
 	{
 		randomJumpAnimation();
 		m_keySpace = true;
-		if (m_onGround && m_progress.canJump())
+		if ((m_onGround || inWater()) && m_progress.canJump() && !m_numberOfJump)
 		{
 			m_sprite.setNextEvent(StartJump);
 			m_jumpVelocity = m_pixelSecondJump;
@@ -861,6 +890,8 @@ void	CharacterOcto::caseSpace()
 			m_afterJump = false;
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 2;
+			if (inWater())
+				m_numberOfJump = 0;
 		}
 		else
 			m_numberOfJump = 3;
