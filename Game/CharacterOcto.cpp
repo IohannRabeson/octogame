@@ -182,13 +182,13 @@ void	CharacterOcto::setupAnimation()
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_danceWithMusicAnimation.setFrames({
-			Frame(sf::seconds(0.35f), {77, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.35f), {78, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.35f), {79, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.35f), {80, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {81, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.35f), {82, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.35f), {83, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {78, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {79, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_danceWithMusicAnimation.setLoop(octo::LoopMode::NoLoop);
 
@@ -678,8 +678,9 @@ void	CharacterOcto::dance()
 	if (m_timeEventIdle > m_timeEventIdleMax)
 	{
 		m_timeEventIdleMax = sf::seconds(m_danceDistribution(m_engine));
-		if (octo::Application::getAudioManager().getMusicVolume() > 0.f)
+		if (octo::Application::getAudioManager().getMusicVolume() > 0.f){
 			m_sprite.setNextEvent(DanceWithMusic);
+		}
 	}
 	if (m_sprite.getCurrentEvent() == DanceWithMusic && m_sprite.isTerminated())
 		m_sprite.setNextEvent(Idle);
@@ -692,12 +693,13 @@ void	CharacterOcto::randomJumpAnimation()
 	if(!m_jumpDistribution(m_engine))
 	{
 		m_startJumpAnimation.setFrames({
+				Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {78, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {79, sf::FloatRect(), sf::Vector2f()}),
 				Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
 				Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
 				Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {83, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
 				});
 		m_startJumpAnimation.setLoop(octo::LoopMode::NoLoop);
 	}
