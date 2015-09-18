@@ -227,8 +227,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	setupGameObjectPosition(m_nanoRobots);
 	setupGameObjectPosition(m_otherObjects);
 
-	//TODO: if biome want water
-	m_water.reset(new Water(biome));
+	// If water level < 0.f, there is no water
+	if (biome.getWaterLevel() > 0.f)
+		m_water.reset(new Water(biome));
 }
 
 template<class T>

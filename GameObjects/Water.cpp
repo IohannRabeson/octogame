@@ -20,8 +20,7 @@ Water::Water(ABiome & biome) :
 	m_rectRight.setFillColor(sf::Color(0, 0, 200, 50));
 	m_rectRight.setOutlineColor(sf::Color::Red);
 
-	//TODO: get height from biome
-	m_limit = 1000.f;
+	m_limit = biome.getWaterLevel();
 	setPosition(sf::Vector2f(0.f, m_limit));
 
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
