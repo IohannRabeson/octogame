@@ -16,6 +16,7 @@
 #include "OldDesertStaticNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "Tent.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
@@ -227,6 +228,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					Bouibouik * simple = new Bouibouik();
 					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::Tent:
+				{
+					Tent * simple = new Tent();
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
 			default:

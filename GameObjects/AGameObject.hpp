@@ -21,6 +21,7 @@ enum class GameObjectType
 	JuNpc = 16384u,
 	OldDesertStaticNpc = 32768u,
 	Bouibouik = 65535u,
+	Tent = 65537u,
 	FannyNpc = 131070u,
 	TurbanNpc = 524280,
 };

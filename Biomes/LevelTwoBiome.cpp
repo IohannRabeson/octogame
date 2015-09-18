@@ -136,7 +136,8 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[592] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[658] = GameObjectType::Bouibouik;
-	m_gameObjects[720] = GameObjectType::OldDesertStaticNpc;
+	m_gameObjects[730] = GameObjectType::OldDesertStaticNpc;
+	m_gameObjects[690] = GameObjectType::Tent;
 	m_gameObjects[740] = GameObjectType::Portal;
 	m_interestPointPosX = 500;
 
