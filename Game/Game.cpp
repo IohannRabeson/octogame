@@ -79,7 +79,7 @@ void	Game::loadLevel(void)
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
-	m_octo->setup();
+	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setPosition(startPosition);
 }
 

@@ -46,7 +46,8 @@ private:
 		data(std::size_t nanoRobot, Level biome) :
 			nanoRobotCount(nanoRobot),
 			destination(biome)
-		{}
+		{
+		}
 
 		std::size_t		nanoRobotCount;
 		Level			destination;
