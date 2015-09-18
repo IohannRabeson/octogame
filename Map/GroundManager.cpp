@@ -129,7 +129,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new JumpNanoRobot());
-					position.y += Tile::TileSize;
 					ptr->setPosition(position);
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
