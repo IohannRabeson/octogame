@@ -56,8 +56,8 @@ private:
 		data() :
 			nanoRobotCount(5u),
 			destination(Level::Default),
-			musicVol(10),
-			soundVol(10),
+			musicVol(10u),
+			soundVol(10u),
 			music(true),
 			sound(true),
 			fullscreen(true),
