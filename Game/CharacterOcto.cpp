@@ -318,6 +318,7 @@ void	CharacterOcto::setupMachine()
 
 	machine.addTransition(Jump, state13, state3);
 
+	machine.addTransition(DoubleJump, state0, state4);
 	machine.addTransition(DoubleJump, state1, state4);
 	machine.addTransition(DoubleJump, state2, state4);
 	machine.addTransition(DoubleJump, state3, state4);
@@ -380,23 +381,27 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartElevator, state6, state10);
 	machine.addTransition(StartElevator, state7, state10);
 	machine.addTransition(StartElevator, state10, state10);
+	machine.addTransition(StartElevator, state11, state10);
 	machine.addTransition(StartElevator, state12, state10);
 	machine.addTransition(StartElevator, state13, state10);
 
 	machine.addTransition(Elevator, state10, state11);
+	//TODO fix
+	machine.addTransition(Elevator, state13, state11);
 
 	machine.addTransition(Idle, state0, state0);
 	machine.addTransition(Idle, state1, state0);
 	machine.addTransition(Idle, state2, state0);
 	machine.addTransition(Idle, state3, state0);
-	machine.addTransition(Idle, state13, state0);
 	machine.addTransition(Idle, state4, state0);
 	machine.addTransition(Idle, state5, state0);
 	machine.addTransition(Idle, state6, state0);
-	machine.addTransition(Idle, state12, state0);
 	machine.addTransition(Idle, state7, state0);
 	machine.addTransition(Idle, state8, state0);
 	machine.addTransition(Idle, state9, state0);
+	machine.addTransition(Idle, state10, state0);
+	machine.addTransition(Idle, state12, state0);
+	machine.addTransition(Idle, state13, state0);
 
 	m_sprite.setMachine(machine);
 }
@@ -691,7 +696,7 @@ void	CharacterOcto::dance()
 
 bool	CharacterOcto::inWater()
 {
-	if (m_box->getBaryCenter().y > m_waterLevel)
+	if (m_waterLevel != -1.f && m_box->getBaryCenter().y > m_waterLevel)
 	{
 		return true;
 	}
@@ -804,14 +809,24 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 void	CharacterOcto::commitEnvironmentToPhysics()
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
+	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	if (inWater())
 	{
-		velocity.y *= 0.7;
-		velocity.x *= 0.7;
-		if (m_sprite.getCurrentEvent() == Fall)
+		switch (state)
 		{
-			velocity.y = m_pixelSecondSlowFall;
+			case SlowFall:
+				velocity.x *= 1.4f;
+				velocity.y *= 1.5f;
+				break;
+			case Fall:
+				velocity.x *= 0.7f;
+				velocity.y = m_pixelSecondSlowFall;
+				break;
+			default:
+				velocity.x *= 0.7f;
+				velocity.y *= 0.7f;
+				break;
 		}
 	}
 	m_box->setVelocity(velocity);
