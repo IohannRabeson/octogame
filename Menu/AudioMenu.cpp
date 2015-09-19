@@ -1,4 +1,6 @@
 #include "AudioMenu.hpp"
+#include "SoundVolumeMenu.hpp"
+#include "MusicVolumeMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "EmptyMenu.hpp"
 
@@ -9,42 +11,27 @@ class MusicYesNo: public YesNoMenu
 {
 	void setIndex(void)
 	{
-		octo::AudioManager & audio = octo::Application::getAudioManager();
-		setIndexCursor(audio.getMusicEnabled());
+		m_volumeMusic = 9;
+		m_isActive = false;
+		setIndexCursor(m_isActive);
 	}
 
 	void actionYes(void)
 	{
 		octo::AudioManager & audio = octo::Application::getAudioManager();
-		audio.setMusicEnabled(true);
+		m_volumeMusic = audio.getMusicVolume();
+		audio.setMusicVolume(40);
 	}
 
 	void actionNo(void)
 	{
 		octo::AudioManager & audio = octo::Application::getAudioManager();
-		audio.setMusicEnabled(false);
-	}
-};
-
-class SoundYesNo: public YesNoMenu
-{
-	void setIndex(void)
-	{
-		octo::AudioManager & audio = octo::Application::getAudioManager();
-		setIndexCursor(audio.getSoundEnabled());
+		audio.setMusicVolume(m_volumeMusic);
 	}
 
-	void actionYes(void)
-	{
-		octo::AudioManager & audio = octo::Application::getAudioManager();
-		audio.setSoundEnabled(true);
-	}
-
-	void actionNo(void)
-	{
-		octo::AudioManager & audio = octo::Application::getAudioManager();
-		audio.setSoundEnabled(false);
-	}
+private:
+	float		m_volumeMusic;
+	bool		m_isActive;
 };
 
 AudioMenu::AudioMenu(void)
@@ -53,7 +40,8 @@ AudioMenu::AudioMenu(void)
 
 void AudioMenu::createMenus(void)
 {
-	addMenu("Music", std::unique_ptr<MusicYesNo>(new MusicYesNo()));
-	addMenu("Sound", std::unique_ptr<SoundYesNo>(new SoundYesNo()));
+	addMenu("Musique", std::unique_ptr<MusicVolumeMenu>(new MusicVolumeMenu()));
+	addMenu("Son", std::unique_ptr<SoundVolumeMenu>(new SoundVolumeMenu()));
+	addMenu("I <3", std::unique_ptr<MusicYesNo>(new MusicYesNo()));
 }
 

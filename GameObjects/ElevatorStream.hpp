@@ -15,6 +15,7 @@
 
 # include "AGameObject.hpp"
 # include "IPlaceable.hpp"
+# include "SmokeSystem.hpp"
 
 class ABiome;
 class RectangleShape;
@@ -70,8 +71,10 @@ private:
 	State							m_state;
 	sf::Time						m_timer;
 	sf::Time						m_timerMax;
+	SmokeSystem						m_smoke;
 
 	octo::SpriteAnimation			m_animation;
+	octo::SpriteAnimation			m_brokenAnimation;
 	octo::AnimatedSprite			m_spriteBottomFront;
 	octo::AnimatedSprite			m_spriteBottomBack;
 	octo::AnimatedSprite			m_spriteTopFront;

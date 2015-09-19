@@ -4,20 +4,27 @@
 
 enum class GameObjectType
 {
-	Boss = 0u,
 	Player = 1u,
 	PlayerEvent = 2u,
-	Npc = 4u,
-	Portal = 8u,
-	Potion = 32u,
-	Decor = 64u,
-	Tile = 128u,
-	Elevator = 256u,
-	CedricNpc = 512u,
-	SpaceShip = 1024u,
-	GroundTransformNanoRobot = 2048u,
-	RepairNanoRobot = 4096u,
-	FranfranNpc = 8192u
+	Tile = 4u,
+	Decor = 8u,
+	Portal = 16u,
+	Elevator = 32u,
+	CedricNpc = 64u,
+	SpaceShip = 128u,
+	RepairNanoRobot = 256u,
+	JumpNanoRobot = 512u,
+	DoubleJumpNanoRobot = 1024u,
+	SlowFallNanoRobot = 2048u,
+	GroundTransformNanoRobot = 4096u,
+	FranfranNpc = 8192u,
+	JuNpc = 16384u,
+	OldDesertStaticNpc = 32768u,
+	Bouibouik = 65535u,
+	Tent = 65537u,
+	FannyNpc = 131070u,
+	Water = 123u,
+	TurbanNpc = 524280
 };
 
 /*!

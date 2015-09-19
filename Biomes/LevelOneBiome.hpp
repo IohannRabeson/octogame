@@ -29,6 +29,7 @@ public:
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;
+	virtual Level										getId()const;
 
 	virtual sf::Vector2u								getMapSize();
 	virtual sf::Vector2f								getMapSizeFloat();
@@ -37,6 +38,8 @@ public:
 	virtual float										getTransitionDuration();
 	virtual int											getInterestPointPosX();
 	virtual std::map<std::size_t, GameObjectType> const & getGameObjects();
+	virtual Level										getDestination();
+	virtual float										getWaterLevel();
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -141,6 +144,8 @@ public:
 private:
 	RandomGenerator										m_generator;
 	std::string											m_name;
+	Level												m_id;
+	std::string											m_seed;
 
 	sf::Vector2u										m_mapSize;
 	std::size_t											m_mapSeed;
@@ -153,6 +158,8 @@ private:
 
 	std::map<std::size_t, std::string>					m_instances;
 	std::map<std::size_t, GameObjectType>				m_gameObjects;
+	std::vector<Level>									m_destinations;
+	std::size_t											m_destinationIndex;
 
 	sf::Time											m_dayDuration;
 	sf::Time											m_startDayDuration;

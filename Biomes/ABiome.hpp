@@ -16,6 +16,14 @@
 
 class AGameObjectBase;
 
+enum class Level : std::size_t
+{
+	Default,
+	LevelOne,
+	LevelTwo,
+	LevelThree
+};
+
 class ABiome : public octo::NonCopyable
 {
 public:
@@ -23,6 +31,7 @@ public:
 
 	virtual void										setup(std::size_t seed) = 0;
 	virtual std::string									getName()const = 0;
+	virtual Level										getId()const = 0;
 
 	virtual sf::Vector2u								getMapSize() = 0;
 	virtual sf::Vector2f								getMapSizeFloat() = 0;
@@ -31,6 +40,8 @@ public:
 	virtual float										getTransitionDuration() = 0;
 	virtual int											getInterestPointPosX() = 0;
 	virtual std::map<std::size_t, GameObjectType> const & getGameObjects() = 0;
+	virtual Level										getDestination() = 0;
+	virtual float										getWaterLevel() = 0;
 
 	virtual std::map<std::size_t, std::string>			const & getInstances() = 0;
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers() = 0;

@@ -46,21 +46,28 @@ SRC_STATES =	Screens/StateTest.cpp					\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
-				Game/RepairNanoRobot.cpp				\
-				Game/MusicPlayer.cpp					\
 				Game/OctoSound.cpp						\
-				Game/SparkSystem.cpp					\
 				Game/Progress.cpp						\
+				Game/MusicPlayer.cpp					\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\
 				GameObjects/ElevatorStream.cpp			\
 				GameObjects/SpaceShip.cpp				\
+				GameObjects/SimpleObject.cpp			\
+				GameObjects/Bouibouik.cpp				\
+				GameObjects/Tent.cpp					\
+				GameObjects/Water.cpp					\
+				GameObjects/InstanceDecor.cpp			\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
 				Npcs/CedricNpc.cpp						\
 				Npcs/FranfranNpc.cpp					\
+				Npcs/JuNpc.cpp							\
+				Npcs/FannyNpc.cpp						\
+				Npcs/TurbanNpc.cpp						\
+				Npcs/OldDesertStaticNpc.cpp				\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
@@ -72,6 +79,8 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/OptionMenu.cpp						\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
+				Menu/SoundVolumeMenu.cpp				\
+				Menu/MusicVolumeMenu.cpp				\
 				Menu/ControlMenu.cpp					\
 				Menu/YesNoMenu.cpp						\
 				Menu/ResolutionMenu.cpp					\
@@ -82,6 +91,10 @@ SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/FireflyPositionBehaviors.cpp	\
 				NanoRobots/NanoRobot.cpp				\
 				NanoRobots/GroundTransformNanoRobot.cpp	\
+				NanoRobots/RepairNanoRobot.cpp			\
+				NanoRobots/JumpNanoRobot.cpp			\
+				NanoRobots/DoubleJumpNanoRobot.cpp		\
+				NanoRobots/SlowFallNanoRobot.cpp		\
 
 SRC_MAP =		Map/Map.cpp								\
 				Map/GroundManager.cpp					\
@@ -96,6 +109,8 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
 				Biomes/LevelOneBiome.cpp				\
+				Biomes/LevelTwoBiome.cpp				\
+				Biomes/LevelThreeBiome.cpp				\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
@@ -120,6 +135,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
 				Decors/SmokeSystem.cpp					\
+				Decors/SparkSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\

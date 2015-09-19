@@ -6,7 +6,7 @@
 
 class SkyCycle;
 
-class FranfranNpc : public ANpc, AGameObject<GameObjectType::FranfranNpc>
+class FranfranNpc : public ANpc, public AGameObject<GameObjectType::FranfranNpc>
 {
 public:
 	FranfranNpc(void);

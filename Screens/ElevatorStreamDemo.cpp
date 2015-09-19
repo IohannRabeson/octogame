@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/01 04:24:03 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/12 13:35:04 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/09/16 17:50:27 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ void	ElevatorStreamDemo::start()
 	octo::Application::getCamera().setCenter(sf::Vector2f());
 
 	BiomeManager manager;
-	manager.registerBiome<DefaultBiome>("test");
-	manager.changeBiome("test", 0);
+	manager.registerBiome<DefaultBiome>(Level::LevelOne);
+	manager.changeBiome(Level::LevelOne, 0);
 	m_teleportBeam.setBiome(manager.getCurrentBiome());
 }
 

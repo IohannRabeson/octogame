@@ -1,4 +1,5 @@
 #include "MainMenu.hpp"
+#include "ControlMenu.hpp"
 #include "YesNoMenu.hpp"
 #include <Camera.hpp>
 #include <Application.hpp>
@@ -18,9 +19,10 @@ MainMenu::MainMenu(void)
 
 void MainMenu::createMenus(void)
 {
-	addMenu("Settings", std::unique_ptr<OptionMenu>(new OptionMenu()));
-	addMenu("Quit", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
-	setCharacterSize(40);
+	addMenu("Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
+	addMenu("Controles", std::unique_ptr<ControlMenu>(new ControlMenu()));
+	addMenu("Quitter", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+	setCharacterSize(30);
 	setBubbleType(ABubble::Type::Think);
 }
 
@@ -28,7 +30,7 @@ void MainMenu::setup(void)
 {
 	AMenuSelection::setup();
 	m_filter.setSize(octo::Application::getCamera().getSize());
-	m_filter.setFillColor(sf::Color(255, 255, 255, 100));
+	m_filter.setFillColor(sf::Color(0, 0, 0, 50));
 }
 
 void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePosition)

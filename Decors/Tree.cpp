@@ -80,10 +80,11 @@ void Tree::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCor
 	downMidLeft += origin;
 	downMidRight += origin;
 
-	builder.createTriangle(origin, upLeft, upRight, color + sf::Color(5, 5, 5));
-	builder.createTriangle(origin, upRight, upMidRight, color + sf::Color(5, 5, 5));
-	builder.createTriangle(origin, upMidRight, downMidRight, color + sf::Color(5, 5, 5));
-	builder.createTriangle(origin, downMidRight, downRight, color + sf::Color(5, 5, 5));
+	sf::Color deltaColor = color + sf::Color(7, 7, 7);
+	builder.createTriangle(origin, upLeft, upRight, deltaColor);
+	builder.createTriangle(origin, upRight, upMidRight, deltaColor);
+	builder.createTriangle(origin, upMidRight, downMidRight, deltaColor);
+	builder.createTriangle(origin, downMidRight, downRight, deltaColor);
 	builder.createTriangle(origin, downRight, downLeft, color);
 	builder.createTriangle(origin, downLeft, downMidLeft, color);
 	builder.createTriangle(origin, downMidLeft, upMidLeft, color);

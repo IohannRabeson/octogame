@@ -10,35 +10,11 @@
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
-Progress::Progress()
+Progress::Progress() :
+	m_newSave(false),
+	m_changeLevel(false)
 {
 	setup();
-	octo::Console&				console = octo::Application::getConsole();
-
-	console.addCommand(L"octo.setCanUseAction", [this](bool b)
-			{
-			setCanUseAction(b);
-			});
-	console.addCommand(L"octo.setCanWalk", [this](bool b)
-			{
-			setCanWalk(b);
-			});
-	console.addCommand(L"octo.setCanJump", [this](bool b)
-			{
-			setCanJump(b);
-			});
-	console.addCommand(L"octo.setCanDoubleJump", [this](bool b)
-			{
-			setCanDoubleJump(b);
-			});
-	console.addCommand(L"octo.setCanSlowFall", [this](bool b)
-			{
-			setCanSlowFall(b);
-			});
-	console.addCommand(L"octo.setCanUseElevator", [this](bool b)
-			{
-			setCanUseElevator(b);
-			});
 }
 
 Progress & Progress::getInstance()
@@ -55,12 +31,6 @@ void	Progress::setup()
 	m_newSave = false;
 	m_filename = "save.osv";
 	m_data = data();
-	m_action = false;
-	m_walk = false;
-	m_jump = false;
-	m_doubleJump = false;
-	m_slowFall = false;
-	m_elevator = false;
 }
 
 void	Progress::load(std::string const &filename)
@@ -79,9 +49,6 @@ void	Progress::load(std::string const &filename)
 
 void	Progress::init()
 {
-	//TODO
-	std::cout << "name:" << m_data.biomeName << std::endl;
-	//std::cout << "robot:" << m_data.nanoRobotCount << std::endl;
 }
 
 void	Progress::save()
@@ -103,37 +70,58 @@ void	Progress::reset()
 	setup();
 }
 
-void	Progress::setupInfoLevel(ABiome & biome)
+void	Progress::setNextDestination(Level destination)
 {
-	m_data.biomeName = biome.getName();
+	m_data.destination = destination;
+	m_changeLevel = true;
 }
 
-bool	Progress::canUseAction()
+Level	Progress::getNextDestination(void) const
 {
-	return m_action;
+	return m_data.destination;
+}
+
+bool	Progress::canMoveMap()
+{
+	return (m_data.nanoRobotCount > 0);
+}
+
+bool	Progress::canRepair()
+{
+	return (m_data.nanoRobotCount > 1);
 }
 
 bool	Progress::canWalk()
 {
-	return m_walk;
+	return true;
 }
 
 bool	Progress::canJump()
 {
-	return m_jump;
+	return (m_data.nanoRobotCount > 2);
 }
 
 bool	Progress::canDoubleJump()
 {
-	return m_doubleJump;
+	return (m_data.nanoRobotCount > 3);
 }
 
 bool	Progress::canSlowFall()
 {
-	return m_slowFall;
+	return (m_data.nanoRobotCount > 4);
 }
 
 bool	Progress::canUseElevator()
 {
-	return m_elevator;
+	return (m_data.nanoRobotCount > 1);
+}
+
+bool	Progress::changeLevel() const
+{
+	return m_changeLevel;
+}
+
+void	Progress::levelChanged()
+{
+	m_changeLevel = false;
 }

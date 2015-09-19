@@ -10,13 +10,16 @@
 
 DefaultBiome::DefaultBiome() :
 	m_name("Default"),
+	m_id(Level::Default),
+	m_seed("Default"),
 	m_mapSize(sf::Vector2u(512u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(0.f, 800.f),
+	m_octoStartPosition(0.f, 400.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(230.f, 168.f, 0.f),
 	m_tileEndColor(254.f, 231.f, 170.f),
+	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(20.f)),
 	m_startDayDuration(sf::seconds(15.f)),
@@ -35,8 +38,8 @@ DefaultBiome::DefaultBiome() :
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
-	m_sunCount(1u, 3u),
-	m_moonCount(1u, 3u),
+	m_sunCount(3u, 5u),
+	m_moonCount(2u, 3u),
 	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
@@ -91,7 +94,7 @@ DefaultBiome::DefaultBiome() :
 
 	m_sunSize(sf::Vector2f(60.f, 60.f), sf::Vector2f(150.f, 150.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 255, 200),
+	m_sunColor(255, 255, 255),
 
 	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 100.f)),
 	m_moonColor(200, 200, 200),
@@ -103,7 +106,7 @@ DefaultBiome::DefaultBiome() :
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
-	m_generator.setSeed(m_name);
+	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
@@ -121,14 +124,24 @@ DefaultBiome::DefaultBiome() :
 	// TODO define map position and number of map
 	m_instances[12] = MINIMAP_OMP;
 	m_instances[86] = TEST_MAP2_OMP;
+	m_instances[450] = HOUSE_OMP;
 
 	// Define game objects
 	m_gameObjects[50] = GameObjectType::Portal;
-	m_gameObjects[150] = GameObjectType::CedricNpc;
-	m_gameObjects[170] = GameObjectType::FranfranNpc;
 	m_gameObjects[0] = GameObjectType::GroundTransformNanoRobot;
 	m_gameObjects[450] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[400] = GameObjectType::Bouibouik;
 	m_gameObjects[100] = GameObjectType::SpaceShip;
+	m_gameObjects[150] = GameObjectType::CedricNpc;
+	m_gameObjects[170] = GameObjectType::FranfranNpc;
+	m_gameObjects[190] = GameObjectType::JuNpc;
+	m_gameObjects[230] = GameObjectType::FannyNpc;
+	m_gameObjects[260] = GameObjectType::Tent;
+	m_gameObjects[250] = GameObjectType::TurbanNpc;
+	m_gameObjects[290] = GameObjectType::OldDesertStaticNpc;
+
+	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::LevelOne);
 }
 
 void			DefaultBiome::setup(std::size_t seed)
@@ -139,6 +152,11 @@ void			DefaultBiome::setup(std::size_t seed)
 std::string		DefaultBiome::getName()const
 {
 	return (m_name);
+}
+
+Level			DefaultBiome::getId()const
+{
+	return (m_id);
 }
 
 //TODO:: We'll probably need a setter for mapSize
@@ -175,6 +193,16 @@ int				DefaultBiome::getInterestPointPosX()
 std::map<std::size_t, GameObjectType> const &	DefaultBiome::getGameObjects()
 {
 	return m_gameObjects;
+}
+
+Level	DefaultBiome::getDestination()
+{
+	return m_destinations[m_destinationIndex++];
+}
+
+float	DefaultBiome::getWaterLevel()
+{
+	return 1000.f;
 }
 
 std::map<std::size_t, std::string> const & DefaultBiome::getInstances()
@@ -575,6 +603,8 @@ std::size_t		DefaultBiome::getSunPartCount()
 
 sf::Color		DefaultBiome::getSunColor()
 {
+	if (m_sunColor == sf::Color(255, 255, 255))
+		return m_sunColor;
 	return (randomColor(m_sunColor));
 }
 

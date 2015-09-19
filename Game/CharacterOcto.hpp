@@ -24,15 +24,17 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Idle,
 		Right,
 		Left,
+		StartJump,
 		Jump,
-		DoubleJump,
+		DoubleJump = 5,
 		Fall,
 		Dance,
+		DanceWithMusic,
 		SlowFall,
 		Death,
 		Drink,
 		StartElevator,
-		Elevator,
+		Elevator = 13,
 	};
 public:
 	friend class OctoEvent;
@@ -45,9 +47,10 @@ public:
 	CharacterOcto();
 	virtual ~CharacterOcto();
 
-	void					setup(void);
+	void					setup(ABiome & biome);
 	void					update(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
+	void					drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states)const;
 
 	bool					onPressed(sf::Event::KeyEvent const& event);
 	bool					onReleased(sf::Event::KeyEvent const& event);
@@ -60,17 +63,23 @@ public:
 	void					giveNanoRobot(NanoRobot * robot);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot);
 	void					repairElevator(ElevatorStream & elevator);
+	void					usePortal(Portal & portal);
 
 private:
 	bool	dieFall();
 	bool	endDeath();
+	void	dance();
+	bool	inWater();
+	void	randomJumpAnimation();
 	void	timeEvent(sf::Time frameTime);
+	void	resetTimeEvent();
 	void	setupAnimation();
 	void	setupMachine();
 	void	collisionTileUpdate();
 	void	onSky(Events event);
 	void	collisionElevatorUpdate();
 	void	commitControlsToPhysics(float frametime);
+	void	commitEnvironmentToPhysics();
 	void	commitPhysicsToGraphics();
 	void	commitEventToGraphics();
 	void	caseLeft();
@@ -78,7 +87,6 @@ private:
 	void	caseSpace();
 	void	caseUp();
 	void	caseAction();
-	void	dance();
 
 private:
 	class OctoSound;
@@ -86,9 +94,12 @@ private:
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
+	octo::CharacterAnimation	m_startJumpAnimation;
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
 	octo::CharacterAnimation	m_danceAnimation;
+	octo::CharacterAnimation	m_danceWithMusicAnimation;
+	octo::CharacterAnimation	m_answerWolfAnimation;
 	octo::CharacterAnimation	m_slowFallAnimation;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
@@ -100,13 +111,16 @@ private:
 	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
 	RepairNanoRobot *			m_repairNanoRobot;
 	Progress &					m_progress;
+	std::mt19937				m_engine;
+	std::uniform_int_distribution<std::size_t>		m_jumpDistribution;
+	std::uniform_real_distribution<float>			m_danceDistribution;
 
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
+	sf::Time					m_timeEventIdleMax;
 	sf::Time					m_timeEventDeath;
-	sf::Time					m_timeEventStartElevator;
-	float						m_spriteScale;
 	sf::Time					m_timeEventInk;
+	float						m_spriteScale;
 	float						m_pixelSecondJump;
 	float						m_pixelSecondSlowFall;
 	float						m_pixelSecondWalk;
@@ -118,6 +132,7 @@ private:
 	float						m_previousTop;
 	float						m_topElevator;
 	float						m_deltaPositionY;
+	float						m_waterLevel;
 	std::size_t					m_numberOfJump;
 	bool						m_originMove;
 	bool						m_onGround;
@@ -133,7 +148,9 @@ private:
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
 	bool						m_collisionElevatorEvent;
+	bool						m_doScale;
 	SmokeSystem					m_ink;
+	Events						m_prevEvent;
 };
 
 #endif

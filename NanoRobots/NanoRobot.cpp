@@ -8,13 +8,13 @@
 #include <ResourceManager.hpp>
 #include <sstream>
 
-NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames) :
+NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames, int seed) :
 	m_swarm(1),
 	m_uniformPopulation(1234u, &octo::Application::getResourceManager().getPalette(FROM_SEA1_OPA),
 						1.2f, 2.f, 6.f, 10.f, 32.f, 50.f,
 						sf::Time::Zero, sf::Time::Zero),
 	m_spawnMode(FireflySwarm::SpawnMode::Normal),
-	m_positionBehavior(new FireflySwarm::CirclePositionBehavior(2345, 50.f)),
+	m_positionBehavior(new FireflySwarm::CirclePositionBehavior(seed, 50.f)),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_state(Idle),
 	m_timer(sf::Time::Zero),
@@ -68,6 +68,11 @@ void NanoRobot::setup(AGameObjectBase * gameObject)
 	m_box->setCollisionType(static_cast<std::uint32_t>(gameObject->getObjectType()));
 }
 
+void NanoRobot::addMapOffset(float x, float y)
+{
+	setPosition(sf::Vector2f(getPosition().x + x, getPosition().y + y));
+}
+
 void NanoRobot::transfertToOcto(void)
 {
 	PhysicsEngine::getInstance().unregisterShape(m_box);
@@ -81,12 +86,12 @@ void NanoRobot::transfertToOcto(void)
 
 void NanoRobot::setPosition(sf::Vector2f const & position)
 {
-	if (std::abs(position.x - m_sprite.getPosition().x) > 400.f)
+	sf::Vector2f	pos = position;
+	pos.y -= Tile::TripleTileSize * 2.f;
+	if (std::abs(pos.x - m_swarm.getFirefly(0u).position.x) > 400.f)
 		m_isTravelling = true;
 	else
 		m_isTravelling = false;
-	sf::Vector2f	pos = position;
-	pos.y -= Tile::TripleTileSize * 2.f;
 	m_swarm.setTarget(pos);
 }
 
@@ -95,9 +100,23 @@ bool NanoRobot::isTravelling(void) const
 	return m_isTravelling;
 }
 
+void NanoRobot::setState(NanoRobot::State state)
+{
+	m_state = state;
+}
+
 sf::Vector2f const & NanoRobot::getPosition(void) const
 {
 	return m_swarm.getFirefly(0u).position;
+}
+
+sf::Vector2f const & NanoRobot::getTargetPosition(void)
+{
+	if (std::abs(m_swarm.getTarget().x - m_swarm.getFirefly(0u).position.x) > 400.f)
+		m_isTravelling = true;
+	else
+		m_isTravelling = false;
+	return m_swarm.getTarget();
 }
 
 NanoRobot::State NanoRobot::getState(void) const
@@ -126,7 +145,6 @@ void NanoRobot::update(sf::Time frametime)
 	if (m_state == Speak)
 	{
 		m_timer += frametime;
-
 		if (m_timer > m_timerMax)
 		{
 			m_state = FollowOcto;

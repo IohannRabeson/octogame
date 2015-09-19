@@ -9,12 +9,14 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	m_prevDayState(skyCycle.isDay()),
 	m_timerSwitchDayNight(0.f)
 {
-	setSize(sf::Vector2f(35.f, 75.f));
+	setSize(sf::Vector2f(35.f, 100.f));
 	setOrigin(sf::Vector2f(75.f, 68.f));
-	setScale(0.6f);
+	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(0.f, -50.f));
 	setup();
+
+	setupBox(this, static_cast<std::size_t>(GameObjectType::CedricNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void CedricNpc::setup(void)
@@ -246,6 +248,7 @@ void CedricNpc::update(sf::Time frametime)
 	sprite.setPosition(bounds.left, bounds.top);
 
 	updateText(frametime);
+	resetVariables();
 }
 
 void CedricNpc::updateState(void)
@@ -276,7 +279,6 @@ void CedricNpc::updateState(void)
 void CedricNpc::updatePhysics(void)
 {
 	RectangleShape * box = getBox();
-	CircleShape * eventBox = getEventBox();
 	octo::CharacterSprite & sprite = getSprite();
 	sf::Vector2f velocity;
 
@@ -289,5 +291,4 @@ void CedricNpc::updatePhysics(void)
 		velocity.x = getVelocity();
 	}
 	box->setVelocity(velocity);
-	eventBox->setPosition(sprite.getPosition().x - eventBox->getRadius(), sprite.getPosition().y - eventBox->getRadius());
 }

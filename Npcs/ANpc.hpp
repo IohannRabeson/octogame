@@ -10,9 +10,9 @@
 # include "IPlaceable.hpp"
 
 class RectangleShape;
-class CircleShape;
+class CharacterOcto;
 
-class ANpc : public AGameObject<GameObjectType::Npc>, public sf::Drawable, public IPlaceable
+class ANpc : public sf::Drawable, public IPlaceable
 {
 public:
 	virtual ~ANpc(void);
@@ -25,10 +25,11 @@ public:
 	void setCurrentText(int index);
 	void setScale(float scale);
 	void addMapOffset(float x, float y);
-	void activatePhysics(bool active);
+	void onTheFloor(void);
 	sf::Vector2f const & getPosition(void) const;
 
 	virtual void setup(void) = 0;
+	virtual void collideOctoEvent(CharacterOcto * octo);
 	virtual void update(sf::Time frametime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
@@ -53,8 +54,7 @@ protected:
 	void setNextEvent(Events event);
 	void setMachine(octo::FiniteStateMachine const & machine);
 	void setVelocity(float velocity);
-	void setBoxCollision(std::size_t type, std::size_t mask);
-	void setCurrentText(std::size_t index);
+	void setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask);
 	void setTextOffset(sf::Vector2f const & offset);
 	void setupIdleAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode);
 	void setupWalkAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode);
@@ -66,7 +66,6 @@ protected:
 	sf::Vector2f const & getOrigin(void) const;
 	sf::FloatRect const & getArea(void) const;
 	RectangleShape * getBox(void);
-	CircleShape * getEventBox(void);
 	octo::CharacterSprite & getSprite(void);
 	octo::CharacterAnimation & getIdleAnimation(void);
 	octo::CharacterAnimation & getWalkAnimation(void);
@@ -79,6 +78,7 @@ protected:
 	virtual bool canDance(void) const;
 	virtual bool canSpecial1(void) const;
 	virtual bool canSpecial2(void) const;
+	virtual void resetVariables(void);
 
 	virtual void setupMachine(void);
 	virtual void updateState(void);
@@ -95,13 +95,16 @@ private:
 	octo::CharacterAnimation					m_special1Animation;
 	octo::CharacterAnimation					m_special2Animation;
 	RectangleShape *							m_box;
-	CircleShape *								m_eventBox;
 	sf::FloatRect								m_area;
 	sf::Vector2f								m_origin;
 	sf::Vector2f								m_textOffset;
+	sf::Time									m_timer;
+	sf::Time									m_timerMax;
 	int											m_currentText;
 	float										m_velocity;
 	float										m_scale;
+	bool										m_displayText;
+	bool										m_collideOctoEvent;
 
 };
 
