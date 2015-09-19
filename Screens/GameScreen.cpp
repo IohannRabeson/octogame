@@ -16,10 +16,10 @@ void	GameScreen::start()
 	m_menu.setup();
 
 	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-	Progress &				progress = Progress::getInstance();
+//	Progress &				progress = Progress::getInstance();
 	graphics.addKeyboardListener(this);
 
-	progress.load("save.osv");
+//	progress.load("save.osv");
 	m_game.reset(new Game());
 	m_game->loadLevel();
 }

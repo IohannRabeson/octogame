@@ -131,7 +131,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[5] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
-	m_instances[585] = MAP_NANO_JUMP_DESERT_OMP;
+	m_instances[584] = MAP_NANO_JUMP_DESERT_OMP;
 	m_gameObjects[375] = GameObjectType::TurbanNpc;
 	m_gameObjects[592] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
@@ -145,7 +145,7 @@ LevelTwoBiome::LevelTwoBiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelOne);
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::LevelTwo);
 }
 
 void			LevelTwoBiome::setup(std::size_t seed)
