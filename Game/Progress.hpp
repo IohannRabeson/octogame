@@ -39,8 +39,8 @@ private:
 	void	setup();
 	struct data{
 		data() :
-			nanoRobotCount(5u),
-			destination(Level::Default)
+			nanoRobotCount(0u),
+			destination(Level::LevelOne)
 		{
 		}
 		data(std::size_t nanoRobot, Level biome) :
