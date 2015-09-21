@@ -59,6 +59,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Tent.cpp					\
 				GameObjects/Water.cpp					\
 				GameObjects/InstanceDecor.cpp			\
+				GameObjects/Firecamp.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
@@ -67,6 +68,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/JuNpc.cpp							\
 				Npcs/FannyNpc.cpp						\
 				Npcs/TurbanNpc.cpp						\
+				Npcs/GuiNpc.cpp							\
 				Npcs/OldDesertStaticNpc.cpp				\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\

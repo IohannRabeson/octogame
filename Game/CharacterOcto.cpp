@@ -99,6 +99,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::uint32_t>(GameObjectType::Elevator)
 		| static_cast<std::uint32_t>(GameObjectType::CedricNpc)
 		| static_cast<std::uint32_t>(GameObjectType::FannyNpc)
+		| static_cast<std::uint32_t>(GameObjectType::GuiNpc)
 		| static_cast<std::uint32_t>(GameObjectType::JuNpc)
 		| static_cast<std::uint32_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
