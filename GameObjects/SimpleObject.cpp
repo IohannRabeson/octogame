@@ -24,6 +24,11 @@ void SimpleObject::setPosition(sf::Vector2f const & position)
 	m_sprite.setPosition(position.x, position.y);
 }
 
+octo::AnimatedSprite & SimpleObject::getSprite(void)
+{
+	return m_sprite;
+}
+
 void SimpleObject::update(sf::Time frameTime)
 {
 	m_sprite.update(frameTime);

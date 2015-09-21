@@ -10,6 +10,7 @@
 #include "SlowFallNanoRobot.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
+#include <PostEffectManager.hpp>
 #include <ResourceManager.hpp>
 #include <GraphicsManager.hpp>
 
@@ -88,7 +89,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
 		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
 		| static_cast<std::uint32_t>(GameObjectType::JumpNanoRobot)
-		| static_cast<std::uint32_t>(GameObjectType::Elevator);
+		| static_cast<std::uint32_t>(GameObjectType::Elevator)
+		| static_cast<std::uint32_t>(GameObjectType::Bouibouik);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
@@ -205,11 +207,11 @@ void	CharacterOcto::setupAnimation()
 	m_slowFallAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_deathAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {35, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {36, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {37, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {38, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(1.4f), {39, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {35, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {36, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {37, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {38, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {39, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_deathAnimation.setLoop(octo::LoopMode::NoLoop);
 
@@ -679,17 +681,19 @@ bool	CharacterOcto::endDeath()
 {
 	if (m_sprite.getCurrentEvent() == Death)
 	{
-		if (m_timeEventDeath > sf::seconds(3.0f))
+		if (m_sprite.isTerminated())
 		{
-			if (m_keyLeft)
-				m_sprite.setNextEvent(Left);
-			else if (m_keyRight)
-				m_sprite.setNextEvent(Right);
-			else
-				m_sprite.setNextEvent(Idle);
+			octo::StateManager & states = octo::Application::getStateManager();
+			octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+			octo::Camera&			camera = octo::Application::getCamera();
+			sf::Vector2f			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
+
+			m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+			m_progress.setReverseSprite(m_originMove);
+			postEffect.setAllShaderEnabled(false);
+			states.push("octo_death");
 		}
-		else
-			return false;
+		return false;
 	}
 	return true;
 }

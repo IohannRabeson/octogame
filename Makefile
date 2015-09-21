@@ -43,6 +43,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/FsmDemoScreen.cpp				\
 				Screens/ElevatorStreamDemo.cpp			\
 				Screens/TransitionScreen.cpp			\
+				Screens/DeathScreen.cpp					\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
