@@ -12,8 +12,7 @@ std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
 	m_newSave(false),
-	m_changeLevel(false),
-	m_isDead(false)
+	m_changeLevel(false)
 {
 	setup();
 }
@@ -31,7 +30,6 @@ void	Progress::setup()
 {
 	m_newSave = false;
 	m_filename = "save.osv";
-	m_isDead = false;
 	m_data = data();
 }
 

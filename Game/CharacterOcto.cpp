@@ -10,6 +10,7 @@
 #include "SlowFallNanoRobot.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
+#include <PostEffectManager.hpp>
 #include <ResourceManager.hpp>
 #include <GraphicsManager.hpp>
 
@@ -680,11 +681,15 @@ bool	CharacterOcto::endDeath()
 	{
 		if (m_sprite.isTerminated())
 		{
+			octo::StateManager & states = octo::Application::getStateManager();
+			octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 			octo::Camera&			camera = octo::Application::getCamera();
 			sf::Vector2f			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
-			m_progress.setDeath(true);
+
 			m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 			m_progress.setReverseSprite(m_originMove);
+			postEffect.setAllShaderEnabled(false);
+			states.push("octo_death");
 		}
 		return false;
 	}

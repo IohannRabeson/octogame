@@ -61,12 +61,6 @@ void	GameScreen::update(sf::Time frameTime)
 			states.push("transition");
 		}
 	}
-	if (Progress::getInstance().isDead())
-	{
-		postEffect.setAllShaderEnabled(false);
-		Progress::getInstance().setDeath(false);
-		states.push("octo_death");
-	}
 }
 
 bool GameScreen::onPressed(sf::Event::KeyEvent const &event)

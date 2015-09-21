@@ -28,9 +28,6 @@ public:
 	bool				changeLevel() const;
 	void				levelChanged();
 
-	inline bool			isDead(){ return m_isDead; }
-	inline void			setDeath(bool isDead){ m_isDead = isDead; }
-
 	inline void					setOctoPos(sf::Vector2f const & position){ m_octoPos = position; }
 	inline sf::Vector2f const&	getOctoPos(){ return m_octoPos; }
 
@@ -68,7 +65,6 @@ private:
 	data									m_data;
 	bool									m_newSave;
 	bool									m_changeLevel;
-	bool									m_isDead;
 	bool									m_reverseSprite;
 	sf::Vector2f							m_octoPos;
 };
