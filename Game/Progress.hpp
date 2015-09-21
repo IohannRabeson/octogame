@@ -54,14 +54,9 @@ private:
 	void	setup();
 	struct data{
 		data() :
-			nanoRobotCount(5u),
-			destination(Level::Default),
-			musicVol(10u),
-			soundVol(10u),
-			music(true),
-			sound(true),
-			fullscreen(true),
-			vsync(true)
+			data(5u, Level::Default,
+					10u, 10u, true, true,
+					true, true)
 		{
 		}
 		data(std::size_t nanoRobot, Level biome,
