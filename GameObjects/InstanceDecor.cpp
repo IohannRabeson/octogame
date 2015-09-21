@@ -2,7 +2,7 @@
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
-InstanceDecor::InstanceDecor(ResourceKey key, sf::Vector2f const & scale, sf::Vector2f const & position, std::size_t nbFrames)
+InstanceDecor::InstanceDecor(ResourceKey key, sf::Vector2f const & scale, sf::Vector2f const & position, std::size_t nbFrames, float frameDuration)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -12,7 +12,7 @@ InstanceDecor::InstanceDecor(ResourceKey key, sf::Vector2f const & scale, sf::Ve
 
 	octo::SpriteAnimation::FrameList	frames;
 	for (std::size_t i = 0u; i < nbFrames; i++)
-		frames.emplace_back(sf::seconds(0.2f), i);
+		frames.emplace_back(sf::seconds(frameDuration), i);
 
 	m_animation.setFrames(frames);
 	m_animation.setLoop(octo::LoopMode::Loop);
