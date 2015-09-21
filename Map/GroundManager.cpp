@@ -13,10 +13,12 @@
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "TurbanNpc.hpp"
+#include "GuiNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
+#include "Firecamp.hpp"
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -101,12 +103,17 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
+	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(HOUSE_PUSSY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(HOUSE_PUSSY_OSS, scale, position, 4u);
+			});
+	m_decorFactory.registerCreator(FIRECAMP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Firecamp(scale, position);
 			});
 
 	// Get all the gameobjects from instances
@@ -868,6 +875,8 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerFront.update(deltatime, camera);
 	m_decorManagerGround.update(deltatime, camera);
 }
+
+
 
 void GroundManager::updateGameObjects(sf::Time frametime)
 {

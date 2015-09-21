@@ -16,6 +16,7 @@ public:
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
+	void setupSmoke(void);
 	SmokeSystem		m_smoke;
 };
 
