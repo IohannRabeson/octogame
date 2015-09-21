@@ -34,6 +34,7 @@
 #include "QuitScreen.hpp"
 #include "ElevatorStreamDemo.hpp"
 #include "TransitionScreen.hpp"
+#include "DeathScreen.hpp"
 #include "AGameObject.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
@@ -55,6 +56,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<ResourceLoadingScreen>("loading");
 	manager.registerState<QuitScreen>("quit");
 	manager.registerState<TransitionScreen>("transition");
+	manager.registerState<DeathScreen>("octo_death");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 

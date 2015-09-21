@@ -43,6 +43,7 @@ void	GameScreen::stop()
 void	GameScreen::update(sf::Time frameTime)
 {
 	AMenu::State state = m_menu.getState();
+	octo::StateManager & states = octo::Application::getStateManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
@@ -57,7 +58,6 @@ void	GameScreen::update(sf::Time frameTime)
 		m_game->update(frameTime);
 		if (Progress::getInstance().changeLevel())
 		{
-			octo::StateManager & states = octo::Application::getStateManager();
 			states.push("transition");
 		}
 	}

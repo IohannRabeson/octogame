@@ -28,6 +28,12 @@ public:
 	bool				changeLevel() const;
 	void				levelChanged();
 
+	inline void					setOctoPos(sf::Vector2f const & position){ m_octoPos = position; }
+	inline sf::Vector2f const&	getOctoPos(){ return m_octoPos; }
+
+	inline void		setReverseSprite(bool reverse){ m_reverseSprite = reverse; }
+	inline bool		getReverseSprite(){ return m_reverseSprite; }
+
 	void				load(std::string const & filename);
 	void				save();
 	void				reset();
@@ -69,7 +75,8 @@ private:
 	data									m_data;
 	bool									m_newSave;
 	bool									m_changeLevel;
-
+	bool									m_reverseSprite;
+	sf::Vector2f							m_octoPos;
 };
 
 #endif
