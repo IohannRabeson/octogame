@@ -55,7 +55,7 @@ private:
 	struct data{
 		data() :
 			data(5u, Level::Default,
-					10u, 10u, true, true,
+					5u, 100u, true, true,
 					true, true)
 		{
 		}

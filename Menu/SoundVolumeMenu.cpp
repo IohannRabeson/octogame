@@ -1,6 +1,7 @@
 #include "SoundVolumeMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "EmptyMenu.hpp"
+#include "Progress.hpp"
 
 #include <Application.hpp>
 #include <AudioManager.hpp>
@@ -21,7 +22,11 @@ void SoundVolumeMenu::createMenus(void)
 	addMenu(L"7", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(L"8", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(L"9", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	setIndexCursor(9u);
+
+	m_volume = static_cast<std::size_t>(octo::Application::getAudioManager().getSoundVolume());
+	if (m_volume >= 100.f)
+		m_volume = 99.f;
+	setIndexCursor(static_cast<std::size_t>(m_volume / 10.f));
 }
 
 void SoundVolumeMenu::onSelection(void)

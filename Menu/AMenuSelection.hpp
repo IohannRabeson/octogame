@@ -43,6 +43,7 @@ private:
 
 	std::vector<sf::Vector2f>					m_cursorPosition;
 	std::size_t									m_indexCursor;
+	std::size_t									m_indexSave;
 	bool										m_isKeyboard;
 
 	sf::CircleShape								m_cursor;
