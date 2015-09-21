@@ -8,7 +8,14 @@ Bouibouik::Bouibouik(void) :
 					Frame(sf::seconds(0.2f), 1u),
 					Frame(sf::seconds(0.2f), 2u),
 					Frame(sf::seconds(0.2f), 1u)}, octo::LoopMode::Loop);
+	setupSmoke();
+}
 
+Bouibouik::~Bouibouik(void)
+{}
+
+void Bouibouik::setupSmoke(void)
+{
 	m_smoke.setup(sf::Vector2f(5.f, 5.f));
 	m_smoke.setVelocity(sf::Vector2f(0.f, -100.f));
 	m_smoke.setEmitTimeRange(0.2f, 0.3f);
@@ -18,9 +25,6 @@ Bouibouik::Bouibouik(void) :
 	m_smoke.setDispersion(80.f);
 	m_smoke.setColor(sf::Color(155, 155, 155, 150));
 }
-
-Bouibouik::~Bouibouik(void)
-{}
 
 void Bouibouik::setPosition(sf::Vector2f const & position)
 {

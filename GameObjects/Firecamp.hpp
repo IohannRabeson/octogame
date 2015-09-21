@@ -2,6 +2,7 @@
 # define FIRECAMP_HPP
 
 # include "InstanceDecor.hpp"
+# include "SmokeSystem.hpp"
 
 class Firecamp : public InstanceDecor
 {
@@ -16,6 +17,8 @@ public:
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
+	void setupSmoke(sf::Vector2f const & position);
+	SmokeSystem					m_smoke;
 	octo::AnimatedSprite		m_spriteFire;
 	octo::SpriteAnimation		m_animationFire;
 
