@@ -19,6 +19,7 @@ public:
 protected:
 	SimpleObject(ResourceKey key);
 
+	octo::AnimatedSprite &	getSprite(void);
 	void setupAnimation(std::initializer_list<octo::SpriteAnimation::Frame> list, octo::LoopMode loop);
 
 private:

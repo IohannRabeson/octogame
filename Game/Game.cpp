@@ -8,6 +8,7 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
+#include "Bouibouik.hpp"
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -130,6 +131,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				octo->onCollision(GameObjectType::Elevator, collisionDirection);
 			}
 			break;
+		case GameObjectType::Bouibouik:
+				gameObjectCast<Bouibouik>(gameObject)->startBalle();
+			break;
 		case GameObjectType::Portal:
 				octo->usePortal(*gameObjectCast<Portal>(gameObject));
 			break;
@@ -164,7 +168,6 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 
 void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
 {
-	(void)octo;
 	(void)collisionDirection;
 	switch (gameObject->getObjectType())
 	{

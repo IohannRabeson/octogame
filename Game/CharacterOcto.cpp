@@ -88,7 +88,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
 		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
 		| static_cast<std::uint32_t>(GameObjectType::JumpNanoRobot)
-		| static_cast<std::uint32_t>(GameObjectType::Elevator);
+		| static_cast<std::uint32_t>(GameObjectType::Elevator)
+		| static_cast<std::uint32_t>(GameObjectType::Bouibouik);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
