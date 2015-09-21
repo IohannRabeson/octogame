@@ -39,18 +39,28 @@ private:
 	void	setup();
 	struct data{
 		data() :
-			nanoRobotCount(5u),
-			destination(Level::LevelTwo)
+			data(5u, Level::Default,
+					5u, 100u,
+					true, true)
 		{
 		}
-		data(std::size_t nanoRobot, Level biome) :
+		data(std::size_t nanoRobot, Level biome,
+				std::size_t musicVol, std::size_t soundVol,
+				bool fullscreen, bool vsync) :
 			nanoRobotCount(nanoRobot),
-			destination(biome)
+			destination(biome),
+			musicVol(musicVol),
+			soundVol(soundVol),
+			fullscreen(fullscreen),
+			vsync(vsync)
 		{
 		}
-
 		std::size_t		nanoRobotCount;
 		Level			destination;
+		std::size_t		musicVol;
+		std::size_t		soundVol;
+		bool			fullscreen;
+		bool			vsync;
 
 	};
 
