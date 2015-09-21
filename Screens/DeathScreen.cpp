@@ -3,7 +3,6 @@
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
-#include <Console.hpp>
 
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
@@ -94,9 +93,4 @@ void	DeathScreen::setSpriteSheet(octo::SpriteSheet const& spriteSheet)
 void	DeathScreen::setAnimation(octo::SpriteAnimation const& animation)
 {
 	m_sprite.setAnimation(animation);
-}
-
-bool	DeathScreen::onPressed(sf::Event::KeyEvent const&)
-{
-	return (true);
 }

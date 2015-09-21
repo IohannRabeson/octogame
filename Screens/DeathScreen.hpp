@@ -2,12 +2,10 @@
 # define DEATHSCREEN_HPP
 # include <AbstractState.hpp>
 # include <AnimatedSprite.hpp>
-# include <DefaultGraphicsListeners.hpp>
 
 # include <SFML/Graphics/Sprite.hpp>
 
-class DeathScreen : public octo::AbstractState,
-							 	 public octo::DefaultKeyboardListener
+class DeathScreen : public octo::AbstractState
 {
 public:
 	DeathScreen();
@@ -23,7 +21,6 @@ public:
 
 	void			setSpriteSheet(octo::SpriteSheet const& spriteSheet);
 	void			setAnimation(octo::SpriteAnimation const& animation);
-	bool			onPressed(sf::Event::KeyEvent const& event);
 private:
 	octo::AnimatedSprite		m_sprite;
 	octo::SpriteAnimation		m_animation;
