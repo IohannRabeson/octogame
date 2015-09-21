@@ -21,7 +21,9 @@ void MusicVolumeMenu::createMenus(void)
 	addMenu(L"7", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(L"8", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(L"9", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	setIndexCursor(9u);
+
+	m_volume = static_cast<std::size_t>(octo::Application::getAudioManager().getMusicVolume());
+	setIndexCursor(m_volume);
 }
 
 void MusicVolumeMenu::onSelection(void)

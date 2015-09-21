@@ -3,6 +3,7 @@
 #include "MusicVolumeMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "EmptyMenu.hpp"
+#include "Progress.hpp"
 
 #include <Application.hpp>
 #include <AudioManager.hpp>

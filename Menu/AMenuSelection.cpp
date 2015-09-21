@@ -69,7 +69,10 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 		setKeyboard(true);
 	}
 	else
+	{
+		m_indexSave = m_indexCursor;
 		setKeyboard(false);
+	}
 }
 
 
@@ -89,15 +92,9 @@ bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
-		{
-			setState(AMenu::State::Hide);
-			AMenu * backMenu = getBackMenu();
-			if (backMenu)
-				backMenu->setState(AMenu::State::Active);
-			break;
-		}
 		case sf::Keyboard::Escape:
 		{
+			m_indexCursor = m_indexSave;
 			setState(AMenu::State::Hide);
 			AMenu * backMenu = getBackMenu();
 			if (backMenu)
@@ -129,10 +126,6 @@ bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
 				break;
 			}
 			case sf::Keyboard::Right:
-			{
-				onSelection();
-				break;
-			}
 			case sf::Keyboard::Return:
 			{
 				onSelection();
