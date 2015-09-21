@@ -876,6 +876,8 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerGround.update(deltatime, camera);
 }
 
+
+
 void GroundManager::updateGameObjects(sf::Time frametime)
 {
 	for (auto & decor : m_instanceDecors)

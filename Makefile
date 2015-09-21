@@ -46,6 +46,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
+				Game/OctoSound.cpp						\
 				Game/Progress.cpp						\
 				Game/MusicPlayer.cpp					\
 
