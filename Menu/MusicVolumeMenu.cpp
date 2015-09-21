@@ -11,16 +11,16 @@ MusicVolumeMenu::MusicVolumeMenu(void)
 
 void MusicVolumeMenu::createMenus(void)
 {
-	addMenu("0", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("1", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("2", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("3", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("4", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("5", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("6", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("7", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("8", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("9", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"0", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"1", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"2", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"3", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"4", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"5", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"6", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"7", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"8", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"9", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	setIndexCursor(9u);
 }
 
