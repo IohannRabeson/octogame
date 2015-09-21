@@ -13,3 +13,4 @@ nano_slow_fall.oss=Umbrellllaaaaaaaaaaaa
 ju.oss=...Elle est nulle ma cape...
 fanny.oss=On dirait qu'il y a un truc la haut.
 npc_turban.oss="Tout casse!"
+guillaume.oss=Oublie pas que tu peux bouger la map ! je suis blond

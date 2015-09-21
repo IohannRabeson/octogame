@@ -66,6 +66,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/JuNpc.cpp							\
 				Npcs/FannyNpc.cpp						\
 				Npcs/TurbanNpc.cpp						\
+				Npcs/GuiNpc.cpp							\
 				Npcs/OldDesertStaticNpc.cpp				\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
