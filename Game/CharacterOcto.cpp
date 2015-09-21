@@ -204,11 +204,11 @@ void	CharacterOcto::setupAnimation()
 	m_slowFallAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_deathAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {35, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {36, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {37, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {38, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(1.4f), {39, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {35, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {36, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {37, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {38, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {39, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_deathAnimation.setLoop(octo::LoopMode::NoLoop);
 
@@ -438,7 +438,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_collisionElevatorEvent = false;
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
-	m_progress.setOctoPos(sf::Vector2f(m_sprite.getPosition().x, m_sprite.getPosition().y + m_sprite.getLocalSize().y));
+
 	m_ink.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
 	{
@@ -679,7 +679,13 @@ bool	CharacterOcto::endDeath()
 	if (m_sprite.getCurrentEvent() == Death)
 	{
 		if (m_sprite.isTerminated())
+		{
+			octo::Camera&			camera = octo::Application::getCamera();
+			sf::Vector2f			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 			m_progress.setDeath(true);
+			m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+			m_progress.setReverseSprite(m_originMove);
+		}
 		return false;
 	}
 	return true;

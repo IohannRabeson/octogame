@@ -10,24 +10,24 @@
 
 DeathScreen::DeathScreen() :
 	m_timeDeath(sf::Time::Zero),
-	m_timeDeathMax(sf::seconds(3.5f))
+	m_timeDeathMax(sf::seconds(2.13f))
 {
 	octo::SpriteAnimation::FrameList	frames;
 
 	frames.emplace_back(sf::seconds(1.f), 0);
-	frames.emplace_back(sf::seconds(0.2f), 1);
-	frames.emplace_back(sf::seconds(0.2f), 2);
-	frames.emplace_back(sf::seconds(0.2f), 3);
-	frames.emplace_back(sf::seconds(0.2f), 4);
-	frames.emplace_back(sf::seconds(0.2f), 5);
-	frames.emplace_back(sf::seconds(0.2f), 6);
-	frames.emplace_back(sf::seconds(0.2f), 7);
-	frames.emplace_back(sf::seconds(0.2f), 8);
-	frames.emplace_back(sf::seconds(0.2f), 9);
-	frames.emplace_back(sf::seconds(0.2f), 10);
-	frames.emplace_back(sf::seconds(0.2f), 11);
-	frames.emplace_back(sf::seconds(0.2f), 12);
-	frames.emplace_back(sf::seconds(0.2f), 13);
+	frames.emplace_back(sf::seconds(0.1f), 1);
+	frames.emplace_back(sf::seconds(0.1f), 2);
+	frames.emplace_back(sf::seconds(0.1f), 3);
+	frames.emplace_back(sf::seconds(0.1f), 4);
+	frames.emplace_back(sf::seconds(0.1f), 5);
+	frames.emplace_back(sf::seconds(0.1f), 6);
+	frames.emplace_back(sf::seconds(0.1f), 7);
+	frames.emplace_back(sf::seconds(0.1f), 8);
+	frames.emplace_back(sf::seconds(0.1f), 9);
+	frames.emplace_back(sf::seconds(0.1f), 10);
+	frames.emplace_back(sf::seconds(0.1f), 11);
+	frames.emplace_back(sf::seconds(0.1f), 12);
+	frames.emplace_back(sf::seconds(0.1f), 13);
 	m_animation.setFrames(frames);
 	m_animation.setLoop(octo::LoopMode::NoLoop);
 }
@@ -38,16 +38,22 @@ DeathScreen::~DeathScreen()
 
 void	DeathScreen::start()
 {
-	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	octo::Camera&			camera = octo::Application::getCamera();
+	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	sf::Vector2f const&		pos = Progress::getInstance().getOctoPos();
+	sf::Vector2f			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
+	sf::Vector2f			scale = sf::Vector2f(0.6f, 0.6f);
+
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_DEATH_OSS));
-	m_sprite.setPosition(pos.x, pos.y - m_sprite.getLocalSize().y);
 	m_sprite.setAnimation(m_animation);
-	m_sprite.setScale(0.6f, 0.6f);
 	m_sprite.play();
-	camera.setCenter(m_sprite.getGlobalBounds().left + m_sprite.getGlobalBounds().width / 2,
-					 m_sprite.getGlobalBounds().top + m_sprite.getGlobalBounds().height / 2);
+	if (Progress::getInstance().getReverseSprite())
+	{
+		scale.x *= -1.f;
+		m_sprite.setOrigin(m_sprite.getOrigin().x + m_sprite.getLocalSize().x, 0.f);
+	}
+	m_sprite.setScale(scale);
+	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
 }
 
 void	DeathScreen::pause()
