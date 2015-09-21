@@ -107,6 +107,30 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
+	m_decorFactory.registerCreator(HOUSE_ORANGE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_ORANGE_OSS, scale, position, 3u);
+			});
+	m_decorFactory.registerCreator(HOUSE_GREEN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_GREEN_OSS, scale, position, 5u);
+			});
+	m_decorFactory.registerCreator(HOUSE_RANDOM_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_RANDOM_2_OSS, scale, position, 2u);
+			});
+	m_decorFactory.registerCreator(HOUSE_RANDOM_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_RANDOM_1_OSS, scale, position, 2u);
+			});
+	m_decorFactory.registerCreator(HOUSE_RANDOM_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_RANDOM_OSS, scale, position, 3u);
+			});
+	m_decorFactory.registerCreator(HOUSE_LIGHT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_LIGHT_OSS, scale, position, 3u);
+			});
 	m_decorFactory.registerCreator(HOUSE_PUSSY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(HOUSE_PUSSY_OSS, scale, position, 4u);
