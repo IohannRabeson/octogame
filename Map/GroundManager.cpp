@@ -117,7 +117,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			});
 	m_decorFactory.registerCreator(FALL_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new InstanceDecor(FALL_SIGN_OSS, scale, position, 3u, 0.4f);
+				return new InstanceDecor(FALL_SIGN_OSS, scale, position, 4u, 0.4f);
 			});
 
 	// Get all the gameobjects from instances
