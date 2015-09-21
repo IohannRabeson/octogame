@@ -3,8 +3,9 @@
 #include "Tile.hpp"
 #include "ABiome.hpp"
 #include <Application.hpp>
-#include <Camera.hpp>
-#include <Console.hpp>
+#include <AudioManager.hpp>
+#include <GraphicsManager.hpp>
+
 #include <iostream>
 #include <fstream>
 
@@ -49,10 +50,24 @@ void	Progress::load(std::string const &filename)
 
 void	Progress::init()
 {
+	octo::AudioManager & audio = octo::Application::getAudioManager();
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+
+	audio.setMusicVolume(m_data.musicVol);
+	audio.setSoundVolume(m_data.soundVol);
+	graphics.setFullscreen(m_data.fullscreen);
+	graphics.setVerticalSyncEnabled(m_data.vsync);
 }
 
 void	Progress::save()
 {
+	octo::AudioManager & audio = octo::Application::getAudioManager();
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+
+	m_data.musicVol = audio.getMusicVolume() ;
+	m_data.soundVol = audio.getSoundVolume();
+	m_data.fullscreen = graphics.isFullscreen();
+	m_data.vsync = graphics.isVerticalSyncEnabled();
 	saveToFile();
 }
 
