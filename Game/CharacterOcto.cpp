@@ -981,7 +981,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	{
 		if (state != Fall)
 		{
-			if (state != StartJump)
+			if (state != StartJump && state != Jump && state != DoubleJump)
 				m_sprite.setNextEvent(Fall);
 		}
 	}
