@@ -10,8 +10,8 @@ ResolutionMenu::ResolutionMenu(void)
 
 void ResolutionMenu::createMenus(void)
 {
-	addMenu("1920 x 1080 x 32", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu("1280 x 720 x 32", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"1920 x 1080 x 32", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"1280 x 720 x 32", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	//setCharacterSize();
 }
 
