@@ -16,6 +16,7 @@
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
+#include "CedricNpc.hpp"
 #include "TurbanNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -178,6 +179,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::JuNpc:
 			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::CedricNpc:
+			gameObjectCast<CedricNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::FannyNpc:
 			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);
