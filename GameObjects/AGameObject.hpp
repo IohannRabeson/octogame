@@ -22,10 +22,11 @@ enum class GameObjectType
 	OldDesertStaticNpc = 32768u,
 	Bouibouik = 65536u,
 	GuiNpc = 131072u,
-	Tent = 65537u,
-	FannyNpc = 131070u,
-	Water = 123u,
-	TurbanNpc = 524280
+	FannyNpc = 262144,
+	TurbanNpc = 524288,
+	Tent = 129u,
+	Firecamp = 130u,
+	Water = 131u
 };
 
 /*!

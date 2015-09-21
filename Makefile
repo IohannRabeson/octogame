@@ -58,6 +58,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Tent.cpp					\
 				GameObjects/Water.cpp					\
 				GameObjects/InstanceDecor.cpp			\
+				GameObjects/Firecamp.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\

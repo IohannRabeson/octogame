@@ -40,7 +40,7 @@ private:
 	struct data{
 		data() :
 			nanoRobotCount(5u),
-			destination(Level::Default)
+			destination(Level::LevelTwo)
 		{
 		}
 		data(std::size_t nanoRobot, Level biome) :

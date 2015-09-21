@@ -18,6 +18,7 @@
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
+#include "Firecamp.hpp"
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -109,6 +110,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_decorFactory.registerCreator(HOUSE_PUSSY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(HOUSE_PUSSY_OSS, scale, position, 4u);
+			});
+	m_decorFactory.registerCreator(FIRECAMP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Firecamp(scale, position);
 			});
 
 	// Get all the gameobjects from instances
