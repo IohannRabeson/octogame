@@ -438,8 +438,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_collisionElevatorEvent = false;
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
-	m_progess.setOctoPos(m_sprite.getPosition());
-
+	m_progress.setOctoPos(sf::Vector2f(m_sprite.getPosition().x, m_sprite.getPosition().y + m_sprite.getLocalSize().y));
 	m_ink.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
 	{
@@ -679,7 +678,7 @@ bool	CharacterOcto::endDeath()
 {
 	if (m_sprite.getCurrentEvent() == Death)
 	{
-		if (m_spritem_sprite.getPosition().isTerminated())
+		if (m_sprite.isTerminated())
 			m_progress.setDeath(true);
 		return false;
 	}

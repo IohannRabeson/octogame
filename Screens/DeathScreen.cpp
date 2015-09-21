@@ -6,6 +6,7 @@
 #include <Console.hpp>
 
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 
 DeathScreen::DeathScreen() :
 	m_timeDeath(sf::Time::Zero),
@@ -39,8 +40,9 @@ void	DeathScreen::start()
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	octo::Camera&			camera = octo::Application::getCamera();
-
+	sf::Vector2f const&		pos = Progress::getInstance().getOctoPos();
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_DEATH_OSS));
+	m_sprite.setPosition(pos.x, pos.y - m_sprite.getLocalSize().y);
 	m_sprite.setAnimation(m_animation);
 	m_sprite.setScale(0.6f, 0.6f);
 	m_sprite.play();
