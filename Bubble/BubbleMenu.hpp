@@ -20,7 +20,7 @@ public:
 	BubbleMenu(void);
 	virtual ~BubbleMenu(void) = default;
 
-	virtual void						setup(std::vector<std::string> const & subMenuTitle,
+	virtual void						setup(std::vector<std::wstring> const & subMenuTitle,
 											  sf::Color const & color,
 											  std::size_t characterSize = 0u);
 

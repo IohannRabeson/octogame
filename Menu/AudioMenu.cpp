@@ -40,8 +40,8 @@ AudioMenu::AudioMenu(void)
 
 void AudioMenu::createMenus(void)
 {
-	addMenu("Musique", std::unique_ptr<MusicVolumeMenu>(new MusicVolumeMenu()));
-	addMenu("Son", std::unique_ptr<SoundVolumeMenu>(new SoundVolumeMenu()));
-	addMenu("I <3", std::unique_ptr<MusicYesNo>(new MusicYesNo()));
+	addMenu(L"Musique", std::unique_ptr<MusicVolumeMenu>(new MusicVolumeMenu()));
+	addMenu(L"Son", std::unique_ptr<SoundVolumeMenu>(new SoundVolumeMenu()));
+	addMenu(L"I <3", std::unique_ptr<MusicYesNo>(new MusicYesNo()));
 }
 
