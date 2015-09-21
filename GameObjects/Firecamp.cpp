@@ -13,13 +13,13 @@ Firecamp::Firecamp(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_spriteFire.rotate(90);
 
 	octo::SpriteAnimation::FrameList	frames;
-	frames.emplace_back(sf::seconds(0.2f), 0u);
-	frames.emplace_back(sf::seconds(0.2f), 1u);
-	frames.emplace_back(sf::seconds(0.2f), 2u);
-	frames.emplace_back(sf::seconds(0.2f), 3u);
-	frames.emplace_back(sf::seconds(0.2f), 4u);
-	frames.emplace_back(sf::seconds(0.2f), 5u);
-	frames.emplace_back(sf::seconds(0.2f), 6u);
+	frames.emplace_back(sf::seconds(0.1f), 0u);
+	frames.emplace_back(sf::seconds(0.1f), 1u);
+	frames.emplace_back(sf::seconds(0.1f), 2u);
+	frames.emplace_back(sf::seconds(0.1f), 3u);
+	frames.emplace_back(sf::seconds(0.1f), 4u);
+	frames.emplace_back(sf::seconds(0.1f), 5u);
+	frames.emplace_back(sf::seconds(0.1f), 6u);
 	m_animationFire.setFrames(frames);
 	m_animationFire.setLoop(octo::LoopMode::Loop);
 	m_spriteFire.setAnimation(m_animationFire);
