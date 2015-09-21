@@ -1,6 +1,7 @@
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
+#include "OctoSound.hpp"
 #include "ElevatorStream.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -45,6 +46,7 @@ CharacterOcto::CharacterOcto() :
 	m_collisionElevatorEvent(false),
 	m_doScale(false)
 {
+	m_sound.reset(new OctoSound());
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 
@@ -97,6 +99,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::uint32_t>(GameObjectType::Elevator)
 		| static_cast<std::uint32_t>(GameObjectType::CedricNpc)
 		| static_cast<std::uint32_t>(GameObjectType::FannyNpc)
+		| static_cast<std::uint32_t>(GameObjectType::GuiNpc)
 		| static_cast<std::uint32_t>(GameObjectType::JuNpc)
 		| static_cast<std::uint32_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
@@ -183,13 +186,13 @@ void	CharacterOcto::setupAnimation()
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_danceWithMusicAnimation.setFrames({
-				Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {78, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {79, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {78, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {79, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_danceWithMusicAnimation.setLoop(octo::LoopMode::NoLoop);
 
@@ -318,6 +321,7 @@ void	CharacterOcto::setupMachine()
 
 	machine.addTransition(Jump, state13, state3);
 
+	machine.addTransition(DoubleJump, state0, state4);
 	machine.addTransition(DoubleJump, state1, state4);
 	machine.addTransition(DoubleJump, state2, state4);
 	machine.addTransition(DoubleJump, state3, state4);
@@ -380,23 +384,27 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartElevator, state6, state10);
 	machine.addTransition(StartElevator, state7, state10);
 	machine.addTransition(StartElevator, state10, state10);
+	machine.addTransition(StartElevator, state11, state10);
 	machine.addTransition(StartElevator, state12, state10);
 	machine.addTransition(StartElevator, state13, state10);
 
 	machine.addTransition(Elevator, state10, state11);
+	//TODO fix
+	machine.addTransition(Elevator, state13, state11);
 
 	machine.addTransition(Idle, state0, state0);
 	machine.addTransition(Idle, state1, state0);
 	machine.addTransition(Idle, state2, state0);
 	machine.addTransition(Idle, state3, state0);
-	machine.addTransition(Idle, state13, state0);
 	machine.addTransition(Idle, state4, state0);
 	machine.addTransition(Idle, state5, state0);
 	machine.addTransition(Idle, state6, state0);
-	machine.addTransition(Idle, state12, state0);
 	machine.addTransition(Idle, state7, state0);
 	machine.addTransition(Idle, state8, state0);
 	machine.addTransition(Idle, state9, state0);
+	machine.addTransition(Idle, state10, state0);
+	machine.addTransition(Idle, state12, state0);
+	machine.addTransition(Idle, state13, state0);
 
 	m_sprite.setMachine(machine);
 }
@@ -420,7 +428,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 		commitPhysicsToGraphics();
 		m_sprite.update(frameTime);
 	}
-	m_previousTop = m_box->getGlobalBounds().top;
+	resetTimeEvent();
+	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()));
 
 	if (!m_collisionElevatorEvent && m_progress.canRepair())
 		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
@@ -428,6 +437,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionElevatorEvent = false;
+	m_previousTop = m_box->getGlobalBounds().top;
+	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	m_ink.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
@@ -460,14 +471,20 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 			break;
 		case DoubleJump:
 			m_timeEventInk += frameTime;
-			m_timeEventFall = sf::Time::Zero;
 			break;
 		default:
-			m_timeEventFall = sf::Time::Zero;
-			m_timeEventIdle = sf::Time::Zero;
-			m_timeEventDeath = sf::Time::Zero;
-			m_timeEventInk = sf::Time::Zero;
 			break;
+	}
+}
+
+void	CharacterOcto::resetTimeEvent()
+{
+	if (m_prevEvent != m_sprite.getCurrentEvent())
+	{
+		m_timeEventFall = sf::Time::Zero;
+		m_timeEventIdle = sf::Time::Zero;
+		m_timeEventDeath = sf::Time::Zero;
+		m_timeEventInk = sf::Time::Zero;
 	}
 }
 
@@ -804,14 +821,24 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 void	CharacterOcto::commitEnvironmentToPhysics()
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
+	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	if (inWater())
 	{
-		velocity.y *= 0.7;
-		velocity.x *= 0.7;
-		if (m_sprite.getCurrentEvent() == Fall)
+		switch (state)
 		{
-			velocity.y = m_pixelSecondSlowFall;
+			case SlowFall:
+				velocity.x *= 1.4f;
+				velocity.y *= 1.5f;
+				break;
+			case Fall:
+				velocity.x *= 0.7f;
+				velocity.y = m_pixelSecondSlowFall;
+				break;
+			default:
+				velocity.x *= 0.7f;
+				velocity.y *= 0.7f;
+				break;
 		}
 	}
 	m_box->setVelocity(velocity);
@@ -955,7 +982,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	{
 		if (state != Fall)
 		{
-			if (state != StartJump)
+			if (state != StartJump && state != Jump && state != DoubleJump)
 				m_sprite.setNextEvent(Fall);
 		}
 	}
