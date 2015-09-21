@@ -22,7 +22,6 @@ Bouibouik::Bouibouik(void) :
 					Frame(sf::seconds(0.2f), 1u)}, octo::LoopMode::Loop);
 	setupSmoke();
 
-	octo::AnimatedSprite & sprite = getSprite();
 	m_box->setGameObject(this);
 	m_box->setRadius(200.f);
 	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Bouibouik));
