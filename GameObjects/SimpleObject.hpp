@@ -25,6 +25,7 @@ protected:
 	SimpleObject(ResourceKey key, ResourceKey shader, float duration);
 
 	sf::Shader & getShader(void);
+	octo::AnimatedSprite const & getSprite(void) const;
 	bool getStartBalle(void) const;
 	bool getCollideWithOcto(void) const;
 	sf::Time getTimer(void) const;

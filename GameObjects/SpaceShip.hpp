@@ -24,7 +24,7 @@ public:
 	void setPosition(sf::Vector2f const & position);
 
 	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	octo::CharacterSprite		m_sprite;

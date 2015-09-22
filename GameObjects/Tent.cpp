@@ -1,5 +1,6 @@
 #include "Tent.hpp"
 #include <Interpolations.hpp>
+#include <SFML/Graphics.hpp>
 
 Tent::Tent(void) :
 	SimpleObject(TENT_OSS, PIXELATE_FRAG, 20.f)
@@ -33,4 +34,12 @@ void Tent::update(sf::Time frameTime)
 void Tent::setPosition(sf::Vector2f const & position)
 {
 	SimpleObject::setPosition(position - sf::Vector2f(0.f, 180.f));
+}
+
+void Tent::draw(sf::RenderTarget &, sf::RenderStates) const
+{}
+
+void Tent::drawFront(sf::RenderTarget & render, sf::RenderStates) const
+{
+	render.draw(getSprite());
 }
