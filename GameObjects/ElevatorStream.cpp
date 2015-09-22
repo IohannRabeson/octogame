@@ -165,8 +165,8 @@ ElevatorStream::ElevatorStream() :
 	m_box->setGameObject(this);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setApplyGravity(false);
-	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Elevator));
-	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player) | static_cast<std::uint32_t>(GameObjectType::PlayerEvent));
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Elevator));
+	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	m_box->setSize(150.f, 0.f);
 	m_particles->setWidth(150.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);

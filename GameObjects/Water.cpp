@@ -12,11 +12,11 @@ Water::Water(ABiome & biome) :
 	m_limit(1000.f),
 	m_shaderIndex(0u)
 {
-	m_rectLeft.setSize(sf::Vector2f(m_width, 1000.f));
+	m_rectLeft.setSize(sf::Vector2f(m_width, 10000.f));
 	m_rectLeft.setFillColor(sf::Color(0, 0, 200, 50));
 	m_rectLeft.setOutlineColor(sf::Color::Red);
 
-	m_rectRight.setSize(sf::Vector2f(m_width, 1000.f));
+	m_rectRight.setSize(sf::Vector2f(m_width, 10000.f));
 	m_rectRight.setFillColor(sf::Color(0, 0, 200, 50));
 	m_rectRight.setOutlineColor(sf::Color::Red);
 
@@ -68,7 +68,7 @@ void Water::update(sf::Time frameTime)
 	m_shader.setParameter("time", m_waveCycle.asSeconds());
 	m_shader.setParameter("distortionFactor", 0.15f);
 	m_shader.setParameter("riseFactor", 0.1f);
-	float limit = rect.height - (1000.f - rect.top);
+	float limit = rect.height - (m_limit - rect.top);
 	m_shader.setParameter("limit", limit);
 	m_shader.setParameter("offset_limit", limit / rect.height);
 	m_shader.setParameter("height", 1.f - (limit / rect.height));

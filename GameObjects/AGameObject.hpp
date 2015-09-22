@@ -24,8 +24,8 @@ enum class GameObjectType
 	GuiNpc = 131072u,
 	FannyNpc = 262144,
 	TurbanNpc = 524288,
-	Tent = 129u,
-	Firecamp = 130u,
+	Tent = 1048576u,
+	Firecamp = 2097152u,
 	Water = 131u
 };
 
