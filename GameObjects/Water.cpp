@@ -70,8 +70,11 @@ void Water::update(sf::Time frameTime)
 	m_shader.setParameter("riseFactor", 0.1f);
 	float limit = rect.height - (m_limit - rect.top);
 	m_shader.setParameter("limit", limit);
-	m_shader.setParameter("offset_limit", limit / rect.height);
-	m_shader.setParameter("height", 1.f - (limit / rect.height));
+	float ratio = limit / rect.height;
+	if (ratio > 1.f)
+		ratio = 1.f;
+	m_shader.setParameter("offset_limit", ratio);
+	m_shader.setParameter("height", 1.f - ratio);
 }
 
 void Water::draw(sf::RenderTarget & render, sf::RenderStates states) const
