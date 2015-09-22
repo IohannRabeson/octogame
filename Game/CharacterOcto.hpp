@@ -69,7 +69,7 @@ private:
 	bool	dieFall();
 	bool	endDeath();
 	void	dance();
-	bool	inWater();
+	void	inWater();
 	void	randomJumpAnimation();
 	void	timeEvent(sf::Time frameTime);
 	void	resetTimeEvent();
@@ -151,6 +151,7 @@ private:
 	bool						m_collisionElevator;
 	bool						m_collisionElevatorEvent;
 	bool						m_doScale;
+	bool						m_inWater;
 	SmokeSystem					m_ink;
 	Events						m_prevEvent;
 };
