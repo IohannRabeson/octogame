@@ -59,6 +59,11 @@ sf::Shader & SimpleObject::getShader(void)
 	return m_shader;
 }
 
+octo::AnimatedSprite & SimpleObject::getSprite(void)
+{
+	return m_sprite;
+}
+
 octo::AnimatedSprite const & SimpleObject::getSprite(void) const
 {
 	return m_sprite;
