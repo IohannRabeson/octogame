@@ -13,6 +13,7 @@
 #ifndef DROPSYSTEM_HPP
 # define DROPSYSTEM_HPP
 
+# include "ABiome.hpp"
 # include <ParticleSystem.hpp>
 
 # include <random>
@@ -36,7 +37,7 @@ public:
 	/*!	Define drop properties
 	 *
 	 */
-	void	setDrop(sf::Vector2f const & dropSize, float speed, sf::Color const & color);
+	void	setDrop(sf::Vector2f const & dropSize, float speed, sf::Color const & color, ABiome & biome);
 
 	/*!	Define the rectangle where the drops will appears. Drops are destroy when their y position is lower than the bottom of camera.
 	 *
@@ -69,6 +70,7 @@ private:
 	sf::Time					m_dropInterval;
 	sf::Time					m_dropTimer;
 	bool						m_canCreateDrop;
+	float						m_waterLevel;
 };
 
 #endif
