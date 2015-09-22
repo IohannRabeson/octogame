@@ -17,13 +17,15 @@ private:
 	std::shared_ptr<sf::Sound>	m_sound;
 	Events						m_prevEvent;
 
-	sf::Time					m_timeEventFall;
-	sf::Time					m_timeEventIdle;
-	sf::Time					m_timeEventElevator;
-	bool						m_inWater;
-	bool						m_onGround;
-	float						m_volumeEffect;
-	float						m_volumeVoice;
+	sf::Time										m_timeEventFall;
+	sf::Time										m_timeEventIdle;
+	sf::Time										m_timeEventElevator;
+	bool											m_inWater;
+	bool											m_onGround;
+	float											m_volumeEffect;
+	float											m_volumeVoice;
+	std::mt19937									m_engine;
+	std::uniform_real_distribution<float>			m_pitchDistribution;
 };
 
 #endif

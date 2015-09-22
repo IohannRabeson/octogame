@@ -9,7 +9,9 @@ CharacterOcto::OctoSound::OctoSound() :
 	m_inWater(false),
 	m_onGround(false),
 	m_volumeEffect(0.3f),
-	m_volumeVoice(0.5f)
+	m_volumeVoice(0.5f),
+	m_engine(std::time(0)),
+	m_pitchDistribution(0.5f, 1.5f)
 {
 }
 
@@ -56,7 +58,8 @@ void	CharacterOcto::OctoSound::startEvent(Events event)
 				audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_WAV), m_volumeEffect);
 			break;
 		case DoubleJump:
-				audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_WAV), m_volumeEffect);
+			audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_WAV), m_volumeEffect,
+					m_pitchDistribution(m_engine));
 			break;
 		case Death:
 			m_sound = audio.playSound(resources.getSound(OCTO_DEATH_WAV), m_volumeVoice);
