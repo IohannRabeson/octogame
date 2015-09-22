@@ -42,6 +42,7 @@ CharacterOcto::CharacterOcto() :
 	m_keySpace(false),
 	m_keyUp(false),
 	m_keyAction(false),
+	m_keyPortal(false),
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false),
@@ -565,7 +566,7 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 
 void	CharacterOcto::usePortal(Portal & portal)
 {
-	if (m_keyUp)
+	if (m_keyPortal)
 	{
 		m_progress.setNextDestination(portal.getDestination());
 	}
@@ -850,33 +851,6 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 	m_box->setVelocity(velocity);
 }
 
-bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
-{
-	if (m_sprite.getCurrentEvent() == Death)
-		return true;
-	switch (event.code)
-	{
-		case sf::Keyboard::Left:
-			caseLeft();
-			break;
-		case sf::Keyboard::Right:
-			caseRight();
-			break;
-		case sf::Keyboard::Space:
-			caseSpace();
-			break;
-		case sf::Keyboard::Up:
-			caseUp();
-			break;
-		case sf::Keyboard::Q:
-			caseAction();
-			break;
-		default:
-			break;
-	}
-	return (true);
-}
-
 void	CharacterOcto::caseLeft()
 {
 	if (!m_keyLeft)
@@ -951,6 +925,44 @@ void CharacterOcto::caseAction()
 	}
 }
 
+void CharacterOcto::casePortal()
+{
+	if (!m_keyPortal)
+	{
+		m_keyPortal = true;
+	}
+}
+
+bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
+{
+	if (m_sprite.getCurrentEvent() == Death)
+		return true;
+	switch (event.code)
+	{
+		case sf::Keyboard::Left:
+			caseLeft();
+			break;
+		case sf::Keyboard::Right:
+			caseRight();
+			break;
+		case sf::Keyboard::Space:
+			caseSpace();
+			break;
+		case sf::Keyboard::Up:
+			caseUp();
+			break;
+		case sf::Keyboard::E:
+			caseAction();
+			break;
+		case sf::Keyboard::D:
+			casePortal();
+			break;
+		default:
+			break;
+	}
+	return (true);
+}
+
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
@@ -975,8 +987,11 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Up:
 			m_keyUp = false;
 			break;
-		case sf::Keyboard::Q:
+		case sf::Keyboard::E:
 			m_keyAction = false;
+			break;
+		case sf::Keyboard::D:
+			m_keyPortal = false;
 			break;
 		default:
 			otherKeyReleased = true;

@@ -217,11 +217,11 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 {
 	switch (event.code)
 	{
-		case sf::Keyboard::E:
-			if (Progress::getInstance().canMoveMap()) //TODO: move into octo
+		case sf::Keyboard::S:
+			if (Progress::getInstance().canMoveMap())
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 		break;
-		case sf::Keyboard::R:
+		case sf::Keyboard::F:
 			if (Progress::getInstance().canMoveMap())
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
 		break;
