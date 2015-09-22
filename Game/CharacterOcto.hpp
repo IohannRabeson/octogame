@@ -149,6 +149,7 @@ private:
 	bool						m_collisionElevator;
 	bool						m_collisionElevatorEvent;
 	bool						m_doScale;
+	bool						m_inWater;
 	SmokeSystem					m_ink;
 	Events						m_prevEvent;
 };

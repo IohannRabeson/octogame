@@ -45,7 +45,8 @@ CharacterOcto::CharacterOcto() :
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false),
-	m_doScale(false)
+	m_doScale(false),
+	m_inWater(false)
 {
 	m_sound.reset(new OctoSound());
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
@@ -321,6 +322,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state4, state13);
 	machine.addTransition(StartJump, state5, state13);
 	machine.addTransition(StartJump, state12, state13);
+	machine.addTransition(StartJump, state13, state13);
 
 	machine.addTransition(Jump, state13, state3);
 
@@ -715,8 +717,12 @@ bool	CharacterOcto::inWater()
 {
 	if (m_waterLevel != -1.f && m_box->getBaryCenter().y > m_waterLevel)
 	{
+		if (!m_inWater)
+			m_numberOfJump = 0;
+		m_inWater = true;
 		return true;
 	}
+	m_inWater = false;
 	return false;
 }
 
@@ -841,8 +847,8 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 				velocity.y = m_pixelSecondSlowFall;
 				break;
 			default:
-				velocity.x *= 0.7f;
-				velocity.y *= 0.7f;
+				velocity.x *= 0.8f;
+				velocity.y *= 0.8f;
 				break;
 		}
 	}
@@ -915,6 +921,8 @@ void	CharacterOcto::caseSpace()
 			m_sprite.setNextEvent(StartJump);
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 1;
+			if (!m_progress.canDoubleJump() && inWater())
+				m_numberOfJump = 0;
 		}
 		else if (m_numberOfJump == 1 && m_progress.canDoubleJump())
 		{
