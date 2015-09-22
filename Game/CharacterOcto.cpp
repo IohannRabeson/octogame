@@ -801,8 +801,8 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 			velocity.x = m_pixelSecondWalk;
 		}
 	}
-
-	if (m_keySpace && (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump || m_sprite.getCurrentEvent() == StartJump))
+	//TODO
+	if (m_keySpace && m_numberOfJump < 3 && (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump || m_sprite.getCurrentEvent() == StartJump))
 	{
 		velocity.y = m_jumpVelocity;
 		m_jumpVelocity += m_pixelSecondMultiplier * frametime;
