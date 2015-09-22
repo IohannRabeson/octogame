@@ -9,7 +9,6 @@
 # include "CircleShape.hpp"
 # include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
-
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 
@@ -70,9 +69,10 @@ private:
 	bool	dieFall();
 	bool	endDeath();
 	void	dance();
-	bool	inWater();
+	void	inWater();
 	void	randomJumpAnimation();
 	void	timeEvent(sf::Time frameTime);
+	void	resetTimeEvent();
 	void	setupAnimation();
 	void	setupMachine();
 	void	collisionTileUpdate();
@@ -87,8 +87,11 @@ private:
 	void	caseSpace();
 	void	caseUp();
 	void	caseAction();
+	void	casePortal();
 
 private:
+	class OctoSound;
+	std::unique_ptr<OctoSound>	m_sound;
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
@@ -143,11 +146,14 @@ private:
 	bool						m_keySpace;
 	bool						m_keyUp;
 	bool						m_keyAction;
+	bool						m_keyPortal;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
 	bool						m_collisionElevatorEvent;
 	bool						m_doScale;
+	bool						m_inWater;
 	SmokeSystem					m_ink;
+	Events						m_prevEvent;
 };
 
 #endif

@@ -43,9 +43,11 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/FsmDemoScreen.cpp				\
 				Screens/ElevatorStreamDemo.cpp			\
 				Screens/TransitionScreen.cpp			\
+				Screens/DeathScreen.cpp					\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
+				Game/OctoSound.cpp						\
 				Game/Progress.cpp						\
 				Game/MusicPlayer.cpp					\
 
@@ -58,6 +60,8 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Tent.cpp					\
 				GameObjects/Water.cpp					\
 				GameObjects/InstanceDecor.cpp			\
+				GameObjects/Firecamp.cpp				\
+				GameObjects/Concert.cpp					\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
@@ -66,6 +70,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/JuNpc.cpp							\
 				Npcs/FannyNpc.cpp						\
 				Npcs/TurbanNpc.cpp						\
+				Npcs/GuiNpc.cpp							\
 				Npcs/OldDesertStaticNpc.cpp				\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
@@ -134,6 +139,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
 				Decors/SmokeSystem.cpp					\
+				Decors/MusicSystem.cpp					\
 				Decors/SparkSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\

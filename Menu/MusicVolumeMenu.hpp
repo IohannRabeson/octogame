@@ -11,6 +11,8 @@ public:
 
 	void createMenus();
 	void onSelection();
+private:
+	std::size_t m_volume;
 };
 
 #endif

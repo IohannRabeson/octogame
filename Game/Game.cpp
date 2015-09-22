@@ -8,7 +8,9 @@
 #include "AShape.hpp"
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
-#include "Progress.hpp"
+#include "Bouibouik.hpp"
+#include "Tent.hpp"
+#include "Concert.hpp"
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -16,6 +18,8 @@
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
+#include "CedricNpc.hpp"
+#include "GuiNpc.hpp"
 #include "TurbanNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -129,6 +133,15 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				octo->onCollision(GameObjectType::Elevator, collisionDirection);
 			}
 			break;
+		case GameObjectType::Tent:
+				gameObjectCast<Tent>(gameObject)->startBalle();
+			break;
+		case GameObjectType::Concert:
+				gameObjectCast<Concert>(gameObject)->startBalle();
+			break;
+		case GameObjectType::Bouibouik:
+				gameObjectCast<Bouibouik>(gameObject)->startBalle();
+			break;
 		case GameObjectType::Portal:
 				octo->usePortal(*gameObjectCast<Portal>(gameObject));
 			break;
@@ -163,7 +176,6 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 
 void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection)
 {
-	(void)octo;
 	(void)collisionDirection;
 	switch (gameObject->getObjectType())
 	{
@@ -179,8 +191,14 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::JuNpc:
 			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::CedricNpc:
+			gameObjectCast<CedricNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::FannyNpc:
 			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::GuiNpc:
+			gameObjectCast<GuiNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::TurbanNpc:
 			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
@@ -203,11 +221,11 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 {
 	switch (event.code)
 	{
-		case sf::Keyboard::E:
-			if (Progress::getInstance().canMoveMap()) //TODO: move into octo
+		case sf::Keyboard::S:
+			if (Progress::getInstance().canMoveMap())
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 		break;
-		case sf::Keyboard::R:
+		case sf::Keyboard::F:
 			if (Progress::getInstance().canMoveMap())
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
 		break;

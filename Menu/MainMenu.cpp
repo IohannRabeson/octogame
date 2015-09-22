@@ -19,9 +19,9 @@ MainMenu::MainMenu(void)
 
 void MainMenu::createMenus(void)
 {
-	addMenu("Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
-	addMenu("Controles", std::unique_ptr<ControlMenu>(new ControlMenu()));
-	addMenu("Quitter", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+	addMenu(L"Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
+	addMenu(L"Contrôles", std::unique_ptr<ControlMenu>(new ControlMenu()));
+	addMenu(L"Quitter", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 	setCharacterSize(30);
 	setBubbleType(ABubble::Type::Think);
 }

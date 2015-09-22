@@ -28,6 +28,12 @@ public:
 	bool				changeLevel() const;
 	void				levelChanged();
 
+	inline void					setOctoPos(sf::Vector2f const & position){ m_octoPos = position; }
+	inline sf::Vector2f const&	getOctoPos(){ return m_octoPos; }
+
+	inline void		setReverseSprite(bool reverse){ m_reverseSprite = reverse; }
+	inline bool		getReverseSprite(){ return m_reverseSprite; }
+
 	void				load(std::string const & filename);
 	void				save();
 	void				reset();
@@ -39,18 +45,28 @@ private:
 	void	setup();
 	struct data{
 		data() :
-			nanoRobotCount(5u),
-			destination(Level::Default)
+			data(3u, Level::LevelThree,
+					5u, 100u,
+					true, true)
 		{
 		}
-		data(std::size_t nanoRobot, Level biome) :
+		data(std::size_t nanoRobot, Level biome,
+				std::size_t musicVol, std::size_t soundVol,
+				bool fullscreen, bool vsync) :
 			nanoRobotCount(nanoRobot),
-			destination(biome)
+			destination(biome),
+			musicVol(musicVol),
+			soundVol(soundVol),
+			fullscreen(fullscreen),
+			vsync(vsync)
 		{
 		}
-
 		std::size_t		nanoRobotCount;
 		Level			destination;
+		std::size_t		musicVol;
+		std::size_t		soundVol;
+		bool			fullscreen;
+		bool			vsync;
 
 	};
 
@@ -59,7 +75,8 @@ private:
 	data									m_data;
 	bool									m_newSave;
 	bool									m_changeLevel;
-
+	bool									m_reverseSprite;
+	sf::Vector2f							m_octoPos;
 };
 
 #endif

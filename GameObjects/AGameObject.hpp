@@ -20,11 +20,14 @@ enum class GameObjectType
 	FranfranNpc = 8192u,
 	JuNpc = 16384u,
 	OldDesertStaticNpc = 32768u,
-	Bouibouik = 65535u,
-	Tent = 65537u,
-	FannyNpc = 131070u,
-	Water = 123u,
-	TurbanNpc = 524280
+	Bouibouik = 65536u,
+	GuiNpc = 131072u,
+	FannyNpc = 262144,
+	TurbanNpc = 524288,
+	Tent = 1048576u,
+	Firecamp = 2097152u,
+	Concert = 4194304u,
+	Water = 131u
 };
 
 /*!

@@ -13,10 +13,13 @@
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "TurbanNpc.hpp"
+#include "GuiNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
+#include "Concert.hpp"
+#include "Firecamp.hpp"
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -101,12 +104,45 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
+	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
+	m_decorFactory.registerCreator(HOUSE_ORANGE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_ORANGE_OSS, scale, position, 3u);
+			});
+	m_decorFactory.registerCreator(HOUSE_GREEN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_GREEN_OSS, scale, position, 5u);
+			});
+	m_decorFactory.registerCreator(HOUSE_RANDOM_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_RANDOM_2_OSS, scale, position, 2u);
+			});
+	m_decorFactory.registerCreator(HOUSE_RANDOM_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_RANDOM_1_OSS, scale, position, 2u);
+			});
+	m_decorFactory.registerCreator(HOUSE_RANDOM_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_RANDOM_OSS, scale, position, 3u);
+			});
+	m_decorFactory.registerCreator(HOUSE_LIGHT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_LIGHT_OSS, scale, position, 3u);
+			});
 	m_decorFactory.registerCreator(HOUSE_PUSSY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(HOUSE_PUSSY_OSS, scale, position, 4u);
+			});
+	m_decorFactory.registerCreator(FIRECAMP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Firecamp(scale, position);
+			});
+	m_decorFactory.registerCreator(FALL_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(FALL_SIGN_OSS, scale, position, 4u, 0.4f);
 			});
 
 	// Get all the gameobjects from instances
@@ -233,7 +269,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, oldDesertStatic);
 				}
 				break;
-
 			case GameObjectType::RepairNanoRobot:
 					if (!Progress::getInstance().canRepair())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
@@ -265,6 +300,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::Tent:
 				{
 					Tent * simple = new Tent();
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::Concert:
+				{
+					Concert * simple = new Concert();
 					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
@@ -869,6 +910,8 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerGround.update(deltatime, camera);
 }
 
+
+
 void GroundManager::updateGameObjects(sf::Time frametime)
 {
 	for (auto & decor : m_instanceDecors)
@@ -938,6 +981,10 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 	render.draw(m_decorManagerBack, states);
 	for (auto & decor : m_instanceDecors)
 		decor->draw(render, states);
+	for (auto & objectHigh : m_otherObjectsHigh)
+		objectHigh.m_gameObject->draw(render, states);
+	for (auto & objectLow : m_otherObjectsLow)
+		objectLow.m_gameObject->draw(render, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->draw(render, states);
 	for (auto & portal : m_portals)
@@ -953,9 +1000,9 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render, states);
 	for (auto & objectHigh : m_otherObjectsHigh)
-		objectHigh.m_gameObject->draw(render, states);
+		objectHigh.m_gameObject->drawFront(render, states);
 	for (auto & objectLow : m_otherObjectsLow)
-		objectLow.m_gameObject->draw(render, states);
+		objectLow.m_gameObject->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);

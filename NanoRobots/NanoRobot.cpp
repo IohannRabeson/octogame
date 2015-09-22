@@ -25,7 +25,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t 
 
 	m_box->setRadius(100.f);
 	m_box->setType(AShape::Type::e_trigger);
-	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player));
+	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
 	m_box->setApplyGravity(false);
 
 	m_swarm.setPositionBehavior(m_positionBehavior);
@@ -65,7 +65,7 @@ NanoRobot::~NanoRobot(void)
 void NanoRobot::setup(AGameObjectBase * gameObject)
 {
 	m_box->setGameObject(gameObject);
-	m_box->setCollisionType(static_cast<std::uint32_t>(gameObject->getObjectType()));
+	m_box->setCollisionType(static_cast<std::size_t>(gameObject->getObjectType()));
 }
 
 void NanoRobot::addMapOffset(float x, float y)

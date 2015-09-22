@@ -9,10 +9,10 @@
 class InstanceDecor : public IPlaceable
 {
 public:
-	InstanceDecor(ResourceKey key, sf::Vector2f const & scale, sf::Vector2f const & position, std::size_t nbFrames);
+	InstanceDecor(ResourceKey key, sf::Vector2f const & scale, sf::Vector2f const & position, std::size_t nbFrames, float frameDuration = 0.2f);
 	virtual ~InstanceDecor(void);
 
-	void addMapOffset(float x, float y);
+	virtual void addMapOffset(float x, float y);
 	sf::Vector2f const & getPosition(void) const;
 	virtual void setPosition(sf::Vector2f const & position);
 

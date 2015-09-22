@@ -8,10 +8,10 @@
 
 Mushroom::Mushroom(void) :
 	m_pointCount(5u),
-	m_animator(0.5f, 4.f, 1.f, 0.2f),
+	m_animator(0.5f, 4.f, 5.f, 0.2f),
 	m_animation(1.f),
 	m_bouncingTimer(sf::Time::Zero),
-	m_bouncingTimerMax(sf::seconds(1.f)),
+	m_bouncingTimerMax(sf::seconds(5.f)),
 	m_bouncingBool(true),
 	m_sound(true)
 {

@@ -1,6 +1,7 @@
 #include "CharacterOcto.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
+#include "OctoSound.hpp"
 #include "ElevatorStream.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -9,6 +10,7 @@
 #include "SlowFallNanoRobot.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
+#include <PostEffectManager.hpp>
 #include <ResourceManager.hpp>
 #include <GraphicsManager.hpp>
 
@@ -40,11 +42,14 @@ CharacterOcto::CharacterOcto() :
 	m_keySpace(false),
 	m_keyUp(false),
 	m_keyAction(false),
+	m_keyPortal(false),
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false),
-	m_doScale(false)
+	m_doScale(false),
+	m_inWater(false)
 {
+	m_sound.reset(new OctoSound());
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 
@@ -81,24 +86,29 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_waterLevel = biome.getWaterLevel();
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
-	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
-	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal)
-		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
-		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
-		| static_cast<std::uint32_t>(GameObjectType::JumpNanoRobot)
-		| static_cast<std::uint32_t>(GameObjectType::Elevator);
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Player));
+	std::size_t mask = static_cast<std::size_t>(GameObjectType::Portal)
+		| static_cast<std::size_t>(GameObjectType::GroundTransformNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::RepairNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::JumpNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::Elevator)
+		| static_cast<std::size_t>(GameObjectType::Tent)
+		| static_cast<std::size_t>(GameObjectType::Concert)
+		| static_cast<std::size_t>(GameObjectType::Bouibouik);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
 	m_eventBox->setGameObject(&m_octoEvent);
 	m_eventBox->setRadius(400.f);
-	m_eventBox->setCollisionType(static_cast<std::uint32_t>(GameObjectType::PlayerEvent));
-	std::uint32_t maskEvent = static_cast<std::uint32_t>(GameObjectType::Portal)
-		| static_cast<std::uint32_t>(GameObjectType::Elevator)
-		| static_cast<std::uint32_t>(GameObjectType::CedricNpc)
-		| static_cast<std::uint32_t>(GameObjectType::FannyNpc)
-		| static_cast<std::uint32_t>(GameObjectType::JuNpc)
-		| static_cast<std::uint32_t>(GameObjectType::TurbanNpc);
+	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
+		| static_cast<std::size_t>(GameObjectType::Elevator)
+		| static_cast<std::size_t>(GameObjectType::CedricNpc)
+		| static_cast<std::size_t>(GameObjectType::FannyNpc)
+		| static_cast<std::size_t>(GameObjectType::FranfranNpc)
+		| static_cast<std::size_t>(GameObjectType::GuiNpc)
+		| static_cast<std::size_t>(GameObjectType::JuNpc)
+		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
 	m_eventBox->setType(AShape::Type::e_trigger);
@@ -183,13 +193,13 @@ void	CharacterOcto::setupAnimation()
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_danceWithMusicAnimation.setFrames({
-				Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {78, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {79, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {78, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {79, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_danceWithMusicAnimation.setLoop(octo::LoopMode::NoLoop);
 
@@ -202,11 +212,11 @@ void	CharacterOcto::setupAnimation()
 	m_slowFallAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_deathAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {35, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {36, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {37, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {38, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(1.4f), {39, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {35, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {36, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {37, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {38, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {39, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_deathAnimation.setLoop(octo::LoopMode::NoLoop);
 
@@ -314,9 +324,13 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state2, state13);
 	machine.addTransition(StartJump, state4, state13);
 	machine.addTransition(StartJump, state5, state13);
+	machine.addTransition(StartJump, state7, state13);
 	machine.addTransition(StartJump, state12, state13);
+	machine.addTransition(StartJump, state13, state13);
 
 	machine.addTransition(Jump, state13, state3);
+	//TODO fix
+	machine.addTransition(Jump, state7, state3);
 
 	machine.addTransition(DoubleJump, state0, state4);
 	machine.addTransition(DoubleJump, state1, state4);
@@ -409,6 +423,7 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	timeEvent(frameTime);
+	inWater();
 	if (endDeath())
 	{
 		dance();
@@ -425,7 +440,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 		commitPhysicsToGraphics();
 		m_sprite.update(frameTime);
 	}
-	m_previousTop = m_box->getGlobalBounds().top;
+	resetTimeEvent();
+	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()));
 
 	if (!m_collisionElevatorEvent && m_progress.canRepair())
 		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
@@ -433,6 +449,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionElevatorEvent = false;
+	m_previousTop = m_box->getGlobalBounds().top;
+	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	m_ink.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
@@ -465,14 +483,20 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 			break;
 		case DoubleJump:
 			m_timeEventInk += frameTime;
-			m_timeEventFall = sf::Time::Zero;
 			break;
 		default:
-			m_timeEventFall = sf::Time::Zero;
-			m_timeEventIdle = sf::Time::Zero;
-			m_timeEventDeath = sf::Time::Zero;
-			m_timeEventInk = sf::Time::Zero;
 			break;
+	}
+}
+
+void	CharacterOcto::resetTimeEvent()
+{
+	if (m_prevEvent != m_sprite.getCurrentEvent())
+	{
+		m_timeEventFall = sf::Time::Zero;
+		m_timeEventIdle = sf::Time::Zero;
+		m_timeEventDeath = sf::Time::Zero;
+		m_timeEventInk = sf::Time::Zero;
 	}
 }
 
@@ -549,7 +573,7 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 
 void	CharacterOcto::usePortal(Portal & portal)
 {
-	if (m_keyUp)
+	if (m_keyPortal)
 	{
 		m_progress.setNextDestination(portal.getDestination());
 	}
@@ -655,7 +679,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 bool	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > sf::seconds(2.0f) && !inWater())
+	if (m_timeEventFall > sf::seconds(2.0f) && !m_inWater)
 	{
 		m_sprite.setNextEvent(Death);
 		return true;
@@ -667,17 +691,19 @@ bool	CharacterOcto::endDeath()
 {
 	if (m_sprite.getCurrentEvent() == Death)
 	{
-		if (m_timeEventDeath > sf::seconds(3.0f))
+		if (m_sprite.isTerminated())
 		{
-			if (m_keyLeft)
-				m_sprite.setNextEvent(Left);
-			else if (m_keyRight)
-				m_sprite.setNextEvent(Right);
-			else
-				m_sprite.setNextEvent(Idle);
+			octo::StateManager & states = octo::Application::getStateManager();
+			octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+			octo::Camera&			camera = octo::Application::getCamera();
+			sf::Vector2f			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
+
+			m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+			m_progress.setReverseSprite(m_originMove);
+			postEffect.setAllShaderEnabled(false);
+			states.push("octo_death");
 		}
-		else
-			return false;
+		return false;
 	}
 	return true;
 }
@@ -694,13 +720,16 @@ void	CharacterOcto::dance()
 		m_sprite.setNextEvent(Idle);
 }
 
-bool	CharacterOcto::inWater()
+void	CharacterOcto::inWater()
 {
 	if (m_waterLevel != -1.f && m_box->getBaryCenter().y > m_waterLevel)
 	{
-		return true;
+		if (!m_inWater)
+			m_numberOfJump = 0;
+		m_inWater = true;
 	}
-	return false;
+	else
+		m_inWater = false;
 }
 
 void	CharacterOcto::randomJumpAnimation()
@@ -776,8 +805,8 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 			velocity.x = m_pixelSecondWalk;
 		}
 	}
-
-	if (m_keySpace && (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump || m_sprite.getCurrentEvent() == StartJump))
+	//TODO
+	if (m_keySpace && m_numberOfJump < 3 && (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump || m_sprite.getCurrentEvent() == StartJump))
 	{
 		velocity.y = m_jumpVelocity;
 		m_jumpVelocity += m_pixelSecondMultiplier * frametime;
@@ -811,7 +840,7 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 	sf::Vector2f	velocity = m_box->getVelocity();
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
 
-	if (inWater())
+	if (m_inWater)
 	{
 		switch (state)
 		{
@@ -824,39 +853,12 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 				velocity.y = m_pixelSecondSlowFall;
 				break;
 			default:
-				velocity.x *= 0.7f;
-				velocity.y *= 0.7f;
+				velocity.x *= 0.8f;
+				velocity.y *= 0.8f;
 				break;
 		}
 	}
 	m_box->setVelocity(velocity);
-}
-
-bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
-{
-	if (m_sprite.getCurrentEvent() == Death)
-		return true;
-	switch (event.code)
-	{
-		case sf::Keyboard::Left:
-			caseLeft();
-			break;
-		case sf::Keyboard::Right:
-			caseRight();
-			break;
-		case sf::Keyboard::Space:
-			caseSpace();
-			break;
-		case sf::Keyboard::Up:
-			caseUp();
-			break;
-		case sf::Keyboard::Q:
-			caseAction();
-			break;
-		default:
-			break;
-	}
-	return (true);
 }
 
 void	CharacterOcto::caseLeft()
@@ -893,11 +895,13 @@ void	CharacterOcto::caseSpace()
 	{
 		randomJumpAnimation();
 		m_keySpace = true;
-		if ((m_onGround || inWater()) && m_progress.canJump() && !m_numberOfJump)
+		if ((m_onGround || m_inWater) && m_progress.canJump() && !m_numberOfJump)
 		{
 			m_sprite.setNextEvent(StartJump);
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 1;
+			if (!m_progress.canDoubleJump() && m_inWater)
+				m_numberOfJump = 0;
 		}
 		else if (m_numberOfJump == 1 && m_progress.canDoubleJump())
 		{
@@ -905,7 +909,7 @@ void	CharacterOcto::caseSpace()
 			m_afterJump = false;
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 2;
-			if (inWater())
+			if (m_inWater)
 				m_numberOfJump = 0;
 		}
 		else
@@ -933,6 +937,44 @@ void CharacterOcto::caseAction()
 	}
 }
 
+void CharacterOcto::casePortal()
+{
+	if (!m_keyPortal)
+	{
+		m_keyPortal = true;
+	}
+}
+
+bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
+{
+	if (m_sprite.getCurrentEvent() == Death)
+		return true;
+	switch (event.code)
+	{
+		case sf::Keyboard::Left:
+			caseLeft();
+			break;
+		case sf::Keyboard::Right:
+			caseRight();
+			break;
+		case sf::Keyboard::Space:
+			caseSpace();
+			break;
+		case sf::Keyboard::Up:
+			caseUp();
+			break;
+		case sf::Keyboard::E:
+			caseAction();
+			break;
+		case sf::Keyboard::D:
+			casePortal();
+			break;
+		default:
+			break;
+	}
+	return (true);
+}
+
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
@@ -957,8 +999,11 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Up:
 			m_keyUp = false;
 			break;
-		case sf::Keyboard::Q:
+		case sf::Keyboard::E:
 			m_keyAction = false;
+			break;
+		case sf::Keyboard::D:
+			m_keyPortal = false;
 			break;
 		default:
 			otherKeyReleased = true;
@@ -970,7 +1015,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 	{
 		if (state != Fall)
 		{
-			if (state != StartJump)
+			if (state != StartJump && state != Jump && state != DoubleJump)
 				m_sprite.setNextEvent(Fall);
 		}
 	}

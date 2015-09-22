@@ -22,7 +22,7 @@ public:
 	virtual void		update(sf::Time frameTime, sf::Vector2f const & position);
 	void				draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
-	void				addMenu(std::string const & name, std::unique_ptr<AMenu>&& menu);
+	void				addMenu(std::wstring const & name, std::unique_ptr<AMenu>&& menu);
 	virtual bool		onPressed(sf::Event::KeyEvent const & event);
 
 	virtual void		createMenus(void) = 0;
@@ -38,11 +38,12 @@ private:
 	BubbleMenu									m_bubble;
 	ABubble::Type								m_type;
 	std::size_t									m_characterSize;
-	std::vector<std::string>					m_menuTitles;
+	std::vector<std::wstring>					m_menuTitles;
 	std::vector<std::unique_ptr<AMenu>>			m_menus;
 
 	std::vector<sf::Vector2f>					m_cursorPosition;
 	std::size_t									m_indexCursor;
+	std::size_t									m_indexSave;
 	bool										m_isKeyboard;
 
 	sf::CircleShape								m_cursor;

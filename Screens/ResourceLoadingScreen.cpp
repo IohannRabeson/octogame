@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ResourceLoadingScreen.hpp"
+#include "Progress.hpp"
 #include <ResourceLoading.hpp>
 #include <StateManager.hpp>
 #include <Application.hpp>
@@ -44,6 +45,8 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 void	ResourceLoadingScreen::start()
 {
 	pushLoading("default.pck");
+	Progress & progress = Progress::getInstance();
+	progress.load("save.osv");
 	AbstractResourceLoadingState::start();
 }
 

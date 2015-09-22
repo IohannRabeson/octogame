@@ -1,7 +1,6 @@
 #ifndef BOUIBOUIK_HPP
 # define BOUIBOUIK_HPP
 
-# include "AGameObject.hpp"
 # include "SimpleObject.hpp"
 # include "SmokeSystem.hpp"
 
@@ -12,11 +11,16 @@ public:
 	virtual ~Bouibouik(void);
 
 	virtual void setPosition(sf::Vector2f const & position);
+
+	virtual void startBalle(void);
 	virtual void update(sf::Time frametime);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	SmokeSystem		m_smoke;
+
+	void setupSmoke(void);
+
 };
 
 #endif

@@ -9,7 +9,7 @@ BubbleMenu::BubbleMenu(void)
 {
 }
 
-void BubbleMenu::setup(std::vector<std::string> const & subMenuTitle, sf::Color const & color, std::size_t characterSize)
+void BubbleMenu::setup(std::vector<std::wstring> const & subMenuTitle, sf::Color const & color, std::size_t characterSize)
 {
 	m_contentSize.x = 0.f;
 	m_contentSize.y = 0.f;
