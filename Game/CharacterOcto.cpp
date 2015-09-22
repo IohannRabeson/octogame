@@ -323,10 +323,13 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state2, state13);
 	machine.addTransition(StartJump, state4, state13);
 	machine.addTransition(StartJump, state5, state13);
+	machine.addTransition(StartJump, state7, state13);
 	machine.addTransition(StartJump, state12, state13);
 	machine.addTransition(StartJump, state13, state13);
 
 	machine.addTransition(Jump, state13, state3);
+	//TODO fix
+	machine.addTransition(Jump, state7, state3);
 
 	machine.addTransition(DoubleJump, state0, state4);
 	machine.addTransition(DoubleJump, state1, state4);
