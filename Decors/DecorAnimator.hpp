@@ -29,6 +29,7 @@ enum class State
 	void					sleep(void);
 	void					die(void);
 	void					setup(sf::Time lifeTime = sf::seconds(1.f));
+	void					setBeatMouvement(float delta);
 	bool					update(sf::Time frameTime);
 	float					getAnimation(void) const;
 	float					getAnimationTime(void) const;

@@ -69,6 +69,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(188, 206, 213),
 	m_treeAngle(15.f, 75.f),
+	m_treeBeatMouvement(0.f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(143, 208, 202),
 
@@ -434,6 +435,11 @@ float			LevelOneBiome::getTreeAngle()
 bool			LevelOneBiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
+}
+
+float			LevelOneBiome::getTreeBeatMouvement()
+{
+	return (m_treeBeatMouvement);
 }
 
 bool			LevelOneBiome::canCreateTree()

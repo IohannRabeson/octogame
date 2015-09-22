@@ -89,6 +89,7 @@ public:
 	virtual sf::Color									getTreeColor() = 0;
 	virtual float										getTreeAngle() = 0;
 	virtual bool										getTreeIsMoving() = 0;
+	virtual float										getTreeBeatMouvement() = 0;
 	virtual bool										canCreateTree() = 0;
 	virtual bool										canCreateLeaf() = 0;
 	virtual sf::Vector2f								getLeafSize() = 0;
