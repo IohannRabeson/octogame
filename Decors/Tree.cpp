@@ -12,7 +12,7 @@ Tree::Tree(void) :
 	m_count(0u),
 	m_angleMaxCount(0u),
 	m_mapSizeY(0.f),
-	m_animator(2.f, 4.f, 3.f, 0.15f),
+	m_animator(2.f, 4.f, 3.f, 0.01f),
 	m_animation(1.f),
 	m_growSide(true),
 	m_isLeaf(true),
