@@ -69,6 +69,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_treeLifeTime(sf::seconds(90), sf::seconds(180)),
 	m_treeColor(40, 37, 44),
 	m_treeAngle(5.f, 15.f),
+	m_treeBeatMouvement(0.05f),
 	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(250.f, 250.f)),
 	m_leafColor(0, 90, 67),
 
@@ -439,6 +440,11 @@ float			LevelThreeBiome::getTreeAngle()
 bool			LevelThreeBiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
+}
+
+float			LevelThreeBiome::getTreeBeatMouvement()
+{
+	return (m_treeBeatMouvement);
 }
 
 bool			LevelThreeBiome::canCreateTree()

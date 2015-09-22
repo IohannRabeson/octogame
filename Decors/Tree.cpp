@@ -217,6 +217,7 @@ void Tree::setup(ABiome& biome)
 	m_octogonLeaf.resize(m_leafMaxCount);
 	m_leafSize.resize(m_leafMaxCount);
 	m_mapSizeY = biome.getMapSizeFloat().y;
+	m_animator.setBeatMouvement(biome.getTreeBeatMouvement());
 
 	newTree(biome);
 }

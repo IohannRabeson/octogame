@@ -69,6 +69,7 @@ DefaultBiome::DefaultBiome() :
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(30, 30, 30),
 	m_treeAngle(15.f, 75.f),
+	m_treeBeatMouvement(0.15f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(143, 208, 202),
 
@@ -426,6 +427,11 @@ float			DefaultBiome::getTreeAngle()
 bool			DefaultBiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
+}
+
+float			DefaultBiome::getTreeBeatMouvement()
+{
+	return (m_treeBeatMouvement);
 }
 
 bool			DefaultBiome::canCreateTree()

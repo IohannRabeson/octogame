@@ -136,6 +136,11 @@ void DecorAnimator::setup(sf::Time lifeTime)
 	m_lifeTimerMax = lifeTime.asSeconds();
 }
 
+void DecorAnimator::setBeatMouvement(float delta)
+{
+	m_beatDelta = delta;
+}
+
 bool DecorAnimator::update(sf::Time frameTime)
 {
 	if (m_startTimer < m_startTimerMax)
