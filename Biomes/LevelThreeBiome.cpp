@@ -70,7 +70,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_treeColor(21,99,116),
 	m_treeAngle(5.f, 15.f),
 	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(250.f, 250.f)),
-	m_leafColor(223,152,80),
+	m_leafColor(239,255,0),
 
 	m_mushroomSize(sf::Vector2f(20.f, 300.f), sf::Vector2f(300.f, 500.f)),
 	m_mushroomColor(211, 255, 210),
