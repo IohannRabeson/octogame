@@ -69,7 +69,7 @@ private:
 	bool	dieFall();
 	bool	endDeath();
 	void	dance();
-	bool	inWater();
+	void	inWater();
 	void	randomJumpAnimation();
 	void	timeEvent(sf::Time frameTime);
 	void	resetTimeEvent();
@@ -87,6 +87,7 @@ private:
 	void	caseSpace();
 	void	caseUp();
 	void	caseAction();
+	void	casePortal();
 
 private:
 	class OctoSound;
@@ -145,10 +146,12 @@ private:
 	bool						m_keySpace;
 	bool						m_keyUp;
 	bool						m_keyAction;
+	bool						m_keyPortal;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
 	bool						m_collisionElevatorEvent;
 	bool						m_doScale;
+	bool						m_inWater;
 	SmokeSystem					m_ink;
 	Events						m_prevEvent;
 };

@@ -67,7 +67,7 @@ void SpaceShip::update(sf::Time frameTime)
 	m_smoke.update(frameTime);
 }
 
-void SpaceShip::draw(sf::RenderTarget& render, sf::RenderStates) const
+void SpaceShip::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_sprite);
 	m_smoke.draw(render);

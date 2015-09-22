@@ -9,6 +9,7 @@
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
 #include "Bouibouik.hpp"
+#include "Tent.hpp"
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -131,6 +132,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				octo->onCollision(GameObjectType::Elevator, collisionDirection);
 			}
 			break;
+		case GameObjectType::Tent:
+				gameObjectCast<Tent>(gameObject)->startBalle();
+			break;
 		case GameObjectType::Bouibouik:
 				gameObjectCast<Bouibouik>(gameObject)->startBalle();
 			break;
@@ -213,11 +217,11 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 {
 	switch (event.code)
 	{
-		case sf::Keyboard::E:
-			if (Progress::getInstance().canMoveMap()) //TODO: move into octo
+		case sf::Keyboard::S:
+			if (Progress::getInstance().canMoveMap())
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 		break;
-		case sf::Keyboard::R:
+		case sf::Keyboard::F:
 			if (Progress::getInstance().canMoveMap())
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
 		break;

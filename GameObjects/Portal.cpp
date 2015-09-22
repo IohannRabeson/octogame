@@ -32,8 +32,8 @@ Portal::Portal(Level destination) :
 	m_box->setGameObject(this);
 	m_box->setApplyGravity(false);
 	m_box->setType(AShape::Type::e_trigger);
-	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Portal));
-	m_box->setCollisionMask(static_cast<std::uint32_t>(GameObjectType::Player) | static_cast<std::uint32_t>(GameObjectType::PlayerEvent));
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Portal));
+	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
 
 	setRadius(m_radius);
 	setPosition(m_position);
