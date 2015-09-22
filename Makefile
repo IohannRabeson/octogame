@@ -141,6 +141,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SmokeSystem.cpp					\
 				Decors/MusicSystem.cpp					\
 				Decors/SparkSystem.cpp					\
+				Decors/HelmetSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
