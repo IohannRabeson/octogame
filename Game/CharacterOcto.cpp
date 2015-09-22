@@ -42,6 +42,7 @@ CharacterOcto::CharacterOcto() :
 	m_keySpace(false),
 	m_keyUp(false),
 	m_keyAction(false),
+	m_keyPortal(false),
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false),
@@ -84,28 +85,28 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_waterLevel = biome.getWaterLevel();
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
-	m_box->setCollisionType(static_cast<std::uint32_t>(GameObjectType::Player));
-	std::uint32_t mask = static_cast<std::uint32_t>(GameObjectType::Portal)
-		| static_cast<std::uint32_t>(GameObjectType::GroundTransformNanoRobot)
-		| static_cast<std::uint32_t>(GameObjectType::RepairNanoRobot)
-		| static_cast<std::uint32_t>(GameObjectType::JumpNanoRobot)
-		| static_cast<std::uint32_t>(GameObjectType::Elevator)
-		| static_cast<std::uint32_t>(GameObjectType::Tent)
-		| static_cast<std::uint32_t>(GameObjectType::Bouibouik);
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Player));
+	std::size_t mask = static_cast<std::size_t>(GameObjectType::Portal)
+		| static_cast<std::size_t>(GameObjectType::GroundTransformNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::RepairNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::JumpNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::Elevator)
+		| static_cast<std::size_t>(GameObjectType::Tent)
+		| static_cast<std::size_t>(GameObjectType::Bouibouik);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
 	m_eventBox->setGameObject(&m_octoEvent);
 	m_eventBox->setRadius(400.f);
-	m_eventBox->setCollisionType(static_cast<std::uint32_t>(GameObjectType::PlayerEvent));
-	std::uint32_t maskEvent = static_cast<std::uint32_t>(GameObjectType::Portal)
-		| static_cast<std::uint32_t>(GameObjectType::Elevator)
-		| static_cast<std::uint32_t>(GameObjectType::CedricNpc)
-		| static_cast<std::uint32_t>(GameObjectType::FannyNpc)
-		| static_cast<std::uint32_t>(GameObjectType::FranfranNpc)
-		| static_cast<std::uint32_t>(GameObjectType::GuiNpc)
-		| static_cast<std::uint32_t>(GameObjectType::JuNpc)
-		| static_cast<std::uint32_t>(GameObjectType::TurbanNpc);
+	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
+		| static_cast<std::size_t>(GameObjectType::Elevator)
+		| static_cast<std::size_t>(GameObjectType::CedricNpc)
+		| static_cast<std::size_t>(GameObjectType::FannyNpc)
+		| static_cast<std::size_t>(GameObjectType::FranfranNpc)
+		| static_cast<std::size_t>(GameObjectType::GuiNpc)
+		| static_cast<std::size_t>(GameObjectType::JuNpc)
+		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
 	m_eventBox->setType(AShape::Type::e_trigger);
@@ -565,7 +566,7 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 
 void	CharacterOcto::usePortal(Portal & portal)
 {
-	if (m_keyUp)
+	if (m_keyPortal)
 	{
 		m_progress.setNextDestination(portal.getDestination());
 	}
@@ -850,33 +851,6 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 	m_box->setVelocity(velocity);
 }
 
-bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
-{
-	if (m_sprite.getCurrentEvent() == Death)
-		return true;
-	switch (event.code)
-	{
-		case sf::Keyboard::Left:
-			caseLeft();
-			break;
-		case sf::Keyboard::Right:
-			caseRight();
-			break;
-		case sf::Keyboard::Space:
-			caseSpace();
-			break;
-		case sf::Keyboard::Up:
-			caseUp();
-			break;
-		case sf::Keyboard::Q:
-			caseAction();
-			break;
-		default:
-			break;
-	}
-	return (true);
-}
-
 void	CharacterOcto::caseLeft()
 {
 	if (!m_keyLeft)
@@ -951,6 +925,44 @@ void CharacterOcto::caseAction()
 	}
 }
 
+void CharacterOcto::casePortal()
+{
+	if (!m_keyPortal)
+	{
+		m_keyPortal = true;
+	}
+}
+
+bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
+{
+	if (m_sprite.getCurrentEvent() == Death)
+		return true;
+	switch (event.code)
+	{
+		case sf::Keyboard::Left:
+			caseLeft();
+			break;
+		case sf::Keyboard::Right:
+			caseRight();
+			break;
+		case sf::Keyboard::Space:
+			caseSpace();
+			break;
+		case sf::Keyboard::Up:
+			caseUp();
+			break;
+		case sf::Keyboard::E:
+			caseAction();
+			break;
+		case sf::Keyboard::D:
+			casePortal();
+			break;
+		default:
+			break;
+	}
+	return (true);
+}
+
 bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
@@ -975,8 +987,11 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Up:
 			m_keyUp = false;
 			break;
-		case sf::Keyboard::Q:
+		case sf::Keyboard::E:
 			m_keyAction = false;
+			break;
+		case sf::Keyboard::D:
+			m_keyPortal = false;
 			break;
 		default:
 			otherKeyReleased = true;

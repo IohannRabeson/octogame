@@ -74,13 +74,6 @@ bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
 					m_menu.setState(AMenu::State::Active);
 				break;
 			}
-		case sf::Keyboard::F:
-			{
-				octo::StateManager & states = octo::Application::getStateManager();
-				Progress::getInstance().setNextDestination(Level::Default);
-				states.push("transition");
-				break;
-			}
 		default:
 			break;
 	}

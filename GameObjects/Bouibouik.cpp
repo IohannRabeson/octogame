@@ -11,7 +11,7 @@ Bouibouik::Bouibouik(void) :
 					Frame(sf::seconds(0.2f), 1u)}, octo::LoopMode::Loop);
 	setupSmoke();
 
-	setupBox(this, static_cast<std::uint32_t>(GameObjectType::Bouibouik), static_cast<std::uint32_t>(GameObjectType::Player));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Bouibouik), static_cast<std::size_t>(GameObjectType::Player));
 }
 
 Bouibouik::~Bouibouik(void)
