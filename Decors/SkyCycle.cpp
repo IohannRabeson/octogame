@@ -87,7 +87,7 @@ void SkyCycle::setup(ABiome & biome)
 	m_colorDownNight = sf::Color(50, 50, 50);
 
 	octo::ResourceManager const & resource = octo::Application::getResourceManager();
-	m_rainSound = octo::Application::getAudioManager().playSound(resource.getSound(RAIN_STEREO_WAV), 1.f, 1.f);
+	m_rainSound = octo::Application::getAudioManager().playSound(resource.getSound(RAIN_STEREO_WAV), 0.f, 1.f);
 	m_rainSound->setLoop(true);
 }
 
@@ -259,7 +259,7 @@ void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 	computeDayNight(frameTime);
 	if (biome.canCreateRain() || biome.canCreateSnow())
 		computeDrop(frameTime, biome);
-	if (biome.canCreateRain())
+	if (biome.canCreateRain() && !biome.canCreateSnow())
 		m_rainSound->setVolume(m_weather / m_dropTimerMax.asSeconds() * 10);
 	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
 	{
