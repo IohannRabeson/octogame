@@ -26,6 +26,7 @@ enum class GameObjectType
 	TurbanNpc = 524288,
 	Tent = 1048576u,
 	Firecamp = 2097152u,
+	Concert = 4194304u,
 	Water = 131u
 };
 
