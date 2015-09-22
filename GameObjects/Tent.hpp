@@ -11,6 +11,8 @@ public:
 
 	virtual void update(sf::Time frameTime);
 	virtual void setPosition(sf::Vector2f const & position);
+	virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
+	virtual void drawFront(sf::RenderTarget &, sf::RenderStates) const;
 
 };
 

@@ -975,6 +975,10 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 	render.draw(m_decorManagerBack, states);
 	for (auto & decor : m_instanceDecors)
 		decor->draw(render, states);
+	for (auto & objectHigh : m_otherObjectsHigh)
+		objectHigh.m_gameObject->draw(render, states);
+	for (auto & objectLow : m_otherObjectsLow)
+		objectLow.m_gameObject->draw(render, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->draw(render, states);
 	for (auto & portal : m_portals)
@@ -990,9 +994,9 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render, states);
 	for (auto & objectHigh : m_otherObjectsHigh)
-		objectHigh.m_gameObject->draw(render, states);
+		objectHigh.m_gameObject->drawFront(render, states);
 	for (auto & objectLow : m_otherObjectsLow)
-		objectLow.m_gameObject->draw(render, states);
+		objectLow.m_gameObject->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
