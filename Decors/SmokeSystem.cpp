@@ -13,13 +13,15 @@ SmokeSystem::SmokeSystem() :
 	m_canEmit(true),
 	m_lifeScaleFactor(15.f),
 	m_dispersion(300.f),
-	m_engine(std::time(0)),
+	m_engine(0),
 	m_emitTimeDistri(0.01f, 0.2f),
 	m_growTimeDistri(0.5f, 1.5f),
 	m_lifeTimeDistri(2.5f, 4.f),
 	m_sideDistri(0, 3),
 	m_scaleDistri(1.f, 2.5f)
 {
+	std::random_device rd;
+	m_engine.seed(rd());
 }
 
 void SmokeSystem::setup(sf::Vector2f const & sizeParticle)

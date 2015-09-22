@@ -15,9 +15,13 @@ public:
 	virtual void startBalle(void);
 	virtual void update(sf::Time frametime);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	virtual void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	SmokeSystem		m_smoke;
+	octo::AnimatedSprite		m_spriteFront;
+	octo::SpriteAnimation		m_animationFront;
+	SmokeSystem					m_smoke;
+	SmokeSystem					m_smoke2;
 
 	void setupSmoke(void);
 
