@@ -9,6 +9,7 @@
 #include "RectangleShape.hpp"
 #include "ElevatorStream.hpp"
 #include "Bouibouik.hpp"
+#include "Tent.hpp"
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -130,6 +131,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
 				octo->onCollision(GameObjectType::Elevator, collisionDirection);
 			}
+			break;
+		case GameObjectType::Tent:
+				gameObjectCast<Tent>(gameObject)->startBalle();
 			break;
 		case GameObjectType::Bouibouik:
 				gameObjectCast<Bouibouik>(gameObject)->startBalle();
