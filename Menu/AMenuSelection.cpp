@@ -5,7 +5,8 @@
 AMenuSelection::AMenuSelection(void) :
 	m_type(ABubble::Type::Left),
 	m_characterSize(20u),
-	m_indexCursor(0),
+	m_indexCursor(0u),
+	m_indexSave(0u),
 	m_isKeyboard(false)
 {
 }
@@ -28,14 +29,14 @@ void AMenuSelection::setupBubble(void)
 	m_bubble.setup(m_menuTitles, sf::Color(255, 255, 255, 255), m_characterSize);
 	m_bubble.setType(ABubble::None);
 
-	for (std::size_t i = 0; i < m_menus.size(); i++)
-		m_menus[i]->setup(this);
-
 	m_cursor.setRadius(10);
 	m_cursor.setPointCount(8);
 	m_cursor.setOrigin(10, 10);
 	m_cursor.setRotation(360.f / 16.f);
 	m_cursorPosition = m_bubble.getCursorPosition();
+
+	for (std::size_t i = 0; i < m_menus.size(); i++)
+		m_menus[i]->setup(this);
 }
 
 void AMenuSelection::setKeyboard(bool isKeyboard)
@@ -58,6 +59,7 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 	sf::Vector2f const & contentPosition = m_bubble.getContentUpLeft();
 	for (std::size_t i = 0; i < m_menus.size(); i++)
 		m_menus[i]->update(frameTime, m_cursorPosition[i] + contentPosition);
+
 
 	if (getState() == AMenu::State::Active)
 	{
@@ -94,11 +96,11 @@ bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
 		case sf::Keyboard::Left:
 		case sf::Keyboard::Escape:
 		{
-			m_indexCursor = m_indexSave;
 			setState(AMenu::State::Hide);
 			AMenu * backMenu = getBackMenu();
 			if (backMenu)
 				backMenu->setState(AMenu::State::Active);
+			m_indexCursor = m_indexSave;
 			break;
 		}
 		default:
