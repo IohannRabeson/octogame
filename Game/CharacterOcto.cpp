@@ -419,6 +419,7 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	timeEvent(frameTime);
+	inWater();
 	if (endDeath())
 	{
 		dance();
@@ -674,7 +675,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 bool	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > sf::seconds(2.0f) && !inWater())
+	if (m_timeEventFall > sf::seconds(2.0f) && !m_inWater)
 	{
 		m_sprite.setNextEvent(Death);
 		return true;
@@ -715,17 +716,16 @@ void	CharacterOcto::dance()
 		m_sprite.setNextEvent(Idle);
 }
 
-bool	CharacterOcto::inWater()
+void	CharacterOcto::inWater()
 {
 	if (m_waterLevel != -1.f && m_box->getBaryCenter().y > m_waterLevel)
 	{
 		if (!m_inWater)
 			m_numberOfJump = 0;
 		m_inWater = true;
-		return true;
 	}
-	m_inWater = false;
-	return false;
+	else
+		m_inWater = false;
 }
 
 void	CharacterOcto::randomJumpAnimation()
@@ -836,7 +836,7 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 	sf::Vector2f	velocity = m_box->getVelocity();
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
 
-	if (inWater())
+	if (m_inWater)
 	{
 		switch (state)
 		{
@@ -891,12 +891,12 @@ void	CharacterOcto::caseSpace()
 	{
 		randomJumpAnimation();
 		m_keySpace = true;
-		if ((m_onGround || inWater()) && m_progress.canJump() && !m_numberOfJump)
+		if ((m_onGround || m_inWater) && m_progress.canJump() && !m_numberOfJump)
 		{
 			m_sprite.setNextEvent(StartJump);
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 1;
-			if (!m_progress.canDoubleJump() && inWater())
+			if (!m_progress.canDoubleJump() && m_inWater)
 				m_numberOfJump = 0;
 		}
 		else if (m_numberOfJump == 1 && m_progress.canDoubleJump())
@@ -905,7 +905,7 @@ void	CharacterOcto::caseSpace()
 			m_afterJump = false;
 			m_jumpVelocity = m_pixelSecondJump;
 			m_numberOfJump = 2;
-			if (inWater())
+			if (m_inWater)
 				m_numberOfJump = 0;
 		}
 		else

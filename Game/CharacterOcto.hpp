@@ -69,7 +69,7 @@ private:
 	bool	dieFall();
 	bool	endDeath();
 	void	dance();
-	bool	inWater();
+	void	inWater();
 	void	randomJumpAnimation();
 	void	timeEvent(sf::Time frameTime);
 	void	resetTimeEvent();
