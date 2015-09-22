@@ -32,8 +32,9 @@ void	DropSystem::setDropRect(sf::FloatRect const& dropRect)
 	m_dropRect = dropRect;
 }
 
-void	DropSystem::setDrop(sf::Vector2f const & dropSize, float speed, sf::Color const & color)
+void	DropSystem::setDrop(sf::Vector2f const & dropSize, float speed, sf::Color const & color, ABiome & biome)
 {
+	m_waterLevel = biome.getWaterLevel();
 	for (auto &particle : m_particles)
 		particle.isAlive = false;
 	m_size = dropSize;
@@ -83,7 +84,11 @@ void	DropSystem::update(sf::Time frameTime, float angle, octo::VertexBuilder & b
 
 bool	DropSystem::isDeadParticle(Particle const& particle, float bottom)
 {
-	return (particle.position.y > bottom);
+	if (particle.position.y > m_waterLevel)
+		return true;
+	else if (particle.position.y > bottom)
+		return true;
+	return false;
 }
 
 void			DropSystem::createDrop(Particle & particle, float angle)
