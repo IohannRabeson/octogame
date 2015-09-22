@@ -61,6 +61,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Water.cpp					\
 				GameObjects/InstanceDecor.cpp			\
 				GameObjects/Firecamp.cpp				\
+				GameObjects/Concert.cpp					\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
@@ -138,6 +139,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
 				Decors/SmokeSystem.cpp					\
+				Decors/MusicSystem.cpp					\
 				Decors/SparkSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\

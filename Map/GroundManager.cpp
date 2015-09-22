@@ -18,6 +18,7 @@
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
+#include "Concert.hpp"
 #include "Firecamp.hpp"
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
@@ -268,7 +269,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, oldDesertStatic);
 				}
 				break;
-
 			case GameObjectType::RepairNanoRobot:
 					if (!Progress::getInstance().canRepair())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
@@ -300,6 +300,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::Tent:
 				{
 					Tent * simple = new Tent();
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::Concert:
+				{
+					Concert * simple = new Concert();
 					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
