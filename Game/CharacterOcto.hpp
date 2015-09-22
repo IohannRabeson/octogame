@@ -9,6 +9,7 @@
 # include "CircleShape.hpp"
 # include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
+# include "HelmetSystem.hpp"
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 
@@ -152,7 +153,8 @@ private:
 	bool						m_collisionElevatorEvent;
 	bool						m_doScale;
 	bool						m_inWater;
-	SmokeSystem					m_ink;
+	SmokeSystem					m_inkParticle;
+	HelmetSystem				m_helmetParticle;
 	Events						m_prevEvent;
 };
 

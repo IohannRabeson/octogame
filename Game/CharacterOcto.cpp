@@ -123,14 +123,14 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_sprite.setScale(m_spriteScale, m_spriteScale);
 	m_sprite.restart();
 
-	m_ink.setCanEmit(false);
-	m_ink.setup(sf::Vector2f(3.f, 3.f));
-	m_ink.setVelocity(sf::Vector2f(0.f, 100.f));
-	m_ink.setEmitTimeRange(0.005f, 0.01f);
-	m_ink.setGrowTimeRange(0.1f, 0.2f);
-	m_ink.setLifeTimeRange(0.4f, 0.5f);
-	m_ink.setScaleFactor(30.f);
-	m_ink.setColor(sf::Color(0, 0, 0));
+	m_inkParticle.setCanEmit(false);
+	m_inkParticle.setup(sf::Vector2f(3.f, 3.f));
+	m_inkParticle.setVelocity(sf::Vector2f(0.f, 100.f));
+	m_inkParticle.setEmitTimeRange(0.005f, 0.01f);
+	m_inkParticle.setGrowTimeRange(0.1f, 0.2f);
+	m_inkParticle.setLifeTimeRange(0.4f, 0.5f);
+	m_inkParticle.setScaleFactor(30.f);
+	m_inkParticle.setColor(sf::Color(0, 0, 0));
 }
 
 void	CharacterOcto::setupAnimation()
@@ -439,6 +439,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 	{
 		commitPhysicsToGraphics();
 		m_sprite.update(frameTime);
+		m_helmetParticle.setPosition(getPosition() + sf::Vector2f(30.f, -20.f));
+		m_helmetParticle.update(frameTime);
 	}
 	resetTimeEvent();
 	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()));
@@ -452,14 +454,14 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
 
-	m_ink.update(frameTime);
+	m_inkParticle.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
 	{
-		m_ink.setCanEmit(true);
-		m_ink.setPosition(m_box->getBaryCenter());
+		m_inkParticle.setCanEmit(true);
+		m_inkParticle.setPosition(m_box->getBaryCenter());
 	}
 	else
-		m_ink.setCanEmit(false);
+		m_inkParticle.setCanEmit(false);
 
 	for (auto & robot : m_nanoRobots)
 	{
@@ -502,7 +504,8 @@ void	CharacterOcto::resetTimeEvent()
 
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
-	m_ink.draw(render);
+	m_inkParticle.draw(render);
+	m_helmetParticle.draw(render);
 	m_sprite.draw(render, states);
 }
 
@@ -682,6 +685,7 @@ bool	CharacterOcto::dieFall()
 	if (m_timeEventFall > sf::seconds(2.0f) && !m_inWater)
 	{
 		m_sprite.setNextEvent(Death);
+		m_helmetParticle.canEmit(true);
 		return true;
 	}
 	return false;
