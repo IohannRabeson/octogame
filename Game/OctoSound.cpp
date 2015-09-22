@@ -4,7 +4,12 @@
 #include <ResourceManager.hpp>
 
 CharacterOcto::OctoSound::OctoSound() :
-	m_sound(nullptr)
+	m_sound(nullptr),
+	m_prevEvent(Idle),
+	m_inWater(false),
+	m_onGround(false),
+	m_volumeEffect(0.3f),
+	m_volumeVoice(0.5f)
 {
 }
 
@@ -14,8 +19,10 @@ CharacterOcto::OctoSound::~OctoSound()
 		m_sound->stop();
 }
 
-void	CharacterOcto::OctoSound::update(sf::Time frameTime, Events event)
+void	CharacterOcto::OctoSound::update(sf::Time frameTime, Events event, bool inWater, bool onGround)
 {
+	m_inWater = inWater;
+	m_onGround = onGround;
 	if (m_prevEvent != event)
 	{
 		if (m_sound != nullptr){
@@ -34,6 +41,7 @@ void	CharacterOcto::OctoSound::resetTimeEvent()
 {
 	m_timeEventFall = sf::Time::Zero;
 	m_timeEventIdle = sf::Time::Zero;
+	m_timeEventElevator = sf::Time::Zero;
 }
 
 void	CharacterOcto::OctoSound::startEvent(Events event)
@@ -43,12 +51,15 @@ void	CharacterOcto::OctoSound::startEvent(Events event)
 
 	switch(event)
 	{
-		case Elevator:
+		case StartElevator:
+			if (m_onGround)
+				audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_WAV), m_volumeEffect);
+			break;
 		case DoubleJump:
-			m_sound = audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_WAV));
+				audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_WAV), m_volumeEffect);
 			break;
 		case Death:
-			m_sound = audio.playSound(resources.getSound(OCTO_DEATH_WAV));
+			m_sound = audio.playSound(resources.getSound(OCTO_DEATH_WAV), m_volumeVoice);
 		default:
 			break;
 	}
@@ -60,28 +71,54 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 
 	switch(event)
 	{
+		case Right:
+		case Left:
+				walkSound();
+				break;
 		case Fall:
 			m_timeEventFall += frameTime;
 			if (m_timeEventFall > sf::seconds(3.f) && m_sound == nullptr)
 			{
-				m_sound = audio.playSound(resources.getSound(OCTO_FEAR_WAV));
+				m_sound = audio.playSound(resources.getSound(OCTO_FEAR_WAV), m_volumeVoice);
 			}
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;
 			if (m_timeEventIdle > sf::seconds(6.f) && m_sound == nullptr)
 			{
-				m_sound = audio.playSound(resources.getSound(OCTO_MONOLOGUE_WAV));
+				m_sound = audio.playSound(resources.getSound(OCTO_MONOLOGUE_WAV), m_volumeVoice);
 			}
 			break;
-		case Right:
-		case Left:
+		case Elevator:
+			m_timeEventElevator += frameTime;
+			if (m_timeEventElevator > sf::seconds(1.f) && m_sound == nullptr)
+				m_sound = audio.playSound(resources.getSound(OCTO_START_ELEVATOR_WAV), m_volumeEffect);
+		default:
 			break;
-		case Jump:
+	}
+}
+
+void	CharacterOcto::OctoSound::walkSound()
+{
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+	Level						level = Progress::getInstance().getNextDestination();
+
+	if (m_inWater && (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped))
+	{
+		m_sound = audio.playSound(resources.getSound(OCTO_WALK_WATER_WAV), m_volumeEffect);
+		return;
+	}
+
+	switch (level)
+	{
+		case Level::LevelTwo:
+			if (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped)
+				m_sound = audio.playSound(resources.getSound(OCTO_WALK_ROCK_WAV), m_volumeEffect);
 			break;
-		case DoubleJump:
-			break;
-		case Death:
+		case Level::LevelThree:
+			if (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped)
+				m_sound = audio.playSound(resources.getSound(OCTO_WALK_LEAF_WAV), m_volumeEffect);
 			break;
 		default:
 			break;

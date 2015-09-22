@@ -441,7 +441,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 		m_sprite.update(frameTime);
 	}
 	resetTimeEvent();
-	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()));
+	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()),
+			m_inWater, m_onGround);
 
 	if (!m_collisionElevatorEvent && m_progress.canRepair())
 		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
