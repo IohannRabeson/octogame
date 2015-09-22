@@ -26,6 +26,7 @@ protected:
 
 	sf::Shader & getShader(void);
 	octo::AnimatedSprite const & getSprite(void) const;
+	octo::AnimatedSprite & getSprite(void);
 	bool getStartBalle(void) const;
 	bool getCollideWithOcto(void) const;
 	sf::Time getTimer(void) const;
