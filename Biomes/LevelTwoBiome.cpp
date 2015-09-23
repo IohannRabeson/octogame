@@ -11,7 +11,7 @@
 LevelTwoBiome::LevelTwoBiome() :
 	m_name("LevelTwo"),
 	m_id(Level::LevelTwo),
-	m_seed("LevelTwo"),
+	m_seed("Caillou"),
 	m_mapSize(sf::Vector2u(900u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(50.f * 16.f, 650.f),
