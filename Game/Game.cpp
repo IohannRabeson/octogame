@@ -36,7 +36,9 @@ Game::Game(void) :
 	m_groundManager(nullptr),
 	m_parallaxScrolling(nullptr),
 	m_musicPlayer(nullptr),
-	m_octo(nullptr)
+	m_octo(nullptr),
+	m_keyS(false),
+	m_keyF(false)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -101,6 +103,7 @@ void	Game::update(sf::Time frameTime)
 	m_octo->update(frameTime);
 	followPlayer(frameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
+	moveMap();
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
@@ -134,16 +137,16 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::Tent:
-				gameObjectCast<Tent>(gameObject)->startBalle();
+			gameObjectCast<Tent>(gameObject)->startBalle();
 			break;
 		case GameObjectType::Concert:
-				gameObjectCast<Concert>(gameObject)->startBalle();
+			gameObjectCast<Concert>(gameObject)->startBalle();
 			break;
 		case GameObjectType::Bouibouik:
-				gameObjectCast<Bouibouik>(gameObject)->startBalle();
+			gameObjectCast<Bouibouik>(gameObject)->startBalle();
 			break;
 		case GameObjectType::Portal:
-				octo->usePortal(*gameObjectCast<Portal>(gameObject));
+			octo->usePortal(*gameObjectCast<Portal>(gameObject));
 			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling())
@@ -217,20 +220,48 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 	(void)tileShape;
 }
 
+void Game::moveMap()
+{
+	if (m_keyS)
+	{
+		if (Progress::getInstance().canMoveMap())
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+	}
+	else if (m_keyF)
+	{
+		if (Progress::getInstance().canMoveMap())
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+	}
+}
+
 bool Game::onPressed(sf::Event::KeyEvent const & event)
 {
 	switch (event.code)
 	{
 		case sf::Keyboard::S:
-			if (Progress::getInstance().canMoveMap())
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
-		break;
+			m_keyS = true;
+			break;
 		case sf::Keyboard::F:
-			if (Progress::getInstance().canMoveMap())
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
-		break;
+			m_keyF = true;
+			break;
 		default:
-		break;
+			break;
+	}
+	return true;
+}
+
+bool	Game::onReleased(sf::Event::KeyEvent const& event)
+{
+	switch (event.code)
+	{
+		case sf::Keyboard::S:
+			m_keyS = false;
+			break;
+		case sf::Keyboard::F:
+			m_keyF = false;
+			break;
+		default:
+			break;
 	}
 	return true;
 }

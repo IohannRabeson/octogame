@@ -49,7 +49,8 @@ GroundManager::GroundManager(void) :
 	m_decorManagerGround(200000),
 	m_nextState(GenerationState::Next),
 	m_cycle(nullptr),
-	m_water(nullptr)
+	m_water(nullptr),
+	m_soundGeneration(nullptr)
 {}
 
 void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
@@ -938,6 +939,8 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 
 void GroundManager::update(float deltatime)
 {
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	m_transitionTimer += deltatime;
 
 	// Get the top left of the camera view
@@ -948,6 +951,12 @@ void GroundManager::update(float deltatime)
 	if (m_transitionTimer >= m_transitionTimerMax)
 	{
 		bool compute = false;
+		if (m_nextState != GenerationState::None)
+		{
+			if (m_soundGeneration != nullptr)
+				m_soundGeneration->stop();
+			//m_soundGeneration = audio.playSound(resources.getSound(OCTO_GREETING_WAV));
+		}
 		if (m_nextState == GenerationState::Next)
 		{
 			compute = true;
