@@ -15,15 +15,8 @@ float noise(vec2 x)
 
 float fbm(vec2 p, vec3 a)
 {
-	float total = 0.0;
-	float frequency = 1.0;
-	float amplitude = a.x;
-	for (int i = 0; i < a.z; ++i)
-	{
-		total += noise(p * frequency) * amplitude;
-		frequency *= a.y;
-		amplitude *= a.x;
-	}
+	float total = noise(p * 1.0) * 0.5;
+	total += noise(p * a.y) * 0.25;
 	return total;
 }
 
