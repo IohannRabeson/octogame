@@ -128,7 +128,6 @@ LevelOneBiome::LevelOneBiome() :
 	m_gameObjects[30] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 320;
 	m_gameObjects[8] = GameObjectType::SpaceShip;
-	m_gameObjects[38] = GameObjectType::Concert;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelTwo);
