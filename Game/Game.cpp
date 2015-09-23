@@ -148,6 +148,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 		case GameObjectType::Portal:
 			octo->usePortal(*gameObjectCast<Portal>(gameObject));
 			break;
+		case GameObjectType::CedricNpc:
+			gameObjectCast<CedricNpc>(gameObject)->startBalle();
+			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling())
 			{

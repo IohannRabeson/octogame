@@ -94,6 +94,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::Tent)
 		| static_cast<std::size_t>(GameObjectType::Concert)
+		| static_cast<std::size_t>(GameObjectType::CedricNpc)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik);
 	m_box->setCollisionMask(mask);
 
