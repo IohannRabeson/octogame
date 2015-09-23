@@ -40,6 +40,7 @@ public:
 	virtual std::map<std::size_t, GameObjectType> const & getGameObjects();
 	virtual Level										getDestination();
 	virtual float										getWaterLevel();
+	virtual sf::Color									getWaterColor();
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -156,6 +157,8 @@ private:
 	std::vector<sf::Color>								m_particleColor;
 	sf::Color											m_tileStartColor;
 	sf::Color											m_tileEndColor;
+	float												m_waterLevel;
+	sf::Color											m_waterColor;
 
 	std::map<std::size_t, std::string>					m_instances;
 	std::map<std::size_t, GameObjectType>				m_gameObjects;

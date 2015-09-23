@@ -19,6 +19,8 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
+	m_waterLevel(-1.f),
+	m_waterColor(255, 255, 255, 200),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -65,11 +67,11 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_rockColor(240, 110, 110),
 
 	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 200.f)),
+	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
-	m_treeBeatMouvement(0.15f),
+	m_treeBeatMouvement(0.1f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(46, 133, 84),
 
@@ -207,7 +209,12 @@ Level	LevelTwoBiome::getDestination()
 
 float	LevelTwoBiome::getWaterLevel()
 {
-	return -1.f;
+	return m_waterLevel;
+}
+
+sf::Color	LevelTwoBiome::getWaterColor()
+{
+	return m_waterColor;
 }
 
 std::map<std::size_t, std::string> const & LevelTwoBiome::getInstances()

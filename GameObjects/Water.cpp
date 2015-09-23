@@ -13,11 +13,11 @@ Water::Water(ABiome & biome) :
 	m_shaderIndex(0u)
 {
 	m_rectLeft.setSize(sf::Vector2f(m_width, 10000.f));
-	m_rectLeft.setFillColor(sf::Color(0, 0, 200, 50));
+	m_rectLeft.setFillColor(biome.getWaterColor());
 	m_rectLeft.setOutlineColor(sf::Color::Red);
 
 	m_rectRight.setSize(sf::Vector2f(m_width, 10000.f));
-	m_rectRight.setFillColor(sf::Color(0, 0, 200, 50));
+	m_rectRight.setFillColor(biome.getWaterColor());
 	m_rectRight.setOutlineColor(sf::Color::Red);
 
 	m_limit = biome.getWaterLevel();
