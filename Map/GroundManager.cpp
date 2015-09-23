@@ -102,7 +102,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
-	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
+	m_npcFactory.registerCreator<ClassicNpc>(OCTO_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
