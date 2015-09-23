@@ -2,6 +2,7 @@
 # define NANOROBOT_HPP
 
 # include <AnimatedSprite.hpp>
+# include <random>
 
 # include "AGameObject.hpp"
 # include "FireflySwarm.hpp"
@@ -40,6 +41,7 @@ public:
 protected:
 	NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames, int seed);
 	void setup(AGameObjectBase * gameObject);
+	void playSound(void);
 
 private:
 	FireflySwarm							m_swarm;
@@ -58,7 +60,10 @@ private:
 	sf::Time								m_timerMax;
 
 	bool									m_isTravelling;
+
 	NanoEffect								m_glowingEffect;
+	std::mt19937							m_engine;
+	std::uniform_int_distribution<int>		m_soundDistri;
 };
 
 #endif

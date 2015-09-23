@@ -1,6 +1,7 @@
 #ifndef TERRAINMANAGER_HPP
 # define TERRAINMANAGER_HPP
 
+# include <AudioManager.hpp>
 # include <GenericFactory.hpp>
 # include "Map.hpp"
 # include "DecorManager.hpp"
@@ -84,6 +85,7 @@ private:
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
 	std::unique_ptr<Water>				m_water;
+	std::shared_ptr<sf::Sound>			m_soundGeneration;
 
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
