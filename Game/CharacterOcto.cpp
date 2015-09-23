@@ -439,7 +439,6 @@ void	CharacterOcto::update(sf::Time frameTime)
 	{
 		commitPhysicsToGraphics();
 		m_sprite.update(frameTime);
-		m_helmetParticle.setPosition(getPosition() + sf::Vector2f(30.f, -20.f));
 		m_helmetParticle.update(frameTime);
 	}
 	resetTimeEvent();
@@ -506,8 +505,8 @@ void	CharacterOcto::resetTimeEvent()
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	m_inkParticle.draw(render);
-	m_helmetParticle.draw(render);
 	m_sprite.draw(render, states);
+	m_helmetParticle.draw(render);
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
@@ -687,6 +686,7 @@ bool	CharacterOcto::dieFall()
 	{
 		m_sprite.setNextEvent(Death);
 		m_helmetParticle.canEmit(true);
+		m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
 		return true;
 	}
 	return false;
