@@ -51,6 +51,7 @@ protected:
 
 	ANpc(ResourceKey const & npcId);
 
+	void setTimerMax(sf::Time timerMax);
 	void setNextEvent(Events event);
 	void setMachine(octo::FiniteStateMachine const & machine);
 	void setVelocity(float velocity);
@@ -63,6 +64,9 @@ protected:
 
 	float getScale(void) const;
 	float getVelocity(void) const;
+	void addTimer(sf::Time time);
+	sf::Time getTimer(void) const;
+	sf::Time getTimerMax(void) const;
 	sf::Vector2f const & getOrigin(void) const;
 	sf::FloatRect const & getArea(void) const;
 	RectangleShape * getBox(void);
