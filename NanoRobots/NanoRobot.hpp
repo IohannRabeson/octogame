@@ -9,6 +9,7 @@
 # include "FireflyPositionBehaviors.hpp"
 # include "IPlaceable.hpp"
 # include "BubbleText.hpp"
+# include "NanoEffect.hpp"
 
 class CircleShape;
 
@@ -57,7 +58,7 @@ private:
 	sf::Time								m_timerMax;
 
 	bool									m_isTravelling;
-
+	NanoEffect								m_glowingEffect;
 };
 
 #endif

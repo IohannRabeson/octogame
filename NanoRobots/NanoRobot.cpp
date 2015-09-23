@@ -57,6 +57,8 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t 
 	m_text->setup(npcTexts[id][0u], sf::Color::White);
 	m_text->setType(ABubble::Type::Speak);
 	m_text->setActive(false);
+
+	m_glowingEffect.setup(m_sprite);
 }
 
 NanoRobot::~NanoRobot(void)
@@ -81,6 +83,7 @@ void NanoRobot::transfertToOcto(void)
 	m_swarm.getFirefly(0u).speed = 1.f;
 	m_text->setActive(true);
 	m_state = Speak;
+	m_glowingEffect.onTransfer();
 	Progress::getInstance().addNanoRobot();
 }
 
@@ -130,7 +133,7 @@ void NanoRobot::update(sf::Time frametime)
 	m_sprite.update(frametime);
 
 	sf::Vector2f const & pos = m_swarm.getFirefly(0u).position;
-	m_sprite.setPosition(pos - sf::Vector2f(32.f, 32.f));
+	m_sprite.setPosition(pos - m_sprite.getGlobalSize() / 2.f);
 	if (m_box)
 	{
 		m_box->setPosition(pos.x - m_box->getRadius(), pos.y - m_box->getRadius());
@@ -150,12 +153,15 @@ void NanoRobot::update(sf::Time frametime)
 			m_state = FollowOcto;
 		}
 	}
+	m_glowingEffect.setPosition(pos);
+	m_glowingEffect.update(frametime);
 }
 
 void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak)
 	{
+		render.draw(m_glowingEffect);
 		render.draw(m_sprite);
 		if (m_state == Idle || m_state == Speak)
 			m_text->draw(render);
