@@ -11,7 +11,7 @@
 LevelTwoBiome::LevelTwoBiome() :
 	m_name("LevelTwo"),
 	m_id(Level::LevelTwo),
-	m_seed("Caillou"),
+	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(900u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(50.f * 16.f, 650.f),
@@ -126,25 +126,21 @@ LevelTwoBiome::LevelTwoBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	// TODO define map position and number of map
-	//m_instances[12] = MINIMAP_OMP;
-	//m_instances[86] = TEST_MAP2_OMP;
-
 	// Define game objects
-	m_gameObjects[5] = GameObjectType::JuNpc;
+	m_gameObjects[10] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
 	m_instances[584] = MAP_NANO_JUMP_DESERT_OMP;
-	m_gameObjects[375] = GameObjectType::TurbanNpc;
-	m_gameObjects[592] = GameObjectType::FannyNpc;
+	m_gameObjects[395] = GameObjectType::TurbanNpc;
+	m_gameObjects[597] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[645] = GameObjectType::Bouibouik;
-	m_gameObjects[720] = GameObjectType::OldDesertStaticNpc;
-	m_gameObjects[680] = GameObjectType::Tent;
-	m_gameObjects[740] = GameObjectType::Portal;
+	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
+	m_gameObjects[750] = GameObjectType::Tent;
+	m_gameObjects[700] = GameObjectType::Portal;
 	m_interestPointPosX = 500;
 
-	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 801};
+	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelOne);
