@@ -430,8 +430,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 		collisionElevatorUpdate();
 		collisionTileUpdate();
 		commitPhysicsToGraphics();
-		commitEventToGraphics();
 		m_sprite.update(frameTime);
+		commitEventToGraphics();
 		commitControlsToPhysics(frameTime.asSeconds());
 		commitEnvironmentToPhysics();
 	}
@@ -698,10 +698,10 @@ bool	CharacterOcto::endDeath()
 	{
 		if (m_sprite.isTerminated())
 		{
-			octo::StateManager & states = octo::Application::getStateManager();
-			octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
-			octo::Camera&			camera = octo::Application::getCamera();
-			sf::Vector2f			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
+			octo::StateManager &		states = octo::Application::getStateManager();
+			octo::PostEffectManager &	postEffect = octo::Application::getPostEffectManager();
+			octo::Camera&				camera = octo::Application::getCamera();
+			sf::Vector2f				cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 
 			m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 			m_progress.setReverseSprite(m_originMove);
@@ -782,13 +782,13 @@ void	CharacterOcto::commitEventToGraphics()
 	if (m_keyLeft && !m_originMove)
 	{
 		m_sprite.setScale(-1.f * m_spriteScale, 1.f * m_spriteScale);
-		m_sprite.setOrigin(m_sprite.getOrigin().x + m_sprite.getLocalSize().x, 0.f);
+		m_sprite.setOrigin(m_sprite.getLocalSize().x, 0.f);
 		m_originMove = true;
 	}
 	else if (m_keyRight && m_originMove)
 	{
 		m_sprite.setScale(1.f * m_spriteScale, 1.f * m_spriteScale);
-		m_sprite.setOrigin(m_sprite.getOrigin().x - m_sprite.getLocalSize().x, 0.f);
+		m_sprite.setOrigin(0.f , 0.f);
 		m_originMove = false;
 	}
 	m_doScale = false;
@@ -843,7 +843,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 void	CharacterOcto::commitEnvironmentToPhysics()
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
-	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
+	Events			state = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	if (m_inWater)
 	{
