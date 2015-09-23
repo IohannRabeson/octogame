@@ -15,9 +15,10 @@ MusicPlayer::MusicPlayer(void) :
 	initMusicValue(m_mainMusics[1], MENU_OPUS_II_WAV);
 	initMusicValue(m_mainMusics[2], MENU_OPUS_III_WAV);
 
-	m_eventMusics.resize(2);
+	m_eventMusics.resize(3);
 	initMusicValue(m_eventMusics[0], BALLADE_MENTALE_WAV);
 	initMusicValue(m_eventMusics[1], SPACE_SHIP_WAV);
+	initMusicValue(m_eventMusics[2], COLONISATION_WAV);
 }
 
 void MusicPlayer::setup(ABiome const & biome)
@@ -55,6 +56,11 @@ bool MusicPlayer::getEvent(sf::Vector2f const & octoPos)
 	else if (m_biomeId == Level::LevelOne)
 	{
 		m_currentEventKey = SPACE_SHIP_WAV;
+		return true;
+	}
+	else if (m_biomeId == Level::LevelThree)
+	{
+		m_currentEventKey = COLONISATION_WAV;
 		return true;
 	}
 	return false;
