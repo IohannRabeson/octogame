@@ -1017,6 +1017,10 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 		nano.m_gameObject->draw(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->draw(render, states);
+}
+
+void GroundManager::drawWater(sf::RenderTarget& render, sf::RenderStates states) const
+{
 	if (m_water)
 		render.draw(*m_water, states);
 }

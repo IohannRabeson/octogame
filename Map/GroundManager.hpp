@@ -34,8 +34,9 @@ public:
 
 	void setup(ABiome & biome, SkyCycle & cycle);
 	void update(float deltatime);
-	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
+	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
+	void drawWater(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawText(sf::RenderTarget& render, sf::RenderStates states) const;
 	NanoRobot * getNanoRobot(NanoRobot * robot);
 	inline void setNextGenerationState(GenerationState state) { m_nextState = state; }
