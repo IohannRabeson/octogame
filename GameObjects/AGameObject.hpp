@@ -27,6 +27,10 @@ enum class GameObjectType
 	Tent = 1048576u,
 	Firecamp = 2097152u,
 	Concert = 4194304u,
+	PunkNpc = 8388608u,
+	FatNpc = 16777216u,
+	IohannNpc = 33554432u,
+	LucienNpc = 67108864u,
 	Water = 131u
 };
 
