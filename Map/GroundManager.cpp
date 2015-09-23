@@ -1036,4 +1036,8 @@ void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) 
 		npc.m_gameObject->drawText(render, states);
 	for (auto & npc : m_npcs)
 		npc->drawText(render, states);
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->drawText(render, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->drawText(render, states);
 }
