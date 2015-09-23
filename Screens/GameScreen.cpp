@@ -8,7 +8,8 @@
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
 
-GameScreen::GameScreen(void)
+GameScreen::GameScreen(void) :
+	m_doSave(false)
 {}
 
 void	GameScreen::start()
@@ -50,6 +51,12 @@ void	GameScreen::update(sf::Time frameTime)
 	{
 		m_menu.update(frameTime, m_game->getOctoBubblePosition());
 		postEffect.setAllShaderEnabled(false);
+		m_doSave = true;
+	}
+	else if (m_doSave)
+	{
+		Progress::getInstance().save();
+		m_doSave = false;
 	}
 	else
 	{
