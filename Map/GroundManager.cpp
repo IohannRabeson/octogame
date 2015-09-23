@@ -955,7 +955,8 @@ void GroundManager::update(float deltatime)
 		{
 			if (m_soundGeneration != nullptr)
 				m_soundGeneration->stop();
-			//m_soundGeneration = audio.playSound(resources.getSound(OCTO_GREETING_WAV));
+			//TODO
+			m_soundGeneration = audio.playSound(resources.getSound(OCTO_GREETING_WAV), 0.f);
 		}
 		if (m_nextState == GenerationState::Next)
 		{
