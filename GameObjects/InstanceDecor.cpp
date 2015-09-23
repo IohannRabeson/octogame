@@ -43,7 +43,7 @@ sf::Vector2f const & InstanceDecor::getPosition(void) const
 
 void InstanceDecor::setPosition(sf::Vector2f const & position)
 {
-	m_sprite.setPosition(position.x, position.y - m_sprite.getLocalSize().y * m_sprite.getScale().y);
+	m_sprite.setPosition(position.x - m_sprite.getLocalSize().x * m_sprite.getScale().x, position.y - m_sprite.getLocalSize().y * m_sprite.getScale().y);
 }
 
 void InstanceDecor::update(sf::Time frameTime)

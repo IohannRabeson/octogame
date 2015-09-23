@@ -127,12 +127,13 @@ LevelThreeBiome::LevelThreeBiome() :
 	// Define game objects
 	m_instances[1070] = MAP_ELEVATOR_JUNGLE_OMP;
 	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
+	m_instances[765] = TEST_MAP_VILLAGE_OMP;
 	m_gameObjects[4] = GameObjectType::Portal;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::LevelOne);
+	m_destinations.push_back(Level::LevelTwo);
 	m_destinations.push_back(Level::Default);
 }
 
