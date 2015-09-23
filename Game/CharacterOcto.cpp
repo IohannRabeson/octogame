@@ -94,6 +94,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::Tent)
 		| static_cast<std::size_t>(GameObjectType::Concert)
+		| static_cast<std::size_t>(GameObjectType::CedricNpc)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik);
 	m_box->setCollisionMask(mask);
 
@@ -514,6 +515,13 @@ void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates sta
 	for (auto & robot : m_nanoRobots)
 		robot->draw(render, states);
 }
+
+void	CharacterOcto::drawText(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
+{
+	for (auto & robot : m_nanoRobots)
+		robot->drawText(render, states);
+}
+
 
 void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisionDirection)
 {

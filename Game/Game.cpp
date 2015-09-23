@@ -148,6 +148,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 		case GameObjectType::Portal:
 			octo->usePortal(*gameObjectCast<Portal>(gameObject));
 			break;
+		case GameObjectType::CedricNpc:
+			gameObjectCast<CedricNpc>(gameObject)->startBalle();
+			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling())
 			{
@@ -280,6 +283,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
+	m_octo->drawText(render, states);
 }
 
 void	Game::followPlayer(sf::Time frameTime)

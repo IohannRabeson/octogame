@@ -2,12 +2,22 @@
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <PostEffectManager.hpp>
+#include <Camera.hpp>
+#include <Math.hpp>
+#include <Interpolations.hpp>
 
 CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	ANpc(CEDRIC_OSS),
 	m_skyCycle(skyCycle),
 	m_prevDayState(skyCycle.isDay()),
-	m_timerSwitchDayNight(0.f)
+	m_timerSwitchDayNight(0.f),
+	m_shaderIndex(0u),
+	m_startBalle(false),
+	m_timer(sf::Time::Zero),
+	m_effectDuration(sf::seconds(20.f))
 {
 	setSize(sf::Vector2f(35.f, 100.f));
 	setOrigin(sf::Vector2f(75.f, 68.f));
@@ -16,7 +26,20 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	setTextOffset(sf::Vector2f(0.f, -50.f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::CedricNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::CedricNpc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
+
+	octo::ResourceManager & resources = octo::Application::getResourceManager();
+	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+
+	m_shader.loadFromMemory(resources.getText(VISION_TROUBLE_FRAG), sf::Shader::Fragment);
+	octo::PostEffect postEffectShader;
+	postEffectShader.resetShader(&m_shader);
+	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+}
+
+CedricNpc::~CedricNpc(void)
+{
+	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
 }
 
 void CedricNpc::setup(void)
@@ -202,6 +225,13 @@ void CedricNpc::setupMachine(void)
 	setNextEvent(Left);
 }
 
+void CedricNpc::startBalle(void)
+{
+	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+	postEffect.enableEffect(m_shaderIndex, true);
+	m_startBalle = true;
+}
+
 void CedricNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
@@ -248,6 +278,30 @@ void CedricNpc::update(sf::Time frametime)
 	sprite.setPosition(bounds.left, bounds.top);
 
 	updateText(frametime);
+
+	if (m_startBalle)
+	{
+		m_timer += frametime;
+		float length;
+		if (m_timer < m_effectDuration / 2.f)
+			length = octo::linearInterpolation(0.f, 2.f, m_timer / (m_effectDuration / 2.f));
+		else
+			length = octo::linearInterpolation(2.f, 0.f, (m_timer - m_effectDuration / 2.f) / (m_effectDuration / 2.f));
+		sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+		length *= 40.f;
+		float rotation = m_timer.asSeconds() / 5.f;
+		float x = std::cos(rotation * octo::Pi2 * 1.5f) * length / rect.width;
+		float y = std::sin(rotation * octo::Pi2 * 2.f) * length / rect.height;
+		float z = std::sin(rotation * octo::Pi2) * length / rect.height;
+		m_shader.setParameter("offset", x, y, z);
+		if (m_timer > m_effectDuration)
+		{
+			m_timer = sf::Time::Zero;
+			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+			postEffect.enableEffect(m_shaderIndex, false);
+			m_startBalle = false;
+		}
+	}
 	resetVariables();
 }
 

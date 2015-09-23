@@ -14,6 +14,10 @@
 #include "FannyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "GuiNpc.hpp"
+#include "PunkNpc.hpp"
+#include "FatNpc.hpp"
+#include "LucienNpc.hpp"
+#include "IohannNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
@@ -106,6 +110,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
+	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
+	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
+	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
+	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
@@ -479,6 +487,11 @@ NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 	return robot;
 }
 
+void	GroundManager::setNextGenerationState(GenerationState state)
+{
+	if (m_transitionTimer >= m_transitionTimerMax)
+		m_nextState = state;
+}
 
 void GroundManager::setTransitionAppear(int x, int y)
 {
@@ -1031,4 +1044,8 @@ void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) 
 		npc.m_gameObject->drawText(render, states);
 	for (auto & npc : m_npcs)
 		npc->drawText(render, states);
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->drawText(render, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->drawText(render, states);
 }

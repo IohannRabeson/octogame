@@ -1,9 +1,11 @@
 #include "Concert.hpp"
 #include <Interpolations.hpp>
 #include <SFML/Graphics.hpp>
+#include <Application.hpp>
+#include <Camera.hpp>
 
 Concert::Concert(void) :
-	SimpleObject(CONCERT_OSS, PIXELATE_FRAG, 20.f)
+	SimpleObject(CONCERT_OSS, CONCERT_FRAG, 20.f)
 {
 	typedef octo::SpriteAnimation::Frame	Frame;
 	setupAnimation({Frame(sf::seconds(0.2f), 0u),
@@ -14,6 +16,8 @@ Concert::Concert(void) :
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Concert), static_cast<std::size_t>(GameObjectType::Player));
 	getSprite().setScale(sf::Vector2f(0.8f, 0.8f));
 	m_particles.canEmit(true);
+	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+	getShader().setParameter("resolution", rect.width, rect.height);
 }
 
 Concert::~Concert(void)
@@ -25,12 +29,12 @@ void Concert::update(sf::Time frameTime)
 
 	if (getStartBalle())
 	{
-		float intensity;
+		float time;
 		if (getTimer() < getEffectDuration() / 2.f)
-			intensity = octo::linearInterpolation(0.f, 0.02f, getTimer() / (getEffectDuration() / 2.f));
+			time = octo::linearInterpolation(0.f, 1.f, getTimer() / (getEffectDuration() / 2.f));
 		else
-			intensity = octo::linearInterpolation(0.02f, 0.f, (getTimer() - getEffectDuration() / 2.f) / (getEffectDuration() / 2.f));
-		shader.setParameter("pixel_threshold", intensity);
+			time = octo::linearInterpolation(1.f, 0.f, (getTimer() - getEffectDuration() / 2.f) / (getEffectDuration() / 2.f));
+		shader.setParameter("time", time);
 	}
 	SimpleObject::update(frameTime);
 	m_particles.update(frameTime);

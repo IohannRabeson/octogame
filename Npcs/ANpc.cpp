@@ -133,6 +133,11 @@ bool ANpc::canSpecial2(void) const
 	return false;
 }
 
+void ANpc::setTimerMax(sf::Time timerMax)
+{
+	m_timerMax = timerMax;
+}
+
 void ANpc::setArea(sf::FloatRect const & area)
 {
 	m_area = area;
@@ -152,7 +157,6 @@ void ANpc::setScale(float scale)
 
 void ANpc::setPosition(sf::Vector2f const & position)
 {
-
 	if (m_box->getSleep())
 	{
 		m_box->setPosition(position.x, position.y - m_box->getSize().y - getHeight());
@@ -221,6 +225,21 @@ float ANpc::getScale(void) const
 float ANpc::getVelocity(void) const
 {
 	return m_velocity;
+}
+
+void ANpc::addTimer(sf::Time time)
+{
+	m_timer += time;
+}
+
+sf::Time ANpc::getTimer(void) const
+{
+	return m_timer;
+}
+
+sf::Time ANpc::getTimerMax(void) const
+{
+	return m_timerMax;
 }
 
 sf::Vector2f const & ANpc::getOrigin(void) const
