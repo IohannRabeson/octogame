@@ -20,6 +20,7 @@ public:
 private:
 	MainMenu				m_menu;
 	std::unique_ptr<Game>	m_game;
+	bool					m_doSave;
 
 	virtual bool onPressed(sf::Event::KeyEvent const & event);
 };
