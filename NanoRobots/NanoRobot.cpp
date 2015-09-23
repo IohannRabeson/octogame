@@ -57,8 +57,6 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t 
 	m_text->setup(npcTexts[id][0u], sf::Color::White);
 	m_text->setType(ABubble::Type::Speak);
 	m_text->setActive(false);
-
-	m_glowingEffect.setup(m_sprite);
 }
 
 NanoRobot::~NanoRobot(void)

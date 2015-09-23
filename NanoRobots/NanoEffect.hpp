@@ -18,7 +18,6 @@ public:
 	NanoEffect(void);
 	virtual ~NanoEffect(void) = default;
 
-	void							setup(octo::AnimatedSprite const & sprite);
 	void							update(sf::Time frameTime);
 	void							draw(sf::RenderTarget & render, sf::RenderStates states = sf::RenderStates()) const;
 
@@ -32,8 +31,7 @@ public:
 	void							onTransfer(void);
 
 private:
-	void							createOctogon(sf::Vector2f const & size,
-												 float sizeCorner,
+	void							createLosange(sf::Vector2f const & size,
 												 sf::Vector2f const & origin,
 												 sf::Color const & color,
 												 octo::VertexBuilder& builder);
@@ -48,7 +46,6 @@ private:
 	std::size_t						m_used;
 	octo::VertexBuilder				m_builder;
 
-	octo::AnimatedSprite			m_sprite;
 	sf::Vector2f					m_size;
 	sf::Vector2f					m_position;
 	sf::Color						m_color;

@@ -4,7 +4,7 @@ NanoEffect::NanoEffect(void) :
 	m_vertices(new sf::Vertex[100]),
 	m_count(100),
 	m_used(0u),
-	m_size(10.f, 10.f),
+	m_size(80.f, 80.f),
 	m_color(255, 255, 255, 200),
 	m_isActive(true),
 	m_isTransfer(false),
@@ -13,54 +13,28 @@ NanoEffect::NanoEffect(void) :
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 }
 
-void NanoEffect::setup(octo::AnimatedSprite const & sprite)
+void NanoEffect::createLosange(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	m_sprite = sprite;
-	m_sprite.setScale(0.f, 0.f);
-	m_sprite.setColor(m_color);
-}
+	sf::Vector2f up(0.f, -size.y);
+	sf::Vector2f down(0.f, size.y);
+	sf::Vector2f left(-size.x, 0.f);
+	sf::Vector2f right(size.x, 0.f);
 
-void NanoEffect::createOctogon(sf::Vector2f const & size, float sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
-{
-	sf::Vector2f upLeft(-size.x, -size.y - sizeCorner);
-	sf::Vector2f upRight(size.x, -size.y - sizeCorner);
-	sf::Vector2f upMidLeft(-size.x - sizeCorner, -size.y);
-	sf::Vector2f upMidRight(size.x + sizeCorner, -size.y);
-	sf::Vector2f downLeft(-size.x, size.y + sizeCorner);
-	sf::Vector2f downRight(size.x, size.y + sizeCorner);
-	sf::Vector2f downMidLeft(-size.x - sizeCorner, size.y);
-	sf::Vector2f downMidRight(size.x + sizeCorner, size.y);
+	up += origin;
+	down += origin;
+	left += origin;
+	right += origin;
 
-	upLeft += origin;
-	upRight += origin;
-	upMidLeft += origin;
-	upMidRight += origin;
-	downLeft += origin;
-	downRight += origin;
-	downMidLeft += origin;
-	downMidRight += origin;
-
-	builder.createTriangle(origin, upLeft, upRight, color);
-	builder.createTriangle(origin, upRight, upMidRight, color);
-	builder.createTriangle(origin, upMidRight, downMidRight, color);
-	builder.createTriangle(origin, downMidRight, downRight, color);
-	builder.createTriangle(origin, downRight, downLeft, color);
-	builder.createTriangle(origin, downLeft, downMidLeft, color);
-	builder.createTriangle(origin, downMidLeft, upMidLeft, color);
-	builder.createTriangle(origin, upMidLeft, upLeft, color);
+	builder.createTriangle(left, up, right, color);
+	builder.createTriangle(left, down, right, color);
 }
 
 void NanoEffect::createEffect(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color color, octo::VertexBuilder& builder)
 {
-	(void)builder;
 	float glowingCoef = m_glowingTimer / m_glowingTimerMax;
-	//float sizeCorner = size.x;
 
-	m_sprite.setColor(sf::Color::Black);
 	color.a = color.a * (1 - glowingCoef);
-	m_sprite.setScale(size.x * glowingCoef, size.y * glowingCoef);
-	m_sprite.setPosition(origin - m_sprite.getGlobalSize() / 2.f);
-	//createOctogon(size * glowingCoef, sizeCorner * glowingCoef, origin, color, builder);
+	createLosange(size * glowingCoef, origin, color, builder);
 }
 
 void NanoEffect::update(sf::Time frameTime)
@@ -93,9 +67,7 @@ void NanoEffect::onTransfer(void)
 
 void NanoEffect::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	//render.draw(m_vertices.get(), m_used, sf::Triangles, states);
-	(void)states;
-	render.draw(m_sprite, sf::BlendAlpha);
+	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 }
 
 sf::Vector2f const & NanoEffect::getPosition(void) const
