@@ -17,6 +17,7 @@
 #include "PunkNpc.hpp"
 #include "FatNpc.hpp"
 #include "LucienNpc.hpp"
+#include "IohannNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
@@ -112,6 +113,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
 	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
+	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;

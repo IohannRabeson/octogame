@@ -129,7 +129,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	// Define game objects
 	m_gameObjects[10] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
-	m_instances[15] = MAP_WAVE_DESERT_OMP;
+	m_instances[353] = MAP_WAVE_DESERT_OMP;
 	m_instances[584] = MAP_NANO_JUMP_DESERT_OMP;
 	m_gameObjects[395] = GameObjectType::TurbanNpc;
 	m_gameObjects[597] = GameObjectType::FannyNpc;
