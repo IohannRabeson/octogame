@@ -5,6 +5,7 @@
 #include "CircleShape.hpp"
 #include "Progress.hpp"
 #include <Application.hpp>
+#include <AudioManager.hpp>
 #include <ResourceManager.hpp>
 #include <sstream>
 
@@ -19,7 +20,9 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t 
 	m_state(Idle),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(7.f)),
-	m_isTravelling(false)
+	m_isTravelling(false),
+	m_engine(std::time(0)),
+	m_soundDistri(0u, 2u)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -68,6 +71,28 @@ void NanoRobot::setup(AGameObjectBase * gameObject)
 	m_box->setCollisionType(static_cast<std::size_t>(gameObject->getObjectType()));
 }
 
+void NanoRobot::playSound(void)
+{
+	std::size_t soundChoose = m_soundDistri(m_engine);
+	octo::AudioManager& audio = octo::Application::getAudioManager();
+	octo::ResourceManager& resource = octo::Application::getResourceManager();
+
+	switch (soundChoose)
+	{
+		case 0u:
+			audio.playSound(resource.getSound(NANO_1_WAV), 1.f, 1.f);
+			break;
+		case 1u:
+			audio.playSound(resource.getSound(NANO_2_WAV), 1.f, 1.f);
+			break;
+		case 2u:
+			audio.playSound(resource.getSound(NANO_3_WAV), 1.f, 1.f);
+			break;
+		default:
+			break;
+	}
+}
+
 void NanoRobot::addMapOffset(float x, float y)
 {
 	setPosition(sf::Vector2f(getPosition().x + x, getPosition().y + y));
@@ -83,6 +108,7 @@ void NanoRobot::transfertToOcto(void)
 	m_state = Speak;
 	m_glowingEffect.onTransfer();
 	Progress::getInstance().addNanoRobot();
+	playSound();
 }
 
 void NanoRobot::setPosition(sf::Vector2f const & position)
