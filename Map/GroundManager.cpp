@@ -951,13 +951,6 @@ void GroundManager::update(float deltatime)
 	if (m_transitionTimer >= m_transitionTimerMax)
 	{
 		bool compute = false;
-		if (m_nextState != GenerationState::None)
-		{
-			if (m_soundGeneration != nullptr)
-				m_soundGeneration->stop();
-			//TODO
-			m_soundGeneration = audio.playSound(resources.getSound(OCTO_GREETING_WAV), 0.f);
-		}
 		if (m_nextState == GenerationState::Next)
 		{
 			compute = true;
@@ -978,6 +971,10 @@ void GroundManager::update(float deltatime)
 		{
 			m_transitionTimer = 0.f;
 			swapMap();
+			if (m_soundGeneration != nullptr)
+				m_soundGeneration->stop();
+			//TODO
+			m_soundGeneration = audio.playSound(resources.getSound(OCTO_GREETING_WAV), 0.f);
 		}
 	}
 	updateOffset(deltatime);
