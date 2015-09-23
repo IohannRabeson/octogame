@@ -167,7 +167,7 @@ ElevatorStream::ElevatorStream() :
 	m_box->setApplyGravity(false);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Elevator));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
-	m_box->setSize(150.f, 0.f);
+	m_box->setSize(100.f, 0.f);
 	m_particles->setWidth(150.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
@@ -280,7 +280,7 @@ void	ElevatorStream::setPosition(sf::Vector2f const & position)
 
 	sf::Vector2f const &	posBox = m_box->getPosition();
 
-	m_box->setPosition(m_position.x - (getWidth() / 2.f), posBox.y);
+	m_box->setPosition(m_position.x - (getWidth() / 3.f), posBox.y);
 	m_spriteBottomFront.setPosition(m_position + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
 	m_spriteBottomBack.setPosition(m_position + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
 	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
