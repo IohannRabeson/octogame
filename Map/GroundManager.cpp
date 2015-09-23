@@ -479,6 +479,11 @@ NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 	return robot;
 }
 
+void	GroundManager::setNextGenerationState(GenerationState state)
+{
+	if (m_transitionTimer >= m_transitionTimerMax)
+		m_nextState = state;
+}
 
 void GroundManager::setTransitionAppear(int x, int y)
 {
