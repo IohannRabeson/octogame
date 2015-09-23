@@ -1,6 +1,7 @@
 #ifndef CEDRICNPC_HPP
 # define CEDRICNPC_HPP
 
+# include <SFML/Graphics/Shader.hpp>
 # include "ANpc.hpp"
 
 class SkyCycle;
@@ -9,7 +10,9 @@ class CedricNpc : public ANpc, public AGameObject<GameObjectType::CedricNpc>
 {
 public:
 	CedricNpc(SkyCycle const & skyCycle);
-	virtual ~CedricNpc(void) = default;
+	virtual ~CedricNpc(void);
+
+	void startBalle(void);
 
 	virtual void setup(void);
 	virtual void update(sf::Time frametime);
@@ -37,6 +40,11 @@ private:
 	SkyCycle const &			m_skyCycle;
 	bool						m_prevDayState;
 	float						m_timerSwitchDayNight;
+	sf::Shader					m_shader;
+	std::size_t					m_shaderIndex;
+	bool						m_startBalle;
+	sf::Time					m_timer;
+	sf::Time					m_effectDuration;
 
 };
 
