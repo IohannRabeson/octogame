@@ -19,6 +19,8 @@ LevelOneBiome::LevelOneBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
 	m_tileEndColor(137, 189, 211),
+	m_waterLevel(-1.f),
+	m_waterColor(255, 255, 255, 200),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(45.f)),
@@ -193,7 +195,12 @@ Level	LevelOneBiome::getDestination()
 
 float	LevelOneBiome::getWaterLevel()
 {
-	return -1.f;
+	return m_waterLevel;
+}
+
+sf::Color	LevelOneBiome::getWaterColor()
+{
+	return m_waterColor;
 }
 
 std::map<std::size_t, std::string> const & LevelOneBiome::getInstances()

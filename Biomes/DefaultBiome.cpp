@@ -19,6 +19,8 @@ DefaultBiome::DefaultBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(230.f, 168.f, 0.f),
 	m_tileEndColor(254.f, 231.f, 170.f),
+	m_waterLevel(1000.f),
+	m_waterColor(255, 255, 255, 200),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(20.f)),
@@ -203,7 +205,12 @@ Level	DefaultBiome::getDestination()
 
 float	DefaultBiome::getWaterLevel()
 {
-	return 1000.f;
+	return m_waterLevel;
+}
+
+sf::Color	DefaultBiome::getWaterColor()
+{
+	return m_waterColor;
 }
 
 std::map<std::size_t, std::string> const & DefaultBiome::getInstances()

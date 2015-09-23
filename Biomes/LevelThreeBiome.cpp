@@ -19,6 +19,8 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
 	m_tileEndColor(0, 124, 104),
+	m_waterLevel(1500.f),
+	m_waterColor(255, 255, 255, 200),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -197,7 +199,12 @@ Level	LevelThreeBiome::getDestination()
 
 float	LevelThreeBiome::getWaterLevel()
 {
-	return 1500.f;
+	return m_waterLevel;
+}
+
+sf::Color	LevelThreeBiome::getWaterColor()
+{
+	return m_waterColor;
 }
 
 std::map<std::size_t, std::string> const & LevelThreeBiome::getInstances()

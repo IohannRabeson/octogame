@@ -19,6 +19,8 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
+	m_waterLevel(-1.f),
+	m_waterColor(255, 255, 255, 200),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -207,7 +209,12 @@ Level	LevelTwoBiome::getDestination()
 
 float	LevelTwoBiome::getWaterLevel()
 {
-	return -1.f;
+	return m_waterLevel;
+}
+
+sf::Color	LevelTwoBiome::getWaterColor()
+{
+	return m_waterColor;
 }
 
 std::map<std::size_t, std::string> const & LevelTwoBiome::getInstances()
