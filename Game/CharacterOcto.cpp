@@ -505,7 +505,6 @@ void	CharacterOcto::resetTimeEvent()
 
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
-	m_box->debugDraw(render);
 	m_inkParticle.draw(render);
 	m_helmetParticle.draw(render);
 	m_sprite.draw(render, states);
