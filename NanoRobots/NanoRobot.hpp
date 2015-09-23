@@ -37,6 +37,7 @@ public:
 
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
+	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
 	NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames, int seed);

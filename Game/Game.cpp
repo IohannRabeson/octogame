@@ -280,6 +280,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
+	m_octo->drawText(render, states);
 }
 
 void	Game::followPlayer(sf::Time frameTime)

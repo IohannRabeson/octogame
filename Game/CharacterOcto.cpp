@@ -515,6 +515,13 @@ void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates sta
 		robot->draw(render, states);
 }
 
+void	CharacterOcto::drawText(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
+{
+	for (auto & robot : m_nanoRobots)
+		robot->drawText(render, states);
+}
+
+
 void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisionDirection)
 {
 	switch(type)
