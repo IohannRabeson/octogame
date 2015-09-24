@@ -128,6 +128,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_instances[1070] = MAP_ELEVATOR_JUNGLE_OMP;
 	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
 	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
+	m_instances[670] = MAP_SECRET_LEFT_VILLAGE_JUNGLE_OMP;
 	m_gameObjects[4] = GameObjectType::Portal;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_interestPointPosX = 500;
