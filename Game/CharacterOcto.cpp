@@ -966,9 +966,11 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 	{
 		case sf::Keyboard::Left:
 			caseLeft();
+			m_progress.walk();
 			break;
 		case sf::Keyboard::Right:
 			caseRight();
+			m_progress.walk();
 			break;
 		case sf::Keyboard::Space:
 			caseSpace();
