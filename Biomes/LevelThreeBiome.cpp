@@ -14,7 +14,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_seed("LevelThree"),
 	m_mapSize(sf::Vector2u(1100u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(50.f * 16.f, 650.f),
+	m_octoStartPosition(7.f * 16.f, 650.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
@@ -124,20 +124,17 @@ LevelThreeBiome::LevelThreeBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	// TODO define map position and number of map
-	//m_instances[12] = MINIMAP_OMP;
-	//m_instances[86] = TEST_MAP2_OMP;
-
 	// Define game objects
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[740] = GameObjectType::Portal;
-	m_gameObjects[5] = GameObjectType::JuNpc;
-	m_gameObjects[600] = GameObjectType::RepairNanoRobot;
-	m_instances[400] = TEST_MAP2_OMP;
+	m_instances[1070] = MAP_ELEVATOR_JUNGLE_OMP;
+	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
+	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
+	m_instances[670] = MAP_SECRET_LEFT_VILLAGE_JUNGLE_OMP;
+	m_gameObjects[4] = GameObjectType::Portal;
+	m_gameObjects[500] = GameObjectType::Portal;
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::LevelOne);
+	m_destinations.push_back(Level::LevelTwo);
 	m_destinations.push_back(Level::Default);
 }
 
