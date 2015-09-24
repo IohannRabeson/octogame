@@ -130,7 +130,6 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
 	m_gameObjects[4] = GameObjectType::Portal;
 	m_gameObjects[500] = GameObjectType::Portal;
-	m_gameObjects[1093] = GameObjectType::IohannNpc;
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
