@@ -305,7 +305,6 @@ void	CharacterOcto::setupMachine()
 	state16 = std::make_shared<State>("WaterJump", m_elevatorAnimation, m_sprite);
 
 	machine.setStart(state0);
-
 	machine.addTransition(Left, state0, state1);
 	machine.addTransition(Left, state1, state1);
 	machine.addTransition(Left, state2, state1);
@@ -349,8 +348,8 @@ void	CharacterOcto::setupMachine()
 
 	machine.addTransition(Jump, state13, state3);
 	//TODO fix
-	machine.addTransition(Jump, state7, state3);
-	machine.addTransition(Jump, state14, state3);
+//	machine.addTransition(Jump, state7, state3);
+//	machine.addTransition(Jump, state14, state3);
 
 	machine.addTransition(DoubleJump, state0, state4);
 	machine.addTransition(DoubleJump, state1, state4);
@@ -432,7 +431,7 @@ void	CharacterOcto::setupMachine()
 
 	machine.addTransition(Elevator, state10, state11);
 	//TODO fix
-	machine.addTransition(Elevator, state13, state11);
+//	machine.addTransition(Elevator, state13, state11);
 
 	machine.addTransition(StartWaterJump, state0, state15);
 	machine.addTransition(StartWaterJump, state1, state15);
@@ -450,7 +449,7 @@ void	CharacterOcto::setupMachine()
 
 	machine.addTransition(WaterJump, state15, state16);
 	//TODO fix
-	machine.addTransition(WaterJump, state13, state16);
+//	machine.addTransition(WaterJump, state13, state16);
 
 	machine.addTransition(Idle, state0, state0);
 	machine.addTransition(Idle, state1, state0);
@@ -472,6 +471,10 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
+	commitEventToGraphics();
+	commitPhysicsToGraphics();
+	m_sprite.update(frameTime);
+	resetTimeEvent();
 	timeEvent(frameTime);
 	inWater();
 	if (endDeath())
@@ -479,19 +482,11 @@ void	CharacterOcto::update(sf::Time frameTime)
 		dance();
 		collisionElevatorUpdate();
 		collisionTileUpdate();
-		commitPhysicsToGraphics();
-		m_sprite.update(frameTime);
-		commitEventToGraphics();
 		commitControlsToPhysics(frameTime.asSeconds());
 		commitEnvironmentToPhysics();
 	}
 	else
-	{
-		commitPhysicsToGraphics();
-		m_sprite.update(frameTime);
 		m_helmetParticle.update(frameTime);
-	}
-	resetTimeEvent();
 	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()),
 			m_inWater, m_onGround);
 
@@ -654,9 +649,9 @@ void	CharacterOcto::collisionTileUpdate()
 	{
 		if (!m_onGround)
 		{
-			m_afterJump = false;
-			m_onGround = true;
 			m_numberOfJump = 0;
+			m_onGround = true;
+			m_afterJump = false;
 			if (dieFall())
 				return;
 			if (m_keyLeft)
@@ -666,6 +661,8 @@ void	CharacterOcto::collisionTileUpdate()
 			else
 				m_sprite.setNextEvent(Idle);
 		}
+		if (m_numberOfJump == 3)
+			m_numberOfJump = 0;
 	}
 }
 
@@ -689,7 +686,7 @@ void	CharacterOcto::onSky(Events event)
 			}
 			break;
 		case StartSlowFall:
-			if (m_timeEventStartSlowFall > sf::seconds(0.6f))
+			if (m_sprite.isTerminated())
 				m_sprite.setNextEvent(SlowFall);
 			break;
 		case StartWaterJump:
@@ -785,7 +782,7 @@ bool	CharacterOcto::endDeath()
 
 void	CharacterOcto::dance()
 {
-	if (m_timeEventIdle > m_timeEventIdleMax)
+	if (m_timeEventIdle > m_timeEventIdleMax && m_sprite.getCurrentEvent() == Idle)
 	{
 		m_timeEventIdleMax = sf::seconds(m_danceDistribution(m_engine));
 		if (octo::Application::getAudioManager().getMusicVolume() > 0.f)
@@ -913,7 +910,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 			velocity.x = 0.f;
 			velocity.y = m_jumpVelocity;
 			if (!m_inWater)
-				m_jumpVelocity += (m_pixelSecondMultiplier * 1.2f) * frametime;
+				m_jumpVelocity += m_pixelSecondMultiplier * frametime;
 		}
 	}
 	m_box->setVelocity(velocity);
@@ -1012,7 +1009,8 @@ void CharacterOcto::caseUp()
 		m_keyUp = true;
 		if (m_inWater && m_progress.canUseWaterJump())
 		{
-			m_jumpVelocity = m_pixelSecondJump * 1.3f;
+			//TODO
+			m_jumpVelocity = m_pixelSecondJump * 1.5f;
 			m_sprite.setNextEvent(StartWaterJump);
 		}
 		else if (m_onElevator && m_progress.canUseElevator())
