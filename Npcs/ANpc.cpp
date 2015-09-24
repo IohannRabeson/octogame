@@ -6,6 +6,7 @@
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <sstream>
+#include <cwchar>
 
 ANpc::ANpc(ResourceKey const & npcId) :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
@@ -21,13 +22,15 @@ ANpc::ANpc(ResourceKey const & npcId) :
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
-	std::map<std::string, std::vector<std::string>>	npcTexts;
-	std::istringstream f(resources.getText(DIALOGS_TXT).toAnsiString());
-	std::string key;
-	std::string line;
-	while (std::getline(f, key, '='))
+	std::map<std::string, std::vector<std::wstring>>	npcTexts;
+	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstring wkey;
+	std::wstring line;
+	wchar_t delim = '=';
+	while (std::getline(f, wkey, delim))
 	{
 		std::getline(f, line);
+		std::string key(wkey.begin(), wkey.end());
 		npcTexts[key].push_back(line);
 	}
 	if (npcTexts.find(npcId) != npcTexts.end())
@@ -199,7 +202,7 @@ void ANpc::setSize(sf::Vector2f const & size)
 	m_box->setSize(size);
 }
 
-void ANpc::setTexts(std::vector<std::string> const & texts)
+void ANpc::setTexts(std::vector<std::wstring> const & texts)
 {
 	for (std::size_t i = 0u; i < texts.size(); i++)
 	{
