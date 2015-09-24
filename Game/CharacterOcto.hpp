@@ -123,7 +123,6 @@ private:
 	std::uniform_int_distribution<std::size_t>		m_jumpDistribution;
 	std::uniform_real_distribution<float>			m_danceDistribution;
 
-	sf::Time					m_timeEventStartSlowFall;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;

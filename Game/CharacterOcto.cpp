@@ -116,7 +116,6 @@ void	CharacterOcto::setup(ABiome & biome)
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_OSS));
 
-	m_timeEventStartSlowFall = sf::Time::Zero;
 	m_timeEventFall = sf::Time::Zero;
 	m_timeEventIdle = sf::Time::Zero;
 	m_timeEventDeath = sf::Time::Zero;
@@ -537,9 +536,6 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 		case DoubleJump:
 			m_timeEventInk += frameTime;
 			break;
-		case StartSlowFall:
-			m_timeEventStartSlowFall += frameTime;
-			break;
 		default:
 			break;
 	}
@@ -549,7 +545,6 @@ void	CharacterOcto::resetTimeEvent()
 {
 	if (m_prevEvent != m_sprite.getCurrentEvent())
 	{
-		m_timeEventStartSlowFall = sf::Time::Zero;
 		m_timeEventFall = sf::Time::Zero;
 		m_timeEventIdle = sf::Time::Zero;
 		m_timeEventDeath = sf::Time::Zero;
