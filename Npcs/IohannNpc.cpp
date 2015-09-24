@@ -87,15 +87,15 @@ void IohannNpc::updateState(void)
 	sf::FloatRect const & area = getArea();
 	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
 
-	if (sprite.getCurrentEvent() == Left && canWalk() && bounds.left <= area.left && canWalk())
+	if (sprite.getCurrentEvent() == Left && canWalk() && bounds.left <= area.left)
 	{
 		sprite.setNextEvent(Right);
-		setWalkEvent(m_lastState);
+		setWalkEvent(Right);
 	}
 	else if (sprite.getCurrentEvent() == Right && canWalk() && (bounds.left + bounds.width) >= (area.left + area.width))
 	{
 		sprite.setNextEvent(Left);
-		setWalkEvent(m_lastState);
+		setWalkEvent(Left);
 	}
 	else if (sprite.getCurrentEvent() == Special1)
 	{
