@@ -342,8 +342,11 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state4, state13);
 	machine.addTransition(StartJump, state5, state13);
 	machine.addTransition(StartJump, state7, state13);
+	machine.addTransition(StartJump, state8, state13);
+	machine.addTransition(StartJump, state9, state13);
 	machine.addTransition(StartJump, state12, state13);
 	machine.addTransition(StartJump, state13, state13);
+	machine.addTransition(StartJump, state14, state13);
 	machine.addTransition(StartJump, state15, state13);
 	machine.addTransition(StartJump, state16, state13);
 
@@ -360,6 +363,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(DoubleJump, state7, state4);
 	machine.addTransition(DoubleJump, state13, state4);
 	machine.addTransition(DoubleJump, state14, state4);
+	machine.addTransition(DoubleJump, state15, state4);
+	machine.addTransition(DoubleJump, state16, state4);
 
 	machine.addTransition(Fall, state0, state5);
 	machine.addTransition(Fall, state1, state5);
@@ -926,15 +931,12 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 	{
 		switch (state)
 		{
-			case StartSlowFall:
-			case SlowFall:
-				velocity.x *= 1.4f;
-				velocity.y *= 1.5f;
-				break;
 			case Fall:
 				velocity.x *= 0.7f;
 				velocity.y = m_pixelSecondSlowFall;
 				break;
+			case StartSlowFall:
+			case SlowFall:
 			case StartWaterJump:
 			case WaterJump:
 				break;
