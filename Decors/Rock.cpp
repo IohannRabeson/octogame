@@ -1,11 +1,16 @@
 #include "Rock.hpp"
 #include "ABiome.hpp"
 #include "Tile.hpp"
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <AudioManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 Rock::Rock() :
 	m_partCount(1u),
 	m_animator(1.f, 0.f, 3.f, 0.1f),
-	m_animation(1.f)
+	m_animation(1.f),
+	m_sound(true)
 {
 }
 
@@ -132,9 +137,20 @@ void Rock::setup(ABiome& biome)
 		i++;
 	}
 	m_animator.setup();
+	m_sound = true;
 }
 
-void Rock::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
+void Rock::playSound(ABiome & biome, sf::Vector2f const & position)
+{
+	if (m_sound && m_animation)
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+		audio.playSound(resources.getSound(ROCK_WAV), 1.f, biome.randomFloat(0.8, 1.f), sf::Vector3f(position.x, position.y, 0.f), 100.f, 0.5f);
+		m_sound = false;
+	}
+}
+void Rock::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	m_animator.update(frameTime);
 	m_animation = m_animator.getAnimation();
@@ -143,6 +159,7 @@ void Rock::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	float delta = (m_left.x + (m_right.x - m_left.x) / 2.f);
 	if (delta >= 0)
 		delta = -delta - Tile::TileSize;
+	playSound(biome, position);
 	createRock(m_values, sf::Vector2f(position.x + delta, position.y + m_size.x / 2.f), m_color, builder);
 }
 

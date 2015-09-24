@@ -47,13 +47,15 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string id, std::size_t 
 	m_sprite.setAnimation(m_animation);
 	m_sprite.play();
 
-	std::map<std::string, std::vector<std::string>>	npcTexts;
-	std::istringstream f(resources.getText(DIALOGS_TXT).toAnsiString());
-	std::string key;
-	std::string line;
-	while (std::getline(f, key, '='))
+	std::map<std::string, std::vector<std::wstring>>	npcTexts;
+	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstring wkey;
+	std::wstring line;
+	wchar_t delim = '=';
+	while (std::getline(f, wkey, delim))
 	{
 		std::getline(f, line);
+		std::string key(wkey.begin(), wkey.end());
 		npcTexts[key].push_back(line);
 	}
 	m_text.reset(new BubbleText());

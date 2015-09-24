@@ -32,7 +32,7 @@ void BubbleText::setupBlocString(void)
 	}
 }
 
-void BubbleText::setup(std::string const & phrase, sf::Color const & color, std::size_t characterSize)
+void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std::size_t characterSize)
 {
 	if (characterSize == 0u)
 		characterSize = m_characterSize;

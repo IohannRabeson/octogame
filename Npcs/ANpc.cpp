@@ -6,6 +6,7 @@
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <sstream>
+#include <cwchar>
 
 ANpc::ANpc(ResourceKey const & npcId) :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
@@ -21,13 +22,15 @@ ANpc::ANpc(ResourceKey const & npcId) :
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
-	std::map<std::string, std::vector<std::string>>	npcTexts;
-	std::istringstream f(resources.getText(DIALOGS_TXT).toAnsiString());
-	std::string key;
-	std::string line;
-	while (std::getline(f, key, '='))
+	std::map<std::string, std::vector<std::wstring>>	npcTexts;
+	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstring wkey;
+	std::wstring line;
+	wchar_t delim = '=';
+	while (std::getline(f, wkey, delim))
 	{
 		std::getline(f, line);
+		std::string key(wkey.begin(), wkey.end());
 		npcTexts[key].push_back(line);
 	}
 	if (npcTexts.find(npcId) != npcTexts.end())
@@ -133,6 +136,11 @@ bool ANpc::canSpecial2(void) const
 	return false;
 }
 
+void ANpc::setTimerMax(sf::Time timerMax)
+{
+	m_timerMax = timerMax;
+}
+
 void ANpc::setArea(sf::FloatRect const & area)
 {
 	m_area = area;
@@ -152,7 +160,6 @@ void ANpc::setScale(float scale)
 
 void ANpc::setPosition(sf::Vector2f const & position)
 {
-
 	if (m_box->getSleep())
 	{
 		m_box->setPosition(position.x, position.y - m_box->getSize().y - getHeight());
@@ -195,7 +202,7 @@ void ANpc::setSize(sf::Vector2f const & size)
 	m_box->setSize(size);
 }
 
-void ANpc::setTexts(std::vector<std::string> const & texts)
+void ANpc::setTexts(std::vector<std::wstring> const & texts)
 {
 	for (std::size_t i = 0u; i < texts.size(); i++)
 	{
@@ -221,6 +228,21 @@ float ANpc::getScale(void) const
 float ANpc::getVelocity(void) const
 {
 	return m_velocity;
+}
+
+void ANpc::addTimer(sf::Time time)
+{
+	m_timer += time;
+}
+
+sf::Time ANpc::getTimer(void) const
+{
+	return m_timer;
+}
+
+sf::Time ANpc::getTimerMax(void) const
+{
+	return m_timerMax;
 }
 
 sf::Vector2f const & ANpc::getOrigin(void) const

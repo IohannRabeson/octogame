@@ -37,6 +37,7 @@ private:
 
 	sf::Vector2f				m_left;
 	sf::Vector2f				m_right;
+	bool						m_sound;
 
 	void createOctogon(sf::Vector2f const & size,
 						sf::Vector2f const & origin,
@@ -51,6 +52,7 @@ private:
 					sf::Vector2f const & originRock,
 					sf::Color const & color,
 					octo::VertexBuilder& builder);
+	void playSound(ABiome & biome, sf::Vector2f const & position);
 };
 
 #endif

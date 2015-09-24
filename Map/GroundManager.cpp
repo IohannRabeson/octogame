@@ -14,6 +14,10 @@
 #include "FannyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "GuiNpc.hpp"
+#include "PunkNpc.hpp"
+#include "FatNpc.hpp"
+#include "LucienNpc.hpp"
+#include "IohannNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
@@ -106,6 +110,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
+	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
+	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
+	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
+	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
@@ -137,13 +145,17 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(HOUSE_PUSSY_OSS, scale, position, 4u);
 			});
-	m_decorFactory.registerCreator(FIRECAMP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
-			{
-				return new Firecamp(scale, position);
-			});
 	m_decorFactory.registerCreator(FALL_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(FALL_SIGN_OSS, scale, position, 4u, 0.4f);
+			});
+	m_decorFactory.registerCreator(PLANT_JUNGLE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PLANT_JUNGLE_OSS, scale, position, 3u, 0.4f);
+			});
+	m_decorFactory.registerCreator(FIRECAMP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Firecamp(scale, position);
 			});
 
 	// Get all the gameobjects from instances
@@ -185,7 +197,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		{
 			octo::LevelMap::Decor decor = resources.getLevelMap(instance.second).getDecor(i);
 			sf::Vector2f position = decor.position;
-			position.x += instance.first * Tile::TileSize - Map::OffsetY;
+			position.x += instance.first * Tile::TileSize - Map::OffsetX;
 			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
 			m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
