@@ -37,6 +37,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		StartElevator,
 		Elevator = 13,
 		SlowFall,
+		StartWaterJump,
 		WaterJump
 	};
 public:

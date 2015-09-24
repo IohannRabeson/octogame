@@ -283,6 +283,8 @@ void	CharacterOcto::setupMachine()
 	StatePtr					state12;
 	StatePtr					state13;
 	StatePtr					state14;
+	StatePtr					state15;
+	StatePtr					state16;
 
 	state0 = std::make_shared<State>("Idle", m_idleAnimation, m_sprite);
 	state1 = std::make_shared<State>("Left", m_walkAnimation, m_sprite);
@@ -299,6 +301,8 @@ void	CharacterOcto::setupMachine()
 	state12 = std::make_shared<State>("DanceWithMusic", m_danceWithMusicAnimation, m_sprite);
 	state13 = std::make_shared<State>("StartJump", m_startJumpAnimation, m_sprite);
 	state14 = std::make_shared<State>("SlowFall", m_slowFallAnimation, m_sprite);
+	state15 = std::make_shared<State>("StartWaterJump", m_startElevatorAnimation, m_sprite);
+	state16 = std::make_shared<State>("WaterJump", m_elevatorAnimation, m_sprite);
 
 	machine.setStart(state0);
 
@@ -340,7 +344,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state7, state13);
 	machine.addTransition(StartJump, state12, state13);
 	machine.addTransition(StartJump, state13, state13);
-	machine.addTransition(StartJump, state14, state13);
+	machine.addTransition(StartJump, state15, state13);
+	machine.addTransition(StartJump, state16, state13);
 
 	machine.addTransition(Jump, state13, state3);
 	//TODO fix
@@ -369,6 +374,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Fall, state12, state5);
 	machine.addTransition(Fall, state13, state5);
 	machine.addTransition(Fall, state14, state5);
+	machine.addTransition(Fall, state15, state5);
+	machine.addTransition(Fall, state16, state5);
 
 	machine.addTransition(Dance, state0, state6);
 
@@ -387,6 +394,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartSlowFall, state12, state7);
 	machine.addTransition(StartSlowFall, state13, state7);
 	machine.addTransition(StartSlowFall, state14, state7);
+	machine.addTransition(StartSlowFall, state15, state7);
+	machine.addTransition(StartSlowFall, state16, state7);
 
 	machine.addTransition(SlowFall, state7, state14);
 
@@ -424,6 +433,24 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Elevator, state10, state11);
 	//TODO fix
 	machine.addTransition(Elevator, state13, state11);
+
+	machine.addTransition(StartWaterJump, state0, state15);
+	machine.addTransition(StartWaterJump, state1, state15);
+	machine.addTransition(StartWaterJump, state2, state15);
+	machine.addTransition(StartWaterJump, state3, state15);
+	machine.addTransition(StartWaterJump, state4, state15);
+	machine.addTransition(StartWaterJump, state5, state15);
+	machine.addTransition(StartWaterJump, state6, state15);
+	machine.addTransition(StartWaterJump, state7, state15);
+	machine.addTransition(StartWaterJump, state10, state15);
+	machine.addTransition(StartWaterJump, state11, state15);
+	machine.addTransition(StartWaterJump, state12, state15);
+	machine.addTransition(StartWaterJump, state13, state15);
+	machine.addTransition(StartWaterJump, state14, state15);
+
+	machine.addTransition(WaterJump, state15, state16);
+	//TODO fix
+	machine.addTransition(WaterJump, state13, state16);
 
 	machine.addTransition(Idle, state0, state0);
 	machine.addTransition(Idle, state1, state0);
@@ -650,6 +677,7 @@ void	CharacterOcto::onSky(Events event)
 			if (m_sprite.isTerminated())
 				m_sprite.setNextEvent(Jump);
 			break;
+		case WaterJump:
 		case Jump:
 		case DoubleJump:
 			if (m_box->getGlobalBounds().top > m_previousTop
@@ -663,6 +691,10 @@ void	CharacterOcto::onSky(Events event)
 		case StartSlowFall:
 			if (m_timeEventStartSlowFall > sf::seconds(0.6f))
 				m_sprite.setNextEvent(SlowFall);
+			break;
+		case StartWaterJump:
+			if (m_sprite.isTerminated())
+				m_sprite.setNextEvent(WaterJump);
 			break;
 		case SlowFall:
 		case Fall:
@@ -875,6 +907,14 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 			if (m_sprite.getCurrentEvent() == Elevator)
 				velocity.y = (2.5f * m_pixelSecondSlowFall);
 		}
+		if (m_sprite.getCurrentEvent() == StartWaterJump
+				|| m_sprite.getCurrentEvent() == WaterJump)
+		{
+			velocity.x = 0.f;
+			velocity.y = m_jumpVelocity;
+			if (!m_inWater)
+				m_jumpVelocity += (m_pixelSecondMultiplier * 1.2f) * frametime;
+		}
 	}
 	m_box->setVelocity(velocity);
 }
@@ -896,6 +936,9 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 			case Fall:
 				velocity.x *= 0.7f;
 				velocity.y = m_pixelSecondSlowFall;
+				break;
+			case StartWaterJump:
+			case WaterJump:
 				break;
 			default:
 				velocity.x *= 0.8f;
@@ -967,10 +1010,15 @@ void CharacterOcto::caseUp()
 	if (!m_keyUp)
 	{
 		m_keyUp = true;
-		if (!m_onGround  && m_progress.canSlowFall())
-			m_sprite.setNextEvent(StartSlowFall);
-		if (m_onElevator && m_progress.canUseElevator())
+		if (m_inWater && m_progress.canUseWaterJump())
+		{
+			m_jumpVelocity = m_pixelSecondJump * 1.3f;
+			m_sprite.setNextEvent(StartWaterJump);
+		}
+		else if (m_onElevator && m_progress.canUseElevator())
 			m_sprite.setNextEvent(StartElevator);
+		else if (!m_onGround && m_progress.canSlowFall())
+			m_sprite.setNextEvent(StartSlowFall);
 	}
 }
 
