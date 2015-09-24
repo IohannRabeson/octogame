@@ -20,12 +20,20 @@ void BubbleText::setupBlocString(void)
 	for (auto it = m_phrase.begin(); it != m_phrase.end(); it++)
 	{
 		j++;
-		if (*it == ' ')
+		if (*it == ' ' || *it == '\\')
 			lastSpace = it;
 		if (j == m_characterPerLine)
 		{
 			*lastSpace = '\n';
 			it = ++lastSpace;
+			j = 0u;
+			m_lineCount++;
+		}
+		else if (*it == 'n' && *lastSpace == '\\')
+		{
+			*lastSpace = '\n';
+			m_phrase.erase(it);
+			it = ++it;
 			j = 0u;
 			m_lineCount++;
 		}
