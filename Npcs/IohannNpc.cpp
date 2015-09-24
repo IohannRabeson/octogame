@@ -41,6 +41,10 @@ void IohannNpc::setup(void)
 			Frame(sf::seconds(0.3f), {7u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 

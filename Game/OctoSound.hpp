@@ -11,6 +11,7 @@ public:
 	void	update(sf::Time frameTime, Events event, bool inWater, bool onGround);
 private:
 	void	resetTimeEvent();
+	void	transition();
 	void	startEvent(Events event);
 	void	duringEvent(sf::Time frameTime, Events event);
 	void	walkSound();
@@ -22,6 +23,8 @@ private:
 	sf::Time										m_timeEventElevator;
 	bool											m_inWater;
 	bool											m_onGround;
+	bool											m_landing;
+	bool											m_transitionWater;
 	float											m_volumeEffect;
 	float											m_volumeVoice;
 	std::mt19937									m_engine;

@@ -32,7 +32,7 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 	m_startSprite.setOrigin(m_startSprite.getLocalBounds().width / 2.f, m_startSprite.getLocalBounds().height / 2.f);
 	m_startSprite.setPosition(octo::Application::getCamera().getCenter());
 	m_startSprite.setScale(1.2f, 1.2f);
-	m_font = resources.getFont(VERAMONO_TTF);
+	m_font = resources.getFont(CHINESETROOPS_TTF);
 	m_message.setFont(m_font);
 	m_message.setColor(sf::Color(253, 235, 62));
 	m_message.setCharacterSize(20);
