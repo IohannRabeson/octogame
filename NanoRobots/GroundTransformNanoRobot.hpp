@@ -13,10 +13,20 @@ public:
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
 
 private:
+	enum State
+	{
+		FirstSpawn,
+		Walk,
+		MoveMap,
+		TalkAboutShit,
+		None
+	};
+
 	sf::Time	m_textTimer;
 	sf::Time	m_textTimerMax;
 	bool		m_canSpeak;
-	bool		m_firstSpawn;
+	bool		m_talkaboutshit;
+	State		m_state;
 
 };
 
