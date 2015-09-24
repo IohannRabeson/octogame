@@ -13,7 +13,7 @@ public:
 	BubbleText(void);
 	virtual ~BubbleText(void) = default;
 
-	virtual void					setup(std::string const & phrase,
+	virtual void					setup(std::wstring const & phrase,
 											sf::Color const & color,
 											std::size_t characterSize = 0u);
 
@@ -32,7 +32,7 @@ private:
 	sf::Text						m_text;
 	std::size_t						m_characterPerLine;
 	std::size_t						m_lineCount;
-	std::string						m_phrase;
+	std::wstring					m_phrase;
 };
 
 #endif
