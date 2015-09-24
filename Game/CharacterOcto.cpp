@@ -338,6 +338,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state0, state13);
 	machine.addTransition(StartJump, state1, state13);
 	machine.addTransition(StartJump, state2, state13);
+	machine.addTransition(StartJump, state3, state13);
 	machine.addTransition(StartJump, state4, state13);
 	machine.addTransition(StartJump, state5, state13);
 	machine.addTransition(StartJump, state7, state13);
