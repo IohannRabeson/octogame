@@ -874,10 +874,10 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 			velocity.x = m_pixelSecondWalk;
 		}
 	}
-	//TODO
 	if (m_keySpace &&
 			(event == Jump || event == DoubleJump || event == StartJump))
 	{
+		//TODO
 		if (m_numberOfJump >= 3)
 			std::cout << "BUG" << std::endl;
 		velocity.y = m_jumpVelocity;
