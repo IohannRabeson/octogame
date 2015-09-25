@@ -46,7 +46,7 @@ private:
 	void	setup();
 	struct data{
 		data() :
-			data(5u, Level::LevelOne,
+			data(5u, Level::LevelThree,
 					5u, 100u,
 					true, true)
 		{

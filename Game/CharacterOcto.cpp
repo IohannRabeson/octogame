@@ -350,9 +350,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state16, state13);
 
 	machine.addTransition(Jump, state13, state3);
-	//TODO fix
-//	machine.addTransition(Jump, state7, state3);
-//	machine.addTransition(Jump, state14, state3);
 
 	machine.addTransition(DoubleJump, state0, state4);
 	machine.addTransition(DoubleJump, state1, state4);
@@ -435,8 +432,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartElevator, state14, state10);
 
 	machine.addTransition(Elevator, state10, state11);
-	//TODO fix
-//	machine.addTransition(Elevator, state13, state11);
 
 	machine.addTransition(StartWaterJump, state0, state15);
 	machine.addTransition(StartWaterJump, state1, state15);
@@ -453,8 +448,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartWaterJump, state14, state15);
 
 	machine.addTransition(WaterJump, state15, state16);
-	//TODO fix
-//	machine.addTransition(WaterJump, state13, state16);
 
 	machine.addTransition(Idle, state0, state0);
 	machine.addTransition(Idle, state1, state0);
@@ -783,13 +776,15 @@ bool	CharacterOcto::endDeath()
 
 void	CharacterOcto::dance()
 {
-	if (m_timeEventIdle > m_timeEventIdleMax && m_sprite.getCurrentEvent() == Idle)
+	Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
+
+	if (m_timeEventIdle > m_timeEventIdleMax && event == Idle)
 	{
 		m_timeEventIdleMax = sf::seconds(m_danceDistribution(m_engine));
 		if (octo::Application::getAudioManager().getMusicVolume() > 0.f)
 			m_sprite.setNextEvent(DanceWithMusic);
 	}
-	if (m_sprite.getCurrentEvent() == DanceWithMusic && m_sprite.isTerminated())
+	if (event == DanceWithMusic && m_sprite.isTerminated())
 		m_sprite.setNextEvent(Idle);
 }
 
@@ -866,6 +861,7 @@ void	CharacterOcto::commitEventToGraphics()
 void	CharacterOcto::commitControlsToPhysics(float frametime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();
+	Events			event = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	if (m_progress.canWalk())
 	{
@@ -879,8 +875,11 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 		}
 	}
 	//TODO
-	if (m_keySpace && m_numberOfJump < 3 && (m_sprite.getCurrentEvent() == Jump || m_sprite.getCurrentEvent() == DoubleJump || m_sprite.getCurrentEvent() == StartJump))
+	if (m_keySpace &&
+			(event == Jump || event == DoubleJump || event == StartJump))
 	{
+		if (m_numberOfJump >= 3)
+			std::cout << "BUG" << std::endl;
 		velocity.y = m_jumpVelocity;
 		m_jumpVelocity += m_pixelSecondMultiplier * frametime;
 	}
@@ -892,26 +891,29 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 
 	if (m_keyUp)
 	{
-		if (m_sprite.getCurrentEvent() == StartSlowFall
-				|| m_sprite.getCurrentEvent() == SlowFall)
+		if (event == StartSlowFall || event == SlowFall)
 		{
-			velocity.x *= 1.6f; // TODO fix, not frametime dependant
+			if (event == StartSlowFall)
+				velocity.x *= 1.3f;
+			else
+				velocity.x *= 1.6f;
 			velocity.y = m_pixelSecondSlowFall;
 		}
 		if (!m_onTopElevator)
 		{
-			if (m_sprite.getCurrentEvent() == StartElevator)
+			if (event == StartElevator)
 				velocity.y = (1.2f * m_pixelSecondSlowFall);
-			if (m_sprite.getCurrentEvent() == Elevator)
+			if (event == Elevator)
 				velocity.y = (2.5f * m_pixelSecondSlowFall);
 		}
-		if (m_sprite.getCurrentEvent() == StartWaterJump
-				|| m_sprite.getCurrentEvent() == WaterJump)
+		if (event == StartWaterJump || event == WaterJump)
 		{
 			velocity.x = 0.f;
 			velocity.y = m_jumpVelocity;
 			if (!m_inWater)
 				m_jumpVelocity += m_pixelSecondMultiplier * frametime;
+			else
+				m_jumpVelocity -= m_pixelSecondMultiplier * frametime;
 		}
 	}
 	m_box->setVelocity(velocity);
@@ -930,9 +932,11 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 				velocity.x *= 0.7f;
 				velocity.y = m_pixelSecondSlowFall;
 				break;
+			case StartWaterJump:
+				velocity.y *= 0.9f;
+				break;
 			case StartSlowFall:
 			case SlowFall:
-			case StartWaterJump:
 			case WaterJump:
 				break;
 			default:
@@ -966,9 +970,7 @@ void	CharacterOcto::caseRight()
 		m_keyLeft = false;
 		m_doScale = true;
 		if (m_onGround && m_progress.canWalk())
-		{
 			m_sprite.setNextEvent(Right);
-		}
 	}
 }
 
@@ -1007,8 +1009,7 @@ void CharacterOcto::caseUp()
 		m_keyUp = true;
 		if (m_inWater && m_progress.canUseWaterJump())
 		{
-			//TODO
-			m_jumpVelocity = m_pixelSecondJump * 1.5f;
+			m_jumpVelocity = m_pixelSecondJump * 0.9f;
 			m_sprite.setNextEvent(StartWaterJump);
 		}
 		else if (m_onElevator && m_progress.canUseElevator())

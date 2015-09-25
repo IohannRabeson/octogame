@@ -3,6 +3,7 @@
 # include <CharacterSprite.hpp>
 # include <CharacterAnimation.hpp>
 # include <DefaultGraphicsListeners.hpp>
+
 # include "AGameObject.hpp"
 # include "Progress.hpp"
 # include "RectangleShape.hpp"
@@ -10,6 +11,7 @@
 # include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
+
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 
