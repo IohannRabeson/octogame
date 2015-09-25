@@ -26,13 +26,11 @@ void main()
 	p.x *= resolution.x / resolution.y;
 	p *= 20.0;
 
-	vec4 distorsionValue = vec4(fbm(p, vec3(0.5, 2.0, 2.0)));
-	vec2 distorsionOffset = distorsionValue.xy;
-	distorsionOffset -= vec2(0.5, 0.5);
-	distorsionOffset *= 2.0 * 0.3 * time;
+	vec4 distortionValue = vec4(fbm(p, vec3(0.5, 2.0, 2.0)));
+	vec2 distortionOffset = distortionValue.xy;
+	distortionOffset -= vec2(0.5, 0.5);
+	distortionOffset *= 2.0 * 0.3 * time;
 
-	vec2 distorsionTexCoord = gl_TexCoord[0].xy + distorsionOffset;
-	gl_FragColor = texture2D(texture, distorsionTexCoord);
-
+	vec2 distortionTexCoord = gl_TexCoord[0].xy + distortionOffset;
+	gl_FragColor = texture2D(texture, distortionTexCoord);
 }
-

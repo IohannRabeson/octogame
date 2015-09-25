@@ -3,62 +3,74 @@
 #include <ResourceManager.hpp>
 #include "ResourceDefinitions.hpp"
 
-SpaceShip::SpaceShip(SpaceShipEvents event)
+SpaceShip::SpaceShip(SpaceShipEvents event) :
+	m_event(event)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(SPACESHIP_OSS));
-	m_sprite.setScale(1.f, 1.f);
+	if (event == Broken)
+	{
+		m_sprite.setSpriteSheet(resources.getSpriteSheet(BROKEN_SHIP_OSS));
+		m_sprite.setScale(1.f, 1.f);
 
-	typedef octo::CharacterAnimation::Frame		Frame;
-	std::vector<Frame>							frames;
-	frames.push_back(Frame(sf::seconds(0.2f), { 0, sf::FloatRect(), sf::Vector2f() }));
-	frames.push_back(Frame(sf::seconds(0.2f), { 1, sf::FloatRect(), sf::Vector2f() }));
-	frames.push_back(Frame(sf::seconds(0.2f), { 2, sf::FloatRect(), sf::Vector2f() }));
-	frames.push_back(Frame(sf::seconds(0.2f), { 3, sf::FloatRect(), sf::Vector2f() }));
-	m_brokenAnimation.setFrames(frames);
-	m_brokenAnimation.setLoop(octo::LoopMode::Loop);
+		typedef octo::SpriteAnimation::Frame	Frame;
+		m_animation.setFrames({	Frame(sf::seconds(0.2f), 0u),
+								Frame(sf::seconds(0.2f), 1u),
+								Frame(sf::seconds(0.2f), 2u),
+								Frame(sf::seconds(0.2f), 3u)});
+		m_animation.setLoop(octo::LoopMode::Loop);
+		m_smoke.setup(sf::Vector2f(10.f, 10.f));
+		m_smoke.setVelocity(sf::Vector2f(0.f, -140.f));
+	}
+	else if (event == Flying)
+	{
+		m_sprite.setSpriteSheet(resources.getSpriteSheet(SHIP_OSS));
+		m_sprite.setScale(1.f, 1.f);
 
-	frames.clear();
-	frames.push_back(Frame(sf::seconds(0.2f), { 0, sf::FloatRect(), sf::Vector2f() }));
-	frames.push_back(Frame(sf::seconds(0.2f), { 3, sf::FloatRect(), sf::Vector2f() }));
-	m_flyingAnimation.setFrames(frames);
-	m_flyingAnimation.setLoop(octo::LoopMode::Loop);
-
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					flyingState;
-	StatePtr					brokenState;
-
-	flyingState = std::make_shared<State>("0", m_flyingAnimation, m_sprite);
-	brokenState = std::make_shared<State>("1", m_brokenAnimation, m_sprite);
-
-	machine.setStart(brokenState);
-	machine.addTransition(Flying, flyingState, flyingState);
-	machine.addTransition(Flying, brokenState, flyingState);
-
-	machine.addTransition(Broken, brokenState, brokenState);
-	machine.addTransition(Broken, flyingState, brokenState);
-
-	m_sprite.setMachine(machine);
-	m_sprite.restart();
-	m_sprite.setNextEvent(event);
-
-	m_smoke.setup(sf::Vector2f(10.f, 10.f));
-	m_smoke.setVelocity(sf::Vector2f(0.f, -140.f));
+		typedef octo::SpriteAnimation::Frame	Frame;
+		m_animation.setFrames({	Frame(sf::seconds(0.05f), 0u),
+								Frame(sf::seconds(0.05f), 1u),
+								Frame(sf::seconds(0.05f), 2u),
+								Frame(sf::seconds(0.05f), 3u),
+								Frame(sf::seconds(0.05f), 4u),
+								Frame(sf::seconds(0.05f), 5u),
+								Frame(sf::seconds(0.05f), 6u),
+								Frame(sf::seconds(0.05f), 7u)});
+		m_animation.setLoop(octo::LoopMode::Loop);
+		m_smoke.setup(sf::Vector2f(10.f, 10.f));
+		m_smoke.setVelocity(sf::Vector2f(-750.f, 0.f));
+		m_smoke.setEmitTimeRange(0.05f, 0.1f);
+	}
+	m_sprite.setAnimation(m_animation);
+	m_sprite.play();
 }
 
 void SpaceShip::setNextEvent(SpaceShipEvents event)
 {
-	m_sprite.setNextEvent(event);
+	m_event = event;
 }
 
 void SpaceShip::setPosition(sf::Vector2f const & position)
 {
 	m_sprite.setPosition(position.x, position.y - m_sprite.getLocalSize().y * 0.775f);
-	m_smoke.setPosition(position + sf::Vector2f(220.f, -200.f));
+	if (m_event == Broken)
+		m_smoke.setPosition(position + sf::Vector2f(220.f, -200.f));
+}
+
+sf::Vector2f const & SpaceShip::getPosition(void) const
+{
+	return m_sprite.getPosition();
+}
+
+sf::Vector2f SpaceShip::getSize(void) const
+{
+	return m_sprite.getGlobalSize();
+}
+
+void SpaceShip::move(sf::Vector2f const & translation)
+{
+	m_sprite.setPosition(m_sprite.getPosition() + translation);
+	m_smoke.setPosition(m_sprite.getPosition() + sf::Vector2f(1000.f, 280.f));
 }
 
 void SpaceShip::update(sf::Time frameTime)

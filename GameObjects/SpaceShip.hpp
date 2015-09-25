@@ -1,8 +1,7 @@
 #ifndef SPACESHIP_HPP
 # define SPACESHIP_HPP
 
-# include <CharacterSprite.hpp>
-# include <CharacterAnimation.hpp>
+# include <AnimatedSprite.hpp>
 
 # include "AGameObject.hpp"
 # include "SmokeSystem.hpp"
@@ -17,20 +16,23 @@ public:
 		Broken
 	};
 
-	SpaceShip(SpaceShipEvents event);// statr animation
+	SpaceShip(SpaceShipEvents event);
 	virtual ~SpaceShip(void) = default;
 
 	void setNextEvent(SpaceShipEvents event);
 	void setPosition(sf::Vector2f const & position);
+	sf::Vector2f const & getPosition(void) const;
+	sf::Vector2f getSize(void) const;
 
+	void move(sf::Vector2f const & translation);
 	void update(sf::Time frameTime);
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	octo::CharacterSprite		m_sprite;
-	octo::CharacterAnimation	m_flyingAnimation;
-	octo::CharacterAnimation	m_brokenAnimation;
+	octo::AnimatedSprite		m_sprite;
+	octo::SpriteAnimation		m_animation;
 	SmokeSystem					m_smoke;
+	SpaceShipEvents				m_event;
 };
 
 #endif
