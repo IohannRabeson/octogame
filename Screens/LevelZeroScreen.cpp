@@ -1,6 +1,7 @@
 #include "LevelZeroScreen.hpp"
 #include "ResourceDefinitions.hpp"
 #include <Application.hpp>
+#include <AudioManager.hpp>
 #include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
@@ -17,6 +18,8 @@ LevelZeroScreen::LevelZeroScreen(void) :
 void	LevelZeroScreen::start()
 {
 	octo::GraphicsManager &		graphics = octo::Application::getGraphicsManager();
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resource = octo::Application::getResourceManager();
 
 	m_timer = sf::Time::Zero;
 	m_timerMax = sf::seconds(4.f);
@@ -24,6 +27,7 @@ void	LevelZeroScreen::start()
 	m_timerEndMax = sf::seconds(6.f);
 	m_spaceShip.setPosition(sf::Vector2f(0.f, 0.f));
 	m_stars.canEmit(true);
+	audio.startMusic(resource.getSound(ACTION_FAST_WAV), sf::milliseconds(1000.f));
 
 	graphics.addKeyboardListener(this);
 }
@@ -39,7 +43,10 @@ void	LevelZeroScreen::resume()
 void	LevelZeroScreen::stop()
 {
 	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+
 	graphics.removeKeyboardListener(this);
+	audio.stopMusic(sf::milliseconds(1000.f));
 }
 
 void	LevelZeroScreen::update(sf::Time frameTime)
