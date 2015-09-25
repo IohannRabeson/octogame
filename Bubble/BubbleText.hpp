@@ -30,6 +30,7 @@ private:
 	sf::Vector2f					m_contentSize;
 	sf::Font						m_font;
 	sf::Text						m_text;
+	std::size_t						m_characterPerLineMax;
 	std::size_t						m_characterPerLine;
 	std::size_t						m_lineCount;
 	std::wstring					m_phrase;
