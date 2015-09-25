@@ -16,6 +16,8 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 						sf::Time::Zero, sf::Time::Zero),
 	m_spawnMode(FireflySwarm::SpawnMode::Normal),
 	m_positionBehavior(new FireflySwarm::CirclePositionBehavior(seed, 50.f)),
+	m_ray(new sf::Vertex[16]),
+	m_texture(nullptr),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_textIndex(0u),
 	m_state(Idle),
@@ -26,6 +28,8 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_soundDistri(0u, 2u)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
+
+	m_texture = &resources.getTexture(STARGRADIENT_PNG);
 
 	m_box->setRadius(100.f);
 	m_box->setType(AShape::Type::e_trigger);
@@ -68,6 +72,34 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 		bubble->setActive(true);
 		m_texts.push_back(std::move(bubble));
 	}
+
+	sf::Color color = sf::Color::Red;
+
+	for (std::size_t i = 0u; i < 16u; i++)
+		m_ray[i].color = color;
+
+	m_ray[1].color.a = 0;
+	m_ray[2].color.a = 0;
+	m_ray[4].color.a = 0;
+	m_ray[7].color.a = 0;
+
+	m_ray[12].color = sf::Color(255, 165, 0);
+	m_ray[13].color = sf::Color(255, 165, 0);
+	m_ray[14].color = sf::Color(255, 165, 0);
+	m_ray[15].color = sf::Color(255, 165, 0);
+
+	sf::Vector2f texSize(m_texture->getSize());
+	m_ray[8].texCoords = sf::Vector2f(0.f, 0.f);
+	m_ray[9].texCoords = sf::Vector2f(texSize.x, 0.f);
+	m_ray[10].texCoords = texSize;
+	m_ray[11].texCoords = sf::Vector2f(0.f, texSize.y);
+
+	m_ray[12].texCoords = sf::Vector2f(0.f, 0.f);
+	m_ray[13].texCoords = sf::Vector2f(texSize.x, 0.f);
+	m_ray[14].texCoords = texSize;
+	m_ray[15].texCoords = sf::Vector2f(0.f, texSize.y);
+
+	m_particles.setColor(color);
 }
 
 NanoRobot::~NanoRobot(void)
@@ -101,6 +133,36 @@ void NanoRobot::playSound(void)
 	}
 }
 
+void NanoRobot::makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness)
+{
+	static float const size = 8.f;
+	sf::Vector2f	p(-(p1.y - p0.y), p1.x - p0.x);
+	float			halfThickness = thickness * .5f;
+
+	octo::normalize(p);
+	p *= halfThickness;
+
+	vertices[0].position = p0;
+	vertices[1].position = p0 + p;
+	vertices[2].position = p1 + p;
+	vertices[3].position = p1;
+
+	vertices[4].position = p0 - p;
+	vertices[5].position = p0;
+	vertices[6].position = p1;
+	vertices[7].position = p1 - p;
+
+	vertices[8].position = p0 + sf::Vector2f(-size, -size);
+	vertices[9].position = p0 + sf::Vector2f(size, -size);
+	vertices[10].position = p0 + sf::Vector2f(size, size);
+	vertices[11].position = p0 + sf::Vector2f(-size, size);
+
+	vertices[12].position = p1 + sf::Vector2f(-size, -size);
+	vertices[13].position = p1 + sf::Vector2f(size, -size);
+	vertices[14].position = p1 + sf::Vector2f(size, size);
+	vertices[15].position = p1 + sf::Vector2f(-size, size);
+}
+
 void NanoRobot::addMapOffset(float x, float y)
 {
 	setPosition(sf::Vector2f(getPosition().x + x, getPosition().y + y));
@@ -116,6 +178,11 @@ void NanoRobot::transfertToOcto(void)
 	m_glowingEffect.onTransfer();
 	Progress::getInstance().addNanoRobot();
 	playSound();
+}
+
+void NanoRobot::setTarget(sf::Vector2f const & target)
+{
+	m_target = target;
 }
 
 void NanoRobot::setPosition(sf::Vector2f const & position)
@@ -185,6 +252,15 @@ void NanoRobot::update(sf::Time frametime)
 			m_state = FollowOcto;
 	}
 
+	m_particles.canEmit(false);
+	if (m_state == Repair)
+	{
+		makeLaser(m_ray.get(), getPosition() + sf::Vector2f(-2.f, 16.f), m_target, 4.f);
+		m_particles.canEmit(true);
+		m_particles.setPosition(m_target);
+	}
+	m_particles.update(frametime);
+
 	m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
 	m_texts[m_textIndex]->update(frametime);
 	m_glowingEffect.setPosition(pos);
@@ -193,11 +269,17 @@ void NanoRobot::update(sf::Time frametime)
 
 void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
-	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak)
+	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak || m_state == Repair)
 	{
 		render.draw(m_glowingEffect);
 		render.draw(m_sprite);
 	}
+	if (m_state == Repair)
+	{
+		render.draw(m_ray.get(), 8, sf::Quads);
+		render.draw(m_ray.get() + 8, 8u, sf::Quads, m_texture);
+	}
+	m_particles.draw(render);
 }
 
 void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const

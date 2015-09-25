@@ -492,7 +492,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 			m_inWater, m_onGround);
 
 	if (!m_collisionElevatorEvent && m_progress.canRepair())
-		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
+		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 
 	m_collisionTile = false;
 	m_collisionElevator = false;
@@ -613,17 +613,17 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 		if (!elevator.isActivated())
 		{
 			elevator.activate();
-			m_repairNanoRobot->setState(RepairNanoRobot::State::Repair);
+			m_repairNanoRobot->setState(NanoRobot::State::Repair);
 			sf::Vector2f target = elevator.getPosition();
 			target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
 			target.y -= 50.f;
 			m_repairNanoRobot->setTarget(target);
 		}
 		else
-			m_repairNanoRobot->setState(RepairNanoRobot::State::Done);
+			m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 	}
 	else if (m_progress.canRepair())
-		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
+		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 	m_collisionElevatorEvent = true;
 }
 
