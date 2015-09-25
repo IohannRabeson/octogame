@@ -73,28 +73,28 @@ public:
 	void					usePortal(Portal & portal);
 
 private:
-	bool	dieFall();
-	bool	endDeath();
-	void	dance();
-	void	inWater();
-	void	randomJumpAnimation();
-	void	timeEvent(sf::Time frameTime);
-	void	resetTimeEvent();
-	void	setupAnimation();
-	void	setupMachine();
-	void	collisionTileUpdate();
-	void	onSky(Events event);
-	void	collisionElevatorUpdate();
-	void	commitControlsToPhysics(float frametime);
-	void	commitEnvironmentToPhysics();
-	void	commitPhysicsToGraphics();
-	void	commitEventToGraphics();
-	void	caseLeft();
-	void	caseRight();
-	void	caseSpace();
-	void	caseUp();
-	void	caseAction();
-	void	casePortal();
+	bool					dieFall();
+	bool					endDeath();
+	void					dance();
+	void					inWater();
+	void					randomJumpAnimation();
+	void					timeEvent(sf::Time frameTime);
+	void					resetTimeEvent();
+	void					setupAnimation();
+	void					setupMachine();
+	void					collisionTileUpdate();
+	void					onSky(Events event);
+	void					collisionElevatorUpdate();
+	void					commitControlsToPhysics(float frametime);
+	void					commitEnvironmentToPhysics();
+	void					commitPhysicsToGraphics();
+	void					commitEventToGraphics();
+	void					caseLeft();
+	void					caseRight();
+	void					caseSpace();
+	void					caseUp();
+	void					caseAction();
+	void					casePortal();
 
 private:
 	class OctoSound;
@@ -125,6 +125,8 @@ private:
 	std::uniform_int_distribution<std::size_t>		m_jumpDistribution;
 	std::uniform_real_distribution<float>			m_danceDistribution;
 
+	SmokeSystem					m_inkParticle;
+	HelmetSystem				m_helmetParticle;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;
@@ -161,8 +163,6 @@ private:
 	bool						m_collisionElevatorEvent;
 	bool						m_doScale;
 	bool						m_inWater;
-	SmokeSystem					m_inkParticle;
-	HelmetSystem				m_helmetParticle;
 	Events						m_prevEvent;
 };
 

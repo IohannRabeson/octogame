@@ -1,18 +1,19 @@
+#include <Application.hpp>
+#include <AudioManager.hpp>
+#include <PostEffectManager.hpp>
+#include <ResourceManager.hpp>
+#include <GraphicsManager.hpp>
+
 #include "CharacterOcto.hpp"
+#include "OctoSound.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
-#include "OctoSound.hpp"
 #include "ElevatorStream.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
-#include <Application.hpp>
-#include <AudioManager.hpp>
-#include <PostEffectManager.hpp>
-#include <ResourceManager.hpp>
-#include <GraphicsManager.hpp>
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
