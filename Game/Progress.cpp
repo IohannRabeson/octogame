@@ -132,6 +132,12 @@ bool	Progress::canUseElevator()
 	return (m_data.nanoRobotCount > 1);
 }
 
+bool	Progress::canUseWaterJump()
+{
+	//TODO
+	return (m_data.nanoRobotCount > 0);
+}
+
 bool	Progress::changeLevel() const
 {
 	return m_changeLevel;

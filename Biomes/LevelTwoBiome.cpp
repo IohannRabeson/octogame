@@ -132,7 +132,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
 	m_instances[584] = MAP_NANO_JUMP_DESERT_OMP;
 	m_gameObjects[395] = GameObjectType::TurbanNpc;
-	m_gameObjects[597] = GameObjectType::FannyNpc;
+	m_gameObjects[556] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[645] = GameObjectType::Bouibouik;
 	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
