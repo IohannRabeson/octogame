@@ -44,6 +44,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/ElevatorStreamDemo.cpp			\
 				Screens/TransitionScreen.cpp			\
 				Screens/DeathScreen.cpp					\
+				Screens/LevelZeroScreen.cpp				\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
@@ -147,6 +148,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/MusicSystem.cpp					\
 				Decors/SparkSystem.cpp					\
 				Decors/HelmetSystem.cpp					\
+				Decors/StarSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\

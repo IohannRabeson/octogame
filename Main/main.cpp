@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/12 20:12:05 by jbalestr         ###   ########.fr       */
+/*   Updated: 2015/09/25 11:40:41 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 #include "QuitScreen.hpp"
 #include "ElevatorStreamDemo.hpp"
 #include "TransitionScreen.hpp"
+#include "LevelZeroScreen.hpp"
 #include "DeathScreen.hpp"
 #include "AGameObject.hpp"
 
@@ -57,6 +58,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<QuitScreen>("quit");
 	manager.registerState<TransitionScreen>("transition");
 	manager.registerState<DeathScreen>("octo_death");
+	manager.registerState<LevelZeroScreen>("zero");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
