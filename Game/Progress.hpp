@@ -26,6 +26,7 @@ public:
 
 	bool				canMoveMap();
 	bool				canRepair();
+	bool				canRepairShip();
 	bool				canWalk();
 	bool				canJump();
 	bool				canDoubleJump();

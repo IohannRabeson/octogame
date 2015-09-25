@@ -7,6 +7,8 @@
 # include "SmokeSystem.hpp"
 # include "IPlaceable.hpp"
 
+class CircleShape;
+
 class SpaceShip : public AGameObject<GameObjectType::SpaceShip>, public IPlaceable
 {
 public:
@@ -33,6 +35,8 @@ private:
 	octo::SpriteAnimation		m_animation;
 	SmokeSystem					m_smoke;
 	SpaceShipEvents				m_event;
+	CircleShape *				m_box;
+
 };
 
 #endif

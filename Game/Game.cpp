@@ -10,6 +10,7 @@
 #include "ElevatorStream.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
+#include "SpaceShip.hpp"
 #include "Concert.hpp"
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
@@ -216,6 +217,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::LucienNpc:
 			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SpaceShip:
+			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));
 			break;
 		default:
 			break;

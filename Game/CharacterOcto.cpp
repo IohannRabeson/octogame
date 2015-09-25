@@ -9,6 +9,7 @@
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
 #include "ElevatorStream.hpp"
+#include "SpaceShip.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
@@ -105,6 +106,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
+		| static_cast<std::size_t>(GameObjectType::SpaceShip)
 		| static_cast<std::size_t>(GameObjectType::CedricNpc)
 		| static_cast<std::size_t>(GameObjectType::FannyNpc)
 		| static_cast<std::size_t>(GameObjectType::FranfranNpc)
@@ -625,6 +627,14 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 	else if (m_progress.canRepair())
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 	m_collisionElevatorEvent = true;
+}
+
+void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
+{
+	if (m_progress.canRepairShip())
+	{
+		(void)spaceShip;
+	}
 }
 
 void	CharacterOcto::usePortal(Portal & portal)
