@@ -31,6 +31,7 @@ public:
 	bool				canDoubleJump();
 	bool				canSlowFall();
 	bool				canUseElevator();
+	bool				canUseWaterJump();
 	bool				changeLevel() const;
 	void				levelChanged();
 

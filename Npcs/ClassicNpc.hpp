@@ -6,7 +6,7 @@
 class ClassicNpc : public ANpc
 {
 public:
-	ClassicNpc(ResourceKey const & npcId = OCTO_COMPLETE_OSS);
+	ClassicNpc(ResourceKey const & npcId = OCTO_OSS);
 	virtual ~ClassicNpc(void) = default;
 
 	virtual void setup(void);

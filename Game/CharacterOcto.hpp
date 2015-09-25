@@ -3,6 +3,7 @@
 # include <CharacterSprite.hpp>
 # include <CharacterAnimation.hpp>
 # include <DefaultGraphicsListeners.hpp>
+
 # include "AGameObject.hpp"
 # include "Progress.hpp"
 # include "RectangleShape.hpp"
@@ -10,6 +11,7 @@
 # include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
+
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 
@@ -31,11 +33,14 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Fall,
 		Dance,
 		DanceWithMusic,
-		SlowFall,
+		StartSlowFall,
 		Death,
 		Drink,
 		StartElevator,
 		Elevator = 13,
+		SlowFall,
+		StartWaterJump,
+		WaterJump
 	};
 public:
 	friend class OctoEvent;
@@ -68,32 +73,31 @@ public:
 	void					usePortal(Portal & portal);
 
 private:
-	bool	dieFall();
-	bool	endDeath();
-	void	dance();
-	void	inWater();
-	void	randomJumpAnimation();
-	void	timeEvent(sf::Time frameTime);
-	void	resetTimeEvent();
-	void	setupAnimation();
-	void	setupMachine();
-	void	collisionTileUpdate();
-	void	onSky(Events event);
-	void	collisionElevatorUpdate();
-	void	commitControlsToPhysics(float frametime);
-	void	commitEnvironmentToPhysics();
-	void	commitPhysicsToGraphics();
-	void	commitEventToGraphics();
-	void	caseLeft();
-	void	caseRight();
-	void	caseSpace();
-	void	caseUp();
-	void	caseAction();
-	void	casePortal();
+	bool					dieFall();
+	bool					endDeath();
+	void					dance();
+	void					inWater();
+	void					randomJumpAnimation();
+	void					timeEvent(sf::Time frameTime);
+	void					resetTimeEvent();
+	void					setupAnimation();
+	void					setupMachine();
+	void					collisionTileUpdate();
+	void					onSky(Events event);
+	void					collisionElevatorUpdate();
+	void					commitControlsToPhysics(float frametime);
+	void					commitEnvironmentToPhysics();
+	void					commitPhysicsToGraphics();
+	void					commitEventToGraphics();
+	void					caseLeft();
+	void					caseRight();
+	void					caseSpace();
+	void					caseUp();
+	void					caseAction();
+	void					casePortal();
 
 private:
 	class OctoSound;
-	std::unique_ptr<OctoSound>	m_sound;
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
@@ -103,21 +107,26 @@ private:
 	octo::CharacterAnimation	m_danceAnimation;
 	octo::CharacterAnimation	m_danceWithMusicAnimation;
 	octo::CharacterAnimation	m_answerWolfAnimation;
+	octo::CharacterAnimation	m_startSlowFallAnimation;
 	octo::CharacterAnimation	m_slowFallAnimation;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
 	octo::CharacterAnimation	m_startElevatorAnimation;
 	octo::CharacterAnimation	m_elevatorAnimation;
-	RectangleShape *			m_box;
-	CircleShape *				m_eventBox;
-	OctoEvent					m_octoEvent;
-	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
-	RepairNanoRobot *			m_repairNanoRobot;
-	Progress &					m_progress;
-	std::mt19937				m_engine;
+
+	std::unique_ptr<OctoSound>						m_sound;
+	RectangleShape *								m_box;
+	CircleShape *									m_eventBox;
+	OctoEvent										m_octoEvent;
+	std::vector<std::unique_ptr<NanoRobot>>			m_nanoRobots;
+	RepairNanoRobot *								m_repairNanoRobot;
+	Progress &										m_progress;
+	std::mt19937									m_engine;
 	std::uniform_int_distribution<std::size_t>		m_jumpDistribution;
 	std::uniform_real_distribution<float>			m_danceDistribution;
 
+	SmokeSystem					m_inkParticle;
+	HelmetSystem				m_helmetParticle;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;
@@ -154,8 +163,6 @@ private:
 	bool						m_collisionElevatorEvent;
 	bool						m_doScale;
 	bool						m_inWater;
-	SmokeSystem					m_inkParticle;
-	HelmetSystem				m_helmetParticle;
 	Events						m_prevEvent;
 };
 
