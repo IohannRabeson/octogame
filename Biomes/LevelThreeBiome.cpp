@@ -77,7 +77,7 @@ LevelThreeBiome::LevelThreeBiome() :
 
 	m_mushroomSize(sf::Vector2f(20.f, 300.f), sf::Vector2f(300.f, 500.f)),
 	m_mushroomColor(255, 182, 0),
-	m_mushroomLifeTime(sf::seconds(10), sf::seconds(30)),
+	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
 	m_crystalSize(sf::Vector2f(40.f, 100.f), sf::Vector2f(80.f, 200.f)),
 	m_crystalPartCount(2u, 8u),
@@ -129,7 +129,10 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
 	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
 	m_instances[670] = MAP_SECRET_LEFT_VILLAGE_JUNGLE_OMP;
-	m_instances[2] = TEST_MAP_DOUBLE_JUMP_OMP;
+	//m_instances[2] = TEST_MAP_DOUBLE_JUMP_OMP;
+	m_instances[2] = MAP_CEDRIC_JUNGLE_OMP; //2 to 102
+	m_instances[120] = MAP_TRAIL_JUNGLE_OMP; //150 to 450
+	m_instances[500] = MAP_DOUBLE_JUMP_JUNGLE_OMP; //500 to 600
 	m_gameObjects[4] = GameObjectType::Portal;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_interestPointPosX = 500;
