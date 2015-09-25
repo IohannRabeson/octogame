@@ -243,8 +243,10 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	{
 		case sf::Keyboard::S:
 			m_keyS = true;
+			Progress::getInstance().moveMap();
 			break;
 		case sf::Keyboard::F:
+			Progress::getInstance().moveMap();
 			m_keyF = true;
 			break;
 		default:
