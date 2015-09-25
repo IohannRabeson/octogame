@@ -21,7 +21,8 @@ public:
 	{
 		Idle,
 		Speak,
-		FollowOcto
+		FollowOcto,
+		User
 	};
 
 	virtual ~NanoRobot(void);
@@ -30,6 +31,7 @@ public:
 	void transfertToOcto(void);
 	void setPosition(sf::Vector2f const & position);
 	void setState(NanoRobot::State state);
+	void setTextIndex(std::size_t index);
 	sf::Vector2f const & getPosition(void) const;
 	sf::Vector2f const & getTargetPosition(void);
 	NanoRobot::State getState(void) const;
@@ -40,31 +42,34 @@ public:
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
-	NanoRobot(sf::Vector2f const & position, std::string id, std::size_t nbFrames, int seed);
+	NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed);
 	void setup(AGameObjectBase * gameObject);
 	void playSound(void);
 
+	std::unique_ptr<BubbleText> const & getCurrentText(void) const { return m_texts[m_textIndex]; }
+
 private:
-	FireflySwarm							m_swarm;
-	FireflySwarm::UniformPopulation			m_uniformPopulation;
-	FireflySwarm::SpawnMode					m_spawnMode;
-	FireflySwarm::CirclePositionBehavior *	m_positionBehavior;
+	FireflySwarm								m_swarm;
+	FireflySwarm::UniformPopulation				m_uniformPopulation;
+	FireflySwarm::SpawnMode						m_spawnMode;
+	FireflySwarm::CirclePositionBehavior *		m_positionBehavior;
 
-	octo::AnimatedSprite					m_sprite;
-	octo::SpriteAnimation					m_animation;
+	octo::AnimatedSprite						m_sprite;
+	octo::SpriteAnimation						m_animation;
 
-	CircleShape *							m_box;
-	std::unique_ptr<BubbleText>				m_text;
+	CircleShape *								m_box;
+	std::vector<std::unique_ptr<BubbleText>>	m_texts;
+	std::size_t									m_textIndex;
 
-	State									m_state;
-	sf::Time								m_timer;
-	sf::Time								m_timerMax;
+	State										m_state;
+	sf::Time									m_timer;
+	sf::Time									m_timerMax;
 
-	bool									m_isTravelling;
+	bool										m_isTravelling;
 
-	NanoEffect								m_glowingEffect;
-	std::mt19937							m_engine;
-	std::uniform_int_distribution<int>		m_soundDistri;
+	NanoEffect									m_glowingEffect;
+	std::mt19937								m_engine;
+	std::uniform_int_distribution<int>			m_soundDistri;
 };
 
 #endif

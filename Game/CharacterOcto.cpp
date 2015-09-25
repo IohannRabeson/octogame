@@ -110,6 +110,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::FranfranNpc)
 		| static_cast<std::size_t>(GameObjectType::GuiNpc)
 		| static_cast<std::size_t>(GameObjectType::JuNpc)
+		| static_cast<std::size_t>(GameObjectType::LucienNpc)
+		| static_cast<std::size_t>(GameObjectType::OldDesertStaticNpc)
 		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
@@ -1044,9 +1046,11 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 	{
 		case sf::Keyboard::Left:
 			caseLeft();
+			m_progress.walk();
 			break;
 		case sf::Keyboard::Right:
 			caseRight();
+			m_progress.walk();
 			break;
 		case sf::Keyboard::Space:
 			caseSpace();

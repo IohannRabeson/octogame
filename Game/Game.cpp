@@ -21,6 +21,8 @@
 #include "CedricNpc.hpp"
 #include "GuiNpc.hpp"
 #include "TurbanNpc.hpp"
+#include "OldDesertStaticNpc.hpp"
+#include "LucienNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -209,6 +211,12 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::TurbanNpc:
 			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::OldDesertStaticNpc:
+			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::LucienNpc:
+			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		default:
 			break;
 	}
@@ -243,8 +251,10 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	{
 		case sf::Keyboard::S:
 			m_keyS = true;
+			Progress::getInstance().moveMap();
 			break;
 		case sf::Keyboard::F:
+			Progress::getInstance().moveMap();
 			m_keyF = true;
 			break;
 		default:
