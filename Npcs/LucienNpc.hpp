@@ -15,6 +15,9 @@ protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
 
+private:
+	bool		m_side;
+
 };
 
 #endif

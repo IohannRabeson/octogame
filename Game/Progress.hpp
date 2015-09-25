@@ -49,7 +49,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::LevelOne,
+			data(5u, Level::LevelOne,
 					5u, 100u,
 					true, true)
 		{
