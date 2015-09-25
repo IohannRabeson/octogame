@@ -44,7 +44,7 @@ void	AnimatedSpriteDemoScreen::start()
 	octo::Camera&			camera = octo::Application::getCamera();
 	octo::Console&			console = octo::Application::getConsole();
 
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_TEST_OSS));
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_OSS));
 	m_sprite.setAnimation(m_animation);
 	m_sprite.play();
 	camera.setCenter(m_sprite.getGlobalBounds().left + m_sprite.getGlobalBounds().width / 2,
