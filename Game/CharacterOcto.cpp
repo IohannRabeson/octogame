@@ -48,6 +48,7 @@ CharacterOcto::CharacterOcto() :
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false),
+	m_collisionSpaceShip(false),
 	m_doScale(false),
 	m_inWater(false)
 {
@@ -493,12 +494,19 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()),
 			m_inWater, m_onGround);
 
-	if (!m_collisionElevatorEvent && m_progress.canRepair())
+	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepair())
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
+
+	if (!m_collisionSpaceShip && m_progress.canRepairShip())
+	{
+		for (auto & robot : m_nanoRobots)
+			robot->setState(NanoRobot::State::FollowOcto);
+	}
 
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionElevatorEvent = false;
+	m_collisionSpaceShip = false;
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
 
@@ -631,10 +639,17 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 
 void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 {
-	if (m_progress.canRepairShip())
+	if (m_progress.canRepairShip() && m_keyAction)
 	{
+		for (auto & robot : m_nanoRobots)
+		{
+			robot->setState(NanoRobot::State::RepairShip);
+			robot->setTarget(spaceShip->getPosition());
+		}
+		// spaceShip->isRepaired()
 		(void)spaceShip;
 	}
+	m_collisionSpaceShip = true;
 }
 
 void	CharacterOcto::usePortal(Portal & portal)

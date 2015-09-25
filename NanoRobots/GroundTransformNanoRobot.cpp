@@ -3,7 +3,7 @@
 #include "Progress.hpp"
 
 GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
-	NanoRobot(sf::Vector2f(30 * 16.f, 800.f), NANO_GROUND_TRANSFORM_OSS, 4, 9854),
+	NanoRobot(sf::Vector2f(30 * 16.f, 800.f), NANO_GROUND_TRANSFORM_OSS, 4, 9854, sf::Vector2f(0.f, -20.f)),
 	m_textTimer(sf::Time::Zero),
 	m_textTimerMax(sf::seconds(3.f)),
 	m_canSpeak(false),
@@ -18,6 +18,11 @@ GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 
 	if (Progress::getInstance().getNanoRobotCount() != 0u)
 		m_talkaboutshit = false;
+
+	std::vector<sf::Vector2f> targets;
+	targets.push_back(sf::Vector2f(100.f, 50.f));
+	targets.push_back(sf::Vector2f(300.f, 250.f));
+	setTargets(targets);
 }
 
 void GroundTransformNanoRobot::update(sf::Time frameTime)

@@ -24,6 +24,8 @@ public:
 	bool				getWalk(void) const { return m_data.walk; }
 	bool				getMoveMap(void) const { return m_data.moveMap; }
 
+	bool				isFirstTime(void) const { return m_data.firstTime; }
+	void				setFirstTime(bool firstTime) { m_data.firstTime = firstTime; }
 	bool				canMoveMap();
 	bool				canRepair();
 	bool				canRepairShip();
@@ -64,6 +66,7 @@ private:
 			soundVol(soundVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
+			firstTime(true),
 			walk(false),
 			moveMap(false)
 		{}
@@ -74,6 +77,7 @@ private:
 		std::size_t		soundVol;
 		bool			fullscreen;
 		bool			vsync;
+		bool			firstTime;
 		bool			walk;
 		bool			moveMap;
 	};

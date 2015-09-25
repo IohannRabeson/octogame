@@ -163,6 +163,7 @@ private:
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
 	bool						m_collisionElevatorEvent;
+	bool						m_collisionSpaceShip;
 	bool						m_doScale;
 	bool						m_inWater;
 	Events						m_prevEvent;
