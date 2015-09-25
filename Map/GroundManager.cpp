@@ -14,6 +14,10 @@
 #include "FannyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "GuiNpc.hpp"
+#include "PunkNpc.hpp"
+#include "FatNpc.hpp"
+#include "LucienNpc.hpp"
+#include "IohannNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
@@ -102,10 +106,14 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
-	m_npcFactory.registerCreator<ClassicNpc>(OCTO_COMPLETE_OSS);
+	m_npcFactory.registerCreator<ClassicNpc>(OCTO_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
+	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
+	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
+	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
+	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
@@ -137,13 +145,17 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(HOUSE_PUSSY_OSS, scale, position, 4u);
 			});
-	m_decorFactory.registerCreator(FIRECAMP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
-			{
-				return new Firecamp(scale, position);
-			});
 	m_decorFactory.registerCreator(FALL_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(FALL_SIGN_OSS, scale, position, 4u, 0.4f);
+			});
+	m_decorFactory.registerCreator(PLANT_JUNGLE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PLANT_JUNGLE_OSS, scale, position, 3u, 0.4f);
+			});
+	m_decorFactory.registerCreator(FIRECAMP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Firecamp(scale, position);
 			});
 
 	// Get all the gameobjects from instances
@@ -185,7 +197,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		{
 			octo::LevelMap::Decor decor = resources.getLevelMap(instance.second).getDecor(i);
 			sf::Vector2f position = decor.position;
-			position.x += instance.first * Tile::TileSize - Map::OffsetY;
+			position.x += instance.first * Tile::TileSize - Map::OffsetX;
 			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
 			m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
@@ -479,6 +491,11 @@ NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 	return robot;
 }
 
+void	GroundManager::setNextGenerationState(GenerationState state)
+{
+	if (m_transitionTimer >= m_transitionTimerMax)
+		m_nextState = state;
+}
 
 void GroundManager::setTransitionAppear(int x, int y)
 {
@@ -951,13 +968,6 @@ void GroundManager::update(float deltatime)
 	if (m_transitionTimer >= m_transitionTimerMax)
 	{
 		bool compute = false;
-		if (m_nextState != GenerationState::None)
-		{
-			if (m_soundGeneration != nullptr)
-				m_soundGeneration->stop();
-			//TODO
-			m_soundGeneration = audio.playSound(resources.getSound(OCTO_GREETING_WAV), 0.f);
-		}
 		if (m_nextState == GenerationState::Next)
 		{
 			compute = true;
@@ -978,6 +988,10 @@ void GroundManager::update(float deltatime)
 		{
 			m_transitionTimer = 0.f;
 			swapMap();
+			if (m_soundGeneration != nullptr)
+				m_soundGeneration->stop();
+			//TODO
+			m_soundGeneration = audio.playSound(resources.getSound(OCTO_GREETING_WAV), 0.f);
 		}
 	}
 	updateOffset(deltatime);
@@ -1020,6 +1034,10 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 		nano.m_gameObject->draw(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->draw(render, states);
+}
+
+void GroundManager::drawWater(sf::RenderTarget& render, sf::RenderStates states) const
+{
 	if (m_water)
 		render.draw(*m_water, states);
 }
@@ -1030,4 +1048,8 @@ void GroundManager::drawText(sf::RenderTarget& render, sf::RenderStates states) 
 		npc.m_gameObject->drawText(render, states);
 	for (auto & npc : m_npcs)
 		npc->drawText(render, states);
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->drawText(render, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->drawText(render, states);
 }

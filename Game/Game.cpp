@@ -21,6 +21,8 @@
 #include "CedricNpc.hpp"
 #include "GuiNpc.hpp"
 #include "TurbanNpc.hpp"
+#include "OldDesertStaticNpc.hpp"
+#include "LucienNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -148,6 +150,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 		case GameObjectType::Portal:
 			octo->usePortal(*gameObjectCast<Portal>(gameObject));
 			break;
+		case GameObjectType::CedricNpc:
+			gameObjectCast<CedricNpc>(gameObject)->startBalle();
+			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling())
 			{
@@ -206,6 +211,12 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::TurbanNpc:
 			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::OldDesertStaticNpc:
+			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::LucienNpc:
+			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		default:
 			break;
 	}
@@ -240,8 +251,10 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	{
 		case sf::Keyboard::S:
 			m_keyS = true;
+			Progress::getInstance().moveMap();
 			break;
 		case sf::Keyboard::F:
+			Progress::getInstance().moveMap();
 			m_keyF = true;
 			break;
 		default:
@@ -277,8 +290,10 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
+	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
+	m_octo->drawText(render, states);
 }
 
 void	Game::followPlayer(sf::Time frameTime)

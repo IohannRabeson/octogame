@@ -104,7 +104,7 @@ void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf
 		{
 			m_decorManagerFront.add(new Cloud(m_cycle));
 			m_originCloudsFront[i].x = biome.randomFloat(leftLimit, rightLimit);
-			m_originCloudsFront[i].y = biome.randomFloat(cameraSize.y / 3.f, -mapSize.y);
+			m_originCloudsFront[i].y = biome.randomFloat(-mapSize.y, 0.f);
 		}
 	}
 }

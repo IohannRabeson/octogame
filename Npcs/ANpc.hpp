@@ -21,7 +21,7 @@ public:
 	void setPosition(sf::Vector2f const & position);
 	void setOrigin(sf::Vector2f const & origin);
 	void setSize(sf::Vector2f const & size);
-	void setTexts(std::vector<std::string> const & texts);
+	void setTexts(std::vector<std::wstring> const & texts);
 	void setCurrentText(int index);
 	void setScale(float scale);
 	void addMapOffset(float x, float y);
@@ -51,6 +51,7 @@ protected:
 
 	ANpc(ResourceKey const & npcId);
 
+	void setTimerMax(sf::Time timerMax);
 	void setNextEvent(Events event);
 	void setMachine(octo::FiniteStateMachine const & machine);
 	void setVelocity(float velocity);
@@ -63,6 +64,9 @@ protected:
 
 	float getScale(void) const;
 	float getVelocity(void) const;
+	void addTimer(sf::Time time);
+	sf::Time getTimer(void) const;
+	sf::Time getTimerMax(void) const;
 	sf::Vector2f const & getOrigin(void) const;
 	sf::FloatRect const & getArea(void) const;
 	RectangleShape * getBox(void);

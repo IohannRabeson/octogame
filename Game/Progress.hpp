@@ -18,6 +18,12 @@ public:
 	void				setNextDestination(Level destination);
 	Level				getNextDestination(void) const;
 
+	void				walk(void) { m_data.walk = true; };
+	void				moveMap(void) { m_data.moveMap = true; };
+
+	bool				getWalk(void) const { return m_data.walk; }
+	bool				getMoveMap(void) const { return m_data.moveMap; }
+
 	bool				canMoveMap();
 	bool				canRepair();
 	bool				canWalk();
@@ -25,25 +31,23 @@ public:
 	bool				canDoubleJump();
 	bool				canSlowFall();
 	bool				canUseElevator();
+	bool				canUseWaterJump();
 	bool				changeLevel() const;
 	void				levelChanged();
 
-	inline void					setOctoPos(sf::Vector2f const & position){ m_octoPos = position; }
-	inline sf::Vector2f const&	getOctoPos(){ return m_octoPos; }
+	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
+	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
 
-	inline void		setReverseSprite(bool reverse){ m_reverseSprite = reverse; }
-	inline bool		getReverseSprite(){ return m_reverseSprite; }
+	void				setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
+	bool				getReverseSprite() const { return m_reverseSprite; }
 
 	void				load(std::string const & filename);
 	void				save();
 	void				reset();
 
 private:
-	Progress();
-	void	init();
-	void	saveToFile();
-	void	setup();
-	struct data{
+	struct data
+	{
 		data() :
 			data(0u, Level::LevelOne,
 					5u, 100u,
@@ -58,25 +62,33 @@ private:
 			musicVol(musicVol),
 			soundVol(soundVol),
 			fullscreen(fullscreen),
-			vsync(vsync)
-		{
-		}
+			vsync(vsync),
+			walk(false),
+			moveMap(false)
+		{}
+
 		std::size_t		nanoRobotCount;
 		Level			destination;
 		std::size_t		musicVol;
 		std::size_t		soundVol;
 		bool			fullscreen;
 		bool			vsync;
-
+		bool			walk;
+		bool			moveMap;
 	};
 
-	static std::unique_ptr<Progress>		m_instance;
-	std::string								m_filename;
-	data									m_data;
-	bool									m_newSave;
-	bool									m_changeLevel;
-	bool									m_reverseSprite;
-	sf::Vector2f							m_octoPos;
+	Progress();
+	void				init();
+	void				saveToFile();
+	void				setup();
+
+	static std::unique_ptr<Progress>	m_instance;
+	std::string							m_filename;
+	data								m_data;
+	bool								m_newSave;
+	bool								m_changeLevel;
+	bool								m_reverseSprite;
+	sf::Vector2f						m_octoPos;
 };
 
 #endif

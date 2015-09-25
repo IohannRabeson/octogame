@@ -6,6 +6,7 @@
 #include "ResourceDefinitions.hpp"
 
 BubbleText::BubbleText(void) :
+	m_characterPerLineMax(0u),
 	m_characterPerLine(0u),
 	m_lineCount(1u)
 {
@@ -20,19 +21,30 @@ void BubbleText::setupBlocString(void)
 	for (auto it = m_phrase.begin(); it != m_phrase.end(); it++)
 	{
 		j++;
-		if (*it == ' ')
+		if (*it == ' ' || *it == '\\')
 			lastSpace = it;
-		if (j == m_characterPerLine)
+		if (j == m_characterPerLineMax - 1u)
 		{
 			*lastSpace = '\n';
 			it = ++lastSpace;
+			m_characterPerLine = j;
+			j = 0u;
+			m_lineCount++;
+		}
+		else if (*it == 'n' && *lastSpace == '\\')
+		{
+			*lastSpace = '\n';
+			m_phrase.erase(it);
+			it = ++it;
+			if (j > m_characterPerLine)
+				m_characterPerLine = j - 2;
 			j = 0u;
 			m_lineCount++;
 		}
 	}
 }
 
-void BubbleText::setup(std::string const & phrase, sf::Color const & color, std::size_t characterSize)
+void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std::size_t characterSize)
 {
 	if (characterSize == 0u)
 		characterSize = m_characterSize;
@@ -48,12 +60,14 @@ void BubbleText::setup(std::string const & phrase, sf::Color const & color, std:
 	m_text.setString(m_phrase);
 
 	float widthTotalText = m_text.findCharacterPos(m_phrase.size() - 1).x - m_text.findCharacterPos(0).x;
-	m_characterPerLine = static_cast<std::size_t>(m_contentSize.x / (widthTotalText / m_phrase.size()));
+	m_characterPerLineMax = static_cast<std::size_t>(m_contentSize.x / (widthTotalText / m_phrase.size()));
 
 	setupBlocString();
 	m_contentSize.y = m_lineCount * m_font.getLineSpacing(characterSize);
 	if (m_lineCount == 1u)
 		m_contentSize.x = widthTotalText + m_font.getGlyph(m_phrase[m_phrase.size() - 1], characterSize, 0).advance;
+	else if (m_characterPerLine != m_characterPerLineMax)
+		m_contentSize.x = m_characterPerLine * (widthTotalText / m_phrase.size());
 	m_text.setString(m_phrase);
 }
 
