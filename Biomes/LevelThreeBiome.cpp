@@ -33,7 +33,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
-	m_lightningSize(700.f, 1300.f),
+	m_lightningSize(700.f, 2500.f),
 
 	m_rockCount(10u, 20u),
 	m_treeCount(100u, 101u),
@@ -129,6 +129,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
 	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
 	m_instances[670] = MAP_SECRET_LEFT_VILLAGE_JUNGLE_OMP;
+	m_instances[2] = TEST_MAP_DOUBLE_JUMP_OMP;
 	m_gameObjects[4] = GameObjectType::Portal;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_interestPointPosX = 500;
