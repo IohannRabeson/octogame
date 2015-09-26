@@ -17,7 +17,6 @@ LevelZeroScreen::LevelZeroScreen(void) :
 void	LevelZeroScreen::start()
 {
 	octo::GraphicsManager &		graphics = octo::Application::getGraphicsManager();
-	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 
 	m_timer = sf::Time::Zero;
 	m_timerMax = sf::seconds(4.f);

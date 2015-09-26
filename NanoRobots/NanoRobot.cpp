@@ -167,6 +167,20 @@ void NanoRobot::makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vect
 	vertices[15].position = p1 + sf::Vector2f(-size, size);
 }
 
+void NanoRobot::playSoundRepair(void)
+{
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+	if (m_state == Repair && m_sound == nullptr)
+		m_sound = audio.playSound(resources.getSound(REPAIR_WITH_LAZER_WAV), 0.7f);
+	if (m_state != Repair && m_sound != nullptr)
+	{
+		m_sound->stop();
+		m_sound = nullptr;
+	}
+}
+
 void NanoRobot::addMapOffset(float x, float y)
 {
 	setPosition(sf::Vector2f(getPosition().x + x, getPosition().y + y));
@@ -287,6 +301,7 @@ void NanoRobot::update(sf::Time frametime)
 			m_particles.setPosition(target);
 		}
 	}
+	playSoundRepair();
 	m_particles.update(frametime);
 
 	m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
@@ -312,9 +327,8 @@ void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 
 void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const
 {
-	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak)
-	{
-		if (m_state == Idle || m_state == Speak)
-			m_texts[m_textIndex]->draw(render);
-	}
+	if (m_state == Idle)
+		return;
+	if (!m_isTravelling && m_state == Speak)
+		m_texts[m_textIndex]->draw(render);
 }

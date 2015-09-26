@@ -17,11 +17,16 @@ GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 		m_state = Walk;
 
 	if (Progress::getInstance().getNanoRobotCount() != 0u)
+	{
 		m_talkaboutshit = false;
+		m_state = None;
+	}
 
 	std::vector<sf::Vector2f> targets;
-	targets.push_back(sf::Vector2f(100.f, 50.f));
-	targets.push_back(sf::Vector2f(300.f, 250.f));
+	targets.push_back(sf::Vector2f(143.f, 333.f));
+	targets.push_back(sf::Vector2f(167.f, 330.f));
+	targets.push_back(sf::Vector2f(172.f, 355.f));
+	targets.push_back(sf::Vector2f(147.f, 358.f));
 	setTargets(targets);
 }
 
@@ -112,8 +117,6 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 
 void GroundTransformNanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	if (isTravelling())
-		return;
 	if (m_canSpeak)
 	{
 		getCurrentText()->draw(render, states);

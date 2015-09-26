@@ -2,6 +2,7 @@
 # define NANOROBOT_HPP
 
 # include <AnimatedSprite.hpp>
+# include <AudioManager.hpp>
 # include <random>
 
 # include "AGameObject.hpp"
@@ -54,6 +55,7 @@ protected:
 	void setTargets(std::vector<sf::Vector2f> const & targets);
 	void playSound(void);
 	void makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
+	void playSoundRepair(void);
 
 private:
 	FireflySwarm								m_swarm;
@@ -87,6 +89,7 @@ private:
 	NanoEffect									m_glowingEffect;
 	std::mt19937								m_engine;
 	std::uniform_int_distribution<int>			m_soundDistri;
+	std::shared_ptr<sf::Sound>					m_sound;
 };
 
 #endif

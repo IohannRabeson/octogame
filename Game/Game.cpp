@@ -41,7 +41,8 @@ Game::Game(void) :
 	m_musicPlayer(nullptr),
 	m_octo(nullptr),
 	m_keyS(false),
-	m_keyF(false)
+	m_keyF(false),
+	m_soundGeneration(nullptr)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -155,7 +156,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
 		case GameObjectType::JumpNanoRobot:
-			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling())
+			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<JumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -163,7 +164,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::GroundTransformNanoRobot:
-			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
+			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canMoveMap())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -171,7 +172,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
-			if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling())
+			if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canRepair())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -237,15 +238,37 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 
 void Game::moveMap()
 {
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+	if (m_soundGeneration != nullptr && !m_keyS && !m_keyF)
+	{
+		m_soundGeneration->stop();
+		m_soundGeneration = nullptr;
+	}
 	if (m_keyS)
 	{
 		if (Progress::getInstance().canMoveMap())
+		{
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+			if (m_soundGeneration == nullptr)
+			{
+				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV));
+				m_soundGeneration->setLoop(true);
+			}
+		}
 	}
 	else if (m_keyF)
 	{
 		if (Progress::getInstance().canMoveMap())
+		{
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			if (m_soundGeneration == nullptr)
+			{
+				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV), 1.f);
+				m_soundGeneration->setLoop(true);
+			}
+		}
 	}
 }
 
