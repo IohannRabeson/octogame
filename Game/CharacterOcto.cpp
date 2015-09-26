@@ -697,7 +697,7 @@ void	CharacterOcto::onSky(Events event)
 			{
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterFullJump;
-				if (m_keyUp)
+				if (m_keyUp && m_progress.canSlowFall())
 					m_sprite.setNextEvent(StartSlowFall);
 				else
 					m_sprite.setNextEvent(Fall);
@@ -908,7 +908,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 			velocity.x = m_pixelSecondWalk;
 		}
 	}
-	if (m_keySpace &&
+	if (m_keySpace && m_numberOfJump < 3 &&
 			(event == Jump || event == DoubleJump || event == StartJump))
 	{
 		velocity.y = m_jumpVelocity;
