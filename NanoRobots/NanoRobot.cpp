@@ -172,9 +172,9 @@ void NanoRobot::playSoundRepair(void)
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 
-	if (m_state == Repair && m_sound == nullptr)
+	if ((m_state == Repair || m_state == RepairShip) && m_sound == nullptr)
 		m_sound = audio.playSound(resources.getSound(REPAIR_WITH_LAZER_WAV), 0.7f);
-	if (m_state != Repair && m_sound != nullptr)
+	if (m_state != Repair && m_state != RepairShip && m_sound != nullptr)
 	{
 		m_sound->stop();
 		m_sound = nullptr;
