@@ -297,22 +297,26 @@ void CedricNpc::updateState(void)
 	sf::FloatRect const & bounds = box->getGlobalBounds();
 	sf::FloatRect const & area = getArea();
 
-	if (sprite.getCurrentEvent() == Left && bounds.left <= area.left)
+	if (sprite.getCurrentEvent() == Left)
 	{
 		if (m_prevDayState && m_skyCycle.isNight())
+		{
 			sprite.setNextEvent(Special2);
-		else
+		}
+		else if (bounds.left <= area.left)
 		{
 			sprite.setNextEvent(Right);
 			sprite.setOrigin(getOrigin().x, getOrigin().y);
 			sprite.setScale(getScale(), getScale());
 		}
 	}
-	else if (sprite.getCurrentEvent() == Right && (bounds.left + bounds.width) >= (area.left + area.width))
+	else if (sprite.getCurrentEvent() == Right)
 	{
 		if (m_prevDayState && m_skyCycle.isNight())
+		{
 			sprite.setNextEvent(Special2);
-		else
+		}
+		else if ((bounds.left + bounds.width) >= (area.left + area.width))
 		{
 			sprite.setNextEvent(Left);
 			sf::Vector2f const & size = sprite.getLocalSize();

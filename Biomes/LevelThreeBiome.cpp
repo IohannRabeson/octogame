@@ -23,7 +23,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_waterColor(0, 189, 168, 150),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(100.f)),
+	m_dayDuration(sf::seconds(20.f)),
 	m_startDayDuration(sf::seconds(15.f)),
 	m_skyDayColor(252, 252, 190),
 	m_skyNightColor(0, 0, 0),
