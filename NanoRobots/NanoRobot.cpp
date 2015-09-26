@@ -230,9 +230,10 @@ void NanoRobot::setTextIndex(std::size_t index)
 	m_textIndex = index;
 }
 
-void NanoRobot::setTargets(std::vector<sf::Vector2f> const & targets)
+void NanoRobot::setTargets(std::vector<sf::Vector2f> const & targets, float travelDuration)
 {
 	m_targets = targets;
+	m_timerRepairMax = sf::seconds(travelDuration);
 }
 
 sf::Vector2f const & NanoRobot::getPosition(void) const
