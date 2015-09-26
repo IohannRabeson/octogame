@@ -13,7 +13,6 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	ANpc(CEDRIC_OSS),
 	m_skyCycle(skyCycle),
 	m_prevDayState(skyCycle.isDay()),
-	m_timerSwitchDayNight(0.f),
 	m_shaderIndex(0u),
 	m_startBalle(false),
 	m_timer(sf::Time::Zero),
