@@ -39,7 +39,6 @@ private:
 	octo::CharacterAnimation	m_special2AnimationNight;
 	SkyCycle const &			m_skyCycle;
 	bool						m_prevDayState;
-	float						m_timerSwitchDayNight;
 	sf::Shader					m_shader;
 	std::size_t					m_shaderIndex;
 	bool						m_startBalle;
