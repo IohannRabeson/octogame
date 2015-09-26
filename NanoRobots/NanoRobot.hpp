@@ -2,6 +2,7 @@
 # define NANOROBOT_HPP
 
 # include <AnimatedSprite.hpp>
+# include <AudioManager.hpp>
 # include <random>
 
 # include "AGameObject.hpp"
@@ -11,6 +12,7 @@
 # include "IPlaceable.hpp"
 # include "BubbleText.hpp"
 # include "NanoEffect.hpp"
+# include "SparkSystem.hpp"
 
 class CircleShape;
 
@@ -22,13 +24,14 @@ public:
 		Idle,
 		Speak,
 		FollowOcto,
+		Repair,
+		RepairShip,
 		User
 	};
 
 	virtual ~NanoRobot(void);
 
-	void addMapOffset(float x, float y);
-	void transfertToOcto(void);
+	void setTarget(sf::Vector2f const & target);
 	void setPosition(sf::Vector2f const & position);
 	void setState(NanoRobot::State state);
 	void setTextIndex(std::size_t index);
@@ -37,22 +40,38 @@ public:
 	NanoRobot::State getState(void) const;
 	bool isTravelling(void) const;
 
+	void addMapOffset(float x, float y);
+	void transfertToOcto(void);
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
-	NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed);
-	void setup(AGameObjectBase * gameObject);
-	void playSound(void);
+	NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser);
 
 	std::unique_ptr<BubbleText> const & getCurrentText(void) const { return m_texts[m_textIndex]; }
+
+	void setup(AGameObjectBase * gameObject);
+	void setTargets(std::vector<sf::Vector2f> const & targets, float travelDuration);
+	void playSound(void);
+	void makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
+	void playSoundRepair(void);
 
 private:
 	FireflySwarm								m_swarm;
 	FireflySwarm::UniformPopulation				m_uniformPopulation;
 	FireflySwarm::SpawnMode						m_spawnMode;
 	FireflySwarm::CirclePositionBehavior *		m_positionBehavior;
+
+	std::unique_ptr<sf::Vertex[]>				m_ray;
+	std::vector<sf::Vector2f>					m_targets;
+	sf::Vector2f								m_target;
+	SparkSystem									m_particles;
+	sf::Texture const *							m_texture;
+	sf::Vector2f								m_offsetLaser;
+	sf::Time									m_timerRepair;
+	sf::Time									m_timerRepairMax;
+	std::size_t									m_repairIndex;
 
 	octo::AnimatedSprite						m_sprite;
 	octo::SpriteAnimation						m_animation;
@@ -70,6 +89,7 @@ private:
 	NanoEffect									m_glowingEffect;
 	std::mt19937								m_engine;
 	std::uniform_int_distribution<int>			m_soundDistri;
+	std::shared_ptr<sf::Sound>					m_sound;
 };
 
 #endif

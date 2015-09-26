@@ -108,6 +108,11 @@ bool	Progress::canRepair()
 	return (m_data.nanoRobotCount > 1);
 }
 
+bool	Progress::canRepairShip()
+{
+	return (m_data.nanoRobotCount > 4);
+}
+
 bool	Progress::canWalk()
 {
 	return true;
@@ -135,8 +140,7 @@ bool	Progress::canUseElevator()
 
 bool	Progress::canUseWaterJump()
 {
-	//TODO
-	return (m_data.nanoRobotCount > 0);
+	return (m_data.nanoRobotCount > 5);
 }
 
 bool	Progress::changeLevel() const

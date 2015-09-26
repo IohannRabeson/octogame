@@ -18,6 +18,7 @@
 
 class ElevatorStream;
 class RepairNanoRobot;
+class SpaceShip;
 
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	public octo::DefaultKeyboardListener,
@@ -71,6 +72,7 @@ public:
 	void					giveNanoRobot(NanoRobot * robot);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot);
 	void					repairElevator(ElevatorStream & elevator);
+	void					collideSpaceShip(SpaceShip * spaceShip);
 	void					usePortal(Portal & portal);
 
 private:
@@ -163,6 +165,7 @@ private:
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
 	bool						m_collisionElevatorEvent;
+	bool						m_collisionSpaceShip;
 	bool						m_doScale;
 	bool						m_inWater;
 	Events						m_prevEvent;
