@@ -24,6 +24,7 @@
 #include "Tent.hpp"
 #include "Concert.hpp"
 #include "Firecamp.hpp"
+#include "Cage.hpp"
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -155,6 +156,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_decorFactory.registerCreator(FIRECAMP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new Firecamp(scale, position);
+			});
+	m_decorFactory.registerCreator(CAGE_FRONT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Cage(scale, position);
 			});
 
 	// Get all the gameobjects from instances

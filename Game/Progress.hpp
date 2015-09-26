@@ -24,6 +24,13 @@ public:
 	bool				getWalk(void) const { return m_data.walk; }
 	bool				getMoveMap(void) const { return m_data.moveMap; }
 
+	void				startChallenge(void) { m_validChallenge = true; }
+	bool				canValidChallenge(void) const { return m_validChallenge; }
+	void				endChallenge(void) { m_validChallenge = false; }
+
+	void				setCanOpenDoubleJump(bool canOpen) { m_data.canOpenDoubleJump = canOpen; }
+	bool				canOpenDoubleJump(void) const { return m_data.canOpenDoubleJump; }
+
 	bool				canMoveMap();
 	bool				canRepair();
 	bool				canWalk();
@@ -49,7 +56,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::LevelOne, 5u, 100u, true, true)
+			data(3u, Level::LevelThree, 5u, 100u, true, true)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
@@ -62,7 +69,8 @@ private:
 			fullscreen(fullscreen),
 			vsync(vsync),
 			walk(false),
-			moveMap(false)
+			moveMap(false),
+			canOpenDoubleJump(false)
 		{}
 
 		std::size_t		nanoRobotCount;
@@ -73,6 +81,7 @@ private:
 		bool			vsync;
 		bool			walk;
 		bool			moveMap;
+		bool			canOpenDoubleJump;
 	};
 
 	Progress();
@@ -86,6 +95,7 @@ private:
 	bool								m_newSave;
 	bool								m_changeLevel;
 	bool								m_reverseSprite;
+	bool								m_validChallenge;
 	sf::Vector2f						m_octoPos;
 };
 

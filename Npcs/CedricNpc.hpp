@@ -17,6 +17,7 @@ public:
 	virtual void setup(void);
 	virtual void update(sf::Time frametime);
 	virtual float getHeight(void) const { return 0.f; }
+	std::size_t getId(void) const { return m_id; }
 
 protected:
 	enum CedricEvents
@@ -33,6 +34,7 @@ protected:
 	virtual void updatePhysics(void);
 
 private:
+	static std::size_t			Id;
 	octo::CharacterAnimation	m_idleAnimationNight;
 	octo::CharacterAnimation	m_walkAnimationNight;
 	octo::CharacterAnimation	m_special1AnimationNight;
@@ -45,6 +47,7 @@ private:
 	bool						m_startBalle;
 	sf::Time					m_timer;
 	sf::Time					m_effectDuration;
+	std::size_t					m_id;
 
 };
 
