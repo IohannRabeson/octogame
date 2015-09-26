@@ -1025,6 +1025,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerGround, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
+	for (auto & decor : m_instanceDecors)
+		decor->drawFront(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->draw(render, states);
 }
