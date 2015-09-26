@@ -202,9 +202,8 @@ void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 
 void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const
 {
-	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak)
-	{
-		if (m_state == Idle || m_state == Speak)
-			m_texts[m_textIndex]->draw(render);
-	}
+	if (m_state == Idle)
+		return;
+	if (!m_isTravelling && m_state == Speak)
+		m_texts[m_textIndex]->draw(render);
 }
