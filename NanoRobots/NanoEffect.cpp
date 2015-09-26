@@ -4,7 +4,7 @@ NanoEffect::NanoEffect(void) :
 	m_vertices(new sf::Vertex[100]),
 	m_count(100),
 	m_used(0u),
-	m_size(80.f, 80.f),
+	m_size(150.f, 150.f),
 	m_color(255, 255, 255, 200),
 	m_isActive(true),
 	m_isTransfer(false),
