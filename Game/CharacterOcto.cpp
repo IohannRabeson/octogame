@@ -9,11 +9,13 @@
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
 #include "ElevatorStream.hpp"
+#include "SpaceShip.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
+#include "WaterNanoRobot.hpp"
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -47,6 +49,7 @@ CharacterOcto::CharacterOcto() :
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false),
+	m_collisionSpaceShip(false),
 	m_doScale(false),
 	m_inWater(false)
 {
@@ -64,6 +67,8 @@ CharacterOcto::CharacterOcto() :
 		giveNanoRobot(new DoubleJumpNanoRobot());
 	if (m_progress.canSlowFall())
 		giveNanoRobot(new SlowFallNanoRobot());
+	if (m_progress.canUseWaterJump())
+		giveNanoRobot(new WaterNanoRobot());
 
 	for (auto & robot : m_nanoRobots)
 	{
@@ -105,6 +110,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
+		| static_cast<std::size_t>(GameObjectType::SpaceShip)
 		| static_cast<std::size_t>(GameObjectType::CedricNpc)
 		| static_cast<std::size_t>(GameObjectType::FannyNpc)
 		| static_cast<std::size_t>(GameObjectType::FranfranNpc)
@@ -506,12 +512,19 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()),
 			m_inWater, m_onGround);
 
-	if (!m_collisionElevatorEvent && m_progress.canRepair())
-		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
+	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepair())
+		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
+
+	if (!m_collisionSpaceShip && m_progress.canRepairShip())
+	{
+		for (auto & robot : m_nanoRobots)
+			robot->setState(NanoRobot::State::FollowOcto);
+	}
 
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionElevatorEvent = false;
+	m_collisionSpaceShip = false;
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
 
@@ -631,18 +644,33 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 		if (!elevator.isActivated())
 		{
 			elevator.activate();
-			m_repairNanoRobot->setState(RepairNanoRobot::State::Repair);
+			m_repairNanoRobot->setState(NanoRobot::State::Repair);
 			sf::Vector2f target = elevator.getPosition();
 			target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
 			target.y -= 50.f;
 			m_repairNanoRobot->setTarget(target);
 		}
 		else
-			m_repairNanoRobot->setState(RepairNanoRobot::State::Done);
+			m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 	}
 	else if (m_progress.canRepair())
-		m_repairNanoRobot->setState(RepairNanoRobot::State::None);
+		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 	m_collisionElevatorEvent = true;
+}
+
+void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
+{
+	if (m_progress.canRepairShip() && m_keyAction)
+	{
+		for (auto & robot : m_nanoRobots)
+		{
+			robot->setState(NanoRobot::State::RepairShip);
+			robot->setTarget(spaceShip->getPosition());
+		}
+		// spaceShip->isRepaired()
+		(void)spaceShip;
+	}
+	m_collisionSpaceShip = true;
 }
 
 void	CharacterOcto::usePortal(Portal & portal)

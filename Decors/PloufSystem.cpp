@@ -7,7 +7,7 @@ PloufSystem::PloufSystem() :
 	m_engine(std::time(0)),
 	m_creationTimeDistri(0.001f, 0.002f),
 	m_lifeTimeDistri(0.6f, 0.8f),
-	m_directionDistri(0.f, octo::Pi2),
+	m_directionDistri(octo::PiDiv2, octo::Pi + octo::PiDiv2),
 	m_timer(sf::Time::Zero),
 	m_nextCreation(sf::Time::Zero),
 	m_color(sf::Color(28, 172, 228, 110)),
@@ -69,7 +69,7 @@ void	PloufSystem::updateParticle(sf::Time frameTime, Particle& particle)
 	std::get<Component::Rotation>(particle) += AngularVelocity * frameTime.asSeconds();
 	std::get<MyComponent::Time>(particle) += frameTime;
 	float ratio = std::get<MyComponent::Time>(particle) / std::get<MyComponent::Life>(particle);
-	std::get<Component::Position>(particle) += sf::Vector2f(0.f, 100.f) * ratio * frameTime.asSeconds();
+	std::get<Component::Position>(particle) += sf::Vector2f(0.f, 200.f) * ratio * frameTime.asSeconds();
 	std::get<Component::Color>(particle).a = 255.f * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds()));
 }
 
