@@ -515,7 +515,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepair())
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 
-	if (!m_collisionSpaceShip && m_progress.canRepairShip())
+	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepairShip())
 	{
 		for (auto & robot : m_nanoRobots)
 			robot->setState(NanoRobot::State::FollowOcto);
@@ -667,8 +667,6 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 			robot->setState(NanoRobot::State::RepairShip);
 			robot->setTarget(spaceShip->getPosition());
 		}
-		// spaceShip->isRepaired()
-		(void)spaceShip;
 	}
 	m_collisionSpaceShip = true;
 }
