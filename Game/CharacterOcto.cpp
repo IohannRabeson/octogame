@@ -774,7 +774,6 @@ bool	CharacterOcto::endDeath()
 		return false;
 	}
 	return true;
-
 }
 
 void	CharacterOcto::dance()

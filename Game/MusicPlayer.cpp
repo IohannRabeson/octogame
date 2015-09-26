@@ -21,10 +21,6 @@ MusicPlayer::MusicPlayer(void) :
 	initMusicValue(m_eventMusics[2], COLONISATION_WAV);
 }
 
-MusicPlayer::~MusicPlayer()
-{
-}
-
 void MusicPlayer::setup(ABiome const & biome)
 {
 	m_biomeId = biome.getId();
