@@ -758,23 +758,23 @@ bool	CharacterOcto::dieFall()
 
 bool	CharacterOcto::endDeath()
 {
+	octo::Camera&				camera = octo::Application::getCamera();
+	sf::Vector2f				cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
+
+	m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+	m_progress.setReverseSprite(m_originMove);
 	if (m_sprite.getCurrentEvent() == Death)
 	{
 		if (m_sprite.isTerminated())
 		{
 			octo::StateManager &		states = octo::Application::getStateManager();
-			octo::PostEffectManager &	postEffect = octo::Application::getPostEffectManager();
-			octo::Camera&				camera = octo::Application::getCamera();
-			sf::Vector2f				cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
-
-			m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
-			m_progress.setReverseSprite(m_originMove);
-			postEffect.setAllShaderEnabled(false);
+			octo::Application::getPostEffectManager().setAllShaderEnabled(false);
 			states.push("octo_death");
 		}
 		return false;
 	}
 	return true;
+
 }
 
 void	CharacterOcto::dance()

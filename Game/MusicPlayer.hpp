@@ -15,7 +15,7 @@ class MusicPlayer
 {
 public:
 	MusicPlayer(void);
-	~MusicPlayer(void) = default;
+	~MusicPlayer(void);
 
 	void setup(ABiome const & biome);
 	void update(sf::Time frameTime, sf::Vector2f const & octoPos);

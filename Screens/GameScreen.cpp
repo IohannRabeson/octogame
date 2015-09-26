@@ -7,7 +7,6 @@
 #include <StateManager.hpp>
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
-#include <AudioManager.hpp>
 
 GameScreen::GameScreen(void) :
 	m_doSave(false)
@@ -39,6 +38,7 @@ void	GameScreen::resume()
 
 void	GameScreen::stop()
 {
+	octo::Application::getAudioManager().stopMusic(sf::Time::Zero);
 	Progress::getInstance().save();
 }
 
@@ -47,8 +47,6 @@ void	GameScreen::update(sf::Time frameTime)
 	AMenu::State state = m_menu.getState();
 	octo::StateManager & states = octo::Application::getStateManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
-	octo::AudioManager & audio = octo::Application::getAudioManager();
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 	{
@@ -68,8 +66,8 @@ void	GameScreen::update(sf::Time frameTime)
 		m_game->update(frameTime);
 		if (Progress::getInstance().changeLevel())
 		{
-			audio.playSound(resources.getSound(PORTAL_START_WAV), 0.7f);
-			states.push("transition");
+			octo::Application::getPostEffectManager().setAllShaderEnabled(false);
+			states.push("transitionLevel");
 		}
 	}
 }
