@@ -107,8 +107,6 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 
 void GroundTransformNanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	if (isTravelling())
-		return;
 	if (m_canSpeak)
 	{
 		getCurrentText()->draw(render, states);

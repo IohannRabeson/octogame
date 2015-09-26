@@ -155,7 +155,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
 		case GameObjectType::JumpNanoRobot:
-			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling())
+			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<JumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -163,7 +163,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::GroundTransformNanoRobot:
-			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
+			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canMoveMap())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -171,7 +171,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
-			if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling())
+			if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canRepair())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
 				ptr->transfertToOcto();

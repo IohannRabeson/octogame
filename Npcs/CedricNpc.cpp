@@ -236,42 +236,11 @@ void CedricNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (sprite.getCurrentEvent() == Special2 || sprite.getCurrentEvent() == Special2Night)
-		m_timerSwitchDayNight += frametime.asSeconds();
-
-	if (m_skyCycle.isNight())
-	{
-		if (m_prevDayState)
-		{
-			sprite.setNextEvent(Special2);
-		}
-		else if (m_timerSwitchDayNight > 0.8f)
-		{
-			m_timerSwitchDayNight = 0.f;
-			if (sprite.getCurrentEvent() == Special2)
-				sprite.setNextEvent(IdleNight);
-		}
-	}
-	else if (m_skyCycle.isDay())
-	{
-		if (!m_prevDayState)
-		{
-			sprite.setNextEvent(Special2Night);
-		}
-		else if (m_timerSwitchDayNight > 0.8f)
-		{
-			m_timerSwitchDayNight = 0.f;
-			if (sprite.getCurrentEvent() == Special2Night)
-				sprite.setNextEvent(Left);
-		}
-		else
-			updateState();
-	}
+	updateState();
+	updatePhysics();
 
 	// Get Night cycle to change the animation
 	m_prevDayState = m_skyCycle.isDay();
-
-	updatePhysics();
 
 	sprite.update(frametime);
 	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
@@ -312,21 +281,43 @@ void CedricNpc::updateState(void)
 	sf::FloatRect const & bounds = box->getGlobalBounds();
 	sf::FloatRect const & area = getArea();
 
-	if (canWalk())
+	if (sprite.getCurrentEvent() == Left && bounds.left <= area.left)
 	{
-		if (sprite.getCurrentEvent() == Left && bounds.left <= area.left)
+		if (m_prevDayState && m_skyCycle.isNight())
+			sprite.setNextEvent(Special2);
+		else
 		{
 			sprite.setNextEvent(Right);
 			sprite.setOrigin(getOrigin().x, getOrigin().y);
 			sprite.setScale(getScale(), getScale());
 		}
-		else if (sprite.getCurrentEvent() == Right && (bounds.left + bounds.width) >= (area.left + area.width))
+	}
+	else if (sprite.getCurrentEvent() == Right && (bounds.left + bounds.width) >= (area.left + area.width))
+	{
+		if (m_prevDayState && m_skyCycle.isNight())
+			sprite.setNextEvent(Special2);
+		else
 		{
 			sprite.setNextEvent(Left);
 			sf::Vector2f const & size = sprite.getLocalSize();
 			sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
 			sprite.setScale(-getScale(), getScale());
 		}
+	}
+	else if (sprite.getCurrentEvent() == Special2)
+	{
+		if (sprite.isTerminated())
+			sprite.setNextEvent(IdleNight);
+	}
+	else if (sprite.getCurrentEvent() == Special2Night)
+	{
+		if (sprite.isTerminated())
+			sprite.setNextEvent(Left);
+	}
+	else if (sprite.getCurrentEvent() == IdleNight)
+	{
+		if (!m_prevDayState && m_skyCycle.isDay())
+			sprite.setNextEvent(Special2Night);
 	}
 }
 
