@@ -2,12 +2,15 @@
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
 #include <Camera.hpp>
 #include <Math.hpp>
 #include <Interpolations.hpp>
+
+std::size_t CedricNpc::Id = 0u;
 
 CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	ANpc(CEDRIC_OSS),
@@ -16,7 +19,8 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	m_shaderIndex(0u),
 	m_startBalle(false),
 	m_timer(sf::Time::Zero),
-	m_effectDuration(sf::seconds(20.f))
+	m_effectDuration(sf::seconds(25.f)),
+	m_id(Id++)
 {
 	setSize(sf::Vector2f(35.f, 100.f));
 	setOrigin(sf::Vector2f(75.f, 68.f));
@@ -39,6 +43,7 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 CedricNpc::~CedricNpc(void)
 {
 	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
+	Id = 0u;
 }
 
 void CedricNpc::setup(void)
@@ -226,9 +231,20 @@ void CedricNpc::setupMachine(void)
 
 void CedricNpc::startBalle(void)
 {
-	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	postEffect.enableEffect(m_shaderIndex, true);
-	m_startBalle = true;
+	if (m_id == 0u)
+	{
+		octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+		postEffect.enableEffect(m_shaderIndex, true);
+		m_startBalle = true;
+		Progress::getInstance().startChallenge();
+	}
+	else
+	{
+		if (Progress::getInstance().canValidChallenge() && !Progress::getInstance().canOpenDoubleJump())
+		{
+			Progress::getInstance().setCanOpenDoubleJump(true);
+		}
+	}
 }
 
 void CedricNpc::update(sf::Time frametime)
@@ -268,6 +284,7 @@ void CedricNpc::update(sf::Time frametime)
 			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 			postEffect.enableEffect(m_shaderIndex, false);
 			m_startBalle = false;
+			Progress::getInstance().endChallenge();
 		}
 	}
 	resetVariables();
