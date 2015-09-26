@@ -8,7 +8,8 @@ RepairNanoRobot::RepairNanoRobot(void) :
 	NanoRobot(sf::Vector2f(600.f * 16.f, 800.f), NANO_REPAIR_OSS, 8, 12542),
 	m_ray(new sf::Vertex[16]),
 	m_texture(nullptr),
-	m_state(None)
+	m_state(None),
+	m_sound(nullptr)
 {
 	setup(this);
 	m_texture = &octo::Application::getResourceManager().getTexture(STARGRADIENT_PNG);
@@ -93,6 +94,7 @@ void RepairNanoRobot::update(sf::Time frameTime)
 		m_particles.canEmit(true);
 		m_particles.setPosition(m_target);
 	}
+	playSoundRepair();
 	m_particles.update(frameTime);
 }
 
@@ -105,4 +107,18 @@ void RepairNanoRobot::draw(sf::RenderTarget & render, sf::RenderStates states) c
 		render.draw(m_ray.get() + 8, 8u, sf::Quads, m_texture);
 	}
 	m_particles.draw(render);
+}
+
+void	RepairNanoRobot::playSoundRepair()
+{
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+	if (m_state == Repair && m_sound == nullptr)
+		m_sound = audio.playSound(resources.getSound(REPAIR_WITH_LAZER_WAV), 0.7f);
+	if (m_state != Repair && m_sound != nullptr)
+	{
+		m_sound->stop();
+		m_sound = nullptr;
+	}
 }
