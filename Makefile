@@ -42,6 +42,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/QuitScreen.cpp					\
 				Screens/FsmDemoScreen.cpp				\
 				Screens/ElevatorStreamDemo.cpp			\
+				Screens/TransitionLevelScreen.cpp		\
 				Screens/TransitionScreen.cpp			\
 				Screens/DeathScreen.cpp					\
 				Screens/LevelZeroScreen.cpp				\
