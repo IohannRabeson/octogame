@@ -15,6 +15,7 @@
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
+#include "WaterNanoRobot.hpp"
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -66,6 +67,8 @@ CharacterOcto::CharacterOcto() :
 		giveNanoRobot(new DoubleJumpNanoRobot());
 	if (m_progress.canSlowFall())
 		giveNanoRobot(new SlowFallNanoRobot());
+	if (m_progress.canUseWaterJump())
+		giveNanoRobot(new WaterNanoRobot());
 
 	for (auto & robot : m_nanoRobots)
 	{
@@ -130,6 +133,9 @@ void	CharacterOcto::setup(ABiome & biome)
 	setupMachine();
 	m_sprite.setScale(m_spriteScale, m_spriteScale);
 	m_sprite.restart();
+
+	m_ploufParticle.canEmit(false);
+	m_ploufParticle.setColor(biome.getWaterColor());
 
 	m_inkParticle.setCanEmit(false);
 	m_inkParticle.setup(sf::Vector2f(3.f, 3.f));
@@ -222,6 +228,7 @@ void	CharacterOcto::setupAnimation()
 	m_slowFallAnimation.setFrames({
 			Frame(sf::seconds(0.2f), {52, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {53, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {54, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_slowFallAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -324,6 +331,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Left, state12, state1);
 	machine.addTransition(Left, state13, state1);
 	machine.addTransition(Left, state14, state1);
+	machine.addTransition(Left, state15, state1);
+	machine.addTransition(Left, state16, state1);
 
 	machine.addTransition(Right, state0, state2);
 	machine.addTransition(Right, state1, state2);
@@ -339,6 +348,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Right, state12, state2);
 	machine.addTransition(Right, state13, state2);
 	machine.addTransition(Right, state14, state2);
+	machine.addTransition(Right, state15, state2);
+	machine.addTransition(Right, state16, state2);
 
 	machine.addTransition(StartJump, state0, state13);
 	machine.addTransition(StartJump, state1, state13);
@@ -418,6 +429,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Death, state12, state8);
 	machine.addTransition(Death, state13, state8);
 	machine.addTransition(Death, state14, state8);
+	machine.addTransition(Death, state15, state8);
+	machine.addTransition(Death, state16, state8);
 
 	machine.addTransition(Drink, state0, state9);
 	machine.addTransition(Drink, state1, state9);
@@ -436,6 +449,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartElevator, state12, state10);
 	machine.addTransition(StartElevator, state13, state10);
 	machine.addTransition(StartElevator, state14, state10);
+	machine.addTransition(StartElevator, state15, state10);
+	machine.addTransition(StartElevator, state16, state10);
 
 	machine.addTransition(Elevator, state10, state11);
 
@@ -452,6 +467,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartWaterJump, state12, state15);
 	machine.addTransition(StartWaterJump, state13, state15);
 	machine.addTransition(StartWaterJump, state14, state15);
+	machine.addTransition(StartWaterJump, state15, state15);
+	machine.addTransition(StartWaterJump, state16, state15);
 
 	machine.addTransition(WaterJump, state15, state16);
 
@@ -469,6 +486,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Idle, state12, state0);
 	machine.addTransition(Idle, state13, state0);
 	machine.addTransition(Idle, state14, state0);
+	machine.addTransition(Idle, state15, state0);
 
 	m_sprite.setMachine(machine);
 }
@@ -510,6 +528,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
 
+	m_ploufParticle.setEmitter(m_box->getBaryCenter());
+	m_ploufParticle.update(frameTime);
 	m_inkParticle.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
 	{
@@ -563,6 +583,7 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_inkParticle.draw(render);
 	m_sprite.draw(render, states);
 	m_helmetParticle.draw(render);
+	m_ploufParticle.draw(render);
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
@@ -704,7 +725,10 @@ void	CharacterOcto::onSky(Events event)
 			{
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterFullJump;
-				m_sprite.setNextEvent(Fall);
+				if (m_keyUp)
+					m_sprite.setNextEvent(StartSlowFall);
+				else
+					m_sprite.setNextEvent(Fall);
 			}
 			break;
 		case StartSlowFall:
@@ -818,14 +842,24 @@ void	CharacterOcto::dance()
 
 void	CharacterOcto::inWater()
 {
+	bool	emit = false;
+
 	if (m_waterLevel != -1.f && m_box->getBaryCenter().y > m_waterLevel)
 	{
 		if (!m_inWater)
+		{
 			m_numberOfJump = 0;
-		m_inWater = true;
+			emit = true;
+			m_inWater = true;
+		}
 	}
-	else
+	else if (m_inWater)
+	{
+		emit = true;
 		m_inWater = false;
+	}
+	if (emit)
+		m_ploufParticle.canEmit(true);
 }
 
 void	CharacterOcto::randomJumpAnimation()

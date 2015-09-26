@@ -1,8 +1,8 @@
-#include "WaterNanoRobot.hpp"
+#include "RepairNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
 
-WaterNanoRobot::WaterNanoRobot(void) :
-	NanoRobot(sf::Vector2f(600.f * 16.f, 800.f), NANO_WATER_OSS, 8, 12542, sf::Vector2f(-2.f, 16.f))
+RepairNanoRobot::RepairNanoRobot(void) :
+	NanoRobot(sf::Vector2f(600.f * 16.f, 800.f), NANO_REPAIR_OSS, 8, 12542, sf::Vector2f(-2.f, 16.f))
 {
 	setup(this);
 

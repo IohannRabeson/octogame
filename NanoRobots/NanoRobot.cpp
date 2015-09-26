@@ -287,20 +287,16 @@ void NanoRobot::update(sf::Time frametime)
 	if (m_state == RepairShip)
 	{
 		m_timerRepair += frametime;
-		if (m_targets.size() == 0u || m_repairIndex >= m_targets.size() - 1)
-			m_state = FollowOcto;
-		else
+		if (m_timerRepair > m_timerRepairMax)
 		{
-			if (m_timerRepair > m_timerRepairMax)
-			{
-				m_timerRepair = sf::Time::Zero;
-				m_repairIndex++;
-			}
-			sf::Vector2f target = octo::linearInterpolation(m_target + m_targets[m_repairIndex], m_target + m_targets[m_repairIndex + 1u], m_timerRepair / m_timerRepairMax);
-			makeLaser(m_ray.get(), getPosition() + m_offsetLaser, target, 4.f);
-			m_particles.canEmit(true);
-			m_particles.setPosition(target);
+			m_timerRepair = sf::Time::Zero;
+			m_repairIndex++;
 		}
+		std::size_t index2 = (m_repairIndex + 1u) % m_targets.size();
+		sf::Vector2f target = octo::linearInterpolation(m_target + m_targets[m_repairIndex % m_targets.size()], m_target + m_targets[index2], m_timerRepair / m_timerRepairMax);
+		makeLaser(m_ray.get(), getPosition() + m_offsetLaser, target, 4.f);
+		m_particles.canEmit(true);
+		m_particles.setPosition(target);
 	}
 	playSoundRepair();
 	m_particles.update(frametime);

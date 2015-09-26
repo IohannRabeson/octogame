@@ -1,13 +1,13 @@
-#ifndef WATERNANOROBOT_HPP
-# define WATERNANOROBOT_HPP
+#ifndef REPAIRNANOROBOT_HPP
+# define REPAIRNANOROBOT_HPP
 
 # include "NanoRobot.hpp"
 
-class WaterNanoRobot : public NanoRobot, public AGameObject<GameObjectType::WaterNanoRobot>
+class RepairNanoRobot : public NanoRobot, public AGameObject<GameObjectType::RepairNanoRobot>
 {
 public:
-	WaterNanoRobot(void);
-	virtual ~WaterNanoRobot(void) = default;
+	RepairNanoRobot(void);
+	virtual ~RepairNanoRobot(void) = default;
 
 };
 

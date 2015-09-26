@@ -26,6 +26,14 @@ public:
 
 	bool				isFirstTime(void) const { return m_data.firstTime; }
 	void				setFirstTime(bool firstTime) { m_data.firstTime = firstTime; }
+
+	void				startChallenge(void) { m_validChallenge = true; }
+	bool				canValidChallenge(void) const { return m_validChallenge; }
+	void				endChallenge(void) { m_validChallenge = false; }
+
+	void				setCanOpenDoubleJump(bool canOpen) { m_data.canOpenDoubleJump = canOpen; }
+	bool				canOpenDoubleJump(void) const { return m_data.canOpenDoubleJump; }
+
 	bool				canMoveMap();
 	bool				canRepair();
 	bool				canRepairShip();
@@ -66,7 +74,8 @@ private:
 			vsync(vsync),
 			firstTime(true),
 			walk(false),
-			moveMap(false)
+			moveMap(false),
+			canOpenDoubleJump(false)
 		{}
 
 		std::size_t		nanoRobotCount;
@@ -78,6 +87,7 @@ private:
 		bool			firstTime;
 		bool			walk;
 		bool			moveMap;
+		bool			canOpenDoubleJump;
 	};
 
 	Progress();
@@ -91,6 +101,7 @@ private:
 	bool								m_newSave;
 	bool								m_changeLevel;
 	bool								m_reverseSprite;
+	bool								m_validChallenge;
 	sf::Vector2f						m_octoPos;
 };
 

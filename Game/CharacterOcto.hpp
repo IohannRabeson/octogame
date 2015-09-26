@@ -11,6 +11,7 @@
 # include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
+# include "PloufSystem.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -129,6 +130,7 @@ private:
 
 	SmokeSystem					m_inkParticle;
 	HelmetSystem				m_helmetParticle;
+	PloufSystem					m_ploufParticle;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;
