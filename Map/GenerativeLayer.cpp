@@ -180,8 +180,8 @@ void GenerativeLayer::update(float deltatime, ABiome &)
 	m_bottomLeft.setPosition(sf::Vector2f(m_vertices[0u].position.x, m_vertices[((m_widthScreen - 1) * 4u) + 2u].position.y));
 	m_bottomRight.setPosition(m_bottomLeft.getPosition() - sf::Vector2f(m_mapSize.x, 0.f));
 
-	m_bottomLeft.setFillColor(opacityColor);
-	m_bottomRight.setFillColor(opacityColor);
+	m_bottomLeft.setFillColor(m_vertices[0 * 4u + 0u].color);
+	m_bottomRight.setFillColor(m_vertices[0 * 4u + 2u].color);
 }
 
 void GenerativeLayer::draw(sf::RenderTarget & render, sf::RenderStates states) const
