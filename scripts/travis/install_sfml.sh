@@ -18,7 +18,6 @@ libxcb-icccm4-dev
 libxcb-image0-dev
 libxcb-util0-dev
 libxcb-randr0-dev
-libboost-all-dev
 libpcre3-dev
 cmake
 "

@@ -31,11 +31,13 @@
 doc/generated/
 
 # Generated files in examples and tests
-**/*.pck
-**/ResourceDefinitions.hpp
+*.osv
+*.pck
+*Definitions.hpp
 
 # Vim files
 *.swp
+.session*
 
 # MacOS files
 *.DS_Store
@@ -51,6 +53,9 @@ callgrind.*
 
 # kdiff3 files
 *.orig
+
+# vim session file
+.session*
 
 # personnal files
 TODO

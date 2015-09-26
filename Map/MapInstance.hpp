@@ -1,29 +1,44 @@
 #ifndef MAPINSTANCE_HPP
 # define MAPINSTANCE_HPP
 
-# include "Map.hpp"
-# include "StaticTileObject.hpp"
+# include <SFML/Graphics.hpp>
+# include <Array3D.hpp>
+# include "IMapTransformable.hpp"
+# include "Tile.hpp"
 
-class MapInstance : public Map
+namespace octo
+{
+	class LevelMap;
+}
+
+class MapInstance : public IMapTransformable
 {
 public:
-	MapInstance(void);
-	virtual ~MapInstance(void);
+	static constexpr int		HeightOffset = -70;
 
-	virtual void swapDepth(void);
-	virtual void registerDepth(void);
-	virtual void nextStep(void);
-	virtual void previousStep(void);
-	virtual void computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY);
+	MapInstance(std::size_t position, std::string const & resourceId);
+	virtual ~MapInstance(void) = default;
 
-protected:
-	virtual void initBiome(void);
-	virtual float firstCurve(float * vec);
-	virtual float secondCurve(float * vec);
-	virtual void setColor(Tile & p_tile);
+	void swapDepth(void);
+	void registerDepth(void);
+	void nextStep(void);
+	void previousStep(void);
+	inline Tile const & get(std::size_t x, std::size_t y) const { return m_tiles(x, y, m_depth); }
+	inline std::size_t getWidth(void) const { return m_tiles.columns(); }
+	inline std::size_t getHeight(void) const { return m_tiles.rows(); }
+	inline sf::IntRect const & getCornerPositions(void) const { return m_cornerPositions; }
+
+	static void setTransitionType(Tile & tile);
 
 private:
-	StaticTileObject *		m_instance;
+	MapInstance(void) = delete;
+	void setStartTransition(int transitionType, Tile & tile, int x, int y);
+
+	octo::Array3D<Tile>		m_tiles;
+	octo::LevelMap const &	m_levelMap;
+	sf::IntRect				m_cornerPositions;
+	int						m_depth;
+	int						m_oldDepth;
 
 };
 

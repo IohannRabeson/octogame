@@ -1,23 +1,23 @@
 language: cpp
-
 sudo: required
-
 compiler:
- - clang
-
+- clang
 env:
- - MODE=release
- - MODE=debug
-
+- MODE=release
+- MODE=debug
+matrix:
+  fast_finish: true
 before_install:
- - chmod u=rx ./scripts/travis/*.sh
-
+- chmod u=rx ./scripts/travis/*.sh
 install:
- - sudo ./scripts/travis/install_compiler.sh
- - sudo ./scripts/travis/install_cppcheck.sh
- - sudo ./scripts/travis/install_sfml.sh
-
+- sudo ./scripts/travis/install_boost.sh
+- sudo ./scripts/travis/install_compiler.sh
+- if [ "$MODE" = "debug" ]; then sudo ./scripts/travis/install_cppcheck.sh; fi
+- sudo ./scripts/travis/install_sfml.sh
 script:
- - make static-check
- - make complete RUN_DEPEND=off
+- if [ "$MODE" = "debug" ]; then make static-check; fi
+- make complete RUN_DEPEND=off MODE=$MODE
 
+notifications:
+  slack:
+    secure: QmwX2LoBpk5j44P0N5CC74P1//tud7Lpk0aqm6tsF21Ou1lj00Pl5GlkWq+rarPmP7IsxnFQZ7v7bGlYyHAE07SvJmZvt5bvdohG6KcPfaAKig2NMRlpbNOV/vQ+n0WEjIiDfqv69qt82DC+j4lfxHRkUSAZqcNIjUHMJaPK/Uw=

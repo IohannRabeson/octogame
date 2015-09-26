@@ -1,8 +1,8 @@
 TARGET = octodyssey.app
-DIRS = Main Firefly Screens Map Managers Octo Decors Physics
+DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
-BUILD_DIR = ./builds/game/
+BUILD_DIR = ./builds/game
 OUTPUT_DIR = .
 # libraries directories (ex: ../libft)
 LIB_DIRS = $(CORE_DIR)
@@ -11,15 +11,20 @@ LIB_DIRS = $(CORE_DIR)
 LIBS = octo sfml-system sfml-window sfml-graphics sfml-audio
 
 # sources
-SRC = $(SRC_PHYSICS)										\
-	  $(SRC_STATES)									\
-	  $(SRC_FIREFLY)									\
+SRC = $(SRC_PHYSICS)									\
+	  $(SRC_STATES)										\
+	  $(SRC_GAME)										\
+	  $(SRC_GAMEOBJ)									\
+	  $(SRC_NPCS)										\
+	  $(SRC_NAROBOT)									\
 	  $(SRC_MAP)										\
-	  $(SRC_MANAGERS)									\
 	  $(SRC_OCTO)										\
+	  $(SRC_BIOMES)										\
 	  $(SRC_DECORS)										\
+	  $(SRC_BUBBLE)										\
+	  $(SRC_MENU)										\
 	  Main/DefaultApplicationListener.cpp				\
-	  Main/main.cpp
+	  Main/main.cpp										\
 
 SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/FireflyTestScreen.cpp			\
@@ -28,40 +33,154 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/AnimatedSpriteDemoScreen.cpp	\
 				Screens/AudioDemoScreen.cpp				\
 				Screens/EngineScreen.cpp				\
-				Screens/PhysicsMapScreen.cpp				\
+				Screens/PhysicsMapScreen.cpp			\
+				Screens/LightningDemoScreen.cpp			\
+				Screens/GameScreen.cpp					\
 				Screens/DecorManagerDemoScreen.cpp		\
-				Screens/StateGame.cpp
+				Screens/ParticleDemoScreen.cpp			\
+				Screens/ResourceLoadingScreen.cpp		\
+				Screens/QuitScreen.cpp					\
+				Screens/FsmDemoScreen.cpp				\
+				Screens/ElevatorStreamDemo.cpp			\
+				Screens/TransitionScreen.cpp			\
+				Screens/DeathScreen.cpp					\
+				Screens/LevelZeroScreen.cpp				\
 
-SRC_FIREFLY =	Firefly/FireflySwarm.cpp				\
-				Firefly/FireflyPopulation.cpp			\
-				Firefly/FireflyPositionBehaviors.cpp
+SRC_GAME =		Game/Game.cpp							\
+				Game/CharacterOcto.cpp					\
+				Game/OctoSound.cpp						\
+				Game/Progress.cpp						\
+				Game/MusicPlayer.cpp					\
+
+SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
+				GameObjects/Portal.cpp					\
+				GameObjects/ElevatorStream.cpp			\
+				GameObjects/SpaceShip.cpp				\
+				GameObjects/SimpleObject.cpp			\
+				GameObjects/Bouibouik.cpp				\
+				GameObjects/Tent.cpp					\
+				GameObjects/Water.cpp					\
+				GameObjects/InstanceDecor.cpp			\
+				GameObjects/Firecamp.cpp				\
+				GameObjects/Cage.cpp					\
+				GameObjects/Concert.cpp					\
+
+SRC_NPCS =		Npcs/ANpc.cpp							\
+				Npcs/ClassicNpc.cpp						\
+				Npcs/CedricNpc.cpp						\
+				Npcs/FranfranNpc.cpp					\
+				Npcs/JuNpc.cpp							\
+				Npcs/FannyNpc.cpp						\
+				Npcs/TurbanNpc.cpp						\
+				Npcs/GuiNpc.cpp							\
+				Npcs/PunkNpc.cpp						\
+				Npcs/FatNpc.cpp							\
+				Npcs/LucienNpc.cpp						\
+				Npcs/IohannNpc.cpp						\
+				Npcs/OldDesertStaticNpc.cpp				\
+
+SRC_BUBBLE =	Bubble/ABubble.cpp						\
+				Bubble/BubbleText.cpp					\
+				Bubble/BubbleMenu.cpp					\
+
+SRC_MENU =		Menu/AMenu.cpp							\
+				Menu/AMenuSelection.cpp					\
+				Menu/MainMenu.cpp						\
+				Menu/OptionMenu.cpp						\
+				Menu/VideoMenu.cpp						\
+				Menu/AudioMenu.cpp						\
+				Menu/SoundVolumeMenu.cpp				\
+				Menu/MusicVolumeMenu.cpp				\
+				Menu/ControlMenu.cpp					\
+				Menu/YesNoMenu.cpp						\
+				Menu/ResolutionMenu.cpp					\
+				Menu/EmptyMenu.cpp						\
+
+SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
+				NanoRobots/FireflyPopulation.cpp		\
+				NanoRobots/FireflyPositionBehaviors.cpp	\
+				NanoRobots/NanoRobot.cpp				\
+				NanoRobots/GroundTransformNanoRobot.cpp	\
+				NanoRobots/RepairNanoRobot.cpp			\
+				NanoRobots/JumpNanoRobot.cpp			\
+				NanoRobots/DoubleJumpNanoRobot.cpp		\
+				NanoRobots/SlowFallNanoRobot.cpp		\
+				NanoRobots/WaterNanoRobot.cpp			\
+				NanoRobots/NanoEffect.cpp				\
 
 SRC_MAP =		Map/Map.cpp								\
-				Map/TerrainManager.cpp			\
-				Map/MapInstance.cpp
+				Map/GroundManager.cpp					\
+				Map/Noise.cpp							\
+				Map/ParallaxScrolling.cpp				\
+				Map/GenerativeLayer.cpp					\
+				Map/Tile.cpp							\
+				Map/MapInstance.cpp						\
 
-SRC_MANAGERS =	Managers/MapManager.cpp
+SRC_BIOMES =	Biomes/ABiome.cpp						\
+				Biomes/BiomeManager.cpp					\
+				Biomes/HSL.cpp							\
+				Biomes/DefaultBiome.cpp					\
+				Biomes/LevelOneBiome.cpp				\
+				Biomes/LevelTwoBiome.cpp				\
+				Biomes/LevelThreeBiome.cpp				\
 
-SRC_OCTO =		Octo/OctoNoise.cpp
-
-SRC_DECORS =	Decors/StaticTileObject.cpp				\
-				Decors/GameObject.cpp					\
-				Decors/DecorManager.cpp					\
+SRC_DECORS =	Decors/DecorManager.cpp					\
+				Decors/SkyManager.cpp					\
+				Decors/SkyCycle.cpp						\
 				Decors/ADecor.cpp						\
-				Decors/ABiome.cpp						\
-				Decors/TestBiome.cpp
+				Decors/RandomGenerator.cpp				\
+				Decors/DecorAnimator.cpp				\
+				Decors/Crystal.cpp						\
+				Decors/AShineBuilder.cpp				\
+				Decors/ShineEffect.cpp					\
+				Decors/Star.cpp							\
+				Decors/Rainbow.cpp						\
+				Decors/Cloud.cpp						\
+				Decors/Rock.cpp							\
+				Decors/Tree.cpp							\
+				Decors/Sun.cpp							\
+				Decors/Moon.cpp							\
+				Decors/Mushroom.cpp						\
+				Decors/GroundRock.cpp					\
+				Decors/Sky.cpp							\
+				Decors/SunLight.cpp						\
+				Decors/Lightning.cpp					\
+				Decors/DropSystem.cpp					\
+				Decors/SmokeSystem.cpp					\
+				Decors/MusicSystem.cpp					\
+				Decors/SparkSystem.cpp					\
+				Decors/HelmetSystem.cpp					\
+				Decors/PloufSystem.cpp					\
+				Decors/StarSystem.cpp					\
 
-SRC_PHYSICS =	Physics/PolygonShape.cpp						\
-				Physics/RectangleShape.cpp						\
-				Physics/ConvexShape.cpp						\
-				Physics/CircleShape.cpp						\
-				Physics/Tile.cpp					\
-				Physics/PhysicsEngine.cpp					\
-				Physics/ShapeBuilder.cpp					\
-				Physics/AShape.cpp
+SRC_PHYSICS =	Physics/PolygonShape.cpp				\
+				Physics/RectangleShape.cpp				\
+				Physics/ConvexShape.cpp					\
+				Physics/CircleShape.cpp					\
+				Physics/TileShape.cpp					\
+				Physics/PhysicsEngine.cpp				\
+				Physics/ShapeBuilder.cpp				\
+				Physics/GroupShape.cpp					\
+				Physics/AShape.cpp						\
+
 
 # package files
-PACKAGE_FILE = default.pck
+LOADING_PCK_FILE = loading.pck
+DEFAULT_PCK_FILE = default.pck
+TARGET_HPP_FILE  = Main/ResourceDefinitions.hpp
+LOADING_HPP_FILE = $(BUILD_DIR)/LoadingDefinitions.hpp
+DEFAULT_HPP_FILE = $(BUILD_DIR)/DefaultDefinitions.hpp
+# resources directory
+RESOURCES_DIR = ./resources
+# resources sub directory
+LOADING_SRC = $(RESOURCES_DIR)/Loading/*
+DEFAULT_SRC = $(RESOURCES_DIR)/Sound/*			\
+			  $(RESOURCES_DIR)/Image/*			\
+			  $(RESOURCES_DIR)/Color/*			\
+			  $(RESOURCES_DIR)/Map/*			\
+			  $(RESOURCES_DIR)/SpriteSheet/*	\
+			  $(RESOURCES_DIR)/Shader/*			\
+			  $(RESOURCES_DIR)/Text/*			\
 
 # compiler
 COMPILER = $(CXX)
@@ -81,7 +200,7 @@ SRCS = $(SRC)
 CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = release
+MODE = debug
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)
@@ -117,14 +236,14 @@ endif
 fclean: clean
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(TARGET)$(COLOR_OFF)"
 	@rm -f $(COMPLETE_TARGET)
+	@rm -f $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE)
+	@rm -f $(TARGET_HPP_FILE)
 	
 clean:
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(addprefix "\\n\\t", $(notdir $(OBJS)))$(COLOR_OFF)"
 	@rm -f $(OBJS)
 	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
 	@rm -fr $(BUILD_DIR)
-	@echo " - $(COLOR_ACTION)removing$(COLOR_OFF): $(COLOR_OBJECT)$(PACKAGE_FILE)$(COLOR_OFF)"
-	@rm -f $(PACKAGE_FILE)
 
 $(BUILD_DIR):
 	@echo " - $(COLOR_ACTION)creating directory$(COLOR_OFF): $(COLOR_OBJECT)$(BUILD_DIR)$(COLOR_OFF)"
@@ -132,28 +251,38 @@ $(BUILD_DIR):
 
 print_summary:
 ifeq ($(MODE), debug)
-	@echo " - Making $(TARGET) [DEBUG]: $(CFLAGS)"
+	@echo " - Making $(TARGET) [DEBUG]: $(CFLAGS) | $(COMPILER)"
 else
-	@echo " - Making $(TARGET): $(CFLAGS)"
+	@echo " - Making $(TARGET): $(CFLAGS) | $(COMPILER)"
 endif
 
 core_library:
-	@make -s -C $(CORE_DIR) MODE=$(MODE)
+	@make -s -C $(CORE_DIR) MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 clean_core_library:
-	@make -s -C $(CORE_DIR) clean MODE=$(MODE)
+	@make -s -C $(CORE_DIR) clean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
 fclean_core_library:
-	@make -s -C $(CORE_DIR) fclean MODE=$(MODE)
+	@make -s -C $(CORE_DIR) fclean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
-package: $(PACKAGE_FILE)
-	
 
-$(PACKAGE_FILE):
-	$(PACKAGER) $(PACKAGE_FILE) -h Main/ResourceDefinitions.hpp ./resources/*
+package: $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE) $(TARGET_HPP_FILE)
+
+$(LOADING_PCK_FILE):
+	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(LOADING_PCK_FILE)"
+	$(PACKAGER) $(LOADING_PCK_FILE) -h $(LOADING_HPP_FILE) $(LOADING_SRC)
+
+$(DEFAULT_PCK_FILE):
+	@echo " - $(COLOR_ACTION)creating package $(COLOR_OFF): $(DEFAULT_PCK_FILE)"
+	$(PACKAGER) $(DEFAULT_PCK_FILE) -h $(DEFAULT_HPP_FILE) $(DEFAULT_SRC)
+
+$(TARGET_HPP_FILE):
+	@echo " - $(COLOR_ACTION)creating file $(COLOR_OFF): $(TARGET_HPP_FILE)"
+	@cat $(DEFAULT_HPP_FILE) >> $(TARGET_HPP_FILE)
+	@cat $(LOADING_HPP_FILE) >> $(TARGET_HPP_FILE)
 
 complete:
-	make complete -C octolib/ MODE=$(MODE)
+	make complete -C octolib/ MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 	make re
 
 static-check:

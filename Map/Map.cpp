@@ -1,38 +1,39 @@
 #include "Map.hpp"
+#include "ABiome.hpp"
+#include "MapInstance.hpp"
+#include "FunctionsOffset.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+#include <Interpolations.hpp>
+#include <cassert>
 
 Map::Map(void) :
 	m_depth(0.f),
 	m_oldDepth(0.f),
-	m_biome(),
+	m_mapJoinWidth(20.f),
+	m_mapJoinHalfWidth(10.f),
 	m_width(0u),
 	m_height(0u),
 	m_offset(nullptr),
-	m_curOffset(),
-	mn_totalWidth(0),
-	mn_decorTileCount(0u)
-{}
+	m_mapSurface(nullptr)
+{
+}
 
 Map::~Map(void)
 {
-	for (std::size_t x = 0; x < m_tiles.columns(); x++)
-	{
-		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			delete m_tiles.get(x, y);
-	}
+	for (auto it = m_tiles.begin(); it != m_tiles.end(); it++)
+		delete *it;
 }
 
-void Map::init(Biome * p_biome)
+void Map::init(ABiome & biome)
 {
-	m_biome = p_biome;
-	m_width = octo::Application::getGraphicsManager().getVideoMode().width / Tile::TileSize + 4u; // 4 tiles to add margin at left and right
-	m_height  = octo::Application::getGraphicsManager().getVideoMode().height / Tile::TileSize + 6u; // 6 tiles to add margin at top and bottom
+	// Init value from biome
+	m_mapSize = biome.getMapSize();
+	m_mapJoinWidth = static_cast<float>(m_mapSize.y) / 4.f;
+	m_mapJoinHalfWidth = m_mapJoinWidth / 2.f;
 
-	initBiome();
-
-	// init vertices to place decors
-	m_vertices.reset(new sf::Vertex[MaxDecor]);
+	m_width = octo::Application::getGraphicsManager().getVideoMode().width / Tile::TileSize + OffsetTileX * 2u; // 4 tiles to add margin at left and right
+	m_height  = octo::Application::getGraphicsManager().getVideoMode().height / Tile::TileSize + OffsetTileY * 2u + 50u; // 6 tiles to add margin at top and bottom + 50 to keep computing the surfaces even if we are far in the sky
 
 	m_tiles.resize(m_width, m_height, nullptr);
 	for (std::size_t x = 0; x < m_tiles.columns(); x++)
@@ -40,111 +41,174 @@ void Map::init(Biome * p_biome)
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 		{
 			m_tiles.get(x, y) = new Tile();
-			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[3] = sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize + Tile::TileSize);
+			m_tiles.get(x, y)->setStartTransition(0u, sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(1u, sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(2u, sf::Vector2f(x * Tile::TileSize + Tile::TileSize, y * Tile::TileSize + Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(3u, sf::Vector2f(x * Tile::TileSize, y * Tile::TileSize + Tile::TileSize));
 		}
 	}
+
+	m_wideDecorPositions.resize(biome.getMapSize().x);
+
+	auto const & instances = biome.getInstances();
+	for (auto & instance : instances)
+		m_instances.push_back(std::unique_ptr<MapInstance>(new MapInstance(instance.first, instance.second)));
+
+	m_noise.setSeed(biome.getMapSeed());
+
+	// Initialize mapSurface pointer
+	setMapSurfaceGenerator(biome.getMapSurfaceGenerator());
+	// Initialize tileColor pointer
+	setTileColorGenerator(biome.getTileColorGenerator());
 }
 
-void Map::computeMapRange(int p_startX, int p_endX, int p_startY, int p_endY)
+void Map::computeMapRange(int startX, int endX, int startY, int endY)
 {
-	float vec[3];
-	int height;
-	int offset;
-	int offsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
+	int height; // The height of the generated map
+	int offsetX; // The tile position adjust to avoid negativ offset (because map is circular)
 	int offsetY;
-	int offsetPosX;
-	float v;
-	for (int x = p_startX; x < p_endX; x++)
+	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+	int curOffsetY = static_cast<int>(m_curOffset.y / Tile::TileSize);
+	int offsetPosX; // The real position of the tile (in the world)
+	MapInstance * curInstance;
+
+	assert(m_mapSurface);
+	assert(m_tileColor);
+
+	float startTransitionX = (m_mapSurface((static_cast<float>(m_mapSize.x) - m_mapJoinHalfWidth) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+	float endTransitionX = (m_mapSurface(m_mapJoinHalfWidth / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+
+	for (int x = startX; x < endX; x++)
 	{
-		offset = x + offsetX;
-		offsetPosX = offset;
-		while (offset < 0)
-			offset += m_biome->mn_width;
-		while (offset >= static_cast<int>(m_biome->mn_width))
-			offset -= m_biome->mn_width;
-		vec[0] = static_cast<float>(offset);
-		vec[1] = m_depth;
-		// firstCurve return a value b/tween -1 & 1
-		// we normalize it betwen 0 & max_height
-		v = (firstCurve(vec) + 1.f) * static_cast<float>(m_biome->mn_height) / 2.f;
-		height = static_cast<int>(v);
-		for (int y = p_startY; y < p_endY; y++)
+		curInstance = nullptr;
+		offsetX = x + curOffsetX;
+		offsetPosX = offsetX;
+		while (offsetX < 0)
+			offsetX += m_mapSize.x;
+		while (offsetX >= static_cast<int>(m_mapSize.x))
+			offsetX -= m_mapSize.x;
+
+		for (auto & instance : m_instances)
 		{
-			offsetY = y + static_cast<int>(m_curOffset.y / Tile::TileSize);
-			// Init square
-			m_tiles.get(x, y)->m_startTransition[0] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[1] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[2] = sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
-			m_tiles.get(x, y)->m_startTransition[3] = sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize);
-			if (offsetY < height || offsetY < 0)
+			if (offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
 			{
-				m_tiles.get(x, y)->mb_isEmpty = true;
+				curInstance = instance.get();
+				break;
+			}
+		}
+		// Check if we are at the transition between 0 and m_mapSize.x
+		if (offsetX < static_cast<int>(m_mapJoinHalfWidth) || offsetX >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
+		{
+			float transition = offsetX < static_cast<int>(m_mapJoinHalfWidth) ? static_cast<float>(offsetX) + m_mapJoinHalfWidth : m_mapJoinHalfWidth - static_cast<float>(m_mapSize.x) + static_cast<float>(offsetX);
+			height =  octo::cosinusInterpolation(startTransitionX, endTransitionX, transition / m_mapJoinWidth);
+		}
+		else
+		{
+			// mapSurface return a value between -1 & 1
+			// we normalize it betwen 0 & max_height
+			height = static_cast<int>((m_mapSurface(static_cast<float>(offsetX) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
+		}
+		for (int y = startY; y < endY; y++)
+		{
+			offsetY = y + curOffsetY;
+			// Init square
+			m_tiles.get(x, y)->setStartTransition(0u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(1u, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY) * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(2u, sf::Vector2f((offsetPosX + 1) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
+			m_tiles.get(x, y)->setStartTransition(3u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
+			m_tiles.get(x, y)->setTileType(octo::LevelMap::TileType::Empty);
+
+			if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
+			{
+				Tile const & tileInstance = curInstance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top);
+				m_tiles.get(x, y)->setIsEmpty(tileInstance.isEmpty());
+				m_tiles.get(x, y)->setTileType(tileInstance.getTileType());
+				MapInstance::setTransitionType(*m_tiles.get(x, y));
+			}
+			else if (offsetY < height)
+			{
+				m_tiles.get(x, y)->setIsEmpty(true);
 				continue;
 			}
-			vec[0] = static_cast<float>(x + offsetX);
-			vec[1] = static_cast<float>(offsetY);
-			vec[2] = m_depth;
-			// secondCurve return a value between -1 & 1
-			m_tiles.get(x, y)->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
-			m_tiles.get(x, y)->mb_isEmpty = false;
-			setColor(*m_tiles.get(x, y));
+			else
+				m_tiles.get(x, y)->setIsEmpty(false);
+			m_tiles.get(x, y)->setStartColor(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth));
 		}
 	}
 }
 
 void Map::computeDecor(void)
 {
-	float vec[3];
-	int offset;
-	int offsetPosX;
+	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
 	int height;
-	int offsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
-	for (auto it = m_decors.begin(); it != m_decors.end(); it++)
+	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+
+	assert(m_mapSurface);
+
+	float startTransitionX = (m_mapSurface((static_cast<float>(m_mapSize.x) - m_mapJoinHalfWidth) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+	float endTransitionX = (m_mapSurface(m_mapJoinHalfWidth / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+
+	for (auto it = m_decorPositions.begin(); it != m_decorPositions.end(); it++)
 	{
-		offset = offsetX;
-		offsetPosX = it->first;
-		while (offset < 0)
+		// Check if we are at the transition between 0 and m_mapSize.x
+		if (it->first < static_cast<int>(m_mapJoinHalfWidth) || it->first >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
 		{
-			offset += mn_totalWidth;
-			offsetPosX -= mn_totalWidth;
+			float transition = it->first < static_cast<int>(m_mapJoinHalfWidth) ? static_cast<float>(it->first) + m_mapJoinHalfWidth : m_mapJoinHalfWidth - static_cast<float>(m_mapSize.x) + static_cast<float>(it->first);
+			height =  octo::cosinusInterpolation(startTransitionX, endTransitionX, transition / m_mapJoinWidth);
 		}
-		while (offset >= static_cast<int>(mn_totalWidth))
+		else
 		{
-			offset -= mn_totalWidth;
-			offsetPosX += mn_totalWidth;
+			// mapSurface return a value between -1 & 1
+			// we normalize it betwen 0 & max_height
+			height = static_cast<int>((m_mapSurface(static_cast<float>(it->first) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
 		}
-		int border = offset + static_cast<int>(m_tiles.columns());
-		if (border > static_cast<int>(mn_totalWidth))
-		{
-			if (it->first < (border % static_cast<int>(mn_totalWidth)) + 20)
-				offsetPosX += mn_totalWidth;
-		}
-		vec[0] = static_cast<float>(it->first);
-		vec[1] = m_depth;
-		height = static_cast<int>((firstCurve(vec) + 1.f) * static_cast<float>(m_biome->mn_height) / 2.f);
-		it->second->m_startTransition[0].x = offsetPosX * Tile::TileSize;
-		it->second->m_startTransition[0].y = height * Tile::TileSize;
-		vec[0] = static_cast<float>(offsetPosX);
-		vec[1] = static_cast<float>(height);
-		vec[2] = m_depth;
-		it->second->mf_noiseValue = (secondCurve(vec) + 1.f) / 2.f;
-		setColor(*it->second);
+		it->second.x = Tile::TileSize * static_cast<float>(getCircleOffset(curOffsetX, it->first, static_cast<int>(m_mapSize.x)));
+		it->second.y = Tile::TileSize * static_cast<float>(height);
 	}
 }
 
-sf::Vertex * Map::getHeight(int x)
+void Map::computeWideDecor(void)
 {
-	auto it = m_decors.find(x);
-	if (it == m_decors.end())
+	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
+	int height;
+	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
+
+	assert(m_mapSurface);
+
+	float startTransitionX = (m_mapSurface((static_cast<float>(m_mapSize.x) - m_mapJoinHalfWidth) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+	float endTransitionX = (m_mapSurface(m_mapJoinHalfWidth / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f;
+
+	for (int x = 0; x < static_cast<int>(m_wideDecorPositions.size()); x++)
 	{
-		m_decors[x] = &m_reserveTile[mn_decorTileCount];
-		m_decors[x]->mp_upLeft = &m_vertices[mn_decorTileCount];
-		mn_decorTileCount++;
+		if (!m_wideDecorPositions[x].first)
+			continue;
+		// Check if we are at the transition between 0 and m_mapSize.x
+		if (x < static_cast<int>(m_mapJoinHalfWidth) || x >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
+		{
+			float transition = x < static_cast<int>(m_mapJoinHalfWidth) ? static_cast<float>(x) + m_mapJoinHalfWidth : m_mapJoinHalfWidth - static_cast<float>(m_mapSize.x) + static_cast<float>(x);
+			height =  octo::cosinusInterpolation(startTransitionX, endTransitionX, transition / m_mapJoinWidth);
+		}
+		else
+		{
+			// mapSurface return a value between -1 & 1
+			// we normalize it betwen 0 & max_height
+			height = static_cast<int>((m_mapSurface(static_cast<float>(x) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
+		}
+		m_wideDecorPositions[x].second.x = Tile::TileSize * static_cast<float>(getCircleOffset(curOffsetX, x, static_cast<int>(m_mapSize.x)));
+		m_wideDecorPositions[x].second.y = Tile::TileSize * static_cast<float>(height);
 	}
-	return m_decors[x]->mp_upLeft;
+}
+
+void Map::registerDecor(int x)
+{
+	m_decorPositions.emplace_back(std::pair<int, sf::Vector2f>(x, sf::Vector2f()));
+}
+
+void Map::registerWideDecor(std::size_t x)
+{
+	assert(x < m_mapSize.x);
+	m_wideDecorPositions[x].first = true;
 }
 
 void Map::swapDepth(void)
@@ -152,17 +216,46 @@ void Map::swapDepth(void)
 	float tmp = m_depth;
 	m_depth = m_oldDepth;
 	m_oldDepth = tmp;
+	for (auto & instance : m_instances)
+		instance->swapDepth();
 }
 
 void Map::registerDepth(void)
 {
 	m_oldDepth = m_depth;
+	for (auto & instance : m_instances)
+		instance->registerDepth();
 }
 
-void Map::addOffsetX(int p_offsetX)
+void Map::nextStep(void)
+{
+	m_depth += 3.f;
+	for (auto & instance : m_instances)
+		instance->nextStep();
+}
+
+void Map::previousStep(void)
+{
+	m_depth -= 3.f;
+	for (auto & instance : m_instances)
+		instance->previousStep();
+}
+
+void Map::setMapSurfaceGenerator(MapSurfaceGenerator mapSurface)
+{
+	m_mapSurface = std::bind(mapSurface, std::ref(m_noise), std::placeholders::_1, std::placeholders::_2);
+}
+
+void Map::setTileColorGenerator(TileColorGenerator tileColor)
+{
+	m_tileColor = std::bind(tileColor, std::ref(m_noise), std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+}
+
+void Map::addOffsetX(int offsetX)
 {
 	Tile *	m_tmp[m_tiles.rows()];
-	if (p_offsetX > 0)
+
+	if (offsetX > 0)
 	{
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tmp[y] = m_tiles(0, y);
@@ -173,8 +266,9 @@ void Map::addOffsetX(int p_offsetX)
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tiles(m_tiles.columns() - 1, y) = m_tmp[y];
+		addOffsetX(offsetX - 1);
 	}
-	else if (p_offsetX < 0)
+	else if (offsetX < 0)
 	{
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tmp[y] = m_tiles(m_tiles.columns() - 1, y);
@@ -185,13 +279,15 @@ void Map::addOffsetX(int p_offsetX)
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 			m_tiles(0, y) = m_tmp[y];
+		addOffsetX(offsetX + 1);
 	}
 }
 
-void Map::addOffsetY(int p_offsetY)
+void Map::addOffsetY(int offsetY)
 {
 	Tile *	m_tmp[m_tiles.columns()];
-	if (p_offsetY > 0)
+
+	if (offsetY > 0)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tmp[x] = m_tiles(x, 0);
@@ -202,8 +298,9 @@ void Map::addOffsetY(int p_offsetY)
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tiles(x, m_tiles.rows() - 1) = m_tmp[x];
+		addOffsetY(offsetY - 1);
 	}
-	else if (p_offsetY < 0)
+	else if (offsetY < 0)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tmp[x] = m_tiles(x, m_tiles.rows() - 1);
@@ -214,5 +311,6 @@ void Map::addOffsetY(int p_offsetY)
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
 			m_tiles(x, 0) = m_tmp[x];
+		addOffsetY(offsetY + 1);
 	}
 }

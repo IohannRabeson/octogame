@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 02:45:47 by irabeson          #+#    #+#             */
-/*   Updated: 2015/06/12 16:29:48 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/06/24 05:52:59 by irabeson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <SFML/Graphics/Color.hpp>
 # include <SFML/Graphics/Vertex.hpp>
 # include <SFML/Graphics/RenderTarget.hpp>
+# include <SFML/Graphics/Drawable.hpp>
+# include <SFML/Graphics/Transformable.hpp>
 # include <SFML/System/Time.hpp>
 
 # include <cstddef>
@@ -24,19 +26,21 @@
 # include <random>
 # include <memory>
 
+# include <VertexBuilder.hpp>
 # include <GenericFactory.hpp>
 # include <Camera.hpp>
 
 class ADecor;
 class ABiome;
 
-class DecorManager
+class DecorManager : public sf::Drawable,
+					 public sf::Transformable
 {
 	typedef std::list<ADecor*>		List;
 	typedef std::mt19937			RandomEngine;
 public:
-	typedef typename List::iterator	Iterator;
-	typedef typename List::iterator	ConstIterator;
+	typedef typename List::iterator			Iterator;
+	typedef typename List::const_iterator	ConstIterator;
 
 	enum class DecorTypes
 	{
@@ -47,12 +51,23 @@ public:
 		Star,
 		Cloud,
 		Sun,
-		Moon
+		Moon,
+		Rainbow,
+		Mushroom,
+		GroundRock,
+		Sky,
+		SunLight
 	};
 
 	explicit DecorManager(std::size_t maxVertexCount);
+	~DecorManager();
 
 	void		setup(ABiome* biome);
+
+	inline Iterator begin() { return m_elements.begin(); };
+	inline Iterator end() { return m_elements.end(); };
+	ConstIterator begin() const { return m_elements.begin(); };
+	ConstIterator end() const { return m_elements.end(); };
 
 	Iterator	add(DecorTypes type);
 	Iterator	add(ADecor* decor);
@@ -70,6 +85,7 @@ private:
 	std::unique_ptr<sf::Vertex[]>	m_vertices;
 	std::size_t						m_count;
 	std::size_t						m_used;
+	octo::VertexBuilder				m_builder;
 	ABiome*							m_biome;
 };
 

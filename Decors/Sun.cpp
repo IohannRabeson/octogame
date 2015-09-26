@@ -1,127 +1,87 @@
 #include "Sun.hpp"
-#include "Map.hpp"
+#include "ABiome.hpp"
 
 Sun::Sun(void) :
-	Decor(),
-	m_sizeCorner(),
-	m_transparency(sf::Color::White),
-	mf_angle(0.f)
+	m_partCount(1u),
+	m_animator(1.f, 0.f, 4.f, 0.2f),
+	m_animation(1.f),
+	m_glowingTimer(sf::Time::Zero),
+	m_glowingTimerMax(sf::seconds(3.f))
 {
 }
 
-Sun::~Sun(void)
+void Sun::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
+	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
+	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
+	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidRight(size.x, -size.y + sizeCorner.y);
+	sf::Vector2f downLeft(-size.x + sizeCorner.x, size.y);
+	sf::Vector2f downRight(size.x - sizeCorner.x, size.y);
+	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
+
+	upLeft += origin;
+	upRight += origin;
+	upMidLeft += origin;
+	upMidRight += origin;
+	downLeft += origin;
+	downRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+
+	builder.createTriangle(origin, upLeft, upRight, color);
+	builder.createTriangle(origin, upRight, upMidRight, color);
+	builder.createTriangle(origin, upMidRight, downMidRight, color);
+	builder.createTriangle(origin, downMidRight, downRight, color);
+	builder.createTriangle(origin, downRight, downLeft, color);
+	builder.createTriangle(origin, downLeft, downMidLeft, color);
+	builder.createTriangle(origin, downMidLeft, upMidLeft, color);
+	builder.createTriangle(origin, upMidLeft, upLeft, color);
 }
 
-void Sun::createOneSun(sf::Vector2f p_size, sf::Vector2f p_sizeCorner, sf::Vector2f p_origin, sf::Color p_color)
+void Sun::createSun(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, std::size_t partCount, sf::Color color, octo::VertexBuilder& builder)
 {
-	sf::Vector2f upLeft(-p_size.x + p_sizeCorner.x, -p_size.y);
-	sf::Vector2f upRight(p_size.x - p_sizeCorner.x, -p_size.y);
-	sf::Vector2f cornerUpLeft(-p_size.x + p_sizeCorner.x, -p_size.y + p_sizeCorner.y);
-	sf::Vector2f cornerUpRight(p_size.x - p_sizeCorner.x, -p_size.y + p_sizeCorner.y);
-	sf::Vector2f upMidLeft(-p_size.x, -p_size.y + p_sizeCorner.y);
-	sf::Vector2f upMidRight(p_size.x, -p_size.y + p_sizeCorner.y);
-	sf::Vector2f downLeft(-p_size.x + p_sizeCorner.x, p_size.y);
-	sf::Vector2f downRight(p_size.x - p_sizeCorner.x, p_size.y);
-	sf::Vector2f cornerDownLeft(-p_size.x + p_sizeCorner.x, p_size.y - p_sizeCorner.y);
-	sf::Vector2f cornerDownRight(p_size.x - p_sizeCorner.x, p_size.y - p_sizeCorner.y);
-	sf::Vector2f downMidLeft(-p_size.x, p_size.y - p_sizeCorner.y);
-	sf::Vector2f downMidRight(p_size.x, p_size.y - p_sizeCorner.y);
+	color.a = 105;
+	sf::Vector2f tmpSize = size;
+	sf::Vector2f tmpSizeCorner = sizeCorner;
+	partCount = partCount > 0 ? partCount : 1;
+	float deltaAlpha = (255 - 105) / partCount;
 
-	createTriangle(upLeft, cornerUpLeft, upMidLeft, p_origin, p_color);
-	createTriangle(upRight, cornerUpRight, upMidRight, p_origin, p_color);
-	createTriangle(downLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
-	createTriangle(downRight, cornerDownRight, downMidRight, p_origin, p_color);
-
-	createRectangle(upLeft, upRight, cornerUpRight, cornerUpLeft, p_origin, p_color);
-	createRectangle(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, p_origin, p_color);
-	createRectangle(cornerDownLeft, cornerDownRight, downRight, downLeft, p_origin, p_color);
-	createRectangle(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
-	createRectangle(cornerUpRight, upMidRight, downMidRight, cornerDownRight, p_origin, p_color);
-	/*
-	createRectangle(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
-	createRectangle(upMidRight, cornerUpRight, cornerDownRight, downMidRight, p_origin, p_color);
-	createRectangle(upLeft, upRight, downRight, downLeft, p_origin, p_color);
-	*/
-}
-
-void Sun::createSun(void)
-{
-	mn_countVertex = 0;
-
-	m_transparency.a = 110 - (110 * mf_timer / mf_maxTimer);
-	float coef = mf_timer * mf_mouvement / 2.f;
-	createOneSun(m_size * coef, m_sizeCorner * coef, m_origin, m_transparency);
-	for (int i = m_biome->m_sun.mn_nb; i > 0; i--)
+	for (std::size_t i = 0; i < partCount; i++)
 	{
-		m_transparency.a = 110 - i;
-		coef = (1.f + i / 4.f) * mf_mouvement;
-		createOneSun(m_size * coef, m_sizeCorner * coef, m_origin, m_transparency);
+		createOctogon(tmpSize, tmpSizeCorner, origin, color, builder);
+		tmpSize = tmpSize - size / 10.f;
+		tmpSizeCorner = tmpSizeCorner - sizeCorner / 10.f;
+		color.a += deltaAlpha;
 	}
-	createOneSun(m_size * mf_mouvement, m_sizeCorner * mf_mouvement, m_origin, m_transparency);
-	createLightness();
+
+	// Create glowing effect
+	float glowingCoef = m_glowingTimer.asSeconds() / m_glowingTimerMax.asSeconds();
+	color.a = 255 * (1 - glowingCoef);
+	// x2 size for the glowing sun
+	float glowingCoefSize = glowingCoef * 2.f;
+	createOctogon(size * glowingCoefSize, sizeCorner * glowingCoefSize, origin, color, builder);
 }
 
-void Sun::randomDecor(void)
+void Sun::setup(ABiome& biome)
 {
-	Decor::randomDecor();
-	m_color = sf::Color(255, 255, 255);
-	float size = randomRange(m_biome->m_sun.mn_minSizeX, m_biome->m_sun.mn_maxSizeX);
-	m_size = sf::Vector2f(size, size);
-	m_origin = sf::Vector2f(150, 150);
-	m_sizeCorner = sf::Vector2f(m_size.x / 2.f, m_size.y / 2.f);
-	m_transparency = sf::Color(m_color.r, m_color.g, m_color.b);
-
-	// Init containers
-	mn_maxTriangle = 14 * (m_biome->m_sun.mn_nb + 3);
-	allocateVertex(mn_maxTriangle * 3u);
-	createSun();
+	m_size = biome.getSunSize();
+	m_sizeCorner = m_size / 2.f;
+	m_color = biome.getSunColor();
+	m_partCount = biome.getSunPartCount();
+	m_animator.setup();
 }
 
-void Sun::createLightness(void)
+void Sun::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	if (mf_angle > 0.f && mf_angle < 180.f)
-	{
-		sf::Vector2f upLeft(0.f, 0.f);
-		sf::Vector2f upRight(1900.f, 0.f);
-		sf::Vector2f downLeft(0.f, 1080.f);
-		sf::Vector2f downRight(1900, 1080.f);
-		sf::Vector2f origin(0.f, 0.f);
-		sf::Color color(255, 128, 0);
-		if (mf_angle > 0.f && mf_angle < 90.f)
-			color.a = mf_angle;
-		else
-			color.a = 180.f - mf_angle;
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
 
-		createRectangle(upLeft, upRight, downRight, downLeft, origin, color);
-	}
-}
+	m_glowingTimer += frameTime;
+	if (m_glowingTimer > m_glowingTimerMax)
+		m_glowingTimer -= m_glowingTimerMax;
 
-
-void Sun::computeOrigin(float pf_deltatime)
-{
-	m_origin = sf::Vector2f(-1900 / 2.f, -1080 / 2.f);
-	mf_angle += pf_deltatime * 10;
-	if (mf_angle >= 360.f)
-		mf_angle = 0.f;
-	float cosA = cos(mf_angle * PI / 180.f);
-	float sinA = sin(mf_angle * PI / 180.f);
-	rotateVec(&m_origin, cosA, sinA);
-	m_origin.x += 1900 / 2.f;
-	m_origin.y += 1080;
-}
-
-void Sun::init(Biome * p_biome)
-{
-	Decor::init(p_biome);
-	randomDecor();
-	createSun();
-}
-
-void Sun::update(float pf_deltatime)
-{
-	Decor::update(pf_deltatime);
-
-	computeOrigin(pf_deltatime);
-	createSun();
+	sf::Vector2f const & position = getPosition();
+	createSun(m_size * m_animation, m_sizeCorner * m_animation, position, m_partCount, m_color, builder);
 }

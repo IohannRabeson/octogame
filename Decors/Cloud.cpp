@@ -1,162 +1,205 @@
 #include "Cloud.hpp"
-#include "Map.hpp"
+#include "ABiome.hpp"
+#include "SkyCycle.hpp"
+#include <Interpolations.hpp>
+#include <Application.hpp>
+#include <Camera.hpp>
+#include <ResourceManager.hpp>
 
-Cloud::Cloud() :
-	Decor(),
-	mn_coundOctogon(0),
-	mn_alpha(0)
+#include "ResourceDefinitions.hpp"
+
+Cloud::Cloud(void) :
+	Cloud(nullptr)
 {
 }
 
-Cloud::~Cloud()
+Cloud::Cloud(SkyCycle * cycle) :
+	m_partCount(1u),
+	m_animator(4.f, 5.f, 4.f, 0.1f),
+	m_animation(1.f),
+	m_thunderCloud(false),
+	m_lightning(1),
+	m_lightningSize(0.f),
+	m_cycle(cycle)
 {
-	m_values.clear();
 }
 
-void Cloud::createOctogon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color & p_color, float p_sizeUp, float p_sizeDown, float p_sizeRec)
+Cloud::~Cloud(void)
 {
-	p_color.a = mf_mouvement * mn_alpha;
-
-	sf::Vector2f upLeft(-p_size.x + p_sizeUp, -p_size.y - p_sizeUp);
-	sf::Vector2f upRight(p_size.x - p_sizeUp, -p_size.y - p_sizeUp);
-	sf::Vector2f cornerUpLeft(-p_size.x + p_sizeUp, -p_size.y);
-	sf::Vector2f cornerUpRight(p_size.x - p_sizeUp, -p_size.y);
-	sf::Vector2f upMidLeft(-p_size.x, -p_size.y);
-	sf::Vector2f upMidRight(p_size.x, -p_size.y);
-
-	sf::Vector2f downLeft(-p_size.x + p_sizeDown, p_size.y + p_sizeDown);
-	sf::Vector2f downRight(p_size.x - p_sizeDown, p_size.y + p_sizeDown);
-	sf::Vector2f cornerDownLeft(-p_size.x + p_sizeDown, p_size.y);
-	sf::Vector2f cornerDownRight(p_size.x - p_sizeDown, p_size.y);
-	sf::Vector2f downMidLeft(-p_size.x, p_size.y);
-	sf::Vector2f downMidRight(p_size.x, p_size.y);
-
-	sf::Vector2f recUpLeft(downMidLeft.x, downMidLeft.y - p_sizeRec);
-	sf::Vector2f recUpRight(downMidLeft.x + 4.f, recUpLeft.y);
-	sf::Vector2f recDown(downMidLeft.x + 4.f, downMidLeft.y);
-	sf::Vector2f secondRec(downLeft.x, downLeft.y - 4.f);
-
-	// Corner up
-	createTriangle(upMidRight, cornerUpRight, upRight, p_origin, p_color);
-	createTriangle(upMidLeft, cornerUpLeft, upLeft, p_origin, p_color);
-
-	// Fill with rectangle
-	createRectangle(upLeft, upRight, cornerUpRight, cornerUpLeft, p_origin, p_color);
-	createRectangle(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, p_origin, p_color);
-	createRectangle(cornerDownLeft, cornerDownRight, downRight, downLeft, p_origin, p_color);
-	createRectangle(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, p_origin, p_color);
-	createRectangle(cornerUpRight, upMidRight, downMidRight, cornerDownRight, p_origin, p_color);
-
-	// Corner down
-	createTriangle(downMidRight, cornerDownRight, downRight, p_origin, p_color);
-	createTriangle(downMidLeft, cornerDownLeft, downLeft, p_origin, p_color);
-
-	// Details
-	createRectangle(downMidLeft, recUpLeft, recUpRight, recDown, p_origin, p_color);
-	createRectangle(downMidLeft, recDown, secondRec, downLeft, p_origin, p_color);
-}
-
-void Cloud::createCloud(void)
-{
-	mn_countVertex = 0;
-	for (int i = 0; i < mn_coundOctogon; i++)
-		createOctogon(sf::Vector2f(m_values[i].size.x, m_values[i].size.y * mf_mouvement), m_values[i].origin + m_origin, m_color,
-						m_values[i].sizeUp * mf_mouvement, m_values[i].sizeDown * mf_mouvement, m_values[i].sizeRec * mf_mouvement);
-	if (b_isIce == true)
+	for (std::size_t i = 0; i < m_partCount; i++)
 	{
-		sf::Color iceColor(5, 103, 155, 60);
-		for (int i = 0; i < mn_coundOctogon; i++)
-			createOctogon(sf::Vector2f(m_values[i].size.x, m_values[i].size.y * mf_mouvement * 1.1f), m_values[i].origin + m_origin, iceColor,
-							m_values[i].sizeUp * 1.2f, m_values[i].sizeDown * 1.2f, m_values[i].sizeRec * mf_mouvement * 1.2f);
+		delete m_rain[i];
+		delete m_snow[i];
 	}
 }
 
-void Cloud::randomDecor(void)
+bool Cloud::isDisabledIfOutOfScreen()const
 {
-	Decor::randomDecor();
-	// Init values
-	mf_liveTime = randomRange(m_biome->m_tree.mn_minLive, m_biome->m_tree.mn_maxLive);
-	m_color = sf::Color(230, 230, 230);
-	mn_alpha = randomRange(100, 220);
-	m_size = sf::Vector2f(randomRange(m_biome->m_cloud.mn_minSizeX, m_biome->m_cloud.mn_maxSizeX), randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY));
-	m_origin.x = randomRange(0, 1900);
-	m_origin.y = randomRange(0, 500);
-
-	// Allocate memory
-	mn_coundOctogon = randomRange(m_biome->m_cloud.mn_minElement, m_biome->m_cloud.mn_maxElement);
-	mn_maxTriangle = (18 * mn_coundOctogon);
-	allocateVertex(mn_maxTriangle * 3u);
-	mn_countVertex = 0u;
-
-	m_values.resize(mn_coundOctogon);
-
-	// Compute left random values
-	int i = 0;
-	float totalY = 0;
-	sf::Vector2f size = m_size;
-	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
-	while (i < mn_coundOctogon / 2)
-	{
-		size.y = randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY);
-		totalY += size.y;
-		size.x -= totalY;
-		origin.y += randomRange(static_cast<int>(-totalY), 0.f);
-		if (size.y * 2 < size.x)
-		{
-			m_values[i].size = size;
-			m_values[i].origin = origin;
-			m_values[i].sizeUp = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_values[i].sizeDown = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_values[i].sizeRec = randomRange(10, static_cast<int>(size.y * 2));
-		}
-		else
-			break;
-		i++;
-	}
-
-	// Compute right random values
-	totalY = 0;
-	size = m_size;
-	origin = sf::Vector2f(0.f, 0.f + m_size.y);
-	while (i < mn_coundOctogon)
-	{
-		size.y = randomRange(m_biome->m_cloud.mn_minSizeY, m_biome->m_cloud.mn_maxSizeY);
-		totalY += size.y;
-		size.x -= totalY;
-		origin.y += randomRange(0.0f, static_cast<int>(totalY));
-		if (size.y * 2 < size.x)
-		{
-			m_values[i].size = size;
-			m_values[i].origin = origin;
-			m_values[i].sizeUp = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_values[i].sizeDown = randomRange(static_cast<int>(size.y), static_cast<int>(size.y * 2));
-			m_values[i].sizeRec = randomRange(10, static_cast<int>(size.y * 2));
-		}
-		i++;
-	}
-
-	createCloud();
+	return (false);
 }
 
-void Cloud::init(Biome * p_biome)
+void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color color, octo::VertexBuilder& builder)
 {
-	Decor::init(p_biome);
-	randomDecor();
-	m_values.reserve(m_biome->m_cloud.mn_maxElement);
+	color.a *= m_animation;
+	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
+	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
+	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidRight(size.x, -size.y + sizeCorner.y);
+	sf::Vector2f downLeft(-size.x + sizeCorner.x, size.y);
+	sf::Vector2f downRight(size.x - sizeCorner.x, size.y);
+	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
+
+	sf::Vector2f recDownRight(0.f, -size.y + sizeCorner.y);
+
+	upLeft += origin;
+	upRight += origin;
+	upMidLeft += origin;
+	upMidRight += origin;
+	downLeft += origin;
+	downRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+	recDownRight += origin;
+
+	builder.createTriangle(origin, upLeft, upRight, color);
+	builder.createTriangle(origin, upRight, upMidRight, color);
+	builder.createTriangle(origin, upMidRight, downMidRight, color);
+	builder.createTriangle(origin, downMidRight, downRight, color);
+	builder.createTriangle(origin, downRight, downLeft, color);
+	builder.createTriangle(origin, downLeft, downMidLeft, color);
+	builder.createTriangle(origin, downMidLeft, upMidLeft, color);
+	builder.createTriangle(origin, upMidLeft, upLeft, color);
+
+	builder.createQuad(upLeft, upRight, recDownRight, upMidLeft, color);
 }
 
-void Cloud::update(float pf_deltatime)
+void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f const & origin, std::size_t partCount, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	Decor::update(pf_deltatime);
+	for (std::size_t i = 0; i < partCount; i++)
+		createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
+}
 
-	if (b_isIce == false)
-		m_origin.x += pf_deltatime * m_biome->mn_wind;
+void Cloud::setupLightning(ABiome & biome)
+{
+	m_thunderCloud = biome.randomBool(0.6);
 
-	if (m_origin.x >= 1900 + 500)
+	if (m_thunderCloud)
 	{
-		randomDecor();
-		m_origin.x = -500;
+		octo::Camera& camera = octo::Application::getCamera();
+
+		m_lightning.addArc(camera.getCenter(), camera.getCenter(), 2.f);
+		m_lightning.addArc(camera.getCenter(), camera.getCenter(), 4.f);
+		m_lightning.addArc(camera.getCenter(), camera.getCenter(), 6.f);
+		m_lightning.addArc(camera.getCenter(), camera.getCenter(), 4.f);
+		m_lightning.addArc(camera.getCenter(), camera.getCenter(), 2.f);
+
+		m_lightningSize = biome.getLightningSize();
+	}
+}
+
+void Cloud::setup(ABiome& biome)
+{
+	m_color = biome.getCloudColor();
+	m_partCount = biome.getCloudPartCount();
+	m_values.resize(m_partCount);
+	m_rain.resize(m_partCount);
+	m_snow.resize(m_partCount);
+	m_dropUpLeft.resize(m_partCount);
+
+	for (std::size_t i = 0; i < m_partCount; i++)
+	{
+		m_rain[i] = new DropSystem();
+		m_rain[i]->setDrop(sf::Vector2f(0.5f, 50.f), 1024.f, m_color, biome);
+		m_snow[i] = new DropSystem();
+		m_snow[i]->setDrop(sf::Vector2f(5.f, 5.f), 256.f, m_color, biome);
 	}
 
-	createCloud();
+	newCloud(biome);
+	setupLightning(biome);
+}
+
+void Cloud::newCloud(ABiome & biome)
+{
+	m_size = biome.getCloudSize();
+
+	for (std::size_t i = 0; i < m_partCount; i++)
+	{
+		m_values[i].size.x = biome.getCloudSize().x / 5.f;
+		m_values[i].size.y = m_values[i].size.x;
+		m_values[i].sizeCorner = m_values[i].size / 2.f;
+		m_values[i].origin.x = biome.randomFloat(-m_size.x / 2.f, m_size.x / 2.f);
+		m_values[i].origin.y = biome.randomFloat(-m_size.y / 2.f, m_size.y / 2.f);
+
+		m_dropUpLeft[i] = sf::Vector2f(m_values[i].origin.x - m_values[i].size.x, m_values[i].origin.y);
+	}
+
+	m_animator.setup(biome.getCloudLifeTime());
+}
+
+void Cloud::updateThunder(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position)
+{
+	float thunder = m_cycle == nullptr ? 0.f : m_cycle->getThunderValue();
+	if (m_thunderCloud && thunder && biome.randomBool(0.6))
+	{
+		std::size_t cloudNumber = biome.randomInt(0, m_partCount - 1);
+		m_p0 = position + m_values[cloudNumber].origin;
+		m_p1 = sf::Vector2f(position.x, position.y + m_lightningSize * thunder);
+		for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+			m_lightning.setArc(i, m_p0, m_p1);
+		for (auto i = 0u; i < m_lightning.getArcCount(); ++i)
+			m_lightning.setArc(i, m_p0, m_p1);
+		m_lightning.update(frameTime, builder);
+	}
+}
+
+void Cloud::updateRain(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position)
+{
+	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue();
+	for (std::size_t i = 0; i < m_partCount; i++)
+	{
+		sf::Vector2f size(m_values[i].size.x * 2.f, m_values[i].size.y);
+		sf::FloatRect rect(m_dropUpLeft[i] + position, size * m_animation);
+		float angle = biome.getWind() / 4.f + biome.randomFloat(-5.f, 5.f);
+		if (angle > 45.f)
+			angle = 45.f;
+		else if (angle < -45.f)
+			angle = -45.f;
+		m_rain[i]->setDropRect(rect);
+		// -i create 1 second of delay and avoid one line of drop a the begining
+		m_rain[i]->setDropPerSecond(weather - i);
+		m_rain[i]->update(frameTime, angle, builder);
+	}
+}
+
+void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position)
+{
+	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue() / 4.f;
+	for (std::size_t i = 0; i < m_partCount; i++)
+	{
+		sf::Vector2f size(m_values[i].size.x * 2.f, m_values[i].size.y);
+		sf::FloatRect rect(m_dropUpLeft[i] + position, size * m_animation);
+		m_snow[i]->setDropRect(rect);
+		m_snow[i]->setDropPerSecond(weather - i);
+		m_snow[i]->update(frameTime, biome.randomFloat(-45.f, 45.f), builder);
+	}
+}
+
+void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
+{
+	sf::Vector2f const & position = getPosition();
+
+	if (biome.canCreateThunder() && m_animator.getState() == DecorAnimator::State::Life)
+		updateThunder(frameTime, biome, builder, position);
+
+	if (biome.canCreateRain())
+		updateRain(frameTime, biome, builder, position);
+	else if (biome.canCreateSnow())
+		updateSnow(frameTime, biome, builder, position);
+
+	if (m_animator.update(frameTime))
+		newCloud(biome);
+	m_animation = m_animator.getAnimation();
+
+	createCloud(m_values, position, m_partCount, m_color, builder);
 }

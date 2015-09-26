@@ -1,31 +1,34 @@
 #ifndef STAR_HPP
 # define STAR_HPP
 
-# include "Decor.hpp"
-# include <vector>
+# include "AShineBuilder.hpp"
+# include "DecorAnimator.hpp"
 
-class Star : public Decor
+class SkyCycle;
+
+class Star : public AShineBuilder
 {
-private:
-	sf::CircleShape				m_light;
-	sf::Vector2f				m_sizeHeart;
-	float						mf_shineTimer;
-	float						mf_maxShineTime;
-
 public:
 	Star(void);
-	virtual ~Star(void);
+	Star(SkyCycle * cycle);
+	virtual ~Star(void) = default;
 
-	void init(Biome * p_biome);
+	virtual void setup(ABiome& biome);
+	virtual void update(sf::Time frameTime,
+						octo::VertexBuilder& builder,
+						ABiome& biome);
 
-	void createOneStar(sf::Vector2f p_size, sf::Vector2f p_sizeHeart, float p_angle, sf::Color p_color);
-	void randomDecor(void);
-	void setOrigin(sf::Vector2f p_origin);
-	void shine(float pf_deltatime);
-	void computeStates(float pf_deltatime);
+private:
+	sf::Vector2f	m_size;
+	sf::Color		m_color;
+	sf::Vector2f	m_sizeHeart;
+	DecorAnimator	m_animator;
+	float			m_animation;
 
-	virtual void update(float pf_deltatime);
-	virtual void draw(sf::RenderTarget & p_target, sf::RenderStates p_states) const;
+	sf::Vector2f	m_glowSize;
+	sf::Vector2f	m_glowSizeCorner;
+
+	SkyCycle		*m_cycle;
 };
 
 #endif

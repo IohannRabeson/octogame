@@ -1,32 +1,35 @@
 #include "Rock.hpp"
-#include "Map.hpp"
+#include "ABiome.hpp"
+#include "Tile.hpp"
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <AudioManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 Rock::Rock() :
-	Decor(),
-	mn_countOctogon(0)
+	m_partCount(1u),
+	m_animator(1.f, 0.f, 3.f, 0.1f),
+	m_animation(1.f),
+	m_sound(true)
 {
 }
 
-Rock::~Rock()
+void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float const & sizeLeft, float const & sizeRight, float const & sizeRec, sf::Vector2f const & rockOrigin, octo::VertexBuilder& builder)
 {
-	m_values.clear();
-}
-
-void Rock::createOctogon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color, float p_sizeLeft, float p_sizeRight, float p_sizeRec)
-{
-	sf::Vector2f upLeft(-p_size.x, -p_size.y);
-	sf::Vector2f upRight(p_size.x, -p_size.y);
-	sf::Vector2f left(-p_size.x - p_sizeLeft, -p_size.y + p_sizeLeft);
-	sf::Vector2f right(p_size.x + p_sizeRight, -p_size.y + p_sizeRight);
-	sf::Vector2f midLeft(-p_size.x, -p_size.y + p_sizeLeft);
-	sf::Vector2f midRight(p_size.x, -p_size.y + p_sizeRight);
-	sf::Vector2f downLeft(-p_size.x - p_sizeLeft, 0.f);
-	sf::Vector2f downRight(p_size.x + p_sizeRight, 0.f);
-	sf::Vector2f downMidLeft(-p_size.x, 0.f);
-	sf::Vector2f downMidRight(p_size.x, 0.f);
-	sf::Vector2f recUp(upLeft.x + p_sizeRec, upLeft.y);
-	sf::Vector2f recLeft(upLeft.x, upLeft.y + 4.0f);
-	sf::Vector2f recRight(recUp.x, recUp.y + 4.0f);
+	sf::Vector2f upLeft(-size.x, -size.y);
+	sf::Vector2f upRight(size.x, -size.y);
+	sf::Vector2f left(-size.x - sizeLeft, -size.y + sizeLeft);
+	sf::Vector2f right(size.x + sizeRight, -size.y + sizeRight);
+	sf::Vector2f midLeft(-size.x, -size.y + sizeLeft);
+	sf::Vector2f midRight(size.x, -size.y + sizeRight);
+	sf::Vector2f downLeft(-size.x - sizeLeft, 0.f);
+	sf::Vector2f downRight(size.x + sizeRight, 0.f);
+	sf::Vector2f downMidLeft(-size.x, 0.f);
+	sf::Vector2f downMidRight(size.x, 0.f);
+	sf::Vector2f recUp(upLeft.x + sizeRec, upLeft.y);
+	//TODO: Not a clean way to set rec size
+	sf::Vector2f recLeft(upLeft.x, upLeft.y + (4.f * m_animation));
+	sf::Vector2f recRight(recUp.x, recUp.y + (4.f * m_animation));
 
 	// Avoid under limit point when grows
 	midLeft.y = midLeft.y > 0.f ? 0.f : midLeft.y;
@@ -34,81 +37,77 @@ void Rock::createOctogon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p
 	midRight.y = midRight.y > 0.f ? 0.f : midRight.y;
 	right.y = right.y > 0.f ? 0.f : right.y;
 
-	createTriangle(right, midRight, upRight, p_origin, p_color);
+	upLeft += origin;
+	upRight += origin;
+	left += origin;
+	right += origin;
+	midLeft += origin;
+	midRight += origin;
+	downLeft += origin;
+	downRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+	recUp += origin;
+	recLeft += origin;
+	recRight += origin;
 
+	builder.createTriangle(right, midRight, upRight, color);
 
-	createRectangle(upLeft, upRight, midRight, midLeft, p_origin, p_color);
-	createRectangle(midLeft, midRight, downMidRight, downMidLeft, p_origin, p_color);
-	createRectangle(left, midLeft, downMidLeft, downLeft, p_origin, p_color);
-	createRectangle(right, midRight, downMidRight, downRight, p_origin, p_color);
+	builder.createQuad(upLeft, upRight, midRight, midLeft, color);
+	builder.createQuad(midLeft, midRight, downMidRight, downMidLeft, color);
+	builder.createQuad(left, midLeft, downMidLeft, downLeft, color);
+	builder.createQuad(right, midRight, downMidRight, downRight, color);
+	builder.createTriangle(left, midLeft, upLeft, color);
+	builder.createQuad(upLeft, recUp, recRight, recLeft, color);
 
-	createTriangle(left, midLeft, upLeft, p_origin, p_color + sf::Color(100, 100, 100));
-	createRectangle(upLeft, recUp, recRight, recLeft, p_origin, p_color + sf::Color(100, 100, 100));
+	builder.createTriangle(left, midLeft, upLeft, sf::Color(255, 255, 255, 100));
+	builder.createQuad(upLeft, recUp, recRight, recLeft, sf::Color(255, 255, 255, 100));
 
 	// Compute last left point
-	if (p_origin.x - m_origin.x + downLeft.x < m_left.x && p_origin.x - m_origin.x < 0.f)
-		m_left.x = p_origin.x - m_origin.x + downLeft.x;
+	if (downLeft.x - rockOrigin.x < m_left.x && origin.x < rockOrigin.x)
+		m_left.x = downLeft.x - rockOrigin.x;
 	// Compute last right point
-	if (p_origin.x - m_origin.x + downRight.x > m_right.x && p_origin.x - m_origin.x > 0.f)
-		m_right.x = p_origin.x - m_origin.x + downRight.x;
+	if (downRight.x - rockOrigin.x > m_right.x && origin.x > rockOrigin.x)
+		m_right.x = downRight.x - rockOrigin.x;
 }
 
-void Rock::createRock(void)
+void Rock::createRock(std::vector<OctogonValue> const & values, sf::Vector2f const & originRock, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	mn_countVertex = 0;
-	for (int i = 0; i < mn_countOctogon; i++)
-		createOctogon(sf::Vector2f(m_values[i].size.x, m_values[i].size.y * mf_mouvement), m_values[i].origin + m_origin, m_color,
-						m_values[i].sizeLeft, m_values[i].sizeRight, m_values[i].sizeRec * mf_mouvement);
-	createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, m_color);
-
-	if (b_isIce == true)
-	{
-		sf::Color iceColor(5, 103, 155, 60);
-		if (me_currentState == e_state_sleep)
-		{
-			for (int i = 0; i < mn_countOctogon; i++)
-			createOctogon(sf::Vector2f(m_values[i].size.x, m_values[i].size.y * mf_mouvement * 1.1f), m_values[i].origin + m_origin, iceColor,
-							m_values[i].sizeLeft * 1.2f, m_values[i].sizeRight * 1.2f, m_values[i].sizeRec * mf_mouvement * 1.2f);
-			createTriangle(m_left, m_right, sf::Vector2f(0.0f, (m_right.x - m_left.x) / 2.f), m_origin, iceColor);
-		}
-	}
+	for (std::size_t i = 0u; i < m_partCount; i++)
+		createOctogon(sf::Vector2f(values[i].size.x, values[i].size.y * m_animation), values[i].origin + originRock, m_values[i].color,
+						values[i].sizeLeft, values[i].sizeRight, values[i].sizeRec, originRock, builder);
+	builder.createTriangle(m_left + originRock, m_right + originRock, sf::Vector2f(m_left.x + (m_right.x - m_left.x) / 2.f, ((m_right.x - m_left.x) / 2.f) * m_animation) + originRock, color);
 }
 
-void Rock::randomDecor(void)
+void Rock::setup(ABiome& biome)
 {
-	Decor::randomDecor();
-	m_color = sf::Color(122.f, 108.f, 135.f);
-	m_size = sf::Vector2f(randomRange(m_biome->m_rock.mn_minSizeX, m_biome->m_rock.mn_maxSizeX), randomRange(m_biome->m_rock.mn_minSizeY, m_biome->m_rock.mn_maxSizeY));
+	m_size = biome.getRockSize();
+	m_color = biome.getRockColor();
+	m_partCount = biome.getRockPartCount();
+	m_partCount = m_partCount >= 2u ? m_partCount : 2;
+	m_values.resize(m_partCount);
 
-	// Allocate memory
-	mn_countOctogon = randomRange(m_biome->m_rock.mn_minElement, m_biome->m_rock.mn_maxElement);
-	mn_maxTriangle = (12 * mn_countOctogon + 1) * 2; // +1 for root triangle
-	allocateVertex(mn_maxTriangle * 3u);
-	mn_countVertex = 0u;
-
-	m_values.resize(mn_countOctogon);
-
-	m_left = sf::Vector2f(0.f, 0.f);
-	m_right = sf::Vector2f(0.f, 0.f);
+	std::size_t i = 0u;
+	float totalX = 0.f;
+	sf::Vector2f size;
 
 	// Compute left random values
-	int i = 0;
-	float totalX = 0;
-	sf::Vector2f size = m_size;
-	sf::Vector2f origin = sf::Vector2f(0.f, 0.f);
-	while (i < mn_countOctogon / 2)
+	size = m_size;
+	sf::Vector2f origin(0.f, 0.f);
+	while (i < m_partCount / 2.f)
 	{
-		size.x = randomRange(m_biome->m_rock.mn_minSizeX, m_biome->m_rock.mn_maxSizeX);
+		size.x = biome.randomFloat(m_size.x * 0.5f, m_size.x);
 		totalX += size.x;
 		size.y -= totalX;
-		origin.x += randomRange(static_cast<int>(-totalX), 0.f);
-		if (size.x * 2 < size.y)
+		origin.x += biome.randomFloat(-totalX, 0.f);
+		if (size.x * 2.f < size.y)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeLeft = randomRange(static_cast<int>(size.x), static_cast<int>(size.x * 2));
-			m_values[i].sizeRight = randomRange(static_cast<int>(size.x), static_cast<int>(size.x * 2));
-			m_values[i].sizeRec = randomRange(10, static_cast<int>(size.x * 2));
+			m_values[i].sizeLeft = biome.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRight = biome.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRec = biome.randomFloat(0.f, size.x * 2.f);
+			m_values[i].color = biome.getRockColor();
 		}
 		else
 			break;
@@ -116,41 +115,51 @@ void Rock::randomDecor(void)
 	}
 
 	// Compute right random values
-	totalX = 0;
+	totalX = 0.f;
+	m_size = biome.getRockSize();
 	size = m_size;
-	origin = sf::Vector2f(0.f + m_size.x, 0.f);
-	while (i < mn_countOctogon)
+	origin = sf::Vector2f(0.f + size.x, 0.f);
+	while (i < m_partCount)
 	{
-		size.x = randomRange(m_biome->m_rock.mn_minSizeX, m_biome->m_rock.mn_maxSizeX);
+		size.x = biome.randomFloat(m_size.x * 0.5f, m_size.x);
 		totalX += size.x;
 		size.y -= totalX;
-		origin.x += randomRange(0.0f, static_cast<int>(totalX));
-		if (size.x * 2 < size.y)
+		origin.x += biome.randomFloat(0.0f, totalX);
+		if (size.x * 2.f < size.y)
 		{
 			m_values[i].size = size;
 			m_values[i].origin = origin;
-			m_values[i].sizeLeft = randomRange(static_cast<int>(size.x), static_cast<int>(size.x * 2));
-			m_values[i].sizeRight = randomRange(static_cast<int>(size.x), static_cast<int>(size.x * 2));
-			m_values[i].sizeRec = randomRange(10, static_cast<int>(size.x * 2));
+			m_values[i].sizeLeft = biome.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRight = biome.randomFloat(size.x, size.x * 2.f);
+			m_values[i].sizeRec = biome.randomFloat(10.f, size.x * 2.f);
+			m_values[i].color = biome.getRockColor();
 		}
 		i++;
 	}
-
-	createRock();
+	m_animator.setup();
+	m_sound = true;
 }
 
-void Rock::init(Biome * p_biome)
+void Rock::playSound(ABiome & biome, sf::Vector2f const & position)
 {
-	Decor::init(p_biome);
-	randomDecor();
-	m_values.reserve(m_biome->m_rock.mn_maxElement);
+	if (m_sound && m_animation)
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+		audio.playSound(resources.getSound(ROCK_WAV), 1.f, biome.randomFloat(0.8, 1.f), sf::Vector3f(position.x, position.y, 0.f), 100.f, 0.5f);
+		m_sound = false;
+	}
 }
-
-void Rock::update(float pf_deltatime)
+void Rock::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
-	Decor::update(pf_deltatime);
-	Decor::putOnMap();
-	m_origin.y += m_size.x * 4;
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
 
-	createRock();
+	sf::Vector2f const & position = getPosition();
+	float delta = (m_left.x + (m_right.x - m_left.x) / 2.f);
+	if (delta >= 0)
+		delta = -delta - Tile::TileSize;
+	playSound(biome, position);
+	createRock(m_values, sf::Vector2f(position.x + delta, position.y + m_size.x / 2.f), m_color, builder);
 }
+

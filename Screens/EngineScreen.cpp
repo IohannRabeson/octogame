@@ -19,6 +19,7 @@ EngineScreen::EngineScreen(void) :
 void	EngineScreen::start()
 {
 	ShapeBuilder & builder = m_engine;
+	m_engine.setTileCollision(false);
 
 	m_shape = builder.createRectangle();
 	m_shape->setApplyGravity(false);

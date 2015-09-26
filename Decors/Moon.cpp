@@ -1,118 +1,127 @@
 #include "Moon.hpp"
-#include "Map.hpp"
+#include "ABiome.hpp"
+#include <Interpolations.hpp>
+
 
 Moon::Moon(void) :
-	Decor(),
-	mf_angle(180.f)
+	m_animator(1.f, 0.f, 4.f, 0.2f),
+	m_animation(1.f),
+	m_timer(sf::Time::Zero),
+	m_timerMax(sf::seconds(30.f)),
+	m_way(true)
 {
 }
 
-Moon::~Moon(void)
+void Moon::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
+	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
+	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
+	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidRight(size.x, -size.y + sizeCorner.y);
+	sf::Vector2f downLeft(-size.x + sizeCorner.x, size.y);
+	sf::Vector2f downRight(size.x - sizeCorner.x, size.y);
+	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
+
+	upLeft += origin;
+	upRight += origin;
+	upMidLeft += origin;
+	upMidRight += origin;
+	downLeft += origin;
+	downRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+
+	builder.createTriangle(origin, upLeft, upRight, color);
+	builder.createTriangle(origin, upRight, upMidRight, color);
+	builder.createTriangle(origin, upMidRight, downMidRight, color);
+	builder.createTriangle(origin, downMidRight, downRight, color);
+	builder.createTriangle(origin, downRight, downLeft, color);
+	builder.createTriangle(origin, downLeft, downMidLeft, color);
+	builder.createTriangle(origin, downMidLeft, upMidLeft, color);
+	builder.createTriangle(origin, upMidLeft, upLeft, color);
 }
 
-void Moon::createOneMoon(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color)
+//TODO: Possible to factorize and avoid computing twice all right points
+void Moon::createDarkOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color const & color, float interpolateValue, octo::VertexBuilder& builder)
 {
-	float unit = p_size.x / 3.f;
+	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
+	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
+	sf::Vector2f cornerUpLeft(-size.x + sizeCorner.x, -size.y + sizeCorner.y);
+	sf::Vector2f cornerUpRight(size.x - sizeCorner.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
+	sf::Vector2f upMidRight(size.x, -size.y + sizeCorner.y);
+	sf::Vector2f downLeft(-size.x + sizeCorner.x, size.y);
+	sf::Vector2f downRight(size.x - sizeCorner.x, size.y);
+	sf::Vector2f cornerDownLeft(-size.x + sizeCorner.x, size.y - sizeCorner.y);
+	sf::Vector2f cornerDownRight(size.x - sizeCorner.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidLeft(-size.x, size.y - sizeCorner.y);
+	sf::Vector2f downMidRight(size.x, size.y - sizeCorner.y);
 
-	sf::Vector2f upLeft(-unit * 2.f, -p_size.y);
-	sf::Vector2f upRight(-unit, -p_size.y);
-	sf::Vector2f quarterUpLeft(-p_size.x, -p_size.y + unit);
-	sf::Vector2f quarterUpRight(-unit * 2.f, -p_size.y + unit);
-	sf::Vector2f upMidLeft(-unit, -unit);
-	sf::Vector2f upMidRight(unit, -unit);
-	sf::Vector2f downMidLeft(-unit, unit);
-	sf::Vector2f downMidRight(unit, unit);
-	sf::Vector2f quarterDownLeft(-p_size.x, p_size.y - unit);
-	sf::Vector2f quarterDownRight(-unit * 2.f, p_size.y - unit);
-	sf::Vector2f downLeft(-unit * 2.f, p_size.y);
-	sf::Vector2f downRight(-unit, p_size.y);
+	upLeft = octo::linearInterpolation(upLeft, upRight, interpolateValue);
+	downLeft = octo::linearInterpolation(downLeft, downRight, interpolateValue);
+	upMidLeft = octo::linearInterpolation(upMidLeft, upMidRight, interpolateValue);
+	downMidLeft = octo::linearInterpolation(downMidLeft, downMidRight, interpolateValue);
+	cornerUpLeft = octo::linearInterpolation(cornerUpLeft, upMidRight, interpolateValue);
+	cornerUpRight = octo::linearInterpolation(cornerUpRight, upMidRight, interpolateValue);
+	cornerDownLeft = octo::linearInterpolation(cornerDownLeft, downMidRight, interpolateValue);
+	cornerDownRight = octo::linearInterpolation(cornerDownRight, downMidRight, interpolateValue);
 
-	createRectangle(upLeft, upRight, quarterUpRight, quarterUpLeft, p_origin, p_color);
-	createRectangle(upRight, upMidRight, upMidLeft, quarterUpRight, p_origin, p_color);
-	createRectangle(upMidRight, downMidRight, downMidLeft, upMidLeft, p_origin, p_color);
-	createRectangle(downLeft, downRight, quarterDownRight, quarterDownLeft, p_origin, p_color);
-	createRectangle(downRight, downMidRight, downMidLeft, quarterDownRight, p_origin, p_color);
+	upLeft += origin;
+	upRight += origin;
+	cornerUpLeft += origin;
+	cornerUpRight += origin;
+	upMidLeft += origin;
+	upMidRight += origin;
+	downLeft += origin;
+	downRight += origin;
+	cornerDownLeft += origin;
+	cornerDownRight += origin;
+	downMidLeft += origin;
+	downMidRight += origin;
+
+	builder.createTriangle(upLeft, cornerUpLeft, upMidLeft, color);
+	builder.createTriangle(upRight, cornerUpRight, upMidRight, color);
+	builder.createTriangle(downLeft, cornerDownLeft, downMidLeft, color);
+	builder.createTriangle(downRight, cornerDownRight, downMidRight, color);
+
+	builder.createQuad(upLeft, upRight, cornerUpRight, cornerUpLeft, color);
+	builder.createQuad(cornerUpLeft, cornerUpRight, cornerDownRight, cornerDownLeft, color);
+	builder.createQuad(cornerDownLeft, cornerDownRight, downRight, downLeft, color);
+	builder.createQuad(upMidLeft, cornerUpLeft, cornerDownLeft, downMidLeft, color);
+	builder.createQuad(cornerUpRight, upMidRight, downMidRight, cornerDownRight, color);
 }
 
-void Moon::createMoon(void)
+void Moon::createMoon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float interpolateValue, octo::VertexBuilder& builder)
 {
-	mn_countVertex = 0;
-
-	/*
-	m_transparency.a = 110 - (110 * mf_timer / mf_maxTimer);
-	float coef = mf_timer * mf_mouvement / 2.f;
-	createOneMoon(m_size * coef, m_origin, m_transparency);
-	for (int i = m_biome->m_sun.mn_nb; i > 0; i--)
-	{
-		coef = (1.f + i / 4.f) * mf_mouvement;
-		createOneMoon(m_size * coef, m_origin, m_transparency);
-	}
-	*/
-	m_transparency.a = 180;
-	createOneMoon(m_size * mf_mouvement, m_origin, m_transparency);
-	createDarkness();
+	createOctogon(size, size / 2.f, origin, color, builder);
+	sf::Color darkSideColor(0, 0, 0);
+	createDarkOctogon(size, size / 2.f, origin, darkSideColor, interpolateValue, builder);
 }
 
-void Moon::randomDecor(void)
+void Moon::setup(ABiome& biome)
 {
-	//TODO: WORK ONN THE MOOOOON
-	Decor::randomDecor();
-	m_color = sf::Color(255, 255, 255);
-	float size = randomRange(m_biome->m_sun.mn_minSizeX, m_biome->m_sun.mn_maxSizeX);
-	m_size = sf::Vector2f(size, size);
-	m_origin = sf::Vector2f(300, 150);
-	m_transparency = sf::Color(m_color.r, m_color.g, m_color.b);
-
-	// Init containers
-	mn_maxTriangle = 10 * (m_biome->m_sun.mn_nb + 2);
-	allocateVertex(mn_maxTriangle * 3u);
-	createMoon();
+	m_size = biome.getMoonSize();
+	m_color = biome.getMoonColor();
+	m_timerMax = biome.getMoonLifeTime();
+	m_animator.setup();
 }
 
-void Moon::createDarkness(void)
+void Moon::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	if (mf_angle > 0.f && mf_angle < 180.f)
-	{
-		sf::Vector2f upLeft(0.f, 0.f);
-		sf::Vector2f upRight(1900.f, 0.f);
-		sf::Vector2f downLeft(0.f, 1080.f);
-		sf::Vector2f downRight(1900, 1080.f);
-		sf::Vector2f origin(0.f, 0.f);
-		sf::Color color(0, 102, 204);
-		if (mf_angle > 0.f && mf_angle < 90.f)
-			color.a = mf_angle;
-		else
-			color.a = 180.f - mf_angle;
+	m_animator.update(frameTime);
+	m_animation = m_animator.getAnimation();
+	if (m_way)
+		m_timer += frameTime;
+	else
+		m_timer -= frameTime;
+	if (m_timer >= m_timerMax)
+		m_way = false;
+	else if (m_timer <= sf::Time::Zero)
+		m_way = true;
+	float interpolateValue = m_timer.asSeconds() / m_timerMax.asSeconds();
 
-		createRectangle(upLeft, upRight, downRight, downLeft, origin, color);
-	}
-}
+	sf::Vector2f const & position = getPosition();
 
-void Moon::computeOrigin(float pf_deltatime)
-{
-	m_origin = sf::Vector2f(-1900 / 2.f, -1080 / 2.f);
-	mf_angle += pf_deltatime * 10;
-	if (mf_angle >= 360.f)
-		mf_angle = 0.f;
-	float cosA = cos(mf_angle * PI / 180.f);
-	float sinA = sin(mf_angle * PI / 180.f);
-	rotateVec(&m_origin, cosA, sinA);
-	m_origin.x += 1900 / 2.f;
-	m_origin.y += 1080;
-}
-
-void Moon::init(Biome * p_biome)
-{
-	Decor::init(p_biome);
-	randomDecor();
-	createMoon();
-}
-
-void Moon::update(float pf_deltatime)
-{
-	Decor::update(pf_deltatime);
-
-	computeOrigin(pf_deltatime);
-	createMoon();
+	createMoon(m_size * m_animation, position, m_color, interpolateValue, builder);
 }

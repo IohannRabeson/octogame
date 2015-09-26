@@ -1,34 +1,46 @@
 #ifndef MUSHROOM_HPP
 # define MUSHROOM_HPP
 
-# include "Decor.hpp"
-# include <vector>
-# include <cmath>
+# include "ADecor.hpp"
+# include "DecorAnimator.hpp"
+# include <SFML/Graphics/Color.hpp>
 
-class Mushroom : public Decor
+class Mushroom : public ADecor
 {
 public:
-/*
-	struct MushroomValue
-	{
-		float	sizeFeet;
-		float	sizeHead;
-	};
-*/
 	Mushroom(void);
-	virtual ~Mushroom(void);
+	virtual ~Mushroom(void) = default;
 
-	void init(Biome * p_biome);
-
-	void createMushroom1(sf::Vector2f p_size, sf::Vector2f p_origin, sf::Color p_color);
-	void createMushroom(void);
-	void randomDecor(void);
-
-	virtual void update(float pf_deltatime);
+	virtual void setup(ABiome& biome);
+	virtual void update(sf::Time frameTime,
+						octo::VertexBuilder& builder,
+						ABiome& biome);
 
 private:
-	std::vector<sf::Vector2f>	m_leftVertex;
-	std::vector<sf::Vector2f>	m_rightVertex;
+	sf::Vector2f				m_size;
+	sf::Color					m_color;
+	std::size_t					m_pointCount;
+	std::vector<sf::Vector2f>	m_leftFirst;
+	std::vector<sf::Vector2f>	m_leftSecond;
+	std::vector<sf::Vector2f>	m_leftFinal;
+	std::vector<sf::Vector2f>	m_rightFinal;
+
+	DecorAnimator				m_animator;
+	float						m_animation;
+	sf::Time					m_bouncingTimer;
+	sf::Time					m_bouncingTimerMax;
+	bool						m_bouncingBool;
+	bool						m_sound;
+
+	void createMushroom(sf::Vector2f const & size,
+					sf::Vector2f const & origin,
+					sf::Color const & color,
+					float bouncingValue,
+					octo::VertexBuilder& builder);
+
+	void newMushroom(ABiome & biome);
+	float computeBouncingValue(sf::Time frameTime);
+	void playSound(ABiome & biome, sf::Vector2f const & position);
 };
 
 #endif
