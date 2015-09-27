@@ -255,7 +255,7 @@ void Game::moveMap()
 		m_soundGeneration->stop();
 		m_soundGeneration = nullptr;
 	}
-	if (m_keyS)
+	if (m_keyS || Progress::getInstance().canValidChallenge())
 	{
 		if (Progress::getInstance().canMoveMap())
 		{

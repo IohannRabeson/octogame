@@ -38,6 +38,7 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	octo::PostEffect postEffectShader;
 	postEffectShader.resetShader(&m_shader);
 	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+	setCurrentText(m_id);
 }
 
 CedricNpc::~CedricNpc(void)
@@ -243,6 +244,8 @@ void CedricNpc::startBalle(void)
 		if (Progress::getInstance().canValidChallenge() && !Progress::getInstance().canOpenDoubleJump())
 		{
 			Progress::getInstance().setCanOpenDoubleJump(true);
+			if (m_id == 1u)
+				setCurrentText(2u);
 		}
 	}
 }
