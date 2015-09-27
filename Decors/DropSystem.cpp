@@ -84,7 +84,7 @@ void	DropSystem::update(sf::Time frameTime, float angle, octo::VertexBuilder & b
 
 bool	DropSystem::isDeadParticle(Particle const& particle, float bottom)
 {
-	if (particle.position.y > m_waterLevel)
+	if (particle.position.y > m_waterLevel && m_waterLevel != -1)
 		return true;
 	else if (particle.position.y > bottom)
 		return true;
