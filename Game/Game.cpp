@@ -22,9 +22,11 @@
 #include "FannyNpc.hpp"
 #include "CedricNpc.hpp"
 #include "GuiNpc.hpp"
+#include "PunkNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "LucienNpc.hpp"
+#include "IohannNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -227,6 +229,12 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::LucienNpc:
 			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::PunkNpc:
+			gameObjectCast<PunkNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::IohannNpc:
+			gameObjectCast<IohannNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::SpaceShip:
 			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));
