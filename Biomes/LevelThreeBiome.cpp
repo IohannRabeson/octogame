@@ -14,7 +14,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_seed("LevelThree"),
 	m_mapSize(sf::Vector2u(1100u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(7.f * 16.f, 650.f),
+	m_octoStartPosition(43.f * 16.f, 650.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
@@ -23,7 +23,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_waterColor(0, 189, 168, 150),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(20.f)),
+	m_dayDuration(sf::seconds(80.f)),
 	m_startDayDuration(sf::seconds(15.f)),
 	m_skyDayColor(252, 252, 190),
 	m_skyNightColor(0, 0, 0),
@@ -129,11 +129,10 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
 	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
 	m_instances[670] = MAP_SECRET_LEFT_VILLAGE_JUNGLE_OMP;
-	//m_instances[2] = TEST_MAP_DOUBLE_JUMP_OMP;
 	m_instances[2] = MAP_CEDRIC_JUNGLE_OMP; //2 to 102
 	m_instances[120] = MAP_TRAIL_JUNGLE_OMP; //150 to 450
 	m_instances[500] = MAP_DOUBLE_JUMP_JUNGLE_OMP; //500 to 600
-	m_gameObjects[4] = GameObjectType::Portal;
+	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_interestPointPosX = 500;
 
