@@ -59,7 +59,6 @@ void	Progress::init()
 	audio.setSoundVolume(m_data.soundVol);
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
-	endChallenge();
 }
 
 void	Progress::save()
