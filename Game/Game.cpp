@@ -24,6 +24,7 @@
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
 #include "TurbanNpc.hpp"
+#include "VinceNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
@@ -227,6 +228,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::OldDesertStaticNpc:
 			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::VinceNpc:
+			gameObjectCast<VinceNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::LucienNpc:
 			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -328,7 +332,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
-	//m_physicsEngine.debugDraw(render);
+	m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	m_groundManager->drawFront(render, states);

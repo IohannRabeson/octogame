@@ -19,6 +19,7 @@
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
+#include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
@@ -294,6 +295,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					OldDesertStaticNpc * oldDesertStatic = new OldDesertStaticNpc();
 					oldDesertStatic->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, oldDesertStatic);
+				}
+				break;
+			case GameObjectType::VinceNpc:
+				{
+					VinceNpc * vince = new VinceNpc();
+					vince->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, vince);
 				}
 				break;
 			case GameObjectType::RepairNanoRobot:

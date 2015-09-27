@@ -116,10 +116,10 @@ void ABubble::update(sf::Time frameTime)
 		createExtension(m_position, m_color, m_currentType, m_builder);
 		m_size = getContentSize();
 		computePositionBubble(m_currentType, m_position);
+		m_contentUpLeft = m_positionBubble - m_size / 2.f;
+		updateContent(frameTime, m_contentUpLeft);
 		if (m_isActive)
 		{
-			m_contentUpLeft = m_positionBubble - m_size / 2.f;
-			updateContent(frameTime, m_contentUpLeft);
 			createOctogon(m_size / 2.f, m_sizeCorner, m_positionBubble, m_color, m_builder);
 		}
 		else

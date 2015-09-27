@@ -24,3 +24,4 @@ nano_slow_fall.oss=Bah alors Octo, on est perdu ?!\nQuoi ? Moi ? Ben, je te perm
 nano_water.oss=J'aime l'eau
 iohann.oss=La flotte est bien chouette. Il y a plein de choses au fond.
 npc_punk.oss=Vous n'auriez pas vu mon chien Faust?
+vince.oss=Je peux pas aller dans le village alors je pêche. Il n'y a rien de mieux à faire ici…
