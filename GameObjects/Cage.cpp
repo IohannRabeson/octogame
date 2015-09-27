@@ -4,7 +4,8 @@
 #include <ResourceManager.hpp>
 
 Cage::Cage(sf::Vector2f const & scale, sf::Vector2f const & position) :
-	InstanceDecor(CAGE_BACK_OSS, scale, position, 1u, 0.4f),
+	InstanceDecor(CAGE_BACK_OSS, scale, position, 4u, 0.4f),
+	m_canOpen(false),
 	m_isOpen(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
@@ -28,6 +29,10 @@ Cage::Cage(sf::Vector2f const & scale, sf::Vector2f const & position) :
 
 	m_spriteFront.setAnimation(m_animationFront);
 	m_spriteFront.play();
+
+	//InstanceDecorSprite
+	getAnimation().setLoop(octo::LoopMode::NoLoop);
+	getSprite().pause();
 }
 
 void Cage::addMapOffset(float x, float y)
@@ -47,9 +52,13 @@ void Cage::update(sf::Time frameTime)
 	InstanceDecor::update(frameTime);
 	m_spriteFront.update(frameTime);
 
-	if (!m_isOpen && Progress::getInstance().canOpenDoubleJump())
+	if (!m_canOpen && Progress::getInstance().canOpenDoubleJump())
+		m_canOpen = true;
+
+	if (m_canOpen && !m_isOpen && !Progress::getInstance().canValidChallenge())
 	{
 		m_spriteFront.setAnimation(m_animationFrontOpen);
+		getSprite().play();
 		m_isOpen = true;
 	}
 }

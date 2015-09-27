@@ -186,6 +186,16 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
+			else if (!spriteTrigger.name.compare(NANO_DOUBLE_JUMP_OSS))
+			{
+				if (!Progress::getInstance().canDoubleJump())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new DoubleJumpNanoRobot());
+					ptr->setPosition(position);
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
 			else
 			{
 				std::unique_ptr<ANpc> npc;
@@ -1030,10 +1040,10 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerGround, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
-	for (auto & decor : m_instanceDecors)
-		decor->drawFront(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->draw(render, states);
+	for (auto & decor : m_instanceDecors)
+		decor->drawFront(render, states);
 }
 
 void GroundManager::drawWater(sf::RenderTarget& render, sf::RenderStates states) const
