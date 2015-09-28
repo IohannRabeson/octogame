@@ -11,12 +11,14 @@
 # include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
+# include "PloufSystem.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
 
 class ElevatorStream;
 class RepairNanoRobot;
+class SpaceShip;
 
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	public octo::DefaultKeyboardListener,
@@ -70,6 +72,7 @@ public:
 	void					giveNanoRobot(NanoRobot * robot);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot);
 	void					repairElevator(ElevatorStream & elevator);
+	void					collideSpaceShip(SpaceShip * spaceShip);
 	void					usePortal(Portal & portal);
 
 private:
@@ -127,6 +130,7 @@ private:
 
 	SmokeSystem					m_inkParticle;
 	HelmetSystem				m_helmetParticle;
+	PloufSystem					m_ploufParticle;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;
@@ -161,7 +165,7 @@ private:
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
 	bool						m_collisionElevatorEvent;
-	bool						m_doScale;
+	bool						m_collisionSpaceShip;
 	bool						m_inWater;
 	Events						m_prevEvent;
 };

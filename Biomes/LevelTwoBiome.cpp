@@ -14,7 +14,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(900u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(50.f * 16.f, 650.f),
+	m_octoStartPosition(43.f * 16.f, 650.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
@@ -131,7 +131,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
 	m_instances[584] = MAP_NANO_JUMP_DESERT_OMP;
-	m_gameObjects[395] = GameObjectType::TurbanNpc;
+	m_gameObjects[300] = GameObjectType::TurbanNpc;
 	m_gameObjects[556] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[645] = GameObjectType::Bouibouik;

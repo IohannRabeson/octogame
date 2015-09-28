@@ -1,10 +1,13 @@
 #include "SpaceShip.hpp"
+#include "ResourceDefinitions.hpp"
+#include "PhysicsEngine.hpp"
+#include "CircleShape.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
-#include "ResourceDefinitions.hpp"
 
 SpaceShip::SpaceShip(SpaceShipEvents event) :
-	m_event(event)
+	m_event(event),
+	m_box(nullptr)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -21,6 +24,13 @@ SpaceShip::SpaceShip(SpaceShipEvents event) :
 		m_animation.setLoop(octo::LoopMode::Loop);
 		m_smoke.setup(sf::Vector2f(10.f, 10.f));
 		m_smoke.setVelocity(sf::Vector2f(0.f, -140.f));
+		m_box = PhysicsEngine::getShapeBuilder().createCircle(false);
+		m_box->setGameObject(this);
+		m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::SpaceShip));
+		m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::PlayerEvent));
+		m_box->setRadius(m_sprite.getGlobalSize().x / 2.f);
+		m_box->setApplyGravity(false);
+		m_box->setType(AShape::Type::e_trigger);
 	}
 	else if (event == Flying)
 	{
@@ -54,7 +64,14 @@ void SpaceShip::setPosition(sf::Vector2f const & position)
 {
 	m_sprite.setPosition(position.x, position.y - m_sprite.getLocalSize().y * 0.775f);
 	if (m_event == Broken)
+	{
 		m_smoke.setPosition(position + sf::Vector2f(220.f, -200.f));
+		if (m_box)
+		{
+			m_box->setPosition(m_sprite.getPosition() + m_sprite.getGlobalSize() / 2.f - sf::Vector2f(m_box->getRadius(), m_box->getRadius()));
+			m_box->update();
+		}
+	}
 }
 
 sf::Vector2f const & SpaceShip::getPosition(void) const

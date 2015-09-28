@@ -73,13 +73,13 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 	}
 	else if (m_state == Falling)
 	{
-		m_offsetCamera -= 150.f * frameTime.asSeconds();
-		translation.y = 300.f * frameTime.asSeconds();
 		if (m_timerEnd >= m_timerEndMax)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			states.push("game");
+			states.pop();
 		}
+		m_offsetCamera = 150.f * frameTime.asSeconds();
+		translation.y = 300.f * frameTime.asSeconds();
 	}
 
 	m_spaceShip.move(translation);

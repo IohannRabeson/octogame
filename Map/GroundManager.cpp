@@ -19,11 +19,13 @@
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
+#include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
 #include "Concert.hpp"
 #include "Firecamp.hpp"
+#include "Cage.hpp"
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -53,8 +55,7 @@ GroundManager::GroundManager(void) :
 	m_decorManagerGround(200000),
 	m_nextState(GenerationState::Next),
 	m_cycle(nullptr),
-	m_water(nullptr),
-	m_soundGeneration(nullptr)
+	m_water(nullptr)
 {}
 
 void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
@@ -157,6 +158,50 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new Firecamp(scale, position);
 			});
+	m_decorFactory.registerCreator(CAGE_FRONT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Cage(scale, position);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_1_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_2_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_3_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_3_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_4_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_4_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_5_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_5_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_6_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_6_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_7_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_7_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_8_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_8_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_9_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_9_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_10_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_10_OSS, scale, position, 1u, 0.4f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -178,6 +223,16 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new JumpNanoRobot());
+					ptr->setPosition(position);
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
+			else if (!spriteTrigger.name.compare(NANO_DOUBLE_JUMP_OSS))
+			{
+				if (!Progress::getInstance().canDoubleJump())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new DoubleJumpNanoRobot());
 					ptr->setPosition(position);
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
@@ -280,6 +335,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					OldDesertStaticNpc * oldDesertStatic = new OldDesertStaticNpc();
 					oldDesertStatic->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, oldDesertStatic);
+				}
+				break;
+			case GameObjectType::VinceNpc:
+				{
+					VinceNpc * vince = new VinceNpc();
+					vince->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, vince);
 				}
 				break;
 			case GameObjectType::RepairNanoRobot:
@@ -956,8 +1018,6 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 
 void GroundManager::update(float deltatime)
 {
-	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	m_transitionTimer += deltatime;
 
 	// Get the top left of the camera view
@@ -988,10 +1048,6 @@ void GroundManager::update(float deltatime)
 		{
 			m_transitionTimer = 0.f;
 			swapMap();
-			if (m_soundGeneration != nullptr)
-				m_soundGeneration->stop();
-			//TODO
-			m_soundGeneration = audio.playSound(resources.getSound(OCTO_GREETING_WAV), 0.f);
 		}
 	}
 	updateOffset(deltatime);
@@ -1034,6 +1090,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 		nano.m_gameObject->draw(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->draw(render, states);
+	for (auto & decor : m_instanceDecors)
+		decor->drawFront(render, states);
 }
 
 void GroundManager::drawWater(sf::RenderTarget& render, sf::RenderStates states) const

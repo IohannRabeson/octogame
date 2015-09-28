@@ -24,8 +24,19 @@ public:
 	bool				getWalk(void) const { return m_data.walk; }
 	bool				getMoveMap(void) const { return m_data.moveMap; }
 
+	bool				isFirstTime(void) const { return m_data.firstTime; }
+	void				setFirstTime(bool firstTime) { m_data.firstTime = firstTime; }
+
+	void				startChallenge(void) { m_validChallenge = true; }
+	bool				canValidChallenge(void) const { return m_validChallenge; }
+	void				endChallenge(void) { m_validChallenge = false; }
+
+	void				setCanOpenDoubleJump(bool canOpen) { m_data.canOpenDoubleJump = canOpen; }
+	bool				canOpenDoubleJump(void) const { return m_data.canOpenDoubleJump; }
+
 	bool				canMoveMap();
 	bool				canRepair();
+	bool				canRepairShip();
 	bool				canWalk();
 	bool				canJump();
 	bool				canDoubleJump();
@@ -49,11 +60,9 @@ private:
 	struct data
 	{
 		data() :
-			data(5u, Level::LevelOne,
-					5u, 100u,
-					true, true)
-		{
-		}
+			data(1u, Level::LevelTwo, 5u, 100u, true, true)
+		{}
+
 		data(std::size_t nanoRobot, Level biome,
 				std::size_t musicVol, std::size_t soundVol,
 				bool fullscreen, bool vsync) :
@@ -63,8 +72,10 @@ private:
 			soundVol(soundVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
+			firstTime(true),
 			walk(false),
-			moveMap(false)
+			moveMap(false),
+			canOpenDoubleJump(false)
 		{}
 
 		std::size_t		nanoRobotCount;
@@ -73,8 +84,10 @@ private:
 		std::size_t		soundVol;
 		bool			fullscreen;
 		bool			vsync;
+		bool			firstTime;
 		bool			walk;
 		bool			moveMap;
+		bool			canOpenDoubleJump;
 	};
 
 	Progress();
@@ -88,6 +101,7 @@ private:
 	bool								m_newSave;
 	bool								m_changeLevel;
 	bool								m_reverseSprite;
+	bool								m_validChallenge;
 	sf::Vector2f						m_octoPos;
 };
 

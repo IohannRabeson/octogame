@@ -42,6 +42,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/QuitScreen.cpp					\
 				Screens/FsmDemoScreen.cpp				\
 				Screens/ElevatorStreamDemo.cpp			\
+				Screens/TransitionLevelScreen.cpp		\
 				Screens/TransitionScreen.cpp			\
 				Screens/DeathScreen.cpp					\
 				Screens/LevelZeroScreen.cpp				\
@@ -62,6 +63,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Water.cpp					\
 				GameObjects/InstanceDecor.cpp			\
 				GameObjects/Firecamp.cpp				\
+				GameObjects/Cage.cpp					\
 				GameObjects/Concert.cpp					\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
@@ -77,6 +79,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/LucienNpc.cpp						\
 				Npcs/IohannNpc.cpp						\
 				Npcs/OldDesertStaticNpc.cpp				\
+				Npcs/VinceNpc.cpp						\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
@@ -104,6 +107,7 @@ SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/JumpNanoRobot.cpp			\
 				NanoRobots/DoubleJumpNanoRobot.cpp		\
 				NanoRobots/SlowFallNanoRobot.cpp		\
+				NanoRobots/WaterNanoRobot.cpp			\
 				NanoRobots/NanoEffect.cpp				\
 
 SRC_MAP =		Map/Map.cpp								\
@@ -148,6 +152,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/MusicSystem.cpp					\
 				Decors/SparkSystem.cpp					\
 				Decors/HelmetSystem.cpp					\
+				Decors/PloufSystem.cpp					\
 				Decors/StarSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\

@@ -14,7 +14,8 @@ std::unique_ptr<Progress> Progress::m_instance = nullptr;
 Progress::Progress() :
 	m_newSave(false),
 	m_changeLevel(false),
-	m_reverseSprite(false)
+	m_reverseSprite(false),
+	m_validChallenge(false)
 {
 	setup();
 }
@@ -107,6 +108,11 @@ bool	Progress::canRepair()
 	return (m_data.nanoRobotCount > 1);
 }
 
+bool	Progress::canRepairShip()
+{
+	return (m_data.nanoRobotCount > 4);
+}
+
 bool	Progress::canWalk()
 {
 	return true;
@@ -134,8 +140,7 @@ bool	Progress::canUseElevator()
 
 bool	Progress::canUseWaterJump()
 {
-	//TODO
-	return (m_data.nanoRobotCount > 0);
+	return (m_data.nanoRobotCount > 5);
 }
 
 bool	Progress::changeLevel() const

@@ -10,19 +10,24 @@
 #include "ElevatorStream.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
+#include "SpaceShip.hpp"
 #include "Concert.hpp"
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
+#include "DoubleJumpNanoRobot.hpp"
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "CedricNpc.hpp"
 #include "GuiNpc.hpp"
+#include "PunkNpc.hpp"
 #include "TurbanNpc.hpp"
+#include "VinceNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "LucienNpc.hpp"
+#include "IohannNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -40,7 +45,8 @@ Game::Game(void) :
 	m_musicPlayer(nullptr),
 	m_octo(nullptr),
 	m_keyS(false),
-	m_keyF(false)
+	m_keyF(false),
+	m_soundGeneration(nullptr)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -154,15 +160,23 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
 		case GameObjectType::JumpNanoRobot:
-			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling())
+			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<JumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr);
 			}
 			break;
+		case GameObjectType::DoubleJumpNanoRobot:
+			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canDoubleJump() && Progress::getInstance().canOpenDoubleJump())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(ptr);
+			}
+			break;
 		case GameObjectType::GroundTransformNanoRobot:
-			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling())
+			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canMoveMap())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -170,7 +184,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
-			if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling())
+			if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canRepair())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -214,8 +228,20 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::OldDesertStaticNpc:
 			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::VinceNpc:
+			gameObjectCast<VinceNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::LucienNpc:
 			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::PunkNpc:
+			gameObjectCast<PunkNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::IohannNpc:
+			gameObjectCast<IohannNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SpaceShip:
+			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));
 			break;
 		default:
 			break;
@@ -233,15 +259,37 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 
 void Game::moveMap()
 {
-	if (m_keyS)
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+	if (m_soundGeneration != nullptr && !m_keyS && !m_keyF)
+	{
+		m_soundGeneration->stop();
+		m_soundGeneration = nullptr;
+	}
+	if (m_keyS || Progress::getInstance().canValidChallenge())
 	{
 		if (Progress::getInstance().canMoveMap())
+		{
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+			if (m_soundGeneration == nullptr)
+			{
+				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV));
+				m_soundGeneration->setLoop(true);
+			}
+		}
 	}
 	else if (m_keyF)
 	{
 		if (Progress::getInstance().canMoveMap())
+		{
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			if (m_soundGeneration == nullptr)
+			{
+				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV), 1.f);
+				m_soundGeneration->setLoop(true);
+			}
+		}
 	}
 }
 
@@ -290,6 +338,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
+	m_skyManager->drawBirds(render, states);
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);

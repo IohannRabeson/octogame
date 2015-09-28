@@ -2,6 +2,7 @@
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
@@ -9,21 +10,24 @@
 #include <Math.hpp>
 #include <Interpolations.hpp>
 
+std::size_t CedricNpc::Id = 0u;
+
 CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	ANpc(CEDRIC_OSS),
 	m_skyCycle(skyCycle),
 	m_prevDayState(skyCycle.isDay()),
-	m_timerSwitchDayNight(0.f),
 	m_shaderIndex(0u),
 	m_startBalle(false),
 	m_timer(sf::Time::Zero),
-	m_effectDuration(sf::seconds(20.f))
+	m_effectDuration(sf::seconds(25.f)),
+	m_delayMax(sf::seconds(4.f)),
+	m_id(Id++)
 {
-	setSize(sf::Vector2f(35.f, 100.f));
-	setOrigin(sf::Vector2f(75.f, 68.f));
+	setSize(sf::Vector2f(200.f, 100.f));
+	setOrigin(sf::Vector2f(-30.f, 68.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(0.f, -50.f));
+	setTextOffset(sf::Vector2f(60.f, -50.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::CedricNpc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
@@ -35,11 +39,16 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	octo::PostEffect postEffectShader;
 	postEffectShader.resetShader(&m_shader);
 	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+	if (m_id == 0u)
+		setCurrentText(0u);
+	else
+		setCurrentText(2u);
 }
 
 CedricNpc::~CedricNpc(void)
 {
 	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
+	Id = 0u;
 }
 
 void CedricNpc::setup(void)
@@ -227,51 +236,31 @@ void CedricNpc::setupMachine(void)
 
 void CedricNpc::startBalle(void)
 {
-	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	postEffect.enableEffect(m_shaderIndex, true);
-	m_startBalle = true;
+	if (m_id == 0u)
+	{
+		octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+		postEffect.enableEffect(m_shaderIndex, true);
+		m_startBalle = true;
+		Progress::getInstance().startChallenge();
+	}
+	else
+	{
+		if (Progress::getInstance().canValidChallenge() && !Progress::getInstance().canOpenDoubleJump())
+			Progress::getInstance().setCanOpenDoubleJump(true);
+		if (Progress::getInstance().canOpenDoubleJump())
+			setCurrentText(3u);
+	}
 }
 
 void CedricNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (sprite.getCurrentEvent() == Special2 || sprite.getCurrentEvent() == Special2Night)
-		m_timerSwitchDayNight += frametime.asSeconds();
-
-	if (m_skyCycle.isNight())
-	{
-		if (m_prevDayState)
-		{
-			sprite.setNextEvent(Special2);
-		}
-		else if (m_timerSwitchDayNight > 0.8f)
-		{
-			m_timerSwitchDayNight = 0.f;
-			if (sprite.getCurrentEvent() == Special2)
-				sprite.setNextEvent(IdleNight);
-		}
-	}
-	else if (m_skyCycle.isDay())
-	{
-		if (!m_prevDayState)
-		{
-			sprite.setNextEvent(Special2Night);
-		}
-		else if (m_timerSwitchDayNight > 0.8f)
-		{
-			m_timerSwitchDayNight = 0.f;
-			if (sprite.getCurrentEvent() == Special2Night)
-				sprite.setNextEvent(Left);
-		}
-		else
-			updateState();
-	}
+	updateState();
+	updatePhysics();
 
 	// Get Night cycle to change the animation
 	m_prevDayState = m_skyCycle.isDay();
-
-	updatePhysics();
 
 	sprite.update(frametime);
 	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
@@ -281,25 +270,31 @@ void CedricNpc::update(sf::Time frametime)
 
 	if (m_startBalle)
 	{
-		m_timer += frametime;
-		float length;
-		if (m_timer < m_effectDuration / 2.f)
-			length = octo::linearInterpolation(0.f, 2.f, m_timer / (m_effectDuration / 2.f));
-		else
-			length = octo::linearInterpolation(2.f, 0.f, (m_timer - m_effectDuration / 2.f) / (m_effectDuration / 2.f));
-		sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
-		length *= 40.f;
-		float rotation = m_timer.asSeconds() / 5.f;
-		float x = std::cos(rotation * octo::Pi2 * 1.5f) * length / rect.width;
-		float y = std::sin(rotation * octo::Pi2 * 2.f) * length / rect.height;
-		float z = std::sin(rotation * octo::Pi2) * length / rect.height;
-		m_shader.setParameter("offset", x, y, z);
-		if (m_timer > m_effectDuration)
+		m_delay += frametime;
+		if (m_delay >= m_delayMax)
 		{
-			m_timer = sf::Time::Zero;
-			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-			postEffect.enableEffect(m_shaderIndex, false);
-			m_startBalle = false;
+			setCurrentText(1u);
+			m_timer += frametime;
+			float length;
+			if (m_timer < m_effectDuration / 2.f)
+				length = octo::linearInterpolation(0.f, 2.f, m_timer / (m_effectDuration / 2.f));
+			else
+				length = octo::linearInterpolation(2.f, 0.f, (m_timer - m_effectDuration / 2.f) / (m_effectDuration / 2.f));
+			sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+			length *= 40.f;
+			float rotation = m_timer.asSeconds() / 5.f;
+			float x = std::cos(rotation * octo::Pi2 * 1.5f) * length / rect.width;
+			float y = std::sin(rotation * octo::Pi2 * 2.f) * length / rect.height;
+			float z = std::sin(rotation * octo::Pi2) * length / rect.height;
+			m_shader.setParameter("offset", x, y, z);
+			if (m_timer > m_effectDuration)
+			{
+				m_timer = sf::Time::Zero;
+				octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+				postEffect.enableEffect(m_shaderIndex, false);
+				m_startBalle = false;
+				Progress::getInstance().endChallenge();
+			}
 		}
 	}
 	resetVariables();
@@ -312,21 +307,47 @@ void CedricNpc::updateState(void)
 	sf::FloatRect const & bounds = box->getGlobalBounds();
 	sf::FloatRect const & area = getArea();
 
-	if (canWalk())
+	if (sprite.getCurrentEvent() == Left)
 	{
-		if (sprite.getCurrentEvent() == Left && bounds.left <= area.left)
+		if (m_prevDayState && m_skyCycle.isNight())
+		{
+			sprite.setNextEvent(Special2);
+		}
+		else if (bounds.left <= area.left)
 		{
 			sprite.setNextEvent(Right);
 			sprite.setOrigin(getOrigin().x, getOrigin().y);
 			sprite.setScale(getScale(), getScale());
 		}
-		else if (sprite.getCurrentEvent() == Right && (bounds.left + bounds.width) >= (area.left + area.width))
+	}
+	else if (sprite.getCurrentEvent() == Right)
+	{
+		if (m_prevDayState && m_skyCycle.isNight())
+		{
+			sprite.setNextEvent(Special2);
+		}
+		else if ((bounds.left + bounds.width) >= (area.left + area.width))
 		{
 			sprite.setNextEvent(Left);
 			sf::Vector2f const & size = sprite.getLocalSize();
 			sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
 			sprite.setScale(-getScale(), getScale());
 		}
+	}
+	else if (sprite.getCurrentEvent() == Special2)
+	{
+		if (sprite.isTerminated())
+			sprite.setNextEvent(IdleNight);
+	}
+	else if (sprite.getCurrentEvent() == Special2Night)
+	{
+		if (sprite.isTerminated())
+			sprite.setNextEvent(Left);
+	}
+	else if (sprite.getCurrentEvent() == IdleNight)
+	{
+		if (!m_prevDayState && m_skyCycle.isDay())
+			sprite.setNextEvent(Special2Night);
 	}
 }
 

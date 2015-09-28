@@ -157,7 +157,7 @@ ElevatorStream::ElevatorStream() :
 	m_upColor(255, 255, 255, 0),
 	m_state(Disappear),
 	m_timer(sf::Time::Zero),
-	m_timerMax(sf::seconds(1.5f))
+	m_timerMax(sf::seconds(2.5f))
 
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();

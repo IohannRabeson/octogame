@@ -39,6 +39,7 @@ private:
 	std::unique_ptr<CharacterOcto>		m_octo;
 	bool								m_keyS;
 	bool								m_keyF;
+	std::shared_ptr<sf::Sound>			m_soundGeneration;
 
 	void			moveMap();
 	bool			onPressed(sf::Event::KeyEvent const & event);

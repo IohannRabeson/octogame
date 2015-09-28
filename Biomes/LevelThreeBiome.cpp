@@ -11,10 +11,10 @@
 LevelThreeBiome::LevelThreeBiome() :
 	m_name("LevelThree"),
 	m_id(Level::LevelThree),
-	m_seed("LevelThree"),
+	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(1100u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(7.f * 16.f, 650.f),
+	m_octoStartPosition(43.f * 16.f, 650.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
@@ -23,7 +23,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_waterColor(0, 189, 168, 150),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(100.f)),
+	m_dayDuration(sf::seconds(80.f)),
 	m_startDayDuration(sf::seconds(15.f)),
 	m_skyDayColor(252, 252, 190),
 	m_skyNightColor(0, 0, 0),
@@ -33,7 +33,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
-	m_lightningSize(700.f, 1300.f),
+	m_lightningSize(700.f, 2500.f),
 
 	m_rockCount(10u, 20u),
 	m_treeCount(100u, 101u),
@@ -77,7 +77,7 @@ LevelThreeBiome::LevelThreeBiome() :
 
 	m_mushroomSize(sf::Vector2f(20.f, 300.f), sf::Vector2f(300.f, 500.f)),
 	m_mushroomColor(255, 182, 0),
-	m_mushroomLifeTime(sf::seconds(10), sf::seconds(30)),
+	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
 	m_crystalSize(sf::Vector2f(40.f, 100.f), sf::Vector2f(80.f, 200.f)),
 	m_crystalPartCount(2u, 8u),
@@ -129,8 +129,12 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
 	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
 	m_instances[670] = MAP_SECRET_LEFT_VILLAGE_JUNGLE_OMP;
-	m_gameObjects[4] = GameObjectType::Portal;
+	m_instances[2] = MAP_CEDRIC_JUNGLE_OMP; //2 to 102
+	m_instances[120] = MAP_TRAIL_JUNGLE_OMP; //150 to 450
+	m_instances[500] = MAP_DOUBLE_JUMP_JUNGLE_OMP; //500 to 600
+	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[500] = GameObjectType::Portal;
+	m_gameObjects[300] = GameObjectType::VinceNpc;
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination

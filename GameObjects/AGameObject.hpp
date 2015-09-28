@@ -31,6 +31,8 @@ enum class GameObjectType
 	FatNpc = 16777216u,
 	IohannNpc = 33554432u,
 	LucienNpc = 67108864u,
+	WaterNanoRobot = 134217728u,
+	VinceNpc = 268435456u,
 	Water = 131u
 };
 

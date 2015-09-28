@@ -46,6 +46,16 @@ void InstanceDecor::setPosition(sf::Vector2f const & position)
 	m_sprite.setPosition(position.x - m_sprite.getLocalSize().x * m_sprite.getScale().x, position.y - m_sprite.getLocalSize().y * m_sprite.getScale().y);
 }
 
+octo::AnimatedSprite & InstanceDecor::getSprite(void)
+{
+	return m_sprite;
+}
+
+octo::SpriteAnimation & InstanceDecor::getAnimation(void)
+{
+	return m_animation;
+}
+
 void InstanceDecor::update(sf::Time frameTime)
 {
 	m_sprite.update(frameTime);
