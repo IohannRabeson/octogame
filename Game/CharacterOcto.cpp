@@ -728,7 +728,7 @@ void	CharacterOcto::onSky(Events event)
 			{
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterFullJump;
-				if (m_keyUp && m_progress.canSlowFall())
+				if (m_keyUp && m_progress.canSlowFall() && !m_onElevator)
 					m_sprite.setNextEvent(StartSlowFall);
 				else
 					m_sprite.setNextEvent(Fall);
@@ -978,7 +978,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 				m_jumpVelocity -= m_pixelSecondMultiplier * frametime;
 		}
 	}
-	else if (m_onElevator && !m_onGround)
+	else if (m_onElevator && event == Fall)
 		velocity.y = m_pixelSecondSlowFall;
 	m_box->setVelocity(velocity);
 }
@@ -1162,7 +1162,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::E:
 			m_keyAction = false;
 			m_keyPortal = false;
-			if (m_useElevator)
+			if (m_onElevator)
 				m_keyUp = false;
 			break;
 		default:
