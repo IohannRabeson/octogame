@@ -46,6 +46,8 @@ private:
 	bool						m_startBalle;
 	sf::Time					m_timer;
 	sf::Time					m_effectDuration;
+	sf::Time					m_delay;
+	sf::Time					m_delayMax;
 	std::size_t					m_id;
 
 };

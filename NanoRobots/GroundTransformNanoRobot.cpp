@@ -5,7 +5,7 @@
 GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 	NanoRobot(sf::Vector2f(30 * 16.f, 800.f), NANO_GROUND_TRANSFORM_OSS, 4, 9854, sf::Vector2f(0.f, -26.f)),
 	m_textTimer(sf::Time::Zero),
-	m_textTimerMax(sf::seconds(3.f)),
+	m_textTimerMax(sf::seconds(5.f)),
 	m_canSpeak(false),
 	m_talkaboutshit(true),
 	m_state(Walk)

@@ -389,12 +389,12 @@ void ANpc::updateText(sf::Time frametime)
 {
 	if (m_displayText)
 	{
-		m_texts[m_currentText]->setPosition(m_sprite.getPosition() + m_textOffset);
-		m_texts[m_currentText]->update(frametime);
 		if (m_collideOctoEvent)
 			m_texts[m_currentText]->setActive(true);
 		else
 			m_texts[m_currentText]->setActive(false);
+		m_texts[m_currentText]->setPosition(m_sprite.getPosition() + m_textOffset);
+		m_texts[m_currentText]->update(frametime);
 	}
 }
 

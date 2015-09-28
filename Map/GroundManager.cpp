@@ -19,6 +19,7 @@
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
+#include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
@@ -186,6 +187,16 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
+			else if (!spriteTrigger.name.compare(NANO_DOUBLE_JUMP_OSS))
+			{
+				if (!Progress::getInstance().canDoubleJump())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new DoubleJumpNanoRobot());
+					ptr->setPosition(position);
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
 			else
 			{
 				std::unique_ptr<ANpc> npc;
@@ -284,6 +295,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					OldDesertStaticNpc * oldDesertStatic = new OldDesertStaticNpc();
 					oldDesertStatic->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, oldDesertStatic);
+				}
+				break;
+			case GameObjectType::VinceNpc:
+				{
+					VinceNpc * vince = new VinceNpc();
+					vince->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, vince);
 				}
 				break;
 			case GameObjectType::RepairNanoRobot:
@@ -1030,10 +1048,10 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerGround, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
-	for (auto & decor : m_instanceDecors)
-		decor->drawFront(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)
 		nano->draw(render, states);
+	for (auto & decor : m_instanceDecors)
+		decor->drawFront(render, states);
 }
 
 void GroundManager::drawWater(sf::RenderTarget& render, sf::RenderStates states) const

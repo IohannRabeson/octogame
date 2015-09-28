@@ -15,6 +15,8 @@ public:
 	virtual void addMapOffset(float x, float y);
 	sf::Vector2f const & getPosition(void) const;
 	virtual void setPosition(sf::Vector2f const & position);
+	virtual octo::SpriteAnimation & getAnimation(void);
+	virtual octo::AnimatedSprite & getSprite(void);
 
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;

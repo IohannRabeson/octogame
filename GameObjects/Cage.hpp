@@ -19,6 +19,7 @@ private:
 	octo::AnimatedSprite		m_spriteFront;
 	octo::SpriteAnimation		m_animationFront;
 	octo::SpriteAnimation		m_animationFrontOpen;
+	bool						m_canOpen;
 	bool						m_isOpen;
 
 };

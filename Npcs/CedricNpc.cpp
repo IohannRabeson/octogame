@@ -20,13 +20,14 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	m_startBalle(false),
 	m_timer(sf::Time::Zero),
 	m_effectDuration(sf::seconds(25.f)),
+	m_delayMax(sf::seconds(4.f)),
 	m_id(Id++)
 {
-	setSize(sf::Vector2f(35.f, 100.f));
-	setOrigin(sf::Vector2f(75.f, 68.f));
+	setSize(sf::Vector2f(200.f, 100.f));
+	setOrigin(sf::Vector2f(-30.f, 68.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(0.f, -50.f));
+	setTextOffset(sf::Vector2f(60.f, -50.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::CedricNpc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
@@ -38,6 +39,10 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	octo::PostEffect postEffectShader;
 	postEffectShader.resetShader(&m_shader);
 	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+	if (m_id == 0u)
+		setCurrentText(0u);
+	else
+		setCurrentText(2u);
 }
 
 CedricNpc::~CedricNpc(void)
@@ -241,9 +246,9 @@ void CedricNpc::startBalle(void)
 	else
 	{
 		if (Progress::getInstance().canValidChallenge() && !Progress::getInstance().canOpenDoubleJump())
-		{
 			Progress::getInstance().setCanOpenDoubleJump(true);
-		}
+		if (Progress::getInstance().canOpenDoubleJump())
+			setCurrentText(3u);
 	}
 }
 
@@ -265,26 +270,31 @@ void CedricNpc::update(sf::Time frametime)
 
 	if (m_startBalle)
 	{
-		m_timer += frametime;
-		float length;
-		if (m_timer < m_effectDuration / 2.f)
-			length = octo::linearInterpolation(0.f, 2.f, m_timer / (m_effectDuration / 2.f));
-		else
-			length = octo::linearInterpolation(2.f, 0.f, (m_timer - m_effectDuration / 2.f) / (m_effectDuration / 2.f));
-		sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
-		length *= 40.f;
-		float rotation = m_timer.asSeconds() / 5.f;
-		float x = std::cos(rotation * octo::Pi2 * 1.5f) * length / rect.width;
-		float y = std::sin(rotation * octo::Pi2 * 2.f) * length / rect.height;
-		float z = std::sin(rotation * octo::Pi2) * length / rect.height;
-		m_shader.setParameter("offset", x, y, z);
-		if (m_timer > m_effectDuration)
+		m_delay += frametime;
+		if (m_delay >= m_delayMax)
 		{
-			m_timer = sf::Time::Zero;
-			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-			postEffect.enableEffect(m_shaderIndex, false);
-			m_startBalle = false;
-			Progress::getInstance().endChallenge();
+			setCurrentText(1u);
+			m_timer += frametime;
+			float length;
+			if (m_timer < m_effectDuration / 2.f)
+				length = octo::linearInterpolation(0.f, 2.f, m_timer / (m_effectDuration / 2.f));
+			else
+				length = octo::linearInterpolation(2.f, 0.f, (m_timer - m_effectDuration / 2.f) / (m_effectDuration / 2.f));
+			sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+			length *= 40.f;
+			float rotation = m_timer.asSeconds() / 5.f;
+			float x = std::cos(rotation * octo::Pi2 * 1.5f) * length / rect.width;
+			float y = std::sin(rotation * octo::Pi2 * 2.f) * length / rect.height;
+			float z = std::sin(rotation * octo::Pi2) * length / rect.height;
+			m_shader.setParameter("offset", x, y, z);
+			if (m_timer > m_effectDuration)
+			{
+				m_timer = sf::Time::Zero;
+				octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+				postEffect.enableEffect(m_shaderIndex, false);
+				m_startBalle = false;
+				Progress::getInstance().endChallenge();
+			}
 		}
 	}
 	resetVariables();

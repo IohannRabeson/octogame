@@ -77,7 +77,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 		m_texts.push_back(std::move(bubble));
 	}
 
-	sf::Color color = sf::Color::Green;
+	sf::Color color = sf::Color::Red;
 
 	for (std::size_t i = 0u; i < 16u; i++)
 		m_ray[i].color = color;
@@ -124,13 +124,13 @@ void NanoRobot::playSound(void)
 	switch (soundChoose)
 	{
 		case 0u:
-			audio.playSound(resource.getSound(NANO_1_WAV), 0.6f, 1.f);
+			audio.playSound(resource.getSound(NANO_1_WAV), 0.5f, 1.f);
 			break;
 		case 1u:
-			audio.playSound(resource.getSound(NANO_2_WAV), 0.6f, 1.f);
+			audio.playSound(resource.getSound(NANO_2_WAV), 0.5f, 1.f);
 			break;
 		case 2u:
-			audio.playSound(resource.getSound(NANO_3_WAV), 0.6f, 1.f);
+			audio.playSound(resource.getSound(NANO_3_WAV), 0.5f, 1.f);
 			break;
 		default:
 			break;

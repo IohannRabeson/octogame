@@ -1,7 +1,9 @@
 #ifndef SKYMANAGER_HPP
 # define SKYMANAGER_HPP
 
-#include "DecorManager.hpp"
+# include "DecorManager.hpp"
+# include <AnimatedSprite.hpp>
+# include <SpriteAnimation.hpp>
 
 class SkyCycle;
 class ABiome;
@@ -18,6 +20,7 @@ public:
 	DecorManager const & getDecorsBack(void) const;
 	DecorManager const & getDecorsFront(void) const;
 	DecorManager const & getFilter(void) const;
+	void drawBirds(sf::RenderTarget & render, sf::RenderStates & states) const;
 
 private:
 	sf::Vector2f setRotatePosition(DecorManager::Iterator decor,
@@ -35,6 +38,11 @@ private:
 						sf::Vector2f const & cameraCenter);
 
 	void setupClouds(ABiome & biome,
+					sf::Vector2f const & cameraSize,
+					sf::Vector2f const & cameraCenter,
+					sf::Vector2f const & mapSize);
+
+	void setupBirds(ABiome & biome,
 					sf::Vector2f const & cameraSize,
 					sf::Vector2f const & cameraCenter,
 					sf::Vector2f const & mapSize);
@@ -61,6 +69,10 @@ private:
 	std::vector<sf::Vector2f>	m_originCloudsFront;
 
 	float						m_parallaxSpeedY;
+
+	std::vector<sf::Vector2f>			m_originBirds;
+	std::vector<octo::AnimatedSprite>	m_birdsSprite;
+	octo::SpriteAnimation				m_birdsAnimation;
 };
 
 #endif

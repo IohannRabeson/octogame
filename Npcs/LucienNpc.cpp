@@ -156,9 +156,15 @@ void LucienNpc::updateState(void)
 		{
 			addTimer(-getTimerMax());
 			if (m_side)
+			{
 				sprite.setNextEvent(Special1);
+				setTextOffset(sf::Vector2f(92.f, -80.f));
+			}
 			else
+			{
 				sprite.setNextEvent(Special2);
+				setTextOffset(sf::Vector2f(-20.f, -80.f));
+			}
 		}
 	}
 }

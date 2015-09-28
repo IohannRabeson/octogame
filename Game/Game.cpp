@@ -22,9 +22,12 @@
 #include "FannyNpc.hpp"
 #include "CedricNpc.hpp"
 #include "GuiNpc.hpp"
+#include "PunkNpc.hpp"
 #include "TurbanNpc.hpp"
+#include "VinceNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "LucienNpc.hpp"
+#include "IohannNpc.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -225,8 +228,17 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::OldDesertStaticNpc:
 			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::VinceNpc:
+			gameObjectCast<VinceNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::LucienNpc:
 			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::PunkNpc:
+			gameObjectCast<PunkNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::IohannNpc:
+			gameObjectCast<IohannNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::SpaceShip:
 			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));
@@ -255,7 +267,7 @@ void Game::moveMap()
 		m_soundGeneration->stop();
 		m_soundGeneration = nullptr;
 	}
-	if (m_keyS)
+	if (m_keyS || Progress::getInstance().canValidChallenge())
 	{
 		if (Progress::getInstance().canMoveMap())
 		{
@@ -326,6 +338,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
+	m_skyManager->drawBirds(render, states);
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);

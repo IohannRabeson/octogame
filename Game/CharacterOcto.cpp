@@ -96,6 +96,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::GroundTransformNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::RepairNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::JumpNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::DoubleJumpNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::Tent)
 		| static_cast<std::size_t>(GameObjectType::Concert)
@@ -113,10 +114,13 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::CedricNpc)
 		| static_cast<std::size_t>(GameObjectType::FannyNpc)
 		| static_cast<std::size_t>(GameObjectType::FranfranNpc)
+		| static_cast<std::size_t>(GameObjectType::IohannNpc)
+		| static_cast<std::size_t>(GameObjectType::PunkNpc)
 		| static_cast<std::size_t>(GameObjectType::GuiNpc)
 		| static_cast<std::size_t>(GameObjectType::JuNpc)
 		| static_cast<std::size_t>(GameObjectType::LucienNpc)
 		| static_cast<std::size_t>(GameObjectType::OldDesertStaticNpc)
+		| static_cast<std::size_t>(GameObjectType::VinceNpc)
 		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
@@ -815,6 +819,7 @@ bool	CharacterOcto::endDeath()
 		{
 			octo::StateManager &		states = octo::Application::getStateManager();
 			octo::Application::getPostEffectManager().setAllShaderEnabled(false);
+			Progress::getInstance().endChallenge();
 			states.push("octo_death");
 		}
 		return false;

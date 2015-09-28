@@ -10,16 +10,16 @@
 TransitionLevelScreen::TransitionLevelScreen() :
 	m_sound(nullptr),
 	m_timeTransition(sf::Time::Zero),
-	m_timeTransitionMax(sf::seconds(2.16f))
+	m_timeTransitionMax(sf::seconds(0.8f))
 {
 	octo::SpriteAnimation::FrameList	frames;
 
-	frames.emplace_back(sf::seconds(1.f), 0);
-	frames.emplace_back(sf::seconds(0.1f), 1);
-	frames.emplace_back(sf::seconds(0.1f), 2);
-	frames.emplace_back(sf::seconds(0.1f), 3);
-	frames.emplace_back(sf::seconds(0.1f), 4);
-	frames.emplace_back(sf::seconds(0.1f), 5);
+//	frames.emplace_back(sf::seconds(1.f), 0);
+//	frames.emplace_back(sf::seconds(0.1f), 1);
+//	frames.emplace_back(sf::seconds(0.1f), 2);
+//	frames.emplace_back(sf::seconds(0.1f), 3);
+//	frames.emplace_back(sf::seconds(0.1f), 4);
+//	frames.emplace_back(sf::seconds(0.1f), 5);
 	frames.emplace_back(sf::seconds(0.1f), 6);
 	frames.emplace_back(sf::seconds(0.1f), 7);
 	frames.emplace_back(sf::seconds(0.1f), 8);
