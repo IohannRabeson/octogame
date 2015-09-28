@@ -859,7 +859,6 @@ bool	CharacterOcto::endDeath()
 		if (m_sprite.isTerminated())
 		{
 			octo::StateManager &		states = octo::Application::getStateManager();
-			octo::Application::getPostEffectManager().setAllShaderEnabled(false);
 			Progress::getInstance().endChallenge();
 			states.push("octo_death");
 		}
