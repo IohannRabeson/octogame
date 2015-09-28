@@ -31,6 +31,7 @@ private:
 	void	duringEvent(sf::Time frameTime, Events event);
 	void	walkSound();
 	void	stopSound();
+	void	fadeIn(sf::Time frameTime);
 	void	fadeOut(sf::Time frameTime);
 	std::shared_ptr<sf::Sound>				m_sound;
 	std::shared_ptr<sf::Sound>				m_soundEnvironment;
@@ -41,6 +42,7 @@ private:
 	sf::Time										m_timeEventFall;
 	sf::Time										m_timeEventIdle;
 	sf::Time										m_timeEventElevator;
+	sf::Time										m_timeSoundIn;
 	sf::Time										m_timeSoundTransition;
 	sf::Time										m_timeSoundTransitionMax;
 	bool											m_inWater;

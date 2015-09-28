@@ -11,6 +11,7 @@ CharacterOcto::OctoSound::OctoSound() :
 	m_timeEventFall(sf::Time::Zero),
 	m_timeEventIdle(sf::Time::Zero),
 	m_timeEventElevator(sf::Time::Zero),
+	m_timeSoundIn(sf::Time::Zero),
 	m_timeSoundTransition(sf::Time::Zero),
 	m_timeSoundTransitionMax(sf::seconds(1.f)),
 	m_inWater(false),
@@ -216,7 +217,13 @@ void	CharacterOcto::OctoSound::walkSound()
 void	CharacterOcto::OctoSound::stopSound()
 {
 	m_soundFadeOut.push_back(soundFade(m_sound));
+	m_timeSoundIn = sf::Time::Zero;
 	m_sound = nullptr;
+}
+
+void	CharacterOcto::OctoSound::fadeIn(sf::Time frameTime)
+{
+	m_timeSoundIn += frameTime;
 }
 
 void	CharacterOcto::OctoSound::fadeOut(sf::Time frameTime)
@@ -226,15 +233,13 @@ void	CharacterOcto::OctoSound::fadeOut(sf::Time frameTime)
 	{
 		volume = 0.f;
 		sound.time += frameTime;
-		volume = (sound.m_maxVolume * 100) * (1.f - (sound.time / sf::seconds(0.5f)));
+		volume = (sound.m_maxVolume * 50) * (1.f - (sound.time / sf::seconds(0.2f)));
 		if (volume >= 0.f)
 		{
-			std::cout << "s" << std::endl;
 			sound.sound->setVolume(volume);
 		}
 		else
 		{
-			std::cout << "r" << std::endl;
 			sound.stop = true;
 			sound.sound->stop();
 		}
