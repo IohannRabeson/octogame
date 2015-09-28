@@ -28,7 +28,7 @@ CharacterOcto::OctoSound::OctoSound() :
 CharacterOcto::OctoSound::~OctoSound()
 {
 	if (m_sound != nullptr)
-		m_sound->stop();
+		stopSound();
 	if (m_soundTransition != nullptr)
 		m_soundTransition->stop();
 	if (m_soundEnvironment != nullptr)
@@ -53,15 +53,14 @@ void	CharacterOcto::OctoSound::update(sf::Time frameTime, Events event, bool inW
 	environmentEvent(inWater, onGround);
 	if (m_prevEvent != event)
 	{
-		if (m_sound != nullptr){
-			m_sound->stop();
-			m_sound = nullptr;
-		}
+		if (m_sound != nullptr)
+			stopSound();
 		resetTimeEvent();
 		startEvent(event);
 	}
 	else
 		duringEvent(frameTime, event);
+	fadeOut(frameTime);
 	m_prevEvent = event;
 	m_transitionInWater = false;
 	m_transitionOutWater = false;
@@ -135,8 +134,8 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 	{
 		case Right:
 		case Left:
-				walkSound();
-				break;
+			walkSound();
+			break;
 		case Fall:
 			m_timeEventFall += frameTime;
 			if (m_timeEventFall > sf::seconds(3.f) && m_sound == nullptr)
@@ -148,7 +147,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;
-			if (m_timeEventIdle > sf::seconds(6.f) && m_sound == nullptr)
+			if (m_timeEventIdle > sf::seconds(12.f) && m_sound == nullptr)
 			{
 				m_sound = audio.playSound(resources.getSound(OCTO_MONOLOGUE_WAV), m_volumeVoice);
 			}
@@ -212,4 +211,35 @@ void	CharacterOcto::OctoSound::walkSound()
 		default:
 			break;
 	}
+}
+
+void	CharacterOcto::OctoSound::stopSound()
+{
+	m_soundFadeOut.push_back(soundFade(m_sound));
+	m_sound = nullptr;
+}
+
+void	CharacterOcto::OctoSound::fadeOut(sf::Time frameTime)
+{
+	float	volume;
+	for (auto & sound : m_soundFadeOut)
+	{
+		volume = 0.f;
+		sound.time += frameTime;
+		volume = (sound.m_maxVolume * 100) * (1.f - (sound.time / sf::seconds(0.5f)));
+		if (volume >= 0.f)
+		{
+			std::cout << "s" << std::endl;
+			sound.sound->setVolume(volume);
+		}
+		else
+		{
+			std::cout << "r" << std::endl;
+			sound.stop = true;
+			sound.sound->stop();
+		}
+	}
+	m_soundFadeOut.erase(std::remove_if(m_soundFadeOut.begin() , m_soundFadeOut.end(),
+				[](soundFade & p){ return p.stop; }),
+			m_soundFadeOut.end());
 }
