@@ -2,6 +2,7 @@
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <PostEffectManager.hpp>
 #include <Camera.hpp>
 
 #include "ResourceDefinitions.hpp"
@@ -56,6 +57,7 @@ void	TransitionLevelScreen::start()
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
 	m_sound = audio.playSound(resources.getSound(PORTAL_START_WAV), 0.7f);
+	octo::Application::getPostEffectManager().setAllShaderEnabled(false);
 }
 
 void	TransitionLevelScreen::pause()

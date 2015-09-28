@@ -38,8 +38,10 @@ void	GameScreen::resume()
 
 void	GameScreen::stop()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
 	octo::Application::getAudioManager().stopMusic(sf::Time::Zero);
 	Progress::getInstance().save();
+	graphics.removeKeyboardListener(this);
 }
 
 void	GameScreen::update(sf::Time frameTime)
@@ -66,7 +68,6 @@ void	GameScreen::update(sf::Time frameTime)
 		m_game->update(frameTime);
 		if (Progress::getInstance().changeLevel())
 		{
-			octo::Application::getPostEffectManager().setAllShaderEnabled(false);
 			states.push("transitionLevel");
 		}
 	}
