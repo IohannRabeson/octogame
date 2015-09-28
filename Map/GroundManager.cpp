@@ -18,6 +18,7 @@
 #include "FatNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
+#include "ConstanceNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
@@ -328,6 +329,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					TurbanNpc * turban = new TurbanNpc();
 					turban->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, turban);
+				}
+				break;
+			case GameObjectType::ConstanceNpc:
+				{
+					ConstanceNpc * constance = new ConstanceNpc();
+					constance->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, constance);
 				}
 				break;
 			case GameObjectType::OldDesertStaticNpc:
