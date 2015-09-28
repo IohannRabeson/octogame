@@ -688,6 +688,8 @@ void	CharacterOcto::collisionTileUpdate()
 	{
 		m_onGround = false;
 		onSky(static_cast<Events>(m_sprite.getCurrentEvent()));
+		if (m_numberOfJump == 0)
+			m_numberOfJump = 1;
 	}
 	else
 	{
@@ -758,6 +760,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 	if (m_collisionElevator)
 	{
+		m_timeEventFall = sf::Time::Zero;
 		m_onElevator = true;
 		if (m_sprite.getCurrentEvent() == StartElevator)
 		{
@@ -962,7 +965,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 		{
 			if (event == StartElevator)
 				velocity.y = (1.2f * m_pixelSecondSlowFall);
-			if (event == Elevator)
+			else if (event == Elevator)
 				velocity.y = (2.5f * m_pixelSecondSlowFall);
 		}
 		if (event == StartWaterJump || event == WaterJump)
@@ -975,6 +978,8 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 				m_jumpVelocity -= m_pixelSecondMultiplier * frametime;
 		}
 	}
+	else if (m_onElevator && !m_onGround)
+		velocity.y = m_pixelSecondSlowFall;
 	m_box->setVelocity(velocity);
 }
 
@@ -1111,10 +1116,18 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 			caseUp();
 			break;
 		case sf::Keyboard::E:
-			caseAction();
-			break;
-		case sf::Keyboard::D:
-			casePortal();
+			if (m_onElevator && m_progress.canUseElevator())
+			{
+				if (!m_keyUp){
+				m_sprite.setNextEvent(StartElevator);
+				m_keyUp = true;
+				}
+			}
+			else
+			{
+				caseAction();
+				casePortal();
+			}
 			break;
 		default:
 			break;
@@ -1148,9 +1161,9 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::E:
 			m_keyAction = false;
-			break;
-		case sf::Keyboard::D:
 			m_keyPortal = false;
+			if (m_useElevator)
+				m_keyUp = false;
 			break;
 		default:
 			otherKeyReleased = true;
