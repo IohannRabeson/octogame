@@ -529,13 +529,7 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
-	if (!m_collisionPortal && m_sprite.getCurrentEvent() == PortalEvent)
-	{
-		if (m_onGround)
-			m_sprite.setNextEvent(Idle);
-		else
-			m_sprite.setNextEvent(Fall);
-	}
+	portalEvent();
 	if (m_sprite.getCurrentEvent() != PortalEvent)
 		commitPhysicsToGraphics();
 	m_sprite.update(frameTime);
@@ -558,7 +552,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()),
 			m_inWater, m_onGround);
 
-	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepair() && m_repairNanoRobot->getState() == NanoRobot::State::Repair)
+	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepair()
+			&& m_repairNanoRobot->getState() == NanoRobot::State::Repair)
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 
 	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepairShip())
@@ -590,6 +585,17 @@ void	CharacterOcto::update(sf::Time frameTime)
 	{
 		robot->update(frameTime);
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
+	}
+}
+
+void	CharacterOcto::portalEvent()
+{
+	if (!m_collisionPortal && m_sprite.getCurrentEvent() == PortalEvent)
+	{
+		if (m_onGround)
+			m_sprite.setNextEvent(Idle);
+		else
+			m_sprite.setNextEvent(Fall);
 	}
 }
 
@@ -721,7 +727,7 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 void	CharacterOcto::usePortal(Portal & portal)
 {
 	m_collisionPortal = true;
-	if (m_sprite.isTerminated() && m_sprite.getCurrentEvent() == PortalEvent)
+	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
 		m_progress.setNextDestination(portal.getDestination());
 	}
@@ -774,7 +780,7 @@ void	CharacterOcto::onSky(Events event)
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterFullJump;
 				if (m_keyUp && m_progress.canSlowFall())
-						m_sprite.setNextEvent(StartSlowFall);
+					m_sprite.setNextEvent(StartSlowFall);
 				else
 					m_sprite.setNextEvent(Fall);
 			}
@@ -1214,7 +1220,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			otherKeyReleased = true;
 			break;
 	}
-	if (state == Death || otherKeyReleased || state == PortalEvent)
+	if (state == Death || state == PortalEvent || otherKeyReleased)
 		return true;
 	if (!m_onGround && !m_keyUp && !m_keyElevator)
 	{

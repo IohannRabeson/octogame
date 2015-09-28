@@ -79,6 +79,7 @@ public:
 private:
 	bool					dieFall();
 	bool					endDeath();
+	void					portalEvent();
 	void					dance();
 	void					inWater();
 	void					randomJumpAnimation();
