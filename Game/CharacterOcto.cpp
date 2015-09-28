@@ -50,7 +50,6 @@ CharacterOcto::CharacterOcto() :
 	m_collisionElevator(false),
 	m_collisionElevatorEvent(false),
 	m_collisionSpaceShip(false),
-	m_doScale(false),
 	m_inWater(false)
 {
 	m_sound.reset(new OctoSound());
@@ -493,7 +492,6 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
-	commitEventToGraphics();
 	commitPhysicsToGraphics();
 	m_sprite.update(frameTime);
 	resetTimeEvent();
@@ -506,6 +504,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		collisionTileUpdate();
 		commitControlsToPhysics(frameTime.asSeconds());
 		commitEnvironmentToPhysics();
+		commitEventToGraphics();
 	}
 	else
 		m_helmetParticle.update(frameTime);
@@ -899,21 +898,20 @@ void	CharacterOcto::commitPhysicsToGraphics()
 
 void	CharacterOcto::commitEventToGraphics()
 {
-	if (!m_doScale || m_box->getSleep())
-		return;
-	if (m_keyLeft && !m_originMove)
+	sf::Vector2f const&	velocity = m_box->getVelocity();
+
+	if (velocity.x < 0 && !m_originMove)
 	{
 		m_sprite.setScale(-1.f * m_spriteScale, 1.f * m_spriteScale);
 		m_sprite.setOrigin(m_sprite.getLocalSize().x, 0.f);
 		m_originMove = true;
 	}
-	else if (m_keyRight && m_originMove)
+	else if (velocity.x > 0 && m_originMove)
 	{
 		m_sprite.setScale(1.f * m_spriteScale, 1.f * m_spriteScale);
 		m_sprite.setOrigin(0.f , 0.f);
 		m_originMove = false;
 	}
-	m_doScale = false;
 }
 
 
@@ -1010,11 +1008,8 @@ void	CharacterOcto::caseLeft()
 	{
 		m_keyLeft = true;
 		m_keyRight = false;
-		m_doScale = true;
 		if (m_onGround && m_progress.canWalk())
-		{
 			m_sprite.setNextEvent(Left);
-		}
 	}
 }
 
@@ -1024,7 +1019,6 @@ void	CharacterOcto::caseRight()
 	{
 		m_keyRight = true;
 		m_keyLeft = false;
-		m_doScale = true;
 		if (m_onGround && m_progress.canWalk())
 			m_sprite.setNextEvent(Right);
 	}
