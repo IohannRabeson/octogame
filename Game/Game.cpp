@@ -275,6 +275,8 @@ void Game::moveMap()
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			else if (m_keyF)
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			else
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			if (m_soundGeneration == nullptr)
 			{
 				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV));
