@@ -529,6 +529,13 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
+	if (!m_collisionPortal && m_sprite.getCurrentEvent() == PortalEvent)
+	{
+		if (m_onGround)
+			m_sprite.setNextEvent(Idle);
+		else
+			m_sprite.setNextEvent(Fall);
+	}
 	if (m_sprite.getCurrentEvent() != PortalEvent)
 		commitPhysicsToGraphics();
 	m_sprite.update(frameTime);
