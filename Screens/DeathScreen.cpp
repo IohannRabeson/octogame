@@ -2,7 +2,6 @@
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
-#include <PostEffectManager.hpp>
 #include <Camera.hpp>
 
 #include "ResourceDefinitions.hpp"
@@ -54,7 +53,6 @@ void	DeathScreen::start()
 	}
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
-	octo::Application::getPostEffectManager().setAllShaderEnabled(false);
 }
 
 void	DeathScreen::pause()

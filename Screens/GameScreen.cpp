@@ -27,10 +27,15 @@ void	GameScreen::start()
 
 void	GameScreen::pause()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
 }
 
 void	GameScreen::resume()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	octo::Application::getPostEffectManager().setAllShaderEnabled(false);
+	graphics.addKeyboardListener(this);
 	Progress::getInstance().levelChanged();
 	m_game.reset(new Game());
 	m_game->loadLevel();
