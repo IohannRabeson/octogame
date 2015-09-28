@@ -42,7 +42,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Elevator = 13,
 		SlowFall,
 		StartWaterJump,
-		WaterJump
+		WaterJump,
+		PortalEvent
 	};
 public:
 	friend class OctoEvent;
@@ -116,6 +117,7 @@ private:
 	octo::CharacterAnimation	m_drinkAnimation;
 	octo::CharacterAnimation	m_startElevatorAnimation;
 	octo::CharacterAnimation	m_elevatorAnimation;
+	octo::CharacterAnimation	m_portalAnimation;
 
 	std::unique_ptr<OctoSound>						m_sound;
 	RectangleShape *								m_box;
@@ -162,8 +164,10 @@ private:
 	bool						m_keyUp;
 	bool						m_keyAction;
 	bool						m_keyPortal;
+	bool						m_keyElevator;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
+	bool						m_collisionPortal;
 	bool						m_collisionElevatorEvent;
 	bool						m_collisionSpaceShip;
 	bool						m_inWater;
