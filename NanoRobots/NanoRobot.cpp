@@ -326,6 +326,6 @@ void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const
 {
 	if (m_state == Idle)
 		return;
-	if (!m_isTravelling && m_state == Speak)
+	if (m_state == Speak)
 		m_texts[m_textIndex]->draw(render);
 }

@@ -515,7 +515,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()),
 			m_inWater, m_onGround);
 
-	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepair())
+	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepair() && m_repairNanoRobot->getState() == NanoRobot::State::Repair)
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 
 	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepairShip())

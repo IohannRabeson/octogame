@@ -7,10 +7,10 @@ VinceNpc::VinceNpc(void) :
 	ANpc(VINCE_OSS)
 {
 	setSize(sf::Vector2f(1.f, 75.f));
-	setOrigin(sf::Vector2f(180.f, 380.f));
+	setOrigin(sf::Vector2f(110.f, 812.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(-60.f, -120.f));
+	setTextOffset(sf::Vector2f(-20.f, -70.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::VinceNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));

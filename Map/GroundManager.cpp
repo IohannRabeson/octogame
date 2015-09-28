@@ -162,6 +162,46 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new Cage(scale, position);
 			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_1_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_2_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_3_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_3_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_4_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_4_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_5_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_5_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_6_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_6_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_7_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_7_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_8_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_8_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_9_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_9_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TRAIL_SIGN_10_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TRAIL_SIGN_10_OSS, scale, position, 1u, 0.4f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
