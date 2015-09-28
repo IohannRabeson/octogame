@@ -27,10 +27,15 @@ void	GameScreen::start()
 
 void	GameScreen::pause()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
 }
 
 void	GameScreen::resume()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	octo::Application::getPostEffectManager().setAllShaderEnabled(false);
+	graphics.addKeyboardListener(this);
 	Progress::getInstance().levelChanged();
 	m_game.reset(new Game());
 	m_game->loadLevel();
@@ -38,8 +43,11 @@ void	GameScreen::resume()
 
 void	GameScreen::stop()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
 	octo::Application::getAudioManager().stopMusic(sf::Time::Zero);
 	Progress::getInstance().save();
+	octo::Application::getPostEffectManager().removeEffects();
+	graphics.removeKeyboardListener(this);
 }
 
 void	GameScreen::update(sf::Time frameTime)
@@ -65,10 +73,7 @@ void	GameScreen::update(sf::Time frameTime)
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
 		if (Progress::getInstance().changeLevel())
-		{
-			octo::Application::getPostEffectManager().setAllShaderEnabled(false);
 			states.push("transitionLevel");
-		}
 	}
 }
 
