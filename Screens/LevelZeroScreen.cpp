@@ -85,7 +85,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			m_state = Falling;
 		}
 		float interpolateValue = m_timerEnd / m_timerEndMax / 2.f;
-		sf::Color color = octo::linearInterpolation(sf::Color::Black, m_downColorBackground, interpolateValue);
+		sf::Color const & color = octo::linearInterpolation(sf::Color::Black, m_downColorBackground, interpolateValue);
 		m_spaceShip.setSmokeVelocity(sf::Vector2f(octo::linearInterpolation(-1400.f, -200.f, interpolateValue), 0.f));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 	}
@@ -116,7 +116,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			states.push("game");
 		}
 		float interpolateValue = m_timerEnd / m_timerEndMax / 1.5f;
-		sf::Color color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
+		sf::Color const & color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
 		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-20.f, -400.f, interpolateValue)));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
@@ -134,7 +134,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 
 void	LevelZeroScreen::createBackground(sf::Vector2f const & position, sf::Color const & color)
 {
-	sf::Vector2f cameraSize = octo::Application::getCamera().getSize();
+	sf::Vector2f const & cameraSize = octo::Application::getCamera().getSize();
 	m_background[0] = sf::Vertex(sf::Vector2f(0.f, 0.f) + position, m_upColorBackground);
 	m_background[1] = sf::Vertex(sf::Vector2f(cameraSize.x, 0.f) + position, m_upColorBackground);
 	m_background[2] = sf::Vertex(sf::Vector2f(cameraSize.x, cameraSize.y * 1.5f) + position, color);
