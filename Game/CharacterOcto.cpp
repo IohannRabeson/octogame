@@ -239,6 +239,7 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.2f), {52, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {53, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {54, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {53, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_slowFallAnimation.setLoop(octo::LoopMode::Loop);
 
