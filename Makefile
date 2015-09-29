@@ -45,6 +45,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/TransitionLevelScreen.cpp		\
 				Screens/TransitionScreen.cpp			\
 				Screens/DeathScreen.cpp					\
+				Screens/TransitionLevelZeroScreen.cpp	\
 				Screens/LevelZeroScreen.cpp				\
 
 SRC_GAME =		Game/Game.cpp							\
@@ -157,6 +158,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SparkSystem.cpp					\
 				Decors/HelmetSystem.cpp					\
 				Decors/PloufSystem.cpp					\
+				Decors/WaterDropSystem.cpp				\
 				Decors/StarSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
