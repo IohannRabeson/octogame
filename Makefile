@@ -45,6 +45,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/TransitionLevelScreen.cpp		\
 				Screens/TransitionScreen.cpp			\
 				Screens/DeathScreen.cpp					\
+				Screens/TransitionLevelZeroScreen.cpp	\
 				Screens/LevelZeroScreen.cpp				\
 
 SRC_GAME =		Game/Game.cpp							\
@@ -127,6 +128,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/LevelOneBiome.cpp				\
 				Biomes/LevelTwoBiome.cpp				\
 				Biomes/LevelThreeBiome.cpp				\
+				Biomes/LevelFourBiome.cpp				\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
