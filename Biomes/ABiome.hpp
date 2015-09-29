@@ -21,7 +21,8 @@ enum class Level : std::size_t
 	Default,
 	LevelOne,
 	LevelTwo,
-	LevelThree
+	LevelThree,
+	LevelFour,
 };
 
 class ABiome : public octo::NonCopyable
@@ -43,6 +44,7 @@ public:
 	virtual Level										getDestination() = 0;
 	virtual float										getWaterLevel() = 0;
 	virtual sf::Color									getWaterColor() = 0;
+	virtual float										getTransitionStep() { return 3.f; };
 
 	virtual std::map<std::size_t, std::string>			const & getInstances() = 0;
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers() = 0;

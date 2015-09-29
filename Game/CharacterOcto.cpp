@@ -1020,7 +1020,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 			if (!m_inWater)
 				m_jumpVelocity += m_pixelSecondMultiplier * frametime;
 			else
-				m_jumpVelocity -= m_pixelSecondMultiplier * frametime;
+				m_jumpVelocity -= m_pixelSecondMultiplier * frametime * 2.3f;
 		}
 	}
 	if (!m_onTopElevator)
@@ -1045,7 +1045,7 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 		switch (state)
 		{
 			case Fall:
-				velocity.x *= 0.7f;
+				velocity.x *= 1.2f;
 				velocity.y = m_pixelSecondSlowFall;
 				break;
 			case StartWaterJump:
@@ -1056,8 +1056,8 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 			case WaterJump:
 				break;
 			default:
-				velocity.x *= 0.8f;
-				velocity.y *= 0.8f;
+				velocity.x *= 1.2f;
+				velocity.y *= 1.2f;
 				break;
 		}
 	}
