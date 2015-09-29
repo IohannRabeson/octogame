@@ -13,7 +13,7 @@ ControlMenu::ControlMenu(void) :
 
 void ControlMenu::createMenus(void)
 {
-	addMenu(L"Déplacement : [Gauche]/[Droite]", nullptr);
+	addMenu(L"Déplacement : [GAUCHE]/[DROITE]", nullptr);
 }
 
 void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
@@ -35,25 +35,25 @@ void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
 	}
 	if (progress.canJump() && m_isCreatedJump == false)
 	{
-		addMenu(L"Saut : [Espace]", nullptr);
+		addMenu(L"Saut : [ESPACE]", nullptr);
 		m_isCreatedJump = true;
 		setupBubble();
 	}
 	if (progress.canDoubleJump() && m_isCreatedDoubleJump == false)
 	{
-		addMenu(L"Double Saut : [Espace]", nullptr);
+		addMenu(L"Double Saut : [ESPACE]", nullptr);
 		m_isCreatedDoubleJump = true;
 		setupBubble();
 	}
 	if (progress.canUseWaterJump() && m_isCreatedWaterJump == false)
 	{
-		addMenu(L"Water Jump : [Haut]", nullptr);
+		addMenu(L"Water Jump : [HAUT]", nullptr);
 		m_isCreatedWaterJump = true;
 		setupBubble();
 	}
 	if (progress.canSlowFall() && m_isCreatedSlowFall == false)
 	{
-		addMenu(L"Chutte lente : [Haut]", nullptr);
+		addMenu(L"Chutte lente : [HAUT]", nullptr);
 		m_isCreatedSlowFall = true;
 		setupBubble();
 	}

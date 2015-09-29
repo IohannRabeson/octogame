@@ -19,7 +19,6 @@ private:
 		Walk,
 		MoveMap,
 		TalkAboutShit,
-		EscapeTalk,
 		None
 	};
 
@@ -27,7 +26,6 @@ private:
 	sf::Time	m_textTimerMax;
 	bool		m_canSpeak;
 	bool		m_talkaboutshit;
-	bool		m_escapeTalk;
 	State		m_state;
 
 };
