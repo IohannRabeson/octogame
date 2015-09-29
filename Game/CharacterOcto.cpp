@@ -147,6 +147,10 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_ploufParticle.canEmit(false);
 	m_ploufParticle.setColor(biome.getWaterColor());
 
+	m_waterParticle.canEmit(false);
+	m_waterParticle.setWidth(m_box->getSize().x);
+	m_waterParticle.setColor(sf::Color::Red);
+
 	m_inkParticle.setCanEmit(false);
 	m_inkParticle.setup(sf::Vector2f(3.f, 3.f));
 	m_inkParticle.setVelocity(sf::Vector2f(0.f, 100.f));
@@ -239,6 +243,7 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.2f), {52, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {53, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {54, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {53, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_slowFallAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -577,6 +582,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 
 	m_ploufParticle.setEmitter(m_box->getBaryCenter());
 	m_ploufParticle.update(frameTime);
+	m_waterParticle.setEmitter(m_box->getBaryCenter());
+	m_waterParticle.update(frameTime);
 	m_inkParticle.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
 	{
@@ -642,6 +649,7 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_sprite.draw(render, states);
 	m_helmetParticle.draw(render);
 	m_ploufParticle.draw(render);
+	m_waterParticle.draw(render);
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
@@ -916,6 +924,7 @@ void	CharacterOcto::inWater()
 	{
 		emit = true;
 		m_inWater = false;
+		m_waterParticle.canEmit(true);
 	}
 	if (emit)
 		m_ploufParticle.canEmit(true);

@@ -85,15 +85,16 @@ void	ResourceLoadingScreen::draw(sf::RenderTarget& render)const
 
 void	ResourceLoadingScreen::onNoMoreLoading()
 {
-	Progress &				progress = Progress::getInstance();
-	octo::StateManager & states = octo::Application::getStateManager();
+//	Progress &				progress = Progress::getInstance();
+//	octo::StateManager & states = octo::Application::getStateManager();
 
-	if (progress.isFirstTime())
+	octo::Application::getStateManager().change(octo::Application::getOptions().getValue<std::string>("second_state", "game"));
+/*	if (progress.isFirstTime())
 	{
 		progress.setFirstTime(false);
 		progress.save();
 		states.change("zero");
 	}
 	else
-		states.change("game");
+		states.change("game");*/
 }
