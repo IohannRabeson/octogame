@@ -136,6 +136,11 @@ bool ANpc::canSpecial2(void) const
 	return false;
 }
 
+void ANpc::setTimer(sf::Time time)
+{
+	m_timer = time;
+}
+
 void ANpc::setTimerMax(sf::Time timerMax)
 {
 	m_timerMax = timerMax;
@@ -220,6 +225,11 @@ void ANpc::setCurrentText(int index)
 	m_currentText = index;
 }
 
+void ANpc::setDisplayText(bool displayText)
+{
+	m_displayText = displayText;
+}
+
 float ANpc::getScale(void) const
 {
 	return m_scale;
@@ -228,6 +238,11 @@ float ANpc::getScale(void) const
 float ANpc::getVelocity(void) const
 {
 	return m_velocity;
+}
+
+bool ANpc::getCollideEventOcto(void) const
+{
+	return m_collideOctoEvent;
 }
 
 void ANpc::addTimer(sf::Time time)

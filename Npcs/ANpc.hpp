@@ -51,10 +51,12 @@ protected:
 
 	ANpc(ResourceKey const & npcId);
 
+	void setTimer(sf::Time time);
 	void setTimerMax(sf::Time timerMax);
 	void setNextEvent(Events event);
 	void setMachine(octo::FiniteStateMachine const & machine);
 	void setVelocity(float velocity);
+	void setDisplayText(bool displayText);
 	void setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask);
 	void setTextOffset(sf::Vector2f const & offset);
 	void setupIdleAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode);
@@ -64,6 +66,7 @@ protected:
 
 	float getScale(void) const;
 	float getVelocity(void) const;
+	bool getCollideEventOcto(void) const;
 	void addTimer(sf::Time time);
 	sf::Time getTimer(void) const;
 	sf::Time getTimerMax(void) const;
