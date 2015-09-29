@@ -741,7 +741,7 @@ void	CharacterOcto::collisionTileUpdate()
 	{
 		m_onGround = false;
 		onSky(static_cast<Events>(m_sprite.getCurrentEvent()));
-		if (m_numberOfJump == 0)
+		if (m_numberOfJump == 0 && !m_inWater)
 			m_numberOfJump = 1;
 	}
 	else
