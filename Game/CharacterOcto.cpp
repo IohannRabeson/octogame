@@ -149,7 +149,7 @@ void	CharacterOcto::setup(ABiome & biome)
 
 	m_waterParticle.canEmit(false);
 	m_waterParticle.setWidth(m_box->getSize().x);
-	m_waterParticle.setColor(sf::Color::Red);
+	m_waterParticle.setColor(biome.getWaterColor());
 
 	m_inkParticle.setCanEmit(false);
 	m_inkParticle.setup(sf::Vector2f(3.f, 3.f));
