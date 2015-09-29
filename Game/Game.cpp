@@ -3,6 +3,7 @@
 #include "LevelOneBiome.hpp"
 #include "LevelTwoBiome.hpp"
 #include "LevelThreeBiome.hpp"
+#include "LevelFourBiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -54,6 +55,7 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<LevelOneBiome>(Level::LevelOne);
 	m_biomeManager.registerBiome<LevelTwoBiome>(Level::LevelTwo);
 	m_biomeManager.registerBiome<LevelThreeBiome>(Level::LevelThree);
+	m_biomeManager.registerBiome<LevelFourBiome>(Level::LevelFour);
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
 }
 
@@ -359,7 +361,7 @@ void	Game::followPlayer(sf::Time frameTime)
 	if (octoDownPos.y >= cameraPos.y)
 		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 5.f);
 	else if (octoUpPos.y <= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 2.f);
+		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 4.f);
 
 	camera.setCenter(cameraPos);
 }
