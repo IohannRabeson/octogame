@@ -68,6 +68,7 @@ private:
 	float										m_oldDepth;
 	float										m_mapJoinWidth;
 	float										m_mapJoinHalfWidth;
+	float										m_transitionStep;
 	TileMap										m_tiles;
 	std::size_t									m_width;
 	std::size_t									m_height;

@@ -16,7 +16,9 @@ public:
 
 	void			canEmit(bool canEmit);
 	void			setColor(sf::Color const & color);
-	void			setSpeed(sf::Vector2f const & speed);
+	void			setSpeed(sf::Vector2f speed);
+	void			setEmitTimeRange(float min, float max);
+	void			setup(sf::Vector2f const & sizeParticle);
 	void			update(sf::Time frameTime);
 
 private:
@@ -25,6 +27,8 @@ private:
 	std::mt19937	m_engine;
 	Dist			m_creationTimeDistri;
 	Dist			m_heightDistri;
+	Dist			m_sizePlanetDistri;
+	sf::Vector2f	m_sizeParticle;
 	sf::Vector2f	m_speed;
 	sf::Time		m_timer;
 	sf::Time		m_nextCreation;
@@ -34,6 +38,13 @@ private:
 	virtual void	updateParticle(sf::Time frameTime, Particle & particle);
 	virtual bool	isDeadParticle(Particle const & particle);
 
+	void			createOctogon(sf::Vector2f const & size,
+								  sf::Vector2f const & sizeCorner,
+								  StarSystem::Prototype & prototype);
+	void			createTriangle(sf::Vertex const & p1,
+								   sf::Vertex const & p2,
+								   sf::Vertex const & p3,
+								   StarSystem::Prototype & prototype);
 };
 
 
