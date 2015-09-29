@@ -27,3 +27,4 @@ transitionLevelZero=On dirait que tu as pris un sacré coup sur la tête. Octo, 
 transitionLevelZero=Souviens-toi, je suis un de tes OCTOBOTS.\nLes autres se sont perdus dans l'espace pendant ce #@% crash.
 transitionLevelZero=Nous sommes là pour t'aider…\nChacun de nous te donne une capacité spéciale.\nTu nous a construit pour faire de toi un meilleur @&% poulpe.
 transitionLevelZero=Cherchons les autres… Allons nous en d'ici… #+&… À nous tous, nous pourrons réparer ton vaisseau.
+amandine.oss=Faust, au pied !
