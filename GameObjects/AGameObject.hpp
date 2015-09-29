@@ -33,6 +33,8 @@ enum class GameObjectType
 	LucienNpc = 67108864u,
 	WaterNanoRobot = 134217728u,
 	VinceNpc = 268435456u,
+	ConstanceNpc = 536870912u,
+	AmandineNpc = 1073741824u,
 	Water = 131u
 };
 
