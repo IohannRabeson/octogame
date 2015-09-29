@@ -119,7 +119,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		sf::Color color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
 		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-20.f, -400.f, interpolateValue)));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
-		m_offsetCamera = -camera.getSize().x / 2.f * interpolateValue;
+		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
 		translation.y = 15.f * interpolateValue;
 	}
 
@@ -127,9 +127,8 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 	m_spaceShip.update(frameTime);
 	for (std::size_t i = 0; i < m_starsCount; i++)
 		m_stars[i].update(frameTime);
-	//float ratio = m_timer / m_timerMax;
-	//sf::Vector2f movement(std::cos(ratio * octo::Pi2) * 15.f, std::sin(ratio * octo::Pi2) * 35.f);
-	sf::Vector2f movement(m_offsetCamera, m_offsetCamera);
+	float ratio = m_timer / m_timerMax;
+	sf::Vector2f movement(std::cos(ratio * octo::Pi2) * 25.f + m_offsetCamera * 0.5f, std::sin(ratio * octo::Pi2) * 55.f);
 	camera.setCenter(movement + m_spaceShip.getPosition() + sf::Vector2f(camera.getRectangle().width / 2.f + 300.f, m_spaceShip.getSize().y / 2.f + m_offsetCamera));
 }
 
