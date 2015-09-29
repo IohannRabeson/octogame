@@ -2,7 +2,7 @@
 # define AGAMEOBJECT_HPP
 # include <type_traits>
 
-enum class GameObjectType
+enum class GameObjectType : std::size_t
 {
 	Player = 1u,
 	PlayerEvent = 2u,
@@ -35,6 +35,7 @@ enum class GameObjectType
 	VinceNpc = 268435456u,
 	ConstanceNpc = 536870912u,
 	AmandineNpc = 1073741824u,
+	JeffMouffyNpc = 2147483648u,
 	Water = 131u
 };
 

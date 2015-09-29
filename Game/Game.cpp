@@ -24,6 +24,7 @@
 #include "CedricNpc.hpp"
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
+#include "JeffMouffyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
@@ -227,6 +228,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::TurbanNpc:
 			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::JeffMouffyNpc:
+			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::OldDesertStaticNpc:
 			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -336,6 +340,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(*m_parallaxScrolling, states);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
@@ -344,7 +349,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
-	//m_physicsEngine.debugDraw(render);
 }
 
 void	Game::followPlayer(sf::Time frameTime)
