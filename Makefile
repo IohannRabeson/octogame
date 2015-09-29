@@ -82,6 +82,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/VinceNpc.cpp						\
 				Npcs/ConstanceNpc.cpp					\
 				Npcs/AmandineNpc.cpp					\
+				Npcs/JeffMouffyNpc.cpp					\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
