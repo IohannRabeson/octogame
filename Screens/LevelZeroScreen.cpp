@@ -120,7 +120,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-20.f, -400.f, interpolateValue)));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
-		translation.y = 15.f * interpolateValue;
+		translation.y = 5.f * interpolateValue;
 	}
 
 	m_spaceShip.move(translation);
