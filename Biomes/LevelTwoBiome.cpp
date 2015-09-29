@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -206,6 +207,8 @@ Level	LevelTwoBiome::getDestination()
 
 float	LevelTwoBiome::getWaterLevel()
 {
+	if (Progress::getInstance().canUseWaterJump())
+		return 1000.f;
 	return m_waterLevel;
 }
 
