@@ -63,7 +63,7 @@ private:
 	struct data
 	{
 		data() :
-			data(6u, Level::LevelTwo, 5u, 100u, true, false)
+			data(0u, Level::LevelOne, 5u, 100u, true, true)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
