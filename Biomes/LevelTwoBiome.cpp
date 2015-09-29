@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -20,7 +21,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
 	m_waterLevel(-1.f),
-	m_waterColor(255, 255, 255, 200),
+	m_waterColor(234, 94, 0, 200),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -138,6 +139,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[750] = GameObjectType::Tent;
 	m_gameObjects[700] = GameObjectType::Portal;
+	m_instances[870] = MAP_ELEVATOR_JUNGLE_OMP;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
@@ -205,6 +207,8 @@ Level	LevelTwoBiome::getDestination()
 
 float	LevelTwoBiome::getWaterLevel()
 {
+	if (Progress::getInstance().canUseWaterJump())
+		return 1200.f;
 	return m_waterLevel;
 }
 
@@ -251,6 +255,8 @@ Map::MapSurfaceGenerator LevelTwoBiome::getMapSurfaceGenerator()
 		float start = 680.f / static_cast<float>(m_mapSize.x);
 		float end = 800.f / static_cast<float>(m_mapSize.x);
 		float offset = 10.f / static_cast<float>(m_mapSize.x);
+		float startHole = 850.f / static_cast<float>(m_mapSize.x);
+		float endHole = 865.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float mapHigh = n / 3.f - 1.9f;
 
@@ -260,6 +266,8 @@ Map::MapSurfaceGenerator LevelTwoBiome::getMapSurfaceGenerator()
 			return mapHigh;
 		else if (x > end && x <= end + offset)
 			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
+		else if (x > startHole && x < endHole)
+			return 1.5f;
 		else
 			return n;
 	};
