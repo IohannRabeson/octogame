@@ -11,17 +11,22 @@
 TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_time(sf::Time::Zero)
 {
+	octo::Camera&			camera = octo::Application::getCamera();
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
 	std::wstring wkey;
 	std::wstring line;
 	wchar_t delim = '=';
+	camera.setCenter(0.f, 0.f);
 	while (std::getline(f, wkey, delim))
 	{
 		std::getline(f, line);
 		std::string key(wkey.begin(), wkey.end());
-		if (key.compare("transitionLevelZero"))
+		if (!key.compare("transitionLevelZero"))
 		{
+			bubble.setPosition(camera.getCenter());
+			bubble.setType(ABubble::Type::Speak);
+			bubble.setActive(true);
 			bubble.setup(line, sf::Color::White);
 			break;
 		}
@@ -48,13 +53,13 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 {
 	octo::StateManager & states = octo::Application::getStateManager();
 	m_time += frameTime;
-	bubble.updateContent(frameTime, sf::Vector2f(0.f, 0.f));
+	bubble.update(frameTime);
 	if (m_time > sf::seconds(2.f))
 		states.push("game");
 }
 
 void	TransitionLevelZeroScreen::draw(sf::RenderTarget& render)const
 {
-	render.clear(sf::Color::Green);
-	bubble.drawContent(render, sf::RenderStates());
+	render.clear();
+	bubble.draw(render);
 }
