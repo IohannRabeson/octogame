@@ -69,7 +69,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		if (m_timerEnd >= m_timerEndMax)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			states.pop();
+			states.push("transitionLevelZero");
 		}
 		m_offsetCamera = 150.f * frameTime.asSeconds();
 		translation.y = 300.f * frameTime.asSeconds();

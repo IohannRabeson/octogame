@@ -34,6 +34,7 @@
 #include "QuitScreen.hpp"
 #include "ElevatorStreamDemo.hpp"
 #include "TransitionLevelScreen.hpp"
+#include "TransitionLevelZeroScreen.hpp"
 #include "TransitionScreen.hpp"
 #include "LevelZeroScreen.hpp"
 #include "DeathScreen.hpp"
@@ -61,6 +62,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<TransitionLevelScreen>("transitionLevel");
 	manager.registerState<DeathScreen>("octo_death");
 	manager.registerState<LevelZeroScreen>("zero");
+	manager.registerState<TransitionLevelZeroScreen>("transitionLevelZero");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
