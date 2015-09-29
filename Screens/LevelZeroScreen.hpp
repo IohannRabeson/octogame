@@ -28,6 +28,7 @@ public:
 private:
 	enum State
 	{
+		Rising,
 		Flying,
 		Falling
 	};
