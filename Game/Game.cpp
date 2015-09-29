@@ -98,6 +98,9 @@ void	Game::loadLevel(void)
 	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setPosition(startPosition);
+
+	//TODO: THINK ABOUT A BETTER WAY
+	update(sf::seconds(0.0001f));
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
