@@ -135,8 +135,8 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_gameObjects[300] = GameObjectType::VinceNpc;
-	m_gameObjects[763] = GameObjectType::AmandineNpc;
-	m_gameObjects[770] = GameObjectType::FaustNpc;
+	m_gameObjects[745] = GameObjectType::AmandineNpc;
+	m_gameObjects[769] = GameObjectType::FaustNpc;
 	m_gameObjects[780] = GameObjectType::ConstanceNpc;
 	m_interestPointPosX = 500;
 
