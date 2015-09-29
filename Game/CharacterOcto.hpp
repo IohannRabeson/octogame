@@ -163,9 +163,11 @@ private:
 	bool						m_keyRight;
 	bool						m_keySpace;
 	bool						m_keyUp;
+	bool						m_keyDown;
 	bool						m_keyAction;
 	bool						m_keyPortal;
 	bool						m_keyElevator;
+	bool						m_keyE;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
 	bool						m_collisionPortal;

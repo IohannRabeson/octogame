@@ -44,9 +44,11 @@ CharacterOcto::CharacterOcto() :
 	m_keyRight(false),
 	m_keySpace(false),
 	m_keyUp(false),
+	m_keyDown(false),
 	m_keyAction(false),
 	m_keyPortal(false),
 	m_keyElevator(false),
+	m_keyE(false),
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionPortal(false),
@@ -1045,8 +1047,11 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 		switch (state)
 		{
 			case Fall:
-				velocity.x *= 1.2f;
-				velocity.y = m_pixelSecondSlowFall;
+				if (!m_keyDown)
+				{
+					velocity.x *= 1.2f;
+					velocity.y = m_pixelSecondSlowFall;
+				}
 				break;
 			case StartWaterJump:
 				velocity.y *= 0.9f;
@@ -1129,7 +1134,7 @@ void CharacterOcto::caseUp()
 			m_keyElevator = true;
 			m_sprite.setNextEvent(StartElevator);
 		}
-		else if (!m_onGround && m_progress.canSlowFall())
+		else if (!m_onGround && !m_inWater && m_progress.canSlowFall())
 			m_sprite.setNextEvent(StartSlowFall);
 	}
 }
@@ -1170,7 +1175,11 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Up:
 			caseUp();
 			break;
+		case sf::Keyboard::Down:
+			m_keyDown = true;
+			break;
 		case sf::Keyboard::E:
+			m_keyE = true;
 			if (m_onElevator && m_progress.canUseElevator() && !m_keyElevator)
 			{
 				m_sprite.setNextEvent(StartElevator);
@@ -1211,12 +1220,18 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Up:
 			m_keyUp = false;
-			m_keyElevator = false;
+			if (!m_keyE)
+				m_keyElevator = false;
+			break;
+		case sf::Keyboard::Down:
+			m_keyDown = false;
 			break;
 		case sf::Keyboard::E:
+			m_keyE = false;
 			m_keyAction = false;
 			m_keyPortal = false;
-			m_keyElevator = false;
+			if (!m_keyUp)
+				m_keyElevator = false;
 			break;
 		default:
 			otherKeyReleased = true;
