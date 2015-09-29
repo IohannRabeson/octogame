@@ -5,6 +5,7 @@
 
 # include "AGameObject.hpp"
 # include "SmokeSystem.hpp"
+# include "MusicSystem.hpp"
 # include "IPlaceable.hpp"
 
 class CircleShape;
@@ -25,6 +26,7 @@ public:
 	void setPosition(sf::Vector2f const & position);
 	sf::Vector2f const & getPosition(void) const;
 	sf::Vector2f getSize(void) const;
+	void setSmokeVelocity(sf::Vector2f const & velocity);
 
 	void move(sf::Vector2f const & translation);
 	void update(sf::Time frameTime);
@@ -34,6 +36,7 @@ private:
 	octo::AnimatedSprite		m_sprite;
 	octo::SpriteAnimation		m_animation;
 	SmokeSystem					m_smoke;
+	MusicSystem					m_music;
 	SpaceShipEvents				m_event;
 	CircleShape *				m_box;
 
