@@ -45,6 +45,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/TransitionLevelScreen.cpp		\
 				Screens/TransitionScreen.cpp			\
 				Screens/DeathScreen.cpp					\
+				Screens/TransitionLevelZeroScreen.cpp	\
 				Screens/LevelZeroScreen.cpp				\
 
 SRC_GAME =		Game/Game.cpp							\

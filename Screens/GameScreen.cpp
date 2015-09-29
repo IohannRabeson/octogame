@@ -52,9 +52,10 @@ void	GameScreen::stop()
 
 void	GameScreen::update(sf::Time frameTime)
 {
-	AMenu::State state = m_menu.getState();
-	octo::StateManager & states = octo::Application::getStateManager();
+	AMenu::State			state = m_menu.getState();
+	octo::StateManager &	states = octo::Application::getStateManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+	Progress &				progress = Progress::getInstance();
 
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 	{
@@ -64,7 +65,7 @@ void	GameScreen::update(sf::Time frameTime)
 	}
 	else if (m_doSave)
 	{
-		Progress::getInstance().save();
+		progress.save();
 		m_doSave = false;
 	}
 	else
@@ -72,8 +73,11 @@ void	GameScreen::update(sf::Time frameTime)
 		postEffect.setAllShaderEnabled(true);
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
-		if (Progress::getInstance().changeLevel())
+		if (progress.changeLevel())
+		{
+			progress.save();
 			states.push("transitionLevel");
+		}
 	}
 }
 
