@@ -50,6 +50,7 @@ SpaceShip::SpaceShip(SpaceShipEvents event) :
 		m_smoke.setup(sf::Vector2f(10.f, 10.f));
 		m_smoke.setVelocity(sf::Vector2f(-750.f, 0.f));
 		m_smoke.setEmitTimeRange(0.05f, 0.1f);
+		m_music.canEmit(true);
 	}
 	m_sprite.setAnimation(m_animation);
 	m_sprite.play();
@@ -84,20 +85,28 @@ sf::Vector2f SpaceShip::getSize(void) const
 	return m_sprite.getGlobalSize();
 }
 
+void SpaceShip::setSmokeVelocity(sf::Vector2f const & velocity)
+{
+	m_smoke.setVelocity(velocity);
+}
+
 void SpaceShip::move(sf::Vector2f const & translation)
 {
 	m_sprite.setPosition(m_sprite.getPosition() + translation);
 	m_smoke.setPosition(m_sprite.getPosition() + sf::Vector2f(1000.f, 280.f));
+	m_music.setEmitter(m_sprite.getPosition() + sf::Vector2f(1045.f, 170.f));
 }
 
 void SpaceShip::update(sf::Time frameTime)
 {
 	m_sprite.update(frameTime);
 	m_smoke.update(frameTime);
+	m_music.update(frameTime);
 }
 
 void SpaceShip::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_sprite);
 	m_smoke.draw(render);
+	m_music.draw(render);
 }

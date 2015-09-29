@@ -12,6 +12,7 @@
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
 # include "PloufSystem.hpp"
+# include "WaterDropSystem.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -42,7 +43,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Elevator = 13,
 		SlowFall,
 		StartWaterJump,
-		WaterJump
+		WaterJump,
+		PortalEvent
 	};
 public:
 	friend class OctoEvent;
@@ -78,6 +80,7 @@ public:
 private:
 	bool					dieFall();
 	bool					endDeath();
+	void					portalEvent();
 	void					dance();
 	void					inWater();
 	void					randomJumpAnimation();
@@ -116,6 +119,7 @@ private:
 	octo::CharacterAnimation	m_drinkAnimation;
 	octo::CharacterAnimation	m_startElevatorAnimation;
 	octo::CharacterAnimation	m_elevatorAnimation;
+	octo::CharacterAnimation	m_portalAnimation;
 
 	std::unique_ptr<OctoSound>						m_sound;
 	RectangleShape *								m_box;
@@ -131,6 +135,7 @@ private:
 	SmokeSystem					m_inkParticle;
 	HelmetSystem				m_helmetParticle;
 	PloufSystem					m_ploufParticle;
+	WaterDropSystem				m_waterParticle;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;
@@ -160,10 +165,14 @@ private:
 	bool						m_keyRight;
 	bool						m_keySpace;
 	bool						m_keyUp;
+	bool						m_keyDown;
 	bool						m_keyAction;
 	bool						m_keyPortal;
+	bool						m_keyElevator;
+	bool						m_keyE;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
+	bool						m_collisionPortal;
 	bool						m_collisionElevatorEvent;
 	bool						m_collisionSpaceShip;
 	bool						m_inWater;

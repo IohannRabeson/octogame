@@ -3,6 +3,7 @@
 #include "LevelOneBiome.hpp"
 #include "LevelTwoBiome.hpp"
 #include "LevelThreeBiome.hpp"
+#include "LevelFourBiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -23,6 +24,7 @@
 #include "CedricNpc.hpp"
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
+#include "JeffMouffyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
@@ -54,6 +56,7 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<LevelOneBiome>(Level::LevelOne);
 	m_biomeManager.registerBiome<LevelTwoBiome>(Level::LevelTwo);
 	m_biomeManager.registerBiome<LevelThreeBiome>(Level::LevelThree);
+	m_biomeManager.registerBiome<LevelFourBiome>(Level::LevelFour);
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
 }
 
@@ -225,6 +228,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::TurbanNpc:
 			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::JeffMouffyNpc:
+			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::OldDesertStaticNpc:
 			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -325,9 +331,9 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
-	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
@@ -352,7 +358,7 @@ void	Game::followPlayer(sf::Time frameTime)
 	if (octoDownPos.y >= cameraPos.y)
 		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 5.f);
 	else if (octoUpPos.y <= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 2.f);
+		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 4.f);
 
 	camera.setCenter(cameraPos);
 }

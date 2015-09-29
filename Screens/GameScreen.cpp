@@ -27,10 +27,15 @@ void	GameScreen::start()
 
 void	GameScreen::pause()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
 }
 
 void	GameScreen::resume()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	octo::Application::getPostEffectManager().setAllShaderEnabled(false);
+	graphics.addKeyboardListener(this);
 	Progress::getInstance().levelChanged();
 	m_game.reset(new Game());
 	m_game->loadLevel();
@@ -38,15 +43,19 @@ void	GameScreen::resume()
 
 void	GameScreen::stop()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
 	octo::Application::getAudioManager().stopMusic(sf::Time::Zero);
 	Progress::getInstance().save();
+	octo::Application::getPostEffectManager().removeEffects();
+	graphics.removeKeyboardListener(this);
 }
 
 void	GameScreen::update(sf::Time frameTime)
 {
-	AMenu::State state = m_menu.getState();
-	octo::StateManager & states = octo::Application::getStateManager();
+	AMenu::State			state = m_menu.getState();
+	octo::StateManager &	states = octo::Application::getStateManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+	Progress &				progress = Progress::getInstance();
 
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 	{
@@ -56,7 +65,7 @@ void	GameScreen::update(sf::Time frameTime)
 	}
 	else if (m_doSave)
 	{
-		Progress::getInstance().save();
+		progress.save();
 		m_doSave = false;
 	}
 	else
@@ -64,9 +73,9 @@ void	GameScreen::update(sf::Time frameTime)
 		postEffect.setAllShaderEnabled(true);
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
-		if (Progress::getInstance().changeLevel())
+		if (progress.changeLevel())
 		{
-			octo::Application::getPostEffectManager().setAllShaderEnabled(false);
+			progress.save();
 			states.push("transitionLevel");
 		}
 	}

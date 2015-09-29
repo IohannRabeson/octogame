@@ -12,6 +12,7 @@ Map::Map(void) :
 	m_oldDepth(0.f),
 	m_mapJoinWidth(20.f),
 	m_mapJoinHalfWidth(10.f),
+	m_transitionStep(3.f),
 	m_width(0u),
 	m_height(0u),
 	m_offset(nullptr),
@@ -31,6 +32,7 @@ void Map::init(ABiome & biome)
 	m_mapSize = biome.getMapSize();
 	m_mapJoinWidth = static_cast<float>(m_mapSize.y) / 4.f;
 	m_mapJoinHalfWidth = m_mapJoinWidth / 2.f;
+	m_transitionStep = biome.getTransitionStep();
 
 	m_width = octo::Application::getGraphicsManager().getVideoMode().width / Tile::TileSize + OffsetTileX * 2u; // 4 tiles to add margin at left and right
 	m_height  = octo::Application::getGraphicsManager().getVideoMode().height / Tile::TileSize + OffsetTileY * 2u + 50u; // 6 tiles to add margin at top and bottom + 50 to keep computing the surfaces even if we are far in the sky
@@ -229,14 +231,14 @@ void Map::registerDepth(void)
 
 void Map::nextStep(void)
 {
-	m_depth += 3.f;
+	m_depth += m_transitionStep;
 	for (auto & instance : m_instances)
 		instance->nextStep();
 }
 
 void Map::previousStep(void)
 {
-	m_depth -= 3.f;
+	m_depth -= m_transitionStep;
 	for (auto & instance : m_instances)
 		instance->previousStep();
 }
