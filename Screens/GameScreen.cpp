@@ -74,7 +74,10 @@ void	GameScreen::update(sf::Time frameTime)
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
 		if (progress.changeLevel())
+		{
+			progress.save();
 			states.push("transitionLevel");
+		}
 	}
 }
 
