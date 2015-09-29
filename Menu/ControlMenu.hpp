@@ -18,6 +18,7 @@ private:
 	bool	m_isCreatedRepair;
 	bool	m_isCreatedJump;
 	bool	m_isCreatedDoubleJump;
+	bool	m_isCreatedWaterJump;
 	bool	m_isCreatedSlowFall;
 };
 
