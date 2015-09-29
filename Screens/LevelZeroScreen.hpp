@@ -3,6 +3,8 @@
 
 # include <AbstractState.hpp>
 # include <SFML/Graphics.hpp>
+# include <AudioManager.hpp>
+# include <memory>
 # include "SpaceShip.hpp"
 # include "StarSystem.hpp"
 # include "HSL.hpp"
@@ -44,6 +46,9 @@ private:
 	float							m_offsetCamera;
 	bool							m_keyUp;
 	bool							m_keyDown;
+	bool							m_isSoundPlayed;
+	bool							m_isSoundExplodePlayed;
+	std::shared_ptr<sf::Sound>		m_ground;
 
 	void createBackground(sf::Vector2f const & position, sf::Color const & downColor);
 };
