@@ -32,6 +32,8 @@ private:
 	Dist			m_widthDistri;
 	sf::Time		m_timer;
 	sf::Time		m_nextCreation;
+	sf::Time		m_timerDuration;
+	sf::Time		m_timerDurationMax;
 	sf::Color		m_color;
 	bool			m_canEmit;
 	float			m_width;

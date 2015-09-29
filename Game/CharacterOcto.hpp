@@ -12,6 +12,7 @@
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
 # include "PloufSystem.hpp"
+# include "WaterDropSystem.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -134,6 +135,7 @@ private:
 	SmokeSystem					m_inkParticle;
 	HelmetSystem				m_helmetParticle;
 	PloufSystem					m_ploufParticle;
+	WaterDropSystem				m_waterParticle;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;

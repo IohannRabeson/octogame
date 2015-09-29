@@ -21,7 +21,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
 	m_waterLevel(-1.f),
-	m_waterColor(255, 255, 255, 200),
+	m_waterColor(234, 94, 0, 200),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -208,7 +208,7 @@ Level	LevelTwoBiome::getDestination()
 float	LevelTwoBiome::getWaterLevel()
 {
 	if (Progress::getInstance().canUseWaterJump())
-		return 1000.f;
+		return 1200.f;
 	return m_waterLevel;
 }
 
