@@ -18,6 +18,8 @@
 #include "FatNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
+#include "ConstanceNpc.hpp"
+#include "AmandineNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
@@ -115,7 +117,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
 	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
-	m_npcFactory.registerCreator(CEDRIC_OSS, [skyCycle](){ return new CedricNpc(skyCycle); });
+	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(HOUSE_ORANGE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
@@ -330,6 +332,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, turban);
 				}
 				break;
+			case GameObjectType::ConstanceNpc:
+				{
+					ConstanceNpc * constance = new ConstanceNpc();
+					constance->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, constance);
+				}
+				break;
 			case GameObjectType::OldDesertStaticNpc:
 				{
 					OldDesertStaticNpc * oldDesertStatic = new OldDesertStaticNpc();
@@ -342,6 +351,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					VinceNpc * vince = new VinceNpc();
 					vince->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, vince);
+				}
+				break;
+			case GameObjectType::AmandineNpc:
+				{
+					AmandineNpc * amandine = new AmandineNpc();
+					amandine->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, amandine);
 				}
 				break;
 			case GameObjectType::RepairNanoRobot:
