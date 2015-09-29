@@ -22,7 +22,8 @@ void ConstanceNpc::setup(void)
 	typedef octo::CharacterAnimation::Frame			Frame;
 
 	getIdleAnimation().setFrames({
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.6f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.6f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
