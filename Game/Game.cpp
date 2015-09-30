@@ -280,6 +280,7 @@ void Game::moveMap(sf::Time frameTime)
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	float						volume = 0.f;
+
 	if (m_soundGeneration != nullptr && !m_keyS && !m_keyF && !Progress::getInstance().canValidChallenge())
 	{
 		m_groundSoundTime -= frameTime;
