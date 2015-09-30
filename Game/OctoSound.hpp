@@ -10,19 +10,38 @@ public:
 	~OctoSound();
 	void	update(sf::Time frameTime, Events event, bool inWater, bool onGround);
 private:
+	struct soundFade
+	{
+		soundFade() = default;
+		explicit soundFade(std::shared_ptr<sf::Sound> sound) :
+			sound(sound),
+			time(sf::Time::Zero),
+			stop(false)
+		{
+			m_maxVolume = sound->getVolume();
+		}
+		std::shared_ptr<sf::Sound>		sound;
+		sf::Time						time;
+		bool							stop;
+		float							m_maxVolume;
+	};
 	void	resetTimeEvent();
 	void	environmentEvent(bool inWater, bool onGround);
 	void	startEvent(Events event);
 	void	duringEvent(sf::Time frameTime, Events event);
 	void	walkSound();
-	std::shared_ptr<sf::Sound>	m_sound;
-	std::shared_ptr<sf::Sound>	m_soundEnvironment;
-	std::shared_ptr<sf::Sound>	m_soundTransition;
-	Events						m_prevEvent;
+	void	stopSound();
+	void	fadeOut(sf::Time frameTime);
+	std::shared_ptr<sf::Sound>				m_sound;
+	std::shared_ptr<sf::Sound>				m_soundEnvironment;
+	std::shared_ptr<sf::Sound>				m_soundTransition;
+	std::vector<soundFade>					m_soundFadeOut;
+	Events									m_prevEvent;
 
 	sf::Time										m_timeEventFall;
 	sf::Time										m_timeEventIdle;
 	sf::Time										m_timeEventElevator;
+	sf::Time										m_timeSoundIn;
 	sf::Time										m_timeSoundTransition;
 	sf::Time										m_timeSoundTransitionMax;
 	bool											m_inWater;

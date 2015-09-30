@@ -11,6 +11,7 @@ CharacterOcto::OctoSound::OctoSound() :
 	m_timeEventFall(sf::Time::Zero),
 	m_timeEventIdle(sf::Time::Zero),
 	m_timeEventElevator(sf::Time::Zero),
+	m_timeSoundIn(sf::Time::Zero),
 	m_timeSoundTransition(sf::Time::Zero),
 	m_timeSoundTransitionMax(sf::seconds(1.f)),
 	m_inWater(false),
@@ -27,6 +28,8 @@ CharacterOcto::OctoSound::OctoSound() :
 
 CharacterOcto::OctoSound::~OctoSound()
 {
+	for (auto & sound : m_soundFadeOut)
+		sound.sound->stop();
 	if (m_sound != nullptr)
 		m_sound->stop();
 	if (m_soundTransition != nullptr)
@@ -53,15 +56,14 @@ void	CharacterOcto::OctoSound::update(sf::Time frameTime, Events event, bool inW
 	environmentEvent(inWater, onGround);
 	if (m_prevEvent != event)
 	{
-		if (m_sound != nullptr){
-			m_sound->stop();
-			m_sound = nullptr;
-		}
+		if (m_sound != nullptr)
+			stopSound();
 		resetTimeEvent();
 		startEvent(event);
 	}
 	else
 		duringEvent(frameTime, event);
+	fadeOut(frameTime);
 	m_prevEvent = event;
 	m_transitionInWater = false;
 	m_transitionOutWater = false;
@@ -135,8 +137,8 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 	{
 		case Right:
 		case Left:
-				walkSound();
-				break;
+			walkSound();
+			break;
 		case Fall:
 			m_timeEventFall += frameTime;
 			if (m_timeEventFall > sf::seconds(3.f) && m_sound == nullptr)
@@ -148,7 +150,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;
-			if (m_timeEventIdle > sf::seconds(6.f) && m_sound == nullptr)
+			if (m_timeEventIdle > sf::seconds(12.f) && m_sound == nullptr)
 			{
 				m_sound = audio.playSound(resources.getSound(OCTO_MONOLOGUE_WAV), m_volumeVoice);
 			}
@@ -212,4 +214,34 @@ void	CharacterOcto::OctoSound::walkSound()
 		default:
 			break;
 	}
+}
+
+void	CharacterOcto::OctoSound::stopSound()
+{
+	m_soundFadeOut.push_back(soundFade(m_sound));
+	m_timeSoundIn = sf::Time::Zero;
+	m_sound = nullptr;
+}
+
+void	CharacterOcto::OctoSound::fadeOut(sf::Time frameTime)
+{
+	float	volume;
+	for (auto & sound : m_soundFadeOut)
+	{
+		volume = 0.f;
+		sound.time += frameTime;
+		volume = (sound.m_maxVolume * 50) * (1.f - (sound.time / sf::seconds(0.5f)));
+		if (volume >= 0.f)
+		{
+			sound.sound->setVolume(volume);
+		}
+		else
+		{
+			sound.stop = true;
+			sound.sound->stop();
+		}
+	}
+	m_soundFadeOut.erase(std::remove_if(m_soundFadeOut.begin() , m_soundFadeOut.end(),
+				[](soundFade & p){ return p.stop; }),
+			m_soundFadeOut.end());
 }
