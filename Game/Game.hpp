@@ -40,8 +40,11 @@ private:
 	bool								m_keyS;
 	bool								m_keyF;
 	std::shared_ptr<sf::Sound>			m_soundGeneration;
+	float								m_groundVolume;
+	sf::Time							m_groundSoundTime;
+	sf::Time							m_groundSoundTimeMax;
 
-	void			moveMap();
+	void			moveMap(sf::Time frameTime);
 	bool			onPressed(sf::Event::KeyEvent const & event);
 	bool			onReleased(sf::Event::KeyEvent const & event);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);

@@ -28,8 +28,10 @@ CharacterOcto::OctoSound::OctoSound() :
 
 CharacterOcto::OctoSound::~OctoSound()
 {
+	for (auto & sound : m_soundFadeOut)
+		sound.sound->stop();
 	if (m_sound != nullptr)
-		stopSound();
+		m_sound->stop();
 	if (m_soundTransition != nullptr)
 		m_soundTransition->stop();
 	if (m_soundEnvironment != nullptr)
@@ -228,7 +230,7 @@ void	CharacterOcto::OctoSound::fadeOut(sf::Time frameTime)
 	{
 		volume = 0.f;
 		sound.time += frameTime;
-		volume = (sound.m_maxVolume * 50) * (1.f - (sound.time / sf::seconds(0.2f)));
+		volume = (sound.m_maxVolume * 50) * (1.f - (sound.time / sf::seconds(0.5f)));
 		if (volume >= 0.f)
 		{
 			sound.sound->setVolume(volume);
