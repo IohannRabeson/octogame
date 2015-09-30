@@ -18,7 +18,7 @@ vec3 hsv2rgb(vec3 c)
 {
 	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
 	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+	return vec3(c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y));
 }
 
 void main(void)
@@ -26,7 +26,7 @@ void main(void)
 	vec4 color = gl_Color * texture2D(texture, gl_TexCoord[0].xy);
 	float len = length(gl_FragCoord.xy - position);
 
-	if (len < 2000.0)
+	if (len < radius)
 	{
 		vec3 hsv = rgb2hsv(color.rgb);
 		hsv.r *= len / 200.0 - 5.0 * time;
