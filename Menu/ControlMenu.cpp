@@ -47,7 +47,7 @@ void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
 	}
 	if (progress.canUseWaterJump() && m_isCreatedWaterJump == false)
 	{
-		addMenu(L"Water Jump : [HAUT]", nullptr);
+		addMenu(L"Propulsion Eau : [HAUT]", nullptr);
 		m_isCreatedWaterJump = true;
 		setupBubble();
 	}

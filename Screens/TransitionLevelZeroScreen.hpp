@@ -16,6 +16,7 @@ public:
 	virtual void		pause();
 	virtual void		resume();
 	virtual void		stop();
+	void				playSound(std::size_t index);
 	virtual void		update(sf::Time frameTime);
 	virtual void		draw(sf::RenderTarget& render)const;
 
@@ -25,6 +26,10 @@ private:
 	sf::Time						m_time;
 	std::vector<sf::Time>			m_timerMax;
 	std::size_t						m_index;
+	sf::Time						m_startTimer;
+	sf::Time						m_startTimerMax;
+	bool							m_soundPlayed1;
+	bool							m_soundPlayed2;
 };
 
 #endif

@@ -4,6 +4,8 @@
 #include <GraphicsManager.hpp>
 #include <StateManager.hpp>
 #include <ResourceManager.hpp>
+#include <AudioManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 #include <sstream>
 #include <cwchar>
@@ -12,7 +14,10 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_bubbleCount(5u),
 	m_bubble(new BubbleText[m_bubbleCount]),
 	m_time(sf::Time::Zero),
-	m_index(0u)
+	m_index(0u),
+	m_startTimerMax(sf::seconds(3.f)),
+	m_soundPlayed1(false),
+	m_soundPlayed2(false)
 {
 	octo::Camera&			camera = octo::Application::getCamera();
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
@@ -43,7 +48,6 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 			i++;
 		}
 	}
-	m_bubble[m_index].setType(ABubble::Type::Speak);
 }
 
 void	TransitionLevelZeroScreen::start()
@@ -62,10 +66,29 @@ void	TransitionLevelZeroScreen::stop()
 {
 }
 
+void	TransitionLevelZeroScreen::playSound(std::size_t index)
+{
+	if (m_soundPlayed1 == false && index == 0u)
+	{
+		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_2_WAV), 0.5f);
+		m_soundPlayed1 = true;
+	}
+	if (m_soundPlayed2 == false && index == 3u)
+	{
+		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_3_WAV), 0.5f);
+		m_soundPlayed2 = true;
+	}
+}
+
 void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 {
 	if (m_index >= m_bubbleCount)
 		return;
+	if (m_startTimer <= m_startTimerMax)
+	{
+		m_startTimer += frameTime;
+		return;
+	}
 	octo::StateManager & states = octo::Application::getStateManager();
 	m_time += frameTime;
 	for (std::size_t i = 0; i < m_bubbleCount; i++)
@@ -75,8 +98,10 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 	m_bubble[m_index].update(frameTime);
 	if (m_time > m_timerMax[m_index])
 	{
+		playSound(m_index);
 		m_time = sf::Time::Zero;
 		m_index++;
+		playSound(m_index);
 	}
 	if (m_index >= m_bubbleCount)
 		states.push("game");
