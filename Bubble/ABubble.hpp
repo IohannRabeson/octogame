@@ -20,7 +20,8 @@ enum Type
 	Speak,
 	Think,
 	Right,
-	Left
+	Left,
+	Up
 };
 
 
