@@ -52,7 +52,7 @@ Game::Game(void) :
 	m_soundGeneration(nullptr),
 	m_groundVolume(100.f),
 	m_groundSoundTime(sf::Time::Zero),
-	m_groundSoundTimeMax(sf::seconds(0.8f))
+	m_groundSoundTimeMax(sf::seconds(0.6f))
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
