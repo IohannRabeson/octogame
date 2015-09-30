@@ -81,10 +81,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 	else if (m_keyDown)
 		translation.y = 300.f * frameTime.asSeconds();
 
-	if (m_state == Rising)
-	{
-	}
-	else if (m_state == Flying)
+	if (m_state == Flying)
 	{
 		if (m_timerEnd >= m_timerEndMax * 2.f)
 		{
