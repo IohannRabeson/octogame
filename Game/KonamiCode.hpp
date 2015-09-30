@@ -25,6 +25,7 @@ private:
 	State				m_state;
 	sf::Time			m_timer;
 	sf::Time			m_timerMax;
+	sf::Vector2f		m_position;
 
 	bool onPressed(sf::Event::KeyEvent const & event);
 

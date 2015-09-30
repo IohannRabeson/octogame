@@ -24,9 +24,6 @@ KonamiCode::KonamiCode(void) :
 	postEffectShader.resetShader(&m_shader);
 	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
 
-	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
-	m_shader.setParameter("resolution", rect.width, rect.height);
-
 	//Up;
 	//Up;
 	//Down;
@@ -49,21 +46,22 @@ void KonamiCode::update(sf::Time frameTime)
 {
 	if (m_index == 10u)
 		m_state = Success;
-	else
-		m_state = Fail;
 	if (m_state == Success)
 	{
 		octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 		postEffect.enableEffect(m_shaderIndex, true);
+		m_position = sf::Vector2f(1500.f, 500.f); //TODO set position from octo
+		m_shader.setParameter("position", m_position.x, m_position.y);
 		m_timer += frameTime;
 		if (m_timer > m_timerMax)
 		{
-			m_state = Fail;
+			//m_state = Fail;
 			m_timer = sf::Time::Zero;
 			postEffect.enableEffect(m_shaderIndex, false);
 		}
+		m_shader.setParameter("time", m_timer / m_timerMax);
+		m_shader.setParameter("radius", m_timer / m_timerMax * 2000.f);
 	}
-	m_shader.setParameter("time", m_timer / m_timerMax);
 }
 
 void KonamiCode::draw(sf::RenderTarget & render, sf::RenderStates states) const
