@@ -22,6 +22,9 @@ public:
 	virtual void					updateContent(sf::Time frameTime, sf::Vector2f const & position);
 	virtual void					drawContent(sf::RenderTarget & render, sf::RenderStates states) const;
 
+	//Use only when the phrase has the same size as the last one
+	void							setPhrase(std::wstring const & text);
+
 private:
 	void setupBlocString(void);
 

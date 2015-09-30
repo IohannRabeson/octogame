@@ -51,7 +51,10 @@ Game::Game(void) :
 	m_octo(nullptr),
 	m_keyS(false),
 	m_keyF(false),
-	m_soundGeneration(nullptr)
+	m_soundGeneration(nullptr),
+	m_groundVolume(100.f),
+	m_groundSoundTime(sf::Time::Zero),
+	m_groundSoundTimeMax(sf::seconds(0.6f))
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -65,6 +68,8 @@ Game::Game(void) :
 
 Game::~Game(void)
 {
+	if (m_soundGeneration != nullptr)
+		m_soundGeneration->stop();
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.removeKeyboardListener(this);
 }
@@ -120,7 +125,7 @@ void	Game::update(sf::Time frameTime)
 	m_octo->update(frameTime);
 	followPlayer(frameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
-	moveMap();
+	moveMap(frameTime);
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
@@ -278,37 +283,42 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 	(void)tileShape;
 }
 
-void Game::moveMap()
+void Game::moveMap(sf::Time frameTime)
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && !m_keyS && !m_keyF)
+	if (m_soundGeneration != nullptr && !m_keyS && !m_keyF && !Progress::getInstance().canValidChallenge())
 	{
-		m_soundGeneration->stop();
-		m_soundGeneration = nullptr;
+		m_groundSoundTime -= frameTime;
+		if (m_groundSoundTime < sf::Time::Zero)
+			m_groundSoundTime = sf::Time::Zero;
+		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
+		m_soundGeneration->setVolume(volume);
 	}
-	if (m_keyS || Progress::getInstance().canValidChallenge())
+	if (m_keyS || m_keyF || Progress::getInstance().canValidChallenge())
 	{
 		if (Progress::getInstance().canMoveMap())
 		{
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+			if (m_keyS)
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+			else if (m_keyF)
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			else
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			if (m_soundGeneration == nullptr)
 			{
-				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV));
+				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV), 0.f);
 				m_soundGeneration->setLoop(true);
 			}
-		}
-	}
-	else if (m_keyF)
-	{
-		if (Progress::getInstance().canMoveMap())
-		{
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
-			if (m_soundGeneration == nullptr)
+			else
 			{
-				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV), 1.f);
-				m_soundGeneration->setLoop(true);
+				m_groundSoundTime += frameTime;
+				if (m_groundSoundTime > m_groundSoundTimeMax)
+					m_groundSoundTime = m_groundSoundTimeMax;
+				volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
+				m_soundGeneration->setVolume(volume);
 			}
 		}
 	}

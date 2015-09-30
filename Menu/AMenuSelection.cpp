@@ -3,7 +3,7 @@
 #include <assert.h>
 
 AMenuSelection::AMenuSelection(void) :
-	m_type(ABubble::Type::Left),
+	m_type(ABubble::Type::Right),
 	m_characterSize(20u),
 	m_indexCursor(0u),
 	m_indexSave(0u),
@@ -29,6 +29,7 @@ void AMenuSelection::setupBubble(void)
 	m_bubble.setup(m_menuTitles, sf::Color(255, 255, 255, 255), m_characterSize);
 	m_bubble.setType(ABubble::None);
 
+	//create octogon for cursor
 	m_cursor.setRadius(10);
 	m_cursor.setPointCount(8);
 	m_cursor.setOrigin(10, 10);
