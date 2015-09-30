@@ -1,6 +1,9 @@
 uniform sampler2D texture;
 uniform float time;
+uniform float time_factor;
 uniform float radius;
+uniform float radius_factor;
+uniform float radius_gradient;
 uniform vec2 position;
 
 vec3 rgb2hsv(vec3 c)
@@ -21,6 +24,11 @@ vec3 hsv2rgb(vec3 c)
 	return vec3(c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y));
 }
 
+float lerp(float a, float b, float alpha)
+{
+	return (a * (1.0 - alpha) + b * alpha);
+}
+
 void main(void)
 {
 	vec4 color = gl_Color * texture2D(texture, gl_TexCoord[0].xy);
@@ -29,11 +37,16 @@ void main(void)
 	if (len < radius)
 	{
 		vec3 hsv = rgb2hsv(color.rgb);
-		hsv.r *= len / 200.0 - 5.0 * time;
-		//hsv.g *= ftime * 10.0 * len / 800.0;
-		//hsv.r = 1.0;
-		gl_FragColor = vec4(hsv2rgb(hsv), 1.0);
+		hsv.r += len * radius_factor - time_factor * time;
+		//hsv.g += 20 * time;
+		vec3 rgb = vec4(hsv2rgb(hsv), 1.0);
+		float alpha = clamp(abs(len - radius) / radius_gradient, 0.0, 1.0);
+		gl_FragColor.r = lerp(color.r, rgb.r, alpha);
+		gl_FragColor.g = lerp(color.g, rgb.g, alpha);
+		gl_FragColor.b = lerp(color.b, rgb.b, alpha);
+		gl_FragColor.a = 1.0;
 	}
 	else
 		gl_FragColor = color;
 }
+

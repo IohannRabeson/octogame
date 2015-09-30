@@ -23,6 +23,9 @@ KonamiCode::KonamiCode(void) :
 	octo::PostEffect postEffectShader;
 	postEffectShader.resetShader(&m_shader);
 	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+	m_shader.setParameter("time_factor", 2.f);
+	m_shader.setParameter("radius_factor", 0.0005f);
+	m_shader.setParameter("radius_gradient", 100.f);
 
 	//Up;
 	//Up;
