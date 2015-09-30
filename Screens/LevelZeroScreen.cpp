@@ -81,7 +81,14 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 	else if (m_keyDown)
 		translation.y = 300.f * frameTime.asSeconds();
 
-	if (m_state == Flying)
+	if (m_state == Rising)
+	{
+		if (m_timer > sf::seconds(2.f))
+		{
+			std::cout << "out" << std::endl;
+		}
+	}
+	else if (m_state == Flying)
 	{
 		if (m_timerEnd >= m_timerEndMax * 2.f)
 		{
@@ -116,7 +123,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		if (m_timerEnd >= m_timerEndMax)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			states.push("transitionLevelZero");
+			states.change("transitionLevelZero");
 		}
 		float interpolateValue = m_timerEnd / m_timerEndMax / 1.5f;
 		sf::Color const & color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
