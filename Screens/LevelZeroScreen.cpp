@@ -118,12 +118,12 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			octo::StateManager & states = octo::Application::getStateManager();
 			states.push("transitionLevelZero");
 		}
-		float interpolateValue = m_timerEnd / m_timerEndMax / 1.5f;
+		float interpolateValue = m_timerEnd / m_timerEndMax;
 		sf::Color const & color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
-		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-100.f, -1500.f, interpolateValue)));
+		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-100.f, -1700.f, interpolateValue)));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
-		translation.y = 5.f * interpolateValue;
+		translation.y = 0.f;
 	}
 
 	m_spaceShip.move(translation);
