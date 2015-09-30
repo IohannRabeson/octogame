@@ -221,11 +221,6 @@ void	CharacterOcto::OctoSound::stopSound()
 	m_sound = nullptr;
 }
 
-void	CharacterOcto::OctoSound::fadeIn(sf::Time frameTime)
-{
-	m_timeSoundIn += frameTime;
-}
-
 void	CharacterOcto::OctoSound::fadeOut(sf::Time frameTime)
 {
 	float	volume;

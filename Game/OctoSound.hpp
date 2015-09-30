@@ -31,7 +31,6 @@ private:
 	void	duringEvent(sf::Time frameTime, Events event);
 	void	walkSound();
 	void	stopSound();
-	void	fadeIn(sf::Time frameTime);
 	void	fadeOut(sf::Time frameTime);
 	std::shared_ptr<sf::Sound>				m_sound;
 	std::shared_ptr<sf::Sound>				m_soundEnvironment;
