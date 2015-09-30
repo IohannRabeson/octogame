@@ -1,5 +1,6 @@
 #include "LevelZeroScreen.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
@@ -19,7 +20,10 @@ LevelZeroScreen::LevelZeroScreen(void) :
 	m_keyDown(false),
 	m_isSoundPlayed(false),
 	m_isSoundExplodePlayed(false)
-{}
+{
+	if (Progress::getInstance().spaceShipIsRepair())
+		m_state = Rising;
+}
 
 void	LevelZeroScreen::start()
 {
@@ -86,7 +90,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		}
 		float interpolateValue = m_timerEnd / m_timerEndMax / 2.f;
 		sf::Color const & color = octo::linearInterpolation(sf::Color::Black, m_downColorBackground, interpolateValue);
-		m_spaceShip.setSmokeVelocity(sf::Vector2f(octo::linearInterpolation(-1400.f, -200.f, interpolateValue), 0.f));
+		m_spaceShip.setSmokeVelocity(sf::Vector2f(octo::linearInterpolation(-1400.f, -200.f, interpolateValue), 0.f) * frameTime.asSeconds() * 100.f);
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 	}
 	else if (m_state == Falling)
@@ -116,7 +120,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		}
 		float interpolateValue = m_timerEnd / m_timerEndMax / 1.5f;
 		sf::Color const & color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
-		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-20.f, -400.f, interpolateValue)));
+		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-20.f, -400.f, interpolateValue)) * frameTime.asSeconds() * 200.f);
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
 		translation.y = 5.f * interpolateValue;

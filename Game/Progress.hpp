@@ -34,6 +34,9 @@ public:
 	void				setCanOpenDoubleJump(bool canOpen) { m_data.canOpenDoubleJump = canOpen; }
 	bool				canOpenDoubleJump(void) const { return m_data.canOpenDoubleJump; }
 
+	void				spaceShipRepair(bool isRepair) { m_spaceShipRepair = isRepair; }
+	bool				spaceShipIsRepair() const { return m_spaceShipRepair; }
+
 	bool				canMoveMap();
 	bool				canRepair();
 	bool				canRepairShip();
@@ -60,7 +63,7 @@ private:
 	struct data
 	{
 		data() :
-			data(5u, Level::LevelThree, 5u, 100u, true, false)
+			data(3u, Level::LevelThree, 5u, 100u, true, true)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
@@ -72,7 +75,7 @@ private:
 			soundVol(soundVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
-			firstTime(true),
+			firstTime(false),
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false)
@@ -102,6 +105,7 @@ private:
 	bool								m_changeLevel;
 	bool								m_reverseSprite;
 	bool								m_validChallenge;
+	bool								m_spaceShipRepair;
 	sf::Vector2f						m_octoPos;
 };
 

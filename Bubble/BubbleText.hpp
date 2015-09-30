@@ -15,7 +15,8 @@ public:
 
 	virtual void					setup(std::wstring const & phrase,
 											sf::Color const & color,
-											std::size_t characterSize = 0u);
+											std::size_t characterSize = 20u,
+											float bubbleWidth = 350.f);
 
 	virtual sf::Vector2f const &	getContentSize(void) const;
 	virtual void					updateContent(sf::Time frameTime, sf::Vector2f const & position);
@@ -24,9 +25,9 @@ public:
 private:
 	void setupBlocString(void);
 
-	static constexpr float			m_bubbleWidth = 350.f;
 	static constexpr std::size_t	m_characterSize = 20u;
 
+	float							m_bubbleWidth;
 	sf::Vector2f					m_contentSize;
 	sf::Font						m_font;
 	sf::Text						m_text;

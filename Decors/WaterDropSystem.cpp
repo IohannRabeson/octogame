@@ -5,12 +5,14 @@
 
 WaterDropSystem::WaterDropSystem() :
 	m_engine(std::time(0)),
-	m_creationTimeDistri(0.001f, 0.002f),
+	m_creationTimeDistri(0.1f, 0.2f),
 	m_lifeTimeDistri(0.6f, 0.8f),
 	m_directionDistri(octo::PiDiv2, octo::Pi + octo::PiDiv2),
 	m_widthDistri(0.f, 1.f),
 	m_timer(sf::Time::Zero),
 	m_nextCreation(sf::Time::Zero),
+	m_timerDuration(sf::Time::Zero),
+	m_timerDurationMax(sf::seconds(1.f)),
 	m_color(sf::Color(28, 172, 228, 110)),
 	m_canEmit(false),
 	m_width(100.f)
@@ -62,7 +64,14 @@ void	WaterDropSystem::update(sf::Time frameTime)
 		m_nextCreation = sf::seconds(m_creationTimeDistri(m_engine));
 	}
 	if (m_canEmit == true)
-		m_canEmit = false;
+	{
+		m_timerDuration += frameTime;
+		if (m_timerDuration > m_timerDurationMax)
+		{
+			m_canEmit = false;
+			m_timerDuration = sf::Time::Zero;
+		}
+	}
 }
 
 void	WaterDropSystem::updateParticle(sf::Time frameTime, Particle& particle)

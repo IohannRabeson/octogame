@@ -8,7 +8,6 @@ GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 	m_textTimerMax(sf::seconds(5.f)),
 	m_canSpeak(false),
 	m_talkaboutshit(true),
-	m_escapeTalk(true),
 	m_state(Walk)
 {
 	setup(this);
@@ -20,7 +19,6 @@ GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 	if (Progress::getInstance().getNanoRobotCount() != 0u)
 	{
 		m_talkaboutshit = false;
-		m_escapeTalk = false;
 		m_state = None;
 	}
 
@@ -96,16 +94,6 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			if (m_textTimer > m_textTimerMax)
 			{
 				m_talkaboutshit = false;
-				m_state = EscapeTalk;
-			}
-			break;
-		case EscapeTalk:
-			m_textTimer += frameTime;
-			m_canSpeak = true;
-			setTextIndex(4u);
-			if (m_textTimer > m_textTimerMax)
-			{
-				m_escapeTalk = false;
 				m_state = None;
 			}
 			break;
@@ -118,15 +106,6 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 				{
 					m_textTimer = sf::Time::Zero;
 					m_state = TalkAboutShit;
-				}
-			}
-			if (m_escapeTalk)
-			{
-				m_textTimer += frameTime;
-				if (m_textTimer > m_textTimerMax)
-				{
-					m_textTimer = sf::Time::Zero;
-					m_state = EscapeTalk;
 				}
 			}
 			break;

@@ -6,6 +6,7 @@
 #include "ResourceDefinitions.hpp"
 
 BubbleText::BubbleText(void) :
+	m_bubbleWidth(350.f),
 	m_characterPerLineMax(0u),
 	m_characterPerLine(0u),
 	m_lineCount(1u)
@@ -44,10 +45,9 @@ void BubbleText::setupBlocString(void)
 	}
 }
 
-void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std::size_t characterSize)
+void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std::size_t characterSize, float bubbleWidth)
 {
-	if (characterSize == 0u)
-		characterSize = m_characterSize;
+	m_bubbleWidth = bubbleWidth;
 	m_phrase = phrase;
 	ABubble::setColor(color);
 	m_contentSize.x = m_bubbleWidth;

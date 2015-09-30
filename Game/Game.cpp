@@ -27,6 +27,7 @@
 #include "JeffMouffyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
+#include "AmandineNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
@@ -103,6 +104,9 @@ void	Game::loadLevel(void)
 	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setPosition(startPosition);
+
+	//TODO: THINK ABOUT A BETTER WAY
+	update(sf::seconds(0.0001f));
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -217,6 +221,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::FranfranNpc:
 			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::AmandineNpc:
+			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::JuNpc:
 			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);

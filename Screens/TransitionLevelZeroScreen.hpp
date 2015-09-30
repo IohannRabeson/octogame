@@ -6,6 +6,8 @@
 # include "Game.hpp"
 # include "MainMenu.hpp"
 
+# include <memory>
+
 class TransitionLevelZeroScreen : public octo::AbstractState
 {
 public:
@@ -18,8 +20,11 @@ public:
 	virtual void		draw(sf::RenderTarget& render)const;
 
 private:
-	BubbleText			bubble;
-	sf::Time			m_time;
+	std::size_t						m_bubbleCount;
+	std::unique_ptr<BubbleText[]>	m_bubble;
+	sf::Time						m_time;
+	std::vector<sf::Time>			m_timerMax;
+	std::size_t						m_index;
 };
 
 #endif
