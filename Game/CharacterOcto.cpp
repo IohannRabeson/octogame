@@ -582,7 +582,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 
 	m_ploufParticle.setEmitter(m_box->getBaryCenter());
 	m_ploufParticle.update(frameTime);
-	m_waterParticle.setEmitter(m_box->getBaryCenter());
+	m_waterParticle.setEmitter(m_box->getBaryCenter()
+			+ sf::Vector2f(-m_box->getSize().x / 2.f, m_box->getSize().y / 2.f));
 	m_waterParticle.update(frameTime);
 	m_inkParticle.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
