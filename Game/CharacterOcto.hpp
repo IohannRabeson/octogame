@@ -141,6 +141,8 @@ private:
 	sf::Time					m_timeEventIdleMax;
 	sf::Time					m_timeEventDeath;
 	sf::Time					m_timeEventInk;
+	sf::Time					m_timeRepairSpaceShip;
+	sf::Time					m_timeRepairSpaceShipMax;
 	float						m_spriteScale;
 	float						m_pixelSecondJump;
 	float						m_pixelSecondSlowFall;
@@ -175,6 +177,7 @@ private:
 	bool						m_collisionPortal;
 	bool						m_collisionElevatorEvent;
 	bool						m_collisionSpaceShip;
+	bool						m_repairShip;
 	bool						m_inWater;
 	Events						m_prevEvent;
 };

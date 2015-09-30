@@ -107,7 +107,10 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 }
 
 NanoRobot::~NanoRobot(void)
-{}
+{
+	if (m_sound != nullptr)
+		m_sound->stop();
+}
 
 void NanoRobot::setup(AGameObjectBase * gameObject)
 {

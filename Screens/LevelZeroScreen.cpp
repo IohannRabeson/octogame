@@ -90,7 +90,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		}
 		float interpolateValue = m_timerEnd / m_timerEndMax / 2.f;
 		sf::Color const & color = octo::linearInterpolation(sf::Color::Black, m_downColorBackground, interpolateValue);
-		m_spaceShip.setSmokeVelocity(sf::Vector2f(octo::linearInterpolation(-1400.f, -200.f, interpolateValue), 0.f) * frameTime.asSeconds() * 100.f);
+		m_spaceShip.setSmokeVelocity(sf::Vector2f(octo::linearInterpolation(-1400.f, -200.f, interpolateValue), 0.f));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 	}
 	else if (m_state == Falling)
@@ -116,14 +116,14 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		if (m_timerEnd >= m_timerEndMax)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			states.push("transitionLevelZero");
+			states.change("transitionLevelZero");
 		}
-		float interpolateValue = m_timerEnd / m_timerEndMax / 1.5f;
+		float interpolateValue = m_timerEnd / m_timerEndMax;
 		sf::Color const & color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
-		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-20.f, -400.f, interpolateValue)) * frameTime.asSeconds() * 200.f);
+		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-100.f, -1700.f, interpolateValue)));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
-		translation.y = 5.f * interpolateValue;
+		translation.y = 0.f;
 	}
 
 	m_spaceShip.move(translation);

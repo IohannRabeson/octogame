@@ -26,6 +26,7 @@ CharacterOcto::CharacterOcto() :
 	m_jumpDistribution(0, 4),
 	m_danceDistribution(2.f, 6.f),
 	m_timeEventIdleMax(sf::seconds(4.f)),
+	m_timeRepairSpaceShipMax(sf::seconds(4.f)),
 	m_spriteScale(0.6f),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondSlowFall(-300.f),
@@ -54,6 +55,7 @@ CharacterOcto::CharacterOcto() :
 	m_collisionPortal(false),
 	m_collisionElevatorEvent(false),
 	m_collisionSpaceShip(false),
+	m_repairShip(false),
 	m_inWater(false)
 {
 	m_sound.reset(new OctoSound());
@@ -128,6 +130,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::AmandineNpc)
 		| static_cast<std::size_t>(GameObjectType::ConstanceNpc)
 		| static_cast<std::size_t>(GameObjectType::JeffMouffyNpc)
+		| static_cast<std::size_t>(GameObjectType::BrayouNpc)
+		| static_cast<std::size_t>(GameObjectType::EvaNpc)
 		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
@@ -139,6 +143,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_timeEventIdle = sf::Time::Zero;
 	m_timeEventDeath = sf::Time::Zero;
 	m_timeEventInk = sf::Time::Zero;
+	m_timeRepairSpaceShip = sf::Time::Zero;
 	setupAnimation();
 	setupMachine();
 	m_sprite.setScale(m_spriteScale, m_spriteScale);
@@ -572,6 +577,16 @@ void	CharacterOcto::update(sf::Time frameTime)
 			robot->setState(NanoRobot::State::FollowOcto);
 	}
 
+	if (m_repairShip)
+	{
+		m_timeRepairSpaceShip += frameTime;
+		if (m_timeRepairSpaceShip > m_timeRepairSpaceShipMax)
+		{
+			octo::StateManager & states = octo::Application::getStateManager();
+			m_progress.spaceShipRepair(true);
+			states.change("zero");
+		}
+	}
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionPortal = false;
@@ -734,6 +749,7 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 			robot->setState(NanoRobot::State::RepairShip);
 			robot->setTarget(spaceShip->getPosition());
 		}
+		m_repairShip = true;
 	}
 	m_collisionSpaceShip = true;
 }
