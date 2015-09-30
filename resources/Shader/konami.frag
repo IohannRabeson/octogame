@@ -40,7 +40,7 @@ void main(void)
 		hsv.r += len * radius_factor - time_factor * time;
 		//hsv.g = clamp(hsv.g, 0.5, 1.0);
 		//hsv.b = 0.8;
-		vec3 rgb = vec4(hsv2rgb(hsv), 1.0);
+		vec4 rgb = vec4(hsv2rgb(hsv), 1.0);
 		float alpha = clamp(abs(len - radius) / radius_gradient, 0.0, 1.0);
 		gl_FragColor.r = lerp(color.r, rgb.r, alpha);
 		gl_FragColor.g = lerp(color.g, rgb.g, alpha);
