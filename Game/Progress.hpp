@@ -63,7 +63,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::LevelOne, 5u, 100u, true, true)
+			data(8u, Level::LevelOne, 5u, 100u, true, true)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
@@ -75,7 +75,7 @@ private:
 			soundVol(soundVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
-			firstTime(true),
+			firstTime(false),
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false)

@@ -21,8 +21,6 @@ LevelZeroScreen::LevelZeroScreen(void) :
 	m_isSoundPlayed(false),
 	m_isSoundExplodePlayed(false)
 {
-	if (Progress::getInstance().spaceShipIsRepair())
-		m_state = Rising;
 }
 
 void	LevelZeroScreen::start()
@@ -47,6 +45,9 @@ void	LevelZeroScreen::start()
 
 	audio.startMusic(resource.getSound(ACTION_FAST_WAV), sf::milliseconds(1000.f));
 	graphics.addKeyboardListener(this);
+
+	if (Progress::getInstance().spaceShipIsRepair())
+		m_state = Rising;
 }
 
 void	LevelZeroScreen::pause()
@@ -123,7 +124,19 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-100.f, -1700.f, interpolateValue)));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
-		translation.y = 0.f;
+	}
+	else if (m_state == Rising)
+	{
+		float interpolateValue = m_timerEnd / m_timerEndMax;
+		sf::Color const & color = octo::linearInterpolation(sf::Color::White, m_downColorBackground, interpolateValue);
+		m_spaceShip.setSmokeVelocity(sf::Vector2f(-1400.f, 0.f));
+		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
+		m_offsetCamera = -camera.getSize().x * 1.5f + camera.getSize().x * 1.5 * interpolateValue;
+		if (m_timerEnd >= m_timerEndMax)
+		{
+			m_timerEnd = sf::Time::Zero;
+			m_state = Flying;
+		}
 	}
 
 	m_spaceShip.move(translation);
