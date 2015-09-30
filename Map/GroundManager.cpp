@@ -373,7 +373,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				break;
 			case GameObjectType::EvaNpc:
 				{
-					EvaNpc * npc = new EvaNpc();
+					EvaNpc * npc = new EvaNpc(biome.getWaterColor());
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}

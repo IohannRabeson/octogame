@@ -1,17 +1,18 @@
 #include "EvaNpc.hpp"
 #include "RectangleShape.hpp"
 
-EvaNpc::EvaNpc(void) :
-	ANpc(NPC_FAUST_OSS)
+EvaNpc::EvaNpc(sf::Color const & color) :
+	ANpc(EVA_OSS)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
+	setSize(sf::Vector2f(25.f, 125.f));
 	setOrigin(sf::Vector2f(90.f, 100.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::EvaNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	m_particles.setColor(color);
+	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void EvaNpc::setup(void)
@@ -22,40 +23,35 @@ void EvaNpc::setup(void)
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
 	getSpecial1Animation().setFrames({
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {16u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {17u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {18u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {19u, sf::FloatRect(), sf::Vector2f()}),
 			});
-	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
+	getSpecial1Animation().setLoop(octo::LoopMode::Loop);
+
+	setupAnimation(m_startSpecial1, {
+			FramePair(0.4f, 10u),
+			FramePair(0.4f, 11u),
+			FramePair(0.4f, 12u),
+			FramePair(0.4f, 13u),
+			FramePair(0.4f, 14u),
+			FramePair(0.4f, 15u)},
+			octo::LoopMode::NoLoop);
+
+	setupAnimation(m_endSpecial1, {
+			FramePair(0.4f, 15u),
+			FramePair(0.4f, 14u),
+			FramePair(0.4f, 13u),
+			FramePair(0.4f, 12u),
+			FramePair(0.4f, 11u),
+			FramePair(0.4f, 10u)},
+			octo::LoopMode::NoLoop);
 
 	setupMachine();
 }
@@ -68,38 +64,72 @@ void EvaNpc::setupMachine(void)
 	octo::FiniteStateMachine	machine;
 	StatePtr					idleState;
 	StatePtr					special1State;
+	StatePtr					startSpecial1State;
+	StatePtr					endSpecial1State;
 
 	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
 	special1State = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
+	startSpecial1State = std::make_shared<State>("2", m_startSpecial1, getSprite());
+	endSpecial1State = std::make_shared<State>("3", m_endSpecial1, getSprite());
 
-	machine.setStart(idleState);
+	machine.setStart(special1State);
 	machine.addTransition(Idle, idleState, idleState);
-	machine.addTransition(Idle, special1State, idleState);
+	machine.addTransition(Idle, endSpecial1State, idleState);
 
-	machine.addTransition(Special1, idleState, special1State);
+	machine.addTransition(StartSpecial1, idleState, startSpecial1State);
+
+	machine.addTransition(Special1, startSpecial1State, special1State);
+	machine.addTransition(Special1, special1State, special1State);
+
+	machine.addTransition(EndSpecial1, special1State, endSpecial1State);
 
 	setMachine(machine);
-	setNextEvent(Idle);
+	setNextEvent(Special1);
+}
+
+void EvaNpc::update(sf::Time frameTime)
+{
+	octo::CharacterSprite & sprite = getSprite();
+	m_particles.update(frameTime);
+	m_particles.setEmitter(sprite.getPosition() + sf::Vector2f(17.f, 30.f));
+	m_particles.canEmit(false);
+	ANpc::update(frameTime);
 }
 
 void EvaNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (sprite.getCurrentEvent() == Special1)
+	if (getSprite().getCurrentEvent() == Special1 && getCollideEventOcto())
+	{
+		getSprite().setNextEvent(EndSpecial1);
+	}
+	else if (sprite.getCurrentEvent() == StartSpecial1)
 	{
 		if (sprite.isTerminated())
-		{
+			sprite.setNextEvent(Special1);
+	}
+	else if (sprite.getCurrentEvent() == EndSpecial1)
+	{
+		if (sprite.isTerminated())
 			sprite.setNextEvent(Idle);
-			addTimer(-getTimer());
-		}
 	}
 	else if (sprite.getCurrentEvent() == Idle)
 	{
-		if (getTimer() >= getTimerMax())
+		if (getCollideEventOcto())
+			setDisplayText(true);
+		else
 		{
-			addTimer(-getTimerMax());
-			sprite.setNextEvent(Special1);
+			setDisplayText(false);
+			sprite.setNextEvent(StartSpecial1);
 		}
 	}
+	else
+		m_particles.canEmit(true);
+}
+
+void EvaNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
+{
+	ANpc::draw(render, states);
+	m_particles.draw(render);
 }
