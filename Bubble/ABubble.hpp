@@ -19,6 +19,7 @@ enum Type
 	None,
 	Speak,
 	Think,
+	Right,
 	Left
 };
 
