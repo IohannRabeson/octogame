@@ -116,7 +116,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		if (m_timerEnd >= m_timerEndMax)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			states.push("transitionLevelZero");
+			states.change("transitionLevelZero");
 		}
 		float interpolateValue = m_timerEnd / m_timerEndMax;
 		sf::Color const & color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
