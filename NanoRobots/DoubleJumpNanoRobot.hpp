@@ -9,8 +9,6 @@ public:
 	DoubleJumpNanoRobot(void);
 	virtual ~DoubleJumpNanoRobot(void) = default;
 
-private:
-
 };
 
 #endif
