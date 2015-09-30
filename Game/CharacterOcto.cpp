@@ -582,8 +582,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 		m_timeRepairSpaceShip += frameTime;
 		if (m_timeRepairSpaceShip > m_timeRepairSpaceShipMax)
 		{
+			octo::StateManager & states = octo::Application::getStateManager();
 			m_progress.spaceShipRepair(true);
-			octo::StateManager &		states = octo::Application::getStateManager();
 			states.change("zero");
 		}
 	}
