@@ -86,3 +86,8 @@ void BubbleText::drawContent(sf::RenderTarget & render, sf::RenderStates states)
 {
 	render.draw(m_text, states);
 }
+
+void BubbleText::setPhrase(std::wstring const & text)
+{
+	m_text.setString(text);
+}

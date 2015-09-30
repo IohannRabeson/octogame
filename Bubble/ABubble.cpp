@@ -104,8 +104,12 @@ void ABubble::computePositionBubble(Type type, sf::Vector2f const & position)
 		else
 			m_positionBubble = sf::Vector2f(position.x - m_sizeCorner / 2.f, position.y - m_sizeCorner * 2.f - m_sizeCorner / 2.f);
 	}
-	else if (type == Type::Left)
+	else if (type == Type::Right)
 		m_positionBubble = position + sf::Vector2f(m_sizeCorner * 2.f + m_size.x / 2.f, 0.f);
+	else if (type == Type::Left)
+		m_positionBubble = position - sf::Vector2f(m_sizeCorner * 2.f + m_size.x / 2.f, 0.f);
+	else if (type == Type::Up)
+		m_positionBubble = position - sf::Vector2f(m_size.x / 2.f, m_sizeCorner * 2.f + m_size.y / 2.f);
 }
 
 void ABubble::update(sf::Time frameTime)
