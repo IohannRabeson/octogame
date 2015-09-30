@@ -83,10 +83,6 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 
 	if (m_state == Rising)
 	{
-		if (m_timer > sf::seconds(2.f))
-		{
-			std::cout << "out" << std::endl;
-		}
 	}
 	else if (m_state == Flying)
 	{
