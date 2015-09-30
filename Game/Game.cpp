@@ -28,6 +28,8 @@
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
 #include "AmandineNpc.hpp"
+#include "BrayouNpc.hpp"
+#include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
@@ -216,6 +218,12 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::FranfranNpc:
 			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::EvaNpc:
+			gameObjectCast<EvaNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::BrayouNpc:
+			gameObjectCast<BrayouNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::AmandineNpc:
 			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
