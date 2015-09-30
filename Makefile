@@ -85,6 +85,8 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/AmandineNpc.cpp					\
 				Npcs/JeffMouffyNpc.cpp					\
 				Npcs/FaustNpc.cpp						\
+				Npcs/BrayouNpc.cpp						\
+				Npcs/EvaNpc.cpp							\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
@@ -161,6 +163,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/PloufSystem.cpp					\
 				Decors/WaterDropSystem.cpp				\
 				Decors/StarSystem.cpp					\
+				Decors/WaterCascadeSystem.cpp			\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
