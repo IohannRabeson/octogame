@@ -17,6 +17,8 @@
 #include "PunkNpc.hpp"
 #include "FatNpc.hpp"
 #include "LucienNpc.hpp"
+#include "BrayouNpc.hpp"
+#include "EvaNpc.hpp"
 #include "IohannNpc.hpp"
 #include "ConstanceNpc.hpp"
 #include "FaustNpc.hpp"
@@ -367,6 +369,20 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					FaustNpc * faust = new FaustNpc();
 					faust->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, faust);
+				}
+				break;
+			case GameObjectType::EvaNpc:
+				{
+					EvaNpc * npc = new EvaNpc(biome.getWaterColor());
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::BrayouNpc:
+				{
+					BrayouNpc * npc = new BrayouNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::AmandineNpc:
