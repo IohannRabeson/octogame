@@ -47,6 +47,7 @@ Game::Game(void) :
 	m_parallaxScrolling(nullptr),
 	m_musicPlayer(nullptr),
 	m_octo(nullptr),
+	m_konami(nullptr),
 	m_keyS(false),
 	m_keyF(false),
 	m_soundGeneration(nullptr),
@@ -96,6 +97,7 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling.reset(new ParallaxScrolling());
 	m_musicPlayer.reset(new MusicPlayer());
 	m_octo.reset(new CharacterOcto());
+	m_konami.reset(new KonamiCode());
 
 	m_skyCycle->setup(m_biomeManager.getCurrentBiome());
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
@@ -128,6 +130,7 @@ void	Game::update(sf::Time frameTime)
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
 	m_musicPlayer->update(frameTime, m_octo->getPosition());
+	m_konami->update(frameTime);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
@@ -366,6 +369,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
+	render.draw(*m_konami);
 }
 
 void	Game::followPlayer(sf::Time frameTime)
