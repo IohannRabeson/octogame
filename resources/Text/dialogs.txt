@@ -30,3 +30,5 @@ transitionLevelZero=Cherchons les autres… Allons nous en d'ici… #+&… À no
 amandine.oss=Faust, au pied !
 eva.oss=J'ai soif
 brayou.oss=Je suis grand
+pea.oss=J'ai plein de cheuveux :D
+pierre.oss=Je sais aps quoi dire

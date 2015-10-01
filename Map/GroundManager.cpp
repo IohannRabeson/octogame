@@ -32,6 +32,8 @@
 #include "Concert.hpp"
 #include "Firecamp.hpp"
 #include "Cage.hpp"
+#include "PeaNpc.hpp"
+#include "PierreNpc.hpp"
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -374,6 +376,20 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::EvaNpc:
 				{
 					EvaNpc * npc = new EvaNpc(biome.getWaterColor());
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::PierreNpc:
+				{
+					PierreNpc * npc = new PierreNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::PeaNpc:
+				{
+					PeaNpc * npc = new PeaNpc();
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
