@@ -18,13 +18,15 @@ private:
 	enum State
 	{
 		Success,
-		Fail
+		Fail,
+		End
 	};
 	std::size_t			m_index;
 	sf::Shader			m_shader;
 	std::size_t			m_shaderIndex;
 	State				m_state;
 	sf::Time			m_timer;
+	sf::Time			m_timerEnd;
 	sf::Time			m_timerMax;
 
 	bool onPressed(sf::Event::KeyEvent const & event);
