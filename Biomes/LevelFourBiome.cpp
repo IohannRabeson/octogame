@@ -125,7 +125,7 @@ LevelFourBiome::LevelFourBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[400] = MAP_ELEVATOR_JUNGLE_OMP;
+	m_instances[700] = MAP_ELEVATOR_JUNGLE_OMP;
 	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
 	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
 	m_instances[670] = MAP_SECRET_LEFT_VILLAGE_JUNGLE_OMP;

@@ -9,7 +9,9 @@
 #include <ResourceManager.hpp>
 #include <sstream>
 
-NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser) :
+sf::Vector2f NanoRobot::m_laserConvergence;
+
+NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, float multiplier) :
 	m_swarm(1),
 	m_uniformPopulation(1234u, &octo::Application::getResourceManager().getPalette(FROM_SEA1_OPA),
 						1.2f, 2.f, 6.f, 10.f, 32.f, 50.f,
@@ -19,9 +21,13 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_ray(new sf::Vertex[16]),
 	m_texture(nullptr),
 	m_offsetLaser(offsetLaser),
+	m_timerRepairShip(sf::Time::Zero),
 	m_timerRepair(sf::Time::Zero),
 	m_timerRepairMax(sf::seconds(4.f)),
 	m_repairIndex(0u),
+	m_startLastAnimation(false),
+	m_usePathLaser(false),
+	m_multiplier(multiplier),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_textIndex(0u),
 	m_state(Idle),
@@ -118,6 +124,25 @@ void NanoRobot::setup(AGameObjectBase * gameObject)
 	m_box->setCollisionType(static_cast<std::size_t>(gameObject->getObjectType()));
 }
 
+void NanoRobot::setLaserColor(sf::Color const & color)
+{
+	for (std::size_t i = 0u; i < 12u; i++)
+	{
+		m_ray[i].color = color;
+		m_ray[i].color.a = 100;
+	}
+
+	m_ray[1].color.a = 0;
+	m_ray[2].color.a = 0;
+	m_ray[4].color.a = 0;
+	m_ray[7].color.a = 0;
+}
+
+void NanoRobot::setRepairShipPosition(sf::Vector2f const & position)
+{
+	m_repairShipPosition = position;
+}
+
 void NanoRobot::makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness)
 {
 	static float const size = 8.f;
@@ -185,6 +210,8 @@ void NanoRobot::setTarget(sf::Vector2f const & target)
 
 void NanoRobot::setPosition(sf::Vector2f const & position)
 {
+	if (m_startLastAnimation)
+		return;
 	sf::Vector2f	pos = position + sf::Vector2f(0.f, -200.f);
 	if (std::abs(pos.x - m_swarm.getFirefly(0u).position.x) > 400.f)
 		m_isTravelling = true;
@@ -200,6 +227,10 @@ bool NanoRobot::isTravelling(void) const
 
 void NanoRobot::setState(NanoRobot::State state)
 {
+	if (m_startLastAnimation)
+		return;
+	if (state == GoingToRepairShip)
+		m_startLastAnimation = true;
 	m_state = state;
 }
 
@@ -234,6 +265,26 @@ NanoRobot::State NanoRobot::getState(void) const
 	return m_state;
 }
 
+bool NanoRobot::isReparingShip(void) const
+{
+	return m_startLastAnimation;
+}
+
+void NanoRobot::setLaserConvergence(sf::Vector2f const & position)
+{
+	m_laserConvergence = position;
+}
+
+void NanoRobot::setUsePathLaser(bool usePathLaser)
+{
+	m_usePathLaser = usePathLaser;
+}
+
+sf::Vector2f const & NanoRobot::getLaserConvergence(void)
+{
+	return m_laserConvergence;
+}
+
 void NanoRobot::update(sf::Time frametime)
 {
 	m_swarm.update(frametime);
@@ -248,31 +299,45 @@ void NanoRobot::update(sf::Time frametime)
 		m_box->update();
 	}
 
+	m_particles.canEmit(false);
 	if (m_state == Speak)
 	{
 		m_timer += frametime;
 		if (m_timer > m_timerMax)
 			m_state = FollowOcto;
 	}
-
-	m_particles.canEmit(false);
-	if (m_state == Repair)
+	else if (m_state == Repair)
 	{
 		makeLaser(m_ray.get(), getPosition() + m_offsetLaser, m_target, 4.f);
 		m_particles.canEmit(true);
 		m_particles.setPosition(m_target);
 	}
-
-	if (m_state == RepairShip)
+	else if (m_state == GoingToRepairShip)
 	{
 		m_timerRepair += frametime;
+		m_positionBehavior->setRadius(30.f);
+		m_swarm.setTarget(m_repairShipPosition);
+		if (m_timerRepair > m_timerRepairMax)
+		{
+			m_timerRepair = sf::Time::Zero;
+			m_state = RepairShip;
+		}
+	}
+	else if (m_state == RepairShip)
+	{
+		m_timerRepair += frametime;
+		m_swarm.setTarget(m_repairShipPosition);
 		if (m_timerRepair > m_timerRepairMax)
 		{
 			m_timerRepair = sf::Time::Zero;
 			m_repairIndex++;
 		}
-		std::size_t index2 = (m_repairIndex + 1u) % m_targets.size();
-		sf::Vector2f target = octo::linearInterpolation(m_target + m_targets[m_repairIndex % m_targets.size()], m_target + m_targets[index2], m_timerRepair / m_timerRepairMax);
+		sf::Vector2f target = m_target;
+		if (m_usePathLaser)
+		{
+			std::size_t index2 = (m_repairIndex + 1u) % m_targets.size();
+			target = octo::linearInterpolation(m_target + m_targets[m_repairIndex % m_targets.size()], m_target + m_targets[index2], m_timerRepair / m_timerRepairMax);
+		}
 		makeLaser(m_ray.get(), getPosition() + m_offsetLaser, target, 4.f);
 		m_particles.canEmit(true);
 		m_particles.setPosition(target);
@@ -284,6 +349,19 @@ void NanoRobot::update(sf::Time frametime)
 	m_texts[m_textIndex]->update(frametime);
 	m_glowingEffect.setPosition(pos);
 	m_glowingEffect.update(frametime);
+
+	updateRepairShip(frametime);
+}
+
+void NanoRobot::updateRepairShip(sf::Time frameTime)
+{
+	if (isReparingShip())
+	{
+		m_timerRepairShip += frameTime;
+		float speed = m_timerRepairShip.asSeconds() + octo::Pi2 * m_multiplier / 6.f;
+		setRepairShipPosition(sf::Vector2f(220.f, 450.f) + sf::Vector2f(std::cos(speed), std::sin(speed)) * 150.f);
+		setTarget(m_laserConvergence);
+	}
 }
 
 void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const

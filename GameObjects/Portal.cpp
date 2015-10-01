@@ -60,7 +60,7 @@ Portal::Portal(Level destination) :
 
 Portal::~Portal(void)
 {
-	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
+	//octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
 }
 
 void Portal::update(sf::Time frametime)

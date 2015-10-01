@@ -9,7 +9,12 @@ public:
 	RepairShipNanoRobot(void);
 	virtual ~RepairShipNanoRobot(void) = default;
 
+protected:
+	virtual void updateRepairShip(sf::Time frameTime);
+
 private:
+	sf::Time	m_timer;
+	sf::Time	m_timerMax;
 
 };
 

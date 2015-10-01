@@ -27,7 +27,7 @@ CharacterOcto::CharacterOcto() :
 	m_jumpDistribution(0, 4),
 	m_danceDistribution(2.f, 6.f),
 	m_timeEventIdleMax(sf::seconds(4.f)),
-	m_timeRepairSpaceShipMax(sf::seconds(4.f)),
+	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
@@ -791,7 +791,7 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 	{
 		for (auto & robot : m_nanoRobots)
 		{
-			robot->setState(NanoRobot::State::RepairShip);
+			robot->setState(NanoRobot::State::GoingToRepairShip);
 			robot->setTarget(spaceShip->getPosition());
 		}
 		m_repairShip = true;

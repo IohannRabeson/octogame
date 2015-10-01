@@ -3,7 +3,7 @@
 #include "Progress.hpp"
 
 GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
-	NanoRobot(sf::Vector2f(30 * 16.f, 700.f), NANO_GROUND_TRANSFORM_OSS, 4, 9854, sf::Vector2f(0.f, -26.f)),
+	NanoRobot(sf::Vector2f(30 * 16.f, 700.f), NANO_GROUND_TRANSFORM_OSS, 4, 9854, sf::Vector2f(0.f, -26.f), 3.f),
 	m_textTimer(sf::Time::Zero),
 	m_textTimerMax(sf::seconds(5.f)),
 	m_canSpeak(false),
@@ -28,6 +28,7 @@ GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 	targets.push_back(sf::Vector2f(172.f, 355.f));
 	targets.push_back(sf::Vector2f(147.f, 358.f));
 	setTargets(targets, 1.f);
+	setLaserColor(sf::Color::Blue);
 }
 
 void GroundTransformNanoRobot::update(sf::Time frameTime)
