@@ -208,7 +208,7 @@ void NanoRobot::setTarget(sf::Vector2f const & target)
 
 void NanoRobot::setPosition(sf::Vector2f const & position)
 {
-	sf::Vector2f	pos = position;
+	sf::Vector2f	pos = position + sf::Vector2f(0.f, -150.f);
 	if (std::abs(pos.x - m_swarm.getFirefly(0u).position.x) > 400.f)
 		m_isTravelling = true;
 	else
