@@ -11,6 +11,7 @@ KonamiCode::KonamiCode(void) :
 	m_shaderIndex(0u),
 	m_state(Fail),
 	m_timer(sf::Time::Zero),
+	m_timerEnd(sf::Time::Zero),
 	m_timerMax(sf::seconds(6.f))
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
@@ -50,21 +51,42 @@ void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 	if (m_index == 10u)
 	{
 		m_state = Success;
+		octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+		postEffect.enableEffect(m_shaderIndex, true);
+		m_index = 0u;
+		m_timer = sf::Time::Zero;
+		m_timerEnd = sf::Time::Zero;
+		m_shader.setParameter("end_alpha", 1.f);
 	}
 	if (m_state == Success)
 	{
-		octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-		postEffect.enableEffect(m_shaderIndex, true);
-		m_shader.setParameter("position", position.x, position.y);
 		m_timer += frameTime;
+		octo::Camera const & camera = octo::Application::getCamera();
+		sf::Vector2i pos = camera.mapCoordsToPixel(position);
+		m_shader.setParameter("position", pos.x, camera.getSize().y - pos.y);
+		m_shader.setParameter("time", m_timer / m_timerMax);
+		m_shader.setParameter("radius", (m_timer / m_timerMax) * 2000.f);
 		if (m_timer > m_timerMax)
 		{
-			m_state = Fail;
-			m_timer = sf::Time::Zero;
-			postEffect.enableEffect(m_shaderIndex, false);
+			m_state = End;
+			m_timer -= m_timerMax;
 		}
+	}
+	else if (m_state == End)
+	{
+		m_timer += frameTime;
+		m_timerEnd += frameTime;
+		octo::Camera const & camera = octo::Application::getCamera();
+		sf::Vector2i pos = camera.mapCoordsToPixel(position);
+		m_shader.setParameter("position", pos.x, camera.getSize().y - pos.y);
 		m_shader.setParameter("time", m_timer / m_timerMax);
-		m_shader.setParameter("radius", m_timer / m_timerMax * 2000.f);
+		m_shader.setParameter("end_alpha", 1.f - (m_timerEnd / m_timerMax));
+		if (m_timerEnd > m_timerMax)
+		{
+			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+			postEffect.enableEffect(m_shaderIndex, false);
+			m_state = Fail;
+		}
 	}
 }
 
