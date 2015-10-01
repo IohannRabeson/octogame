@@ -21,8 +21,6 @@ LevelZeroScreen::LevelZeroScreen(void) :
 	m_isSoundPlayed(false),
 	m_isSoundExplodePlayed(false)
 {
-	if (Progress::getInstance().spaceShipIsRepair())
-		m_state = Rising;
 }
 
 void	LevelZeroScreen::start()
@@ -47,6 +45,9 @@ void	LevelZeroScreen::start()
 
 	audio.startMusic(resource.getSound(ACTION_FAST_WAV), sf::milliseconds(1000.f));
 	graphics.addKeyboardListener(this);
+
+	if (Progress::getInstance().spaceShipIsRepair())
+		m_state = Rising;
 }
 
 void	LevelZeroScreen::pause()
@@ -64,6 +65,7 @@ void	LevelZeroScreen::stop()
 	graphics.removeKeyboardListener(this);
 }
 
+#include <iostream>
 void	LevelZeroScreen::update(sf::Time frameTime)
 {
 	octo::Camera &				camera = octo::Application::getCamera();
@@ -119,11 +121,25 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			states.change("transitionLevelZero");
 		}
 		float interpolateValue = m_timerEnd / m_timerEndMax;
+		if (interpolateValue > 1.f)
+			interpolateValue = 1.f;
 		sf::Color const & color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
 		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-100.f, -1700.f, interpolateValue)));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
-		translation.y = 0.f;
+	}
+	else if (m_state == Rising)
+	{
+		float interpolateValue = m_timerEnd / m_timerEndMax;
+		sf::Color const & color = octo::linearInterpolation(sf::Color::White, m_downColorBackground, interpolateValue);
+		m_spaceShip.setSmokeVelocity(sf::Vector2f(-1400.f, 0.f));
+		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
+		m_offsetCamera = -camera.getSize().x * 1.5f + camera.getSize().x * 1.5 * interpolateValue;
+		if (m_timerEnd >= m_timerEndMax)
+		{
+			m_timerEnd = sf::Time::Zero;
+			m_state = Flying;
+		}
 	}
 
 	m_spaceShip.move(translation);
@@ -138,10 +154,10 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 void	LevelZeroScreen::createBackground(sf::Vector2f const & position, sf::Color const & color)
 {
 	sf::Vector2f const & cameraSize = octo::Application::getCamera().getSize();
-	m_background[0] = sf::Vertex(sf::Vector2f(0.f, 0.f) + position, m_upColorBackground);
-	m_background[1] = sf::Vertex(sf::Vector2f(cameraSize.x, 0.f) + position, m_upColorBackground);
-	m_background[2] = sf::Vertex(sf::Vector2f(cameraSize.x, cameraSize.y * 1.5f) + position, color);
-	m_background[3] = sf::Vertex(sf::Vector2f(0.f, cameraSize.y * 1.5f) + position, color);
+	m_background[0] = sf::Vertex(sf::Vector2f(-500.f, -500.f) + position, m_upColorBackground);
+	m_background[1] = sf::Vertex(sf::Vector2f(cameraSize.x + 500.f, -500.f) + position, m_upColorBackground);
+	m_background[2] = sf::Vertex(sf::Vector2f(cameraSize.x + 500.f, cameraSize.y + 500.f) + position, color);
+	m_background[3] = sf::Vertex(sf::Vector2f(-500.f, cameraSize.y + 500.f) + position, color);
 }
 
 void	LevelZeroScreen::draw(sf::RenderTarget & render) const
