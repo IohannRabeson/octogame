@@ -6,8 +6,8 @@
 #include <ctime>
 
 StarSystem::StarSystem() :
-	m_creationTimeDistri(0.01f, 0.03f),
-	m_heightDistri(-200.f, octo::Application::getCamera().getRectangle().height + 200.f),
+	m_creationTimeDistri(0.01f, 0.02f),
+	m_heightDistri(-1000.f, octo::Application::getCamera().getRectangle().height + 1000.f),
 	m_speed(-2000.f, 0.f),
 	m_timer(sf::Time::Zero),
 	m_nextCreation(sf::Time::Zero),
