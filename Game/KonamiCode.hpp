@@ -10,9 +10,10 @@ public:
 	KonamiCode(void);
 	virtual ~KonamiCode(void);
 
-	void update(sf::Time frameTime);
+	void update(sf::Time frameTime, sf::Vector2f const & position);
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
+	bool canStartEvent();
 private:
 	enum State
 	{
@@ -25,7 +26,6 @@ private:
 	State				m_state;
 	sf::Time			m_timer;
 	sf::Time			m_timerMax;
-	sf::Vector2f		m_position;
 
 	bool onPressed(sf::Event::KeyEvent const & event);
 

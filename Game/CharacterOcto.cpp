@@ -301,6 +301,15 @@ void	CharacterOcto::setupAnimation()
 			});
 	m_portalAnimation.setLoop(octo::LoopMode::NoLoop);
 
+	m_konamiCodeAnimation.setFrames({
+			Frame(sf::seconds(0.1f), {56, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {57, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {58, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {59, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {60, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(6.f), {61, sf::FloatRect(), sf::Vector2f()}),
+			});
+	m_konamiCodeAnimation.setLoop(octo::LoopMode::NoLoop);
 }
 
 void	CharacterOcto::setupMachine()
@@ -327,6 +336,7 @@ void	CharacterOcto::setupMachine()
 	StatePtr					state15;
 	StatePtr					state16;
 	StatePtr					state17;
+	StatePtr					state18;
 
 	state0 = std::make_shared<State>("Idle", m_idleAnimation, m_sprite);
 	state1 = std::make_shared<State>("Left", m_walkAnimation, m_sprite);
@@ -346,6 +356,7 @@ void	CharacterOcto::setupMachine()
 	state15 = std::make_shared<State>("StartWaterJump", m_startElevatorAnimation, m_sprite);
 	state16 = std::make_shared<State>("WaterJump", m_elevatorAnimation, m_sprite);
 	state17 = std::make_shared<State>("PortalEvent", m_portalAnimation, m_sprite);
+	state18 = std::make_shared<State>("KonamiCode", m_konamiCodeAnimation, m_sprite);
 
 	machine.setStart(state0);
 	machine.addTransition(Left, state0, state1);
@@ -426,6 +437,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Fall, state15, state5);
 	machine.addTransition(Fall, state16, state5);
 	machine.addTransition(Fall, state17, state5);
+	machine.addTransition(Fall, state18, state5);
 
 	machine.addTransition(Dance, state0, state6);
 
@@ -520,6 +532,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Idle, state14, state0);
 	machine.addTransition(Idle, state15, state0);
 	machine.addTransition(Idle, state17, state0);
+	machine.addTransition(Idle, state18, state0);
 
 	machine.addTransition(PortalEvent, state0, state17);
 	machine.addTransition(PortalEvent, state1, state17);
@@ -538,6 +551,22 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(PortalEvent, state15, state17);
 	machine.addTransition(PortalEvent, state16, state17);
 
+	machine.addTransition(KonamiCode, state0, state18);
+	machine.addTransition(KonamiCode, state1, state18);
+	machine.addTransition(KonamiCode, state2, state18);
+	machine.addTransition(KonamiCode, state3, state18);
+	machine.addTransition(KonamiCode, state4, state18);
+	machine.addTransition(KonamiCode, state5, state18);
+	machine.addTransition(KonamiCode, state6, state18);
+	machine.addTransition(KonamiCode, state7, state18);
+	machine.addTransition(KonamiCode, state8, state18);
+	machine.addTransition(KonamiCode, state9, state18);
+	machine.addTransition(KonamiCode, state10, state18);
+	machine.addTransition(KonamiCode, state12, state18);
+	machine.addTransition(KonamiCode, state13, state18);
+	machine.addTransition(KonamiCode, state14, state18);
+	machine.addTransition(KonamiCode, state15, state18);
+	machine.addTransition(KonamiCode, state17, state18);
 
 	m_sprite.setMachine(machine);
 }
@@ -545,13 +574,13 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	portalEvent();
-	if (m_sprite.getCurrentEvent() != PortalEvent)
+	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode)
 		commitPhysicsToGraphics();
 	m_sprite.update(frameTime);
 	resetTimeEvent();
 	timeEvent(frameTime);
 	inWater();
-	if (m_sprite.getCurrentEvent() != PortalEvent && endDeath())
+	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode && endDeath())
 	{
 		dance();
 		collisionElevatorUpdate();
@@ -560,13 +589,22 @@ void	CharacterOcto::update(sf::Time frameTime)
 		commitEnvironmentToPhysics();
 		commitEventToGraphics();
 		if (m_collisionPortal && m_keyPortal)
+		{
 			m_sprite.setNextEvent(PortalEvent);
+		}
 	}
 	else
 		m_helmetParticle.update(frameTime);
 	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()),
 			m_inWater, m_onGround);
-
+	if (m_sprite.getCurrentEvent() == KonamiCode && m_sprite.isTerminated())
+	{
+		m_box->setApplyGravity(true);
+		if (m_onGround)
+			m_sprite.setNextEvent(Idle);
+		else
+			m_sprite.setNextEvent(Fall);
+	}
 	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepair()
 			&& m_repairNanoRobot->getState() == NanoRobot::State::Repair)
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
@@ -760,6 +798,15 @@ void	CharacterOcto::usePortal(Portal & portal)
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
 		m_progress.setNextDestination(portal.getDestination());
+	}
+}
+
+void	CharacterOcto::startKonamiCode(bool canStart)
+{
+	if (canStart && m_sprite.getCurrentEvent() != KonamiCode)
+	{
+		m_sprite.setNextEvent(KonamiCode);
+		m_box->setApplyGravity(false);
 	}
 }
 
@@ -1184,7 +1231,7 @@ void CharacterOcto::casePortal()
 
 bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 {
-	if (m_sprite.getCurrentEvent() == Death)
+	if (m_sprite.getCurrentEvent() == Death || m_sprite.getCurrentEvent() == KonamiCode)
 		return true;
 	switch (event.code)
 	{
@@ -1264,7 +1311,7 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 			otherKeyReleased = true;
 			break;
 	}
-	if (state == Death || state == PortalEvent || otherKeyReleased)
+	if (state == Death || state == PortalEvent || state == KonamiCode || otherKeyReleased)
 		return true;
 	if (!m_onGround && !m_keyUp && !m_keyElevator)
 	{
