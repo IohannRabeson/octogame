@@ -10,6 +10,7 @@
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
 # include "MusicPlayer.hpp"
+# include "KonamiCode.hpp"
 
 # include <memory>
 
@@ -37,6 +38,7 @@ private:
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
 	std::unique_ptr<MusicPlayer>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
+	std::unique_ptr<KonamiCode>			m_konami;
 	bool								m_keyS;
 	bool								m_keyF;
 	std::shared_ptr<sf::Sound>			m_soundGeneration;
