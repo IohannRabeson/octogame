@@ -16,7 +16,7 @@ Progress::Progress() :
 	m_changeLevel(false),
 	m_reverseSprite(false),
 	m_validChallenge(false),
-	m_spaceShipRepair(true)
+	m_spaceShipRepair(false)
 {
 	setup();
 }
@@ -85,7 +85,12 @@ void	Progress::saveToFile()
 
 void	Progress::reset()
 {
+	m_changeLevel = false;
+	m_reverseSprite = false;
+	m_validChallenge = false;
+	m_spaceShipRepair = false;
 	setup();
+	save();
 }
 
 void	Progress::setNextDestination(Level destination)
