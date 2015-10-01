@@ -130,8 +130,9 @@ LevelFourBiome::LevelFourBiome() :
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_gameObjects[150] = GameObjectType::EvaNpc;
 	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-	//m_gameObjects[770] = GameObjectType::ConstanceNpc;
-	//m_gameObjects[763] = GameObjectType::AmandineNpc;
+	m_gameObjects[645] = GameObjectType::PeaNpc;
+	m_gameObjects[600] = GameObjectType::BrayouNpc;
+
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination

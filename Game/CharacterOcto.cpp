@@ -132,7 +132,6 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::ConstanceNpc)
 		| static_cast<std::size_t>(GameObjectType::JeffMouffyNpc)
 		| static_cast<std::size_t>(GameObjectType::BrayouNpc)
-		| static_cast<std::size_t>(GameObjectType::EvaNpc)
 		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
@@ -507,6 +506,8 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartWaterJump, state5, state15);
 	machine.addTransition(StartWaterJump, state6, state15);
 	machine.addTransition(StartWaterJump, state7, state15);
+	machine.addTransition(StartWaterJump, state8, state15);
+	machine.addTransition(StartWaterJump, state9, state15);
 	machine.addTransition(StartWaterJump, state10, state15);
 	machine.addTransition(StartWaterJump, state11, state15);
 	machine.addTransition(StartWaterJump, state12, state15);
@@ -514,6 +515,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartWaterJump, state14, state15);
 	machine.addTransition(StartWaterJump, state15, state15);
 	machine.addTransition(StartWaterJump, state16, state15);
+	machine.addTransition(StartWaterJump, state17, state15);
 
 	machine.addTransition(WaterJump, state15, state16);
 
@@ -984,6 +986,7 @@ void	CharacterOcto::inWater()
 			emit = true;
 			m_inWater = true;
 		}
+		m_waterParticle.clear();
 	}
 	else if (m_inWater)
 	{

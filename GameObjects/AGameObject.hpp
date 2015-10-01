@@ -39,7 +39,9 @@ enum class GameObjectType : std::size_t
 	BrayouNpc = 4294967296u,
 	EvaNpc = 8589934592u,
 	Water = 131u,
-	FaustNpc = 132u
+	FaustNpc = 132u,
+	PierreNpc = 133u,
+	PeaNpc = 134u
 };
 
 /*!
