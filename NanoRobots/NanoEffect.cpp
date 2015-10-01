@@ -1,4 +1,8 @@
 #include "NanoEffect.hpp"
+#include "ResourceDefinitions.hpp"
+#include <Application.hpp>
+#include <AudioManager.hpp>
+#include <ResourceManager.hpp>
 
 NanoEffect::NanoEffect(void) :
 	m_vertices(new sf::Vertex[100]),
@@ -8,9 +12,33 @@ NanoEffect::NanoEffect(void) :
 	m_color(255, 255, 255, 200),
 	m_isActive(true),
 	m_isTransfer(false),
+	m_isRandom(false),
 	m_glowingTimerMax(sf::seconds(2.f))
 {
+	m_generator.setSeed("random");
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
+}
+
+void NanoEffect::playSound(void)
+{
+	std::size_t soundChoose = m_generator.randomInt(0u, 3u);
+	octo::AudioManager& audio = octo::Application::getAudioManager();
+	octo::ResourceManager& resource = octo::Application::getResourceManager();
+
+	switch (soundChoose)
+	{
+		case 0u:
+			audio.playSound(resource.getSound(NANO_1_WAV), 0.5f, 1.f);
+			break;
+		case 1u:
+			audio.playSound(resource.getSound(NANO_2_WAV), 0.5f, 1.f);
+			break;
+		case 2u:
+			audio.playSound(resource.getSound(NANO_3_WAV), 0.5f, 1.f);
+			break;
+		default:
+			break;
+	}
 }
 
 void NanoEffect::createLosange(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
@@ -41,6 +69,7 @@ void NanoEffect::update(sf::Time frameTime)
 {
 	m_builder.clear();
 	m_glowingTimer += frameTime;
+	m_randomGlowing += frameTime;
 	if (m_glowingTimer >= m_glowingTimerMax)
 	{
 		if (m_isTransfer == true)
@@ -50,8 +79,16 @@ void NanoEffect::update(sf::Time frameTime)
 	if (m_isActive == true)
 	{
 		createEffect(m_size, m_position, m_color, m_builder);
-		if (m_isTransfer == true)
+		if (m_isTransfer == true && m_isRandom == false)
 			createEffect(m_size * 2.f, m_position, m_color, m_builder);
+	}
+	if (m_randomGlowing >= m_randomGlowingMax && m_isTransfer == true)
+	{
+		playSound();
+		m_isActive = true;
+		m_glowingTimer = sf::Time::Zero;
+		m_randomGlowing = sf::Time::Zero;
+		m_randomGlowingMax = sf::seconds(m_generator.randomFloat(30.f, 90.f));
 	}
 	m_used = m_builder.getUsed();
 }
@@ -60,7 +97,9 @@ void NanoEffect::onTransfer(void)
 {
 	if (m_isActive == true && m_isTransfer == false)
 	{
+		playSound();
 		m_isTransfer = true;
+		m_isRandom = true;
 		m_glowingTimer = sf::Time::Zero;
 	}
 }
