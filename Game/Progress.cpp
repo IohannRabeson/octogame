@@ -16,7 +16,7 @@ Progress::Progress() :
 	m_changeLevel(false),
 	m_reverseSprite(false),
 	m_validChallenge(false),
-	m_spaceShipRepair(true)
+	m_spaceShipRepair(false)
 {
 	setup();
 }

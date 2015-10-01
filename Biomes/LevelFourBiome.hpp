@@ -258,6 +258,7 @@ private:
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
 	sf::Color											randomColor(sf::Color const & color);
+	sf::Color											randomColorLeaf(sf::Color const & color);
 };
 
 #endif
