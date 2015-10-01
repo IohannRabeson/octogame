@@ -88,6 +88,8 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/FaustNpc.cpp						\
 				Npcs/BrayouNpc.cpp						\
 				Npcs/EvaNpc.cpp							\
+				Npcs/PierreNpc.cpp						\
+				Npcs/PeaNpc.cpp							\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

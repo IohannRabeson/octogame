@@ -132,7 +132,6 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::ConstanceNpc)
 		| static_cast<std::size_t>(GameObjectType::JeffMouffyNpc)
 		| static_cast<std::size_t>(GameObjectType::BrayouNpc)
-		| static_cast<std::size_t>(GameObjectType::EvaNpc)
 		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
