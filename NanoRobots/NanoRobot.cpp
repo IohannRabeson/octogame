@@ -118,28 +118,6 @@ void NanoRobot::setup(AGameObjectBase * gameObject)
 	m_box->setCollisionType(static_cast<std::size_t>(gameObject->getObjectType()));
 }
 
-void NanoRobot::playSound(void)
-{
-	std::size_t soundChoose = m_soundDistri(m_engine);
-	octo::AudioManager& audio = octo::Application::getAudioManager();
-	octo::ResourceManager& resource = octo::Application::getResourceManager();
-
-	switch (soundChoose)
-	{
-		case 0u:
-			audio.playSound(resource.getSound(NANO_1_WAV), 0.5f, 1.f);
-			break;
-		case 1u:
-			audio.playSound(resource.getSound(NANO_2_WAV), 0.5f, 1.f);
-			break;
-		case 2u:
-			audio.playSound(resource.getSound(NANO_3_WAV), 0.5f, 1.f);
-			break;
-		default:
-			break;
-	}
-}
-
 void NanoRobot::makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness)
 {
 	static float const size = 8.f;
@@ -198,7 +176,6 @@ void NanoRobot::transfertToOcto(void)
 	m_state = Speak;
 	m_glowingEffect.onTransfer();
 	Progress::getInstance().addNanoRobot();
-	playSound();
 }
 
 void NanoRobot::setTarget(sf::Vector2f const & target)
