@@ -242,26 +242,77 @@ std::vector<ParallaxScrolling::ALayer *> LevelFourBiome::getLayers()
 
 Map::MapSurfaceGenerator LevelFourBiome::getMapSurfaceGenerator()
 {
-	return [this](Noise & noise, float x, float y)
+	auto fun = [](float x, float a)
 	{
-		float n = noise.fBm(x, y, 3, 3.f, 0.6f) * 2.5f;
-		float start = 40.f / static_cast<float>(m_mapSize.x);
-		float middle1 = 300.f / static_cast<float>(m_mapSize.x);
-		float end = 400.f / static_cast<float>(m_mapSize.x);
-		float offset = 50.f / static_cast<float>(m_mapSize.x);
-		float bot = n / 5.0f + 1.0f;
-		float top = n / 10.0f - 0.6f;
+		// n.b.: this Logistic Sigmoid has been normalized.
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, top, (x - start + offset) / offset);
-		else if (x > start && x <= middle1 - offset)
-			return top;
-		else if (x > middle1 - offset && x <= middle1)
-			return octo::cosinusInterpolation(top, bot, (x - middle1 + offset) / offset);
-		else if (x > middle1 && x <= end)
+		float epsilon = 0.0001f;
+		float min_param_a = 0.f + epsilon;
+		float max_param_a = 1.f - epsilon;
+		a = std::max(min_param_a, std::min(max_param_a, a));
+		a = (1.f / (1.f - a) - 1.f);
+
+		float A = 1.f / (1.f + std::exp(0 -((x-0.5)*a*2.0)));
+		float B = 1.f / (1.f + std::exp(a));
+		float C = 1.f / (1.f + std::exp(0-a));
+		float y = (A-B)/(C-B);
+		return y;
+	};
+	return [fun, this](Noise & noise, float x, float y)
+	{
+		static const float startHill1 = 40.f / static_cast<float>(m_mapSize.x);
+		static const float endHill1 = 200.f / static_cast<float>(m_mapSize.x);
+		static const float startHill2 = 300.f / static_cast<float>(m_mapSize.x);
+		static const float endHill2 = 400.f / static_cast<float>(m_mapSize.x);
+		static const float startHill3 = 500.f / static_cast<float>(m_mapSize.x);
+		static const float endHill3 = 600.f / static_cast<float>(m_mapSize.x);
+		static const float startHill4 = 900.f / static_cast<float>(m_mapSize.x);
+		static const float endHill4 = 1000.f / static_cast<float>(m_mapSize.x);
+		static const float offset = 50.f / static_cast<float>(m_mapSize.x);
+		static const float offsetSlim = 40.f / static_cast<float>(m_mapSize.x);
+		static const float curveValue = 0.970f;
+
+		float n = noise.fBm(x, y, 3, 3.f, 0.6f);
+		float bot = n / 10.0f + 1.0f;
+		float topHill1 = n / 10.0f - 0.6f;
+		float topHill2 = n / 15.0f - 0.6f;
+		float topHill3 = n / 15.0f - 1.6f;
+		float topHill4 = n / 15.0f - 0.6f;
+
+		if (x > startHill1 - offset && x <= startHill1)
+			return octo::cosinusInterpolation(n, topHill1, (x - startHill1 + offset) / offset);
+		else if (x > startHill1 && x <= endHill1 - offset)
+			return topHill1;
+		else if (x <= endHill1)
+			return octo::cosinusInterpolation(topHill1, bot, (x - endHill1 + offset) / offset);
+
+		else if (x <= startHill2)
 			return bot;
-		else if (x > end && x <= end + offset)
-			return octo::cosinusInterpolation(n, bot, (x - end + offset) / offset);
+		else if (x <= startHill2 + offsetSlim)
+			return bot - std::abs(bot - topHill2) * fun(1.f - ((startHill2 + offsetSlim - x)) / offsetSlim, curveValue);
+		else if (x <= endHill2)
+			return topHill2;
+		else if (x <= endHill2 + offsetSlim)
+			return bot - std::abs(bot - topHill2) * fun((endHill2 + offsetSlim - x) / offsetSlim, curveValue);
+
+		else if (x <= startHill3)
+			return bot;
+		else if (x <= startHill3 + offsetSlim)
+			return bot - std::abs(bot - topHill3) * fun(1.f - ((startHill3 + offsetSlim - x)) / offsetSlim, curveValue);
+		else if (x <= endHill3)
+			return topHill3;
+		else if (x <= endHill3 + offsetSlim)
+			return bot - std::abs(bot - topHill3) * fun((endHill3 + offsetSlim - x) / offsetSlim, curveValue);
+
+		else if (x <= startHill4)
+			return bot;
+		else if (x <= startHill4 + offsetSlim)
+			return bot - std::abs(bot - topHill4) * fun(1.f - ((startHill4 + offsetSlim - x)) / offsetSlim, curveValue);
+		else if (x <= endHill4)
+			return topHill4;
+		else if (x <= endHill4 + offsetSlim)
+			return n - std::abs(n - topHill4) * fun((endHill4 + offsetSlim - x) / offsetSlim, curveValue);
+
 		else
 			return n;
 	};
