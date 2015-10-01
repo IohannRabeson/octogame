@@ -44,7 +44,8 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		SlowFall,
 		StartWaterJump,
 		WaterJump,
-		PortalEvent
+		PortalEvent,
+		KonamiCode = 18
 	};
 public:
 	friend class OctoEvent;
@@ -76,6 +77,7 @@ public:
 	void					repairElevator(ElevatorStream & elevator);
 	void					collideSpaceShip(SpaceShip * spaceShip);
 	void					usePortal(Portal & portal);
+	void					startKonamiCode(bool canStart);
 
 private:
 	bool					dieFall();
@@ -120,6 +122,7 @@ private:
 	octo::CharacterAnimation	m_startElevatorAnimation;
 	octo::CharacterAnimation	m_elevatorAnimation;
 	octo::CharacterAnimation	m_portalAnimation;
+	octo::CharacterAnimation	m_konamiCodeAnimation;
 
 	std::unique_ptr<OctoSound>						m_sound;
 	RectangleShape *								m_box;

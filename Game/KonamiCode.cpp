@@ -11,7 +11,7 @@ KonamiCode::KonamiCode(void) :
 	m_shaderIndex(0u),
 	m_state(Fail),
 	m_timer(sf::Time::Zero),
-	m_timerMax(sf::seconds(5.f))
+	m_timerMax(sf::seconds(6.f))
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
@@ -45,20 +45,21 @@ KonamiCode::~KonamiCode(void)
 	graphics.removeKeyboardListener(this);
 }
 
-void KonamiCode::update(sf::Time frameTime)
+void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 {
 	if (m_index == 10u)
+	{
 		m_state = Success;
+	}
 	if (m_state == Success)
 	{
 		octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 		postEffect.enableEffect(m_shaderIndex, true);
-		m_position = sf::Vector2f(1500.f, 500.f); //TODO set position from octo
-		m_shader.setParameter("position", m_position.x, m_position.y);
+		m_shader.setParameter("position", position.x, position.y);
 		m_timer += frameTime;
 		if (m_timer > m_timerMax)
 		{
-			//m_state = Fail;
+			m_state = Fail;
 			m_timer = sf::Time::Zero;
 			postEffect.enableEffect(m_shaderIndex, false);
 		}
@@ -71,6 +72,13 @@ void KonamiCode::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	(void)render;
 	(void)states;
+}
+
+bool KonamiCode::canStartEvent()
+{
+	if (m_index == 9u)
+		return true;
+	return false;
 }
 
 bool KonamiCode::onPressed(sf::Event::KeyEvent const & event)
