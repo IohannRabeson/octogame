@@ -147,6 +147,7 @@ private:
 	sf::Time					m_timeRepairSpaceShip;
 	sf::Time					m_timeRepairSpaceShipMax;
 	float						m_spriteScale;
+	float						m_maxJumpWaterVelocity;
 	float						m_pixelSecondJump;
 	float						m_pixelSecondSlowFall;
 	float						m_pixelSecondWalk;

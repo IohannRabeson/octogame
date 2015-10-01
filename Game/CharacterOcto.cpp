@@ -28,6 +28,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(4.f)),
 	m_spriteScale(0.6f),
+	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondSlowFall(-300.f),
 	m_pixelSecondWalk(320.f),
@@ -1091,11 +1092,11 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 		}
 		if (event == StartWaterJump || event == WaterJump)
 		{
-			velocity.x = 0.f;
+			velocity.x *= 0.4f;
 			velocity.y = m_jumpVelocity;
 			if (!m_inWater)
 				m_jumpVelocity += m_pixelSecondMultiplier * frametime;
-			else
+			else if (m_jumpVelocity > m_maxJumpWaterVelocity)
 				m_jumpVelocity -= m_pixelSecondMultiplier * frametime * 2.3f;
 		}
 	}
