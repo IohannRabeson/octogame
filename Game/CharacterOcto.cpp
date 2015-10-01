@@ -986,6 +986,7 @@ void	CharacterOcto::inWater()
 			emit = true;
 			m_inWater = true;
 		}
+		m_waterParticle.clear();
 	}
 	else if (m_inWater)
 	{
