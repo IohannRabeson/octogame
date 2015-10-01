@@ -111,7 +111,7 @@ bool	Progress::canRepair()
 
 bool	Progress::canRepairShip()
 {
-	return (m_data.nanoRobotCount > 4);
+	return (m_data.nanoRobotCount > 6);
 }
 
 bool	Progress::canWalk()

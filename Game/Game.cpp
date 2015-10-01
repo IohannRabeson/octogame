@@ -16,6 +16,7 @@
 #include "AGameObject.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "RepairShipNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "FranfranNpc.hpp"
@@ -206,6 +207,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
+			}
+			break;
+		case GameObjectType::RepairShipNanoRobot:
+			if (!gameObjectCast<RepairShipNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canRepairShip())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairShipNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(static_cast<RepairShipNanoRobot *>(ptr));
 			}
 			break;
 		default:
