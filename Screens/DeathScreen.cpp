@@ -1,6 +1,7 @@
 #include "DeathScreen.hpp"
 
 #include <Application.hpp>
+#include <AudioManager.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
 
@@ -67,7 +68,10 @@ void	DeathScreen::resume()
 
 void	DeathScreen::stop()
 {
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 
+	audio.playSound(resources.getSound(PORTAL_END_WAV));
 }
 
 void	DeathScreen::update(sf::Time frameTime)
