@@ -132,7 +132,8 @@ LevelFourBiome::LevelFourBiome() :
 	m_instances[2] = MAP_CEDRIC_JUNGLE_OMP; //2 to 102
 	m_instances[500] = MAP_DOUBLE_JUMP_JUNGLE_OMP; //500 to 600
 	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[500] = GameObjectType::Portal;
+	m_gameObjects[70] = GameObjectType::PeaNpc;
+	m_gameObjects[80] = GameObjectType::PierreNpc;
 	m_gameObjects[300] = GameObjectType::VinceNpc;
 	m_gameObjects[770] = GameObjectType::ConstanceNpc;
 	m_gameObjects[763] = GameObjectType::AmandineNpc;
