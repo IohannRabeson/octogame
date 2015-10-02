@@ -82,7 +82,6 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	// TODO: info du biome vers lequel on va se téléporter
 	PortalParticle			m_particles;
 	Level					m_destination;
 	sf::Vector2f			m_position;
