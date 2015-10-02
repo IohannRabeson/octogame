@@ -4,8 +4,8 @@
 FaustNpc::FaustNpc(void) :
 	ANpc(NPC_FAUST_OSS)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(120.f, 100.f));
+	setSize(sf::Vector2f(130.f, 155.f));
+	setOrigin(sf::Vector2f(20.f, 0.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setTimerMax(sf::seconds(8.0f));

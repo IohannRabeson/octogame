@@ -139,7 +139,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[750] = GameObjectType::Tent;
 	m_gameObjects[700] = GameObjectType::Portal;
-	m_instances[870] = MAP_ELEVATOR_JUNGLE_OMP;
+//	m_instances[870] = MAP_ELEVATOR_JUNGLE_OMP;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};

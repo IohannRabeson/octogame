@@ -57,6 +57,7 @@ protected:
 	void setMachine(octo::FiniteStateMachine const & machine);
 	void setVelocity(float velocity);
 	void setDisplayText(bool displayText);
+	void setActiveText(bool active);
 	void setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask);
 	void setTextOffset(sf::Vector2f const & offset);
 	void setupIdleAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode);
@@ -111,6 +112,7 @@ private:
 	float										m_velocity;
 	float										m_scale;
 	bool										m_displayText;
+	bool										m_activeText;
 	bool										m_collideOctoEvent;
 
 };
