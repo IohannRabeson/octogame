@@ -87,9 +87,9 @@ LevelFourBiome::LevelFourBiome() :
 	m_shineEffectRotateAngle(100.f, 200.f),
 
 	m_cloudSize(sf::Vector2f(400.f, 200.f), sf::Vector2f(800.f, 400.f)),
-	m_cloudPartCount(10u, 15u),
+	m_cloudPartCount(3u, 4u),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
-	m_cloudColor(255, 255, 255, 200),
+	m_cloudColor(255, 255, 255, 100),
 
 	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),
@@ -125,13 +125,15 @@ LevelFourBiome::LevelFourBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[140] = MAP_ELEVATOR_JUNGLE_OMP;
-	m_gameObjects[70] = GameObjectType::Portal;
-	m_gameObjects[500] = GameObjectType::Portal;
+	m_instances[140] = MAP_TRAIL_SLOWFALL_WATER_OMP;
+	m_gameObjects[40] = GameObjectType::Portal;
+	m_gameObjects[75] = GameObjectType::BrayouNpc;
 	m_gameObjects[150] = GameObjectType::EvaNpc;
+	m_gameObjects[500] = GameObjectType::Portal;
 	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-	m_gameObjects[645] = GameObjectType::PeaNpc;
-	m_gameObjects[600] = GameObjectType::BrayouNpc;
+	m_gameObjects[675] = GameObjectType::PeaNpc;
+	m_gameObjects[850] = GameObjectType::Concert;
+	m_gameObjects[695] = GameObjectType::WaterNanoRobot;
 
 	m_interestPointPosX = 500;
 
@@ -298,7 +300,7 @@ Map::MapSurfaceGenerator LevelFourBiome::getMapSurfaceGenerator()
 		else if (x <= endHill2)
 			return topHill2;
 		else if (x <= endHill2 + offsetSlim)
-			return bot1 - std::abs(bot1 - topHill2) * fun((endHill2 + offsetSlim - x) / offsetSlim, curveValue);
+			return bot1 - std::abs(bot1 - topHill2) * fun((endHill2 + offsetSlim - x) / offsetSlim, 0.87f);
 
 		else if (x <= startHill3)
 			return bot2;
