@@ -243,7 +243,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new DoubleJumpNanoRobot());
-					ptr->setPosition(position);
+					ptr->setPosition(position + sf::Vector2f(0, 570.f));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
