@@ -47,7 +47,6 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 
 CedricNpc::~CedricNpc(void)
 {
-	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
 	Id = 0u;
 }
 

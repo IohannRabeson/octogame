@@ -129,6 +129,7 @@ LevelFourBiome::LevelFourBiome() :
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
 	m_gameObjects[149] = GameObjectType::EvaNpc;
+	m_gameObjects[179] = GameObjectType::CanouilleNpc;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
 	m_gameObjects[675] = GameObjectType::PeaNpc;
@@ -300,7 +301,7 @@ Map::MapSurfaceGenerator LevelFourBiome::getMapSurfaceGenerator()
 		else if (x <= endHill2)
 			return topHill2;
 		else if (x <= endHill2 + offsetSlim)
-			return bot1 - std::abs(bot1 - topHill2) * fun((endHill2 + offsetSlim - x) / offsetSlim, 0.87f);
+			return bot2 - std::abs(bot2 - topHill2) * fun((endHill2 + offsetSlim - x) / offsetSlim, 0.87f);
 
 		else if (x <= startHill3)
 			return bot2;
@@ -309,7 +310,7 @@ Map::MapSurfaceGenerator LevelFourBiome::getMapSurfaceGenerator()
 		else if (x <= endHill3)
 			return topHill3;
 		else if (x <= endHill3 + offsetSlim)
-			return bot2 - std::abs(bot2 - topHill3) * fun((endHill3 + offsetSlim - x) / offsetSlim, curveValue);
+			return bot1 - std::abs(bot1 - topHill3) * fun((endHill3 + offsetSlim - x) / offsetSlim, curveValue);
 
 		else if (x <= startHill4)
 			return bot1;
