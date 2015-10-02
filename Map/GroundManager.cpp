@@ -26,6 +26,7 @@
 #include "AmandineNpc.hpp"
 #include "JeffMouffyNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
+#include "WellKeeperNpc.hpp"
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
@@ -380,6 +381,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					ConstanceNpc * constance = new ConstanceNpc();
 					constance->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, constance);
+				}
+				break;
+			case GameObjectType::WellKeeperNpc:
+				{
+					WellKeeperNpc * npc = new WellKeeperNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::OldDesertStaticNpc:
