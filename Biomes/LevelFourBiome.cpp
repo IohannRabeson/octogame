@@ -825,7 +825,7 @@ sf::Color		LevelFourBiome::randomColorLeaf(sf::Color const & color)
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
 	tmp.Hue += m_generator.randomFloat(-180.f, 180.f);
-	tmp.Luminance += m_generator.randomFloat(-10.f, 10.f);
+	tmp.Luminance += m_generator.randomFloat(-20.f, 0.f);
 	sf::Color newColor = tmp.TurnToRGB();
 	newColor.a = color.a;
 	return (newColor);
