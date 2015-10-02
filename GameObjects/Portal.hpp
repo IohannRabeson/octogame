@@ -69,6 +69,8 @@ public:
 	Portal(Level destination);
 	virtual ~Portal(void);
 
+	void addMapOffset(float x, float y);
+	sf::Vector2f const & getPosition(void) const;
 	void setPosition(sf::Vector2f const & position);
 	void setRadius(float radius);
 	void setBiome(ABiome & biome);

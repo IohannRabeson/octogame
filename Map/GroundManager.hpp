@@ -96,6 +96,7 @@ private:
 	std::vector<GameObjectPosition<IPlaceable>>			m_otherObjectsLow;
 	std::vector<std::unique_ptr<InstanceDecor>>			m_instanceDecors;
 	std::vector<std::unique_ptr<InstanceDecor>>			m_instanceDecorsFront;
+	std::vector<std::unique_ptr<Portal>>				m_otherOnInstance;
 	std::vector<std::unique_ptr<ANpc>>					m_npcs;
 	std::vector<std::unique_ptr<NanoRobot>>				m_nanoRobotOnInstance;
 

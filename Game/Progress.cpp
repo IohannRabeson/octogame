@@ -13,6 +13,7 @@
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
+	m_filename("save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
 	m_reverseSprite(false),
@@ -71,7 +72,7 @@ void	Progress::save()
 	octo::AudioManager & audio = octo::Application::getAudioManager();
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 
-	m_data.musicVol = audio.getMusicVolume() ;
+	m_data.musicVol = audio.getMusicVolume();
 	m_data.soundVol = audio.getSoundVolume();
 	m_data.fullscreen = graphics.isFullscreen();
 	m_data.vsync = graphics.isVerticalSyncEnabled();
