@@ -131,7 +131,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[10] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
-	m_instances[584] = MAP_NANO_JUMP_DESERT_OMP;
+	m_instances[580] = MAP_NANO_JUMP_DESERT_OMP;
 	m_gameObjects[300] = GameObjectType::TurbanNpc;
 	m_gameObjects[556] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
@@ -139,7 +139,6 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[750] = GameObjectType::Tent;
 	m_gameObjects[700] = GameObjectType::Portal;
-//	m_instances[870] = MAP_ELEVATOR_JUNGLE_OMP;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
