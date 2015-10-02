@@ -736,6 +736,8 @@ void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisi
 			// TODO
 			if (collisionDirection.x == 0 && collisionDirection.y < 0)
 				m_collisionTile = true;
+			else if (collisionDirection.x != 0 && collisionDirection.y == 0)
+				m_timeEventFall = sf::Time::Zero;
 			break;
 		case GameObjectType::Elevator:
 			m_collisionElevator = true;
@@ -939,7 +941,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 bool	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > sf::seconds(2.0f) && !m_inWater)
+	if (m_timeEventFall > sf::seconds(4.0f) && !m_inWater)
 	{
 		m_sprite.setNextEvent(Death);
 		m_helmetParticle.canEmit(true);
@@ -1162,7 +1164,7 @@ void	CharacterOcto::caseLeft()
 	{
 		m_keyLeft = true;
 		m_keyRight = false;
-		if (m_onGround && m_progress.canWalk())
+		if (m_onGround && m_progress.canWalk() && m_numberOfJump != 1)
 			m_sprite.setNextEvent(Left);
 	}
 }
@@ -1173,7 +1175,7 @@ void	CharacterOcto::caseRight()
 	{
 		m_keyRight = true;
 		m_keyLeft = false;
-		if (m_onGround && m_progress.canWalk())
+		if (m_onGround && m_progress.canWalk() && m_numberOfJump != 1)
 			m_sprite.setNextEvent(Right);
 	}
 }
