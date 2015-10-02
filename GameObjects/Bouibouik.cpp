@@ -84,11 +84,11 @@ void Bouibouik::update(sf::Time frameTime)
 		if (getTimer() < step)
 			intensity = octo::linearInterpolation(1.f, 0.1f, getTimer() / step);
 		else if (getTimer() < 3.f * step)
-			intensity = octo::linearInterpolation(0.1f, 0.02f, (getTimer() - step) / (3.f * step));
+			intensity = octo::linearInterpolation(0.1f, 0.02f, (getTimer() - step) / (2.f * step));
 		else if (getTimer() < 5.f * step)
-			intensity = octo::linearInterpolation(0.02f, 0.1f, (getTimer() - 3.f * step) / (5.f * step));
+			intensity = octo::linearInterpolation(0.02f, 0.1f, (getTimer() - 3.f * step) / (2.f * step));
 		else
-			intensity = octo::linearInterpolation(0.1f, 1.f, (getTimer() - 5.f * step) / (getEffectDuration()));
+			intensity = octo::linearInterpolation(0.1f, 1.f, (getTimer() - 5.f * step) / step);
 		shader.setParameter("intensity", intensity);
 	}
 	if (getCollideWithOcto())
