@@ -20,7 +20,8 @@ LevelFourBiome::LevelFourBiome() :
 	m_tileStartColor(255, 193, 177),
 	m_tileEndColor(249, 237, 188),
 	m_waterLevel(1.f),
-	m_waterColor(141, 52, 130, 100),
+	//m_waterColor(141, 52, 130, 100),
+	m_waterColor(3, 57, 108, 130),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(30.f)),
@@ -36,7 +37,7 @@ LevelFourBiome::LevelFourBiome() :
 	m_lightningSize(700.f, 2500.f),
 
 	m_rockCount(30u, 35u),
-	m_treeCount(100u, 100u),
+	m_treeCount(30u, 30u),
 	m_mushroomCount(39u, 40u),
 	m_crystalCount(70u, 100u),
 	m_starCount(500u, 800u),
@@ -62,9 +63,9 @@ LevelFourBiome::LevelFourBiome() :
 	m_canCreateMoon(true),
 	m_canCreateRainbow(true),
 
-	m_rockSize(sf::Vector2f(30.f, 100.f), sf::Vector2f(60.f, 300.f)),
+	m_rockSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(40.f, 300.f)),
 	m_rockPartCount(10.f, 15.f),
-	m_rockColor(35, 30, 15),
+	m_rockColor(60, 72, 84),
 
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
@@ -81,7 +82,7 @@ LevelFourBiome::LevelFourBiome() :
 
 	m_crystalSize(sf::Vector2f(5.f, 30.f), sf::Vector2f(20.f, 80.f)),
 	m_crystalPartCount(15u, 25u),
-	m_crystalColor(5, 0, 5, 230),
+	m_crystalColor(162, 121, 143, 150),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
