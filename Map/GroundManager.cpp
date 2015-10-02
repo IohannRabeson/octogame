@@ -29,6 +29,7 @@
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "Well.hpp"
 #include "Tent.hpp"
 #include "Concert.hpp"
 #include "Firecamp.hpp"
@@ -42,6 +43,7 @@
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
+#include "WaterNanoRobot.hpp"
 #include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
@@ -111,6 +113,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
 	m_offset.x = rect.left;
 	m_offset.y = rect.top;
+	//m_oldOffset = sf::Vector2i(m_offset / 16.f);
 	updateOffset(0.f);
 }
 
@@ -445,13 +448,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					if (!Progress::getInstance().canMoveMap())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
 				break;
-			case GameObjectType::DoubleJumpNanoRobot:
-					if (!Progress::getInstance().canDoubleJump())
-						m_nanoRobots.emplace_back(gameObject.first, 3, new DoubleJumpNanoRobot());
-				break;
-			case GameObjectType::SlowFallNanoRobot:
-					if (!Progress::getInstance().canSlowFall())
-						m_nanoRobots.emplace_back(gameObject.first, 3, new SlowFallNanoRobot());
+			case GameObjectType::WaterNanoRobot:
+					if (!Progress::getInstance().canUseWaterJump())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new WaterNanoRobot());
 				break;
 			case GameObjectType::SpaceShip:
 				{
@@ -468,6 +467,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::Tent:
 				{
 					Tent * simple = new Tent();
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::Well:
+				{
+					Well * simple = new Well();
 					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
 				}
 				break;

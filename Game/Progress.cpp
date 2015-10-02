@@ -90,7 +90,12 @@ void	Progress::saveToFile()
 
 void	Progress::reset()
 {
+	m_changeLevel = false;
+	m_reverseSprite = false;
+	m_validChallenge = false;
+	m_spaceShipRepair = false;
 	setup();
+	save();
 }
 
 void	Progress::addNanoRobot()

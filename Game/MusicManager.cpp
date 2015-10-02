@@ -10,22 +10,24 @@ MusicManager::MusicManager() :
 	m_musicLevel[0] = AreaMusic(Level::LevelOne, SPACE_SHIP_WAV, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_II_WAV, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
-	m_musicLevel[3] = AreaMusic(Level::LevelFour, SPACE_SHIP_WAV, sf::FloatRect());
+	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
 
 	m_music.resize(4);
 
 	// Montagne
-	m_music[0] = AreaMusic(Level::LevelTwo, "noMusic",
+	m_music[0] = AreaMusic(Level::LevelTwo, OCTO_SLOWFALL_WAV,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
 	// oasis
 	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
 			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1700.f), sf::Vector2f(2100.f, 900.f)));
 	// village
 	m_music[2] = AreaMusic(Level::LevelThree, ACTION_FAST_WAV,
-			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235 * 16, 2300.f)));
+			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
 	//iles 
-	m_music[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV,
-			sf::FloatRect(sf::Vector2f(130.f * 16.f, -4500.f), sf::Vector2f(410 * 16, 4500.f)));
+	m_music[3] = AreaMusic(Level::LevelFour, OCTO_SLOWFALL_WAV,
+			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1300.f * 16.f, 6200.f)));
+	m_music[3] = AreaMusic(Level::LevelFour, OCTO_SLOWFALL_WAV,
+			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
 }
 
 MusicManager::~MusicManager()
@@ -33,6 +35,7 @@ MusicManager::~MusicManager()
 	if (m_played)
 		m_audio.stopMusic(sf::Time::Zero);
 	m_audio.setMusicVolume(m_maxVolume);
+	Progress::getInstance().save();
 }
 
 void	MusicManager::setup(ABiome & biome)
