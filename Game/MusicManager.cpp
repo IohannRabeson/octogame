@@ -12,7 +12,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
 
-	m_music.resize(5);
+	m_music.resize(6);
 
 	// Montagne
 	m_music[0] = AreaMusic(Level::LevelTwo, OCTO_SLOWFALL_WAV,
@@ -23,11 +23,14 @@ MusicManager::MusicManager() :
 	// village
 	m_music[2] = AreaMusic(Level::LevelThree, ACTION_SLOW_WAV,
 			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
+	// cedric challenge
+	m_music[3] = AreaMusic(Level::LevelThree, OCTO_SLOWFALL_WAV,
+			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)));
 	//water
-	m_music[3] = AreaMusic(Level::LevelFour, SOUTERRAIN_LUGUBRE_WAV,
+	m_music[4] = AreaMusic(Level::LevelFour, SOUTERRAIN_LUGUBRE_WAV,
 			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
 	//run
-	m_music[4] = AreaMusic(Level::LevelFour, OCTO_SLOWFALL_WAV,
+	m_music[5] = AreaMusic(Level::LevelFour, OCTO_SLOWFALL_WAV,
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
 }
 
@@ -103,7 +106,6 @@ void	MusicManager::transition(sf::Time frameTime)
 			m_current = music.name;
 			if (music.music.getDuration() <= music.offset)
 			{
-				std::cout << "reset" << std::endl;
 				music.offset = sf::Time::Zero;
 			}
 			m_audio.setMusicVolume(0.f);
@@ -112,7 +114,6 @@ void	MusicManager::transition(sf::Time frameTime)
 					music.offset, true);
 			m_played = true;
 			isStart = true;
-			std::cout << "start" << music.offset.asSeconds() << std::endl;
 			break;
 		}
 		else if (music.area.contains(m_position)
@@ -129,7 +130,6 @@ void	MusicManager::transition(sf::Time frameTime)
 					m_timer = sf::Time::Zero;
 				volume = m_maxVolume * (m_timer / main.transitionTime);
 				m_audio.setMusicVolume(volume);
-				std::cout << "FadeM" << volume << std::endl;
 			}
 			break;
 		}
@@ -142,7 +142,6 @@ void	MusicManager::transition(sf::Time frameTime)
 			if (m_timer > music.transitionTime)
 				m_timer = music.transitionTime;
 			volume = m_maxVolume * (m_timer / music.transitionTime);
-			std::cout << "grow" << volume << "|" << music.offset.asSeconds() << std::endl;
 			m_audio.setMusicVolume(volume);
 			break;
 		}
@@ -156,7 +155,6 @@ void	MusicManager::transition(sf::Time frameTime)
 				m_timer = sf::Time::Zero;
 			volume = m_maxVolume * (m_timer / music.transitionTime);
 			m_audio.setMusicVolume(volume);
-			std::cout << "Fade" << volume << "|" << music.offset.asSeconds() << std::endl;
 			break;
 		}
 		else
@@ -175,7 +173,6 @@ void	MusicManager::transition(sf::Time frameTime)
 				m_current = main.name;
 				if (main.music.getDuration() <= main.offset)
 				{
-					std::cout << "reset" << std::endl;
 					main.offset = sf::Time::Zero;
 				}
 				m_audio.startMusic(main.music, sf::Time::Zero,
@@ -184,7 +181,6 @@ void	MusicManager::transition(sf::Time frameTime)
 				m_timer = sf::Time::Zero;
 				m_played = true;
 				isStart = true;
-				std::cout << "startM" << main.offset.asSeconds() << std::endl;
 				break;
 			}
 			else
@@ -194,7 +190,6 @@ void	MusicManager::transition(sf::Time frameTime)
 				if (m_timer > main.transitionTime)
 					m_timer = main.transitionTime;
 				volume = m_maxVolume * (m_timer / main.transitionTime);
-				std::cout << "growM" << volume << std::endl;
 				m_audio.setMusicVolume(volume);
 				break;
 			}
@@ -202,7 +197,6 @@ void	MusicManager::transition(sf::Time frameTime)
 	}
 	if (m_timer == sf::Time::Zero && m_played && !isStart)
 	{
-		std::cout << "STOP" << volume << std::endl;
 		//STOP
 		m_audio.stopMusic(sf::Time::Zero);
 		m_audio.setMusicVolume(m_maxVolume);
