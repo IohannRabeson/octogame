@@ -67,13 +67,13 @@ LevelFourBiome::LevelFourBiome() :
 	m_rockColor(35, 30, 15),
 
 	m_treeDepth(6u, 7u),
-	m_treeSize(sf::Vector2f(5.f, 60.f), sf::Vector2f(20.f, 100.f)),
+	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(177, 150, 186),
+	m_treeColor(0, 255, 159),
 	m_treeAngle(-180.f, 180.f),
 	m_treeBeatMouvement(0.1f),
 	m_leafSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(40.f, 40.f)),
-	m_leafColor(177, 150, 186, 150.f),
+	m_leafColor(0, 255, 159, 150.f),
 
 	m_mushroomSize(sf::Vector2f(3.f, 20.f), sf::Vector2f(10.f, 50.f)),
 	m_mushroomColor(60, 0, 53, 150.f),
@@ -513,7 +513,7 @@ sf::Time		LevelFourBiome::getTreeLifeTime()
 
 sf::Color		LevelFourBiome::getTreeColor()
 {
-	return (randomColor(m_treeColor));
+	return (randomColorLeaf(m_treeColor));
 }
 
 float			LevelFourBiome::getTreeAngle()
