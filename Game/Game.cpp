@@ -189,7 +189,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::DoubleJumpNanoRobot:
-			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canDoubleJump() && Progress::getInstance().canOpenDoubleJump())
+			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canDoubleJump() && Progress::getInstance().canOpenDoubleJump() && !Progress::getInstance().canValidChallenge())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -403,7 +403,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
-	m_physicsEngine.debugDraw(render);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	m_groundManager->drawFront(render, states);
