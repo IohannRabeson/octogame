@@ -413,6 +413,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state14, state13);
 	machine.addTransition(StartJump, state15, state13);
 	machine.addTransition(StartJump, state16, state13);
+	machine.addTransition(StartJump, state17, state13);
 
 	machine.addTransition(Jump, state13, state3);
 
@@ -426,6 +427,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(DoubleJump, state14, state4);
 	machine.addTransition(DoubleJump, state15, state4);
 	machine.addTransition(DoubleJump, state16, state4);
+	machine.addTransition(DoubleJump, state17, state4);
 
 	machine.addTransition(Fall, state0, state5);
 	machine.addTransition(Fall, state1, state5);
@@ -808,9 +810,14 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 
 void	CharacterOcto::usePortal(Portal & portal)
 {
+	octo::Camera&				camera = octo::Application::getCamera();
+	sf::Vector2f const&			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
+
 	m_collisionPortal = true;
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
+		m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+		m_progress.setReverseSprite(m_originMove);
 		m_progress.setNextDestination(portal.getDestination());
 	}
 }
@@ -1246,7 +1253,9 @@ void CharacterOcto::casePortal()
 
 bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 {
-	if (m_sprite.getCurrentEvent() == Death || m_sprite.getCurrentEvent() == KonamiCode)
+	if (m_sprite.getCurrentEvent() == Death
+			|| m_sprite.getCurrentEvent() == KonamiCode
+			|| m_sprite.getCurrentEvent() == PortalEvent)
 		return true;
 	switch (event.code)
 	{
