@@ -42,7 +42,8 @@ enum class GameObjectType : std::size_t
 	Water = 131u,
 	FaustNpc = 132u,
 	PierreNpc = 133u,
-	PeaNpc = 134u
+	PeaNpc = 134u,
+	CanouilleNpc = 135u
 };
 
 /*!

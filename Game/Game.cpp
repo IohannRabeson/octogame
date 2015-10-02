@@ -21,6 +21,7 @@
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "FranfranNpc.hpp"
+#include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "CedricNpc.hpp"
@@ -274,6 +275,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::TurbanNpc:
 			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::CanouilleNpc:
+			gameObjectCast<CanouilleNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::JeffMouffyNpc:
 			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);

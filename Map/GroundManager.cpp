@@ -22,6 +22,7 @@
 #include "IohannNpc.hpp"
 #include "ConstanceNpc.hpp"
 #include "FaustNpc.hpp"
+#include "CanouilleNpc.hpp"
 #include "AmandineNpc.hpp"
 #include "JeffMouffyNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
@@ -385,6 +386,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					JeffMouffyNpc * jeffMouffy = new JeffMouffyNpc();
 					jeffMouffy->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, jeffMouffy);
+				}
+				break;
+			case GameObjectType::CanouilleNpc:
+				{
+					CanouilleNpc * npc = new CanouilleNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::FaustNpc:
