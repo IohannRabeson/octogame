@@ -90,7 +90,7 @@ void	Game::loadLevel(void)
 	// Reset last values
 	postEffect.removeEffects();
 	// Reset PhysycsEngine
-	octo::Application::getCamera().setCenter(startPosition);
+	octo::Application::getCamera().setCenter(startPosition - sf::Vector2f(0.f, 200.f));
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(8u);
@@ -112,7 +112,7 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup(m_biomeManager.getCurrentBiome());
-	m_octo->setPosition(startPosition);
+	m_octo->setStartPosition(startPosition);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -394,7 +394,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
-	//m_physicsEngine.debugDraw(render);
+	m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	m_groundManager->drawFront(render, states);

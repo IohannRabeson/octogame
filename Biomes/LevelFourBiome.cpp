@@ -14,7 +14,7 @@ LevelFourBiome::LevelFourBiome() :
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(1300u, 200u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(40.f * 16.f, -850.f),
+	m_octoStartPosition(40.f * 16.f, -1050.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 193, 177),
