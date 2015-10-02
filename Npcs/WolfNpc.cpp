@@ -9,7 +9,7 @@ WolfNpc::WolfNpc(void) :
 	m_specialDistribution(1, 2),
 	m_lastState(Left)
 {
-	setSize(sf::Vector2f(190.f, 155.f));
+	setSize(sf::Vector2f(240.f, 155.f));
 	setOrigin(sf::Vector2f(0.f, 0.f));
 	setScale(0.8f);
 	setVelocity(50.f);
@@ -57,11 +57,11 @@ void WolfNpc::setup(void)
 			Frame(sf::seconds(0.4f), {18u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {19u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {20u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {21u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(1.8f), {21u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {22u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {23u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {24u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(1.4f), {25u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {25u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
