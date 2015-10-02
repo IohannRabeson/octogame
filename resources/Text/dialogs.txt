@@ -33,3 +33,4 @@ eva.oss=J'ai soif
 brayou.oss=Je suis grand
 pea.oss=J'ai plein de cheuveux :D
 pierre.oss=Je sais aps quoi dire
+npc_well_keeper.oss=Saute dans le puit hahahahahahahaha

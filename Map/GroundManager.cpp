@@ -26,6 +26,7 @@
 #include "AmandineNpc.hpp"
 #include "JeffMouffyNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
+#include "WellKeeperNpc.hpp"
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
@@ -35,6 +36,7 @@
 #include "Concert.hpp"
 #include "Firecamp.hpp"
 #include "Cage.hpp"
+#include "Seb.hpp"
 #include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
 #include "Water.hpp"
@@ -217,6 +219,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(TRAIL_SIGN_10_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(SEB_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Seb(scale, position);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -380,6 +386,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					ConstanceNpc * constance = new ConstanceNpc();
 					constance->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, constance);
+				}
+				break;
+			case GameObjectType::WellKeeperNpc:
+				{
+					WellKeeperNpc * npc = new WellKeeperNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::OldDesertStaticNpc:
