@@ -13,6 +13,7 @@
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
+	m_filename("save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
 	m_reverseSprite(false),

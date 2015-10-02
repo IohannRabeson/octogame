@@ -40,11 +40,12 @@ CharacterOcto::OctoSound::~OctoSound()
 
 void	CharacterOcto::OctoSound::update(sf::Time frameTime, Events event, bool inWater, bool onGround)
 {
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float	volume = 0.f;
 	if (m_soundTransition != nullptr)
 	{
 		m_timeSoundTransition += frameTime;
-		volume = (m_volumeEffect * 100) * (1.f - (m_timeSoundTransition / m_timeSoundTransitionMax));
+		volume = (m_volumeEffect * audio.getSoundVolume()) * (1.f - (m_timeSoundTransition / m_timeSoundTransitionMax));
 		if (volume >= 0.f)
 			m_soundTransition->setVolume(volume);
 		if (m_soundTransition->getStatus() == sf::Sound::Stopped || volume < 0.f)
@@ -230,7 +231,7 @@ void	CharacterOcto::OctoSound::fadeOut(sf::Time frameTime)
 	{
 		volume = 0.f;
 		sound.time += frameTime;
-		volume = (sound.m_maxVolume * 50) * (1.f - (sound.time / sf::seconds(0.5f)));
+		volume = (sound.m_maxVolume) * (1.f - (sound.time / sf::seconds(0.5f)));
 		if (volume >= 0.f)
 		{
 			sound.sound->setVolume(volume);

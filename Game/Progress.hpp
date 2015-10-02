@@ -37,7 +37,7 @@ public:
 	void				spaceShipRepair(bool isRepair) { m_spaceShipRepair = isRepair; }
 	bool				spaceShipIsRepair() const { return m_spaceShipRepair; }
 
-	bool				getMusicVolume() const { return m_data.musicVol; }
+	float				getMusicVolume() const { return m_data.musicVol; }
 
 	bool				canMoveMap();
 	bool				canRepair();

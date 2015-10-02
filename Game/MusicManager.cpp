@@ -1,4 +1,5 @@
 #include "MusicManager.hpp"
+#include "Progress.hpp"
 
 MusicManager::MusicManager() :
 	m_audio(octo::Application::getAudioManager()),
@@ -14,25 +15,24 @@ MusicManager::MusicManager() :
 
 	// Montagne
 	m_music[0] = AreaMusic(Level::LevelTwo, "noMusic",
-				sf::FloatRect(sf::Vector2f(340.f * 16.f, -3000.f), sf::Vector2f(3300.f, 1500.f)));
+			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3000.f), sf::Vector2f(3300.f, 1500.f)));
 	// oasis
 	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
-				sf::FloatRect(sf::Vector2f(665.f * 16.f, -1400.f), sf::Vector2f(2000.f, 500.f)));
+			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1400.f), sf::Vector2f(2000.f, 500.f)));
 
 	// village todo pos
 	m_music[2] = AreaMusic(Level::LevelThree, ACTION_FAST_WAV,
-				sf::FloatRect(sf::Vector2f(760.f * 16.f, -2000.f), sf::Vector2f(225 * 16, 500.f)));
+			sf::FloatRect(sf::Vector2f(760.f * 16.f, -2000.f), sf::Vector2f(225 * 16, 500.f)));
 
 	//TODO TODO TODO
 	m_maxVolume = m_audio.getMusicVolume();
-	std::cout << m_maxVolume << std::endl;
 }
 
 MusicManager::~MusicManager()
 {
 	if (m_played)
-		m_audio.stopMusic(sf::seconds(0.f));
-//	m_audio.setMusicVolume(m_maxVolume);
+		m_audio.stopMusic(sf::Time::Zero);
+	m_audio.setMusicVolume(m_maxVolume);
 }
 
 void	MusicManager::setup(ABiome & biome)
@@ -43,6 +43,7 @@ void	MusicManager::setup(ABiome & biome)
 
 void	MusicManager::update(sf::Time frameTime, sf::Vector2f const & octoPos)
 {
+	m_maxVolume = Progress::getInstance().getMusicVolume();
 	basePosition(octoPos);
 	transition(frameTime);
 }
@@ -100,7 +101,8 @@ void	MusicManager::transition(sf::Time frameTime)
 				music.offset = sf::Time::Zero;
 			}
 			m_audio.setMusicVolume(0.f);
-			m_audio.startMusic(music.music, sf::seconds(0.f),
+			m_timer = sf::Time::Zero;
+			m_audio.startMusic(music.music, sf::Time::Zero,
 					music.offset, true);
 			m_played = true;
 			isStart = true;
@@ -134,7 +136,7 @@ void	MusicManager::transition(sf::Time frameTime)
 			if (m_timer > music.transitionTime)
 				m_timer = music.transitionTime;
 			volume = m_maxVolume * (m_timer / music.transitionTime);
-			std::cout << "grow" << volume << std::endl;
+			std::cout << "grow" << volume << "|" << music.offset.asSeconds() << std::endl;
 			m_audio.setMusicVolume(volume);
 			break;
 		}
@@ -148,7 +150,7 @@ void	MusicManager::transition(sf::Time frameTime)
 				m_timer = sf::Time::Zero;
 			volume = m_maxVolume * (m_timer / music.transitionTime);
 			m_audio.setMusicVolume(volume);
-			std::cout << "Fade" << volume << std::endl;
+			std::cout << "Fade" << volume << "|" << music.offset.asSeconds() << std::endl;
 			break;
 		}
 		else
@@ -166,13 +168,14 @@ void	MusicManager::transition(sf::Time frameTime)
 			{
 				m_current = main.name;
 				if (main.music.getDuration() <= main.offset)
-			{
+				{
 					std::cout << "reset" << std::endl;
 					main.offset = sf::Time::Zero;
-			}
-				m_audio.startMusic(main.music, sf::seconds(0.f),
+				}
+				m_audio.startMusic(main.music, sf::Time::Zero,
 						main.offset, true);
 				m_audio.setMusicVolume(0.f);
+				m_timer = sf::Time::Zero;
 				m_played = true;
 				isStart = true;
 				std::cout << "startM" << main.offset.asSeconds() << std::endl;
@@ -195,7 +198,7 @@ void	MusicManager::transition(sf::Time frameTime)
 	{
 		std::cout << "STOP" << volume << std::endl;
 		//STOP
-		m_audio.stopMusic(sf::seconds(0.f));
+		m_audio.stopMusic(sf::Time::Zero);
 		m_audio.setMusicVolume(m_maxVolume);
 		m_played = false;
 	}
