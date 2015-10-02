@@ -20,6 +20,7 @@
 #include "JumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
+#include "WaterNanoRobot.hpp"
 #include "FranfranNpc.hpp"
 #include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
@@ -209,6 +210,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<SlowFallNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr);
+			}
+			break;
+		case GameObjectType::WaterNanoRobot:
+			if (!gameObjectCast<WaterNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canUseWaterJump())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<WaterNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(static_cast<WaterNanoRobot *>(ptr));
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
