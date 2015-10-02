@@ -99,7 +99,7 @@ void	Game::loadLevel(void)
 	m_skyManager.reset(new SkyManager());
 	m_groundManager.reset(new GroundManager());
 	m_parallaxScrolling.reset(new ParallaxScrolling());
-	m_musicPlayer.reset(new MusicPlayer());
+	m_musicPlayer.reset(new MusicManager());
 	m_octo.reset(new CharacterOcto());
 	m_konami.reset(new KonamiCode());
 
@@ -372,6 +372,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
+	m_musicPlayer->debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	//m_physicsEngine.debugDraw(render);

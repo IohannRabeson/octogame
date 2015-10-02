@@ -9,7 +9,7 @@
 # include "CharacterOcto.hpp"
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
-# include "MusicPlayer.hpp"
+# include "MusicManager.hpp"
 # include "KonamiCode.hpp"
 
 # include <memory>
@@ -36,7 +36,7 @@ private:
 	std::unique_ptr<SkyManager>			m_skyManager;
 	std::unique_ptr<GroundManager>		m_groundManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
-	std::unique_ptr<MusicPlayer>		m_musicPlayer;
+	std::unique_ptr<MusicManager>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<KonamiCode>			m_konami;
 	bool								m_keyS;
