@@ -129,6 +129,7 @@ LevelFourBiome::LevelFourBiome() :
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
 	m_gameObjects[149] = GameObjectType::EvaNpc;
+	m_gameObjects[179] = GameObjectType::CanouilleNpc;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
 	m_gameObjects[675] = GameObjectType::PeaNpc;
