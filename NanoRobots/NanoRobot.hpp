@@ -25,6 +25,7 @@ public:
 		Speak,
 		FollowOcto,
 		Repair,
+		GoingToRepairShip,
 		RepairShip,
 		User
 	};
@@ -47,14 +48,22 @@ public:
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
-	NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser);
+	NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, float multiplier = 0.f);
 
 	std::unique_ptr<BubbleText> const & getCurrentText(void) const { return m_texts[m_textIndex]; }
 
 	void setup(AGameObjectBase * gameObject);
+	void setUsePathLaser(bool usePathLaser);
+	void setLaserColor(sf::Color const & color);
+	void setRepairShipPosition(sf::Vector2f const & position);
 	void setTargets(std::vector<sf::Vector2f> const & targets, float travelDuration);
 	void makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
 	void playSoundRepair(void);
+	virtual void updateRepairShip(sf::Time frameTime);
+
+	bool isReparingShip(void) const;
+	static void setLaserConvergence(sf::Vector2f const & position);
+	static sf::Vector2f const & getLaserConvergence(void);
 
 private:
 	FireflySwarm								m_swarm;
@@ -68,9 +77,15 @@ private:
 	SparkSystem									m_particles;
 	sf::Texture const *							m_texture;
 	sf::Vector2f								m_offsetLaser;
+	sf::Time									m_timerRepairShip;
 	sf::Time									m_timerRepair;
 	sf::Time									m_timerRepairMax;
 	std::size_t									m_repairIndex;
+	sf::Vector2f								m_repairShipPosition;
+	bool										m_startLastAnimation;
+	bool										m_usePathLaser;
+	static sf::Vector2f							m_laserConvergence;
+	float										m_multiplier;
 
 	octo::AnimatedSprite						m_sprite;
 	octo::SpriteAnimation						m_animation;

@@ -9,6 +9,12 @@ public:
 	RepairNanoRobot(void);
 	virtual ~RepairNanoRobot(void) = default;
 
+	virtual void update(sf::Time frameTime);
+
+private:
+	sf::Time	m_timer;
+	sf::Time	m_timerMax;
+
 };
 
 #endif
