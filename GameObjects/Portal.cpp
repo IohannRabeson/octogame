@@ -62,6 +62,20 @@ Portal::~Portal(void)
 {
 }
 
+void Portal::addMapOffset(float x, float y)
+{
+	m_position = m_position + sf::Vector2f(x, y);
+	m_particles.setEmitter(m_position);
+	m_sprite.setPosition(m_sprite.getPosition().x + x, m_sprite.getPosition().y + y);
+	m_box->setPosition(m_box->getPosition().x + x, m_box->getPosition().y + y);
+	m_box->update();
+}
+
+sf::Vector2f const & Portal::getPosition(void) const
+{
+	return m_sprite.getPosition();
+}
+
 void Portal::update(sf::Time frametime)
 {
 	m_particles.update(frametime);

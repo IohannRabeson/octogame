@@ -289,7 +289,17 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			sf::Vector2f position = decor.position;
 			position.x += instance.first * Tile::TileSize - Map::OffsetX;
 			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
-			m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
+
+			if (!decor.name.compare(OBJECT_PORTAL_OSS))
+			{
+				//TODO care about get destination
+				std::unique_ptr<Portal> portal(new Portal(biome.getDestination()));
+				portal->setBiome(biome);
+				portal->setPosition(position);
+				m_otherOnInstance.push_back(std::move(portal));
+			}
+			else
+				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
 
 		bool spawnInstance = false;
@@ -866,6 +876,14 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			npc.m_gameObject->addMapOffset(-mapSizeX, 0.f);
 	}
 
+	for (auto const & otherOnInstance : m_otherOnInstance)
+	{
+		if (otherOnInstance->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			otherOnInstance->addMapOffset(mapSizeX, 0.f);
+		else if (otherOnInstance->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			otherOnInstance->addMapOffset(-mapSizeX, 0.f);
+	}
+
 	for (auto const & npc : m_npcs)
 	{
 		if (npc->getPosition().x < m_offset.x - mapSizeX / 2.f)
@@ -873,7 +891,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		else if (npc->getPosition().x > m_offset.x + mapSizeX / 2.f)
 			npc->addMapOffset(-mapSizeX, 0.f);
 	}
-	
+
 	if (m_water)
 	{
 		if (m_water->getPosition().x < m_offset.x - mapSizeX / 2.f)
@@ -1090,8 +1108,6 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerGround.update(deltatime, camera);
 }
 
-
-
 void GroundManager::updateGameObjects(sf::Time frametime)
 {
 	for (auto & decor : m_instanceDecors)
@@ -1106,6 +1122,8 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 		portal.m_gameObject->update(frametime);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->update(frametime);
+	for (auto & object : m_otherOnInstance)
+		object->update(frametime);
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->update(frametime);
 	for (auto & npc : m_npcs)
@@ -1169,6 +1187,8 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 		elevator.m_gameObject->draw(render, states);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render, states);
+	for (auto & object : m_otherOnInstance)
+		object->draw(render, states);
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->draw(render, states);
 	for (auto & npc : m_npcs)
