@@ -29,6 +29,7 @@
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "WolfNpc.hpp"
 #include "Tent.hpp"
 #include "Concert.hpp"
 #include "Firecamp.hpp"
@@ -126,6 +127,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
 	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
+	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
