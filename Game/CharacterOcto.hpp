@@ -71,7 +71,7 @@ public:
 	sf::Vector2f const &	getPhysicsPosition() const;
 	sf::Vector2f const &	getPosition() const;
 	sf::Vector2f			getBubblePosition() const;
-	void					setPosition(sf::Vector2f const & position);
+	void					setStartPosition(sf::Vector2f const & position);
 	void					giveNanoRobot(NanoRobot * robot);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot);
 	void					repairElevator(ElevatorStream & elevator);

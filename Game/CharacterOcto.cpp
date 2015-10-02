@@ -109,6 +109,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::DoubleJumpNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::RepairShipNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::SlowFallNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::WaterNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::Tent)
 		| static_cast<std::size_t>(GameObjectType::Concert)
@@ -749,9 +750,12 @@ void	CharacterOcto::setTopElevator(float top)
 	m_topElevator = top;
 }
 
-void	CharacterOcto::setPosition(sf::Vector2f const & position)
+void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 {
 	m_box->setPosition(position);
+	m_box->update();
+	m_eventBox->setPosition(position);
+	m_eventBox->update();
 }
 
 void	CharacterOcto::giveNanoRobot(NanoRobot * robot)

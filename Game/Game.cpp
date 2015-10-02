@@ -20,6 +20,7 @@
 #include "JumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
+#include "WaterNanoRobot.hpp"
 #include "FranfranNpc.hpp"
 #include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
@@ -90,7 +91,7 @@ void	Game::loadLevel(void)
 	// Reset last values
 	postEffect.removeEffects();
 	// Reset PhysycsEngine
-	octo::Application::getCamera().setCenter(startPosition);
+	octo::Application::getCamera().setCenter(startPosition - sf::Vector2f(0.f, 200.f));
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(8u);
@@ -112,7 +113,7 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup(m_biomeManager.getCurrentBiome());
-	m_octo->setPosition(startPosition);
+	m_octo->setStartPosition(startPosition);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -209,6 +210,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<SlowFallNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr);
+			}
+			break;
+		case GameObjectType::WaterNanoRobot:
+			if (!gameObjectCast<WaterNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canUseWaterJump())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<WaterNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(static_cast<WaterNanoRobot *>(ptr));
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
