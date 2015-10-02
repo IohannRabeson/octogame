@@ -92,6 +92,12 @@ void	Progress::reset()
 	setup();
 }
 
+void	Progress::addNanoRobot()
+{
+	m_data.nanoRobotCount++;
+	save();
+}
+
 void	Progress::setNextDestination(Level destination)
 {
 	m_data.destination = destination;
