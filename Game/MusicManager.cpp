@@ -12,7 +12,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
 
-	m_music.resize(4);
+	m_music.resize(5);
 
 	// Montagne
 	m_music[0] = AreaMusic(Level::LevelTwo, OCTO_SLOWFALL_WAV,
@@ -21,12 +21,13 @@ MusicManager::MusicManager() :
 	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
 			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1700.f), sf::Vector2f(2100.f, 900.f)));
 	// village
-	m_music[2] = AreaMusic(Level::LevelThree, ACTION_FAST_WAV,
+	m_music[2] = AreaMusic(Level::LevelThree, ACTION_SLOW_WAV,
 			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
-	//iles 
-	m_music[3] = AreaMusic(Level::LevelFour, OCTO_SLOWFALL_WAV,
-			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1300.f * 16.f, 6200.f)));
-	m_music[3] = AreaMusic(Level::LevelFour, OCTO_SLOWFALL_WAV,
+	//water
+	m_music[3] = AreaMusic(Level::LevelFour, SOUTERRAIN_LUGUBRE_WAV,
+			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
+	//run
+	m_music[4] = AreaMusic(Level::LevelFour, OCTO_SLOWFALL_WAV,
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
 }
 
@@ -83,8 +84,8 @@ void	MusicManager::basePosition(sf::Vector2f const & octoPos)
 
 void	MusicManager::transition(sf::Time frameTime)
 {
-	bool	isStart = false;
-	float	volume;
+	bool		isStart = false;
+	float		volume;
 	std::size_t	inLevel = 0u;
 	std::size_t	index = 0u;
 
@@ -101,7 +102,8 @@ void	MusicManager::transition(sf::Time frameTime)
 			//START
 			m_current = music.name;
 			if (music.music.getDuration() <= music.offset)
-			{std::cout << "reset" << std::endl;
+			{
+				std::cout << "reset" << std::endl;
 				music.offset = sf::Time::Zero;
 			}
 			m_audio.setMusicVolume(0.f);
