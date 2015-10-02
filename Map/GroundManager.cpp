@@ -286,6 +286,16 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
+			else if (!spriteTrigger.name.compare(NANO_REPAIR_SHIP_OSS))
+			{
+				if (!Progress::getInstance().canRepairShip())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new RepairShipNanoRobot());
+					ptr->setPosition(position + sf::Vector2f(0.f, 250.f));
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
 			else
 			{
 				std::unique_ptr<ANpc> npc;
