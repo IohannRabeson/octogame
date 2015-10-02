@@ -217,6 +217,14 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(TRAIL_SIGN_10_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(PYRAMID_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PYRAMID_OSS, scale, position, 9u, 0.1f);
+			});
+	m_decorFactory.registerCreator(PYRAMID_TOP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PYRAMID_TOP_OSS, scale, position, 9u, 0.1f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -289,7 +297,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			sf::Vector2f position = decor.position;
 			position.x += instance.first * Tile::TileSize - Map::OffsetX;
 			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
-			m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
+			if (!decor.isFront)
+				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
+			else
+				m_instanceDecorsFront.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
 
 		bool spawnInstance = false;
@@ -890,6 +901,15 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			decor->addMapOffset(-mapSizeX, 0.f);
 	}
 
+	for (auto const & decor : m_instanceDecorsFront)
+	{
+		if (decor->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			decor->addMapOffset(mapSizeX, 0.f);
+		else if (decor->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			decor->addMapOffset(-mapSizeX, 0.f);
+	}
+
+
 	for (auto const & robot : m_nanoRobotOnInstance)
 	{
 		if (robot->getTargetPosition().x < m_offset.x - mapSizeX / 2.f)
@@ -1096,6 +1116,8 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 {
 	for (auto & decor : m_instanceDecors)
 		decor->update(frametime);
+	for (auto & decor : m_instanceDecorsFront)
+		decor->update(frametime);
 	for (auto & object : m_otherObjectsHigh)
 		object.m_gameObject->update(frametime);
 	for (auto & object : m_otherObjectsLow)
@@ -1186,6 +1208,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
+	for (auto & decor : m_instanceDecorsFront)
+		decor->draw(render, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)

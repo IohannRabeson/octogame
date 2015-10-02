@@ -21,7 +21,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
 	m_waterLevel(-1.f),
-	m_waterColor(234, 94, 0, 200),
+	m_waterColor(96, 204, 233, 180),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -132,6 +132,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
 	m_instances[580] = MAP_NANO_JUMP_DESERT_OMP;
+	m_instances[11] = MAP_PYRAMID_OMP;
 	m_gameObjects[300] = GameObjectType::TurbanNpc;
 	m_gameObjects[556] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
@@ -209,7 +210,7 @@ Level	LevelTwoBiome::getDestination()
 float	LevelTwoBiome::getWaterLevel()
 {
 	if (Progress::getInstance().canUseWaterJump())
-		return 1200.f;
+		return 1400.f;
 	return m_waterLevel;
 }
 
