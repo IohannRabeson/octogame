@@ -6,26 +6,26 @@ MusicManager::MusicManager() :
 	m_played(false),
 	m_timer(sf::Time::Zero)
 {
-	m_musicLevel.resize(3);
+	m_musicLevel.resize(4);
 	m_musicLevel[0] = AreaMusic(Level::LevelOne, SPACE_SHIP_WAV, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_II_WAV, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
+	m_musicLevel[3] = AreaMusic(Level::LevelFour, SPACE_SHIP_WAV, sf::FloatRect());
 
-	m_music.resize(3);
+	m_music.resize(4);
 
 	// Montagne
 	m_music[0] = AreaMusic(Level::LevelTwo, "noMusic",
-			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3000.f), sf::Vector2f(3300.f, 1500.f)));
+			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
 	// oasis
 	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
-			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1400.f), sf::Vector2f(2000.f, 500.f)));
-
-	// village todo pos
+			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1700.f), sf::Vector2f(2100.f, 900.f)));
+	// village
 	m_music[2] = AreaMusic(Level::LevelThree, ACTION_FAST_WAV,
-			sf::FloatRect(sf::Vector2f(760.f * 16.f, -2000.f), sf::Vector2f(225 * 16, 500.f)));
-
-	//TODO TODO TODO
-	m_maxVolume = m_audio.getMusicVolume();
+			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235 * 16, 2300.f)));
+	//iles 
+	m_music[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV,
+			sf::FloatRect(sf::Vector2f(130.f * 16.f, -4500.f), sf::Vector2f(410 * 16, 4500.f)));
 }
 
 MusicManager::~MusicManager()
@@ -39,6 +39,7 @@ void	MusicManager::setup(ABiome & biome)
 {
 	m_currentLevel = biome.getId();
 	m_mapSize = biome.getMapSizeFloat();
+	m_maxVolume = Progress::getInstance().getMusicVolume();
 }
 
 void	MusicManager::update(sf::Time frameTime, sf::Vector2f const & octoPos)
@@ -56,7 +57,7 @@ void	MusicManager::debugDraw(sf::RenderTarget & render)
 		{
 			sf::RectangleShape	shape(sf::Vector2f(music.area.width, music.area.height));
 			shape.setPosition(music.area.left, music.area.top);
-			shape.setFillColor(sf::Color::White);
+			shape.setFillColor(sf::Color(63, 206, 87));
 			render.draw(shape);
 		}
 	}
