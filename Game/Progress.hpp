@@ -11,9 +11,9 @@ class Progress
 public:
 	static Progress & getInstance(void);
 
-	inline void			addNanoRobot() { m_data.nanoRobotCount++; }
-	inline void			removeNanoRobot() { m_data.nanoRobotCount--; }
-	inline std::size_t	getNanoRobotCount() { return m_data.nanoRobotCount; }
+	void				addNanoRobot();
+	void				removeNanoRobot() { m_data.nanoRobotCount--; }
+	std::size_t			getNanoRobotCount() { return m_data.nanoRobotCount; }
 
 	void				setNextDestination(Level destination);
 	Level				getNextDestination(void) const;

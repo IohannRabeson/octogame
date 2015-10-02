@@ -1,20 +1,20 @@
-#include "FaustNpc.hpp"
+#include "CanouilleNpc.hpp"
 #include "RectangleShape.hpp"
 
-FaustNpc::FaustNpc(void) :
-	ANpc(NPC_FAUST_OSS)
+CanouilleNpc::CanouilleNpc(void) :
+	ANpc(NPC_CANOUILLE_OSS)
 {
-	setSize(sf::Vector2f(130.f, 155.f));
-	setOrigin(sf::Vector2f(20.f, 0.f));
+	setSize(sf::Vector2f(115.f, 305.f));
+	setOrigin(sf::Vector2f(30.f, -100.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::FaustNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
-void FaustNpc::setup(void)
+void CanouilleNpc::setup(void)
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
 
@@ -22,7 +22,9 @@ void FaustNpc::setup(void)
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
@@ -31,36 +33,15 @@ void FaustNpc::setup(void)
 			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
 }
 
-void FaustNpc::setupMachine(void)
+void CanouilleNpc::setupMachine(void)
 {
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
@@ -82,7 +63,7 @@ void FaustNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-void FaustNpc::updateState(void)
+void CanouilleNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 

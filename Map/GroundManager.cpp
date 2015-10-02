@@ -22,6 +22,7 @@
 #include "IohannNpc.hpp"
 #include "ConstanceNpc.hpp"
 #include "FaustNpc.hpp"
+#include "CanouilleNpc.hpp"
 #include "AmandineNpc.hpp"
 #include "JeffMouffyNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
@@ -37,9 +38,11 @@
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "RepairShipNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
+#include "WaterNanoRobot.hpp"
 #include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
@@ -245,6 +248,26 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
+			else if (!spriteTrigger.name.compare(NANO_REPAIR_SHIP_OSS))
+			{
+				if (!Progress::getInstance().canRepairShip())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new RepairShipNanoRobot());
+					ptr->setPosition(position);
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
+			else if (!spriteTrigger.name.compare(NANO_SLOW_FALL_OSS))
+			{
+				if (!Progress::getInstance().canSlowFall())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new SlowFallNanoRobot());
+					ptr->setPosition(position);
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
 			else
 			{
 				std::unique_ptr<ANpc> npc;
@@ -366,6 +389,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, jeffMouffy);
 				}
 				break;
+			case GameObjectType::CanouilleNpc:
+				{
+					CanouilleNpc * npc = new CanouilleNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::FaustNpc:
 				{
 					FaustNpc * faust = new FaustNpc();
@@ -416,13 +446,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					if (!Progress::getInstance().canMoveMap())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
 				break;
-			case GameObjectType::DoubleJumpNanoRobot:
-					if (!Progress::getInstance().canDoubleJump())
-						m_nanoRobots.emplace_back(gameObject.first, 3, new DoubleJumpNanoRobot());
-				break;
-			case GameObjectType::SlowFallNanoRobot:
-					if (!Progress::getInstance().canSlowFall())
-						m_nanoRobots.emplace_back(gameObject.first, 3, new SlowFallNanoRobot());
+			case GameObjectType::WaterNanoRobot:
+					if (!Progress::getInstance().canUseWaterJump())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new WaterNanoRobot());
 				break;
 			case GameObjectType::SpaceShip:
 				{

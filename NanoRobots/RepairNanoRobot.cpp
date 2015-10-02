@@ -22,4 +22,12 @@ RepairNanoRobot::RepairNanoRobot(void) :
 	targets.push_back(sf::Vector2f(195.f, 208.f));
 	targets.push_back(sf::Vector2f(189.f, 208.f));
 	setTargets(targets, 0.6f);
+
+	setLaserColor(sf::Color::Red);
+	setRepairShipPosition(sf::Vector2f(1000.f, 1000.f));
+}
+
+void RepairNanoRobot::update(sf::Time frameTime)
+{
+	NanoRobot::update(frameTime);
 }

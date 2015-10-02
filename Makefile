@@ -89,6 +89,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/BrayouNpc.cpp						\
 				Npcs/EvaNpc.cpp							\
 				Npcs/PierreNpc.cpp						\
+				Npcs/CanouilleNpc.cpp					\
 				Npcs/PeaNpc.cpp							\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
@@ -114,6 +115,7 @@ SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/NanoRobot.cpp				\
 				NanoRobots/GroundTransformNanoRobot.cpp	\
 				NanoRobots/RepairNanoRobot.cpp			\
+				NanoRobots/RepairShipNanoRobot.cpp		\
 				NanoRobots/JumpNanoRobot.cpp			\
 				NanoRobots/DoubleJumpNanoRobot.cpp		\
 				NanoRobots/SlowFallNanoRobot.cpp		\

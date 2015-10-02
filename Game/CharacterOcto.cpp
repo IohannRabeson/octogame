@@ -12,6 +12,7 @@
 #include "SpaceShip.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "RepairShipNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
@@ -26,7 +27,7 @@ CharacterOcto::CharacterOcto() :
 	m_jumpDistribution(0, 4),
 	m_danceDistribution(2.f, 6.f),
 	m_timeEventIdleMax(sf::seconds(4.f)),
-	m_timeRepairSpaceShipMax(sf::seconds(4.f)),
+	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
@@ -75,6 +76,8 @@ CharacterOcto::CharacterOcto() :
 		giveNanoRobot(new SlowFallNanoRobot());
 	if (m_progress.canUseWaterJump())
 		giveNanoRobot(new WaterNanoRobot());
+	if (m_progress.canRepairShip())
+		giveNanoRobot(new RepairShipNanoRobot());
 
 	for (auto & robot : m_nanoRobots)
 	{
@@ -104,6 +107,9 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::RepairNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::JumpNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::DoubleJumpNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::RepairShipNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::SlowFallNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::WaterNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::Tent)
 		| static_cast<std::size_t>(GameObjectType::Concert)
@@ -787,7 +793,7 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 	{
 		for (auto & robot : m_nanoRobots)
 		{
-			robot->setState(NanoRobot::State::RepairShip);
+			robot->setState(NanoRobot::State::GoingToRepairShip);
 			robot->setTarget(spaceShip->getPosition());
 		}
 		m_repairShip = true;
@@ -986,6 +992,7 @@ void	CharacterOcto::inWater()
 			emit = true;
 			m_inWater = true;
 		}
+		m_waterParticle.clear();
 	}
 	else if (m_inWater)
 	{

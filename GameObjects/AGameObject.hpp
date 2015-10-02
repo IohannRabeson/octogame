@@ -17,7 +17,7 @@ enum class GameObjectType : std::size_t
 	DoubleJumpNanoRobot = 1024u,
 	SlowFallNanoRobot = 2048u,
 	GroundTransformNanoRobot = 4096u,
-	FranfranNpc = 8192u,
+	RepairShipNanoRobot = 8192u,
 	JuNpc = 16384u,
 	OldDesertStaticNpc = 32768u,
 	Bouibouik = 65536u,
@@ -38,10 +38,12 @@ enum class GameObjectType : std::size_t
 	JeffMouffyNpc = 2147483648u,
 	BrayouNpc = 4294967296u,
 	EvaNpc = 8589934592u,
+	FranfranNpc = 130u,
 	Water = 131u,
 	FaustNpc = 132u,
 	PierreNpc = 133u,
-	PeaNpc = 134u
+	PeaNpc = 134u,
+	CanouilleNpc = 135u
 };
 
 /*!

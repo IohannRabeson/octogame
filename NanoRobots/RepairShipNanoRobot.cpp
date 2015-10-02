@@ -1,8 +1,10 @@
-#include "DoubleJumpNanoRobot.hpp"
+#include "RepairShipNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
 
-DoubleJumpNanoRobot::DoubleJumpNanoRobot(void) :
-	NanoRobot(sf::Vector2f(8680.f, -2600.f), NANO_DOUBLE_JUMP_OSS, 3, 18524, sf::Vector2f(0.f, -22.f), 2.f)
+RepairShipNanoRobot::RepairShipNanoRobot(void) :
+	NanoRobot(sf::Vector2f(9700, -1320.f), NANO_REPAIR_SHIP_OSS, 4, 11185654, sf::Vector2f(0.f, -24.f)),
+	m_timer(sf::Time::Zero),
+	m_timerMax(sf::seconds(2.f))
 {
 	setup(this);
 
@@ -35,6 +37,64 @@ DoubleJumpNanoRobot::DoubleJumpNanoRobot(void) :
 	targets.push_back(sf::Vector2f(260.f, 244.f));
 	targets.push_back(sf::Vector2f(239.f, 104.f));
 	targets.push_back(sf::Vector2f(269.f, 64.f));
-	setTargets(targets, 0.4f);
-	setLaserColor(sf::Color::Green);
+	setTargets(targets, 0.6f);
+	setUsePathLaser(true);
+}
+
+static sf::Color makeRainbow(float step)
+{
+	float r = 0.f;
+	float g = 0.f;
+	float b = 0.f;
+	int i = static_cast<int>(step * 6.f);
+	float f = step * 6.f - i;
+	float q = 1.f - f;
+
+	switch (i % 6)
+	{
+		case 0:
+			r = 1.f;
+			g = f;
+			b = 0.f;
+			break;
+		case 1:
+			r = q;
+			g = 1.f;
+			b = 0.f;
+			break;
+		case 2:
+			r = 0.f;
+			g = 1.f;
+			b = f;
+			break;
+		case 3:
+			r = 0.f;
+			g = q;
+			b = 1.f;
+			break;
+		case 4:
+			r = f;
+			g = 0.f;
+			b = 1.f;
+			break;
+		case 5:
+			r = 1.f;
+			g = 0.f;
+			b = q;
+			break;
+	}
+	return sf::Color(r * 255.f, g * 255.f, b * 255.f);
+}
+
+void RepairShipNanoRobot::updateRepairShip(sf::Time frameTime)
+{
+	if (isReparingShip())
+	{
+		m_timer += frameTime;
+		if (m_timer > m_timerMax)
+			m_timer -= m_timerMax;
+		setRepairShipPosition(sf::Vector2f(220.f, 450.f));
+		setLaserColor(makeRainbow(m_timer / m_timerMax));
+		setLaserConvergence(getPosition() + sf::Vector2f(0.f, -24.f));
+	}
 }

@@ -3,6 +3,7 @@
 #include "Tile.hpp"
 #include "ABiome.hpp"
 #include <Application.hpp>
+#include <Options.hpp>
 #include <AudioManager.hpp>
 #include <GraphicsManager.hpp>
 
@@ -18,7 +19,10 @@ Progress::Progress() :
 	m_validChallenge(false),
 	m_spaceShipRepair(false)
 {
-	setup();
+#ifndef NDEBUG
+	m_data.nanoRobotCount = octo::Application::getOptions().getValue<std::size_t>("nb_nano"); // TODO : remove from defaultsetup();
+	m_data.destination = static_cast<Level>(octo::Application::getOptions().getValue<std::size_t>("level")); // TODO : remove from defaultsetup();
+#endif
 }
 
 Progress & Progress::getInstance()
@@ -93,6 +97,12 @@ void	Progress::reset()
 	save();
 }
 
+void	Progress::addNanoRobot()
+{
+	m_data.nanoRobotCount++;
+	save();
+}
+
 void	Progress::setNextDestination(Level destination)
 {
 	m_data.destination = destination;
@@ -116,7 +126,7 @@ bool	Progress::canRepair()
 
 bool	Progress::canRepairShip()
 {
-	return (m_data.nanoRobotCount > 4);
+	return (m_data.nanoRobotCount > 6);
 }
 
 bool	Progress::canWalk()
