@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 SlowFallNanoRobot::SlowFallNanoRobot(void) :
-	NanoRobot(sf::Vector2f(200.f, 900.f), NANO_SLOW_FALL_OSS, 2, 5544, sf::Vector2f(0.f, -19.f))
+	NanoRobot(sf::Vector2f(200.f, 900.f), NANO_SLOW_FALL_OSS, 2, 5544, sf::Vector2f(0.f, -19.f), 4.f)
 {
 	setup(this);
 
@@ -14,4 +14,5 @@ SlowFallNanoRobot::SlowFallNanoRobot(void) :
 	targets.push_back(sf::Vector2f(91.f, 275.f));
 	targets.push_back(sf::Vector2f(86.f, 274.f));
 	setTargets(targets, 0.6f);
+	setLaserColor(sf::Color(75, 0, 130));
 }

@@ -38,6 +38,7 @@
 #include "Water.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
+#include "RepairShipNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
@@ -242,6 +243,16 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new DoubleJumpNanoRobot());
+					ptr->setPosition(position);
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
+			else if (!spriteTrigger.name.compare(NANO_REPAIR_SHIP_OSS))
+			{
+				if (!Progress::getInstance().canRepairShip())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new RepairShipNanoRobot());
 					ptr->setPosition(position);
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
