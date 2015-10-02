@@ -94,8 +94,10 @@ void FatNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
+#include <iostream>
 void FatNpc::updateState(void)
 {
+	std::cout << getPosition().x << "|" << getPosition().y << std::endl;
 	octo::CharacterSprite & sprite = getSprite();
 	sf::FloatRect const & area = getArea();
 	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
