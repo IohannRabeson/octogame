@@ -30,6 +30,7 @@
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "WolfNpc.hpp"
+#include "Well.hpp"
 #include "Tent.hpp"
 #include "Concert.hpp"
 #include "Firecamp.hpp"
@@ -113,6 +114,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
 	m_offset.x = rect.left;
 	m_offset.y = rect.top;
+	//m_oldOffset = sf::Vector2i(m_offset / 16.f);
 	updateOffset(0.f);
 }
 
@@ -236,7 +238,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new JumpNanoRobot());
-					ptr->setPosition(position);
+					ptr->setPosition(position + sf::Vector2f(0.f, 100.f));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
@@ -246,7 +248,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new DoubleJumpNanoRobot());
-					ptr->setPosition(position);
+					ptr->setPosition(position + sf::Vector2f(0.f, 480.f));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
@@ -467,6 +469,12 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::Tent:
 				{
 					Tent * simple = new Tent();
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::Well:
+				{
+					Well * simple = new Well();
 					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
 				}
 				break;

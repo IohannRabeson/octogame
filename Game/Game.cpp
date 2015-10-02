@@ -91,7 +91,7 @@ void	Game::loadLevel(void)
 	// Reset last values
 	postEffect.removeEffects();
 	// Reset PhysycsEngine
-	octo::Application::getCamera().setCenter(startPosition);
+	octo::Application::getCamera().setCenter(startPosition - sf::Vector2f(0.f, 200.f));
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
 	m_physicsEngine.setIterationCount(8u);
@@ -113,7 +113,7 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup(m_biomeManager.getCurrentBiome());
-	m_octo->setPosition(startPosition);
+	m_octo->setStartPosition(startPosition);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -189,7 +189,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::DoubleJumpNanoRobot:
-			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canDoubleJump() && Progress::getInstance().canOpenDoubleJump())
+			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canDoubleJump() && Progress::getInstance().canOpenDoubleJump() && !Progress::getInstance().canValidChallenge())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();

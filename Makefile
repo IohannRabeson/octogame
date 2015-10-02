@@ -67,6 +67,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Firecamp.cpp				\
 				GameObjects/Cage.cpp					\
 				GameObjects/Concert.cpp					\
+				GameObjects/Well.cpp					\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\

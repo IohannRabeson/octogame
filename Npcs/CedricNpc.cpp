@@ -19,7 +19,7 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	m_shaderIndex(0u),
 	m_startBalle(false),
 	m_timer(sf::Time::Zero),
-	m_effectDuration(sf::seconds(25.f)),
+	m_effectDuration(sf::seconds(32.f)),
 	m_delayMax(sf::seconds(4.f)),
 	m_id(Id++)
 {

@@ -131,7 +131,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[10] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
-	m_instances[584] = MAP_NANO_JUMP_DESERT_OMP;
+	m_instances[580] = MAP_NANO_JUMP_DESERT_OMP;
 	m_gameObjects[300] = GameObjectType::TurbanNpc;
 	m_gameObjects[556] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
@@ -139,6 +139,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[750] = GameObjectType::Tent;
 	m_gameObjects[700] = GameObjectType::Portal;
+	m_gameObjects[845] = GameObjectType::Well;
 //	m_instances[870] = MAP_ELEVATOR_JUNGLE_OMP;
 	m_interestPointPosX = 500;
 
@@ -256,7 +257,7 @@ Map::MapSurfaceGenerator LevelTwoBiome::getMapSurfaceGenerator()
 		float end = 800.f / static_cast<float>(m_mapSize.x);
 		float offset = 10.f / static_cast<float>(m_mapSize.x);
 		float startHole = 850.f / static_cast<float>(m_mapSize.x);
-		float endHole = 865.f / static_cast<float>(m_mapSize.x);
+		float endHole = 869.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float mapHigh = n / 3.f - 1.9f;
 
@@ -267,7 +268,7 @@ Map::MapSurfaceGenerator LevelTwoBiome::getMapSurfaceGenerator()
 		else if (x > end && x <= end + offset)
 			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
 		else if (x > startHole && x < endHole)
-			return 1.5f;
+			return 4.0f;
 		else
 			return n;
 	};

@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 JumpNanoRobot::JumpNanoRobot(void) :
-	NanoRobot(sf::Vector2f(9700, -1320.f), NANO_JUMP_OSS, 4, 654, sf::Vector2f(0.f, -24.f), 1.f)
+	NanoRobot(sf::Vector2f(9700, -1180.f), NANO_JUMP_OSS, 4, 654, sf::Vector2f(0.f, -24.f), 1.f)
 {
 	setup(this);
 
