@@ -16,6 +16,7 @@ ANpc::ANpc(ResourceKey const & npcId) :
 	m_velocity(200.f),
 	m_scale(1.f),
 	m_displayText(false),
+	m_activeText(true),
 	m_collideOctoEvent(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
@@ -230,6 +231,13 @@ void ANpc::setDisplayText(bool displayText)
 	m_displayText = displayText;
 }
 
+void ANpc::setActiveText(bool active)
+{
+	for (auto & text : m_texts)
+		text->setActive(active);
+	m_activeText = active;
+}
+
 float ANpc::getScale(void) const
 {
 	return m_scale;
@@ -404,7 +412,7 @@ void ANpc::updateText(sf::Time frametime)
 {
 	if (m_displayText)
 	{
-		if (m_collideOctoEvent)
+		if (m_collideOctoEvent && m_activeText)
 			m_texts[m_currentText]->setActive(true);
 		else
 			m_texts[m_currentText]->setActive(false);

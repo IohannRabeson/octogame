@@ -4,10 +4,10 @@
 EvaNpc::EvaNpc(sf::Color const & color) :
 	ANpc(EVA_OSS)
 {
-	setSize(sf::Vector2f(25.f, 125.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setSize(sf::Vector2f(75.f, 325.f));
+	setOrigin(sf::Vector2f(60.f, -150.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(-20.f, 150.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
@@ -91,7 +91,7 @@ void EvaNpc::update(sf::Time frameTime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 	m_particles.update(frameTime);
-	m_particles.setEmitter(sprite.getPosition() + sf::Vector2f(17.f, 30.f));
+	m_particles.setEmitter(sprite.getPosition() + sf::Vector2f(45.f, 228.f));
 	m_particles.canEmit(false);
 	ANpc::update(frameTime);
 }
@@ -100,6 +100,7 @@ void EvaNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
+	setDisplayText(false);
 	if (getSprite().getCurrentEvent() == Special1 && getCollideEventOcto())
 	{
 		getSprite().setNextEvent(EndSpecial1);
@@ -117,10 +118,11 @@ void EvaNpc::updateState(void)
 	else if (sprite.getCurrentEvent() == Idle)
 	{
 		if (getCollideEventOcto())
+		{
 			setDisplayText(true);
+		}
 		else
 		{
-			setDisplayText(false);
 			sprite.setNextEvent(StartSpecial1);
 		}
 	}
