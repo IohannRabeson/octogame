@@ -20,7 +20,6 @@ LevelFourBiome::LevelFourBiome() :
 	m_tileStartColor(255, 193, 177),
 	m_tileEndColor(249, 237, 188),
 	m_waterLevel(1.f),
-	//m_waterColor(141, 52, 130, 100),
 	m_waterColor(3, 57, 108, 130),
 	m_destinationIndex(0u),
 
@@ -38,7 +37,7 @@ LevelFourBiome::LevelFourBiome() :
 
 	m_rockCount(30u, 35u),
 	m_treeCount(30u, 30u),
-	m_mushroomCount(39u, 40u),
+	m_mushroomCount(390u, 400u),
 	m_crystalCount(70u, 100u),
 	m_starCount(500u, 800u),
 	m_sunCount(3u, 3u),
@@ -76,7 +75,7 @@ LevelFourBiome::LevelFourBiome() :
 	m_leafSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(40.f, 40.f)),
 	m_leafColor(0, 255, 159, 150.f),
 
-	m_mushroomSize(sf::Vector2f(3.f, 20.f), sf::Vector2f(10.f, 50.f)),
+	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(60, 0, 53, 150.f),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
