@@ -236,7 +236,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new JumpNanoRobot());
-					ptr->setPosition(position);
+					ptr->setPosition(position + sf::Vector2f(0.f, 100.f));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
@@ -246,7 +246,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new DoubleJumpNanoRobot());
-					ptr->setPosition(position + sf::Vector2f(0, 480.f));
+					ptr->setPosition(position + sf::Vector2f(0.f, 480.f));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
