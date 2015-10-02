@@ -52,7 +52,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/OctoSound.cpp						\
 				Game/Progress.cpp						\
-				Game/MusicPlayer.cpp					\
+				Game/MusicManager.cpp					\
 				Game/KonamiCode.cpp						\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
