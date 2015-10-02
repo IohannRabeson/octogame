@@ -750,9 +750,12 @@ void	CharacterOcto::setTopElevator(float top)
 	m_topElevator = top;
 }
 
-void	CharacterOcto::setPosition(sf::Vector2f const & position)
+void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 {
 	m_box->setPosition(position);
+	m_box->update();
+	m_eventBox->setPosition(position);
+	m_eventBox->update();
 }
 
 void	CharacterOcto::giveNanoRobot(NanoRobot * robot)
