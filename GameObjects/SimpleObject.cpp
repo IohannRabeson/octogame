@@ -27,7 +27,6 @@ SimpleObject::SimpleObject(ResourceKey key, ResourceKey shader, float duration) 
 
 SimpleObject::~SimpleObject(void)
 {
-	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
 }
 
 void SimpleObject::startBalle(void)

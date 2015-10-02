@@ -17,8 +17,10 @@
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
+#include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "FranfranNpc.hpp"
+#include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "CedricNpc.hpp"
@@ -90,7 +92,7 @@ void	Game::loadLevel(void)
 	octo::Application::getCamera().setCenter(startPosition);
 	m_physicsEngine.unregisterAllShapes();
 	m_physicsEngine.unregisterAllTiles();
-	m_physicsEngine.setIterationCount(octo::Application::getOptions().getValue<std::size_t>("iteration_count")); // TODO : remove from default
+	m_physicsEngine.setIterationCount(8u);
 	m_physicsEngine.setGravity(sf::Vector2f(0.f, 600.f));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
@@ -200,6 +202,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				m_octo->giveNanoRobot(ptr);
 			}
 			break;
+		case GameObjectType::SlowFallNanoRobot:
+			if (!gameObjectCast<SlowFallNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canSlowFall())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<SlowFallNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(ptr);
+			}
+			break;
 		case GameObjectType::RepairNanoRobot:
 			if (!gameObjectCast<RepairNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canRepair())
 			{
@@ -256,6 +266,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::TurbanNpc:
 			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::CanouilleNpc:
+			gameObjectCast<CanouilleNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::JeffMouffyNpc:
 			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);
@@ -373,9 +386,9 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
 	m_musicPlayer->debugDraw(render);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
-	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);

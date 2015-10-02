@@ -11,9 +11,9 @@ class Progress
 public:
 	static Progress & getInstance(void);
 
-	inline void			addNanoRobot() { m_data.nanoRobotCount++; }
-	inline void			removeNanoRobot() { m_data.nanoRobotCount--; }
-	inline std::size_t	getNanoRobotCount() { return m_data.nanoRobotCount; }
+	void				addNanoRobot();
+	void				removeNanoRobot() { m_data.nanoRobotCount--; }
+	std::size_t			getNanoRobotCount() { return m_data.nanoRobotCount; }
 
 	void				setNextDestination(Level destination);
 	Level				getNextDestination(void) const;
@@ -65,7 +65,7 @@ private:
 	struct data
 	{
 		data() :
-			data(6u, Level::LevelOne, 5u, 100u, true, true)
+			data(8u, Level::LevelOne, 5u, 100u, true, true)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,

@@ -24,13 +24,15 @@ MusicManager::MusicManager() :
 				sf::FloatRect(sf::Vector2f(760.f * 16.f, -2000.f), sf::Vector2f(225 * 16, 500.f)));
 
 	//TODO TODO TODO
-	m_maxVolume = 50.f;
+	m_maxVolume = m_audio.getMusicVolume();
+	std::cout << m_maxVolume << std::endl;
 }
 
 MusicManager::~MusicManager()
 {
 	if (m_played)
 		m_audio.stopMusic(sf::seconds(0.f));
+//	m_audio.setMusicVolume(m_maxVolume);
 }
 
 void	MusicManager::setup(ABiome & biome)
