@@ -92,6 +92,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/PierreNpc.cpp						\
 				Npcs/CanouilleNpc.cpp					\
 				Npcs/PeaNpc.cpp							\
+				Npcs/WolfNpc.cpp						\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

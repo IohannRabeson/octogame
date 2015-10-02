@@ -29,6 +29,7 @@
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "WolfNpc.hpp"
 #include "Well.hpp"
 #include "Tent.hpp"
 #include "Concert.hpp"
@@ -128,6 +129,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
 	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
+	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
@@ -236,7 +238,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new JumpNanoRobot());
-					ptr->setPosition(position);
+					ptr->setPosition(position + sf::Vector2f(0.f, 100.f));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
@@ -246,7 +248,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				{
 					std::unique_ptr<NanoRobot> ptr;
 					ptr.reset(new DoubleJumpNanoRobot());
-					ptr->setPosition(position);
+					ptr->setPosition(position + sf::Vector2f(0.f, 480.f));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
