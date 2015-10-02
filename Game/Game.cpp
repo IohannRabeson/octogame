@@ -17,6 +17,7 @@
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
+#include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
@@ -196,6 +197,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			if (!gameObjectCast<GroundTransformNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canMoveMap())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(ptr);
+			}
+			break;
+		case GameObjectType::SlowFallNanoRobot:
+			if (!gameObjectCast<SlowFallNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canSlowFall())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<SlowFallNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr);
 			}
