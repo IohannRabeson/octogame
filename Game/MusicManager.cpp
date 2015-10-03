@@ -15,7 +15,7 @@ MusicManager::MusicManager() :
 	m_music.resize(6);
 
 	// Montagne
-	m_music[0] = AreaMusic(Level::LevelTwo, OCTO_SLOWFALL_WAV,
+	m_music[0] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
 	// oasis
 	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
@@ -24,13 +24,13 @@ MusicManager::MusicManager() :
 	m_music[2] = AreaMusic(Level::LevelThree, ACTION_SLOW_WAV,
 			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
 	// cedric challenge
-	m_music[3] = AreaMusic(Level::LevelThree, OCTO_SLOWFALL_WAV,
+	m_music[3] = AreaMusic(Level::LevelThree, ACTION_FAST_WAV,
 			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)));
 	//water
 	m_music[4] = AreaMusic(Level::LevelFour, SOUTERRAIN_LUGUBRE_WAV,
 			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
 	//run
-	m_music[5] = AreaMusic(Level::LevelFour, OCTO_SLOWFALL_WAV,
+	m_music[5] = AreaMusic(Level::LevelFour, MENU_OPUS_I_WAV,
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
 }
 

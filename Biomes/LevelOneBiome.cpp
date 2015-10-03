@@ -129,7 +129,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_gameObjects[300] = GameObjectType::FranfranNpc;
 	m_gameObjects[30] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 320;
-	m_gameObjects[8] = GameObjectType::WellKeeperNpc;
+	m_gameObjects[8] = GameObjectType::SpaceShip;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelTwo);
