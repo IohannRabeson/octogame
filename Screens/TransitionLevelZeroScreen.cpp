@@ -48,6 +48,21 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 			i++;
 		}
 	}
+
+		m_sprite.setSpriteSheet(resources.getSpriteSheet(NANO_GROUND_TRANSFORM_OSS));
+		m_sprite.setScale(1.f, 1.f);
+
+		typedef octo::SpriteAnimation::Frame	Frame;
+		m_animation.setFrames({	Frame(sf::seconds(0.2f), 0u),
+								Frame(sf::seconds(0.2f), 1u),
+								Frame(sf::seconds(0.2f), 2u),
+								Frame(sf::seconds(0.2f), 3u),
+								Frame(sf::seconds(0.2f), 2u),
+								Frame(sf::seconds(0.2f), 1u)});
+		m_animation.setLoop(octo::LoopMode::Loop);
+		m_sprite.setAnimation(m_animation);
+		m_sprite.play();
+		m_sprite.setPosition(camera.getCenter() + sf::Vector2f(-40.f, -4.f));
 }
 
 void	TransitionLevelZeroScreen::start()
@@ -105,6 +120,8 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 	}
 	if (m_index >= m_bubbleCount)
 		states.push("game");
+
+	m_sprite.update(frameTime);
 }
 
 void	TransitionLevelZeroScreen::draw(sf::RenderTarget& render)const
@@ -112,6 +129,9 @@ void	TransitionLevelZeroScreen::draw(sf::RenderTarget& render)const
 	if (m_index >= m_bubbleCount)
 		return;
 	render.clear();
+
+	if (m_startTimer <= m_startTimerMax)
+		render.draw(m_sprite);
 	if (m_index < m_bubbleCount)
 		m_bubble[m_index].draw(render);
 }

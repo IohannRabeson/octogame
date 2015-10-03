@@ -63,7 +63,7 @@ void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePositio
 
 	m_nanoCount = progress.getNanoRobotCount();
 	m_infoText = std::to_wstring(m_nanoCount + 1) + L" / 8 Octobots";
-	m_infoBubble.setPosition(octoBubblePosition - sf::Vector2f(200.f, 90.f));
+	m_infoBubble.setPosition(octoBubblePosition - sf::Vector2f(240.f, 90.f));
 	m_infoBubble.setPhrase(m_infoText);
 	m_infoBubble.update(frameTime);
 }

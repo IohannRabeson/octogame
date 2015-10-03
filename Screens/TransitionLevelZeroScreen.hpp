@@ -5,6 +5,7 @@
 
 # include "Game.hpp"
 # include "MainMenu.hpp"
+# include <AnimatedSprite.hpp>
 
 # include <memory>
 
@@ -30,6 +31,9 @@ private:
 	sf::Time						m_startTimerMax;
 	bool							m_soundPlayed1;
 	bool							m_soundPlayed2;
+
+	octo::AnimatedSprite			m_sprite;
+	octo::SpriteAnimation			m_animation;
 };
 
 #endif
