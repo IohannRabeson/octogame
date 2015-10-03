@@ -959,7 +959,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 bool	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > sf::seconds(4.0f) && !m_inWater)
+	if (m_timeEventFall > sf::seconds(3.0f) && !m_inWater)
 	{
 		m_sprite.setNextEvent(Death);
 		m_helmetParticle.canEmit(true);
