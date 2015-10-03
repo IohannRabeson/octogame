@@ -128,7 +128,7 @@ LevelTwoBiome::LevelTwoBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_gameObjects[10] = GameObjectType::JuNpc;
+	m_gameObjects[20] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
 	m_instances[580] = MAP_NANO_JUMP_DESERT_OMP;
@@ -141,6 +141,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[750] = GameObjectType::Tent;
 	m_gameObjects[700] = GameObjectType::Portal;
 	m_gameObjects[845] = GameObjectType::Well;
+	m_gameObjects[870] = GameObjectType::WellKeeperNpc;
 //	m_instances[870] = MAP_ELEVATOR_JUNGLE_OMP;
 	m_interestPointPosX = 500;
 

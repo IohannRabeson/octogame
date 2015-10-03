@@ -138,6 +138,8 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_gameObjects[745] = GameObjectType::AmandineNpc;
 	m_gameObjects[769] = GameObjectType::FaustNpc;
 	m_gameObjects[780] = GameObjectType::ConstanceNpc;
+	m_gameObjects[80] = GameObjectType::PierreNpc;
+	m_gameObjects[470] = GameObjectType::CanouilleNpc;
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
