@@ -425,6 +425,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(DoubleJump, state3, state4);
 	machine.addTransition(DoubleJump, state5, state4);
 	machine.addTransition(DoubleJump, state7, state4);
+	machine.addTransition(DoubleJump, state11, state4);
 	machine.addTransition(DoubleJump, state13, state4);
 	machine.addTransition(DoubleJump, state14, state4);
 	machine.addTransition(DoubleJump, state15, state4);
@@ -839,7 +840,7 @@ void	CharacterOcto::collisionTileUpdate()
 	{
 		m_onGround = false;
 		onSky(static_cast<Events>(m_sprite.getCurrentEvent()));
-		if (m_numberOfJump == 0 && !m_inWater)
+		if (m_numberOfJump == 0 && !m_inWater && !m_useElevator)
 			m_numberOfJump = 1;
 	}
 	else
@@ -893,8 +894,16 @@ void	CharacterOcto::onSky(Events event)
 			if (m_sprite.isTerminated())
 				m_sprite.setNextEvent(WaterJump);
 			break;
-		case SlowFall:
 		case Fall:
+			if (m_keyUp)
+			{
+				if (m_onElevator)
+					m_sprite.setNextEvent(StartElevator);
+				else
+					m_sprite.setNextEvent(StartSlowFall);
+			}
+			break;
+		case SlowFall:
 		case StartElevator:
 		case Elevator:
 			break;
