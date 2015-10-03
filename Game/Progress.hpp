@@ -77,7 +77,7 @@ private:
 			soundVol(soundVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
-			firstTime(false),
+			firstTime(true),
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false)
