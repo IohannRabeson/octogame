@@ -5,7 +5,10 @@
 #include <Camera.hpp>
 
 Concert::Concert(void) :
-	SimpleObject(CONCERT_OSS, CONCERT_FRAG, 20.f)
+	SimpleObject(CONCERT_OSS, CONCERT_FRAG, 20.f),
+	m_particlesCount(13),
+	m_particles(new MusicSystem[m_particlesCount])
+	
 {
 	typedef octo::SpriteAnimation::Frame	Frame;
 	setupAnimation({Frame(sf::seconds(0.2f), 0u),
@@ -15,9 +18,10 @@ Concert::Concert(void) :
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Concert), static_cast<std::size_t>(GameObjectType::Player));
 	getSprite().setScale(sf::Vector2f(0.8f, 0.8f));
-	m_particles.canEmit(true);
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
 	getShader().setParameter("resolution", rect.width, rect.height);
+	for (std::size_t i = 0; i < m_particlesCount; i++)
+		m_particles[i].canEmit(true);
 }
 
 Concert::~Concert(void)
@@ -37,13 +41,18 @@ void Concert::update(sf::Time frameTime)
 		shader.setParameter("time", time);
 	}
 	SimpleObject::update(frameTime);
-	m_particles.update(frameTime);
+	for (std::size_t i = 0; i < m_particlesCount; i++)
+		m_particles[i].update(frameTime);
 }
 
 void Concert::setPosition(sf::Vector2f const & position)
 {
 	SimpleObject::setPosition(position - sf::Vector2f(0.f, getSprite().getGlobalSize().x));
-	m_particles.setEmitter(position + sf::Vector2f(100.f, -170.f));
+	m_particles[0].setEmitter(position + sf::Vector2f(100.f, -180.f));
+	m_particles[1].setEmitter(position + sf::Vector2f(300.f, -180.f));
+	m_particles[2].setEmitter(position + sf::Vector2f(200.f, -180.f));
+	for (std::size_t i = 3; i < m_particlesCount; i++)
+		m_particles[i].setEmitter(position + sf::Vector2f(-20.f + i * 28.f, -325.f));
 }
 
 void Concert::draw(sf::RenderTarget &, sf::RenderStates) const
@@ -52,5 +61,6 @@ void Concert::draw(sf::RenderTarget &, sf::RenderStates) const
 void Concert::drawFront(sf::RenderTarget & render, sf::RenderStates) const
 {
 	render.draw(getSprite());
-	m_particles.draw(render);
+	for (std::size_t i = 0; i < m_particlesCount; i++)
+		m_particles[i].draw(render);
 }

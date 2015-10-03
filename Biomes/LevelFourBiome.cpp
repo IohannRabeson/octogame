@@ -132,9 +132,10 @@ LevelFourBiome::LevelFourBiome() :
 	m_gameObjects[179] = GameObjectType::CanouilleNpc;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-	m_gameObjects[675] = GameObjectType::PeaNpc;
+	m_gameObjects[668] = GameObjectType::PeaNpc;
 	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
-	m_gameObjects[850] = GameObjectType::Concert;
+	m_gameObjects[90] = GameObjectType::Concert;
+	m_gameObjects[730] = GameObjectType::Concert;
 
 	m_interestPointPosX = 500;
 
