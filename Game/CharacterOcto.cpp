@@ -190,27 +190,27 @@ void	CharacterOcto::setupAnimation()
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_walkAnimation.setFrames({
-			Frame(sf::seconds(0.3f), {0, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {0, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.1f), {1, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {2, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {3, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {4, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {5, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {6, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {7, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.1f), {8, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {9, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {10, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {11, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {12, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {13, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.1f), {14, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {15, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {16, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {16, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {17, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.1f), {18, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {19, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {20, sf::FloatRect(), sf::Vector2f()})
+			Frame(sf::seconds(0.2f), {20, sf::FloatRect(), sf::Vector2f()}),
 	});
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -899,7 +899,7 @@ void	CharacterOcto::onSky(Events event)
 			{
 				if (m_onElevator)
 					m_sprite.setNextEvent(StartElevator);
-				else
+				else if (m_progress.canSlowFall())
 					m_sprite.setNextEvent(StartSlowFall);
 			}
 			break;
