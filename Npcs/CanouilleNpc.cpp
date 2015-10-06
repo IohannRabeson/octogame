@@ -4,10 +4,10 @@
 CanouilleNpc::CanouilleNpc(void) :
 	ANpc(NPC_CANOUILLE_OSS)
 {
-	setSize(sf::Vector2f(115.f, 305.f));
-	setOrigin(sf::Vector2f(30.f, 400.f));
-	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setSize(sf::Vector2f(300.f, 700.f));
+	setOrigin(sf::Vector2f(-40.f, 0.f));
+	setScale(1.0f);
+	setTextOffset(sf::Vector2f(137.f, 10.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
