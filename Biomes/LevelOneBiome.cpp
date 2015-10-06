@@ -114,7 +114,7 @@ LevelOneBiome::LevelOneBiome() :
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
-	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
+	m_mapSeed = 42;//m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 
 	// Create a set a 20 colors for particles

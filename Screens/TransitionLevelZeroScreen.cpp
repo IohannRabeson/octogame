@@ -121,7 +121,11 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 		playSound(m_index);
 	}
 	if (m_index >= m_bubbleCount)
+	{
+		octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+		graphics.removeKeyboardListener(this);
 		states.push("game");
+	}
 
 	m_sprite.update(frameTime);
 }
@@ -132,15 +136,7 @@ bool TransitionLevelZeroScreen::onPressed(sf::Event::KeyEvent const &event)
 	{
 		case sf::Keyboard::Escape:
 			{
-				if (m_index < m_bubbleCount)
-					m_index++;
-				else
-				{
-					octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-					octo::StateManager & states = octo::Application::getStateManager();
-					graphics.removeKeyboardListener(this);
-					states.push("game");
-				}
+				m_index++;
 				break;
 			}
 		default:
