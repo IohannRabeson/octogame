@@ -20,15 +20,17 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_soundPlayed2(false)
 {
 	octo::Camera&			camera = octo::Application::getCamera();
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	
+	octo::ResourceManager &	resources = octo::Application::getResourceManager();
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+
+	graphics.addKeyboardListener(this);
 	camera.setCenter(0.f, 0.f);
 	m_timerMax.resize(m_bubbleCount);
-	m_timerMax[0] = sf::seconds(4.5f);
-	m_timerMax[1] = sf::seconds(5.f);
-	m_timerMax[2] = sf::seconds(6.f);
-	m_timerMax[3] = sf::seconds(7.f);
-	m_timerMax[4] = sf::seconds(6.f);
+	m_timerMax[0] = sf::seconds(5.5f);
+	m_timerMax[1] = sf::seconds(6.f);
+	m_timerMax[2] = sf::seconds(7.f);
+	m_timerMax[3] = sf::seconds(8.f);
+	m_timerMax[4] = sf::seconds(9.f);
 
 	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
 	std::wstring wkey;
@@ -119,9 +121,28 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 		playSound(m_index);
 	}
 	if (m_index >= m_bubbleCount)
+	{
+		octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+		graphics.removeKeyboardListener(this);
 		states.push("game");
+	}
 
 	m_sprite.update(frameTime);
+}
+
+bool TransitionLevelZeroScreen::onPressed(sf::Event::KeyEvent const &event)
+{
+	switch (event.code)
+	{
+		case sf::Keyboard::Escape:
+			{
+				m_index++;
+				break;
+			}
+		default:
+			break;
+	}
+	return (true);
 }
 
 void	TransitionLevelZeroScreen::draw(sf::RenderTarget& render)const
@@ -130,7 +151,7 @@ void	TransitionLevelZeroScreen::draw(sf::RenderTarget& render)const
 		return;
 	render.clear();
 
-	if (m_startTimer <= m_startTimerMax)
+	if (m_startTimer >= m_startTimerMax)
 		render.draw(m_sprite);
 	if (m_index < m_bubbleCount)
 		m_bubble[m_index].draw(render);
