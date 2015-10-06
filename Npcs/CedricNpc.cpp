@@ -27,7 +27,7 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	setOrigin(sf::Vector2f(-30.f, 68.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(60.f, -50.f));
+	setTextOffset(sf::Vector2f(80.f, -50.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::CedricNpc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
