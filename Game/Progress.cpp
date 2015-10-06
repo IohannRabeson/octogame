@@ -22,7 +22,7 @@ Progress::Progress() :
 {
 #ifndef NDEBUG
 	m_data.nanoRobotCount = octo::Application::getOptions().getValue<std::size_t>("nb_nano"); // TODO : remove from defaultsetup();
-	m_data.destination = static_cast<Level>(octo::Application::getOptions().getValue<std::size_t>("level")); // TODO : remove from defaultsetup();
+	m_data.nextDestination = static_cast<Level>(octo::Application::getOptions().getValue<std::size_t>("level")); // TODO : remove from defaultsetup();
 #endif
 }
 
@@ -106,13 +106,23 @@ void	Progress::addNanoRobot()
 
 void	Progress::setNextDestination(Level destination)
 {
-	m_data.destination = destination;
+	m_data.nextDestination = destination;
 	m_changeLevel = true;
 }
 
 Level	Progress::getNextDestination(void) const
 {
-	return m_data.destination;
+	return m_data.nextDestination;
+}
+
+void	Progress::setLastDestination(Level destination)
+{
+	m_data.lastDestination = destination;
+}
+
+Level	Progress::getLastDestination(void) const
+{
+	return m_data.lastDestination;
 }
 
 bool	Progress::canMoveMap()

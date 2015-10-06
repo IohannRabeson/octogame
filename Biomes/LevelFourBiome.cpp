@@ -138,8 +138,8 @@ LevelFourBiome::LevelFourBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::LevelThree);
 	m_destinations.push_back(Level::LevelTwo);
+	m_destinations.push_back(Level::LevelThree);
 }
 
 void			LevelFourBiome::setup(std::size_t seed)

@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -136,6 +137,10 @@ LevelOneBiome::LevelOneBiome() :
 	m_destinations.push_back(Level::LevelTwo);
 
 	m_treePos = {36, 200, 206, 209, 220, 229, 240, 254, 259, 275, 350, 359, 363, 369, 385, 401, 410, 423, 450};
+
+	Progress & progress = Progress::getInstance();
+	if (progress.getNanoRobotCount() >= 1)
+		m_octoStartPosition = sf::Vector2f(323 * 16.f, 600.f);
 }
 
 void			LevelOneBiome::setup(std::size_t seed)

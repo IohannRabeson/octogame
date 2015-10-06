@@ -142,7 +142,6 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[700] = GameObjectType::Portal;
 	m_gameObjects[845] = GameObjectType::Well;
 	m_gameObjects[870] = GameObjectType::WellKeeperNpc;
-//	m_instances[870] = MAP_ELEVATOR_JUNGLE_OMP;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
@@ -150,6 +149,10 @@ LevelTwoBiome::LevelTwoBiome() :
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelOne);
 	m_destinations.push_back(Level::LevelThree);
+
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() != Level::LevelOne && progress.getLastDestination() != Level::LevelFour)
+		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
 }
 
 void			LevelTwoBiome::setup(std::size_t seed)

@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -145,6 +146,10 @@ LevelThreeBiome::LevelThreeBiome() :
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelTwo);
 	m_destinations.push_back(Level::LevelFour);
+
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() != Level::LevelTwo)
+		m_octoStartPosition = sf::Vector2f(490.f * 16.f, 2400.f);
 }
 
 void			LevelThreeBiome::setup(std::size_t seed)
