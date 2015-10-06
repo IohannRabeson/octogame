@@ -6,11 +6,11 @@
 WellKeeperNpc::WellKeeperNpc(void) :
 	ANpc(NPC_WELL_KEEPER_OSS)
 {
-	setSize(sf::Vector2f(1.f, 75.f));
-	setOrigin(sf::Vector2f(0.f, 162.f));
+	setSize(sf::Vector2f(200.f, 150.f));
+	setOrigin(sf::Vector2f(-20.f, 70.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(80.f, 0.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
