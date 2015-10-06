@@ -13,7 +13,7 @@ IohannNpc::IohannNpc(void) :
 	setOrigin(sf::Vector2f(90.f, 100.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(-10.f, -75.f));
 	setTimerMax(sf::seconds(15.0f));
 	setup();
 
