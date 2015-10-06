@@ -13,31 +13,38 @@ NanoEffect::NanoEffect(void) :
 	m_isActive(true),
 	m_isTransfer(false),
 	m_isRandom(false),
-	m_glowingTimerMax(sf::seconds(2.f))
+	m_glowingTimerMax(sf::seconds(2.f)),
+	m_soundPlayed(false)
 {
 	m_generator.setSeed("random");
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 }
 
+#include <iostream>
 void NanoEffect::playSound(void)
 {
-	std::size_t soundChoose = m_generator.randomInt(0u, 3u);
-	octo::AudioManager& audio = octo::Application::getAudioManager();
-	octo::ResourceManager& resource = octo::Application::getResourceManager();
-
-	switch (soundChoose)
+	if (m_soundPlayed == false)
 	{
-		case 0u:
-			audio.playSound(resource.getSound(NANO_1_WAV), 0.5f, 1.f);
-			break;
-		case 1u:
-			audio.playSound(resource.getSound(NANO_2_WAV), 0.5f, 1.f);
-			break;
-		case 2u:
-			audio.playSound(resource.getSound(NANO_3_WAV), 0.5f, 1.f);
-			break;
-		default:
-			break;
+		std::cout << "Nano Sound" << std::endl;
+		std::size_t soundChoose = m_generator.randomInt(0u, 3u);
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resource = octo::Application::getResourceManager();
+	
+		switch (soundChoose)
+		{
+			case 0u:
+				audio.playSound(resource.getSound(NANO_1_WAV), 0.5f, 1.f);
+				break;
+			case 1u:
+				audio.playSound(resource.getSound(NANO_2_WAV), 0.5f, 1.f);
+				break;
+			case 2u:
+				audio.playSound(resource.getSound(NANO_3_WAV), 0.5f, 1.f);
+				break;
+			default:
+				break;
+		}
+		m_soundPlayed = true;
 	}
 }
 
@@ -85,6 +92,7 @@ void NanoEffect::update(sf::Time frameTime)
 	if (m_randomGlowing >= m_randomGlowingMax && m_isTransfer == true)
 	{
 		playSound();
+		m_soundPlayed = false;
 		m_isActive = true;
 		m_glowingTimer = sf::Time::Zero;
 		m_randomGlowing = sf::Time::Zero;
