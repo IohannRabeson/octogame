@@ -317,19 +317,19 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			sf::Vector2f position = decor.position;
 			position.x += instance.first * Tile::TileSize - Map::OffsetX;
 			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
-			if (!decor.isFront)
-				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
-			else
-				m_instanceDecorsFront.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 
 			if (!decor.name.compare(OBJECT_PORTAL_OSS))
 			{
 				//TODO care about get destination
 				std::unique_ptr<Portal> portal(new Portal(biome.getDestination()));
 				portal->setBiome(biome);
-				portal->setPosition(position);
+				portal->setPosition(position + sf::Vector2f(50.f, 350.f));
 				m_otherOnInstance.push_back(std::move(portal));
 			}
+			else if (!decor.isFront)
+				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
+			else
+				m_instanceDecorsFront.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
 
 		bool spawnInstance = false;

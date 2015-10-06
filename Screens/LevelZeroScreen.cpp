@@ -65,7 +65,6 @@ void	LevelZeroScreen::stop()
 	graphics.removeKeyboardListener(this);
 }
 
-#include <iostream>
 void	LevelZeroScreen::update(sf::Time frameTime)
 {
 	octo::Camera &				camera = octo::Application::getCamera();

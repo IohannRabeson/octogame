@@ -17,7 +17,8 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_index(0u),
 	m_startTimerMax(sf::seconds(3.f)),
 	m_soundPlayed1(false),
-	m_soundPlayed2(false)
+	m_soundPlayed2(false),
+	m_isStatePush(false)
 {
 	octo::Camera&			camera = octo::Application::getCamera();
 	octo::ResourceManager &	resources = octo::Application::getResourceManager();
@@ -100,13 +101,21 @@ void	TransitionLevelZeroScreen::playSound(std::size_t index)
 void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 {
 	if (m_index >= m_bubbleCount)
+	{
+		if (m_isStatePush)
+			return;
+		octo::StateManager & states = octo::Application::getStateManager();
+		octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+		graphics.removeKeyboardListener(this);
+		m_isStatePush = true;
+		states.push("game");
 		return;
+	}
 	if (m_startTimer <= m_startTimerMax)
 	{
 		m_startTimer += frameTime;
 		return;
 	}
-	octo::StateManager & states = octo::Application::getStateManager();
 	m_time += frameTime;
 	for (std::size_t i = 0; i < m_bubbleCount; i++)
 		m_bubble[i].setType(ABubble::Type::None);
@@ -119,12 +128,6 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 		m_time = sf::Time::Zero;
 		m_index++;
 		playSound(m_index);
-	}
-	if (m_index >= m_bubbleCount)
-	{
-		octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-		graphics.removeKeyboardListener(this);
-		states.push("game");
 	}
 
 	m_sprite.update(frameTime);
