@@ -233,7 +233,31 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			});
 	m_decorFactory.registerCreator(PARA_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new InstanceDecor(PARA_SIGN_OSS, scale, position, 4u, 0.4f);
+				return new InstanceDecor(PARA_SIGN_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(COLUMN_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_1_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(COLUMN_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_2_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(COLUMN_3_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_3_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(COLUMN_4_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_4_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(COLUMN_5_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_5_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(PLANT_JUNGLE_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PLANT_JUNGLE_2_OSS, scale, position, 3u, 0.4f);
 			});
 
 	// Get all the gameobjects from instances
