@@ -14,6 +14,7 @@ NanoEffect::NanoEffect(void) :
 	m_isTransfer(false),
 	m_isRandom(false),
 	m_glowingTimerMax(sf::seconds(2.f)),
+	m_randomGlowingMax(sf::seconds(1000.f)),
 	m_soundPlayed(false)
 {
 	m_generator.setSeed("random");
@@ -85,11 +86,15 @@ void NanoEffect::update(sf::Time frameTime)
 	{
 		createEffect(m_size, m_position, m_color, m_builder);
 		if (m_isTransfer == true && m_isRandom == false)
+		{
 			createEffect(m_size * 2.f, m_position, m_color, m_builder);
+			createEffect(m_size * 3.f, m_position, m_color, m_builder);
+		}
 	}
 	if (m_randomGlowing >= m_randomGlowingMax && m_isTransfer == true)
 	{
 		playSound();
+		m_isRandom = true;
 		m_soundPlayed = false;
 		m_isActive = true;
 		m_glowingTimer = sf::Time::Zero;
@@ -105,8 +110,8 @@ void NanoEffect::onTransfer(void)
 	{
 		playSound();
 		m_isTransfer = true;
-		m_isRandom = true;
 		m_glowingTimer = sf::Time::Zero;
+		m_randomGlowingMax = sf::seconds(m_generator.randomFloat(30.f, 90.f));
 	}
 }
 

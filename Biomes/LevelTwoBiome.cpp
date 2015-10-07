@@ -127,6 +127,10 @@ LevelTwoBiome::LevelTwoBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() == Level::LevelThree)
+		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
+
 	// Define game objects
 	m_gameObjects[20] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
@@ -141,7 +145,10 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[750] = GameObjectType::Tent;
 	m_gameObjects[700] = GameObjectType::Portal;
 	m_gameObjects[845] = GameObjectType::Well;
-	m_gameObjects[870] = GameObjectType::WellKeeperNpc;
+	if (progress.canUseWaterJump())
+		m_gameObjects[85] = GameObjectType::WellKeeperNpc;
+	else
+		m_gameObjects[870] = GameObjectType::WellKeeperNpc;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
@@ -149,10 +156,6 @@ LevelTwoBiome::LevelTwoBiome() :
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelOne);
 	m_destinations.push_back(Level::LevelThree);
-
-	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::LevelThree)
-		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
 }
 
 void			LevelTwoBiome::setup(std::size_t seed)
