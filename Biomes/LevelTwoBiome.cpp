@@ -146,7 +146,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[700] = GameObjectType::Portal;
 	m_gameObjects[845] = GameObjectType::Well;
 	if (progress.canUseWaterJump())
-		m_gameObjects[85] = GameObjectType::WellKeeperNpc;
+		m_gameObjects[88] = GameObjectType::WellKeeperNpc;
 	else
 		m_gameObjects[870] = GameObjectType::WellKeeperNpc;
 	m_interestPointPosX = 500;

@@ -147,7 +147,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 				m_sound = audio.playSound(resources.getSound(OCTO_FEAR_WAV), m_volumeVoice);
 			}
 			if (m_transitionInWater)
-				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect * 0.6f, m_pitchDistribution(m_engine));
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;
@@ -170,7 +170,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			if (m_transitionInWater)
 			{
 				m_sound->stop();
-				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect * 0.3f, m_pitchDistribution(m_engine));
 			}
 			break;
 		case StartJump:
@@ -179,7 +179,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 		case StartWaterJump:
 		case WaterJump:
 			if (m_transitionInWater || m_transitionOutWater)
-				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect * 0.8f, m_pitchDistribution(m_engine));
 			break;
 		default:
 			break;
