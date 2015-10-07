@@ -20,12 +20,10 @@ NanoEffect::NanoEffect(void) :
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 }
 
-#include <iostream>
 void NanoEffect::playSound(void)
 {
 	if (m_soundPlayed == false)
 	{
-		std::cout << "Nano Sound" << std::endl;
 		std::size_t soundChoose = m_generator.randomInt(0u, 3u);
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resource = octo::Application::getResourceManager();

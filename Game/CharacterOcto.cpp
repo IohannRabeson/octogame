@@ -626,7 +626,10 @@ void	CharacterOcto::update(sf::Time frameTime)
 	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepairShip())
 	{
 		for (auto & robot : m_nanoRobots)
-			robot->setState(NanoRobot::State::FollowOcto);
+		{
+			if (robot->getState() != NanoRobot::State::Speak)
+				robot->setState(NanoRobot::State::FollowOcto);
+		}
 	}
 
 	if (m_repairShip)
