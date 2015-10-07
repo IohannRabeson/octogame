@@ -83,7 +83,6 @@ private:
 			soundVol(soundVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
-			//firstTime(true),
 			firstTime(true),
 			walk(false),
 			moveMap(false),
