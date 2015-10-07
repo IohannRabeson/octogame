@@ -60,6 +60,7 @@ private:
 	sf::Time						m_glowingTimerMax;
 	sf::Time						m_randomGlowing;
 	sf::Time						m_randomGlowingMax;
+	bool							m_soundPlayed;
 };
 
 #endif

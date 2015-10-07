@@ -16,7 +16,8 @@ public:
 	virtual void drawFront(sf::RenderTarget &, sf::RenderStates) const;
 
 private:
-	MusicSystem		m_particles;
+	std::size_t						m_particlesCount;
+	std::unique_ptr<MusicSystem[]>	m_particles;
 
 };
 

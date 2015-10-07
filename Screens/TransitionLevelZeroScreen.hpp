@@ -5,10 +5,11 @@
 
 # include "Game.hpp"
 # include "MainMenu.hpp"
+# include <AnimatedSprite.hpp>
 
 # include <memory>
 
-class TransitionLevelZeroScreen : public octo::AbstractState
+class TransitionLevelZeroScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
 {
 public:
 	TransitionLevelZeroScreen();
@@ -30,6 +31,12 @@ private:
 	sf::Time						m_startTimerMax;
 	bool							m_soundPlayed1;
 	bool							m_soundPlayed2;
+	bool							m_isStatePush;
+
+	octo::AnimatedSprite			m_sprite;
+	octo::SpriteAnimation			m_animation;
+
+	virtual bool onPressed(sf::Event::KeyEvent const & event);
 };
 
 #endif

@@ -21,7 +21,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
 	m_waterLevel(-1.f),
-	m_waterColor(234, 94, 0, 200),
+	m_waterColor(96, 204, 233, 180),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -116,7 +116,7 @@ LevelTwoBiome::LevelTwoBiome() :
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
-	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
+	m_mapSeed = 42;//m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 
 	// Create a set a 20 colors for particles
@@ -127,11 +127,16 @@ LevelTwoBiome::LevelTwoBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() == Level::LevelThree)
+		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
+
 	// Define game objects
-	m_gameObjects[10] = GameObjectType::JuNpc;
+	m_gameObjects[20] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
 	m_instances[580] = MAP_NANO_JUMP_DESERT_OMP;
+	m_instances[11] = MAP_PYRAMID_OMP;
 	m_gameObjects[300] = GameObjectType::TurbanNpc;
 	m_gameObjects[556] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
@@ -140,7 +145,10 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[750] = GameObjectType::Tent;
 	m_gameObjects[700] = GameObjectType::Portal;
 	m_gameObjects[845] = GameObjectType::Well;
-//	m_instances[870] = MAP_ELEVATOR_JUNGLE_OMP;
+	if (progress.canUseWaterJump())
+		m_gameObjects[88] = GameObjectType::WellKeeperNpc;
+	else
+		m_gameObjects[870] = GameObjectType::WellKeeperNpc;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
@@ -209,7 +217,7 @@ Level	LevelTwoBiome::getDestination()
 float	LevelTwoBiome::getWaterLevel()
 {
 	if (Progress::getInstance().canUseWaterJump())
-		return 1200.f;
+		return 1400.f;
 	return m_waterLevel;
 }
 

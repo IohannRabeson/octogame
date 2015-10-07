@@ -113,7 +113,7 @@ LevelFourBiome::LevelFourBiome() :
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
-	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
+	m_mapSeed = 42u;//m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 
 	// Create a set a 20 colors for particles
@@ -126,21 +126,20 @@ LevelFourBiome::LevelFourBiome() :
 
 	// Define game objects
 	m_instances[140] = MAP_TRAIL_SLOWFALL_WATER_OMP;
+	m_instances[900] = MAP_PORTAL_WATER_OMP;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
 	m_gameObjects[149] = GameObjectType::EvaNpc;
-	m_gameObjects[179] = GameObjectType::CanouilleNpc;
-	m_gameObjects[500] = GameObjectType::Portal;
 	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-	m_gameObjects[675] = GameObjectType::PeaNpc;
+	m_gameObjects[668] = GameObjectType::PeaNpc;
 	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
-	m_gameObjects[850] = GameObjectType::Concert;
+	m_gameObjects[730] = GameObjectType::Concert;
 
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::LevelThree);
 	m_destinations.push_back(Level::LevelTwo);
+	m_destinations.push_back(Level::LevelThree);
 }
 
 void			LevelFourBiome::setup(std::size_t seed)
@@ -555,7 +554,17 @@ sf::Color		LevelFourBiome::getLeafColor()
 
 std::size_t		LevelFourBiome::getTreePositionX()
 {
-	return randomInt(1u, m_mapSize.x - 1u);
+	std::size_t pos;
+	bool isValidPos = false;
+	while (isValidPos == false)
+	{
+		pos = randomInt(1u, m_mapSize.x - 1u);
+			if ((pos >= 0.f && pos <= 150.f + 20.f) || (pos >= 620.f - 20.f && pos <= 750.f + 20.f) || (pos >= 1000.f - 20.f && pos <= 1080.f + 30.f))
+				isValidPos = false;
+			else
+				isValidPos = true;
+	}
+	return pos;
 }
 
 sf::Vector2f	LevelFourBiome::getCrystalSize()

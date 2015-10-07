@@ -35,9 +35,11 @@
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
 #include "AmandineNpc.hpp"
+#include "ConstanceNpc.hpp"
 #include "BrayouNpc.hpp"
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
+#include "WellKeeperNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
 #include <Application.hpp>
@@ -85,12 +87,15 @@ Game::~Game(void)
 void	Game::loadLevel(void)
 {
 	m_biomeManager.changeBiome(Progress::getInstance().getNextDestination(), 0x12345);
+	Progress::getInstance().setLastDestination(m_biomeManager.getCurrentBiome().getId());
 
+	octo::AudioManager& audio = octo::Application::getAudioManager();
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
 
 	// Reset last values
 	postEffect.removeEffects();
+	audio.reset();
 	// Reset PhysycsEngine
 	octo::Application::getCamera().setCenter(startPosition - sf::Vector2f(0.f, 200.f));
 	m_physicsEngine.unregisterAllShapes();
@@ -104,7 +109,7 @@ void	Game::loadLevel(void)
 	m_skyManager.reset(new SkyManager());
 	m_groundManager.reset(new GroundManager());
 	m_parallaxScrolling.reset(new ParallaxScrolling());
-	m_musicPlayer.reset(new MusicPlayer());
+	m_musicPlayer.reset(new MusicManager());
 	m_octo.reset(new CharacterOcto());
 	m_konami.reset(new KonamiCode());
 
@@ -271,6 +276,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::AmandineNpc:
 			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::ConstanceNpc:
+			gameObjectCast<ConstanceNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::JuNpc:
 			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -291,6 +299,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::JeffMouffyNpc:
 			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::WellKeeperNpc:
+			gameObjectCast<WellKeeperNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::OldDesertStaticNpc:
 			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
@@ -407,6 +418,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
+	//m_musicPlayer->debugDraw(render);
 	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);

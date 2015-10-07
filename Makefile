@@ -52,7 +52,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/OctoSound.cpp						\
 				Game/Progress.cpp						\
-				Game/MusicPlayer.cpp					\
+				Game/MusicManager.cpp					\
 				Game/KonamiCode.cpp						\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
@@ -68,6 +68,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Cage.cpp					\
 				GameObjects/Concert.cpp					\
 				GameObjects/Well.cpp					\
+				GameObjects/Seb.cpp						\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
@@ -92,6 +93,8 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/PierreNpc.cpp						\
 				Npcs/CanouilleNpc.cpp					\
 				Npcs/PeaNpc.cpp							\
+				Npcs/WolfNpc.cpp						\
+				Npcs/WellKeeperNpc.cpp					\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

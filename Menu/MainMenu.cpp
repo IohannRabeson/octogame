@@ -13,6 +13,20 @@ class YesNoQuit : public YesNoMenu
 	inline void actionNo(void) { }
 };
 
+class YesNoReset : public YesNoMenu
+{
+	inline void setIndex(void) { setIndexCursor(0); }
+	inline void actionYes(void)
+	{
+		Progress &				progress = Progress::getInstance();
+		octo::StateManager &	states = octo::Application::getStateManager();
+		progress.reset();
+		progress.setFirstTime(false);
+		states.change("zero");
+	}
+	inline void actionNo(void) { }
+};
+
 //MainMenu
 MainMenu::MainMenu(void) :
 	m_nanoCount(0u)
@@ -23,6 +37,7 @@ void MainMenu::createMenus(void)
 {
 	addMenu(L"Contrôles", std::unique_ptr<ControlMenu>(new ControlMenu()));
 	addMenu(L"Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
+	addMenu(L"Recommencer", std::unique_ptr<YesNoReset>(new YesNoReset()));
 	addMenu(L"Quitter", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 	setCharacterSize(30);
 	setBubbleType(ABubble::Type::Up);
@@ -47,8 +62,8 @@ void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePositio
 	m_filter.setPosition(sf::Vector2f(camera.left, camera.top));
 
 	m_nanoCount = progress.getNanoRobotCount();
-	m_infoText = std::to_wstring(m_nanoCount) + L" / 8 Octobots";
-	m_infoBubble.setPosition(octoBubblePosition - sf::Vector2f(200.f, 90.f));
+	m_infoText = std::to_wstring(m_nanoCount + 1) + L" / 8 Octobots";
+	m_infoBubble.setPosition(octoBubblePosition - sf::Vector2f(240.f, 90.f));
 	m_infoBubble.setPhrase(m_infoText);
 	m_infoBubble.update(frameTime);
 }

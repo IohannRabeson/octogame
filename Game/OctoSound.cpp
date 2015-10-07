@@ -40,11 +40,12 @@ CharacterOcto::OctoSound::~OctoSound()
 
 void	CharacterOcto::OctoSound::update(sf::Time frameTime, Events event, bool inWater, bool onGround)
 {
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float	volume = 0.f;
 	if (m_soundTransition != nullptr)
 	{
 		m_timeSoundTransition += frameTime;
-		volume = (m_volumeEffect * 100) * (1.f - (m_timeSoundTransition / m_timeSoundTransitionMax));
+		volume = (m_volumeEffect * audio.getSoundVolume()) * (1.f - (m_timeSoundTransition / m_timeSoundTransitionMax));
 		if (volume >= 0.f)
 			m_soundTransition->setVolume(volume);
 		if (m_soundTransition->getStatus() == sf::Sound::Stopped || volume < 0.f)
@@ -141,12 +142,12 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			break;
 		case Fall:
 			m_timeEventFall += frameTime;
-			if (m_timeEventFall > sf::seconds(3.f) && m_sound == nullptr)
+			if (m_timeEventFall > sf::seconds(4.f) && m_sound == nullptr)
 			{
 				m_sound = audio.playSound(resources.getSound(OCTO_FEAR_WAV), m_volumeVoice);
 			}
 			if (m_transitionInWater)
-				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect * 0.6f, m_pitchDistribution(m_engine));
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;
@@ -169,7 +170,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			if (m_transitionInWater)
 			{
 				m_sound->stop();
-				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect * 0.3f, m_pitchDistribution(m_engine));
 			}
 			break;
 		case StartJump:
@@ -178,7 +179,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 		case StartWaterJump:
 		case WaterJump:
 			if (m_transitionInWater || m_transitionOutWater)
-				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_WAV), m_volumeEffect * 0.8f, m_pitchDistribution(m_engine));
 			break;
 		default:
 			break;
@@ -230,7 +231,7 @@ void	CharacterOcto::OctoSound::fadeOut(sf::Time frameTime)
 	{
 		volume = 0.f;
 		sound.time += frameTime;
-		volume = (sound.m_maxVolume * 50) * (1.f - (sound.time / sf::seconds(0.5f)));
+		volume = (sound.m_maxVolume) * (1.f - (sound.time / sf::seconds(0.5f)));
 		if (volume >= 0.f)
 		{
 			sound.sound->setVolume(volume);

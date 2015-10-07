@@ -18,6 +18,9 @@ public:
 	void				setNextDestination(Level destination);
 	Level				getNextDestination(void) const;
 
+	void				setLastDestination(Level destination);
+	Level				getLastDestination(void) const;
+
 	void				walk(void) { m_data.walk = true; };
 	void				moveMap(void) { m_data.moveMap = true; };
 
@@ -36,6 +39,10 @@ public:
 
 	void				spaceShipRepair(bool isRepair) { m_spaceShipRepair = isRepair; }
 	bool				spaceShipIsRepair() const { return m_spaceShipRepair; }
+
+	float				getMusicVolume() const { return m_data.musicVol; }
+	void				setMusicVolume(float volume) { m_data.musicVol = volume; }
+	void				setSoundVolume(float volume) { m_data.soundVol = volume; }
 
 	bool				canMoveMap();
 	bool				canRepair();
@@ -63,26 +70,28 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::LevelOne, 5u, 100u, true, true)
+			data(0u, Level::LevelOne, 6u, 100u, true, true)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
 				std::size_t musicVol, std::size_t soundVol,
 				bool fullscreen, bool vsync) :
 			nanoRobotCount(nanoRobot),
-			destination(biome),
+			nextDestination(biome),
+			lastDestination(biome),
 			musicVol(musicVol),
 			soundVol(soundVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
-			firstTime(false),
+			firstTime(true),
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false)
 		{}
 
 		std::size_t		nanoRobotCount;
-		Level			destination;
+		Level			nextDestination;
+		Level			lastDestination;
 		std::size_t		musicVol;
 		std::size_t		soundVol;
 		bool			fullscreen;

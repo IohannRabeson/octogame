@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -89,7 +90,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
-	m_cloudColor(255, 255, 255, 200),
+	m_cloudColor(255, 255, 255, 100),
 
 	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),
@@ -113,7 +114,7 @@ LevelThreeBiome::LevelThreeBiome() :
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
-	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
+	m_mapSeed = 42u;//m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 
 	// Create a set a 20 colors for particles
@@ -138,11 +139,17 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_gameObjects[745] = GameObjectType::AmandineNpc;
 	m_gameObjects[769] = GameObjectType::FaustNpc;
 	m_gameObjects[780] = GameObjectType::ConstanceNpc;
+	m_gameObjects[80] = GameObjectType::PierreNpc;
+	m_gameObjects[470] = GameObjectType::CanouilleNpc;
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::LevelTwo);
 	m_destinations.push_back(Level::LevelFour);
+
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() == Level::LevelFour)
+		m_octoStartPosition = sf::Vector2f(490.f * 16.f, 2400.f);
 }
 
 void			LevelThreeBiome::setup(std::size_t seed)

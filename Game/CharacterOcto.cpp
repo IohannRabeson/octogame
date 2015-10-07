@@ -139,6 +139,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::ConstanceNpc)
 		| static_cast<std::size_t>(GameObjectType::JeffMouffyNpc)
 		| static_cast<std::size_t>(GameObjectType::BrayouNpc)
+		| static_cast<std::size_t>(GameObjectType::CanouilleNpc)
+		| static_cast<std::size_t>(GameObjectType::WellKeeperNpc)
 		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
@@ -189,27 +191,27 @@ void	CharacterOcto::setupAnimation()
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_walkAnimation.setFrames({
-			Frame(sf::seconds(0.3f), {0, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {0, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.1f), {1, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {2, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {3, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {4, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {5, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {6, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {7, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.1f), {8, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {9, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {10, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {11, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {12, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {13, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.1f), {14, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {15, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {16, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {16, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {17, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.1f), {18, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {19, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {20, sf::FloatRect(), sf::Vector2f()})
+			Frame(sf::seconds(0.2f), {20, sf::FloatRect(), sf::Vector2f()}),
 	});
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -414,6 +416,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, state14, state13);
 	machine.addTransition(StartJump, state15, state13);
 	machine.addTransition(StartJump, state16, state13);
+	machine.addTransition(StartJump, state17, state13);
 
 	machine.addTransition(Jump, state13, state3);
 
@@ -423,10 +426,12 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(DoubleJump, state3, state4);
 	machine.addTransition(DoubleJump, state5, state4);
 	machine.addTransition(DoubleJump, state7, state4);
+	machine.addTransition(DoubleJump, state11, state4);
 	machine.addTransition(DoubleJump, state13, state4);
 	machine.addTransition(DoubleJump, state14, state4);
 	machine.addTransition(DoubleJump, state15, state4);
 	machine.addTransition(DoubleJump, state16, state4);
+	machine.addTransition(DoubleJump, state17, state4);
 
 	machine.addTransition(Fall, state0, state5);
 	machine.addTransition(Fall, state1, state5);
@@ -622,7 +627,10 @@ void	CharacterOcto::update(sf::Time frameTime)
 	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepairShip())
 	{
 		for (auto & robot : m_nanoRobots)
-			robot->setState(NanoRobot::State::FollowOcto);
+		{
+			if (robot->getState() != NanoRobot::State::Speak)
+				robot->setState(NanoRobot::State::FollowOcto);
+		}
 	}
 
 	if (m_repairShip)
@@ -737,6 +745,8 @@ void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisi
 			// TODO
 			if (collisionDirection.x == 0 && collisionDirection.y < 0)
 				m_collisionTile = true;
+			else if (collisionDirection.x != 0 && collisionDirection.y == 0)
+				m_timeEventFall = sf::Time::Zero;
 			break;
 		case GameObjectType::Elevator:
 			m_collisionElevator = true;
@@ -807,9 +817,14 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 
 void	CharacterOcto::usePortal(Portal & portal)
 {
+	octo::Camera&				camera = octo::Application::getCamera();
+	sf::Vector2f const&			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
+
 	m_collisionPortal = true;
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
+		m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+		m_progress.setReverseSprite(m_originMove);
 		m_progress.setNextDestination(portal.getDestination());
 	}
 }
@@ -829,7 +844,7 @@ void	CharacterOcto::collisionTileUpdate()
 	{
 		m_onGround = false;
 		onSky(static_cast<Events>(m_sprite.getCurrentEvent()));
-		if (m_numberOfJump == 0 && !m_inWater)
+		if (m_numberOfJump == 0 && !m_inWater && !m_useElevator)
 			m_numberOfJump = 1;
 	}
 	else
@@ -883,8 +898,16 @@ void	CharacterOcto::onSky(Events event)
 			if (m_sprite.isTerminated())
 				m_sprite.setNextEvent(WaterJump);
 			break;
-		case SlowFall:
 		case Fall:
+			if (m_keyUp)
+			{
+				if (m_onElevator)
+					m_sprite.setNextEvent(StartElevator);
+				else if (m_progress.canSlowFall())
+					m_sprite.setNextEvent(StartSlowFall);
+			}
+			break;
+		case SlowFall:
 		case StartElevator:
 		case Elevator:
 			break;
@@ -940,7 +963,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 bool	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > sf::seconds(2.0f) && !m_inWater)
+	if (m_timeEventFall > sf::seconds(3.0f) && !m_inWater)
 	{
 		m_sprite.setNextEvent(Death);
 		m_helmetParticle.canEmit(true);
@@ -1163,7 +1186,7 @@ void	CharacterOcto::caseLeft()
 	{
 		m_keyLeft = true;
 		m_keyRight = false;
-		if (m_onGround && m_progress.canWalk())
+		if (m_onGround && m_progress.canWalk() && m_numberOfJump != 1)
 			m_sprite.setNextEvent(Left);
 	}
 }
@@ -1174,7 +1197,7 @@ void	CharacterOcto::caseRight()
 	{
 		m_keyRight = true;
 		m_keyLeft = false;
-		if (m_onGround && m_progress.canWalk())
+		if (m_onGround && m_progress.canWalk() && m_numberOfJump != 1)
 			m_sprite.setNextEvent(Right);
 	}
 }
@@ -1245,7 +1268,9 @@ void CharacterOcto::casePortal()
 
 bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 {
-	if (m_sprite.getCurrentEvent() == Death || m_sprite.getCurrentEvent() == KonamiCode)
+	if (m_sprite.getCurrentEvent() == Death
+			|| m_sprite.getCurrentEvent() == KonamiCode
+			|| m_sprite.getCurrentEvent() == PortalEvent)
 		return true;
 	switch (event.code)
 	{

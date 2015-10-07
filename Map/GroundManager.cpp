@@ -26,14 +26,17 @@
 #include "AmandineNpc.hpp"
 #include "JeffMouffyNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
+#include "WellKeeperNpc.hpp"
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "WolfNpc.hpp"
 #include "Well.hpp"
 #include "Tent.hpp"
 #include "Concert.hpp"
 #include "Firecamp.hpp"
 #include "Cage.hpp"
+#include "Seb.hpp"
 #include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
 #include "Water.hpp"
@@ -128,6 +131,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
 	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
+	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
@@ -215,6 +219,22 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(TRAIL_SIGN_10_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(PYRAMID_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PYRAMID_OSS, scale, position, 9u, 0.1f);
+			});
+	m_decorFactory.registerCreator(PYRAMID_TOP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PYRAMID_TOP_OSS, scale, position, 9u, 0.1f);
+			});
+	m_decorFactory.registerCreator(SEB_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Seb(scale, position);
+			});
+	m_decorFactory.registerCreator(PARA_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PARA_SIGN_OSS, scale, position, 4u, 0.4f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -270,6 +290,16 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
+			else if (!spriteTrigger.name.compare(NANO_REPAIR_SHIP_OSS))
+			{
+				if (!Progress::getInstance().canRepairShip())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new RepairShipNanoRobot());
+					ptr->setPosition(position + sf::Vector2f(0.f, 250.f));
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
 			else
 			{
 				std::unique_ptr<ANpc> npc;
@@ -287,7 +317,19 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			sf::Vector2f position = decor.position;
 			position.x += instance.first * Tile::TileSize - Map::OffsetX;
 			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
-			m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
+
+			if (!decor.name.compare(OBJECT_PORTAL_OSS))
+			{
+				//TODO care about get destination
+				std::unique_ptr<Portal> portal(new Portal(biome.getDestination()));
+				portal->setBiome(biome);
+				portal->setPosition(position + sf::Vector2f(50.f, 350.f));
+				m_otherOnInstance.push_back(std::move(portal));
+			}
+			else if (!decor.isFront)
+				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
+			else
+				m_instanceDecorsFront.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
 
 		bool spawnInstance = false;
@@ -368,6 +410,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					ConstanceNpc * constance = new ConstanceNpc();
 					constance->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, constance);
+				}
+				break;
+			case GameObjectType::WellKeeperNpc:
+				{
+					WellKeeperNpc * npc = new WellKeeperNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::OldDesertStaticNpc:
@@ -864,6 +913,14 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			npc.m_gameObject->addMapOffset(-mapSizeX, 0.f);
 	}
 
+	for (auto const & otherOnInstance : m_otherOnInstance)
+	{
+		if (otherOnInstance->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			otherOnInstance->addMapOffset(mapSizeX, 0.f);
+		else if (otherOnInstance->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			otherOnInstance->addMapOffset(-mapSizeX, 0.f);
+	}
+
 	for (auto const & npc : m_npcs)
 	{
 		if (npc->getPosition().x < m_offset.x - mapSizeX / 2.f)
@@ -871,7 +928,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		else if (npc->getPosition().x > m_offset.x + mapSizeX / 2.f)
 			npc->addMapOffset(-mapSizeX, 0.f);
 	}
-	
+
 	if (m_water)
 	{
 		if (m_water->getPosition().x < m_offset.x - mapSizeX / 2.f)
@@ -887,6 +944,15 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		else if (decor->getPosition().x > m_offset.x + mapSizeX / 2.f)
 			decor->addMapOffset(-mapSizeX, 0.f);
 	}
+
+	for (auto const & decor : m_instanceDecorsFront)
+	{
+		if (decor->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			decor->addMapOffset(mapSizeX, 0.f);
+		else if (decor->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			decor->addMapOffset(-mapSizeX, 0.f);
+	}
+
 
 	for (auto const & robot : m_nanoRobotOnInstance)
 	{
@@ -972,6 +1038,11 @@ void GroundManager::updateOffset(float)
 		ofX = newOfX - m_oldOffset.x;
 	if (m_oldOffset.y != newOfY)
 		ofY = newOfY - m_oldOffset.y;
+
+	if (ofX >= static_cast<int>(m_tiles->getColumns()) - 1)
+		ofX = static_cast<int>(m_tiles->getColumns()) - 1;
+	if (ofY >= static_cast<int>(m_tiles->getRows()) - 1)
+		ofY = static_cast<int>(m_tiles->getRows()) - 1;
 
 	if (ofX)
 		computeDecor();
@@ -1088,11 +1159,11 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerGround.update(deltatime, camera);
 }
 
-
-
 void GroundManager::updateGameObjects(sf::Time frametime)
 {
 	for (auto & decor : m_instanceDecors)
+		decor->update(frametime);
+	for (auto & decor : m_instanceDecorsFront)
 		decor->update(frametime);
 	for (auto & object : m_otherObjectsHigh)
 		object.m_gameObject->update(frametime);
@@ -1104,6 +1175,8 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 		portal.m_gameObject->update(frametime);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->update(frametime);
+	for (auto & object : m_otherOnInstance)
+		object->update(frametime);
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->update(frametime);
 	for (auto & npc : m_npcs)
@@ -1167,6 +1240,8 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 		elevator.m_gameObject->draw(render, states);
 	for (auto & portal : m_portals)
 		portal.m_gameObject->draw(render, states);
+	for (auto & object : m_otherOnInstance)
+		object->draw(render, states);
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->draw(render, states);
 	for (auto & npc : m_npcs)
@@ -1184,6 +1259,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
+	for (auto & decor : m_instanceDecorsFront)
+		decor->draw(render, states);
 	for (auto & nano : m_nanoRobots)
 		nano.m_gameObject->draw(render, states);
 	for (auto & nano : m_nanoRobotOnInstance)
