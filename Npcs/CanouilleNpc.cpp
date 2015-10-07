@@ -1,5 +1,6 @@
 #include "CanouilleNpc.hpp"
 #include "RectangleShape.hpp"
+#include "Progress.hpp"
 
 CanouilleNpc::CanouilleNpc(void) :
 	ANpc(NPC_CANOUILLE_OSS)
@@ -83,4 +84,7 @@ void CanouilleNpc::updateState(void)
 			sprite.setNextEvent(Special1);
 		}
 	}
+
+	if (Progress::getInstance().canDoubleJump())
+		setCurrentText(1u);
 }

@@ -2,6 +2,7 @@
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
+#include "Progress.hpp"
 
 WellKeeperNpc::WellKeeperNpc(void) :
 	ANpc(NPC_WELL_KEEPER_OSS)
@@ -29,6 +30,8 @@ void WellKeeperNpc::setup(void)
 
 	setupMachine();
 	setNextEvent(Idle);
+	if (Progress::getInstance().canUseWaterJump())
+		setCurrentText(1u);
 }
 
 void WellKeeperNpc::setupMachine(void)
