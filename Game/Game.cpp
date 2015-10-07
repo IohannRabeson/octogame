@@ -88,11 +88,13 @@ void	Game::loadLevel(void)
 	m_biomeManager.changeBiome(Progress::getInstance().getNextDestination(), 0x12345);
 	Progress::getInstance().setLastDestination(m_biomeManager.getCurrentBiome().getId());
 
+	octo::AudioManager& audio = octo::Application::getAudioManager();
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
 
 	// Reset last values
 	postEffect.removeEffects();
+	audio.reset();
 	// Reset PhysycsEngine
 	octo::Application::getCamera().setCenter(startPosition - sf::Vector2f(0.f, 200.f));
 	m_physicsEngine.unregisterAllShapes();

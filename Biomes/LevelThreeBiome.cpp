@@ -148,7 +148,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_destinations.push_back(Level::LevelFour);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() != Level::LevelTwo)
+	if (progress.getLastDestination() == Level::LevelFour)
 		m_octoStartPosition = sf::Vector2f(490.f * 16.f, 2400.f);
 }
 
