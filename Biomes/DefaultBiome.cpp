@@ -9,6 +9,7 @@
 #include <iostream>
 
 DefaultBiome::DefaultBiome() :
+	m_generator("random"),
 	m_name("Default"),
 	m_id(Level::Default),
 	m_seed("Default"),
@@ -109,7 +110,7 @@ DefaultBiome::DefaultBiome() :
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
-	m_generator.setSeed(m_seed);
+	//m_generator.setSeed(m_seed);
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
@@ -125,26 +126,8 @@ DefaultBiome::DefaultBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// TODO define map position and number of map
-	m_instances[12] = MINIMAP_OMP;
-	m_instances[86] = TEST_MAP2_OMP;
-	m_instances[450] = HOUSE_OMP;
-
-	// Define game objects
 	m_gameObjects[50] = GameObjectType::Portal;
-	m_gameObjects[0] = GameObjectType::GroundTransformNanoRobot;
-	m_gameObjects[450] = GameObjectType::RepairNanoRobot;
-	m_gameObjects[400] = GameObjectType::Bouibouik;
-	m_gameObjects[100] = GameObjectType::SpaceShip;
-	m_gameObjects[150] = GameObjectType::CedricNpc;
-	m_gameObjects[170] = GameObjectType::FranfranNpc;
-	m_gameObjects[190] = GameObjectType::JuNpc;
-	m_gameObjects[230] = GameObjectType::FannyNpc;
-	m_gameObjects[260] = GameObjectType::Tent;
-	m_gameObjects[250] = GameObjectType::TurbanNpc;
-	m_gameObjects[290] = GameObjectType::OldDesertStaticNpc;
-
-	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::LevelOne);
+	m_destinations.push_back(Level::Default);
 }
 
 void			DefaultBiome::setup(std::size_t seed)

@@ -126,7 +126,7 @@ LevelFourBiome::LevelFourBiome() :
 
 	// Define game objects
 	m_instances[140] = MAP_TRAIL_SLOWFALL_WATER_OMP;
-	m_instances[800] = MAP_PARA_SIGN_WATER_OMP;
+	m_instances[760] = MAP_PARA_SIGN_WATER_OMP;
 	m_instances[900] = MAP_PORTAL_WATER_OMP;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
