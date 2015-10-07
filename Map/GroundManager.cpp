@@ -233,7 +233,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			});
 	m_decorFactory.registerCreator(PARA_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new InstanceDecor(PARA_SIGN_OSS, scale, position, 1u, 0.4f);
+				return new InstanceDecor(PARA_SIGN_OSS, scale, position, 4u, 0.4f);
 			});
 	m_decorFactory.registerCreator(COLUMN_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
