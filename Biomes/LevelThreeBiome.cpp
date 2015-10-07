@@ -90,7 +90,7 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
-	m_cloudColor(255, 255, 255, 200),
+	m_cloudColor(255, 255, 255, 100),
 
 	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),

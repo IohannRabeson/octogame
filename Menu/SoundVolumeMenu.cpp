@@ -31,9 +31,8 @@ void SoundVolumeMenu::createMenus(void)
 
 void SoundVolumeMenu::onSelection(void)
 {
-	octo::AudioManager & audio = octo::Application::getAudioManager();
-
-	audio.setSoundVolume(getIndexCursor() * 10);
+	octo::Application::getAudioManager().setSoundVolume(getIndexCursor() * 10);
+	Progress::getInstance().setSoundVolume(getIndexCursor() * 10);
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();

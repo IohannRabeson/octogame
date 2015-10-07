@@ -41,6 +41,8 @@ public:
 	bool				spaceShipIsRepair() const { return m_spaceShipRepair; }
 
 	float				getMusicVolume() const { return m_data.musicVol; }
+	void				setMusicVolume(float volume) { m_data.musicVol = volume; }
+	void				setSoundVolume(float volume) { m_data.soundVol = volume; }
 
 	bool				canMoveMap();
 	bool				canRepair();
@@ -68,7 +70,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::LevelOne, 5u, 100u, true, true)
+			data(0u, Level::LevelOne, 6u, 100u, true, true)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
