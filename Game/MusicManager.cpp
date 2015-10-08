@@ -12,14 +12,14 @@ MusicManager::MusicManager() :
 	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
 
-	m_music.resize(5);
+	m_music.resize(6);
 
 	// Montagne
 	m_music[0] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
 	// oasis
-//	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
-//			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1700.f), sf::Vector2f(2100.f, 900.f)));
+	//	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
+	//			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1700.f), sf::Vector2f(2100.f, 900.f)));
 	// village
 	m_music[1] = AreaMusic(Level::LevelThree, ACTION_SLOW_WAV,
 			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
@@ -32,6 +32,9 @@ MusicManager::MusicManager() :
 	//run
 	m_music[4] = AreaMusic(Level::LevelFour, MENU_OPUS_I_WAV,
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
+	//concert
+	m_music[5] = AreaMusic(Level::LevelFour, ACTION_SLOW_WAV,
+			sf::FloatRect(sf::Vector2f(700.f * 16.f, -3400.f), sf::Vector2f(70.f * 16.f, 1350.f)));
 }
 
 MusicManager::~MusicManager()
@@ -58,12 +61,45 @@ void	MusicManager::update(sf::Time frameTime, sf::Vector2f const & octoPos)
 
 void	MusicManager::debugDraw(sf::RenderTarget & render)
 {
+	sf::Rect<float> rect = octo::Application::getCamera().getRectangle();
+	bool	mXm = false;
+	bool	mXp = false;
+
+	std::size_t indexX = 0;
+	if (rect.left < 0)
+	{
+		while (rect.left < 0){
+			rect.left += m_mapSize.x;
+			mXm = true;
+			indexX++;
+		}
+	}
+	else if (rect.left > m_mapSize.x)
+	{
+		while (rect.left > m_mapSize.x)
+		{
+			indexX++;
+			mXp = true;
+			rect.left -= m_mapSize.x;
+		}
+	}
 	for (auto & music : m_music)
 	{
 		if (music.level == m_currentLevel)
 		{
 			sf::RectangleShape	shape(sf::Vector2f(music.area.width, music.area.height));
-			shape.setPosition(music.area.left, music.area.top);
+			if (music.area.intersects(rect))
+			{
+				float top = music.area.top;
+				float left = music.area.left;
+				if (mXm)
+					left -= (m_mapSize.x * indexX);
+				else if (mXp)
+					left += (m_mapSize.x * indexX);
+				shape.setPosition(left, top);
+			}
+			else
+				shape.setPosition(music.area.left, music.area.top);
 			shape.setFillColor(sf::Color(63, 206, 87));
 			render.draw(shape);
 		}
