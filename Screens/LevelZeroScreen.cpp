@@ -65,7 +65,6 @@ void	LevelZeroScreen::stop()
 	graphics.removeKeyboardListener(this);
 }
 
-#include <iostream>
 void	LevelZeroScreen::update(sf::Time frameTime)
 {
 	octo::Camera &				camera = octo::Application::getCamera();
@@ -101,7 +100,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		{
 			octo::AudioManager &		audio = octo::Application::getAudioManager();
 			octo::ResourceManager &		resource = octo::Application::getResourceManager();
-			audio.stopMusic(sf::seconds(2.f));
+
 			audio.playSound(resource.getSound(OCTO_FEAR_WAV), 0.5f);
 			m_ground = audio.playSound(resource.getSound(GROUND_WAV), 0.6f, 1.8f);
 			m_isSoundPlayed = true;
@@ -110,6 +109,8 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		{
 			octo::AudioManager &		audio = octo::Application::getAudioManager();
 			octo::ResourceManager &		resource = octo::Application::getResourceManager();
+
+			audio.stopMusic(sf::seconds(0.1f));
 			audio.playSound(resource.getSound(EXPLODE_HELMET_WAV), 0.5f, 0.5f);
 			audio.playSound(resource.getSound(TREE_WAV), 0.5f, 0.5f);
 			m_ground->setVolume(0.f);

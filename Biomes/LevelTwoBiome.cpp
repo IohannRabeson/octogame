@@ -116,7 +116,7 @@ LevelTwoBiome::LevelTwoBiome() :
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
-	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
+	m_mapSeed = 42;//m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 
 	// Create a set a 20 colors for particles
@@ -126,6 +126,10 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_particleColor[0] = m_rockColor;
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
+
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() == Level::LevelThree)
+		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
 
 	// Define game objects
 	m_gameObjects[20] = GameObjectType::JuNpc;
@@ -141,8 +145,10 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[750] = GameObjectType::Tent;
 	m_gameObjects[700] = GameObjectType::Portal;
 	m_gameObjects[845] = GameObjectType::Well;
-	m_gameObjects[870] = GameObjectType::WellKeeperNpc;
-//	m_instances[870] = MAP_ELEVATOR_JUNGLE_OMP;
+	if (progress.canUseWaterJump())
+		m_gameObjects[88] = GameObjectType::WellKeeperNpc;
+	else
+		m_gameObjects[870] = GameObjectType::WellKeeperNpc;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};

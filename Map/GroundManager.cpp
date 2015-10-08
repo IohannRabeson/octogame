@@ -235,6 +235,30 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(PARA_SIGN_OSS, scale, position, 4u, 0.4f);
 			});
+	m_decorFactory.registerCreator(COLUMN_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_1_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(COLUMN_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_2_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(COLUMN_3_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_3_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(COLUMN_4_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_4_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(COLUMN_5_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_5_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(PLANT_JUNGLE_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PLANT_JUNGLE_2_OSS, scale, position, 3u, 0.4f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -317,19 +341,19 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			sf::Vector2f position = decor.position;
 			position.x += instance.first * Tile::TileSize - Map::OffsetX;
 			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
-			if (!decor.isFront)
-				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
-			else
-				m_instanceDecorsFront.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 
 			if (!decor.name.compare(OBJECT_PORTAL_OSS))
 			{
 				//TODO care about get destination
 				std::unique_ptr<Portal> portal(new Portal(biome.getDestination()));
 				portal->setBiome(biome);
-				portal->setPosition(position);
+				portal->setPosition(position + sf::Vector2f(50.f, 350.f));
 				m_otherOnInstance.push_back(std::move(portal));
 			}
+			else if (!decor.isFront)
+				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
+			else
+				m_instanceDecorsFront.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 		}
 
 		bool spawnInstance = false;
@@ -1038,6 +1062,11 @@ void GroundManager::updateOffset(float)
 		ofX = newOfX - m_oldOffset.x;
 	if (m_oldOffset.y != newOfY)
 		ofY = newOfY - m_oldOffset.y;
+
+	if (ofX >= static_cast<int>(m_tiles->getColumns()) - 1)
+		ofX = static_cast<int>(m_tiles->getColumns()) - 1;
+	if (ofY >= static_cast<int>(m_tiles->getRows()) - 1)
+		ofY = static_cast<int>(m_tiles->getRows()) - 1;
 
 	if (ofX)
 		computeDecor();

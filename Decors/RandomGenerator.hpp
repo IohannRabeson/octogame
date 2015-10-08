@@ -8,6 +8,7 @@ class RandomGenerator
 {
 public:
 	RandomGenerator(void);
+	RandomGenerator(std::string const & string);
 	~RandomGenerator(void) = default;
 
 	void setSeed(std::string const & string);

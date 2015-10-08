@@ -1,6 +1,7 @@
 #include "MusicVolumeMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "EmptyMenu.hpp"
+#include "Progress.hpp"
 
 #include <Application.hpp>
 #include <AudioManager.hpp>
@@ -28,9 +29,8 @@ void MusicVolumeMenu::createMenus(void)
 
 void MusicVolumeMenu::onSelection(void)
 {
-	octo::AudioManager & audio = octo::Application::getAudioManager();
-
-	audio.setMusicVolume(getIndexCursor());
+	octo::Application::getAudioManager().setMusicVolume(getIndexCursor());
+	Progress::getInstance().setMusicVolume(getIndexCursor());
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();

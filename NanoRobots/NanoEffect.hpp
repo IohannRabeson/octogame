@@ -16,6 +16,15 @@ class NanoEffect : public sf::Drawable,
 				public sf::Transformable
 {
 public:
+
+	enum State
+	{
+		Active,
+		Transfer,
+		Random,
+		Wait
+	};
+
 	NanoEffect(void);
 	virtual ~NanoEffect(void) = default;
 
@@ -25,10 +34,8 @@ public:
 	sf::Vector2f const &			getPosition(void) const;
 	sf::Color const &				getColor(void) const;
 	float							getSizeCorner(void) const;
-	bool							isActive(void) const;
 	void							setPosition(sf::Vector2f const & position);
 	void							setColor(sf::Color const & color);
-	void							setActive(bool isActive);
 	void							onTransfer(void);
 
 private:
@@ -39,6 +46,7 @@ private:
 
 	void							createEffect(sf::Vector2f const & size,
 												 sf::Vector2f const & origin,
+												 float glowingCoef,
 												 sf::Color color,
 												 octo::VertexBuilder& builder);
 
@@ -53,13 +61,15 @@ private:
 	sf::Vector2f					m_size;
 	sf::Vector2f					m_position;
 	sf::Color						m_color;
-	bool							m_isActive;
-	bool							m_isTransfer;
-	bool							m_isRandom;
+	State							m_state;
+	bool							m_isTransferHappen;
 	sf::Time						m_glowingTimer;
 	sf::Time						m_glowingTimerMax;
-	sf::Time						m_randomGlowing;
-	sf::Time						m_randomGlowingMax;
+	sf::Time						m_transferTimer;
+	sf::Time						m_transferTimerMax;
+	sf::Time						m_randomTimer;
+	sf::Time						m_randomTimerMax;
+	bool							m_soundPlayed;
 };
 
 #endif

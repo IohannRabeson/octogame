@@ -28,12 +28,14 @@
 #include "CedricNpc.hpp"
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
+#include "FatNpc.hpp"
 #include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
 #include "JeffMouffyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
 #include "AmandineNpc.hpp"
+#include "ConstanceNpc.hpp"
 #include "BrayouNpc.hpp"
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
@@ -85,12 +87,15 @@ Game::~Game(void)
 void	Game::loadLevel(void)
 {
 	m_biomeManager.changeBiome(Progress::getInstance().getNextDestination(), 0x12345);
+	Progress::getInstance().setLastDestination(m_biomeManager.getCurrentBiome().getId());
 
+	octo::AudioManager& audio = octo::Application::getAudioManager();
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
 
 	// Reset last values
 	postEffect.removeEffects();
+	audio.reset();
 	// Reset PhysycsEngine
 	octo::Application::getCamera().setCenter(startPosition - sf::Vector2f(0.f, 200.f));
 	m_physicsEngine.unregisterAllShapes();
@@ -271,6 +276,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::AmandineNpc:
 			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::ConstanceNpc:
+			gameObjectCast<ConstanceNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::JuNpc:
 			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -309,6 +317,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::IohannNpc:
 			gameObjectCast<IohannNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::FatNpc:
+			gameObjectCast<FatNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::SpaceShip:
 			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));

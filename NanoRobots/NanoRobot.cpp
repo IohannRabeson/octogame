@@ -32,7 +32,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_textIndex(0u),
 	m_state(Idle),
 	m_timer(sf::Time::Zero),
-	m_timerMax(sf::seconds(7.f)),
+	m_timerMax(sf::seconds(15.f)),
 	m_isTravelling(false),
 	m_engine(std::time(0)),
 	m_soundDistri(0u, 2u)

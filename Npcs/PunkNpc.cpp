@@ -10,7 +10,7 @@ PunkNpc::PunkNpc(void) :
 	setOrigin(sf::Vector2f(90.f, 100.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(-15.f, -65.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::PunkNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));

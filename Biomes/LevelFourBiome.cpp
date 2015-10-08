@@ -113,7 +113,7 @@ LevelFourBiome::LevelFourBiome() :
 #ifndef NDEBUG
 	m_mapSeed = 42u;
 #else
-	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
+	m_mapSeed = 42u;//m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 
 	// Create a set a 20 colors for particles
@@ -126,6 +126,7 @@ LevelFourBiome::LevelFourBiome() :
 
 	// Define game objects
 	m_instances[140] = MAP_TRAIL_SLOWFALL_WATER_OMP;
+	m_instances[785] = MAP_PARA_SIGN_WATER_OMP;
 	m_instances[900] = MAP_PORTAL_WATER_OMP;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
@@ -138,8 +139,8 @@ LevelFourBiome::LevelFourBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::LevelThree);
 	m_destinations.push_back(Level::LevelTwo);
+	m_destinations.push_back(Level::LevelThree);
 }
 
 void			LevelFourBiome::setup(std::size_t seed)

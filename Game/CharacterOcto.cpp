@@ -129,6 +129,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::FranfranNpc)
 		| static_cast<std::size_t>(GameObjectType::IohannNpc)
 		| static_cast<std::size_t>(GameObjectType::PunkNpc)
+		| static_cast<std::size_t>(GameObjectType::FatNpc)
 		| static_cast<std::size_t>(GameObjectType::GuiNpc)
 		| static_cast<std::size_t>(GameObjectType::JuNpc)
 		| static_cast<std::size_t>(GameObjectType::LucienNpc)
@@ -626,7 +627,10 @@ void	CharacterOcto::update(sf::Time frameTime)
 	if (!m_collisionSpaceShip && !m_collisionElevatorEvent && m_progress.canRepairShip())
 	{
 		for (auto & robot : m_nanoRobots)
-			robot->setState(NanoRobot::State::FollowOcto);
+		{
+			if (robot->getState() != NanoRobot::State::Speak)
+				robot->setState(NanoRobot::State::FollowOcto);
+		}
 	}
 
 	if (m_repairShip)
