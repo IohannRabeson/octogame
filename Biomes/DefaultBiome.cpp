@@ -17,7 +17,7 @@ DefaultBiome::DefaultBiome() :
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.5f),
-	m_interestPointPosX(m_mapSize.x / 2.f),
+	m_interestPointPosX(45u),
 	m_tileStartColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_tileEndColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_waterLevel(m_generator.randomInt(0u, 3000u)),
@@ -37,7 +37,7 @@ DefaultBiome::DefaultBiome() :
 	m_lightningSize(m_generator.randomFloat(10.f, 700.f), m_generator.randomFloat(700.f, 3000.f)),
 
 	m_rockCount(m_generator.randomInt(1, 40), m_generator.randomInt(40, 250)),
-	m_treeCount(m_generator.randomInt(1, 20), m_generator.randomInt(20, 100)),
+	m_treeCount(m_generator.randomInt(1, 20), m_generator.randomInt(20, 50)),
 	m_mushroomCount(m_generator.randomInt(1, 100), m_generator.randomInt(100, 250)),
 	m_crystalCount(m_generator.randomInt(1, 70), m_generator.randomInt(70, 250)),
 	m_starCount(300u, 800u),
