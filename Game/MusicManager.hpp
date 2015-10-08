@@ -19,10 +19,12 @@ private:
 	{
 		AreaMusic() = default;
 		explicit AreaMusic(Level level, ResourceKey key, sf::FloatRect rect,
+				float volume = 1.f,
 				sf::Time transitionTime = sf::seconds(1.f)) :
 			level(level),
 			name(key),
 			area(rect),
+			volume(volume),
 			offset(sf::Time::Zero),
 			transitionTime(transitionTime)
 		{
@@ -32,6 +34,7 @@ private:
 		Level			level;
 		ResourceKey		name;
 		sf::FloatRect	area;
+		float			volume;
 		sf::SoundBuffer	music;
 		sf::Time		offset;
 		sf::Time		transitionTime;

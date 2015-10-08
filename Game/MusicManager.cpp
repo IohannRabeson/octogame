@@ -9,7 +9,7 @@ MusicManager::MusicManager() :
 	m_musicLevel.resize(4);
 	m_musicLevel[0] = AreaMusic(Level::LevelOne, SPACE_SHIP_WAV, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_II_WAV, sf::FloatRect());
-	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
+	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect(), 0.6f);
 	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
 
 	m_music.resize(5);
@@ -128,7 +128,7 @@ void	MusicManager::transition(sf::Time frameTime)
 				main.offset += frameTime;
 				if (m_timer < sf::Time::Zero)
 					m_timer = sf::Time::Zero;
-				volume = m_maxVolume * (m_timer / main.transitionTime);
+				volume = (m_maxVolume * main.volume) * (m_timer / main.transitionTime);
 				m_audio.setMusicVolume(volume);
 			}
 			break;
@@ -141,7 +141,7 @@ void	MusicManager::transition(sf::Time frameTime)
 			music.offset += frameTime;
 			if (m_timer > music.transitionTime)
 				m_timer = music.transitionTime;
-			volume = m_maxVolume * (m_timer / music.transitionTime);
+			volume = (m_maxVolume * music.volume) * (m_timer / music.transitionTime);
 			m_audio.setMusicVolume(volume);
 			break;
 		}
@@ -153,7 +153,7 @@ void	MusicManager::transition(sf::Time frameTime)
 			music.offset += frameTime;
 			if (m_timer < sf::Time::Zero)
 				m_timer = sf::Time::Zero;
-			volume = m_maxVolume * (m_timer / music.transitionTime);
+			volume = (m_maxVolume * music.volume) * (m_timer / music.transitionTime);
 			m_audio.setMusicVolume(volume);
 			break;
 		}
@@ -189,7 +189,7 @@ void	MusicManager::transition(sf::Time frameTime)
 				main.offset += frameTime;
 				if (m_timer > main.transitionTime)
 					m_timer = main.transitionTime;
-				volume = m_maxVolume * (m_timer / main.transitionTime);
+				volume = (m_maxVolume * main.volume) * (m_timer / main.transitionTime);
 				m_audio.setMusicVolume(volume);
 				break;
 			}
