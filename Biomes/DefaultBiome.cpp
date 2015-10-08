@@ -132,7 +132,11 @@ DefaultBiome::DefaultBiome() :
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
 	//m_gameObjects[70] = GameObjectType::Portal;
-	m_destinations.push_back(Level::Default);
+	if (m_generator.randomBool(0.8f))
+		m_destinations.push_back(Level::Default);
+	else
+		m_destinations.push_back(Level::LevelOne);
+
 	//m_destinations.push_back(Level::LevelOne);
 
 	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -1u)] = GameObjectType::SpaceShip;

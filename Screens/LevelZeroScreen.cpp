@@ -47,7 +47,10 @@ void	LevelZeroScreen::start()
 	graphics.addKeyboardListener(this);
 
 	if (Progress::getInstance().spaceShipIsRepair())
+	{
+		Progress::getInstance().setNextDestination(Level::Default);
 		m_state = Rising;
+	}
 }
 
 void	LevelZeroScreen::pause()
