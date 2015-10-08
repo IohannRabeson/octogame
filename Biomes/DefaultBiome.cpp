@@ -134,6 +134,8 @@ DefaultBiome::DefaultBiome() :
 	//m_gameObjects[70] = GameObjectType::Portal;
 	m_destinations.push_back(Level::Default);
 	//m_destinations.push_back(Level::LevelOne);
+
+	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -1u)] = GameObjectType::SpaceShip;
 }
 
 void			DefaultBiome::setup(std::size_t seed)
