@@ -13,7 +13,7 @@ DefaultBiome::DefaultBiome() :
 	m_name("Default"),
 	m_id(Level::Default),
 	m_seed("Default"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(400u, 600u), m_generator.randomInt(2u, 500u))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(400u, 600u), m_generator.randomInt(2u, 1000u))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.5f),
@@ -36,10 +36,10 @@ DefaultBiome::DefaultBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(m_generator.randomFloat(10.f, 700.f), m_generator.randomFloat(700.f, 3000.f)),
 
-	m_rockCount(m_generator.randomInt(1, 40), m_generator.randomInt(40, 250)),
+	m_rockCount(m_generator.randomInt(1, 40), m_generator.randomInt(40, 100)),
 	m_treeCount(m_generator.randomInt(1, 20), m_generator.randomInt(20, 50)),
 	m_mushroomCount(m_generator.randomInt(1, 100), m_generator.randomInt(100, 250)),
-	m_crystalCount(m_generator.randomInt(1, 70), m_generator.randomInt(70, 250)),
+	m_crystalCount(m_generator.randomInt(1, 70), m_generator.randomInt(70, 150)),
 	m_starCount(300u, 800u),
 	m_sunCount(m_generator.randomInt(1, 10), m_generator.randomInt(10, 20)),
 	m_moonCount(m_generator.randomInt(1, 10), m_generator.randomInt(10, 20)),
@@ -128,10 +128,12 @@ DefaultBiome::DefaultBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// TODO define map position and number of map
-	m_gameObjects[20] = GameObjectType::Portal;
-	m_gameObjects[70] = GameObjectType::Portal;
+	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x -1u);
+	m_gameObjects[portalPos] = GameObjectType::Portal;
+	m_interestPointPosX = portalPos;
+	//m_gameObjects[70] = GameObjectType::Portal;
 	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::LevelOne);
+	//m_destinations.push_back(Level::LevelOne);
 }
 
 void			DefaultBiome::setup(std::size_t seed)
