@@ -17,7 +17,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_index(0u),
 	m_startTimerMax(sf::seconds(3.f)),
 	m_soundPlayed1(false),
-	m_soundPlayed2(false),
+	m_soundPlayed2(false)
 {
 	octo::Camera&			camera = octo::Application::getCamera();
 	octo::ResourceManager &	resources = octo::Application::getResourceManager();
@@ -32,13 +32,18 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
 	std::wstring wkey;
 	std::wstring line;
+	std::string keyName;
+	if (Progress::getInstance().getNextDestination() != Level::Default)
+		keyName = "transitionLevelZero";
+	else
+		keyName = "transitionLevelZeroToRandom";
 	wchar_t delim = '=';
 	std::size_t i = 0;
 	while (std::getline(f, wkey, delim))
 	{
 		std::getline(f, line);
 		std::string key(wkey.begin(), wkey.end());
-		if (!key.compare("transitionLevelZero"))
+		if (!key.compare(keyName))
 		{
 			m_bubble[i].setup(line, sf::Color::White, 28u, 700.f);
 			m_bubble[i].setPosition(camera.getCenter());
@@ -48,20 +53,20 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 		}
 	}
 
-		m_sprite.setSpriteSheet(resources.getSpriteSheet(NANO_GROUND_TRANSFORM_OSS));
-		m_sprite.setScale(1.f, 1.f);
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(NANO_GROUND_TRANSFORM_OSS));
+	m_sprite.setScale(1.f, 1.f);
 
-		typedef octo::SpriteAnimation::Frame	Frame;
-		m_animation.setFrames({	Frame(sf::seconds(0.2f), 0u),
-								Frame(sf::seconds(0.2f), 1u),
-								Frame(sf::seconds(0.2f), 2u),
-								Frame(sf::seconds(0.2f), 3u),
-								Frame(sf::seconds(0.2f), 2u),
-								Frame(sf::seconds(0.2f), 1u)});
-		m_animation.setLoop(octo::LoopMode::Loop);
-		m_sprite.setAnimation(m_animation);
-		m_sprite.play();
-		m_sprite.setPosition(camera.getCenter() + sf::Vector2f(-40.f, -4.f));
+	typedef octo::SpriteAnimation::Frame	Frame;
+	m_animation.setFrames({	Frame(sf::seconds(0.2f), 0u),
+							Frame(sf::seconds(0.2f), 1u),
+							Frame(sf::seconds(0.2f), 2u),
+							Frame(sf::seconds(0.2f), 3u),
+							Frame(sf::seconds(0.2f), 2u),
+							Frame(sf::seconds(0.2f), 1u)});
+	m_animation.setLoop(octo::LoopMode::Loop);
+	m_sprite.setAnimation(m_animation);
+	m_sprite.play();
+	m_sprite.setPosition(camera.getCenter() + sf::Vector2f(-40.f, -4.f));
 }
 
 void	TransitionLevelZeroScreen::start()
@@ -132,9 +137,12 @@ bool TransitionLevelZeroScreen::onPressed(sf::Event::KeyEvent const &event)
 {
 	switch (event.code)
 	{
+		case sf::Keyboard::Return:
+		case sf::Keyboard::Space:
 		case sf::Keyboard::Escape:
 			{
 				m_index++;
+				m_time = sf::Time::Zero;
 				break;
 			}
 		default:
