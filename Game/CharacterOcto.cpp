@@ -807,6 +807,8 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 	{
 		for (auto & robot : m_nanoRobots)
 		{
+			if (robot->getState() == NanoRobot::State::GoingToRepairShip || robot->getState() == NanoRobot::State::RepairShip)
+				continue;
 			robot->setState(NanoRobot::State::GoingToRepairShip);
 			robot->setTarget(spaceShip->getPosition());
 		}

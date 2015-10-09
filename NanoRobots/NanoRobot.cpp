@@ -140,7 +140,7 @@ void NanoRobot::setLaserColor(sf::Color const & color)
 
 void NanoRobot::setRepairShipPosition(sf::Vector2f const & position)
 {
-	m_repairShipPosition = position;
+	m_repairShipPosition = m_target + position;
 }
 
 void NanoRobot::makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness)
@@ -359,14 +359,14 @@ void NanoRobot::updateRepairShip(sf::Time frameTime)
 	{
 		m_timerRepairShip += frameTime;
 		float speed = m_timerRepairShip.asSeconds() + octo::Pi2 * m_multiplier / 6.f;
-		setRepairShipPosition(sf::Vector2f(220.f, 450.f) + sf::Vector2f(std::cos(speed), std::sin(speed)) * 150.f);
+		setRepairShipPosition(sf::Vector2f(std::cos(speed), std::sin(speed)) * 150.f);
 		setTarget(m_laserConvergence);
 	}
 }
 
 void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
-	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak || m_state == Repair || m_state == RepairShip)
+	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak || m_state == Repair || m_state == RepairShip || m_state == GoingToRepairShip)
 	{
 		render.draw(m_glowingEffect);
 		render.draw(m_sprite);

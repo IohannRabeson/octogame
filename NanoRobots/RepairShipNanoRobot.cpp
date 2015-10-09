@@ -91,7 +91,7 @@ void RepairShipNanoRobot::updateRepairShip(sf::Time frameTime)
 	m_timer += frameTime;
 	if (m_timer > m_timerMax)
 		m_timer -= m_timerMax;
-	setRepairShipPosition(sf::Vector2f(220.f, 450.f));
+	setRepairShipPosition(sf::Vector2f(220.f, -150.f));
 	setLaserColor(makeRainbow(m_timer / m_timerMax));
 	setLaserConvergence(getPosition() + sf::Vector2f(0.f, -24.f));
 }
