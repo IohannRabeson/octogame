@@ -37,7 +37,7 @@ LevelFourBiome::LevelFourBiome() :
 
 	m_rockCount(30u, 35u),
 	m_treeCount(30u, 30u),
-	m_mushroomCount(4390u, 4400u),
+	m_mushroomCount(390u, 400u),
 	m_crystalCount(70u, 100u),
 	m_starCount(500u, 800u),
 	m_sunCount(3u, 3u),
