@@ -184,6 +184,20 @@ bool	LevelZeroScreen::onPressed(sf::Event::KeyEvent const & event)
 		case sf::Keyboard::Down:
 			m_keyDown = true;
 			break;
+		case sf::Keyboard::Return:
+		case sf::Keyboard::Space:
+		case sf::Keyboard::Escape:
+		{
+			if (Progress::getInstance().isFirstTime() == false)
+			{
+				octo::StateManager &	states = octo::Application::getStateManager();
+				octo::AudioManager &	audio = octo::Application::getAudioManager();
+
+				states.change("transitionLevelZero");
+				audio.stopMusic(sf::seconds(0.1f));
+			}
+			break;
+		}
 		default:
 			break;
 	}
