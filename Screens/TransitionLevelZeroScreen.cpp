@@ -18,13 +18,9 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_startTimerMax(sf::seconds(3.f)),
 	m_soundPlayed1(false),
 	m_soundPlayed2(false),
-	m_isStatePush(false)
 {
 	octo::Camera&			camera = octo::Application::getCamera();
 	octo::ResourceManager &	resources = octo::Application::getResourceManager();
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-
-	graphics.addKeyboardListener(this);
 	camera.setCenter(0.f, 0.f);
 	m_timerMax.resize(m_bubbleCount);
 	m_timerMax[0] = sf::seconds(5.5f);
@@ -70,6 +66,8 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 
 void	TransitionLevelZeroScreen::start()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	graphics.addKeyboardListener(this);
 }
 
 void	TransitionLevelZeroScreen::pause()
@@ -82,6 +80,8 @@ void	TransitionLevelZeroScreen::resume()
 
 void	TransitionLevelZeroScreen::stop()
 {
+	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	graphics.removeKeyboardListener(this);
 }
 
 void	TransitionLevelZeroScreen::playSound(std::size_t index)
@@ -102,13 +102,8 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 {
 	if (m_index >= m_bubbleCount)
 	{
-		if (m_isStatePush)
-			return;
 		octo::StateManager & states = octo::Application::getStateManager();
-		octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-		graphics.removeKeyboardListener(this);
-		m_isStatePush = true;
-		states.push("game");
+		states.change("game");
 		return;
 	}
 	if (m_startTimer <= m_startTimerMax)

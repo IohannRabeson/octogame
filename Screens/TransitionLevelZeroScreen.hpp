@@ -31,7 +31,6 @@ private:
 	sf::Time						m_startTimerMax;
 	bool							m_soundPlayed1;
 	bool							m_soundPlayed2;
-	bool							m_isStatePush;
 
 	octo::AnimatedSprite			m_sprite;
 	octo::SpriteAnimation			m_animation;
