@@ -101,6 +101,8 @@ void	Progress::reset()
 void	Progress::addNanoRobot()
 {
 	m_data.nanoRobotCount++;
+	std::cout << m_data.nanoRobotCount << std::endl;
+	assert(m_data.nanoRobotCount <= 7);
 	save();
 }
 
