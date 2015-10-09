@@ -128,18 +128,15 @@ DefaultBiome::DefaultBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// TODO define map position and number of map
-	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x -1u);
+	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x - 40u);
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
-	//m_gameObjects[70] = GameObjectType::Portal;
 	if (m_generator.randomBool(0.8f))
 		m_destinations.push_back(Level::Default);
 	else
 		m_destinations.push_back(Level::LevelOne);
 
-	//m_destinations.push_back(Level::LevelOne);
-
-	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -1u)] = GameObjectType::SpaceShip;
+	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
 }
 
 void			DefaultBiome::setup(std::size_t seed)
