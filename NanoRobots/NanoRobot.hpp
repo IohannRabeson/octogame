@@ -42,7 +42,7 @@ public:
 	bool isTravelling(void) const;
 
 	void addMapOffset(float x, float y);
-	void transfertToOcto(void);
+	void transfertToOcto(bool inInit = false);
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;

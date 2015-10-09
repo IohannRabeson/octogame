@@ -82,7 +82,7 @@ CharacterOcto::CharacterOcto() :
 	for (auto & robot : m_nanoRobots)
 	{
 		robot->setPosition(getPosition());
-		robot->transfertToOcto();
+		robot->transfertToOcto(true);
 		m_progress.removeNanoRobot();
 		robot->setState(NanoRobot::State::FollowOcto);
 	}

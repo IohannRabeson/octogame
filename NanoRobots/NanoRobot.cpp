@@ -192,7 +192,7 @@ void NanoRobot::addMapOffset(float x, float y)
 	setPosition(sf::Vector2f(getPosition().x + x, getPosition().y + y));
 }
 
-void NanoRobot::transfertToOcto(void)
+void NanoRobot::transfertToOcto(bool inInit)
 {
 	PhysicsEngine::getInstance().unregisterShape(m_box);
 	m_box = nullptr;
@@ -200,7 +200,8 @@ void NanoRobot::transfertToOcto(void)
 	m_swarm.getFirefly(0u).speed = 1.f;
 	m_state = Speak;
 	m_glowingEffect.onTransfer();
-	Progress::getInstance().addNanoRobot();
+	if (!inInit)
+		Progress::getInstance().addNanoRobot();
 }
 
 void NanoRobot::setTarget(sf::Vector2f const & target)
