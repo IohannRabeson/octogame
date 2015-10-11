@@ -21,7 +21,7 @@ DefaultBiome::DefaultBiome() :
 	m_tileStartColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_tileEndColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_waterLevel(m_generator.randomInt(400u, 3000u)),
-	m_waterColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(50, 200)),
+	m_waterColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(40, 150)),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(40.f)),
@@ -41,7 +41,7 @@ DefaultBiome::DefaultBiome() :
 	m_mushroomCount(m_generator.randomInt(1, 100), m_generator.randomInt(100, 250)),
 	m_crystalCount(m_generator.randomInt(1, 70), m_generator.randomInt(70, 150)),
 	m_starCount(300u, 800u),
-	m_sunCount(m_generator.randomInt(1, 10), m_generator.randomInt(10, 20)),
+	m_sunCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 15)),
 	m_moonCount(m_generator.randomInt(1, 10), m_generator.randomInt(10, 20)),
 	m_rainbowCount(m_generator.randomInt(1, 3), m_generator.randomInt(3, 10)),
 	m_cloudCount(m_generator.randomInt(1, 50), m_generator.randomInt(50, 100)),
@@ -63,7 +63,7 @@ DefaultBiome::DefaultBiome() :
 	m_canCreateMoon(m_generator.randomBool(0.8f)),
 	m_canCreateRainbow(m_generator.randomBool(0.4f)),
 
-	m_rockSize(sf::Vector2f(m_generator.randomFloat(2.f, 20.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(20.f, 100.f), m_generator.randomFloat(100.f, 600.f))),
+	m_rockSize(sf::Vector2f(m_generator.randomFloat(2.f, 50.f), m_generator.randomFloat(10.f, 60.f)), sf::Vector2f(m_generator.randomFloat(50.f, 100.f), m_generator.randomFloat(200.f, 600.f))),
 	m_rockPartCount(m_generator.randomInt(2.f, 4.f), m_generator.randomFloat(4.f, 20.f)),
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
@@ -74,20 +74,20 @@ DefaultBiome::DefaultBiome() :
 	m_treeColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_treeAngle(m_generator.randomFloat(-180, 30), m_generator.randomFloat(30, 180)),
 	m_treeBeatMouvement(0.15f),
-	m_leafSize(sf::Vector2f(m_generator.randomFloat(2.f, 20.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(20.f, 100.f), m_generator.randomFloat(100.f, 600.f))),
+	m_leafSize(sf::Vector2f(m_generator.randomFloat(2.f, 20.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(20.f, 100.f), m_generator.randomFloat(400.f, 600.f))),
 	m_leafColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
 	//TODO: Randomize all of that
-	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
+	m_mushroomSize(sf::Vector2f(m_generator.randomFloat(2.f, 50.f), m_generator.randomFloat(10.f, 60.f)), sf::Vector2f(m_generator.randomFloat(50.f, 100.f), m_generator.randomFloat(200.f, 600.f))),
 	m_mushroomColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_mushroomLifeTime(sf::seconds(10), sf::seconds(30)),
 
-	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 100.f)),
+	m_crystalSize(sf::Vector2f(m_generator.randomFloat(2.f, 50.f), m_generator.randomFloat(10.f, 60.f)), sf::Vector2f(m_generator.randomFloat(50.f, 100.f), m_generator.randomFloat(200.f, 600.f))),
 	m_crystalPartCount(2u, 8u),
 	m_crystalColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 150),
-	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
+	m_shineEffectSize(sf::Vector2f(m_generator.randomFloat(2.f, 50.f), m_generator.randomFloat(10.f, 60.f)), sf::Vector2f(m_generator.randomFloat(50.f, 100.f), m_generator.randomFloat(200.f, 600.f))),
 	m_shineEffectColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 100),
-	m_shineEffectRotateAngle(100.f, 200.f),
+	m_shineEffectRotateAngle(m_generator.randomFloat(50.f, 100.f), m_generator.randomFloat(100.f, 360.f)),
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
@@ -98,11 +98,11 @@ DefaultBiome::DefaultBiome() :
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
-	m_sunSize(sf::Vector2f(60.f, 60.f), sf::Vector2f(150.f, 150.f)),
-	m_sunPartCount(2u, 4u),
+	m_sunSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 600.f), m_generator.randomFloat(100.f, 600.f))),
+	m_sunPartCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 7)),
 	m_sunColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
-	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 100.f)),
+	m_moonSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 600.f), m_generator.randomFloat(100.f, 600.f))),
 	m_moonColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
 
@@ -119,6 +119,7 @@ DefaultBiome::DefaultBiome() :
 	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 
+	m_randomSurfaceNumber = m_generator.randomInt(1u, 4u);
 	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
@@ -130,11 +131,12 @@ DefaultBiome::DefaultBiome() :
 	// TODO define map position and number of map
 	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x - 40u);
 	m_gameObjects[portalPos] = GameObjectType::Portal;
+	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x - 40u)] = GameObjectType::Portal;
+	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x - 40u)] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
-	if (m_generator.randomBool(0.8f))
-		m_destinations.push_back(Level::Default);
-	else
-		m_destinations.push_back(Level::LevelOne);
+	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::Default);
 
 	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
 }
@@ -238,6 +240,36 @@ std::vector<ParallaxScrolling::ALayer *> DefaultBiome::getLayers()
 
 Map::MapSurfaceGenerator DefaultBiome::getMapSurfaceGenerator()
 {
+	switch (m_randomSurfaceNumber)
+	{
+		case 1u:
+			return [](Noise & noise, float x, float y)
+			{
+				return noise.fBm(x, y, 3, 3.f, 0.3f);
+			};
+			break;
+		case 2u:
+			return [](Noise & noise, float x, float y)
+			{
+				return noise.noise(x * 1.1f, y);
+			};
+			break;
+		case 3u:
+			return [](Noise & noise, float x, float y)
+			{
+				return noise.perlin(x, y, 3, 2.f);
+			};
+			break;
+		case 4u:
+			return [](Noise & noise, float x, float y)
+			{
+				return noise.perlin(x * 10.f, y, 2, 2.f);
+			};
+			break;
+		default:
+			break;
+	}
+
 	return [](Noise & noise, float x, float y)
 	{
 		return noise.fBm(x, y, 3, 3.f, 0.3f);

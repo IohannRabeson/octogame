@@ -145,6 +145,7 @@ public:
 
 private:
 	RandomGenerator										m_generator;
+	std::size_t											m_randomSurfaceNumber;
 	std::string											m_name;
 	Level												m_id;
 	std::string											m_seed;
