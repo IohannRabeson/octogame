@@ -24,6 +24,7 @@ CharacterOcto::OctoSound::OctoSound() :
 	m_engine(std::time(0)),
 	m_pitchDistribution(0.5f, 1.5f)
 {
+	m_soundFadeOut.reserve(100);
 }
 
 CharacterOcto::OctoSound::~OctoSound()

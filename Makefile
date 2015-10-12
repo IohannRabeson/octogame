@@ -109,6 +109,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/SoundVolumeMenu.cpp				\
 				Menu/MusicVolumeMenu.cpp				\
 				Menu/ControlMenu.cpp					\
+				Menu/CreditMenu.cpp						\
 				Menu/YesNoMenu.cpp						\
 				Menu/ResolutionMenu.cpp					\
 				Menu/EmptyMenu.cpp						\

@@ -1,5 +1,6 @@
 #include "MainMenu.hpp"
 #include "ControlMenu.hpp"
+#include "CreditMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "Progress.hpp"
 #include <Camera.hpp>
@@ -48,6 +49,7 @@ void MainMenu::createMenus(void)
 {
 	addMenu(L"Contrôles", std::unique_ptr<ControlMenu>(new ControlMenu()));
 	addMenu(L"Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
+	addMenu(L"Crédits", std::unique_ptr<CreditMenu>(new CreditMenu()));
 	addMenu(L"Recommencer", std::unique_ptr<YesNoReset>(new YesNoReset()));
 	addMenu(L"Quitter", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 	setCharacterSize(30);
