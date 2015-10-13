@@ -38,7 +38,7 @@ Progress & Progress::getInstance()
 void	Progress::setup()
 {
 	m_newSave = false;
-	m_filename = octo::Application::getOptions().getValue<std::string>("path") + "save.oss";
+	m_filename = octo::Application::getOptions().getValue<std::string>("path") + "save.osv";
 	m_data = data();
 }
 
