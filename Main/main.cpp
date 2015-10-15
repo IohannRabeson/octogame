@@ -77,11 +77,7 @@ int main(int argc, char **argv)
 {
 	try
 	{
-		std::string app = "octodyssee.app";
-		argv[0][strlen(argv[0]) - app.size()] = '\0';
-		std::string path(argv[0]);
-
-		octo::Application::initialize("L'Odyssee Octonaute", path + "default.conf", argc, argv);
+		octo::Application::initialize("L'Odyssee Octonaute", "default.conf", argc, argv);
 		octo::StateManager&							states = octo::Application::getStateManager();
 		octo::Console&								console = octo::Application::getConsole();
 		octo::GraphicsManager&						graphics = octo::Application::getGraphicsManager();

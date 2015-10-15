@@ -227,7 +227,7 @@ CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 FRAMEWORKS_FLAGS = $(addprefix -F , $(FRAMEWORKS_DIR)) $(addprefix -framework , $(FRAMEWORK))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = debug
+MODE = release
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)
