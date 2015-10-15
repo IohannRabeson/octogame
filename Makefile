@@ -292,6 +292,13 @@ clean_core_library:
 fclean_core_library:
 	@make -s -C $(CORE_DIR) fclean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
+package_app:
+	rm -rf "./builds/$(TARGET).app"
+	mkdir -p "./builds/$(TARGET).app"/Contents/{MacOS,Resources}
+	cp -R "$(FRAMEWORKS_DIR)"/* "./builds/$(TARGET).app/Contents/Resources/"
+	cp Info.plist "./builds/$(TARGET).app/Contents/"
+	sed -e "s/APP_NAME/$(TARGET)/g" -i "" "./builds/$(TARGET).app/Contents/Info.plist"
+	cp ./$(TARGET) "./builds/$(TARGET).app/Contents/MacOS/$(TARGET)"
 
 package: $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE) $(TARGET_HPP_FILE)
 
