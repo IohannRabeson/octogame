@@ -105,12 +105,9 @@ void	Progress::addNanoRobot()
 	save();
 }
 
-void	Progress::setNextDestination(Level destination)
+void	Progress::setNextDestination(Level destination, bool hasTransition)
 {
-	if (destination == Level::Default && m_data.nextDestination == Level::LevelOne)
-		m_changeLevel = false;
-	else
-		m_changeLevel = true;
+	m_changeLevel = hasTransition;
 	m_data.nextDestination = destination;
 }
 

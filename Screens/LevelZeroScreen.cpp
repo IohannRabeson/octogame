@@ -48,7 +48,7 @@ void	LevelZeroScreen::start()
 
 	if (Progress::getInstance().spaceShipIsRepair())
 	{
-		Progress::getInstance().setNextDestination(Level::Default);
+		Progress::getInstance().setNextDestination(Level::Default, false);
 		m_state = Rising;
 	}
 }
