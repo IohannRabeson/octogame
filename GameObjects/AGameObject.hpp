@@ -31,6 +31,7 @@ enum class GameObjectType : std::size_t
 	FatNpc = 16777216u,
 	IohannNpc = 33554432u,
 	LucienNpc = 67108864u,
+	ClementineNpc = 67108868u,
 	WaterNanoRobot = 134217728u,
 	VinceNpc = 268435456u,
 	ConstanceNpc = 536870912u,

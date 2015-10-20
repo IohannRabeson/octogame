@@ -28,6 +28,7 @@
 #include "CedricNpc.hpp"
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
+#include "ClementineNpc.hpp"
 #include "FatNpc.hpp"
 #include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
@@ -317,6 +318,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::IohannNpc:
 			gameObjectCast<IohannNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::ClementineNpc:
+			gameObjectCast<ClementineNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::FatNpc:
 			gameObjectCast<FatNpc>(gameObject)->collideOctoEvent(octo);
