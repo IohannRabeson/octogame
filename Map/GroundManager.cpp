@@ -20,6 +20,7 @@
 #include "BrayouNpc.hpp"
 #include "EvaNpc.hpp"
 #include "IohannNpc.hpp"
+#include "ClementineNpc.hpp"
 #include "ConstanceNpc.hpp"
 #include "FaustNpc.hpp"
 #include "CanouilleNpc.hpp"
@@ -131,6 +132,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
 	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
+	m_npcFactory.registerCreator<ClementineNpc>(CLEMENTINE_OSS);
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
 

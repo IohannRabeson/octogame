@@ -86,6 +86,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/VinceNpc.cpp						\
 				Npcs/ConstanceNpc.cpp					\
 				Npcs/AmandineNpc.cpp					\
+				Npcs/ClementineNpc.cpp					\
 				Npcs/JeffMouffyNpc.cpp					\
 				Npcs/FaustNpc.cpp						\
 				Npcs/BrayouNpc.cpp						\

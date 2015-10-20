@@ -13,7 +13,7 @@ JeffMouffyNpc::JeffMouffyNpc(void) :
 	setOrigin(sf::Vector2f(90.f, 193.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(100.f, -80.f));
 	setTimerMax(sf::seconds(5.f));
 	setup();
 
