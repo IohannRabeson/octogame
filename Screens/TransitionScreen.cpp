@@ -26,7 +26,7 @@ void	TransitionScreen::update(sf::Time frameTime)
 	if (m_timer >= m_timerMax)
 	{
 		octo::StateManager & states = octo::Application::getStateManager();
-		states.pop();
+		states.change("game");
 	}
 }
 

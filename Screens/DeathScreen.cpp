@@ -79,7 +79,7 @@ void	DeathScreen::update(sf::Time frameTime)
 	octo::StateManager & states = octo::Application::getStateManager();
 	m_timeDeath += frameTime;
 	if (m_timeDeath > m_timeDeathMax)
-		states.pop();
+		states.change("game");
 	m_sprite.update(frameTime);
 }
 

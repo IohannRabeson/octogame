@@ -987,7 +987,7 @@ bool	CharacterOcto::endDeath()
 		{
 			octo::StateManager &		states = octo::Application::getStateManager();
 			Progress::getInstance().endChallenge();
-			states.push("octo_death");
+			states.change("octo_death");
 		}
 		return false;
 	}
