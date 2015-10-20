@@ -105,10 +105,10 @@ void	Progress::addNanoRobot()
 	save();
 }
 
-void	Progress::setNextDestination(Level destination)
+void	Progress::setNextDestination(Level destination, bool hasTransition)
 {
+	m_changeLevel = hasTransition;
 	m_data.nextDestination = destination;
-	m_changeLevel = true;
 }
 
 Level	Progress::getNextDestination(void) const

@@ -15,7 +15,7 @@ public:
 	void				removeNanoRobot() { m_data.nanoRobotCount--; }
 	std::size_t			getNanoRobotCount() { return m_data.nanoRobotCount; }
 
-	void				setNextDestination(Level destination);
+	void				setNextDestination(Level destination, bool hasTransition = true);
 	Level				getNextDestination(void) const;
 
 	void				setLastDestination(Level destination);
