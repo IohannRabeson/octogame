@@ -15,7 +15,7 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(900u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(43.f * 16.f, 650.f),
+	m_octoStartPosition(43.f * 16.f, 600.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),

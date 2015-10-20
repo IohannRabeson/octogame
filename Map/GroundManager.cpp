@@ -1067,6 +1067,10 @@ void GroundManager::updateOffset(float)
 		ofX = static_cast<int>(m_tiles->getColumns()) - 1;
 	if (ofY >= static_cast<int>(m_tiles->getRows()) - 1)
 		ofY = static_cast<int>(m_tiles->getRows()) - 1;
+	if (ofX <= -static_cast<int>(m_tiles->getColumns()) + 1)
+		ofX = -static_cast<int>(m_tiles->getColumns()) + 1;
+	if (ofY <= -static_cast<int>(m_tiles->getRows()) + 1)
+		ofY = -static_cast<int>(m_tiles->getRows()) + 1;
 
 	if (ofX)
 		computeDecor();
