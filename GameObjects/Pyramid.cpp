@@ -14,7 +14,7 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 
 	m_spriteTop.setSpriteSheet(resources.getSpriteSheet(PYRAMID_TOP_OSS));
 	m_spriteTop.setScale(scale);
-	m_spriteTop.setPosition(position.x + 600.f, position.y - 385.f);
+	m_spriteTop.setPosition(position.x + 600.f, position.y - 384.f);
 	m_spriteTop.setAnimation(m_animationTop);
 	m_spriteTop.play();
 
@@ -55,7 +55,7 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 		m_spriteBlocs[i].play();
 	}
 
-	for (; i < 14u; i++)
+	for (; i < 13u; i++)
 	{
 		octo::SpriteAnimation::FrameList	frames;
 		frames.emplace_back(sf::seconds(2.1f), 0u);
