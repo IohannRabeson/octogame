@@ -34,6 +34,7 @@
 #include "WolfNpc.hpp"
 #include "Well.hpp"
 #include "Tent.hpp"
+#include "Pyramid.hpp"
 #include "Concert.hpp"
 #include "Firecamp.hpp"
 #include "Cage.hpp"
@@ -223,11 +224,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			});
 	m_decorFactory.registerCreator(PYRAMID_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new InstanceDecor(PYRAMID_OSS, scale, position, 9u, 0.1f);
-			});
-	m_decorFactory.registerCreator(PYRAMID_TOP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
-			{
-				return new InstanceDecor(PYRAMID_TOP_OSS, scale, position, 9u, 0.1f);
+				return new Pyramid(scale, position);
 			});
 	m_decorFactory.registerCreator(SEB_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
