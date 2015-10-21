@@ -17,6 +17,7 @@ public:
 private:
 	enum State
 	{
+		Start,
 		Success,
 		Fail,
 		End

@@ -9,12 +9,12 @@ JellyfishNpc::JellyfishNpc(void) :
 	m_startTimer(false),
 	m_animationEnd(false)
 {
-	setSize(sf::Vector2f(10.f, 175.f));
+	setSize(sf::Vector2f(10.f, 275.f));
 	setOrigin(sf::Vector2f(90.f, 13.f));
 	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(100.f, -80.f));
-	setTimerMax(sf::seconds(5.f));
+	setTimerMax(sf::seconds(100.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
@@ -25,12 +25,16 @@ void JellyfishNpc::setup(void)
 	typedef octo::CharacterAnimation::Frame			Frame;
 
 	getIdleAnimation().setFrames({
-			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(1.f), {0u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
@@ -91,13 +95,9 @@ void JellyfishNpc::updateState(void)
 		}
 		if (m_startTimer)
 		{
-			if (getTimer() > getTimerMax())
-			{
-				setDisplayText(false);
-				sprite.setNextEvent(Special1);
-				m_startPosition = getPosition();
-				setTimer(sf::Time::Zero);
-			}
+			sprite.setNextEvent(Special1);
+			m_startPosition = getPosition();
+			setTimer(sf::Time::Zero);
 		}
 	}
 }
@@ -108,9 +108,9 @@ void JellyfishNpc::updatePhysics(void)
 	if (sprite.getCurrentEvent() == Special1)
 	{
 		RectangleShape * box = getBox();
-		box->setPosition(octo::linearInterpolation(m_startPosition, m_startPosition + sf::Vector2f(0.f, -6000.f), getTimer() / getTimerMax()));
+		box->setPosition(octo::linearInterpolation(m_startPosition, m_startPosition + sf::Vector2f(0.f, -10000.f), getTimer() / getTimerMax() * 5.f));
 		box->update();
-		if (getTimer() > getTimerMax())
+		if (getTimer() > getTimerMax() * 5.f)
 			m_animationEnd = true;
 	}
 }

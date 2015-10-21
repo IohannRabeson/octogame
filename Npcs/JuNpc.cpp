@@ -57,6 +57,8 @@ void JuNpc::setup(void)
 			});
 	getSpecial2Animation().setLoop(octo::LoopMode::NoLoop);
 
+	if (Progress::getInstance().canUseWaterJump() == true)
+		setCurrentText(1u);
 	setupMachine();
 }
 
