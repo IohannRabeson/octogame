@@ -26,6 +26,7 @@
 #include "CanouilleNpc.hpp"
 #include "AmandineNpc.hpp"
 #include "JeffMouffyNpc.hpp"
+#include "JellyfishNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "WellKeeperNpc.hpp"
 #include "VinceNpc.hpp"
@@ -254,9 +255,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(COLUMN_5_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(COLUMN_KONAMI_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(COLUMN_KONAMI_OSS, scale, position, 2u, 0.5f);
+			});
 	m_decorFactory.registerCreator(PLANT_JUNGLE_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new InstanceDecor(PLANT_JUNGLE_2_OSS, scale, position, 3u, 0.4f);
+				return new InstanceDecor(PLANT_JUNGLE_2_OSS, scale, position, 3u, 0.3f);
 			});
 	m_decorFactory.registerCreator(DOUBLE_JUMP_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
@@ -481,6 +486,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					JeffMouffyNpc * jeffMouffy = new JeffMouffyNpc();
 					jeffMouffy->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, jeffMouffy);
+				}
+				break;
+			case GameObjectType::JellyfishNpc:
+				{
+					JellyfishNpc * jellyfish = new JellyfishNpc();
+					jellyfish->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, jellyfish);
 				}
 				break;
 			case GameObjectType::CanouilleNpc:
