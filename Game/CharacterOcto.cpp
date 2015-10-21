@@ -69,15 +69,15 @@ CharacterOcto::CharacterOcto() :
 	if (m_progress.canRepair())
 		giveRepairNanoRobot(new RepairNanoRobot());
 	if (m_progress.canJump())
-		giveNanoRobot(new JumpNanoRobot());
+		giveNanoRobot(new JumpNanoRobot(sf::Vector2f(0.f, 0.f)));
 	if (m_progress.canDoubleJump())
-		giveNanoRobot(new DoubleJumpNanoRobot());
+		giveNanoRobot(new DoubleJumpNanoRobot(sf::Vector2f(0.f, 0.f)));
 	if (m_progress.canSlowFall())
-		giveNanoRobot(new SlowFallNanoRobot());
+		giveNanoRobot(new SlowFallNanoRobot(sf::Vector2f(0.f, 0.f)));
 	if (m_progress.canUseWaterJump())
 		giveNanoRobot(new WaterNanoRobot());
 	if (m_progress.canRepairShip())
-		giveNanoRobot(new RepairShipNanoRobot());
+		giveNanoRobot(new RepairShipNanoRobot(sf::Vector2f(0.f, 0.f)));
 
 	for (auto & robot : m_nanoRobots)
 	{

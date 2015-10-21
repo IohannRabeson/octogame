@@ -298,8 +298,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				if (!Progress::getInstance().canJump())
 				{
 					std::unique_ptr<NanoRobot> ptr;
-					ptr.reset(new JumpNanoRobot());
-					ptr->setPosition(position + sf::Vector2f(0.f, 100.f));
+					ptr.reset(new JumpNanoRobot(position));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
@@ -308,8 +307,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				if (!Progress::getInstance().canDoubleJump())
 				{
 					std::unique_ptr<NanoRobot> ptr;
-					ptr.reset(new DoubleJumpNanoRobot());
-					ptr->setPosition(position + sf::Vector2f(0.f, 480.f));
+					ptr.reset(new DoubleJumpNanoRobot(position));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
@@ -318,8 +316,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				if (!Progress::getInstance().canRepairShip())
 				{
 					std::unique_ptr<NanoRobot> ptr;
-					ptr.reset(new RepairShipNanoRobot());
-					ptr->setPosition(position);
+					ptr.reset(new RepairShipNanoRobot(position));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
@@ -328,18 +325,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				if (!Progress::getInstance().canSlowFall())
 				{
 					std::unique_ptr<NanoRobot> ptr;
-					ptr.reset(new SlowFallNanoRobot());
-					ptr->setPosition(position);
-					m_nanoRobotOnInstance.push_back(std::move(ptr));
-				}
-			}
-			else if (!spriteTrigger.name.compare(NANO_REPAIR_SHIP_OSS))
-			{
-				if (!Progress::getInstance().canRepairShip())
-				{
-					std::unique_ptr<NanoRobot> ptr;
-					ptr.reset(new RepairShipNanoRobot());
-					ptr->setPosition(position + sf::Vector2f(0.f, 250.f));
+					ptr.reset(new SlowFallNanoRobot(position));
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}

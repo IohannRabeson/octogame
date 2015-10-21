@@ -6,7 +6,7 @@
 class RepairShipNanoRobot : public NanoRobot, public AGameObject<GameObjectType::RepairShipNanoRobot>
 {
 public:
-	RepairShipNanoRobot(void);
+	RepairShipNanoRobot(sf::Vector2f const & position);
 	virtual ~RepairShipNanoRobot(void) = default;
 
 protected:

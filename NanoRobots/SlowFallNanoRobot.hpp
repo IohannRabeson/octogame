@@ -6,7 +6,7 @@
 class SlowFallNanoRobot : public NanoRobot, public AGameObject<GameObjectType::SlowFallNanoRobot>
 {
 public:
-	SlowFallNanoRobot(void);
+	SlowFallNanoRobot(sf::Vector2f const & position);
 	virtual ~SlowFallNanoRobot(void) = default;
 
 private:
