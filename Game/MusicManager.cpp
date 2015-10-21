@@ -128,6 +128,7 @@ void	MusicManager::basePosition(sf::Vector2f const & octoPos)
 
 void	MusicManager::transition(sf::Time frameTime)
 {
+	Progress	const& progress = Progress::getInstance();
 	bool		isStart = false;
 	float		volume;
 	std::size_t	inLevel = 0u;
@@ -137,6 +138,9 @@ void	MusicManager::transition(sf::Time frameTime)
 	{
 		if (music.level != m_currentLevel)
 			continue;
+		//TODO
+		if (music.areaName == AreaName::CedricChallenge && !progress.canValidChallenge() && progress.getNanoRobotCount() == 4)
+			break;
 		inLevel++;
 		volume = 0.f;
 		if (music.area.contains(m_position) && !m_played)
@@ -161,8 +165,6 @@ void	MusicManager::transition(sf::Time frameTime)
 				&& m_current != music.name && m_played)
 		{
 			//FADE MAIN MUSIC
-			if (music.areaName == AreaName::CedricChallenge && !Progress::getInstance().canValidChallenge())
-				break;
 			for (auto & main : m_musicLevel)
 			{
 				if (main.level != m_currentLevel)
