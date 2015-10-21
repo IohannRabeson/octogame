@@ -28,8 +28,8 @@ private:
 				sf::Time transitionTime = sf::seconds(1.f)) :
 			level(level),
 			name(key),
-			area(rect),
 			areaName(areaName),
+			area(rect),
 			offset(sf::Time::Zero),
 			transitionTime(transitionTime)
 		{

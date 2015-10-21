@@ -13,7 +13,7 @@ public:
 
 	void				addNanoRobot();
 	void				removeNanoRobot() { m_data.nanoRobotCount--; }
-	std::size_t			getNanoRobotCount() { return m_data.nanoRobotCount; }
+	std::size_t			getNanoRobotCount() const { return m_data.nanoRobotCount; }
 
 	void				setNextDestination(Level destination, bool hasTransition = true);
 	Level				getNextDestination(void) const;
