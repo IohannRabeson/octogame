@@ -744,11 +744,8 @@ void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisi
 	switch(type)
 	{
 		case GameObjectType::Tile:
-			// TODO
 			if (collisionDirection.x == 0 && collisionDirection.y < 0)
 				m_collisionTile = true;
-//			else if (collisionDirection.x != 0 && collisionDirection.y == 0)
-//				m_timeEventFall = sf::Time::Zero;
 			break;
 		case GameObjectType::Elevator:
 			m_collisionElevator = true;

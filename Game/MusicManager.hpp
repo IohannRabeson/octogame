@@ -2,6 +2,7 @@
 # define MUSICMANAGER_HPP
 # include "ResourceDefinitions.hpp"
 # include "ABiome.hpp"
+# include "RandomGenerator.hpp"
 # include <AudioManager.hpp>
 # include <ResourceManager.hpp>
 # include <Application.hpp>
@@ -46,6 +47,7 @@ private:
 	ResourceKey							m_current;
 	sf::Time							m_timer;
 	float								m_maxVolume;
+	RandomGenerator						m_generator;
 
 private:
 	void	basePosition(sf::Vector2f const & octoPos);

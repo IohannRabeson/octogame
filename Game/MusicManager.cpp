@@ -2,6 +2,7 @@
 #include "Progress.hpp"
 
 MusicManager::MusicManager() :
+	m_generator("random"),
 	m_audio(octo::Application::getAudioManager()),
 	m_played(false),
 	m_timer(sf::Time::Zero)
@@ -11,10 +12,13 @@ MusicManager::MusicManager() :
 	m_musicLevel[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_II_WAV, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
-	m_musicLevel[4] = AreaMusic(Level::Default, BALLADE_MENTALE_WAV, sf::FloatRect());
+
+	//random music
+	AreaMusic defaultBiome =  m_musicLevel[m_generator.randomInt(0, 3)];
+	defaultBiome.level = Level::Default;
+	m_musicLevel[4] = defaultBiome;
 
 	m_music.resize(6);
-
 	// Montagne
 	m_music[0] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
