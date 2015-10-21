@@ -6,7 +6,7 @@
 class DoubleJumpNanoRobot : public NanoRobot, public AGameObject<GameObjectType::DoubleJumpNanoRobot>
 {
 public:
-	DoubleJumpNanoRobot(void);
+	DoubleJumpNanoRobot(sf::Vector2f const & position);
 	virtual ~DoubleJumpNanoRobot(void) = default;
 
 };
