@@ -16,14 +16,20 @@ public:
 	void update(sf::Time frameTime, sf::Vector2f const & octoPos);
 	void debugDraw(sf::RenderTarget & render);
 private:
+	enum class AreaName : std::size_t
+	{
+		Undefined,
+		CedricChallenge,
+	};
 	struct AreaMusic
 	{
 		AreaMusic() = default;
-		explicit AreaMusic(Level level, ResourceKey key, sf::FloatRect rect,
+		explicit AreaMusic(Level level, ResourceKey key, sf::FloatRect rect, AreaName areaName = AreaName::Undefined,
 				sf::Time transitionTime = sf::seconds(1.f)) :
 			level(level),
 			name(key),
 			area(rect),
+			areaName(areaName),
 			offset(sf::Time::Zero),
 			transitionTime(transitionTime)
 		{
@@ -32,6 +38,7 @@ private:
 		}
 		Level			level;
 		ResourceKey		name;
+		AreaName		areaName;
 		sf::FloatRect	area;
 		sf::SoundBuffer	music;
 		sf::Time		offset;

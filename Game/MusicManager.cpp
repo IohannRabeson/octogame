@@ -30,7 +30,7 @@ MusicManager::MusicManager() :
 			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
 	// cedric challenge
 	m_music[2] = AreaMusic(Level::LevelThree, ACTION_FAST_WAV,
-			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)));
+			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)), AreaName::CedricChallenge);
 	//water
 	m_music[3] = AreaMusic(Level::LevelFour, SOUTERRAIN_LUGUBRE_WAV,
 			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
@@ -161,6 +161,8 @@ void	MusicManager::transition(sf::Time frameTime)
 				&& m_current != music.name && m_played)
 		{
 			//FADE MAIN MUSIC
+			if (music.areaName == AreaName::CedricChallenge && !Progress::getInstance().canValidChallenge())
+				break;
 			for (auto & main : m_musicLevel)
 			{
 				if (main.level != m_currentLevel)
