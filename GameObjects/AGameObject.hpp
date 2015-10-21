@@ -37,7 +37,7 @@ enum class GameObjectType : std::size_t
 	ConstanceNpc = 536870912u,
 	AmandineNpc = 1073741824u,
 	JeffMouffyNpc = 2147483648u,
-	BrayouNpc = 4294967296u,
+	JellyfishNpc = 4294967296u,
 	EvaNpc = 8589934592u,
 	FranfranNpc = 130u,
 	Water = 131u,
@@ -47,7 +47,8 @@ enum class GameObjectType : std::size_t
 	CanouilleNpc = 135u,
 	WolfNpc = 136u,
 	Well = 137u,
-	WellKeeperNpc = 138u
+	WellKeeperNpc = 138u,
+	BrayouNpc = 139u
 };
 
 /*!
