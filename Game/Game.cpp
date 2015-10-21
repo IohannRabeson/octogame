@@ -40,6 +40,7 @@
 #include "BrayouNpc.hpp"
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
+#include "JellyfishNpc.hpp"
 #include "WellKeeperNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
@@ -301,6 +302,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::JeffMouffyNpc:
 			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::JellyfishNpc:
+			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::WellKeeperNpc:
 			gameObjectCast<WellKeeperNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -449,7 +453,7 @@ void	Game::followPlayer(sf::Time frameTime)
 	octoDownPos.y -= cameraSize.y / 4.f;
 	cameraPos.x = octo::linearInterpolation(octoUpPos.x, cameraPos.x, 1.f - frameTimeSeconds);
 	if (octoDownPos.y >= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 5.f);
+		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 6.f);
 	else if (octoUpPos.y <= cameraPos.y)
 		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 4.f);
 

@@ -57,6 +57,7 @@ protected:
 	void setLaserColor(sf::Color const & color);
 	void setRepairShipPosition(sf::Vector2f const & position);
 	void setTargets(std::vector<sf::Vector2f> const & targets, float travelDuration);
+	void setSwarmTarget(sf::Vector2f const & position);
 	void makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
 	void playSoundRepair(void);
 	virtual void updateRepairShip(sf::Time frameTime);

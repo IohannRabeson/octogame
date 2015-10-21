@@ -1,8 +1,8 @@
 #include "JumpNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
 
-JumpNanoRobot::JumpNanoRobot(void) :
-	NanoRobot(sf::Vector2f(9700, -1180.f), NANO_JUMP_OSS, 4, 654, sf::Vector2f(0.f, -24.f), 1.f)
+JumpNanoRobot::JumpNanoRobot(sf::Vector2f const & position) :
+	NanoRobot(position, NANO_JUMP_OSS, 4, 654, sf::Vector2f(0.f, -24.f), 1.f)
 {
 	setup(this);
 
@@ -17,4 +17,6 @@ JumpNanoRobot::JumpNanoRobot(void) :
 	targets.push_back(sf::Vector2f(278.f, 340.f));
 	setTargets(targets, 0.6f);
 	setLaserColor(sf::Color(255, 127, 0));
+
+	setSwarmTarget(position);
 }

@@ -7,7 +7,7 @@ EvaNpc::EvaNpc(sf::Color const & color) :
 	setSize(sf::Vector2f(75.f, 325.f));
 	setOrigin(sf::Vector2f(60.f, -150.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, 150.f));
+	setTextOffset(sf::Vector2f(10.f, 150.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
@@ -100,7 +100,6 @@ void EvaNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	setDisplayText(false);
 	if (getSprite().getCurrentEvent() == Special1 && getCollideEventOcto())
 	{
 		getSprite().setNextEvent(EndSpecial1);

@@ -69,15 +69,15 @@ CharacterOcto::CharacterOcto() :
 	if (m_progress.canRepair())
 		giveRepairNanoRobot(new RepairNanoRobot());
 	if (m_progress.canJump())
-		giveNanoRobot(new JumpNanoRobot());
+		giveNanoRobot(new JumpNanoRobot(sf::Vector2f(0.f, 0.f)));
 	if (m_progress.canDoubleJump())
-		giveNanoRobot(new DoubleJumpNanoRobot());
+		giveNanoRobot(new DoubleJumpNanoRobot(sf::Vector2f(0.f, 0.f)));
 	if (m_progress.canSlowFall())
-		giveNanoRobot(new SlowFallNanoRobot());
+		giveNanoRobot(new SlowFallNanoRobot(sf::Vector2f(0.f, 0.f)));
 	if (m_progress.canUseWaterJump())
 		giveNanoRobot(new WaterNanoRobot());
 	if (m_progress.canRepairShip())
-		giveNanoRobot(new RepairShipNanoRobot());
+		giveNanoRobot(new RepairShipNanoRobot(sf::Vector2f(0.f, 0.f)));
 
 	for (auto & robot : m_nanoRobots)
 	{
@@ -137,6 +137,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::AmandineNpc)
 		| static_cast<std::size_t>(GameObjectType::ConstanceNpc)
 		| static_cast<std::size_t>(GameObjectType::JeffMouffyNpc)
+		| static_cast<std::size_t>(GameObjectType::JellyfishNpc)
 		| static_cast<std::size_t>(GameObjectType::BrayouNpc)
 		| static_cast<std::size_t>(GameObjectType::ClementineNpc)
 		| static_cast<std::size_t>(GameObjectType::CanouilleNpc)

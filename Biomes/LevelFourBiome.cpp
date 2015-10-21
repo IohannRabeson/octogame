@@ -136,6 +136,19 @@ LevelFourBiome::LevelFourBiome() :
 	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
 	m_gameObjects[730] = GameObjectType::Concert;
 
+	m_gameObjects[200] = GameObjectType::JellyfishNpc;
+	m_gameObjects[270] = GameObjectType::JellyfishNpc;
+	m_gameObjects[420] = GameObjectType::JellyfishNpc;
+	m_gameObjects[540] = GameObjectType::JellyfishNpc;
+	m_gameObjects[715] = GameObjectType::JellyfishNpc;
+	m_gameObjects[810] = GameObjectType::JellyfishNpc;
+	m_gameObjects[980] = GameObjectType::JellyfishNpc;
+
+	m_gameObjects[1120] = GameObjectType::JellyfishNpc;
+	m_gameObjects[1140] = GameObjectType::JellyfishNpc;
+	m_gameObjects[1160] = GameObjectType::JellyfishNpc;
+	m_gameObjects[1250] = GameObjectType::JellyfishNpc;
+
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination

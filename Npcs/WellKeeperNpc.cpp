@@ -8,7 +8,7 @@ WellKeeperNpc::WellKeeperNpc(void) :
 	ANpc(NPC_WELL_KEEPER_OSS)
 {
 	setSize(sf::Vector2f(50.f, 150.f));
-	setOrigin(sf::Vector2f(60.f, 70.f));
+	setOrigin(sf::Vector2f(70.f, 70.f));
 	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(20.f, 0.f));
@@ -53,4 +53,11 @@ void WellKeeperNpc::setupMachine(void)
 
 void WellKeeperNpc::updateState(void)
 {
+	if (Progress::getInstance().canUseWaterJump())
+	{
+		octo::CharacterSprite & sprite = getSprite();
+		sf::Vector2f const & size = sprite.getLocalSize();
+		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
+		sprite.setScale(-getScale(), getScale());
+	}
 }

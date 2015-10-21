@@ -179,7 +179,7 @@ void NanoRobot::playSoundRepair(void)
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 
 	if ((m_state == Repair || m_state == RepairShip) && m_sound == nullptr)
-		m_sound = audio.playSound(resources.getSound(REPAIR_WITH_LAZER_WAV), 0.7f);
+		m_sound = audio.playSound(resources.getSound(REPAIR_WITH_LAZER_WAV), 0.6f);
 	if (m_state != Repair && m_state != RepairShip && m_sound != nullptr)
 	{
 		m_sound->stop();
@@ -189,14 +189,21 @@ void NanoRobot::playSoundRepair(void)
 
 void NanoRobot::addMapOffset(float x, float y)
 {
-	setPosition(sf::Vector2f(getPosition().x + x, getPosition().y + y));
+	sf::Vector2f position = getPosition() + sf::Vector2f(x, y);
+	if (m_startLastAnimation)
+		return;
+	if (std::abs(position.x - m_swarm.getFirefly(0u).position.x) > 400.f)
+		m_isTravelling = true;
+	else
+		m_isTravelling = false;
+	m_swarm.setTarget(position);
 }
 
 void NanoRobot::transfertToOcto(bool inInit)
 {
 	PhysicsEngine::getInstance().unregisterShape(m_box);
 	m_box = nullptr;
-	m_positionBehavior->setRadius(450.f);
+	m_positionBehavior->setRadius(250.f);
 	m_swarm.getFirefly(0u).speed = 1.f;
 	m_state = Speak;
 	m_glowingEffect.onTransfer();
@@ -209,11 +216,16 @@ void NanoRobot::setTarget(sf::Vector2f const & target)
 	m_target = target;
 }
 
+void NanoRobot::setSwarmTarget(sf::Vector2f const & position)
+{
+	m_swarm.setTarget(position);
+}
+
 void NanoRobot::setPosition(sf::Vector2f const & position)
 {
+	sf::Vector2f pos = position + sf::Vector2f(0.f, -200.f);
 	if (m_startLastAnimation)
 		return;
-	sf::Vector2f	pos = position + sf::Vector2f(0.f, -200.f);
 	if (std::abs(pos.x - m_swarm.getFirefly(0u).position.x) > 400.f)
 		m_isTravelling = true;
 	else
