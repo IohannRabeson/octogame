@@ -76,7 +76,8 @@ void	GameScreen::update(sf::Time frameTime)
 		if (progress.changeLevel())
 		{
 			progress.save();
-			states.push("transitionLevel");
+			progress.levelChanged();
+			states.change("transitionLevel");
 		}
 	}
 }

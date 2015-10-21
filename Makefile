@@ -73,6 +73,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Concert.cpp					\
 				GameObjects/Well.cpp					\
 				GameObjects/Seb.cpp						\
+				GameObjects/Pyramid.cpp					\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
@@ -90,6 +91,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/VinceNpc.cpp						\
 				Npcs/ConstanceNpc.cpp					\
 				Npcs/AmandineNpc.cpp					\
+				Npcs/ClementineNpc.cpp					\
 				Npcs/JeffMouffyNpc.cpp					\
 				Npcs/FaustNpc.cpp						\
 				Npcs/BrayouNpc.cpp						\

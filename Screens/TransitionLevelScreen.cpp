@@ -76,7 +76,7 @@ void	TransitionLevelScreen::update(sf::Time frameTime)
 	octo::StateManager & states = octo::Application::getStateManager();
 	m_timeTransition += frameTime;
 	if (m_timeTransition  > m_timeTransitionMax)
-		states.pop();
+		states.change("game");
 	m_sprite.update(frameTime);
 }
 

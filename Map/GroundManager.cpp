@@ -20,6 +20,7 @@
 #include "BrayouNpc.hpp"
 #include "EvaNpc.hpp"
 #include "IohannNpc.hpp"
+#include "ClementineNpc.hpp"
 #include "ConstanceNpc.hpp"
 #include "FaustNpc.hpp"
 #include "CanouilleNpc.hpp"
@@ -33,6 +34,7 @@
 #include "WolfNpc.hpp"
 #include "Well.hpp"
 #include "Tent.hpp"
+#include "Pyramid.hpp"
 #include "Concert.hpp"
 #include "Firecamp.hpp"
 #include "Cage.hpp"
@@ -131,6 +133,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
 	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
+	m_npcFactory.registerCreator<ClementineNpc>(CLEMENTINE_OSS);
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
 
@@ -221,11 +224,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			});
 	m_decorFactory.registerCreator(PYRAMID_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new InstanceDecor(PYRAMID_OSS, scale, position, 9u, 0.1f);
-			});
-	m_decorFactory.registerCreator(PYRAMID_TOP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
-			{
-				return new InstanceDecor(PYRAMID_TOP_OSS, scale, position, 9u, 0.1f);
+				return new Pyramid(scale, position);
 			});
 	m_decorFactory.registerCreator(SEB_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
@@ -258,6 +257,26 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_decorFactory.registerCreator(PLANT_JUNGLE_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(PLANT_JUNGLE_2_OSS, scale, position, 3u, 0.4f);
+			});
+	m_decorFactory.registerCreator(DOUBLE_JUMP_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(DOUBLE_JUMP_SIGN_OSS, scale, position, 4u, 0.4f);
+			});
+	m_decorFactory.registerCreator(SKELETON_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(SKELETON_1_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(SKELETON_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(SKELETON_2_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(SKELETON_3_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(SKELETON_3_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(SKELETON_4_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(SKELETON_4_OSS, scale, position, 1u, 0.4f);
 			});
 
 	// Get all the gameobjects from instances
@@ -1071,7 +1090,6 @@ void GroundManager::updateOffset(float)
 		ofX = -static_cast<int>(m_tiles->getColumns()) + 1;
 	if (ofY <= -static_cast<int>(m_tiles->getRows()) + 1)
 		ofY = -static_cast<int>(m_tiles->getRows()) + 1;
-
 
 	if (ofX)
 		computeDecor();

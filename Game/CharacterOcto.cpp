@@ -138,6 +138,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::ConstanceNpc)
 		| static_cast<std::size_t>(GameObjectType::JeffMouffyNpc)
 		| static_cast<std::size_t>(GameObjectType::BrayouNpc)
+		| static_cast<std::size_t>(GameObjectType::ClementineNpc)
 		| static_cast<std::size_t>(GameObjectType::CanouilleNpc)
 		| static_cast<std::size_t>(GameObjectType::WellKeeperNpc)
 		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
@@ -987,7 +988,7 @@ bool	CharacterOcto::endDeath()
 		{
 			octo::StateManager &		states = octo::Application::getStateManager();
 			Progress::getInstance().endChallenge();
-			states.push("octo_death");
+			states.change("octo_death");
 		}
 		return false;
 	}
