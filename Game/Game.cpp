@@ -449,7 +449,7 @@ void	Game::followPlayer(sf::Time frameTime)
 	octoDownPos.y -= cameraSize.y / 4.f;
 	cameraPos.x = octo::linearInterpolation(octoUpPos.x, cameraPos.x, 1.f - frameTimeSeconds);
 	if (octoDownPos.y >= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 5.f);
+		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 6.f);
 	else if (octoUpPos.y <= cameraPos.y)
 		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 4.f);
 
