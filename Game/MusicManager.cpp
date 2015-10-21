@@ -6,11 +6,12 @@ MusicManager::MusicManager() :
 	m_played(false),
 	m_timer(sf::Time::Zero)
 {
-	m_musicLevel.resize(4);
+	m_musicLevel.resize(5);
 	m_musicLevel[0] = AreaMusic(Level::LevelOne, SPACE_SHIP_WAV, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_II_WAV, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
+	m_musicLevel[4] = AreaMusic(Level::Default, BALLADE_MENTALE_WAV, sf::FloatRect());
 
 	m_music.resize(6);
 

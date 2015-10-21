@@ -605,6 +605,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		commitEventToGraphics();
 		if (m_collisionPortal && m_keyPortal)
 		{
+			m_box->setApplyGravity(false);
 			m_sprite.setNextEvent(PortalEvent);
 		}
 	}
@@ -676,6 +677,7 @@ void	CharacterOcto::portalEvent()
 {
 	if (!m_collisionPortal && m_sprite.getCurrentEvent() == PortalEvent)
 	{
+		m_box->setApplyGravity(true);
 		if (m_onGround)
 			m_sprite.setNextEvent(Idle);
 		else
