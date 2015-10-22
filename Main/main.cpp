@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 {
 	try
 	{
-		octo::Application::initialize("L'Odyssee Octonaute", "default.conf", argc, argv);
+		octo::Application::initialize("An Octonaut Odyssey", "default.conf", argc, argv);
 		octo::StateManager&							states = octo::Application::getStateManager();
 		octo::Console&								console = octo::Application::getConsole();
 		octo::GraphicsManager&						graphics = octo::Application::getGraphicsManager();
