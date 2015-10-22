@@ -42,7 +42,8 @@ CharacterOcto::OctoSound::~OctoSound()
 void	CharacterOcto::OctoSound::update(sf::Time frameTime, Events event, bool inWater, bool onGround)
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	float	volume = 0.f;
+	float						volume = 0.f;
+
 	if (m_soundTransition != nullptr)
 	{
 		m_timeSoundTransition += frameTime;
@@ -228,6 +229,7 @@ void	CharacterOcto::OctoSound::stopSound()
 void	CharacterOcto::OctoSound::fadeOut(sf::Time frameTime)
 {
 	float	volume;
+
 	for (auto & sound : m_soundFadeOut)
 	{
 		volume = 0.f;
