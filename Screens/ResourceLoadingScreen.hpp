@@ -16,8 +16,10 @@
 
 # include "FireflySwarm.hpp"
 # include "FireflyPopulation.hpp"
+# include "ResourceDefinitions.hpp"
 
 # include <string>
+# include <vector>
 
 # include <SFML/Graphics/Text.hpp>
 # include <SFML/Graphics/RectangleShape.hpp>
@@ -33,13 +35,18 @@ private:
 	virtual void	draw(sf::RenderTarget& render)const;
 	virtual void	onNoMoreLoading();	
 private:
-	sf::Texture			m_startTexture;
-	sf::Sprite			m_startSprite;
-	sf::Font			m_font;
-	std::string			m_string;
-	sf::Text			m_message;
-	sf::RectangleShape	m_borders;
-	sf::RectangleShape	m_bar;
+	std::size_t					m_count;
+	std::vector<ResourceKey>	m_key;
+	std::vector<sf::Texture>	m_startTextures;
+	std::vector<sf::Sprite>		m_startSprites;
+	std::size_t					m_index;
+	sf::Time					m_timer;
+	std::vector<sf::Time>		m_timerMax;
+	sf::Font					m_font;
+	std::string					m_string;
+	sf::Text					m_message;
+	sf::RectangleShape			m_borders;
+	sf::RectangleShape			m_bar;
 };
 
 #endif
