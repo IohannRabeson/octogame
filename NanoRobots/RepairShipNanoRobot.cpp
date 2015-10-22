@@ -1,8 +1,8 @@
 #include "RepairShipNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
 
-RepairShipNanoRobot::RepairShipNanoRobot(void) :
-	NanoRobot(sf::Vector2f(9700, -1320.f), NANO_REPAIR_SHIP_OSS, 4, 11185654, sf::Vector2f(0.f, -24.f)),
+RepairShipNanoRobot::RepairShipNanoRobot(sf::Vector2f const & position) :
+	NanoRobot(position, NANO_REPAIR_SHIP_OSS, 4, 11185654, sf::Vector2f(0.f, -24.f)),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(2.f))
 {
@@ -39,6 +39,8 @@ RepairShipNanoRobot::RepairShipNanoRobot(void) :
 	targets.push_back(sf::Vector2f(269.f, 64.f));
 	setTargets(targets, 0.6f);
 	setUsePathLaser(true);
+
+	setSwarmTarget(position);
 }
 
 static sf::Color makeRainbow(float step)

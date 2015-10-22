@@ -145,10 +145,10 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_gameObjects[750] = GameObjectType::Tent;
 	m_gameObjects[700] = GameObjectType::Portal;
 	m_gameObjects[845] = GameObjectType::Well;
-	if (progress.canUseWaterJump())
-		m_gameObjects[88] = GameObjectType::WellKeeperNpc;
+	if (!progress.canUseWaterJump())
+		m_gameObjects[880] = GameObjectType::WellKeeperNpc;
 	else
-		m_gameObjects[870] = GameObjectType::WellKeeperNpc;
+		m_gameObjects[88] = GameObjectType::WellKeeperNpc;
 	m_interestPointPosX = 500;
 
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};

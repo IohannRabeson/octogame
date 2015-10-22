@@ -13,7 +13,7 @@ LevelOneBiome::LevelOneBiome() :
 	m_name("Level_One"),
 	m_id(Level::LevelOne),
 	m_seed("Level_One"),
-	m_mapSize(sf::Vector2u(600u, 16u)),
+	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(250.f, 700.f),
 	m_transitionDuration(0.5f),

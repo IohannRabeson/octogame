@@ -48,22 +48,13 @@ KonamiCode::~KonamiCode(void)
 
 void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 {
-	if (m_index == 10u)
-	{
+	if (m_state == Start)
 		m_state = Success;
-		octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-		postEffect.enableEffect(m_shaderIndex, true);
-		m_index = 0u;
-		m_timer = sf::Time::Zero;
-		m_timerEnd = sf::Time::Zero;
-		m_shader.setParameter("end_alpha", 1.f);
-	}
-	if (m_state == Success)
+	else if (m_state == Success)
 	{
 		m_timer += frameTime;
-		octo::Camera const & camera = octo::Application::getCamera();
-		sf::Vector2i pos = camera.mapCoordsToPixel(position);
-		m_shader.setParameter("position", pos.x, camera.getSize().y - pos.y);
+		sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+		m_shader.setParameter("position", position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - position.y + screen.top);
 		m_shader.setParameter("time", m_timer / m_timerMax);
 		m_shader.setParameter("radius", (m_timer / m_timerMax) * 2000.f);
 		if (m_timer > m_timerMax)
@@ -76,9 +67,8 @@ void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 	{
 		m_timer += frameTime;
 		m_timerEnd += frameTime;
-		octo::Camera const & camera = octo::Application::getCamera();
-		sf::Vector2i pos = camera.mapCoordsToPixel(position);
-		m_shader.setParameter("position", pos.x, camera.getSize().y - pos.y);
+		sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+		m_shader.setParameter("position", position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - position.y + screen.top);
 		m_shader.setParameter("time", m_timer / m_timerMax);
 		m_shader.setParameter("end_alpha", 1.f - (m_timerEnd / m_timerMax));
 		if (m_timerEnd > m_timerMax)
@@ -87,6 +77,16 @@ void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 			postEffect.enableEffect(m_shaderIndex, false);
 			m_state = Fail;
 		}
+	}
+	if (m_index == 10u)
+	{
+		m_state = Start;
+		octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+		postEffect.enableEffect(m_shaderIndex, true);
+		m_index = 0u;
+		m_timer = sf::Time::Zero;
+		m_timerEnd = sf::Time::Zero;
+		m_shader.setParameter("end_alpha", 1.f);
 	}
 }
 
@@ -98,7 +98,7 @@ void KonamiCode::draw(sf::RenderTarget & render, sf::RenderStates states) const
 
 bool KonamiCode::canStartEvent()
 {
-	if (m_index == 9u)
+	if (m_state == Start)
 		return true;
 	return false;
 }

@@ -7,7 +7,7 @@ BrayouNpc::BrayouNpc(void) :
 	setSize(sf::Vector2f(25.f, 150.f));
 	setOrigin(sf::Vector2f(90.f, 100.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(-10.f, -70.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
@@ -77,6 +77,10 @@ void BrayouNpc::updateState(void)
 	}
 	else if (sprite.getCurrentEvent() == Idle)
 	{
+		octo::CharacterSprite & sprite = getSprite();
+		sf::Vector2f const & size = sprite.getLocalSize();
+		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
+		sprite.setScale(-getScale(), getScale());
 		if (getTimer() >= getTimerMax())
 		{
 			addTimer(-getTimerMax());

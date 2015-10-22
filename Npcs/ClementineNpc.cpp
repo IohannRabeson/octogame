@@ -105,6 +105,9 @@ bool ClementineNpc::canSpecial1(void) const
 void ClementineNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
+	sf::Vector2f const & size = sprite.getLocalSize();
+	sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
+	sprite.setScale(-getScale(), getScale());
 
 	if (sprite.getCurrentEvent() == Idle && m_canSpecial)
 		sprite.setNextEvent(Special1);

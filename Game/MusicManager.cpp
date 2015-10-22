@@ -47,7 +47,7 @@ MusicManager::MusicManager() :
 	m_music[4] = AreaMusic(Level::LevelFour, MENU_OPUS_I_WAV,
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
 	//concert
-	m_music[5] = AreaMusic(Level::LevelFour, ACTION_FAST_WAV,
+	m_music[5] = AreaMusic(Level::LevelFour, MENU_OPUS_II_REVERSE_WAV,
 			sf::FloatRect(sf::Vector2f(700.f * 16.f, -3400.f), sf::Vector2f(70.f * 16.f, 1350.f)));
 }
 
