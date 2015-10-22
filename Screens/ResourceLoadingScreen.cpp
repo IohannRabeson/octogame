@@ -20,19 +20,62 @@
 #include <Camera.hpp>
 #include <Options.hpp>
 
-#include "ResourceDefinitions.hpp"
-
 ResourceLoadingScreen::ResourceLoadingScreen() :
-	AbstractResourceLoadingState()
+	AbstractResourceLoadingState(),
+	m_count(16u),
+	m_index(0u)
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	octo::Application::getGraphicsManager().setIcon(resources.getTexture(ICON_PNG).copyToImage());
-	m_startTexture = resources.getTexture(START_SCREEN_PNG);
-	m_startTexture.setSmooth(true);
-	m_startSprite.setTexture(m_startTexture);
-	m_startSprite.setOrigin(m_startSprite.getLocalBounds().width / 2.f, m_startSprite.getLocalBounds().height / 2.f);
-	m_startSprite.setPosition(octo::Application::getCamera().getCenter());
-	m_startSprite.setScale(1.2f, 1.2f);
+
+	m_key.resize(m_count);
+	m_key[0] = SCREEN00_PNG;
+	m_key[1] = SCREEN01_PNG;
+	m_key[2] = SCREEN02_PNG;
+	m_key[3] = SCREEN03_PNG;
+	m_key[4] = SCREEN04_PNG;
+	m_key[5] = SCREEN05_PNG;
+	m_key[6] = SCREEN06_PNG;
+	m_key[7] = SCREEN07_PNG;
+	m_key[8] = SCREEN08_PNG;
+	m_key[9] = SCREEN09_PNG;
+	m_key[10] = SCREEN10_PNG;
+	m_key[11] = SCREEN11_PNG;
+	m_key[12] = SCREEN12_PNG;
+	m_key[13] = SCREEN13_PNG;
+	m_key[14] = SCREEN14_PNG;
+	m_key[15] = SCREEN15_PNG;
+
+	m_timerMax.resize(m_count);
+	m_timerMax[0] = sf::seconds(0.01f);
+	m_timerMax[1] = sf::seconds(1.0f);
+	m_timerMax[2] = sf::seconds(0.03f);
+	m_timerMax[3] = sf::seconds(1.3f);
+	m_timerMax[4] = sf::seconds(0.03f);
+	m_timerMax[5] = sf::seconds(0.5f);
+	m_timerMax[6] = sf::seconds(0.01f);
+	m_timerMax[7] = sf::seconds(0.2f);
+	m_timerMax[8] = sf::seconds(0.01f);
+	m_timerMax[9] = sf::seconds(0.03f);
+	m_timerMax[10] = sf::seconds(0.02f);
+	m_timerMax[11] = sf::seconds(0.01f);
+	m_timerMax[12] = sf::seconds(0.1f);
+	m_timerMax[13] = sf::seconds(3.3f);
+	m_timerMax[14] = sf::seconds(0.03f);
+	m_timerMax[15] = sf::seconds(0.01f);
+
+	m_startTextures.resize(m_count);
+	m_startSprites.resize(m_count);
+
+	for (std::size_t i = 0u; i < m_count; i++)
+	{
+		m_startTextures[i] = resources.getTexture(m_key[i]);
+		m_startTextures[i].setSmooth(true);
+		m_startSprites[i].setTexture(m_startTextures[i]);
+		m_startSprites[i].setOrigin(m_startSprites[i].getLocalBounds().width / 2.f, m_startSprites[i].getLocalBounds().height / 2.f);
+		m_startSprites[i].setPosition(octo::Application::getCamera().getCenter());
+	}
+
 	m_font = resources.getFont(CHINESETROOPS_TTF);
 	m_message.setFont(m_font);
 	m_message.setColor(sf::Color(253, 235, 62));
@@ -73,12 +116,21 @@ void	ResourceLoadingScreen::update(sf::Time frameTime)
 	m_borders.setSize(sf::Vector2f(cameraRect.width - padding, height));
 	m_bar.setPosition(cameraRect.left + padding / 2, posY - (height / 2) + 1);
 	m_bar.setSize(sf::Vector2f((cameraRect.width - padding - 2) * progress, height - 2));
+
+	m_timer += frameTime;
+	if (m_timer > m_timerMax[m_index])
+	{
+		m_timer = sf::Time::Zero;
+		m_index++;
+		if (m_index >= m_count)
+			m_index = 0u;
+	}
 }
 
 void	ResourceLoadingScreen::draw(sf::RenderTarget& render)const
 {
 	render.clear(sf::Color::Black);
-	render.draw(m_startSprite);
+	render.draw(m_startSprites[m_index]);
 	render.draw(m_message);
 	render.draw(m_borders);
 	render.draw(m_bar);
