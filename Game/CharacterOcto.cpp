@@ -606,6 +606,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		commitEventToGraphics();
 		if (m_collisionPortal && m_keyPortal)
 		{
+			m_box->setApplyGravity(false);
 			m_sprite.setNextEvent(PortalEvent);
 		}
 	}
@@ -677,6 +678,7 @@ void	CharacterOcto::portalEvent()
 {
 	if (!m_collisionPortal && m_sprite.getCurrentEvent() == PortalEvent)
 	{
+		m_box->setApplyGravity(true);
 		if (m_onGround)
 			m_sprite.setNextEvent(Idle);
 		else
@@ -743,11 +745,8 @@ void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisi
 	switch(type)
 	{
 		case GameObjectType::Tile:
-			// TODO
 			if (collisionDirection.x == 0 && collisionDirection.y < 0)
 				m_collisionTile = true;
-//			else if (collisionDirection.x != 0 && collisionDirection.y == 0)
-//				m_timeEventFall = sf::Time::Zero;
 			break;
 		case GameObjectType::Elevator:
 			m_collisionElevator = true;
