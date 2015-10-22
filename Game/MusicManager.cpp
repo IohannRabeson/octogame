@@ -4,16 +4,30 @@
 MusicManager::MusicManager() :
 	m_audio(octo::Application::getAudioManager()),
 	m_played(false),
-	m_timer(sf::Time::Zero)
+	m_timer(sf::Time::Zero),
+	m_generator("random")
 {
-	m_musicLevel.resize(4);
+	ResourceKey			musicKey[9];
+
+	musicKey[0] = SPACE_SHIP_WAV;
+	musicKey[1] = MENU_OPUS_II_WAV;
+	musicKey[2] = COLONISATION_WAV;
+	musicKey[3] = BALLADE_MENTALE_WAV;
+	musicKey[4] = MENU_OPUS_III_WAV;
+	musicKey[5] = ACTION_SLOW_WAV;
+	musicKey[6] = ACTION_FAST_WAV;
+	musicKey[7] = SOUTERRAIN_LUGUBRE_WAV;
+	musicKey[8] = MENU_OPUS_I_WAV;
+
+	m_musicLevel.resize(5);
 	m_musicLevel[0] = AreaMusic(Level::LevelOne, SPACE_SHIP_WAV, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_II_WAV, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
+	m_musicLevel[4] = AreaMusic(Level::Default,
+			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
 
 	m_music.resize(6);
-
 	// Montagne
 	m_music[0] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
@@ -25,7 +39,7 @@ MusicManager::MusicManager() :
 			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
 	// cedric challenge
 	m_music[2] = AreaMusic(Level::LevelThree, ACTION_FAST_WAV,
-			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)));
+			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)), AreaName::CedricChallenge);
 	//water
 	m_music[3] = AreaMusic(Level::LevelFour, SOUTERRAIN_LUGUBRE_WAV,
 			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
@@ -123,6 +137,7 @@ void	MusicManager::basePosition(sf::Vector2f const & octoPos)
 
 void	MusicManager::transition(sf::Time frameTime)
 {
+	Progress	const& progress = Progress::getInstance();
 	bool		isStart = false;
 	float		volume;
 	std::size_t	inLevel = 0u;
@@ -141,9 +156,7 @@ void	MusicManager::transition(sf::Time frameTime)
 			//START
 			m_current = music.name;
 			if (music.music.getDuration() <= music.offset)
-			{
 				music.offset = sf::Time::Zero;
-			}
 			m_audio.setMusicVolume(0.f);
 			m_timer = sf::Time::Zero;
 			m_audio.startMusic(music.music, sf::Time::Zero,
@@ -156,16 +169,22 @@ void	MusicManager::transition(sf::Time frameTime)
 				&& m_current != music.name && m_played)
 		{
 			//FADE MAIN MUSIC
-			for (auto & main : m_musicLevel)
+			if (music.areaName == AreaName::CedricChallenge
+					&& !progress.canValidChallenge())
+				index = inLevel;
+			else
 			{
-				if (main.level != m_currentLevel)
-					continue;
-				m_timer -= frameTime;
-				main.offset += frameTime;
-				if (m_timer < sf::Time::Zero)
-					m_timer = sf::Time::Zero;
-				volume = m_maxVolume * (m_timer / main.transitionTime);
-				m_audio.setMusicVolume(volume);
+				for (auto & main : m_musicLevel)
+				{
+					if (main.level != m_currentLevel)
+						continue;
+					m_timer -= frameTime;
+					main.offset += frameTime;
+					if (m_timer < sf::Time::Zero)
+						m_timer = sf::Time::Zero;
+					volume = m_maxVolume * (m_timer / main.transitionTime);
+					m_audio.setMusicVolume(volume);
+				}
 			}
 			break;
 		}
@@ -173,6 +192,20 @@ void	MusicManager::transition(sf::Time frameTime)
 				&& m_current == music.name && m_played)
 		{
 			//GROW
+			if (music.areaName == AreaName::CedricChallenge && !progress.canValidChallenge())
+			{
+				m_timer -= frameTime;
+				music.offset += frameTime;
+				if (m_timer < sf::Time::Zero)
+				{
+					m_timer = sf::Time::Zero;
+					index = inLevel;
+					m_played = false;
+				}
+				volume = m_maxVolume * (m_timer / music.transitionTime);
+				m_audio.setMusicVolume(volume);
+				break;
+			}
 			m_timer += frameTime;
 			music.offset += frameTime;
 			if (m_timer > music.transitionTime)
@@ -181,9 +214,10 @@ void	MusicManager::transition(sf::Time frameTime)
 			m_audio.setMusicVolume(volume);
 			break;
 		}
-		else if (!music.area.contains(m_position)
-				&& m_current == music.name && m_played)
+		else if (!music.area.contains(m_position) && m_current == music.name && m_played)
 		{
+			if (progress.canValidChallenge())
+				break;
 			//FADE
 			m_timer -= frameTime;
 			music.offset += frameTime;
@@ -208,9 +242,7 @@ void	MusicManager::transition(sf::Time frameTime)
 			{
 				m_current = main.name;
 				if (main.music.getDuration() <= main.offset)
-				{
 					main.offset = sf::Time::Zero;
-				}
 				m_audio.startMusic(main.music, sf::Time::Zero,
 						main.offset, true);
 				m_audio.setMusicVolume(0.f);
