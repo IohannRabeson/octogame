@@ -119,11 +119,19 @@ void JeffMouffyNpc::updatePhysics(void)
 			setTimer(sf::Time::Zero);
 		else if (sprite.isTerminated())
 		{
-			RectangleShape * box = getBox();
-			box->setPosition(octo::linearInterpolation(m_startPosition, m_startPosition + sf::Vector2f(0.f, -2000.f), getTimer() / getTimerMax()));
-			box->update();
+			if (m_animationEnd == false)
+			{
+				RectangleShape * box = getBox();
+				box->setPosition(octo::linearInterpolation(m_startPosition, m_startPosition + sf::Vector2f(0.f, -2000.f), getTimer() / getTimerMax()));
+				box->update();
+			}
 			if (getTimer() > getTimerMax())
+			{
+				setCurrentText(1u);
+				setTextOffset(sf::Vector2f(0.f, -120.f));
+				setDisplayText(true);
 				m_animationEnd = true;
+			}
 		}
 	}
 }
@@ -135,6 +143,6 @@ void JeffMouffyNpc::collideOctoEvent(CharacterOcto * octo)
 
 void JeffMouffyNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	if (!m_animationEnd)
+//	if (!m_animationEnd)
 		ANpc::draw(render, states);
 }
