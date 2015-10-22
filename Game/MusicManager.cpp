@@ -7,16 +7,25 @@ MusicManager::MusicManager() :
 	m_timer(sf::Time::Zero),
 	m_generator("random")
 {
+	ResourceKey			musicKey[9];
+
+	musicKey[0] = SPACE_SHIP_WAV;
+	musicKey[1] = MENU_OPUS_II_WAV;
+	musicKey[2] = COLONISATION_WAV;
+	musicKey[3] = BALLADE_MENTALE_WAV;
+	musicKey[4] = MENU_OPUS_III_WAV;
+	musicKey[5] = ACTION_SLOW_WAV;
+	musicKey[6] = ACTION_FAST_WAV;
+	musicKey[7] = SOUTERRAIN_LUGUBRE_WAV;
+	musicKey[8] = MENU_OPUS_I_WAV;
+
 	m_musicLevel.resize(5);
 	m_musicLevel[0] = AreaMusic(Level::LevelOne, SPACE_SHIP_WAV, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_II_WAV, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
-
-	//random music
-	AreaMusic defaultBiome =  m_musicLevel[m_generator.randomInt(0, 3)];
-	defaultBiome.level = Level::Default;
-	m_musicLevel[4] = defaultBiome;
+	m_musicLevel[4] = AreaMusic(Level::Default,
+			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
 
 	m_music.resize(6);
 	// Montagne
@@ -130,7 +139,6 @@ void	MusicManager::transition(sf::Time frameTime)
 {
 	Progress	const& progress = Progress::getInstance();
 	bool		isStart = false;
-	bool		forceFade = false;
 	float		volume;
 	std::size_t	inLevel = 0u;
 	std::size_t	index = 0u;
@@ -139,7 +147,6 @@ void	MusicManager::transition(sf::Time frameTime)
 	{
 		if (music.level != m_currentLevel)
 			continue;
-		//TODO
 		inLevel++;
 		volume = 0.f;
 		if (music.area.contains(m_position) && !m_played)
@@ -207,8 +214,7 @@ void	MusicManager::transition(sf::Time frameTime)
 			m_audio.setMusicVolume(volume);
 			break;
 		}
-		else if ((!music.area.contains(m_position) || forceFade)
-				&& m_current == music.name && m_played)
+		else if (!music.area.contains(m_position) && m_current == music.name && m_played)
 		{
 			if (progress.canValidChallenge())
 				break;
