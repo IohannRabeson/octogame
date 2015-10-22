@@ -170,7 +170,7 @@ void	MusicManager::transition(sf::Time frameTime)
 		{
 			//FADE MAIN MUSIC
 			if (music.areaName == AreaName::CedricChallenge
-					&& !progress.canValidChallenge() && progress.getNanoRobotCount() == 4)
+					&& !progress.canValidChallenge())
 				index = inLevel;
 			else
 			{
