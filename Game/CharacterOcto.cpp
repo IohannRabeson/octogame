@@ -913,6 +913,7 @@ void	CharacterOcto::onSky(Events event)
 			}
 			break;
 		case SlowFall:
+			break;
 		case StartElevator:
 		case Elevator:
 			if (!m_collisionElevator)
