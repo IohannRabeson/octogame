@@ -178,6 +178,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			break;
 		case GameObjectType::Concert:
 			gameObjectCast<Concert>(gameObject)->startBalle();
+			m_musicPlayer->startBalleMusic(gameObjectCast<Concert>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::Concert);
 			break;
 		case GameObjectType::Bouibouik:
 			gameObjectCast<Bouibouik>(gameObject)->startBalle();
@@ -187,6 +188,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			break;
 		case GameObjectType::CedricNpc:
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
+			m_musicPlayer->startBalleMusic(gameObjectCast<CedricNpc>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::CedricChallenge);
 			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())

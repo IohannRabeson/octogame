@@ -10,21 +10,24 @@
 class MusicManager
 {
 public:
+	enum class MusicNameArea : std::size_t
+	{
+		CedricChallenge,
+		Concert,
+		Undefined,
+		NoBalle,
+	};
 	MusicManager();
 	~MusicManager();
 	void setup(ABiome & biome);
 	void update(sf::Time frameTime, sf::Vector2f const & octoPos);
 	void debugDraw(sf::RenderTarget & render);
+	void startBalleMusic(sf::Time duration, MusicNameArea name);
 private:
-	enum class AreaName : std::size_t
-	{
-		Undefined,
-		CedricChallenge,
-	};
 	struct AreaMusic
 	{
 		AreaMusic() = default;
-		explicit AreaMusic(Level level, ResourceKey key, sf::FloatRect rect, AreaName areaName = AreaName::Undefined,
+		explicit AreaMusic(Level level, ResourceKey key, sf::FloatRect rect, MusicNameArea areaName = MusicNameArea::Undefined,
 				sf::Time transitionTime = sf::seconds(1.f)) :
 			level(level),
 			name(key),
@@ -38,7 +41,7 @@ private:
 		}
 		Level			level;
 		ResourceKey		name;
-		AreaName		areaName;
+		MusicNameArea		areaName;
 		sf::FloatRect	area;
 		sf::SoundBuffer	music;
 		sf::Time		offset;
@@ -56,9 +59,15 @@ private:
 	float								m_maxVolume;
 	RandomGenerator						m_generator;
 
+	bool								m_newBalle;
+	MusicNameArea							m_musicToPlay;
+	sf::Time								m_durationBalle;
+
 private:
 	void	basePosition(sf::Vector2f const & octoPos);
 	void	transition(sf::Time frameTime);
+	void	grow(AreaMusic & music, sf::Time frameTime);
+	void	fade(AreaMusic & music, sf::Time frameTime);
 };
 
 #endif

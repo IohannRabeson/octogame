@@ -20,6 +20,7 @@ public:
 	virtual void startBalle(void);
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	sf::Time getEffectDuration(void) const;
 
 protected:
 	SimpleObject(ResourceKey key, ResourceKey shader, float duration);
@@ -30,7 +31,6 @@ protected:
 	bool getStartBalle(void) const;
 	bool getCollideWithOcto(void) const;
 	sf::Time getTimer(void) const;
-	sf::Time getEffectDuration(void) const;
 	void adjustBox(sf::Vector2f const & offset, float radius);
 	void setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask);
 	void setupAnimation(std::initializer_list<octo::SpriteAnimation::Frame> list, octo::LoopMode loop);
