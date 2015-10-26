@@ -166,17 +166,23 @@ void	MusicManager::transition(sf::Time frameTime)
 		{
 			if (!std::string("noMusic").compare(music.name))
 				break;
-			//START
-			m_current = music.name;
-			if (music.music.getDuration() <= music.offset)
-				music.offset = sf::Time::Zero;
-			m_audio.setMusicVolume(0.f);
-			m_timer = sf::Time::Zero;
-			m_audio.startMusic(music.music, sf::Time::Zero,
-					music.offset, true);
-			m_played = true;
-			isStart = true;
-			m_newBalle = false;
+			if (music.areaName != MusicNameArea::Undefined
+					&& m_musicToPlay == MusicNameArea::NoBalle)
+				index = inLevel;
+			else
+			{
+				//START
+				m_current = music.name;
+				if (music.music.getDuration() <= music.offset)
+					music.offset = sf::Time::Zero;
+				m_audio.setMusicVolume(0.f);
+				m_timer = sf::Time::Zero;
+				m_audio.startMusic(music.music, sf::Time::Zero,
+						music.offset, true);
+				m_played = true;
+				isStart = true;
+				m_newBalle = false;
+			}
 			break;
 		}
 		else if (music.area.contains(m_position)
@@ -207,6 +213,7 @@ void	MusicManager::transition(sf::Time frameTime)
 				fade(music, frameTime);
 				if (m_timer == sf::Time::Zero)
 				{
+					m_audio.stopMusic(sf::Time::Zero);
 					m_played = false;
 					m_musicToPlay = MusicNameArea::NoBalle;
 				}
@@ -260,7 +267,6 @@ void	MusicManager::transition(sf::Time frameTime)
 	{
 		//STOP
 		m_audio.stopMusic(sf::Time::Zero);
-		//m_audio.setMusicVolume(m_maxVolume);
 		m_played = false;
 	}
 }

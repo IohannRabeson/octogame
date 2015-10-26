@@ -188,7 +188,8 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			break;
 		case GameObjectType::CedricNpc:
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
-			m_musicPlayer->startBalleMusic(gameObjectCast<CedricNpc>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::CedricChallenge);
+			if (gameObjectCast<CedricNpc>(gameObject)->getId() == 0u)
+				m_musicPlayer->startBalleMusic(gameObjectCast<CedricNpc>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::CedricChallenge);
 			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())
@@ -428,7 +429,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
-//	m_musicPlayer->debugDraw(render);
+	//m_musicPlayer->debugDraw(render);
 	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
