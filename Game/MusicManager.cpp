@@ -187,17 +187,12 @@ void	MusicManager::transition(sf::Time frameTime)
 				index = inLevel;
 			else
 			{
-				//FADE MAIN MUSIC todo
+				//FADE MAIN MUSIC
 				for (auto & main : m_musicLevel)
 				{
 					if (main.level != m_currentLevel)
 						continue;
-					m_timer -= frameTime;
-					main.offset += frameTime;
-					if (m_timer < sf::Time::Zero)
-						m_timer = sf::Time::Zero;
-					volume = m_maxVolume * (m_timer / main.transitionTime);
-					m_audio.setMusicVolume(volume);
+					fade(main, frameTime);
 				}
 			}
 			break;
@@ -209,48 +204,25 @@ void	MusicManager::transition(sf::Time frameTime)
 			if (m_durationBalle == sf::Time::Zero
 					&& music.areaName == m_musicToPlay)
 			{
-				m_timer -= frameTime;
-				music.offset += frameTime;
+				fade(music, frameTime);
 				if (m_timer < sf::Time::Zero)
 				{
-					m_timer = sf::Time::Zero;
-					index = inLevel;
 					m_played = false;
 					m_musicToPlay = MusicNameArea::NoBalle;
 				}
-				volume = m_maxVolume * (m_timer / music.transitionTime);
-				m_audio.setMusicVolume(volume);
-				break;
 			}
-			//GROW
-			m_timer += frameTime;
-			music.offset += frameTime;
-			if (m_timer > music.transitionTime)
-				m_timer = music.transitionTime;
-			volume = m_maxVolume * (m_timer / music.transitionTime);
-			m_audio.setMusicVolume(volume);
+			else
+				grow(music, frameTime);
 			break;
 		}
 		else if (!music.area.contains(m_position) && m_current == music.name && m_played)
 		{
-			//GROW BALLE
 			if (m_durationBalle > sf::Time::Zero)
 			{
-				m_timer += frameTime;
-				music.offset += frameTime;
-				if (m_timer > music.transitionTime)
-					m_timer = music.transitionTime;
-				volume = m_maxVolume * (m_timer / music.transitionTime);
-				m_audio.setMusicVolume(volume);
+				grow(music, frameTime);
 				break;
 			}
-			//FADE
-			m_timer -= frameTime;
-			music.offset += frameTime;
-			if (m_timer < sf::Time::Zero)
-				m_timer = sf::Time::Zero;
-			volume = m_maxVolume * (m_timer / music.transitionTime);
-			m_audio.setMusicVolume(volume);
+			fade(music, frameTime);
 			break;
 		}
 		else
@@ -279,12 +251,7 @@ void	MusicManager::transition(sf::Time frameTime)
 			}
 			else
 			{
-				m_timer += frameTime;
-				main.offset += frameTime;
-				if (m_timer > main.transitionTime)
-					m_timer = main.transitionTime;
-				volume = m_maxVolume * (m_timer / main.transitionTime);
-				m_audio.setMusicVolume(volume);
+				grow(main, frameTime);
 				break;
 			}
 		}
