@@ -205,7 +205,7 @@ void	MusicManager::transition(sf::Time frameTime)
 					&& music.areaName == m_musicToPlay)
 			{
 				fade(music, frameTime);
-				if (m_timer < sf::Time::Zero)
+				if (m_timer == sf::Time::Zero)
 				{
 					m_played = false;
 					m_musicToPlay = MusicNameArea::NoBalle;
