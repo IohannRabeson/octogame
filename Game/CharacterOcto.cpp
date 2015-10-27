@@ -953,6 +953,11 @@ void	CharacterOcto::collisionElevatorUpdate()
 		}
 		if (top <= m_topElevator)
 			m_onTopElevator = true;
+		if (m_keyAction && !m_keyElevator && m_progress.canUseElevator())
+		{
+			m_keyElevator = true;
+			m_sprite.setNextEvent(StartElevator);
+		}
 	}
 	else
 	{
