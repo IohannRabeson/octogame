@@ -18,6 +18,7 @@ public:
 	virtual void update(sf::Time frametime);
 	virtual float getHeight(void) const { return 0.f; }
 	std::size_t getId(void) const { return m_id; }
+	sf::Time getEffectDuration(void) const { return m_effectDuration; }
 
 protected:
 	enum CedricEvents
