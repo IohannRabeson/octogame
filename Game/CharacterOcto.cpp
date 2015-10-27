@@ -903,15 +903,21 @@ void	CharacterOcto::onSky(Events event)
 		case Fall:
 			if (m_keyUp)
 			{
-				if (m_onElevator)
-					m_sprite.setNextEvent(StartElevator);
-				else if (m_progress.canSlowFall())
+				if (m_progress.canSlowFall())
 					m_sprite.setNextEvent(StartSlowFall);
+			}
+			if (m_keyElevator)
+			{
+				if (m_progress.canUseElevator() && m_collisionElevator)
+					m_sprite.setNextEvent(StartElevator);
 			}
 			break;
 		case SlowFall:
+			break;
 		case StartElevator:
 		case Elevator:
+			if (!m_collisionElevator)
+				m_sprite.setNextEvent(Fall);
 			break;
 		default:
 			m_sprite.setNextEvent(Fall);
@@ -940,7 +946,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 			if (m_sprite.isTerminated())
 				m_sprite.setNextEvent(Elevator);
 		}
-		if (!m_keyElevator)
+		else if (!m_keyElevator)
 		{
 			m_useElevator = false;
 			m_box->setApplyGravity(true);
@@ -1138,7 +1144,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 				m_jumpVelocity -= m_pixelSecondMultiplier * frametime * 2.3f;
 		}
 	}
-	if (!m_onTopElevator)
+	if (!m_onTopElevator && m_keyElevator)
 	{
 		if (event == StartElevator)
 			velocity.y = (1.2f * m_pixelSecondSlowFall);
@@ -1178,8 +1184,8 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 				velocity.y *= 1.2f;
 				break;
 		}
+		m_box->setVelocity(velocity);
 	}
-	m_box->setVelocity(velocity);
 }
 
 void	CharacterOcto::caseLeft()
@@ -1242,7 +1248,7 @@ void CharacterOcto::caseUp()
 			m_jumpVelocity = m_pixelSecondJump * 0.9f;
 			m_sprite.setNextEvent(StartWaterJump);
 		}
-		else if (m_onElevator && m_progress.canUseElevator())
+		else if (m_onElevator && m_progress.canUseElevator() && !m_keyElevator)
 		{
 			m_keyElevator = true;
 			m_sprite.setNextEvent(StartElevator);
