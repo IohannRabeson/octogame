@@ -148,7 +148,6 @@ void	MusicManager::basePosition(sf::Vector2f const & octoPos)
 void	MusicManager::transition(sf::Time frameTime)
 {
 	bool		isStart = false;
-	float		volume;
 	std::size_t	inLevel = 0u;
 	std::size_t	index = 0u;
 
@@ -161,7 +160,6 @@ void	MusicManager::transition(sf::Time frameTime)
 		if (music.level != m_currentLevel)
 			continue;
 		inLevel++;
-		volume = 0.f;
 		if (music.area.contains(m_position) && !m_played)
 		{
 			if (!std::string("noMusic").compare(music.name))
