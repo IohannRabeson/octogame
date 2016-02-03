@@ -38,6 +38,8 @@ enum class GameObjectType : std::size_t
 	AmandineNpc = 1073741824u,
 	JeffMouffyNpc = 2147483648u,
 	JellyfishNpc = 4294967296u,
+	BirdBlueNpc = 4294967297u,
+	BirdRedNpc = 4294967298u,
 	EvaNpc = 8589934592u,
 	FranfranNpc = 130u,
 	Water = 131u,

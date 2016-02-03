@@ -141,6 +141,17 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_gameObjects[780] = GameObjectType::ConstanceNpc;
 	m_gameObjects[80] = GameObjectType::PierreNpc;
 	m_gameObjects[470] = GameObjectType::CanouilleNpc;
+
+	m_gameObjects[170] = GameObjectType::BirdRedNpc;
+	m_gameObjects[240] = GameObjectType::BirdRedNpc;
+	m_gameObjects[270] = GameObjectType::BirdBlueNpc;
+	m_gameObjects[700] = GameObjectType::BirdRedNpc;
+	m_gameObjects[830] = GameObjectType::BirdBlueNpc;
+	m_gameObjects[870] = GameObjectType::BirdBlueNpc;
+	m_gameObjects[900] = GameObjectType::BirdBlueNpc;
+	m_gameObjects[940] = GameObjectType::BirdRedNpc;
+	m_gameObjects[1000] = GameObjectType::BirdRedNpc;
+
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
