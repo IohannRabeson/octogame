@@ -181,3 +181,20 @@ void	Progress::levelChanged()
 {
 	m_changeLevel = false;
 }
+
+void	Progress::registerNpc(ResourceKey const & key)
+{
+	if (!npc[m_data.nextDestination][key])
+		npc[m_data.nextDestination][key] = false;
+}
+
+void	Progress::meetNpc(ResourceKey const & key)
+{
+	npc[m_data.nextDestination][key] = true;
+}
+
+void	Progress::printNpc(void)
+{
+	for (auto it = npc[m_data.nextDestination].begin(); it != npc[m_data.nextDestination].end(); it++)
+		std::cout << it->first << " " << it->second << std::endl;
+}

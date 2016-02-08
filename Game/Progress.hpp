@@ -1,6 +1,8 @@
 #ifndef PROGRESS_HPP
 # define PROGRESS_HPP
 # include "GroundManager.hpp"
+# include "ResourceDefinitions.hpp"
+# include "ABiome.hpp"
 # include <SFML/System/Vector2.hpp>
 # include <string>
 # include <memory>
@@ -62,6 +64,10 @@ public:
 	void				setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool				getReverseSprite() const { return m_reverseSprite; }
 
+	void				registerNpc(ResourceKey const & key);
+	void				meetNpc(ResourceKey const & key);
+	void				printNpc(void);
+
 	void				load(std::string const & filename);
 	void				save();
 	void				reset();
@@ -100,6 +106,7 @@ private:
 		bool			walk;
 		bool			moveMap;
 		bool			canOpenDoubleJump;
+		std::string		npc;
 	};
 
 	Progress();
@@ -116,6 +123,7 @@ private:
 	bool								m_validChallenge;
 	bool								m_spaceShipRepair;
 	sf::Vector2f						m_octoPos;
+	std::map<Level, std::map<ResourceKey, bool>> npc;
 };
 
 #endif

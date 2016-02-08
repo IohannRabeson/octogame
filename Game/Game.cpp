@@ -402,6 +402,9 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 			Progress::getInstance().moveMap();
 			m_keyF = true;
 			break;
+		case sf::Keyboard::P:
+			Progress::getInstance().printNpc();
+			break;
 		default:
 			break;
 	}

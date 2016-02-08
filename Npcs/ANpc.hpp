@@ -102,6 +102,7 @@ private:
 	octo::CharacterAnimation					m_walkAnimation;
 	octo::CharacterAnimation					m_special1Animation;
 	octo::CharacterAnimation					m_special2Animation;
+	ResourceKey									m_id;
 	RectangleShape *							m_box;
 	sf::FloatRect								m_area;
 	sf::Vector2f								m_origin;
