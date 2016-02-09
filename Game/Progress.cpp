@@ -106,6 +106,13 @@ void	Progress::addNanoRobot()
 	save();
 }
 
+void	Progress::setNanoRobotCount(std::size_t count)
+{
+	m_data.nanoRobotCount = count;
+	assert(m_data.nanoRobotCount <= 7);
+	save();
+}
+
 void	Progress::setNextDestination(Level destination, bool hasTransition)
 {
 	m_changeLevel = hasTransition;
@@ -180,4 +187,19 @@ bool	Progress::changeLevel() const
 void	Progress::levelChanged()
 {
 	m_changeLevel = false;
+}
+
+void	Progress::registerLevel(Level level)
+{
+	for (auto it = m_levels.begin(); it != m_levels.end(); it++)
+	{
+		if (*it == level)
+			return;
+	}
+	m_levels.push_back(level);
+}
+
+std::vector<Level> const & Progress::getRegisteredLevels(void)
+{
+	return (m_levels);
 }
