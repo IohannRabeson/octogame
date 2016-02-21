@@ -115,6 +115,9 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/CreditMenu.cpp						\
 				Menu/YesNoMenu.cpp						\
 				Menu/ResolutionMenu.cpp					\
+				Menu/CheatCodeMenu.cpp					\
+				Menu/LevelMenu.cpp						\
+				Menu/NanoMenu.cpp						\
 				Menu/EmptyMenu.cpp						\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
