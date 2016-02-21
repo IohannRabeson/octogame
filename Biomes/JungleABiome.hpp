@@ -1,5 +1,5 @@
-#ifndef LEVELFOURBIOME_HPP
-# define LEVELFOURBIOME_HPP
+#ifndef JUGNLEABIOME_HPP
+# define JUGNLEABIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -10,7 +10,7 @@
 # include <SFML/System/Vector2.hpp>
 
 
-class LevelFourBiome : public ABiome
+class JungleABiome : public ABiome
 {
 template<class T>
 struct Range
@@ -25,7 +25,7 @@ struct Range
 };
 
 public:
-	LevelFourBiome();
+	JungleABiome();
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;
@@ -41,7 +41,6 @@ public:
 	virtual Level										getDestination();
 	virtual float										getWaterLevel();
 	virtual sf::Color									getWaterColor();
-	virtual float										getTransitionStep() { return 0.5f; };
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -258,7 +257,6 @@ private:
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
 	sf::Color											randomColor(sf::Color const & color);
-	sf::Color											randomColorLeaf(sf::Color const & color);
 };
 
 #endif

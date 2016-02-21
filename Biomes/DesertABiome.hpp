@@ -1,5 +1,5 @@
-#ifndef LEVELTHREEBIOME_HPP
-# define LEVELTHREEBIOME_HPP
+#ifndef DESERTABIOME_HPP
+# define DESERTABIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -10,7 +10,7 @@
 # include <SFML/System/Vector2.hpp>
 
 
-class LevelThreeBiome : public ABiome
+class DesertABiome : public ABiome
 {
 template<class T>
 struct Range
@@ -25,7 +25,7 @@ struct Range
 };
 
 public:
-	LevelThreeBiome();
+	DesertABiome();
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;
@@ -257,6 +257,9 @@ private:
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
 	sf::Color											randomColor(sf::Color const & color);
+
+	std::vector<int>									m_treePos;
+	std::size_t											m_indexTreePos;
 };
 
 #endif
