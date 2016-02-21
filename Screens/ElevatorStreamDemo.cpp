@@ -34,8 +34,8 @@ void	ElevatorStreamDemo::start()
 	octo::Application::getCamera().setCenter(sf::Vector2f());
 
 	BiomeManager manager;
-	manager.registerBiome<DefaultBiome>(Level::LevelOne);
-	manager.changeBiome(Level::LevelOne, 0);
+	manager.registerBiome<DefaultBiome>(Level::IceA);
+	manager.changeBiome(Level::IceA, 0);
 	m_teleportBeam.setBiome(manager.getCurrentBiome());
 }
 

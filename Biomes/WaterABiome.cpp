@@ -1,4 +1,4 @@
-#include "LevelFourBiome.hpp"
+#include "WaterABiome.hpp"
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
@@ -8,9 +8,9 @@
 #include <limits>
 #include <iostream>
 
-LevelFourBiome::LevelFourBiome() :
-	m_name("LevelFour"),
-	m_id(Level::LevelFour),
+WaterABiome::WaterABiome() :
+	m_name("Water A"),
+	m_id(Level::WaterA),
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(1300u, 200u)),
 	m_mapSeed(42u),
@@ -152,82 +152,82 @@ LevelFourBiome::LevelFourBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::LevelTwo);
-	m_destinations.push_back(Level::LevelThree);
+	m_destinations.push_back(Level::DesertA);
+	m_destinations.push_back(Level::JungleA);
 }
 
-void			LevelFourBiome::setup(std::size_t seed)
+void			WaterABiome::setup(std::size_t seed)
 {
 	(void)seed;
 }
 
-std::string		LevelFourBiome::getName()const
+std::string		WaterABiome::getName()const
 {
 	return (m_name);
 }
 
-Level			LevelFourBiome::getId()const
+Level			WaterABiome::getId()const
 {
 	return m_id;
 }
 
 //TODO:: We'll probably need a setter for mapSize
-sf::Vector2u	LevelFourBiome::getMapSize()
+sf::Vector2u	WaterABiome::getMapSize()
 {
 	return (m_mapSize);
 }
 
-std::size_t		LevelFourBiome::getMapSeed()
+std::size_t		WaterABiome::getMapSeed()
 {
 	return m_mapSeed;
 }
 
-sf::Vector2f	LevelFourBiome::getMapSizeFloat()
+sf::Vector2f	WaterABiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
 }
 
-sf::Vector2f	LevelFourBiome::getOctoStartPosition()
+sf::Vector2f	WaterABiome::getOctoStartPosition()
 {
 	return m_octoStartPosition;
 }
 
-float			LevelFourBiome::getTransitionDuration()
+float			WaterABiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				LevelFourBiome::getInterestPointPosX()
+int				WaterABiome::getInterestPointPosX()
 {
 	return (m_interestPointPosX);
 }
 
-std::map<std::size_t, GameObjectType> const &	LevelFourBiome::getGameObjects()
+std::map<std::size_t, GameObjectType> const &	WaterABiome::getGameObjects()
 {
 	return m_gameObjects;
 }
 
-Level	LevelFourBiome::getDestination()
+Level	WaterABiome::getDestination()
 {
 	return m_destinations[m_destinationIndex++];
 }
 
-float	LevelFourBiome::getWaterLevel()
+float	WaterABiome::getWaterLevel()
 {
 	return m_waterLevel;
 }
 
-sf::Color	LevelFourBiome::getWaterColor()
+sf::Color	WaterABiome::getWaterColor()
 {
 	return m_waterColor;
 }
 
-std::map<std::size_t, std::string> const & LevelFourBiome::getInstances()
+std::map<std::size_t, std::string> const & WaterABiome::getInstances()
 {
 	return m_instances;
 }
 
-std::vector<ParallaxScrolling::ALayer *> LevelFourBiome::getLayers()
+std::vector<ParallaxScrolling::ALayer *> WaterABiome::getLayers()
 {
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
@@ -253,7 +253,7 @@ std::vector<ParallaxScrolling::ALayer *> LevelFourBiome::getLayers()
 	return vector;
 }
 
-Map::MapSurfaceGenerator LevelFourBiome::getMapSurfaceGenerator()
+Map::MapSurfaceGenerator WaterABiome::getMapSurfaceGenerator()
 {
 	auto fun = [](float x, float a)
 	{
@@ -339,7 +339,7 @@ Map::MapSurfaceGenerator LevelFourBiome::getMapSurfaceGenerator()
 	};
 }
 
-Map::TileColorGenerator LevelFourBiome::getTileColorGenerator()
+Map::TileColorGenerator WaterABiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart(143, 93, 195);
 	sf::Color secondColorEnd(61, 14, 111);
@@ -365,68 +365,68 @@ Map::TileColorGenerator LevelFourBiome::getTileColorGenerator()
 	};
 }
 
-sf::Color		LevelFourBiome::getParticleColorGround()
+sf::Color		WaterABiome::getParticleColorGround()
 {
 	std::size_t colorIndex = randomInt(0u, 19u);
 	return (m_particleColor[colorIndex]);
 }
 
-sf::Color		LevelFourBiome::getTileStartColor()
+sf::Color		WaterABiome::getTileStartColor()
 {
 	return (m_tileStartColor);
 }
 
-sf::Color		LevelFourBiome::getTileEndColor()
+sf::Color		WaterABiome::getTileEndColor()
 {
 	return (m_tileEndColor);
 }
 
-sf::Time		LevelFourBiome::getDayDuration()
+sf::Time		WaterABiome::getDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Time		LevelFourBiome::getStartDayDuration()
+sf::Time		WaterABiome::getStartDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Color		LevelFourBiome::getSkyDayColor()
+sf::Color		WaterABiome::getSkyDayColor()
 {
 	return (m_skyDayColor);
 }
 
-sf::Color		LevelFourBiome::getSkyNightColor()
+sf::Color		WaterABiome::getSkyNightColor()
 {
 	return (m_skyNightColor);
 }
 
-sf::Color		LevelFourBiome::getNightLightColor()
+sf::Color		WaterABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
 }
 
-sf::Color		LevelFourBiome::getSunsetLightColor()
+sf::Color		WaterABiome::getSunsetLightColor()
 {
 	return (m_SunsetLightColor);
 }
 
-float			LevelFourBiome::getWind()
+float			WaterABiome::getWind()
 {
 	return (m_wind);
 }
 
-void			LevelFourBiome::setWind(float wind)
+void			WaterABiome::setWind(float wind)
 {
 	m_wind = wind;
 }
 
-bool			LevelFourBiome::canCreateRain()
+bool			WaterABiome::canCreateRain()
 {
 	return (m_canCreateRain);
 }
 
-std::size_t		LevelFourBiome::getRainDropPerSecond()
+std::size_t		WaterABiome::getRainDropPerSecond()
 {
 	std::size_t value = randomRangeSizeT(m_rainDropPerSecond);
 	if (value <= m_rainDropPerSecondMax)
@@ -435,138 +435,138 @@ std::size_t		LevelFourBiome::getRainDropPerSecond()
 		return (m_rainDropPerSecondMax);
 }
 
-sf::Time		LevelFourBiome::getSunnyTime()
+sf::Time		WaterABiome::getSunnyTime()
 {
 	return (randomRangeTime(m_sunnyTime));
 }
 
-sf::Time		LevelFourBiome::getRainingTime()
+sf::Time		WaterABiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
 }
 
-bool			LevelFourBiome::canCreateThunder()
+bool			WaterABiome::canCreateThunder()
 {
 	return (m_canCreateThunder);
 }
 
-float			LevelFourBiome::getLightningSize()
+float			WaterABiome::getLightningSize()
 {
 	return (randomRangeFloat(m_lightningSize));
 }
 
-bool			LevelFourBiome::canCreateSnow()
+bool			WaterABiome::canCreateSnow()
 {
 	return (m_canCreateSnow);
 }
 
-std::size_t		LevelFourBiome::getRockCount()
+std::size_t		WaterABiome::getRockCount()
 {
 	return (randomRangeSizeT(m_rockCount));
 }
 
-std::size_t		LevelFourBiome::getTreeCount()
+std::size_t		WaterABiome::getTreeCount()
 {
 	return (randomRangeSizeT(m_treeCount));
 }
 
-std::size_t		LevelFourBiome::getMushroomCount()
+std::size_t		WaterABiome::getMushroomCount()
 {
 	return (randomRangeSizeT(m_mushroomCount));
 }
 
-std::size_t		LevelFourBiome::getCrystalCount()
+std::size_t		WaterABiome::getCrystalCount()
 {
 	return (randomRangeSizeT(m_crystalCount));
 }
 
-std::size_t		LevelFourBiome::getStarCount()
+std::size_t		WaterABiome::getStarCount()
 {
 	return (randomRangeSizeT(m_starCount));
 }
 
-std::size_t		LevelFourBiome::getSunCount()
+std::size_t		WaterABiome::getSunCount()
 {
 	return (randomRangeSizeT(m_sunCount));
 }
 
-std::size_t		LevelFourBiome::getMoonCount()
+std::size_t		WaterABiome::getMoonCount()
 {
 	return (randomRangeSizeT(m_moonCount));
 }
 
-std::size_t		LevelFourBiome::getRainbowCount()
+std::size_t		WaterABiome::getRainbowCount()
 {
 	return (randomRangeSizeT(m_rainbowCount));
 }
 
-std::size_t		LevelFourBiome::getCloudCount()
+std::size_t		WaterABiome::getCloudCount()
 {
 	return (randomRangeSizeT(m_cloudCount));
 }
 
-std::size_t		LevelFourBiome::getGroundRockCount()
+std::size_t		WaterABiome::getGroundRockCount()
 {
 	return (randomRangeSizeT(m_groundRockCount));
 }
 
-std::size_t	LevelFourBiome::getTreeDepth()
+std::size_t	WaterABiome::getTreeDepth()
 {
 	return (randomRangeSizeT(m_treeDepth));
 }
 
-sf::Vector2f	LevelFourBiome::getTreeSize()
+sf::Vector2f	WaterABiome::getTreeSize()
 {
 	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Time		LevelFourBiome::getTreeLifeTime()
+sf::Time		WaterABiome::getTreeLifeTime()
 {
 	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Color		LevelFourBiome::getTreeColor()
+sf::Color		WaterABiome::getTreeColor()
 {
 	return (randomColorLeaf(m_treeColor));
 }
 
-float			LevelFourBiome::getTreeAngle()
+float			WaterABiome::getTreeAngle()
 {
 	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			LevelFourBiome::getTreeIsMoving()
+bool			WaterABiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-float			LevelFourBiome::getTreeBeatMouvement()
+float			WaterABiome::getTreeBeatMouvement()
 {
 	return (m_treeBeatMouvement);
 }
 
-bool			LevelFourBiome::canCreateTree()
+bool			WaterABiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			LevelFourBiome::canCreateLeaf()
+bool			WaterABiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	LevelFourBiome::getLeafSize()
+sf::Vector2f	WaterABiome::getLeafSize()
 {
 	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		LevelFourBiome::getLeafColor()
+sf::Color		WaterABiome::getLeafColor()
 {
 	return (randomColorLeaf(m_leafColor));
 }
 
-std::size_t		LevelFourBiome::getTreePositionX()
+std::size_t		WaterABiome::getTreePositionX()
 {
 	std::size_t pos;
 	bool isValidPos = false;
@@ -581,22 +581,22 @@ std::size_t		LevelFourBiome::getTreePositionX()
 	return pos;
 }
 
-sf::Vector2f	LevelFourBiome::getCrystalSize()
+sf::Vector2f	WaterABiome::getCrystalSize()
 {
 	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		LevelFourBiome::getCrystalPartCount()
+std::size_t		WaterABiome::getCrystalPartCount()
 {
 	return (randomRangeSizeT(m_crystalPartCount));
 }
 
-sf::Color		LevelFourBiome::getCrystalColor()
+sf::Color		WaterABiome::getCrystalColor()
 {
 	return (randomColor(m_crystalColor));
 }
 
-int				LevelFourBiome::getCrystalPosX()
+int				WaterABiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_interestPointPosX - m_mapSize.x / 2.f;
@@ -607,217 +607,217 @@ int				LevelFourBiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			LevelFourBiome::canCreateCrystal()
+bool			WaterABiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	LevelFourBiome::getShineEffectSize()
+sf::Vector2f	WaterABiome::getShineEffectSize()
 {
 	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		LevelFourBiome::getShineEffectColor()
+sf::Color		WaterABiome::getShineEffectColor()
 {
 	return (randomColor(m_shineEffectColor));
 }
 
-float			LevelFourBiome::getShineEffectRotateAngle()
+float			WaterABiome::getShineEffectRotateAngle()
 {
 	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			LevelFourBiome::canCreateShineEffect()
+bool			WaterABiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	LevelFourBiome::getRockSize()
+sf::Vector2f	WaterABiome::getRockSize()
 {
 	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		LevelFourBiome::getRockPartCount()
+std::size_t		WaterABiome::getRockPartCount()
 {
 	return (randomRangeSizeT(m_rockPartCount));
 }
 
-sf::Color		LevelFourBiome::getRockColor()
+sf::Color		WaterABiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
 }
 
-bool			LevelFourBiome::canCreateRock()
+bool			WaterABiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	LevelFourBiome::getMushroomSize()
+sf::Vector2f	WaterABiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
 }
 
-sf::Color		LevelFourBiome::getMushroomColor()
+sf::Color		WaterABiome::getMushroomColor()
 {
 	return (randomColor(m_mushroomColor));
 }
 
-sf::Time		LevelFourBiome::getMushroomLifeTime()
+sf::Time		WaterABiome::getMushroomLifeTime()
 {
 	return (randomRangeTime(m_mushroomLifeTime));
 }
 
-bool			LevelFourBiome::canCreateMushroom()
+bool			WaterABiome::canCreateMushroom()
 {
 	return (m_canCreateMushroom);
 }
 
-sf::Vector2f	LevelFourBiome::getCloudSize()
+sf::Vector2f	WaterABiome::getCloudSize()
 {
 	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		LevelFourBiome::getCloudPartCount()
+std::size_t		WaterABiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
-sf::Time		LevelFourBiome::getCloudLifeTime()
+sf::Time		WaterABiome::getCloudLifeTime()
 {
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		LevelFourBiome::getCloudColor()
+sf::Color		WaterABiome::getCloudColor()
 {
 	return (randomColor(m_cloudColor));
 }
 
-bool			LevelFourBiome::canCreateCloud()
+bool			WaterABiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	LevelFourBiome::getStarSize()
+sf::Vector2f	WaterABiome::getStarSize()
 {
 	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		LevelFourBiome::getStarColor()
+sf::Color		WaterABiome::getStarColor()
 {
 	return (randomColor(m_starColor));
 }
 
-sf::Time		LevelFourBiome::getStarLifeTime()
+sf::Time		WaterABiome::getStarLifeTime()
 {
 	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			LevelFourBiome::canCreateStar()
+bool			WaterABiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	LevelFourBiome::getSunSize()
+sf::Vector2f 	WaterABiome::getSunSize()
 {
 	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-std::size_t		LevelFourBiome::getSunPartCount()
+std::size_t		WaterABiome::getSunPartCount()
 {
 	return (randomRangeSizeT(m_sunPartCount));
 }
 
-sf::Color		LevelFourBiome::getSunColor()
+sf::Color		WaterABiome::getSunColor()
 {
 	if (m_sunColor == sf::Color(255, 255, 255))
 		return m_sunColor;
 	return (randomColor(m_sunColor));
 }
 
-bool			LevelFourBiome::canCreateSun()
+bool			WaterABiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	LevelFourBiome::getMoonSize()
+sf::Vector2f 	WaterABiome::getMoonSize()
 {
 	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		LevelFourBiome::getMoonColor()
+sf::Color		WaterABiome::getMoonColor()
 {
 	return (randomColor(m_moonColor));
 }
 
-sf::Time		LevelFourBiome::getMoonLifeTime()
+sf::Time		WaterABiome::getMoonLifeTime()
 {
 	return (randomRangeTime(m_moonLifeTime));
 }
 
-bool			LevelFourBiome::canCreateMoon()
+bool			WaterABiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-float			LevelFourBiome::getRainbowThickness()
+float			WaterABiome::getRainbowThickness()
 {
 	return (randomRangeFloat(m_rainbowThickness));
 }
 
-float			LevelFourBiome::getRainbowPartSize()
+float			WaterABiome::getRainbowPartSize()
 {
 	return (randomRangeFloat(m_rainbowPartSize));
 }
 
-std::size_t		LevelFourBiome::getRainbowLoopCount()
+std::size_t		WaterABiome::getRainbowLoopCount()
 {
 	return (randomRangeSizeT(m_rainbowLoopCount));
 }
 
-sf::Time		LevelFourBiome::getRainbowLifeTime()
+sf::Time		WaterABiome::getRainbowLifeTime()
 {
 	return (randomRangeTime(m_rainbowLifeTime));
 }
 
-sf::Time		LevelFourBiome::getRainbowIntervalTime()
+sf::Time		WaterABiome::getRainbowIntervalTime()
 {
 	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
-bool			LevelFourBiome::canCreateRainbow()
+bool			WaterABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
 }
 
 
-float			LevelFourBiome::randomFloat(float min, float max)
+float			WaterABiome::randomFloat(float min, float max)
 {
 	return (m_generator.randomFloat(min, max));
 }
 
-int				LevelFourBiome::randomInt(int min, int max)
+int				WaterABiome::randomInt(int min, int max)
 {
 	return (m_generator.randomInt(min, max));
 }
 
-bool			LevelFourBiome::randomBool(float percent)
+bool			WaterABiome::randomBool(float percent)
 {
 	return (m_generator.randomBool(percent));
 }
 
-float			LevelFourBiome::randomRangeFloat(Range<float> const & range)
+float			WaterABiome::randomRangeFloat(Range<float> const & range)
 {
 	return (randomFloat(range.min, range.max));
 }
 
-int				LevelFourBiome::randomRangeSizeT(Range<std::size_t> const & range)
+int				WaterABiome::randomRangeSizeT(Range<std::size_t> const & range)
 {
 	return (randomInt(range.min, range.max));
 }
 
-sf::Vector2f	LevelFourBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+sf::Vector2f	WaterABiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 {
 	sf::Vector2f tmp;
 	tmp.x = randomFloat(range.min.x, range.max.x);
@@ -825,13 +825,13 @@ sf::Vector2f	LevelFourBiome::randomRangeVector2f(Range<sf::Vector2f> const & ran
 	return tmp;
 }
 
-sf::Time		LevelFourBiome::randomRangeTime(Range<sf::Time> const & range)
+sf::Time		WaterABiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }
 
-sf::Color		LevelFourBiome::randomColor(sf::Color const & color)
+sf::Color		WaterABiome::randomColor(sf::Color const & color)
 {
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
@@ -843,7 +843,7 @@ sf::Color		LevelFourBiome::randomColor(sf::Color const & color)
 
 }
 
-sf::Color		LevelFourBiome::randomColorLeaf(sf::Color const & color)
+sf::Color		WaterABiome::randomColorLeaf(sf::Color const & color)
 {
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);

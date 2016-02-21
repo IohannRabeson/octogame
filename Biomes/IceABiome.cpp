@@ -1,4 +1,4 @@
-#include "LevelOneBiome.hpp"
+#include "IceABiome.hpp"
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
@@ -9,9 +9,9 @@
 #include <limits>
 #include <iostream>
 
-LevelOneBiome::LevelOneBiome() :
-	m_name("Level_One"),
-	m_id(Level::LevelOne),
+IceABiome::IceABiome() :
+	m_name("Ice A"),
+	m_id(Level::IceA),
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
@@ -131,88 +131,88 @@ LevelOneBiome::LevelOneBiome() :
 	m_gameObjects[8] = GameObjectType::SpaceShip;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::LevelTwo || progress.getLastDestination() == Level::Default)
+	if (progress.getLastDestination() == Level::DesertA || progress.getLastDestination() == Level::Default)
 		m_octoStartPosition = sf::Vector2f(323 * 16.f, 600.f);
 
 	m_gameObjects[320] = GameObjectType::Portal;
 	m_gameObjects[300] = GameObjectType::FranfranNpc;
-	m_destinations.push_back(Level::LevelTwo);
+	m_destinations.push_back(Level::DesertA);
 
 	m_treePos = {36, 200, 206, 209, 220, 229, 240, 254, 259, 275, 350, 359, 363, 369, 385, 401, 410, 423, 450};
 }
 
-void			LevelOneBiome::setup(std::size_t seed)
+void			IceABiome::setup(std::size_t seed)
 {
 	(void)seed;
 }
 
-Level			LevelOneBiome::getId()const
+Level			IceABiome::getId()const
 {
 	return m_id;
 }
 
-std::string		LevelOneBiome::getName()const
+std::string		IceABiome::getName()const
 {
 	return (m_name);
 }
 
 //TODO:: We'll probably need a setter for mapSize
-sf::Vector2u	LevelOneBiome::getMapSize()
+sf::Vector2u	IceABiome::getMapSize()
 {
 	return (m_mapSize);
 }
 
-std::size_t		LevelOneBiome::getMapSeed()
+std::size_t		IceABiome::getMapSeed()
 {
 	return m_mapSeed;
 }
 
-sf::Vector2f	LevelOneBiome::getMapSizeFloat()
+sf::Vector2f	IceABiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
 }
 
-sf::Vector2f	LevelOneBiome::getOctoStartPosition()
+sf::Vector2f	IceABiome::getOctoStartPosition()
 {
 	return m_octoStartPosition;
 }
 
-float			LevelOneBiome::getTransitionDuration()
+float			IceABiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				LevelOneBiome::getInterestPointPosX()
+int				IceABiome::getInterestPointPosX()
 {
 	return (m_interestPointPosX);
 }
 
-std::map<std::size_t, GameObjectType> const &	LevelOneBiome::getGameObjects()
+std::map<std::size_t, GameObjectType> const &	IceABiome::getGameObjects()
 {
 	return m_gameObjects;
 }
 
-Level	LevelOneBiome::getDestination()
+Level	IceABiome::getDestination()
 {
 	return m_destinations[m_destinationIndex++];
 }
 
-float	LevelOneBiome::getWaterLevel()
+float	IceABiome::getWaterLevel()
 {
 	return m_waterLevel;
 }
 
-sf::Color	LevelOneBiome::getWaterColor()
+sf::Color	IceABiome::getWaterColor()
 {
 	return m_waterColor;
 }
 
-std::map<std::size_t, std::string> const & LevelOneBiome::getInstances()
+std::map<std::size_t, std::string> const & IceABiome::getInstances()
 {
 	return m_instances;
 }
 
-std::vector<ParallaxScrolling::ALayer *> LevelOneBiome::getLayers()
+std::vector<ParallaxScrolling::ALayer *> IceABiome::getLayers()
 {
 	//sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
@@ -240,7 +240,7 @@ std::vector<ParallaxScrolling::ALayer *> LevelOneBiome::getLayers()
 	return vector;
 }
 
-Map::MapSurfaceGenerator LevelOneBiome::getMapSurfaceGenerator()
+Map::MapSurfaceGenerator IceABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
@@ -264,7 +264,7 @@ Map::MapSurfaceGenerator LevelOneBiome::getMapSurfaceGenerator()
 	};
 }
 
-Map::TileColorGenerator LevelOneBiome::getTileColorGenerator()
+Map::TileColorGenerator IceABiome::getTileColorGenerator()
 {
 	return [this](Noise & noise, float x, float y, float z)
 	{
@@ -273,68 +273,68 @@ Map::TileColorGenerator LevelOneBiome::getTileColorGenerator()
 	};
 }
 
-sf::Color		LevelOneBiome::getParticleColorGround()
+sf::Color		IceABiome::getParticleColorGround()
 {
 	std::size_t colorIndex = randomInt(0u, 19u);
 	return (m_particleColor[colorIndex]);
 }
 
-sf::Color		LevelOneBiome::getTileStartColor()
+sf::Color		IceABiome::getTileStartColor()
 {
 	return (m_tileStartColor);
 }
 
-sf::Color		LevelOneBiome::getTileEndColor()
+sf::Color		IceABiome::getTileEndColor()
 {
 	return (m_tileEndColor);
 }
 
-sf::Time		LevelOneBiome::getDayDuration()
+sf::Time		IceABiome::getDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Time		LevelOneBiome::getStartDayDuration()
+sf::Time		IceABiome::getStartDayDuration()
 {
 	return (m_startDayDuration);
 }
 
-sf::Color		LevelOneBiome::getSkyDayColor()
+sf::Color		IceABiome::getSkyDayColor()
 {
 	return (m_skyDayColor);
 }
 
-sf::Color		LevelOneBiome::getSkyNightColor()
+sf::Color		IceABiome::getSkyNightColor()
 {
 	return (m_skyNightColor);
 }
 
-sf::Color		LevelOneBiome::getNightLightColor()
+sf::Color		IceABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
 }
 
-sf::Color		LevelOneBiome::getSunsetLightColor()
+sf::Color		IceABiome::getSunsetLightColor()
 {
 	return (m_sunsetLightColor);
 }
 
-float			LevelOneBiome::getWind()
+float			IceABiome::getWind()
 {
 	return (m_wind);
 }
 
-void			LevelOneBiome::setWind(float wind)
+void			IceABiome::setWind(float wind)
 {
 	m_wind = wind;
 }
 
-bool			LevelOneBiome::canCreateRain()
+bool			IceABiome::canCreateRain()
 {
 	return (m_canCreateRain);
 }
 
-std::size_t		LevelOneBiome::getRainDropPerSecond()
+std::size_t		IceABiome::getRainDropPerSecond()
 {
 	std::size_t value = randomRangeSizeT(m_rainDropPerSecond);
 	if (value <= m_rainDropPerSecondMax)
@@ -343,158 +343,158 @@ std::size_t		LevelOneBiome::getRainDropPerSecond()
 		return (m_rainDropPerSecondMax);
 }
 
-sf::Time		LevelOneBiome::getSunnyTime()
+sf::Time		IceABiome::getSunnyTime()
 {
 	return (randomRangeTime(m_sunnyTime));
 }
 
-sf::Time		LevelOneBiome::getRainingTime()
+sf::Time		IceABiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
 }
 
-bool			LevelOneBiome::canCreateThunder()
+bool			IceABiome::canCreateThunder()
 {
 	return (m_canCreateThunder);
 }
 
-float			LevelOneBiome::getLightningSize()
+float			IceABiome::getLightningSize()
 {
 	return (randomRangeFloat(m_lightningSize));
 }
 
-bool			LevelOneBiome::canCreateSnow()
+bool			IceABiome::canCreateSnow()
 {
 	return (m_canCreateSnow);
 }
 
-std::size_t		LevelOneBiome::getRockCount()
+std::size_t		IceABiome::getRockCount()
 {
 	return (randomRangeSizeT(m_rockCount));
 }
 
-std::size_t		LevelOneBiome::getTreeCount()
+std::size_t		IceABiome::getTreeCount()
 {
 	return (randomRangeSizeT(m_treeCount));
 }
 
-std::size_t		LevelOneBiome::getMushroomCount()
+std::size_t		IceABiome::getMushroomCount()
 {
 	return (randomRangeSizeT(m_mushroomCount));
 }
 
-std::size_t		LevelOneBiome::getCrystalCount()
+std::size_t		IceABiome::getCrystalCount()
 {
 	return (randomRangeSizeT(m_crystalCount));
 }
 
-std::size_t		LevelOneBiome::getStarCount()
+std::size_t		IceABiome::getStarCount()
 {
 	return (randomRangeSizeT(m_starCount));
 }
 
-std::size_t		LevelOneBiome::getSunCount()
+std::size_t		IceABiome::getSunCount()
 {
 	return (randomRangeSizeT(m_sunCount));
 }
 
-std::size_t		LevelOneBiome::getMoonCount()
+std::size_t		IceABiome::getMoonCount()
 {
 	return (randomRangeSizeT(m_moonCount));
 }
 
-std::size_t		LevelOneBiome::getRainbowCount()
+std::size_t		IceABiome::getRainbowCount()
 {
 	return (randomRangeSizeT(m_rainbowCount));
 }
 
-std::size_t		LevelOneBiome::getCloudCount()
+std::size_t		IceABiome::getCloudCount()
 {
 	return (randomRangeSizeT(m_cloudCount));
 }
 
-std::size_t		LevelOneBiome::getGroundRockCount()
+std::size_t		IceABiome::getGroundRockCount()
 {
 	return (randomRangeSizeT(m_groundRockCount));
 }
 
-std::size_t	LevelOneBiome::getTreeDepth()
+std::size_t	IceABiome::getTreeDepth()
 {
 	return (randomRangeSizeT(m_treeDepth));
 }
 
-sf::Vector2f	LevelOneBiome::getTreeSize()
+sf::Vector2f	IceABiome::getTreeSize()
 {
 	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Time		LevelOneBiome::getTreeLifeTime()
+sf::Time		IceABiome::getTreeLifeTime()
 {
 	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Color		LevelOneBiome::getTreeColor()
+sf::Color		IceABiome::getTreeColor()
 {
 	return (randomColor(m_treeColor));
 }
 
-float			LevelOneBiome::getTreeAngle()
+float			IceABiome::getTreeAngle()
 {
 	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			LevelOneBiome::getTreeIsMoving()
+bool			IceABiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-float			LevelOneBiome::getTreeBeatMouvement()
+float			IceABiome::getTreeBeatMouvement()
 {
 	return (m_treeBeatMouvement);
 }
 
-bool			LevelOneBiome::canCreateTree()
+bool			IceABiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			LevelOneBiome::canCreateLeaf()
+bool			IceABiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	LevelOneBiome::getLeafSize()
+sf::Vector2f	IceABiome::getLeafSize()
 {
 	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		LevelOneBiome::getLeafColor()
+sf::Color		IceABiome::getLeafColor()
 {
 	return (randomColor(m_leafColor));
 }
 
-std::size_t		LevelOneBiome::getTreePositionX()
+std::size_t		IceABiome::getTreePositionX()
 {
 	return (m_treePos[m_indexTreePos++]);
 }
 
-sf::Vector2f	LevelOneBiome::getCrystalSize()
+sf::Vector2f	IceABiome::getCrystalSize()
 {
 	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		LevelOneBiome::getCrystalPartCount()
+std::size_t		IceABiome::getCrystalPartCount()
 {
 	return (randomRangeSizeT(m_crystalPartCount));
 }
 
-sf::Color		LevelOneBiome::getCrystalColor()
+sf::Color		IceABiome::getCrystalColor()
 {
 	return (randomColor(m_crystalColor));
 }
 
-int				LevelOneBiome::getCrystalPosX()
+int				IceABiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_interestPointPosX - m_mapSize.x / 2.f;
@@ -505,215 +505,215 @@ int				LevelOneBiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			LevelOneBiome::canCreateCrystal()
+bool			IceABiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	LevelOneBiome::getShineEffectSize()
+sf::Vector2f	IceABiome::getShineEffectSize()
 {
 	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		LevelOneBiome::getShineEffectColor()
+sf::Color		IceABiome::getShineEffectColor()
 {
 	return (randomColor(m_shineEffectColor));
 }
 
-float			LevelOneBiome::getShineEffectRotateAngle()
+float			IceABiome::getShineEffectRotateAngle()
 {
 	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			LevelOneBiome::canCreateShineEffect()
+bool			IceABiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	LevelOneBiome::getRockSize()
+sf::Vector2f	IceABiome::getRockSize()
 {
 	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		LevelOneBiome::getRockPartCount()
+std::size_t		IceABiome::getRockPartCount()
 {
 	return (randomRangeSizeT(m_rockPartCount));
 }
 
-sf::Color		LevelOneBiome::getRockColor()
+sf::Color		IceABiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
 }
 
-bool			LevelOneBiome::canCreateRock()
+bool			IceABiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	LevelOneBiome::getMushroomSize()
+sf::Vector2f	IceABiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
 }
 
-sf::Color		LevelOneBiome::getMushroomColor()
+sf::Color		IceABiome::getMushroomColor()
 {
 	return (randomColor(m_mushroomColor));
 }
 
-sf::Time		LevelOneBiome::getMushroomLifeTime()
+sf::Time		IceABiome::getMushroomLifeTime()
 {
 	return (randomRangeTime(m_mushroomLifeTime));
 }
 
-bool			LevelOneBiome::canCreateMushroom()
+bool			IceABiome::canCreateMushroom()
 {
 	return (m_canCreateMushroom);
 }
 
-sf::Vector2f	LevelOneBiome::getCloudSize()
+sf::Vector2f	IceABiome::getCloudSize()
 {
 	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		LevelOneBiome::getCloudPartCount()
+std::size_t		IceABiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
-sf::Time		LevelOneBiome::getCloudLifeTime()
+sf::Time		IceABiome::getCloudLifeTime()
 {
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		LevelOneBiome::getCloudColor()
+sf::Color		IceABiome::getCloudColor()
 {
 	return (randomColor(m_cloudColor));
 }
 
-bool			LevelOneBiome::canCreateCloud()
+bool			IceABiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	LevelOneBiome::getStarSize()
+sf::Vector2f	IceABiome::getStarSize()
 {
 	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		LevelOneBiome::getStarColor()
+sf::Color		IceABiome::getStarColor()
 {
 	return (randomColor(m_starColor));
 }
 
-sf::Time		LevelOneBiome::getStarLifeTime()
+sf::Time		IceABiome::getStarLifeTime()
 {
 	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			LevelOneBiome::canCreateStar()
+bool			IceABiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	LevelOneBiome::getSunSize()
+sf::Vector2f 	IceABiome::getSunSize()
 {
 	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-std::size_t		LevelOneBiome::getSunPartCount()
+std::size_t		IceABiome::getSunPartCount()
 {
 	return (randomRangeSizeT(m_sunPartCount));
 }
 
-sf::Color		LevelOneBiome::getSunColor()
+sf::Color		IceABiome::getSunColor()
 {
 	return (randomColor(m_sunColor));
 }
 
-bool			LevelOneBiome::canCreateSun()
+bool			IceABiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	LevelOneBiome::getMoonSize()
+sf::Vector2f 	IceABiome::getMoonSize()
 {
 	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		LevelOneBiome::getMoonColor()
+sf::Color		IceABiome::getMoonColor()
 {
 	return (randomColor(m_moonColor));
 }
 
-sf::Time		LevelOneBiome::getMoonLifeTime()
+sf::Time		IceABiome::getMoonLifeTime()
 {
 	return (randomRangeTime(m_moonLifeTime));
 }
 
-bool			LevelOneBiome::canCreateMoon()
+bool			IceABiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-float			LevelOneBiome::getRainbowThickness()
+float			IceABiome::getRainbowThickness()
 {
 	return (randomRangeFloat(m_rainbowThickness));
 }
 
-float			LevelOneBiome::getRainbowPartSize()
+float			IceABiome::getRainbowPartSize()
 {
 	return (randomRangeFloat(m_rainbowPartSize));
 }
 
-std::size_t		LevelOneBiome::getRainbowLoopCount()
+std::size_t		IceABiome::getRainbowLoopCount()
 {
 	return (randomRangeSizeT(m_rainbowLoopCount));
 }
 
-sf::Time		LevelOneBiome::getRainbowLifeTime()
+sf::Time		IceABiome::getRainbowLifeTime()
 {
 	return (randomRangeTime(m_rainbowLifeTime));
 }
 
-sf::Time		LevelOneBiome::getRainbowIntervalTime()
+sf::Time		IceABiome::getRainbowIntervalTime()
 {
 	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
-bool			LevelOneBiome::canCreateRainbow()
+bool			IceABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
 }
 
 
-float			LevelOneBiome::randomFloat(float min, float max)
+float			IceABiome::randomFloat(float min, float max)
 {
 	return (m_generator.randomFloat(min, max));
 }
 
-int				LevelOneBiome::randomInt(int min, int max)
+int				IceABiome::randomInt(int min, int max)
 {
 	return (m_generator.randomInt(min, max));
 }
 
-bool			LevelOneBiome::randomBool(float percent)
+bool			IceABiome::randomBool(float percent)
 {
 	return (m_generator.randomBool(percent));
 }
 
-float			LevelOneBiome::randomRangeFloat(Range<float> const & range)
+float			IceABiome::randomRangeFloat(Range<float> const & range)
 {
 	return (randomFloat(range.min, range.max));
 }
 
-int				LevelOneBiome::randomRangeSizeT(Range<std::size_t> const & range)
+int				IceABiome::randomRangeSizeT(Range<std::size_t> const & range)
 {
 	return (randomInt(range.min, range.max));
 }
 
-sf::Vector2f	LevelOneBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+sf::Vector2f	IceABiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 {
 	sf::Vector2f tmp;
 	tmp.x = randomFloat(range.min.x, range.max.x);
@@ -721,13 +721,13 @@ sf::Vector2f	LevelOneBiome::randomRangeVector2f(Range<sf::Vector2f> const & rang
 	return tmp;
 }
 
-sf::Time		LevelOneBiome::randomRangeTime(Range<sf::Time> const & range)
+sf::Time		IceABiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }
 
-sf::Color		LevelOneBiome::randomColor(sf::Color const & color)
+sf::Color		IceABiome::randomColor(sf::Color const & color)
 {
 	HSL tmp = TurnToHSL(color);
 	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);
