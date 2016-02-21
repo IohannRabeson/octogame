@@ -2,7 +2,7 @@
 #include "EmptyMenu.hpp"
 #include "Progress.hpp"
 
-LevelMenu::LevelMenu(void):
+LevelMenu::LevelMenu(void) :
 	m_index(0u)
 {
 }
@@ -10,12 +10,12 @@ LevelMenu::LevelMenu(void):
 void LevelMenu::createMenus(void)
 {
 	std::vector<Level> const & levels = Progress::getInstance().getRegisteredLevels();
-	Level level = Progress::getInstance().getInstance().getNextDestination();
+	Level const & level = Progress::getInstance().getInstance().getNextDestination();
 	for (std::size_t i = 0; i < levels.size(); i++)
 	{
 		if (level == levels[i])
 			m_index = i;
-		addMenu(std::to_wstring((std::size_t)i), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+		addMenu(std::to_wstring(static_cast<std::size_t>(i)), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	}
 
 	setIndexCursor(static_cast<std::size_t>(m_index));

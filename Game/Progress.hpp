@@ -16,7 +16,7 @@ public:
 	void				setNanoRobotCount(std::size_t count);
 	std::size_t			getNanoRobotCount() const { return m_data.nanoRobotCount; }
 
-	void				setNextDestination(Level destination, bool hasTransition = true);
+	void				setNextDestination(Level const & destination, bool hasTransition = true);
 	Level				getNextDestination(void) const;
 
 	void				setLastDestination(Level destination);
@@ -57,8 +57,8 @@ public:
 	bool				changeLevel() const;
 	void				levelChanged();
 
-	void				registerLevel(Level biome);
-	std::vector<Level> const & getRegisteredLevels(void);
+	void				registerLevel(Level const & biome);
+	std::vector<Level> const & getRegisteredLevels(void) const;
 
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
