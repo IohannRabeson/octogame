@@ -262,7 +262,7 @@ void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 	computeDayNight(frameTime);
 	if (biome.canCreateRain() || biome.canCreateSnow())
 		computeDrop(frameTime, biome);
-	if (m_rainSound && biome.canCreateRain() && !biome.canCreateSnow() && biome.getId() != Level::LevelFour)
+	if (m_rainSound && biome.canCreateRain() && !biome.canCreateSnow() && biome.getId() != Level::WaterA)
 		m_rainSound->setVolume(m_weather / m_dropTimerMax.asSeconds() * 10);
 	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
 	{

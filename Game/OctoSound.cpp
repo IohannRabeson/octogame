@@ -205,11 +205,11 @@ void	CharacterOcto::OctoSound::walkSound()
 
 	switch (level)
 	{
-		case Level::LevelTwo:
+		case Level::DesertA:
 			if (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped)
 				m_sound = audio.playSound(resources.getSound(OCTO_WALK_ROCK_WAV), m_volumeEffect);
 			break;
-		case Level::LevelThree:
+		case Level::JungleA:
 			if (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped)
 				m_sound = audio.playSound(resources.getSound(OCTO_WALK_LEAF_WAV), m_volumeEffect);
 			break;

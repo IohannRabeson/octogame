@@ -147,10 +147,10 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
 				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
-				Biomes/LevelOneBiome.cpp				\
-				Biomes/LevelTwoBiome.cpp				\
-				Biomes/LevelThreeBiome.cpp				\
-				Biomes/LevelFourBiome.cpp				\
+				Biomes/IceABiome.cpp					\
+				Biomes/DesertABiome.cpp					\
+				Biomes/JungleABiome.cpp					\
+				Biomes/WaterABiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\

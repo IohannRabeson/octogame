@@ -1,4 +1,4 @@
-#include "LevelThreeBiome.hpp"
+#include "JungleABiome.hpp"
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
@@ -9,9 +9,9 @@
 #include <limits>
 #include <iostream>
 
-LevelThreeBiome::LevelThreeBiome() :
-	m_name("LevelThree"),
-	m_id(Level::LevelThree),
+JungleABiome::JungleABiome() :
+	m_name("Jungle A"),
+	m_id(Level::JungleA),
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(1100u, 128u)),
 	m_mapSeed(42u),
@@ -155,86 +155,86 @@ LevelThreeBiome::LevelThreeBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::LevelTwo);
-	m_destinations.push_back(Level::LevelFour);
+	m_destinations.push_back(Level::DesertA);
+	m_destinations.push_back(Level::WaterA);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::LevelFour)
+	if (progress.getLastDestination() == Level::WaterA)
 		m_octoStartPosition = sf::Vector2f(490.f * 16.f, 2400.f);
 }
 
-void			LevelThreeBiome::setup(std::size_t seed)
+void			JungleABiome::setup(std::size_t seed)
 {
 	(void)seed;
 }
 
-std::string		LevelThreeBiome::getName()const
+std::string		JungleABiome::getName()const
 {
 	return (m_name);
 }
 
-Level			LevelThreeBiome::getId()const
+Level			JungleABiome::getId()const
 {
 	return m_id;
 }
 
 //TODO:: We'll probably need a setter for mapSize
-sf::Vector2u	LevelThreeBiome::getMapSize()
+sf::Vector2u	JungleABiome::getMapSize()
 {
 	return (m_mapSize);
 }
 
-std::size_t		LevelThreeBiome::getMapSeed()
+std::size_t		JungleABiome::getMapSeed()
 {
 	return m_mapSeed;
 }
 
-sf::Vector2f	LevelThreeBiome::getMapSizeFloat()
+sf::Vector2f	JungleABiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
 }
 
-sf::Vector2f	LevelThreeBiome::getOctoStartPosition()
+sf::Vector2f	JungleABiome::getOctoStartPosition()
 {
 	return m_octoStartPosition;
 }
 
-float			LevelThreeBiome::getTransitionDuration()
+float			JungleABiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				LevelThreeBiome::getInterestPointPosX()
+int				JungleABiome::getInterestPointPosX()
 {
 	return (m_interestPointPosX);
 }
 
-std::map<std::size_t, GameObjectType> const &	LevelThreeBiome::getGameObjects()
+std::map<std::size_t, GameObjectType> const &	JungleABiome::getGameObjects()
 {
 	return m_gameObjects;
 }
 
-Level	LevelThreeBiome::getDestination()
+Level	JungleABiome::getDestination()
 {
 	return m_destinations[m_destinationIndex++];
 }
 
-float	LevelThreeBiome::getWaterLevel()
+float	JungleABiome::getWaterLevel()
 {
 	return m_waterLevel;
 }
 
-sf::Color	LevelThreeBiome::getWaterColor()
+sf::Color	JungleABiome::getWaterColor()
 {
 	return m_waterColor;
 }
 
-std::map<std::size_t, std::string> const & LevelThreeBiome::getInstances()
+std::map<std::size_t, std::string> const & JungleABiome::getInstances()
 {
 	return m_instances;
 }
 
-std::vector<ParallaxScrolling::ALayer *> LevelThreeBiome::getLayers()
+std::vector<ParallaxScrolling::ALayer *> JungleABiome::getLayers()
 {
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
@@ -260,7 +260,7 @@ std::vector<ParallaxScrolling::ALayer *> LevelThreeBiome::getLayers()
 	return vector;
 }
 
-Map::MapSurfaceGenerator LevelThreeBiome::getMapSurfaceGenerator()
+Map::MapSurfaceGenerator JungleABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
@@ -287,7 +287,7 @@ Map::MapSurfaceGenerator LevelThreeBiome::getMapSurfaceGenerator()
 	};
 }
 
-Map::TileColorGenerator LevelThreeBiome::getTileColorGenerator()
+Map::TileColorGenerator JungleABiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart(76, 70, 102);
 	sf::Color secondColorEnd(56, 50, 72);
@@ -313,68 +313,68 @@ Map::TileColorGenerator LevelThreeBiome::getTileColorGenerator()
 	};
 }
 
-sf::Color		LevelThreeBiome::getParticleColorGround()
+sf::Color		JungleABiome::getParticleColorGround()
 {
 	std::size_t colorIndex = randomInt(0u, 19u);
 	return (m_particleColor[colorIndex]);
 }
 
-sf::Color		LevelThreeBiome::getTileStartColor()
+sf::Color		JungleABiome::getTileStartColor()
 {
 	return (m_tileStartColor);
 }
 
-sf::Color		LevelThreeBiome::getTileEndColor()
+sf::Color		JungleABiome::getTileEndColor()
 {
 	return (m_tileEndColor);
 }
 
-sf::Time		LevelThreeBiome::getDayDuration()
+sf::Time		JungleABiome::getDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Time		LevelThreeBiome::getStartDayDuration()
+sf::Time		JungleABiome::getStartDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Color		LevelThreeBiome::getSkyDayColor()
+sf::Color		JungleABiome::getSkyDayColor()
 {
 	return (m_skyDayColor);
 }
 
-sf::Color		LevelThreeBiome::getSkyNightColor()
+sf::Color		JungleABiome::getSkyNightColor()
 {
 	return (m_skyNightColor);
 }
 
-sf::Color		LevelThreeBiome::getNightLightColor()
+sf::Color		JungleABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
 }
 
-sf::Color		LevelThreeBiome::getSunsetLightColor()
+sf::Color		JungleABiome::getSunsetLightColor()
 {
 	return (m_SunsetLightColor);
 }
 
-float			LevelThreeBiome::getWind()
+float			JungleABiome::getWind()
 {
 	return (m_wind);
 }
 
-void			LevelThreeBiome::setWind(float wind)
+void			JungleABiome::setWind(float wind)
 {
 	m_wind = wind;
 }
 
-bool			LevelThreeBiome::canCreateRain()
+bool			JungleABiome::canCreateRain()
 {
 	return (m_canCreateRain);
 }
 
-std::size_t		LevelThreeBiome::getRainDropPerSecond()
+std::size_t		JungleABiome::getRainDropPerSecond()
 {
 	std::size_t value = randomRangeSizeT(m_rainDropPerSecond);
 	if (value <= m_rainDropPerSecondMax)
@@ -383,158 +383,158 @@ std::size_t		LevelThreeBiome::getRainDropPerSecond()
 		return (m_rainDropPerSecondMax);
 }
 
-sf::Time		LevelThreeBiome::getSunnyTime()
+sf::Time		JungleABiome::getSunnyTime()
 {
 	return (randomRangeTime(m_sunnyTime));
 }
 
-sf::Time		LevelThreeBiome::getRainingTime()
+sf::Time		JungleABiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
 }
 
-bool			LevelThreeBiome::canCreateThunder()
+bool			JungleABiome::canCreateThunder()
 {
 	return (m_canCreateThunder);
 }
 
-float			LevelThreeBiome::getLightningSize()
+float			JungleABiome::getLightningSize()
 {
 	return (randomRangeFloat(m_lightningSize));
 }
 
-bool			LevelThreeBiome::canCreateSnow()
+bool			JungleABiome::canCreateSnow()
 {
 	return (m_canCreateSnow);
 }
 
-std::size_t		LevelThreeBiome::getRockCount()
+std::size_t		JungleABiome::getRockCount()
 {
 	return (randomRangeSizeT(m_rockCount));
 }
 
-std::size_t		LevelThreeBiome::getTreeCount()
+std::size_t		JungleABiome::getTreeCount()
 {
 	return (randomRangeSizeT(m_treeCount));
 }
 
-std::size_t		LevelThreeBiome::getMushroomCount()
+std::size_t		JungleABiome::getMushroomCount()
 {
 	return (randomRangeSizeT(m_mushroomCount));
 }
 
-std::size_t		LevelThreeBiome::getCrystalCount()
+std::size_t		JungleABiome::getCrystalCount()
 {
 	return (randomRangeSizeT(m_crystalCount));
 }
 
-std::size_t		LevelThreeBiome::getStarCount()
+std::size_t		JungleABiome::getStarCount()
 {
 	return (randomRangeSizeT(m_starCount));
 }
 
-std::size_t		LevelThreeBiome::getSunCount()
+std::size_t		JungleABiome::getSunCount()
 {
 	return (randomRangeSizeT(m_sunCount));
 }
 
-std::size_t		LevelThreeBiome::getMoonCount()
+std::size_t		JungleABiome::getMoonCount()
 {
 	return (randomRangeSizeT(m_moonCount));
 }
 
-std::size_t		LevelThreeBiome::getRainbowCount()
+std::size_t		JungleABiome::getRainbowCount()
 {
 	return (randomRangeSizeT(m_rainbowCount));
 }
 
-std::size_t		LevelThreeBiome::getCloudCount()
+std::size_t		JungleABiome::getCloudCount()
 {
 	return (randomRangeSizeT(m_cloudCount));
 }
 
-std::size_t		LevelThreeBiome::getGroundRockCount()
+std::size_t		JungleABiome::getGroundRockCount()
 {
 	return (randomRangeSizeT(m_groundRockCount));
 }
 
-std::size_t	LevelThreeBiome::getTreeDepth()
+std::size_t	JungleABiome::getTreeDepth()
 {
 	return (randomRangeSizeT(m_treeDepth));
 }
 
-sf::Vector2f	LevelThreeBiome::getTreeSize()
+sf::Vector2f	JungleABiome::getTreeSize()
 {
 	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Time		LevelThreeBiome::getTreeLifeTime()
+sf::Time		JungleABiome::getTreeLifeTime()
 {
 	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Color		LevelThreeBiome::getTreeColor()
+sf::Color		JungleABiome::getTreeColor()
 {
 	return (randomColor(m_treeColor));
 }
 
-float			LevelThreeBiome::getTreeAngle()
+float			JungleABiome::getTreeAngle()
 {
 	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			LevelThreeBiome::getTreeIsMoving()
+bool			JungleABiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-float			LevelThreeBiome::getTreeBeatMouvement()
+float			JungleABiome::getTreeBeatMouvement()
 {
 	return (m_treeBeatMouvement);
 }
 
-bool			LevelThreeBiome::canCreateTree()
+bool			JungleABiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			LevelThreeBiome::canCreateLeaf()
+bool			JungleABiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	LevelThreeBiome::getLeafSize()
+sf::Vector2f	JungleABiome::getLeafSize()
 {
 	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		LevelThreeBiome::getLeafColor()
+sf::Color		JungleABiome::getLeafColor()
 {
 	return (randomColor(m_leafColor));
 }
 
-std::size_t		LevelThreeBiome::getTreePositionX()
+std::size_t		JungleABiome::getTreePositionX()
 {
 	return randomInt(1u, m_mapSize.x - 1u);
 }
 
-sf::Vector2f	LevelThreeBiome::getCrystalSize()
+sf::Vector2f	JungleABiome::getCrystalSize()
 {
 	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		LevelThreeBiome::getCrystalPartCount()
+std::size_t		JungleABiome::getCrystalPartCount()
 {
 	return (randomRangeSizeT(m_crystalPartCount));
 }
 
-sf::Color		LevelThreeBiome::getCrystalColor()
+sf::Color		JungleABiome::getCrystalColor()
 {
 	return (randomColor(m_crystalColor));
 }
 
-int				LevelThreeBiome::getCrystalPosX()
+int				JungleABiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_interestPointPosX - m_mapSize.x / 2.f;
@@ -545,217 +545,217 @@ int				LevelThreeBiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			LevelThreeBiome::canCreateCrystal()
+bool			JungleABiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	LevelThreeBiome::getShineEffectSize()
+sf::Vector2f	JungleABiome::getShineEffectSize()
 {
 	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		LevelThreeBiome::getShineEffectColor()
+sf::Color		JungleABiome::getShineEffectColor()
 {
 	return (randomColor(m_shineEffectColor));
 }
 
-float			LevelThreeBiome::getShineEffectRotateAngle()
+float			JungleABiome::getShineEffectRotateAngle()
 {
 	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			LevelThreeBiome::canCreateShineEffect()
+bool			JungleABiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	LevelThreeBiome::getRockSize()
+sf::Vector2f	JungleABiome::getRockSize()
 {
 	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		LevelThreeBiome::getRockPartCount()
+std::size_t		JungleABiome::getRockPartCount()
 {
 	return (randomRangeSizeT(m_rockPartCount));
 }
 
-sf::Color		LevelThreeBiome::getRockColor()
+sf::Color		JungleABiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
 }
 
-bool			LevelThreeBiome::canCreateRock()
+bool			JungleABiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	LevelThreeBiome::getMushroomSize()
+sf::Vector2f	JungleABiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
 }
 
-sf::Color		LevelThreeBiome::getMushroomColor()
+sf::Color		JungleABiome::getMushroomColor()
 {
 	return (randomColor(m_mushroomColor));
 }
 
-sf::Time		LevelThreeBiome::getMushroomLifeTime()
+sf::Time		JungleABiome::getMushroomLifeTime()
 {
 	return (randomRangeTime(m_mushroomLifeTime));
 }
 
-bool			LevelThreeBiome::canCreateMushroom()
+bool			JungleABiome::canCreateMushroom()
 {
 	return (m_canCreateMushroom);
 }
 
-sf::Vector2f	LevelThreeBiome::getCloudSize()
+sf::Vector2f	JungleABiome::getCloudSize()
 {
 	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		LevelThreeBiome::getCloudPartCount()
+std::size_t		JungleABiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
-sf::Time		LevelThreeBiome::getCloudLifeTime()
+sf::Time		JungleABiome::getCloudLifeTime()
 {
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		LevelThreeBiome::getCloudColor()
+sf::Color		JungleABiome::getCloudColor()
 {
 	return (randomColor(m_cloudColor));
 }
 
-bool			LevelThreeBiome::canCreateCloud()
+bool			JungleABiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	LevelThreeBiome::getStarSize()
+sf::Vector2f	JungleABiome::getStarSize()
 {
 	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		LevelThreeBiome::getStarColor()
+sf::Color		JungleABiome::getStarColor()
 {
 	return (randomColor(m_starColor));
 }
 
-sf::Time		LevelThreeBiome::getStarLifeTime()
+sf::Time		JungleABiome::getStarLifeTime()
 {
 	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			LevelThreeBiome::canCreateStar()
+bool			JungleABiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	LevelThreeBiome::getSunSize()
+sf::Vector2f 	JungleABiome::getSunSize()
 {
 	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-std::size_t		LevelThreeBiome::getSunPartCount()
+std::size_t		JungleABiome::getSunPartCount()
 {
 	return (randomRangeSizeT(m_sunPartCount));
 }
 
-sf::Color		LevelThreeBiome::getSunColor()
+sf::Color		JungleABiome::getSunColor()
 {
 	if (m_sunColor == sf::Color(255, 255, 255))
 		return m_sunColor;
 	return (randomColor(m_sunColor));
 }
 
-bool			LevelThreeBiome::canCreateSun()
+bool			JungleABiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	LevelThreeBiome::getMoonSize()
+sf::Vector2f 	JungleABiome::getMoonSize()
 {
 	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		LevelThreeBiome::getMoonColor()
+sf::Color		JungleABiome::getMoonColor()
 {
 	return (randomColor(m_moonColor));
 }
 
-sf::Time		LevelThreeBiome::getMoonLifeTime()
+sf::Time		JungleABiome::getMoonLifeTime()
 {
 	return (randomRangeTime(m_moonLifeTime));
 }
 
-bool			LevelThreeBiome::canCreateMoon()
+bool			JungleABiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-float			LevelThreeBiome::getRainbowThickness()
+float			JungleABiome::getRainbowThickness()
 {
 	return (randomRangeFloat(m_rainbowThickness));
 }
 
-float			LevelThreeBiome::getRainbowPartSize()
+float			JungleABiome::getRainbowPartSize()
 {
 	return (randomRangeFloat(m_rainbowPartSize));
 }
 
-std::size_t		LevelThreeBiome::getRainbowLoopCount()
+std::size_t		JungleABiome::getRainbowLoopCount()
 {
 	return (randomRangeSizeT(m_rainbowLoopCount));
 }
 
-sf::Time		LevelThreeBiome::getRainbowLifeTime()
+sf::Time		JungleABiome::getRainbowLifeTime()
 {
 	return (randomRangeTime(m_rainbowLifeTime));
 }
 
-sf::Time		LevelThreeBiome::getRainbowIntervalTime()
+sf::Time		JungleABiome::getRainbowIntervalTime()
 {
 	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
-bool			LevelThreeBiome::canCreateRainbow()
+bool			JungleABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
 }
 
 
-float			LevelThreeBiome::randomFloat(float min, float max)
+float			JungleABiome::randomFloat(float min, float max)
 {
 	return (m_generator.randomFloat(min, max));
 }
 
-int				LevelThreeBiome::randomInt(int min, int max)
+int				JungleABiome::randomInt(int min, int max)
 {
 	return (m_generator.randomInt(min, max));
 }
 
-bool			LevelThreeBiome::randomBool(float percent)
+bool			JungleABiome::randomBool(float percent)
 {
 	return (m_generator.randomBool(percent));
 }
 
-float			LevelThreeBiome::randomRangeFloat(Range<float> const & range)
+float			JungleABiome::randomRangeFloat(Range<float> const & range)
 {
 	return (randomFloat(range.min, range.max));
 }
 
-int				LevelThreeBiome::randomRangeSizeT(Range<std::size_t> const & range)
+int				JungleABiome::randomRangeSizeT(Range<std::size_t> const & range)
 {
 	return (randomInt(range.min, range.max));
 }
 
-sf::Vector2f	LevelThreeBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+sf::Vector2f	JungleABiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 {
 	sf::Vector2f tmp;
 	tmp.x = randomFloat(range.min.x, range.max.x);
@@ -763,13 +763,13 @@ sf::Vector2f	LevelThreeBiome::randomRangeVector2f(Range<sf::Vector2f> const & ra
 	return tmp;
 }
 
-sf::Time		LevelThreeBiome::randomRangeTime(Range<sf::Time> const & range)
+sf::Time		JungleABiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }
 
-sf::Color		LevelThreeBiome::randomColor(sf::Color const & color)
+sf::Color		JungleABiome::randomColor(sf::Color const & color)
 {
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
