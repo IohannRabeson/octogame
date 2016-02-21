@@ -1,4 +1,5 @@
 #include "MainMenu.hpp"
+#include "CheatCodeMenu.hpp"
 #include "ControlMenu.hpp"
 #include "CreditMenu.hpp"
 #include "YesNoMenu.hpp"
@@ -48,6 +49,9 @@ MainMenu::MainMenu(void) :
 void MainMenu::createMenus(void)
 {
 	addMenu(L"Contrôles", std::unique_ptr<ControlMenu>(new ControlMenu()));
+#ifndef NDEBUG
+	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
+#endif
 	addMenu(L"Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
 	addMenu(L"Crédits", std::unique_ptr<CreditMenu>(new CreditMenu()));
 	addMenu(L"Recommencer", std::unique_ptr<YesNoReset>(new YesNoReset()));
