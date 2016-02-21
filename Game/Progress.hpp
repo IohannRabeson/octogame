@@ -15,9 +15,10 @@ public:
 
 	void				addNanoRobot();
 	void				removeNanoRobot() { m_data.nanoRobotCount--; }
+	void				setNanoRobotCount(std::size_t count);
 	std::size_t			getNanoRobotCount() const { return m_data.nanoRobotCount; }
 
-	void				setNextDestination(Level destination, bool hasTransition = true);
+	void				setNextDestination(Level const & destination, bool hasTransition = true);
 	Level				getNextDestination(void) const;
 
 	void				setLastDestination(Level destination);
@@ -57,6 +58,9 @@ public:
 	bool				canUseWaterJump();
 	bool				changeLevel() const;
 	void				levelChanged();
+
+	void				registerLevel(Level const & biome);
+	std::vector<Level> const & getRegisteredLevels(void) const;
 
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
@@ -114,16 +118,18 @@ private:
 	void				saveToFile();
 	void				setup();
 
-	static std::unique_ptr<Progress>	m_instance;
-	std::string							m_filename;
-	data								m_data;
-	bool								m_newSave;
-	bool								m_changeLevel;
-	bool								m_reverseSprite;
-	bool								m_validChallenge;
-	bool								m_spaceShipRepair;
-	sf::Vector2f						m_octoPos;
-	std::map<Level, std::map<ResourceKey, bool>> npc;
+	static std::unique_ptr<Progress>				m_instance;
+	std::string										m_filename;
+	data											m_data;
+	bool											m_newSave;
+	bool											m_changeLevel;
+	bool											m_reverseSprite;
+	bool											m_validChallenge;
+	bool											m_spaceShipRepair;
+	sf::Vector2f									m_octoPos;
+
+	std::map<Level, std::map<ResourceKey, bool>>	npc;
+	std::vector<Level>								m_levels;
 };
 
 #endif

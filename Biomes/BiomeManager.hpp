@@ -16,6 +16,7 @@
 # include <GenericFactory.hpp>
 # include <memory>
 # include "ABiome.hpp"
+# include "Progress.hpp"
 
 class BiomeManager : public octo::NonCopyable
 {
@@ -36,6 +37,7 @@ private:
 template <class T>
 void	BiomeManager::registerBiome(Level key)
 {
+	Progress::getInstance().registerLevel(key);
 	m_factory.registerCreator<T>(key);
 }
 
