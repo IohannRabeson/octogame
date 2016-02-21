@@ -1,5 +1,5 @@
-#ifndef LEVELONEBIOME_HPP
-# define LEVELONEBIOME_HPP
+#ifndef ICEABIOME_HPP
+# define ICEABIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -10,7 +10,7 @@
 # include <SFML/System/Vector2.hpp>
 
 
-class LevelOneBiome : public ABiome
+class IceABiome : public ABiome
 {
 template<class T>
 struct Range
@@ -25,7 +25,7 @@ struct Range
 };
 
 public:
-	LevelOneBiome();
+	IceABiome();
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;

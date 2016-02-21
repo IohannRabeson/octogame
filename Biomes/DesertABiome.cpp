@@ -1,4 +1,4 @@
-#include "LevelTwoBiome.hpp"
+#include "DesertABiome.hpp"
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
@@ -9,9 +9,9 @@
 #include <limits>
 #include <iostream>
 
-LevelTwoBiome::LevelTwoBiome() :
-	m_name("LevelTwo"),
-	m_id(Level::LevelTwo),
+DesertABiome::DesertABiome() :
+	m_name("Desert A"),
+	m_id(Level::DesertA),
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(900u, 128u)),
 	m_mapSeed(42u),
@@ -128,7 +128,7 @@ LevelTwoBiome::LevelTwoBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::LevelThree)
+	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
 
 	// Define game objects
@@ -154,84 +154,84 @@ LevelTwoBiome::LevelTwoBiome() :
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::LevelOne);
-	m_destinations.push_back(Level::LevelThree);
+	m_destinations.push_back(Level::IceA);
+	m_destinations.push_back(Level::JungleA);
 }
 
-void			LevelTwoBiome::setup(std::size_t seed)
+void			DesertABiome::setup(std::size_t seed)
 {
 	(void)seed;
 }
 
-std::string		LevelTwoBiome::getName()const
+std::string		DesertABiome::getName()const
 {
 	return (m_name);
 }
 
-Level			LevelTwoBiome::getId()const
+Level			DesertABiome::getId()const
 {
 	return m_id;
 }
 
 //TODO:: We'll probably need a setter for mapSize
-sf::Vector2u	LevelTwoBiome::getMapSize()
+sf::Vector2u	DesertABiome::getMapSize()
 {
 	return (m_mapSize);
 }
 
-std::size_t		LevelTwoBiome::getMapSeed()
+std::size_t		DesertABiome::getMapSeed()
 {
 	return m_mapSeed;
 }
 
-sf::Vector2f	LevelTwoBiome::getMapSizeFloat()
+sf::Vector2f	DesertABiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
 }
 
-sf::Vector2f	LevelTwoBiome::getOctoStartPosition()
+sf::Vector2f	DesertABiome::getOctoStartPosition()
 {
 	return m_octoStartPosition;
 }
 
-float			LevelTwoBiome::getTransitionDuration()
+float			DesertABiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				LevelTwoBiome::getInterestPointPosX()
+int				DesertABiome::getInterestPointPosX()
 {
 	return (m_interestPointPosX);
 }
 
-std::map<std::size_t, GameObjectType> const &	LevelTwoBiome::getGameObjects()
+std::map<std::size_t, GameObjectType> const &	DesertABiome::getGameObjects()
 {
 	return m_gameObjects;
 }
 
-Level	LevelTwoBiome::getDestination()
+Level	DesertABiome::getDestination()
 {
 	return m_destinations[m_destinationIndex++];
 }
 
-float	LevelTwoBiome::getWaterLevel()
+float	DesertABiome::getWaterLevel()
 {
 	if (Progress::getInstance().canUseWaterJump())
 		return 1400.f;
 	return m_waterLevel;
 }
 
-sf::Color	LevelTwoBiome::getWaterColor()
+sf::Color	DesertABiome::getWaterColor()
 {
 	return m_waterColor;
 }
 
-std::map<std::size_t, std::string> const & LevelTwoBiome::getInstances()
+std::map<std::size_t, std::string> const & DesertABiome::getInstances()
 {
 	return m_instances;
 }
 
-std::vector<ParallaxScrolling::ALayer *> LevelTwoBiome::getLayers()
+std::vector<ParallaxScrolling::ALayer *> DesertABiome::getLayers()
 {
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
@@ -257,7 +257,7 @@ std::vector<ParallaxScrolling::ALayer *> LevelTwoBiome::getLayers()
 	return vector;
 }
 
-Map::MapSurfaceGenerator LevelTwoBiome::getMapSurfaceGenerator()
+Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
@@ -282,7 +282,7 @@ Map::MapSurfaceGenerator LevelTwoBiome::getMapSurfaceGenerator()
 	};
 }
 
-Map::TileColorGenerator LevelTwoBiome::getTileColorGenerator()
+Map::TileColorGenerator DesertABiome::getTileColorGenerator()
 {
 	return [this](Noise & noise, float x, float y, float z)
 	{
@@ -291,68 +291,68 @@ Map::TileColorGenerator LevelTwoBiome::getTileColorGenerator()
 	};
 }
 
-sf::Color		LevelTwoBiome::getParticleColorGround()
+sf::Color		DesertABiome::getParticleColorGround()
 {
 	std::size_t colorIndex = randomInt(0u, 19u);
 	return (m_particleColor[colorIndex]);
 }
 
-sf::Color		LevelTwoBiome::getTileStartColor()
+sf::Color		DesertABiome::getTileStartColor()
 {
 	return (m_tileStartColor);
 }
 
-sf::Color		LevelTwoBiome::getTileEndColor()
+sf::Color		DesertABiome::getTileEndColor()
 {
 	return (m_tileEndColor);
 }
 
-sf::Time		LevelTwoBiome::getDayDuration()
+sf::Time		DesertABiome::getDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Time		LevelTwoBiome::getStartDayDuration()
+sf::Time		DesertABiome::getStartDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Color		LevelTwoBiome::getSkyDayColor()
+sf::Color		DesertABiome::getSkyDayColor()
 {
 	return (m_skyDayColor);
 }
 
-sf::Color		LevelTwoBiome::getSkyNightColor()
+sf::Color		DesertABiome::getSkyNightColor()
 {
 	return (m_skyNightColor);
 }
 
-sf::Color		LevelTwoBiome::getNightLightColor()
+sf::Color		DesertABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
 }
 
-sf::Color		LevelTwoBiome::getSunsetLightColor()
+sf::Color		DesertABiome::getSunsetLightColor()
 {
 	return (m_SunsetLightColor);
 }
 
-float			LevelTwoBiome::getWind()
+float			DesertABiome::getWind()
 {
 	return (m_wind);
 }
 
-void			LevelTwoBiome::setWind(float wind)
+void			DesertABiome::setWind(float wind)
 {
 	m_wind = wind;
 }
 
-bool			LevelTwoBiome::canCreateRain()
+bool			DesertABiome::canCreateRain()
 {
 	return (m_canCreateRain);
 }
 
-std::size_t		LevelTwoBiome::getRainDropPerSecond()
+std::size_t		DesertABiome::getRainDropPerSecond()
 {
 	std::size_t value = randomRangeSizeT(m_rainDropPerSecond);
 	if (value <= m_rainDropPerSecondMax)
@@ -361,158 +361,158 @@ std::size_t		LevelTwoBiome::getRainDropPerSecond()
 		return (m_rainDropPerSecondMax);
 }
 
-sf::Time		LevelTwoBiome::getSunnyTime()
+sf::Time		DesertABiome::getSunnyTime()
 {
 	return (randomRangeTime(m_sunnyTime));
 }
 
-sf::Time		LevelTwoBiome::getRainingTime()
+sf::Time		DesertABiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
 }
 
-bool			LevelTwoBiome::canCreateThunder()
+bool			DesertABiome::canCreateThunder()
 {
 	return (m_canCreateThunder);
 }
 
-float			LevelTwoBiome::getLightningSize()
+float			DesertABiome::getLightningSize()
 {
 	return (randomRangeFloat(m_lightningSize));
 }
 
-bool			LevelTwoBiome::canCreateSnow()
+bool			DesertABiome::canCreateSnow()
 {
 	return (m_canCreateSnow);
 }
 
-std::size_t		LevelTwoBiome::getRockCount()
+std::size_t		DesertABiome::getRockCount()
 {
 	return (randomRangeSizeT(m_rockCount));
 }
 
-std::size_t		LevelTwoBiome::getTreeCount()
+std::size_t		DesertABiome::getTreeCount()
 {
 	return (randomRangeSizeT(m_treeCount));
 }
 
-std::size_t		LevelTwoBiome::getMushroomCount()
+std::size_t		DesertABiome::getMushroomCount()
 {
 	return (randomRangeSizeT(m_mushroomCount));
 }
 
-std::size_t		LevelTwoBiome::getCrystalCount()
+std::size_t		DesertABiome::getCrystalCount()
 {
 	return (randomRangeSizeT(m_crystalCount));
 }
 
-std::size_t		LevelTwoBiome::getStarCount()
+std::size_t		DesertABiome::getStarCount()
 {
 	return (randomRangeSizeT(m_starCount));
 }
 
-std::size_t		LevelTwoBiome::getSunCount()
+std::size_t		DesertABiome::getSunCount()
 {
 	return (randomRangeSizeT(m_sunCount));
 }
 
-std::size_t		LevelTwoBiome::getMoonCount()
+std::size_t		DesertABiome::getMoonCount()
 {
 	return (randomRangeSizeT(m_moonCount));
 }
 
-std::size_t		LevelTwoBiome::getRainbowCount()
+std::size_t		DesertABiome::getRainbowCount()
 {
 	return (randomRangeSizeT(m_rainbowCount));
 }
 
-std::size_t		LevelTwoBiome::getCloudCount()
+std::size_t		DesertABiome::getCloudCount()
 {
 	return (randomRangeSizeT(m_cloudCount));
 }
 
-std::size_t		LevelTwoBiome::getGroundRockCount()
+std::size_t		DesertABiome::getGroundRockCount()
 {
 	return (randomRangeSizeT(m_groundRockCount));
 }
 
-std::size_t	LevelTwoBiome::getTreeDepth()
+std::size_t	DesertABiome::getTreeDepth()
 {
 	return (randomRangeSizeT(m_treeDepth));
 }
 
-sf::Vector2f	LevelTwoBiome::getTreeSize()
+sf::Vector2f	DesertABiome::getTreeSize()
 {
 	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Time		LevelTwoBiome::getTreeLifeTime()
+sf::Time		DesertABiome::getTreeLifeTime()
 {
 	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Color		LevelTwoBiome::getTreeColor()
+sf::Color		DesertABiome::getTreeColor()
 {
 	return (randomColor(m_treeColor));
 }
 
-float			LevelTwoBiome::getTreeAngle()
+float			DesertABiome::getTreeAngle()
 {
 	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			LevelTwoBiome::getTreeIsMoving()
+bool			DesertABiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-float			LevelTwoBiome::getTreeBeatMouvement()
+float			DesertABiome::getTreeBeatMouvement()
 {
 	return (m_treeBeatMouvement);
 }
 
-bool			LevelTwoBiome::canCreateTree()
+bool			DesertABiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			LevelTwoBiome::canCreateLeaf()
+bool			DesertABiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	LevelTwoBiome::getLeafSize()
+sf::Vector2f	DesertABiome::getLeafSize()
 {
 	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		LevelTwoBiome::getLeafColor()
+sf::Color		DesertABiome::getLeafColor()
 {
 	return (randomColor(m_leafColor));
 }
 
-std::size_t		LevelTwoBiome::getTreePositionX()
+std::size_t		DesertABiome::getTreePositionX()
 {
 	return m_treePos[m_indexTreePos++];
 }
 
-sf::Vector2f	LevelTwoBiome::getCrystalSize()
+sf::Vector2f	DesertABiome::getCrystalSize()
 {
 	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		LevelTwoBiome::getCrystalPartCount()
+std::size_t		DesertABiome::getCrystalPartCount()
 {
 	return (randomRangeSizeT(m_crystalPartCount));
 }
 
-sf::Color		LevelTwoBiome::getCrystalColor()
+sf::Color		DesertABiome::getCrystalColor()
 {
 	return (randomColor(m_crystalColor));
 }
 
-int				LevelTwoBiome::getCrystalPosX()
+int				DesertABiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_interestPointPosX - m_mapSize.x / 2.f;
@@ -523,217 +523,217 @@ int				LevelTwoBiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			LevelTwoBiome::canCreateCrystal()
+bool			DesertABiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	LevelTwoBiome::getShineEffectSize()
+sf::Vector2f	DesertABiome::getShineEffectSize()
 {
 	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		LevelTwoBiome::getShineEffectColor()
+sf::Color		DesertABiome::getShineEffectColor()
 {
 	return (randomColor(m_shineEffectColor));
 }
 
-float			LevelTwoBiome::getShineEffectRotateAngle()
+float			DesertABiome::getShineEffectRotateAngle()
 {
 	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			LevelTwoBiome::canCreateShineEffect()
+bool			DesertABiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	LevelTwoBiome::getRockSize()
+sf::Vector2f	DesertABiome::getRockSize()
 {
 	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		LevelTwoBiome::getRockPartCount()
+std::size_t		DesertABiome::getRockPartCount()
 {
 	return (randomRangeSizeT(m_rockPartCount));
 }
 
-sf::Color		LevelTwoBiome::getRockColor()
+sf::Color		DesertABiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
 }
 
-bool			LevelTwoBiome::canCreateRock()
+bool			DesertABiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	LevelTwoBiome::getMushroomSize()
+sf::Vector2f	DesertABiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
 }
 
-sf::Color		LevelTwoBiome::getMushroomColor()
+sf::Color		DesertABiome::getMushroomColor()
 {
 	return (randomColor(m_mushroomColor));
 }
 
-sf::Time		LevelTwoBiome::getMushroomLifeTime()
+sf::Time		DesertABiome::getMushroomLifeTime()
 {
 	return (randomRangeTime(m_mushroomLifeTime));
 }
 
-bool			LevelTwoBiome::canCreateMushroom()
+bool			DesertABiome::canCreateMushroom()
 {
 	return (m_canCreateMushroom);
 }
 
-sf::Vector2f	LevelTwoBiome::getCloudSize()
+sf::Vector2f	DesertABiome::getCloudSize()
 {
 	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		LevelTwoBiome::getCloudPartCount()
+std::size_t		DesertABiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
-sf::Time		LevelTwoBiome::getCloudLifeTime()
+sf::Time		DesertABiome::getCloudLifeTime()
 {
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		LevelTwoBiome::getCloudColor()
+sf::Color		DesertABiome::getCloudColor()
 {
 	return (randomColor(m_cloudColor));
 }
 
-bool			LevelTwoBiome::canCreateCloud()
+bool			DesertABiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	LevelTwoBiome::getStarSize()
+sf::Vector2f	DesertABiome::getStarSize()
 {
 	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		LevelTwoBiome::getStarColor()
+sf::Color		DesertABiome::getStarColor()
 {
 	return (randomColor(m_starColor));
 }
 
-sf::Time		LevelTwoBiome::getStarLifeTime()
+sf::Time		DesertABiome::getStarLifeTime()
 {
 	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			LevelTwoBiome::canCreateStar()
+bool			DesertABiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	LevelTwoBiome::getSunSize()
+sf::Vector2f 	DesertABiome::getSunSize()
 {
 	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-std::size_t		LevelTwoBiome::getSunPartCount()
+std::size_t		DesertABiome::getSunPartCount()
 {
 	return (randomRangeSizeT(m_sunPartCount));
 }
 
-sf::Color		LevelTwoBiome::getSunColor()
+sf::Color		DesertABiome::getSunColor()
 {
 	if (m_sunColor == sf::Color(255, 255, 255))
 		return m_sunColor;
 	return (randomColor(m_sunColor));
 }
 
-bool			LevelTwoBiome::canCreateSun()
+bool			DesertABiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	LevelTwoBiome::getMoonSize()
+sf::Vector2f 	DesertABiome::getMoonSize()
 {
 	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		LevelTwoBiome::getMoonColor()
+sf::Color		DesertABiome::getMoonColor()
 {
 	return (randomColor(m_moonColor));
 }
 
-sf::Time		LevelTwoBiome::getMoonLifeTime()
+sf::Time		DesertABiome::getMoonLifeTime()
 {
 	return (randomRangeTime(m_moonLifeTime));
 }
 
-bool			LevelTwoBiome::canCreateMoon()
+bool			DesertABiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-float			LevelTwoBiome::getRainbowThickness()
+float			DesertABiome::getRainbowThickness()
 {
 	return (randomRangeFloat(m_rainbowThickness));
 }
 
-float			LevelTwoBiome::getRainbowPartSize()
+float			DesertABiome::getRainbowPartSize()
 {
 	return (randomRangeFloat(m_rainbowPartSize));
 }
 
-std::size_t		LevelTwoBiome::getRainbowLoopCount()
+std::size_t		DesertABiome::getRainbowLoopCount()
 {
 	return (randomRangeSizeT(m_rainbowLoopCount));
 }
 
-sf::Time		LevelTwoBiome::getRainbowLifeTime()
+sf::Time		DesertABiome::getRainbowLifeTime()
 {
 	return (randomRangeTime(m_rainbowLifeTime));
 }
 
-sf::Time		LevelTwoBiome::getRainbowIntervalTime()
+sf::Time		DesertABiome::getRainbowIntervalTime()
 {
 	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
-bool			LevelTwoBiome::canCreateRainbow()
+bool			DesertABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
 }
 
 
-float			LevelTwoBiome::randomFloat(float min, float max)
+float			DesertABiome::randomFloat(float min, float max)
 {
 	return (m_generator.randomFloat(min, max));
 }
 
-int				LevelTwoBiome::randomInt(int min, int max)
+int				DesertABiome::randomInt(int min, int max)
 {
 	return (m_generator.randomInt(min, max));
 }
 
-bool			LevelTwoBiome::randomBool(float percent)
+bool			DesertABiome::randomBool(float percent)
 {
 	return (m_generator.randomBool(percent));
 }
 
-float			LevelTwoBiome::randomRangeFloat(Range<float> const & range)
+float			DesertABiome::randomRangeFloat(Range<float> const & range)
 {
 	return (randomFloat(range.min, range.max));
 }
 
-int				LevelTwoBiome::randomRangeSizeT(Range<std::size_t> const & range)
+int				DesertABiome::randomRangeSizeT(Range<std::size_t> const & range)
 {
 	return (randomInt(range.min, range.max));
 }
 
-sf::Vector2f	LevelTwoBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+sf::Vector2f	DesertABiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 {
 	sf::Vector2f tmp;
 	tmp.x = randomFloat(range.min.x, range.max.x);
@@ -741,13 +741,13 @@ sf::Vector2f	LevelTwoBiome::randomRangeVector2f(Range<sf::Vector2f> const & rang
 	return tmp;
 }
 
-sf::Time		LevelTwoBiome::randomRangeTime(Range<sf::Time> const & range)
+sf::Time		DesertABiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }
 
-sf::Color		LevelTwoBiome::randomColor(sf::Color const & color)
+sf::Color		DesertABiome::randomColor(sf::Color const & color)
 {
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
