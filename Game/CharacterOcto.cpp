@@ -399,7 +399,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Right, stateSartWaterJump, stateRight);
 	machine.addTransition(Right, stateWaterJump, stateRight);
 
-	machine.addTransition(StartJump, stateIdle, stateLeft);
+	machine.addTransition(StartJump, stateIdle, stateStartJump);
 	machine.addTransition(StartJump, stateLeft, stateStartJump);
 	machine.addTransition(StartJump, stateRight, stateStartJump);
 	machine.addTransition(StartJump, stateJump, stateStartJump);
