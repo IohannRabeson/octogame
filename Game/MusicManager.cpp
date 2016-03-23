@@ -26,7 +26,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_WAV, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_WAV, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_WAV, sf::FloatRect());
-	m_musicLevel[3] = AreaMusic(Level::DesertA, BALLADE_MENTALE_WAV, sf::FloatRect());
+	m_musicLevel[3] = AreaMusic(Level::WaterA, BALLADE_MENTALE_WAV, sf::FloatRect());
 	m_musicLevel[4] = AreaMusic(Level::Default,
 			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
 
@@ -44,13 +44,13 @@ MusicManager::MusicManager() :
 	m_music[2] = AreaMusic(Level::JungleA, ACTION_SLOW_WAV,
 			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
 	//concert BALLE
-	m_music[3] = AreaMusic(Level::DesertA, MENU_OPUS_II_REVERSE_WAV,
+	m_music[3] = AreaMusic(Level::WaterA, MENU_OPUS_II_REVERSE_WAV,
 			sf::FloatRect(sf::Vector2f(700.f * 16.f, -3400.f), sf::Vector2f(70.f * 16.f, 1350.f)), MusicNameArea::Concert);
 	//water
-	m_music[4] = AreaMusic(Level::DesertA, SOUTERRAIN_LUGUBRE_WAV,
+	m_music[4] = AreaMusic(Level::WaterA, SOUTERRAIN_LUGUBRE_WAV,
 			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
 	//run
-	m_music[5] = AreaMusic(Level::DesertA, MENU_OPUS_I_WAV,
+	m_music[5] = AreaMusic(Level::WaterA, MENU_OPUS_I_WAV,
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
 }
 
