@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -13,7 +14,7 @@ DefaultBiome::DefaultBiome() :
 	m_name("Default"),
 	m_id(Level::Default),
 	m_seed("Default"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(400u, 600u), m_generator.randomInt(2u, 800u))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomInt(2u, 800u))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.5f),
@@ -130,15 +131,13 @@ DefaultBiome::DefaultBiome() :
 
 	// TODO define map position and number of map
 	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x - 40u);
+	Progress & progress = Progress::getInstance();
 	m_gameObjects[portalPos] = GameObjectType::Portal;
-	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x - 40u)] = GameObjectType::Portal;
-	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x - 40u)] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
-	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(progress.getLastDestination());
 
-	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
+	if (progress.getNanoRobotCount() >= 7)
+		m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
 }
 
 void			DefaultBiome::setup(std::size_t seed)
@@ -261,10 +260,20 @@ Map::MapSurfaceGenerator DefaultBiome::getMapSurfaceGenerator()
 			};
 			break;
 		case 4u:
-			return [](Noise & noise, float x, float y)
+			if (Progress::getInstance().getNanoRobotCount() >= 3)
 			{
-				return noise.perlin(x * 10.f, y, 2, 2.f);
-			};
+				return [](Noise & noise, float x, float y)
+				{
+					return noise.perlin(x * 10.f, y, 2, 2.f);
+				};
+			}
+			else
+			{
+				return [](Noise & noise, float x, float y)
+				{
+					return noise.perlin(x, y, 3, 2.f);
+				};
+			}
 			break;
 		default:
 			break;

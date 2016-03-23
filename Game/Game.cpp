@@ -370,9 +370,9 @@ void Game::moveMap(sf::Time frameTime)
 		if (Progress::getInstance().canMoveMap())
 		{
 			if (m_keyS)
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
-			else if (m_keyF)
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			else if (m_keyF)
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			else
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			if (m_soundGeneration == nullptr)

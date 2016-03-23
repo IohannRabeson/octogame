@@ -1288,6 +1288,8 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 			caseUp();
 			break;
 		case sf::Keyboard::Down:
+			//TODO: TO REMOVE
+			//std::cout << m_box->getPosition().x << " " << m_box->getPosition().y << std::endl;
 			m_keyDown = true;
 			break;
 		case sf::Keyboard::E:

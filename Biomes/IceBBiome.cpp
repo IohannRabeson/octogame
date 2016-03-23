@@ -15,7 +15,7 @@ IceBBiome::IceBBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(30.f, -100.f),
+	m_octoStartPosition(950.f, -1850.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -130,11 +130,14 @@ IceBBiome::IceBBiome() :
 	m_interestPointPosX = 320;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::DesertA || progress.getLastDestination() == Level::Default)
-		m_octoStartPosition = sf::Vector2f(323 * 16.f, -100.f);
+	if (progress.getLastDestination() == Level::DesertA)
+		m_octoStartPosition = sf::Vector2f(4450, -1850.f);
 
 //	m_gameObjects[320] = GameObjectType::Portal;
+	m_destinations.push_back(Level::IceA);
 	m_destinations.push_back(Level::DesertA);
+	m_gameObjects[530] = GameObjectType::Portal;
+	m_destinations.push_back(Level::Default);
 
 }
 
