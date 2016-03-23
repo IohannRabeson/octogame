@@ -3,14 +3,13 @@
 
 # include "AMenu.hpp"
 # include "BubbleMenu.hpp"
+# include "InputListener.hpp"
 # include <GraphicsManager.hpp>
-# include <DefaultGraphicsListeners.hpp>
 # include <SFML/Graphics/CircleShape.hpp>
 
 # include <memory>
 
-class AMenuSelection : public AMenu,
-					   public octo::DefaultKeyboardListener
+class AMenuSelection : public AMenu, public InputListener
 {
 public:
 	AMenuSelection(void);
@@ -23,7 +22,7 @@ public:
 	void				draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 	void				addMenu(std::wstring const & name, std::unique_ptr<AMenu>&& menu);
-	virtual bool		onPressed(sf::Event::KeyEvent const & event);
+	virtual bool		onInputPressed(InputListener::OctoKeys const & key);
 
 	virtual void		createMenus(void) = 0;
 	virtual void		onSelection(void);

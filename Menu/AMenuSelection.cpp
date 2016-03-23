@@ -42,15 +42,14 @@ void AMenuSelection::setupBubble(void)
 
 void AMenuSelection::setKeyboard(bool isKeyboard)
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	if (m_isKeyboard == false && isKeyboard == true)
 	{
-		graphics.addKeyboardListener(this);
+		InputListener::addInputListener();
 		m_isKeyboard = true;
 	}
 	else if (m_isKeyboard == true && isKeyboard == false)
 	{
-		graphics.removeKeyboardListener(this);
+		InputListener::removeInputListener();
 		m_isKeyboard = false;
 	}
 }
@@ -90,12 +89,12 @@ void AMenuSelection::draw(sf::RenderTarget & render, sf::RenderStates states) co
 		render.draw(m_cursor);
 }
 
-bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
+bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::Left:
-		case sf::Keyboard::Escape:
+		case OctoKeys::Left:
+		case OctoKeys::Escape:
 		{
 			setState(AMenu::State::Hide);
 			AMenu * backMenu = getBackMenu();
@@ -110,9 +109,9 @@ bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
 
 	if (m_menus.size())
 	{
-		switch (event.code)
+		switch (key)
 		{
-			case sf::Keyboard::Up:
+			case OctoKeys::Up:
 			{
 				if (m_indexCursor == 0u)
 					m_indexCursor = m_menus.size() - 1;
@@ -120,7 +119,7 @@ bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
 					m_indexCursor -= 1;
 				break;
 			}
-			case sf::Keyboard::Down:
+			case OctoKeys::Down:
 			{
 				if (m_indexCursor >= m_menus.size() - 1)
 					m_indexCursor = 0u;
@@ -128,8 +127,8 @@ bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
 					m_indexCursor += 1;
 				break;
 			}
-			case sf::Keyboard::Right:
-			case sf::Keyboard::Return:
+			case OctoKeys::Right:
+			case OctoKeys::Return:
 			{
 				onSelection();
 				break;

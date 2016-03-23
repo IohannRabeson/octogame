@@ -68,8 +68,7 @@ Game::Game(void) :
 	m_groundSoundTime(sf::Time::Zero),
 	m_groundSoundTimeMax(sf::seconds(0.6f))
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(this);
+	InputListener::addInputListener();
 
 	m_biomeManager.registerBiome<IceABiome>(Level::IceA);
 	m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
@@ -82,8 +81,7 @@ Game::~Game(void)
 {
 	if (m_soundGeneration != nullptr)
 		m_soundGeneration->stop();
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
 }
 
 void	Game::loadLevel(void)
@@ -390,15 +388,15 @@ void Game::moveMap(sf::Time frameTime)
 	}
 }
 
-bool Game::onPressed(sf::Event::KeyEvent const & event)
+bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::S:
+		case OctoKeys::GroundLeft:
 			m_keyS = true;
 			Progress::getInstance().moveMap();
 			break;
-		case sf::Keyboard::F:
+		case OctoKeys::GroundRight:
 			Progress::getInstance().moveMap();
 			m_keyF = true;
 			break;
@@ -408,14 +406,14 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	return true;
 }
 
-bool	Game::onReleased(sf::Event::KeyEvent const& event)
+bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::S:
+		case OctoKeys::GroundLeft:
 			m_keyS = false;
 			break;
-		case sf::Keyboard::F:
+		case OctoKeys::GroundRight:
 			m_keyF = false;
 			break;
 		default:

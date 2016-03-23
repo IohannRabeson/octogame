@@ -13,6 +13,7 @@
 # include "HelmetSystem.hpp"
 # include "PloufSystem.hpp"
 # include "WaterDropSystem.hpp"
+# include "InputListener.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -22,7 +23,7 @@ class RepairNanoRobot;
 class SpaceShip;
 
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
-	public octo::DefaultKeyboardListener,
+	public InputListener,
 	public sf::Drawable
 {
 	enum Events
@@ -64,8 +65,8 @@ public:
 	void					drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states)const;
 	void					drawText(sf::RenderTarget& render, sf::RenderStates states)const;
 
-	bool					onPressed(sf::Event::KeyEvent const& event);
-	bool					onReleased(sf::Event::KeyEvent const& event);
+	bool					onInputPressed(InputListener::OctoKeys const & key);
+	bool					onInputReleased(InputListener::OctoKeys const & key);
 	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
 	void					setTopElevator(float top);
 	sf::Vector2f const &	getPhysicsPosition() const;

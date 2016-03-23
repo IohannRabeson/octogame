@@ -10,6 +10,16 @@ InputListener::~InputListener(void)
 {
 }
 
+bool	InputListener::onInputPressed(InputListener::OctoKeys const &)
+{
+	return true;
+}
+
+bool	InputListener::onInputReleased(InputListener::OctoKeys const &)
+{
+	return true;
+}
+
 void	InputListener::addInputListener(void)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
@@ -50,6 +60,12 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::F:
 			onInputPressed(OctoKeys::GroundLeft);
 			break;
+		case sf::Keyboard::Return:
+			onInputPressed(OctoKeys::Return);
+			break;
+		case sf::Keyboard::Escape:
+			onInputPressed(OctoKeys::Escape);
+			break;
 		default:
 			break;
 	}
@@ -61,31 +77,62 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
-			onInputPressed(OctoKeys::Left);
+			onInputReleased(OctoKeys::Left);
 			break;
 		case sf::Keyboard::Right:
-			onInputPressed(OctoKeys::Right);
+			onInputReleased(OctoKeys::Right);
 			break;
 		case sf::Keyboard::Space:
-			onInputPressed(OctoKeys::Space);
+			onInputReleased(OctoKeys::Space);
 			break;
 		case sf::Keyboard::Up:
-			onInputPressed(OctoKeys::Up);
+			onInputReleased(OctoKeys::Up);
 			break;
 		case sf::Keyboard::Down:
-			onInputPressed(OctoKeys::Down);
+			onInputReleased(OctoKeys::Down);
 			break;
 		case sf::Keyboard::E:
-			onInputPressed(OctoKeys::Use);
+			onInputReleased(OctoKeys::Use);
 			break;
 		case sf::Keyboard::S:
-			onInputPressed(OctoKeys::GroundRight);
+			onInputReleased(OctoKeys::GroundRight);
 			break;
 		case sf::Keyboard::F:
-			onInputPressed(OctoKeys::GroundLeft);
+			onInputReleased(OctoKeys::GroundLeft);
+			break;
+		case sf::Keyboard::Return:
+			onInputReleased(OctoKeys::Return);
+			break;
+		case sf::Keyboard::Escape:
+			onInputReleased(OctoKeys::Escape);
 			break;
 		default:
 			break;
 	}
 	return true;
 }
+
+
+void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
+{
+	(void)event;
+	if (sf::Joystick::isConnected(0))
+	{
+	}
+}
+void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
+{
+	(void)event;
+	if (sf::Joystick::isConnected(0))
+	{
+	}
+}
+
+void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
+{
+	(void)event;
+	if (sf::Joystick::isConnected(0))
+	{
+	}
+}
+
