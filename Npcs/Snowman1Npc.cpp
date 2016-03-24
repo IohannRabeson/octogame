@@ -1,20 +1,20 @@
-#include "Snowman2Npc.hpp"
+#include "Snowman1Npc.hpp"
 #include "RectangleShape.hpp"
 
-Snowman2Npc::Snowman2Npc(void) :
-	ANpc(SNOWMAN_2_OSS)
+Snowman1Npc::Snowman1Npc(void) :
+	ANpc(SNOWMAN_1_OSS)
 {
 	setSize(sf::Vector2f(25.f, 75.f));
 	setOrigin(sf::Vector2f(170.f, 165.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-45.f, -65.f));
+	setTextOffset(sf::Vector2f(-55.f, -65.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
-void Snowman2Npc::setup(void)
+void Snowman1Npc::setup(void)
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
 
@@ -37,7 +37,7 @@ void Snowman2Npc::setup(void)
 	setupMachine();
 }
 
-void Snowman2Npc::setupMachine(void)
+void Snowman1Npc::setupMachine(void)
 {
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
@@ -59,7 +59,7 @@ void Snowman2Npc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-void Snowman2Npc::updateState(void)
+void Snowman1Npc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
