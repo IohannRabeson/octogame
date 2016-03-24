@@ -22,6 +22,7 @@
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+//Script AddNpc Include
 #include "FranfranNpc.hpp"
 #include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
@@ -266,6 +267,7 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::Portal:
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
+//Script AddNpc GameObject
 		case GameObjectType::FranfranNpc:
 			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
 			break;
