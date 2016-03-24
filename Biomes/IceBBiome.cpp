@@ -126,14 +126,12 @@ IceBBiome::IceBBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	m_instances[50] = MAP_ICE_B_TRAIL_OMP;
-//	m_gameObjects[30] = GameObjectType::GroundTransformNanoRobot;
-	m_interestPointPosX = 320;
+	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertA)
 		m_octoStartPosition = sf::Vector2f(4450, -1850.f);
 
-//	m_gameObjects[320] = GameObjectType::Portal;
 	m_destinations.push_back(Level::IceA);
 	m_destinations.push_back(Level::DesertA);
 	m_gameObjects[530] = GameObjectType::Portal;

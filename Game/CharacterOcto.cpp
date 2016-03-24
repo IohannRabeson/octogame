@@ -142,7 +142,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::ClementineNpc)
 		| static_cast<std::size_t>(GameObjectType::CanouilleNpc)
 		| static_cast<std::size_t>(GameObjectType::WellKeeperNpc)
-		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
+		| static_cast<std::size_t>(GameObjectType::TurbanNpc)
+		| static_cast<std::size_t>(GameObjectType::Snowman2Npc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
 	m_eventBox->setType(AShape::Type::e_trigger);

@@ -48,7 +48,8 @@ enum class GameObjectType : std::size_t
 	WolfNpc = 136u,
 	Well = 137u,
 	WellKeeperNpc = 138u,
-	BrayouNpc = 139u
+	BrayouNpc = 139u,
+	Snowman2Npc = 140u
 };
 
 /*!

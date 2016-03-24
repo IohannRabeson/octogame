@@ -39,6 +39,7 @@
 #include "AmandineNpc.hpp"
 #include "ConstanceNpc.hpp"
 #include "BrayouNpc.hpp"
+#include "Snowman2Npc.hpp"
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "JellyfishNpc.hpp"
@@ -279,6 +280,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::BrayouNpc:
 			gameObjectCast<BrayouNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Snowman2Npc:
+			gameObjectCast<Snowman2Npc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::AmandineNpc:
 			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);

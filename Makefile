@@ -98,6 +98,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/WolfNpc.cpp						\
 				Npcs/WellKeeperNpc.cpp					\
 				Npcs/JellyfishNpc.cpp					\
+				Npcs/Snowman2Npc.cpp					\
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
