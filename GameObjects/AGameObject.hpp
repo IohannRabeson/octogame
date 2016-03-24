@@ -50,7 +50,9 @@ enum class GameObjectType : std::size_t
 	Snowman2Npc = 137u,
 	Well = 140u,
 	Snowman1Npc = 141u,
+	Snowman3Npc = 1142u,
 //Script AddNpc
+
 
 	BrayouNpc = 139u
 };

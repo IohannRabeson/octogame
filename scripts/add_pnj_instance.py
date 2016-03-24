@@ -49,7 +49,7 @@ for line in fileinput.input('GameObjects/AGameObject.hpp', inplace=1):
 
 for line in fileinput.input('Makefile', inplace=1):
     if line.startswith('#Script AddNpc'):
-        print "\t\t\t\tNpcs/" + className + ".cpp\t\t\t\t\\",
+        print "\t\t\t\tNpcs/" + className + ".cpp\t\t\t\t\\\n",
         print line
     else:
         saveLine = line
