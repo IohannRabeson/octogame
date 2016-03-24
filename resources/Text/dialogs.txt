@@ -48,5 +48,5 @@ npc_canouille.oss=Mmmhhhhh… Tu a l'air bien à l'aise maintenant ! Continue to
 npc_well_keeper.oss=Puit… Asséché… Dangereux…
 npc_well_keeper.oss=Puit… Réparé… Rempli… Eau…  
 clementine.oss=Hé, coucou toi ! On m’a parlé d’un lieu caché, unique, incroyable… Il est quelque part derrière ce portail, alors j’y vais ! Regarde, il ressemble à ça !
-snowman_2.oss="Grrrr"
-snowman_1.oss="Grrr"
+snowman_2.oss="Reflechis un peu!"
+snowman_1.oss="Je crois que j'ai besoin de vacances au soleil…"

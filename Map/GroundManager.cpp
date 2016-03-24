@@ -289,6 +289,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(SKELETON_4_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(HOUSE_SNOW_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_SNOW_OSS, scale, position, 1u, 0.4f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
