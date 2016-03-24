@@ -71,7 +71,7 @@ void	DeathScreen::stop()
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 
-	audio.playSound(resources.getSound(PORTAL_END_WAV));
+	audio.playSound(resources.getSound(PORTAL_END_OGG));
 }
 
 void	DeathScreen::update(sf::Time frameTime)

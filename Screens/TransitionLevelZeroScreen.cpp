@@ -93,12 +93,12 @@ void	TransitionLevelZeroScreen::playSound(std::size_t index)
 {
 	if (m_soundPlayed1 == false && index == 0u)
 	{
-		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_2_WAV), 0.5f);
+		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_2_OGG), 0.5f);
 		m_soundPlayed1 = true;
 	}
 	if (m_soundPlayed2 == false && index == 3u)
 	{
-		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_3_WAV), 0.5f);
+		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_3_OGG), 0.5f);
 		m_soundPlayed2 = true;
 	}
 }
