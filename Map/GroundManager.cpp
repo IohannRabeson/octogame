@@ -36,6 +36,9 @@
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "HouseFlatSnow.hpp"
+#include "EngineSnow.hpp"
+#include "WeirdHouseSnow.hpp"
 #include "WolfNpc.hpp"
 #include "Well.hpp"
 #include "Tent.hpp"
@@ -563,6 +566,24 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::Bouibouik:
 				{
 					Bouibouik * simple = new Bouibouik();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::HouseFlatSnow:
+				{
+					HouseFlatSnow * simple = new HouseFlatSnow();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::EngineSnow:
+				{
+					EngineSnow * simple = new EngineSnow();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::WeirdHouseSnow:
+				{
+					WeirdHouseSnow * simple = new WeirdHouseSnow();
 					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
 				}
 				break;

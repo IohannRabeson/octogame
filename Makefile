@@ -70,6 +70,9 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Well.cpp					\
 				GameObjects/Seb.cpp						\
 				GameObjects/Pyramid.cpp					\
+				GameObjects/HouseFlatSnow.cpp			\
+				GameObjects/EngineSnow.cpp				\
+				GameObjects/WeirdHouseSnow.cpp			\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\

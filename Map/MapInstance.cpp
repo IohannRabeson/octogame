@@ -50,14 +50,16 @@ void MapInstance::nextStep(void)
 {
 	m_depth++;
 	if (m_depth >= static_cast<int>(m_tiles.depth()))
-		m_depth = 0;
+		m_depth = static_cast<int>(m_tiles.depth() - 1u);
+		//m_depth = 0;
 }
 
 void MapInstance::previousStep(void)
 {
 	m_depth--;
 	if (m_depth < 0)
-		m_depth = m_tiles.depth() - 1u;
+		m_depth = 0u;
+		//m_depth = m_tiles.depth() - 1u;
 }
 
 void MapInstance::setTransitionType(Tile & tile)

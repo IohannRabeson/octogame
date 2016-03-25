@@ -132,11 +132,14 @@ IceDBiome::IceDBiome() :
 	if (progress.getLastDestination() == Level::DesertA)
 		m_octoStartPosition = sf::Vector2f(16.f * 357.f, -500.f);
 
+	m_gameObjects[100] = GameObjectType::HouseFlatSnow;
+	m_gameObjects[270] = GameObjectType::EngineSnow;
+	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
+	m_gameObjects[570] = GameObjectType::EngineSnow;
 	m_gameObjects[30] = GameObjectType::Portal;
-	m_gameObjects[350] = GameObjectType::Portal;
+	m_gameObjects[355] = GameObjectType::Portal;
 	m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::DesertA);
-
 }
 
 void			IceDBiome::setup(std::size_t seed)

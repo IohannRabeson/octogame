@@ -113,6 +113,9 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Tent)
 		| static_cast<std::size_t>(GameObjectType::Concert)
 		| static_cast<std::size_t>(GameObjectType::CedricNpc)
+		| static_cast<std::size_t>(GameObjectType::HouseFlatSnow)
+		| static_cast<std::size_t>(GameObjectType::EngineSnow)
+		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik);
 	m_box->setCollisionMask(mask);
 
