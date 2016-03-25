@@ -13,9 +13,9 @@ IceBBiome::IceBBiome() :
 	m_name("Ice B"),
 	m_id(Level::IceB),
 	m_seed("Level_One"),
-	m_mapSize(sf::Vector2u(610u, 256u)),
+	m_mapSize(sf::Vector2u(550u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(950.f, -1850.f),
+	m_octoStartPosition(457.f * 16.f, -1850.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -36,7 +36,7 @@ IceBBiome::IceBBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 1300.f),
 
-	m_rockCount(7u, 8u),
+	m_rockCount(17u, 28u),
 	m_treeCount(10u, 10u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(4u, 8u),
@@ -61,9 +61,9 @@ IceBBiome::IceBBiome() :
 	m_canCreateStar(true),
 	m_canCreateSun(false),
 	m_canCreateMoon(true),
-	m_canCreateRainbow(true),
+	m_canCreateRainbow(false),
 
-	m_rockSize(sf::Vector2f(5.f, 50.f), sf::Vector2f(20.f, 70.f)),
+	m_rockSize(sf::Vector2f(10.f, 140.f), sf::Vector2f(30.f, 200.f)),
 	m_rockPartCount(2.f, 10.f),
 	m_rockColor(0, 31, 63),
 
@@ -132,10 +132,9 @@ IceBBiome::IceBBiome() :
 	if (progress.getLastDestination() == Level::DesertA || progress.getLastDestination() == Level::IceD)
 		m_octoStartPosition = sf::Vector2f(4450, -1850.f);
 
+	m_gameObjects[450] = GameObjectType::Portal;
 	m_destinations.push_back(Level::IceC);
 	m_destinations.push_back(Level::IceA);
-	m_gameObjects[530] = GameObjectType::Portal;
-	m_destinations.push_back(Level::Default);
 
 }
 
@@ -240,10 +239,29 @@ std::vector<ParallaxScrolling::ALayer *> IceBBiome::getLayers()
 
 Map::MapSurfaceGenerator IceBBiome::getMapSurfaceGenerator()
 {
+	return [this](Noise & noise, float x, float y)
+	{
+		float start = 50.f / static_cast<float>(m_mapSize.x);
+		float end = 300.f / static_cast<float>(m_mapSize.x);
+		float offset = 25.f / static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 1.78f;
+		float mapHigh = - 1.76f;
+
+		if (x > start - offset && x <= start)
+			return octo::cosinusInterpolation(n, mapHigh, (x - start + offset) / offset);
+		else if (x > start && x <= end)
+			return mapHigh;
+		else if (x > end && x <= end + offset)
+			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
+		else
+			return n;
+	};
+	/*
 	return [](Noise & noise, float x, float y)
 	{
-		return noise.fBm(x, y, 3, 3.f, 0.3f);
+		return noise.fBm(x, y, 3, 3.f, 0.3f) - 2.f;
 	};
+	*/
 }
 
 Map::TileColorGenerator IceBBiome::getTileColorGenerator()
