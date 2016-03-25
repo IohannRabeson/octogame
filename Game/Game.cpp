@@ -373,7 +373,7 @@ void Game::moveMap(sf::Time frameTime)
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			if (m_soundGeneration == nullptr)
 			{
-				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV), 0.f);
+				m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
 				m_soundGeneration->setLoop(true);
 			}
 			else
