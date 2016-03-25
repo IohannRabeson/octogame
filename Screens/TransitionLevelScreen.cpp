@@ -49,7 +49,7 @@ void	TransitionLevelScreen::start()
 	}
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
-	m_sound = audio.playSound(resources.getSound(PORTAL_START_WAV), 0.7f);
+	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.7f);
 }
 
 void	TransitionLevelScreen::pause()
@@ -68,7 +68,7 @@ void	TransitionLevelScreen::stop()
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	if (m_sound != nullptr)
 		m_sound->stop();
-	audio.playSound(resources.getSound(PORTAL_END_WAV));
+	audio.playSound(resources.getSound(PORTAL_END_OGG));
 }
 
 void	TransitionLevelScreen::update(sf::Time frameTime)

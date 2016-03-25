@@ -228,7 +228,7 @@ SRCS = $(SRC)
 CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = release
+MODE = debug
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)
