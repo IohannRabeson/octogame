@@ -129,11 +129,11 @@ IceCBiome::IceCBiome() :
 	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::DesertA)
+	if (progress.getLastDestination() == Level::IceD)
 		m_octoStartPosition = sf::Vector2f(4450, -1850.f);
 
 	//m_destinations.push_back(Level::IceB);
-	m_destinations.push_back(Level::DesertA);
+	m_destinations.push_back(Level::IceD);
 	m_gameObjects[200] = GameObjectType::Portal;
 	m_destinations.push_back(Level::Default);
 

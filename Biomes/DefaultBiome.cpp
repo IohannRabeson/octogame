@@ -133,7 +133,9 @@ DefaultBiome::DefaultBiome() :
 	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x - 40u);
 	Progress & progress = Progress::getInstance();
 	m_gameObjects[portalPos] = GameObjectType::Portal;
+	m_gameObjects[23.f * 16.f] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
+	m_destinations.push_back(progress.getLastDestination());
 	m_destinations.push_back(progress.getLastDestination());
 
 	if (progress.getNanoRobotCount() >= 7)
