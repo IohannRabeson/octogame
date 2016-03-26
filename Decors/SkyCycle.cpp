@@ -89,7 +89,7 @@ void SkyCycle::setup(ABiome & biome)
 	octo::ResourceManager const & resource = octo::Application::getResourceManager();
 	if (biome.canCreateRain())
 	{
-		m_rainSound = octo::Application::getAudioManager().playSound(resource.getSound(RAIN_STEREO_WAV), 0.f, 1.f);
+		m_rainSound = octo::Application::getAudioManager().playSound(resource.getSound(RAIN_STEREO_OGG), 0.f, 1.f);
 		m_rainSound->setLoop(true);
 	}
 }
@@ -248,11 +248,11 @@ void SkyCycle::playSound(ABiome & biome)
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
 		std::size_t thunderType = m_distriThunder(m_engine);
 		if (thunderType == 0u)
-			audio.playSound(resources.getSound(THUNDER1_STEREO_WAV), 0.4f, biome.randomFloat(0.5f, 1.5f));
+			audio.playSound(resources.getSound(THUNDER1_STEREO_OGG), 0.4f, biome.randomFloat(0.5f, 1.5f));
 		else if (thunderType == 1u)
-			audio.playSound(resources.getSound(THUNDER2_STEREO_WAV), 0.4f, biome.randomFloat(0.5f, 1.5f));
+			audio.playSound(resources.getSound(THUNDER2_STEREO_OGG), 0.4f, biome.randomFloat(0.5f, 1.5f));
 		else
-			audio.playSound(resources.getSound(THUNDER3_STEREO_WAV), 0.4f, biome.randomFloat(0.5f, 1.5f));
+			audio.playSound(resources.getSound(THUNDER3_STEREO_OGG), 0.4f, biome.randomFloat(0.5f, 1.5f));
 		m_boolThunder = false;
 	}
 }
@@ -262,7 +262,7 @@ void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 	computeDayNight(frameTime);
 	if (biome.canCreateRain() || biome.canCreateSnow())
 		computeDrop(frameTime, biome);
-	if (m_rainSound && biome.canCreateRain() && !biome.canCreateSnow() && biome.getId() != Level::LevelFour)
+	if (m_rainSound && biome.canCreateRain() && !biome.canCreateSnow() && biome.getId() != Level::WaterA)
 		m_rainSound->setVolume(m_weather / m_dropTimerMax.asSeconds() * 10);
 	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
 	{

@@ -13,9 +13,10 @@ public:
 
 	void				addNanoRobot();
 	void				removeNanoRobot() { m_data.nanoRobotCount--; }
+	void				setNanoRobotCount(std::size_t count);
 	std::size_t			getNanoRobotCount() const { return m_data.nanoRobotCount; }
 
-	void				setNextDestination(Level destination, bool hasTransition = true);
+	void				setNextDestination(Level const & destination, bool hasTransition = true);
 	Level				getNextDestination(void) const;
 
 	void				setLastDestination(Level destination);
@@ -56,6 +57,9 @@ public:
 	bool				changeLevel() const;
 	void				levelChanged();
 
+	void				registerLevel(Level const & biome);
+	std::vector<Level> const & getRegisteredLevels(void) const;
+
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
 
@@ -70,7 +74,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::LevelOne, 6u, 100u, true, true)
+			data(0u, Level::IceA, 6u, 100u, true, true)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
@@ -116,6 +120,7 @@ private:
 	bool								m_validChallenge;
 	bool								m_spaceShipRepair;
 	sf::Vector2f						m_octoPos;
+	std::vector<Level>					m_levels;
 };
 
 #endif

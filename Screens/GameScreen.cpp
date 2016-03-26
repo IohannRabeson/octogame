@@ -14,8 +14,6 @@ GameScreen::GameScreen(void) :
 
 void	GameScreen::start()
 {
-	m_menu.setup();
-
 	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
 	Progress &				progress = Progress::getInstance();
 	graphics.addKeyboardListener(this);
@@ -23,6 +21,7 @@ void	GameScreen::start()
 	progress.load("save.osv");
 	m_game.reset(new Game());
 	m_game->loadLevel();
+	m_menu.setup();
 }
 
 void	GameScreen::pause()

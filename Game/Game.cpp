@@ -1,9 +1,9 @@
 #include "Game.hpp"
 #include "DefaultBiome.hpp"
-#include "LevelOneBiome.hpp"
-#include "LevelTwoBiome.hpp"
-#include "LevelThreeBiome.hpp"
-#include "LevelFourBiome.hpp"
+#include "IceABiome.hpp"
+#include "DesertABiome.hpp"
+#include "JungleABiome.hpp"
+#include "WaterABiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -71,10 +71,10 @@ Game::Game(void) :
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 
-	m_biomeManager.registerBiome<LevelOneBiome>(Level::LevelOne);
-	m_biomeManager.registerBiome<LevelTwoBiome>(Level::LevelTwo);
-	m_biomeManager.registerBiome<LevelThreeBiome>(Level::LevelThree);
-	m_biomeManager.registerBiome<LevelFourBiome>(Level::LevelFour);
+	m_biomeManager.registerBiome<IceABiome>(Level::IceA);
+	m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
+	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
+	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
 }
 
@@ -375,7 +375,7 @@ void Game::moveMap(sf::Time frameTime)
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			if (m_soundGeneration == nullptr)
 			{
-				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV), 0.f);
+				m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
 				m_soundGeneration->setLoop(true);
 			}
 			else

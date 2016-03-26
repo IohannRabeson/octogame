@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:49:40 by irabeson          #+#    #+#             */
-/*   Updated: 2015/05/29 17:45:59 by irabeson         ###   ########.fr       */
+/*   Updated: 2015/10/27 13:47:39 by glasset          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ bool	DefaultApplicationListener::onPressed(sf::Event::KeyEvent const& event)
 //			octo::Application::stop();
 //			break;
 		case sf::Keyboard::F5:
+			#ifndef NDEBUG
 			octo::Application::getConsole().setEnabled(true);
+			#endif
 			break;
 		default:
 			break;

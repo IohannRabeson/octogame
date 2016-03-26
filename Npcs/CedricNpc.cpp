@@ -273,7 +273,10 @@ void CedricNpc::update(sf::Time frametime)
 		if (m_delay >= m_delayMax)
 		{
 			setCurrentText(1u);
-			m_timer += frametime;
+			if (Progress::getInstance().canOpenDoubleJump() && !Progress::getInstance().canDoubleJump())
+				m_timer += frametime * 10.f;
+			else
+				m_timer += frametime;
 			float length;
 			if (m_timer < m_effectDuration / 2.f)
 				length = octo::linearInterpolation(0.f, 2.f, m_timer / (m_effectDuration / 2.f));

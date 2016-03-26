@@ -119,6 +119,9 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/CreditMenu.cpp						\
 				Menu/YesNoMenu.cpp						\
 				Menu/ResolutionMenu.cpp					\
+				Menu/CheatCodeMenu.cpp					\
+				Menu/LevelMenu.cpp						\
+				Menu/NanoMenu.cpp						\
 				Menu/EmptyMenu.cpp						\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
@@ -146,10 +149,10 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
 				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
-				Biomes/LevelOneBiome.cpp				\
-				Biomes/LevelTwoBiome.cpp				\
-				Biomes/LevelThreeBiome.cpp				\
-				Biomes/LevelFourBiome.cpp				\
+				Biomes/IceABiome.cpp					\
+				Biomes/DesertABiome.cpp					\
+				Biomes/JungleABiome.cpp					\
+				Biomes/WaterABiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
@@ -232,7 +235,7 @@ CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 FRAMEWORKS_FLAGS = $(addprefix -F , $(FRAMEWORKS_DIR)) $(addprefix -framework , $(FRAMEWORK))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = release
+MODE = debug
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)

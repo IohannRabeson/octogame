@@ -12,45 +12,45 @@ MusicManager::MusicManager() :
 {
 	ResourceKey			musicKey[9];
 
-	musicKey[0] = SPACE_SHIP_WAV;
-	musicKey[1] = MENU_OPUS_II_WAV;
-	musicKey[2] = COLONISATION_WAV;
-	musicKey[3] = BALLADE_MENTALE_WAV;
-	musicKey[4] = MENU_OPUS_III_WAV;
-	musicKey[5] = ACTION_SLOW_WAV;
-	musicKey[6] = ACTION_FAST_WAV;
-	musicKey[7] = SOUTERRAIN_LUGUBRE_WAV;
-	musicKey[8] = MENU_OPUS_I_WAV;
+	musicKey[0] = SPACE_SHIP_OGG;
+	musicKey[1] = MENU_OPUS_II_OGG;
+	musicKey[2] = COLONISATION_OGG;
+	musicKey[3] = BALLADE_MENTALE_OGG;
+	musicKey[4] = MENU_OPUS_III_OGG;
+	musicKey[5] = ACTION_SLOW_OGG;
+	musicKey[6] = ACTION_FAST_OGG;
+	musicKey[7] = SOUTERRAIN_LUGUBRE_OGG;
+	musicKey[8] = MENU_OPUS_I_OGG;
 
 	m_musicLevel.resize(5);
-	m_musicLevel[0] = AreaMusic(Level::LevelOne, SPACE_SHIP_WAV, sf::FloatRect());
-	m_musicLevel[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_II_WAV, sf::FloatRect());
-	m_musicLevel[2] = AreaMusic(Level::LevelThree, COLONISATION_WAV, sf::FloatRect());
-	m_musicLevel[3] = AreaMusic(Level::LevelFour, BALLADE_MENTALE_WAV, sf::FloatRect());
+	m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
+	m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
+	m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
+	m_musicLevel[3] = AreaMusic(Level::WaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
 	m_musicLevel[4] = AreaMusic(Level::Default,
 			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
 
 	m_music.resize(6);
 	// Montagne
-	m_music[0] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
+	m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
 	// oasis
-	//	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_WAV,
+	//	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_OGG,
 	//			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1700.f), sf::Vector2f(2100.f, 900.f)));
 	// cedric challenge BALLE
-	m_music[1] = AreaMusic(Level::LevelThree, ACTION_FAST_WAV,
+	m_music[1] = AreaMusic(Level::JungleA, ACTION_FAST_OGG,
 			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)), MusicNameArea::CedricChallenge);
 	// village
-	m_music[2] = AreaMusic(Level::LevelThree, ACTION_SLOW_WAV,
+	m_music[2] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
 			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
 	//concert BALLE
-	m_music[3] = AreaMusic(Level::LevelFour, MENU_OPUS_II_REVERSE_WAV,
+	m_music[3] = AreaMusic(Level::WaterA, MENU_OPUS_II_REVERSE_OGG,
 			sf::FloatRect(sf::Vector2f(700.f * 16.f, -3400.f), sf::Vector2f(70.f * 16.f, 1350.f)), MusicNameArea::Concert);
 	//water
-	m_music[4] = AreaMusic(Level::LevelFour, SOUTERRAIN_LUGUBRE_WAV,
+	m_music[4] = AreaMusic(Level::WaterA, SOUTERRAIN_LUGUBRE_OGG,
 			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
 	//run
-	m_music[5] = AreaMusic(Level::LevelFour, MENU_OPUS_I_WAV,
+	m_music[5] = AreaMusic(Level::WaterA, MENU_OPUS_I_OGG,
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
 }
 
@@ -148,7 +148,6 @@ void	MusicManager::basePosition(sf::Vector2f const & octoPos)
 void	MusicManager::transition(sf::Time frameTime)
 {
 	bool		isStart = false;
-	float		volume;
 	std::size_t	inLevel = 0u;
 	std::size_t	index = 0u;
 
@@ -161,7 +160,6 @@ void	MusicManager::transition(sf::Time frameTime)
 		if (music.level != m_currentLevel)
 			continue;
 		inLevel++;
-		volume = 0.f;
 		if (music.area.contains(m_position) && !m_played)
 		{
 			if (!std::string("noMusic").compare(music.name))

@@ -156,7 +156,8 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 
 	octo::Camera const & camera = octo::Application::getCamera();
 	sf::Vector2f const & cameraSize = camera.getSize();
-	sf::Vector2f const & cameraCenter = cameraSize / 2.f;
+	//sf::Vector2f const & cameraCenter = cameraSize / 2.f;
+	sf::Vector2f const & cameraCenter = camera.getCenter();
 
 	m_mapSizeFloat = biome.getMapSizeFloat();
 	m_wind = biome.getWind();

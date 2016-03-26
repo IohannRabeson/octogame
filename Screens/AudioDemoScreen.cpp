@@ -106,7 +106,7 @@ void	AudioDemoScreen::onPressed(sf::Event::MouseButtonEvent const& event)
 	}
 	else
 	{
-		audio.playSound(resources.getSound(CRYSTAL_WAV),
+		audio.playSound(resources.getSound(CRYSTAL_OGG),
 						1.f,
 						1.f,
 						sf::Vector3f(clickPos.x, clickPos.y, 0.f));
