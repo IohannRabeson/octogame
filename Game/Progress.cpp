@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
@@ -44,6 +45,7 @@ void	Progress::setup()
 
 void	Progress::load(std::string const &filename)
 {
+	std::cout << "Load" << std::endl;
 	m_filename = octo::Application::getOptions().getValue<std::string>("path") + filename;
 	std::ifstream filestream(m_filename, std::ios::in | std::ios::binary);
 	if(!filestream)
@@ -66,10 +68,12 @@ void	Progress::init()
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
 	m_validChallenge = false;
+	loadNpc();
 }
 
 void	Progress::save()
 {
+	std::cout << "save" << std::endl;
 	//octo::AudioManager & audio = octo::Application::getAudioManager();
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 
@@ -77,6 +81,8 @@ void	Progress::save()
 	//m_data.soundVol = audio.getSoundVolume();
 	m_data.fullscreen = graphics.isFullscreen();
 	m_data.vsync = graphics.isVerticalSyncEnabled();
+
+	saveNpc();
 	saveToFile();
 }
 
@@ -191,19 +197,79 @@ void	Progress::levelChanged()
 
 void	Progress::registerNpc(ResourceKey const & key)
 {
-	if (!npc[m_data.nextDestination][key])
-		npc[m_data.nextDestination][key] = false;
+	//TODO: Find how to register everybody and dont duplicate
+	if (m_npc[m_data.nextDestination].find(key) != m_npc[m_data.nextDestination].end())
+	{
+		m_npc[m_data.nextDestination][key] = false;
+		std::cout << "Register Npc " << key << std::endl;
+	}
 }
 
 void	Progress::meetNpc(ResourceKey const & key)
 {
-	npc[m_data.nextDestination][key] = true;
+	if (m_changeLevel == false && !m_npc[m_data.nextDestination][key])
+		m_npc[m_data.nextDestination][key] = true;
+}
+
+void	Progress::saveNpc()
+{
+	std::string saveNpc;
+	for (auto itLevel = m_npc.begin(); itLevel != m_npc.end(); itLevel++)
+	{
+		saveNpc += std::to_string(static_cast<int>(itLevel->first)) + " ";
+		for (auto it = itLevel->second.begin(); it != itLevel->second.end(); it++)
+		{
+			saveNpc += static_cast<std::string>(it->first);
+			saveNpc += " " + std::to_string(it->second) + " ";
+		}
+		saveNpc += "\n";
+	}
+	bzero(m_data.npc, 10000);
+	strcpy(m_data.npc, saveNpc.c_str());
+}
+
+void	Progress::split(const std::string &s, char delim, std::vector<std::string> &elems)
+{
+	std::stringstream ss(s);
+	std::string item;
+	while (std::getline(ss, item, delim))
+		elems.push_back(item);
+}
+
+void	Progress::loadNpc()
+{
+	std::istringstream savedNpc(m_data.npc);
+	std::string line;
+	while (std::getline(savedNpc, line))
+	{
+		std::cout << "Line: " << line << std::endl;
+		std::vector<std::string> splitLine;
+		split(line, ' ', splitLine);
+		Level level = static_cast<Level>(stoi(splitLine[0]));
+		m_npc[level].clear();
+
+		for (std::size_t i = 1; i < splitLine.size(); i = i += 2)
+		{
+			ResourceKey key = static_cast<ResourceKey>(strdup(splitLine[i].c_str()));
+			m_npc[level][key] = static_cast<bool>(stoi(splitLine[i + 1]));
+		}
+	}
 }
 
 void	Progress::printNpc(void)
 {
-	for (auto it = npc[m_data.nextDestination].begin(); it != npc[m_data.nextDestination].end(); it++)
-		std::cout << it->first << " " << it->second << std::endl;
+	std::string saveNpc = "";
+	for (auto itLevel = m_npc.begin(); itLevel != m_npc.end(); itLevel++)
+	{
+		saveNpc += std::to_string(static_cast<int>(itLevel->first)) + " ";
+		for (auto it = itLevel->second.begin(); it != itLevel->second.end(); it++)
+		{
+			saveNpc += it->first;
+			saveNpc += " " + std::to_string(it->second) + " ";
+		}
+		saveNpc += "\n";
+	}
+	std::cout << saveNpc << std::endl;
 }
 
 void	Progress::registerLevel(Level const & level)

@@ -110,13 +110,16 @@ private:
 		bool			walk;
 		bool			moveMap;
 		bool			canOpenDoubleJump;
-		std::string		npc;
+		char			npc[10000];
 	};
 
 	Progress();
 	void				init();
 	void				saveToFile();
 	void				setup();
+	void				saveNpc();
+	void				loadNpc();
+	void				split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 	static std::unique_ptr<Progress>				m_instance;
 	std::string										m_filename;
@@ -128,7 +131,7 @@ private:
 	bool											m_spaceShipRepair;
 	sf::Vector2f									m_octoPos;
 
-	std::map<Level, std::map<ResourceKey, bool>>	npc;
+	std::map<Level, std::map<ResourceKey, bool>>	m_npc;
 	std::vector<Level>								m_levels;
 };
 
