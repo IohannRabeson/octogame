@@ -124,6 +124,7 @@ private:
 	void				loadNpc();
 	void				split(const std::string &s, char delim, std::vector<std::string> &elems);
 
+	bool											m_isSaved;
 	static std::unique_ptr<Progress>				m_instance;
 	std::string										m_filename;
 	data											m_data;

@@ -7,13 +7,13 @@
 #include <AudioManager.hpp>
 #include <GraphicsManager.hpp>
 
-#include <iostream>
 #include <fstream>
 #include <stdlib.h>
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
+	m_isSaved(false),
 	m_filename(octo::Application::getOptions().getValue<std::string>("path") + "save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
@@ -47,6 +47,7 @@ void	Progress::setup()
 
 void	Progress::load(std::string const &filename)
 {
+	m_isSaved = false;
 	m_filename = octo::Application::getOptions().getValue<std::string>("path") + filename;
 	std::ifstream filestream(m_filename, std::ios::in | std::ios::binary);
 	if(!filestream)
@@ -74,16 +75,20 @@ void	Progress::init()
 
 void	Progress::save()
 {
-	//octo::AudioManager & audio = octo::Application::getAudioManager();
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	if (m_isSaved == false)
+	{
+		m_isSaved = true;
+		//octo::AudioManager & audio = octo::Application::getAudioManager();
+		octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 
-	//m_data.musicVol = audio.getMusicVolume();
-	//m_data.soundVol = audio.getSoundVolume();
-	m_data.fullscreen = graphics.isFullscreen();
-	m_data.vsync = graphics.isVerticalSyncEnabled();
+		//m_data.musicVol = audio.getMusicVolume();
+		//m_data.soundVol = audio.getSoundVolume();
+		m_data.fullscreen = graphics.isFullscreen();
+		m_data.vsync = graphics.isVerticalSyncEnabled();
 
-	saveNpc();
-	saveToFile();
+		saveNpc();
+		saveToFile();
+	}
 }
 
 void	Progress::saveToFile()
