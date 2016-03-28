@@ -19,7 +19,9 @@ Progress::Progress() :
 	m_changeLevel(false),
 	m_reverseSprite(false),
 	m_validChallenge(false),
-	m_spaceShipRepair(false)
+	m_spaceShipRepair(false),
+	m_npcCount(0u),
+	m_npcMax(0u)
 {
 #ifndef NDEBUG
 	m_data.nanoRobotCount = octo::Application::getOptions().getValue<std::size_t>("nb_nano"); // TODO : remove from defaultsetup();
@@ -45,7 +47,6 @@ void	Progress::setup()
 
 void	Progress::load(std::string const &filename)
 {
-	std::cout << "Load" << std::endl;
 	m_filename = octo::Application::getOptions().getValue<std::string>("path") + filename;
 	std::ifstream filestream(m_filename, std::ios::in | std::ios::binary);
 	if(!filestream)
@@ -73,7 +74,6 @@ void	Progress::init()
 
 void	Progress::save()
 {
-	std::cout << "save" << std::endl;
 	//octo::AudioManager & audio = octo::Application::getAudioManager();
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 
@@ -197,16 +197,14 @@ void	Progress::levelChanged()
 
 void	Progress::registerNpc(ResourceKey const & key)
 {
-	//TODO: Find how to register everybody and dont duplicate
-	if (m_npc[m_data.nextDestination].find(key) != m_npc[m_data.nextDestination].end())
-	{
-		m_npc[m_data.nextDestination][key] = false;
-		std::cout << "Register Npc " << key << std::endl;
-	}
+	std::string keyString(key);
+	if (!m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
+		m_npcMax++;
 }
 
 void	Progress::meetNpc(ResourceKey const & key)
 {
+	std::string keyString(key);
 	if (m_changeLevel == false && !m_npc[m_data.nextDestination][key])
 		m_npc[m_data.nextDestination][key] = true;
 }
@@ -224,7 +222,6 @@ void	Progress::saveNpc()
 		}
 		saveNpc += "\n";
 	}
-	bzero(m_data.npc, 10000);
 	strcpy(m_data.npc, saveNpc.c_str());
 }
 
@@ -242,16 +239,18 @@ void	Progress::loadNpc()
 	std::string line;
 	while (std::getline(savedNpc, line))
 	{
-		std::cout << "Line: " << line << std::endl;
 		std::vector<std::string> splitLine;
 		split(line, ' ', splitLine);
+
 		Level level = static_cast<Level>(stoi(splitLine[0]));
 		m_npc[level].clear();
 
 		for (std::size_t i = 1; i < splitLine.size(); i = i += 2)
 		{
-			ResourceKey key = static_cast<ResourceKey>(strdup(splitLine[i].c_str()));
-			m_npc[level][key] = static_cast<bool>(stoi(splitLine[i + 1]));
+			if (splitLine[i + 1] == "1")
+				m_npc[level].insert(std::make_pair(splitLine[i], true));
+			else
+				m_npc[level].insert(std::make_pair(splitLine[i], false));
 		}
 	}
 }
@@ -270,6 +269,25 @@ void	Progress::printNpc(void)
 		saveNpc += "\n";
 	}
 	std::cout << saveNpc << std::endl;
+}
+
+std::size_t	Progress::getNpcCount()
+{
+	m_npcCount = 0u;
+	for (auto it = m_npc[m_data.lastDestination].begin(); it != m_npc[m_data.lastDestination].end(); it++)
+	{
+		if (it->second)
+			m_npcCount++;
+	}
+	return m_npcCount;
+}
+
+std::size_t	Progress::getNpcMax()
+{
+	m_npcMax = 0u;
+	for (auto it = m_npc[m_data.lastDestination].begin(); it != m_npc[m_data.lastDestination].end(); it++)
+		m_npcMax++;
+	return m_npcMax;
 }
 
 void	Progress::registerLevel(Level const & level)

@@ -62,6 +62,9 @@ public:
 	void				registerLevel(Level const & biome);
 	std::vector<Level> const & getRegisteredLevels(void) const;
 
+	std::size_t			getNpcCount();
+	std::size_t			getNpcMax();
+
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
 
@@ -131,7 +134,9 @@ private:
 	bool											m_spaceShipRepair;
 	sf::Vector2f									m_octoPos;
 
-	std::map<Level, std::map<ResourceKey, bool>>	m_npc;
+	std::map<Level, std::map<std::string, bool>>	m_npc;
+	std::size_t										m_npcCount;
+	std::size_t										m_npcMax;
 	std::vector<Level>								m_levels;
 };
 
