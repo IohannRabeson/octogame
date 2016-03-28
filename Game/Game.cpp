@@ -36,6 +36,8 @@
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
 #include "AmandineNpc.hpp"
+#include "FaustNpc.hpp"
+#include "WolfNpc.hpp"
 #include "ConstanceNpc.hpp"
 #include "BrayouNpc.hpp"
 #include "EvaNpc.hpp"
@@ -280,6 +282,12 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::AmandineNpc:
 			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::FaustNpc:
+			gameObjectCast<FaustNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::WolfNpc:
+			gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::ConstanceNpc:
 			gameObjectCast<ConstanceNpc>(gameObject)->collideOctoEvent(octo);

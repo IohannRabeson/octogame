@@ -1,6 +1,8 @@
 #ifndef PROGRESS_HPP
 # define PROGRESS_HPP
 # include "GroundManager.hpp"
+# include "ResourceDefinitions.hpp"
+# include "ABiome.hpp"
 # include <SFML/System/Vector2.hpp>
 # include <string>
 # include <memory>
@@ -60,11 +62,17 @@ public:
 	void				registerLevel(Level const & biome);
 	std::vector<Level> const & getRegisteredLevels(void) const;
 
+	std::size_t			getNpcCount();
+	std::size_t			getNpcMax();
+
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
 
 	void				setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool				getReverseSprite() const { return m_reverseSprite; }
+
+	void				registerNpc(ResourceKey const & key);
+	void				meetNpc(ResourceKey const & key);
 
 	void				load(std::string const & filename);
 	void				save();
@@ -104,23 +112,31 @@ private:
 		bool			walk;
 		bool			moveMap;
 		bool			canOpenDoubleJump;
+		char			npc[10000];
 	};
 
 	Progress();
 	void				init();
 	void				saveToFile();
 	void				setup();
+	void				saveNpc();
+	void				loadNpc();
+	void				split(const std::string &s, char delim, std::vector<std::string> &elems);
 
-	static std::unique_ptr<Progress>	m_instance;
-	std::string							m_filename;
-	data								m_data;
-	bool								m_newSave;
-	bool								m_changeLevel;
-	bool								m_reverseSprite;
-	bool								m_validChallenge;
-	bool								m_spaceShipRepair;
-	sf::Vector2f						m_octoPos;
-	std::vector<Level>					m_levels;
+	static std::unique_ptr<Progress>				m_instance;
+	std::string										m_filename;
+	data											m_data;
+	bool											m_newSave;
+	bool											m_changeLevel;
+	bool											m_reverseSprite;
+	bool											m_validChallenge;
+	bool											m_spaceShipRepair;
+	sf::Vector2f									m_octoPos;
+
+	std::map<Level, std::map<std::string, bool>>	m_npc;
+	std::size_t										m_npcCount;
+	std::size_t										m_npcMax;
+	std::vector<Level>								m_levels;
 };
 
 #endif
