@@ -124,6 +124,10 @@ void	CharacterOcto::OctoSound::startEvent(Events event)
 			audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_OGG), m_volumeEffect,
 					m_pitchDistribution(m_engine));
 			break;
+		case StartJump:
+			audio.playSound(resources.getSound(OCTO_JUMP_OGG), m_volumeEffect * 2.f,
+					m_pitchDistribution(m_engine));
+			break;
 		case Death:
 			audio.playSound(resources.getSound(EXPLODE_HELMET_OGG), m_volumeEffect);
 			m_sound = audio.playSound(resources.getSound(OCTO_DEATH_OGG), m_volumeVoice);

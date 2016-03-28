@@ -22,8 +22,11 @@ public:
 private:
 	sf::RectangleShape			m_filter;
 	BubbleText					m_infoBubble;
+	BubbleText					m_npcBubble;
 	std::wstring				m_infoText;
 	std::size_t					m_nanoCount;
+	std::size_t					m_npcCount;
+	std::size_t					m_npcMax;
 };
 
 #endif

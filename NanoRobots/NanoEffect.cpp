@@ -1,5 +1,6 @@
 #include "NanoEffect.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
@@ -14,11 +15,13 @@ NanoEffect::NanoEffect(void) :
 	m_isTransferHappen(false),
 	m_glowingTimerMax(sf::seconds(2.f)),
 	m_transferTimerMax(sf::seconds(2.f)),
-	m_soundPlayed(false)
+	m_soundPlayed(false),
+	m_lastNanoCount(0u)
 {
 	m_generator.setSeed("random");
 	m_randomTimerMax = sf::seconds(m_generator.randomFloat(30.f, 90.f));
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
+	m_lastNanoCount = Progress::getInstance().getNanoRobotCount();
 }
 
 void NanoEffect::playSound(void)
@@ -29,6 +32,8 @@ void NanoEffect::playSound(void)
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resource = octo::Application::getResourceManager();
 	
+		if (m_lastNanoCount != Progress::getInstance().getNanoRobotCount())
+			audio.playSound(resource.getSound(OCTO_QUESTION_OGG), 0.7f, 1.f);
 		switch (soundChoose)
 		{
 			case 0u:
@@ -85,19 +90,19 @@ void NanoEffect::update(sf::Time frameTime)
 		}
 		case State::Transfer:
 		{
-			playSound();
-			m_transferTimer += frameTime;
-			if (m_transferTimer >= m_transferTimerMax)
-			{
-				m_isTransferHappen = true;
-				m_transferTimer = sf::Time::Zero;
-				m_state = State::Wait;
-			}
-			float coef = m_transferTimer / m_transferTimerMax;
-			createEffect(m_size, m_position, coef, m_color, m_builder);
-			createEffect(m_size * 2.f, m_position, coef, m_color, m_builder);
-			createEffect(m_size * 3.f, m_position, coef, m_color, m_builder);
-			break;
+				playSound();
+				m_transferTimer += frameTime;
+				if (m_transferTimer >= m_transferTimerMax)
+				{
+					m_isTransferHappen = true;
+					m_transferTimer = sf::Time::Zero;
+					m_state = State::Wait;
+				}
+				float coef = m_transferTimer / m_transferTimerMax;
+				createEffect(m_size, m_position, coef, m_color, m_builder);
+				createEffect(m_size * 2.f, m_position, coef, m_color, m_builder);
+				createEffect(m_size * 3.f, m_position, coef, m_color, m_builder);
+				break;
 		}
 		case State::Random:
 		{
@@ -127,6 +132,8 @@ void NanoEffect::update(sf::Time frameTime)
 			break;
 	}
 
+	Progress const & progress = Progress::getInstance();
+	m_lastNanoCount = progress.getNanoRobotCount();
 	m_used = m_builder.getUsed();
 }
 
