@@ -13,7 +13,6 @@
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
-	m_isSaved(false),
 	m_filename(octo::Application::getOptions().getValue<std::string>("path") + "save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
@@ -47,7 +46,6 @@ void	Progress::setup()
 
 void	Progress::load(std::string const &filename)
 {
-	m_isSaved = false;
 	m_filename = octo::Application::getOptions().getValue<std::string>("path") + filename;
 	std::ifstream filestream(m_filename, std::ios::in | std::ios::binary);
 	if(!filestream)
@@ -75,20 +73,16 @@ void	Progress::init()
 
 void	Progress::save()
 {
-	if (m_isSaved == false)
-	{
-		m_isSaved = true;
-		//octo::AudioManager & audio = octo::Application::getAudioManager();
-		octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+	//octo::AudioManager & audio = octo::Application::getAudioManager();
+	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 
-		//m_data.musicVol = audio.getMusicVolume();
-		//m_data.soundVol = audio.getSoundVolume();
-		m_data.fullscreen = graphics.isFullscreen();
-		m_data.vsync = graphics.isVerticalSyncEnabled();
+	//m_data.musicVol = audio.getMusicVolume();
+	//m_data.soundVol = audio.getSoundVolume();
+	m_data.fullscreen = graphics.isFullscreen();
+	m_data.vsync = graphics.isVerticalSyncEnabled();
 
-		saveNpc();
-		saveToFile();
-	}
+	saveNpc();
+	saveToFile();
 }
 
 void	Progress::saveToFile()
@@ -106,6 +100,7 @@ void	Progress::reset()
 	m_reverseSprite = false;
 	m_validChallenge = false;
 	m_spaceShipRepair = false;
+	m_npc.clear();
 	setup();
 	save();
 }
@@ -227,7 +222,7 @@ void	Progress::saveNpc()
 		}
 		saveNpc += "\n";
 	}
-	strcpy(m_data.npc, saveNpc.c_str());
+	std::strcpy(m_data.npc, saveNpc.c_str());
 }
 
 void	Progress::split(const std::string &s, char delim, std::vector<std::string> &elems)
@@ -260,22 +255,6 @@ void	Progress::loadNpc()
 	}
 }
 
-void	Progress::printNpc(void)
-{
-	std::string saveNpc = "";
-	for (auto itLevel = m_npc.begin(); itLevel != m_npc.end(); itLevel++)
-	{
-		saveNpc += std::to_string(static_cast<int>(itLevel->first)) + " ";
-		for (auto it = itLevel->second.begin(); it != itLevel->second.end(); it++)
-		{
-			saveNpc += it->first;
-			saveNpc += " " + std::to_string(it->second) + " ";
-		}
-		saveNpc += "\n";
-	}
-	std::cout << saveNpc << std::endl;
-}
-
 std::size_t	Progress::getNpcCount()
 {
 	m_npcCount = 0u;
@@ -289,9 +268,7 @@ std::size_t	Progress::getNpcCount()
 
 std::size_t	Progress::getNpcMax()
 {
-	m_npcMax = 0u;
-	for (auto it = m_npc[m_data.lastDestination].begin(); it != m_npc[m_data.lastDestination].end(); it++)
-		m_npcMax++;
+	m_npcMax = m_npc[m_data.lastDestination].size();
 	return m_npcMax;
 }
 
