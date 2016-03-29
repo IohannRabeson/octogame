@@ -25,15 +25,19 @@ bool	InputListener::onInputReleased(InputListener::OctoKeys const &)
 void	InputListener::addInputListener(void)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(this);
-	graphics.addJoystickListener(this);
+	if (sf::Joystick::isConnected(0))
+		graphics.addJoystickListener(this);
+	else
+		graphics.addKeyboardListener(this);
 }
 
 void	InputListener::removeInputListener(void)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(this);
-	graphics.removeJoystickListener(this);
+	if (sf::Joystick::isConnected(0))
+		graphics.removeJoystickListener(this);
+	else
+		graphics.removeKeyboardListener(this);
 }
 
 bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
@@ -51,6 +55,7 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Up:
 			onInputPressed(OctoKeys::Up);
+			onInputPressed(OctoKeys::SlowFall);
 			break;
 		case sf::Keyboard::Down:
 			onInputPressed(OctoKeys::Down);
@@ -124,24 +129,38 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 		if (event.axis == sf::Joystick::X)
 		{
 			if (event.position > 50)
-				onInputPressed(OctoKeys::Right);
-			else if (event.position < -50)
-				onInputPressed(OctoKeys::Left);
-			else
 			{
-				onInputReleased(OctoKeys::Right);
+				m_joystickBoolX = true;
+				onInputPressed(OctoKeys::Right);
+			}
+			else if (event.position < -50)
+			{
+				m_joystickBoolX = true;
+				onInputPressed(OctoKeys::Left);
+			}
+			else if (m_joystickBoolX == true)
+			{
+				m_joystickBoolX = false;
 				onInputReleased(OctoKeys::Left);
+				onInputReleased(OctoKeys::Right);
 			}
 		}
 
 		if (event.axis == sf::Joystick::Y)
 		{
 			if (event.position < -50)
-				onInputPressed(OctoKeys::Up);
-			else if (event.position > 50)
-				onInputPressed(OctoKeys::Down);
-			else
 			{
+				m_joystickBoolY = true;
+				//onInputPressed(OctoKeys::Up);
+			}
+			else if (event.position > 50)
+			{
+				m_joystickBoolY = true;
+				onInputPressed(OctoKeys::Down);
+			}
+			else if (m_joystickBoolY == true)
+			{
+				m_joystickBoolY = false;
 				onInputReleased(OctoKeys::Up);
 				onInputReleased(OctoKeys::Down);
 			}
@@ -179,9 +198,11 @@ void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 			case 8:
 				onInputPressed(OctoKeys::GroundLeft);
 				break;
-//			case 15:
-//				onInputPressed(OctoKeys::Return);
-//				break;
+			case 10:
+			case 11:
+				onInputPressed(OctoKeys::SlowFall);
+				onInputPressed(OctoKeys::Up);
+				break;
 			case 3:
 				onInputPressed(OctoKeys::Escape);
 				break;
@@ -221,9 +242,11 @@ void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 			case 8:
 				onInputReleased(OctoKeys::GroundLeft);
 				break;
-//			case 15:
-//				onInputReleased(OctoKeys::Return);
-//				break;
+			case 10:
+			case 11:
+				onInputReleased(OctoKeys::SlowFall);
+				onInputReleased(OctoKeys::Up);
+				break;
 			case 3:
 				onInputReleased(OctoKeys::Escape);
 				break;

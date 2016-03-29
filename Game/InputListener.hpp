@@ -39,6 +39,9 @@ private:
 	virtual void	onMoved(sf::Event::JoystickMoveEvent const& event);
 	virtual void	onPressed(sf::Event::JoystickButtonEvent const& event);
 	virtual void	onReleased(sf::Event::JoystickButtonEvent const& event);
+
+	bool			m_joystickBoolX;
+	bool			m_joystickBoolY;
 };
 
 #endif

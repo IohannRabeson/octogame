@@ -94,6 +94,7 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 	switch (key)
 	{
 		case OctoKeys::Left:
+		case OctoKeys::Use:
 		case OctoKeys::Escape:
 		{
 			setState(AMenu::State::Hide);
@@ -127,6 +128,7 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 					m_indexCursor += 1;
 				break;
 			}
+			case OctoKeys::Space:
 			case OctoKeys::Right:
 			case OctoKeys::Return:
 			{

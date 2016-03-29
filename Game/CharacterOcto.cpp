@@ -1284,6 +1284,7 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Space:
 			caseSpace();
 			break;
+		case OctoKeys::SlowFall:
 		case OctoKeys::Up:
 			caseUp();
 			break;
