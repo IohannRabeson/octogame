@@ -8,7 +8,6 @@ Concert::Concert(void) :
 	SimpleObject(CONCERT_OSS, CONCERT_FRAG, 20.f),
 	m_particlesCount(13),
 	m_particles(new MusicSystem[m_particlesCount])
-	
 {
 	typedef octo::SpriteAnimation::Frame	Frame;
 	setupAnimation({Frame(sf::seconds(0.2f), 0u),
