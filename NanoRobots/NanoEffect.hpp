@@ -70,6 +70,7 @@ private:
 	sf::Time						m_randomTimer;
 	sf::Time						m_randomTimerMax;
 	bool							m_soundPlayed;
+	std::size_t						m_lastNanoCount;
 };
 
 #endif
