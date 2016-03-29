@@ -202,11 +202,15 @@ void	Progress::registerNpc(ResourceKey const & key)
 		m_npcMax++;
 }
 
-void	Progress::meetNpc(ResourceKey const & key)
+bool	Progress::meetNpc(ResourceKey const & key)
 {
 	std::string keyString(key);
 	if (m_changeLevel == false && !m_npc[m_data.nextDestination][key])
+	{
 		m_npc[m_data.nextDestination][key] = true;
+		return true;
+	}
+	return false;
 }
 
 void	Progress::saveNpc()

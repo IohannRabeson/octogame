@@ -112,10 +112,12 @@ void Portal::update(sf::Time frametime)
 	{
 		if (m_position.y + m_radius > screen.top && m_position.y - m_radius < screen.top + screen.height)
 		{
+			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
 			postEffect.enableEffect(m_shaderIndex, true);
 			m_shader.setParameter("time", m_timer);
+			m_shader.setParameter("radius", m_radius * zoomFactor);
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
-			m_shader.setParameter("center", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
+			m_shader.setParameter("center", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
 		}
 	}
 
