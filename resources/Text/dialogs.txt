@@ -51,3 +51,5 @@ clementine.oss=Hé, coucou toi ! On m’a parlé d’un lieu caché, unique, inc
 snowman_2.oss=Reflechis un peu plus!
 snowman_1.oss=Je crois que j'ai besoin de vacances au soleil…
 snowman_3.oss=Je suis le plus cool de cet Iceberg!
+snowgirl_1.oss=Moi je m'appel Lo-Lita. Lalalala.
+snowgirl_2.oss=Ciao bel Octo ! N'oublie pas de t'hydrater.

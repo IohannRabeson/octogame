@@ -10,6 +10,8 @@
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 //Script AddNpc Include
+#include "SnowGirl2Npc.hpp"
+#include "SnowGirl1Npc.hpp"
 #include "Snowman3Npc.hpp"
 #include "Snowman1Npc.hpp"
 #include "FranfranNpc.hpp"
@@ -145,6 +147,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClementineNpc>(CLEMENTINE_OSS);
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<SnowGirl2Npc>(SNOWGIRL_2_OSS);
+	m_npcFactory.registerCreator<SnowGirl1Npc>(SNOWGIRL_1_OSS);
 	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
@@ -431,6 +435,20 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					FranfranNpc * franfran = new FranfranNpc();
 					franfran->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, franfran);
+				}
+				break;
+			case GameObjectType::Snowman1Npc:
+				{
+					Snowman1Npc * snowman = new Snowman1Npc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
+				}
+				break;
+			case GameObjectType::SnowGirl2Npc:
+				{
+					SnowGirl2Npc * snowman = new SnowGirl2Npc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
 				}
 				break;
 			case GameObjectType::JuNpc:

@@ -18,7 +18,6 @@ IceDBiome::IceDBiome() :
 	m_octoStartPosition(16.f * 37.f, -500.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	//m_tileStartColor(227, 227, 227),
 	m_tileStartColor(227, 227, 227),
 	m_tileEndColor(27, 79, 101),
 	m_waterLevel(-1.f),
@@ -133,10 +132,12 @@ IceDBiome::IceDBiome() :
 		m_octoStartPosition = sf::Vector2f(16.f * 357.f, -500.f);
 
 	m_gameObjects[100] = GameObjectType::HouseFlatSnow;
+	m_gameObjects[140] = GameObjectType::Snowman1Npc;
 	m_gameObjects[270] = GameObjectType::EngineSnow;
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
 	m_gameObjects[570] = GameObjectType::EngineSnow;
 	m_gameObjects[30] = GameObjectType::Portal;
+	m_gameObjects[390] = GameObjectType::SnowGirl2Npc;
 	m_gameObjects[355] = GameObjectType::Portal;
 	m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::DesertA);

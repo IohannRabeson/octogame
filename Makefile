@@ -104,7 +104,11 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/Snowman2Npc.cpp					\
 				Npcs/Snowman1Npc.cpp					\
 				Npcs/Snowman3Npc.cpp					\
+				Npcs/SnowGirl1Npc.cpp					\
+				Npcs/SnowGirl2Npc.cpp					\
 #Script AddNpc
+
+
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
