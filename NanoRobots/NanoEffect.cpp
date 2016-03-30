@@ -158,6 +158,11 @@ sf::Color const & NanoEffect::getColor(void) const
 	return m_color;
 }
 
+sf::Vector2f const & NanoEffect::getNanoScale(void) const
+{
+	return m_nanoScale;
+}
+
 void NanoEffect::setPosition(sf::Vector2f const & position)
 {
 	m_position = position;
@@ -168,3 +173,7 @@ void NanoEffect::setColor(sf::Color const & color)
 	m_color = color;
 }
 
+void NanoEffect::setNanoScale(sf::Vector2f const & scale)
+{
+	m_nanoScale = scale;
+}

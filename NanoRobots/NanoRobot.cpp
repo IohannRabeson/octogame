@@ -207,6 +207,7 @@ void NanoRobot::transfertToOcto(bool inInit)
 	m_swarm.getFirefly(0u).speed = 1.f;
 	m_state = Speak;
 	m_glowingEffect.onTransfer();
+	m_sprite.setScale(1.f, 1.f);
 	if (!inInit)
 		Progress::getInstance().addNanoRobot();
 }
