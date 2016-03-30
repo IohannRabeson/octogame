@@ -106,7 +106,11 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/Snowman3Npc.cpp					\
 				Npcs/SnowGirl1Npc.cpp					\
 				Npcs/SnowGirl2Npc.cpp					\
+				Npcs/StrangerGirlSnowNpc.cpp				\
+				Npcs/StrangerSnowNpc.cpp				\
 #Script AddNpc
+
+
 
 
 

@@ -131,14 +131,16 @@ IceDBiome::IceDBiome() :
 	if (progress.getLastDestination() == Level::DesertA)
 		m_octoStartPosition = sf::Vector2f(16.f * 357.f, -500.f);
 
+	m_gameObjects[30] = GameObjectType::Portal;
 	m_gameObjects[100] = GameObjectType::HouseFlatSnow;
 	m_gameObjects[140] = GameObjectType::Snowman1Npc;
 	m_gameObjects[270] = GameObjectType::EngineSnow;
-	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
-	m_gameObjects[570] = GameObjectType::EngineSnow;
-	m_gameObjects[30] = GameObjectType::Portal;
-	m_gameObjects[390] = GameObjectType::SnowGirl2Npc;
+	m_gameObjects[310] = GameObjectType::StrangerSnowNpc;
 	m_gameObjects[355] = GameObjectType::Portal;
+	m_gameObjects[400] = GameObjectType::SnowGirl2Npc;
+	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
+	//m_gameObjects[500] = GameObjectType::StrangerGirlSnowNpc;
+	m_gameObjects[570] = GameObjectType::EngineSnow;
 	m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::DesertA);
 }
