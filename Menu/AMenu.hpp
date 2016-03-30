@@ -4,6 +4,8 @@
 # include <SFML/Graphics/Drawable.hpp>
 # include <SFML/Graphics/Transformable.hpp>
 # include <SFML/System/Time.hpp>
+# include <map>
+# include <cwchar>
 
 class AMenu : public sf::Drawable,
 			  public sf::Transformable
@@ -27,6 +29,10 @@ public:
 	void			setState(State state);
 	State			getState(void) const;
 	AMenu *			getBackMenu(void);
+	void			initTexts(void);
+	std::wstring	getText(std::string const & text);
+
+	std::map<std::string, std::wstring> m_menuTexts;
 
 private:
 	State			m_currentState;

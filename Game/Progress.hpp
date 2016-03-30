@@ -19,6 +19,8 @@ public:
 
 	static Progress & getInstance(void);
 
+	void				setLanguage(Language language);
+	Progress::Language	getLanguage(void) const;
 	ResourceKey			getTextFile(void) const;
 
 	void				addNanoRobot();
