@@ -105,6 +105,13 @@ void	Progress::reset()
 	save();
 }
 
+ResourceKey Progress::getTextFile(void) const
+{
+	if (m_data.language == Language::en_keyboard)
+		return DIALOGS_EN_KEYBOARD_TXT;
+	return DIALOGS_FR_KEYBOARD_TXT;
+}
+
 void	Progress::addNanoRobot()
 {
 	m_data.nanoRobotCount++;

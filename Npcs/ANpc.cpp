@@ -22,12 +22,13 @@ ANpc::ANpc(ResourceKey const & npcId) :
 	m_collideOctoEvent(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	Progress::getInstance().registerNpc(npcId);
+	Progress & progress = Progress::getInstance();
+	progress.registerNpc(npcId);
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
 	std::map<std::string, std::vector<std::wstring>>	npcTexts;
-	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstringstream f(resources.getText(progress.getTextFile()).toWideString());
 	std::wstring wkey;
 	std::wstring line;
 	wchar_t delim = '=';
