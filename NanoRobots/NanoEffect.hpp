@@ -73,6 +73,8 @@ private:
 	sf::Time						m_randomTimerMax;
 	bool							m_soundPlayed;
 	std::size_t						m_lastNanoCount;
+	sf::Vector2f					m_nanoScaleOrigin;
+	sf::Vector2f					m_nanoScaleZoom;
 	sf::Vector2f					m_nanoScale;
 };
 

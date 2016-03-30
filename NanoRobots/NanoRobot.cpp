@@ -52,6 +52,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(id));
 	m_sprite.setScale(0.6f, 0.6f);
+	m_glowingEffect.setNanoScale(sf::Vector2f(0.6f, 0.6f));
 
 	octo::SpriteAnimation::FrameList	frames;
 	for (std::size_t i = 0u; i < nbFrames; i++)
@@ -207,7 +208,6 @@ void NanoRobot::transfertToOcto(bool inInit)
 	m_swarm.getFirefly(0u).speed = 1.f;
 	m_state = Speak;
 	m_glowingEffect.onTransfer();
-	m_sprite.setScale(1.f, 1.f);
 	if (!inInit)
 		Progress::getInstance().addNanoRobot();
 }
@@ -362,6 +362,7 @@ void NanoRobot::update(sf::Time frametime)
 	m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
 	m_texts[m_textIndex]->update(frametime);
 	m_glowingEffect.setPosition(pos);
+	m_sprite.setScale(m_glowingEffect.getNanoScale());
 	m_glowingEffect.update(frametime);
 
 	updateRepairShip(frametime);
