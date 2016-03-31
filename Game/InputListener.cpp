@@ -4,7 +4,9 @@
 
 #include <iostream>
 
-InputListener::InputListener(void)
+InputListener::InputListener(void) :
+	m_joystickBoolX(false),
+	m_joystickBoolY(false)
 {
 }
 
@@ -25,10 +27,8 @@ bool	InputListener::onInputReleased(InputListener::OctoKeys const &)
 void	InputListener::addInputListener(void)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	if (sf::Joystick::isConnected(0))
-		graphics.addJoystickListener(this);
-	else
-		graphics.addKeyboardListener(this);
+	graphics.addJoystickListener(this);
+	graphics.addKeyboardListener(this);
 }
 
 void	InputListener::removeInputListener(void)
@@ -151,7 +151,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 			if (event.position < -50)
 			{
 				m_joystickBoolY = true;
-				//onInputPressed(OctoKeys::Up);
+				onInputPressed(OctoKeys::Up);
 			}
 			else if (event.position > 50)
 			{

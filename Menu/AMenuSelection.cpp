@@ -7,7 +7,8 @@ AMenuSelection::AMenuSelection(void) :
 	m_characterSize(20u),
 	m_indexCursor(0u),
 	m_indexSave(0u),
-	m_isKeyboard(false)
+	m_isKeyboard(false),
+	m_inputTimerMax(sf::seconds(0.2f))
 {
 }
 
@@ -69,6 +70,7 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_bubble.update(frameTime);
 		m_cursor.setPosition(m_cursorPosition[m_indexCursor] + contentPosition);
 		setKeyboard(true);
+		m_inputTimer += frameTime;
 	}
 	else
 	{
@@ -91,53 +93,58 @@ void AMenuSelection::draw(sf::RenderTarget & render, sf::RenderStates states) co
 
 bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (key)
-	{
-		case OctoKeys::Left:
-		case OctoKeys::Use:
-		case OctoKeys::Escape:
-		{
-			setState(AMenu::State::Hide);
-			AMenu * backMenu = getBackMenu();
-			if (backMenu)
-				backMenu->setState(AMenu::State::Active);
-			m_indexCursor = m_indexSave;
-			break;
-		}
-		default:
-			break;
-	}
-
-	if (m_menus.size())
+	if (m_inputTimer >= m_inputTimerMax)
 	{
 		switch (key)
 		{
-			case OctoKeys::Up:
+			case OctoKeys::Left:
+			case OctoKeys::Use:
+			case OctoKeys::Escape:
 			{
-				if (m_indexCursor == 0u)
-					m_indexCursor = m_menus.size() - 1;
-				else
-					m_indexCursor -= 1;
-				break;
-			}
-			case OctoKeys::Down:
-			{
-				if (m_indexCursor >= m_menus.size() - 1)
-					m_indexCursor = 0u;
-				else
-					m_indexCursor += 1;
-				break;
-			}
-			case OctoKeys::Space:
-			case OctoKeys::Right:
-			case OctoKeys::Return:
-			{
-				onSelection();
+				setState(AMenu::State::Hide);
+				AMenu * backMenu = getBackMenu();
+				if (backMenu)
+					backMenu->setState(AMenu::State::Active);
+				m_indexCursor = m_indexSave;
 				break;
 			}
 			default:
 				break;
 		}
+	
+		if (m_menus.size())
+		{
+			switch (key)
+			{
+				case OctoKeys::Up:
+				{
+					if (m_indexCursor == 0u)
+						m_indexCursor = m_menus.size() - 1;
+					else
+						m_indexCursor -= 1;
+					break;
+				}
+				case OctoKeys::Down:
+				{
+					if (m_indexCursor >= m_menus.size() - 1)
+						m_indexCursor = 0u;
+					else
+						m_indexCursor += 1;
+					break;
+				}
+				case OctoKeys::Space:
+				case OctoKeys::Right:
+				case OctoKeys::Return:
+				{
+					onSelection();
+					break;
+				}
+				default:
+					break;
+			}
+		}
+
+		m_inputTimer = sf::Time::Zero;
 	}
 	return (true);
 }

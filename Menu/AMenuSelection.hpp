@@ -46,6 +46,8 @@ private:
 	bool										m_isKeyboard;
 
 	sf::CircleShape								m_cursor;
+	sf::Time									m_inputTimer;
+	sf::Time									m_inputTimerMax;
 };
 
 #endif
