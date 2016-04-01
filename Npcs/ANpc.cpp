@@ -22,12 +22,13 @@ ANpc::ANpc(ResourceKey const & npcId) :
 	m_collideOctoEvent(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	Progress::getInstance().registerNpc(npcId);
+	Progress & progress = Progress::getInstance();
+	progress.registerNpc(npcId);
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
 	std::map<std::string, std::vector<std::wstring>>	npcTexts;
-	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstringstream f(resources.getText(progress.getTextFile()).toWideString());
 	std::wstring wkey;
 	std::wstring line;
 	wchar_t delim = '=';
@@ -351,9 +352,9 @@ void ANpc::update(sf::Time frametime)
 
 void ANpc::collideOctoEvent(CharacterOcto * octo)
 {
-	(void)octo;
-	Progress::getInstance().meetNpc(m_id);
 	m_collideOctoEvent = true;
+	if (Progress::getInstance().meetNpc(m_id))
+		octo->collideZoomEvent(m_box->getPosition());
 }
 
 void ANpc::updateState(void)

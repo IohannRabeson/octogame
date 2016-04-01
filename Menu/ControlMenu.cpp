@@ -13,7 +13,8 @@ ControlMenu::ControlMenu(void) :
 
 void ControlMenu::createMenus(void)
 {
-	addMenu(L"Déplacement : [GAUCHE]/[DROITE]", nullptr);
+	AMenu::initTexts();
+	addMenu(AMenu::getText("control_move"), nullptr);
 }
 
 void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
@@ -22,38 +23,38 @@ void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
 
 	if (progress.canMoveMap() && m_isCreatedMoveMap == false)
 	{
-		addMenu(L"Contrôle du sol : [S]/[F]", nullptr);
-		addMenu(L"Portail : [E]", nullptr);
+		addMenu(AMenu::getText("control_ground"), nullptr);
+		addMenu(AMenu::getText("control_portal"), nullptr);
 		m_isCreatedMoveMap = true;
 		setupBubble();
 	}
 	if (progress.canRepair() && m_isCreatedRepair == false)
 	{
-		addMenu(L"Elevator : [E]", nullptr);
+		addMenu(AMenu::getText("control_elevator"), nullptr);
 		m_isCreatedRepair = true;
 		setupBubble();
 	}
 	if (progress.canJump() && m_isCreatedJump == false)
 	{
-		addMenu(L"Saut : [ESPACE]", nullptr);
+		addMenu(AMenu::getText("control_jump"), nullptr);
 		m_isCreatedJump = true;
 		setupBubble();
 	}
 	if (progress.canDoubleJump() && m_isCreatedDoubleJump == false)
 	{
-		addMenu(L"Double Saut : [ESPACE]", nullptr);
+		addMenu(AMenu::getText("control_double_jump"), nullptr);
 		m_isCreatedDoubleJump = true;
 		setupBubble();
 	}
 	if (progress.canUseWaterJump() && m_isCreatedWaterJump == false)
 	{
-		addMenu(L"Propulsion Eau : [HAUT]", nullptr);
+		addMenu(AMenu::getText("control_water_jump"), nullptr);
 		m_isCreatedWaterJump = true;
 		setupBubble();
 	}
 	if (progress.canSlowFall() && m_isCreatedSlowFall == false)
 	{
-		addMenu(L"Chutte lente : [HAUT]", nullptr);
+		addMenu(AMenu::getText("control_slow_fall"), nullptr);
 		m_isCreatedSlowFall = true;
 		setupBubble();
 	}

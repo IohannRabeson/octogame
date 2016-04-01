@@ -9,9 +9,10 @@
 # include "StarSystem.hpp"
 # include "HSL.hpp"
 # include "RandomGenerator.hpp"
+# include "InputListener.hpp"
 
 class LevelZeroScreen : public octo::AbstractState,
-						public octo::DefaultKeyboardListener
+						public InputListener
 {
 public:
 	LevelZeroScreen(void);
@@ -22,8 +23,8 @@ public:
 	virtual void		update(sf::Time frameTime);
 	virtual void		draw(sf::RenderTarget& render)const;
 
-	virtual bool	onPressed(sf::Event::KeyEvent const & event);
-	virtual bool	onReleased(sf::Event::KeyEvent const& event);
+	virtual bool	onInputPressed(InputListener::OctoKeys const & key);
+	virtual bool	onInputReleased(InputListener::OctoKeys const & key);
 
 private:
 	enum State

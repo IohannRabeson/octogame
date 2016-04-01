@@ -38,6 +38,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_soundDistri(0u, 2u)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
+	Progress & progress = Progress::getInstance();
 
 	m_texture = &resources.getTexture(STARGRADIENT_PNG);
 
@@ -52,6 +53,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(id));
 	m_sprite.setScale(0.6f, 0.6f);
+	m_glowingEffect.setNanoScale(sf::Vector2f(0.6f, 0.6f));
 
 	octo::SpriteAnimation::FrameList	frames;
 	for (std::size_t i = 0u; i < nbFrames; i++)
@@ -63,7 +65,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_sprite.play();
 
 	std::map<std::string, std::vector<std::wstring>>	npcTexts;
-	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstringstream f(resources.getText(progress.getTextFile()).toWideString());
 	std::wstring wkey;
 	std::wstring line;
 	wchar_t delim = '=';
@@ -361,6 +363,7 @@ void NanoRobot::update(sf::Time frametime)
 	m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
 	m_texts[m_textIndex]->update(frametime);
 	m_glowingEffect.setPosition(pos);
+	m_sprite.setScale(m_glowingEffect.getNanoScale());
 	m_glowingEffect.update(frametime);
 
 	updateRepairShip(frametime);

@@ -90,19 +90,25 @@ void NanoEffect::update(sf::Time frameTime)
 		}
 		case State::Transfer:
 		{
-				playSound();
-				m_transferTimer += frameTime;
-				if (m_transferTimer >= m_transferTimerMax)
-				{
-					m_isTransferHappen = true;
-					m_transferTimer = sf::Time::Zero;
-					m_state = State::Wait;
-				}
-				float coef = m_transferTimer / m_transferTimerMax;
-				createEffect(m_size, m_position, coef, m_color, m_builder);
-				createEffect(m_size * 2.f, m_position, coef, m_color, m_builder);
-				createEffect(m_size * 3.f, m_position, coef, m_color, m_builder);
-				break;
+			playSound();
+			m_transferTimer += frameTime;
+			if (m_transferTimer >= m_transferTimerMax)
+			{
+				m_isTransferHappen = true;
+				m_transferTimer = sf::Time::Zero;
+				m_state = State::Wait;
+			}
+			float coef = m_transferTimer / m_transferTimerMax;
+			createEffect(m_size, m_position, coef, m_color, m_builder);
+			createEffect(m_size * 2.f, m_position, coef, m_color, m_builder);
+			createEffect(m_size * 3.f, m_position, coef, m_color, m_builder);
+
+			if (m_transferTimer <= m_transferTimerMax / 2.f)
+				m_nanoScale = octo::cosinusInterpolation(m_nanoScaleOrigin, m_nanoScaleZoom, m_transferTimer / (m_transferTimerMax / 2.f));
+			else if (m_transferTimer <= m_transferTimerMax)
+				m_nanoScale = octo::cosinusInterpolation(m_nanoScaleZoom, m_nanoScaleOrigin, (m_transferTimer - m_transferTimerMax / 2.f) / (m_transferTimerMax / 2.f));
+
+			break;
 		}
 		case State::Random:
 		{
@@ -158,6 +164,11 @@ sf::Color const & NanoEffect::getColor(void) const
 	return m_color;
 }
 
+sf::Vector2f const & NanoEffect::getNanoScale(void) const
+{
+	return m_nanoScale;
+}
+
 void NanoEffect::setPosition(sf::Vector2f const & position)
 {
 	m_position = position;
@@ -168,3 +179,9 @@ void NanoEffect::setColor(sf::Color const & color)
 	m_color = color;
 }
 
+void NanoEffect::setNanoScale(sf::Vector2f const & scale)
+{
+	m_nanoScaleOrigin = scale;
+	m_nanoScaleZoom = scale * 2.f;
+	m_nanoScale = scale;
+}

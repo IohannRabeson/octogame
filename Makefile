@@ -51,8 +51,10 @@ SRC_STATES =	Screens/StateTest.cpp					\
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/OctoSound.cpp						\
+				Game/CameraMovement.cpp					\
 				Game/Progress.cpp						\
 				Game/MusicManager.cpp					\
+				Game/InputListener.cpp					\
 				Game/KonamiCode.cpp						\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
@@ -125,6 +127,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/OptionMenu.cpp						\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
+				Menu/LanguageMenu.cpp					\
 				Menu/SoundVolumeMenu.cpp				\
 				Menu/MusicVolumeMenu.cpp				\
 				Menu/ControlMenu.cpp					\

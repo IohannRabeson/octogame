@@ -61,8 +61,9 @@ CharacterOcto::CharacterOcto() :
 	m_inWater(false)
 {
 	m_sound.reset(new OctoSound());
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(this);
+	m_cameraMovement.reset(new CameraMovement);
+
+	InputListener::addInputListener();
 
 	if (m_progress.canMoveMap())
 		giveNanoRobot(new GroundTransformNanoRobot());
@@ -89,8 +90,7 @@ CharacterOcto::CharacterOcto() :
 
 CharacterOcto::~CharacterOcto(void)
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
 }
 
 void	CharacterOcto::setup(ABiome & biome)
@@ -671,6 +671,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		robot->update(frameTime);
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
+	m_cameraMovement->follow(frameTime, m_box->getPosition());
 }
 
 void	CharacterOcto::portalEvent()
@@ -1278,34 +1279,32 @@ void CharacterOcto::casePortal()
 	}
 }
 
-bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
+bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 {
 	if (m_sprite.getCurrentEvent() == Death
 			|| m_sprite.getCurrentEvent() == KonamiCode
 			|| m_sprite.getCurrentEvent() == PortalEvent)
 		return true;
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::Left:
+		case OctoKeys::Left:
 			caseLeft();
 			m_progress.walk();
 			break;
-		case sf::Keyboard::Right:
+		case OctoKeys::Right:
 			caseRight();
 			m_progress.walk();
 			break;
-		case sf::Keyboard::Space:
+		case OctoKeys::Space:
 			caseSpace();
 			break;
-		case sf::Keyboard::Up:
+		case OctoKeys::SlowFall:
 			caseUp();
 			break;
-		case sf::Keyboard::Down:
-			//TODO: TO REMOVE
-			//std::cout << m_box->getPosition().x << " " << m_box->getPosition().y << std::endl;
+		case OctoKeys::Down:
 			m_keyDown = true;
 			break;
-		case sf::Keyboard::E:
+		case OctoKeys::Use:
 			m_keyE = true;
 			if (m_onElevator && m_progress.canUseElevator() && !m_keyElevator)
 			{
@@ -1324,20 +1323,20 @@ bool	CharacterOcto::onPressed(sf::Event::KeyEvent const& event)
 	return (true);
 }
 
-bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
+bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
 	bool otherKeyReleased = false;
 
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::Left:
+		case OctoKeys::Left:
 			m_keyLeft = false;
 			break;
-		case sf::Keyboard::Right:
+		case OctoKeys::Right:
 			m_keyRight = false;
 			break;
-		case sf::Keyboard::Space:
+		case OctoKeys::Space:
 			m_keySpace = false;
 			if (state == Jump || state == DoubleJump || state == StartJump)
 			{
@@ -1345,15 +1344,15 @@ bool	CharacterOcto::onReleased(sf::Event::KeyEvent const& event)
 				m_afterJumpVelocity = m_pixelSecondAfterJump;
 			}
 			break;
-		case sf::Keyboard::Up:
+		case OctoKeys::Up:
 			m_keyUp = false;
 			if (!m_keyE)
 				m_keyElevator = false;
 			break;
-		case sf::Keyboard::Down:
+		case OctoKeys::Down:
 			m_keyDown = false;
 			break;
-		case sf::Keyboard::E:
+		case OctoKeys::Use:
 			m_keyE = false;
 			m_keyAction = false;
 			m_keyPortal = false;
@@ -1399,3 +1398,8 @@ sf::Vector2f	CharacterOcto::getBubblePosition() const
 	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -80.f));
 }
 
+
+void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
+{
+	m_cameraMovement->collideZoomEvent(position);
+}

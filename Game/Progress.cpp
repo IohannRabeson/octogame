@@ -105,6 +105,23 @@ void	Progress::reset()
 	save();
 }
 
+void	Progress::setLanguage(Language language)
+{
+	m_data.language = language;
+}
+
+Progress::Language Progress::getLanguage(void) const
+{
+	return m_data.language;
+}
+
+ResourceKey Progress::getTextFile(void) const
+{
+	if (m_data.language == Language::en_keyboard)
+		return DIALOGS_EN_KEYBOARD_TXT;
+	return DIALOGS_FR_KEYBOARD_TXT;
+}
+
 void	Progress::addNanoRobot()
 {
 	m_data.nanoRobotCount++;
@@ -202,11 +219,15 @@ void	Progress::registerNpc(ResourceKey const & key)
 		m_npcMax++;
 }
 
-void	Progress::meetNpc(ResourceKey const & key)
+bool	Progress::meetNpc(ResourceKey const & key)
 {
 	std::string keyString(key);
 	if (m_changeLevel == false && !m_npc[m_data.nextDestination][key])
+	{
 		m_npc[m_data.nextDestination][key] = true;
+		return true;
+	}
+	return false;
 }
 
 void	Progress::saveNpc()

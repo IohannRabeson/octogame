@@ -1,15 +1,15 @@
 #ifndef TRANSITIONLEVELZEROSCREEN_HPP
 # define TRANSITIONLEVELZEROSCREEN_HPP
 # include <AbstractState.hpp>
-# include <GraphicsListeners.hpp>
 
 # include "Game.hpp"
 # include "MainMenu.hpp"
+# include "InputListener.hpp"
 # include <AnimatedSprite.hpp>
 
 # include <memory>
 
-class TransitionLevelZeroScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
+class TransitionLevelZeroScreen : public octo::AbstractState, public InputListener
 {
 public:
 	TransitionLevelZeroScreen();
@@ -35,7 +35,7 @@ private:
 	octo::AnimatedSprite			m_sprite;
 	octo::SpriteAnimation			m_animation;
 
-	virtual bool onPressed(sf::Event::KeyEvent const & event);
+	virtual bool onInputPressed(InputListener::OctoKeys const & key);
 };
 
 #endif

@@ -81,8 +81,7 @@ Game::Game(void) :
 	m_groundSoundTime(sf::Time::Zero),
 	m_groundSoundTimeMax(sf::seconds(0.6f))
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(this);
+	InputListener::addInputListener();
 
 	m_biomeManager.registerBiome<IceABiome>(Level::IceA);
 	m_biomeManager.registerBiome<IceBBiome>(Level::IceB);
@@ -98,8 +97,7 @@ Game::~Game(void)
 {
 	if (m_soundGeneration != nullptr)
 		m_soundGeneration->stop();
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
 }
 
 void	Game::loadLevel(void)
@@ -152,7 +150,6 @@ void	Game::update(sf::Time frameTime)
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
 	m_octo->update(frameTime);
-	followPlayer(frameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
 	moveMap(frameTime);
 	m_groundManager->update(frameTime.asSeconds());
@@ -434,15 +431,15 @@ void Game::moveMap(sf::Time frameTime)
 	}
 }
 
-bool Game::onPressed(sf::Event::KeyEvent const & event)
+bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::S:
+		case OctoKeys::GroundLeft:
 			m_keyS = true;
 			Progress::getInstance().moveMap();
 			break;
-		case sf::Keyboard::F:
+		case OctoKeys::GroundRight:
 			Progress::getInstance().moveMap();
 			m_keyF = true;
 			break;
@@ -452,14 +449,14 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	return true;
 }
 
-bool	Game::onReleased(sf::Event::KeyEvent const& event)
+bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::S:
+		case OctoKeys::GroundLeft:
 			m_keyS = false;
 			break;
-		case sf::Keyboard::F:
+		case OctoKeys::GroundRight:
 			m_keyF = false;
 			break;
 		default:
@@ -486,23 +483,4 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
 	render.draw(*m_konami);
-}
-
-void	Game::followPlayer(sf::Time frameTime)
-{
-	float frameTimeSeconds = frameTime.asSeconds();
-	octo::Camera & camera = octo::Application::getCamera();
-	sf::Vector2f const & cameraSize = camera.getSize();
-	sf::Vector2f cameraPos = camera.getCenter();
-	sf::Vector2f octoUpPos = m_octo->getPosition();
-	sf::Vector2f octoDownPos = octoUpPos;
-
-	octoDownPos.y -= cameraSize.y / 4.f;
-	cameraPos.x = octo::linearInterpolation(octoUpPos.x, cameraPos.x, 1.f - frameTimeSeconds);
-	if (octoDownPos.y >= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 6.f);
-	else if (octoUpPos.y <= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 4.f);
-
-	camera.setCenter(cameraPos);
 }

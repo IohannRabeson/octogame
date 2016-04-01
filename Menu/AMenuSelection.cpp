@@ -7,7 +7,8 @@ AMenuSelection::AMenuSelection(void) :
 	m_characterSize(20u),
 	m_indexCursor(0u),
 	m_indexSave(0u),
-	m_isKeyboard(false)
+	m_isKeyboard(false),
+	m_inputTimerMax(sf::seconds(0.2f))
 {
 }
 
@@ -42,15 +43,14 @@ void AMenuSelection::setupBubble(void)
 
 void AMenuSelection::setKeyboard(bool isKeyboard)
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	if (m_isKeyboard == false && isKeyboard == true)
 	{
-		graphics.addKeyboardListener(this);
+		InputListener::addInputListener();
 		m_isKeyboard = true;
 	}
 	else if (m_isKeyboard == true && isKeyboard == false)
 	{
-		graphics.removeKeyboardListener(this);
+		InputListener::removeInputListener();
 		m_isKeyboard = false;
 	}
 }
@@ -70,6 +70,7 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_bubble.update(frameTime);
 		m_cursor.setPosition(m_cursorPosition[m_indexCursor] + contentPosition);
 		setKeyboard(true);
+		m_inputTimer += frameTime;
 	}
 	else
 	{
@@ -90,53 +91,60 @@ void AMenuSelection::draw(sf::RenderTarget & render, sf::RenderStates states) co
 		render.draw(m_cursor);
 }
 
-bool AMenuSelection::onPressed(sf::Event::KeyEvent const &event)
+bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	if (m_inputTimer >= m_inputTimerMax)
 	{
-		case sf::Keyboard::Left:
-		case sf::Keyboard::Escape:
+		switch (key)
 		{
-			setState(AMenu::State::Hide);
-			AMenu * backMenu = getBackMenu();
-			if (backMenu)
-				backMenu->setState(AMenu::State::Active);
-			m_indexCursor = m_indexSave;
-			break;
-		}
-		default:
-			break;
-	}
-
-	if (m_menus.size())
-	{
-		switch (event.code)
-		{
-			case sf::Keyboard::Up:
+			case OctoKeys::Left:
+			case OctoKeys::Use:
+			case OctoKeys::Escape:
 			{
-				if (m_indexCursor == 0u)
-					m_indexCursor = m_menus.size() - 1;
-				else
-					m_indexCursor -= 1;
-				break;
-			}
-			case sf::Keyboard::Down:
-			{
-				if (m_indexCursor >= m_menus.size() - 1)
-					m_indexCursor = 0u;
-				else
-					m_indexCursor += 1;
-				break;
-			}
-			case sf::Keyboard::Right:
-			case sf::Keyboard::Return:
-			{
-				onSelection();
+				setState(AMenu::State::Hide);
+				AMenu * backMenu = getBackMenu();
+				if (backMenu)
+					backMenu->setState(AMenu::State::Active);
+				m_indexCursor = m_indexSave;
 				break;
 			}
 			default:
 				break;
 		}
+	
+		if (m_menus.size())
+		{
+			switch (key)
+			{
+				case OctoKeys::Up:
+				{
+					if (m_indexCursor == 0u)
+						m_indexCursor = m_menus.size() - 1;
+					else
+						m_indexCursor -= 1;
+					break;
+				}
+				case OctoKeys::Down:
+				{
+					if (m_indexCursor >= m_menus.size() - 1)
+						m_indexCursor = 0u;
+					else
+						m_indexCursor += 1;
+					break;
+				}
+				case OctoKeys::Space:
+				case OctoKeys::Right:
+				case OctoKeys::Return:
+				{
+					onSelection();
+					break;
+				}
+				default:
+					break;
+			}
+		}
+
+		m_inputTimer = sf::Time::Zero;
 	}
 	return (true);
 }

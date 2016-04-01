@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 	}
 	catch (std::exception const& e)
 	{
-		std::cerr << "exception: " << e.what() << std::endl;
+		std::cerr << "Run exception: " << e.what() << std::endl;
 	}
 	octo::Application::destroy();
     return (0);
