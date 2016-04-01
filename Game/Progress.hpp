@@ -72,7 +72,7 @@ public:
 	bool				getReverseSprite() const { return m_reverseSprite; }
 
 	void				registerNpc(ResourceKey const & key);
-	void				meetNpc(ResourceKey const & key);
+	bool				meetNpc(ResourceKey const & key);
 
 	void				load(std::string const & filename);
 	void				save();

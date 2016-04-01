@@ -351,9 +351,9 @@ void ANpc::update(sf::Time frametime)
 
 void ANpc::collideOctoEvent(CharacterOcto * octo)
 {
-	(void)octo;
-	Progress::getInstance().meetNpc(m_id);
 	m_collideOctoEvent = true;
+	if (Progress::getInstance().meetNpc(m_id))
+		octo->collideZoomEvent(m_box->getPosition());
 }
 
 void ANpc::updateState(void)
