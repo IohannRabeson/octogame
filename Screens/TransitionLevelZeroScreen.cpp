@@ -1,7 +1,6 @@
 #include "TransitionLevelZeroScreen.hpp"
 
 #include <Application.hpp>
-#include <GraphicsManager.hpp>
 #include <StateManager.hpp>
 #include <ResourceManager.hpp>
 #include <AudioManager.hpp>
@@ -71,8 +70,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 
 void	TransitionLevelZeroScreen::start()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(this);
+	InputListener::addInputListener();
 }
 
 void	TransitionLevelZeroScreen::pause()
@@ -85,8 +83,7 @@ void	TransitionLevelZeroScreen::resume()
 
 void	TransitionLevelZeroScreen::stop()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
 }
 
 void	TransitionLevelZeroScreen::playSound(std::size_t index)
@@ -133,13 +130,14 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 	m_sprite.update(frameTime);
 }
 
-bool TransitionLevelZeroScreen::onPressed(sf::Event::KeyEvent const &event)
+bool TransitionLevelZeroScreen::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::Return:
-		case sf::Keyboard::Space:
-		case sf::Keyboard::Escape:
+		case OctoKeys::Return:
+		case OctoKeys::Space:
+		case OctoKeys::Use:
+		case OctoKeys::Escape:
 			{
 				m_index++;
 				m_time = sf::Time::Zero;

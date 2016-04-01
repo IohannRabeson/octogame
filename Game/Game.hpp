@@ -12,12 +12,14 @@
 # include "MusicManager.hpp"
 # include "KonamiCode.hpp"
 
+#include "InputListener.hpp"
+
 # include <memory>
 
 class PhysicsEngine;
 class AShape;
 
-class Game : public octo::DefaultKeyboardListener, public IContactListener
+class Game : public InputListener, public IContactListener
 {
 public:
 	Game(void);
@@ -47,8 +49,8 @@ private:
 	sf::Time							m_groundSoundTimeMax;
 
 	void			moveMap(sf::Time frameTime);
-	bool			onPressed(sf::Event::KeyEvent const & event);
-	bool			onReleased(sf::Event::KeyEvent const & event);
+	bool			onInputPressed(InputListener::OctoKeys const & key);
+	bool			onInputReleased(InputListener::OctoKeys const & key);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);
 	void			onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection);
 	void			followPlayer(sf::Time frameTime);
