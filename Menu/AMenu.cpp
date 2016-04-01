@@ -47,11 +47,12 @@ void AMenu::initTexts(void)
 		std::string key(wkey.begin(), wkey.end());
 		m_menuTexts[key] = line;
 	}
+	m_menuTexts["error"] = L"Missing Menu";
 }
 
-std::wstring AMenu::getText(std::string const & text)
+std::wstring const & AMenu::getText(std::string const & text)
 {
 	if (m_menuTexts.find(text) != m_menuTexts.end())
 		return m_menuTexts[text];
-	return L"Missing menu";
+	return m_menuTexts["error"];
 }
