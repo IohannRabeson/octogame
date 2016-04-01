@@ -18,11 +18,12 @@ public:
 		NoBalle,
 	};
 	MusicManager();
-	~MusicManager();
+	virtual ~MusicManager();
 	void setup(ABiome & biome);
 	void update(sf::Time frameTime, sf::Vector2f const & octoPos);
 	void debugDraw(sf::RenderTarget & render);
 	void startBalleMusic(sf::Time duration, MusicNameArea name);
+
 private:
 	struct AreaMusic
 	{
