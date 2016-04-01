@@ -1,5 +1,7 @@
 #include "TransitionLevelZeroScreen.hpp"
 
+#include "Progress.hpp"
+
 #include <Application.hpp>
 #include <StateManager.hpp>
 #include <ResourceManager.hpp>
@@ -28,7 +30,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_timerMax[3] = sf::seconds(8.f);
 	m_timerMax[4] = sf::seconds(9.f);
 
-	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstringstream f(resources.getText(Progress::getInstance().getTextFile()).toWideString());
 	std::wstring wkey;
 	std::wstring line;
 	std::string keyName;

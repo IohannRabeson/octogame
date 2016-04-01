@@ -50,14 +50,15 @@ MainMenu::MainMenu(void) :
 
 void MainMenu::createMenus(void)
 {
-	addMenu(L"Contrôles", std::unique_ptr<ControlMenu>(new ControlMenu()));
+	AMenu::initTexts();
+	addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
 #ifndef NDEBUG
 	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
 #endif
-	addMenu(L"Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
-	addMenu(L"Crédits", std::unique_ptr<CreditMenu>(new CreditMenu()));
-	addMenu(L"Recommencer", std::unique_ptr<YesNoReset>(new YesNoReset()));
-	addMenu(L"Quitter", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+	addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
+	addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
+	addMenu(AMenu::getText("menu_restart"), std::unique_ptr<YesNoReset>(new YesNoReset()));
+	addMenu(AMenu::getText("menu_quit"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 	setCharacterSize(30);
 	setBubbleType(ABubble::Type::Up);
 }
@@ -67,7 +68,7 @@ void MainMenu::setup(void)
 	AMenuSelection::setup();
 	m_filter.setSize(octo::Application::getCamera().getSize());
 	m_filter.setFillColor(sf::Color(0, 0, 0, 50));
-	m_infoText = L"10 / 10 Rencontres";
+	m_infoText = L"10 / 10 " + AMenu::getText("menu_friends");
 	m_npcBubble.setup(m_infoText, sf::Color::White);
 	m_npcBubble.setType(ABubble::Type::Left);
 	m_npcBubble.setActive(true);
@@ -87,7 +88,7 @@ void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePositio
 	m_nanoCount = progress.getNanoRobotCount();
 	m_npcCount = progress.getNpcCount();
 	m_npcMax = progress.getNpcMax();
-	m_infoText = std::to_wstring(m_npcCount) + L" / " + std::to_wstring(m_npcMax) + L" Rencontres";
+	m_infoText = std::to_wstring(m_npcCount) + L" / " + std::to_wstring(m_npcMax) + L" " + AMenu::getText("menu_friends");
 	m_npcBubble.setPosition(octoBubblePosition - sf::Vector2f(240.f, 90.f));
 	m_npcBubble.setPhrase(m_infoText);
 	m_npcBubble.update(frameTime);

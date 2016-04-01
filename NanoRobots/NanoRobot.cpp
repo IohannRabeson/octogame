@@ -38,6 +38,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_soundDistri(0u, 2u)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
+	Progress & progress = Progress::getInstance();
 
 	m_texture = &resources.getTexture(STARGRADIENT_PNG);
 
@@ -64,7 +65,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_sprite.play();
 
 	std::map<std::string, std::vector<std::wstring>>	npcTexts;
-	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstringstream f(resources.getText(progress.getTextFile()).toWideString());
 	std::wstring wkey;
 	std::wstring line;
 	wchar_t delim = '=';

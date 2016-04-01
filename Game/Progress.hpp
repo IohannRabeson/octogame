@@ -11,7 +11,17 @@ class ABiome;
 class Progress
 {
 public:
+	enum class Language : std::size_t
+	{
+		fr_keyboard,
+		en_keyboard
+	};
+
 	static Progress & getInstance(void);
+
+	void				setLanguage(Language language);
+	Progress::Language	getLanguage(void) const;
+	ResourceKey			getTextFile(void) const;
 
 	void				addNanoRobot();
 	void				removeNanoRobot() { m_data.nanoRobotCount--; }
@@ -82,12 +92,12 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::IceA, 6u, 100u, true, true)
+			data(0u, Level::IceA, 6u, 100u, true, true, Language::en_keyboard)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
 				std::size_t musicVol, std::size_t soundVol,
-				bool fullscreen, bool vsync) :
+				bool fullscreen, bool vsync, Language language) :
 			nanoRobotCount(nanoRobot),
 			nextDestination(biome),
 			lastDestination(biome),
@@ -95,6 +105,7 @@ private:
 			soundVol(soundVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
+			language(language),
 			firstTime(true),
 			walk(false),
 			moveMap(false),
@@ -108,6 +119,7 @@ private:
 		std::size_t		soundVol;
 		bool			fullscreen;
 		bool			vsync;
+		Language		language;
 		bool			firstTime;
 		bool			walk;
 		bool			moveMap;
