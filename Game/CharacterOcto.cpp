@@ -61,6 +61,8 @@ CharacterOcto::CharacterOcto() :
 	m_inWater(false)
 {
 	m_sound.reset(new OctoSound());
+	m_cameraMovement.reset(new CameraMovement);
+
 	InputListener::addInputListener();
 
 	if (m_progress.canMoveMap())
@@ -658,6 +660,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		robot->update(frameTime);
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
+	m_cameraMovement->follow(frameTime, m_box->getPosition());
 }
 
 void	CharacterOcto::portalEvent()
@@ -1384,3 +1387,8 @@ sf::Vector2f	CharacterOcto::getBubblePosition() const
 	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -80.f));
 }
 
+
+void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
+{
+	m_cameraMovement->collideZoomEvent(position);
+}

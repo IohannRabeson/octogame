@@ -14,6 +14,7 @@
 # include "PloufSystem.hpp"
 # include "WaterDropSystem.hpp"
 # include "InputListener.hpp"
+# include "CameraMovement.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -79,6 +80,7 @@ public:
 	void					collideSpaceShip(SpaceShip * spaceShip);
 	void					usePortal(Portal & portal);
 	void					startKonamiCode(bool canStart);
+	void					collideZoomEvent(sf::Vector2f const & position);
 
 private:
 	bool					dieFall();
@@ -126,6 +128,7 @@ private:
 	octo::CharacterAnimation	m_konamiCodeAnimation;
 
 	std::unique_ptr<OctoSound>						m_sound;
+	std::unique_ptr<CameraMovement>					m_cameraMovement;
 	RectangleShape *								m_box;
 	CircleShape *									m_eventBox;
 	OctoEvent										m_octoEvent;
