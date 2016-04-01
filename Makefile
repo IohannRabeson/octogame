@@ -51,7 +51,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/OctoSound.cpp						\
-				Game/CameraMouvement.cpp				\
+				Game/CameraMovement.cpp					\
 				Game/Progress.cpp						\
 				Game/MusicManager.cpp					\
 				Game/KonamiCode.cpp						\

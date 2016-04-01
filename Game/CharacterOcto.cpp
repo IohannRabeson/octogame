@@ -61,7 +61,7 @@ CharacterOcto::CharacterOcto() :
 	m_inWater(false)
 {
 	m_sound.reset(new OctoSound());
-	m_cameraMouvement.reset(new CameraMouvement);
+	m_cameraMovement.reset(new CameraMovement);
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 
@@ -661,7 +661,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		robot->update(frameTime);
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
-	m_cameraMouvement->follow(frameTime, m_box->getPosition());
+	m_cameraMovement->follow(frameTime, m_box->getPosition());
 }
 
 void	CharacterOcto::portalEvent()
@@ -1391,5 +1391,5 @@ sf::Vector2f	CharacterOcto::getBubblePosition() const
 
 void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
 {
-	m_cameraMouvement->collideZoomEvent(position);
+	m_cameraMovement->collideZoomEvent(position);
 }

@@ -1,14 +1,14 @@
-#ifndef CAMERAMOUVEMENT_HPP
-# define CAMERAMOUVEMENT_HPP
+#ifndef CAMERAMOVEMENT_HPP
+# define CAMERAMOVEMENT_HPP
 
 # include <SFML/System/Vector2.hpp>
 # include <SFML/System/Time.hpp>
 
-class CameraMouvement
+class CameraMovement
 {
 public:
-	CameraMouvement(void);
-	virtual ~CameraMouvement(void) = default;
+	CameraMovement(void);
+	virtual ~CameraMovement(void) = default;
 
 	void follow(sf::Time frameTime, sf::Vector2f const & octoPos);
 	void collideZoom(sf::Time frametime);

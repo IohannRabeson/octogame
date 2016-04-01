@@ -1,12 +1,10 @@
-#include "CameraMouvement.hpp"
+#include "CameraMovement.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
 
-#include <iostream>
-
-CameraMouvement::CameraMouvement(void):
+CameraMovement::CameraMovement(void):
 	m_zoomFactor(0.85f),
 	m_isZoom(false),
 	m_timerZoom(sf::Time::Zero),
@@ -18,7 +16,7 @@ CameraMouvement::CameraMouvement(void):
 	octo::Application::getCamera().setSize(m_initialSize);
 }
 
-void	CameraMouvement::follow(sf::Time frameTime, sf::Vector2f const & octoPos)
+void	CameraMovement::follow(sf::Time frameTime, sf::Vector2f const & octoPos)
 {
 	float frameTimeSeconds = frameTime.asSeconds();
 	octo::Camera & camera = octo::Application::getCamera();
@@ -51,7 +49,7 @@ void	CameraMouvement::follow(sf::Time frameTime, sf::Vector2f const & octoPos)
 	camera.setCenter(cameraPos);
 }
 
-void CameraMouvement::collideZoom(sf::Time frametime)
+void CameraMovement::collideZoom(sf::Time frametime)
 {
 	octo::Camera & camera = octo::Application::getCamera();
 
@@ -75,7 +73,7 @@ void CameraMouvement::collideZoom(sf::Time frametime)
 		m_isZoom = false;
 }
 
-void CameraMouvement::collideZoomEvent(sf::Vector2f const & npcPos)
+void CameraMovement::collideZoomEvent(sf::Vector2f const & npcPos)
 {
 	m_isZoom = true;
 	if (npcPos != m_npcPos)

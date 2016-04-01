@@ -13,7 +13,7 @@
 # include "HelmetSystem.hpp"
 # include "PloufSystem.hpp"
 # include "WaterDropSystem.hpp"
-# include "CameraMouvement.hpp"
+# include "CameraMovement.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -127,7 +127,7 @@ private:
 	octo::CharacterAnimation	m_konamiCodeAnimation;
 
 	std::unique_ptr<OctoSound>						m_sound;
-	std::unique_ptr<CameraMouvement>				m_cameraMouvement;
+	std::unique_ptr<CameraMovement>					m_cameraMovement;
 	RectangleShape *								m_box;
 	CircleShape *									m_eventBox;
 	OctoEvent										m_octoEvent;
