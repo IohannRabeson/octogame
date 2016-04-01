@@ -7,8 +7,6 @@
 # include <GraphicsManager.hpp>
 # include <SFML/Graphics/CircleShape.hpp>
 
-# include <memory>
-
 class AMenuSelection : public AMenu, public InputListener
 {
 public:

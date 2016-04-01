@@ -1,7 +1,7 @@
 #ifndef INPUTLISTENER_HPP
 # define INPUTLISTENER_HPP
 
-#include <DefaultGraphicsListeners.hpp>
+# include <DefaultGraphicsListeners.hpp>
 
 class InputListener : public octo::DefaultKeyboardListener,
 					  public octo::DefaultJoystickListener
@@ -23,7 +23,7 @@ public:
 	};
 
 	InputListener(void);
-	~InputListener(void);
+	virtual ~InputListener(void) = default;
 
 	virtual bool	onInputPressed(InputListener::OctoKeys const & key);
 	virtual bool	onInputReleased(InputListener::OctoKeys const & key);

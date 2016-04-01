@@ -2,15 +2,9 @@
 #include <GraphicsManager.hpp>
 #include "InputListener.hpp"
 
-#include <iostream>
-
 InputListener::InputListener(void) :
 	m_joystickBoolX(false),
 	m_joystickBoolY(false)
-{
-}
-
-InputListener::~InputListener(void)
 {
 }
 
@@ -34,10 +28,8 @@ void	InputListener::addInputListener(void)
 void	InputListener::removeInputListener(void)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	if (sf::Joystick::isConnected(0))
-		graphics.removeJoystickListener(this);
-	else
-		graphics.removeKeyboardListener(this);
+	graphics.removeJoystickListener(this);
+	graphics.removeKeyboardListener(this);
 }
 
 bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
