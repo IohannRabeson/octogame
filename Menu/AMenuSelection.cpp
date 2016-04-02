@@ -8,7 +8,7 @@ AMenuSelection::AMenuSelection(void) :
 	m_indexCursor(0u),
 	m_indexSave(0u),
 	m_isKeyboard(false),
-	m_inputTimerMax(sf::seconds(0.2f))
+	m_inputTimerMax(sf::seconds(0.1f))
 {
 }
 

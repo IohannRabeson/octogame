@@ -5,6 +5,8 @@
 
 #include "ResourceDefinitions.hpp"
 
+#include <iterator>
+
 BubbleText::BubbleText(void) :
 	m_bubbleWidth(350.f),
 	m_characterPerLineMax(0u),
@@ -26,9 +28,11 @@ void BubbleText::setupBlocString(void)
 			lastSpace = it;
 		if (j == m_characterPerLineMax - 1u)
 		{
+			std::size_t lineSize = j - std::distance(lastSpace, it);
+			if (lineSize > m_characterPerLine)
+				m_characterPerLine = lineSize;
 			*lastSpace = '\n';
 			it = ++lastSpace;
-			m_characterPerLine = j;
 			j = 0u;
 			m_lineCount++;
 		}

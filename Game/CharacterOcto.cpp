@@ -113,6 +113,9 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Tent)
 		| static_cast<std::size_t>(GameObjectType::Concert)
 		| static_cast<std::size_t>(GameObjectType::CedricNpc)
+		| static_cast<std::size_t>(GameObjectType::HouseFlatSnow)
+		| static_cast<std::size_t>(GameObjectType::EngineSnow)
+		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik);
 	m_box->setCollisionMask(mask);
 
@@ -121,6 +124,13 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setRadius(400.f);
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
+//Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::StrangerSnowNpc)
+		| static_cast<std::size_t>(GameObjectType::StrangerGirlSnowNpc)
+		| static_cast<std::size_t>(GameObjectType::SnowGirl2Npc)
+		| static_cast<std::size_t>(GameObjectType::SnowGirl1Npc)
+		| static_cast<std::size_t>(GameObjectType::Snowman3Npc)
+		| static_cast<std::size_t>(GameObjectType::Snowman1Npc)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::SpaceShip)
 		| static_cast<std::size_t>(GameObjectType::CedricNpc)
@@ -144,7 +154,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::ClementineNpc)
 		| static_cast<std::size_t>(GameObjectType::CanouilleNpc)
 		| static_cast<std::size_t>(GameObjectType::WellKeeperNpc)
-		| static_cast<std::size_t>(GameObjectType::TurbanNpc);
+		| static_cast<std::size_t>(GameObjectType::TurbanNpc)
+		| static_cast<std::size_t>(GameObjectType::Snowman2Npc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
 	m_eventBox->setType(AShape::Type::e_trigger);

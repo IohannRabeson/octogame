@@ -1,6 +1,9 @@
 #include "Game.hpp"
 #include "DefaultBiome.hpp"
 #include "IceABiome.hpp"
+#include "IceBBiome.hpp"
+#include "IceCBiome.hpp"
+#include "IceDBiome.hpp"
 #include "DesertABiome.hpp"
 #include "JungleABiome.hpp"
 #include "WaterABiome.hpp"
@@ -21,6 +24,13 @@
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+//Script AddNpc Include
+#include "StrangerSnowNpc.hpp"
+#include "StrangerGirlSnowNpc.hpp"
+#include "SnowGirl2Npc.hpp"
+#include "SnowGirl1Npc.hpp"
+#include "Snowman3Npc.hpp"
+#include "Snowman1Npc.hpp"
 #include "FranfranNpc.hpp"
 #include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
@@ -40,6 +50,7 @@
 #include "WolfNpc.hpp"
 #include "ConstanceNpc.hpp"
 #include "BrayouNpc.hpp"
+#include "Snowman2Npc.hpp"
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "JellyfishNpc.hpp"
@@ -73,6 +84,9 @@ Game::Game(void) :
 	InputListener::addInputListener();
 
 	m_biomeManager.registerBiome<IceABiome>(Level::IceA);
+	m_biomeManager.registerBiome<IceBBiome>(Level::IceB);
+	m_biomeManager.registerBiome<IceCBiome>(Level::IceC);
+	m_biomeManager.registerBiome<IceDBiome>(Level::IceD);
 	m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
 	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
@@ -262,6 +276,25 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::Portal:
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
+//Script AddNpc GameObject
+		case GameObjectType::StrangerSnowNpc:
+			gameObjectCast<StrangerSnowNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::StrangerGirlSnowNpc:
+			gameObjectCast<StrangerGirlSnowNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SnowGirl2Npc:
+			gameObjectCast<SnowGirl2Npc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SnowGirl1Npc:
+			gameObjectCast<SnowGirl1Npc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Snowman3Npc:
+			gameObjectCast<Snowman3Npc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Snowman1Npc:
+			gameObjectCast<Snowman1Npc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::FranfranNpc:
 			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -276,6 +309,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::BrayouNpc:
 			gameObjectCast<BrayouNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Snowman2Npc:
+			gameObjectCast<Snowman2Npc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::AmandineNpc:
 			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
@@ -373,9 +409,9 @@ void Game::moveMap(sf::Time frameTime)
 		if (Progress::getInstance().canMoveMap())
 		{
 			if (m_keyS)
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
-			else if (m_keyF)
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			else if (m_keyF)
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			else
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			if (m_soundGeneration == nullptr)

@@ -9,11 +9,19 @@
 #include "MapInstance.hpp"
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
+//Script AddNpc Include
+#include "StrangerSnowNpc.hpp"
+#include "StrangerGirlSnowNpc.hpp"
+#include "SnowGirl2Npc.hpp"
+#include "SnowGirl1Npc.hpp"
+#include "Snowman3Npc.hpp"
+#include "Snowman1Npc.hpp"
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "GuiNpc.hpp"
+#include "Snowman2Npc.hpp"
 #include "PunkNpc.hpp"
 #include "FatNpc.hpp"
 #include "LucienNpc.hpp"
@@ -32,6 +40,9 @@
 #include "VinceNpc.hpp"
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
+#include "HouseFlatSnow.hpp"
+#include "EngineSnow.hpp"
+#include "WeirdHouseSnow.hpp"
 #include "WolfNpc.hpp"
 #include "Well.hpp"
 #include "Tent.hpp"
@@ -130,12 +141,20 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
+	m_npcFactory.registerCreator<Snowman2Npc>(SNOWMAN_2_OSS);
 	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
 	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
 	m_npcFactory.registerCreator<ClementineNpc>(CLEMENTINE_OSS);
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
+//Script AddNpc Factory
+	m_npcFactory.registerCreator<StrangerSnowNpc>(STRANGER_SNOW_OSS);
+	m_npcFactory.registerCreator<StrangerGirlSnowNpc>(STRANGER_GIRL_SNOW_OSS);
+	m_npcFactory.registerCreator<SnowGirl2Npc>(SNOWGIRL_2_OSS);
+	m_npcFactory.registerCreator<SnowGirl1Npc>(SNOWGIRL_1_OSS);
+	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
+	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
@@ -283,6 +302,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(SKELETON_4_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(HOUSE_SNOW_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_SNOW_OSS, scale, position, 1u, 0.4f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -418,6 +441,34 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, franfran);
 				}
 				break;
+			case GameObjectType::Snowman1Npc:
+				{
+					Snowman1Npc * snowman = new Snowman1Npc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
+				}
+				break;
+			case GameObjectType::StrangerGirlSnowNpc:
+				{
+					StrangerGirlSnowNpc * snowman = new StrangerGirlSnowNpc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
+				}
+				break;
+			case GameObjectType::StrangerSnowNpc:
+				{
+					StrangerSnowNpc * snowman = new StrangerSnowNpc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
+				}
+				break;
+			case GameObjectType::SnowGirl2Npc:
+				{
+					SnowGirl2Npc * snowman = new SnowGirl2Npc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
+				}
+				break;
 			case GameObjectType::JuNpc:
 				{
 					JuNpc * ju = new JuNpc();
@@ -551,6 +602,24 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::Bouibouik:
 				{
 					Bouibouik * simple = new Bouibouik();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::HouseFlatSnow:
+				{
+					HouseFlatSnow * simple = new HouseFlatSnow();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::EngineSnow:
+				{
+					EngineSnow * simple = new EngineSnow();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::WeirdHouseSnow:
+				{
+					WeirdHouseSnow * simple = new WeirdHouseSnow();
 					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
 				}
 				break;

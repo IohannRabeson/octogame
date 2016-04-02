@@ -72,6 +72,9 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Well.cpp					\
 				GameObjects/Seb.cpp						\
 				GameObjects/Pyramid.cpp					\
+				GameObjects/HouseFlatSnow.cpp			\
+				GameObjects/EngineSnow.cpp				\
+				GameObjects/WeirdHouseSnow.cpp			\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
@@ -100,6 +103,19 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/WolfNpc.cpp						\
 				Npcs/WellKeeperNpc.cpp					\
 				Npcs/JellyfishNpc.cpp					\
+				Npcs/Snowman2Npc.cpp					\
+				Npcs/Snowman1Npc.cpp					\
+				Npcs/Snowman3Npc.cpp					\
+				Npcs/SnowGirl1Npc.cpp					\
+				Npcs/SnowGirl2Npc.cpp					\
+				Npcs/StrangerGirlSnowNpc.cpp				\
+				Npcs/StrangerSnowNpc.cpp				\
+#Script AddNpc
+
+
+
+
+
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
@@ -149,6 +165,9 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
 				Biomes/IceABiome.cpp					\
+				Biomes/IceBBiome.cpp					\
+				Biomes/IceCBiome.cpp					\
+				Biomes/IceDBiome.cpp					\
 				Biomes/DesertABiome.cpp					\
 				Biomes/JungleABiome.cpp					\
 				Biomes/WaterABiome.cpp					\
