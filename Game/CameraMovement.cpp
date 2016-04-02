@@ -25,7 +25,13 @@ void	CameraMovement::follow(sf::Time frameTime, sf::Vector2f const & octoPos)
 	float lookAtUpPosY = octoPos.y;
 	float lookAtDownPosY = octoPos.y;
 
-	lookAtDownPosY -= cameraSize.y / 4.f;
+	//TODO: Continu here!
+	/*
+	if (m_eventFallTimer >= sf::seconds(3.f))
+		lookAtDownPosY += -cameraSize.y / 4.f + cameraSize.y / 4.f * (m_eventFallTimer.asSeconds() - 2.f);
+	else
+	*/
+	lookAtDownPosY += -cameraSize.y / 4.f;
 	cameraPos.x = octo::linearInterpolation(octoPos.x, cameraPos.x, 1.f - frameTimeSeconds);
 	if (lookAtDownPosY >= cameraPos.y)
 		cameraPos.y = octo::linearInterpolation(lookAtDownPosY, cameraPos.y, 1.f - frameTimeSeconds * 6.f);
@@ -82,4 +88,9 @@ void CameraMovement::collideZoomEvent(sf::Vector2f const & npcPos)
 		m_timerUnZoom = sf::Time::Zero;
 		m_npcPos = npcPos;
 	}
+}
+
+void CameraMovement::setEventFallTimer(sf::Time const & eventFallTimer)
+{
+	m_eventFallTimer = eventFallTimer;
 }

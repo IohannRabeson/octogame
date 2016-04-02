@@ -692,6 +692,7 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 	{
 		case Fall:
 			m_timeEventFall += frameTime;
+			m_cameraMovement->setEventFallTimer(m_timeEventFall);
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;

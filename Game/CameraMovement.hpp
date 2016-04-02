@@ -13,12 +13,14 @@ public:
 	void follow(sf::Time frameTime, sf::Vector2f const & octoPos);
 	void collideZoom(sf::Time frametime);
 	void collideZoomEvent(sf::Vector2f const & npcPos);
+	void setEventFallTimer(sf::Time const & eventFallTimer);
 
 private:
 	sf::Vector2f								m_initialSize;
 	sf::Vector2f								m_currentSize;
 	float										m_zoomFactor;
 	bool										m_isZoom;
+	sf::Time									m_eventFallTimer;
 	sf::Vector2f								m_npcPos;
 	sf::Time									m_timerZoom;
 	sf::Time									m_timerZoomMax;
