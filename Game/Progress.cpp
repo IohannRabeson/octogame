@@ -149,7 +149,8 @@ Level	Progress::getNextDestination(void) const
 
 void	Progress::setLastDestination(Level destination)
 {
-	m_data.lastDestination = destination;
+	if (destination != Level::Default)
+		m_data.lastDestination = destination;
 }
 
 Level	Progress::getLastDestination(void) const
