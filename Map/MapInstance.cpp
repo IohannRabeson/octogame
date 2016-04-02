@@ -1,4 +1,5 @@
 #include "MapInstance.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <LevelMap.hpp>
 #include <ResourceManager.hpp>
@@ -50,16 +51,24 @@ void MapInstance::nextStep(void)
 {
 	m_depth++;
 	if (m_depth >= static_cast<int>(m_tiles.depth()))
-		m_depth = static_cast<int>(m_tiles.depth() - 1u);
-		//m_depth = 0;
+	{
+		if (Progress::getInstance().getNextDestination() != Level::JungleA)
+			m_depth = m_tiles.depth() - 1u;
+		else
+			m_depth = 0;
+	}
 }
 
 void MapInstance::previousStep(void)
 {
 	m_depth--;
 	if (m_depth < 0)
-		m_depth = 0u;
-		//m_depth = m_tiles.depth() - 1u;
+	{
+		if (Progress::getInstance().getNextDestination() != Level::JungleA)
+			m_depth = 0u;
+		else
+			m_depth = m_tiles.depth() - 1u;
+	}
 }
 
 void MapInstance::setTransitionType(Tile & tile)
