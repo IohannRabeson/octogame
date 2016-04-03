@@ -85,6 +85,10 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 		m_texts.push_back(std::move(bubble));
 	}
 
+	m_infoBubble.setup(L"Infos", sf::Color(255, 255, 255, 200));
+	m_infoBubble.setType(ABubble::Type::Speak);
+	m_infoBubble.setActive(true);
+
 	sf::Color color = sf::Color::Red;
 
 	for (std::size_t i = 0u; i < 16u; i++)
@@ -240,6 +244,30 @@ bool NanoRobot::isTravelling(void) const
 	return m_isTravelling;
 }
 
+bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
+{
+	switch (key)
+	{
+		case OctoKeys::Infos:
+			m_infoBubble.setActive(true);
+		default:
+			break;
+	}
+	return true;
+}
+
+bool NanoRobot::onInputReleased(InputListener::OctoKeys const & key)
+{
+	switch (key)
+	{
+		case OctoKeys::Infos:
+			m_infoBubble.setActive(false);
+		default:
+			break;
+	}
+	return true;
+}
+
 void NanoRobot::setState(NanoRobot::State state)
 {
 	if (m_startLastAnimation)
@@ -362,6 +390,8 @@ void NanoRobot::update(sf::Time frametime)
 
 	m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
 	m_texts[m_textIndex]->update(frametime);
+	m_infoBubble.setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
+	m_infoBubble.update(frametime);
 	m_glowingEffect.setPosition(pos);
 	m_sprite.setScale(m_glowingEffect.getNanoScale());
 	m_glowingEffect.update(frametime);
@@ -393,6 +423,8 @@ void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 		render.draw(m_ray.get() + 8, 8u, sf::Quads, m_texture);
 	}
 	m_particles.draw(render);
+	if (m_infoBubble.isActive())
+		m_infoBubble.draw(render);
 }
 
 void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const

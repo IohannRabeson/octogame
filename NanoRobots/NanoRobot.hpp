@@ -13,10 +13,11 @@
 # include "BubbleText.hpp"
 # include "NanoEffect.hpp"
 # include "SparkSystem.hpp"
+# include "InputListener.hpp"
 
 class CircleShape;
 
-class NanoRobot : public IPlaceable
+class NanoRobot : public IPlaceable, public InputListener
 {
 public:
 	enum State
@@ -40,6 +41,9 @@ public:
 	sf::Vector2f const & getTargetPosition(void);
 	NanoRobot::State getState(void) const;
 	bool isTravelling(void) const;
+
+	bool onInputPressed(InputListener::OctoKeys const & key);
+	bool onInputReleased(InputListener::OctoKeys const & key);
 
 	void addMapOffset(float x, float y);
 	void transfertToOcto(bool inInit = false);
@@ -94,6 +98,7 @@ private:
 	CircleShape *								m_box;
 	std::vector<std::unique_ptr<BubbleText>>	m_texts;
 	std::size_t									m_textIndex;
+	BubbleText									m_infoBubble;
 
 	State										m_state;
 	sf::Time									m_timer;

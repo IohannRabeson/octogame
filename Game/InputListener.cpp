@@ -67,6 +67,9 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Escape:
 			onInputPressed(OctoKeys::Escape);
 			break;
+		case sf::Keyboard::D:
+			onInputPressed(OctoKeys::Infos);
+			break;
 		default:
 			break;
 	}
@@ -106,6 +109,9 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Escape:
 			onInputReleased(OctoKeys::Escape);
+			break;
+		case sf::Keyboard::D:
+			onInputReleased(OctoKeys::Infos);
 			break;
 		default:
 			break;
