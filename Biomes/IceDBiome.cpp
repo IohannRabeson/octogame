@@ -139,7 +139,7 @@ IceDBiome::IceDBiome() :
 	m_gameObjects[355] = GameObjectType::Portal;
 	m_gameObjects[400] = GameObjectType::SnowGirl2Npc;
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
-	//m_gameObjects[500] = GameObjectType::StrangerGirlSnowNpc;
+	m_gameObjects[475] = GameObjectType::StrangerGirlSnowNpc;
 	m_gameObjects[570] = GameObjectType::EngineSnow;
 	m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::DesertA);
