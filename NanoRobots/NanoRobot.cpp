@@ -30,6 +30,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_multiplier(multiplier),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_textIndex(0u),
+	m_infoSetup(false),
 	m_state(Idle),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(15.f)),
@@ -39,6 +40,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	Progress & progress = Progress::getInstance();
+	InputListener::addInputListener();
 
 	m_texture = &resources.getTexture(STARGRADIENT_PNG);
 
@@ -85,9 +87,8 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 		m_texts.push_back(std::move(bubble));
 	}
 
-	m_infoBubble.setup(L"Infos", sf::Color(255, 255, 255, 200));
-	m_infoBubble.setType(ABubble::Type::Speak);
-	m_infoBubble.setActive(true);
+	m_infoBubble.setType(ABubble::Type::None);
+	m_infoBubble.setActive(false);
 
 	sf::Color color = sf::Color::Red;
 
@@ -120,6 +121,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 
 NanoRobot::~NanoRobot(void)
 {
+	InputListener::removeInputListener();
 	if (m_sound != nullptr)
 		m_sound->stop();
 }
@@ -249,7 +251,15 @@ bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 	switch (key)
 	{
 		case OctoKeys::Infos:
-			m_infoBubble.setActive(true);
+		{
+			if (m_infoSetup == false && m_infoText.size())
+			{
+				m_infoBubble.setup(m_infoText, sf::Color(255, 255, 255, 200), 20u, 600u);
+				m_infoBubble.setType(ABubble::Type::Speak);
+				m_infoBubble.setActive(true);
+				m_infoSetup = true;
+			}
+		}
 		default:
 			break;
 	}
@@ -261,7 +271,14 @@ bool NanoRobot::onInputReleased(InputListener::OctoKeys const & key)
 	switch (key)
 	{
 		case OctoKeys::Infos:
-			m_infoBubble.setActive(false);
+		{
+			if (m_infoSetup == true)
+			{
+				m_infoBubble.setType(ABubble::Type::None);
+				m_infoBubble.setActive(false);
+				m_infoSetup = false;
+			}
+		}
 		default:
 			break;
 	}

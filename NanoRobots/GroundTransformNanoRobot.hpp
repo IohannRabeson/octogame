@@ -11,6 +11,7 @@ public:
 
 	virtual void update(sf::Time frameTime);
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
+	void		 updateInfo(void);
 
 private:
 	enum State

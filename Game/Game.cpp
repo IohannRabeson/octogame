@@ -438,20 +438,16 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 	switch (key)
 	{
 		case OctoKeys::GroundLeft:
-			m_keyS = true;
+			m_keyF = true;
 			Progress::getInstance().moveMap();
 			break;
 		case OctoKeys::GroundRight:
 			Progress::getInstance().moveMap();
-			m_keyF = true;
+			m_keyS = true;
 			break;
 		case OctoKeys::Infos:
-		{
-			sf::Vector2f center = octo::Application::getCamera().getCenter();
-			octo::Application::getCamera().setCenter(sf::Vector2f(center.x + rand() / 1000, center.y));
 			m_slowTimeInfosCoef = 10.f;
 			break;
-		}
 		default:
 			break;
 	}
@@ -463,10 +459,10 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 	switch (key)
 	{
 		case OctoKeys::GroundLeft:
-			m_keyS = false;
+			m_keyF = false;
 			break;
 		case OctoKeys::GroundRight:
-			m_keyF = false;
+			m_keyS = false;
 			break;
 		case OctoKeys::Infos:
 			m_slowTimeInfosCoef = 1.f;
