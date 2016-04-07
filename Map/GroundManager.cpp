@@ -369,6 +369,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		}
 
 		// Get all decors
+		bool spawnElevator = false;
 		for (std::size_t i = 0u; i < levelMap.getDecorCount(); i++)
 		{
 			octo::LevelMap::Decor decor = resources.getLevelMap(instance.second).getDecor(i);
@@ -384,6 +385,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				portal->setPosition(position + sf::Vector2f(50.f, 350.f));
 				m_otherOnInstance.push_back(std::move(portal));
 			}
+			else if (!decor.name.compare(OBJECT_ELEVATOR_TOP_BACK_OSS))
+				spawnElevator = true;
 			else if (!decor.isFront)
 				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 			else
@@ -403,7 +406,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		}
 
 		// For each instance, create an elevator stream
-		if (spawnInstance)
+		if (spawnInstance && spawnElevator)
 		{
 			std::unique_ptr<ElevatorStream> elevator;
 			elevator.reset(new ElevatorStream());
