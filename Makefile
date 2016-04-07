@@ -103,8 +103,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/WolfNpc.cpp						\
 				Npcs/WellKeeperNpc.cpp					\
 				Npcs/JellyfishNpc.cpp					\
-				Npcs/BirdBlueNpc.cpp					\
-				Npcs/BirdRedNpc.cpp						\
+				Npcs/BirdNpc.cpp						\
 				Npcs/Snowman2Npc.cpp					\
 				Npcs/Snowman1Npc.cpp					\
 				Npcs/Snowman3Npc.cpp					\

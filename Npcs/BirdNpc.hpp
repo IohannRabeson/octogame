@@ -1,15 +1,15 @@
-#ifndef BIRDBLUE_HPP
-# define BIRDBLUE_HPP
+#ifndef BIRD_HPP
+# define BIRD_HPP
 
 # include "ANpc.hpp"
 
 class SkyCycle;
 
-class BirdBlueNpc : public ANpc, public AGameObject<GameObjectType::BirdBlueNpc>
+class BirdNpc : public ANpc, public AGameObject<GameObjectType::BirdNpc>
 {
 public:
-	BirdBlueNpc(void);
-	virtual ~BirdBlueNpc(void) = default;
+	BirdNpc(void);
+	virtual ~BirdNpc(void) = default;
 
 	virtual void setup(void);
 	virtual void setPosition(sf::Vector2f const & position);
@@ -20,13 +20,14 @@ public:
 protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
+	virtual void update(sf::Time frametime);
 	virtual void updatePhysics(void);
 
 private:
-	bool			m_startTimer;
 	bool			m_animationEnd;
 	sf::Vector2f	m_startPosition;
 	sf::Vector2f	m_flySpeed;
+	float			m_speedLimit;
 };
 
 #endif

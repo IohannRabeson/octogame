@@ -54,8 +54,7 @@
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "JellyfishNpc.hpp"
-#include "BirdBlueNpc.hpp"
-#include "BirdRedNpc.hpp"
+#include "BirdNpc.hpp"
 #include "WellKeeperNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
@@ -351,11 +350,8 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::JellyfishNpc:
 			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::BirdBlueNpc:
-			gameObjectCast<BirdBlueNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BirdRedNpc:
-			gameObjectCast<BirdRedNpc>(gameObject)->collideOctoEvent(octo);
+		case GameObjectType::BirdNpc:
+			gameObjectCast<BirdNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::WellKeeperNpc:
 			gameObjectCast<WellKeeperNpc>(gameObject)->collideOctoEvent(octo);
@@ -485,7 +481,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
-	m_skyManager->drawBirds(render, states);
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
