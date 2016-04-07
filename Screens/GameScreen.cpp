@@ -72,7 +72,6 @@ void	GameScreen::update(sf::Time frameTime)
 		m_game->update(frameTime);
 		if (progress.changeLevel())
 		{
-			m_doSave = true;
 			progress.levelChanged();
 			states.change("transitionLevel");
 		}
