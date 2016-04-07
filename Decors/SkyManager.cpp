@@ -15,9 +15,9 @@
 
 SkyManager::SkyManager(void) :
 	//TODO:Estimate how much vertex we need
-	m_decorManagerBack(200000),
-	m_decorManagerFront(200000),
-	m_decorManagerFilter(40),
+	m_decorManagerBack(50000),
+	m_decorManagerFront(100000),
+	m_decorManagerFilter(24),
 	m_wind(0.f),
 	m_cycle(nullptr),
 	m_sunCount(0u),
