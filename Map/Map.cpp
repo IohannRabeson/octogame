@@ -54,7 +54,10 @@ void Map::init(ABiome & biome)
 
 	auto const & instances = biome.getInstances();
 	for (auto & instance : instances)
+	{
 		m_instances.push_back(std::unique_ptr<MapInstance>(new MapInstance(instance.first, instance.second)));
+		m_instancesRect.push_back(m_instances.back()->getCornerPositions());
+	}
 
 	m_noise.setSeed(biome.getMapSeed());
 

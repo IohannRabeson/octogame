@@ -39,7 +39,7 @@ public:
 	void drawWater(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawText(sf::RenderTarget& render, sf::RenderStates states) const;
 	NanoRobot * getNanoRobot(NanoRobot * robot);
-	void setNextGenerationState(GenerationState state);
+	void setNextGenerationState(GenerationState state, sf::Vector2f const & octoPos);
 
 private:
 	template<class T>
@@ -86,6 +86,7 @@ private:
 	GenerationState						m_nextState;
 	SkyCycle *							m_cycle;
 	std::unique_ptr<Water>				m_water;
+	sf::Vector2f						m_octoPosState;
 
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;

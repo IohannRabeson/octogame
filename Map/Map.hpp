@@ -75,6 +75,7 @@ private:
 	sf::Vector2f const *						m_offset;
 	sf::Vector2f								m_curOffset;
 	std::vector<std::unique_ptr<MapInstance>>	m_instances;
+	std::vector<sf::IntRect>					m_instancesRect;
 	Decors										m_decorPositions;
 	WideDecors									m_wideDecorPositions;
 	sf::Vector2u								m_mapSize;
