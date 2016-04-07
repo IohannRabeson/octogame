@@ -98,6 +98,7 @@ Game::~Game(void)
 	if (m_soundGeneration != nullptr)
 		m_soundGeneration->stop();
 	InputListener::removeInputListener();
+	Progress::getInstance().save();
 }
 
 void	Game::loadLevel(void)
