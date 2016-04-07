@@ -35,6 +35,7 @@
 #include "AmandineNpc.hpp"
 #include "JeffMouffyNpc.hpp"
 #include "JellyfishNpc.hpp"
+#include "BirdNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "WellKeeperNpc.hpp"
 #include "VinceNpc.hpp"
@@ -530,6 +531,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					JellyfishNpc * jellyfish = new JellyfishNpc();
 					jellyfish->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, jellyfish);
+				}
+				break;
+			case GameObjectType::BirdNpc:
+				{
+					BirdNpc * birdBlue = new BirdNpc();
+					birdBlue->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, birdBlue);
 				}
 				break;
 			case GameObjectType::CanouilleNpc:
