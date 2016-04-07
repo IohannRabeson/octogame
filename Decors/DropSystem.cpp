@@ -56,10 +56,12 @@ void	DropSystem::setDropPerSecond(float count)
 
 void	DropSystem::update(sf::Time frameTime, float angle, octo::VertexBuilder & builder)
 {
-	static float const		BottomMargin{64.f};
+	static float const		Margin{64.f};
 	octo::Camera const &	camera = octo::Application::getCamera();
 	float					cameraBottom = camera.getRectangle().top + camera.getSize().y;
-	float					bottom = cameraBottom + BottomMargin;
+	float					bottom = cameraBottom + Margin;
+	float					cameraTop = camera.getRectangle().top;
+	float					top = cameraTop - Margin;
 
 	m_dropTimer += frameTime;
 	float velocityY = m_speed * frameTime.asSeconds();
@@ -69,7 +71,8 @@ void	DropSystem::update(sf::Time frameTime, float angle, octo::VertexBuilder & b
 		{
 			particle.position.x += particle.velocity.x * frameTime.asSeconds();
 			particle.position.y += velocityY;
-			builder.createTriangle(particle.p1 + particle.position, particle.p2 + particle.position, particle.p3 + particle.position, m_color);
+			if (particle.position.y > top)
+				builder.createTriangle(particle.p1 + particle.position, particle.p2 + particle.position, particle.p3 + particle.position, m_color);
 		}
 		else if (particle.isAlive == false && m_canCreateDrop && m_dropTimer > m_dropInterval)
 		{
