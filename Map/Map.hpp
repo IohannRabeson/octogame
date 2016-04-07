@@ -55,10 +55,12 @@ public:
 	void computeDecor(void);
 	void computeWideDecor(void);
 
+	void		 registerOctoPos(sf::Vector2f const & octoPos);
 	virtual void swapDepth(void);
 	virtual void registerDepth(void);
 	virtual void nextStep(void);
 	virtual void previousStep(void);
+	bool		 isOctoOnInstance(sf::IntRect const & instanceRect, sf::Vector2i const & octoPos);
 
 private:
 	typedef std::function<float(float x, float y)>				MapSurfaceGeneratorBind;
@@ -82,6 +84,7 @@ private:
 	Noise										m_noise;
 	MapSurfaceGeneratorBind						m_mapSurface;
 	TileColorGeneratorBind						m_tileColor;
+	sf::Vector2i								m_octoPos;
 
 };
 

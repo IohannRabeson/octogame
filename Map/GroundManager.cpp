@@ -1328,15 +1328,19 @@ void GroundManager::update(float deltatime)
 		if (m_nextState == GenerationState::Next)
 		{
 			compute = true;
-			m_tilesPrev->nextStep(m_octoPosState);
+			m_tilesPrev->registerOctoPos(m_octoPosState);
+			m_tilesPrev->nextStep();
+			m_tiles->registerOctoPos(m_octoPosState);
 			m_tiles->registerDepth();
-			m_tiles->nextStep(m_octoPosState);
+			m_tiles->nextStep();
 			m_nextState = GenerationState::None;
 		}
 		else if (m_nextState == GenerationState::Previous)
 		{
 			compute = true;
+			m_tilesPrev->registerOctoPos(m_octoPosState);
 			m_tilesPrev->previousStep();
+			m_tiles->registerOctoPos(m_octoPosState);
 			m_tiles->registerDepth();
 			m_tiles->previousStep();
 			m_nextState = GenerationState::None;

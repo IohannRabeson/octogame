@@ -225,6 +225,24 @@ void Map::swapDepth(void)
 		instance->swapDepth();
 }
 
+void Map::registerOctoPos(sf::Vector2f const & octoPos)
+{
+	m_octoPos.x = static_cast<int>(octoPos.x / Tile::TileSize);
+	m_octoPos.y = static_cast<int>(octoPos.y / Tile::TileSize);
+	while (m_octoPos.x >= static_cast<int>(m_mapSize.x))
+		m_octoPos.x -= m_mapSize.x;
+	while (m_octoPos.x <= 0)
+		m_octoPos.x += m_mapSize.x;
+}
+
+bool Map::isOctoOnInstance(sf::IntRect const & instanceRect, sf::Vector2i const & octoPos)
+{
+	if ((octoPos.x >= instanceRect.left && octoPos.x <= instanceRect.width)
+		 && (octoPos.y >= instanceRect.top && octoPos.y <= instanceRect.height))
+		return true;
+	return false;
+}
+
 void Map::registerDepth(void)
 {
 	m_oldDepth = m_depth;
@@ -235,15 +253,21 @@ void Map::registerDepth(void)
 void Map::nextStep(void)
 {
 	m_depth += m_transitionStep;
-	for (auto & instance : m_instances)
-		instance->nextStep();
+	for (std::size_t i = 0; i < m_instances.size(); i++)
+	{
+		if (isOctoOnInstance(m_instancesRect[i], m_octoPos))
+			m_instances[i]->nextStep();
+	}
 }
 
 void Map::previousStep(void)
 {
 	m_depth -= m_transitionStep;
-	for (auto & instance : m_instances)
-		instance->previousStep();
+	for (std::size_t i = 0; i < m_instances.size(); i++)
+	{
+		if (isOctoOnInstance(m_instancesRect[i], m_octoPos))
+			m_instances[i]->previousStep();
+	}
 }
 
 void Map::setMapSurfaceGenerator(MapSurfaceGenerator mapSurface)

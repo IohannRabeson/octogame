@@ -3,6 +3,7 @@
 
 # include <SFML/Graphics.hpp>
 # include <Array3D.hpp>
+# include <AudioManager.hpp>
 # include "IMapTransformable.hpp"
 # include "Tile.hpp"
 
@@ -19,6 +20,7 @@ public:
 	MapInstance(std::size_t position, std::string const & resourceId);
 	virtual ~MapInstance(void) = default;
 
+	void playSound(void);
 	void swapDepth(void);
 	void registerDepth(void);
 	void nextStep(void);
@@ -34,12 +36,11 @@ private:
 	MapInstance(void) = delete;
 	void setStartTransition(int transitionType, Tile & tile, int x, int y);
 
-	octo::Array3D<Tile>		m_tiles;
-	octo::LevelMap const &	m_levelMap;
-	sf::IntRect				m_cornerPositions;
-	int						m_depth;
-	int						m_oldDepth;
-
+	octo::Array3D<Tile>				m_tiles;
+	octo::LevelMap const &			m_levelMap;
+	sf::IntRect						m_cornerPositions;
+	int								m_depth;
+	int								m_oldDepth;
 };
 
 #endif
