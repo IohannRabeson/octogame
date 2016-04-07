@@ -1,7 +1,8 @@
 #include "TransitionLevelZeroScreen.hpp"
 
+#include "Progress.hpp"
+
 #include <Application.hpp>
-#include <GraphicsManager.hpp>
 #include <StateManager.hpp>
 #include <ResourceManager.hpp>
 #include <AudioManager.hpp>
@@ -29,7 +30,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_timerMax[3] = sf::seconds(8.f);
 	m_timerMax[4] = sf::seconds(9.f);
 
-	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstringstream f(resources.getText(Progress::getInstance().getTextFile()).toWideString());
 	std::wstring wkey;
 	std::wstring line;
 	std::string keyName;
@@ -71,8 +72,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 
 void	TransitionLevelZeroScreen::start()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(this);
+	InputListener::addInputListener();
 }
 
 void	TransitionLevelZeroScreen::pause()
@@ -85,20 +85,19 @@ void	TransitionLevelZeroScreen::resume()
 
 void	TransitionLevelZeroScreen::stop()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
 }
 
 void	TransitionLevelZeroScreen::playSound(std::size_t index)
 {
 	if (m_soundPlayed1 == false && index == 0u)
 	{
-		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_2_WAV), 0.5f);
+		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_2_OGG), 0.5f);
 		m_soundPlayed1 = true;
 	}
 	if (m_soundPlayed2 == false && index == 3u)
 	{
-		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_3_WAV), 0.5f);
+		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_3_OGG), 0.5f);
 		m_soundPlayed2 = true;
 	}
 }
@@ -133,13 +132,14 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 	m_sprite.update(frameTime);
 }
 
-bool TransitionLevelZeroScreen::onPressed(sf::Event::KeyEvent const &event)
+bool TransitionLevelZeroScreen::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::Return:
-		case sf::Keyboard::Space:
-		case sf::Keyboard::Escape:
+		case OctoKeys::Return:
+		case OctoKeys::Space:
+		case OctoKeys::Use:
+		case OctoKeys::Escape:
 			{
 				m_index++;
 				m_time = sf::Time::Zero;

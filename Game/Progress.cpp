@@ -7,8 +7,8 @@
 #include <AudioManager.hpp>
 #include <GraphicsManager.hpp>
 
-#include <iostream>
 #include <fstream>
+#include <stdlib.h>
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
@@ -18,7 +18,9 @@ Progress::Progress() :
 	m_changeLevel(false),
 	m_reverseSprite(false),
 	m_validChallenge(false),
-	m_spaceShipRepair(false)
+	m_spaceShipRepair(false),
+	m_npcCount(0u),
+	m_npcMax(0u)
 {
 #ifndef NDEBUG
 	m_data.nanoRobotCount = octo::Application::getOptions().getValue<std::size_t>("nb_nano"); // TODO : remove from defaultsetup();
@@ -66,6 +68,7 @@ void	Progress::init()
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
 	m_validChallenge = false;
+	loadNpc();
 }
 
 void	Progress::save()
@@ -77,6 +80,8 @@ void	Progress::save()
 	//m_data.soundVol = audio.getSoundVolume();
 	m_data.fullscreen = graphics.isFullscreen();
 	m_data.vsync = graphics.isVerticalSyncEnabled();
+
+	saveNpc();
 	saveToFile();
 }
 
@@ -95,8 +100,26 @@ void	Progress::reset()
 	m_reverseSprite = false;
 	m_validChallenge = false;
 	m_spaceShipRepair = false;
+	m_npc.clear();
 	setup();
 	save();
+}
+
+void	Progress::setLanguage(Language language)
+{
+	m_data.language = language;
+}
+
+Progress::Language Progress::getLanguage(void) const
+{
+	return m_data.language;
+}
+
+ResourceKey Progress::getTextFile(void) const
+{
+	if (m_data.language == Language::en_keyboard)
+		return DIALOGS_EN_KEYBOARD_TXT;
+	return DIALOGS_FR_KEYBOARD_TXT;
 }
 
 void	Progress::addNanoRobot()
@@ -126,7 +149,8 @@ Level	Progress::getNextDestination(void) const
 
 void	Progress::setLastDestination(Level destination)
 {
-	m_data.lastDestination = destination;
+	if (destination != Level::Default)
+		m_data.lastDestination = destination;
 }
 
 Level	Progress::getLastDestination(void) const
@@ -187,6 +211,86 @@ bool	Progress::changeLevel() const
 void	Progress::levelChanged()
 {
 	m_changeLevel = false;
+}
+
+void	Progress::registerNpc(ResourceKey const & key)
+{
+	if (!m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
+		m_npcMax++;
+}
+
+bool	Progress::meetNpc(ResourceKey const & key)
+{
+	if (m_changeLevel == false && !m_npc[m_data.nextDestination][key])
+	{
+		m_npc[m_data.nextDestination][key] = true;
+		return true;
+	}
+	return false;
+}
+
+void	Progress::saveNpc()
+{
+	std::string saveNpc;
+	for (auto itLevel = m_npc.begin(); itLevel != m_npc.end(); itLevel++)
+	{
+		saveNpc += std::to_string(static_cast<int>(itLevel->first)) + " ";
+		for (auto it = itLevel->second.begin(); it != itLevel->second.end(); it++)
+		{
+			saveNpc += static_cast<std::string>(it->first);
+			saveNpc += " " + std::to_string(it->second) + " ";
+		}
+		saveNpc += "\n";
+	}
+	assert(saveNpc.size() < 10000);
+	std::strcpy(m_data.npc, saveNpc.c_str());
+}
+
+void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)
+{
+	std::stringstream ss(s);
+	std::string item;
+	while (std::getline(ss, item, delim))
+		elems.push_back(item);
+}
+
+void	Progress::loadNpc()
+{
+	std::istringstream savedNpc(m_data.npc);
+	std::string line;
+	while (std::getline(savedNpc, line))
+	{
+		std::vector<std::string> splitLine;
+		split(line, ' ', splitLine);
+
+		Level level = static_cast<Level>(stoi(splitLine[0]));
+		m_npc[level].clear();
+
+		for (std::size_t i = 1; i < splitLine.size(); i += 2)
+		{
+			if (splitLine[i + 1] == "1")
+				m_npc[level].insert(std::make_pair(splitLine[i], true));
+			else
+				m_npc[level].insert(std::make_pair(splitLine[i], false));
+		}
+	}
+}
+
+std::size_t	Progress::getNpcCount()
+{
+	m_npcCount = 0u;
+	for (auto it = m_npc[m_data.lastDestination].begin(); it != m_npc[m_data.lastDestination].end(); it++)
+	{
+		if (it->second)
+			m_npcCount++;
+	}
+	return m_npcCount;
+}
+
+std::size_t	Progress::getNpcMax()
+{
+	m_npcMax = m_npc[m_data.lastDestination].size();
+	return m_npcMax;
 }
 
 void	Progress::registerLevel(Level const & level)

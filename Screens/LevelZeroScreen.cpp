@@ -2,7 +2,6 @@
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
 #include <Application.hpp>
-#include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
@@ -25,7 +24,6 @@ LevelZeroScreen::LevelZeroScreen(void) :
 
 void	LevelZeroScreen::start()
 {
-	octo::GraphicsManager &		graphics = octo::Application::getGraphicsManager();
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resource = octo::Application::getResourceManager();
 
@@ -43,8 +41,8 @@ void	LevelZeroScreen::start()
 		m_stars[i].setSpeed(sf::Vector2f(-speed, 0.f));
 	}
 
-	audio.startMusic(resource.getSound(ACTION_FAST_WAV), sf::milliseconds(1000.f));
-	graphics.addKeyboardListener(this);
+	audio.startMusic(resource.getSound(ACTION_FAST_OGG), sf::milliseconds(1000.f));
+	InputListener::addInputListener();
 
 	if (Progress::getInstance().spaceShipIsRepair())
 	{
@@ -63,9 +61,7 @@ void	LevelZeroScreen::resume()
 
 void	LevelZeroScreen::stop()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
 }
 
 void	LevelZeroScreen::update(sf::Time frameTime)
@@ -104,8 +100,8 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			octo::AudioManager &		audio = octo::Application::getAudioManager();
 			octo::ResourceManager &		resource = octo::Application::getResourceManager();
 
-			audio.playSound(resource.getSound(OCTO_FEAR_WAV), 0.5f);
-			m_ground = audio.playSound(resource.getSound(GROUND_WAV), 0.6f, 1.8f);
+			audio.playSound(resource.getSound(OCTO_FEAR_OGG), 0.5f);
+			m_ground = audio.playSound(resource.getSound(GROUND_OGG), 0.6f, 1.8f);
 			m_isSoundPlayed = true;
 		}
 		if (m_timerEnd >= m_timerEndMax - sf::seconds(2.f) && !m_isSoundExplodePlayed)
@@ -114,8 +110,8 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			octo::ResourceManager &		resource = octo::Application::getResourceManager();
 
 			audio.stopMusic(sf::seconds(0.1f));
-			audio.playSound(resource.getSound(EXPLODE_HELMET_WAV), 0.5f, 0.5f);
-			audio.playSound(resource.getSound(TREE_WAV), 0.5f, 0.5f);
+			audio.playSound(resource.getSound(EXPLODE_HELMET_OGG), 0.5f, 0.5f);
+			audio.playSound(resource.getSound(TREE_OGG), 0.5f, 0.5f);
 			m_ground->setVolume(0.f);
 			m_isSoundExplodePlayed = true;
 		}
@@ -174,19 +170,19 @@ void	LevelZeroScreen::draw(sf::RenderTarget & render) const
 	m_spaceShip.drawFront(render, states);
 }
 
-bool	LevelZeroScreen::onPressed(sf::Event::KeyEvent const & event)
+bool	LevelZeroScreen::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::Up:
+		case OctoKeys::Up:
 			m_keyUp = true;
 			break;
-		case sf::Keyboard::Down:
+		case OctoKeys::Down:
 			m_keyDown = true;
 			break;
-		case sf::Keyboard::Return:
-		case sf::Keyboard::Space:
-		case sf::Keyboard::Escape:
+		case OctoKeys::Return:
+		case OctoKeys::Space:
+		case OctoKeys::Escape:
 		{
 			if (Progress::getInstance().isFirstTime() == false)
 			{
@@ -204,14 +200,14 @@ bool	LevelZeroScreen::onPressed(sf::Event::KeyEvent const & event)
 	return true;
 }
 
-bool	LevelZeroScreen::onReleased(sf::Event::KeyEvent const& event)
+bool	LevelZeroScreen::onInputReleased(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::Up:
+		case OctoKeys::Up:
 			m_keyUp = false;
 			break;
-		case sf::Keyboard::Down:
+		case OctoKeys::Down:
 			m_keyDown = false;
 			break;
 		default:

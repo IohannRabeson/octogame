@@ -51,8 +51,10 @@ SRC_STATES =	Screens/StateTest.cpp					\
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/OctoSound.cpp						\
+				Game/CameraMovement.cpp					\
 				Game/Progress.cpp						\
 				Game/MusicManager.cpp					\
+				Game/InputListener.cpp					\
 				Game/KonamiCode.cpp						\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
@@ -70,6 +72,9 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Well.cpp					\
 				GameObjects/Seb.cpp						\
 				GameObjects/Pyramid.cpp					\
+				GameObjects/HouseFlatSnow.cpp			\
+				GameObjects/EngineSnow.cpp				\
+				GameObjects/WeirdHouseSnow.cpp			\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
@@ -100,6 +105,14 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/JellyfishNpc.cpp					\
 				Npcs/BirdBlueNpc.cpp					\
 				Npcs/BirdRedNpc.cpp						\
+				Npcs/Snowman2Npc.cpp					\
+				Npcs/Snowman1Npc.cpp					\
+				Npcs/Snowman3Npc.cpp					\
+				Npcs/SnowGirl1Npc.cpp					\
+				Npcs/SnowGirl2Npc.cpp					\
+				Npcs/StrangerGirlSnowNpc.cpp			\
+				Npcs/StrangerSnowNpc.cpp				\
+#Script AddNpc
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
@@ -111,6 +124,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/OptionMenu.cpp						\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
+				Menu/LanguageMenu.cpp					\
 				Menu/SoundVolumeMenu.cpp				\
 				Menu/MusicVolumeMenu.cpp				\
 				Menu/ControlMenu.cpp					\
@@ -148,6 +162,9 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
 				Biomes/IceABiome.cpp					\
+				Biomes/IceBBiome.cpp					\
+				Biomes/IceCBiome.cpp					\
+				Biomes/IceDBiome.cpp					\
 				Biomes/DesertABiome.cpp					\
 				Biomes/JungleABiome.cpp					\
 				Biomes/WaterABiome.cpp					\
@@ -230,7 +247,7 @@ SRCS = $(SRC)
 CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = release
+MODE = debug
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)

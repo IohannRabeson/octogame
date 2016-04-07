@@ -1,6 +1,9 @@
 #include "Game.hpp"
 #include "DefaultBiome.hpp"
 #include "IceABiome.hpp"
+#include "IceBBiome.hpp"
+#include "IceCBiome.hpp"
+#include "IceDBiome.hpp"
 #include "DesertABiome.hpp"
 #include "JungleABiome.hpp"
 #include "WaterABiome.hpp"
@@ -21,6 +24,13 @@
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+//Script AddNpc Include
+#include "StrangerSnowNpc.hpp"
+#include "StrangerGirlSnowNpc.hpp"
+#include "SnowGirl2Npc.hpp"
+#include "SnowGirl1Npc.hpp"
+#include "Snowman3Npc.hpp"
+#include "Snowman1Npc.hpp"
 #include "FranfranNpc.hpp"
 #include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
@@ -36,8 +46,11 @@
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
 #include "AmandineNpc.hpp"
+#include "FaustNpc.hpp"
+#include "WolfNpc.hpp"
 #include "ConstanceNpc.hpp"
 #include "BrayouNpc.hpp"
+#include "Snowman2Npc.hpp"
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "JellyfishNpc.hpp"
@@ -63,17 +76,19 @@ Game::Game(void) :
 	m_musicPlayer(nullptr),
 	m_octo(nullptr),
 	m_konami(nullptr),
-	m_keyS(false),
-	m_keyF(false),
+	m_keyGroundRight(false),
+	m_keyGroundLeft(false),
 	m_soundGeneration(nullptr),
 	m_groundVolume(100.f),
 	m_groundSoundTime(sf::Time::Zero),
 	m_groundSoundTimeMax(sf::seconds(0.6f))
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.addKeyboardListener(this);
+	InputListener::addInputListener();
 
 	m_biomeManager.registerBiome<IceABiome>(Level::IceA);
+	m_biomeManager.registerBiome<IceBBiome>(Level::IceB);
+	m_biomeManager.registerBiome<IceCBiome>(Level::IceC);
+	m_biomeManager.registerBiome<IceDBiome>(Level::IceD);
 	m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
 	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
@@ -84,8 +99,7 @@ Game::~Game(void)
 {
 	if (m_soundGeneration != nullptr)
 		m_soundGeneration->stop();
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
 }
 
 void	Game::loadLevel(void)
@@ -138,7 +152,6 @@ void	Game::update(sf::Time frameTime)
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
 	m_octo->update(frameTime);
-	followPlayer(frameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
 	moveMap(frameTime);
 	m_groundManager->update(frameTime.asSeconds());
@@ -265,6 +278,25 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::Portal:
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
+//Script AddNpc GameObject
+		case GameObjectType::StrangerSnowNpc:
+			gameObjectCast<StrangerSnowNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::StrangerGirlSnowNpc:
+			gameObjectCast<StrangerGirlSnowNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SnowGirl2Npc:
+			gameObjectCast<SnowGirl2Npc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SnowGirl1Npc:
+			gameObjectCast<SnowGirl1Npc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Snowman3Npc:
+			gameObjectCast<Snowman3Npc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Snowman1Npc:
+			gameObjectCast<Snowman1Npc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::FranfranNpc:
 			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -280,8 +312,17 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::BrayouNpc:
 			gameObjectCast<BrayouNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::Snowman2Npc:
+			gameObjectCast<Snowman2Npc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::AmandineNpc:
 			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::FaustNpc:
+			gameObjectCast<FaustNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::WolfNpc:
+			gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::ConstanceNpc:
 			gameObjectCast<ConstanceNpc>(gameObject)->collideOctoEvent(octo);
@@ -363,7 +404,7 @@ void Game::moveMap(sf::Time frameTime)
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && !m_keyS && !m_keyF && !Progress::getInstance().canValidChallenge())
+	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && !Progress::getInstance().canValidChallenge())
 	{
 		m_groundSoundTime -= frameTime;
 		if (m_groundSoundTime < sf::Time::Zero)
@@ -371,19 +412,19 @@ void Game::moveMap(sf::Time frameTime)
 		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 		m_soundGeneration->setVolume(volume);
 	}
-	if (m_keyS || m_keyF || Progress::getInstance().canValidChallenge())
+	if (m_keyGroundRight || m_keyGroundLeft || Progress::getInstance().canValidChallenge())
 	{
 		if (Progress::getInstance().canMoveMap())
 		{
-			if (m_keyS)
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
-			else if (m_keyF)
+			if (m_keyGroundRight)
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
+			else if (m_keyGroundLeft)
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			else
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
 			if (m_soundGeneration == nullptr)
 			{
-				m_soundGeneration = audio.playSound(resources.getSound(GROUND_WAV), 0.f);
+				m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
 				m_soundGeneration->setLoop(true);
 			}
 			else
@@ -398,17 +439,17 @@ void Game::moveMap(sf::Time frameTime)
 	}
 }
 
-bool Game::onPressed(sf::Event::KeyEvent const & event)
+bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::S:
-			m_keyS = true;
+		case OctoKeys::GroundLeft:
+			m_keyGroundLeft = true;
 			Progress::getInstance().moveMap();
 			break;
-		case sf::Keyboard::F:
+		case OctoKeys::GroundRight:
+			m_keyGroundRight = true;
 			Progress::getInstance().moveMap();
-			m_keyF = true;
 			break;
 		default:
 			break;
@@ -416,15 +457,15 @@ bool Game::onPressed(sf::Event::KeyEvent const & event)
 	return true;
 }
 
-bool	Game::onReleased(sf::Event::KeyEvent const& event)
+bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::S:
-			m_keyS = false;
+		case OctoKeys::GroundLeft:
+			m_keyGroundLeft = false;
 			break;
-		case sf::Keyboard::F:
-			m_keyF = false;
+		case OctoKeys::GroundRight:
+			m_keyGroundRight = false;
 			break;
 		default:
 			break;
@@ -450,23 +491,4 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
 	render.draw(*m_konami);
-}
-
-void	Game::followPlayer(sf::Time frameTime)
-{
-	float frameTimeSeconds = frameTime.asSeconds();
-	octo::Camera & camera = octo::Application::getCamera();
-	sf::Vector2f const & cameraSize = camera.getSize();
-	sf::Vector2f cameraPos = camera.getCenter();
-	sf::Vector2f octoUpPos = m_octo->getPosition();
-	sf::Vector2f octoDownPos = octoUpPos;
-
-	octoDownPos.y -= cameraSize.y / 4.f;
-	cameraPos.x = octo::linearInterpolation(octoUpPos.x, cameraPos.x, 1.f - frameTimeSeconds);
-	if (octoDownPos.y >= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(octoDownPos.y, cameraPos.y, 1.f - frameTimeSeconds * 6.f);
-	else if (octoUpPos.y <= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(octoUpPos.y , cameraPos.y, 1.f - frameTimeSeconds * 4.f);
-
-	camera.setCenter(cameraPos);
 }

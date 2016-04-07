@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -13,7 +14,7 @@ DefaultBiome::DefaultBiome() :
 	m_name("Default"),
 	m_id(Level::Default),
 	m_seed("Default"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(400u, 600u), m_generator.randomInt(2u, 800u))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomInt(2u, 400u))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.5f),
@@ -24,7 +25,7 @@ DefaultBiome::DefaultBiome() :
 	m_waterColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(40, 150)),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(40.f)),
+	m_dayDuration(sf::seconds(m_generator.randomFloat(20.f, 150.f))),
 	m_startDayDuration(sf::seconds(15.f)),
 	m_skyDayColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_skyNightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
@@ -39,7 +40,7 @@ DefaultBiome::DefaultBiome() :
 	m_rockCount(m_generator.randomInt(1, 40), m_generator.randomInt(40, 100)),
 	m_treeCount(m_generator.randomInt(1, 20), m_generator.randomInt(20, 50)),
 	m_mushroomCount(m_generator.randomInt(1, 100), m_generator.randomInt(100, 250)),
-	m_crystalCount(m_generator.randomInt(1, 70), m_generator.randomInt(70, 150)),
+	m_crystalCount(m_generator.randomInt(1, 30), m_generator.randomInt(30, 100)),
 	m_starCount(300u, 800u),
 	m_sunCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 15)),
 	m_moonCount(m_generator.randomInt(1, 10), m_generator.randomInt(10, 20)),
@@ -130,15 +131,15 @@ DefaultBiome::DefaultBiome() :
 
 	// TODO define map position and number of map
 	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x - 40u);
+	Progress & progress = Progress::getInstance();
 	m_gameObjects[portalPos] = GameObjectType::Portal;
-	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x - 40u)] = GameObjectType::Portal;
-	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x - 40u)] = GameObjectType::Portal;
+	m_gameObjects[23u] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
-	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(progress.getLastDestination());
+	m_destinations.push_back(progress.getLastDestination());
 
-	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
+	if (progress.getNanoRobotCount() >= 7)
+		m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
 }
 
 void			DefaultBiome::setup(std::size_t seed)
@@ -261,10 +262,20 @@ Map::MapSurfaceGenerator DefaultBiome::getMapSurfaceGenerator()
 			};
 			break;
 		case 4u:
-			return [](Noise & noise, float x, float y)
+			if (Progress::getInstance().getNanoRobotCount() >= 3)
 			{
-				return noise.perlin(x * 10.f, y, 2, 2.f);
-			};
+				return [](Noise & noise, float x, float y)
+				{
+					return noise.perlin(x * 10.f, y, 2, 2.f);
+				};
+			}
+			else
+			{
+				return [](Noise & noise, float x, float y)
+				{
+					return noise.perlin(x, y, 3, 2.f);
+				};
+			}
 			break;
 		default:
 			break;

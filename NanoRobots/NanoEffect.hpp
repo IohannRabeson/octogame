@@ -34,8 +34,10 @@ public:
 	sf::Vector2f const &			getPosition(void) const;
 	sf::Color const &				getColor(void) const;
 	float							getSizeCorner(void) const;
+	sf::Vector2f const &			getNanoScale(void) const;
 	void							setPosition(sf::Vector2f const & position);
 	void							setColor(sf::Color const & color);
+	void							setNanoScale(sf::Vector2f const & scale);
 	void							onTransfer(void);
 
 private:
@@ -70,6 +72,10 @@ private:
 	sf::Time						m_randomTimer;
 	sf::Time						m_randomTimerMax;
 	bool							m_soundPlayed;
+	std::size_t						m_lastNanoCount;
+	sf::Vector2f					m_nanoScaleOrigin;
+	sf::Vector2f					m_nanoScaleZoom;
+	sf::Vector2f					m_nanoScale;
 };
 
 #endif

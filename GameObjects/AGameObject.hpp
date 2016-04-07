@@ -21,6 +21,9 @@ enum class GameObjectType : std::size_t
 	JuNpc = 16384u,
 	OldDesertStaticNpc = 32768u,
 	Bouibouik = 65536u,
+	HouseFlatSnow = 65537u,
+	EngineSnow = 65538u,
+	WeirdHouseSnow = 65539,
 	GuiNpc = 131072u,
 	FannyNpc = 262144,
 	TurbanNpc = 524288,
@@ -48,8 +51,22 @@ enum class GameObjectType : std::size_t
 	PeaNpc = 134u,
 	CanouilleNpc = 135u,
 	WolfNpc = 136u,
-	Well = 137u,
 	WellKeeperNpc = 138u,
+	Snowman2Npc = 137u,
+	Well = 140u,
+	Snowman1Npc = 141u,
+	Snowman3Npc = 1142u,
+	SnowGirl1Npc = 31143u,
+	SnowGirl2Npc = 131144u,
+	StrangerGirlSnowNpc = 2131145u,
+	StrangerSnowNpc = 2131146u,
+//Script AddNpc
+
+
+
+
+
+
 	BrayouNpc = 139u
 };
 

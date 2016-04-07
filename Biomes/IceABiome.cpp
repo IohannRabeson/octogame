@@ -131,12 +131,12 @@ IceABiome::IceABiome() :
 	m_gameObjects[8] = GameObjectType::SpaceShip;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::DesertA || progress.getLastDestination() == Level::Default)
+	if (progress.getLastDestination() == Level::IceB || progress.getLastDestination() == Level::Default)
 		m_octoStartPosition = sf::Vector2f(323 * 16.f, 600.f);
 
 	m_gameObjects[320] = GameObjectType::Portal;
 	m_gameObjects[300] = GameObjectType::FranfranNpc;
-	m_destinations.push_back(Level::DesertA);
+	m_destinations.push_back(Level::IceB);
 
 	m_treePos = {36, 200, 206, 209, 220, 229, 240, 254, 259, 275, 350, 359, 363, 369, 385, 401, 410, 423, 450};
 }

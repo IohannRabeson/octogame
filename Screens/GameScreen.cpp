@@ -14,9 +14,9 @@ GameScreen::GameScreen(void) :
 
 void	GameScreen::start()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
 	Progress &				progress = Progress::getInstance();
-	graphics.addKeyboardListener(this);
+
+	InputListener::addInputListener();
 
 	progress.load("save.osv");
 	m_game.reset(new Game());
@@ -26,27 +26,25 @@ void	GameScreen::start()
 
 void	GameScreen::pause()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
 }
 
 void	GameScreen::resume()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
 	octo::Application::getPostEffectManager().removeEffects();
-	graphics.addKeyboardListener(this);
 	Progress::getInstance().levelChanged();
+
+	InputListener::addInputListener();
 	m_game.reset(new Game());
 	m_game->loadLevel();
 }
 
 void	GameScreen::stop()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
 	octo::Application::getAudioManager().stopMusic(sf::Time::Zero);
 	Progress::getInstance().save();
 	octo::Application::getPostEffectManager().removeEffects();
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
 }
 
 void	GameScreen::update(sf::Time frameTime)
@@ -74,18 +72,18 @@ void	GameScreen::update(sf::Time frameTime)
 		m_game->update(frameTime);
 		if (progress.changeLevel())
 		{
-			progress.save();
+			m_doSave = true;
 			progress.levelChanged();
 			states.change("transitionLevel");
 		}
 	}
 }
 
-bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
+bool GameScreen::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (event.code)
+	switch (key)
 	{
-		case sf::Keyboard::Escape:
+		case OctoKeys::Escape:
 			{
 				AMenu::State state = m_menu.getState();
 				if (state == AMenu::State::Hide)

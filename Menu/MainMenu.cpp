@@ -42,20 +42,23 @@ class YesNoReset : public YesNoMenu
 
 //MainMenu
 MainMenu::MainMenu(void) :
-	m_nanoCount(0u)
+	m_nanoCount(0u),
+	m_npcCount(0u),
+	m_npcMax(0u)
 {
 }
 
 void MainMenu::createMenus(void)
 {
-	addMenu(L"Contrôles", std::unique_ptr<ControlMenu>(new ControlMenu()));
+	AMenu::initTexts();
+	addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
 #ifndef NDEBUG
 	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
 #endif
-	addMenu(L"Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
-	addMenu(L"Crédits", std::unique_ptr<CreditMenu>(new CreditMenu()));
-	addMenu(L"Recommencer", std::unique_ptr<YesNoReset>(new YesNoReset()));
-	addMenu(L"Quitter", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+	addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
+	addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
+	addMenu(AMenu::getText("menu_restart"), std::unique_ptr<YesNoReset>(new YesNoReset()));
+	addMenu(AMenu::getText("menu_quit"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 	setCharacterSize(30);
 	setBubbleType(ABubble::Type::Up);
 }
@@ -65,8 +68,9 @@ void MainMenu::setup(void)
 	AMenuSelection::setup();
 	m_filter.setSize(octo::Application::getCamera().getSize());
 	m_filter.setFillColor(sf::Color(0, 0, 0, 50));
-	m_infoText = L"0 / 8 Octobots";
-	m_infoBubble.setup(m_infoText, sf::Color::White);
+	m_infoText = L"0/8 Octobots ";
+	m_infoText += L"10/10 " + AMenu::getText("menu_friends");
+	m_infoBubble.setup(m_infoText, sf::Color::White, 20u, 200u);
 	m_infoBubble.setType(ABubble::Type::Left);
 	m_infoBubble.setActive(true);
 }
@@ -79,7 +83,10 @@ void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePositio
 	m_filter.setPosition(sf::Vector2f(camera.left, camera.top));
 
 	m_nanoCount = progress.getNanoRobotCount();
-	m_infoText = std::to_wstring(m_nanoCount) + L" / 8 Octobots";
+	m_npcCount = progress.getNpcCount();
+	m_npcMax = progress.getNpcMax();
+	m_infoText = std::to_wstring(m_nanoCount) + L"/8 Octobots\n";
+	m_infoText += std::to_wstring(m_npcCount) + L"/" + std::to_wstring(m_npcMax) + L" " + AMenu::getText("menu_friends");
 	m_infoBubble.setPosition(octoBubblePosition - sf::Vector2f(240.f, 90.f));
 	m_infoBubble.setPhrase(m_infoText);
 	m_infoBubble.update(frameTime);

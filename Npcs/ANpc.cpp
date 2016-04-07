@@ -3,12 +3,14 @@
 #include "CircleShape.hpp"
 #include "PhysicsEngine.hpp"
 #include "CharacterOcto.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <sstream>
 #include <cwchar>
 
 ANpc::ANpc(ResourceKey const & npcId) :
+	m_id(npcId),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(5.f)),
@@ -20,11 +22,13 @@ ANpc::ANpc(ResourceKey const & npcId) :
 	m_collideOctoEvent(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
+	Progress & progress = Progress::getInstance();
+	progress.registerNpc(npcId);
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
 	std::map<std::string, std::vector<std::wstring>>	npcTexts;
-	std::wstringstream f(resources.getText(DIALOGS_TXT).toWideString());
+	std::wstringstream f(resources.getText(progress.getTextFile()).toWideString());
 	std::wstring wkey;
 	std::wstring line;
 	wchar_t delim = '=';
@@ -348,8 +352,9 @@ void ANpc::update(sf::Time frametime)
 
 void ANpc::collideOctoEvent(CharacterOcto * octo)
 {
-	(void)octo;
 	m_collideOctoEvent = true;
+	if (Progress::getInstance().meetNpc(m_id))
+		octo->collideZoomEvent(m_box->getPosition());
 }
 
 void ANpc::updateState(void)

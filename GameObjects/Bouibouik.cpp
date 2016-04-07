@@ -1,10 +1,13 @@
 #include "Bouibouik.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
+#include <AudioManager.hpp>
 #include <ResourceManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 Bouibouik::Bouibouik(void) :
-	SimpleObject(BOUIBOUIK_BACK_OSS, PERSISTENCE_FRAG, 20.f)
+	SimpleObject(BOUIBOUIK_BACK_OSS, PERSISTENCE_FRAG, 20.f),
+	m_sound(true)
 {
 	typedef octo::SpriteAnimation::Frame	Frame;
 	setupAnimation({Frame(sf::seconds(0.2f), 0u)}, octo::LoopMode::Loop);
@@ -79,6 +82,7 @@ void Bouibouik::update(sf::Time frameTime)
 
 	if (getStartBalle())
 	{
+		playSound();
 		float intensity;
 		sf::Time step = getEffectDuration() / 6.f;
 		if (getTimer() < step)
@@ -91,6 +95,8 @@ void Bouibouik::update(sf::Time frameTime)
 			intensity = octo::linearInterpolation(0.1f, 1.f, (getTimer() - 5.f * step) / step);
 		shader.setParameter("intensity", intensity);
 	}
+	else
+		m_sound = true;
 	if (getCollideWithOcto())
 	{
 		m_smoke.setVelocity(sf::Vector2f(0.f, -100.f));
@@ -104,6 +110,17 @@ void Bouibouik::update(sf::Time frameTime)
 	}
 	SimpleObject::update(frameTime);
 	m_spriteFront.update(frameTime);
+}
+
+void Bouibouik::playSound(void)
+{
+	if (m_sound)
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+		audio.playSound(resources.getSound(OCTO_COUGH_OGG), 0.7f);
+		m_sound = false;
+	}
 }
 
 void Bouibouik::draw(sf::RenderTarget& render, sf::RenderStates states) const

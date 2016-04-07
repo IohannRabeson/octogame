@@ -1,12 +1,12 @@
 #ifndef GAMESCREEN_HPP
 # define GAMESCREEN_HPP
 # include <AbstractState.hpp>
-# include <GraphicsListeners.hpp>
 
 # include "Game.hpp"
 # include "MainMenu.hpp"
+# include "InputListener.hpp"
 
-class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
+class GameScreen : public octo::AbstractState, public InputListener
 {
 public:
 	GameScreen(void);
@@ -22,7 +22,7 @@ private:
 	std::unique_ptr<Game>	m_game;
 	bool					m_doSave;
 
-	virtual bool onPressed(sf::Event::KeyEvent const & event);
+	virtual bool onInputPressed(InputListener::OctoKeys const & key);
 };
 
 #endif
