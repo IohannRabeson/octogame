@@ -2,6 +2,7 @@
 # define BIRD_HPP
 
 # include "ANpc.hpp"
+# include "RandomGenerator.hpp"
 
 class SkyCycle;
 
@@ -28,6 +29,7 @@ private:
 	sf::Vector2f	m_startPosition;
 	sf::Vector2f	m_flySpeed;
 	float			m_speedLimit;
+	RandomGenerator	m_generator;
 };
 
 #endif
