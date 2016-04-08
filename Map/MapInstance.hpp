@@ -41,6 +41,7 @@ private:
 	sf::IntRect						m_cornerPositions;
 	int								m_depth;
 	int								m_oldDepth;
+	octo::AudioManager::SoundPtr	m_soundPtr;
 };
 
 #endif

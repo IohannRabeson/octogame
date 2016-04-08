@@ -7,7 +7,8 @@
 MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_levelMap(octo::Application::getResourceManager().getLevelMap(resourceId)),
 	m_depth(0),
-	m_oldDepth(0)
+	m_oldDepth(0),
+	m_soundPtr(nullptr)
 {
 	m_cornerPositions.left = position;
 	m_cornerPositions.top = -m_levelMap.getMapSize().y + MapInstance::HeightOffset;
@@ -49,9 +50,14 @@ void MapInstance::registerDepth(void)
 
 void MapInstance::playSound(void)
 {
-	octo::AudioManager& audio = octo::Application::getAudioManager();
-	octo::ResourceManager& resources = octo::Application::getResourceManager();
-	audio.playSound(resources.getSound(OCTO_NO_OGG), 1.f);
+	if (m_soundPtr == nullptr)
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+		m_soundPtr = audio.playSound(resources.getSound(OCTO_NO_OGG), 1.f);
+	}
+	else if (m_soundPtr->getStatus() == sf::SoundSource::Stopped)
+		m_soundPtr = nullptr;
 }
 
 void MapInstance::nextStep(void)
