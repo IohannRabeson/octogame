@@ -13,9 +13,9 @@ DesertBBiome::DesertBBiome() :
 	m_name("Desert A"),
 	m_id(Level::DesertB),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(600u, 64u)),
+	m_mapSize(sf::Vector2u(900u, 64u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(457.f * 16.f, -2850.f),
+	m_octoStartPosition(75.f * 16.f, -1850.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
@@ -131,7 +131,7 @@ DesertBBiome::DesertBBiome() :
 	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
 
-	m_instances[50] = MAP_DESERT_B_TRAIL_OMP;
+	//m_instances[50] = MAP_DESERT_B_TRAIL_OMP;
 	// Define game objects
 	/*
 	m_gameObjects[20] = GameObjectType::JuNpc;
@@ -262,28 +262,32 @@ std::vector<ParallaxScrolling::ALayer *> DesertBBiome::getLayers()
 
 Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 {
-	/*
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 50.f / static_cast<float>(m_mapSize.x);
-		float end = 300.f / static_cast<float>(m_mapSize.x);
-		float offset = 25.f / static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 1.78f;
-		float mapHigh = - 1.76f;
+		float start1 = 50.f / static_cast<float>(m_mapSize.x);
+		float end1 = 100.f / static_cast<float>(m_mapSize.x);
+		float start2 = 800.f / static_cast<float>(m_mapSize.x);
+		float end2 = 850.f / static_cast<float>(m_mapSize.x);
+		float offset = 10.f / static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		float mapHigh = n / 3.f - 3.9f;
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start + offset) / offset);
-		else if (x > start && x <= end)
+		if (x > start1 - offset && x <= start1)
+			return octo::cosinusInterpolation(n, mapHigh, (x - start1 + offset) / offset);
+		else if (x > start1 && x <= end1)
 			return mapHigh;
-		else if (x > end && x <= end + offset)
-			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
+		else if (x > end1 && x <= end1 + offset)
+			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end1) / offset);
+		else if (x > start2 - offset && x <= start2)
+			return octo::cosinusInterpolation(n, mapHigh, (x - start2 + offset) / offset);
+		else if (x > start2 && x <= end2)
+			return mapHigh;
+		else if (x > end2 && x <= end2 + offset)
+			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end2) / offset);
+		else if (x > end1 + offset && x < start2 + offset)
+			return 4.0f;
 		else
 			return n;
-	};
-	*/
-	return [](Noise & noise, float x, float y)
-	{
-		return noise.fBm(x, y, 3, 3.f, 0.3f);
 	};
 }
 
