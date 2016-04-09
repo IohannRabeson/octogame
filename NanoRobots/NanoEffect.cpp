@@ -33,17 +33,17 @@ void NanoEffect::playSound(void)
 		octo::ResourceManager& resource = octo::Application::getResourceManager();
 	
 		if (m_lastNanoCount != Progress::getInstance().getNanoRobotCount())
-			audio.playSound(resource.getSound(OCTO_QUESTION_OGG), 0.6f, 1.f);
+			audio.playSound(resource.getSound(OCTO_QUESTION_OGG), 0.7f, 1.f);
 		switch (soundChoose)
 		{
 			case 0u:
-				audio.playSound(resource.getSound(NANO_1_OGG), 0.5f, 1.f);
+				audio.playSound(resource.getSound(NANO_1_OGG), 0.4f, 1.f);
 				break;
 			case 1u:
-				audio.playSound(resource.getSound(NANO_2_OGG), 0.5f, 1.f);
+				audio.playSound(resource.getSound(NANO_2_OGG), 0.4f, 1.f);
 				break;
 			case 2u:
-				audio.playSound(resource.getSound(NANO_3_OGG), 0.5f, 1.f);
+				audio.playSound(resource.getSound(NANO_3_OGG), 0.4f, 1.f);
 				break;
 			default:
 				break;
@@ -107,7 +107,6 @@ void NanoEffect::update(sf::Time frameTime)
 				m_nanoScale = octo::cosinusInterpolation(m_nanoScaleOrigin, m_nanoScaleZoom, m_transferTimer / (m_transferTimerMax / 2.f));
 			else if (m_transferTimer <= m_transferTimerMax)
 				m_nanoScale = octo::cosinusInterpolation(m_nanoScaleZoom, m_nanoScaleOrigin, (m_transferTimer - m_transferTimerMax / 2.f) / (m_transferTimerMax / 2.f));
-
 			break;
 		}
 		case State::Random:
@@ -147,6 +146,11 @@ void NanoEffect::onTransfer(void)
 {
 	if (m_isTransferHappen == false)
 		m_state = State::Transfer;
+}
+
+void NanoEffect::setState(State state)
+{
+	m_state = state;
 }
 
 void NanoEffect::draw(sf::RenderTarget & render, sf::RenderStates states) const
