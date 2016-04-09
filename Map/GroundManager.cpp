@@ -821,8 +821,9 @@ NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 	return robot;
 }
 
-void	GroundManager::setNextGenerationState(GenerationState state)
+void	GroundManager::setNextGenerationState(GenerationState state, sf::Vector2f const & octoPos)
 {
+	m_octoPosState = octoPos;
 	if (m_transitionTimer >= m_transitionTimerMax)
 		m_nextState = state;
 }
@@ -1327,7 +1328,9 @@ void GroundManager::update(float deltatime)
 		if (m_nextState == GenerationState::Next)
 		{
 			compute = true;
+			m_tilesPrev->registerOctoPos(m_octoPosState);
 			m_tilesPrev->nextStep();
+			m_tiles->registerOctoPos(m_octoPosState);
 			m_tiles->registerDepth();
 			m_tiles->nextStep();
 			m_nextState = GenerationState::None;
@@ -1335,7 +1338,9 @@ void GroundManager::update(float deltatime)
 		else if (m_nextState == GenerationState::Previous)
 		{
 			compute = true;
+			m_tilesPrev->registerOctoPos(m_octoPosState);
 			m_tilesPrev->previousStep();
+			m_tiles->registerOctoPos(m_octoPosState);
 			m_tiles->registerDepth();
 			m_tiles->previousStep();
 			m_nextState = GenerationState::None;
