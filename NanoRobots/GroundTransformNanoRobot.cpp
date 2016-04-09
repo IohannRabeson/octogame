@@ -120,12 +120,15 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 void GroundTransformNanoRobot::updateInfo(void)
 {
 	Progress & progress = Progress::getInstance();
+	std::size_t oldNpcCount = m_npcCount;
 
-	std::size_t npcCount = progress.getNpcCount();
-	std::size_t npcMax = progress.getNpcMax();
+	m_npcCount = progress.getNpcCount();
+	m_npcMax = progress.getNpcMax();
 	//TODO: Create text system to avoid multiple initialisation
-	std::wstring infoText = std::to_wstring(npcCount) + L"/" + std::to_wstring(npcMax) + L" Friends";// + AMenu::getText("menu_friends");
+	std::wstring infoText = std::to_wstring(m_npcCount) + L"/" + std::to_wstring(m_npcMax) + L" Friends";// + AMenu::getText("menu_friends");
 	setInfoText(infoText);
+	if (oldNpcCount != m_npcCount)
+		NanoRobot::popUpInfo();
 }
 
 void GroundTransformNanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates states) const
