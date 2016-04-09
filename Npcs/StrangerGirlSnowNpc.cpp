@@ -76,7 +76,6 @@ void StrangerGirlSnowNpc::updateState(void)
 	}
 	else if (sprite.getCurrentEvent() == Idle)
 	{
-		octo::CharacterSprite & sprite = getSprite();
 		sf::Vector2f const & size = sprite.getLocalSize();
 		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
 		sprite.setScale(-getScale(), getScale());
