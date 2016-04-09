@@ -16,7 +16,9 @@ Map::Map(void) :
 	m_width(0u),
 	m_height(0u),
 	m_offset(nullptr),
-	m_mapSurface(nullptr)
+	m_mapSurface(nullptr),
+	m_instanceIndex(0u),
+	m_isOctoOnInstance(false)
 {
 }
 
@@ -138,7 +140,20 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			}
 			else
 				m_tiles.get(x, y)->setIsEmpty(false);
-			m_tiles.get(x, y)->setStartColor(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth));
+
+			if (m_isOctoOnInstance && m_octoPos.y <= m_instancesRect[m_instanceIndex].height
+				&& (offsetX >= m_instancesRect[m_instanceIndex].left && offsetX <= m_instancesRect[m_instanceIndex].width))
+			{
+				float interpolateOffset = 5.f;
+				float interpolateValue = 0.4f;
+				if (offsetX < m_instancesRect[m_instanceIndex].left + interpolateOffset)
+					interpolateValue = interpolateValue * ((offsetX - m_instancesRect[m_instanceIndex].left) / interpolateOffset);
+				else if (offsetX > m_instancesRect[m_instanceIndex].width - interpolateOffset)
+					interpolateValue = interpolateValue * ((m_instancesRect[m_instanceIndex].width - offsetX) / interpolateOffset);
+				m_tiles.get(x, y)->setStartColor(octo::linearInterpolation(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth), sf::Color::White, interpolateValue));
+			}
+			else
+				m_tiles.get(x, y)->setStartColor(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth));
 		}
 	}
 }
@@ -227,8 +242,8 @@ void Map::swapDepth(void)
 
 void Map::registerOctoPos(sf::Vector2f const & octoPos)
 {
-	m_octoPos.x = static_cast<int>(octoPos.x / Tile::TileSize);
-	m_octoPos.y = static_cast<int>(octoPos.y / Tile::TileSize);
+	m_octoPos.x = static_cast<int>(octoPos.x / Tile::TileSize) + OffsetTileX;
+	m_octoPos.y = static_cast<int>(octoPos.y / Tile::TileSize) + OffsetTileY;
 	while (m_octoPos.x >= static_cast<int>(m_mapSize.x))
 		m_octoPos.x -= m_mapSize.x;
 	while (m_octoPos.x <= 0)
@@ -237,8 +252,8 @@ void Map::registerOctoPos(sf::Vector2f const & octoPos)
 
 bool Map::isOctoOnInstance(sf::IntRect const & instanceRect, sf::Vector2i const & octoPos)
 {
-	if ((octoPos.x >= instanceRect.left && octoPos.x <= instanceRect.width)
-		 && (octoPos.y >= instanceRect.top && octoPos.y <= instanceRect.height))
+	if ((octoPos.x >= instanceRect.left && octoPos.x < instanceRect.width)
+		 && (octoPos.y >= instanceRect.top && octoPos.y < instanceRect.height))
 		return true;
 	return false;
 }
@@ -253,20 +268,30 @@ void Map::registerDepth(void)
 void Map::nextStep(void)
 {
 	m_depth += m_transitionStep;
+	m_isOctoOnInstance = false;
 	for (std::size_t i = 0; i < m_instances.size(); i++)
 	{
 		if (isOctoOnInstance(m_instancesRect[i], m_octoPos))
+		{
 			m_instances[i]->nextStep();
+			m_instanceIndex = i;
+			m_isOctoOnInstance = true;
+		}
 	}
 }
 
 void Map::previousStep(void)
 {
 	m_depth -= m_transitionStep;
+	m_isOctoOnInstance = false;
 	for (std::size_t i = 0; i < m_instances.size(); i++)
 	{
 		if (isOctoOnInstance(m_instancesRect[i], m_octoPos))
+		{
 			m_instances[i]->previousStep();
+			m_instanceIndex = i;
+			m_isOctoOnInstance = true;
+		}
 	}
 }
 

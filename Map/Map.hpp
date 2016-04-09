@@ -85,7 +85,8 @@ private:
 	MapSurfaceGeneratorBind						m_mapSurface;
 	TileColorGeneratorBind						m_tileColor;
 	sf::Vector2i								m_octoPos;
-
+	std::size_t									m_instanceIndex;
+	bool										m_isOctoOnInstance;
 };
 
 #endif
