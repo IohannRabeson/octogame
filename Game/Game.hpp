@@ -47,6 +47,7 @@ private:
 	float								m_groundVolume;
 	sf::Time							m_groundSoundTime;
 	sf::Time							m_groundSoundTimeMax;
+	float								m_slowTimeInfosCoef;
 
 	void			moveMap(sf::Time frameTime);
 	bool			onInputPressed(InputListener::OctoKeys const & key);

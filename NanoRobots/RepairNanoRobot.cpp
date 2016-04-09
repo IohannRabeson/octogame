@@ -1,5 +1,6 @@
 #include "RepairNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 
 RepairNanoRobot::RepairNanoRobot(void) :
 	NanoRobot(sf::Vector2f(600.f * 16.f, 00.f), NANO_REPAIR_OSS, 8, 12542, sf::Vector2f(0.f, -19.f), 0.f)
@@ -30,4 +31,15 @@ RepairNanoRobot::RepairNanoRobot(void) :
 void RepairNanoRobot::update(sf::Time frameTime)
 {
 	NanoRobot::update(frameTime);
+	updateInfo();
 }
+
+void RepairNanoRobot::updateInfo(void)
+{
+	Progress & progress = Progress::getInstance();
+
+	//TODO: Create text system to avoid multiple initialisation
+	//std::wstring infoText = std::to_wstring(progress.getNanoRobotCount()) + L"/" + std::to_wstring(8u) + L" Octobots";// + AMenu::getText("menu_friends");
+	setInfoText(std::to_wstring(progress.getNanoRobotCount()) + L"/" + std::to_wstring(8u) + L" Octobots");
+}
+

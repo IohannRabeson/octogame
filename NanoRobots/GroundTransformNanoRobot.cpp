@@ -114,6 +114,14 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			m_canSpeak = false;
 			break;
 	}
+	updateInfo();
+}
+
+void GroundTransformNanoRobot::updateInfo(void)
+{
+	Progress & progress = Progress::getInstance();
+
+	setInfoText(std::to_wstring(progress.getNpcCount()) + L"/" + std::to_wstring(progress.getNpcMax()) + L" Friends");
 }
 
 void GroundTransformNanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates states) const

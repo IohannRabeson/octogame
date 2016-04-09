@@ -80,7 +80,8 @@ Game::Game(void) :
 	m_soundGeneration(nullptr),
 	m_groundVolume(100.f),
 	m_groundSoundTime(sf::Time::Zero),
-	m_groundSoundTimeMax(sf::seconds(0.6f))
+	m_groundSoundTimeMax(sf::seconds(0.6f)),
+	m_slowTimeInfosCoef(1.f)
 {
 	InputListener::addInputListener();
 
@@ -147,6 +148,7 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	frameTime = frameTime / m_slowTimeInfosCoef;
 	// update the PhysicsEngine as first
 	m_physicsEngine.update(frameTime.asSeconds());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
@@ -448,6 +450,9 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			m_keyGroundRight = true;
 			Progress::getInstance().moveMap();
 			break;
+		case OctoKeys::Infos:
+			m_slowTimeInfosCoef = 10.f;
+			break;
 		default:
 			break;
 	}
@@ -463,6 +468,9 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::GroundRight:
 			m_keyGroundRight = false;
+			break;
+		case OctoKeys::Infos:
+			m_slowTimeInfosCoef = 1.f;
 			break;
 		default:
 			break;

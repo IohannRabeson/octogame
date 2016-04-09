@@ -19,7 +19,8 @@ public:
 		Use,
 		SlowFall,
 		GroundLeft,
-		GroundRight
+		GroundRight,
+		Infos
 	};
 
 	InputListener(void);

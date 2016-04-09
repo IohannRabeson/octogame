@@ -41,10 +41,7 @@ class YesNoReset : public YesNoMenu
 };
 
 //MainMenu
-MainMenu::MainMenu(void) :
-	m_nanoCount(0u),
-	m_npcCount(0u),
-	m_npcMax(0u)
+MainMenu::MainMenu(void)
 {
 }
 
@@ -68,34 +65,17 @@ void MainMenu::setup(void)
 	AMenuSelection::setup();
 	m_filter.setSize(octo::Application::getCamera().getSize());
 	m_filter.setFillColor(sf::Color(0, 0, 0, 50));
-	m_infoText = L"0/8 Octobots ";
-	m_infoText += L"10/10 " + AMenu::getText("menu_friends");
-	m_infoBubble.setup(m_infoText, sf::Color::White, 20u, 200u);
-	m_infoBubble.setType(ABubble::Type::Left);
-	m_infoBubble.setActive(true);
 }
 
 void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePosition)
 {
 	AMenuSelection::update(frameTime, octoBubblePosition);
 	sf::FloatRect const & camera = octo::Application::getCamera().getRectangle();
-	Progress & progress = Progress::getInstance();
 	m_filter.setPosition(sf::Vector2f(camera.left, camera.top));
-
-	m_nanoCount = progress.getNanoRobotCount();
-	m_npcCount = progress.getNpcCount();
-	m_npcMax = progress.getNpcMax();
-	m_infoText = std::to_wstring(m_nanoCount) + L"/8 Octobots\n";
-	m_infoText += std::to_wstring(m_npcCount) + L"/" + std::to_wstring(m_npcMax) + L" " + AMenu::getText("menu_friends");
-	m_infoBubble.setPosition(octoBubblePosition - sf::Vector2f(240.f, 90.f));
-	m_infoBubble.setPhrase(m_infoText);
-	m_infoBubble.update(frameTime);
 }
 
 void MainMenu::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	render.draw(m_filter, states);
 	AMenuSelection::draw(render, states);
-	if (m_nanoCount)
-		m_infoBubble.draw(render, states);
 }
