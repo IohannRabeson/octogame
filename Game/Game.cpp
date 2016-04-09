@@ -55,6 +55,7 @@
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "JellyfishNpc.hpp"
+#include "BirdNpc.hpp"
 #include "WellKeeperNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
@@ -75,12 +76,13 @@ Game::Game(void) :
 	m_musicPlayer(nullptr),
 	m_octo(nullptr),
 	m_konami(nullptr),
-	m_keyS(false),
-	m_keyF(false),
+	m_keyGroundRight(false),
+	m_keyGroundLeft(false),
 	m_soundGeneration(nullptr),
 	m_groundVolume(100.f),
 	m_groundSoundTime(sf::Time::Zero),
-	m_groundSoundTimeMax(sf::seconds(0.6f))
+	m_groundSoundTimeMax(sf::seconds(0.6f)),
+	m_slowTimeInfosCoef(1.f)
 {
 	InputListener::addInputListener();
 
@@ -100,6 +102,7 @@ Game::~Game(void)
 	if (m_soundGeneration != nullptr)
 		m_soundGeneration->stop();
 	InputListener::removeInputListener();
+	Progress::getInstance().save();
 }
 
 void	Game::loadLevel(void)
@@ -147,6 +150,7 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	frameTime = frameTime / m_slowTimeInfosCoef;
 	// update the PhysicsEngine as first
 	m_physicsEngine.update(frameTime.asSeconds());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
@@ -351,6 +355,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::JellyfishNpc:
 			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::BirdNpc:
+			gameObjectCast<BirdNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::WellKeeperNpc:
 			gameObjectCast<WellKeeperNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -398,7 +405,7 @@ void Game::moveMap(sf::Time frameTime)
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && !m_keyS && !m_keyF && !Progress::getInstance().canValidChallenge())
+	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && !Progress::getInstance().canValidChallenge())
 	{
 		m_groundSoundTime -= frameTime;
 		if (m_groundSoundTime < sf::Time::Zero)
@@ -406,16 +413,16 @@ void Game::moveMap(sf::Time frameTime)
 		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 		m_soundGeneration->setVolume(volume);
 	}
-	if (m_keyS || m_keyF || Progress::getInstance().canValidChallenge())
+	if (m_keyGroundRight || m_keyGroundLeft || Progress::getInstance().canValidChallenge())
 	{
 		if (Progress::getInstance().canMoveMap())
 		{
-			if (m_keyS)
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous);
-			else if (m_keyF)
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+			if (m_keyGroundRight)
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
+			else if (m_keyGroundLeft)
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
 			else
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next);
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
 			if (m_soundGeneration == nullptr)
 			{
 				m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
@@ -438,12 +445,15 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 	switch (key)
 	{
 		case OctoKeys::GroundLeft:
-			m_keyS = true;
+			m_keyGroundLeft = true;
 			Progress::getInstance().moveMap();
 			break;
 		case OctoKeys::GroundRight:
+			m_keyGroundRight = true;
 			Progress::getInstance().moveMap();
-			m_keyF = true;
+			break;
+		case OctoKeys::Infos:
+			m_slowTimeInfosCoef = 10.f;
 			break;
 		default:
 			break;
@@ -456,10 +466,13 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 	switch (key)
 	{
 		case OctoKeys::GroundLeft:
-			m_keyS = false;
+			m_keyGroundLeft = false;
 			break;
 		case OctoKeys::GroundRight:
-			m_keyF = false;
+			m_keyGroundRight = false;
+			break;
+		case OctoKeys::Infos:
+			m_slowTimeInfosCoef = 1.f;
 			break;
 		default:
 			break;
@@ -479,7 +492,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_groundManager->drawFront(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
-	m_skyManager->drawBirds(render, states);
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);

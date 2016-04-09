@@ -22,13 +22,17 @@ MusicManager::MusicManager() :
 	musicKey[7] = SOUTERRAIN_LUGUBRE_OGG;
 	musicKey[8] = MENU_OPUS_I_OGG;
 
-	m_musicLevel.resize(5);
+	m_musicLevel.resize(8);
 	m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::WaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
 	m_musicLevel[4] = AreaMusic(Level::Default,
 			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
+
+	m_musicLevel[5] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
+	m_musicLevel[6] = AreaMusic(Level::IceC, ICE_MUSIC_OGG, sf::FloatRect());
+	m_musicLevel[7] = AreaMusic(Level::IceD, SPACE_SHIP_OGG, sf::FloatRect());
 
 	m_music.resize(6);
 	// Montagne

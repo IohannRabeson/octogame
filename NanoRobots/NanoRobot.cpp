@@ -30,6 +30,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_multiplier(multiplier),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_textIndex(0u),
+	m_infoSetup(false),
 	m_state(Idle),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(15.f)),
@@ -39,6 +40,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	Progress & progress = Progress::getInstance();
+	InputListener::addInputListener();
 
 	m_texture = &resources.getTexture(STARGRADIENT_PNG);
 
@@ -85,6 +87,9 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 		m_texts.push_back(std::move(bubble));
 	}
 
+	m_infoBubble.setType(ABubble::Type::None);
+	m_infoBubble.setActive(false);
+
 	sf::Color color = sf::Color::Red;
 
 	for (std::size_t i = 0u; i < 16u; i++)
@@ -116,6 +121,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 
 NanoRobot::~NanoRobot(void)
 {
+	InputListener::removeInputListener();
 	if (m_sound != nullptr)
 		m_sound->stop();
 }
@@ -208,9 +214,13 @@ void NanoRobot::transfertToOcto(bool inInit)
 	m_positionBehavior->setRadius(250.f);
 	m_swarm.getFirefly(0u).speed = 1.f;
 	m_state = Speak;
-	m_glowingEffect.onTransfer();
 	if (!inInit)
+	{
 		Progress::getInstance().addNanoRobot();
+		m_glowingEffect.onTransfer();
+	}
+	else
+		m_glowingEffect.setState(NanoEffect::State::Wait);
 }
 
 void NanoRobot::setTarget(sf::Vector2f const & target)
@@ -238,6 +248,45 @@ void NanoRobot::setPosition(sf::Vector2f const & position)
 bool NanoRobot::isTravelling(void) const
 {
 	return m_isTravelling;
+}
+
+bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
+{
+	switch (key)
+	{
+		case OctoKeys::Infos:
+		{
+			if (m_infoSetup == false && m_infoText.size())
+			{
+				m_infoBubble.setup(m_infoText, sf::Color::White, 20u, 600u);
+				m_infoBubble.setType(ABubble::Type::Speak);
+				m_infoBubble.setActive(true);
+				m_infoSetup = true;
+			}
+		}
+		default:
+			break;
+	}
+	return true;
+}
+
+bool NanoRobot::onInputReleased(InputListener::OctoKeys const & key)
+{
+	switch (key)
+	{
+		case OctoKeys::Infos:
+		{
+			if (m_infoSetup == true)
+			{
+				m_infoBubble.setType(ABubble::Type::None);
+				m_infoBubble.setActive(false);
+				m_infoSetup = false;
+			}
+		}
+		default:
+			break;
+	}
+	return true;
 }
 
 void NanoRobot::setState(NanoRobot::State state)
@@ -362,6 +411,8 @@ void NanoRobot::update(sf::Time frametime)
 
 	m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
 	m_texts[m_textIndex]->update(frametime);
+	m_infoBubble.setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
+	m_infoBubble.update(frametime);
 	m_glowingEffect.setPosition(pos);
 	m_sprite.setScale(m_glowingEffect.getNanoScale());
 	m_glowingEffect.update(frametime);
@@ -393,6 +444,8 @@ void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 		render.draw(m_ray.get() + 8, 8u, sf::Quads, m_texture);
 	}
 	m_particles.draw(render);
+	if (m_infoBubble.isActive())
+		m_infoBubble.draw(render);
 }
 
 void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const

@@ -12,7 +12,7 @@
 JungleABiome::JungleABiome() :
 	m_name("Jungle A"),
 	m_id(Level::JungleA),
-	m_seed("Vince"),
+	m_seed("sdf"),
 	m_mapSize(sf::Vector2u(1100u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(43.f * 16.f, 650.f),
@@ -141,6 +141,23 @@ JungleABiome::JungleABiome() :
 	m_gameObjects[780] = GameObjectType::ConstanceNpc;
 	m_gameObjects[80] = GameObjectType::PierreNpc;
 	m_gameObjects[470] = GameObjectType::CanouilleNpc;
+
+	m_gameObjects[170] = GameObjectType::BirdNpc;
+	m_gameObjects[180] = GameObjectType::BirdNpc;
+	m_gameObjects[240] = GameObjectType::BirdNpc;
+	m_gameObjects[270] = GameObjectType::BirdNpc;
+	for (std::size_t i = 285; i < 291; i++)
+		m_gameObjects[i] = GameObjectType::BirdNpc;
+	m_gameObjects[700] = GameObjectType::BirdNpc;
+	for (std::size_t i = 830; i < 837; i++)
+		m_gameObjects[i] = GameObjectType::BirdNpc;
+	m_gameObjects[870] = GameObjectType::BirdNpc;
+	m_gameObjects[900] = GameObjectType::BirdNpc;
+	m_gameObjects[940] = GameObjectType::BirdNpc;
+	m_gameObjects[1000] = GameObjectType::BirdNpc;
+	for (std::size_t i = 1000; i < 1005; i++)
+		m_gameObjects[i] = GameObjectType::BirdNpc;
+
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination

@@ -39,6 +39,7 @@ public:
 	void							setColor(sf::Color const & color);
 	void							setNanoScale(sf::Vector2f const & scale);
 	void							onTransfer(void);
+	void							setState(State state);
 
 private:
 	void							createLosange(sf::Vector2f const & size,

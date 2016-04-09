@@ -103,19 +103,15 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/WolfNpc.cpp						\
 				Npcs/WellKeeperNpc.cpp					\
 				Npcs/JellyfishNpc.cpp					\
+				Npcs/BirdNpc.cpp						\
 				Npcs/Snowman2Npc.cpp					\
 				Npcs/Snowman1Npc.cpp					\
 				Npcs/Snowman3Npc.cpp					\
 				Npcs/SnowGirl1Npc.cpp					\
 				Npcs/SnowGirl2Npc.cpp					\
-				Npcs/StrangerGirlSnowNpc.cpp				\
+				Npcs/StrangerGirlSnowNpc.cpp			\
 				Npcs/StrangerSnowNpc.cpp				\
 #Script AddNpc
-
-
-
-
-
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

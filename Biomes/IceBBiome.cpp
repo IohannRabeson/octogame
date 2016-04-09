@@ -125,7 +125,9 @@ IceBBiome::IceBBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_instances[50] = MAP_ICE_B_TRAIL_OMP;
+	m_instances[50] = MAP_ICE_B_TRAIL_A_OMP;
+	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
+	m_instances[178] = MAP_ICE_B_TRAIL_C_OMP;
 	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();

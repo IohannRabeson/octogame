@@ -67,6 +67,9 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Escape:
 			onInputPressed(OctoKeys::Escape);
 			break;
+		case sf::Keyboard::D:
+			onInputPressed(OctoKeys::Infos);
+			break;
 		default:
 			break;
 	}
@@ -106,6 +109,9 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::Escape:
 			onInputReleased(OctoKeys::Escape);
+			break;
+		case sf::Keyboard::D:
+			onInputReleased(OctoKeys::Infos);
 			break;
 		default:
 			break;
@@ -184,10 +190,10 @@ void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 			case 13:
 				onInputPressed(OctoKeys::Use);
 				break;
-			case 9:
+			case 8:
 				onInputPressed(OctoKeys::GroundRight);
 				break;
-			case 8:
+			case 9:
 				onInputPressed(OctoKeys::GroundLeft);
 				break;
 			case 10:
@@ -228,10 +234,10 @@ void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 			case 13:
 				onInputReleased(OctoKeys::Use);
 				break;
-			case 9:
+			case 8:
 				onInputReleased(OctoKeys::GroundRight);
 				break;
-			case 8:
+			case 9:
 				onInputReleased(OctoKeys::GroundLeft);
 				break;
 			case 10:

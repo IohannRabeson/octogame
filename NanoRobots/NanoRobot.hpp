@@ -13,10 +13,11 @@
 # include "BubbleText.hpp"
 # include "NanoEffect.hpp"
 # include "SparkSystem.hpp"
+# include "InputListener.hpp"
 
 class CircleShape;
 
-class NanoRobot : public IPlaceable
+class NanoRobot : public IPlaceable, public InputListener
 {
 public:
 	enum State
@@ -41,6 +42,9 @@ public:
 	NanoRobot::State getState(void) const;
 	bool isTravelling(void) const;
 
+	bool onInputPressed(InputListener::OctoKeys const & key);
+	bool onInputReleased(InputListener::OctoKeys const & key);
+
 	void addMapOffset(float x, float y);
 	void transfertToOcto(bool inInit = false);
 	virtual void update(sf::Time frameTime);
@@ -51,6 +55,7 @@ protected:
 	NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, float multiplier = 0.f);
 
 	std::unique_ptr<BubbleText> const & getCurrentText(void) const { return m_texts[m_textIndex]; }
+	void setInfoText(std::wstring const & infoText) { m_infoText = infoText; }
 
 	void setup(AGameObjectBase * gameObject);
 	void setUsePathLaser(bool usePathLaser);
@@ -94,6 +99,9 @@ private:
 	CircleShape *								m_box;
 	std::vector<std::unique_ptr<BubbleText>>	m_texts;
 	std::size_t									m_textIndex;
+	BubbleText									m_infoBubble;
+	std::wstring								m_infoText;
+	bool										m_infoSetup;
 
 	State										m_state;
 	sf::Time									m_timer;
