@@ -13,7 +13,7 @@ IceDBiome::IceDBiome() :
 	m_name("Ice D"),
 	m_id(Level::IceD),
 	m_seed("Level_One"),
-	m_mapSize(sf::Vector2u(600u, 8u)),
+	m_mapSize(sf::Vector2u(600u, 1u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(16.f * 37.f, -500.f),
 	m_transitionDuration(0.5f),

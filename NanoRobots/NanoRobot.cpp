@@ -214,9 +214,13 @@ void NanoRobot::transfertToOcto(bool inInit)
 	m_positionBehavior->setRadius(250.f);
 	m_swarm.getFirefly(0u).speed = 1.f;
 	m_state = Speak;
-	m_glowingEffect.onTransfer();
 	if (!inInit)
+	{
 		Progress::getInstance().addNanoRobot();
+		m_glowingEffect.onTransfer();
+	}
+	else
+		m_glowingEffect.setState(NanoEffect::State::Wait);
 }
 
 void NanoRobot::setTarget(sf::Vector2f const & target)

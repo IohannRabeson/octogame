@@ -30,8 +30,8 @@ MusicManager::MusicManager() :
 	m_musicLevel[4] = AreaMusic(Level::Default,
 			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
 
-	m_musicLevel[5] = AreaMusic(Level::IceB, SPACE_SHIP_OGG, sf::FloatRect());
-	m_musicLevel[6] = AreaMusic(Level::IceC, SPACE_SHIP_OGG, sf::FloatRect());
+	m_musicLevel[5] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
+	m_musicLevel[6] = AreaMusic(Level::IceC, ICE_MUSIC_OGG, sf::FloatRect());
 	m_musicLevel[7] = AreaMusic(Level::IceD, SPACE_SHIP_OGG, sf::FloatRect());
 
 	m_music.resize(6);
