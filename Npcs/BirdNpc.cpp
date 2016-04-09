@@ -9,17 +9,14 @@
 #include <Camera.hpp>
 
 BirdNpc::BirdNpc(void) :
-	ANpc(BIRD_BLUE_OSS),
+	ANpc(BIRD_RED_OSS),
 	m_animationEnd(false),
 	m_generator("random")
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::CharacterSprite & sprite = getSprite();
 
-//	if (generator.randomBool(0.5f))
-//		sprite.setSpriteSheet(resources.getSpriteSheet(BIRD_BLUE_OSS));
-//	else
-		sprite.setSpriteSheet(resources.getSpriteSheet(BIRD_RED_OSS));
+	//sprite.setSpriteSheet(resources.getSpriteSheet(BIRD_RED_OSS));
 	setSize(sf::Vector2f(10.f, 45.f));
 	setOrigin(sf::Vector2f(90.f, 27.f));
 	setScale(0.8f);
