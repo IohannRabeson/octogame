@@ -11,12 +11,10 @@
 BirdNpc::BirdNpc(void) :
 	ANpc(BIRD_RED_OSS),
 	m_animationEnd(false),
-	m_generator("random")
+	m_generator("random"),
+	m_speedLimit(m_generator.randomFloat(30.f, 150.f)),
+	m_flySpeed(sf::Vector2f(m_generator.randomFloat(200.f, 400.f), m_generator.randomFloat(-100.f, -300.f)))
 {
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	octo::CharacterSprite & sprite = getSprite();
-
-	//sprite.setSpriteSheet(resources.getSpriteSheet(BIRD_RED_OSS));
 	setSize(sf::Vector2f(10.f, 45.f));
 	setOrigin(sf::Vector2f(90.f, 27.f));
 	setScale(0.8f);
@@ -25,8 +23,6 @@ BirdNpc::BirdNpc(void) :
 	setup();
 
 	setTimerMax(sf::seconds(m_generator.randomFloat(5.f, 10.f)));
-	m_speedLimit = m_generator.randomFloat(30.f, 150.f);
-	m_flySpeed = sf::Vector2f(m_generator.randomFloat(200.f, 400.f), m_generator.randomFloat(-100.f, -300.f));
 	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 

@@ -146,7 +146,7 @@ JungleABiome::JungleABiome() :
 	m_gameObjects[180] = GameObjectType::BirdNpc;
 	m_gameObjects[240] = GameObjectType::BirdNpc;
 	m_gameObjects[270] = GameObjectType::BirdNpc;
-	for (std::size_t i = 310; i < 315; i++)
+	for (std::size_t i = 285; i < 291; i++)
 		m_gameObjects[i] = GameObjectType::BirdNpc;
 	m_gameObjects[700] = GameObjectType::BirdNpc;
 	for (std::size_t i = 830; i < 837; i++)

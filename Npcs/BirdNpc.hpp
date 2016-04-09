@@ -27,9 +27,9 @@ protected:
 private:
 	bool			m_animationEnd;
 	sf::Vector2f	m_startPosition;
-	sf::Vector2f	m_flySpeed;
-	float			m_speedLimit;
 	RandomGenerator	m_generator;
+	float			m_speedLimit;
+	sf::Vector2f	m_flySpeed;
 };
 
 #endif
