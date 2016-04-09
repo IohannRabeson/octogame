@@ -71,6 +71,7 @@ void Map::init(ABiome & biome)
 
 void Map::computeMapRange(int startX, int endX, int startY, int endY)
 {
+	static const float interpolateOffset = 5.f;
 	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
 	int height; // The height of the generated map
 	int offsetX; // The tile position adjust to avoid negativ offset (because map is circular)
@@ -144,7 +145,6 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			if (m_isOctoOnInstance && m_octoPos.y <= m_instancesRect[m_instanceIndex].height
 				&& (offsetX >= m_instancesRect[m_instanceIndex].left && offsetX <= m_instancesRect[m_instanceIndex].width))
 			{
-				float interpolateOffset = 5.f;
 				float interpolateValue = 0.4f;
 				if (offsetX < m_instancesRect[m_instanceIndex].left + interpolateOffset)
 					interpolateValue = interpolateValue * ((offsetX - m_instancesRect[m_instanceIndex].left) / interpolateOffset);
@@ -276,6 +276,7 @@ void Map::nextStep(void)
 			m_instances[i]->nextStep();
 			m_instanceIndex = i;
 			m_isOctoOnInstance = true;
+			break;
 		}
 	}
 }
@@ -291,6 +292,7 @@ void Map::previousStep(void)
 			m_instances[i]->previousStep();
 			m_instanceIndex = i;
 			m_isOctoOnInstance = true;
+			break;
 		}
 	}
 }
