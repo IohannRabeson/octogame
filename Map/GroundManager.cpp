@@ -35,6 +35,7 @@
 #include "AmandineNpc.hpp"
 #include "JeffMouffyNpc.hpp"
 #include "JellyfishNpc.hpp"
+#include "BirdNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "WellKeeperNpc.hpp"
 #include "VinceNpc.hpp"
@@ -80,8 +81,8 @@ GroundManager::GroundManager(void) :
 	m_oldOffset(0, 0),
 	//TODO:Estimate what we need
 	m_decorManagerBack(200000),
-	m_decorManagerFront(200000),
-	m_decorManagerGround(200000),
+	m_decorManagerFront(10000),
+	m_decorManagerGround(5000),
 	m_nextState(GenerationState::Next),
 	m_cycle(nullptr),
 	m_water(nullptr)
@@ -368,6 +369,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		}
 
 		// Get all decors
+		bool spawnElevator = false;
 		for (std::size_t i = 0u; i < levelMap.getDecorCount(); i++)
 		{
 			octo::LevelMap::Decor decor = resources.getLevelMap(instance.second).getDecor(i);
@@ -383,6 +385,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				portal->setPosition(position + sf::Vector2f(50.f, 350.f));
 				m_otherOnInstance.push_back(std::move(portal));
 			}
+			else if (!decor.name.compare(OBJECT_ELEVATOR_TOP_BACK_OSS))
+				spawnElevator = true;
 			else if (!decor.isFront)
 				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 			else
@@ -402,7 +406,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		}
 
 		// For each instance, create an elevator stream
-		if (spawnInstance)
+		if (spawnInstance && spawnElevator)
 		{
 			std::unique_ptr<ElevatorStream> elevator;
 			elevator.reset(new ElevatorStream());
@@ -530,6 +534,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					JellyfishNpc * jellyfish = new JellyfishNpc();
 					jellyfish->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, jellyfish);
+				}
+				break;
+			case GameObjectType::BirdNpc:
+				{
+					BirdNpc * birdBlue = new BirdNpc();
+					birdBlue->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, birdBlue);
 				}
 				break;
 			case GameObjectType::CanouilleNpc:
@@ -810,8 +821,9 @@ NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 	return robot;
 }
 
-void	GroundManager::setNextGenerationState(GenerationState state)
+void	GroundManager::setNextGenerationState(GenerationState state, sf::Vector2f const & octoPos)
 {
+	m_octoPosState = octoPos;
 	if (m_transitionTimer >= m_transitionTimerMax)
 		m_nextState = state;
 }
@@ -1316,7 +1328,9 @@ void GroundManager::update(float deltatime)
 		if (m_nextState == GenerationState::Next)
 		{
 			compute = true;
+			m_tilesPrev->registerOctoPos(m_octoPosState);
 			m_tilesPrev->nextStep();
+			m_tiles->registerOctoPos(m_octoPosState);
 			m_tiles->registerDepth();
 			m_tiles->nextStep();
 			m_nextState = GenerationState::None;
@@ -1324,7 +1338,9 @@ void GroundManager::update(float deltatime)
 		else if (m_nextState == GenerationState::Previous)
 		{
 			compute = true;
+			m_tilesPrev->registerOctoPos(m_octoPosState);
 			m_tilesPrev->previousStep();
+			m_tiles->registerOctoPos(m_octoPosState);
 			m_tiles->registerDepth();
 			m_tiles->previousStep();
 			m_nextState = GenerationState::None;

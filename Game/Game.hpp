@@ -41,8 +41,8 @@ private:
 	std::unique_ptr<MusicManager>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<KonamiCode>			m_konami;
-	bool								m_keyS;
-	bool								m_keyF;
+	bool								m_keyGroundRight;
+	bool								m_keyGroundLeft;
 	std::shared_ptr<sf::Sound>			m_soundGeneration;
 	float								m_groundVolume;
 	sf::Time							m_groundSoundTime;

@@ -59,6 +59,8 @@ public:
 	virtual void registerDepth(void);
 	virtual void nextStep(void);
 	virtual void previousStep(void);
+	void registerOctoPos(sf::Vector2f const & octoPos);
+	bool isOctoOnInstance(sf::IntRect const & instanceRect, sf::Vector2i const & octoPos);
 
 private:
 	typedef std::function<float(float x, float y)>				MapSurfaceGeneratorBind;
@@ -75,13 +77,16 @@ private:
 	sf::Vector2f const *						m_offset;
 	sf::Vector2f								m_curOffset;
 	std::vector<std::unique_ptr<MapInstance>>	m_instances;
+	std::vector<sf::IntRect>					m_instancesRect;
 	Decors										m_decorPositions;
 	WideDecors									m_wideDecorPositions;
 	sf::Vector2u								m_mapSize;
 	Noise										m_noise;
 	MapSurfaceGeneratorBind						m_mapSurface;
 	TileColorGeneratorBind						m_tileColor;
-
+	sf::Vector2i								m_octoPos;
+	std::size_t									m_instanceIndex;
+	bool										m_isOctoOnInstance;
 };
 
 #endif

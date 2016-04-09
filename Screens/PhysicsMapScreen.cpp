@@ -148,10 +148,10 @@ bool PhysicsMapScreen::onPressed(sf::Event::KeyEvent const & event)
 	switch (event.code)
 	{
 		case sf::Keyboard::E:
-			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next);
+			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Next, m_camera.getCenter());
 		break;
 		case sf::Keyboard::R:
-			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Previous);
+			m_groundManager.setNextGenerationState(GroundManager::GenerationState::Previous, m_camera.getCenter());
 		break;
 		default:
 		break;

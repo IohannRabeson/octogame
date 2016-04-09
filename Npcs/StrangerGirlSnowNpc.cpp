@@ -31,6 +31,9 @@ void StrangerGirlSnowNpc::setup(void)
 			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 

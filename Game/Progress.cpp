@@ -215,14 +215,12 @@ void	Progress::levelChanged()
 
 void	Progress::registerNpc(ResourceKey const & key)
 {
-	std::string keyString(key);
 	if (!m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
 		m_npcMax++;
 }
 
 bool	Progress::meetNpc(ResourceKey const & key)
 {
-	std::string keyString(key);
 	if (m_changeLevel == false && !m_npc[m_data.nextDestination][key])
 	{
 		m_npc[m_data.nextDestination][key] = true;
@@ -244,10 +242,11 @@ void	Progress::saveNpc()
 		}
 		saveNpc += "\n";
 	}
+	assert(saveNpc.size() < 10000);
 	std::strcpy(m_data.npc, saveNpc.c_str());
 }
 
-void	Progress::split(const std::string &s, char delim, std::vector<std::string> &elems)
+void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)
 {
 	std::stringstream ss(s);
 	std::string item;
@@ -267,7 +266,7 @@ void	Progress::loadNpc()
 		Level level = static_cast<Level>(stoi(splitLine[0]));
 		m_npc[level].clear();
 
-		for (std::size_t i = 1; i < splitLine.size(); i = i += 2)
+		for (std::size_t i = 1; i < splitLine.size(); i += 2)
 		{
 			if (splitLine[i + 1] == "1")
 				m_npc[level].insert(std::make_pair(splitLine[i], true));

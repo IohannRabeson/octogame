@@ -190,10 +190,10 @@ void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 			case 13:
 				onInputPressed(OctoKeys::Use);
 				break;
-			case 9:
+			case 8:
 				onInputPressed(OctoKeys::GroundRight);
 				break;
-			case 8:
+			case 9:
 				onInputPressed(OctoKeys::GroundLeft);
 				break;
 			case 10:
@@ -234,10 +234,10 @@ void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 			case 13:
 				onInputReleased(OctoKeys::Use);
 				break;
-			case 9:
+			case 8:
 				onInputReleased(OctoKeys::GroundRight);
 				break;
-			case 8:
+			case 9:
 				onInputReleased(OctoKeys::GroundLeft);
 				break;
 			case 10:
