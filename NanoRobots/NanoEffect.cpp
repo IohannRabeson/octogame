@@ -33,7 +33,7 @@ void NanoEffect::playSound(void)
 		octo::ResourceManager& resource = octo::Application::getResourceManager();
 	
 		if (m_lastNanoCount != Progress::getInstance().getNanoRobotCount())
-			audio.playSound(resource.getSound(OCTO_QUESTION_OGG), 0.7f, 1.f);
+			audio.playSound(resource.getSound(OCTO_QUESTION_OGG), 0.6f, 1.f);
 		switch (soundChoose)
 		{
 			case 0u:
