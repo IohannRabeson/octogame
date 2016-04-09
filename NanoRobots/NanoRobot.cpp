@@ -254,7 +254,7 @@ bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 		{
 			if (m_infoSetup == false && m_infoText.size())
 			{
-				m_infoBubble.setup(m_infoText, sf::Color(255, 255, 255, 200), 20u, 600u);
+				m_infoBubble.setup(m_infoText, sf::Color::White, 20u, 600u);
 				m_infoBubble.setType(ABubble::Type::Speak);
 				m_infoBubble.setActive(true);
 				m_infoSetup = true;
