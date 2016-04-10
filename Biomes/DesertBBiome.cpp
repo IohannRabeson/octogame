@@ -10,12 +10,12 @@
 #include <iostream>
 
 DesertBBiome::DesertBBiome() :
-	m_name("Desert A"),
+	m_name("Desert B"),
 	m_id(Level::DesertB),
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(900u, 64u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(75.f * 16.f, -1850.f),
+	m_octoStartPosition(60.f * 16.f, -1850.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
@@ -131,6 +131,7 @@ DesertBBiome::DesertBBiome() :
 	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
 
+	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
 	//m_instances[50] = MAP_DESERT_B_TRAIL_OMP;
 	// Define game objects
 	/*
@@ -264,13 +265,13 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start1 = 50.f / static_cast<float>(m_mapSize.x);
-		float end1 = 100.f / static_cast<float>(m_mapSize.x);
-		float start2 = 800.f / static_cast<float>(m_mapSize.x);
-		float end2 = 850.f / static_cast<float>(m_mapSize.x);
+		float start1 = 30.f / static_cast<float>(m_mapSize.x);
+		float end1 = 70.f / static_cast<float>(m_mapSize.x);
+		float start2 = 130.f / static_cast<float>(m_mapSize.x);
+		float end2 = 230.f / static_cast<float>(m_mapSize.x);
 		float offset = 10.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float mapHigh = n / 3.f - 3.9f;
+		float mapHigh = -3.9f;
 
 		if (x > start1 - offset && x <= start1)
 			return octo::cosinusInterpolation(n, mapHigh, (x - start1 + offset) / offset);
@@ -284,7 +285,7 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 			return mapHigh;
 		else if (x > end2 && x <= end2 + offset)
 			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end2) / offset);
-		else if (x > end1 + offset && x < start2 + offset)
+		else if ((x > end2 + offset && m_mapSize.x) || (x > 0u && x < start1 - offset))
 			return 4.0f;
 		else
 			return n;
