@@ -10,6 +10,7 @@
 # include "HSL.hpp"
 # include "RandomGenerator.hpp"
 # include "InputListener.hpp"
+# include "LanguageMenu.hpp"
 
 class LevelZeroScreen : public octo::AbstractState,
 						public InputListener
@@ -51,6 +52,7 @@ private:
 	bool							m_isSoundPlayed;
 	bool							m_isSoundExplodePlayed;
 	std::shared_ptr<sf::Sound>		m_ground;
+	LanguageMenu					m_menu;
 
 	void createBackground(sf::Vector2f const & position, sf::Color const & downColor);
 };

@@ -23,7 +23,7 @@ class YesNoReset : public YesNoMenu
 		Progress &				progress = Progress::getInstance();
 		octo::StateManager &	states = octo::Application::getStateManager();
 		progress.reset();
-		progress.setFirstTime(false);
+		progress.setFirstTime(true);
 		states.change("zero");
 	}
 	
