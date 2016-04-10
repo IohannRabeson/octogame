@@ -126,13 +126,13 @@ JungleABiome::JungleABiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[1070] = MAP_ELEVATOR_JUNGLE_OMP;
-	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
-	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
-	m_instances[670] = MAP_SECRET_LEFT_VILLAGE_JUNGLE_OMP;
-	m_instances[2] = MAP_CEDRIC_JUNGLE_OMP; //2 to 102
-	m_instances[120] = MAP_TRAIL_JUNGLE_OMP; //150 to 450
-	m_instances[500] = MAP_DOUBLE_JUMP_JUNGLE_OMP; //500 to 600
+	m_instances[1070] = MAP_JUNGLE_A_ELEVATOR_OMP;
+	m_instances[1019] = MAP_JUNGLE_A_LUCIEN_OMP;
+	m_instances[765] = MAP_JUNGLE_A_VILLAGE_OMP;
+	m_instances[670] = MAP_JUNGLE_A_SECRET_LEFT_VILLAGE_OMP;
+	m_instances[2] = MAP_JUNGLE_A_CEDRIC_OMP; //2 to 102
+	m_instances[120] = MAP_JUNGLE_A_TRAIL_OMP; //150 to 450
+	m_instances[500] = MAP_JUNGLE_A_DOUBLE_JUMP_OMP; //500 to 600
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[500] = GameObjectType::Portal;
 	m_gameObjects[300] = GameObjectType::VinceNpc;
