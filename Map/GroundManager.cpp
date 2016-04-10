@@ -81,7 +81,7 @@ GroundManager::GroundManager(void) :
 	m_oldOffset(0, 0),
 	//TODO:Estimate what we need
 	m_decorManagerBack(200000),
-	m_decorManagerFront(10000),
+	m_decorManagerFront(20000),
 	m_decorManagerGround(5000),
 	m_nextState(GenerationState::Next),
 	m_cycle(nullptr),
