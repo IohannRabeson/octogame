@@ -134,9 +134,9 @@ DesertABiome::DesertABiome() :
 	// Define game objects
 	m_gameObjects[20] = GameObjectType::JuNpc;
 	m_gameObjects[40] = GameObjectType::Portal;
-	m_instances[353] = MAP_WAVE_DESERT_OMP;
-	m_instances[580] = MAP_NANO_JUMP_DESERT_OMP;
-	m_instances[11] = MAP_PYRAMID_OMP;
+	m_instances[353] = MAP_DESERT_A_WAVE_OMP;
+	m_instances[580] = MAP_DESERT_A_JUMP_OMP;
+	m_instances[11] = MAP_DESERT_A_PYRAMID_OMP;
 	m_gameObjects[300] = GameObjectType::TurbanNpc;
 	m_gameObjects[556] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;

@@ -144,7 +144,6 @@ void	ResourceLoadingScreen::onNoMoreLoading()
 	//octo::Application::getStateManager().change(octo::Application::getOptions().getValue<std::string>("second_state", "game"));
 	if (progress.isFirstTime())
 	{
-		progress.setFirstTime(false);
 		progress.save();
 		states.change("zero");
 	}

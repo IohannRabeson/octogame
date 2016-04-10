@@ -11,7 +11,7 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_soundPtr(nullptr)
 {
 	m_cornerPositions.left = position;
-	m_cornerPositions.top = -m_levelMap.getMapSize().y + MapInstance::HeightOffset;
+	m_cornerPositions.top = -m_levelMap.getMapSize().y + m_levelMap.getMapPosY();
 	m_cornerPositions.width = m_cornerPositions.left + m_levelMap.getMapSize().x;
 	m_cornerPositions.height = m_cornerPositions.top + m_levelMap.getMapSize().y;
 

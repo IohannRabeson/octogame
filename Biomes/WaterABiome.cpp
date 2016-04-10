@@ -125,9 +125,9 @@ WaterABiome::WaterABiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[140] = MAP_TRAIL_SLOWFALL_WATER_OMP;
-	m_instances[785] = MAP_PARA_SIGN_WATER_OMP;
-	m_instances[900] = MAP_PORTAL_WATER_OMP;
+	m_instances[140] = MAP_WATER_A_TRAIL_SLOWFALL_OMP;
+	m_instances[785] = MAP_WATER_A_PARA_SIGN_OMP;
+	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
 	m_gameObjects[149] = GameObjectType::EvaNpc;
