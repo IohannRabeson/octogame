@@ -85,6 +85,11 @@ void	TransitionLevelZeroScreen::resume()
 
 void	TransitionLevelZeroScreen::stop()
 {
+	if (Progress::getInstance().getNextDestination() != Level::Default)
+	{
+		Progress::getInstance().setFirstTime(false);
+		Progress::getInstance().save();
+	}
 	InputListener::removeInputListener();
 }
 
