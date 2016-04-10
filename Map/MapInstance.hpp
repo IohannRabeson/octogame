@@ -15,8 +15,6 @@ namespace octo
 class MapInstance : public IMapTransformable
 {
 public:
-	static constexpr int		HeightOffset = -70;
-
 	MapInstance(std::size_t position, std::string const & resourceId);
 	virtual ~MapInstance(void) = default;
 

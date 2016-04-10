@@ -318,7 +318,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			octo::LevelMap::SpriteTrigger const & spriteTrigger = levelMap.getSprite(i);
 			sf::FloatRect rect;
 			rect.left = spriteTrigger.trigger.left + instance.first * Tile::TileSize - Map::OffsetX;
-			rect.top = (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
+			rect.top = (-levelMap.getMapSize().y + levelMap.getMapPosY()) * Tile::TileSize + spriteTrigger.trigger.top - Map::OffsetY;
 			rect.width = spriteTrigger.trigger.width;
 			rect.height = spriteTrigger.trigger.height;
 			sf::Vector2f position(rect.left, rect.top + rect.height);
@@ -375,7 +375,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			octo::LevelMap::Decor decor = resources.getLevelMap(instance.second).getDecor(i);
 			sf::Vector2f position = decor.position;
 			position.x += instance.first * Tile::TileSize - Map::OffsetX;
-			position.y += (-levelMap.getMapSize().y + MapInstance::HeightOffset) * Tile::TileSize - Map::OffsetY;
+			position.y += (-levelMap.getMapSize().y + levelMap.getMapPosY()) * Tile::TileSize - Map::OffsetY;
 
 			if (!decor.name.compare(OBJECT_PORTAL_OSS))
 			{
@@ -411,7 +411,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			std::unique_ptr<ElevatorStream> elevator;
 			elevator.reset(new ElevatorStream());
 			elevator->setPosition(sf::Vector2f(instance.first * Tile::TileSize - elevator->getWidth(), 0.f));
-			elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + MapInstance::HeightOffset - 9) * Tile::TileSize);
+			elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + levelMap.getMapPosY() - 9) * Tile::TileSize);
 			elevator->setHeight(400.f);
 			elevator->setBiome(biome);
 			std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
