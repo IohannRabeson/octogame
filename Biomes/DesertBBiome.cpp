@@ -131,12 +131,12 @@ DesertBBiome::DesertBBiome() :
 	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
 
+	m_gameObjects[50] = GameObjectType::Portal;
 	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
-	//m_instances[50] = MAP_DESERT_B_TRAIL_OMP;
+	m_instances[260] = MAP_DESERT_B_TRAIL_OMP;
 	// Define game objects
 	/*
 	m_gameObjects[20] = GameObjectType::JuNpc;
-	m_gameObjects[40] = GameObjectType::Portal;
 	m_instances[353] = MAP_WAVE_DESERT_OMP;
 	m_instances[580] = MAP_NANO_JUMP_DESERT_OMP;
 	m_instances[11] = MAP_PYRAMID_OMP;
@@ -158,7 +158,7 @@ DesertBBiome::DesertBBiome() :
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::IceD);
+	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::JungleA);
 }
 
