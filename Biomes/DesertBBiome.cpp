@@ -20,7 +20,7 @@ DesertBBiome::DesertBBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
-	m_waterLevel(-1.f),
+	m_waterLevel(1000.f),
 	m_waterColor(96, 204, 233, 180),
 	m_destinationIndex(0u),
 
@@ -133,6 +133,7 @@ DesertBBiome::DesertBBiome() :
 
 	m_gameObjects[50] = GameObjectType::Portal;
 	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
+	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
 	m_instances[260] = MAP_DESERT_B_TRAIL_OMP;
 	// Define game objects
 	/*
@@ -220,8 +221,6 @@ Level	DesertBBiome::getDestination()
 
 float	DesertBBiome::getWaterLevel()
 {
-	if (Progress::getInstance().canUseWaterJump())
-		return 1400.f;
 	return m_waterLevel;
 }
 
@@ -285,8 +284,8 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 			return mapHigh;
 		else if (x > end2 && x <= end2 + offset)
 			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end2) / offset);
-		else if ((x > end2 + offset && m_mapSize.x) || (x > 0u && x < start1 - offset))
-			return 4.0f;
+//		else if ((x > end2 + offset && m_mapSize.x) || (x > 0u && x < start1 - offset))
+//			return 4.0f;
 		else
 			return n;
 	};

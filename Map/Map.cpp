@@ -97,14 +97,6 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 		while (offsetX >= static_cast<int>(m_mapSize.x))
 			offsetX -= m_mapSize.x;
 
-		for (auto & instance : m_instances)
-		{
-			if (offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
-			{
-				curInstance = instance.get();
-				break;
-			}
-		}
 		// Check if we are at the transition between 0 and m_mapSize.x
 		if (offsetX < static_cast<int>(m_mapJoinHalfWidth) || offsetX >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
 		{
@@ -127,20 +119,26 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			m_tiles.get(x, y)->setStartTransition(3u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
 			m_tiles.get(x, y)->setTileType(octo::LevelMap::TileType::Empty);
 
-			if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
+			for (auto & instance : m_instances)
 			{
-				Tile const & tileInstance = curInstance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top);
-				m_tiles.get(x, y)->setIsEmpty(tileInstance.isEmpty());
-				m_tiles.get(x, y)->setTileType(tileInstance.getTileType());
-				MapInstance::setTransitionType(*m_tiles.get(x, y));
+				if (offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
+					curInstance = instance.get();
+				if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
+				{
+					Tile const & tileInstance = curInstance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top);
+					m_tiles.get(x, y)->setIsEmpty(tileInstance.isEmpty());
+					m_tiles.get(x, y)->setTileType(tileInstance.getTileType());
+					MapInstance::setTransitionType(*m_tiles.get(x, y));
+					break;
+				}
+				else if (offsetY < height)
+				{
+					m_tiles.get(x, y)->setIsEmpty(true);
+					continue;
+				}
+				else
+					m_tiles.get(x, y)->setIsEmpty(false);
 			}
-			else if (offsetY < height)
-			{
-				m_tiles.get(x, y)->setIsEmpty(true);
-				continue;
-			}
-			else
-				m_tiles.get(x, y)->setIsEmpty(false);
 
 			if (m_isOctoOnInstance && m_octoPos.y <= m_instancesRect[m_instanceIndex].height
 				&& (offsetX >= m_instancesRect[m_instanceIndex].left && offsetX <= m_instancesRect[m_instanceIndex].width))
