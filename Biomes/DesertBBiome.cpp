@@ -135,7 +135,7 @@ DesertBBiome::DesertBBiome() :
 	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
 	m_gameObjects[90] = GameObjectType::Portal;
 	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
-	m_instances[260] = MAP_DESERT_B_TRAIL_OMP;
+	m_instances[260] = MAP_DESERT_B_TRAIL_A_OMP;
 	// Define game objects
 	/*
 	m_gameObjects[20] = GameObjectType::JuNpc;
@@ -157,11 +157,12 @@ DesertBBiome::DesertBBiome() :
 	*/
 	m_interestPointPosX = 500;
 
-	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
+	m_treePos = {28, 35, 42, 50, 56, 61, 139, 147, 152, 167, 181, 194, 214};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::DesertA);
-	m_destinations.push_back(Level::JungleA);
+	m_destinations.push_back(Level::Default);
+	//m_destinations.push_back(Level::JungleA);
 }
 
 void			DesertBBiome::setup(std::size_t seed)
