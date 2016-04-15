@@ -133,6 +133,7 @@ DesertBBiome::DesertBBiome() :
 
 	m_gameObjects[50] = GameObjectType::Portal;
 	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
+	m_gameObjects[90] = GameObjectType::Portal;
 	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
 	m_instances[260] = MAP_DESERT_B_TRAIL_OMP;
 	// Define game objects
@@ -268,9 +269,14 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 		float end1 = 70.f / static_cast<float>(m_mapSize.x);
 		float start2 = 130.f / static_cast<float>(m_mapSize.x);
 		float end2 = 230.f / static_cast<float>(m_mapSize.x);
-		float offset = 10.f / static_cast<float>(m_mapSize.x);
+		float startCave = 111.f / static_cast<float>(m_mapSize.x);
+		float endCave = 309.f / static_cast<float>(m_mapSize.x);
+		float offset = 5.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float mapHigh = -3.9f;
+		float caveHighUpLeft = 0.f;
+		float caveHighUpRight = 0.35f;
+		float caveHighDown = 7.7f;
 
 		if (x > start1 - offset && x <= start1)
 			return octo::cosinusInterpolation(n, mapHigh, (x - start1 + offset) / offset);
@@ -284,6 +290,12 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 			return mapHigh;
 		else if (x > end2 && x <= end2 + offset)
 			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end2) / offset);
+		if (x > startCave - offset && x <= startCave)
+			return octo::cosinusInterpolation(n, caveHighUpLeft, (x - startCave + offset) / offset);
+		else if (x > startCave && x <= endCave)
+			return caveHighDown;
+		else if (x > endCave && x <= endCave + offset)
+			return octo::cosinusInterpolation(n, caveHighUpRight, (offset - x - endCave) / offset);
 //		else if ((x > end2 + offset && m_mapSize.x) || (x > 0u && x < start1 - offset))
 //			return 4.0f;
 		else
