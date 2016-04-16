@@ -136,6 +136,7 @@ DesertBBiome::DesertBBiome() :
 	m_gameObjects[90] = GameObjectType::Portal;
 	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
 	m_instances[240] = MAP_DESERT_B_TRAIL_A_OMP;
+	m_instances[290] = MAP_DESERT_B_TRAIL_B_OMP;
 	// Define game objects
 	/*
 	m_gameObjects[20] = GameObjectType::JuNpc;
