@@ -13,7 +13,7 @@ DesertBBiome::DesertBBiome() :
 	m_name("Desert B"),
 	m_id(Level::DesertB),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(900u, 64u)),
+	m_mapSize(sf::Vector2u(750u, 64u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(60.f * 16.f, -1850.f),
 	m_transitionDuration(0.5f),
@@ -135,7 +135,7 @@ DesertBBiome::DesertBBiome() :
 	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
 	m_gameObjects[90] = GameObjectType::Portal;
 	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
-	m_instances[260] = MAP_DESERT_B_TRAIL_A_OMP;
+	m_instances[240] = MAP_DESERT_B_TRAIL_A_OMP;
 	// Define game objects
 	/*
 	m_gameObjects[20] = GameObjectType::JuNpc;

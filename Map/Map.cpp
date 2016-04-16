@@ -121,17 +121,25 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 
 			for (auto & instance : m_instances)
 			{
-				if (offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
-					curInstance = instance.get();
-				if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
+				if ((offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
+					&& (offsetY >= static_cast<int>(instance->getCornerPositions().top) && offsetY < static_cast<int>(instance->getCornerPositions().height)))
 				{
-					Tile const & tileInstance = curInstance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top);
+					//to remove
+					curInstance = instance.get();
+
+					Tile const & tileInstance = instance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top);
 					m_tiles.get(x, y)->setIsEmpty(tileInstance.isEmpty());
 					m_tiles.get(x, y)->setTileType(tileInstance.getTileType());
 					MapInstance::setTransitionType(*m_tiles.get(x, y));
 					break;
 				}
-				else if (offsetY < height)
+			}
+			//TODO: NOT CLEAN
+			if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
+				;
+			else
+			{
+				if (offsetY < height)
 				{
 					m_tiles.get(x, y)->setIsEmpty(true);
 					continue;
