@@ -68,19 +68,19 @@ DesertBBiome::DesertBBiome() :
 	m_rockColor(240, 110, 110),
 
 	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 150.f)),
+	m_treeSize(sf::Vector2f(15.f, 50.f), sf::Vector2f(30.f, 80.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
 	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
+	m_leafSize(sf::Vector2f(80.f, 80.f), sf::Vector2f(150.f, 150.f)),
 	m_leafColor(46, 133, 84),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
 	m_mushroomColor(77, 142, 126),
 	m_mushroomLifeTime(sf::seconds(10), sf::seconds(30)),
 
-	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 100.f)),
+	m_crystalSize(sf::Vector2f(40.f, 80.f), sf::Vector2f(70.f, 150.f)),
 	m_crystalPartCount(2u, 8u),
 	m_crystalColor(18, 14, 66, 150),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
