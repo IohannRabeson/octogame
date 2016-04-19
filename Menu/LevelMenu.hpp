@@ -13,7 +13,8 @@ public:
 	void onSelection();
 
 private:
-	std::size_t		m_index;
+	std::size_t					m_index;
+	std::vector<std::wstring>	m_names;
 };
 
 #endif
