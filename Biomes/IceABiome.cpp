@@ -131,7 +131,7 @@ IceABiome::IceABiome() :
 	m_gameObjects[8] = GameObjectType::SpaceShip;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::IceB || progress.getLastDestination() == Level::Default)
+	if (progress.getLastDestination() == Level::IceB || progress.getLastDestination() == Level::Default || progress.getLastDestination() == Level::DesertA)
 		m_octoStartPosition = sf::Vector2f(323 * 16.f, 600.f);
 
 	m_gameObjects[320] = GameObjectType::Portal;
