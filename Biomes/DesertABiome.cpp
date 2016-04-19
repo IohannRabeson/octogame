@@ -137,6 +137,7 @@ DesertABiome::DesertABiome() :
 	m_instances[353] = MAP_DESERT_A_WAVE_OMP;
 	m_instances[580] = MAP_DESERT_A_JUMP_OMP;
 	m_instances[11] = MAP_DESERT_A_PYRAMID_OMP;
+	m_instances[175] = MAP_DESERT_A_PORTAL_OMP;
 	m_gameObjects[300] = GameObjectType::TurbanNpc;
 	m_gameObjects[556] = GameObjectType::FannyNpc;
 	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
@@ -154,6 +155,7 @@ DesertABiome::DesertABiome() :
 	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::IceA);
 	m_destinations.push_back(Level::IceD);
 	m_destinations.push_back(Level::JungleA);
 }
