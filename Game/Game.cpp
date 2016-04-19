@@ -7,6 +7,7 @@
 #include "DesertABiome.hpp"
 #include "JungleABiome.hpp"
 #include "WaterABiome.hpp"
+#include "WaterBBiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -92,6 +93,7 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
 	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
+	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
 }
 
