@@ -79,7 +79,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
 	int curOffsetY = static_cast<int>(m_curOffset.y / Tile::TileSize);
 	int offsetPosX; // The real position of the tile (in the world)
-	MapInstance * curInstance;
+	bool isInstance;
 
 	assert(m_mapSurface);
 	assert(m_tileColor);
@@ -89,7 +89,6 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 
 	for (int x = startX; x < endX; x++)
 	{
-		curInstance = nullptr;
 		offsetX = x + curOffsetX;
 		offsetPosX = offsetX;
 		while (offsetX < 0)
@@ -111,6 +110,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 		}
 		for (int y = startY; y < endY; y++)
 		{
+			isInstance = false;
 			offsetY = y + curOffsetY;
 			// Init square
 			m_tiles.get(x, y)->setStartTransition(0u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize));
@@ -124,20 +124,15 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 				if ((offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
 					&& (offsetY >= static_cast<int>(instance->getCornerPositions().top) && offsetY < static_cast<int>(instance->getCornerPositions().height)))
 				{
-					//to remove
-					curInstance = instance.get();
-
 					Tile const & tileInstance = instance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top);
 					m_tiles.get(x, y)->setIsEmpty(tileInstance.isEmpty());
 					m_tiles.get(x, y)->setTileType(tileInstance.getTileType());
 					MapInstance::setTransitionType(*m_tiles.get(x, y));
+					isInstance = true;
 					break;
 				}
 			}
-			//TODO: NOT CLEAN
-			if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
-				;
-			else
+			if (!isInstance)
 			{
 				if (offsetY < height)
 				{
