@@ -18,7 +18,6 @@ class AGameObjectBase;
 
 enum class Level : std::size_t
 {
-	Default,
 	IceA,
 	IceB,
 	IceC,
@@ -26,7 +25,10 @@ enum class Level : std::size_t
 	DesertA,
 	DesertB,
 	JungleA,
+	JungleC,
 	WaterA,
+	WaterB,
+	Default,
 };
 
 class ABiome : public octo::NonCopyable

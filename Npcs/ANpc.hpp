@@ -115,6 +115,7 @@ private:
 	bool										m_displayText;
 	bool										m_activeText;
 	bool										m_collideOctoEvent;
+	bool										m_isDoubleJump;
 
 };
 

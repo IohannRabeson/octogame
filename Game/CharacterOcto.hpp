@@ -73,6 +73,7 @@ public:
 	sf::Vector2f const &	getPhysicsPosition() const;
 	sf::Vector2f const &	getPosition() const;
 	sf::Vector2f			getBubblePosition() const;
+	bool					getDoubleJump(void);
 	void					setStartPosition(sf::Vector2f const & position);
 	void					giveNanoRobot(NanoRobot * robot);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot);

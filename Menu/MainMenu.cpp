@@ -26,16 +26,6 @@ class YesNoReset : public YesNoMenu
 		progress.setFirstTime(true);
 		states.change("zero");
 	}
-	
-	inline void onSelection(void)
-	{
-		if (getIndexCursor() == 0u)
-			actionNo();
-		else if (getIndexCursor() == 1u)
-			actionYes();
-	
-		setState(AMenu::State::Hide);
-	}
 
 	inline void actionNo(void) { }
 };

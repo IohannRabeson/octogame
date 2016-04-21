@@ -40,6 +40,7 @@ ANpc::ANpc(ResourceKey const & npcId) :
 	}
 	if (npcTexts.find(npcId) != npcTexts.end())
 	{
+		npcTexts[npcId].push_back(L"Beurk!");
 		m_displayText = true;
 		setTexts(npcTexts[npcId]);
 	}
@@ -353,6 +354,10 @@ void ANpc::update(sf::Time frametime)
 void ANpc::collideOctoEvent(CharacterOcto * octo)
 {
 	m_collideOctoEvent = true;
+	if (octo->getDoubleJump())
+		m_isDoubleJump = true;
+	else
+		m_isDoubleJump = false;
 	if (Progress::getInstance().meetNpc(m_id))
 		octo->collideZoomEvent(m_box->getPosition());
 }
@@ -412,12 +417,15 @@ void ANpc::updateText(sf::Time frametime)
 {
 	if (m_displayText)
 	{
+		int index = m_currentText;
+		if (m_isDoubleJump)
+			index = m_texts.size() - 1;
 		if (m_collideOctoEvent && m_activeText)
-			m_texts[m_currentText]->setActive(true);
+			m_texts[index]->setActive(true);
 		else
-			m_texts[m_currentText]->setActive(false);
-		m_texts[m_currentText]->setPosition(m_sprite.getPosition() + m_textOffset);
-		m_texts[m_currentText]->update(frametime);
+			m_texts[index]->setActive(false);
+		m_texts[index]->setPosition(m_sprite.getPosition() + m_textOffset);
+		m_texts[index]->update(frametime);
 	}
 }
 
@@ -429,5 +437,10 @@ void ANpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
 {
 	if (m_displayText)
-		m_texts[m_currentText]->draw(render);
+	{
+		if (!m_isDoubleJump)
+			m_texts[m_currentText]->draw(render);
+		else
+			m_texts[m_texts.size() - 1]->draw(render);
+	}
 }

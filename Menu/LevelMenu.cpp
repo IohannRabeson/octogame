@@ -5,6 +5,22 @@
 LevelMenu::LevelMenu(void) :
 	m_index(0u)
 {
+	m_names.push_back(L"Ice A");
+	m_names.push_back(L"Ice B");
+	m_names.push_back(L"Ice C");
+	m_names.push_back(L"Ice D");
+	m_names.push_back(L"Desert A");
+	m_names.push_back(L"Jungle A");
+	m_names.push_back(L"Jungle C");
+	m_names.push_back(L"Water A");
+	m_names.push_back(L"Water B");
+	m_names.push_back(L"Random");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
 }
 
 void LevelMenu::createMenus(void)
@@ -15,7 +31,7 @@ void LevelMenu::createMenus(void)
 	{
 		if (level == levels[i])
 			m_index = i;
-		addMenu(std::to_wstring(static_cast<std::size_t>(i)), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+		addMenu(m_names[i], std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	}
 
 	setIndexCursor(static_cast<std::size_t>(m_index));

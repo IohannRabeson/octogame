@@ -135,8 +135,16 @@ DefaultBiome::DefaultBiome() :
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_gameObjects[23u] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
-	m_destinations.push_back(progress.getLastDestination());
-	m_destinations.push_back(progress.getLastDestination());
+	if (progress.getNanoRobotCount() >= 7 && progress.getLastDestination() == Level::IceA)
+	{
+		m_destinations.push_back(Level::Default);
+		m_destinations.push_back(Level::Default);
+	}
+	else
+	{
+		m_destinations.push_back(progress.getLastDestination());
+		m_destinations.push_back(progress.getLastDestination());
+	}
 
 	if (progress.getNanoRobotCount() >= 7)
 		m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;

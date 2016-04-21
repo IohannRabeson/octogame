@@ -1405,6 +1405,13 @@ sf::Vector2f	CharacterOcto::getBubblePosition() const
 	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -80.f));
 }
 
+bool	CharacterOcto::getDoubleJump()
+{
+	if (m_sprite.getCurrentEvent() == DoubleJump)
+		return true;
+	return false;
+}
+
 
 void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
 {
