@@ -137,6 +137,8 @@ DesertBBiome::DesertBBiome() :
 	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
 	m_instances[240] = MAP_DESERT_B_TRAIL_A_OMP;
 	m_instances[290] = MAP_DESERT_B_TRAIL_B_OMP;
+	m_instances[415] = MAP_DESERT_B_TRAIL_C_OMP;
+	//m_instances[415] = MAP_DESERT_B_TRAIL_D_OMP;
 	// Define game objects
 	/*
 	m_gameObjects[20] = GameObjectType::JuNpc;
@@ -163,7 +165,7 @@ DesertBBiome::DesertBBiome() :
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::Default);
-	//m_destinations.push_back(Level::JungleA);
+	m_destinations.push_back(Level::JungleA);
 }
 
 void			DesertBBiome::setup(std::size_t seed)
@@ -273,32 +275,33 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 		float end2 = 230.f / static_cast<float>(m_mapSize.x);
 		float startCave = 111.f / static_cast<float>(m_mapSize.x);
 		float endCave = 309.f / static_cast<float>(m_mapSize.x);
-		float offset = 5.f / static_cast<float>(m_mapSize.x);
+		float offset1 = 5.f / static_cast<float>(m_mapSize.x);
+		float offset2 = 100.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float mapHigh = -3.9f;
 		float caveHighUpLeft = 0.f;
 		float caveHighUpRight = 0.35f;
 		float caveHighDown = 7.7f;
 
-		if (x > start1 - offset && x <= start1)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start1 + offset) / offset);
+		if (x > start1 - offset1 && x <= start1)
+			return octo::cosinusInterpolation(n, mapHigh, (x - start1 + offset1) / offset1);
 		else if (x > start1 && x <= end1)
 			return mapHigh;
-		else if (x > end1 && x <= end1 + offset)
-			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end1) / offset);
-		else if (x > start2 - offset && x <= start2)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start2 + offset) / offset);
+		else if (x > end1 && x <= end1 + offset1)
+			return octo::cosinusInterpolation(n, mapHigh, (offset1 - x - end1) / offset1);
+		else if (x > start2 - offset1 && x <= start2)
+			return octo::cosinusInterpolation(n, mapHigh, (x - start2 + offset1) / offset1);
 		else if (x > start2 && x <= end2)
 			return mapHigh;
-		else if (x > end2 && x <= end2 + offset)
-			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end2) / offset);
-		if (x > startCave - offset && x <= startCave)
-			return octo::cosinusInterpolation(n, caveHighUpLeft, (x - startCave + offset) / offset);
+		else if (x > end2 && x <= end2 + offset1)
+			return octo::cosinusInterpolation(n, mapHigh, (offset1 - x - end2) / offset1);
+		if (x > startCave - offset1 && x <= startCave)
+			return octo::cosinusInterpolation(n, caveHighUpLeft, (x - startCave + offset1) / offset1);
 		else if (x > startCave && x <= endCave)
 			return caveHighDown;
-		else if (x > endCave && x <= endCave + offset)
-			return octo::cosinusInterpolation(n, caveHighUpRight, (offset - x - endCave) / offset);
-//		else if ((x > end2 + offset && m_mapSize.x) || (x > 0u && x < start1 - offset))
+		else if (x > endCave && x <= endCave + offset2)
+			return octo::cosinusInterpolation(n, caveHighUpRight, (offset2 - x - endCave) / offset2);
+//		else if ((x > end2 + offset1 && m_mapSize.x) || (x > 0u && x < start1 - offset1))
 //			return 4.0f;
 		else
 			return n;

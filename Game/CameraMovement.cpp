@@ -12,7 +12,7 @@ CameraMovement::CameraMovement(void):
 	m_timerZoomMax(sf::seconds(2.f)),
 	m_timerUnZoom(sf::Time::Zero),
 	m_timerUnZoomMax(sf::seconds(2.f)),
-	m_timerBeforeChangeMax(sf::seconds(3.f)),
+	m_timerBeforeChangeMax(sf::seconds(4.f)),
 	m_timerChangeLookAtMax(sf::seconds(4.f))
 {
 	m_initialSize = sf::Vector2f(octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);

@@ -124,7 +124,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 				if ((offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
 					&& (offsetY >= static_cast<int>(instance->getCornerPositions().top) && offsetY < static_cast<int>(instance->getCornerPositions().height)))
 				{
-					Tile const & tileInstance = instance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top);
+					Tile const & tileInstance = instance->get(offsetX - instance->getCornerPositions().left, offsetY - instance->getCornerPositions().top);
 					m_tiles.get(x, y)->setIsEmpty(tileInstance.isEmpty());
 					m_tiles.get(x, y)->setTileType(tileInstance.getTileType());
 					MapInstance::setTransitionType(*m_tiles.get(x, y));
