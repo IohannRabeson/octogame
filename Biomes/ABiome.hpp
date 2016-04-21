@@ -24,6 +24,7 @@ enum class Level : std::size_t
 	IceD,
 	DesertA,
 	JungleA,
+	JungleC,
 	WaterA,
 	WaterB,
 	Default,
