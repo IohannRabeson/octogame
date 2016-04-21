@@ -15,7 +15,7 @@ JungleCBiome::JungleCBiome() :
 	m_seed("sdf"),
 	m_mapSize(sf::Vector2u(1100u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(43.f * 16.f, 650.f),
+	m_octoStartPosition(250.f * 16.f, 1000.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
@@ -126,24 +126,11 @@ JungleCBiome::JungleCBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	m_instances[300] = MAP_JUNGLE_C_TRAIL_OMP;
-	m_instances[800] = MAP_JUNGLE_C_PORTAL_OMP;
+	m_instances[700] = MAP_JUNGLE_C_PORTAL_OMP;
+	m_gameObjects[250] = GameObjectType::Portal;
+	m_gameObjects[400] = GameObjectType::Portal;
 	// Define game objects
 	/*
-	m_instances[1019] = MAP_JUNGLE_A_LUCIEN_OMP;
-	m_instances[765] = MAP_JUNGLE_A_VILLAGE_OMP;
-	m_instances[670] = MAP_JUNGLE_A_SECRET_LEFT_VILLAGE_OMP;
-	m_instances[2] = MAP_JUNGLE_A_CEDRIC_OMP; //2 to 102
-	m_instances[120] = MAP_JUNGLE_A_TRAIL_OMP; //150 to 450
-	m_instances[500] = MAP_JUNGLE_A_DOUBLE_JUMP_OMP; //500 to 600
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[500] = GameObjectType::Portal;
-	m_gameObjects[300] = GameObjectType::VinceNpc;
-	m_gameObjects[745] = GameObjectType::AmandineNpc;
-	m_gameObjects[769] = GameObjectType::FaustNpc;
-	m_gameObjects[780] = GameObjectType::ConstanceNpc;
-	m_gameObjects[80] = GameObjectType::PierreNpc;
-	m_gameObjects[470] = GameObjectType::CanouilleNpc;
-
 	m_gameObjects[170] = GameObjectType::BirdNpc;
 	m_gameObjects[180] = GameObjectType::BirdNpc;
 	m_gameObjects[240] = GameObjectType::BirdNpc;
@@ -163,9 +150,9 @@ JungleCBiome::JungleCBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::WaterA);
+	m_destinations.push_back(Level::JungleA);
+	m_destinations.push_back(Level::Default);
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::WaterA)
