@@ -23,7 +23,7 @@ WaterABiome::WaterABiome() :
 	m_waterColor(3, 57, 108, 130),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(30.f)),
+	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::seconds(15.f)),
 	m_skyDayColor(153, 204, 255),
 	m_skyNightColor(255, 90, 61),
