@@ -145,6 +145,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<Snowman2Npc>(SNOWMAN_2_OSS);
 	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
+	m_npcFactory.registerCreator<FatNpc>(BIRD_RED_OSS);
 	m_npcFactory.registerCreator<LucienNpc>(LUCIEN_OSS);
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
 	m_npcFactory.registerCreator<ClementineNpc>(CLEMENTINE_OSS);

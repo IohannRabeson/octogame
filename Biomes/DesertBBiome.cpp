@@ -15,7 +15,7 @@ DesertBBiome::DesertBBiome() :
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(750u, 64u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(60.f * 16.f, -1850.f),
+	m_octoStartPosition(56.f * 16.f, -1800.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
@@ -129,7 +129,7 @@ DesertBBiome::DesertBBiome() :
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleA)
-		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
+		m_octoStartPosition = sf::Vector2f(9800, -4950.f);
 
 	m_gameObjects[50] = GameObjectType::Portal;
 	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
@@ -139,25 +139,7 @@ DesertBBiome::DesertBBiome() :
 	m_instances[290] = MAP_DESERT_B_TRAIL_B_OMP;
 	m_instances[415] = MAP_DESERT_B_TRAIL_C_OMP;
 	m_instances[535] = MAP_DESERT_B_TRAIL_D_OMP;
-	// Define game objects
-	/*
-	m_gameObjects[20] = GameObjectType::JuNpc;
-	m_instances[353] = MAP_WAVE_DESERT_OMP;
-	m_instances[580] = MAP_NANO_JUMP_DESERT_OMP;
-	m_instances[11] = MAP_PYRAMID_OMP;
-	m_gameObjects[300] = GameObjectType::TurbanNpc;
-	m_gameObjects[556] = GameObjectType::FannyNpc;
-	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
-	m_gameObjects[645] = GameObjectType::Bouibouik;
-	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
-	m_gameObjects[750] = GameObjectType::Tent;
-	m_gameObjects[700] = GameObjectType::Portal;
-	m_gameObjects[845] = GameObjectType::Well;
-	if (!progress.canUseWaterJump())
-		m_gameObjects[880] = GameObjectType::WellKeeperNpc;
-	else
-		m_gameObjects[88] = GameObjectType::WellKeeperNpc;
-	*/
+
 	m_interestPointPosX = 500;
 
 	m_treePos = {28, 35, 42, 50, 56, 61, 139, 147, 152, 167, 181, 194, 214};
