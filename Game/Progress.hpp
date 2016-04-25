@@ -72,6 +72,11 @@ public:
 	void				registerLevel(Level const & biome);
 	std::vector<Level> const & getRegisteredLevels(void) const;
 
+	void				registerDeath(float deathPosX);
+	std::vector<int> &	getDeathPos(void);
+
+	void				registerNpc(ResourceKey const & key);
+	bool				meetNpc(ResourceKey const & key);
 	std::size_t			getNpcCount();
 	std::size_t			getNpcMax();
 
@@ -80,9 +85,6 @@ public:
 
 	void				setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool				getReverseSprite() const { return m_reverseSprite; }
-
-	void				registerNpc(ResourceKey const & key);
-	bool				meetNpc(ResourceKey const & key);
 
 	void				load(std::string const & filename);
 	void				save();
@@ -146,6 +148,7 @@ private:
 	sf::Vector2f									m_octoPos;
 
 	std::map<Level, std::map<std::string, bool>>	m_npc;
+	std::map<Level, std::vector<int>>				m_deathPos;
 	std::size_t										m_npcCount;
 	std::size_t										m_npcMax;
 	std::vector<Level>								m_levels;

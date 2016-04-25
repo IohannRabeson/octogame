@@ -213,6 +213,16 @@ void	Progress::levelChanged()
 	m_changeLevel = false;
 }
 
+void	Progress::registerDeath(float deathPosX)
+{
+	m_deathPos[m_data.nextDestination].push_back(static_cast<int>(deathPosX / Tile::TileSize));
+}
+
+std::vector<int> & Progress::getDeathPos()
+{
+	return m_deathPos[m_data.nextDestination];
+}
+
 void	Progress::registerNpc(ResourceKey const & key)
 {
 	if (!m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
