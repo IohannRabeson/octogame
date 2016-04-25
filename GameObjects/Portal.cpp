@@ -2,6 +2,7 @@
 #include "ResourceDefinitions.hpp"
 #include "CircleShape.hpp"
 #include "PhysicsEngine.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
@@ -22,6 +23,7 @@ Portal::Portal(Level destination) :
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+	Progress::getInstance().registerPortal(destination);
 
 	m_shader.loadFromMemory(resources.getText(VORTEX_FRAG), sf::Shader::Fragment);
 	octo::PostEffect postEffectShader;

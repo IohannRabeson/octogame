@@ -80,6 +80,9 @@ public:
 	std::size_t			getNpcCount();
 	std::size_t			getNpcMax();
 
+	void				registerPortal(Level destination);
+	bool				meetPortal(Level destination);
+
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
 
@@ -148,9 +151,12 @@ private:
 	sf::Vector2f									m_octoPos;
 
 	std::map<Level, std::map<std::string, bool>>	m_npc;
-	std::map<Level, std::vector<int>>				m_deathPos;
 	std::size_t										m_npcCount;
 	std::size_t										m_npcMax;
+	std::map<Level, std::vector<int>>				m_deathPos;
+	std::map<Level, std::map<Level, bool>>			m_portals;
+	std::size_t										m_portalCount;
+	std::size_t										m_portalMax;
 	std::vector<Level>								m_levels;
 };
 

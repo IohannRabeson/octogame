@@ -20,12 +20,12 @@ Progress::Progress() :
 	m_validChallenge(false),
 	m_spaceShipRepair(false),
 	m_npcCount(0u),
-	m_npcMax(0u)
+	m_npcMax(0u),
+	m_portalCount(0u),
+	m_portalMax(0u)
 {
-#ifndef NDEBUG
-	m_data.nanoRobotCount = octo::Application::getOptions().getValue<std::size_t>("nb_nano"); // TODO : remove from defaultsetup();
-	m_data.nextDestination = static_cast<Level>(octo::Application::getOptions().getValue<std::size_t>("level")); // TODO : remove from defaultsetup();
-#endif
+	//TODO : to remove
+	(void)m_portalCount;
 }
 
 Progress & Progress::getInstance()
@@ -221,6 +221,22 @@ void	Progress::registerDeath(float deathPosX)
 std::vector<int> & Progress::getDeathPos()
 {
 	return m_deathPos[m_data.nextDestination];
+}
+
+void	Progress::registerPortal(Level destination)
+{
+	if (!m_portals[m_data.nextDestination].insert(std::make_pair(destination, false)).second)
+		m_portalMax++;
+}
+
+bool	Progress::meetPortal(Level destination)
+{
+	if (m_changeLevel == false && !m_portals[m_data.nextDestination][destination])
+	{
+		m_portals[m_data.nextDestination][destination] = true;
+		return true;
+	}
+	return false;
 }
 
 void	Progress::registerNpc(ResourceKey const & key)
