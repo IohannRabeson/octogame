@@ -22,10 +22,12 @@ Progress::Progress() :
 	m_npcCount(0u),
 	m_npcMax(0u)
 {
+/*
 #ifndef NDEBUG
 	m_data.nanoRobotCount = octo::Application::getOptions().getValue<std::size_t>("nb_nano"); // TODO : remove from defaultsetup();
 	m_data.nextDestination = static_cast<Level>(octo::Application::getOptions().getValue<std::size_t>("level")); // TODO : remove from defaultsetup();
 #endif
+*/
 }
 
 Progress & Progress::getInstance()

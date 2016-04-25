@@ -126,7 +126,7 @@ JungleCBiome::JungleCBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	m_instances[300] = MAP_JUNGLE_C_TRAIL_OMP;
-	m_instances[700] = MAP_JUNGLE_C_PORTAL_OMP;
+	m_instances[760] = MAP_JUNGLE_C_PORTAL_OMP;
 	m_gameObjects[290] = GameObjectType::Portal;
 	m_gameObjects[400] = GameObjectType::Portal;
 	// Define game objects
