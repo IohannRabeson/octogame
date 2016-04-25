@@ -11,7 +11,7 @@ class AMenuSelection : public AMenu, public InputListener
 {
 public:
 	AMenuSelection(void);
-	~AMenuSelection(void) = default;
+	virtual ~AMenuSelection(void);
 
 	void				setup(void);
 	void				setupBubble(void);
