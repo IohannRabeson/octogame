@@ -688,9 +688,11 @@ void GroundManager::setupDecors(ABiome & biome)
 	m_decorManagerBack.setup(&biome);
 	m_decorManagerFront.setup(&biome);
 	m_decorManagerGround.setup(&biome);
+	std::vector<int> & deathTreePos = Progress::getInstance().getDeathPos();
 	std::size_t mapSizeX = biome.getMapSize().x;
 
 	std::size_t treeCount = biome.getTreeCount();
+	std::size_t deathTreeCount = deathTreePos.size();
 	std::size_t rainbowCount = biome.getRainbowCount();
 	std::size_t rockCount = static_cast<std::size_t>(biome.getRockCount() / 2.f);
 	std::size_t mushroomCount = static_cast<std::size_t>(biome.getMushroomCount() / 2.f);
@@ -732,6 +734,23 @@ void GroundManager::setupDecors(ABiome & biome)
 			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += treeCount;
+	}
+
+	if (deathTreePos.size())
+	{
+		for (std::size_t i = 0; i < deathTreeCount; i++)
+		{
+			while (deathTreePos[i] > static_cast<int>(mapSizeX))
+				deathTreePos[i] -= mapSizeX;
+			while (deathTreePos[i] <= 0)
+				deathTreePos[i] += mapSizeX;
+
+			int x = deathTreePos[i] + Map::OffsetTileX;
+			m_decorManagerBack.add(DecorManager::DecorTypes::Tree);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += deathTreeCount;
 	}
 
 	if (biome.canCreateRock())
