@@ -101,6 +101,7 @@ void	Progress::reset()
 	m_validChallenge = false;
 	m_spaceShipRepair = false;
 	m_npc.clear();
+	m_portals.clear();
 	setup();
 	save();
 }

@@ -86,6 +86,7 @@ public:
 	void appear(void);
 	inline void disappear(void) { m_state = State::Disappear; }
 	inline bool isActivated(void) const { return m_isActive; }
+	inline bool isOpening(void) { return m_sprite.getCurrentEvent() == Opening; }
 	inline Level getDestination(void) const { return m_destination; }
 
 	void update(sf::Time frameTime);
