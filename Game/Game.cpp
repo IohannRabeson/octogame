@@ -205,7 +205,8 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			gameObjectCast<Bouibouik>(gameObject)->startBalle();
 			break;
 		case GameObjectType::Portal:
-			octo->usePortal(*gameObjectCast<Portal>(gameObject));
+			if (gameObjectCast<Portal>(gameObject)->isActivated())
+				octo->usePortal(*gameObjectCast<Portal>(gameObject));
 			break;
 		case GameObjectType::CedricNpc:
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();

@@ -239,6 +239,13 @@ bool	Progress::meetPortal(Level destination)
 	return false;
 }
 
+bool	Progress::isMetPortal(Level destination)
+{
+	if (m_changeLevel == false && m_portals[m_data.nextDestination][destination])
+		return true;
+	return false;
+}
+
 void	Progress::registerNpc(ResourceKey const & key)
 {
 	if (!m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)

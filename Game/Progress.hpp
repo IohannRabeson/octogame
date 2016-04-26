@@ -82,6 +82,7 @@ public:
 
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);
+	bool				isMetPortal(Level destination);
 
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
