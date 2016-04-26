@@ -21,11 +21,9 @@ Progress::Progress() :
 	m_spaceShipRepair(false),
 	m_npcCount(0u),
 	m_npcMax(0u),
-	m_portalCount(0u),
-	m_portalMax(0u)
+	m_portalsCount(0u),
+	m_portalsMax(0u)
 {
-	//TODO : to remove
-	(void)m_portalCount;
 }
 
 Progress & Progress::getInstance()
@@ -69,6 +67,7 @@ void	Progress::init()
 	graphics.setVerticalSyncEnabled(m_data.vsync);
 	m_validChallenge = false;
 	loadNpc();
+	loadPortals();
 }
 
 void	Progress::save()
@@ -82,6 +81,7 @@ void	Progress::save()
 	m_data.vsync = graphics.isVerticalSyncEnabled();
 
 	saveNpc();
+	savePortals();
 	saveToFile();
 }
 
@@ -226,7 +226,7 @@ std::vector<int> & Progress::getDeathPos()
 void	Progress::registerPortal(Level destination)
 {
 	if (!m_portals[m_data.nextDestination].insert(std::make_pair(destination, false)).second)
-		m_portalMax++;
+		m_portalsMax++;
 }
 
 bool	Progress::meetPortal(Level destination)
@@ -279,14 +279,6 @@ void	Progress::saveNpc()
 	std::strcpy(m_data.npc, saveNpc.c_str());
 }
 
-void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)
-{
-	std::stringstream ss(s);
-	std::string item;
-	while (std::getline(ss, item, delim))
-		elems.push_back(item);
-}
-
 void	Progress::loadNpc()
 {
 	std::istringstream savedNpc(m_data.npc);
@@ -324,6 +316,70 @@ std::size_t	Progress::getNpcMax()
 {
 	m_npcMax = m_npc[m_data.lastDestination].size();
 	return m_npcMax;
+}
+
+void	Progress::savePortals()
+{
+	std::string savePortals;
+	for (auto itLevel = m_portals.begin(); itLevel != m_portals.end(); itLevel++)
+	{
+		savePortals += std::to_string(static_cast<int>(itLevel->first)) + " ";
+		for (auto it = itLevel->second.begin(); it != itLevel->second.end(); it++)
+		{
+			savePortals += std::to_string(static_cast<std::size_t>(it->first));
+			savePortals += " " + std::to_string(it->second) + " ";
+		}
+		savePortals += "\n";
+	}
+	assert(savePortals.size() < 10000);
+	std::strcpy(m_data.portals, savePortals.c_str());
+}
+
+void	Progress::loadPortals()
+{
+	std::istringstream savedPortals(m_data.portals);
+	std::string line;
+	while (std::getline(savedPortals, line))
+	{
+		std::vector<std::string> splitLine;
+		split(line, ' ', splitLine);
+
+		Level level = static_cast<Level>(stoi(splitLine[0]));
+		m_portals[level].clear();
+
+		for (std::size_t i = 1; i < splitLine.size(); i += 2)
+		{
+			if (splitLine[i + 1] == "1")
+				m_portals[level].insert(std::make_pair(static_cast<Level>(stoi(splitLine[i])), true));
+			else
+				m_portals[level].insert(std::make_pair(static_cast<Level>(stoi(splitLine[i])), false));
+		}
+	}
+}
+
+std::size_t	Progress::getPortalsCount()
+{
+	m_portalsCount = 0u;
+	for (auto it = m_portals[m_data.lastDestination].begin(); it != m_portals[m_data.lastDestination].end(); it++)
+	{
+		if (it->second)
+			m_portalsCount++;
+	}
+	return m_portalsCount;
+}
+
+std::size_t	Progress::getPortalsMax()
+{
+	m_portalsMax = m_portals[m_data.lastDestination].size();
+	return m_portalsMax;
+}
+
+void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)
+{
+	std::stringstream ss(s);
+	std::string item;
+	while (std::getline(ss, item, delim))
+		elems.push_back(item);
 }
 
 void	Progress::registerLevel(Level const & level)

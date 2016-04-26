@@ -83,6 +83,8 @@ public:
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);
 	bool				isMetPortal(Level destination);
+	std::size_t			getPortalsCount();
+	std::size_t			getPortalsMax();
 
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
@@ -131,6 +133,7 @@ private:
 		bool			moveMap;
 		bool			canOpenDoubleJump;
 		char			npc[10000];
+		char			portals[10000];
 	};
 
 	Progress();
@@ -139,6 +142,8 @@ private:
 	void				setup();
 	void				saveNpc();
 	void				loadNpc();
+	void				savePortals();
+	void				loadPortals();
 	void				split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 	static std::unique_ptr<Progress>				m_instance;
@@ -156,8 +161,8 @@ private:
 	std::size_t										m_npcMax;
 	std::map<Level, std::vector<int>>				m_deathPos;
 	std::map<Level, std::map<Level, bool>>			m_portals;
-	std::size_t										m_portalCount;
-	std::size_t										m_portalMax;
+	std::size_t										m_portalsCount;
+	std::size_t										m_portalsMax;
 	std::vector<Level>								m_levels;
 };
 
