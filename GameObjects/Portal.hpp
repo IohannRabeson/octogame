@@ -84,6 +84,7 @@ public:
 	void setBiome(ABiome & biome);
 	inline float getRadius(void) const { return m_radius; }
 	void appear(void);
+	bool isLock(void);
 	inline void disappear(void) { m_state = State::Disappear; }
 	inline bool isActivated(void) const { return m_isActive; }
 	inline bool isOpening(void) { return m_sprite.getCurrentEvent() == Opening; }

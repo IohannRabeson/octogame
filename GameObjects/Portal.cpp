@@ -223,12 +223,19 @@ void Portal::setRadius(float radius)
 
 void Portal::appear(void)
 {
-	if (m_state == Activated)
+	if (m_state == Activated || isLock())
 		return;
 	if (m_sprite.getCurrentEvent() == Events::Closed)
 		m_state = State::FirstAppear;
 	else
 		m_state = State::Appear;
+}
+
+bool Portal::isLock(void)
+{
+	if (m_destination == Level::WaterA && Progress::getInstance().getNanoRobotCount() < 4)
+		return true;
+	return false;
 }
 
 void Portal::setBiome(ABiome & biome)
