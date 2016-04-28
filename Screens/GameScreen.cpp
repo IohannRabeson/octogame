@@ -27,6 +27,7 @@ void	GameScreen::start()
 void	GameScreen::pause()
 {
 	InputListener::removeInputListener();
+	m_menu.setKeyboard(false);
 }
 
 void	GameScreen::resume()
@@ -45,6 +46,7 @@ void	GameScreen::stop()
 	Progress::getInstance().save();
 	octo::Application::getPostEffectManager().removeEffects();
 	InputListener::removeInputListener();
+	m_menu.setKeyboard(false);
 }
 
 void	GameScreen::update(sf::Time frameTime)
