@@ -2,6 +2,7 @@
 #include "ResourceDefinitions.hpp"
 #include "CircleShape.hpp"
 #include "PhysicsEngine.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
@@ -22,6 +23,8 @@ Portal::Portal(Level destination) :
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+	Progress & progress = Progress::getInstance();
+	progress.registerPortal(destination);
 
 	m_shader.loadFromMemory(resources.getText(VORTEX_FRAG), sf::Shader::Fragment);
 	octo::PostEffect postEffectShader;
@@ -46,16 +49,70 @@ Portal::Portal(Level destination) :
 	prototype.emplace_back(sf::Vertex({-Size, -Size}));
 	m_particles.reset(prototype, sf::Triangles, 1000);
 
-	octo::SpriteAnimation::FrameList	frames;
-	frames.emplace_back(sf::seconds(0.4), 0);
-	frames.emplace_back(sf::seconds(0.4), 1);
-	frames.emplace_back(sf::seconds(0.4), 2);
-	frames.emplace_back(sf::seconds(0.4), 3);
-	m_animation.setFrames(frames);
-	m_animation.setLoop(octo::LoopMode::Loop);
+	//Setup Sprite
+	typedef octo::CharacterAnimation::Frame Frame;
+
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OBJECT_PORTAL_OSS));
-	m_sprite.setAnimation(m_animation);
-	m_sprite.play();
+
+	m_animationClosed.setFrames({
+		Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
+		Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
+	});
+	m_animationClosed.setLoop(octo::LoopMode::Loop);
+
+	m_animationOpening.setFrames({
+		Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+		Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+		Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+		Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+		Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+		Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+	});
+	m_animationOpening.setLoop(octo::LoopMode::NoLoop);
+
+	m_animationOpened.setFrames({
+		Frame(sf::seconds(0.8f), {0u, sf::FloatRect(), sf::Vector2f()}),
+		Frame(sf::seconds(0.8f), {1u, sf::FloatRect(), sf::Vector2f()}),
+		Frame(sf::seconds(0.8f), {2u, sf::FloatRect(), sf::Vector2f()}),
+		Frame(sf::seconds(0.8f), {3u, sf::FloatRect(), sf::Vector2f()}),
+	});
+	m_animationOpened.setLoop(octo::LoopMode::Loop);
+
+	//Setup state machine
+
+	typedef octo::CharacterSprite::ACharacterState	State;
+	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
+
+	octo::FiniteStateMachine	machine;
+	StatePtr					closed;
+	StatePtr					opening;
+	StatePtr					opened;
+
+	closed = std::make_shared<State>("0", m_animationClosed, m_sprite);
+	opening = std::make_shared<State>("1", m_animationOpening, m_sprite);
+	opened = std::make_shared<State>("2", m_animationOpened, m_sprite);
+
+	machine.setStart(closed);
+	machine.addTransition(Closed, closed, closed);
+	machine.addTransition(Closed, opening, closed);
+
+	machine.addTransition(Opening, opening, opening);
+	machine.addTransition(Opening, closed, opening);
+	machine.addTransition(Opening, opened, opening);
+
+	machine.addTransition(Opened, opened, opened);
+	machine.addTransition(Opened, opening, opened);
+	machine.addTransition(Opened, closed, opened);
+
+	m_sprite.setMachine(machine);
+	m_sprite.restart();
+
+	if (!progress.isMetPortal(m_destination))
+		m_sprite.setNextEvent(Closed);
+	else
+		m_sprite.setNextEvent(Opened);
+
+	m_state = Disappear;
 }
 
 Portal::~Portal(void)
@@ -82,17 +139,36 @@ void Portal::update(sf::Time frametime)
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	postEffect.enableEffect(m_shaderIndex, false);
 
+	if (m_timer >= m_timerMax)
+		m_isActive = true;
+	else
+		m_isActive = false;
+
 	switch (m_state)
 	{
+		case FirstAppear:
+		{
+			if (m_sprite.getCurrentEvent() == Events::Closed)
+				m_sprite.setNextEvent(Opening);
+			break;
+		}
 		case Appear:
+		{
+			if (m_sprite.getCurrentEvent() == Events::Opening && m_sprite.isTerminated())
+				m_sprite.setNextEvent(Opened);
+			else if (m_sprite.getCurrentEvent() == Events::Opened)
+			{
 			m_particles.setMaxParticle(m_timer / m_timerMax * static_cast<float>(m_maxParticle));
 			m_timer += frametime.asSeconds();
 			if (m_timer >= m_timerMax)
 			{
+				Progress::getInstance().meetPortal(m_destination);
 				m_state = Activated;
 				m_timer = m_timerMax;
 			}
+			}
 			break;
+		}
 		case Activated:
 			m_particles.setMaxParticle(m_maxParticle);
 			break;
@@ -133,7 +209,8 @@ void Portal::setPosition(sf::Vector2f const & position)
 	m_particles.setEmitter(m_position);
 	m_box->setPosition(sf::Vector2f(m_position.x - m_radius, m_position.y - m_radius));
 	m_box->update();
-	m_sprite.setPosition(m_position + sf::Vector2f(-m_sprite.getGlobalBounds().width / 2.f, -m_sprite.getGlobalBounds().height / 2.f + 52.f));
+	//TODO : verify with Julien because I dont really understand what am I doing!
+	m_sprite.setPosition(m_position.x - m_radius * 2.f, m_position.y - m_radius * 2.f);
 }
 
 void Portal::setRadius(float radius)
@@ -146,9 +223,19 @@ void Portal::setRadius(float radius)
 
 void Portal::appear(void)
 {
-	if (m_state == Activated)
+	if (m_state == Activated || isLock())
 		return;
-	m_state = State::Appear;
+	if (m_sprite.getCurrentEvent() == Events::Closed)
+		m_state = State::FirstAppear;
+	else
+		m_state = State::Appear;
+}
+
+bool Portal::isLock(void)
+{
+	if (m_destination == Level::WaterA && Progress::getInstance().getNanoRobotCount() < 4)
+		return true;
+	return false;
 }
 
 void Portal::setBiome(ABiome & biome)
@@ -156,9 +243,9 @@ void Portal::setBiome(ABiome & biome)
 	m_particles.setBiome(biome);
 }
 
-void Portal::draw(sf::RenderTarget & render, sf::RenderStates) const
+void Portal::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	render.draw(m_sprite);
+	m_sprite.draw(render, states);
 	m_particles.draw(render);
 }
 

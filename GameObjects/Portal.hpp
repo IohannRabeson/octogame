@@ -6,6 +6,7 @@
 # include <SFML/System/Time.hpp>
 
 # include <AnimatedSprite.hpp>
+# include <CharacterSprite.hpp>
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
 # include <Interpolations.hpp>
@@ -24,9 +25,16 @@ class Portal : public AGameObject<GameObjectType::Portal>, public IPlaceable
 public:
 	enum State
 	{
+		FirstAppear,
 		Appear,
 		Activated,
 		Disappear
+	};
+	enum Events
+	{
+		Closed,
+		Opening,
+		Opened
 	};
 
 private:
@@ -76,8 +84,10 @@ public:
 	void setBiome(ABiome & biome);
 	inline float getRadius(void) const { return m_radius; }
 	void appear(void);
+	bool isLock(void);
 	inline void disappear(void) { m_state = State::Disappear; }
-	inline bool isActivated(void) const { return (m_state == Activated); }
+	inline bool isActivated(void) const { return m_isActive; }
+	inline bool isOpening(void) { return m_sprite.getCurrentEvent() == Opening; }
 	inline Level getDestination(void) const { return m_destination; }
 
 	void update(sf::Time frameTime);
@@ -95,9 +105,12 @@ private:
 	float					m_timer;
 	float					m_timerMax;
 	CircleShape *			m_box;
+	bool					m_isActive;
 
-	octo::SpriteAnimation	m_animation;
-	octo::AnimatedSprite	m_sprite;
+	octo::CharacterAnimation	m_animationOpened;
+	octo::CharacterAnimation	m_animationOpening;
+	octo::CharacterAnimation	m_animationClosed;
+	octo::CharacterSprite		m_sprite;
 };
 
 #endif
