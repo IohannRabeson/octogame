@@ -133,9 +133,6 @@ JungleCBiome::JungleCBiome() :
 	m_gameObjects[170] = GameObjectType::BirdRedNpc;
 	m_gameObjects[180] = GameObjectType::BirdRedNpc;
 	m_gameObjects[240] = GameObjectType::BirdRedNpc;
-	m_gameObjects[270] = GameObjectType::BirdRedNpc;
-	for (std::size_t i = 285; i < 291; i++)
-		m_gameObjects[i] = GameObjectType::BirdRedNpc;
 	m_gameObjects[700] = GameObjectType::BirdRedNpc;
 	for (std::size_t i = 830; i < 837; i++)
 		m_gameObjects[i] = GameObjectType::BirdRedNpc;
