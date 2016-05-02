@@ -15,7 +15,7 @@ JungleCBiome::JungleCBiome() :
 	m_seed("sdf"),
 	m_mapSize(sf::Vector2u(1100u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(43.f * 16.f, 650.f),
+	m_octoStartPosition(294.f * 16.f, 1100.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
@@ -36,13 +36,13 @@ JungleCBiome::JungleCBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(10u, 20u),
-	m_treeCount(100u, 101u),
+	m_rockCount(60u, 80u),
+	m_treeCount(40u, 50u),
 	m_mushroomCount(39u, 40u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
-	m_sunCount(4u, 5u),
-	m_moonCount(2u, 3u),
+	m_sunCount(2u, 3u),
+	m_moonCount(3u, 4u),
 	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
@@ -63,8 +63,8 @@ JungleCBiome::JungleCBiome() :
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
 
-	m_rockSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 100.f)),
-	m_rockPartCount(6.f, 15.f),
+	m_rockSize(sf::Vector2f(50.f, 250.f), sf::Vector2f(150.f, 500.f)),
+	m_rockPartCount(4.f, 10.f),
 	m_rockColor(56, 50, 72),
 
 	m_treeDepth(4u, 5u),
@@ -76,7 +76,7 @@ JungleCBiome::JungleCBiome() :
 	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(250.f, 250.f)),
 	m_leafColor(0, 90, 67),
 
-	m_mushroomSize(sf::Vector2f(200.f, 300.f), sf::Vector2f(400.f, 700.f)),
+	m_mushroomSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(200.f, 300.f)),
 	m_mushroomColor(255, 182, 0),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
@@ -87,7 +87,7 @@ JungleCBiome::JungleCBiome() :
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
+	m_cloudSize(sf::Vector2f(300.f, 200.f), sf::Vector2f(600.f, 400.f)),
 	m_cloudPartCount(6u, 10u),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
@@ -126,23 +126,11 @@ JungleCBiome::JungleCBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	m_instances[300] = MAP_JUNGLE_C_TRAIL_OMP;
+	m_instances[760] = MAP_JUNGLE_C_PORTAL_OMP;
+	m_gameObjects[290] = GameObjectType::Portal;
+	m_gameObjects[400] = GameObjectType::Portal;
 	// Define game objects
 	/*
-	m_instances[1019] = MAP_JUNGLE_A_LUCIEN_OMP;
-	m_instances[765] = MAP_JUNGLE_A_VILLAGE_OMP;
-	m_instances[670] = MAP_JUNGLE_A_SECRET_LEFT_VILLAGE_OMP;
-	m_instances[2] = MAP_JUNGLE_A_CEDRIC_OMP; //2 to 102
-	m_instances[120] = MAP_JUNGLE_A_TRAIL_OMP; //150 to 450
-	m_instances[500] = MAP_JUNGLE_A_DOUBLE_JUMP_OMP; //500 to 600
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[500] = GameObjectType::Portal;
-	m_gameObjects[300] = GameObjectType::VinceNpc;
-	m_gameObjects[745] = GameObjectType::AmandineNpc;
-	m_gameObjects[769] = GameObjectType::FaustNpc;
-	m_gameObjects[780] = GameObjectType::ConstanceNpc;
-	m_gameObjects[80] = GameObjectType::PierreNpc;
-	m_gameObjects[470] = GameObjectType::CanouilleNpc;
-
 	m_gameObjects[170] = GameObjectType::BirdNpc;
 	m_gameObjects[180] = GameObjectType::BirdNpc;
 	m_gameObjects[240] = GameObjectType::BirdNpc;
@@ -162,13 +150,13 @@ JungleCBiome::JungleCBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::WaterA);
+	m_destinations.push_back(Level::JungleA);
+	m_destinations.push_back(Level::Default);
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::WaterA)
-		m_octoStartPosition = sf::Vector2f(490.f * 16.f, 2400.f);
+		m_octoStartPosition = sf::Vector2f(11900, -350.f);
 }
 
 void			JungleCBiome::setup(std::size_t seed)

@@ -12,6 +12,11 @@ AMenuSelection::AMenuSelection(void) :
 {
 }
 
+AMenuSelection::~AMenuSelection(void)
+{
+	setKeyboard(false);
+}
+
 void AMenuSelection::addMenu(std::wstring const & name, std::unique_ptr<AMenu>&& menu)
 {
 	m_menuTitles.push_back(name);

@@ -162,11 +162,11 @@ JungleABiome::JungleABiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::DesertA);
-	m_destinations.push_back(Level::WaterA);
+	m_destinations.push_back(Level::DesertB);
+	m_destinations.push_back(Level::JungleC);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::WaterA)
+	if (progress.getLastDestination() == Level::JungleC)
 		m_octoStartPosition = sf::Vector2f(490.f * 16.f, 2400.f);
 }
 

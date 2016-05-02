@@ -672,6 +672,11 @@ void	CharacterOcto::update(sf::Time frameTime)
 		robot->update(frameTime);
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
+	if (!m_onGround && !m_inWater && !m_onElevator)
+		m_cameraMovement->setFall(true);
+	else
+		m_cameraMovement->setFall(false);
+
 	m_cameraMovement->follow(frameTime, m_box->getPosition());
 }
 
@@ -693,6 +698,7 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 	{
 		case Fall:
 			m_timeEventFall += frameTime;
+			m_cameraMovement->setEventFallTimer(m_timeEventFall);
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;

@@ -23,7 +23,7 @@ WaterABiome::WaterABiome() :
 	m_waterColor(3, 57, 108, 130),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(30.f)),
+	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::seconds(15.f)),
 	m_skyDayColor(153, 204, 255),
 	m_skyNightColor(255, 90, 61),
@@ -127,14 +127,15 @@ WaterABiome::WaterABiome() :
 	// Define game objects
 	m_instances[140] = MAP_WATER_A_TRAIL_SLOWFALL_OMP;
 	m_instances[785] = MAP_WATER_A_PARA_SIGN_OMP;
-	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
+//	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
 	m_gameObjects[149] = GameObjectType::EvaNpc;
 	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-	m_gameObjects[668] = GameObjectType::PeaNpc;
-	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
-	m_gameObjects[730] = GameObjectType::Concert;
+//	m_gameObjects[668] = GameObjectType::PeaNpc;
+//	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
+//	m_gameObjects[730] = GameObjectType::Concert;
+	m_gameObjects[745] = GameObjectType::Portal;
 
 	m_gameObjects[200] = GameObjectType::JellyfishNpc;
 	m_gameObjects[270] = GameObjectType::JellyfishNpc;
@@ -152,8 +153,9 @@ WaterABiome::WaterABiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::DesertA);
-	m_destinations.push_back(Level::JungleA);
+	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::JungleC);
+	m_destinations.push_back(Level::WaterB);
 }
 
 void			WaterABiome::setup(std::size_t seed)

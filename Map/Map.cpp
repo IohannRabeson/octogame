@@ -79,7 +79,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
 	int curOffsetY = static_cast<int>(m_curOffset.y / Tile::TileSize);
 	int offsetPosX; // The real position of the tile (in the world)
-	MapInstance * curInstance;
+	bool isInstance;
 
 	assert(m_mapSurface);
 	assert(m_tileColor);
@@ -89,7 +89,6 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 
 	for (int x = startX; x < endX; x++)
 	{
-		curInstance = nullptr;
 		offsetX = x + curOffsetX;
 		offsetPosX = offsetX;
 		while (offsetX < 0)
@@ -97,14 +96,6 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 		while (offsetX >= static_cast<int>(m_mapSize.x))
 			offsetX -= m_mapSize.x;
 
-		for (auto & instance : m_instances)
-		{
-			if (offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
-			{
-				curInstance = instance.get();
-				break;
-			}
-		}
 		// Check if we are at the transition between 0 and m_mapSize.x
 		if (offsetX < static_cast<int>(m_mapJoinHalfWidth) || offsetX >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
 		{
@@ -119,6 +110,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 		}
 		for (int y = startY; y < endY; y++)
 		{
+			isInstance = false;
 			offsetY = y + curOffsetY;
 			// Init square
 			m_tiles.get(x, y)->setStartTransition(0u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY) * Tile::TileSize));
@@ -127,20 +119,29 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			m_tiles.get(x, y)->setStartTransition(3u, sf::Vector2f((offsetPosX) * Tile::TileSize, (offsetY + 1) * Tile::TileSize));
 			m_tiles.get(x, y)->setTileType(octo::LevelMap::TileType::Empty);
 
-			if (curInstance && offsetY >= static_cast<int>(curInstance->getCornerPositions().top) && offsetY < static_cast<int>(curInstance->getCornerPositions().height))
+			for (auto & instance : m_instances)
 			{
-				Tile const & tileInstance = curInstance->get(offsetX - curInstance->getCornerPositions().left, offsetY - curInstance->getCornerPositions().top);
-				m_tiles.get(x, y)->setIsEmpty(tileInstance.isEmpty());
-				m_tiles.get(x, y)->setTileType(tileInstance.getTileType());
-				MapInstance::setTransitionType(*m_tiles.get(x, y));
+				if ((offsetX >= static_cast<int>(instance->getCornerPositions().left) && offsetX < static_cast<int>(instance->getCornerPositions().width))
+					&& (offsetY >= static_cast<int>(instance->getCornerPositions().top) && offsetY < static_cast<int>(instance->getCornerPositions().height)))
+				{
+					Tile const & tileInstance = instance->get(offsetX - instance->getCornerPositions().left, offsetY - instance->getCornerPositions().top);
+					m_tiles.get(x, y)->setIsEmpty(tileInstance.isEmpty());
+					m_tiles.get(x, y)->setTileType(tileInstance.getTileType());
+					MapInstance::setTransitionType(*m_tiles.get(x, y));
+					isInstance = true;
+					break;
+				}
 			}
-			else if (offsetY < height)
+			if (!isInstance)
 			{
-				m_tiles.get(x, y)->setIsEmpty(true);
-				continue;
+				if (offsetY < height)
+				{
+					m_tiles.get(x, y)->setIsEmpty(true);
+					continue;
+				}
+				else
+					m_tiles.get(x, y)->setIsEmpty(false);
 			}
-			else
-				m_tiles.get(x, y)->setIsEmpty(false);
 
 			if (m_isOctoOnInstance && m_octoPos.y <= m_instancesRect[m_instanceIndex].height
 				&& (offsetX >= m_instancesRect[m_instanceIndex].left && offsetX <= m_instancesRect[m_instanceIndex].width))

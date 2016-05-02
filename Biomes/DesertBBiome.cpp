@@ -1,4 +1,4 @@
-#include "DesertABiome.hpp"
+#include "DesertBBiome.hpp"
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
@@ -9,18 +9,18 @@
 #include <limits>
 #include <iostream>
 
-DesertABiome::DesertABiome() :
-	m_name("Desert A"),
-	m_id(Level::DesertA),
+DesertBBiome::DesertBBiome() :
+	m_name("Desert B"),
+	m_id(Level::DesertB),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(900u, 128u)),
+	m_mapSize(sf::Vector2u(750u, 64u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(43.f * 16.f, 600.f),
+	m_octoStartPosition(56.f * 16.f, -1800.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
-	m_waterLevel(-1.f),
+	m_waterLevel(1000.f),
 	m_waterColor(96, 204, 233, 180),
 	m_destinationIndex(0u),
 
@@ -68,19 +68,19 @@ DesertABiome::DesertABiome() :
 	m_rockColor(240, 110, 110),
 
 	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 150.f)),
+	m_treeSize(sf::Vector2f(15.f, 50.f), sf::Vector2f(30.f, 80.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
 	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
+	m_leafSize(sf::Vector2f(80.f, 80.f), sf::Vector2f(150.f, 150.f)),
 	m_leafColor(46, 133, 84),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
 	m_mushroomColor(77, 142, 126),
 	m_mushroomLifeTime(sf::seconds(10), sf::seconds(30)),
 
-	m_crystalSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(25.f, 100.f)),
+	m_crystalSize(sf::Vector2f(40.f, 80.f), sf::Vector2f(70.f, 150.f)),
 	m_crystalPartCount(2u, 8u),
 	m_crystalColor(18, 14, 66, 150),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
@@ -128,112 +128,100 @@ DesertABiome::DesertABiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::DesertB)
-		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
+	if (progress.getLastDestination() == Level::JungleA)
+		m_octoStartPosition = sf::Vector2f(9800, -4950.f);
 
-	// Define game objects
-	m_gameObjects[20] = GameObjectType::JuNpc;
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_instances[353] = MAP_DESERT_A_WAVE_OMP;
-	m_instances[580] = MAP_DESERT_A_JUMP_OMP;
-	m_instances[11] = MAP_DESERT_A_PYRAMID_OMP;
-	m_instances[175] = MAP_DESERT_A_PORTAL_OMP;
-	m_gameObjects[300] = GameObjectType::TurbanNpc;
-	m_gameObjects[556] = GameObjectType::FannyNpc;
-	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
-	m_gameObjects[645] = GameObjectType::Bouibouik;
-	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
-	m_gameObjects[750] = GameObjectType::Tent;
-	m_gameObjects[700] = GameObjectType::Portal;
-	m_gameObjects[845] = GameObjectType::Well;
-	if (!progress.canUseWaterJump())
-		m_gameObjects[880] = GameObjectType::WellKeeperNpc;
-	else
-		m_gameObjects[88] = GameObjectType::WellKeeperNpc;
+	m_gameObjects[50] = GameObjectType::Portal;
+	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
+	m_gameObjects[90] = GameObjectType::Portal;
+	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
+	m_instances[240] = MAP_DESERT_B_TRAIL_A_OMP;
+	m_instances[290] = MAP_DESERT_B_TRAIL_B_OMP;
+	m_instances[415] = MAP_DESERT_B_TRAIL_C_OMP;
+	m_instances[535] = MAP_DESERT_B_TRAIL_D_OMP;
+
 	m_interestPointPosX = 500;
 
-	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
+	m_treePos = {28, 35, 42, 50, 56, 61, 139, 147, 152, 167, 181, 194, 214};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::IceA);
-	m_destinations.push_back(Level::IceD);
-	m_destinations.push_back(Level::DesertB);
+	m_destinations.push_back(Level::JungleA);
+	m_destinations.push_back(Level::DesertA);
+	m_destinations.push_back(Level::Default);
 }
 
-void			DesertABiome::setup(std::size_t seed)
+void			DesertBBiome::setup(std::size_t seed)
 {
 	(void)seed;
 }
 
-std::string		DesertABiome::getName()const
+std::string		DesertBBiome::getName()const
 {
 	return (m_name);
 }
 
-Level			DesertABiome::getId()const
+Level			DesertBBiome::getId()const
 {
 	return m_id;
 }
 
 //TODO:: We'll probably need a setter for mapSize
-sf::Vector2u	DesertABiome::getMapSize()
+sf::Vector2u	DesertBBiome::getMapSize()
 {
 	return (m_mapSize);
 }
 
-std::size_t		DesertABiome::getMapSeed()
+std::size_t		DesertBBiome::getMapSeed()
 {
 	return m_mapSeed;
 }
 
-sf::Vector2f	DesertABiome::getMapSizeFloat()
+sf::Vector2f	DesertBBiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
 }
 
-sf::Vector2f	DesertABiome::getOctoStartPosition()
+sf::Vector2f	DesertBBiome::getOctoStartPosition()
 {
 	return m_octoStartPosition;
 }
 
-float			DesertABiome::getTransitionDuration()
+float			DesertBBiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				DesertABiome::getInterestPointPosX()
+int				DesertBBiome::getInterestPointPosX()
 {
 	return (m_interestPointPosX);
 }
 
-std::map<std::size_t, GameObjectType> const &	DesertABiome::getGameObjects()
+std::map<std::size_t, GameObjectType> const &	DesertBBiome::getGameObjects()
 {
 	return m_gameObjects;
 }
 
-Level	DesertABiome::getDestination()
+Level	DesertBBiome::getDestination()
 {
 	return m_destinations[m_destinationIndex++];
 }
 
-float	DesertABiome::getWaterLevel()
+float	DesertBBiome::getWaterLevel()
 {
-	if (Progress::getInstance().canUseWaterJump())
-		return 1400.f;
 	return m_waterLevel;
 }
 
-sf::Color	DesertABiome::getWaterColor()
+sf::Color	DesertBBiome::getWaterColor()
 {
 	return m_waterColor;
 }
 
-std::map<std::size_t, std::string> const & DesertABiome::getInstances()
+std::map<std::size_t, std::string> const & DesertBBiome::getInstances()
 {
 	return m_instances;
 }
 
-std::vector<ParallaxScrolling::ALayer *> DesertABiome::getLayers()
+std::vector<ParallaxScrolling::ALayer *> DesertBBiome::getLayers()
 {
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
@@ -259,32 +247,50 @@ std::vector<ParallaxScrolling::ALayer *> DesertABiome::getLayers()
 	return vector;
 }
 
-Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
+Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 680.f / static_cast<float>(m_mapSize.x);
-		float end = 800.f / static_cast<float>(m_mapSize.x);
-		float offset = 10.f / static_cast<float>(m_mapSize.x);
-		float startHole = 850.f / static_cast<float>(m_mapSize.x);
-		float endHole = 869.f / static_cast<float>(m_mapSize.x);
+		float start1 = 30.f / static_cast<float>(m_mapSize.x);
+		float end1 = 70.f / static_cast<float>(m_mapSize.x);
+		float start2 = 130.f / static_cast<float>(m_mapSize.x);
+		float end2 = 230.f / static_cast<float>(m_mapSize.x);
+		float startCave = 111.f / static_cast<float>(m_mapSize.x);
+		float endCave = 309.f / static_cast<float>(m_mapSize.x);
+		float offset1 = 5.f / static_cast<float>(m_mapSize.x);
+		float offset2 = 100.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float mapHigh = n / 3.f - 1.9f;
+		float mapHigh = -3.9f;
+		float caveHighUpLeft = 0.f;
+		float caveHighUpRight = 0.35f;
+		float caveHighDown = 7.7f;
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start + offset) / offset);
-		else if (x > start && x <= end)
+		if (x > start1 - offset1 && x <= start1)
+			return octo::cosinusInterpolation(n, mapHigh, (x - start1 + offset1) / offset1);
+		else if (x > start1 && x <= end1)
 			return mapHigh;
-		else if (x > end && x <= end + offset)
-			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
-		else if (x > startHole && x < endHole)
-			return 4.0f;
+		else if (x > end1 && x <= end1 + offset1)
+			return octo::cosinusInterpolation(n, mapHigh, (offset1 - x - end1) / offset1);
+		else if (x > start2 - offset1 && x <= start2)
+			return octo::cosinusInterpolation(n, mapHigh, (x - start2 + offset1) / offset1);
+		else if (x > start2 && x <= end2)
+			return mapHigh;
+		else if (x > end2 && x <= end2 + offset1)
+			return octo::cosinusInterpolation(n, mapHigh, (offset1 - x - end2) / offset1);
+		if (x > startCave - offset1 && x <= startCave)
+			return octo::cosinusInterpolation(n, caveHighUpLeft, (x - startCave + offset1) / offset1);
+		else if (x > startCave && x <= endCave)
+			return caveHighDown;
+		else if (x > endCave && x <= endCave + offset2)
+			return octo::cosinusInterpolation(n, caveHighUpRight, (offset2 - x - endCave) / offset2);
+//		else if ((x > end2 + offset1 && m_mapSize.x) || (x > 0u && x < start1 - offset1))
+//			return 4.0f;
 		else
 			return n;
 	};
 }
 
-Map::TileColorGenerator DesertABiome::getTileColorGenerator()
+Map::TileColorGenerator DesertBBiome::getTileColorGenerator()
 {
 	return [this](Noise & noise, float x, float y, float z)
 	{
@@ -293,68 +299,68 @@ Map::TileColorGenerator DesertABiome::getTileColorGenerator()
 	};
 }
 
-sf::Color		DesertABiome::getParticleColorGround()
+sf::Color		DesertBBiome::getParticleColorGround()
 {
 	std::size_t colorIndex = randomInt(0u, 19u);
 	return (m_particleColor[colorIndex]);
 }
 
-sf::Color		DesertABiome::getTileStartColor()
+sf::Color		DesertBBiome::getTileStartColor()
 {
 	return (m_tileStartColor);
 }
 
-sf::Color		DesertABiome::getTileEndColor()
+sf::Color		DesertBBiome::getTileEndColor()
 {
 	return (m_tileEndColor);
 }
 
-sf::Time		DesertABiome::getDayDuration()
+sf::Time		DesertBBiome::getDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Time		DesertABiome::getStartDayDuration()
+sf::Time		DesertBBiome::getStartDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Color		DesertABiome::getSkyDayColor()
+sf::Color		DesertBBiome::getSkyDayColor()
 {
 	return (m_skyDayColor);
 }
 
-sf::Color		DesertABiome::getSkyNightColor()
+sf::Color		DesertBBiome::getSkyNightColor()
 {
 	return (m_skyNightColor);
 }
 
-sf::Color		DesertABiome::getNightLightColor()
+sf::Color		DesertBBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
 }
 
-sf::Color		DesertABiome::getSunsetLightColor()
+sf::Color		DesertBBiome::getSunsetLightColor()
 {
 	return (m_SunsetLightColor);
 }
 
-float			DesertABiome::getWind()
+float			DesertBBiome::getWind()
 {
 	return (m_wind);
 }
 
-void			DesertABiome::setWind(float wind)
+void			DesertBBiome::setWind(float wind)
 {
 	m_wind = wind;
 }
 
-bool			DesertABiome::canCreateRain()
+bool			DesertBBiome::canCreateRain()
 {
 	return (m_canCreateRain);
 }
 
-std::size_t		DesertABiome::getRainDropPerSecond()
+std::size_t		DesertBBiome::getRainDropPerSecond()
 {
 	std::size_t value = randomRangeSizeT(m_rainDropPerSecond);
 	if (value <= m_rainDropPerSecondMax)
@@ -363,158 +369,158 @@ std::size_t		DesertABiome::getRainDropPerSecond()
 		return (m_rainDropPerSecondMax);
 }
 
-sf::Time		DesertABiome::getSunnyTime()
+sf::Time		DesertBBiome::getSunnyTime()
 {
 	return (randomRangeTime(m_sunnyTime));
 }
 
-sf::Time		DesertABiome::getRainingTime()
+sf::Time		DesertBBiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
 }
 
-bool			DesertABiome::canCreateThunder()
+bool			DesertBBiome::canCreateThunder()
 {
 	return (m_canCreateThunder);
 }
 
-float			DesertABiome::getLightningSize()
+float			DesertBBiome::getLightningSize()
 {
 	return (randomRangeFloat(m_lightningSize));
 }
 
-bool			DesertABiome::canCreateSnow()
+bool			DesertBBiome::canCreateSnow()
 {
 	return (m_canCreateSnow);
 }
 
-std::size_t		DesertABiome::getRockCount()
+std::size_t		DesertBBiome::getRockCount()
 {
 	return (randomRangeSizeT(m_rockCount));
 }
 
-std::size_t		DesertABiome::getTreeCount()
+std::size_t		DesertBBiome::getTreeCount()
 {
 	return (randomRangeSizeT(m_treeCount));
 }
 
-std::size_t		DesertABiome::getMushroomCount()
+std::size_t		DesertBBiome::getMushroomCount()
 {
 	return (randomRangeSizeT(m_mushroomCount));
 }
 
-std::size_t		DesertABiome::getCrystalCount()
+std::size_t		DesertBBiome::getCrystalCount()
 {
 	return (randomRangeSizeT(m_crystalCount));
 }
 
-std::size_t		DesertABiome::getStarCount()
+std::size_t		DesertBBiome::getStarCount()
 {
 	return (randomRangeSizeT(m_starCount));
 }
 
-std::size_t		DesertABiome::getSunCount()
+std::size_t		DesertBBiome::getSunCount()
 {
 	return (randomRangeSizeT(m_sunCount));
 }
 
-std::size_t		DesertABiome::getMoonCount()
+std::size_t		DesertBBiome::getMoonCount()
 {
 	return (randomRangeSizeT(m_moonCount));
 }
 
-std::size_t		DesertABiome::getRainbowCount()
+std::size_t		DesertBBiome::getRainbowCount()
 {
 	return (randomRangeSizeT(m_rainbowCount));
 }
 
-std::size_t		DesertABiome::getCloudCount()
+std::size_t		DesertBBiome::getCloudCount()
 {
 	return (randomRangeSizeT(m_cloudCount));
 }
 
-std::size_t		DesertABiome::getGroundRockCount()
+std::size_t		DesertBBiome::getGroundRockCount()
 {
 	return (randomRangeSizeT(m_groundRockCount));
 }
 
-std::size_t	DesertABiome::getTreeDepth()
+std::size_t	DesertBBiome::getTreeDepth()
 {
 	return (randomRangeSizeT(m_treeDepth));
 }
 
-sf::Vector2f	DesertABiome::getTreeSize()
+sf::Vector2f	DesertBBiome::getTreeSize()
 {
 	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Time		DesertABiome::getTreeLifeTime()
+sf::Time		DesertBBiome::getTreeLifeTime()
 {
 	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Color		DesertABiome::getTreeColor()
+sf::Color		DesertBBiome::getTreeColor()
 {
 	return (randomColor(m_treeColor));
 }
 
-float			DesertABiome::getTreeAngle()
+float			DesertBBiome::getTreeAngle()
 {
 	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			DesertABiome::getTreeIsMoving()
+bool			DesertBBiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-float			DesertABiome::getTreeBeatMouvement()
+float			DesertBBiome::getTreeBeatMouvement()
 {
 	return (m_treeBeatMouvement);
 }
 
-bool			DesertABiome::canCreateTree()
+bool			DesertBBiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			DesertABiome::canCreateLeaf()
+bool			DesertBBiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	DesertABiome::getLeafSize()
+sf::Vector2f	DesertBBiome::getLeafSize()
 {
 	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		DesertABiome::getLeafColor()
+sf::Color		DesertBBiome::getLeafColor()
 {
 	return (randomColor(m_leafColor));
 }
 
-std::size_t		DesertABiome::getTreePositionX()
+std::size_t		DesertBBiome::getTreePositionX()
 {
 	return m_treePos[m_indexTreePos++];
 }
 
-sf::Vector2f	DesertABiome::getCrystalSize()
+sf::Vector2f	DesertBBiome::getCrystalSize()
 {
 	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		DesertABiome::getCrystalPartCount()
+std::size_t		DesertBBiome::getCrystalPartCount()
 {
 	return (randomRangeSizeT(m_crystalPartCount));
 }
 
-sf::Color		DesertABiome::getCrystalColor()
+sf::Color		DesertBBiome::getCrystalColor()
 {
 	return (randomColor(m_crystalColor));
 }
 
-int				DesertABiome::getCrystalPosX()
+int				DesertBBiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_interestPointPosX - m_mapSize.x / 2.f;
@@ -525,217 +531,217 @@ int				DesertABiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			DesertABiome::canCreateCrystal()
+bool			DesertBBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	DesertABiome::getShineEffectSize()
+sf::Vector2f	DesertBBiome::getShineEffectSize()
 {
 	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		DesertABiome::getShineEffectColor()
+sf::Color		DesertBBiome::getShineEffectColor()
 {
 	return (randomColor(m_shineEffectColor));
 }
 
-float			DesertABiome::getShineEffectRotateAngle()
+float			DesertBBiome::getShineEffectRotateAngle()
 {
 	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			DesertABiome::canCreateShineEffect()
+bool			DesertBBiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	DesertABiome::getRockSize()
+sf::Vector2f	DesertBBiome::getRockSize()
 {
 	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		DesertABiome::getRockPartCount()
+std::size_t		DesertBBiome::getRockPartCount()
 {
 	return (randomRangeSizeT(m_rockPartCount));
 }
 
-sf::Color		DesertABiome::getRockColor()
+sf::Color		DesertBBiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
 }
 
-bool			DesertABiome::canCreateRock()
+bool			DesertBBiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	DesertABiome::getMushroomSize()
+sf::Vector2f	DesertBBiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
 }
 
-sf::Color		DesertABiome::getMushroomColor()
+sf::Color		DesertBBiome::getMushroomColor()
 {
 	return (randomColor(m_mushroomColor));
 }
 
-sf::Time		DesertABiome::getMushroomLifeTime()
+sf::Time		DesertBBiome::getMushroomLifeTime()
 {
 	return (randomRangeTime(m_mushroomLifeTime));
 }
 
-bool			DesertABiome::canCreateMushroom()
+bool			DesertBBiome::canCreateMushroom()
 {
 	return (m_canCreateMushroom);
 }
 
-sf::Vector2f	DesertABiome::getCloudSize()
+sf::Vector2f	DesertBBiome::getCloudSize()
 {
 	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		DesertABiome::getCloudPartCount()
+std::size_t		DesertBBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
-sf::Time		DesertABiome::getCloudLifeTime()
+sf::Time		DesertBBiome::getCloudLifeTime()
 {
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		DesertABiome::getCloudColor()
+sf::Color		DesertBBiome::getCloudColor()
 {
 	return (randomColor(m_cloudColor));
 }
 
-bool			DesertABiome::canCreateCloud()
+bool			DesertBBiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	DesertABiome::getStarSize()
+sf::Vector2f	DesertBBiome::getStarSize()
 {
 	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		DesertABiome::getStarColor()
+sf::Color		DesertBBiome::getStarColor()
 {
 	return (randomColor(m_starColor));
 }
 
-sf::Time		DesertABiome::getStarLifeTime()
+sf::Time		DesertBBiome::getStarLifeTime()
 {
 	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			DesertABiome::canCreateStar()
+bool			DesertBBiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	DesertABiome::getSunSize()
+sf::Vector2f 	DesertBBiome::getSunSize()
 {
 	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-std::size_t		DesertABiome::getSunPartCount()
+std::size_t		DesertBBiome::getSunPartCount()
 {
 	return (randomRangeSizeT(m_sunPartCount));
 }
 
-sf::Color		DesertABiome::getSunColor()
+sf::Color		DesertBBiome::getSunColor()
 {
 	if (m_sunColor == sf::Color(255, 255, 255))
 		return m_sunColor;
 	return (randomColor(m_sunColor));
 }
 
-bool			DesertABiome::canCreateSun()
+bool			DesertBBiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	DesertABiome::getMoonSize()
+sf::Vector2f 	DesertBBiome::getMoonSize()
 {
 	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		DesertABiome::getMoonColor()
+sf::Color		DesertBBiome::getMoonColor()
 {
 	return (randomColor(m_moonColor));
 }
 
-sf::Time		DesertABiome::getMoonLifeTime()
+sf::Time		DesertBBiome::getMoonLifeTime()
 {
 	return (randomRangeTime(m_moonLifeTime));
 }
 
-bool			DesertABiome::canCreateMoon()
+bool			DesertBBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-float			DesertABiome::getRainbowThickness()
+float			DesertBBiome::getRainbowThickness()
 {
 	return (randomRangeFloat(m_rainbowThickness));
 }
 
-float			DesertABiome::getRainbowPartSize()
+float			DesertBBiome::getRainbowPartSize()
 {
 	return (randomRangeFloat(m_rainbowPartSize));
 }
 
-std::size_t		DesertABiome::getRainbowLoopCount()
+std::size_t		DesertBBiome::getRainbowLoopCount()
 {
 	return (randomRangeSizeT(m_rainbowLoopCount));
 }
 
-sf::Time		DesertABiome::getRainbowLifeTime()
+sf::Time		DesertBBiome::getRainbowLifeTime()
 {
 	return (randomRangeTime(m_rainbowLifeTime));
 }
 
-sf::Time		DesertABiome::getRainbowIntervalTime()
+sf::Time		DesertBBiome::getRainbowIntervalTime()
 {
 	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
-bool			DesertABiome::canCreateRainbow()
+bool			DesertBBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
 }
 
 
-float			DesertABiome::randomFloat(float min, float max)
+float			DesertBBiome::randomFloat(float min, float max)
 {
 	return (m_generator.randomFloat(min, max));
 }
 
-int				DesertABiome::randomInt(int min, int max)
+int				DesertBBiome::randomInt(int min, int max)
 {
 	return (m_generator.randomInt(min, max));
 }
 
-bool			DesertABiome::randomBool(float percent)
+bool			DesertBBiome::randomBool(float percent)
 {
 	return (m_generator.randomBool(percent));
 }
 
-float			DesertABiome::randomRangeFloat(Range<float> const & range)
+float			DesertBBiome::randomRangeFloat(Range<float> const & range)
 {
 	return (randomFloat(range.min, range.max));
 }
 
-int				DesertABiome::randomRangeSizeT(Range<std::size_t> const & range)
+int				DesertBBiome::randomRangeSizeT(Range<std::size_t> const & range)
 {
 	return (randomInt(range.min, range.max));
 }
 
-sf::Vector2f	DesertABiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+sf::Vector2f	DesertBBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 {
 	sf::Vector2f tmp;
 	tmp.x = randomFloat(range.min.x, range.max.x);
@@ -743,13 +749,13 @@ sf::Vector2f	DesertABiome::randomRangeVector2f(Range<sf::Vector2f> const & range
 	return tmp;
 }
 
-sf::Time		DesertABiome::randomRangeTime(Range<sf::Time> const & range)
+sf::Time		DesertBBiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }
 
-sf::Color		DesertABiome::randomColor(sf::Color const & color)
+sf::Color		DesertBBiome::randomColor(sf::Color const & color)
 {
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
