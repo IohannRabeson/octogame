@@ -49,7 +49,7 @@ protected:
 
 	typedef std::pair<float, std::size_t>	FramePair;
 
-	ANpc(ResourceKey const & npcId);
+	ANpc(ResourceKey const & npcId, bool isMeetable = true);
 
 	void setTimer(sf::Time time);
 	void setTimerMax(sf::Time timerMax);
@@ -116,6 +116,7 @@ private:
 	bool										m_activeText;
 	bool										m_collideOctoEvent;
 	bool										m_isDoubleJump;
+	bool										m_isMeetable;
 
 };
 

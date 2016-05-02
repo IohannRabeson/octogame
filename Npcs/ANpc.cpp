@@ -9,7 +9,7 @@
 #include <sstream>
 #include <cwchar>
 
-ANpc::ANpc(ResourceKey const & npcId) :
+ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_id(npcId),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_timer(sf::Time::Zero),
@@ -19,11 +19,13 @@ ANpc::ANpc(ResourceKey const & npcId) :
 	m_scale(1.f),
 	m_displayText(false),
 	m_activeText(true),
-	m_collideOctoEvent(false)
+	m_collideOctoEvent(false),
+	m_isMeetable(isMeetable)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	Progress & progress = Progress::getInstance();
-	progress.registerNpc(npcId);
+	if (m_isMeetable)
+		progress.registerNpc(npcId);
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
@@ -358,7 +360,7 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 		m_isDoubleJump = true;
 	else
 		m_isDoubleJump = false;
-	if (Progress::getInstance().meetNpc(m_id))
+	if (m_isMeetable && Progress::getInstance().meetNpc(m_id))
 		octo->collideZoomEvent(m_box->getPosition());
 }
 

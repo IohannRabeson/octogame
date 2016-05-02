@@ -134,6 +134,9 @@ IceBBiome::IceBBiome() :
 	if (progress.getLastDestination() == Level::DesertA || progress.getLastDestination() == Level::IceD)
 		m_octoStartPosition = sf::Vector2f(4450, -1850.f);
 
+	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
+	m_gameObjects[320] = GameObjectType::BirdBlueNpc;
+
 	m_gameObjects[450] = GameObjectType::Portal;
 	m_destinations.push_back(Level::IceC);
 	m_destinations.push_back(Level::IceA);

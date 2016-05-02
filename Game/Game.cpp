@@ -28,6 +28,7 @@
 #include "DoubleJumpNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
 //Script AddNpc Include
+#include "BirdBlueNpc.hpp"
 #include "StrangerSnowNpc.hpp"
 #include "StrangerGirlSnowNpc.hpp"
 #include "SnowGirl2Npc.hpp"
@@ -288,6 +289,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::BirdBlueNpc:
+			gameObjectCast<BirdBlueNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::StrangerSnowNpc:
 			gameObjectCast<StrangerSnowNpc>(gameObject)->collideOctoEvent(octo);
 			break;

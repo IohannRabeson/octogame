@@ -10,6 +10,7 @@
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 //Script AddNpc Include
+#include "BirdBlueNpc.hpp"
 #include "StrangerSnowNpc.hpp"
 #include "StrangerGirlSnowNpc.hpp"
 #include "SnowGirl2Npc.hpp"
@@ -151,6 +152,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClementineNpc>(CLEMENTINE_OSS);
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<BirdBlueNpc>(BIRD_BLUE_OSS);
 	m_npcFactory.registerCreator<StrangerSnowNpc>(STRANGER_SNOW_OSS);
 	m_npcFactory.registerCreator<StrangerGirlSnowNpc>(STRANGER_GIRL_SNOW_OSS);
 	m_npcFactory.registerCreator<SnowGirl2Npc>(SNOWGIRL_2_OSS);
@@ -539,7 +541,14 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				break;
 			case GameObjectType::BirdRedNpc:
 				{
-					BirdRedNpc * birdBlue = new BirdRedNpc();
+					BirdRedNpc * birdRed = new BirdRedNpc();
+					birdRed->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, birdRed);
+				}
+				break;
+			case GameObjectType::BirdBlueNpc:
+				{
+					BirdBlueNpc * birdBlue = new BirdBlueNpc();
 					birdBlue->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, birdBlue);
 				}
