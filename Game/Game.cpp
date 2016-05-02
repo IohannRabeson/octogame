@@ -57,7 +57,7 @@
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "JellyfishNpc.hpp"
-#include "BirdNpc.hpp"
+#include "BirdRedNpc.hpp"
 #include "WellKeeperNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
@@ -360,8 +360,8 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::JellyfishNpc:
 			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::BirdNpc:
-			gameObjectCast<BirdNpc>(gameObject)->collideOctoEvent(octo);
+		case GameObjectType::BirdRedNpc:
+			gameObjectCast<BirdRedNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::WellKeeperNpc:
 			gameObjectCast<WellKeeperNpc>(gameObject)->collideOctoEvent(octo);

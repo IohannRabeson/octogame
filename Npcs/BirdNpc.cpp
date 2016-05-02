@@ -8,8 +8,8 @@
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
 
-BirdNpc::BirdNpc(void) :
-	ANpc(BIRD_RED_OSS),
+BirdNpc::BirdNpc(ResourceKey const & npcId) :
+	ANpc(npcId),
 	m_animationEnd(false),
 	m_generator("random"),
 	m_speedLimit(m_generator.randomFloat(30.f, 150.f)),
@@ -23,7 +23,7 @@ BirdNpc::BirdNpc(void) :
 	setup();
 
 	setTimerMax(sf::seconds(m_generator.randomFloat(5.f, 10.f)));
-	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	//setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void BirdNpc::setup(void)
