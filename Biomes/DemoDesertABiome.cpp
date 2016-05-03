@@ -11,7 +11,7 @@
 
 DemoDesertABiome::DemoDesertABiome() :
 	m_name("Desert A"),
-	m_id(Level::DesertA),
+	m_id(Level::DemoDesertA),
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(600u, 128u)),
 	m_mapSeed(42u),
@@ -138,7 +138,7 @@ DemoDesertABiome::DemoDesertABiome() :
 	m_instances[280] = MAP_DESERT_A_JUMP_OMP;
 	m_gameObjects[70] = GameObjectType::TurbanNpc;
 	m_gameObjects[256] = GameObjectType::FannyNpc;
-	m_gameObjects[330] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[16] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[345] = GameObjectType::Bouibouik;
 	m_gameObjects[440] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[450] = GameObjectType::Tent;
@@ -153,8 +153,8 @@ DemoDesertABiome::DemoDesertABiome() :
 	m_treePos = {377, 382, 389, 397, 410, 411, 423, 460, 463, 485, 490, 494, 503};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::DemoIceD);
 	m_destinations.push_back(Level::DemoJungleA);
+	m_destinations.push_back(Level::DemoIceD);
 }
 
 void			DemoDesertABiome::setup(std::size_t seed)

@@ -11,7 +11,7 @@
 
 DemoIceBBiome::DemoIceBBiome() :
 	m_name("Ice B"),
-	m_id(Level::IceB),
+	m_id(Level::DemoIceB),
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(550u, 256u)),
 	m_mapSeed(42u),

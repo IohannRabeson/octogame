@@ -11,16 +11,16 @@
 
 DemoJungleABiome::DemoJungleABiome() :
 	m_name("Jungle A"),
-	m_id(Level::JungleA),
+	m_id(Level::DemoJungleA),
 	m_seed("sdf"),
-	m_mapSize(sf::Vector2u(1100u, 128u)),
+	m_mapSize(sf::Vector2u(700u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(43.f * 16.f, 650.f),
+	m_octoStartPosition(630.f * 16.f, -1600.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
 	m_tileEndColor(0, 124, 104),
-	m_waterLevel(1500.f),
+	m_waterLevel(-1.f),
 	m_waterColor(0, 189, 168, 150),
 	m_destinationIndex(0u),
 
@@ -126,22 +126,18 @@ DemoJungleABiome::DemoJungleABiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[1070] = MAP_JUNGLE_A_ELEVATOR_OMP;
-	m_instances[1019] = MAP_JUNGLE_A_LUCIEN_OMP;
-	m_instances[765] = MAP_JUNGLE_A_VILLAGE_OMP;
-	m_instances[670] = MAP_JUNGLE_A_SECRET_LEFT_VILLAGE_OMP;
-	m_instances[2] = MAP_JUNGLE_A_CEDRIC_OMP; //2 to 102
-	m_instances[120] = MAP_JUNGLE_A_TRAIL_OMP; //150 to 450
-	m_instances[500] = MAP_JUNGLE_A_DOUBLE_JUMP_OMP; //500 to 600
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[500] = GameObjectType::Portal;
-	m_gameObjects[300] = GameObjectType::VinceNpc;
-	m_gameObjects[745] = GameObjectType::AmandineNpc;
-	m_gameObjects[769] = GameObjectType::FaustNpc;
-	m_gameObjects[780] = GameObjectType::ConstanceNpc;
-	m_gameObjects[80] = GameObjectType::PierreNpc;
-	m_gameObjects[470] = GameObjectType::CanouilleNpc;
+	//m_instances[1019] = MAP_JUNGLE_A_LUCIEN_OMP;
+	//m_instances[765] = MAP_JUNGLE_A_VILLAGE_OMP;
+	//m_instances[670] = MAP_JUNGLE_A_SECRET_LEFT_VILLAGE_OMP;
+	//m_instances[670] = MAP_JUNGLE_A_ELEVATOR_OMP;
+	m_instances[2] = MAP_JUNGLE_A_CEDRIC_OMP;
+	m_instances[120] = MAP_JUNGLE_A_TRAIL_OMP;
+	m_instances[500] = MAP_DEMO_JUNGLE_A_DOUBLE_JUMP_OMP;
+	m_gameObjects[630] = GameObjectType::Portal;
+//	m_gameObjects[450] = GameObjectType::Portal;
+//	m_gameObjects[470] = GameObjectType::CanouilleNpc;
 
+	/*
 	m_gameObjects[170] = GameObjectType::BirdRedNpc;
 	m_gameObjects[180] = GameObjectType::BirdRedNpc;
 	m_gameObjects[240] = GameObjectType::BirdRedNpc;
@@ -157,13 +153,12 @@ DemoJungleABiome::DemoJungleABiome() :
 	m_gameObjects[1000] = GameObjectType::BirdRedNpc;
 	for (std::size_t i = 1000; i < 1005; i++)
 		m_gameObjects[i] = GameObjectType::BirdRedNpc;
-
+	*/
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::DemoDesertA);
 	m_destinations.push_back(Level::DemoWaterA);
+	m_destinations.push_back(Level::DemoDesertA);
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleC)
@@ -271,20 +266,14 @@ Map::MapSurfaceGenerator DemoJungleABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 400.f / static_cast<float>(m_mapSize.x);
-		float middle1 = 700.f / static_cast<float>(m_mapSize.x);
-		float end = 800.f / static_cast<float>(m_mapSize.x);
-		float offset = 130.f / static_cast<float>(m_mapSize.x);
+		float middle1 = 600.f / static_cast<float>(m_mapSize.x);
+		float end = 680.f / static_cast<float>(m_mapSize.x);
+		float offset = 4.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float bot = n / 1.5f + 1.6f;
-		float top = n / 1.5f - 1.6f;
+		float top = n / 1.5f - 2.2f;
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, bot, (x - start + offset) / offset);
-		else if (x > start && x <= middle1 - offset)
-			return bot;
-		else if (x > middle1 - offset && x <= middle1)
-			return octo::cosinusInterpolation(bot, top, (x - middle1 + offset) / offset);
+		if (x > middle1 - offset && x <= middle1)
+			return octo::cosinusInterpolation(n, top, (x - middle1 + offset) / offset);
 		else if (x > middle1 && x <= end)
 			return top;
 		else if (x > end && x <= end + offset)
