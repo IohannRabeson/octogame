@@ -6,10 +6,10 @@
 
 class SkyCycle;
 
-class BirdNpc : public ANpc, public AGameObject<GameObjectType::BirdNpc>
+class BirdNpc : public ANpc
 {
 public:
-	BirdNpc(void);
+	BirdNpc(ResourceKey const & npcId);
 	virtual ~BirdNpc(void) = default;
 
 	virtual void setup(void);
