@@ -144,7 +144,7 @@ DemoIceDBiome::DemoIceDBiome() :
 	m_gameObjects[475] = GameObjectType::StrangerGirlSnowNpc;
 	m_gameObjects[510] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[570] = GameObjectType::EngineSnow;
-	m_destinations.push_back(Level::DemoIceB);
+	m_destinations.push_back(Level::IceA);
 	m_destinations.push_back(Level::DemoDesertA);
 }
 

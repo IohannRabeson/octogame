@@ -154,7 +154,7 @@ DemoDesertABiome::DemoDesertABiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::DemoJungleA);
-	m_destinations.push_back(Level::DemoIceD);
+	m_destinations.push_back(Level::IceA);
 }
 
 void			DemoDesertABiome::setup(std::size_t seed)

@@ -158,7 +158,7 @@ DemoJungleABiome::DemoJungleABiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::DemoWaterA);
-	m_destinations.push_back(Level::DemoDesertA);
+	m_destinations.push_back(Level::IceA);
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleC)
