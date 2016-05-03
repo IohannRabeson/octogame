@@ -173,6 +173,13 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/JungleCBiome.cpp					\
 				Biomes/WaterABiome.cpp					\
 				Biomes/WaterBBiome.cpp					\
+				Biomes/DemoIceABiome.cpp				\
+				Biomes/DemoIceBBiome.cpp				\
+				Biomes/DemoIceCBiome.cpp				\
+				Biomes/DemoIceDBiome.cpp				\
+				Biomes/DemoDesertABiome.cpp				\
+				Biomes/DemoJungleABiome.cpp				\
+				Biomes/DemoWaterABiome.cpp				\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\

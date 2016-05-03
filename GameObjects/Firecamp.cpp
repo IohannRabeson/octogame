@@ -41,14 +41,14 @@ void Firecamp::addMapOffset(float x, float y)
 {
 	InstanceDecor::addMapOffset(x, y);
 	m_spriteFire.setPosition(m_spriteFire.getPosition().x + x, m_spriteFire.getPosition().y + y);
-	m_smoke.setPosition(m_smoke.getPosition() + sf::Vector2f(x, y));
+	m_smoke.setPosition(m_smoke.getPositionEmitter() + sf::Vector2f(x, y));
 }
 
 void Firecamp::setPosition(sf::Vector2f const & position)
 {
 	Firecamp::setPosition(position);
 	m_spriteFire.setPosition(position);
-	m_smoke.setPosition(position);
+	m_smoke.setPosition(position + sf::Vector2f(70.f, 0.f));
 }
 
 void Firecamp::update(sf::Time frameTime)

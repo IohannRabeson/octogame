@@ -10,6 +10,13 @@
 #include "JungleCBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
+#include "DemoIceABiome.hpp"
+#include "DemoIceBBiome.hpp"
+#include "DemoIceCBiome.hpp"
+#include "DemoIceDBiome.hpp"
+#include "DemoDesertABiome.hpp"
+#include "DemoJungleABiome.hpp"
+#include "DemoWaterABiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -100,6 +107,13 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
+	m_biomeManager.registerBiome<DemoIceABiome>(Level::DemoIceA);
+	m_biomeManager.registerBiome<DemoIceBBiome>(Level::DemoIceB);
+	m_biomeManager.registerBiome<DemoIceCBiome>(Level::DemoIceC);
+	m_biomeManager.registerBiome<DemoIceDBiome>(Level::DemoIceD);
+	m_biomeManager.registerBiome<DemoDesertABiome>(Level::DemoDesertA);
+	m_biomeManager.registerBiome<DemoJungleABiome>(Level::DemoJungleA);
+	m_biomeManager.registerBiome<DemoWaterABiome>(Level::DemoWaterA);
 }
 
 Game::~Game(void)

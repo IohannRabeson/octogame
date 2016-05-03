@@ -68,6 +68,7 @@ public:
 	bool				canUseWaterJump();
 	bool				changeLevel() const;
 	void				levelChanged();
+	bool				isDemo() const;
 
 	void				registerLevel(Level const & biome);
 	std::vector<Level> const & getRegisteredLevels(void) const;
@@ -100,7 +101,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::IceA, 6u, 100u, true, true, Language::fr_keyboard)
+			data(0u, Level::DemoIceA, 6u, 100u, true, true, Language::fr_keyboard)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
@@ -164,6 +165,8 @@ private:
 	std::size_t										m_portalsCount;
 	std::size_t										m_portalsMax;
 	std::vector<Level>								m_levels;
+
+	bool											m_isDemo;
 };
 
 #endif

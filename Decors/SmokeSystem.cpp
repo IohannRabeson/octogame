@@ -172,6 +172,11 @@ void	SmokeSystem::setPosition(sf::Vector2f const & position)
 	m_emitter = position;
 }
 
+sf::Vector2f	SmokeSystem::getPositionEmitter(void) const
+{
+	return m_emitter;
+}
+
 void	SmokeSystem::setColor(sf::Color const & color)
 {
 	m_color = color;
