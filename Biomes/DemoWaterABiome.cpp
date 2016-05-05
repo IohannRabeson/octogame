@@ -144,8 +144,7 @@ DemoWaterABiome::DemoWaterABiome() :
 	m_interestPointPosX = 290;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::IceA);
-	m_destinations.push_back(Level::IceA);
+	m_destinations.push_back(Level::Default);
 	m_destinations.push_back(Level::IceA);
 }
 
