@@ -12,9 +12,9 @@ DemoWaterABiome::DemoWaterABiome() :
 	m_name("Water A"),
 	m_id(Level::DemoWaterA),
 	m_seed("Vince"),
-	m_mapSize(sf::Vector2u(1300u, 200u)),
+	m_mapSize(sf::Vector2u(600u, 200u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(40.f * 16.f, -1050.f),
+	m_octoStartPosition(40.f * 16.f, -1150.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 193, 177),
@@ -35,10 +35,10 @@ DemoWaterABiome::DemoWaterABiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(30u, 35u),
-	m_treeCount(30u, 30u),
-	m_mushroomCount(390u, 400u),
-	m_crystalCount(70u, 100u),
+	m_rockCount(20u, 25u),
+	m_treeCount(10u, 15u),
+	m_mushroomCount(250u, 260u),
+	m_crystalCount(30u, 40u),
 	m_starCount(500u, 800u),
 	m_sunCount(3u, 3u),
 	m_moonCount(1u, 1u),
@@ -125,35 +125,27 @@ DemoWaterABiome::DemoWaterABiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[140] = MAP_WATER_A_TRAIL_SLOWFALL_OMP;
-	m_instances[785] = MAP_WATER_A_PARA_SIGN_OMP;
-//	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
+	m_instances[35] = MAP_DEMO_WATER_A_PORTAL_OMP;
+	m_instances[130] = MAP_DEMO_WATER_A_TRAIL_OMP;
+	m_instances[580] = MAP_WATER_A_PARA_SIGN_OMP;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
-	m_gameObjects[149] = GameObjectType::EvaNpc;
-	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-//	m_gameObjects[668] = GameObjectType::PeaNpc;
-//	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
-//	m_gameObjects[730] = GameObjectType::Concert;
-	m_gameObjects[745] = GameObjectType::Portal;
+	m_gameObjects[115] = GameObjectType::EvaNpc;
+	m_gameObjects[435] = GameObjectType::PeaNpc;
+	m_gameObjects[465] = GameObjectType::WaterNanoRobot;
+	m_gameObjects[500] = GameObjectType::Concert;
+	m_gameObjects[570] = GameObjectType::JeffMouffyNpc;
 
+	m_gameObjects[143] = GameObjectType::JellyfishNpc;
 	m_gameObjects[200] = GameObjectType::JellyfishNpc;
 	m_gameObjects[270] = GameObjectType::JellyfishNpc;
-	m_gameObjects[420] = GameObjectType::JellyfishNpc;
-	m_gameObjects[540] = GameObjectType::JellyfishNpc;
-	m_gameObjects[715] = GameObjectType::JellyfishNpc;
-	m_gameObjects[810] = GameObjectType::JellyfishNpc;
-	m_gameObjects[980] = GameObjectType::JellyfishNpc;
+	m_gameObjects[340] = GameObjectType::JellyfishNpc;
 
-	m_gameObjects[1120] = GameObjectType::JellyfishNpc;
-	m_gameObjects[1140] = GameObjectType::JellyfishNpc;
-	m_gameObjects[1160] = GameObjectType::JellyfishNpc;
-	m_gameObjects[1250] = GameObjectType::JellyfishNpc;
-
-	m_interestPointPosX = 500;
+	m_interestPointPosX = 290;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::IceA);
+	m_destinations.push_back(Level::IceA);
 	m_destinations.push_back(Level::IceA);
 }
 
@@ -258,20 +250,23 @@ Map::MapSurfaceGenerator DemoWaterABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 299.f / static_cast<float>(m_mapSize.x);
-		float middle1 = 699.f / static_cast<float>(m_mapSize.x);
-		float offset = 100.f / static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float bot = 0.5f;
+		float floatMapSize = static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
+		float m = n / 3.f;
+		std::vector<float> pointX = {0.f      , 100.f    , 135.f, 420.f, 422.f   , 450.f   , 453.f   , 480.f   , 484.f   , 558.f   , 560.f   , 591.f    , 600.f};
+		std::vector<float> pointY = {m - 1.45f, m - 1.45f, n    , n    , m - 1.5f, m - 1.5f, n - 0.3f, n - 0.3f, m - 2.3f, m - 2.3f, m -1.15f, m - 1.15f, m - 1.15f};
+		for (std::size_t i = 0u; i <= pointX.size(); i++)
+			pointX[i] /= floatMapSize;
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, bot, (x - start + offset) / offset);
-		else if (x > start && x <= middle1)
-			return n + 2.7f;
-		else if (x > middle1 && x <= middle1 + offset)
-			return octo::cosinusInterpolation(n, bot, (x - middle1 - offset) / offset);
-		else
-			return n;
+		for (std::size_t i = 0u; i <= pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
 }
 
@@ -504,17 +499,7 @@ sf::Color		DemoWaterABiome::getLeafColor()
 
 std::size_t		DemoWaterABiome::getTreePositionX()
 {
-	std::size_t pos;
-	bool isValidPos = false;
-	while (isValidPos == false)
-	{
-		pos = randomInt(1u, m_mapSize.x - 1u);
-			if ((pos >= 0.f && pos <= 150.f + 20.f) || (pos >= 620.f - 20.f && pos <= 750.f + 20.f) || (pos >= 1000.f - 20.f && pos <= 1080.f + 30.f))
-				isValidPos = false;
-			else
-				isValidPos = true;
-	}
-	return pos;
+	return randomInt(140u, 400u);
 }
 
 sf::Vector2f	DemoWaterABiome::getCrystalSize()
