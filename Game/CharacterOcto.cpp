@@ -58,7 +58,8 @@ CharacterOcto::CharacterOcto() :
 	m_collisionElevatorEvent(false),
 	m_collisionSpaceShip(false),
 	m_repairShip(false),
-	m_inWater(false)
+	m_inWater(false),
+	m_isDeadlyWater(false)
 {
 	m_sound.reset(new OctoSound());
 	m_cameraMovement.reset(new CameraMovement);
@@ -98,6 +99,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_waterLevel = biome.getWaterLevel();
+	m_isDeadlyWater = biome.isDeadlyWater();
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Player));
@@ -1040,6 +1042,13 @@ void	CharacterOcto::inWater()
 			m_numberOfJump = 0;
 			emit = true;
 			m_inWater = true;
+			if (m_isDeadlyWater)
+			{
+				m_sprite.setNextEvent(Death);
+				m_helmetParticle.canEmit(true);
+				m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
+				Progress::getInstance().registerDeath(getPosition().x);
+			}
 		}
 		m_waterParticle.clear();
 	}

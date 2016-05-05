@@ -188,6 +188,7 @@ private:
 	bool						m_collisionSpaceShip;
 	bool						m_repairShip;
 	bool						m_inWater;
+	bool						m_isDeadlyWater;
 	Events						m_prevEvent;
 };
 

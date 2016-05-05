@@ -12,16 +12,15 @@
 DemoJungleABiome::DemoJungleABiome() :
 	m_name("Jungle A"),
 	m_id(Level::DemoJungleA),
-	m_seed("sdf"),
+	m_seed("stunfest"),
 	m_mapSize(sf::Vector2u(1000u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(630.f * 16.f, -3600.f),
+	m_octoStartPosition(910.f * 16.f, -700.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
 	m_tileEndColor(0, 124, 104),
-	m_waterLevel(350.f),
-	//m_waterColor(0, 189, 168, 150),
+	m_waterLevel(10.f),
 	m_waterColor(56, 50, 72, 150),
 	m_destinationIndex(0u),
 
@@ -32,7 +31,7 @@ DemoJungleABiome::DemoJungleABiome() :
 	m_nightLightColor(0, 0, 0, 130),
 	m_SunsetLightColor(252, 252, 190, 130),
 	m_wind(100.f),
-	m_rainDropPerSecond(10u, 30u),
+	m_rainDropPerSecond(10u, 15u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
@@ -131,27 +130,13 @@ DemoJungleABiome::DemoJungleABiome() :
 	m_instances[120] = MAP_DEMO_JUNGLE_A_TRAIL_OMP;
 	m_instances[500] = MAP_DEMO_JUNGLE_A_DOUBLE_JUMP_OMP;
 	m_instances[600] = MAP_DEMO_JUNGLE_A_VILLAGE_OMP;
-	m_gameObjects[890] = GameObjectType::LucienNpc;
-	m_gameObjects[930] = GameObjectType::Portal;
-	m_gameObjects[960] = GameObjectType::PierreNpc;
+	m_gameObjects[880] = GameObjectType::LucienNpc;
+	m_gameObjects[910] = GameObjectType::Portal;
+	m_gameObjects[955] = GameObjectType::VinceNpc;
 
-	/*
-	m_gameObjects[170] = GameObjectType::BirdRedNpc;
-	m_gameObjects[180] = GameObjectType::BirdRedNpc;
-	m_gameObjects[240] = GameObjectType::BirdRedNpc;
-	m_gameObjects[270] = GameObjectType::BirdRedNpc;
-	for (std::size_t i = 285; i < 291; i++)
+	for (std::size_t i = 850; i < 862; i += 2)
 		m_gameObjects[i] = GameObjectType::BirdRedNpc;
-	m_gameObjects[700] = GameObjectType::BirdRedNpc;
-	for (std::size_t i = 830; i < 837; i++)
-		m_gameObjects[i] = GameObjectType::BirdRedNpc;
-	m_gameObjects[870] = GameObjectType::BirdRedNpc;
-	m_gameObjects[900] = GameObjectType::BirdRedNpc;
-	m_gameObjects[940] = GameObjectType::BirdRedNpc;
-	m_gameObjects[1000] = GameObjectType::BirdRedNpc;
-	for (std::size_t i = 1000; i < 1005; i++)
-		m_gameObjects[i] = GameObjectType::BirdRedNpc;
-	*/
+
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
@@ -229,6 +214,11 @@ sf::Color	DemoJungleABiome::getWaterColor()
 	return m_waterColor;
 }
 
+bool		DemoJungleABiome::isDeadlyWater()
+{
+	return true;
+}
+
 std::map<std::size_t, std::string> const & DemoJungleABiome::getInstances()
 {
 	return m_instances;
@@ -260,8 +250,8 @@ Map::MapSurfaceGenerator DemoJungleABiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f, 603.f, 605.f, 697.f, 696.f, 737.f, 738.f, 820.f          , 850.f          , 980.f          , 984.f};
-		std::vector<float> pointY = {n  , n    , -1.97f, -1.95f, -0.43f, -0.43f, -1.97f, -1.97f, n / 1.5f - 1.43f, n / 1.5f - 1.43f, n    };
+		std::vector<float> pointX = {0.f    , 603.f  , 605.f, 697.f, 696.f, 737.f, 738.f, 820.f          , 850.f          , 980.f          , 984.f   };
+		std::vector<float> pointY = {n - 0.4f, n - 0.4f, -1.97f, -1.95f, -0.43f, -0.43f, -1.97f, -1.97f, n / 1.5f - 1.43f, n / 1.5f - 1.43f, n - 0.3f};
 		for (std::size_t i = 0u; i <= pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -281,9 +271,9 @@ Map::TileColorGenerator DemoJungleABiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart(76, 70, 102);
 	sf::Color secondColorEnd(56, 50, 72);
-	float startTransition = 2500.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = 5000.f / static_cast<float>(m_mapSize.y);
-	float endTransition = 9000.f / static_cast<float>(m_mapSize.y);
+	float startTransition = -1500.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 1000.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 3000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;

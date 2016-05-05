@@ -129,7 +129,8 @@ void	CharacterOcto::OctoSound::startEvent(Events event)
 					m_pitchDistribution(m_engine));
 			break;
 		case Death:
-			audio.playSound(resources.getSound(EXPLODE_HELMET_OGG), m_volumeEffect);
+			if (m_onGround)
+				audio.playSound(resources.getSound(EXPLODE_HELMET_OGG), m_volumeEffect);
 			m_sound = audio.playSound(resources.getSound(OCTO_DEATH_OGG), m_volumeVoice);
 		default:
 			break;
