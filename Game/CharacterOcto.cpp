@@ -792,7 +792,7 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot)
 
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
-	if (m_progress.canRepair() && m_keyAction && getPosition().y > 100.f)
+	if (m_progress.canRepair() && m_keyAction)
 	{
 		if (!elevator.isActivated())
 		{

@@ -87,6 +87,7 @@ private:
 	sf::Vector2i								m_octoPos;
 	std::size_t									m_instanceIndex;
 	bool										m_isOctoOnInstance;
+	sf::Color									m_moveColor;
 };
 
 #endif

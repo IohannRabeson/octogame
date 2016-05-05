@@ -22,7 +22,7 @@ MusicManager::MusicManager() :
 	musicKey[7] = SOUTERRAIN_LUGUBRE_OGG;
 	musicKey[8] = MENU_OPUS_I_OGG;
 
-	m_musicLevel.resize(8);
+	m_musicLevel.resize(15);
 	m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
@@ -34,7 +34,16 @@ MusicManager::MusicManager() :
 	m_musicLevel[6] = AreaMusic(Level::IceC, ICE_MUSIC_OGG, sf::FloatRect());
 	m_musicLevel[7] = AreaMusic(Level::IceD, ICE_MUSIC_D_OGG, sf::FloatRect());
 
-	m_music.resize(6);
+	//Demo
+	m_musicLevel[8] = AreaMusic(Level::DemoIceA, SPACE_SHIP_OGG, sf::FloatRect());
+	m_musicLevel[9] = AreaMusic(Level::DemoIceB, ICE_MUSIC_OGG, sf::FloatRect());
+	m_musicLevel[10] = AreaMusic(Level::DemoIceC, ICE_MUSIC_OGG, sf::FloatRect());
+	m_musicLevel[11] = AreaMusic(Level::DemoIceD, ICE_MUSIC_D_OGG, sf::FloatRect());
+	m_musicLevel[12] = AreaMusic(Level::DemoDesertA, MENU_OPUS_II_OGG, sf::FloatRect());
+	m_musicLevel[13] = AreaMusic(Level::DemoJungleA, COLONISATION_OGG, sf::FloatRect());
+	m_musicLevel[14] = AreaMusic(Level::DemoWaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
+
+	m_music.resize(8);
 	// Montagne
 	m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
@@ -56,6 +65,13 @@ MusicManager::MusicManager() :
 	//run
 	m_music[5] = AreaMusic(Level::WaterA, MENU_OPUS_I_OGG,
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
+
+	// cedric challenge BALLE demo
+	m_music[6] = AreaMusic(Level::DemoJungleA, ACTION_FAST_OGG,
+			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)), MusicNameArea::CedricChallenge);
+	// village demo
+	m_music[7] = AreaMusic(Level::DemoJungleA, ACTION_SLOW_OGG,
+			sf::FloatRect(sf::Vector2f(590.f * 16.f, -2000.f), sf::Vector2f(220.f * 16.f, 2300.f)));
 }
 
 MusicManager::~MusicManager()

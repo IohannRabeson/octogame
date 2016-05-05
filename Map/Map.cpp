@@ -67,6 +67,8 @@ void Map::init(ABiome & biome)
 	setMapSurfaceGenerator(biome.getMapSurfaceGenerator());
 	// Initialize tileColor pointer
 	setTileColorGenerator(biome.getTileColorGenerator());
+
+	m_moveColor = biome.getColorMoveInstance();
 }
 
 void Map::computeMapRange(int startX, int endX, int startY, int endY)
@@ -151,7 +153,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 					interpolateValue = interpolateValue * ((offsetX - m_instancesRect[m_instanceIndex].left) / interpolateOffset);
 				else if (offsetX > m_instancesRect[m_instanceIndex].width - interpolateOffset)
 					interpolateValue = interpolateValue * ((m_instancesRect[m_instanceIndex].width - offsetX) / interpolateOffset);
-				m_tiles.get(x, y)->setStartColor(octo::linearInterpolation(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth), sf::Color::White, interpolateValue));
+				m_tiles.get(x, y)->setStartColor(octo::linearInterpolation(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth), m_moveColor, interpolateValue));
 			}
 			else
 				m_tiles.get(x, y)->setStartColor(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth));

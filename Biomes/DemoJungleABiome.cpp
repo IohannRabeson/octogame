@@ -130,6 +130,7 @@ DemoJungleABiome::DemoJungleABiome() :
 	m_instances[120] = MAP_DEMO_JUNGLE_A_TRAIL_OMP;
 	m_instances[500] = MAP_DEMO_JUNGLE_A_DOUBLE_JUMP_OMP;
 	m_instances[600] = MAP_DEMO_JUNGLE_A_VILLAGE_OMP;
+	m_instances[865] = MAP_DEMO_JUNGLE_A_ELEVATOR_OMP;
 	m_gameObjects[880] = GameObjectType::LucienNpc;
 	m_gameObjects[910] = GameObjectType::Portal;
 	m_gameObjects[955] = GameObjectType::VinceNpc;
@@ -217,6 +218,11 @@ sf::Color	DemoJungleABiome::getWaterColor()
 bool		DemoJungleABiome::isDeadlyWater()
 {
 	return true;
+}
+
+sf::Color	DemoJungleABiome::getColorMoveInstance()
+{
+	return sf::Color(150, 150, 150);
 }
 
 std::map<std::size_t, std::string> const & DemoJungleABiome::getInstances()
@@ -496,7 +502,7 @@ sf::Color		DemoJungleABiome::getLeafColor()
 
 std::size_t		DemoJungleABiome::getTreePositionX()
 {
-	return randomInt(1u, m_mapSize.x - 1u);
+	return randomInt(10u, m_mapSize.x - 1u);
 }
 
 sf::Vector2f	DemoJungleABiome::getCrystalSize()
