@@ -144,6 +144,7 @@ public:
 	virtual bool										randomBool(float percent);
 
 private:
+	static std::size_t									m_seedId;
 	RandomGenerator										m_generator;
 	std::size_t											m_randomSurfaceNumber;
 	std::string											m_name;

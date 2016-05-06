@@ -9,8 +9,10 @@
 #include <limits>
 #include <iostream>
 
+std::size_t DefaultBiome::m_seedId = 4u;
+
 DefaultBiome::DefaultBiome() :
-	m_generator("random"),
+	m_generator(std::to_string(m_seedId++)),
 	m_name("Default"),
 	m_id(Level::Default),
 	m_seed("Default"),
