@@ -43,7 +43,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[13] = AreaMusic(Level::DemoJungleA, COLONISATION_OGG, sf::FloatRect());
 	m_musicLevel[14] = AreaMusic(Level::DemoWaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
 
-	m_music.resize(8);
+	m_music.resize(9);
 	// Montagne
 	m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
@@ -68,10 +68,13 @@ MusicManager::MusicManager() :
 
 	// cedric challenge BALLE demo
 	m_music[6] = AreaMusic(Level::DemoJungleA, ACTION_FAST_OGG,
-			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)), MusicNameArea::CedricChallenge);
+			sf::FloatRect(sf::Vector2f(25.f * 16.f, -2400.f), sf::Vector2f(530.f * 16.f, 2200.f)), MusicNameArea::CedricChallenge);
 	// village demo
 	m_music[7] = AreaMusic(Level::DemoJungleA, ACTION_SLOW_OGG,
 			sf::FloatRect(sf::Vector2f(590.f * 16.f, -2000.f), sf::Vector2f(220.f * 16.f, 2300.f)));
+	//concert BALLE
+	m_music[8] = AreaMusic(Level::DemoWaterA, MENU_OPUS_II_REVERSE_OGG,
+			sf::FloatRect(sf::Vector2f(700.f * 16.f, -3400.f), sf::Vector2f(70.f * 16.f, 1350.f)), MusicNameArea::Concert);
 }
 
 MusicManager::~MusicManager()

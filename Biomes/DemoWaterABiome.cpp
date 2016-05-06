@@ -127,7 +127,7 @@ DemoWaterABiome::DemoWaterABiome() :
 	// Define game objects
 	m_instances[35] = MAP_DEMO_WATER_A_PORTAL_OMP;
 	m_instances[130] = MAP_DEMO_WATER_A_TRAIL_OMP;
-	m_instances[580] = MAP_WATER_A_PARA_SIGN_OMP;
+	m_instances[565] = MAP_WATER_A_PARA_SIGN_OMP;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
 	m_gameObjects[115] = GameObjectType::EvaNpc;
@@ -253,7 +253,7 @@ Map::MapSurfaceGenerator DemoWaterABiome::getMapSurfaceGenerator()
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		float m = n / 3.f;
 		std::vector<float> pointX = {0.f      , 100.f    , 135.f, 420.f, 422.f   , 450.f   , 453.f   , 480.f   , 484.f   , 558.f   , 560.f   , 591.f    , 600.f};
-		std::vector<float> pointY = {m - 1.45f, m - 1.45f, n    , n    , m - 1.5f, m - 1.5f, n - 0.3f, n - 0.3f, m - 2.3f, m - 2.3f, m -1.15f, m - 1.15f, m - 1.15f};
+		std::vector<float> pointY = {m - 1.45f, m - 1.45f, n    , n    , m - 1.5f, m - 1.5f, n - 0.3f, n - 0.3f, m - 2.3f, m - 2.3f, m - 0.3f, m - 0.3f, m - 1.15f};
 		for (std::size_t i = 0u; i <= pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

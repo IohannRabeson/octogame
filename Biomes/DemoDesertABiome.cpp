@@ -279,11 +279,50 @@ Map::MapSurfaceGenerator DemoDesertABiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DemoDesertABiome::getTileColorGenerator()
 {
+	sf::Color secondColorStart = m_particleColor[0];
+	sf::Color secondColorEnd = m_particleColor[1];
+	float start1 = -17000.f / static_cast<float>(m_mapSize.y);
+	float start2 = -14000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -11000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = -6000.f / static_cast<float>(m_mapSize.y);
+	float end1 = -3000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 0.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
+	{
+		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > start1 && y <= start2)
+		{
+			float ratio = (y - (start1)) / (start2 - start1);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
+		}
+		else if (y > start2 && y <= middle1)
+		{
+			float ratio = (y - (start2)) / (middle1 - start2);
+			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
+		}
+		else if (y > middle1 && y <= middle2)
+		{
+			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
+		}
+		else if (y >= middle2 && y < end1)
+		{
+			float ratio = (y - (middle2)) / (end1 - middle2);
+			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
+		}
+		else if (y >= end1 && y < end2)
+		{
+			float ratio = (y - (end1)) / (end2 - end1);
+			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
+		}
+		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
+	};
+	/*
 	return [this](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
+	*/
 }
 
 sf::Color		DemoDesertABiome::getParticleColorGround()
