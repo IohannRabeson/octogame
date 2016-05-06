@@ -36,7 +36,9 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_timerMax(sf::seconds(15.f)),
 	m_isTravelling(false),
 	m_engine(std::time(0)),
-	m_soundDistri(0u, 2u)
+	m_soundDistri(0u, 2u),
+	m_popUp(false),
+	m_popUpTimerMax(sf::seconds(5.f))
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	Progress & progress = Progress::getInstance();
@@ -250,6 +252,30 @@ bool NanoRobot::isTravelling(void) const
 	return m_isTravelling;
 }
 
+void NanoRobot::popUpInfo(void)
+{
+	if (m_popUp == false)
+		m_popUp = true;
+}
+
+void NanoRobot::updatePopUpInfo(sf::Time frametime)
+{
+	if (m_popUp && m_popUpTimer <= m_popUpTimerMax)
+	{
+		m_infoBubble.setup(m_infoText, sf::Color::White, 30u, 600u);
+		m_infoBubble.setType(ABubble::Type::Speak);
+		m_infoBubble.setActive(true);
+		m_popUpTimer += frametime;
+	}
+	else if (m_infoSetup == false)
+	{
+		m_popUp = false;
+		m_popUpTimer = sf::Time::Zero;
+		m_infoBubble.setType(ABubble::Type::None);
+		m_infoBubble.setActive(false);
+	}
+}
+
 bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 {
 	switch (key)
@@ -413,6 +439,7 @@ void NanoRobot::update(sf::Time frametime)
 	m_texts[m_textIndex]->update(frametime);
 	m_infoBubble.setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
 	m_infoBubble.update(frametime);
+	updatePopUpInfo(frametime);
 	m_glowingEffect.setPosition(pos);
 	m_sprite.setScale(m_glowingEffect.getNanoScale());
 	m_glowingEffect.update(frametime);
