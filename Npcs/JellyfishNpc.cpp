@@ -5,7 +5,7 @@
 #include <Interpolations.hpp>
 
 JellyfishNpc::JellyfishNpc(void) :
-	ANpc(JELLYFISH_OSS),
+	ANpc(JELLYFISH_OSS, false),
 	m_startTimer(false),
 	m_animationEnd(false)
 {
