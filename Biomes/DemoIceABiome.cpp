@@ -15,7 +15,7 @@ DemoIceABiome::DemoIceABiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(250.f, 700.f),
+	m_octoStartPosition(250.f, -700.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -128,7 +128,8 @@ DemoIceABiome::DemoIceABiome() :
 
 	m_gameObjects[30] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 320;
-	m_gameObjects[8] = GameObjectType::SpaceShip;
+	m_gameObjects[28] = GameObjectType::SpaceShip;
+	m_instances[20] = MAP_DEMO_ICE_A_CRATER_OMP;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::IceB || progress.getLastDestination() == Level::Default || progress.getLastDestination() == Level::DesertA)
@@ -141,7 +142,7 @@ DemoIceABiome::DemoIceABiome() :
 	m_gameObjects[244] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[390] = GameObjectType::BirdBlueNpc;
 
-	m_treePos = {36, 200, 206, 209, 220, 229, 240, 254, 259, 275, 350, 359, 363, 369, 385, 401, 410, 423, 450};
+	m_treePos = {56, 200, 206, 209, 220, 229, 240, 254, 259, 275, 350, 359, 363, 369, 385, 401, 410, 423, 450};
 }
 
 void			DemoIceABiome::setup(std::size_t seed)
@@ -247,23 +248,18 @@ Map::MapSurfaceGenerator DemoIceABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		static float saveY = y;
-		static bool isBlock = false;
-		if (saveY != y)
-		{
-			saveY = y;
-			isBlock = !isBlock;
-		}
-		if (isBlock && x > 5.f / static_cast<float>(m_mapSize.x) && x < 47.f / static_cast<float>(m_mapSize.x))
-		{
-			if (x == 6.f / static_cast<float>(m_mapSize.x))
-				return 0.25f + 112.f / 16.f;
-			else if (x == 46.f / static_cast<float>(m_mapSize.x))
-				return 0.25f + 112.f / 16.f;
-			return 0.5f + 112.f / 16.f;
-		}
-		return noise.fBm(x, y, 3, 3.f, 0.3f) + 112.f / 16.f;
-		//return 0.f + 112.f / 16.f;
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		float left = 20.f / static_cast<float>(m_mapSize.x);
+		float right = 70.f / static_cast<float>(m_mapSize.x);
+		float offset = 15.f / static_cast<float>(m_mapSize.x);
+		float upInstance = -0.5f;
+		if (x >= left - offset && x < left)
+			return octo::cosinusInterpolation(n, upInstance, (x - left + offset) / offset);
+		else if (x >= left && x < right)
+			return 30.f / 16.f;
+		else if (x >= right && x < right + offset)
+			return octo::cosinusInterpolation(n, upInstance, (offset - x - right) / offset);
+		return n;
 	};
 }
 
