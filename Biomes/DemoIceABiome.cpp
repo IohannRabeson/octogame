@@ -15,7 +15,7 @@ DemoIceABiome::DemoIceABiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(250.f, -700.f),
+	m_octoStartPosition(36.f * 16.f, 60.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -126,7 +126,7 @@ DemoIceABiome::DemoIceABiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[30] = GameObjectType::GroundTransformNanoRobot;
+	m_gameObjects[50] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 320;
 	m_gameObjects[28] = GameObjectType::SpaceShip;
 	m_instances[20] = MAP_DEMO_ICE_A_CRATER_OMP;
@@ -251,7 +251,7 @@ Map::MapSurfaceGenerator DemoIceABiome::getMapSurfaceGenerator()
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float left = 20.f / static_cast<float>(m_mapSize.x);
 		float right = 70.f / static_cast<float>(m_mapSize.x);
-		float offset = 15.f / static_cast<float>(m_mapSize.x);
+		float offset = 10.f / static_cast<float>(m_mapSize.x);
 		float upInstance = -0.5f;
 		if (x >= left - offset && x < left)
 			return octo::cosinusInterpolation(n, upInstance, (x - left + offset) / offset);

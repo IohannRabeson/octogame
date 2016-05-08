@@ -38,6 +38,7 @@ private:
 	std::size_t						m_characterPerLine;
 	std::size_t						m_lineCount;
 	std::wstring					m_phrase;
+	bool							m_contentUpdated;
 };
 
 #endif

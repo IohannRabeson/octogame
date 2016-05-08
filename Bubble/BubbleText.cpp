@@ -59,37 +59,8 @@ void BubbleText::setupBlocString(void)
 			m_characterPerLine = line.size() + word.size();
 		phrase += line + word + L'\n';
 	}
+
 	m_phrase = phrase;
-	/*
-	for (auto it = m_phrase.begin(); it != m_phrase.end(); it++)
-	{
-		j++;
-		if (*it == ' ' || *it == '\\' || *it == '\n')
-			lastSpace = it;
-		if (j == m_characterPerLineMax - 1u)
-		{
-//			std::size_t lineSize = j - std::distance(lastSpace, it);
-//			if (lineSize > m_characterPerLine)
-//				m_characterPerLine = lineSize;
-			*lastSpace = '\n';
-			it = ++lastSpace;
-			j = 0u;
-			m_lineCount++;
-		}
-		else if (*it == 'n' && *lastSpace == '\\')
-		{
-			*lastSpace = '\n';
-			m_phrase.erase(it);
-			it = ++it;
-			if (j > m_characterPerLine)
-				m_characterPerLine = j - 2;
-			j = 0u;
-			m_lineCount++;
-		}
-		if (j > m_characterPerLine)
-			m_characterPerLine = j;
-	}
-	*/
 }
 
 void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std::size_t characterSize, float bubbleWidth)
@@ -116,6 +87,7 @@ void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std
 	else if (m_characterPerLine != m_characterPerLineMax)
 		m_contentSize.x = m_characterPerLine * (widthTotalText / (m_phrase.size() - 1u));
 	m_text.setString(m_phrase);
+	m_contentUpdated = false;
 }
 
 sf::Vector2f const & BubbleText::getContentSize() const
@@ -126,12 +98,14 @@ sf::Vector2f const & BubbleText::getContentSize() const
 void BubbleText::updateContent(sf::Time frameTime, sf::Vector2f const & position)
 {
 	(void)frameTime;
+	m_contentUpdated = true;
 	m_text.setPosition(position);
 }
 
 void BubbleText::drawContent(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	render.draw(m_text, states);
+	if (m_contentUpdated)
+		render.draw(m_text, states);
 }
 
 void BubbleText::setPhrase(std::wstring const & text)

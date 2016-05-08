@@ -36,7 +36,8 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 {
 	NanoRobot::update(frameTime);
 
-	m_timerDemo += frameTime;
+	if (!m_talkaboutshit)
+		m_timerDemo += frameTime;
 	switch (m_state)
 	{
 		case FirstSpawn:
@@ -63,7 +64,7 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			{
 				m_textTimer += frameTime;
 				m_canSpeak = false;
-				if (m_textTimer > m_textTimerMax)
+				if (m_textTimer > m_textTimerMax / 3.f)
 				{
 					m_canSpeak = true;
 					setTextIndex(1u);
@@ -83,7 +84,7 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			{
 				m_textTimer += frameTime;
 				m_canSpeak = false;
-				if (m_textTimer > m_textTimerMax)
+				if (m_textTimer > m_textTimerMax / 3.f)
 				{
 					m_canSpeak = true;
 					setTextIndex(2u);
@@ -129,7 +130,7 @@ void GroundTransformNanoRobot::updateInfo(void)
 		setInfoText(infoText);
 		NanoRobot::popUpInfo();
 	}
-	else if (m_timerDemo >= m_timerDemoMax && progress.isDemo())
+	else if (m_timerDemo >= m_timerDemoMax && progress.isDemo() && !m_talkaboutshit)
 	{
 		if (m_timerDemo >= m_timerDemoMax + sf::seconds(5.f))
 			m_timerDemo = sf::Time::Zero;
