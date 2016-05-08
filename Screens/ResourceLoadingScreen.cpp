@@ -12,6 +12,7 @@
 
 #include "ResourceLoadingScreen.hpp"
 #include "Progress.hpp"
+#include "MusicManager.hpp"
 #include <ResourceLoading.hpp>
 #include <StateManager.hpp>
 #include <Application.hpp>
@@ -142,6 +143,7 @@ void	ResourceLoadingScreen::onNoMoreLoading()
 	octo::StateManager & states = octo::Application::getStateManager();
 
 	//octo::Application::getStateManager().change(octo::Application::getOptions().getValue<std::string>("second_state", "game"));
+	MusicManager::getInstance();
 	if (progress.isFirstTime())
 	{
 		progress.save();
