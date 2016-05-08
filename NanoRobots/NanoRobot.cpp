@@ -262,9 +262,12 @@ void NanoRobot::updatePopUpInfo(sf::Time frametime)
 {
 	if (m_popUp && m_popUpTimer <= m_popUpTimerMax)
 	{
-		m_infoBubble.setup(m_infoText, sf::Color::White, 30u, 600u);
-		m_infoBubble.setType(ABubble::Type::Speak);
-		m_infoBubble.setActive(true);
+		if (m_popUpTimer == sf::Time::Zero)
+		{
+			m_infoBubble.setup(m_infoText, sf::Color::White, 30u, 600u);
+			m_infoBubble.setType(ABubble::Type::Speak);
+			m_infoBubble.setActive(true);
+		}
 		m_popUpTimer += frametime;
 	}
 	else if (m_infoSetup == false)
