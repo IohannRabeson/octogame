@@ -17,6 +17,8 @@ public:
 		Undefined,
 		NoBalle,
 	};
+	static MusicManager &	getInstance(void);
+	static void				deleteInstance(void);
 	MusicManager();
 	virtual ~MusicManager();
 	void setup(ABiome & biome);
@@ -25,6 +27,7 @@ public:
 	void startBalleMusic(sf::Time duration, MusicNameArea name);
 
 private:
+	static std::unique_ptr<MusicManager> m_instance;
 	struct AreaMusic
 	{
 		AreaMusic() = default;
@@ -42,7 +45,7 @@ private:
 		}
 		Level			level;
 		ResourceKey		name;
-		MusicNameArea		areaName;
+		MusicNameArea	areaName;
 		sf::FloatRect	area;
 		sf::SoundBuffer	music;
 		sf::Time		offset;

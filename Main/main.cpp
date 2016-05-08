@@ -39,6 +39,7 @@
 #include "LevelZeroScreen.hpp"
 #include "DeathScreen.hpp"
 #include "AGameObject.hpp"
+#include "MusicManager.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
@@ -88,6 +89,7 @@ int main(int argc, char **argv)
 		setupStateManager(states);
 		setupConsole(console);
 		octo::Application::run("loading");
+		MusicManager::deleteInstance();
 	}
 	catch (std::exception const& e)
 	{

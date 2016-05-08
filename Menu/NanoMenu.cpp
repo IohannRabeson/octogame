@@ -18,7 +18,6 @@ void NanoMenu::createMenus(void)
 	addMenu(L"5", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(L"6", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(L"7", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu(L"8", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
 	std::size_t nbNano = static_cast<std::size_t>(Progress::getInstance().getNanoRobotCount());
 	if (nbNano >= 7u)

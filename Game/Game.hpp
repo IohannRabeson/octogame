@@ -33,12 +33,12 @@ public:
 
 private:
 	PhysicsEngine &						m_physicsEngine;
+	MusicManager &						m_musicPlayer;
 	BiomeManager						m_biomeManager;
 	std::unique_ptr<SkyCycle>			m_skyCycle;
 	std::unique_ptr<SkyManager>			m_skyManager;
 	std::unique_ptr<GroundManager>		m_groundManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
-	std::unique_ptr<MusicManager>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<KonamiCode>			m_konami;
 	bool								m_keyGroundRight;

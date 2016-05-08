@@ -79,11 +79,11 @@
 
 Game::Game(void) :
 	m_physicsEngine(PhysicsEngine::getInstance()),
+	m_musicPlayer(MusicManager::getInstance()),
 	m_skyCycle(nullptr),
 	m_skyManager(nullptr),
 	m_groundManager(nullptr),
 	m_parallaxScrolling(nullptr),
-	m_musicPlayer(nullptr),
 	m_octo(nullptr),
 	m_konami(nullptr),
 	m_keyGroundRight(false),
@@ -150,12 +150,12 @@ void	Game::loadLevel(void)
 	m_physicsEngine.setGravity(sf::Vector2f(0.f, 600.f));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
+	m_musicPlayer.setup(m_biomeManager.getCurrentBiome());
 
 	m_skyCycle.reset(new SkyCycle());
 	m_skyManager.reset(new SkyManager());
 	m_groundManager.reset(new GroundManager());
 	m_parallaxScrolling.reset(new ParallaxScrolling());
-	m_musicPlayer.reset(new MusicManager());
 	m_octo.reset(new CharacterOcto());
 	m_konami.reset(new KonamiCode());
 
@@ -163,7 +163,6 @@ void	Game::loadLevel(void)
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
-	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
 }
@@ -178,6 +177,7 @@ void	Game::update(sf::Time frameTime)
 	frameTime = frameTime / m_slowTimeInfosCoef;
 	// update the PhysicsEngine as first
 	m_physicsEngine.update(frameTime.asSeconds());
+	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
 	m_octo->update(frameTime);
@@ -186,7 +186,6 @@ void	Game::update(sf::Time frameTime)
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
-	m_musicPlayer->update(frameTime, m_octo->getPosition());
 	m_konami->update(frameTime, m_octo->getPosition());
 	m_octo->startKonamiCode(m_konami->canStartEvent());
 }
@@ -222,7 +221,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			break;
 		case GameObjectType::Concert:
 			gameObjectCast<Concert>(gameObject)->startBalle();
-			m_musicPlayer->startBalleMusic(gameObjectCast<Concert>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::Concert);
+			m_musicPlayer.startBalleMusic(gameObjectCast<Concert>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::Concert);
 			break;
 		case GameObjectType::Bouibouik:
 			gameObjectCast<Bouibouik>(gameObject)->startBalle();
@@ -234,7 +233,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 		case GameObjectType::CedricNpc:
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			if (gameObjectCast<CedricNpc>(gameObject)->getId() == 0u)
-				m_musicPlayer->startBalleMusic(gameObjectCast<CedricNpc>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::CedricChallenge);
+				m_musicPlayer.startBalleMusic(gameObjectCast<CedricNpc>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::CedricChallenge);
 			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())

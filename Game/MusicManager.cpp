@@ -1,6 +1,23 @@
 #include "MusicManager.hpp"
 #include "Progress.hpp"
 
+std::unique_ptr<MusicManager> MusicManager::m_instance = nullptr;
+
+MusicManager & MusicManager::getInstance()
+{
+	if (m_instance == nullptr)
+	{
+		m_instance.reset(new MusicManager());
+	}
+	return *m_instance;
+}
+
+void MusicManager::deleteInstance()
+{
+	if (m_instance)
+		m_instance.reset(nullptr);
+}
+
 MusicManager::MusicManager() :
 	m_audio(octo::Application::getAudioManager()),
 	m_played(false),
@@ -90,6 +107,12 @@ void	MusicManager::setup(ABiome & biome)
 	m_currentLevel = biome.getId();
 	m_mapSize = biome.getMapSizeFloat();
 	m_maxVolume = Progress::getInstance().getMusicVolume();
+	m_played = false;
+	m_timer = sf::Time::Zero;
+	m_newBalle = false;
+	m_musicToPlay = MusicNameArea::NoBalle;
+	m_durationBalle = sf::Time::Zero;
+
 }
 
 void	MusicManager::update(sf::Time frameTime, sf::Vector2f const & octoPos)
