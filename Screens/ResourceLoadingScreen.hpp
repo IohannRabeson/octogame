@@ -14,13 +14,12 @@
 # define RESOURCELOADINGSCREEN_HPP
 # include <AbstractResourceLoadingState.hpp>
 
-# include "FireflySwarm.hpp"
-# include "FireflyPopulation.hpp"
 # include "ResourceDefinitions.hpp"
 
 # include <string>
 # include <vector>
 
+# include <SFML/System.hpp>
 # include <SFML/Graphics/Text.hpp>
 # include <SFML/Graphics/RectangleShape.hpp>
 # include <SFML/Graphics/Sprite.hpp>
@@ -31,6 +30,8 @@ public:
 	ResourceLoadingScreen();
 private:
 	virtual void	start();
+	void			updateLoading();
+	void			updateScreen(sf::Time frameTime);
 	virtual void	update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render)const;
 	virtual void	onNoMoreLoading();	
