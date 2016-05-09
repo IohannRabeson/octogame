@@ -339,6 +339,11 @@ void ANpc::resetVariables(void)
 	m_collideOctoEvent = false;
 }
 
+bool ANpc::isDoubleJump(void)
+{
+	return m_isDoubleJump;
+}
+
 void ANpc::update(sf::Time frametime)
 {
 	updateState();
