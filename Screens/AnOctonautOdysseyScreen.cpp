@@ -67,9 +67,7 @@ AnOctonautOdysseyScreen::AnOctonautOdysseyScreen() :
 
 	for (std::size_t i = 0u; i < m_count; i++)
 	{
-		m_startTextures[i] = resources.getTexture(m_key[i]);
-		m_startTextures[i].setSmooth(true);
-		m_startSprites[i].setTexture(m_startTextures[i]);
+		m_startSprites[i].setTexture(resources.getTexture(m_key[i]));
 		m_startSprites[i].setOrigin(m_startSprites[i].getLocalBounds().width / 2.f, m_startSprites[i].getLocalBounds().height / 2.f);
 		m_startSprites[i].setPosition(octo::Application::getCamera().getCenter());
 	}
