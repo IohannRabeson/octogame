@@ -18,6 +18,8 @@
 #include "DefaultApplicationListener.hpp"
 // Ecran de jeu
 #include "StateTest.hpp"
+#include "LogoScreen.hpp"
+#include "AnOctonautOdysseyScreen.hpp"
 #include "FireflyTestScreen.hpp"
 #include "PaletteDemoScreen.hpp"
 #include "SpriteSheetDemoScreen.hpp"
@@ -64,6 +66,8 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<DeathScreen>("octo_death");
 	manager.registerState<LevelZeroScreen>("zero");
 	manager.registerState<TransitionLevelZeroScreen>("transitionLevelZero");
+	manager.registerState<LogoScreen>("logo");
+	manager.registerState<AnOctonautOdysseyScreen>("anoctonautodyssey");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 

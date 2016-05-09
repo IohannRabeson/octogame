@@ -162,15 +162,8 @@ void	ResourceLoadingScreen::draw(sf::RenderTarget& render)const
 
 void	ResourceLoadingScreen::onNoMoreLoading()
 {
-	Progress &				progress = Progress::getInstance();
 	octo::StateManager & states = octo::Application::getStateManager();
 
 	MusicManager::getInstance();
-	if (progress.isFirstTime())
-	{
-		progress.save();
-		states.change("zero");
-	}
-	else
-		states.change("game");
+	states.change("logo");
 }

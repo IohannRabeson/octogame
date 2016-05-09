@@ -24,7 +24,7 @@ class YesNoReset : public YesNoMenu
 		octo::StateManager &	states = octo::Application::getStateManager();
 		progress.reset();
 		progress.setFirstTime(true);
-		states.change("zero");
+		states.change("anoctonautodyssey");
 	}
 
 	inline void actionNo(void) { }
