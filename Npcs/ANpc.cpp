@@ -42,7 +42,7 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	}
 	if (npcTexts.find(npcId) != npcTexts.end())
 	{
-		npcTexts[npcId].push_back(L"Beurk!");
+		npcTexts[npcId].push_back(L"Beurk !\n");
 		m_displayText = true;
 		setTexts(npcTexts[npcId]);
 	}

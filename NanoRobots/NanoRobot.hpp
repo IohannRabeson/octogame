@@ -106,6 +106,7 @@ private:
 	bool										m_infoSetup;
 
 	State										m_state;
+	bool										m_isSpeaking;
 	sf::Time									m_timer;
 	sf::Time									m_timerMax;
 

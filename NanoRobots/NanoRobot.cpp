@@ -32,6 +32,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_textIndex(0u),
 	m_infoSetup(false),
 	m_state(Idle),
+	m_isSpeaking(false),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(15.f)),
 	m_isTravelling(false),
@@ -395,9 +396,7 @@ void NanoRobot::update(sf::Time frametime)
 	m_particles.canEmit(false);
 	if (m_state == Speak)
 	{
-		m_timer += frametime;
-		if (m_timer > m_timerMax)
-			m_state = FollowOcto;
+		m_isSpeaking = true;
 	}
 	else if (m_state == Repair)
 	{
@@ -434,6 +433,16 @@ void NanoRobot::update(sf::Time frametime)
 		makeLaser(m_ray.get(), getPosition() + m_offsetLaser, target, 4.f);
 		m_particles.canEmit(true);
 		m_particles.setPosition(target);
+	}
+
+	if (m_isSpeaking)
+	{
+		m_timer += frametime;
+		if (m_timer > m_timerMax)
+		{
+			m_isSpeaking = false;
+			m_state = FollowOcto;
+		}
 	}
 	playSoundRepair();
 	m_particles.update(frametime);
@@ -482,6 +491,6 @@ void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const
 {
 	if (m_state == Idle)
 		return;
-	if (m_state == Speak)
+	if (m_isSpeaking)
 		m_texts[m_textIndex]->draw(render);
 }
