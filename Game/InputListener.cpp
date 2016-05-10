@@ -7,7 +7,8 @@ InputListener::InputListener(void) :
 	m_joystickLT(false),
 	m_joystickRT(false),
 	m_joystickAxisX(false),
-	m_joystickAxisY(false)
+	m_joystickAxisY(false),
+	m_triggerLimit(0.f)
 {
 	// Unix
 	// Playstation
@@ -17,13 +18,17 @@ InputListener::InputListener(void) :
 #ifdef __linux__
 	m_inputs = { OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
 		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Return, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	m_triggerLimit = 0.f;
 #elif _WIN32
 	m_inputs = { OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
 		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Return, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	m_triggerLimit = 0.f;
+	//TODO check if the value is normalized by sfml, if value is not normalized, use 0.5f instead of 0.f
 #else // __APPLE__
 	m_inputs = { OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::Return,
 		OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::None,
 		OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None };
+	m_triggerLimit = 0.f;
 #endif
 }
 
@@ -145,12 +150,12 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 		// If Xbox controller
 		if (event.axis == sf::Joystick::Z) //LT
 		{
-			if (event.position > 0.f && !m_joystickLT)
+			if (event.position > m_triggerLimit && !m_joystickLT)
 			{
 				m_joystickLT = true;
 				onInputPressed(OctoKeys::GroundLeft);
 			}
-			else if (event.position <= 0.f && m_joystickLT)
+			else if (event.position <= m_triggerLimit && m_joystickLT)
 			{
 				m_joystickLT = false;
 				onInputReleased(OctoKeys::GroundLeft);
@@ -158,12 +163,12 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 		}
 		if (event.axis == sf::Joystick::R) //RT
 		{
-			if (event.position > 0.f && !m_joystickRT)
+			if (event.position > m_triggerLimit && !m_joystickRT)
 			{
 				m_joystickRT = true;
 				onInputPressed(OctoKeys::GroundRight);
 			}
-			else if (event.position <= 0.f && m_joystickRT)
+			else if (event.position <= m_triggerLimit && m_joystickRT)
 			{
 				m_joystickRT = false;
 				onInputReleased(OctoKeys::GroundRight);

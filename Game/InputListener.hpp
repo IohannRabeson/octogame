@@ -38,6 +38,7 @@ private:
 	bool					m_joystickRT;
 	bool					m_joystickAxisX;
 	bool					m_joystickAxisY;
+	float					m_triggerLimit;
 
 	// Keyboard
 	virtual bool		onPressed(sf::Event::KeyEvent const& event);
