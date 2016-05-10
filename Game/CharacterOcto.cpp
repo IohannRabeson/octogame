@@ -1423,6 +1423,11 @@ bool	CharacterOcto::getDoubleJump()
 	return false;
 }
 
+float	CharacterOcto::getWaterLevel() const
+{
+	return m_waterLevel;
+}
+
 
 void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
 {
