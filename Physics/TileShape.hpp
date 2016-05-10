@@ -50,8 +50,7 @@ public:
 	 * \param vertex The new vertex pointer
 	 */
 	inline void setVertex(sf::Vertex * vertex) { m_vertex = vertex; }
-
-	inline void setHeight(float height) { m_height = height; }
+	inline void setEndVertex(sf::Vertex * vertex) { m_endVertex = vertex; }
 
 	/*! Get the global bounds
 	 * The AABB is recomputed at each rotation
@@ -86,12 +85,12 @@ protected:
 
 private:
 	sf::Vertex *				m_vertex; /// Pointer to the up left vertex of the tile
+	sf::Vertex *				m_endVertex; /// Pointer to the bottom right vertex of the tile
 	sf::Vector2f				m_vertices[2];
 	std::vector<sf::Vector2f>	m_edges;
 	std::vector<sf::Vector2f>	m_normals;
 	sf::Vector2f				m_baryCenter;
 	sf::FloatRect				m_globalBounds;
-	float						m_height;
 
 };
 

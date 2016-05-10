@@ -116,6 +116,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	{
 		m_tileShapes[x] = builder.createTile(x, 0u);
 		m_tileShapes[x]->setVertex(&m_vertices[0u]);
+		m_tileShapes[x]->setEndVertex(&m_vertices[0u]);
 		m_tileShapes[x]->setGameObject(nullptr);
 	}
 
@@ -968,28 +969,17 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	Tile * tile;
 	Tile * tilePrev;
 	TileShape * first;
-	std::size_t height;
-	bool isComputed;
 
 	// Update tiles
 	m_verticesCount = 0u;
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
 		first = nullptr;
-		height = 0u;
-		isComputed = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
 			if (tile->isTransitionType(Tile::e_transition_none))
-			{
-				if (first && !isComputed)
-				{
-					first->setHeight(static_cast<float>(height) * Tile::TileSize);
-					isComputed = true;
-				}
 				continue;
-			}
 			else if (first)
 			{
 				// Avoid to compute A LOT of transition under the screen
@@ -1026,11 +1016,10 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 				m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount]);
 				m_tileShapes[x]->setGameObject(tilePrev);
 			}
-			height++;
 			m_verticesCount += 4u;
 		}
-		if (first && !isComputed)
-			first->setHeight(static_cast<float>(height) * Tile::TileSize);
+		if (first)
+			first->setEndVertex(&m_vertices[m_verticesCount - 2u]);
 	}
 
 	// Update decors
