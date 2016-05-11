@@ -25,9 +25,9 @@ InputListener::InputListener(void) :
 	m_triggerLimit = 0.f;
 	//TODO check if the value is normalized by sfml, if value is not normalized, use 0.5f instead of 0.f
 #else // __APPLE__
-	m_inputs = { OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::Return,
-		OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::None,
-		OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None };
+	m_inputs = { OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::None, OctoKeys::None, OctoKeys::Escape, OctoKeys::None,
+		OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Left, OctoKeys::Right, OctoKeys::None,
+		OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None };
 	m_triggerLimit = 0.f;
 #endif
 }
