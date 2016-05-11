@@ -45,7 +45,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	Progress & progress = Progress::getInstance();
 	InputListener::addInputListener();
 
-	m_texture = &resources.getTexture(STARGRADIENT_PNG);
+	m_texture = &resources.getTexture(DISTORSION_PNG);
 
 	m_box->setRadius(150.f);
 	m_box->setType(AShape::Type::e_trigger);
@@ -53,7 +53,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_box->setApplyGravity(false);
 
 	m_swarm.setPositionBehavior(m_positionBehavior);
-	m_swarm.setTexture(resources.getTexture(FIREFLY01_PNG));
+	m_swarm.setTexture(resources.getTexture(DISTORSION_PNG));
 	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(id));

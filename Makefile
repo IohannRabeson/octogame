@@ -27,21 +27,9 @@ SRC = $(SRC_PHYSICS)									\
 	  Main/main.cpp										\
 
 SRC_STATES =	Screens/StateTest.cpp					\
-				Screens/FireflyTestScreen.cpp			\
-				Screens/PaletteDemoScreen.cpp			\
-				Screens/SpriteSheetDemoScreen.cpp		\
-				Screens/AnimatedSpriteDemoScreen.cpp	\
-				Screens/AudioDemoScreen.cpp				\
-				Screens/EngineScreen.cpp				\
-				Screens/PhysicsMapScreen.cpp			\
-				Screens/LightningDemoScreen.cpp			\
 				Screens/GameScreen.cpp					\
-				Screens/DecorManagerDemoScreen.cpp		\
-				Screens/ParticleDemoScreen.cpp			\
 				Screens/ResourceLoadingScreen.cpp		\
 				Screens/QuitScreen.cpp					\
-				Screens/FsmDemoScreen.cpp				\
-				Screens/ElevatorStreamDemo.cpp			\
 				Screens/TransitionLevelScreen.cpp		\
 				Screens/TransitionScreen.cpp			\
 				Screens/DeathScreen.cpp					\

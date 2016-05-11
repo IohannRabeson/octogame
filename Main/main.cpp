@@ -20,21 +20,9 @@
 #include "StateTest.hpp"
 #include "LogoScreen.hpp"
 #include "AnOctonautOdysseyScreen.hpp"
-#include "FireflyTestScreen.hpp"
-#include "PaletteDemoScreen.hpp"
-#include "SpriteSheetDemoScreen.hpp"
-#include "AnimatedSpriteDemoScreen.hpp"
-#include "AudioDemoScreen.hpp"
-#include "EngineScreen.hpp"
-#include "PhysicsMapScreen.hpp"
-#include "LightningDemoScreen.hpp"
 #include "GameScreen.hpp"
-#include "DecorManagerDemoScreen.hpp"
-#include "ParticleDemoScreen.hpp"
-#include "FsmDemoScreen.hpp"
 #include "ResourceLoadingScreen.hpp"
 #include "QuitScreen.hpp"
-#include "ElevatorStreamDemo.hpp"
 #include "TransitionLevelScreen.hpp"
 #include "TransitionLevelZeroScreen.hpp"
 #include "TransitionScreen.hpp"
@@ -46,19 +34,7 @@
 static void	setupStateManager(octo::StateManager& manager)
 {
 	manager.registerState<StateTest>("test");
-	manager.registerState<FireflyTestScreen>("firefly");
-	manager.registerState<PaletteDemoScreen>("colors");
-	manager.registerState<SpriteSheetDemoScreen>("sprite_sheet");
-	manager.registerState<AnimatedSpriteDemoScreen>("animated_sprite");
-	manager.registerState<AudioDemoScreen>("audio");
 	manager.registerState<GameScreen>("game");
-	manager.registerState<EngineScreen>("engine");
-	manager.registerState<PhysicsMapScreen>("physics_map");
-	manager.registerState<LightningDemoScreen>("lightning");
-	manager.registerState<ParticleDemoScreen>("particles");
-	manager.registerState<DecorManagerDemoScreen>("decor");
-	manager.registerState<FsmDemoScreen>("tamagotchi");
-	manager.registerState<ElevatorStreamDemo>("elevator");
 	manager.registerState<ResourceLoadingScreen>("loading");
 	manager.registerState<QuitScreen>("quit");
 	manager.registerState<TransitionScreen>("transition");
