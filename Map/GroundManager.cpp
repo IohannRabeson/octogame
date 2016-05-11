@@ -988,7 +988,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			tile = &m_tiles->get(x, y);
 			if (tile->isTransitionType(Tile::e_transition_none))
 				continue;
-			else if (first)
+			if (first)
 			{
 				// Avoid to compute A LOT of transition under the screen
 				if ((tile->getStartTransition(0u).y > bottomBorder && tilePrev->getStartTransition(0u).y > bottomBorder)
@@ -1028,6 +1028,11 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		}
 		if (first)
 			first->setEndVertex(&m_vertices[m_verticesCount - 2u]);
+		else
+		{
+			m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount - 4u]);
+			m_tileShapes[x]->setEndVertex(&m_vertices[m_verticesCount - 4u]);
+		}
 	}
 
 	// Update decors
