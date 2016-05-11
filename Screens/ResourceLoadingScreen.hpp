@@ -13,6 +13,7 @@
 #ifndef RESOURCELOADINGSCREEN_HPP
 # define RESOURCELOADINGSCREEN_HPP
 # include <AbstractResourceLoadingState.hpp>
+# include <AudioManager.hpp>
 
 # include "ResourceDefinitions.hpp"
 
@@ -30,24 +31,26 @@ public:
 	ResourceLoadingScreen();
 private:
 	virtual void	start();
+	virtual void	stop();
 	void			updateLoading();
 	void			updateScreen(sf::Time frameTime);
 	virtual void	update(sf::Time frameTime);
 	virtual void	draw(sf::RenderTarget& render)const;
 	virtual void	onNoMoreLoading();	
 private:
-	std::size_t					m_count;
-	std::vector<ResourceKey>	m_key;
-	std::vector<sf::Texture>	m_startTextures;
-	std::vector<sf::Sprite>		m_startSprites;
-	std::size_t					m_index;
-	sf::Time					m_timer;
-	std::vector<sf::Time>		m_timerMax;
-	sf::Font					m_font;
-	std::string					m_string;
-	sf::Text					m_message;
-	sf::RectangleShape			m_borders;
-	sf::RectangleShape			m_bar;
+	std::size_t						m_count;
+	std::vector<ResourceKey>		m_key;
+	std::vector<sf::Texture>		m_startTextures;
+	std::vector<sf::Sprite>			m_startSprites;
+	std::size_t						m_index;
+	sf::Time						m_timer;
+	std::vector<sf::Time>			m_timerMax;
+	sf::Font						m_font;
+	std::string						m_string;
+	sf::Text						m_message;
+	sf::RectangleShape				m_borders;
+	sf::RectangleShape				m_bar;
+	octo::AudioManager::SoundPtr	m_sound;
 };
 
 #endif

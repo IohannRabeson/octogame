@@ -30,7 +30,7 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 	octo::Application::getGraphicsManager().setIcon(resources.getTexture(ICON_PNG).copyToImage());
 
 	m_key.resize(m_count);
-	m_key[0] = SCREEN07_JPG;
+	m_key[0] = SCREEN01_JPG;
 	m_key[1] = SCREEN02_JPG;
 	m_key[2] = SCREEN03_JPG;
 	m_key[3] = SCREEN04_JPG;
@@ -55,27 +55,27 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 	m_key[22] = SCREEN23_JPG;
 
 	m_timerMax.resize(m_count);
-	m_timerMax[0] = sf::seconds(0.03f);
-	m_timerMax[1] = sf::seconds(0.03f);
-	m_timerMax[2] = sf::seconds(0.03f);
+	m_timerMax[0] = sf::seconds(0.06f);
+	m_timerMax[1] = sf::seconds(0.07f);
+	m_timerMax[2] = sf::seconds(0.08f);
 	m_timerMax[3] = sf::seconds(1.3f);
-	m_timerMax[4] = sf::seconds(0.03f);
-	m_timerMax[5] = sf::seconds(0.04f);
+	m_timerMax[4] = sf::seconds(0.05f);
+	m_timerMax[5] = sf::seconds(0.07f);
 	m_timerMax[6] = sf::seconds(0.5f);
-	m_timerMax[7] = sf::seconds(0.02f);
+	m_timerMax[7] = sf::seconds(0.08f);
 	m_timerMax[8] = sf::seconds(0.1f);
-	m_timerMax[9] = sf::seconds(0.03f);
-	m_timerMax[10] = sf::seconds(0.02f);
+	m_timerMax[9] = sf::seconds(0.06f);
+	m_timerMax[10] = sf::seconds(0.05f);
 	m_timerMax[11] = sf::seconds(0.3f);
 	m_timerMax[12] = sf::seconds(0.1f);
 	m_timerMax[13] = sf::seconds(1.3f);
-	m_timerMax[14] = sf::seconds(0.03f);
+	m_timerMax[14] = sf::seconds(0.06f);
 	m_timerMax[15] = sf::seconds(0.05f);
 	m_timerMax[16] = sf::seconds(0.04f);
-	m_timerMax[17] = sf::seconds(0.02f);
-	m_timerMax[18] = sf::seconds(0.03f);
-	m_timerMax[19] = sf::seconds(0.04f);
-	m_timerMax[20] = sf::seconds(0.02f);
+	m_timerMax[17] = sf::seconds(0.07f);
+	m_timerMax[18] = sf::seconds(0.06f);
+	m_timerMax[19] = sf::seconds(0.07f);
+	m_timerMax[20] = sf::seconds(0.06f);
 	m_timerMax[21] = sf::seconds(0.05f);
 	m_timerMax[22] = sf::seconds(2.1f);
 
@@ -105,6 +105,14 @@ void	ResourceLoadingScreen::start()
 	Progress & progress = Progress::getInstance();
 	progress.load("save.osv");
 	AbstractResourceLoadingState::start();
+	octo::AudioManager& audio = octo::Application::getAudioManager();
+	m_sound = audio.playSound(octo::Application::getResourceManager().getSound(REPAIR_WITH_LAZER_OGG), 0.3f);
+}
+
+void	ResourceLoadingScreen::stop()
+{
+	if (m_sound)
+		m_sound->stop();
 }
 
 void	ResourceLoadingScreen::updateLoading()
@@ -136,6 +144,14 @@ void	ResourceLoadingScreen::updateScreen(sf::Time frameTime)
 	m_timer += frameTime;
 	if (m_timer > m_timerMax[m_index])
 	{
+		if (m_index == 4u || m_index == 14u)
+		{
+			octo::AudioManager& audio = octo::Application::getAudioManager();
+			octo::ResourceManager& resources = octo::Application::getResourceManager();
+			audio.playSound(resources.getSound(LOGO_SOUND_OGG), 1.f);
+			if (m_index == 8u)
+				audio.playSound(resources.getSound(OCTO_GREETING_OGG), 1.f);
+		}
 		m_timer = sf::Time::Zero;
 		m_index++;
 		if (m_index >= m_count)
