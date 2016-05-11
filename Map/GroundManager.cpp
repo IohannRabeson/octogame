@@ -977,17 +977,25 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	Tile * tile;
 	Tile * tilePrev;
 	TileShape * first;
+	sf::Vertex * last;
+	bool updateLast;
 
 	// Update tiles
 	m_verticesCount = 0u;
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
 		first = nullptr;
+		last = nullptr;
+		updateLast = true;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
 			if (tile->isTransitionType(Tile::e_transition_none))
+			{
+				if (first && tile->isEmpty())
+					updateLast = false;
 				continue;
+			}
 			if (first)
 			{
 				// Avoid to compute A LOT of transition under the screen
@@ -1024,10 +1032,12 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 				m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount]);
 				m_tileShapes[x]->setGameObject(tilePrev);
 			}
+			if (updateLast)
+				last = &m_vertices[m_verticesCount + 2u];
 			m_verticesCount += 4u;
 		}
 		if (first)
-			first->setEndVertex(&m_vertices[m_verticesCount - 2u]);
+			first->setEndVertex(last);
 		else
 		{
 			m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount - 4u]);
