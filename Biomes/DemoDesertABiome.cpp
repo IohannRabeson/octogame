@@ -281,10 +281,10 @@ Map::TileColorGenerator DemoDesertABiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart = m_particleColor[0];
 	sf::Color secondColorEnd = m_particleColor[1];
-	float start1 = -17000.f / static_cast<float>(m_mapSize.y);
+	float start1 = -14700.f / static_cast<float>(m_mapSize.y);
 	float start2 = -14000.f / static_cast<float>(m_mapSize.y);
-	float middle1 = -11000.f / static_cast<float>(m_mapSize.y);
-	float middle2 = -6000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -13000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = -6300.f / static_cast<float>(m_mapSize.y);
 	float end1 = -3000.f / static_cast<float>(m_mapSize.y);
 	float end2 = 0.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
