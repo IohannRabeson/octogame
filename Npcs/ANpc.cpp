@@ -30,7 +30,7 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
-	setTexts(TextManager::getInstance().getTexts(npcId));
+	setTexts(TextManager::getInstance().getTextsNpc(npcId));
 	if (m_texts.size())
 		m_displayText = true;
 }

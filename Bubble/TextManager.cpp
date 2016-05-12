@@ -41,11 +41,9 @@ void TextManager::loadTexts(void)
 
 std::vector<std::wstring> const & TextManager::getTexts(std::string const & key)
 {
-	if (m_texts.find(key) != m_texts.end())
-		m_texts[key].push_back(L"Beurk!");
 	return m_texts[key];
 }
-std::vector<std::wstring> const & TextManager::getTexts(ResourceKey const & key)
+std::vector<std::wstring> const & TextManager::getTextsNpc(ResourceKey const & key)
 {
 	if (m_texts.find(key) != m_texts.end())
 		m_texts[key].push_back(L"Beurk!");

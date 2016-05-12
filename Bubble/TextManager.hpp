@@ -13,8 +13,8 @@ public:
 
 	static TextManager & getInstance(void);
 	void loadTexts(void);
-	std::vector<std::wstring> const & getTexts(ResourceKey const & key);
 	std::vector<std::wstring> const & getTexts(std::string const & key);
+	std::vector<std::wstring> const & getTextsNpc(ResourceKey const & key);
 
 private:
 	static std::unique_ptr<TextManager>					m_instance;
