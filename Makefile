@@ -112,13 +112,14 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/SnowGirl2Npc.cpp					\
 				Npcs/StrangerGirlSnowNpc.cpp			\
 				Npcs/StrangerSnowNpc.cpp				\
-				Npcs/BirdBlueNpc.cpp				\
+				Npcs/BirdBlueNpc.cpp					\
 #Script AddNpc
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
 				Bubble/BubbleMenu.cpp					\
+				Bubble/TextManager.cpp					\
 
 SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/AMenuSelection.cpp					\

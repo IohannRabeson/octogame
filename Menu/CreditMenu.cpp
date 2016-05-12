@@ -7,7 +7,6 @@ CreditMenu::CreditMenu(void)
 
 void CreditMenu::createMenus(void)
 {
-	AMenu::initTexts();
 	addMenu(AMenu::getText("credits_programming") + L" :", nullptr);
 	addMenu(L"Julien Balestrieri", nullptr);
 	addMenu(L"François Corbel", nullptr);

@@ -4,6 +4,7 @@
 #include "PhysicsEngine.hpp"
 #include "CircleShape.hpp"
 #include "Progress.hpp"
+#include "TextManager.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
@@ -39,7 +40,6 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_soundDistri(0u, 2u)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	Progress & progress = Progress::getInstance();
 	InputListener::addInputListener();
 
 	m_texture = &resources.getTexture(STARGRADIENT_PNG);
@@ -66,22 +66,12 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_sprite.setAnimation(m_animation);
 	m_sprite.play();
 
-	std::map<std::string, std::vector<std::wstring>>	npcTexts;
-	std::wstringstream f(resources.getText(progress.getTextFile()).toWideString());
-	std::wstring wkey;
-	std::wstring line;
-	wchar_t delim = '=';
-	while (std::getline(f, wkey, delim))
-	{
-		std::getline(f, line);
-		std::string key(wkey.begin(), wkey.end());
-		npcTexts[key].push_back(line);
-	}
-	for (std::size_t i = 0u; i < npcTexts[id].size(); i++)
+	std::vector<std::wstring> const & nanoTexts = TextManager::getInstance().getTexts(id);
+	for (std::size_t i = 0u; i < nanoTexts.size(); i++)
 	{
 		std::unique_ptr<BubbleText> bubble;
 		bubble.reset(new BubbleText());
-		bubble->setup(npcTexts[id][i], sf::Color::White);
+		bubble->setup(nanoTexts[i], sf::Color::White);
 		bubble->setType(ABubble::Type::Speak);
 		bubble->setActive(true);
 		m_texts.push_back(std::move(bubble));

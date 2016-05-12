@@ -4,6 +4,7 @@
 #include "PhysicsEngine.hpp"
 #include "CharacterOcto.hpp"
 #include "Progress.hpp"
+#include "TextManager.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <sstream>
@@ -29,23 +30,9 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
-	std::map<std::string, std::vector<std::wstring>>	npcTexts;
-	std::wstringstream f(resources.getText(progress.getTextFile()).toWideString());
-	std::wstring wkey;
-	std::wstring line;
-	wchar_t delim = '=';
-	while (std::getline(f, wkey, delim))
-	{
-		std::getline(f, line);
-		std::string key(wkey.begin(), wkey.end());
-		npcTexts[key].push_back(line);
-	}
-	if (npcTexts.find(npcId) != npcTexts.end())
-	{
-		npcTexts[npcId].push_back(L"Beurk!");
+	setTexts(TextManager::getInstance().getTexts(npcId));
+	if (m_texts.size())
 		m_displayText = true;
-		setTexts(npcTexts[npcId]);
-	}
 }
 
 ANpc::~ANpc(void)
