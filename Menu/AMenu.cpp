@@ -1,12 +1,14 @@
 #include "AMenu.hpp"
 #include "Progress.hpp"
+#include "TextManager.hpp"
 #include <ResourceManager.hpp>
 #include <Application.hpp>
 #include <sstream>
 
 AMenu::AMenu(void) :
 	m_currentState(State::Hide),
-	m_backMenu(nullptr)
+	m_backMenu(nullptr),
+	m_missingText(L"Missing menu")
 {
 }
 
@@ -32,27 +34,10 @@ AMenu * AMenu::getBackMenu(void)
 	return m_backMenu;
 }
 
-void AMenu::initTexts(void)
-{
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	Progress & progress = Progress::getInstance();
-
-	std::wstringstream f(resources.getText(progress.getTextFile()).toWideString());
-	std::wstring wkey;
-	std::wstring line;
-	wchar_t delim = '=';
-	while (std::getline(f, wkey, delim))
-	{
-		std::getline(f, line);
-		std::string key(wkey.begin(), wkey.end());
-		m_menuTexts[key] = line;
-	}
-	m_menuTexts["error"] = L"Missing Menu";
-}
-
 std::wstring const & AMenu::getText(std::string const & text)
 {
-	if (m_menuTexts.find(text) != m_menuTexts.end())
-		return m_menuTexts[text];
-	return m_menuTexts["error"];
+	std::vector<std::wstring> const & menuText = TextManager::getInstance().getTexts(text);
+	if (menuText.size())
+		return menuText[0];
+	return m_missingText;
 }

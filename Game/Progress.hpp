@@ -22,6 +22,7 @@ public:
 	void				setLanguage(Language language);
 	Progress::Language	getLanguage(void) const;
 	ResourceKey			getTextFile(void) const;
+	bool				isJoystick(void) const;
 
 	void				addNanoRobot();
 	void				removeNanoRobot() { m_data.nanoRobotCount--; }

@@ -55,7 +55,6 @@ VideoMenu::VideoMenu(void)
 
 void VideoMenu::createMenus(void)
 {
-	AMenu::initTexts();
 	addMenu(AMenu::getText("options_video_fullscreen"), std::unique_ptr<YesNoFullscreen>(new YesNoFullscreen()));
 	addMenu(AMenu::getText("options_video_vsync"), std::unique_ptr<YesNoVsync>(new YesNoVsync()));
 	//TODO: Make resolution work
