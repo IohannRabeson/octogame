@@ -2,6 +2,7 @@
 #include "YesNoMenu.hpp"
 #include "EmptyMenu.hpp"
 #include "Progress.hpp"
+#include "TextManager.hpp"
 
 #include <Application.hpp>
 #include <AudioManager.hpp>
@@ -13,7 +14,6 @@ LanguageMenu::LanguageMenu(void) :
 
 void LanguageMenu::createMenus(void)
 {
-	AMenu::initTexts();
 	addMenu(AMenu::getText("options_language_french"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(AMenu::getText("options_language_english"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
@@ -27,6 +27,7 @@ void LanguageMenu::onSelection(void)
 	{
 		Progress & progress = Progress::getInstance();
 		progress.setLanguage(static_cast<Progress::Language>(getIndexCursor()));
+		TextManager::getInstance().loadTexts();
 		if (progress.changeLevel() == false)
 			progress.setNextDestination(progress.getLastDestination());
 	}

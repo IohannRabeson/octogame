@@ -13,7 +13,6 @@ ControlMenu::ControlMenu(void) :
 
 void ControlMenu::createMenus(void)
 {
-	AMenu::initTexts();
 	addMenu(AMenu::getText("control_move"), nullptr);
 }
 
