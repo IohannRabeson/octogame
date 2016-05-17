@@ -1,11 +1,35 @@
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
+#include <cassert>
 #include "InputListener.hpp"
 
 InputListener::InputListener(void) :
-	m_joystickBoolX(false),
-	m_joystickBoolY(false)
+	m_joystickLT(false),
+	m_joystickRT(false),
+	m_joystickAxisX(false),
+	m_joystickAxisY(false),
+	m_triggerLimit(0.f)
 {
+	// Unix
+	// Playstation
+	//m_inputs = { OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Right, OctoKeys::Use,
+	//OctoKeys::Left, OctoKeys::GroundRight, OctoKeys::GroundLeft, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::Space};
+	// XBox 360
+#ifdef __linux__
+	m_inputs = { OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
+		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Return, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	m_triggerLimit = 0.f;
+#elif _WIN32
+	m_inputs = { OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
+		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Return, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	m_triggerLimit = 0.f;
+	//TODO check if the value is normalized by sfml, if value is not normalized, use 0.5f instead of 0.f
+#else // __APPLE__
+	m_inputs = { OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::None, OctoKeys::None, OctoKeys::Escape, OctoKeys::None,
+		OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Left, OctoKeys::Right, OctoKeys::None,
+		OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	m_triggerLimit = 0.f;
+#endif
 }
 
 bool	InputListener::onInputPressed(InputListener::OctoKeys const &)
@@ -119,46 +143,73 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 	return true;
 }
 
-
 void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 {
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
 	{
-		if (event.axis == sf::Joystick::X)
+		// If Xbox controller
+		if (event.axis == sf::Joystick::Z) //LT
+		{
+			if (event.position > m_triggerLimit && !m_joystickLT)
+			{
+				m_joystickLT = true;
+				onInputPressed(OctoKeys::GroundLeft);
+			}
+			else if (event.position <= m_triggerLimit && m_joystickLT)
+			{
+				m_joystickLT = false;
+				onInputReleased(OctoKeys::GroundLeft);
+			}
+		}
+		if (event.axis == sf::Joystick::R) //RT
+		{
+			if (event.position > m_triggerLimit && !m_joystickRT)
+			{
+				m_joystickRT = true;
+				onInputPressed(OctoKeys::GroundRight);
+			}
+			else if (event.position <= m_triggerLimit && m_joystickRT)
+			{
+				m_joystickRT = false;
+				onInputReleased(OctoKeys::GroundRight);
+			}
+		}
+
+		if (event.axis == sf::Joystick::X || event.axis == sf::Joystick::PovX)
 		{
 			if (event.position > 50)
 			{
-				m_joystickBoolX = true;
+				m_joystickAxisX = true;
 				onInputPressed(OctoKeys::Right);
 			}
 			else if (event.position < -50)
 			{
-				m_joystickBoolX = true;
+				m_joystickAxisX = true;
 				onInputPressed(OctoKeys::Left);
 			}
-			else if (m_joystickBoolX == true)
+			else if (m_joystickAxisX == true)
 			{
-				m_joystickBoolX = false;
+				m_joystickAxisX = false;
 				onInputReleased(OctoKeys::Left);
 				onInputReleased(OctoKeys::Right);
 			}
 		}
 
-		if (event.axis == sf::Joystick::Y)
+		if (event.axis == sf::Joystick::Y || event.axis == sf::Joystick::PovY)
 		{
 			if (event.position < -50)
 			{
-				m_joystickBoolY = true;
+				m_joystickAxisY = true;
 				onInputPressed(OctoKeys::Up);
 			}
 			else if (event.position > 50)
 			{
-				m_joystickBoolY = true;
+				m_joystickAxisY = true;
 				onInputPressed(OctoKeys::Down);
 			}
-			else if (m_joystickBoolY == true)
+			else if (m_joystickAxisY == true)
 			{
-				m_joystickBoolY = false;
+				m_joystickAxisY = false;
 				onInputReleased(OctoKeys::Up);
 				onInputReleased(OctoKeys::Down);
 			}
@@ -170,38 +221,38 @@ void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 {
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
 	{
-		switch (event.button)
+		assert(event.button < m_inputs.size());
+		switch (m_inputs[event.button])
 		{
-			case 7:
+			case OctoKeys::Left:
 				onInputPressed(OctoKeys::Left);
 				break;
-			case 5:
+			case OctoKeys::Right:
 				onInputPressed(OctoKeys::Right);
 				break;
-			case 14:
+			case OctoKeys::Space:
 				onInputPressed(OctoKeys::Space);
 				break;
-			case 4:
+			case OctoKeys::Up:
 				onInputPressed(OctoKeys::Up);
 				break;
-			case 6:
+			case OctoKeys::Down:
 				onInputPressed(OctoKeys::Down);
 				break;
-			case 13:
+			case OctoKeys::Use:
 				onInputPressed(OctoKeys::Use);
 				break;
-			case 8:
+			case OctoKeys::GroundRight:
 				onInputPressed(OctoKeys::GroundRight);
 				break;
-			case 9:
+			case OctoKeys::GroundLeft:
 				onInputPressed(OctoKeys::GroundLeft);
 				break;
-			case 10:
-			case 11:
+			case OctoKeys::SlowFall:
 				onInputPressed(OctoKeys::SlowFall);
 				onInputPressed(OctoKeys::Up);
 				break;
-			case 3:
+			case OctoKeys::Escape:
 				onInputPressed(OctoKeys::Escape);
 				break;
 			default:
@@ -214,38 +265,38 @@ void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 {
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
 	{
-		switch (event.button)
+		assert(event.button < m_inputs.size());
+		switch (m_inputs[event.button])
 		{
-			case 7:
+			case OctoKeys::Left:
 				onInputReleased(OctoKeys::Left);
 				break;
-			case 5:
+			case OctoKeys::Right:
 				onInputReleased(OctoKeys::Right);
 				break;
-			case 14:
+			case OctoKeys::Space:
 				onInputReleased(OctoKeys::Space);
 				break;
-			case 4:
+			case OctoKeys::Up:
 				onInputReleased(OctoKeys::Up);
 				break;
-			case 6:
+			case OctoKeys::Down:
 				onInputReleased(OctoKeys::Down);
 				break;
-			case 13:
+			case OctoKeys::Use:
 				onInputReleased(OctoKeys::Use);
 				break;
-			case 8:
+			case OctoKeys::GroundRight:
 				onInputReleased(OctoKeys::GroundRight);
 				break;
-			case 9:
+			case OctoKeys::GroundLeft:
 				onInputReleased(OctoKeys::GroundLeft);
 				break;
-			case 10:
-			case 11:
+			case OctoKeys::SlowFall:
 				onInputReleased(OctoKeys::SlowFall);
 				onInputReleased(OctoKeys::Up);
 				break;
-			case 3:
+			case OctoKeys::Escape:
 				onInputReleased(OctoKeys::Escape);
 				break;
 			default:
@@ -253,4 +304,3 @@ void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 		}
 	}
 }
-
