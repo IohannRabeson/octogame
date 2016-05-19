@@ -35,6 +35,10 @@ void TextManager::loadTexts(void)
 	{
 		std::getline(f, line);
 		std::string key(wkey.begin(), wkey.end());
+#if _WIN32
+		if (line.length())
+			line.pop_back();
+#endif
 		m_texts[key].push_back(line);
 	}
 }
@@ -47,6 +51,6 @@ std::vector<std::wstring> const & TextManager::getTexts(std::string const & key)
 std::vector<std::wstring> const & TextManager::getTextsNpc(ResourceKey const & key)
 {
 	if (m_texts[key].size())
-		m_texts[key].push_back(L"Beurk!");
+		m_texts[key].push_back(L"Beurk!\n");
 	return m_texts[key];
 }

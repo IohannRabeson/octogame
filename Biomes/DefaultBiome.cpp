@@ -148,8 +148,8 @@ DefaultBiome::DefaultBiome() :
 		m_destinations.push_back(progress.getLastDestination());
 	}
 
-	if (progress.getNanoRobotCount() >= 7)
-		m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
+	//if (progress.getNanoRobotCount() >= 7)
+	//	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
 }
 
 void			DefaultBiome::setup(std::size_t seed)
