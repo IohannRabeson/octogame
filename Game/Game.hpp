@@ -48,6 +48,8 @@ private:
 	sf::Time							m_groundSoundTime;
 	sf::Time							m_groundSoundTimeMax;
 	float								m_slowTimeInfosCoef;
+	std::size_t							m_skipFrames;
+	std::size_t							m_skipFramesMax;
 
 	void			moveMap(sf::Time frameTime);
 	bool			onInputPressed(InputListener::OctoKeys const & key);

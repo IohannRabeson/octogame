@@ -92,7 +92,9 @@ Game::Game(void) :
 	m_groundVolume(100.f),
 	m_groundSoundTime(sf::Time::Zero),
 	m_groundSoundTimeMax(sf::seconds(0.6f)),
-	m_slowTimeInfosCoef(1.f)
+	m_slowTimeInfosCoef(1.f),
+	m_skipFrames(0u),
+	m_skipFramesMax(3u)
 {
 	InputListener::addInputListener();
 
@@ -174,6 +176,11 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	if (m_skipFrames < m_skipFramesMax)
+	{
+		m_skipFrames++;
+		frameTime = sf::seconds(0.016f);
+	}
 	frameTime = frameTime / m_slowTimeInfosCoef;
 	// update the PhysicsEngine as first
 	m_physicsEngine.update(frameTime.asSeconds());
@@ -510,6 +517,8 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
+	if (m_skipFrames < m_skipFramesMax)
+		return;
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
