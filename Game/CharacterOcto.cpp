@@ -1313,7 +1313,7 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 			caseRight();
 			m_progress.walk();
 			break;
-		case OctoKeys::Space:
+		case OctoKeys::Jump:
 			caseSpace();
 			break;
 		case OctoKeys::SlowFall:
@@ -1354,7 +1354,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 		case OctoKeys::Right:
 			m_keyRight = false;
 			break;
-		case OctoKeys::Space:
+		case OctoKeys::Jump:
 			m_keySpace = false;
 			if (state == Jump || state == DoubleJump || state == StartJump)
 			{

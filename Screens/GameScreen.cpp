@@ -84,7 +84,7 @@ bool GameScreen::onInputPressed(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
-		case OctoKeys::Escape:
+		case OctoKeys::Menu:
 			{
 				AMenu::State state = m_menu.getState();
 				if (state == AMenu::State::Hide)
