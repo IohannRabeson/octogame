@@ -258,10 +258,10 @@ Map::MapSurfaceGenerator DemoJungleABiome::getMapSurfaceGenerator()
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f    , 603.f  , 605.f, 697.f, 696.f, 737.f, 738.f, 820.f          , 850.f          , 980.f          , 984.f   };
 		std::vector<float> pointY = {n - 0.4f, n - 0.4f, -1.97f, -1.95f, -0.43f, -0.43f, -1.97f, -1.97f, n / 1.5f - 1.43f, n / 1.5f - 1.43f, n - 0.3f};
-		for (std::size_t i = 0u; i <= pointX.size(); i++)
+		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i <= pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
 		{
 			if (x >= pointX[i] && x < pointX[i + 1])
 			{

@@ -254,10 +254,10 @@ Map::MapSurfaceGenerator DemoWaterABiome::getMapSurfaceGenerator()
 		float m = n / 3.f;
 		std::vector<float> pointX = {0.f      , 100.f    , 135.f, 420.f, 422.f   , 450.f   , 453.f   , 480.f   , 484.f   , 558.f   , 560.f   , 591.f    , 600.f};
 		std::vector<float> pointY = {m - 1.45f, m - 1.45f, n    , n    , m - 1.5f, m - 1.5f, n - 0.3f, n - 0.3f, m - 2.3f, m - 2.3f, m - 0.3f, m - 0.3f, m - 1.15f};
-		for (std::size_t i = 0u; i <= pointX.size(); i++)
+		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i <= pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
 		{
 			if (x >= pointX[i] && x < pointX[i + 1])
 			{
