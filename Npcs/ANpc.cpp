@@ -21,6 +21,7 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_displayText(false),
 	m_activeText(true),
 	m_collideOctoEvent(false),
+	m_isDoubleJump(false),
 	m_isMeetable(isMeetable)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
