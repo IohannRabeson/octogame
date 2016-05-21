@@ -148,7 +148,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
 	{
 		// If Xbox controller
-		if (event.axis == sf::Joystick::Z) //LT
+		if (event.axis == sf::Joystick::R) //LT
 		{
 			if (event.position > m_triggerLimit && !m_joystickLT)
 			{
@@ -161,7 +161,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 				onInputReleased(OctoKeys::GroundLeft);
 			}
 		}
-		if (event.axis == sf::Joystick::R) //RT
+		if (event.axis == sf::Joystick::Z) //RT
 		{
 			if (event.position > m_triggerLimit && !m_joystickRT)
 			{

@@ -21,7 +21,7 @@ DemoJungleABiome::DemoJungleABiome() :
 	m_tileStartColor(0, 76, 54),
 	m_tileEndColor(0, 124, 104),
 	m_waterLevel(10.f),
-	m_waterColor(56, 50, 72, 150),
+	m_waterColor(196, 235, 1, 150),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),

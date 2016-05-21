@@ -1040,8 +1040,8 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			first->setEndVertex(last);
 		else
 		{
-			m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount - 4u]);
-			m_tileShapes[x]->setEndVertex(&m_vertices[m_verticesCount - 4u]);
+			m_tileShapes[x]->setVertex(&m_vertices[0u]);
+			m_tileShapes[x]->setEndVertex(&m_vertices[0u]);
 		}
 	}
 
