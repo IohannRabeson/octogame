@@ -94,7 +94,8 @@ Game::Game(void) :
 	m_groundSoundTimeMax(sf::seconds(0.6f)),
 	m_slowTimeInfosCoef(1.f),
 	m_skipFrames(0u),
-	m_skipFramesMax(3u)
+	m_skipFramesMax(3u),
+	m_timerGroundBubbleMax(sf::seconds(2.5f))
 {
 	InputListener::addInputListener();
 
@@ -167,6 +168,7 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
+	m_groundBubble.setType(ABubble::Type::None);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -473,6 +475,25 @@ void Game::moveMap(sf::Time frameTime)
 			}
 		}
 	}
+
+	setBubbleGround();
+	m_timerGroundBubble += frameTime;
+	if (m_timerGroundBubble >= m_timerGroundBubbleMax)
+		m_groundBubble.setType(ABubble::Type::None);
+	m_groundBubble.setPosition(m_octo->getPosition() + sf::Vector2f(0.f, -100.f));
+	m_groundBubble.update(frameTime);
+}
+
+void	Game::setBubbleGround()
+{
+	if (Progress::getInstance().isOctoOnInstance())
+	{
+		std::wstring const & groundInfos = Progress::getInstance().getGroundInfos();
+	
+		m_groundBubble.setActive(true);
+		m_groundBubble.setup(groundInfos, sf::Color(138, 209, 231, 150), 20u, 1000.f);
+		m_groundBubble.setType(ABubble::Type::Think);
+	}
 }
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
@@ -482,10 +503,12 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::GroundLeft:
 			m_keyGroundLeft = true;
 			Progress::getInstance().moveMap();
+			m_timerGroundBubble = sf::Time::Zero;
 			break;
 		case OctoKeys::GroundRight:
 			m_keyGroundRight = true;
 			Progress::getInstance().moveMap();
+			m_timerGroundBubble = sf::Time::Zero;
 			break;
 		case OctoKeys::Infos:
 			m_slowTimeInfosCoef = 10.f;
@@ -533,5 +556,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
+	m_groundBubble.draw(render, states);
 	render.draw(*m_konami);
 }

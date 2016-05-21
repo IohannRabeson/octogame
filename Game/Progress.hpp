@@ -88,6 +88,11 @@ public:
 	std::size_t			getPortalsCount();
 	std::size_t			getPortalsMax();
 
+	void				setGroundInfos(std::size_t current, std::size_t max, std::wstring sign);
+	std::wstring const & getGroundInfos(void);
+	void				setIsOctoOnInstance(bool isInstance);
+	bool				isOctoOnInstance(void);
+
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
 
@@ -168,6 +173,8 @@ private:
 	std::vector<Level>								m_levels;
 
 	bool											m_isDemo;
+	std::wstring									m_groundInfos;
+	bool											m_isOctoOnInstance;
 };
 
 #endif

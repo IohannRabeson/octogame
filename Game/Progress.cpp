@@ -23,7 +23,8 @@ Progress::Progress() :
 	m_npcMax(0u),
 	m_portalsCount(0u),
 	m_portalsMax(0u),
-	m_isDemo(true)
+	m_isDemo(true),
+	m_isOctoOnInstance(false)
 {
 }
 
@@ -67,6 +68,7 @@ void	Progress::init()
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
 	m_validChallenge = false;
+	m_isOctoOnInstance = false;
 	loadNpc();
 	loadPortals();
 }
@@ -388,6 +390,35 @@ std::size_t	Progress::getPortalsMax()
 {
 	m_portalsMax = m_portals[m_data.lastDestination].size();
 	return m_portalsMax;
+}
+
+void		Progress::setGroundInfos(std::size_t current, std::size_t max, std::wstring sign)
+{
+	m_groundInfos.clear();
+	m_groundInfos = L"[LT] ";
+	for (std::size_t i = 0u; i < max; i++)
+	{
+		if (i == current)
+			m_groundInfos += sign;
+		else
+			m_groundInfos += L"-";
+	}
+	m_groundInfos += L" [RT]";
+}
+
+std::wstring const &Progress::getGroundInfos(void)
+{
+	return m_groundInfos;
+}
+
+void		Progress::setIsOctoOnInstance(bool isInstance)
+{
+	m_isOctoOnInstance = isInstance;
+}
+
+bool		Progress::isOctoOnInstance(void)
+{
+	return m_isOctoOnInstance;
 }
 
 void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)

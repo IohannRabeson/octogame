@@ -2,6 +2,7 @@
 #include "ABiome.hpp"
 #include "MapInstance.hpp"
 #include "FunctionsOffset.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Interpolations.hpp>
@@ -279,9 +280,11 @@ void Map::nextStep(void)
 			m_instances[i]->nextStep();
 			m_instanceIndex = i;
 			m_isOctoOnInstance = true;
+			Progress::getInstance().setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L">");
 			break;
 		}
 	}
+	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
 }
 
 void Map::previousStep(void)
@@ -295,9 +298,11 @@ void Map::previousStep(void)
 			m_instances[i]->previousStep();
 			m_instanceIndex = i;
 			m_isOctoOnInstance = true;
+			Progress::getInstance().setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L"<");
 			break;
 		}
 	}
+	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
 }
 
 void Map::setMapSurfaceGenerator(MapSurfaceGenerator mapSurface)
