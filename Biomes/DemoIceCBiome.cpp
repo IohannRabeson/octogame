@@ -134,8 +134,6 @@ DemoIceCBiome::DemoIceCBiome() :
 
 	//m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::DemoIceD);
-	m_gameObjects[200] = GameObjectType::Portal;
-	m_destinations.push_back(Level::Default);
 
 }
 
