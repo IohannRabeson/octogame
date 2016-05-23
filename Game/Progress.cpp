@@ -13,7 +13,7 @@
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
-	m_filename(octo::Application::getOptions().getValue<std::string>("path") + "save.osv"),
+	m_filename(octo::Application::getOptions().getPath() + "save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
 	m_reverseSprite(false),
@@ -38,13 +38,13 @@ Progress & Progress::getInstance()
 void	Progress::setup()
 {
 	m_newSave = false;
-	m_filename = octo::Application::getOptions().getValue<std::string>("path") + "save.osv";
+	m_filename = octo::Application::getOptions().getPath() + "save.osv";
 	m_data = data();
 }
 
 void	Progress::load(std::string const &filename)
 {
-	m_filename = octo::Application::getOptions().getValue<std::string>("path") + filename;
+	m_filename = octo::Application::getOptions().getPath() + filename;
 	std::ifstream filestream(m_filename, std::ios::in | std::ios::binary);
 	if(!filestream)
 	{

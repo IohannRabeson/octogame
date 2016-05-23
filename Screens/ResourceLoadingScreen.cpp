@@ -88,7 +88,7 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 
 void	ResourceLoadingScreen::start()
 {
-	pushLoading(octo::Application::getOptions().getValue<std::string>("path") + "default.pck");
+	pushLoading(octo::Application::getOptions().getPath() + "default.pck");
 	Progress & progress = Progress::getInstance();
 	progress.load("save.osv");
 	AbstractResourceLoadingState::start();
