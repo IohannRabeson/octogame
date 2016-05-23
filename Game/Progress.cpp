@@ -395,7 +395,10 @@ std::size_t	Progress::getPortalsMax()
 void		Progress::setGroundInfos(std::size_t current, std::size_t max, std::wstring sign)
 {
 	m_groundInfos.clear();
-	m_groundInfos = L"[LT] ";
+	if (isJoystick())
+		m_groundInfos = L"[LT] ";
+	else
+		m_groundInfos = L"[S] ";
 	for (std::size_t i = 0u; i < max; i++)
 	{
 		if (i == current)
@@ -403,7 +406,10 @@ void		Progress::setGroundInfos(std::size_t current, std::size_t max, std::wstrin
 		else
 			m_groundInfos += L"-";
 	}
-	m_groundInfos += L" [RT]";
+	if (isJoystick())
+		m_groundInfos += L" [RT]";
+	else
+		m_groundInfos += L" [F]";
 }
 
 std::wstring const &Progress::getGroundInfos(void)
