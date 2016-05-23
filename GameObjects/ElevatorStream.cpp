@@ -196,10 +196,10 @@ ElevatorStream::ElevatorStream() :
 	m_smoke.setVelocity(sf::Vector2f(0.f, -80.f));
 	m_smoke.setEmitTimeRange(0.2f, 0.3f);
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
-	m_smoke.setLifeTimeRange(0.6f, 0.8f);
-	m_smoke.setScaleFactor(10.f);
+	m_smoke.setLifeTimeRange(0.6f, 1.2f);
+	m_smoke.setScaleFactor(25.f);
 	m_smoke.setDispersion(80.f);
-	m_smoke.setColor(sf::Color(205, 205, 205, 200));
+	m_smoke.setColor(sf::Color(180, 180, 180, 220));
 }
 
 void	ElevatorStream::setupSprite(void)
