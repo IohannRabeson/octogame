@@ -54,12 +54,13 @@ void Concert::setPosition(sf::Vector2f const & position)
 		m_particles[i].setEmitter(position + sf::Vector2f(-20.f + i * 28.f, -325.f));
 }
 
-void Concert::draw(sf::RenderTarget &, sf::RenderStates) const
-{}
+void Concert::draw(sf::RenderTarget & render, sf::RenderStates) const
+{
+	render.draw(getSprite());
+}
 
 void Concert::drawFront(sf::RenderTarget & render, sf::RenderStates) const
 {
-	render.draw(getSprite());
 	for (std::size_t i = 0; i < m_particlesCount; i++)
 		m_particles[i].draw(render);
 }
