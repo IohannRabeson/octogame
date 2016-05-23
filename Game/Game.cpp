@@ -168,7 +168,14 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
+	setupBubbleGround();
+}
+
+void	Game::setupBubbleGround(void)
+{
+	m_colorGround = m_biomeManager.getCurrentBiome().getTileEndColor();
 	m_groundBubble.setType(ABubble::Type::None);
+	m_groundBubble.setActive(true);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -474,26 +481,28 @@ void Game::moveMap(sf::Time frameTime)
 				m_soundGeneration->setVolume(volume);
 			}
 		}
+		m_timerGroundBubble = sf::Time::Zero;
 	}
 
-	setBubbleGround();
-	m_timerGroundBubble += frameTime;
-	if (m_timerGroundBubble >= m_timerGroundBubbleMax)
-		m_groundBubble.setType(ABubble::Type::None);
-	m_groundBubble.setPosition(m_octo->getPosition() + sf::Vector2f(0.f, -100.f));
-	m_groundBubble.update(frameTime);
+	updateBubbleGround(frameTime);
 }
 
-void	Game::setBubbleGround()
+void	Game::updateBubbleGround(sf::Time frameTime)
 {
-	if (Progress::getInstance().isOctoOnInstance())
+	Progress & progress = Progress::getInstance();
+
+	m_timerGroundBubble += frameTime;
+	if (m_timerGroundBubble <= m_timerGroundBubbleMax && progress.isOctoOnInstance())
 	{
-		std::wstring const & groundInfos = Progress::getInstance().getGroundInfos();
-	
-		m_groundBubble.setActive(true);
-		m_groundBubble.setup(groundInfos, sf::Color(138, 209, 231, 150), 20u, 1000.f);
+		std::wstring const & groundInfos = progress.getGroundInfos();
+		m_groundBubble.setup(groundInfos, m_colorGround, 20u, 1000.f);
+		m_groundBubble.setPosition(m_octo->getPosition() + sf::Vector2f(0.f, -100.f));
+		m_groundBubble.update(frameTime);
+		//After update to avoid first update
 		m_groundBubble.setType(ABubble::Type::Think);
 	}
+	else
+		m_groundBubble.setType(ABubble::Type::None);
 }
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
@@ -503,12 +512,10 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::GroundLeft:
 			m_keyGroundLeft = true;
 			Progress::getInstance().moveMap();
-			m_timerGroundBubble = sf::Time::Zero;
 			break;
 		case OctoKeys::GroundRight:
 			m_keyGroundRight = true;
 			Progress::getInstance().moveMap();
-			m_timerGroundBubble = sf::Time::Zero;
 			break;
 		case OctoKeys::Infos:
 			m_slowTimeInfosCoef = 10.f;
