@@ -7,8 +7,7 @@
 #include <Application.hpp>
 #include <AudioManager.hpp>
 
-LanguageMenu::LanguageMenu(void) :
-	m_lastLanguage(0u)
+LanguageMenu::LanguageMenu(void)
 {
 }
 
@@ -18,19 +17,15 @@ void LanguageMenu::createMenus(void)
 	addMenu(AMenu::getText("options_language_english"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
 	setIndexCursor(static_cast<std::size_t>(Progress::getInstance().getLanguage()));
-	m_lastLanguage = static_cast<std::size_t>(Progress::getInstance().getLanguage());
 }
 
 void LanguageMenu::onSelection(void)
 {
-	if (getIndexCursor() != m_lastLanguage)
-	{
-		Progress & progress = Progress::getInstance();
-		progress.setLanguage(static_cast<Progress::Language>(getIndexCursor()));
-		TextManager::getInstance().loadTexts();
-		if (progress.changeLevel() == false)
-			progress.setNextDestination(progress.getLastDestination());
-	}
+	Progress & progress = Progress::getInstance();
+	progress.setLanguage(static_cast<Progress::Language>(getIndexCursor()));
+	TextManager::getInstance().loadTexts();
+	if (progress.changeLevel() == false)
+		progress.setNextDestination(progress.getLastDestination());
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();

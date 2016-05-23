@@ -88,7 +88,7 @@ void	Progress::save()
 void	Progress::saveToFile()
 {
 	std::ofstream filestream(m_filename, std::ios::out | std::ios::binary);
-	if(!filestream)
+	if (!filestream)
 		return;
 	filestream.write(reinterpret_cast<char*>(&m_data), sizeof(struct data));
 	filestream.close();
@@ -120,11 +120,11 @@ ResourceKey Progress::getTextFile(void) const
 {
 	if (isJoystick())
 	{
-		if (m_data.language == Language::en_keyboard)
+		if (m_data.language == Language::en)
 			return DIALOGS_EN_XBOX_TXT;
 		return DIALOGS_FR_XBOX_TXT;
 	}
-	if (m_data.language == Language::en_keyboard)
+	if (m_data.language == Language::en)
 		return DIALOGS_EN_KEYBOARD_TXT;
 	return DIALOGS_FR_KEYBOARD_TXT;
 }

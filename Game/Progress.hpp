@@ -13,8 +13,8 @@ class Progress
 public:
 	enum class Language : std::size_t
 	{
-		fr_keyboard,
-		en_keyboard
+		fr,
+		en
 	};
 
 	static Progress & getInstance(void);
@@ -107,7 +107,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::DemoIceA, 6u, 100u, true, true, Language::fr_keyboard)
+			data(0u, Level::DemoIceA, 6u, 100u, true, true, Language::fr)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
