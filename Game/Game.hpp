@@ -33,12 +33,12 @@ public:
 
 private:
 	PhysicsEngine &						m_physicsEngine;
+	MusicManager &						m_musicPlayer;
 	BiomeManager						m_biomeManager;
 	std::unique_ptr<SkyCycle>			m_skyCycle;
 	std::unique_ptr<SkyManager>			m_skyManager;
 	std::unique_ptr<GroundManager>		m_groundManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
-	std::unique_ptr<MusicManager>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<KonamiCode>			m_konami;
 	bool								m_keyGroundRight;
@@ -48,8 +48,17 @@ private:
 	sf::Time							m_groundSoundTime;
 	sf::Time							m_groundSoundTimeMax;
 	float								m_slowTimeInfosCoef;
+	std::size_t							m_skipFrames;
+	std::size_t							m_skipFramesMax;
+
+	BubbleText							m_groundBubble;
+	sf::Color							m_colorGround;
+	sf::Time							m_timerGroundBubble;
+	sf::Time							m_timerGroundBubbleMax;
 
 	void			moveMap(sf::Time frameTime);
+	void			setupBubbleGround(void);
+	void			updateBubbleGround(sf::Time frameTime);
 	bool			onInputPressed(InputListener::OctoKeys const & key);
 	bool			onInputReleased(InputListener::OctoKeys const & key);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);

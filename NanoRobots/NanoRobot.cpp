@@ -4,6 +4,7 @@
 #include "PhysicsEngine.hpp"
 #include "CircleShape.hpp"
 #include "Progress.hpp"
+#include "TextManager.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
@@ -32,17 +33,19 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_textIndex(0u),
 	m_infoSetup(false),
 	m_state(Idle),
+	m_isSpeaking(false),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(15.f)),
 	m_isTravelling(false),
 	m_engine(std::time(0)),
-	m_soundDistri(0u, 2u)
+	m_soundDistri(0u, 2u),
+	m_popUp(false),
+	m_popUpTimerMax(sf::seconds(5.f))
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	Progress & progress = Progress::getInstance();
 	InputListener::addInputListener();
 
-	m_texture = &resources.getTexture(STARGRADIENT_PNG);
+	m_texture = &resources.getTexture(DISTORSION_PNG);
 
 	m_box->setRadius(150.f);
 	m_box->setType(AShape::Type::e_trigger);
@@ -50,7 +53,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_box->setApplyGravity(false);
 
 	m_swarm.setPositionBehavior(m_positionBehavior);
-	m_swarm.setTexture(resources.getTexture(FIREFLY01_PNG));
+	m_swarm.setTexture(resources.getTexture(DISTORSION_PNG));
 	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(id));
@@ -66,22 +69,12 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_sprite.setAnimation(m_animation);
 	m_sprite.play();
 
-	std::map<std::string, std::vector<std::wstring>>	npcTexts;
-	std::wstringstream f(resources.getText(progress.getTextFile()).toWideString());
-	std::wstring wkey;
-	std::wstring line;
-	wchar_t delim = '=';
-	while (std::getline(f, wkey, delim))
-	{
-		std::getline(f, line);
-		std::string key(wkey.begin(), wkey.end());
-		npcTexts[key].push_back(line);
-	}
-	for (std::size_t i = 0u; i < npcTexts[id].size(); i++)
+	std::vector<std::wstring> const & nanoTexts = TextManager::getInstance().getTexts(id);
+	for (std::size_t i = 0u; i < nanoTexts.size(); i++)
 	{
 		std::unique_ptr<BubbleText> bubble;
 		bubble.reset(new BubbleText());
-		bubble->setup(npcTexts[id][i], sf::Color::White);
+		bubble->setup(nanoTexts[i], sf::Color::White);
 		bubble->setType(ABubble::Type::Speak);
 		bubble->setActive(true);
 		m_texts.push_back(std::move(bubble));
@@ -250,6 +243,33 @@ bool NanoRobot::isTravelling(void) const
 	return m_isTravelling;
 }
 
+void NanoRobot::popUpInfo(void)
+{
+	if (m_popUp == false)
+		m_popUp = true;
+}
+
+void NanoRobot::updatePopUpInfo(sf::Time frametime)
+{
+	if (m_popUp && m_popUpTimer <= m_popUpTimerMax)
+	{
+		if (m_popUpTimer == sf::Time::Zero)
+		{
+			m_infoBubble.setup(m_infoText, sf::Color::White, 30u, 600u);
+			m_infoBubble.setType(ABubble::Type::Speak);
+			m_infoBubble.setActive(true);
+		}
+		m_popUpTimer += frametime;
+	}
+	else if (m_infoSetup == false)
+	{
+		m_popUp = false;
+		m_popUpTimer = sf::Time::Zero;
+		m_infoBubble.setType(ABubble::Type::None);
+		m_infoBubble.setActive(false);
+	}
+}
+
 bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 {
 	switch (key)
@@ -366,9 +386,7 @@ void NanoRobot::update(sf::Time frametime)
 	m_particles.canEmit(false);
 	if (m_state == Speak)
 	{
-		m_timer += frametime;
-		if (m_timer > m_timerMax)
-			m_state = FollowOcto;
+		m_isSpeaking = true;
 	}
 	else if (m_state == Repair)
 	{
@@ -406,6 +424,16 @@ void NanoRobot::update(sf::Time frametime)
 		m_particles.canEmit(true);
 		m_particles.setPosition(target);
 	}
+
+	if (m_isSpeaking)
+	{
+		m_timer += frametime;
+		if (m_timer > m_timerMax)
+		{
+			m_isSpeaking = false;
+			m_state = FollowOcto;
+		}
+	}
 	playSoundRepair();
 	m_particles.update(frametime);
 
@@ -413,6 +441,7 @@ void NanoRobot::update(sf::Time frametime)
 	m_texts[m_textIndex]->update(frametime);
 	m_infoBubble.setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
 	m_infoBubble.update(frametime);
+	updatePopUpInfo(frametime);
 	m_glowingEffect.setPosition(pos);
 	m_sprite.setScale(m_glowingEffect.getNanoScale());
 	m_glowingEffect.update(frametime);
@@ -452,6 +481,6 @@ void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const
 {
 	if (m_state == Idle)
 		return;
-	if (m_state == Speak)
+	if (m_isSpeaking)
 		m_texts[m_textIndex]->draw(render);
 }

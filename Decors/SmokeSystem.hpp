@@ -22,6 +22,7 @@ public:
 	void			update(sf::Time frameTime);
 	void			setup(sf::Vector2f const & sizeParticle);
 	void			setPosition(sf::Vector2f const & position);
+	sf::Vector2f	getPositionEmitter(void) const;
 	void			setColor(sf::Color const & color);
 	void			setVelocity(sf::Vector2f const & direction);
 	void			setScaleFactor(float scaleFactor);

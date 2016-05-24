@@ -56,6 +56,8 @@ protected:
 
 	std::unique_ptr<BubbleText> const & getCurrentText(void) const { return m_texts[m_textIndex]; }
 	void setInfoText(std::wstring const & infoText) { m_infoText = infoText; }
+	void popUpInfo(void);
+	void updatePopUpInfo(sf::Time frameTime);
 
 	void setup(AGameObjectBase * gameObject);
 	void setUsePathLaser(bool usePathLaser);
@@ -104,6 +106,7 @@ private:
 	bool										m_infoSetup;
 
 	State										m_state;
+	bool										m_isSpeaking;
 	sf::Time									m_timer;
 	sf::Time									m_timerMax;
 
@@ -113,6 +116,9 @@ private:
 	std::mt19937								m_engine;
 	std::uniform_int_distribution<int>			m_soundDistri;
 	std::shared_ptr<sf::Sound>					m_sound;
+	bool										m_popUp;
+	sf::Time									m_popUpTimer;
+	sf::Time									m_popUpTimerMax;
 };
 
 #endif

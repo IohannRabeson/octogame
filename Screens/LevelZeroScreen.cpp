@@ -196,9 +196,9 @@ bool	LevelZeroScreen::onInputPressed(InputListener::OctoKeys const & key)
 			case OctoKeys::Down:
 				m_keyDown = true;
 				break;
-			case OctoKeys::Return:
-			case OctoKeys::Space:
-			case OctoKeys::Escape:
+			case OctoKeys::SelectMenu:
+			case OctoKeys::Jump:
+			case OctoKeys::Menu:
 			{
 				octo::StateManager &	states = octo::Application::getStateManager();
 				octo::AudioManager &	audio = octo::Application::getAudioManager();

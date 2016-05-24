@@ -9,8 +9,10 @@
 #include <limits>
 #include <iostream>
 
+std::size_t DefaultBiome::m_seedId = 110u;
+
 DefaultBiome::DefaultBiome() :
-	m_generator("random"),
+	m_generator(std::to_string(m_seedId++)),
 	m_name("Default"),
 	m_id(Level::Default),
 	m_seed("Default"),
@@ -135,7 +137,7 @@ DefaultBiome::DefaultBiome() :
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_gameObjects[23u] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
-	if (progress.getNanoRobotCount() >= 7 && progress.getLastDestination() == Level::IceA)
+	if ((progress.getNanoRobotCount() >= 7 && progress.getLastDestination() == Level::IceA) || (progress.getNanoRobotCount() >= 6 && progress.isDemo()))
 	{
 		m_destinations.push_back(Level::Default);
 		m_destinations.push_back(Level::Default);
@@ -146,8 +148,8 @@ DefaultBiome::DefaultBiome() :
 		m_destinations.push_back(progress.getLastDestination());
 	}
 
-	if (progress.getNanoRobotCount() >= 7)
-		m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
+	//if (progress.getNanoRobotCount() >= 7)
+	//	m_gameObjects[m_generator.randomInt(1u, m_mapSize.x -50u)] = GameObjectType::SpaceShip;
 }
 
 void			DefaultBiome::setup(std::size_t seed)

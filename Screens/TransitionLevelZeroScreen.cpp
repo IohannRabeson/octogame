@@ -141,10 +141,10 @@ bool TransitionLevelZeroScreen::onInputPressed(InputListener::OctoKeys const & k
 {
 	switch (key)
 	{
-		case OctoKeys::Return:
-		case OctoKeys::Space:
+		case OctoKeys::SelectMenu:
+		case OctoKeys::Jump:
 		case OctoKeys::Use:
-		case OctoKeys::Escape:
+		case OctoKeys::Menu:
 			{
 				m_index++;
 				m_time = sf::Time::Zero;

@@ -18,44 +18,23 @@
 #include "DefaultApplicationListener.hpp"
 // Ecran de jeu
 #include "StateTest.hpp"
-#include "FireflyTestScreen.hpp"
-#include "PaletteDemoScreen.hpp"
-#include "SpriteSheetDemoScreen.hpp"
-#include "AnimatedSpriteDemoScreen.hpp"
-#include "AudioDemoScreen.hpp"
-#include "EngineScreen.hpp"
-#include "PhysicsMapScreen.hpp"
-#include "LightningDemoScreen.hpp"
+#include "LogoScreen.hpp"
+#include "AnOctonautOdysseyScreen.hpp"
 #include "GameScreen.hpp"
-#include "DecorManagerDemoScreen.hpp"
-#include "ParticleDemoScreen.hpp"
-#include "FsmDemoScreen.hpp"
 #include "ResourceLoadingScreen.hpp"
 #include "QuitScreen.hpp"
-#include "ElevatorStreamDemo.hpp"
 #include "TransitionLevelScreen.hpp"
 #include "TransitionLevelZeroScreen.hpp"
 #include "TransitionScreen.hpp"
 #include "LevelZeroScreen.hpp"
 #include "DeathScreen.hpp"
 #include "AGameObject.hpp"
+#include "MusicManager.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
 	manager.registerState<StateTest>("test");
-	manager.registerState<FireflyTestScreen>("firefly");
-	manager.registerState<PaletteDemoScreen>("colors");
-	manager.registerState<SpriteSheetDemoScreen>("sprite_sheet");
-	manager.registerState<AnimatedSpriteDemoScreen>("animated_sprite");
-	manager.registerState<AudioDemoScreen>("audio");
 	manager.registerState<GameScreen>("game");
-	manager.registerState<EngineScreen>("engine");
-	manager.registerState<PhysicsMapScreen>("physics_map");
-	manager.registerState<LightningDemoScreen>("lightning");
-	manager.registerState<ParticleDemoScreen>("particles");
-	manager.registerState<DecorManagerDemoScreen>("decor");
-	manager.registerState<FsmDemoScreen>("tamagotchi");
-	manager.registerState<ElevatorStreamDemo>("elevator");
 	manager.registerState<ResourceLoadingScreen>("loading");
 	manager.registerState<QuitScreen>("quit");
 	manager.registerState<TransitionScreen>("transition");
@@ -63,6 +42,8 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<DeathScreen>("octo_death");
 	manager.registerState<LevelZeroScreen>("zero");
 	manager.registerState<TransitionLevelZeroScreen>("transitionLevelZero");
+	manager.registerState<LogoScreen>("logo");
+	manager.registerState<AnOctonautOdysseyScreen>("anoctonautodyssey");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 
@@ -88,6 +69,7 @@ int main(int argc, char **argv)
 		setupStateManager(states);
 		setupConsole(console);
 		octo::Application::run("loading");
+		MusicManager::deleteInstance();
 	}
 	catch (std::exception const& e)
 	{

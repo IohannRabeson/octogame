@@ -65,7 +65,7 @@ void MapInstance::nextStep(void)
 	m_depth++;
 	if (m_depth >= static_cast<int>(m_tiles.depth()))
 	{
-		if (Progress::getInstance().getNextDestination() != Level::JungleA)
+		if (Progress::getInstance().getNextDestination() != Level::JungleA && Progress::getInstance().getNextDestination() != Level::DemoJungleA)
 		{
 			m_depth = m_tiles.depth() - 1u;
 			playSound();
@@ -80,7 +80,7 @@ void MapInstance::previousStep(void)
 	m_depth--;
 	if (m_depth < 0)
 	{
-		if (Progress::getInstance().getNextDestination() != Level::JungleA)
+		if (Progress::getInstance().getNextDestination() != Level::JungleA && Progress::getInstance().getNextDestination() != Level::DemoJungleA)
 		{
 			m_depth = 0u;
 			playSound();

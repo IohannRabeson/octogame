@@ -13,19 +13,19 @@ InputListener::InputListener(void) :
 	// Unix
 	// Playstation
 	//m_inputs = { OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Right, OctoKeys::Use,
-	//OctoKeys::Left, OctoKeys::GroundRight, OctoKeys::GroundLeft, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::Space};
+	//OctoKeys::Left, OctoKeys::GroundRight, OctoKeys::GroundLeft, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::Jump};
 	// XBox 360
 #ifdef __linux__
-	m_inputs = { OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
-		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Return, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
+		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::None };
 	m_triggerLimit = 0.f;
 #elif _WIN32
-	m_inputs = { OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
-		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Return, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
+		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::None };
 	m_triggerLimit = 0.f;
 	//TODO check if the value is normalized by sfml, if value is not normalized, use 0.5f instead of 0.f
 #else // __APPLE__
-	m_inputs = { OctoKeys::Space, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::None, OctoKeys::None, OctoKeys::Escape, OctoKeys::None,
+	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::None, OctoKeys::None, OctoKeys::Menu, OctoKeys::None,
 		OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Left, OctoKeys::Right, OctoKeys::None,
 		OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None };
 	m_triggerLimit = 0.f;
@@ -67,7 +67,7 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 			onInputPressed(OctoKeys::Right);
 			break;
 		case sf::Keyboard::Space:
-			onInputPressed(OctoKeys::Space);
+			onInputPressed(OctoKeys::Jump);
 			break;
 		case sf::Keyboard::Up:
 			onInputPressed(OctoKeys::Up);
@@ -86,10 +86,10 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 			onInputPressed(OctoKeys::GroundLeft);
 			break;
 		case sf::Keyboard::Return:
-			onInputPressed(OctoKeys::Return);
+			onInputPressed(OctoKeys::SelectMenu);
 			break;
 		case sf::Keyboard::Escape:
-			onInputPressed(OctoKeys::Escape);
+			onInputPressed(OctoKeys::Menu);
 			break;
 		case sf::Keyboard::D:
 			onInputPressed(OctoKeys::Infos);
@@ -111,7 +111,7 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 			onInputReleased(OctoKeys::Right);
 			break;
 		case sf::Keyboard::Space:
-			onInputReleased(OctoKeys::Space);
+			onInputReleased(OctoKeys::Jump);
 			break;
 		case sf::Keyboard::Up:
 			onInputReleased(OctoKeys::Up);
@@ -129,10 +129,10 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 			onInputReleased(OctoKeys::GroundLeft);
 			break;
 		case sf::Keyboard::Return:
-			onInputReleased(OctoKeys::Return);
+			onInputReleased(OctoKeys::SelectMenu);
 			break;
 		case sf::Keyboard::Escape:
-			onInputReleased(OctoKeys::Escape);
+			onInputReleased(OctoKeys::Menu);
 			break;
 		case sf::Keyboard::D:
 			onInputReleased(OctoKeys::Infos);
@@ -148,7 +148,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
 	{
 		// If Xbox controller
-		if (event.axis == sf::Joystick::Z) //LT
+		if (event.axis == sf::Joystick::R) //LT
 		{
 			if (event.position > m_triggerLimit && !m_joystickLT)
 			{
@@ -161,7 +161,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 				onInputReleased(OctoKeys::GroundLeft);
 			}
 		}
-		if (event.axis == sf::Joystick::R) //RT
+		if (event.axis == sf::Joystick::Z) //RT
 		{
 			if (event.position > m_triggerLimit && !m_joystickRT)
 			{
@@ -230,8 +230,8 @@ void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 			case OctoKeys::Right:
 				onInputPressed(OctoKeys::Right);
 				break;
-			case OctoKeys::Space:
-				onInputPressed(OctoKeys::Space);
+			case OctoKeys::Jump:
+				onInputPressed(OctoKeys::Jump);
 				break;
 			case OctoKeys::Up:
 				onInputPressed(OctoKeys::Up);
@@ -252,8 +252,8 @@ void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 				onInputPressed(OctoKeys::SlowFall);
 				onInputPressed(OctoKeys::Up);
 				break;
-			case OctoKeys::Escape:
-				onInputPressed(OctoKeys::Escape);
+			case OctoKeys::Menu:
+				onInputPressed(OctoKeys::Menu);
 				break;
 			default:
 				break;
@@ -274,8 +274,8 @@ void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 			case OctoKeys::Right:
 				onInputReleased(OctoKeys::Right);
 				break;
-			case OctoKeys::Space:
-				onInputReleased(OctoKeys::Space);
+			case OctoKeys::Jump:
+				onInputReleased(OctoKeys::Jump);
 				break;
 			case OctoKeys::Up:
 				onInputReleased(OctoKeys::Up);
@@ -292,12 +292,15 @@ void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 			case OctoKeys::GroundLeft:
 				onInputReleased(OctoKeys::GroundLeft);
 				break;
+			case OctoKeys::SelectMenu:
+				onInputPressed(OctoKeys::SelectMenu);
+				break;
 			case OctoKeys::SlowFall:
 				onInputReleased(OctoKeys::SlowFall);
 				onInputReleased(OctoKeys::Up);
 				break;
-			case OctoKeys::Escape:
-				onInputReleased(OctoKeys::Escape);
+			case OctoKeys::Menu:
+				onInputReleased(OctoKeys::Menu);
 				break;
 			default:
 				break;

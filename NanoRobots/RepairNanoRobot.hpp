@@ -11,11 +11,6 @@ public:
 
 	virtual void update(sf::Time frameTime);
 	void		 updateInfo(void);
-
-private:
-	sf::Time	m_timer;
-	sf::Time	m_timerMax;
-
 };
 
 #endif

@@ -29,6 +29,13 @@ enum class Level : std::size_t
 	WaterA,
 	WaterB,
 	Default,
+	DemoIceA,
+	DemoIceB,
+	DemoIceC,
+	DemoIceD,
+	DemoDesertA,
+	DemoJungleA,
+	DemoWaterA,
 };
 
 class ABiome : public octo::NonCopyable
@@ -50,6 +57,8 @@ public:
 	virtual Level										getDestination() = 0;
 	virtual float										getWaterLevel() = 0;
 	virtual sf::Color									getWaterColor() = 0;
+	virtual bool										isDeadlyWater() { return false; };
+	virtual sf::Color									getColorMoveInstance() { return sf::Color::White; };
 	virtual float										getTransitionStep() { return 3.f; };
 
 	virtual std::map<std::size_t, std::string>			const & getInstances() = 0;

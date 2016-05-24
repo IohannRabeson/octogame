@@ -58,7 +58,8 @@ CharacterOcto::CharacterOcto() :
 	m_collisionElevatorEvent(false),
 	m_collisionSpaceShip(false),
 	m_repairShip(false),
-	m_inWater(false)
+	m_inWater(false),
+	m_isDeadlyWater(false)
 {
 	m_sound.reset(new OctoSound());
 	m_cameraMovement.reset(new CameraMovement);
@@ -98,6 +99,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_waterLevel = biome.getWaterLevel();
+	m_isDeadlyWater = biome.isDeadlyWater();
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Player));
@@ -790,7 +792,7 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot)
 
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
-	if (m_progress.canRepair() && m_keyAction && getPosition().y > 100.f)
+	if (m_progress.canRepair() && m_keyAction)
 	{
 		if (!elevator.isActivated())
 		{
@@ -1040,6 +1042,13 @@ void	CharacterOcto::inWater()
 			m_numberOfJump = 0;
 			emit = true;
 			m_inWater = true;
+			if (m_isDeadlyWater)
+			{
+				m_sprite.setNextEvent(Death);
+				m_helmetParticle.canEmit(true);
+				m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
+				Progress::getInstance().registerDeath(getPosition().x);
+			}
 		}
 		m_waterParticle.clear();
 	}
@@ -1304,7 +1313,7 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 			caseRight();
 			m_progress.walk();
 			break;
-		case OctoKeys::Space:
+		case OctoKeys::Jump:
 			caseSpace();
 			break;
 		case OctoKeys::SlowFall:
@@ -1345,7 +1354,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 		case OctoKeys::Right:
 			m_keyRight = false;
 			break;
-		case OctoKeys::Space:
+		case OctoKeys::Jump:
 			m_keySpace = false;
 			if (state == Jump || state == DoubleJump || state == StartJump)
 			{
@@ -1414,8 +1423,13 @@ bool	CharacterOcto::getDoubleJump()
 	return false;
 }
 
+float	CharacterOcto::getWaterLevel() const
+{
+	return m_waterLevel;
+}
 
 void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
 {
 	m_cameraMovement->collideZoomEvent(position);
 }
+

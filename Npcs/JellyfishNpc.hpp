@@ -21,11 +21,13 @@ protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
 	virtual void updatePhysics(void);
+	virtual void update(sf::Time frametime);
+	void		 computeBehavior(sf::Time frametime);
 
 private:
-	bool			m_startTimer;
-	bool			m_animationEnd;
-	sf::Vector2f	m_startPosition;
+	sf::Vector2f	m_octoPosition;
+	float			m_waterLevel;
+	bool			m_isMet;
 };
 
 #endif

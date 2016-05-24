@@ -8,7 +8,8 @@ GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 	m_textTimerMax(sf::seconds(5.f)),
 	m_canSpeak(false),
 	m_talkaboutshit(true),
-	m_state(Walk)
+	m_state(Walk),
+	m_timerDemoMax(sf::seconds(20.f))
 {
 	setup(this);
 	if (Progress::getInstance().getNanoRobotCount() == 0u)
@@ -35,6 +36,8 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 {
 	NanoRobot::update(frameTime);
 
+	if (!m_talkaboutshit)
+		m_timerDemo += frameTime;
 	switch (m_state)
 	{
 		case FirstSpawn:
@@ -61,7 +64,7 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			{
 				m_textTimer += frameTime;
 				m_canSpeak = false;
-				if (m_textTimer > m_textTimerMax)
+				if (m_textTimer > m_textTimerMax / 3.f)
 				{
 					m_canSpeak = true;
 					setTextIndex(1u);
@@ -81,7 +84,7 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			{
 				m_textTimer += frameTime;
 				m_canSpeak = false;
-				if (m_textTimer > m_textTimerMax)
+				if (m_textTimer > m_textTimerMax / 3.f)
 				{
 					m_canSpeak = true;
 					setTextIndex(2u);
@@ -121,7 +124,28 @@ void GroundTransformNanoRobot::updateInfo(void)
 {
 	Progress & progress = Progress::getInstance();
 
-	setInfoText(std::to_wstring(progress.getNpcCount()) + L"/" + std::to_wstring(progress.getNpcMax()) + L" Friends");
+	if (progress.getNextDestination() == Level::Default && progress.isDemo())
+	{
+		std::wstring infoText = L"La démo est terminée, tu es maintenant perdu dans une infinité de niveau aléatoires !";
+		setInfoText(infoText);
+		NanoRobot::popUpInfo();
+	}
+	else if (m_timerDemo >= m_timerDemoMax && progress.isDemo() && !m_talkaboutshit)
+	{
+		if (m_timerDemo >= m_timerDemoMax + sf::seconds(5.f))
+			m_timerDemo = sf::Time::Zero;
+		std::wstring infoText = L"Ce n'est qu'une démo!";
+		setInfoText(infoText);
+		NanoRobot::popUpInfo();
+	}
+	else
+	{
+		m_npcCount = progress.getNpcCount();
+		m_npcMax = progress.getNpcMax();
+		//TODO: Create text system to avoid multiple initialisation
+		std::wstring infoText = std::to_wstring(m_npcCount) + L"/" + std::to_wstring(m_npcMax) + L" Friends";// + AMenu::getText("menu_friends");
+		setInfoText(infoText);
+	}
 }
 
 void GroundTransformNanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates states) const

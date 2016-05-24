@@ -1,6 +1,23 @@
 #include "MusicManager.hpp"
 #include "Progress.hpp"
 
+std::unique_ptr<MusicManager> MusicManager::m_instance = nullptr;
+
+MusicManager & MusicManager::getInstance()
+{
+	if (m_instance == nullptr)
+	{
+		m_instance.reset(new MusicManager());
+	}
+	return *m_instance;
+}
+
+void MusicManager::deleteInstance()
+{
+	if (m_instance)
+		m_instance.reset(nullptr);
+}
+
 MusicManager::MusicManager() :
 	m_audio(octo::Application::getAudioManager()),
 	m_played(false),
@@ -22,40 +39,67 @@ MusicManager::MusicManager() :
 	musicKey[7] = SOUTERRAIN_LUGUBRE_OGG;
 	musicKey[8] = MENU_OPUS_I_OGG;
 
-	m_musicLevel.resize(8);
-	m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
-	m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
-	m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
-	m_musicLevel[3] = AreaMusic(Level::WaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
-	m_musicLevel[4] = AreaMusic(Level::Default,
-			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
-
-	m_musicLevel[5] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
-	m_musicLevel[6] = AreaMusic(Level::IceC, ICE_MUSIC_OGG, sf::FloatRect());
-	m_musicLevel[7] = AreaMusic(Level::IceD, ICE_MUSIC_D_OGG, sf::FloatRect());
-
-	m_music.resize(6);
-	// Montagne
-	m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
-			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
-	// oasis
-	//	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_OGG,
-	//			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1700.f), sf::Vector2f(2100.f, 900.f)));
-	// cedric challenge BALLE
-	m_music[1] = AreaMusic(Level::JungleA, ACTION_FAST_OGG,
-			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)), MusicNameArea::CedricChallenge);
-	// village
-	m_music[2] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
-			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
-	//concert BALLE
-	m_music[3] = AreaMusic(Level::WaterA, MENU_OPUS_II_REVERSE_OGG,
-			sf::FloatRect(sf::Vector2f(700.f * 16.f, -3400.f), sf::Vector2f(70.f * 16.f, 1350.f)), MusicNameArea::Concert);
-	//water
-	m_music[4] = AreaMusic(Level::WaterA, SOUTERRAIN_LUGUBRE_OGG,
-			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
-	//run
-	m_music[5] = AreaMusic(Level::WaterA, MENU_OPUS_I_OGG,
-			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
+	if (!Progress::getInstance().isDemo())
+	{
+		m_musicLevel.resize(8);
+		m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
+		m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
+		m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
+		m_musicLevel[3] = AreaMusic(Level::WaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
+		m_musicLevel[4] = AreaMusic(Level::Default,
+				musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
+	
+		m_musicLevel[5] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
+		m_musicLevel[6] = AreaMusic(Level::IceC, ICE_MUSIC_OGG, sf::FloatRect());
+		m_musicLevel[7] = AreaMusic(Level::IceD, ICE_MUSIC_D_OGG, sf::FloatRect());
+	
+	
+		m_music.resize(6);
+		// Montagne
+		m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
+				sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
+		// oasis
+		//	m_music[1] = AreaMusic(Level::LevelTwo, MENU_OPUS_III_OGG,
+		//			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1700.f), sf::Vector2f(2100.f, 900.f)));
+		// cedric challenge BALLE
+		m_music[1] = AreaMusic(Level::JungleA, ACTION_FAST_OGG,
+				sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)), MusicNameArea::CedricChallenge);
+		// village
+		m_music[2] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
+				sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
+		//concert BALLE
+		m_music[3] = AreaMusic(Level::WaterA, MENU_OPUS_II_REVERSE_OGG,
+				sf::FloatRect(sf::Vector2f(700.f * 16.f, -3400.f), sf::Vector2f(70.f * 16.f, 1350.f)), MusicNameArea::Concert);
+		//water
+		m_music[4] = AreaMusic(Level::WaterA, SOUTERRAIN_LUGUBRE_OGG,
+				sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
+		//run
+		m_music[5] = AreaMusic(Level::WaterA, MENU_OPUS_I_OGG,
+				sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
+	}
+	else
+	{
+		//Demo
+		m_musicLevel.resize(15);
+		m_musicLevel[0] = AreaMusic(Level::DemoIceA, SPACE_SHIP_OGG, sf::FloatRect());
+		m_musicLevel[1] = AreaMusic(Level::DemoIceB, ICE_MUSIC_OGG, sf::FloatRect());
+		m_musicLevel[2] = AreaMusic(Level::DemoIceC, ICE_MUSIC_OGG, sf::FloatRect());
+		m_musicLevel[3] = AreaMusic(Level::DemoIceD, ICE_MUSIC_D_OGG, sf::FloatRect());
+		m_musicLevel[4] = AreaMusic(Level::DemoDesertA, MENU_OPUS_II_OGG, sf::FloatRect());
+		m_musicLevel[5] = AreaMusic(Level::DemoJungleA, COLONISATION_OGG, sf::FloatRect());
+		m_musicLevel[6] = AreaMusic(Level::DemoWaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
+	
+		m_music.resize(3);
+		// cedric challenge BALLE demo
+		m_music[0] = AreaMusic(Level::DemoJungleA, ACTION_FAST_OGG,
+				sf::FloatRect(sf::Vector2f(25.f * 16.f, -2400.f), sf::Vector2f(530.f * 16.f, 2200.f)), MusicNameArea::CedricChallenge);
+		// village demo
+		m_music[1] = AreaMusic(Level::DemoJungleA, ACTION_SLOW_OGG,
+				sf::FloatRect(sf::Vector2f(590.f * 16.f, -2000.f), sf::Vector2f(220.f * 16.f, 2300.f)));
+		//concert BALLE
+		m_music[2] = AreaMusic(Level::DemoWaterA, MENU_OPUS_II_REVERSE_OGG,
+				sf::FloatRect(sf::Vector2f(700.f * 16.f, -3400.f), sf::Vector2f(70.f * 16.f, 1350.f)), MusicNameArea::Concert);
+	}
 }
 
 MusicManager::~MusicManager()
@@ -71,6 +115,12 @@ void	MusicManager::setup(ABiome & biome)
 	m_currentLevel = biome.getId();
 	m_mapSize = biome.getMapSizeFloat();
 	m_maxVolume = Progress::getInstance().getMusicVolume();
+	m_played = false;
+	m_timer = sf::Time::Zero;
+	m_newBalle = false;
+	m_musicToPlay = MusicNameArea::NoBalle;
+	m_durationBalle = sf::Time::Zero;
+
 }
 
 void	MusicManager::update(sf::Time frameTime, sf::Vector2f const & octoPos)

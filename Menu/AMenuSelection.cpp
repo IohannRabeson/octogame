@@ -104,7 +104,7 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 		{
 			case OctoKeys::Left:
 			case OctoKeys::Use:
-			case OctoKeys::Escape:
+			case OctoKeys::Menu:
 			{
 				setState(AMenu::State::Hide);
 				AMenu * backMenu = getBackMenu();
@@ -137,9 +137,9 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 						m_indexCursor += 1;
 					break;
 				}
-				case OctoKeys::Space:
+				case OctoKeys::Jump:
 				case OctoKeys::Right:
-				case OctoKeys::Return:
+				case OctoKeys::SelectMenu:
 				{
 					onSelection();
 					break;

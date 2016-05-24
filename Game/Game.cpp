@@ -10,6 +10,13 @@
 #include "JungleCBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
+#include "DemoIceABiome.hpp"
+#include "DemoIceBBiome.hpp"
+#include "DemoIceCBiome.hpp"
+#include "DemoIceDBiome.hpp"
+#include "DemoDesertABiome.hpp"
+#include "DemoJungleABiome.hpp"
+#include "DemoWaterABiome.hpp"
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "AShape.hpp"
@@ -72,11 +79,11 @@
 
 Game::Game(void) :
 	m_physicsEngine(PhysicsEngine::getInstance()),
+	m_musicPlayer(MusicManager::getInstance()),
 	m_skyCycle(nullptr),
 	m_skyManager(nullptr),
 	m_groundManager(nullptr),
 	m_parallaxScrolling(nullptr),
-	m_musicPlayer(nullptr),
 	m_octo(nullptr),
 	m_konami(nullptr),
 	m_keyGroundRight(false),
@@ -85,20 +92,36 @@ Game::Game(void) :
 	m_groundVolume(100.f),
 	m_groundSoundTime(sf::Time::Zero),
 	m_groundSoundTimeMax(sf::seconds(0.6f)),
-	m_slowTimeInfosCoef(1.f)
+	m_slowTimeInfosCoef(1.f),
+	m_skipFrames(0u),
+	m_skipFramesMax(3u),
+	m_timerGroundBubbleMax(sf::seconds(2.5f))
 {
 	InputListener::addInputListener();
 
-	m_biomeManager.registerBiome<IceABiome>(Level::IceA);
-	m_biomeManager.registerBiome<IceBBiome>(Level::IceB);
-	m_biomeManager.registerBiome<IceCBiome>(Level::IceC);
-	m_biomeManager.registerBiome<IceDBiome>(Level::IceD);
-	m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
-	m_biomeManager.registerBiome<DesertBBiome>(Level::DesertB);
-	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
-	m_biomeManager.registerBiome<JungleCBiome>(Level::JungleC);
-	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
-	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
+	if (!Progress::getInstance().isDemo())
+	{
+		m_biomeManager.registerBiome<IceABiome>(Level::IceA);
+		m_biomeManager.registerBiome<IceBBiome>(Level::IceB);
+		m_biomeManager.registerBiome<IceCBiome>(Level::IceC);
+		m_biomeManager.registerBiome<IceDBiome>(Level::IceD);
+		m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
+		m_biomeManager.registerBiome<DesertBBiome>(Level::DesertB);
+		m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
+		m_biomeManager.registerBiome<JungleCBiome>(Level::JungleC);
+		m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
+		m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
+	}
+	else
+	{
+		m_biomeManager.registerBiome<DemoIceABiome>(Level::DemoIceA);
+		m_biomeManager.registerBiome<DemoIceBBiome>(Level::DemoIceB);
+		m_biomeManager.registerBiome<DemoIceCBiome>(Level::DemoIceC);
+		m_biomeManager.registerBiome<DemoIceDBiome>(Level::DemoIceD);
+		m_biomeManager.registerBiome<DemoDesertABiome>(Level::DemoDesertA);
+		m_biomeManager.registerBiome<DemoJungleABiome>(Level::DemoJungleA);
+		m_biomeManager.registerBiome<DemoWaterABiome>(Level::DemoWaterA);
+	}
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
 }
 
@@ -130,12 +153,12 @@ void	Game::loadLevel(void)
 	m_physicsEngine.setGravity(sf::Vector2f(0.f, 600.f));
 	m_physicsEngine.setTileCollision(true);
 	m_physicsEngine.setContactListener(this);
+	m_musicPlayer.setup(m_biomeManager.getCurrentBiome());
 
 	m_skyCycle.reset(new SkyCycle());
 	m_skyManager.reset(new SkyManager());
 	m_groundManager.reset(new GroundManager());
 	m_parallaxScrolling.reset(new ParallaxScrolling());
-	m_musicPlayer.reset(new MusicManager());
 	m_octo.reset(new CharacterOcto());
 	m_konami.reset(new KonamiCode());
 
@@ -143,9 +166,16 @@ void	Game::loadLevel(void)
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_groundManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
-	m_musicPlayer->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
+	setupBubbleGround();
+}
+
+void	Game::setupBubbleGround(void)
+{
+	m_colorGround = m_biomeManager.getCurrentBiome().getTileEndColor();
+	m_groundBubble.setType(ABubble::Type::None);
+	m_groundBubble.setActive(true);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -155,9 +185,15 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	if (m_skipFrames < m_skipFramesMax)
+	{
+		m_skipFrames++;
+		frameTime = sf::seconds(0.016f);
+	}
 	frameTime = frameTime / m_slowTimeInfosCoef;
 	// update the PhysicsEngine as first
 	m_physicsEngine.update(frameTime.asSeconds());
+	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
 	m_octo->update(frameTime);
@@ -166,7 +202,6 @@ void	Game::update(sf::Time frameTime)
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
-	m_musicPlayer->update(frameTime, m_octo->getPosition());
 	m_konami->update(frameTime, m_octo->getPosition());
 	m_octo->startKonamiCode(m_konami->canStartEvent());
 }
@@ -202,7 +237,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			break;
 		case GameObjectType::Concert:
 			gameObjectCast<Concert>(gameObject)->startBalle();
-			m_musicPlayer->startBalleMusic(gameObjectCast<Concert>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::Concert);
+			m_musicPlayer.startBalleMusic(gameObjectCast<Concert>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::Concert);
 			break;
 		case GameObjectType::Bouibouik:
 			gameObjectCast<Bouibouik>(gameObject)->startBalle();
@@ -214,7 +249,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 		case GameObjectType::CedricNpc:
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			if (gameObjectCast<CedricNpc>(gameObject)->getId() == 0u)
-				m_musicPlayer->startBalleMusic(gameObjectCast<CedricNpc>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::CedricChallenge);
+				m_musicPlayer.startBalleMusic(gameObjectCast<CedricNpc>(gameObject)->getEffectDuration(), MusicManager::MusicNameArea::CedricChallenge);
 			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())
@@ -446,7 +481,28 @@ void Game::moveMap(sf::Time frameTime)
 				m_soundGeneration->setVolume(volume);
 			}
 		}
+		m_timerGroundBubble = sf::Time::Zero;
 	}
+
+	updateBubbleGround(frameTime);
+}
+
+void	Game::updateBubbleGround(sf::Time frameTime)
+{
+	Progress & progress = Progress::getInstance();
+
+	m_timerGroundBubble += frameTime;
+	if (m_timerGroundBubble <= m_timerGroundBubbleMax && progress.isOctoOnInstance())
+	{
+		std::wstring const & groundInfos = progress.getGroundInfos();
+		m_groundBubble.setup(groundInfos, m_colorGround, 20u, 1000.f);
+		m_groundBubble.setPosition(m_octo->getPosition() + sf::Vector2f(0.f, -100.f));
+		m_groundBubble.update(frameTime);
+		//After update to avoid first update
+		m_groundBubble.setType(ABubble::Type::Think);
+	}
+	else
+		m_groundBubble.setType(ABubble::Type::None);
 }
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
@@ -491,6 +547,8 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 
 void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
+	if (m_skipFrames < m_skipFramesMax)
+		return;
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
@@ -505,5 +563,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
+	m_groundBubble.draw(render, states);
 	render.draw(*m_konami);
 }

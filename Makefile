@@ -27,26 +27,16 @@ SRC = $(SRC_PHYSICS)									\
 	  Main/main.cpp										\
 
 SRC_STATES =	Screens/StateTest.cpp					\
-				Screens/FireflyTestScreen.cpp			\
-				Screens/PaletteDemoScreen.cpp			\
-				Screens/SpriteSheetDemoScreen.cpp		\
-				Screens/AnimatedSpriteDemoScreen.cpp	\
-				Screens/AudioDemoScreen.cpp				\
-				Screens/EngineScreen.cpp				\
-				Screens/PhysicsMapScreen.cpp			\
-				Screens/LightningDemoScreen.cpp			\
 				Screens/GameScreen.cpp					\
-				Screens/DecorManagerDemoScreen.cpp		\
-				Screens/ParticleDemoScreen.cpp			\
 				Screens/ResourceLoadingScreen.cpp		\
 				Screens/QuitScreen.cpp					\
-				Screens/FsmDemoScreen.cpp				\
-				Screens/ElevatorStreamDemo.cpp			\
 				Screens/TransitionLevelScreen.cpp		\
 				Screens/TransitionScreen.cpp			\
 				Screens/DeathScreen.cpp					\
 				Screens/TransitionLevelZeroScreen.cpp	\
 				Screens/LevelZeroScreen.cpp				\
+				Screens/LogoScreen.cpp					\
+				Screens/AnOctonautOdysseyScreen.cpp		\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
@@ -112,13 +102,14 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/SnowGirl2Npc.cpp					\
 				Npcs/StrangerGirlSnowNpc.cpp			\
 				Npcs/StrangerSnowNpc.cpp				\
-				Npcs/BirdBlueNpc.cpp				\
+				Npcs/BirdBlueNpc.cpp					\
 #Script AddNpc
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
 				Bubble/BubbleMenu.cpp					\
+				Bubble/TextManager.cpp					\
 
 SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/AMenuSelection.cpp					\
@@ -173,6 +164,13 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/JungleCBiome.cpp					\
 				Biomes/WaterABiome.cpp					\
 				Biomes/WaterBBiome.cpp					\
+				Biomes/DemoIceABiome.cpp				\
+				Biomes/DemoIceBBiome.cpp				\
+				Biomes/DemoIceCBiome.cpp				\
+				Biomes/DemoIceDBiome.cpp				\
+				Biomes/DemoDesertABiome.cpp				\
+				Biomes/DemoJungleABiome.cpp				\
+				Biomes/DemoWaterABiome.cpp				\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
