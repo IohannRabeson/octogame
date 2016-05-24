@@ -90,7 +90,7 @@ IceBBiome::IceBBiome() :
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
-	m_cloudColor(255, 255, 255, 200),
+	m_cloudColor(255, 255, 255, 100),
 
 	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),
@@ -216,10 +216,9 @@ std::map<std::size_t, std::string> const & IceBBiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> IceBBiome::getLayers()
 {
-	//sf::Vector2u const & mapSize = getMapSize();
+	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	/*
 	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
@@ -238,7 +237,6 @@ std::vector<ParallaxScrolling::ALayer *> IceBBiome::getLayers()
 			return noise.noise(x * 1.1f, y);
 		});
 	vector.push_back(layer);
-	*/
 	return vector;
 }
 
