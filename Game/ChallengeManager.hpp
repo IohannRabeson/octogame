@@ -21,7 +21,7 @@ public:
 	class Challenge
 	{
 	public:
-		Challenge(ResourceKey key, float duration);
+		Challenge(ResourceKey key, float challengeDuration, float glitchDuration);
 		virtual ~Challenge(void) = default;
 
 		virtual void update(sf::Time frametime) = 0;
@@ -38,6 +38,8 @@ public:
 		std::size_t		m_index;
 		sf::Time		m_timer;
 		sf::Time		m_duration;
+		sf::Time		m_challengeDuration;
+		sf::Time		m_glitchDuration;
 	};
 
 	~ChallengeManager(void) = default;

@@ -34,8 +34,10 @@ ChallengeManager::Challenge & ChallengeManager::getEffect(Effect effect)
 	return (*m_challenges[effect]);
 }
 
-ChallengeManager::Challenge::Challenge(ResourceKey key, float duration) :
-	m_duration(sf::seconds(duration))
+ChallengeManager::Challenge::Challenge(ResourceKey key, float challengeDuration, float glitchDuration) :
+	m_duration(sf::seconds(challengeDuration)),
+	m_challengeDuration(sf::seconds(challengeDuration)),
+	m_glitchDuration(sf::seconds(glitchDuration))
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
@@ -80,7 +82,7 @@ void ChallengeManager::Challenge::setDuration(float duration)
 }
 
 ChallengeDuplicate::ChallengeDuplicate(void) :
-	Challenge(VISION_TROUBLE_FRAG, 32.f)
+	Challenge(VISION_TROUBLE_FRAG, 32.f, 1.f)
 {}
 
 void ChallengeDuplicate::update(sf::Time frametime)
