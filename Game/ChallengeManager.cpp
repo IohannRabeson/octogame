@@ -1,5 +1,6 @@
 #include "ChallengeManager.hpp"
 #include "Progress.hpp"
+#include "ABiome.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
@@ -23,10 +24,18 @@ void ChallengeManager::reset(void)
 	m_challenges[Effect::Duplicate].reset(new ChallengeDuplicate());
 }
 
-void ChallengeManager::update(sf::Time frametime)
+void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
 {
+	//TODO manage random biome
 	for (auto & it : m_challenges)
+	{
+		//if biome.getType() == it.second->getBiomeType()
+		//if it.second.enable == false
+		//if progress.isChallengeDone(biome.getType())
+		//generate random to do glitch
+		it.second->validateArea(biome, position);
 		it.second->update(frametime);
+	}
 }
 
 ChallengeManager::Challenge & ChallengeManager::getEffect(Effect effect)
@@ -34,10 +43,12 @@ ChallengeManager::Challenge & ChallengeManager::getEffect(Effect effect)
 	return (*m_challenges[effect]);
 }
 
-ChallengeManager::Challenge::Challenge(ResourceKey key, float challengeDuration, float glitchDuration) :
+ChallengeManager::Challenge::Challenge(ResourceKey key, float challengeDuration, float glitchDuration, sf::FloatRect const & area) :
 	m_duration(sf::seconds(challengeDuration)),
 	m_challengeDuration(sf::seconds(challengeDuration)),
-	m_glitchDuration(sf::seconds(glitchDuration))
+	m_glitchDuration(sf::seconds(glitchDuration)),
+	m_area(area),
+	m_validArea(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
@@ -46,6 +57,16 @@ ChallengeManager::Challenge::Challenge(ResourceKey key, float challengeDuration,
 	octo::PostEffect postEffectShader;
 	postEffectShader.resetShader(&m_shader);
 	m_index = postEffect.addEffect(std::move(postEffectShader));
+}
+
+void ChallengeManager::Challenge::validateArea(ABiome & biome, sf::Vector2f const & position)
+{
+	sf::Vector2f pos = position;
+	while (pos.x < 0.f)
+		pos.x += biome.getMapSizeFloat().x;
+	while (pos.x > biome.getMapSizeFloat().x)
+		pos.x -= biome.getMapSizeFloat().x;
+	m_validArea = m_area.contains(pos);
 }
 
 void ChallengeManager::Challenge::start(void)
@@ -81,8 +102,9 @@ void ChallengeManager::Challenge::setDuration(float duration)
 	m_duration = sf::seconds(duration);
 }
 
+// Duplicate
 ChallengeDuplicate::ChallengeDuplicate(void) :
-	Challenge(VISION_TROUBLE_FRAG, 32.f, 1.f)
+	Challenge(VISION_TROUBLE_FRAG, 6.f, 1.f, sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(420.f * 16.f, 2200.f)))
 {}
 
 void ChallengeDuplicate::update(sf::Time frametime)
@@ -92,27 +114,53 @@ void ChallengeDuplicate::update(sf::Time frametime)
 	m_delay += frametime;
 	if (m_delay < sf::seconds(4.f))
 		return;
-	if (Progress::getInstance().canOpenDoubleJump() && !Progress::getInstance().canDoubleJump())
-		m_timer += frametime * 10.f;
-	else
+
+	// We are in the area and the challenge has started
+	if (m_validArea)
+	{
 		m_timer += frametime;
-	float length;
-	if (m_timer < m_duration / 2.f)
-		length = octo::linearInterpolation(0.f, 2.f, m_timer / (m_duration / 2.f));
-	else
-		length = octo::linearInterpolation(2.f, 0.f, (m_timer - m_duration / 2.f) / (m_duration / 2.f));
+	}
+	else // We leaved the area so the challenge is stopping
+	{
+		m_timer = std::min(m_timer, m_duration);
+		m_timer -= frametime * 10.f;
+		if (m_timer < sf::Time::Zero)
+		{
+			m_timer = sf::Time::Zero;
+			stop();
+			Progress::getInstance().endChallenge();
+		}
+	}
+	float length = octo::linearInterpolation(0.f, 60.f, std::min(m_timer, m_duration) / m_duration);
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
-	length *= 40.f;
 	float rotation = m_timer.asSeconds() / 5.f;
 	float x = std::cos(rotation * octo::Pi2 * 1.5f) * length / rect.width;
 	float y = std::sin(rotation * octo::Pi2 * 2.f) * length / rect.height;
 	float z = std::sin(rotation * octo::Pi2) * length / rect.height;
 	m_shader.setParameter("offset", x, y, z);
-	if (m_timer > m_duration)
-	{
-		m_timer = sf::Time::Zero;
-		m_delay = sf::Time::Zero;
-		stop();
-		Progress::getInstance().endChallenge();
-	}
+	//if (Progress::getInstance().canOpenDoubleJump() && !Progress::getInstance().canDoubleJump())
+	//	m_timer += frametime * 10.f;
+	//else
+	//	m_timer += frametime;
+	//float length;
+	//if (m_timer < m_duration / 2.f)
+	//	length = octo::linearInterpolation(0.f, 2.f, m_timer / (m_duration / 2.f));
+	//else
+	//	length = octo::linearInterpolation(2.f, 0.f, (m_timer - m_duration / 2.f) / (m_duration / 2.f));
+	//sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+	//length *= 40.f;
+	//float rotation = m_timer.asSeconds() / 5.f;
+	//float x = std::cos(rotation * octo::Pi2 * 1.5f) * length / rect.width;
+	//float y = std::sin(rotation * octo::Pi2 * 2.f) * length / rect.height;
+	//float z = std::sin(rotation * octo::Pi2) * length / rect.height;
+	//m_shader.setParameter("offset", x, y, z);
+	//if (m_timer > m_duration)
+	//{
+	//	m_timer = sf::Time::Zero;
+	//	m_delay = sf::Time::Zero;
+	//	stop();
+	//	Progress::getInstance().endChallenge();
+	//}
 }
+
+// Pixelate

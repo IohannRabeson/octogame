@@ -7,6 +7,8 @@
 # include <memory>
 # include "ResourceDefinitions.hpp"
 
+class ABiome;
+
 class ChallengeManager
 {
 public:
@@ -21,7 +23,7 @@ public:
 	class Challenge
 	{
 	public:
-		Challenge(ResourceKey key, float challengeDuration, float glitchDuration);
+		Challenge(ResourceKey key, float challengeDuration, float glitchDuration, sf::FloatRect const & area);
 		virtual ~Challenge(void) = default;
 
 		virtual void update(sf::Time frametime) = 0;
@@ -31,6 +33,7 @@ public:
 		bool isFinished(void) const;
 		sf::Time getDuration(void) const;
 		void setDuration(float duration);
+		void validateArea(ABiome & biome, sf::Vector2f const & position);
 		// reminissence
 
 	protected:
@@ -40,6 +43,8 @@ public:
 		sf::Time		m_duration;
 		sf::Time		m_challengeDuration;
 		sf::Time		m_glitchDuration;
+		sf::FloatRect	m_area;
+		bool			m_validArea;
 	};
 
 	~ChallengeManager(void) = default;
@@ -48,7 +53,7 @@ public:
 	Challenge & getEffect(Effect effect);
 
 	void reset(void);
-	void update(sf::Time frametime);
+	void update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime);
 
 private:
 	static std::unique_ptr<ChallengeManager>		m_instance;

@@ -43,7 +43,7 @@ MusicManager::MusicManager() :
 	//			sf::FloatRect(sf::Vector2f(665.f * 16.f, -1700.f), sf::Vector2f(2100.f, 900.f)));
 	// cedric challenge BALLE
 	m_music[1] = AreaMusic(Level::JungleA, ACTION_FAST_OGG,
-			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(530.f * 16.f, 2200.f)), MusicNameArea::CedricChallenge);
+			sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(420.f * 16.f, 2200.f)), MusicNameArea::CedricChallenge);
 	// village
 	m_music[2] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
 			sf::FloatRect(sf::Vector2f(750.f * 16.f, -3500.f), sf::Vector2f(235.f * 16.f, 2300.f)));
