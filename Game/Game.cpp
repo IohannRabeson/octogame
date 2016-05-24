@@ -62,6 +62,7 @@
 #include "WellKeeperNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
+#include "ChallengeManager.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -121,6 +122,7 @@ void	Game::loadLevel(void)
 
 	// Reset last values
 	postEffect.removeEffects();
+	ChallengeManager::getInstance().reset();
 	audio.reset();
 	// Reset PhysycsEngine
 	octo::Application::getCamera().setCenter(startPosition - sf::Vector2f(0.f, 200.f));
@@ -169,6 +171,7 @@ void	Game::update(sf::Time frameTime)
 	m_musicPlayer->update(frameTime, m_octo->getPosition());
 	m_konami->update(frameTime, m_octo->getPosition());
 	m_octo->startKonamiCode(m_konami->canStartEvent());
+	ChallengeManager::getInstance().update(frameTime);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)

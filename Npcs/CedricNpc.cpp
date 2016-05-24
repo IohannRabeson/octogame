@@ -3,6 +3,7 @@
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
 #include "Progress.hpp"
+#include "ChallengeManager.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
@@ -16,11 +17,6 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	ANpc(CEDRIC_OSS),
 	m_skyCycle(skyCycle),
 	m_prevDayState(skyCycle.isDay()),
-	m_shaderIndex(0u),
-	m_startBalle(false),
-	m_timer(sf::Time::Zero),
-	m_effectDuration(sf::seconds(32.f)),
-	m_delayMax(sf::seconds(4.f)),
 	m_id(Id++)
 {
 	setSize(sf::Vector2f(200.f, 100.f));
@@ -32,13 +28,6 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::CedricNpc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
 
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
-
-	m_shader.loadFromMemory(resources.getText(VISION_TROUBLE_FRAG), sf::Shader::Fragment);
-	octo::PostEffect postEffectShader;
-	postEffectShader.resetShader(&m_shader);
-	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
 	if (m_id == 0u)
 		setCurrentText(0u);
 	else
@@ -237,9 +226,7 @@ void CedricNpc::startBalle(void)
 {
 	if (m_id == 0u)
 	{
-		octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-		postEffect.enableEffect(m_shaderIndex, true);
-		m_startBalle = true;
+		ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).start();
 		Progress::getInstance().startChallenge();
 	}
 	else
@@ -249,6 +236,11 @@ void CedricNpc::startBalle(void)
 		if (Progress::getInstance().canOpenDoubleJump())
 			setCurrentText(3u);
 	}
+}
+
+sf::Time CedricNpc::getEffectDuration(void) const
+{
+	return ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).getDuration();
 }
 
 void CedricNpc::update(sf::Time frametime)
@@ -267,38 +259,8 @@ void CedricNpc::update(sf::Time frametime)
 
 	updateText(frametime);
 
-	if (m_startBalle)
-	{
-		m_delay += frametime;
-		if (m_delay >= m_delayMax)
-		{
-			setCurrentText(1u);
-			if (Progress::getInstance().canOpenDoubleJump() && !Progress::getInstance().canDoubleJump())
-				m_timer += frametime * 10.f;
-			else
-				m_timer += frametime;
-			float length;
-			if (m_timer < m_effectDuration / 2.f)
-				length = octo::linearInterpolation(0.f, 2.f, m_timer / (m_effectDuration / 2.f));
-			else
-				length = octo::linearInterpolation(2.f, 0.f, (m_timer - m_effectDuration / 2.f) / (m_effectDuration / 2.f));
-			sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
-			length *= 40.f;
-			float rotation = m_timer.asSeconds() / 5.f;
-			float x = std::cos(rotation * octo::Pi2 * 1.5f) * length / rect.width;
-			float y = std::sin(rotation * octo::Pi2 * 2.f) * length / rect.height;
-			float z = std::sin(rotation * octo::Pi2) * length / rect.height;
-			m_shader.setParameter("offset", x, y, z);
-			if (m_timer > m_effectDuration)
-			{
-				m_timer = sf::Time::Zero;
-				octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-				postEffect.enableEffect(m_shaderIndex, false);
-				m_startBalle = false;
-				Progress::getInstance().endChallenge();
-			}
-		}
-	}
+	if (m_id == 0u && ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable())
+		setCurrentText(1u);
 	resetVariables();
 }
 
