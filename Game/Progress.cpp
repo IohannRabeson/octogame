@@ -23,7 +23,7 @@ Progress::Progress() :
 	m_npcMax(0u),
 	m_portalsCount(0u),
 	m_portalsMax(0u),
-	m_isDemo(true),
+	m_isDemo(false),
 	m_isOctoOnInstance(false)
 {
 }
