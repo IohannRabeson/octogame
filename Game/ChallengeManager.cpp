@@ -82,7 +82,6 @@ void ChallengeDuplicate::Challenge::update(sf::Time frametime)
 			m_timer = sf::Time::Zero;
 			m_delay = sf::Time::Zero;
 			stop();
-			//Progress::getInstance().endChallenge();
 		}
 	}
 	updateShader(frametime);

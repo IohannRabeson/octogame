@@ -51,7 +51,7 @@ void Cage::update(sf::Time frameTime)
 	InstanceDecor::update(frameTime);
 	m_spriteFront.update(frameTime);
 
-	if (!m_isOpen) //TODO add the challenge validated from progress
+	if (!m_isOpen && Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)) //TODO add the challenge validated from progress
 	{
 		m_spriteFront.setAnimation(m_animationFrontOpen);
 		getSprite().play();

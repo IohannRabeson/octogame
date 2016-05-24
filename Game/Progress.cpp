@@ -168,6 +168,16 @@ Level	Progress::getLastDestination(void) const
 	return m_data.lastDestination;
 }
 
+void	Progress::validateChallenge(ChallengeManager::Effect effect)
+{
+	m_data.validateChallenge |= (1u << static_cast<int>(effect));
+}
+
+bool	Progress::isValidateChallenge(ChallengeManager::Effect effect)
+{
+	return m_data.validateChallenge & (1u << static_cast<int>(effect));
+}
+
 bool	Progress::canMoveMap()
 {
 	return (m_data.nanoRobotCount > 0);

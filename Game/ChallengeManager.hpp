@@ -17,7 +17,7 @@ public:
 		Pixelate = 0u,
 		Persistence = 1u,
 		Duplicate = 2u,
-		Displacement = 3u
+		Displacement = 4u
 	};
 
 	class Challenge

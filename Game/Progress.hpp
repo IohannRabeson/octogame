@@ -3,6 +3,7 @@
 # include "GroundManager.hpp"
 # include "ResourceDefinitions.hpp"
 # include "ABiome.hpp"
+# include "ChallengeManager.hpp"
 # include <SFML/System/Vector2.hpp>
 # include <string>
 # include <memory>
@@ -53,6 +54,9 @@ public:
 	float				getMusicVolume() const { return m_data.musicVol; }
 	void				setMusicVolume(float volume) { m_data.musicVol = volume; }
 	void				setSoundVolume(float volume) { m_data.soundVol = volume; }
+
+	void				validateChallenge(ChallengeManager::Effect effect);
+	bool				isValidateChallenge(ChallengeManager::Effect effect);
 
 	bool				canMoveMap();
 	bool				canRepair();
@@ -123,6 +127,7 @@ private:
 			canOpenDoubleJump(false)
 		{}
 
+		std::size_t		validateChallenge;
 		std::size_t		nanoRobotCount;
 		Level			nextDestination;
 		Level			lastDestination;
