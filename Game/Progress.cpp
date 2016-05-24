@@ -13,7 +13,7 @@
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
-	m_filename(octo::Application::getOptions().getValue<std::string>("path") + "save.osv"),
+	m_filename(octo::Application::getOptions().getPath() + "save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
 	m_reverseSprite(false),
@@ -22,7 +22,9 @@ Progress::Progress() :
 	m_npcCount(0u),
 	m_npcMax(0u),
 	m_portalsCount(0u),
-	m_portalsMax(0u)
+	m_portalsMax(0u),
+	m_isDemo(false),
+	m_isOctoOnInstance(false)
 {
 }
 
@@ -38,13 +40,13 @@ Progress & Progress::getInstance()
 void	Progress::setup()
 {
 	m_newSave = false;
-	m_filename = octo::Application::getOptions().getValue<std::string>("path") + "save.osv";
+	m_filename = octo::Application::getOptions().getPath() + "save.osv";
 	m_data = data();
 }
 
 void	Progress::load(std::string const &filename)
 {
-	m_filename = octo::Application::getOptions().getValue<std::string>("path") + filename;
+	m_filename = octo::Application::getOptions().getPath() + filename;
 	std::ifstream filestream(m_filename, std::ios::in | std::ios::binary);
 	if(!filestream)
 	{
@@ -66,6 +68,7 @@ void	Progress::init()
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
 	m_validChallenge = false;
+	m_isOctoOnInstance = false;
 	loadNpc();
 	loadPortals();
 }
@@ -85,7 +88,7 @@ void	Progress::save()
 void	Progress::saveToFile()
 {
 	std::ofstream filestream(m_filename, std::ios::out | std::ios::binary);
-	if(!filestream)
+	if (!filestream)
 		return;
 	filestream.write(reinterpret_cast<char*>(&m_data), sizeof(struct data));
 	filestream.close();
@@ -115,9 +118,21 @@ Progress::Language Progress::getLanguage(void) const
 
 ResourceKey Progress::getTextFile(void) const
 {
-	if (m_data.language == Language::en_keyboard)
+	if (isJoystick())
+	{
+		if (m_data.language == Language::en)
+			return DIALOGS_EN_XBOX_TXT;
+		return DIALOGS_FR_XBOX_TXT;
+	}
+	if (m_data.language == Language::en)
 		return DIALOGS_EN_KEYBOARD_TXT;
 	return DIALOGS_FR_KEYBOARD_TXT;
+}
+
+bool	Progress::isJoystick(void) const
+{
+	sf::Joystick::update();
+	return sf::Joystick::isConnected(0);
 }
 
 void	Progress::addNanoRobot()
@@ -209,6 +224,11 @@ bool	Progress::changeLevel() const
 void	Progress::levelChanged()
 {
 	m_changeLevel = false;
+}
+
+bool	Progress::isDemo() const
+{
+	return m_isDemo;
 }
 
 void	Progress::registerDeath(float deathPosX)
@@ -370,6 +390,41 @@ std::size_t	Progress::getPortalsMax()
 {
 	m_portalsMax = m_portals[m_data.lastDestination].size();
 	return m_portalsMax;
+}
+
+void		Progress::setGroundInfos(std::size_t current, std::size_t max, std::wstring sign)
+{
+	m_groundInfos.clear();
+	if (isJoystick())
+		m_groundInfos = L"[LT] ";
+	else
+		m_groundInfos = L"[S] ";
+	for (std::size_t i = 0u; i < max; i++)
+	{
+		if (i == current)
+			m_groundInfos += sign;
+		else
+			m_groundInfos += L"-";
+	}
+	if (isJoystick())
+		m_groundInfos += L" [RT]";
+	else
+		m_groundInfos += L" [F]";
+}
+
+std::wstring const &Progress::getGroundInfos(void)
+{
+	return m_groundInfos;
+}
+
+void		Progress::setIsOctoOnInstance(bool isInstance)
+{
+	m_isOctoOnInstance = isInstance;
+}
+
+bool		Progress::isOctoOnInstance(void)
+{
+	return m_isOctoOnInstance;
 }
 
 void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)

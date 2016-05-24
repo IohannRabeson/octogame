@@ -74,6 +74,7 @@ public:
 	sf::Vector2f const &	getPosition() const;
 	sf::Vector2f			getBubblePosition() const;
 	bool					getDoubleJump(void);
+	float					getWaterLevel(void) const;
 	void					setStartPosition(sf::Vector2f const & position);
 	void					giveNanoRobot(NanoRobot * robot);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot);
@@ -188,6 +189,7 @@ private:
 	bool						m_collisionSpaceShip;
 	bool						m_repairShip;
 	bool						m_inWater;
+	bool						m_isDeadlyWater;
 	Events						m_prevEvent;
 };
 

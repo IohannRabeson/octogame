@@ -6,6 +6,7 @@
 # include <SFML/System/Time.hpp>
 # include <map>
 # include <cwchar>
+# include <string>
 
 class AMenu : public sf::Drawable,
 			  public sf::Transformable
@@ -29,14 +30,12 @@ public:
 	void								setState(State state);
 	State								getState(void) const;
 	AMenu *								getBackMenu(void);
-	void								initTexts(void);
 	std::wstring const &				getText(std::string const & text);
-
-	std::map<std::string, std::wstring>	m_menuTexts;
 
 private:
 	State								m_currentState;
 	AMenu *								m_backMenu;
+	std::wstring						m_missingText;
 };
 
 #endif

@@ -3,6 +3,7 @@
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
 #include "RandomGenerator.hpp"
+#include "CharacterOcto.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -13,7 +14,8 @@ BirdNpc::BirdNpc(ResourceKey const & npcId) :
 	m_animationEnd(false),
 	m_generator("random"),
 	m_speedLimit(m_generator.randomFloat(30.f, 150.f)),
-	m_flySpeed(sf::Vector2f(m_generator.randomFloat(200.f, 400.f), m_generator.randomFloat(-100.f, -300.f)))
+	m_flySpeed(sf::Vector2f(m_generator.randomFloat(200.f, 400.f), m_generator.randomFloat(-100.f, -300.f))),
+	m_timerDoubleJumpMax(sf::seconds(2.5f))
 {
 	setSize(sf::Vector2f(10.f, 45.f));
 	setOrigin(sf::Vector2f(90.f, 27.f));
@@ -48,10 +50,10 @@ void BirdNpc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	getSpecial2Animation().setFrames({
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(m_generator.randomFloat(0.5f, 2.5f)), {6u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(1.f), {9u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
 			});
@@ -130,9 +132,28 @@ void BirdNpc::updateState(void)
 		sprite.setNextEvent(Special2);
 }
 
-void BirdNpc::update(sf::Time frametime)
+void BirdNpc::caseDoubleJump(sf::Time frametime)
 {
-	addTimer(frametime);
+	if ((ANpc::isDoubleJump() || m_timerDoubleJump != sf::Time::Zero))
+	{
+		if (m_timerDoubleJump == sf::Time::Zero)
+		{
+			if (m_octoPosition.y < m_startPosition.y)
+				m_isDoubleJumpTic = true;
+			m_nextPosition = m_startPosition + sf::Vector2f(0.f, 150.f);
+		}
+		m_timerDoubleJump += frametime;
+		if (m_isDoubleJumpTic)
+			m_startPosition.y = octo::cosinusInterpolation(m_startPosition.y, m_nextPosition.y, m_timerDoubleJump / m_timerDoubleJumpMax);
+		if (m_timerDoubleJump >= m_timerDoubleJumpMax && !ANpc::isDoubleJump())
+			m_timerDoubleJump = sf::Time::Zero;
+	}
+	else
+		m_isDoubleJumpTic = false;
+}
+
+void BirdNpc::computeFlight(sf::Time frametime)
+{
 	octo::CharacterSprite & sprite = getSprite();
 	octo::Camera const & camera = octo::Application::getCamera();
 	sf::Vector2f cameraSize = camera.getSize();
@@ -142,18 +163,29 @@ void BirdNpc::update(sf::Time frametime)
 
 	if (sprite.getCurrentEvent() == Special2 || sprite.getCurrentEvent() == Special1)
 	{
-		m_startPosition += m_flySpeed  * frametime.asSeconds();
+		m_startPosition.x += m_flySpeed.x  * frametime.asSeconds();
 		if (m_startPosition.x >= rightLimit)
 			m_startPosition.x = leftLimit;
 		else if (m_startPosition.x <= leftLimit)
 			m_startPosition.x = rightLimit;
 		if (m_flySpeed.y < 0.f)
+		{
 			m_flySpeed.y += frametime.asSeconds() * m_speedLimit;
+			m_startPosition.y += m_flySpeed.y  * frametime.asSeconds();
+		}
 	}
+}
+
+void BirdNpc::update(sf::Time frametime)
+{
+	addTimer(frametime);
+	computeFlight(frametime);
+	caseDoubleJump(frametime);
 
 	updateState();
 	updatePhysics();
 
+	octo::CharacterSprite & sprite = getSprite();
 	sf::Vector2f const & center = getBox()->getRenderPosition();
 	sprite.update(frametime);
 	sprite.setPosition(center);
@@ -177,6 +209,24 @@ void BirdNpc::updatePhysics(void)
 void BirdNpc::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
+	m_octoPosition = octo->getPosition();
+	if (m_octoPosition.y > m_startPosition.y && m_flySpeed.y > 0.f)
+		m_flySpeed.y = m_generator.randomFloat(-80.f, -160.f);
+	if (m_octoPosition.x > m_startPosition.x && m_flySpeed.x > 0.f && m_generator.randomBool(0.01f))
+	{
+		octo::CharacterSprite & sprite = getSprite();
+		sprite.setOrigin(getOrigin().x, getOrigin().y);
+		sprite.setScale(-getScale(), getScale());
+		m_flySpeed.x = -m_flySpeed.x;
+	}
+	else if (m_octoPosition.x < m_startPosition.x && m_flySpeed.x < 0.f && m_generator.randomBool(0.01f))
+	{
+		octo::CharacterSprite & sprite = getSprite();
+		sprite.setOrigin(getOrigin().x, getOrigin().y);
+		sprite.setScale(getScale(), getScale());
+		m_flySpeed.x = -m_flySpeed.x;
+	}
+
 }
 
 void BirdNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const

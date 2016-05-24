@@ -13,8 +13,8 @@ class Progress
 public:
 	enum class Language : std::size_t
 	{
-		fr_keyboard,
-		en_keyboard
+		fr,
+		en
 	};
 
 	static Progress & getInstance(void);
@@ -22,6 +22,7 @@ public:
 	void				setLanguage(Language language);
 	Progress::Language	getLanguage(void) const;
 	ResourceKey			getTextFile(void) const;
+	bool				isJoystick(void) const;
 
 	void				addNanoRobot();
 	void				removeNanoRobot() { m_data.nanoRobotCount--; }
@@ -68,6 +69,7 @@ public:
 	bool				canUseWaterJump();
 	bool				changeLevel() const;
 	void				levelChanged();
+	bool				isDemo() const;
 
 	void				registerLevel(Level const & biome);
 	std::vector<Level> const & getRegisteredLevels(void) const;
@@ -86,6 +88,11 @@ public:
 	std::size_t			getPortalsCount();
 	std::size_t			getPortalsMax();
 
+	void				setGroundInfos(std::size_t current, std::size_t max, std::wstring sign);
+	std::wstring const & getGroundInfos(void);
+	void				setIsOctoOnInstance(bool isInstance);
+	bool				isOctoOnInstance(void);
+
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
 
@@ -100,7 +107,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::IceA, 6u, 100u, true, true, Language::fr_keyboard)
+			data(0u, Level::IceA, 6u, 100u, true, true, Language::fr)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
@@ -164,6 +171,10 @@ private:
 	std::size_t										m_portalsCount;
 	std::size_t										m_portalsMax;
 	std::vector<Level>								m_levels;
+
+	bool											m_isDemo;
+	std::wstring									m_groundInfos;
+	bool											m_isOctoOnInstance;
 };
 
 #endif

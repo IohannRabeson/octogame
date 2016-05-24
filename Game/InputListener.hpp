@@ -7,15 +7,16 @@ class InputListener : public octo::DefaultKeyboardListener,
 					  public octo::DefaultJoystickListener
 {
 public:
+	//TODO: Rename those keys
 	enum class OctoKeys : std::size_t
 	{
 		Left = 0,
 		Right = 1,
-		Space = 2,
+		Jump = 2,
 		Up = 3,
 		Down = 4,
-		Escape = 5,
-		Return = 6,
+		Menu = 5,
+		SelectMenu = 6,
 		Use = 7,
 		SlowFall = 8,
 		GroundLeft = 9,

@@ -1,5 +1,6 @@
 #include "DecorAnimator.hpp"
 #include "RandomGenerator.hpp"
+#include <Interpolations.hpp>
 
 DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, float delta, float start) :
 	m_currentState(State::Grow),
@@ -36,9 +37,9 @@ void DecorAnimator::computeBeat(float frameTime)
 			m_beatDirection = true;
 	}
 	if (m_beatDirection == true)
-		m_animation = m_finalAnimation + (m_beatDelta * m_beatTimer / m_beatTimerMax);
+		m_animation = octo::cosinusInterpolation(m_finalAnimation + m_beatDelta, m_finalAnimation, m_beatTimer / m_beatTimerMax);
 	else
-		m_animation = m_finalAnimation + m_beatDelta - (m_beatDelta * m_beatTimer / m_beatTimerMax);
+		m_animation = octo::cosinusInterpolation(m_finalAnimation, m_finalAnimation + m_beatDelta, m_beatTimer / m_beatTimerMax);
 }
 
 bool DecorAnimator::computeState(float frameTime)
@@ -67,7 +68,7 @@ bool DecorAnimator::computeState(float frameTime)
 		case State::Grow:
 		{
 			m_growTimer += frameTime;
-			m_animation = m_growTimer / m_growTimerMax * m_finalAnimation;
+			m_animation = octo::cosinusInterpolation(0.f, m_finalAnimation + m_beatDelta, m_growTimer / m_growTimerMax);
 			if (m_growTimer >= m_growTimerMax)
 			{
 				m_growTimer = 0.f;
@@ -78,7 +79,7 @@ bool DecorAnimator::computeState(float frameTime)
 		case State::Die:
 		{
 			m_dieTimer += frameTime;
-			m_animation = m_finalAnimation - m_dieTimer / m_dieTimerMax * m_finalAnimation;
+			m_animation = octo::cosinusInterpolation(m_finalAnimation, 0.f, m_dieTimer / m_dieTimerMax);
 			if (m_dieTimer >= m_dieTimerMax)
 			{
 				m_dieTimer = 0.f;

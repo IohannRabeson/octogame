@@ -2,19 +2,19 @@
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
+#include "CharacterOcto.hpp"
 #include <Interpolations.hpp>
 
 JellyfishNpc::JellyfishNpc(void) :
-	ANpc(JELLYFISH_OSS),
-	m_startTimer(false),
-	m_animationEnd(false)
+	ANpc(JELLYFISH_OSS, false),
+	m_waterLevel(0.f),
+	m_isMet(false)
 {
-	setSize(sf::Vector2f(10.f, 275.f));
-	setOrigin(sf::Vector2f(90.f, 13.f));
+	setSize(sf::Vector2f(10.f, 300.f));
+	setOrigin(sf::Vector2f(60.f, 75.f));
 	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(100.f, -80.f));
-	setTimerMax(sf::seconds(100.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
@@ -76,52 +76,78 @@ void JellyfishNpc::setupMachine(void)
 
 void JellyfishNpc::setPosition(sf::Vector2f const & position)
 {
+	if (!m_isMet)
+		ANpc::setPosition(position);
+}
+
+void JellyfishNpc::update(sf::Time frametime)
+{
 	octo::CharacterSprite & sprite = getSprite();
+
+	computeBehavior(frametime);
+	updateState();
+	updatePhysics();
+
+	sprite.update(frametime);
+	sprite.setPosition(getBox()->getRenderPosition());
+
+	updateText(frametime);
+	resetVariables();
+}
+
+void JellyfishNpc::computeBehavior(sf::Time frametime)
+{
+	octo::CharacterSprite & sprite = getSprite();
+	RectangleShape * box = getBox();
 	if (sprite.getCurrentEvent() == Special1)
-		return;
-	ANpc::setPosition(position);
+	{
+		sf::Vector2f position = octo::linearInterpolation(m_octoPosition, box->getPosition(), 1.f - frametime.asSeconds());
+		if (position.y > m_waterLevel + 200.f)
+			box->setPosition(position);
+		float angle = octo::rad2Deg(std::atan2(box->getPosition().y - m_octoPosition.y, box->getPosition().x - m_octoPosition.x)) - 90.f;
+		if (angle < 0.f)
+			angle += 360.f;
+		//float diff = angle - sprite.getRotation();
+		//sprite.rotate(diff * frametime.asSeconds() * 2.f);
+		sprite.setRotation(angle);
+	}
+	else if (m_isMet)
+	{
+		if (sprite.getRotation() > 180.f)
+			sprite.setRotation(octo::linearInterpolation(360.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
+		else
+			sprite.setRotation(octo::linearInterpolation(0.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
+		if (box->getPosition().y > m_waterLevel + 200.f)
+			box->setPosition(sf::Vector2f(box->getPosition().x, box->getPosition().y - frametime.asSeconds() * 150.f));
+	}
 }
 
 void JellyfishNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (sprite.getCurrentEvent() == Idle)
-	{
-		if (!m_startTimer && getCollideEventOcto())
-		{
-			m_startTimer = true;
-			setTimer(sf::Time::Zero);
-		}
-		if (m_startTimer)
-		{
-			sprite.setNextEvent(Special1);
-			m_startPosition = getPosition();
-			setTimer(sf::Time::Zero);
-		}
-	}
+	if (sprite.getCurrentEvent() == Idle && getCollideEventOcto() && m_octoPosition.y > m_waterLevel)
+		sprite.setNextEvent(Special1);
+	else if (sprite.getCurrentEvent() == Special1 && !getCollideEventOcto())
+		sprite.setNextEvent(Idle);
 }
 
 void JellyfishNpc::updatePhysics(void)
 {
-	octo::CharacterSprite & sprite = getSprite();
-	if (sprite.getCurrentEvent() == Special1)
-	{
-		RectangleShape * box = getBox();
-		box->setPosition(octo::linearInterpolation(m_startPosition, m_startPosition + sf::Vector2f(0.f, -10000.f), getTimer() / getTimerMax() * 5.f));
-		box->update();
-		if (getTimer() > getTimerMax() * 5.f)
-			m_animationEnd = true;
-	}
+	getBox()->update();
 }
 
 void JellyfishNpc::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
+	m_octoPosition = octo->getPosition();
+	if (!m_isMet)
+		m_isMet = true;
+	if (m_waterLevel == 0.f)
+		m_waterLevel = octo->getWaterLevel();
 }
 
 void JellyfishNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	if (!m_animationEnd)
-		ANpc::draw(render, states);
+	ANpc::draw(render, states);
 }

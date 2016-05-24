@@ -80,6 +80,7 @@ protected:
 	octo::CharacterAnimation & getSpecial1Animation(void);
 	octo::CharacterAnimation & getSpecial2Animation(void);
 
+	virtual bool isDoubleJump(void);
 	virtual bool canWalk(void) const;
 	virtual bool canJump(void) const;
 	virtual bool canDoubleJump(void) const;

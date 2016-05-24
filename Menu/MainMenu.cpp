@@ -24,7 +24,7 @@ class YesNoReset : public YesNoMenu
 		octo::StateManager &	states = octo::Application::getStateManager();
 		progress.reset();
 		progress.setFirstTime(true);
-		states.change("zero");
+		states.change("anoctonautodyssey");
 	}
 
 	inline void actionNo(void) { }
@@ -37,7 +37,6 @@ MainMenu::MainMenu(void)
 
 void MainMenu::createMenus(void)
 {
-	AMenu::initTexts();
 	addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
 #ifndef NDEBUG
 	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));

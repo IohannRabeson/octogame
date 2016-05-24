@@ -2,7 +2,6 @@
 # define BUBBLETEXT_HPP
 
 # include "ABubble.hpp"
-# include "DecorAnimator.hpp"
 # include <SFML/Graphics/Color.hpp>
 # include <SFML/Graphics/Text.hpp>
 # include <cstring>
@@ -38,6 +37,7 @@ private:
 	std::size_t						m_characterPerLine;
 	std::size_t						m_lineCount;
 	std::wstring					m_phrase;
+	bool							m_contentUpdated;
 };
 
 #endif

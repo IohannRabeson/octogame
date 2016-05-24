@@ -25,11 +25,19 @@ protected:
 	virtual void updatePhysics(void);
 
 private:
+	void caseDoubleJump(sf::Time frametime);
+	void computeFlight(sf::Time frametime);
+
 	bool			m_animationEnd;
 	sf::Vector2f	m_startPosition;
+	sf::Vector2f	m_nextPosition;
+	sf::Vector2f	m_octoPosition;
 	RandomGenerator	m_generator;
 	float			m_speedLimit;
 	sf::Vector2f	m_flySpeed;
+	bool			m_isDoubleJumpTic;
+	sf::Time		m_timerDoubleJump;
+	sf::Time		m_timerDoubleJumpMax;
 };
 
 #endif
