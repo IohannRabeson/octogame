@@ -17,7 +17,6 @@ Progress::Progress() :
 	m_newSave(false),
 	m_changeLevel(false),
 	m_reverseSprite(false),
-	m_validChallenge(false),
 	m_spaceShipRepair(false),
 	m_npcCount(0u),
 	m_npcMax(0u),
@@ -67,7 +66,6 @@ void	Progress::init()
 	audio.setSoundVolume(m_data.soundVol);
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
-	m_validChallenge = false;
 	m_isOctoOnInstance = false;
 	loadNpc();
 	loadPortals();
@@ -98,7 +96,6 @@ void	Progress::reset()
 {
 	m_changeLevel = false;
 	m_reverseSprite = false;
-	m_validChallenge = false;
 	m_spaceShipRepair = false;
 	m_npc.clear();
 	m_portals.clear();

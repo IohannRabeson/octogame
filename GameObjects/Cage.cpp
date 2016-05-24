@@ -5,7 +5,6 @@
 
 Cage::Cage(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	InstanceDecor(CAGE_BACK_OSS, scale, position, 4u, 0.4f),
-	m_canOpen(false),
 	m_isOpen(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
@@ -52,10 +51,7 @@ void Cage::update(sf::Time frameTime)
 	InstanceDecor::update(frameTime);
 	m_spriteFront.update(frameTime);
 
-	if (!m_canOpen && Progress::getInstance().canOpenDoubleJump())
-		m_canOpen = true;
-
-	if (m_canOpen && !m_isOpen && !Progress::getInstance().canValidChallenge())
+	if (!m_isOpen) //TODO add the challenge validated from progress
 	{
 		m_spriteFront.setAnimation(m_animationFrontOpen);
 		getSprite().play();

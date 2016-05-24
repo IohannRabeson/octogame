@@ -11,13 +11,13 @@
 #include <Math.hpp>
 #include <Interpolations.hpp>
 
-std::size_t CedricNpc::Id = 0u;
+std::size_t CedricNpc::m_count = 0u;
 
 CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	ANpc(CEDRIC_OSS),
 	m_skyCycle(skyCycle),
 	m_prevDayState(skyCycle.isDay()),
-	m_id(Id++)
+	m_id(m_count++)
 {
 	setSize(sf::Vector2f(200.f, 100.f));
 	setOrigin(sf::Vector2f(-30.f, 68.f));
@@ -31,12 +31,12 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	if (m_id == 0u)
 		setCurrentText(0u);
 	else
-		setCurrentText(2u);
+		setCurrentText(3u);
 }
 
 CedricNpc::~CedricNpc(void)
 {
-	Id = 0u;
+	m_count = 0u;
 }
 
 void CedricNpc::setup(void)
@@ -225,17 +225,7 @@ void CedricNpc::setupMachine(void)
 void CedricNpc::startBalle(void)
 {
 	if (m_id == 0u)
-	{
 		ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).start();
-		Progress::getInstance().startChallenge();
-	}
-	else
-	{
-		if (Progress::getInstance().canValidChallenge() && !Progress::getInstance().canOpenDoubleJump())
-			Progress::getInstance().setCanOpenDoubleJump(true);
-		if (Progress::getInstance().canOpenDoubleJump())
-			setCurrentText(3u);
-	}
 }
 
 sf::Time CedricNpc::getEffectDuration(void) const

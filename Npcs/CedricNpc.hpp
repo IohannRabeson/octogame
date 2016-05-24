@@ -35,7 +35,7 @@ protected:
 	virtual void updatePhysics(void);
 
 private:
-	static std::size_t			Id;
+	static std::size_t			m_count;
 	octo::CharacterAnimation	m_idleAnimationNight;
 	octo::CharacterAnimation	m_walkAnimationNight;
 	octo::CharacterAnimation	m_special1AnimationNight;

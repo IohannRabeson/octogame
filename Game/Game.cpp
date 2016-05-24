@@ -263,7 +263,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::DoubleJumpNanoRobot:
-			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canDoubleJump() && Progress::getInstance().canOpenDoubleJump() && !Progress::getInstance().canValidChallenge())
+			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -452,7 +452,7 @@ void Game::moveMap(sf::Time frameTime)
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && !Progress::getInstance().canValidChallenge())
+	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable())
 	{
 		m_groundSoundTime -= frameTime;
 		if (m_groundSoundTime < sf::Time::Zero)
@@ -460,7 +460,7 @@ void Game::moveMap(sf::Time frameTime)
 		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 		m_soundGeneration->setVolume(volume);
 	}
-	if (m_keyGroundRight || m_keyGroundLeft || Progress::getInstance().canValidChallenge())
+	if (m_keyGroundRight || m_keyGroundLeft || ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable())
 	{
 		if (Progress::getInstance().canMoveMap())
 		{

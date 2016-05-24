@@ -44,10 +44,6 @@ public:
 	bool				isFirstTime(void) const { return m_data.firstTime; }
 	void				setFirstTime(bool firstTime) { m_data.firstTime = firstTime; }
 
-	void				startChallenge(void) { m_validChallenge = true; }
-	bool				canValidChallenge(void) const { return m_validChallenge; }
-	void				endChallenge(void) { m_validChallenge = false; }
-
 	void				setCanOpenDoubleJump(bool canOpen) { m_data.canOpenDoubleJump = canOpen; }
 	bool				canOpenDoubleJump(void) const { return m_data.canOpenDoubleJump; }
 
@@ -159,7 +155,6 @@ private:
 	bool											m_newSave;
 	bool											m_changeLevel;
 	bool											m_reverseSprite;
-	bool											m_validChallenge;
 	bool											m_spaceShipRepair;
 	sf::Vector2f									m_octoPos;
 

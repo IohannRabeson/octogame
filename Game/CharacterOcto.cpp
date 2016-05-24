@@ -1009,7 +1009,6 @@ bool	CharacterOcto::endDeath()
 		if (m_sprite.isTerminated())
 		{
 			octo::StateManager &		states = octo::Application::getStateManager();
-			Progress::getInstance().endChallenge();
 			states.change("octo_death");
 		}
 		return false;
