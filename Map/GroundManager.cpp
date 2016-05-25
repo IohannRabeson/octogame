@@ -85,13 +85,11 @@ GroundManager::GroundManager(void) :
 	m_decorManagerFront(50000),
 	m_decorManagerGround(15000),
 	m_nextState(GenerationState::Next),
-	m_cycle(nullptr),
 	m_water(nullptr)
 {}
 
 void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 {
-	m_cycle = &cycle;
 	m_mapSize = biome.getMapSize();
 
 	// Init maps
@@ -124,7 +122,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	m_transitionTimer = m_transitionTimerMax;
 
 	// Init decors
-	setupDecors(biome);
+	setupDecors(biome, cycle);
 
 	// Init game objects
 	setupGameObjects(biome, cycle);
@@ -702,7 +700,7 @@ void GroundManager::setupGameObjectPosition(std::vector<GameObjectPosition<T>> c
 	}
 }
 
-void GroundManager::setupDecors(ABiome & biome)
+void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 {
 	m_decorManagerBack.setup(&biome);
 	m_decorManagerFront.setup(&biome);
@@ -724,7 +722,7 @@ void GroundManager::setupDecors(ABiome & biome)
 		for (std::size_t i = 0; i < rainbowCount; i++)
 		{
 			int x = biome.randomInt(1u, mapSizeX);
-			m_decorManagerBack.add(new Rainbow(m_cycle));
+			m_decorManagerBack.add(new Rainbow(&cycle));
 			m_tiles->registerDecor(x);
 			m_tilesPrev->registerDecor(x);
 		}
