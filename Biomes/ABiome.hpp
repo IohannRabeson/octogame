@@ -41,11 +41,21 @@ enum class Level : std::size_t
 class ABiome : public octo::NonCopyable
 {
 public:
+	enum class Type : std::size_t
+	{
+		Ice,
+		Jungle,
+		Desert,
+		Water,
+		Random
+	};
+
 	virtual ~ABiome();
 
 	virtual void										setup(std::size_t seed) = 0;
 	virtual std::string									getName()const = 0;
 	virtual Level										getId()const = 0;
+	virtual ABiome::Type								getType() const = 0;
 
 	virtual sf::Vector2u								getMapSize() = 0;
 	virtual sf::Vector2f								getMapSizeFloat() = 0;

@@ -62,6 +62,7 @@ DemoIceABiome::DemoIceABiome() :
 	m_canCreateSun(false),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(5.f, 50.f), sf::Vector2f(20.f, 70.f)),
 	m_rockPartCount(2.f, 10.f),
@@ -684,6 +685,11 @@ sf::Time		DemoIceABiome::getRainbowIntervalTime()
 bool			DemoIceABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+ABiome::Type	DemoIceABiome::getType() const
+{
+	return m_type;
 }
 
 
