@@ -65,6 +65,10 @@
 #include "WaterNanoRobot.hpp"
 #include "Progress.hpp"
 #include "Rock.hpp"
+#include "Tree.hpp"
+#include "Mushroom.hpp"
+#include "Crystal.hpp"
+#include "GroundRock.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -397,6 +401,14 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				ADecor * adecor = nullptr;
 				if (!decor.name.compare(DECOR_TREE_OSS))
 					adecor = new Tree();
+				else if (!decor.name.compare(DECOR_ROCK_OSS))
+					adecor = new Rock();
+				else if (!decor.name.compare(DECOR_CRYSTAL_OSS))
+					adecor = new Crystal();
+				else if (!decor.name.compare(DECOR_MUSHROOM_OSS))
+					adecor = new Mushroom();
+				else if (!decor.name.compare(DECOR_GROUND_OSS))
+					adecor = new GroundRock();
 				if (adecor)
 				{
 					adecor->setPosition(position);
