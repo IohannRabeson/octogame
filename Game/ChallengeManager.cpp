@@ -27,14 +27,16 @@ void ChallengeManager::reset(void)
 
 void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
 {
+	m_glitchTimer -= frametime;
 	for (auto & it : m_challenges)
 	{
 		if (biome.getType() == it.second->getBiomeType() || biome.getType() == ABiome::Type::Random)
 		{
 			if (!it.second->enable() && Progress::getInstance().isValidateChallenge(it.first))
 			{
-				if (m_generator.randomBool(0.0005f))
+				if (m_glitchTimer < sf::Time::Zero)
 				{
+					m_glitchTimer = sf::seconds(m_generator.randomFloat(10.f, 30.f));
 					it.second->setGlitch(true);
 					it.second->start();
 				}

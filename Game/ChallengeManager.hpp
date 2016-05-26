@@ -68,6 +68,7 @@ private:
 	static std::unique_ptr<ChallengeManager>		m_instance;
 	std::map<Effect, std::unique_ptr<Challenge>>	m_challenges;
 	RandomGenerator									m_generator;
+	sf::Time										m_glitchTimer;
 
 	ChallengeManager(void);
 	void addEffect(ResourceKey key, Effect effect);
