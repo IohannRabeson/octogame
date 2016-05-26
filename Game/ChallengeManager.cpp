@@ -9,7 +9,6 @@ std::unique_ptr<ChallengeManager> ChallengeManager::m_instance = nullptr;
 
 ChallengeManager::ChallengeManager(void)
 {
-	m_generator.setSeed("random");
 }
 
 ChallengeManager & ChallengeManager::getInstance(void)
@@ -27,48 +26,36 @@ void ChallengeManager::reset(void)
 
 void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
 {
-	m_glitchTimer -= frametime;
 	for (auto & it : m_challenges)
 	{
 		if (biome.getType() == it.second->getBiomeType() || biome.getType() == ABiome::Type::Random)
 		{
 			if (!it.second->enable() && Progress::getInstance().isValidateChallenge(it.first))
 			{
-				if (m_glitchTimer < sf::Time::Zero)
+				if (it.second->canStartGlitch())
 				{
-					m_glitchTimer = sf::seconds(m_generator.randomFloat(10.f, 30.f));
 					it.second->setGlitch(true);
+					it.second->setIntensity(biome.randomFloat(2.f, 10.f));
+					it.second->setDuration(biome.randomFloat(0.25f, 0.75f));
 					it.second->start();
 				}
 			}
-			if (it.second->enable())
-			{
-				if (it.second->isGlitch())
-				{
-					it.second->updateGlitch(frametime);
-				}
-				else
-				{
-					it.second->validateArea(biome, position);
-					it.second->updateChallenge(frametime);
-				}
-			}
+			it.second->update(frametime, biome, position);
 		}
 	}
 }
 
-ChallengeManager::Challenge & ChallengeManager::getEffect(Effect effect)
+ChallengeManager::AChallenge & ChallengeManager::getEffect(Effect effect)
 {
 	return (*m_challenges[effect]);
 }
 
-ChallengeManager::Challenge::Challenge(ResourceKey key, float challengeDuration, float glitchDuration, sf::FloatRect const & area, ABiome::Type biomeType) :
+ChallengeManager::AChallenge::AChallenge(ResourceKey key, float challengeDuration, float intensity, sf::FloatRect const & area, ABiome::Type biomeType) :
 	m_delayMax(sf::seconds(4.f)),
 	m_duration(sf::seconds(challengeDuration)),
-	m_challengeDuration(sf::seconds(challengeDuration)),
-	m_glitchDuration(sf::seconds(glitchDuration)),
 	m_area(area),
 	m_biomeType(biomeType),
+	m_intensity(intensity),
 	m_validArea(false),
 	m_isGlitch(false)
 {
@@ -81,7 +68,25 @@ ChallengeManager::Challenge::Challenge(ResourceKey key, float challengeDuration,
 	m_index = postEffect.addEffect(std::move(postEffectShader));
 }
 
-void ChallengeDuplicate::Challenge::updateGlitch(sf::Time frametime)
+void ChallengeManager::AChallenge::update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position)
+{
+	if (enable())
+	{
+		if (isGlitch())
+		{
+			updateGlitch(frametime, biome);
+		}
+		else
+		{
+			validateArea(biome, position);
+			updateChallenge(frametime);
+		}
+	}
+	else
+		m_glitchTimer -= frametime;
+}
+
+void ChallengeManager::AChallenge::updateGlitch(sf::Time frametime, ABiome & biome)
 {
 	m_delay += frametime;
 	if (m_delay <= m_duration)
@@ -95,11 +100,12 @@ void ChallengeDuplicate::Challenge::updateGlitch(sf::Time frametime)
 		m_delay = sf::Time::Zero;
 		stop();
 		setGlitch(false);
+		m_glitchTimer = sf::seconds(biome.randomFloat(10.f, 30.f));
 	}
 	updateShader(frametime);
 }
 
-void ChallengeDuplicate::Challenge::updateChallenge(sf::Time frametime)
+void ChallengeManager::AChallenge::updateChallenge(sf::Time frametime)
 {
 	m_delay += frametime;
 	if (m_delay < m_delayMax)
@@ -124,7 +130,7 @@ void ChallengeDuplicate::Challenge::updateChallenge(sf::Time frametime)
 	updateShader(frametime);
 }
 
-void ChallengeManager::Challenge::validateArea(ABiome & biome, sf::Vector2f const & position)
+void ChallengeManager::AChallenge::validateArea(ABiome & biome, sf::Vector2f const & position)
 {
 	sf::Vector2f pos = position;
 	while (pos.x < 0.f)
@@ -134,63 +140,68 @@ void ChallengeManager::Challenge::validateArea(ABiome & biome, sf::Vector2f cons
 	m_validArea = m_area.contains(pos);
 }
 
-void ChallengeManager::Challenge::start(void)
+void ChallengeManager::AChallenge::start(void)
 {
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 	postEffect.enableEffect(m_index, true);
 }
 
-void ChallengeManager::Challenge::stop(void)
+void ChallengeManager::AChallenge::stop(void)
 {
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 	postEffect.enableEffect(m_index, false);
 }
 
-bool ChallengeManager::Challenge::enable(void) const
+bool ChallengeManager::AChallenge::enable(void) const
 {
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 	return postEffect.getEffect(m_index).isEnabled();
 }
 
-bool ChallengeManager::Challenge::isFinished(void) const
+bool ChallengeManager::AChallenge::isFinished(void) const
 {
 	return (m_timer >= m_duration);
 }
 
-bool ChallengeManager::Challenge::isGlitch(void) const
+bool ChallengeManager::AChallenge::isGlitch(void) const
 {
 	return m_isGlitch;
 }
 
-sf::Time ChallengeManager::Challenge::getDuration(void) const
+bool ChallengeManager::AChallenge::canStartGlitch(void) const
+{
+	return (m_glitchTimer <= sf::Time::Zero);
+}
+
+sf::Time ChallengeManager::AChallenge::getDuration(void) const
 {
 	return (m_duration);
 }
 
-ABiome::Type ChallengeManager::Challenge::getBiomeType(void) const
+ABiome::Type ChallengeManager::AChallenge::getBiomeType(void) const
 {
 	return m_biomeType;
 }
 
-void ChallengeManager::Challenge::setDuration(float duration)
+void ChallengeManager::AChallenge::setDuration(float duration)
 {
 	m_duration = sf::seconds(duration);
 }
 
-void ChallengeManager::Challenge::setGlitch(bool isGlitch)
+void ChallengeManager::AChallenge::setIntensity(float intensity)
 {
-	if (isGlitch)
-		m_duration = m_glitchDuration;
-	else
-		m_duration = m_challengeDuration;
+	m_intensity = intensity;
+}
+
+void ChallengeManager::AChallenge::setGlitch(bool isGlitch)
+{
 	m_isGlitch = isGlitch;
 }
 
 // Duplicate
 ChallengeDuplicate::ChallengeDuplicate(void) :
-	Challenge(VISION_TROUBLE_FRAG, 6.f, 0.2f, sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle),
-	m_rotation(0.f),
-	m_intensity(60.f)
+	AChallenge(VISION_TROUBLE_FRAG, 6.f, 60.f, sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle),
+	m_rotation(0.f)
 {}
 
 void ChallengeDuplicate::updateShader(sf::Time frametime)
@@ -202,15 +213,6 @@ void ChallengeDuplicate::updateShader(sf::Time frametime)
 	float y = std::sin(m_rotation * octo::Pi2 * 2.f) * length / rect.height;
 	float z = std::sin(m_rotation * octo::Pi2) * length / rect.height;
 	m_shader.setParameter("offset", x, y, z);
-}
-
-void ChallengeDuplicate::setGlitch(bool isGlitch)
-{
-	Challenge::setGlitch(isGlitch);
-	if (isGlitch)
-		m_intensity = 10.f;
-	else
-		m_intensity = 60.f;
 }
 
 // Pixelate
