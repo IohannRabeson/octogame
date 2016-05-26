@@ -1,113 +1,82 @@
 #include "CameraMovement.hpp"
+#include "CharacterOcto.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
 
-CameraMovement::CameraMovement(void):
-	m_zoomFactor(0.85f),
-	m_isZoom(false),
-	m_isFall(false),
-	m_timerZoom(sf::Time::Zero),
-	m_timerZoomMax(sf::seconds(2.f)),
-	m_timerUnZoom(sf::Time::Zero),
-	m_timerUnZoomMax(sf::seconds(2.f)),
-	m_timerBeforeChangeMax(sf::seconds(4.f)),
-	m_timerChangeLookAtMax(sf::seconds(4.f))
-{
-	m_initialSize = sf::Vector2f(octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
-	octo::Application::getCamera().setSize(m_initialSize);
-}
+CameraMovement::CameraMovement(void) :
+	m_behavior(Behavior::FollowOcto),
+	m_speed(4.f),
+	m_maxSpeed(5.f),
+	m_transition(0.f)
+{}
 
-void	CameraMovement::follow(sf::Time frameTime, sf::Vector2f const & octoPos)
+void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 {
-	float frameTimeSeconds = frameTime.asSeconds();
 	octo::Camera & camera = octo::Application::getCamera();
-	sf::Vector2f const & cameraSize = camera.getSize();
-	sf::Vector2f cameraPos = camera.getCenter();
-	float lookAtUpPosY = octoPos.y;
-	float lookAtDownPosY = octoPos.y;
 
-	if (m_isFall)
-		m_timerBeforeChange += frameTime;
-	else
-		m_timerBeforeChange = sf::Time::Zero;
+	if (octo.isFalling())
+		m_behavior = Behavior::OctoFalling;
 
-	if (m_isFall && m_timerChangeLookAt <= m_timerChangeLookAtMax && m_timerBeforeChange >= m_timerBeforeChangeMax)
-		m_timerChangeLookAt += frameTime;
-	else if (m_timerChangeLookAt > sf::Time::Zero)
-		m_timerChangeLookAt -= frameTime / 2.f;
-	else
-		m_timerChangeLookAt = sf::Time::Zero;
+	if (octo.isRaising())
+		m_behavior = Behavior::OctoRaising;
 
-	float coefChangeLookAt = m_timerChangeLookAt / m_timerChangeLookAtMax;
-	lookAtDownPosY += -cameraSize.y / 4.f + (cameraSize.y / 4.f) * coefChangeLookAt * 3.f;
+	sf::Vector2f goalTop = octo.getPosition();
+	goalTop.y -= camera.getRectangle().height / 5.f;
+	sf::Vector2f goalBot = octo.getPosition();
+	goalBot.y += camera.getRectangle().height / 3.f;
 
-	cameraPos.x = octo::linearInterpolation(octoPos.x, cameraPos.x, 1.f - frameTimeSeconds);
-	if (lookAtDownPosY >= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(lookAtDownPosY, cameraPos.y, 1.f - frameTimeSeconds * 6.f);
-	if (lookAtUpPosY <= cameraPos.y)
-		cameraPos.y = octo::linearInterpolation(lookAtUpPosY, cameraPos.y, 1.f - frameTimeSeconds * 4.f);
-
-	if (m_isZoom)
+	switch (m_behavior)
 	{
-		collideZoom(frameTime);
-		if (m_timerZoom < m_timerZoomMax * 2.f)
+		case Behavior::FollowOcto:
 		{
-			lookAtUpPosY = m_npcPos.y;
-			lookAtDownPosY = m_npcPos.y;
-			lookAtDownPosY -= cameraSize.y / 4.f;
-			cameraPos.x = octo::cosinusInterpolation(m_npcPos.x, cameraPos.x, 1.f - frameTimeSeconds * 3.f);
-			if (lookAtDownPosY >= cameraPos.y)
-				cameraPos.y = octo::cosinusInterpolation(lookAtDownPosY, cameraPos.y, 1.f - frameTimeSeconds * 8.f);
-//			else if (lookAtUpPosY <= cameraPos.y)
-//			 	cameraPos.y = octo::cosinusInterpolation(lookAtUpPosY, cameraPos.y, 1.f - frameTimeSeconds * 6.f);
+			m_transition -= 0.3f * frametime.asSeconds();
+			if (m_transition < 0.f)
+				m_transition = 0.f;
+			break;
 		}
+		case Behavior::OctoFalling:
+		{
+			m_transition += 0.5f * frametime.asSeconds();
+			if (m_transition > 1.f)
+				m_transition = 1.f;
+			break;
+		}
+		case Behavior::OctoRaising:
+		{
+			m_transition -= frametime.asSeconds();
+			if (m_transition < 0.f)
+				m_transition = 0.f;
+			break;
+		}
+		default:
+			break;
 	}
-	camera.setCenter(cameraPos);
+	sf::Vector2f goal = octo::linearInterpolation(goalTop, goalBot, m_transition);
+	float t = (std::abs(goal.y - camera.getCenter().y) / (camera.getRectangle().height / 2.f));
+	m_speed = octo::linearInterpolation(1.f, m_maxSpeed, std::min(t, 1.f));
+	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()));
+
+	m_behavior = FollowOcto;
+	m_circle.setPosition(goal);
+	m_circle.setFillColor(sf::Color::Red);
+	m_circle.setRadius(10.f);
 }
 
-void CameraMovement::collideZoom(sf::Time frametime)
+void CameraMovement::draw(sf::RenderTarget & render)
 {
-	octo::Camera & camera = octo::Application::getCamera();
-
-	if (m_timerZoom < m_timerZoomMax)
-	{
-		if (m_timerZoom == sf::Time::Zero)
-			m_currentSize = camera.getSize();
-		m_timerZoom += frametime;
-		camera.setSize(octo::cosinusInterpolation(m_currentSize, m_initialSize * m_zoomFactor, m_timerZoom / m_timerZoomMax));
-	}
-	else if (m_timerZoom >= m_timerZoomMax && m_timerZoom < m_timerZoomMax * 2.f)
-		m_timerZoom += frametime;
-	else if (m_timerUnZoom < m_timerUnZoomMax)
-	{
-		if (m_timerUnZoom == sf::Time::Zero)
-			m_currentSize = camera.getSize();
-		m_timerUnZoom += frametime;
-		camera.setSize(octo::cosinusInterpolation(m_currentSize, m_initialSize, m_timerUnZoom / m_timerUnZoomMax));
-	}
-	else
-		m_isZoom = false;
+	render.draw(m_circle);
+	m_circle.setPosition(octo::Application::getCamera().getCenter());
+	m_circle.setFillColor(sf::Color::Green);
+	render.draw(m_circle);
 }
 
-void CameraMovement::collideZoomEvent(sf::Vector2f const & npcPos)
-{
-	m_isZoom = true;
-	if (npcPos != m_npcPos)
-	{
-		m_timerZoom = sf::Time::Zero;
-		m_timerUnZoom = sf::Time::Zero;
-		m_npcPos = npcPos;
-	}
-}
+void CameraMovement::collideZoom(sf::Time)
+{}
 
-void CameraMovement::setEventFallTimer(sf::Time const & eventFallTimer)
-{
-	m_eventFallTimer = eventFallTimer;
-}
+void CameraMovement::collideZoomEvent(sf::Vector2f const &)
+{}
 
-void CameraMovement::setFall(bool isFall)
-{
-	m_isFall = isFall;
-}
+void CameraMovement::setEventFallTimer(sf::Time const &)
+{}

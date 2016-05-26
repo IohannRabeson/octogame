@@ -70,6 +70,7 @@
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
 #include "ChallengeManager.hpp"
+#include "CameraMovement.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -163,6 +164,7 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling.reset(new ParallaxScrolling());
 	m_octo.reset(new CharacterOcto());
 	m_konami.reset(new KonamiCode());
+	m_cameraMovement.reset(new CameraMovement());
 
 	m_skyCycle->setup(m_biomeManager.getCurrentBiome());
 	m_skyManager->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
@@ -206,6 +208,7 @@ void	Game::update(sf::Time frameTime)
 	m_skyManager->update(frameTime);
 	m_konami->update(frameTime, m_octo->getPosition());
 	m_octo->startKonamiCode(m_konami->canStartEvent());
+	m_cameraMovement->update(frameTime, *m_octo);
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
 }
 
@@ -568,4 +571,5 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_octo->drawText(render, states);
 	m_groundBubble.draw(render, states);
 	render.draw(*m_konami);
+	m_cameraMovement->draw(render);
 }

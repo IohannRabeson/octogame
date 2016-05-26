@@ -62,7 +62,6 @@ CharacterOcto::CharacterOcto() :
 	m_isDeadlyWater(false)
 {
 	m_sound.reset(new OctoSound());
-	m_cameraMovement.reset(new CameraMovement);
 
 	InputListener::addInputListener();
 
@@ -675,12 +674,6 @@ void	CharacterOcto::update(sf::Time frameTime)
 		robot->update(frameTime);
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
-	if (!m_onGround && !m_inWater && !m_onElevator)
-		m_cameraMovement->setFall(true);
-	else
-		m_cameraMovement->setFall(false);
-
-	m_cameraMovement->follow(frameTime, m_box->getPosition());
 }
 
 void	CharacterOcto::portalEvent()
@@ -701,7 +694,6 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 	{
 		case Fall:
 			m_timeEventFall += frameTime;
-			m_cameraMovement->setEventFallTimer(m_timeEventFall);
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;
@@ -1340,6 +1332,23 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 	return (true);
 }
 
+bool	CharacterOcto::isFalling(void)
+{
+	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
+	return (state == Fall || state == SlowFall);
+}
+
+bool	CharacterOcto::isRaising(void)
+{
+	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
+	return state == WaterJump;
+}
+
+bool	CharacterOcto::isInAir(void)
+{
+	return (!m_onGround);
+}
+
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
@@ -1427,8 +1436,10 @@ float	CharacterOcto::getWaterLevel() const
 	return m_waterLevel;
 }
 
+#include <iostream> //TODO remove
 void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
 {
-	m_cameraMovement->collideZoomEvent(position);
+	(void)position;
+	std::cout << "CollideZoomevent" << std::endl;
 }
 

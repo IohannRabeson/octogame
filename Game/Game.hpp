@@ -18,6 +18,7 @@
 
 class PhysicsEngine;
 class AShape;
+class CameraMovement;
 
 class Game : public InputListener, public IContactListener
 {
@@ -41,6 +42,7 @@ private:
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<KonamiCode>			m_konami;
+	std::unique_ptr<CameraMovement>		m_cameraMovement;
 	bool								m_keyGroundRight;
 	bool								m_keyGroundLeft;
 	std::shared_ptr<sf::Sound>			m_soundGeneration;
