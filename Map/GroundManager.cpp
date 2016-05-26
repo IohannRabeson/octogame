@@ -5,6 +5,11 @@
 #include "ADecor.hpp"
 #include "ABiome.hpp"
 #include "Rainbow.hpp"
+#include "Rock.hpp"
+#include "Tree.hpp"
+#include "Mushroom.hpp"
+#include "Crystal.hpp"
+#include "GroundRock.hpp"
 #include "SkyCycle.hpp"
 #include "MapInstance.hpp"
 #include "ClassicNpc.hpp"
@@ -64,11 +69,6 @@
 #include "SlowFallNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
 #include "Progress.hpp"
-#include "Rock.hpp"
-#include "Tree.hpp"
-#include "Mushroom.hpp"
-#include "Crystal.hpp"
-#include "GroundRock.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -409,6 +409,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					adecor = new Mushroom();
 				else if (!decor.name.compare(DECOR_GROUND_OSS))
 					adecor = new GroundRock();
+				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
+					adecor = new Rainbow();
 				if (adecor)
 				{
 					adecor->setPosition(position);
