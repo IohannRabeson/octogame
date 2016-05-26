@@ -83,8 +83,9 @@ private:
 	DecorManager						m_decorManagerBack;
 	DecorManager						m_decorManagerFront;
 	DecorManager						m_decorManagerGround;
+	DecorManager						m_decorManagerInstanceBack;
+	DecorManager						m_decorManagerInstanceFront;
 	GenerationState						m_nextState;
-	SkyCycle *							m_cycle;
 	std::unique_ptr<Water>				m_water;
 	sf::Vector2f						m_octoPosState;
 
@@ -117,7 +118,7 @@ private:
 
 	template<class T>
 	void setupGameObjectPosition(std::vector<GameObjectPosition<T>> const & gameObjectPosition);
-	void setupDecors(ABiome & biome);
+	void setupDecors(ABiome & biome, SkyCycle & cycle);
 	void setupGameObjects(ABiome & biome, SkyCycle & skyCycle);
 	void updateOffset(float deltatime);
 	void updateTransition(sf::FloatRect const & cameraRect);
