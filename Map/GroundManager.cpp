@@ -395,8 +395,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			else if (!decor.name.substr(0, 6).compare("decor_"))
 			{
 				ADecor * adecor = nullptr;
-				if (!decor.name.compare("decor_pyramid.oss"))//TODO replace by DECOR_TREE_OSS
-					adecor = new Rock();
+				if (!decor.name.compare(DECOR_TREE_OSS))
+					adecor = new Tree();
 				if (adecor)
 				{
 					adecor->setPosition(position);
