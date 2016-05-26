@@ -61,6 +61,7 @@ WaterABiome::WaterABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(true),
+	m_type(ABiome::Type::Water),
 
 	m_rockSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(40.f, 300.f)),
 	m_rockPartCount(10.f, 15.f),
@@ -791,6 +792,11 @@ sf::Time		WaterABiome::getRainbowIntervalTime()
 bool			WaterABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+ABiome::Type	WaterABiome::getType() const
+{
+	return m_type;
 }
 
 

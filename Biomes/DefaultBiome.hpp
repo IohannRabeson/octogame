@@ -138,6 +138,7 @@ public:
 	virtual sf::Time									getRainbowLifeTime();
 	virtual sf::Time									getRainbowIntervalTime();
 	virtual bool										canCreateRainbow();
+	virtual ABiome::Type									getType() const;
 
 	virtual float										randomFloat(float min, float max);
 	virtual int											randomInt(int min, int max);
@@ -206,6 +207,7 @@ private:
 	bool												m_canCreateSun;
 	bool												m_canCreateMoon;
 	bool												m_canCreateRainbow;
+	ABiome::Type											m_type;
 
 	Range<sf::Vector2f>									m_rockSize;
 	Range<std::size_t>									m_rockPartCount;

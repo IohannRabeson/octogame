@@ -62,6 +62,7 @@ DemoJungleABiome::DemoJungleABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 100.f)),
 	m_rockPartCount(6.f, 15.f),
@@ -713,6 +714,11 @@ sf::Time		DemoJungleABiome::getRainbowIntervalTime()
 bool			DemoJungleABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+ABiome::Type	DemoJungleABiome::getType() const
+{
+	return m_type;
 }
 
 

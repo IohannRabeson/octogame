@@ -62,6 +62,7 @@ JungleCBiome::JungleCBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_type(ABiome::Type::Jungle),
 
 	m_rockSize(sf::Vector2f(50.f, 250.f), sf::Vector2f(150.f, 500.f)),
 	m_rockPartCount(4.f, 10.f),
@@ -712,6 +713,11 @@ sf::Time		JungleCBiome::getRainbowIntervalTime()
 bool			JungleCBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+ABiome::Type	JungleCBiome::getType() const
+{
+	return m_type;
 }
 
 

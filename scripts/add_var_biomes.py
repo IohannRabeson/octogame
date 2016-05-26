@@ -11,10 +11,10 @@ if len(sys.argv) != 2:
   exit();
 
 mypath = sys.argv[1]
-var_name = "m_shader"
-type_name = "ResourcesKey"
-func_name = "getShader()"
-init_value = "0u"
+var_name = "m_type"
+type_name = "ABiome::Type"
+func_name = "getType() const"
+init_value = "ABiome::Type::Ice"
 
 def add_line_hpp(filename):
   for line in fileinput.input(mypath + filename, inplace=1):
@@ -32,11 +32,11 @@ def add_line_hpp(filename):
 def add_line_cpp(filename):
   skip_line = False
   for line in fileinput.input(mypath + filename, inplace=1):
-    if line.find('m_destinationIndex(') != -1:
+    if line.find('m_canCreateRainbow(') != -1:
     #init variable in constructor
       print line,
       print "\t" + var_name + "(" + init_value + "),"
-    elif line.find('return m_destinations[') != -1:
+    elif line.find('return (m_canCreateRainbow)') != -1:
       skip_line = True
       print line,
     elif skip_line == True:

@@ -3,6 +3,7 @@
 # include "GroundManager.hpp"
 # include "ResourceDefinitions.hpp"
 # include "ABiome.hpp"
+# include "ChallengeManager.hpp"
 # include <SFML/System/Vector2.hpp>
 # include <string>
 # include <memory>
@@ -44,10 +45,6 @@ public:
 	bool				isFirstTime(void) const { return m_data.firstTime; }
 	void				setFirstTime(bool firstTime) { m_data.firstTime = firstTime; }
 
-	void				startChallenge(void) { m_validChallenge = true; }
-	bool				canValidChallenge(void) const { return m_validChallenge; }
-	void				endChallenge(void) { m_validChallenge = false; }
-
 	void				setCanOpenDoubleJump(bool canOpen) { m_data.canOpenDoubleJump = canOpen; }
 	bool				canOpenDoubleJump(void) const { return m_data.canOpenDoubleJump; }
 
@@ -57,6 +54,9 @@ public:
 	float				getMusicVolume() const { return m_data.musicVol; }
 	void				setMusicVolume(float volume) { m_data.musicVol = volume; }
 	void				setSoundVolume(float volume) { m_data.soundVol = volume; }
+
+	void				validateChallenge(ChallengeManager::Effect effect);
+	bool				isValidateChallenge(ChallengeManager::Effect effect);
 
 	bool				canMoveMap();
 	bool				canRepair();
@@ -127,6 +127,7 @@ private:
 			canOpenDoubleJump(false)
 		{}
 
+		std::size_t		validateChallenge;
 		std::size_t		nanoRobotCount;
 		Level			nextDestination;
 		Level			lastDestination;
@@ -159,7 +160,6 @@ private:
 	bool											m_newSave;
 	bool											m_changeLevel;
 	bool											m_reverseSprite;
-	bool											m_validChallenge;
 	bool											m_spaceShipRepair;
 	sf::Vector2f									m_octoPos;
 

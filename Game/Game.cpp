@@ -69,6 +69,7 @@
 #include "WellKeeperNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
+#include "ChallengeManager.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -144,6 +145,7 @@ void	Game::loadLevel(void)
 
 	// Reset last values
 	postEffect.removeEffects();
+	ChallengeManager::getInstance().reset();
 	audio.reset();
 	// Reset PhysycsEngine
 	octo::Application::getCamera().setCenter(startPosition - sf::Vector2f(0.f, 200.f));
@@ -204,6 +206,7 @@ void	Game::update(sf::Time frameTime)
 	m_skyManager->update(frameTime);
 	m_konami->update(frameTime, m_octo->getPosition());
 	m_octo->startKonamiCode(m_konami->canStartEvent());
+	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
@@ -260,7 +263,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::DoubleJumpNanoRobot:
-			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canDoubleJump() && Progress::getInstance().canOpenDoubleJump() && !Progress::getInstance().canValidChallenge())
+			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
@@ -449,7 +452,7 @@ void Game::moveMap(sf::Time frameTime)
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && !Progress::getInstance().canValidChallenge())
+	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate))
 	{
 		m_groundSoundTime -= frameTime;
 		if (m_groundSoundTime < sf::Time::Zero)
@@ -457,7 +460,7 @@ void Game::moveMap(sf::Time frameTime)
 		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 		m_soundGeneration->setVolume(volume);
 	}
-	if (m_keyGroundRight || m_keyGroundLeft || Progress::getInstance().canValidChallenge())
+	if (m_keyGroundRight || m_keyGroundLeft || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
 	{
 		if (Progress::getInstance().canMoveMap())
 		{
@@ -552,7 +555,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.clear();
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
-	//m_musicPlayer->debugDraw(render);
+	m_musicPlayer.debugDraw(render);
 	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);

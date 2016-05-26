@@ -62,6 +62,7 @@ DesertBBiome::DesertBBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_type(ABiome::Type::Desert),
 
 	m_rockSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 400.f)),
 	m_rockPartCount(50.f, 80.f),
@@ -713,6 +714,11 @@ sf::Time		DesertBBiome::getRainbowIntervalTime()
 bool			DesertBBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+ABiome::Type	DesertBBiome::getType() const
+{
+	return m_type;
 }
 
 

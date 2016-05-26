@@ -18,7 +18,7 @@ public:
 	virtual void update(sf::Time frametime);
 	virtual float getHeight(void) const { return 0.f; }
 	std::size_t getId(void) const { return m_id; }
-	sf::Time getEffectDuration(void) const { return m_effectDuration; }
+	sf::Time getEffectDuration(void) const;
 
 protected:
 	enum CedricEvents
@@ -35,20 +35,13 @@ protected:
 	virtual void updatePhysics(void);
 
 private:
-	static std::size_t			Id;
+	static std::size_t			m_count;
 	octo::CharacterAnimation	m_idleAnimationNight;
 	octo::CharacterAnimation	m_walkAnimationNight;
 	octo::CharacterAnimation	m_special1AnimationNight;
 	octo::CharacterAnimation	m_special2AnimationNight;
 	SkyCycle const &			m_skyCycle;
 	bool						m_prevDayState;
-	sf::Shader					m_shader;
-	std::size_t					m_shaderIndex;
-	bool						m_startBalle;
-	sf::Time					m_timer;
-	sf::Time					m_effectDuration;
-	sf::Time					m_delay;
-	sf::Time					m_delayMax;
 	std::size_t					m_id;
 
 };
