@@ -12,10 +12,10 @@
 IceBBiome::IceBBiome() :
 	m_name("Ice B"),
 	m_id(Level::IceB),
-	m_seed("Level_One"),
+	m_seed("Ice B yo"),
 	m_mapSize(sf::Vector2u(550u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(457.f * 16.f, -1850.f),
+	m_octoStartPosition(457.f * 16.f, 1700.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -37,7 +37,7 @@ IceBBiome::IceBBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(17u, 28u),
-	m_treeCount(10u, 10u),
+	m_treeCount(6u, 7u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(4u, 8u),
 	m_starCount(500u, 800u),
@@ -220,24 +220,26 @@ std::vector<ParallaxScrolling::ALayer *> IceBBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(randomColor(sf::Color(0, 5, 10)), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -35, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 10.f, y, 2, 2.f);
+			return noise.perlin(x * 2.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	layer = new GenerativeLayer(randomColor(sf::Color(0, 5, 10)), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -30, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
+	/*
+	layer = new GenerativeLayer(sf::Color(0, 5, 10), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -25, 0.1f, 0.9f, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 1.1f, y);
 		});
 	vector.push_back(layer);
+	*/
 	return vector;
 }
 

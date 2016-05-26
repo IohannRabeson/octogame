@@ -15,7 +15,7 @@ IceABiome::IceABiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(36.f * 16.f, 60.f),
+	m_octoStartPosition(136.f * 16.f, 60.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -127,23 +127,25 @@ IceABiome::IceABiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[50] = GameObjectType::GroundTransformNanoRobot;
-	m_interestPointPosX = 320;
-	m_gameObjects[28] = GameObjectType::SpaceShip;
-	m_instances[20] = MAP_ICE_A_CRATER_OMP;
+	m_gameObjects[150] = GameObjectType::GroundTransformNanoRobot;
+	m_interestPointPosX = 420;
+	m_gameObjects[128] = GameObjectType::SpaceShip;
+	m_instances[70] = MAP_ICE_A_TRAIL_LEFT_OMP;
+	m_instances[120] = MAP_ICE_A_CRATER_OMP;
+	m_instances[170] = MAP_ICE_A_TRAIL_RIGHT_OMP;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::IceB || progress.getLastDestination() == Level::Default || progress.getLastDestination() == Level::DesertA)
-		m_octoStartPosition = sf::Vector2f(323 * 16.f, 600.f);
+		m_octoStartPosition = sf::Vector2f(423 * 16.f, 600.f);
 
-	m_gameObjects[320] = GameObjectType::Portal;
-	m_gameObjects[300] = GameObjectType::FranfranNpc;
+	m_gameObjects[420] = GameObjectType::Portal;
+	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_destinations.push_back(Level::IceB);
 
-	m_gameObjects[244] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[390] = GameObjectType::BirdBlueNpc;
+	m_gameObjects[344] = GameObjectType::BirdBlueNpc;
+	m_gameObjects[490] = GameObjectType::BirdBlueNpc;
 
-	m_treePos = {56, 200, 206, 209, 220, 229, 240, 254, 259, 275, 350, 359, 363, 369, 385, 401, 410, 423, 450};
+	m_treePos = {156, 300, 306, 309, 320, 329, 340, 354, 359, 375, 450, 459, 463, 469, 485, 501, 510, 523, 550};
 }
 
 void			IceABiome::setup(std::size_t seed)
@@ -219,7 +221,7 @@ std::map<std::size_t, std::string> const & IceABiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> IceABiome::getLayers()
 {
-	//sf::Vector2u const & mapSize = getMapSize();
+	sf::Vector2u const & mapSize = sf::Vector2u(getMapSize().x, getMapSize().y * 4u);
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
 	/*
@@ -229,19 +231,19 @@ std::vector<ParallaxScrolling::ALayer *> IceABiome::getLayers()
 			return noise.perlin(x * 10.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	*/
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, 10, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
+	layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.5f, 0.3f), mapSize, 15.f, 15, 0.2f, 0.8f, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.noise(x * 1.1f, y);
+			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	*/
 	return vector;
 }
 
@@ -249,17 +251,21 @@ Map::MapSurfaceGenerator IceABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
+		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float left = 20.f / static_cast<float>(m_mapSize.x);
-		float right = 70.f / static_cast<float>(m_mapSize.x);
-		float offset = 10.f / static_cast<float>(m_mapSize.x);
-		float upInstance = -0.5f;
-		if (x >= left - offset && x < left)
-			return octo::cosinusInterpolation(n, upInstance, (x - left + offset) / offset);
-		else if (x >= left && x < right)
-			return 30.f / 16.f;
-		else if (x >= right && x < right + offset)
-			return octo::cosinusInterpolation(n, upInstance, (offset - x - right) / offset);
+		std::vector<float> pointX = {50.f, 70.f, 120.f, 125.f, 165.f, 170.f, 220.f, 240.f};
+		std::vector<float> pointY = {n   , 0.f , 0.f  , 2.4f , 2.4f , 0.f  , 0.f  , n    };
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
+
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
 		return n;
 	};
 }
