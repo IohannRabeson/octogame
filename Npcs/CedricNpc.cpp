@@ -225,7 +225,10 @@ void CedricNpc::setupMachine(void)
 void CedricNpc::startBalle(void)
 {
 	if (m_id == 0u)
-		ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).start();
+	{
+		if (!Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate))
+			ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).start();
+	}
 	else
 		Progress::getInstance().validateChallenge(ChallengeManager::Effect::Duplicate);
 }
