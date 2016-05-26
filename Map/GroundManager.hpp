@@ -83,6 +83,7 @@ private:
 	DecorManager						m_decorManagerBack;
 	DecorManager						m_decorManagerFront;
 	DecorManager						m_decorManagerGround;
+	DecorManager						m_decorManagerInstance;
 	GenerationState						m_nextState;
 	std::unique_ptr<Water>				m_water;
 	sf::Vector2f						m_octoPosState;

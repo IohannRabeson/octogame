@@ -64,6 +64,7 @@
 #include "SlowFallNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
 #include "Progress.hpp"
+#include "Rock.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -84,6 +85,7 @@ GroundManager::GroundManager(void) :
 	m_decorManagerBack(200000),
 	m_decorManagerFront(50000),
 	m_decorManagerGround(15000),
+	m_decorManagerInstance(15000),
 	m_nextState(GenerationState::Next),
 	m_water(nullptr)
 {}
@@ -390,6 +392,17 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			}
 			else if (!decor.name.compare(OBJECT_ELEVATOR_TOP_BACK_OSS))
 				spawnElevator = true;
+			else if (!decor.name.substr(0, 6).compare("decor_"))
+			{
+				ADecor * adecor = nullptr;
+				if (!decor.name.compare("decor_pyramid.oss"))//TODO replace by DECOR_TREE_OSS
+					adecor = new Rock();
+				if (adecor)
+				{
+					adecor->setPosition(position);
+					m_decorManagerInstance.add(adecor);
+				}
+			}
 			else if (!decor.isFront)
 				m_instanceDecors.emplace_back(std::unique_ptr<InstanceDecor>(m_decorFactory.create(decor.name, decor.scale, position)));
 			else
@@ -705,6 +718,7 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	m_decorManagerBack.setup(&biome);
 	m_decorManagerFront.setup(&biome);
 	m_decorManagerGround.setup(&biome);
+	m_decorManagerInstance.setup(&biome);
 	std::vector<int> & deathTreePos = Progress::getInstance().getDeathPos();
 	std::size_t mapSizeX = biome.getMapSize().x;
 
@@ -1063,7 +1077,6 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	placeMax(m_otherObjectsHigh, currentWide, prevWide, transition);
 	placeMin(m_otherObjectsLow, currentWide, prevWide, transition);
 
-
 	// Replace npc around the map
 	float mapSizeX = m_mapSize.x * Tile::TileSize;
 	for (auto const & npc : m_npcsOnFloor)
@@ -1114,6 +1127,13 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			decor->addMapOffset(-mapSizeX, 0.f);
 	}
 
+	for (auto it = m_decorManagerInstance.begin(); it != m_decorManagerInstance.end(); it++)
+	{
+		if ((*it)->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			(*it)->setPosition((*it)->getPosition() + sf::Vector2f(mapSizeX, 0.f));
+		else if ((*it)->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			(*it)->setPosition((*it)->getPosition() - sf::Vector2f(mapSizeX, 0.f));
+	}
 
 	for (auto const & robot : m_nanoRobotOnInstance)
 	{
@@ -1317,11 +1337,13 @@ void GroundManager::updateDecors(sf::Time deltatime)
 		(*it)->setPosition(m_decorPositions[i]);
 	for (auto it = m_decorManagerGround.begin(); it != m_decorManagerGround.end(); it++, i++)
 		(*it)->setPosition(m_decorPositions[i]);
+	//TODO update decorposition
 
 	octo::Camera& camera = octo::Application::getCamera();
 	m_decorManagerBack.update(deltatime, camera);
 	m_decorManagerFront.update(deltatime, camera);
 	m_decorManagerGround.update(deltatime, camera);
+	m_decorManagerInstance.update(deltatime, camera);
 }
 
 void GroundManager::updateGameObjects(sf::Time frametime)
@@ -1399,6 +1421,7 @@ void GroundManager::update(float deltatime)
 void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	render.draw(m_decorManagerBack, states);
+	render.draw(m_decorManagerInstance, states);
 	for (auto & decor : m_instanceDecors)
 		decor->draw(render, states);
 	for (auto & objectHigh : m_otherObjectsHigh)
