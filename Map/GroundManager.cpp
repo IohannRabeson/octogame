@@ -89,7 +89,8 @@ GroundManager::GroundManager(void) :
 	m_decorManagerBack(200000),
 	m_decorManagerFront(50000),
 	m_decorManagerGround(15000),
-	m_decorManagerInstance(15000),
+	m_decorManagerInstanceBack(15000),
+	m_decorManagerInstanceFront(15000),
 	m_nextState(GenerationState::Next),
 	m_water(nullptr)
 {}
@@ -413,8 +414,11 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					adecor = new Rainbow();
 				if (adecor)
 				{
-					adecor->setPosition(position);
-					m_decorManagerInstance.add(adecor);
+					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));
+					if (decor.isFront || !decor.name.compare(DECOR_GROUND_OSS))
+						m_decorManagerInstanceFront.add(adecor);
+					else
+						m_decorManagerInstanceBack.add(adecor);
 				}
 			}
 			else if (!decor.isFront)
@@ -732,7 +736,8 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	m_decorManagerBack.setup(&biome);
 	m_decorManagerFront.setup(&biome);
 	m_decorManagerGround.setup(&biome);
-	m_decorManagerInstance.setup(&biome);
+	m_decorManagerInstanceBack.setup(&biome);
+	m_decorManagerInstanceFront.setup(&biome);
 	std::vector<int> & deathTreePos = Progress::getInstance().getDeathPos();
 	std::size_t mapSizeX = biome.getMapSize().x;
 
@@ -1141,7 +1146,15 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			decor->addMapOffset(-mapSizeX, 0.f);
 	}
 
-	for (auto it = m_decorManagerInstance.begin(); it != m_decorManagerInstance.end(); it++)
+	for (auto it = m_decorManagerInstanceBack.begin(); it != m_decorManagerInstanceBack.end(); it++)
+	{
+		if ((*it)->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			(*it)->setPosition((*it)->getPosition() + sf::Vector2f(mapSizeX, 0.f));
+		else if ((*it)->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			(*it)->setPosition((*it)->getPosition() - sf::Vector2f(mapSizeX, 0.f));
+	}
+
+	for (auto it = m_decorManagerInstanceFront.begin(); it != m_decorManagerInstanceFront.end(); it++)
 	{
 		if ((*it)->getPosition().x < m_offset.x - mapSizeX / 2.f)
 			(*it)->setPosition((*it)->getPosition() + sf::Vector2f(mapSizeX, 0.f));
@@ -1357,7 +1370,8 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerBack.update(deltatime, camera);
 	m_decorManagerFront.update(deltatime, camera);
 	m_decorManagerGround.update(deltatime, camera);
-	m_decorManagerInstance.update(deltatime, camera);
+	m_decorManagerInstanceBack.update(deltatime, camera);
+	m_decorManagerInstanceFront.update(deltatime, camera);
 }
 
 void GroundManager::updateGameObjects(sf::Time frametime)
@@ -1435,7 +1449,7 @@ void GroundManager::update(float deltatime)
 void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	render.draw(m_decorManagerBack, states);
-	render.draw(m_decorManagerInstance, states);
+	render.draw(m_decorManagerInstanceBack, states);
 	for (auto & decor : m_instanceDecors)
 		decor->draw(render, states);
 	for (auto & objectHigh : m_otherObjectsHigh)
@@ -1465,6 +1479,7 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
+	render.draw(m_decorManagerInstanceFront, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->draw(render, states);
 	for (auto & nano : m_nanoRobots)

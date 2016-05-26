@@ -244,27 +244,23 @@ Map::MapSurfaceGenerator IceBBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 50.f / static_cast<float>(m_mapSize.x);
-		float end = 300.f / static_cast<float>(m_mapSize.x);
-		float offset = 25.f / static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 1.78f;
-		float mapHigh = - 1.76f;
+		float floatMapSize = static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		std::vector<float> pointX = {25.f, 50.f, 51.f, 299.f, 300.f, 325.f};
+		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.2f , 0.f  , n    };
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start + offset) / offset);
-		else if (x > start && x <= end)
-			return mapHigh;
-		else if (x > end && x <= end + offset)
-			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
-		else
-			return n;
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
-	/*
-	return [](Noise & noise, float x, float y)
-	{
-		return noise.fBm(x, y, 3, 3.f, 0.3f) - 2.f;
-	};
-	*/
 }
 
 Map::TileColorGenerator IceBBiome::getTileColorGenerator()
