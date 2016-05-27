@@ -1370,7 +1370,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 				m_afterJumpVelocity = m_pixelSecondAfterJump;
 			}
 			break;
-		case OctoKeys::Up:
+		case OctoKeys::SlowFall:
 			m_keyUp = false;
 			if (!m_keyE)
 				m_keyElevator = false;
