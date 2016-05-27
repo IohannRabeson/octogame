@@ -22,7 +22,11 @@ public:
 		GroundLeft = 9,
 		GroundRight = 10,
 		Infos = 11,
-		None = 12
+		ViewLeft = 12,
+		ViewRight = 13,
+		ViewUp = 14,
+		ViewDown = 15,
+		None = 16
 	};
 
 	InputListener(void);
@@ -39,6 +43,8 @@ private:
 	bool					m_joystickRT;
 	bool					m_joystickAxisX;
 	bool					m_joystickAxisY;
+	bool					m_joystickAxisU;
+	bool					m_joystickAxisV;
 	float					m_triggerLimit;
 
 	// Keyboard

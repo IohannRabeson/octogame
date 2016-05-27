@@ -9,67 +9,107 @@ CameraMovement::CameraMovement(void) :
 	m_behavior(Behavior::FollowOcto),
 	m_speed(4.f),
 	m_maxSpeed(5.f),
-	m_transition(0.f)
-{}
+	m_verticalTransition(0.f),
+	m_horizontalTransition(0.f),
+	m_horizontalAxis(0.f),
+	m_verticalAxis(0.f)
+{
+	InputListener::addInputListener();
+}
 
 void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 {
 	octo::Camera & camera = octo::Application::getCamera();
 
-	if (octo.isFalling())
-		m_behavior = Behavior::OctoFalling;
-
 	if (octo.isRaising())
 		m_behavior = Behavior::OctoRaising;
+	else if (m_behavior != ControlledByPlayer)
+	{
+		if (octo.isFalling())
+			m_behavior = Behavior::OctoFalling;
+		else
+			m_behavior = Behavior::FollowOcto;
+	}
 
-	sf::Vector2f goalTop = octo.getPosition();
-	goalTop.y -= camera.getRectangle().height / 5.f;
-	sf::Vector2f goalBot = octo.getPosition();
-	goalBot.y += camera.getRectangle().height / 3.f;
+	float goalTop = octo.getPosition().y;
+	goalTop -= camera.getRectangle().height / 5.f;
+	float goalBot = octo.getPosition().y;
+	goalBot += camera.getRectangle().height / 3.f;
+	float goalLeft = octo.getPosition().x;
+	goalLeft -= camera.getRectangle().width / 3.f;
+	float goalRight = octo.getPosition().x;
+	goalRight += camera.getRectangle().width / 3.f;
 
 	switch (m_behavior)
 	{
 		case Behavior::FollowOcto:
 		{
-			m_transition -= 0.3f * frametime.asSeconds();
-			if (m_transition < 0.f)
-				m_transition = 0.f;
+			m_verticalTransition -= 0.3f * frametime.asSeconds();
+			if (m_verticalTransition < 0.f)
+				m_verticalTransition = 0.f;
+			if (m_horizontalTransition < 0.f)
+				m_horizontalTransition += frametime.asSeconds();
+			else if (m_horizontalTransition > 0.f)
+				m_horizontalTransition -= frametime.asSeconds();
 			break;
 		}
 		case Behavior::OctoFalling:
 		{
-			m_transition += 0.5f * frametime.asSeconds();
-			if (m_transition > 1.f)
-				m_transition = 1.f;
+			m_verticalTransition += 0.5f * frametime.asSeconds();
+			if (m_verticalTransition > 1.f)
+				m_verticalTransition = 1.f;
+			if (m_horizontalTransition < 0.f)
+				m_horizontalTransition += frametime.asSeconds();
+			else if (m_horizontalTransition > 0.f)
+				m_horizontalTransition -= frametime.asSeconds();
 			break;
 		}
 		case Behavior::OctoRaising:
 		{
-			m_transition -= frametime.asSeconds();
-			if (m_transition < 0.f)
-				m_transition = 0.f;
+			m_verticalTransition -= frametime.asSeconds();
+			if (m_verticalTransition < 0.f)
+				m_verticalTransition = 0.f;
+			if (m_horizontalTransition < 0.f)
+				m_horizontalTransition += frametime.asSeconds();
+			else if (m_horizontalTransition > 0.f)
+				m_horizontalTransition -= frametime.asSeconds();
+			break;
+		}
+		case Behavior::ControlledByPlayer:
+		{
+			m_verticalTransition += m_verticalAxis * frametime.asSeconds();
+			m_horizontalTransition += m_horizontalAxis * frametime.asSeconds();
+			if (m_verticalTransition > 1.f)
+				m_verticalTransition = 1.f;
+			if (m_verticalTransition < 0.f)
+				m_verticalTransition = 0.f;
+			if (m_horizontalTransition > 1.f)
+				m_horizontalTransition = 1.f;
+			if (m_horizontalTransition < -1.f)
+				m_horizontalTransition = -1.f;
 			break;
 		}
 		default:
 			break;
 	}
-	sf::Vector2f goal = octo::linearInterpolation(goalTop, goalBot, m_transition);
+	sf::Vector2f goal = sf::Vector2f(octo::linearInterpolation(goalRight, goalLeft, (m_horizontalTransition + 1.f) / 2.f),
+						octo::linearInterpolation(goalTop, goalBot, m_verticalTransition));
+
 	float t = (std::abs(goal.y - camera.getCenter().y) / (camera.getRectangle().height / 2.f));
 	m_speed = octo::linearInterpolation(1.f, m_maxSpeed, std::min(t, 1.f));
 	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()));
 
-	m_behavior = FollowOcto;
 	m_circle.setPosition(goal);
 	m_circle.setFillColor(sf::Color::Red);
 	m_circle.setRadius(10.f);
 }
 
-void CameraMovement::draw(sf::RenderTarget & render)
+void CameraMovement::draw(sf::RenderTarget &)
 {
-	render.draw(m_circle);
-	m_circle.setPosition(octo::Application::getCamera().getCenter());
-	m_circle.setFillColor(sf::Color::Green);
-	render.draw(m_circle);
+	//render.draw(m_circle);
+	//m_circle.setPosition(octo::Application::getCamera().getCenter());
+	//m_circle.setFillColor(sf::Color::Green);
+	//render.draw(m_circle);
 }
 
 void CameraMovement::collideZoom(sf::Time)
@@ -80,3 +120,46 @@ void CameraMovement::collideZoomEvent(sf::Vector2f const &)
 
 void CameraMovement::setEventFallTimer(sf::Time const &)
 {}
+
+bool CameraMovement::onInputPressed(InputListener::OctoKeys const & key)
+{
+	if (key == InputListener::OctoKeys::ViewLeft)
+	{
+		m_behavior = Behavior::ControlledByPlayer;
+		m_horizontalAxis = 1.f;
+	}
+	else if (key == InputListener::OctoKeys::ViewRight)
+	{
+		m_behavior = Behavior::ControlledByPlayer;
+		m_horizontalAxis = -1.f;
+	}
+
+	if (key == InputListener::OctoKeys::ViewDown)
+	{
+		m_behavior = Behavior::ControlledByPlayer;
+		m_verticalAxis = 1.f;
+	}
+	else if (key == InputListener::OctoKeys::ViewUp)
+	{
+		m_behavior = Behavior::ControlledByPlayer;
+		m_verticalAxis = -1.f;
+	}
+	return true;
+}
+
+bool CameraMovement::onInputReleased(InputListener::OctoKeys const & key)
+{
+	if (key == InputListener::OctoKeys::ViewLeft || key == InputListener::OctoKeys::ViewRight)
+	{
+		m_horizontalAxis = 0.f;
+		if (m_verticalAxis == 0.f)
+			m_behavior = Behavior::FollowOcto;
+	}
+	if (key == InputListener::OctoKeys::ViewUp || key == InputListener::OctoKeys::ViewDown)
+	{
+		m_verticalAxis = 0.f;
+		if (m_horizontalAxis == 0.f)
+			m_behavior = Behavior::FollowOcto;
+	}
+	return true;
+}

@@ -1,6 +1,8 @@
 #ifndef CAMERAMOVEMENT_HPP
 # define CAMERAMOVEMENT_HPP
 
+# include "InputListener.hpp"
+
 # include <SFML/System/Vector2.hpp>
 # include <SFML/System/Time.hpp>
 # include <SFML/Graphics.hpp>
@@ -9,7 +11,7 @@
 
 class CharacterOcto;
 
-class CameraMovement
+class CameraMovement : public InputListener
 {
 public:
 	enum Behavior
@@ -30,11 +32,17 @@ public:
 	void setEventFallTimer(sf::Time const & eventFallTimer);
 	void draw(sf::RenderTarget & render);
 
+	bool onInputPressed(InputListener::OctoKeys const & key);
+	bool onInputReleased(InputListener::OctoKeys const & key);
+
 private:
 	Behavior		m_behavior;
 	float			m_speed;
 	float			m_maxSpeed;
-	float			m_transition;
+	float			m_verticalTransition;
+	float			m_horizontalTransition;
+	float			m_horizontalAxis;
+	float			m_verticalAxis;
 	sf::CircleShape	m_circle;
 
 };

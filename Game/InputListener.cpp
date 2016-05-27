@@ -8,6 +8,8 @@ InputListener::InputListener(void) :
 	m_joystickRT(false),
 	m_joystickAxisX(false),
 	m_joystickAxisY(false),
+	m_joystickAxisU(false),
+	m_joystickAxisV(false),
 	m_triggerLimit(0.f)
 {
 	// Unix
@@ -143,10 +145,51 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 	return true;
 }
 
+#include <iostream>
 void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 {
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
 	{
+		if (event.axis == sf::Joystick::U)
+		{
+			if (event.position > 50)
+			{
+				m_joystickAxisU = true;
+				onInputPressed(OctoKeys::ViewRight);
+			}
+			else if (event.position < -50)
+			{
+				m_joystickAxisU = true;
+				onInputPressed(OctoKeys::ViewLeft);
+			}
+			else if (m_joystickAxisU == true)
+			{
+				m_joystickAxisU = false;
+				onInputReleased(OctoKeys::ViewLeft);
+				onInputReleased(OctoKeys::ViewRight);
+			}
+		}
+
+		if (event.axis == sf::Joystick::V)
+		{
+			if (event.position > 50)
+			{
+				m_joystickAxisV = true;
+				onInputPressed(OctoKeys::ViewDown);
+			}
+			else if (event.position < -50)
+			{
+				m_joystickAxisV = true;
+				onInputPressed(OctoKeys::ViewUp);
+			}
+			else if (m_joystickAxisV == true)
+			{
+				m_joystickAxisV = false;
+				onInputReleased(OctoKeys::ViewUp);
+				onInputReleased(OctoKeys::ViewDown);
+			}
+		}
+
 		if (event.axis == sf::Joystick::X || event.axis == sf::Joystick::PovX)
 		{
 			if (event.position > 50)
@@ -168,7 +211,6 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 		}
 #ifdef _WIN32
 		// If Xbox controller
-
 		if (event.axis == sf::Joystick::Y)
 		{
 			if (event.position < -50)
@@ -284,8 +326,6 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 				onInputReleased(OctoKeys::GroundRight);
 			}
 		}
-
-
 #endif
 	}
 }
@@ -295,42 +335,7 @@ void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
 	{
 		assert(event.button < m_inputs.size());
-		switch (m_inputs[event.button])
-		{
-			case OctoKeys::Left:
-				onInputPressed(OctoKeys::Left);
-				break;
-			case OctoKeys::Right:
-				onInputPressed(OctoKeys::Right);
-				break;
-			case OctoKeys::Jump:
-				onInputPressed(OctoKeys::Jump);
-				break;
-			case OctoKeys::Up:
-				onInputPressed(OctoKeys::Up);
-				break;
-			case OctoKeys::Down:
-				onInputPressed(OctoKeys::Down);
-				break;
-			case OctoKeys::Use:
-				onInputPressed(OctoKeys::Use);
-				break;
-			case OctoKeys::GroundRight:
-				onInputPressed(OctoKeys::GroundRight);
-				break;
-			case OctoKeys::GroundLeft:
-				onInputPressed(OctoKeys::GroundLeft);
-				break;
-			case OctoKeys::SlowFall:
-				onInputPressed(OctoKeys::SlowFall);
-				onInputPressed(OctoKeys::Up);
-				break;
-			case OctoKeys::Menu:
-				onInputPressed(OctoKeys::Menu);
-				break;
-			default:
-				break;
-		}
+		onInputPressed(m_inputs[event.button]);
 	}
 }
 
@@ -339,44 +344,6 @@ void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
 	{
 		assert(event.button < m_inputs.size());
-		switch (m_inputs[event.button])
-		{
-			case OctoKeys::Left:
-				onInputReleased(OctoKeys::Left);
-				break;
-			case OctoKeys::Right:
-				onInputReleased(OctoKeys::Right);
-				break;
-			case OctoKeys::Jump:
-				onInputReleased(OctoKeys::Jump);
-				break;
-			case OctoKeys::Up:
-				onInputReleased(OctoKeys::Up);
-				break;
-			case OctoKeys::Down:
-				onInputReleased(OctoKeys::Down);
-				break;
-			case OctoKeys::Use:
-				onInputReleased(OctoKeys::Use);
-				break;
-			case OctoKeys::GroundRight:
-				onInputReleased(OctoKeys::GroundRight);
-				break;
-			case OctoKeys::GroundLeft:
-				onInputReleased(OctoKeys::GroundLeft);
-				break;
-			case OctoKeys::SelectMenu:
-				onInputPressed(OctoKeys::SelectMenu);
-				break;
-			case OctoKeys::SlowFall:
-				onInputReleased(OctoKeys::SlowFall);
-				onInputReleased(OctoKeys::Up);
-				break;
-			case OctoKeys::Menu:
-				onInputReleased(OctoKeys::Menu);
-				break;
-			default:
-				break;
-		}
+		onInputReleased(m_inputs[event.button]);
 	}
 }
