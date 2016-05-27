@@ -20,7 +20,7 @@ IceDBiome::IceDBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
 	m_tileEndColor(27, 79, 101),
-	m_waterLevel(-1.f),
+	m_waterLevel(1000.f),
 	m_waterColor(255, 255, 255, 200),
 	m_destinationIndex(0u),
 
@@ -136,18 +136,19 @@ IceDBiome::IceDBiome() :
 	m_gameObjects[100] = GameObjectType::HouseFlatSnow;
 	m_gameObjects[150] = GameObjectType::Snowman1Npc;
 	m_gameObjects[190] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[270] = GameObjectType::EngineSnow;
-	m_gameObjects[310] = GameObjectType::StrangerSnowNpc;
+	m_instances[220] = MAP_ICE_D_ELEVATOR_OMP;
+	m_gameObjects[250] = GameObjectType::EngineSnow;
+	m_gameObjects[360] = GameObjectType::StrangerSnowNpc;
 	m_gameObjects[340] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[355] = GameObjectType::Portal;
-	m_gameObjects[400] = GameObjectType::SnowGirl2Npc;
+	m_gameObjects[400] = GameObjectType::RepairNanoRobot;
+//	m_gameObjects[355] = GameObjectType::Portal;
+//	m_gameObjects[400] = GameObjectType::SnowGirl2Npc;
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
-	m_gameObjects[475] = GameObjectType::StrangerGirlSnowNpc;
 	m_gameObjects[510] = GameObjectType::BirdBlueNpc;
-	//m_gameObjects[570] = GameObjectType::EngineSnow;
 	m_instances[551] = MAP_ICE_D_TRAIL_OMP;
-	m_destinations.push_back(Level::IceB);
+	m_gameObjects[630] = GameObjectType::StrangerGirlSnowNpc;
 	m_destinations.push_back(Level::DesertA);
+	m_destinations.push_back(Level::IceB);
 }
 
 void			IceDBiome::setup(std::size_t seed)
@@ -216,6 +217,11 @@ sf::Color	IceDBiome::getWaterColor()
 	return m_waterColor;
 }
 
+bool		IceDBiome::isDeadlyWater()
+{
+	return true;
+}
+
 std::map<std::size_t, std::string> const & IceDBiome::getInstances()
 {
 	return m_instances;
@@ -247,8 +253,8 @@ Map::MapSurfaceGenerator IceDBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {/*house*/50.f, 100.f, 127.f, 128.f , 132.f, 137.f , 138.f, 160.f, 161.f, 166.f, 170.f , 171.f, 190.f, 250.f,/*lake*/500.f, 550.f, 551.f, 620.f, 621.f, 740.f};
-		std::vector<float> pointY = {/*house*/n   , -1.f , -1.f , 10.f  , 11.f , 10.f  , -1.f , -1.f , 10.f , 11.f , 10.f  , -1.f , -1.f , n    ,/*lake*/n    , 0.5f  , 4.f , 4.f  , 2.f  , n    };
+		std::vector<float> pointX = {/*house*/50.f, 100.f, 127.f, 132.f, 138.f, 160.f, 166.f, 171.f, 220.f, 260.f,/*lake*/500.f, 550.f, 551.f, 620.f, 621.f, 740.f};
+		std::vector<float> pointY = {/*house*/n   , -1.f , -1.f , 5.f  , -1.f , -1.f , 5.f  , -1.f , -1.f , n    ,/*lake*/n    , 0.5f  , 4.f , 4.f  , 2.f  , n    };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -268,9 +274,9 @@ Map::TileColorGenerator IceDBiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart(getRockColor());
 	sf::Color secondColorEnd(getRockColor());
-	float startTransition = 1500.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = 3000.f / static_cast<float>(m_mapSize.y);
-	float endTransition = 5000.f / static_cast<float>(m_mapSize.y);
+	float startTransition = 1000.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 2500.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 4500.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;

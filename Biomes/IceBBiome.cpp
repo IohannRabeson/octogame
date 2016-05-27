@@ -132,8 +132,8 @@ IceBBiome::IceBBiome() :
 	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::DesertA || progress.getLastDestination() == Level::IceD)
-		m_octoStartPosition = sf::Vector2f(4450, -1850.f);
+	if (progress.getLastDestination() == Level::IceD)
+		m_octoStartPosition = sf::Vector2f(4450, 1600.f);
 
 	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[320] = GameObjectType::BirdBlueNpc;
