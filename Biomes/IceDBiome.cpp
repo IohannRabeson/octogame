@@ -13,9 +13,9 @@ IceDBiome::IceDBiome() :
 	m_name("Ice D"),
 	m_id(Level::IceD),
 	m_seed("Level_One"),
-	m_mapSize(sf::Vector2u(600u, 1u)),
+	m_mapSize(sf::Vector2u(750u, 36u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(16.f * 37.f, -500.f),
+	m_octoStartPosition(16.f * 37.f, -100.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -64,8 +64,8 @@ IceDBiome::IceDBiome() :
 	m_canCreateRainbow(false),
 	m_type(ABiome::Type::Ice),
 
-	m_rockSize(sf::Vector2f(50.f, 100.f), sf::Vector2f(100.f, 200.f)),
-	m_rockPartCount(2.f, 10.f),
+	m_rockSize(sf::Vector2f(30.f, 100.f), sf::Vector2f(70.f, 200.f)),
+	m_rockPartCount(3.f, 10.f),
 	m_rockColor(0, 31, 63),
 
 	m_treeDepth(5u, 7u),
@@ -134,7 +134,7 @@ IceDBiome::IceDBiome() :
 
 	m_gameObjects[30] = GameObjectType::Portal;
 	m_gameObjects[100] = GameObjectType::HouseFlatSnow;
-	m_gameObjects[140] = GameObjectType::Snowman1Npc;
+	m_gameObjects[150] = GameObjectType::Snowman1Npc;
 	m_gameObjects[190] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[270] = GameObjectType::EngineSnow;
 	m_gameObjects[310] = GameObjectType::StrangerSnowNpc;
@@ -222,17 +222,10 @@ std::map<std::size_t, std::string> const & IceDBiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> IceDBiome::getLayers()
 {
-	//sf::Vector2u const & mapSize = getMapSize();
+	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	/*
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 10.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
@@ -244,24 +237,54 @@ std::vector<ParallaxScrolling::ALayer *> IceDBiome::getLayers()
 			return noise.noise(x * 1.1f, y);
 		});
 	vector.push_back(layer);
-	*/
 	return vector;
 }
 
 Map::MapSurfaceGenerator IceDBiome::getMapSurfaceGenerator()
 {
-	return [](Noise & noise, float x, float y)
+	return [this](Noise & noise, float x, float y)
 	{
-		return noise.fBm(x, y, 3, 3.f, 0.3f);
+		float floatMapSize = static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		std::vector<float> pointX = {/*house*/50.f, 100.f, 127.f, 128.f , 132.f, 137.f , 138.f, 160.f, 161.f, 166.f, 170.f , 171.f, 190.f, 250.f,/*lake*/550.f, 551.f  , 621.f  , 740.f};
+		std::vector<float> pointY = {/*house*/n   , -1.f , -1.f , 10.f  , 11.f , 10.f  , -1.f , -1.f , 10.f , 11.f , 10.f  , -1.f , -1.f , n    ,/*lake*/n    , n + 3.f, n + 3.f, n    };
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
+
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
 }
 
 Map::TileColorGenerator IceDBiome::getTileColorGenerator()
 {
-	return [this](Noise & noise, float x, float y, float z)
+	sf::Color secondColorStart(getRockColor());
+	sf::Color secondColorEnd(getRockColor());
+	float startTransition = 1500.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 3000.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 5000.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
-		//float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		float transition = (noise.noise(x / 10.f, std::cos(y / 20.f), z * 10.f) + 1.f) / 2.f;
+		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > startTransition && y <= middleTransition)
+		{
+			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
+		}
+		else if (y > middleTransition && y <= endTransition)
+		{
+			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
+			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
+		}
+		if (y > endTransition)
+			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }

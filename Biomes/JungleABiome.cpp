@@ -259,12 +259,6 @@ std::vector<ParallaxScrolling::ALayer *> JungleABiome::getLayers()
 		return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.noise(x * 1.1f, y);
-	//	});
-	//vector.push_back(layer);
 	return vector;
 }
 
