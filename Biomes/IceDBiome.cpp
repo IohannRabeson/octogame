@@ -144,7 +144,8 @@ IceDBiome::IceDBiome() :
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
 	m_gameObjects[475] = GameObjectType::StrangerGirlSnowNpc;
 	m_gameObjects[510] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[570] = GameObjectType::EngineSnow;
+	//m_gameObjects[570] = GameObjectType::EngineSnow;
+	m_instances[551] = MAP_ICE_D_TRAIL_OMP;
 	m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::DesertA);
 }
@@ -246,8 +247,8 @@ Map::MapSurfaceGenerator IceDBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {/*house*/50.f, 100.f, 127.f, 128.f , 132.f, 137.f , 138.f, 160.f, 161.f, 166.f, 170.f , 171.f, 190.f, 250.f,/*lake*/550.f, 551.f  , 621.f  , 740.f};
-		std::vector<float> pointY = {/*house*/n   , -1.f , -1.f , 10.f  , 11.f , 10.f  , -1.f , -1.f , 10.f , 11.f , 10.f  , -1.f , -1.f , n    ,/*lake*/n    , n + 3.f, n + 3.f, n    };
+		std::vector<float> pointX = {/*house*/50.f, 100.f, 127.f, 128.f , 132.f, 137.f , 138.f, 160.f, 161.f, 166.f, 170.f , 171.f, 190.f, 250.f,/*lake*/500.f, 550.f, 551.f, 620.f, 621.f, 740.f};
+		std::vector<float> pointY = {/*house*/n   , -1.f , -1.f , 10.f  , 11.f , 10.f  , -1.f , -1.f , 10.f , 11.f , 10.f  , -1.f , -1.f , n    ,/*lake*/n    , 0.5f  , 4.f , 4.f  , 2.f  , n    };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
