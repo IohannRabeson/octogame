@@ -135,8 +135,8 @@ IceABiome::IceABiome() :
 	m_instances[170] = MAP_ICE_A_TRAIL_RIGHT_OMP;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::IceB || progress.getLastDestination() == Level::Default || progress.getLastDestination() == Level::DesertA)
-		m_octoStartPosition = sf::Vector2f(423 * 16.f, 400.f);
+	if (progress.getLastDestination() == Level::IceB)
+		m_octoStartPosition = sf::Vector2f(423 * 16.f, 0.f);
 
 	m_gameObjects[420] = GameObjectType::Portal;
 	m_gameObjects[400] = GameObjectType::FranfranNpc;
