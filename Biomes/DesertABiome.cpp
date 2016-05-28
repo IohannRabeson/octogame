@@ -13,9 +13,9 @@ DesertABiome::DesertABiome() :
 	m_name("Desert A"),
 	m_id(Level::DesertA),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(900u, 128u)),
+	m_mapSize(sf::Vector2u(600u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(43.f * 16.f, 600.f),
+	m_octoStartPosition(583.f * 16.f, 600.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
@@ -62,7 +62,7 @@ DesertABiome::DesertABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
-	m_type(ABiome::Type::Desert),
+	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 400.f)),
 	m_rockPartCount(50.f, 80.f),
@@ -133,32 +133,22 @@ DesertABiome::DesertABiome() :
 		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
 
 	// Define game objects
-	m_gameObjects[20] = GameObjectType::JuNpc;
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_instances[353] = MAP_DESERT_A_WAVE_OMP;
-	m_instances[580] = MAP_DESERT_A_JUMP_OMP;
-	m_instances[11] = MAP_DESERT_A_PYRAMID_OMP;
-	m_instances[175] = MAP_DESERT_A_PORTAL_OMP;
-	m_gameObjects[300] = GameObjectType::TurbanNpc;
-	m_gameObjects[556] = GameObjectType::FannyNpc;
-	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
-	m_gameObjects[645] = GameObjectType::Bouibouik;
-	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
-	m_gameObjects[750] = GameObjectType::Tent;
-	m_gameObjects[700] = GameObjectType::Portal;
-	m_gameObjects[845] = GameObjectType::Well;
-	if (!progress.canUseWaterJump())
-		m_gameObjects[880] = GameObjectType::WellKeeperNpc;
-	else
-		m_gameObjects[88] = GameObjectType::WellKeeperNpc;
-	m_interestPointPosX = 500;
+	m_gameObjects[560] = GameObjectType::JuNpc;
+	m_gameObjects[580] = GameObjectType::Portal;
+	m_instances[53] = MAP_DESERT_A_WAVE_OMP;
+	m_instances[280] = MAP_DESERT_A_JUMP_OMP;
+	m_gameObjects[70] = GameObjectType::TurbanNpc;
+	m_gameObjects[256] = GameObjectType::FannyNpc;
+	m_gameObjects[440] = GameObjectType::OldDesertStaticNpc;
+	m_gameObjects[450] = GameObjectType::Tent;
+	m_gameObjects[400] = GameObjectType::Portal;
+	m_interestPointPosX = 53;
 
-	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
+	m_treePos = {377, 382, 389, 397, 410, 411, 423, 460, 463, 485, 490, 494, 503};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::DemoJungleA);
 	m_destinations.push_back(Level::IceA);
-	m_destinations.push_back(Level::IceD);
-	m_destinations.push_back(Level::DesertB);
 }
 
 void			DesertABiome::setup(std::size_t seed)
@@ -245,18 +235,6 @@ std::vector<ParallaxScrolling::ALayer *> DesertABiome::getLayers()
 			return noise.perlin(x * 1.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.perlin(x, y, 3, 2.f);
-	//	});
-	//vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.noise(x * 1.1f, y);
-	//	});
-	//vector.push_back(layer);
 	return vector;
 }
 
@@ -264,11 +242,9 @@ Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 680.f / static_cast<float>(m_mapSize.x);
-		float end = 800.f / static_cast<float>(m_mapSize.x);
+		float start = 380.f / static_cast<float>(m_mapSize.x);
+		float end = 500.f / static_cast<float>(m_mapSize.x);
 		float offset = 10.f / static_cast<float>(m_mapSize.x);
-		float startHole = 850.f / static_cast<float>(m_mapSize.x);
-		float endHole = 869.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float mapHigh = n / 3.f - 1.9f;
 
@@ -278,8 +254,6 @@ Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 			return mapHigh;
 		else if (x > end && x <= end + offset)
 			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
-		else if (x > startHole && x < endHole)
-			return 4.0f;
 		else
 			return n;
 	};
@@ -287,9 +261,41 @@ Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DesertABiome::getTileColorGenerator()
 {
-	return [this](Noise & noise, float x, float y, float z)
+	sf::Color secondColorStart = m_particleColor[0];
+	sf::Color secondColorEnd = m_particleColor[1];
+	float start1 = -14700.f / static_cast<float>(m_mapSize.y);
+	float start2 = -14000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -13000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = -6300.f / static_cast<float>(m_mapSize.y);
+	float end1 = -3000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 0.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > start1 && y <= start2)
+		{
+			float ratio = (y - (start1)) / (start2 - start1);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
+		}
+		else if (y > start2 && y <= middle1)
+		{
+			float ratio = (y - (start2)) / (middle1 - start2);
+			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
+		}
+		else if (y > middle1 && y <= middle2)
+		{
+			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
+		}
+		else if (y >= middle2 && y < end1)
+		{
+			float ratio = (y - (middle2)) / (end1 - middle2);
+			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
+		}
+		else if (y >= end1 && y < end2)
+		{
+			float ratio = (y - (end1)) / (end2 - end1);
+			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
+		}
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
