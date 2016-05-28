@@ -15,7 +15,7 @@ IceCBiome::IceCBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(440u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(1200.f, -2650.f),
+	m_octoStartPosition(1200.f, -2330.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),

@@ -15,7 +15,7 @@ IceBBiome::IceBBiome() :
 	m_seed("Ice B yo"),
 	m_mapSize(sf::Vector2u(550u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(457.f * 16.f, 1700.f),
+	m_octoStartPosition(453.f * 16.f, 2100.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -133,7 +133,7 @@ IceBBiome::IceBBiome() :
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::IceD)
-		m_octoStartPosition = sf::Vector2f(4450, 1600.f);
+		m_octoStartPosition = sf::Vector2f(278.f * 16.f, 1850.f);
 
 	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[320] = GameObjectType::BirdBlueNpc;

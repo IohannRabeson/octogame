@@ -15,7 +15,7 @@ IceDBiome::IceDBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(750u, 36u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(16.f * 37.f, -100.f),
+	m_octoStartPosition(16.f * 33.f, 80.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -130,7 +130,7 @@ IceDBiome::IceDBiome() :
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertA)
-		m_octoStartPosition = sf::Vector2f(16.f * 357.f, -500.f);
+		m_octoStartPosition = sf::Vector2f(257.f * 16.f, -93.f * 16.f);
 
 	m_gameObjects[30] = GameObjectType::Portal;
 	m_gameObjects[100] = GameObjectType::HouseFlatSnow;
@@ -141,8 +141,6 @@ IceDBiome::IceDBiome() :
 	m_gameObjects[360] = GameObjectType::StrangerSnowNpc;
 	m_gameObjects[340] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[400] = GameObjectType::RepairNanoRobot;
-//	m_gameObjects[355] = GameObjectType::Portal;
-//	m_gameObjects[400] = GameObjectType::SnowGirl2Npc;
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
 	m_gameObjects[510] = GameObjectType::BirdBlueNpc;
 	m_instances[551] = MAP_ICE_D_TRAIL_OMP;
