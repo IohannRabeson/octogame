@@ -452,7 +452,7 @@ void Game::moveMap(sf::Time frameTime)
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate))
+	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && !ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate))
 	{
 		m_groundSoundTime -= frameTime;
 		if (m_groundSoundTime < sf::Time::Zero)
