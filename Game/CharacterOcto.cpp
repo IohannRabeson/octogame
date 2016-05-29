@@ -593,7 +593,10 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime)
 {
 	if (m_onGround)
+	{
+		m_lastPositionOnGround = getPosition();
 		m_onGroundDelay = m_onGroundDelayMax;
+	}
 	m_onGroundDelay -= frameTime;
 	portalEvent();
 	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode)
@@ -1154,6 +1157,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 		}
 		if (event == StartWaterJump || event == WaterJump)
 		{
+			m_lastPositionOnGround = getPosition();
 			velocity.x *= 0.4f;
 			velocity.y = m_jumpVelocity;
 			if (!m_inWater)
@@ -1339,7 +1343,9 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 bool	CharacterOcto::isFalling(void)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
-	return (state == Fall || state == SlowFall);
+	if ((state == Fall || state == SlowFall) && m_lastPositionOnGround.y < getPosition().y)
+		return true;
+	return false;
 }
 
 bool	CharacterOcto::isRaising(void)

@@ -24,7 +24,7 @@ public:
 	};
 
 	CameraMovement(void);
-	virtual ~CameraMovement(void) = default;
+	virtual ~CameraMovement(void);
 
 	void update(sf::Time frameTime, CharacterOcto & octo);
 	void collideZoom(sf::Time frametime);
@@ -38,7 +38,6 @@ public:
 private:
 	Behavior		m_behavior;
 	float			m_speed;
-	float			m_maxSpeed;
 	float			m_verticalTransition;
 	float			m_horizontalTransition;
 	float			m_horizontalAxis;
