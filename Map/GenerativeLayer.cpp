@@ -33,8 +33,8 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	{
 		return noise.perlin(x, y, 3, 2.f, 5.0f);
 	});
-	m_bottomLeft.setSize(sf::Vector2f(m_mapSize) * 16.f);
-	m_bottomRight.setSize(sf::Vector2f(m_mapSize) * 16.f);
+	m_bottomLeft.setSize(sf::Vector2f(m_mapSize) * 100.f);
+	m_bottomRight.setSize(sf::Vector2f(m_mapSize) * 100.f);
 }
 
 void GenerativeLayer::setup(void)
