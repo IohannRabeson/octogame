@@ -73,6 +73,7 @@ bool DecorAnimator::computeState(float frameTime)
 			{
 				m_growTimer = 0.f;
 				m_currentState = State::Life;
+				m_beatDirection = true;
 			}
 			break;
 		}
