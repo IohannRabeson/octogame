@@ -89,9 +89,9 @@ DesertCBiome::DesertCBiome() :
 	m_shineEffectRotateAngle(100.f, 200.f),
 
 	m_cloudSize(sf::Vector2f(400.f, 200.f), sf::Vector2f(1200.f, 600.f)),
-	m_cloudPartCount(6u, 15u),
+	m_cloudPartCount(6u, 10u),
 	m_cloudLifeTime(sf::seconds(2), sf::seconds(20)),
-	m_cloudColor(255, 255, 255, 80),
+	m_cloudColor(18, 14, 66, 20),
 
 	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),

@@ -70,6 +70,7 @@ private:
 
 	DecorAnimator					m_animator;
 	float							m_animation;
+	sf::FloatRect					m_octoRect;
 
 	std::vector<DropSystem *>		m_rain;
 	std::vector<DropSystem *>		m_snow;

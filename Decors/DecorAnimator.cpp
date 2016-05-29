@@ -84,6 +84,7 @@ bool DecorAnimator::computeState(float frameTime)
 			if (m_dieTimer >= m_dieTimerMax)
 			{
 				m_dieTimer = 0.f;
+				m_dieTimerMax = m_dieTimerMaxSave;
 				m_currentState = State::Grow;
 				return true;
 			}
@@ -130,7 +131,11 @@ void DecorAnimator::sleep(void)
 void DecorAnimator::die(void)
 {
 	if (m_currentState == State::Life)
+	{
+		m_dieTimerMaxSave = m_dieTimerMax;
+		m_dieTimerMax = 0.2f;
 		m_currentState = State::Die;
+	}
 }
 
 void DecorAnimator::setup(sf::Time lifeTime)

@@ -49,6 +49,7 @@ private:
 	float			m_growTimerMax;
 	float			m_dieTimer;
 	float			m_dieTimerMax;
+	float			m_dieTimerMaxSave;
 	float			m_beatTimer;
 	float			m_beatTimerMax;
 	bool			m_beatDirection;

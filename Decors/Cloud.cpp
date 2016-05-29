@@ -100,6 +100,11 @@ void Cloud::setupLightning(ABiome & biome)
 
 void Cloud::setup(ABiome& biome)
 {
+	octo::Camera const & camera = octo::Application::getCamera();
+	sf::Vector2f const & cameraSize = camera.getSize();
+
+	m_octoRect.width = cameraSize.x / 3.f;
+	m_octoRect.height = cameraSize.y / 4.f;
 	m_color = biome.getCloudColor();
 	m_partCount = biome.getCloudPartCount();
 	m_values.resize(m_partCount);
@@ -188,6 +193,9 @@ void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder &
 void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	sf::Vector2f const & position = getPosition();
+	octo::Camera const & camera = octo::Application::getCamera();
+	sf::Vector2f const & cameraSize = camera.getSize();
+	sf::Vector2f const & cameraCenter = camera.getCenter();
 
 	if (biome.canCreateThunder() && m_animator.getState() == DecorAnimator::State::Life)
 		updateThunder(frameTime, biome, builder, position);
@@ -197,9 +205,13 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	else if (biome.canCreateSnow())
 		updateSnow(frameTime, biome, builder, position);
 
+	m_octoRect.left = cameraCenter.x - cameraSize.x / 6.f;
+	m_octoRect.top = cameraCenter.y;
 	if (m_animator.update(frameTime))
 		newCloud(biome);
 	m_animation = m_animator.getAnimation();
+	if (m_animator.getState() == DecorAnimator::State::Life && m_octoRect.contains(position))
+		m_animator.die();
 
 	createCloud(m_values, position, m_partCount, m_color, builder);
 }
