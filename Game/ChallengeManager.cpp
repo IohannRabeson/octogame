@@ -200,7 +200,7 @@ void ChallengeManager::AChallenge::setGlitch(bool isGlitch)
 
 // Duplicate
 ChallengeDuplicate::ChallengeDuplicate(void) :
-	AChallenge(VISION_TROUBLE_FRAG, 6.f, 60.f, sf::FloatRect(sf::Vector2f(55.f * 16.f, -3400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle),
+	AChallenge(VISION_TROUBLE_FRAG, 6.f, 60.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle),
 	m_rotation(0.f)
 {}
 
