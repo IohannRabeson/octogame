@@ -115,15 +115,9 @@ Progress::Language Progress::getLanguage(void) const
 
 ResourceKey Progress::getTextFile(void) const
 {
-	if (isJoystick())
-	{
-		if (m_data.language == Language::en)
-			return DIALOGS_EN_XBOX_TXT;
-		return DIALOGS_FR_XBOX_TXT;
-	}
 	if (m_data.language == Language::en)
-		return DIALOGS_EN_KEYBOARD_TXT;
-	return DIALOGS_FR_KEYBOARD_TXT;
+		return DIALOGS_EN_TXT;
+	return DIALOGS_FR_TXT;
 }
 
 bool	Progress::isJoystick(void) const
