@@ -317,13 +317,6 @@ Map::TileColorGenerator DemoDesertABiome::getTileColorGenerator()
 		}
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
-	/*
-	return [this](Noise & noise, float x, float y, float z)
-	{
-		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
-	};
-	*/
 }
 
 sf::Color		DemoDesertABiome::getParticleColorGround()

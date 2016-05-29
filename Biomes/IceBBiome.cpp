@@ -15,7 +15,7 @@ IceBBiome::IceBBiome() :
 	m_seed("Ice B yo"),
 	m_mapSize(sf::Vector2u(550u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(457.f * 16.f, 1700.f),
+	m_octoStartPosition(453.f * 16.f, 2100.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -132,8 +132,8 @@ IceBBiome::IceBBiome() :
 	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::DesertA || progress.getLastDestination() == Level::IceD)
-		m_octoStartPosition = sf::Vector2f(4450, -1850.f);
+	if (progress.getLastDestination() == Level::IceD)
+		m_octoStartPosition = sf::Vector2f(278.f * 16.f, 1850.f);
 
 	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[320] = GameObjectType::BirdBlueNpc;
@@ -232,14 +232,6 @@ std::vector<ParallaxScrolling::ALayer *> IceBBiome::getLayers()
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	/*
-	layer = new GenerativeLayer(sf::Color(0, 5, 10), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -25, 0.1f, 0.9f, 6.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.noise(x * 1.1f, y);
-		});
-	vector.push_back(layer);
-	*/
 	return vector;
 }
 
@@ -268,9 +260,26 @@ Map::MapSurfaceGenerator IceBBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator IceBBiome::getTileColorGenerator()
 {
-	return [this](Noise & noise, float x, float y, float z)
+	sf::Color secondColorStart(getRockColor());
+	sf::Color secondColorEnd(getRockColor());
+	float startTransition = 28000.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 40500.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 50000.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > startTransition && y <= middleTransition)
+		{
+			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
+		}
+		else if (y > middleTransition && y <= endTransition)
+		{
+			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
+			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
+		}
+		if (y > endTransition)
+			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
