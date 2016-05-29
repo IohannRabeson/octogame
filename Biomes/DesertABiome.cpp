@@ -73,7 +73,7 @@ DesertABiome::DesertABiome() :
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
-	m_treeBeatMouvement(0.1f),
+	m_treeBeatMouvement(0.06f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(46, 133, 84),
 
