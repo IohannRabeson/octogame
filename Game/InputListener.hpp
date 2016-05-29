@@ -2,6 +2,7 @@
 # define INPUTLISTENER_HPP
 
 # include <DefaultGraphicsListeners.hpp>
+# include <vector>
 
 class InputListener : public octo::DefaultKeyboardListener,
 					  public octo::DefaultJoystickListener

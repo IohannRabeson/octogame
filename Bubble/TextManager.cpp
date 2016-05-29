@@ -45,6 +45,11 @@ void TextManager::loadTexts(void)
 
 std::vector<std::wstring> const & TextManager::getTexts(std::string const & key)
 {
+	if (Progress::getInstance().isJoystick())
+	{
+		if (!(m_texts.find("joystick_" + key) == m_texts.end()))
+			return (m_texts["joystick_" + key]);
+	}
 	return m_texts[key];
 }
 
@@ -52,5 +57,11 @@ std::vector<std::wstring> const & TextManager::getTextsNpc(ResourceKey const & k
 {
 	if (m_texts[key].size())
 		m_texts[key].push_back(L"Beurk!\n");
+
+	if (Progress::getInstance().isJoystick())
+	{
+		if (!(m_texts.find("joystick_" + static_cast<std::string>(key)) == m_texts.end()))
+			return (m_texts["joystick_" + static_cast<std::string>(key)]);
+	}
 	return m_texts[key];
 }

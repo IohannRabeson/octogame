@@ -21,6 +21,7 @@ public:
 
 	void				addMenu(std::wstring const & name, std::unique_ptr<AMenu>&& menu);
 	virtual bool		onInputPressed(InputListener::OctoKeys const & key);
+	virtual bool		onInputReleased(InputListener::OctoKeys const & key);
 
 	virtual void		createMenus(void) = 0;
 	virtual void		onSelection(void);
@@ -44,8 +45,7 @@ private:
 	bool										m_isKeyboard;
 
 	sf::CircleShape								m_cursor;
-	sf::Time									m_inputTimer;
-	sf::Time									m_inputTimerMax;
+	bool										m_input;
 };
 
 #endif

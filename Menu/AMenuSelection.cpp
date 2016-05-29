@@ -7,8 +7,7 @@ AMenuSelection::AMenuSelection(void) :
 	m_characterSize(20u),
 	m_indexCursor(0u),
 	m_indexSave(0u),
-	m_isKeyboard(false),
-	m_inputTimerMax(sf::seconds(0.1f))
+	m_isKeyboard(false)
 {
 }
 
@@ -75,7 +74,6 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_bubble.update(frameTime);
 		m_cursor.setPosition(m_cursorPosition[m_indexCursor] + contentPosition);
 		setKeyboard(true);
-		m_inputTimer += frameTime;
 	}
 	else
 	{
@@ -98,8 +96,9 @@ void AMenuSelection::draw(sf::RenderTarget & render, sf::RenderStates states) co
 
 bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 {
-	if (m_inputTimer >= m_inputTimerMax)
+	if (!m_input)
 	{
+		m_input = true;
 		switch (key)
 		{
 			case OctoKeys::Left:
@@ -148,10 +147,14 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 					break;
 			}
 		}
-
-		m_inputTimer = sf::Time::Zero;
 	}
 	return (true);
+}
+
+bool AMenuSelection::onInputReleased(InputListener::OctoKeys const &)
+{
+	m_input = false;
+	return true;
 }
 
 void AMenuSelection::onSelection(void)

@@ -170,6 +170,8 @@ private:
 	std::size_t					m_numberOfJump;
 	bool						m_originMove;
 	bool						m_onGround;
+	sf::Time					m_onGroundDelay;
+	sf::Time					m_onGroundDelayMax;
 	bool						m_onElevator;
 	bool						m_useElevator;
 	bool						m_onTopElevator;
