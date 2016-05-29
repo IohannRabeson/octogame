@@ -7,7 +7,7 @@
 #include <Math.hpp>
 #include "ResourceDefinitions.hpp"
 
-Tree::Tree(void) :
+Tree::Tree(bool onInstance) :
 	m_depth(0u),
 	m_count(0u),
 	m_angleMaxCount(0u),
@@ -20,7 +20,8 @@ Tree::Tree(void) :
 	m_countLeaf(0u),
 	m_setLeaf(true),
 	m_leafMaxCount(0u),
-	m_sound(true)
+	m_sound(true),
+	m_onInstance(onInstance)
 {
 }
 
@@ -127,7 +128,8 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	{
 		m_count = m_countLeaf = 0u;
 		m_setLeaf = m_isLeaf;
-		createTrunk(size, center, m_color, builder);
+		if (!m_onInstance)
+			createTrunk(size, center, m_color, builder);
 	}
 
 	// Get current angle
