@@ -161,6 +161,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/IceDBiome.cpp					\
 				Biomes/DesertABiome.cpp					\
 				Biomes/DesertBBiome.cpp					\
+				Biomes/DesertCBiome.cpp					\
 				Biomes/JungleABiome.cpp					\
 				Biomes/JungleCBiome.cpp					\
 				Biomes/WaterABiome.cpp					\
