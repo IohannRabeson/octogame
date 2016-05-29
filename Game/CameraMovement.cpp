@@ -7,14 +7,18 @@
 
 CameraMovement::CameraMovement(void) :
 	m_behavior(Behavior::FollowOcto),
-	m_speed(4.f),
-	m_maxSpeed(5.f),
+	m_speed(3.f),
 	m_verticalTransition(0.f),
 	m_horizontalTransition(0.f),
 	m_horizontalAxis(0.f),
 	m_verticalAxis(0.f)
 {
 	InputListener::addInputListener();
+}
+
+CameraMovement::~CameraMovement(void)
+{
+	InputListener::removeInputListener();
 }
 
 void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
@@ -44,10 +48,11 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	{
 		case Behavior::FollowOcto:
 		{
+			m_speed = 3.f;
 			m_verticalTransition -= 0.3f * frametime.asSeconds();
 			if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
-			if (m_horizontalTransition < 0.f)
+			if (m_horizontalTransition <= 0.f)
 				m_horizontalTransition += frametime.asSeconds();
 			else if (m_horizontalTransition > 0.f)
 				m_horizontalTransition -= frametime.asSeconds();
@@ -55,10 +60,11 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		}
 		case Behavior::OctoFalling:
 		{
+			m_speed = 3.f;
 			m_verticalTransition += 0.5f * frametime.asSeconds();
 			if (m_verticalTransition > 1.f)
 				m_verticalTransition = 1.f;
-			if (m_horizontalTransition < 0.f)
+			if (m_horizontalTransition <= 0.f)
 				m_horizontalTransition += frametime.asSeconds();
 			else if (m_horizontalTransition > 0.f)
 				m_horizontalTransition -= frametime.asSeconds();
@@ -66,10 +72,11 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		}
 		case Behavior::OctoRaising:
 		{
+			m_speed = 4.f;
 			m_verticalTransition -= frametime.asSeconds();
 			if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
-			if (m_horizontalTransition < 0.f)
+			if (m_horizontalTransition <= 0.f)
 				m_horizontalTransition += frametime.asSeconds();
 			else if (m_horizontalTransition > 0.f)
 				m_horizontalTransition -= frametime.asSeconds();
@@ -95,8 +102,6 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	sf::Vector2f goal = sf::Vector2f(octo::linearInterpolation(goalRight, goalLeft, (m_horizontalTransition + 1.f) / 2.f),
 						octo::linearInterpolation(goalTop, goalBot, m_verticalTransition));
 
-	float t = (std::abs(goal.y - camera.getCenter().y) / (camera.getRectangle().height / 2.f));
-	m_speed = octo::linearInterpolation(1.f, m_maxSpeed, std::min(t, 1.f));
 	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()));
 
 	m_circle.setPosition(goal);

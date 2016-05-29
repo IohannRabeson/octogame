@@ -172,6 +172,7 @@ private:
 	bool						m_onGround;
 	sf::Time					m_onGroundDelay;
 	sf::Time					m_onGroundDelayMax;
+	sf::Vector2f				m_lastPositionOnGround;
 	bool						m_onElevator;
 	bool						m_useElevator;
 	bool						m_onTopElevator;
