@@ -207,11 +207,11 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 
 	m_octoRect.left = cameraCenter.x - cameraSize.x / 6.f;
 	m_octoRect.top = cameraCenter.y;
-	if (m_animator.update(frameTime))
-		newCloud(biome);
-	m_animation = m_animator.getAnimation();
 	if (m_animator.getState() == DecorAnimator::State::Life && m_octoRect.contains(position))
 		m_animator.die();
+	if (m_animator.update(frameTime) && !m_octoRect.contains(position))
+		newCloud(biome);
+	m_animation = m_animator.getAnimation();
 
 	createCloud(m_values, position, m_partCount, m_color, builder);
 }

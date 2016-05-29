@@ -44,7 +44,7 @@ DesertCBiome::DesertCBiome() :
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
 	m_rainbowCount(1u, 2u),
-	m_cloudCount(40u, 60u),
+	m_cloudCount(60u, 80u),
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),
@@ -88,10 +88,10 @@ DesertCBiome::DesertCBiome() :
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(400.f, 200.f), sf::Vector2f(1200.f, 600.f)),
+	m_cloudSize(sf::Vector2f(400.f, 200.f), sf::Vector2f(1000.f, 600.f)),
 	m_cloudPartCount(6u, 10u),
-	m_cloudLifeTime(sf::seconds(2), sf::seconds(20)),
-	m_cloudColor(18, 14, 66, 20),
+	m_cloudLifeTime(sf::seconds(2), sf::seconds(10)),
+	m_cloudColor(255, 255, 255, 150),
 
 	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),
@@ -255,8 +255,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f    , 130.f   , 150.f   , 350.f   , 330.f  };
-		std::vector<float> pointY = {2.f + n, 2.f + n , -2.f - n, -2.f - n, 2.f + n};
+		std::vector<float> pointX = {0.f    , 130.f   , 150.f   , 350.f   , 330.f  , 500.f   };
+		std::vector<float> pointY = {2.f + n, 2.f + n , -2.f - n, -2.f - n, 2.f + n,  2.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
