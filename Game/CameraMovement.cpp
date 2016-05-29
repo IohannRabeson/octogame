@@ -52,9 +52,9 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 			m_verticalTransition -= 0.3f * frametime.asSeconds();
 			if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
-			if (m_horizontalTransition <= 0.f)
+			if (m_horizontalTransition + frametime.asSeconds() < 0.f)
 				m_horizontalTransition += frametime.asSeconds();
-			else if (m_horizontalTransition > 0.f)
+			else if (m_horizontalTransition - frametime.asSeconds() > 0.f)
 				m_horizontalTransition -= frametime.asSeconds();
 			break;
 		}
@@ -64,9 +64,9 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 			m_verticalTransition += 0.5f * frametime.asSeconds();
 			if (m_verticalTransition > 1.f)
 				m_verticalTransition = 1.f;
-			if (m_horizontalTransition <= 0.f)
+			if (m_horizontalTransition + frametime.asSeconds() < 0.f)
 				m_horizontalTransition += frametime.asSeconds();
-			else if (m_horizontalTransition > 0.f)
+			else if (m_horizontalTransition - frametime.asSeconds() > 0.f)
 				m_horizontalTransition -= frametime.asSeconds();
 			break;
 		}
@@ -76,9 +76,9 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 			m_verticalTransition -= frametime.asSeconds();
 			if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
-			if (m_horizontalTransition <= 0.f)
+			if (m_horizontalTransition + frametime.asSeconds() < 0.f)
 				m_horizontalTransition += frametime.asSeconds();
-			else if (m_horizontalTransition > 0.f)
+			else if (m_horizontalTransition - frametime.asSeconds() > 0.f)
 				m_horizontalTransition -= frametime.asSeconds();
 			break;
 		}
