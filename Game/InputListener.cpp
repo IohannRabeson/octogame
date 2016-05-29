@@ -145,7 +145,6 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 	return true;
 }
 
-#include <iostream>
 void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 {
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)

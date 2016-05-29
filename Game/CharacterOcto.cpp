@@ -1436,10 +1436,8 @@ float	CharacterOcto::getWaterLevel() const
 	return m_waterLevel;
 }
 
-#include <iostream> //TODO remove
 void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
 {
 	(void)position;
-	std::cout << "CollideZoomevent" << std::endl;
 }
 
