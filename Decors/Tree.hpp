@@ -9,7 +9,7 @@
 class Tree : public ADecor
 {
 public:
-	Tree(void);
+	Tree(bool onInstance = false);
 	virtual ~Tree(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -58,6 +58,7 @@ private:
 	std::size_t					m_leafMaxCount;
 
 	bool						m_sound;
+	bool						m_onInstance;
 
 	void computeQuad(sf::Vector2f const & size,
 					sf::Vector2f const & center,

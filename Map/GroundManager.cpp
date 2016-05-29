@@ -89,8 +89,8 @@ GroundManager::GroundManager(void) :
 	m_decorManagerBack(200000),
 	m_decorManagerFront(50000),
 	m_decorManagerGround(15000),
-	m_decorManagerInstanceBack(15000),
-	m_decorManagerInstanceFront(15000),
+	m_decorManagerInstanceBack(100000),
+	m_decorManagerInstanceFront(100000),
 	m_nextState(GenerationState::Next),
 	m_water(nullptr)
 {}
@@ -401,7 +401,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				ADecor * adecor = nullptr;
 				if (!decor.name.compare(DECOR_TREE_OSS))
-					adecor = new Tree();
+					adecor = new Tree(true);
 				else if (!decor.name.compare(DECOR_ROCK_OSS))
 					adecor = new Rock();
 				else if (!decor.name.compare(DECOR_CRYSTAL_OSS))
