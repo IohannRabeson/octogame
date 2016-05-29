@@ -16,15 +16,15 @@ InputListener::InputListener(void) :
 	//OctoKeys::Left, OctoKeys::GroundRight, OctoKeys::GroundLeft, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::Jump};
 	// XBox 360
 #ifdef __linux__
-	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
-		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::SlowFall, OctoKeys::Infos, OctoKeys::GroundRight,
+		OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::None };
 	m_triggerLimit = 0.f;
 #elif _WIN32
-	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall,
-		OctoKeys::SlowFall, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::SlowFall, OctoKeys::Infos, OctoKeys::GroundRight,
+		OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::None };
 	m_triggerLimit = 50.f;
 #else // __APPLE__
-	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::None, OctoKeys::None, OctoKeys::SlowFall, OctoKeys::SlowFall, OctoKeys::None, OctoKeys::None, OctoKeys::Menu, OctoKeys::None,
+	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::SlowFall, OctoKeys::Infos, OctoKeys::GroundRight, OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::None, OctoKeys::Menu, OctoKeys::None,
 		OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Left, OctoKeys::Right, OctoKeys::None,
 		OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None };
 	m_triggerLimit = 0.f;
@@ -75,13 +75,13 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Down:
 			onInputPressed(OctoKeys::Down);
 			break;
-		case sf::Keyboard::E:
+		case sf::Keyboard::W:
 			onInputPressed(OctoKeys::Use);
 			break;
-		case sf::Keyboard::S:
+		case sf::Keyboard::A:
 			onInputPressed(OctoKeys::GroundRight);
 			break;
-		case sf::Keyboard::F:
+		case sf::Keyboard::D:
 			onInputPressed(OctoKeys::GroundLeft);
 			break;
 		case sf::Keyboard::Return:
@@ -90,7 +90,7 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Escape:
 			onInputPressed(OctoKeys::Menu);
 			break;
-		case sf::Keyboard::D:
+		case sf::Keyboard::S:
 			onInputPressed(OctoKeys::Infos);
 			break;
 		default:
@@ -119,13 +119,13 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Down:
 			onInputReleased(OctoKeys::Down);
 			break;
-		case sf::Keyboard::E:
+		case sf::Keyboard::W:
 			onInputReleased(OctoKeys::Use);
 			break;
-		case sf::Keyboard::S:
+		case sf::Keyboard::A:
 			onInputReleased(OctoKeys::GroundRight);
 			break;
-		case sf::Keyboard::F:
+		case sf::Keyboard::D:
 			onInputReleased(OctoKeys::GroundLeft);
 			break;
 		case sf::Keyboard::Return:
@@ -134,7 +134,7 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::Escape:
 			onInputReleased(OctoKeys::Menu);
 			break;
-		case sf::Keyboard::D:
+		case sf::Keyboard::S:
 			onInputReleased(OctoKeys::Infos);
 			break;
 		default:
@@ -228,12 +228,12 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 				if (event.position < -m_triggerLimit && !m_joystickRT)
 				{
 					m_joystickRT = true;
-					onInputPressed(OctoKeys::GroundLeft);
+					//onInputPressed(OctoKeys::GroundLeft);
 				}
 				else if (event.position >= -m_triggerLimit && m_joystickRT)
 				{
 					m_joystickRT = false;
-					onInputReleased(OctoKeys::GroundLeft);
+					//onInputReleased(OctoKeys::GroundLeft);
 				}
 			}
 		}
@@ -263,12 +263,12 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 			if (event.position > m_triggerLimit && !m_joystickLT)
 			{
 				m_joystickLT = true;
-				onInputPressed(OctoKeys::GroundLeft);
+				//onInputPressed(OctoKeys::GroundLeft);
 			}
 			else if (event.position <= m_triggerLimit && m_joystickLT)
 			{
 				m_joystickLT = false;
-				onInputReleased(OctoKeys::GroundLeft);
+				//onInputReleased(OctoKeys::GroundLeft);
 			}
 		}
 		if (event.axis == sf::Joystick::Z) //RT
@@ -328,6 +328,9 @@ void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 			case OctoKeys::Menu:
 				onInputPressed(OctoKeys::Menu);
 				break;
+			case OctoKeys::Infos:
+				onInputPressed(OctoKeys::Infos);
+				break;
 			default:
 				break;
 		}
@@ -374,6 +377,9 @@ void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 				break;
 			case OctoKeys::Menu:
 				onInputReleased(OctoKeys::Menu);
+				break;
+			case OctoKeys::Infos:
+				onInputReleased(OctoKeys::Infos);
 				break;
 			default:
 				break;
