@@ -40,6 +40,7 @@ CharacterOcto::CharacterOcto() :
 	m_numberOfJump(0),
 	m_originMove(false),
 	m_onGround(false),
+	m_onGroundDelayMax(sf::seconds(0.05f)),
 	m_onElevator(false),
 	m_useElevator(false),
 	m_afterJump(false),
@@ -592,6 +593,9 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
+	if (m_onGround)
+		m_onGroundDelay = m_onGroundDelayMax;
+	m_onGroundDelay -= frameTime;
 	portalEvent();
 	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode)
 		commitPhysicsToGraphics();
@@ -856,7 +860,7 @@ void	CharacterOcto::collisionTileUpdate()
 	{
 		m_onGround = false;
 		onSky(static_cast<Events>(m_sprite.getCurrentEvent()));
-		if (m_numberOfJump == 0 && !m_inWater && !m_useElevator)
+		if (m_numberOfJump == 0 && !m_inWater && !m_useElevator && m_onGroundDelay <= sf::Time::Zero)
 			m_numberOfJump = 1;
 	}
 	else
@@ -1238,7 +1242,7 @@ void	CharacterOcto::caseSpace()
 	{
 		randomJumpAnimation();
 		m_keySpace = true;
-		if ((m_onGround || m_inWater) && m_progress.canJump() && !m_numberOfJump)
+		if ((m_onGround || m_onGroundDelay >= sf::Time::Zero || m_inWater) && m_progress.canJump() && !m_numberOfJump)
 		{
 			m_sprite.setNextEvent(StartJump);
 			m_jumpVelocity = m_pixelSecondJump;
