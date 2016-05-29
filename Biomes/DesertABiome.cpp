@@ -13,9 +13,9 @@ DesertABiome::DesertABiome() :
 	m_name("Desert A"),
 	m_id(Level::DesertA),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(600u, 128u)),
+	m_mapSize(sf::Vector2u(520u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(583.f * 16.f, 600.f),
+	m_octoStartPosition(253.f * 16.f, 53.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
@@ -133,22 +133,22 @@ DesertABiome::DesertABiome() :
 		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
 
 	// Define game objects
-	m_gameObjects[560] = GameObjectType::JuNpc;
-	m_gameObjects[580] = GameObjectType::Portal;
-	m_instances[53] = MAP_DESERT_A_WAVE_OMP;
-	m_instances[280] = MAP_DESERT_A_JUMP_OMP;
+	m_gameObjects[220] = GameObjectType::JuNpc;
+	m_gameObjects[250] = GameObjectType::Portal;
+	m_instances[23] = MAP_DESERT_A_WAVE_OMP;
+	m_instances[250] = MAP_DESERT_A_JUMP_OMP;
 	m_gameObjects[70] = GameObjectType::TurbanNpc;
-	m_gameObjects[256] = GameObjectType::FannyNpc;
-	m_gameObjects[440] = GameObjectType::OldDesertStaticNpc;
-	m_gameObjects[450] = GameObjectType::Tent;
-	m_gameObjects[400] = GameObjectType::Portal;
-	m_interestPointPosX = 53;
+//	m_gameObjects[256] = GameObjectType::FannyNpc;
+	m_gameObjects[410] = GameObjectType::OldDesertStaticNpc;
+	m_gameObjects[420] = GameObjectType::Tent;
+	m_gameObjects[370] = GameObjectType::Portal;
+	m_interestPointPosX = 263;
 
-	m_treePos = {377, 382, 389, 397, 410, 411, 423, 460, 463, 485, 490, 494, 503};
+	m_treePos = {347, 352, 359, 367, 380, 381, 393, 430, 433, 455, 460, 464, 473};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::DemoJungleA);
-	m_destinations.push_back(Level::IceA);
+	m_destinations.push_back(Level::IceD);
+	m_destinations.push_back(Level::JungleA);
 }
 
 void			DesertABiome::setup(std::size_t seed)
@@ -242,8 +242,8 @@ Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 380.f / static_cast<float>(m_mapSize.x);
-		float end = 500.f / static_cast<float>(m_mapSize.x);
+		float start = 350.f / static_cast<float>(m_mapSize.x);
+		float end = 470.f / static_cast<float>(m_mapSize.x);
 		float offset = 10.f / static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float mapHigh = n / 3.f - 1.9f;
@@ -267,8 +267,8 @@ Map::TileColorGenerator DesertABiome::getTileColorGenerator()
 	float start2 = -14000.f / static_cast<float>(m_mapSize.y);
 	float middle1 = -13000.f / static_cast<float>(m_mapSize.y);
 	float middle2 = -6300.f / static_cast<float>(m_mapSize.y);
-	float end1 = -3000.f / static_cast<float>(m_mapSize.y);
-	float end2 = 0.f / static_cast<float>(m_mapSize.y);
+	float end1 = 8000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 15000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;

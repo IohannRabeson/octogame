@@ -57,6 +57,8 @@ void JuNpc::setup(void)
 			});
 	getSpecial2Animation().setLoop(octo::LoopMode::NoLoop);
 
+	getSprite().setScale(-getScale(), getScale());
+
 	if (Progress::getInstance().canUseWaterJump() == true)
 		setCurrentText(1u);
 	setupMachine();
@@ -128,16 +130,10 @@ void JuNpc::updateState(void)
 
 	if (sprite.getCurrentEvent() == Idle && sprite.isTerminated())
 	{
-		if (Progress::getInstance().canUseWaterJump())
-		{
-			octo::CharacterSprite & sprite = getSprite();
-			sf::Vector2f const & size = sprite.getLocalSize();
-			sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-			sprite.setScale(-getScale(), getScale());
-			sprite.setNextEvent(Special2);
-		}
-		else
-			sprite.setNextEvent(Special1);
+		octo::CharacterSprite & sprite = getSprite();
+		sf::Vector2f const & size = sprite.getLocalSize();
+		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
+		sprite.setNextEvent(Special2);
 	}
 	else if (sprite.getCurrentEvent() == Special1 && sprite.isTerminated())
 		sprite.setNextEvent(Idle);
@@ -146,7 +142,6 @@ void JuNpc::updateState(void)
 		octo::CharacterSprite & sprite = getSprite();
 		sf::Vector2f const & size = sprite.getLocalSize();
 		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-		sprite.setScale(-getScale(), getScale());
 		sprite.setNextEvent(Idle);
 	}
 }
