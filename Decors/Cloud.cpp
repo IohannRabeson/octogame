@@ -15,7 +15,7 @@ Cloud::Cloud(void) :
 
 Cloud::Cloud(SkyCycle * cycle) :
 	m_partCount(1u),
-	m_animator(4.f, 5.f, 4.f, 0.1f),
+	m_animator(4.f, 5.f, 4.f, 0.2f),
 	m_animation(1.f),
 	m_thunderCloud(false),
 	m_lightning(1),
