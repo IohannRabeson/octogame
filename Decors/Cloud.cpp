@@ -77,7 +77,7 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 
 bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & position, sf::Vector2f const & point) const
 {
-	if ((point.x > position.x - size.x && point.x < position.x + size.x)
+	if (!m_isCollide && (point.x > position.x - size.x && point.x < position.x + size.x)
 		&& (point.y > position.y - size.y && point.y < position.y + size.y))
 	{
 		return true;

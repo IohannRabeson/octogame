@@ -34,19 +34,15 @@ void DecorAnimator::computeBeat(float frameTime)
 		if (m_currentState == State::Life || m_currentState == State::Die)
 		{
 			m_beatTimer += frameTime;
+			if (m_beatTimer >= m_beatTimerMax)
+			{
+				m_beatTimer = 0.f;
+				m_beatDirection = !m_beatDirection;
+			}
 			if (m_beatDirection == true)
 				m_beatDeltaValue = octo::cosinusInterpolation(0.f, m_beatDelta, m_beatTimer / m_beatTimerMax);
 			else
 				m_beatDeltaValue = octo::cosinusInterpolation(m_beatDelta, 0.f, m_beatTimer / m_beatTimerMax);
-	
-			if (m_beatTimer >= m_beatTimerMax)
-			{
-				m_beatTimer = 0.f;
-				if (m_beatDirection == true)
-					m_beatDirection = false;
-				else
-					m_beatDirection = true;
-			}
 		}
 		else
 		{
