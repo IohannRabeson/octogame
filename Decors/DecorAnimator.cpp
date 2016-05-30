@@ -24,6 +24,7 @@ DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, floa
 	RandomGenerator generator;
 	generator.setSeed("random");
 	m_finalAnimation = 1.0f - m_beatDelta + generator.randomFloat(0.f, 0.1f);
+	m_saveFinalAnimation = m_finalAnimation;
 	m_startTimerMax = generator.randomFloat(0.f, start);
 }
 
@@ -94,6 +95,7 @@ bool DecorAnimator::computeState(float frameTime)
 			{
 				m_dieTimer = 0.f;
 				m_currentState = State::Grow;
+				m_finalAnimation = m_saveFinalAnimation;
 				m_dieSpeed = 1.f;
 				m_startTimer = 0.f;
 				m_beatTimer = 0.f;
@@ -145,6 +147,13 @@ void DecorAnimator::die(void)
 	{
 		m_dieSpeed = 10.f;
 		m_lifeTimerMax = 0.f;
+	}
+	else if (m_currentState == State::Grow)
+	{
+		m_dieSpeed = 10.f;
+		m_finalAnimation = m_animation - m_beatDeltaValue;
+		m_growTimer = 0.f;
+		m_currentState = State::Die;
 	}
 }
 

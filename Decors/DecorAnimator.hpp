@@ -41,6 +41,7 @@ private:
 	State			m_lastState;
 	float			m_animation;
 	float			m_finalAnimation;
+	float			m_saveFinalAnimation;
 
 	float			m_startTimer;
 	float			m_startTimerMax;
