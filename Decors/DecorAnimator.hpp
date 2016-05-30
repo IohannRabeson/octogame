@@ -4,6 +4,7 @@
 # include <SFML/System/Time.hpp>
 # include <random>
 
+// TODO: This class needs to be rebuilt from scratch (too messy)
 // if m_lifeTimerMax == 0.f there isn't life state (default)
 // if m_dieTimerMax == 0.f there isn't die state
 
@@ -49,10 +50,12 @@ private:
 	float			m_growTimerMax;
 	float			m_dieTimer;
 	float			m_dieTimerMax;
+	float			m_dieSpeed;
 	float			m_beatTimer;
 	float			m_beatTimerMax;
 	bool			m_beatDirection;
 	float			m_beatDelta;
+	float			m_beatDeltaValue;
 
 	bool			computeState(float frameTime);
 	void			computeBeat(float frameTime);

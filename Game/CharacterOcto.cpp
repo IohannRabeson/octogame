@@ -681,6 +681,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 		robot->update(frameTime);
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
+
+	Progress::getInstance().setOctoPos(getPosition());
 }
 
 void	CharacterOcto::portalEvent()

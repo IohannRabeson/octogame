@@ -1,6 +1,7 @@
 #include "Cloud.hpp"
 #include "ABiome.hpp"
 #include "SkyCycle.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -15,7 +16,7 @@ Cloud::Cloud(void) :
 
 Cloud::Cloud(SkyCycle * cycle) :
 	m_partCount(1u),
-	m_animator(4.f, 5.f, 4.f, 0.1f),
+	m_animator(4.f, 5.f, 4.f, 0.2f),
 	m_animation(1.f),
 	m_thunderCloud(false),
 	m_lightning(1),
@@ -74,10 +75,26 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 	builder.createQuad(upLeft, upRight, recDownRight, upMidLeft, color);
 }
 
+bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & position, sf::Vector2f const & point) const
+{
+	if (!m_isCollide && (point.x > position.x - size.x && point.x < position.x + size.x)
+		&& (point.y > position.y - size.y && point.y < position.y + size.y))
+	{
+		return true;
+	}
+	return false;
+}
+
 void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f const & origin, std::size_t partCount, sf::Color const & color, octo::VertexBuilder& builder)
 {
+	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
+	m_isCollide = false;
 	for (std::size_t i = 0; i < partCount; i++)
+	{
+		if (isOctogonContain(values[i].size * m_animation, values[i].origin + origin, octoPosition))
+			m_isCollide = true;
 		createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
+	}
 }
 
 void Cloud::setupLightning(ABiome & biome)
@@ -189,17 +206,23 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 {
 	sf::Vector2f const & position = getPosition();
 
-	if (biome.canCreateThunder() && m_animator.getState() == DecorAnimator::State::Life)
-		updateThunder(frameTime, biome, builder, position);
+	if (m_animator.getState() == DecorAnimator::State::Life)
+	{
+		if (biome.canCreateThunder())
+			updateThunder(frameTime, biome, builder, position);
 
-	if (biome.canCreateRain())
-		updateRain(frameTime, biome, builder, position);
-	else if (biome.canCreateSnow())
-		updateSnow(frameTime, biome, builder, position);
+		if (biome.canCreateRain())
+			updateRain(frameTime, biome, builder, position);
+		else if (biome.canCreateSnow())
+			updateSnow(frameTime, biome, builder, position);
+	}
 
 	if (m_animator.update(frameTime))
 		newCloud(biome);
 	m_animation = m_animator.getAnimation();
 
 	createCloud(m_values, position, m_partCount, m_color, builder);
+
+	if (m_isCollide)
+		m_animator.die();
 }

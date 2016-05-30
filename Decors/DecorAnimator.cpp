@@ -14,10 +14,12 @@ DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, floa
 	m_growTimerMax(growTime),
 	m_dieTimer(0.f),
 	m_dieTimerMax(dieTime),
+	m_dieSpeed(1.f),
 	m_beatTimer(0.f),
 	m_beatTimerMax(beatTime),
 	m_beatDirection(true),
-	m_beatDelta(delta)
+	m_beatDelta(delta),
+	m_beatDeltaValue(0.f)
 {
 	RandomGenerator generator;
 	generator.setSeed("random");
@@ -27,23 +29,32 @@ DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, floa
 
 void DecorAnimator::computeBeat(float frameTime)
 {
-	m_beatTimer += frameTime;
-	if (m_beatTimer >= m_beatTimerMax)
+	if (m_beatTimerMax != 0.f)
 	{
-		m_beatTimer = 0.f;
-		if (m_beatDirection == true)
-			m_beatDirection = false;
+		if (m_currentState == State::Life || m_currentState == State::Die)
+		{
+			m_beatTimer += frameTime;
+			if (m_beatTimer >= m_beatTimerMax)
+			{
+				m_beatTimer = 0.f;
+				m_beatDirection = !m_beatDirection;
+			}
+			if (m_beatDirection == true)
+				m_beatDeltaValue = octo::cosinusInterpolation(0.f, m_beatDelta, m_beatTimer / m_beatTimerMax);
+			else
+				m_beatDeltaValue = octo::cosinusInterpolation(m_beatDelta, 0.f, m_beatTimer / m_beatTimerMax);
+		}
 		else
-			m_beatDirection = true;
+		{
+			m_beatDirection = false;
+			m_beatDeltaValue = m_beatDelta;
+		}
 	}
-	if (m_beatDirection == true)
-		m_animation = octo::cosinusInterpolation(m_finalAnimation + m_beatDelta, m_finalAnimation, m_beatTimer / m_beatTimerMax);
-	else
-		m_animation = octo::cosinusInterpolation(m_finalAnimation, m_finalAnimation + m_beatDelta, m_beatTimer / m_beatTimerMax);
 }
 
 bool DecorAnimator::computeState(float frameTime)
 {
+	computeBeat(frameTime);
 	switch (m_currentState)
 	{
 		case State::Life:
@@ -53,38 +64,39 @@ bool DecorAnimator::computeState(float frameTime)
 				m_currentState = State::Die;
 				break;
 			}
+			m_animation = m_finalAnimation + m_beatDeltaValue;
 			m_lifeTimer += frameTime;
-			if (m_lifeTimer >= m_lifeTimerMax && m_animation == m_finalAnimation)
+			if (m_lifeTimer >= m_lifeTimerMax)
 			{
 				m_lifeTimer = 0.f;
-				m_beatTimer = 0.f;
 				if (m_dieTimerMax)
 					m_currentState = State::Die;
 				break;
 			}
-			computeBeat(frameTime);
 			break;
 		}
 		case State::Grow:
 		{
 			m_growTimer += frameTime;
-			m_animation = octo::cosinusInterpolation(0.f, m_finalAnimation + m_beatDelta, m_growTimer / m_growTimerMax);
+			m_animation = octo::cosinusInterpolation(0.f, m_finalAnimation + m_beatDeltaValue, m_growTimer / m_growTimerMax);
 			if (m_growTimer >= m_growTimerMax)
 			{
 				m_growTimer = 0.f;
 				m_currentState = State::Life;
-				m_beatDirection = true;
 			}
 			break;
 		}
 		case State::Die:
 		{
-			m_dieTimer += frameTime;
-			m_animation = octo::cosinusInterpolation(m_finalAnimation, 0.f, m_dieTimer / m_dieTimerMax);
+			m_dieTimer += frameTime * m_dieSpeed;
+			m_animation = octo::cosinusInterpolation(m_finalAnimation + m_beatDeltaValue, 0.f, m_dieTimer / m_dieTimerMax);
 			if (m_dieTimer >= m_dieTimerMax)
 			{
 				m_dieTimer = 0.f;
 				m_currentState = State::Grow;
+				m_dieSpeed = 1.f;
+				m_startTimer = 0.f;
+				m_beatTimer = 0.f;
 				return true;
 			}
 			break;
@@ -129,8 +141,11 @@ void DecorAnimator::sleep(void)
 
 void DecorAnimator::die(void)
 {
-	if (m_currentState == State::Life)
-		m_currentState = State::Die;
+	if (m_currentState == State::Life || m_currentState == State::Die)
+	{
+		m_dieSpeed = 10.f;
+		m_lifeTimerMax = 0.f;
+	}
 }
 
 void DecorAnimator::setup(sf::Time lifeTime)
