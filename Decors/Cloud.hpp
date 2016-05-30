@@ -40,7 +40,7 @@ private:
 
 	bool isOctogonContain(sf::Vector2f const & size,
 							sf::Vector2f const & position,
-							sf::Vector2f const & point);
+							sf::Vector2f const & point) const;
 
 	void createCloud(std::vector<OctogonValue> const & values,
 					sf::Vector2f const & origin,
