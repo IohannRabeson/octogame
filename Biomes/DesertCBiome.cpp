@@ -20,7 +20,8 @@ DesertCBiome::DesertCBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
-	m_waterLevel(1200.f),
+//	m_waterLevel(1200.f),
+	m_waterLevel(-1.f),
 	m_waterColor(240, 110, 110, 180),
 	m_destinationIndex(0u),
 
@@ -133,6 +134,7 @@ DesertCBiome::DesertCBiome() :
 		m_octoStartPosition = sf::Vector2f(9800, -4950.f);
 
 	m_gameObjects[20] = GameObjectType::Portal;
+	m_instances[150] = MAP_DESERT_C_TRAIL_OMP;
 //	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
 //	m_gameObjects[90] = GameObjectType::Portal;
 //	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
@@ -255,8 +257,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f    , 130.f   , 150.f   , 350.f   , 330.f  , 500.f   };
-		std::vector<float> pointY = {0.f + n, 0.f + n , -2.f - n, -2.f - n, 0.f + n,  0.f + n};
+		std::vector<float> pointX = {0.f    , 130.f   , 150.f   , 244.f   , 245.f, 255.f, 253.f   , 350.f   , 330.f  , 500.f   };
+		std::vector<float> pointY = {0.f + n, 0.f + n , -2.f - n, -2.f - n, 0.f  , 0.f  , -2.f - n, -2.f - n, 0.f + n,  0.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
