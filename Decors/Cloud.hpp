@@ -38,6 +38,10 @@ private:
 						sf::Color color,
 						octo::VertexBuilder& builder);
 
+	bool isOctogonContain(sf::Vector2f const & size,
+							sf::Vector2f const & position,
+							sf::Vector2f const & point);
+
 	void createCloud(std::vector<OctogonValue> const & values,
 					sf::Vector2f const & origin,
 					std::size_t partCount,
@@ -70,7 +74,7 @@ private:
 
 	DecorAnimator					m_animator;
 	float							m_animation;
-	sf::FloatRect					m_octoRect;
+	bool							m_isCollide;
 
 	std::vector<DropSystem *>		m_rain;
 	std::vector<DropSystem *>		m_snow;

@@ -1,6 +1,7 @@
 #include "Cloud.hpp"
 #include "ABiome.hpp"
 #include "SkyCycle.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -74,10 +75,26 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 	builder.createQuad(upLeft, upRight, recDownRight, upMidLeft, color);
 }
 
+bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & position, sf::Vector2f const & point)
+{
+	if ((point.x > position.x - size.x && point.x < position.x + size.x)
+		&& (point.y > position.y - size.y && point.y < position.y + size.y))
+	{
+		return true;
+	}
+	return false;
+}
+
 void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f const & origin, std::size_t partCount, sf::Color const & color, octo::VertexBuilder& builder)
 {
+	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
+	m_isCollide = false;
 	for (std::size_t i = 0; i < partCount; i++)
+	{
+		if (isOctogonContain(values[i].size * m_animation, values[i].origin + origin, octoPosition))
+			m_isCollide = true;
 		createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
+	}
 }
 
 void Cloud::setupLightning(ABiome & biome)
@@ -100,11 +117,6 @@ void Cloud::setupLightning(ABiome & biome)
 
 void Cloud::setup(ABiome& biome)
 {
-	octo::Camera const & camera = octo::Application::getCamera();
-	sf::Vector2f const & cameraSize = camera.getSize();
-
-	m_octoRect.width = cameraSize.x / 3.f;
-	m_octoRect.height = cameraSize.y / 4.f;
 	m_color = biome.getCloudColor();
 	m_partCount = biome.getCloudPartCount();
 	m_values.resize(m_partCount);
@@ -193,9 +205,6 @@ void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder &
 void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	sf::Vector2f const & position = getPosition();
-	octo::Camera const & camera = octo::Application::getCamera();
-	sf::Vector2f const & cameraSize = camera.getSize();
-	sf::Vector2f const & cameraCenter = camera.getCenter();
 
 	if (biome.canCreateThunder() && m_animator.getState() == DecorAnimator::State::Life)
 		updateThunder(frameTime, biome, builder, position);
@@ -205,13 +214,12 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	else if (biome.canCreateSnow())
 		updateSnow(frameTime, biome, builder, position);
 
-	m_octoRect.left = cameraCenter.x - cameraSize.x / 6.f;
-	m_octoRect.top = cameraCenter.y;
-	if (m_animator.getState() == DecorAnimator::State::Life && m_octoRect.contains(position))
-		m_animator.die();
-	if (m_animator.update(frameTime) && !m_octoRect.contains(position))
+	if (m_animator.update(frameTime))
 		newCloud(biome);
 	m_animation = m_animator.getAnimation();
 
 	createCloud(m_values, position, m_partCount, m_color, builder);
+
+	if (m_isCollide)
+		m_animator.die();
 }
