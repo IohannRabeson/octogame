@@ -206,13 +206,16 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 {
 	sf::Vector2f const & position = getPosition();
 
-	if (biome.canCreateThunder() && m_animator.getState() == DecorAnimator::State::Life)
-		updateThunder(frameTime, biome, builder, position);
+	if (m_animator.getState() == DecorAnimator::State::Life)
+	{
+		if (biome.canCreateThunder())
+			updateThunder(frameTime, biome, builder, position);
 
-	if (biome.canCreateRain())
-		updateRain(frameTime, biome, builder, position);
-	else if (biome.canCreateSnow())
-		updateSnow(frameTime, biome, builder, position);
+		if (biome.canCreateRain())
+			updateRain(frameTime, biome, builder, position);
+		else if (biome.canCreateSnow())
+			updateSnow(frameTime, biome, builder, position);
+	}
 
 	if (m_animator.update(frameTime))
 		newCloud(biome);
