@@ -265,13 +265,13 @@ bool	Progress::isMetPortal(Level destination)
 	return false;
 }
 
-void	Progress::registerNpc(ResourceKey const & key)
+void	Progress::registerNpc(GameObjectType key)
 {
 	if (!m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
 		m_npcMax++;
 }
 
-bool	Progress::meetNpc(ResourceKey const & key)
+bool	Progress::meetNpc(GameObjectType key)
 {
 	if (m_changeLevel == false && !m_npc[m_data.nextDestination][key])
 	{
@@ -289,7 +289,7 @@ void	Progress::saveNpc()
 		saveNpc += std::to_string(static_cast<int>(itLevel->first)) + " ";
 		for (auto it = itLevel->second.begin(); it != itLevel->second.end(); it++)
 		{
-			saveNpc += static_cast<std::string>(it->first);
+			saveNpc += std::to_string(static_cast<std::size_t>(it->first));
 			saveNpc += " " + std::to_string(it->second) + " ";
 		}
 		saveNpc += "\n";
@@ -313,9 +313,9 @@ void	Progress::loadNpc()
 		for (std::size_t i = 1; i < splitLine.size(); i += 2)
 		{
 			if (splitLine[i + 1] == "1")
-				m_npc[level].insert(std::make_pair(splitLine[i], true));
+				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoi(splitLine[i])), true));
 			else
-				m_npc[level].insert(std::make_pair(splitLine[i], false));
+				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoi(splitLine[i])), false));
 		}
 	}
 }
@@ -335,6 +335,24 @@ std::size_t	Progress::getNpcMax()
 {
 	m_npcMax = m_npc[m_data.lastDestination].size();
 	return m_npcMax;
+}
+
+std::vector<GameObjectType>	Progress::getNpcMet()
+{
+	std::vector<GameObjectType> npcList;
+
+	for (auto level = m_npc.begin(); level != m_npc.end(); level++)
+	{
+		if (level->first != Level::Default)
+		{
+			for (auto npc = level->second.begin(); npc != level->second.end(); npc++)
+			{
+				if (npc->second == true)
+					npcList.push_back(npc->first);
+			}
+		}
+	}
+	return std::move(npcList);
 }
 
 void	Progress::savePortals()

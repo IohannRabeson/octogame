@@ -2,6 +2,7 @@
 # define PROGRESS_HPP
 # include "GroundManager.hpp"
 # include "ResourceDefinitions.hpp"
+# include "AGameObject.hpp"
 # include "ABiome.hpp"
 # include "ChallengeManager.hpp"
 # include <SFML/System/Vector2.hpp>
@@ -77,10 +78,11 @@ public:
 	void				registerDeath(float deathPosX);
 	std::vector<int> &	getDeathPos(void);
 
-	void				registerNpc(ResourceKey const & key);
-	bool				meetNpc(ResourceKey const & key);
+	void				registerNpc(GameObjectType key);
+	bool				meetNpc(GameObjectType key);
 	std::size_t			getNpcCount();
 	std::size_t			getNpcMax();
+	std::vector<GameObjectType>	getNpcMet();
 
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);
@@ -163,7 +165,7 @@ private:
 	bool											m_spaceShipRepair;
 	sf::Vector2f									m_octoPos;
 
-	std::map<Level, std::map<std::string, bool>>	m_npc;
+	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
 	std::size_t										m_npcCount;
 	std::size_t										m_npcMax;
 	std::map<Level, std::vector<int>>				m_deathPos;

@@ -24,10 +24,9 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_isDoubleJump(false),
 	m_isMeetable(isMeetable)
 {
+	//TODO: To remove
+	(void)m_id;
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	Progress & progress = Progress::getInstance();
-	if (m_isMeetable)
-		progress.registerNpc(npcId);
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
@@ -100,6 +99,7 @@ void ANpc::setupMachine(void)
 
 	setMachine(machine);
 	m_sprite.setNextEvent(Idle);
+
 }
 
 bool ANpc::canWalk(void) const
@@ -183,9 +183,14 @@ void ANpc::setVelocity(float velocity)
 
 void ANpc::setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask)
 {
+	Progress & progress = Progress::getInstance();
+
 	m_box->setGameObject(gameObject);
 	m_box->setCollisionType(type);
 	m_box->setCollisionMask(mask);
+
+	if (m_isMeetable)
+		progress.registerNpc(gameObject->getObjectType());
 }
 
 void ANpc::setTextOffset(sf::Vector2f const & offset)
@@ -353,7 +358,7 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 		m_isDoubleJump = true;
 	else
 		m_isDoubleJump = false;
-	if (m_isMeetable && Progress::getInstance().meetNpc(m_id))
+	if (m_isMeetable && Progress::getInstance().meetNpc(m_box->getGameObject()->getObjectType()))
 		octo->collideZoomEvent(m_box->getPosition());
 }
 
