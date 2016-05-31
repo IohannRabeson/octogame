@@ -18,6 +18,7 @@ void	MenuScreen::start()
 	InputListener::addInputListener();
 
 	progress.load("save.osv");
+	progress.setMenu(true);
 	m_game.reset(new Game());
 	m_game->loadLevel();
 	m_menu.setup();

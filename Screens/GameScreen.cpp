@@ -19,6 +19,7 @@ void	GameScreen::start()
 	InputListener::addInputListener();
 
 	progress.load("save.osv");
+	progress.setMenu(false);
 	m_game.reset(new Game());
 	m_game->loadLevel();
 	m_menu.setup();
@@ -72,6 +73,8 @@ void	GameScreen::update(sf::Time frameTime)
 		postEffect.setAllShaderEnabled(true);
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
+		if (progress.isMenu())
+			states.change("menu");
 		if (progress.changeLevel())
 		{
 			progress.levelChanged();
