@@ -4,6 +4,7 @@ menu_play=JOUER!
 menu_controls=Contrôles
 menu_options=Options
 menu_credits=Crédits
+menu_return=Retour
 menu_quit=Quitter
 menu_restart=Recommencer
 menu_friends=Potes

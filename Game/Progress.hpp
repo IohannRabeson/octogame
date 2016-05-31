@@ -23,6 +23,8 @@ public:
 
 	bool				isMenu() const;
 	void				setMenu(bool isMenu);
+	//TODO: Set this value once the game is finished
+	bool				isGameFinished();
 
 	void				setLanguage(Language language);
 	Progress::Language	getLanguage(void) const;
@@ -161,6 +163,7 @@ private:
 
 	static std::unique_ptr<Progress>				m_instance;
 	bool											m_isMenu;
+	bool											m_isGameFinished;
 	std::string										m_filename;
 	data											m_data;
 	bool											m_newSave;

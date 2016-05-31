@@ -14,6 +14,7 @@ std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
 	m_isMenu(true),
+	m_isGameFinished(false),
 	m_filename(octo::Application::getOptions().getPath() + "save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
@@ -45,6 +46,11 @@ bool	Progress::isMenu() const
 void	Progress::setMenu(bool isMenu)
 {
 	m_isMenu = isMenu;
+}
+
+bool	Progress::isGameFinished()
+{
+	return m_isGameFinished;
 }
 
 void	Progress::setup()
@@ -153,9 +159,7 @@ void	Progress::setNanoRobotCount(std::size_t count)
 
 void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 {
-	if (m_isMenu)
-		m_isMenu = false;
-	else
+	if (!m_isMenu)
 		m_data.nextDestination = destination;
 	m_changeLevel = hasTransition;
 }
@@ -281,13 +285,13 @@ bool	Progress::isMetPortal(Level destination)
 
 void	Progress::registerNpc(GameObjectType key)
 {
-	if (!m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
+	if (!m_isMenu && !m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
 		m_npcMax++;
 }
 
 bool	Progress::meetNpc(GameObjectType key)
 {
-	if (m_changeLevel == false && !m_npc[m_data.nextDestination][key])
+	if (!m_isMenu && m_changeLevel == false && !m_npc[m_data.nextDestination][key])
 	{
 		m_npc[m_data.nextDestination][key] = true;
 		return true;
@@ -308,6 +312,8 @@ void	Progress::saveNpc()
 		}
 		saveNpc += "\n";
 	}
+	std::cout << "save" << std::endl;
+	std::cout << saveNpc << std::endl;
 	assert(saveNpc.size() < 10000);
 	std::strcpy(m_data.npc, saveNpc.c_str());
 }
@@ -316,8 +322,10 @@ void	Progress::loadNpc()
 {
 	std::istringstream savedNpc(m_data.npc);
 	std::string line;
+	std::cout << "load" << std::endl;
 	while (std::getline(savedNpc, line))
 	{
+		std::cout << line << std::endl;
 		std::vector<std::string> splitLine;
 		split(line, ' ', splitLine);
 

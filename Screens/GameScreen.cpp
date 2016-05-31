@@ -17,7 +17,6 @@ void	GameScreen::start()
 	Progress &				progress = Progress::getInstance();
 
 	InputListener::addInputListener();
-
 	progress.load("save.osv");
 	progress.setMenu(false);
 	m_game.reset(new Game());
@@ -47,6 +46,7 @@ void	GameScreen::stop()
 	Progress::getInstance().save();
 	octo::Application::getPostEffectManager().removeEffects();
 	InputListener::removeInputListener();
+	m_game.release();
 	m_menu.setKeyboard(false);
 }
 
@@ -73,8 +73,6 @@ void	GameScreen::update(sf::Time frameTime)
 		postEffect.setAllShaderEnabled(true);
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
-		if (progress.isMenu())
-			states.change("menu");
 		if (progress.changeLevel())
 		{
 			progress.levelChanged();

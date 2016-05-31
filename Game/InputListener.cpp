@@ -46,10 +46,13 @@ bool	InputListener::onInputReleased(InputListener::OctoKeys const &)
 
 void	InputListener::addInputListener(void)
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.addJoystickListener(this);
-	graphics.addKeyboardListener(this);
-	m_isListeners = true;
+	if (m_isListeners == false)
+	{
+		octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+		graphics.addJoystickListener(this);
+		graphics.addKeyboardListener(this);
+		m_isListeners = true;
+	}
 }
 
 void	InputListener::removeInputListener(void)

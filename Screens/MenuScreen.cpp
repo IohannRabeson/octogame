@@ -46,32 +46,18 @@ void	MenuScreen::stop()
 	Progress::getInstance().save();
 	octo::Application::getPostEffectManager().removeEffects();
 	InputListener::removeInputListener();
+	m_game.release();
 	m_menu.setKeyboard(false);
 }
 
 void	MenuScreen::update(sf::Time frameTime)
 {
 	AMenu::State				state = m_menu.getState();
-	octo::StateManager &		states = octo::Application::getStateManager();
-	Progress &					progress = Progress::getInstance();
 
 	if (state == AMenu::State::Hide)
 		m_menu.setState(AMenu::State::Active);
-	m_menu.update(frameTime, m_game->getOctoBubblePosition());
 	m_game->update(frameTime);
-	if (progress.changeLevel())
-	{
-		if (progress.isFirstTime())
-		{
-			progress.save();
-			states.change("zero");
-		}
-		else
-		{
-			progress.levelChanged();
-			states.change("transitionLevel");
-		}
-	}
+	m_menu.update(frameTime, m_game->getOctoBubblePosition());
 }
 
 bool MenuScreen::onInputPressed(InputListener::OctoKeys const & key)

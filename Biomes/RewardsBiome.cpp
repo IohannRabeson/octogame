@@ -17,7 +17,7 @@ RewardsBiome::RewardsBiome() :
 	m_name("Rewards"),
 	m_id(Level::Rewards),
 	m_seed("Rewards"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomInt(2u, 100u))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomInt(2u, 50u))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.5f),
@@ -73,7 +73,7 @@ RewardsBiome::RewardsBiome() :
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
 	//TODO: Value to improve
-	m_treeDepth(m_generator.randomInt(4u, 6u), m_generator.randomInt(6u, 9u)),
+	m_treeDepth(m_generator.randomInt(4u, 5u), m_generator.randomInt(6u, 7u)),
 	m_treeSize(sf::Vector2f(m_generator.randomFloat(2.f, 20.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(20.f, 100.f), m_generator.randomFloat(100.f, 600.f))),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
@@ -142,7 +142,7 @@ RewardsBiome::RewardsBiome() :
 	for (std::size_t i = 0; i < npcList.size(); i++)
 	{
 		std::size_t delta = randomInt(10, 20);
-		m_gameObjects[(i + 1) * delta] = npcList[i];
+		m_gameObjects[40 + (i + 1) * delta] = npcList[i];
 		total += delta;
 	}
 }
