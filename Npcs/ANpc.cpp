@@ -228,9 +228,9 @@ void ANpc::setDisplayText(bool displayText)
 
 void ANpc::setActiveText(bool active)
 {
-	for (auto & text : m_texts)
-		text->setActive(active);
-	m_activeText = active;
+		for (auto & text : m_texts)
+			text->setActive(active);
+		m_activeText = active;
 }
 
 float ANpc::getScale(void) const
@@ -436,7 +436,7 @@ void ANpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 
 void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
 {
-	if (m_displayText)
+	if (m_displayText && Progress::getInstance().getNextDestination() != Level::Rewards)
 	{
 		if (!m_isDoubleJump)
 			m_texts[m_currentText]->draw(render);

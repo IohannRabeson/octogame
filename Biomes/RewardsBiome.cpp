@@ -1,4 +1,4 @@
-#include "DefaultBiome.hpp"
+#include "RewardsBiome.hpp"
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
@@ -9,14 +9,14 @@
 #include <limits>
 #include <iostream>
 
-std::size_t DefaultBiome::m_seedId = 110u;
+std::size_t RewardsBiome::m_seedId = 110u;
 
-DefaultBiome::DefaultBiome() :
+RewardsBiome::RewardsBiome() :
 	m_generator(std::to_string(m_seedId++)),
-	m_name("Default"),
-	m_id(Level::Default),
-	m_seed("Default"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomInt(2u, 400u))),
+	m_name("Rewards"),
+	m_id(Level::Rewards),
+	m_seed("Rewards"),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(3500u, 4500u), m_generator.randomInt(2u, 400u))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.5f),
@@ -140,88 +140,92 @@ DefaultBiome::DefaultBiome() :
 	m_interestPointPosX = portalPos;
 	if ((progress.getNanoRobotCount() >= 7 && progress.getLastDestination() == Level::IceA) || (progress.getNanoRobotCount() >= 6 && progress.isDemo()))
 	{
-		m_destinations.push_back(Level::Default);
-		m_destinations.push_back(Level::Default);
+		m_destinations.push_back(Level::Rewards);
+		m_destinations.push_back(Level::Rewards);
 	}
 	else
 	{
 		m_destinations.push_back(progress.getLastDestination());
 		m_destinations.push_back(progress.getLastDestination());
 	}
+	
+	std::vector<GameObjectType> const & npcList = Progress::getInstance().getNpcMet();
+	for (std::size_t i = 0; i < npcList.size(); i++)
+		m_gameObjects[20 * (i + 1)] = npcList[i];
 }
 
-void			DefaultBiome::setup(std::size_t seed)
+void			RewardsBiome::setup(std::size_t seed)
 {
 	(void)seed;
 }
 
-std::string		DefaultBiome::getName()const
+std::string		RewardsBiome::getName()const
 {
 	return (m_name);
 }
 
-Level			DefaultBiome::getId()const
+Level			RewardsBiome::getId()const
 {
 	return (m_id);
 }
 
 //TODO:: We'll probably need a setter for mapSize
-sf::Vector2u	DefaultBiome::getMapSize()
+sf::Vector2u	RewardsBiome::getMapSize()
 {
 	return (m_mapSize);
 }
 
-std::size_t		DefaultBiome::getMapSeed()
+std::size_t		RewardsBiome::getMapSeed()
 {
 	return m_mapSeed;
 }
 
-sf::Vector2f	DefaultBiome::getMapSizeFloat()
+sf::Vector2f	RewardsBiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
 }
 
-sf::Vector2f	DefaultBiome::getOctoStartPosition()
+sf::Vector2f	RewardsBiome::getOctoStartPosition()
 {
 	return m_octoStartPosition;
 }
 
-float			DefaultBiome::getTransitionDuration()
+float			RewardsBiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				DefaultBiome::getInterestPointPosX()
+int				RewardsBiome::getInterestPointPosX()
 {
 	return (m_interestPointPosX);
 }
 
-std::map<std::size_t, GameObjectType> const &	DefaultBiome::getGameObjects()
+std::map<std::size_t, GameObjectType> const &	RewardsBiome::getGameObjects()
 {
 	return m_gameObjects;
 }
 
-Level	DefaultBiome::getDestination()
+Level	RewardsBiome::getDestination()
 {
 	return m_destinations[m_destinationIndex++];
 }
 
-float	DefaultBiome::getWaterLevel()
+float	RewardsBiome::getWaterLevel()
 {
 	return m_waterLevel;
 }
 
-sf::Color	DefaultBiome::getWaterColor()
+sf::Color	RewardsBiome::getWaterColor()
 {
 	return m_waterColor;
 }
 
-std::map<std::size_t, std::string> const & DefaultBiome::getInstances()
+std::map<std::size_t, std::string> const & RewardsBiome::getInstances()
 {
 	return m_instances;
 }
 
-std::vector<ParallaxScrolling::ALayer *> DefaultBiome::getLayers()
+std::vector<ParallaxScrolling::ALayer *> RewardsBiome::getLayers()
 {
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
@@ -247,7 +251,7 @@ std::vector<ParallaxScrolling::ALayer *> DefaultBiome::getLayers()
 	return vector;
 }
 
-Map::MapSurfaceGenerator DefaultBiome::getMapSurfaceGenerator()
+Map::MapSurfaceGenerator RewardsBiome::getMapSurfaceGenerator()
 {
 	switch (m_randomSurfaceNumber)
 	{
@@ -295,7 +299,7 @@ Map::MapSurfaceGenerator DefaultBiome::getMapSurfaceGenerator()
 	};
 }
 
-Map::TileColorGenerator DefaultBiome::getTileColorGenerator()
+Map::TileColorGenerator RewardsBiome::getTileColorGenerator()
 {
 	return [this](Noise & noise, float x, float y, float z)
 	{
@@ -304,68 +308,68 @@ Map::TileColorGenerator DefaultBiome::getTileColorGenerator()
 	};
 }
 
-sf::Color		DefaultBiome::getParticleColorGround()
+sf::Color		RewardsBiome::getParticleColorGround()
 {
 	std::size_t colorIndex = randomInt(0u, 19u);
 	return (m_particleColor[colorIndex]);
 }
 
-sf::Color		DefaultBiome::getTileStartColor()
+sf::Color		RewardsBiome::getTileStartColor()
 {
 	return (m_tileStartColor);
 }
 
-sf::Color		DefaultBiome::getTileEndColor()
+sf::Color		RewardsBiome::getTileEndColor()
 {
 	return (m_tileEndColor);
 }
 
-sf::Time		DefaultBiome::getDayDuration()
+sf::Time		RewardsBiome::getDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Time		DefaultBiome::getStartDayDuration()
+sf::Time		RewardsBiome::getStartDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Color		DefaultBiome::getSkyDayColor()
+sf::Color		RewardsBiome::getSkyDayColor()
 {
 	return (m_skyDayColor);
 }
 
-sf::Color		DefaultBiome::getSkyNightColor()
+sf::Color		RewardsBiome::getSkyNightColor()
 {
 	return (m_skyNightColor);
 }
 
-sf::Color		DefaultBiome::getNightLightColor()
+sf::Color		RewardsBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
 }
 
-sf::Color		DefaultBiome::getSunsetLightColor()
+sf::Color		RewardsBiome::getSunsetLightColor()
 {
 	return (m_SunsetLightColor);
 }
 
-float			DefaultBiome::getWind()
+float			RewardsBiome::getWind()
 {
 	return (m_wind);
 }
 
-void			DefaultBiome::setWind(float wind)
+void			RewardsBiome::setWind(float wind)
 {
 	m_wind = wind;
 }
 
-bool			DefaultBiome::canCreateRain()
+bool			RewardsBiome::canCreateRain()
 {
 	return (m_canCreateRain);
 }
 
-std::size_t		DefaultBiome::getRainDropPerSecond()
+std::size_t		RewardsBiome::getRainDropPerSecond()
 {
 	std::size_t value = randomRangeSizeT(m_rainDropPerSecond);
 	if (value <= m_rainDropPerSecondMax)
@@ -374,158 +378,158 @@ std::size_t		DefaultBiome::getRainDropPerSecond()
 		return (m_rainDropPerSecondMax);
 }
 
-sf::Time		DefaultBiome::getSunnyTime()
+sf::Time		RewardsBiome::getSunnyTime()
 {
 	return (randomRangeTime(m_sunnyTime));
 }
 
-sf::Time		DefaultBiome::getRainingTime()
+sf::Time		RewardsBiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
 }
 
-bool			DefaultBiome::canCreateThunder()
+bool			RewardsBiome::canCreateThunder()
 {
 	return (m_canCreateThunder);
 }
 
-float			DefaultBiome::getLightningSize()
+float			RewardsBiome::getLightningSize()
 {
 	return (randomRangeFloat(m_lightningSize));
 }
 
-bool			DefaultBiome::canCreateSnow()
+bool			RewardsBiome::canCreateSnow()
 {
 	return (m_canCreateSnow);
 }
 
-std::size_t		DefaultBiome::getRockCount()
+std::size_t		RewardsBiome::getRockCount()
 {
 	return (randomRangeSizeT(m_rockCount));
 }
 
-std::size_t		DefaultBiome::getTreeCount()
+std::size_t		RewardsBiome::getTreeCount()
 {
 	return (randomRangeSizeT(m_treeCount));
 }
 
-std::size_t		DefaultBiome::getMushroomCount()
+std::size_t		RewardsBiome::getMushroomCount()
 {
 	return (randomRangeSizeT(m_mushroomCount));
 }
 
-std::size_t		DefaultBiome::getCrystalCount()
+std::size_t		RewardsBiome::getCrystalCount()
 {
 	return (randomRangeSizeT(m_crystalCount));
 }
 
-std::size_t		DefaultBiome::getStarCount()
+std::size_t		RewardsBiome::getStarCount()
 {
 	return (randomRangeSizeT(m_starCount));
 }
 
-std::size_t		DefaultBiome::getSunCount()
+std::size_t		RewardsBiome::getSunCount()
 {
 	return (randomRangeSizeT(m_sunCount));
 }
 
-std::size_t		DefaultBiome::getMoonCount()
+std::size_t		RewardsBiome::getMoonCount()
 {
 	return (randomRangeSizeT(m_moonCount));
 }
 
-std::size_t		DefaultBiome::getRainbowCount()
+std::size_t		RewardsBiome::getRainbowCount()
 {
 	return (randomRangeSizeT(m_rainbowCount));
 }
 
-std::size_t		DefaultBiome::getCloudCount()
+std::size_t		RewardsBiome::getCloudCount()
 {
 	return (randomRangeSizeT(m_cloudCount));
 }
 
-std::size_t		DefaultBiome::getGroundRockCount()
+std::size_t		RewardsBiome::getGroundRockCount()
 {
 	return (randomRangeSizeT(m_groundRockCount));
 }
 
-std::size_t	DefaultBiome::getTreeDepth()
+std::size_t	RewardsBiome::getTreeDepth()
 {
 	return (randomRangeSizeT(m_treeDepth));
 }
 
-sf::Vector2f	DefaultBiome::getTreeSize()
+sf::Vector2f	RewardsBiome::getTreeSize()
 {
 	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Time		DefaultBiome::getTreeLifeTime()
+sf::Time		RewardsBiome::getTreeLifeTime()
 {
 	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Color		DefaultBiome::getTreeColor()
+sf::Color		RewardsBiome::getTreeColor()
 {
 	return (randomColor(m_treeColor));
 }
 
-float			DefaultBiome::getTreeAngle()
+float			RewardsBiome::getTreeAngle()
 {
 	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			DefaultBiome::getTreeIsMoving()
+bool			RewardsBiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-float			DefaultBiome::getTreeBeatMouvement()
+float			RewardsBiome::getTreeBeatMouvement()
 {
 	return (m_treeBeatMouvement);
 }
 
-bool			DefaultBiome::canCreateTree()
+bool			RewardsBiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			DefaultBiome::canCreateLeaf()
+bool			RewardsBiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	DefaultBiome::getLeafSize()
+sf::Vector2f	RewardsBiome::getLeafSize()
 {
 	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		DefaultBiome::getLeafColor()
+sf::Color		RewardsBiome::getLeafColor()
 {
 	return (randomColor(m_leafColor));
 }
 
-std::size_t		DefaultBiome::getTreePositionX()
+std::size_t		RewardsBiome::getTreePositionX()
 {
 	return randomInt(1, m_mapSize.x);
 }
 
-sf::Vector2f	DefaultBiome::getCrystalSize()
+sf::Vector2f	RewardsBiome::getCrystalSize()
 {
 	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		DefaultBiome::getCrystalPartCount()
+std::size_t		RewardsBiome::getCrystalPartCount()
 {
 	return (randomRangeSizeT(m_crystalPartCount));
 }
 
-sf::Color		DefaultBiome::getCrystalColor()
+sf::Color		RewardsBiome::getCrystalColor()
 {
 	return (randomColor(m_crystalColor));
 }
 
-int				DefaultBiome::getCrystalPosX()
+int				RewardsBiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_interestPointPosX - m_mapSize.x / 2.f;
@@ -536,222 +540,222 @@ int				DefaultBiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			DefaultBiome::canCreateCrystal()
+bool			RewardsBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	DefaultBiome::getShineEffectSize()
+sf::Vector2f	RewardsBiome::getShineEffectSize()
 {
 	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		DefaultBiome::getShineEffectColor()
+sf::Color		RewardsBiome::getShineEffectColor()
 {
 	return (randomColor(m_shineEffectColor));
 }
 
-float			DefaultBiome::getShineEffectRotateAngle()
+float			RewardsBiome::getShineEffectRotateAngle()
 {
 	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			DefaultBiome::canCreateShineEffect()
+bool			RewardsBiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	DefaultBiome::getRockSize()
+sf::Vector2f	RewardsBiome::getRockSize()
 {
 	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		DefaultBiome::getRockPartCount()
+std::size_t		RewardsBiome::getRockPartCount()
 {
 	return (randomRangeSizeT(m_rockPartCount));
 }
 
-sf::Color		DefaultBiome::getRockColor()
+sf::Color		RewardsBiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
 }
 
-bool			DefaultBiome::canCreateRock()
+bool			RewardsBiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	DefaultBiome::getMushroomSize()
+sf::Vector2f	RewardsBiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
 }
 
-sf::Color		DefaultBiome::getMushroomColor()
+sf::Color		RewardsBiome::getMushroomColor()
 {
 	return (randomColor(m_mushroomColor));
 }
 
-sf::Time		DefaultBiome::getMushroomLifeTime()
+sf::Time		RewardsBiome::getMushroomLifeTime()
 {
 	return (randomRangeTime(m_mushroomLifeTime));
 }
 
-bool			DefaultBiome::canCreateMushroom()
+bool			RewardsBiome::canCreateMushroom()
 {
 	return (m_canCreateMushroom);
 }
 
-sf::Vector2f	DefaultBiome::getCloudSize()
+sf::Vector2f	RewardsBiome::getCloudSize()
 {
 	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		DefaultBiome::getCloudPartCount()
+std::size_t		RewardsBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
-sf::Time		DefaultBiome::getCloudLifeTime()
+sf::Time		RewardsBiome::getCloudLifeTime()
 {
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		DefaultBiome::getCloudColor()
+sf::Color		RewardsBiome::getCloudColor()
 {
 	return (randomColor(m_cloudColor));
 }
 
-bool			DefaultBiome::canCreateCloud()
+bool			RewardsBiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	DefaultBiome::getStarSize()
+sf::Vector2f	RewardsBiome::getStarSize()
 {
 	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		DefaultBiome::getStarColor()
+sf::Color		RewardsBiome::getStarColor()
 {
 	return (randomColor(m_starColor));
 }
 
-sf::Time		DefaultBiome::getStarLifeTime()
+sf::Time		RewardsBiome::getStarLifeTime()
 {
 	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			DefaultBiome::canCreateStar()
+bool			RewardsBiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	DefaultBiome::getSunSize()
+sf::Vector2f 	RewardsBiome::getSunSize()
 {
 	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-std::size_t		DefaultBiome::getSunPartCount()
+std::size_t		RewardsBiome::getSunPartCount()
 {
 	return (randomRangeSizeT(m_sunPartCount));
 }
 
-sf::Color		DefaultBiome::getSunColor()
+sf::Color		RewardsBiome::getSunColor()
 {
 	if (m_sunColor == sf::Color(255, 255, 255))
 		return m_sunColor;
 	return (randomColor(m_sunColor));
 }
 
-bool			DefaultBiome::canCreateSun()
+bool			RewardsBiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	DefaultBiome::getMoonSize()
+sf::Vector2f 	RewardsBiome::getMoonSize()
 {
 	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		DefaultBiome::getMoonColor()
+sf::Color		RewardsBiome::getMoonColor()
 {
 	return (randomColor(m_moonColor));
 }
 
-sf::Time		DefaultBiome::getMoonLifeTime()
+sf::Time		RewardsBiome::getMoonLifeTime()
 {
 	return (randomRangeTime(m_moonLifeTime));
 }
 
-bool			DefaultBiome::canCreateMoon()
+bool			RewardsBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-float			DefaultBiome::getRainbowThickness()
+float			RewardsBiome::getRainbowThickness()
 {
 	return (randomRangeFloat(m_rainbowThickness));
 }
 
-float			DefaultBiome::getRainbowPartSize()
+float			RewardsBiome::getRainbowPartSize()
 {
 	return (randomRangeFloat(m_rainbowPartSize));
 }
 
-std::size_t		DefaultBiome::getRainbowLoopCount()
+std::size_t		RewardsBiome::getRainbowLoopCount()
 {
 	return (randomRangeSizeT(m_rainbowLoopCount));
 }
 
-sf::Time		DefaultBiome::getRainbowLifeTime()
+sf::Time		RewardsBiome::getRainbowLifeTime()
 {
 	return (randomRangeTime(m_rainbowLifeTime));
 }
 
-sf::Time		DefaultBiome::getRainbowIntervalTime()
+sf::Time		RewardsBiome::getRainbowIntervalTime()
 {
 	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
-bool			DefaultBiome::canCreateRainbow()
+bool			RewardsBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
 }
 
-ABiome::Type	DefaultBiome::getType() const
+ABiome::Type	RewardsBiome::getType() const
 {
 	return m_type;
 }
 
 
-float			DefaultBiome::randomFloat(float min, float max)
+float			RewardsBiome::randomFloat(float min, float max)
 {
 	return (m_generator.randomFloat(min, max));
 }
 
-int				DefaultBiome::randomInt(int min, int max)
+int				RewardsBiome::randomInt(int min, int max)
 {
 	return (m_generator.randomInt(min, max));
 }
 
-bool			DefaultBiome::randomBool(float percent)
+bool			RewardsBiome::randomBool(float percent)
 {
 	return (m_generator.randomBool(percent));
 }
 
-float			DefaultBiome::randomRangeFloat(Range<float> const & range)
+float			RewardsBiome::randomRangeFloat(Range<float> const & range)
 {
 	return (randomFloat(range.min, range.max));
 }
 
-int				DefaultBiome::randomRangeSizeT(Range<std::size_t> const & range)
+int				RewardsBiome::randomRangeSizeT(Range<std::size_t> const & range)
 {
 	return (randomInt(range.min, range.max));
 }
 
-sf::Vector2f	DefaultBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+sf::Vector2f	RewardsBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 {
 	sf::Vector2f tmp;
 	tmp.x = randomFloat(range.min.x, range.max.x);
@@ -759,13 +763,13 @@ sf::Vector2f	DefaultBiome::randomRangeVector2f(Range<sf::Vector2f> const & range
 	return tmp;
 }
 
-sf::Time		DefaultBiome::randomRangeTime(Range<sf::Time> const & range)
+sf::Time		RewardsBiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }
 
-sf::Color		DefaultBiome::randomColor(sf::Color const & color)
+sf::Color		RewardsBiome::randomColor(sf::Color const & color)
 {
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);

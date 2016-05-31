@@ -343,7 +343,7 @@ std::vector<GameObjectType>	Progress::getNpcMet()
 
 	for (auto level = m_npc.begin(); level != m_npc.end(); level++)
 	{
-		if (level->first != Level::Default)
+		if (level->first != Level::Rewards)
 		{
 			for (auto npc = level->second.begin(); npc != level->second.end(); npc++)
 			{

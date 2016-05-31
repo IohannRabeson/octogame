@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include "DefaultBiome.hpp"
 #include "IceABiome.hpp"
 #include "IceBBiome.hpp"
 #include "IceCBiome.hpp"
@@ -11,6 +10,8 @@
 #include "JungleCBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
+#include "DefaultBiome.hpp"
+#include "RewardsBiome.hpp"
 #include "DemoIceABiome.hpp"
 #include "DemoIceBBiome.hpp"
 #include "DemoIceCBiome.hpp"
@@ -127,6 +128,7 @@ Game::Game(void) :
 		m_biomeManager.registerBiome<DemoWaterABiome>(Level::DemoWaterA);
 	}
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
+	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 }
 
 Game::~Game(void)
