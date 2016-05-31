@@ -313,9 +313,9 @@ void	Progress::loadNpc()
 		for (std::size_t i = 1; i < splitLine.size(); i += 2)
 		{
 			if (splitLine[i + 1] == "1")
-				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoi(splitLine[i])), true));
+				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoul(splitLine[i])), true));
 			else
-				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoi(splitLine[i])), false));
+				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoul(splitLine[i])), false));
 		}
 	}
 }

@@ -6,17 +6,18 @@
 #include "Progress.hpp"
 #include <Interpolations.hpp>
 
+#include <ctime>
 #include <limits>
 #include <iostream>
 
 std::size_t RewardsBiome::m_seedId = 110u;
 
 RewardsBiome::RewardsBiome() :
-	m_generator(std::to_string(m_seedId++)),
+	m_generator(std::to_string(std::time(0))),
 	m_name("Rewards"),
 	m_id(Level::Rewards),
 	m_seed("Rewards"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(3500u, 4500u), m_generator.randomInt(2u, 400u))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomInt(2u, 100u))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.5f),
@@ -134,24 +135,16 @@ RewardsBiome::RewardsBiome() :
 
 	// TODO define map position and number of map
 	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x - 40u);
-	Progress & progress = Progress::getInstance();
-	m_gameObjects[portalPos] = GameObjectType::Portal;
-	m_gameObjects[23u] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
-	if ((progress.getNanoRobotCount() >= 7 && progress.getLastDestination() == Level::IceA) || (progress.getNanoRobotCount() >= 6 && progress.isDemo()))
-	{
-		m_destinations.push_back(Level::Rewards);
-		m_destinations.push_back(Level::Rewards);
-	}
-	else
-	{
-		m_destinations.push_back(progress.getLastDestination());
-		m_destinations.push_back(progress.getLastDestination());
-	}
 	
 	std::vector<GameObjectType> const & npcList = Progress::getInstance().getNpcMet();
+	std::size_t total = 0;
 	for (std::size_t i = 0; i < npcList.size(); i++)
-		m_gameObjects[20 * (i + 1)] = npcList[i];
+	{
+		std::size_t delta = randomInt(10, 20);
+		m_gameObjects[(i + 1) * delta] = npcList[i];
+		total += delta;
+	}
 }
 
 void			RewardsBiome::setup(std::size_t seed)
