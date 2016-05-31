@@ -24,10 +24,30 @@ class YesNoReset : public YesNoMenu
 		octo::StateManager &	states = octo::Application::getStateManager();
 		progress.reset();
 		progress.setFirstTime(true);
-		states.change("anoctonautodyssey");
+		states.change("logo");
 	}
 
 	inline void actionNo(void) { }
+};
+
+class PlayMenu : public AMenuSelection
+{
+public:
+	PlayMenu(void) = default;
+	~PlayMenu(void) = default;
+private:
+	void createMenus(void)
+	{
+		addMenu(L"test", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	}
+	void onSelection(void)
+	{
+		setState(AMenu::State::Hide);
+		AMenu * backMenu = getBackMenu();
+		if (backMenu)
+			backMenu->setState(AMenu::State::Active);
+		Progress::getInstance().setNextDestination(Level::Rewards);
+	}
 };
 
 //MainMenu
@@ -37,6 +57,8 @@ MainMenu::MainMenu(void)
 
 void MainMenu::createMenus(void)
 {
+	if (Progress::getInstance().isMenu())
+		addMenu(AMenu::getText("menu_play"), std::unique_ptr<PlayMenu>(new PlayMenu()));
 	addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
 #ifndef NDEBUG
 	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));

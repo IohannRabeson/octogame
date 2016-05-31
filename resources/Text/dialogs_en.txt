@@ -1,5 +1,6 @@
 menu_no=No
 menu_yes=Yes
+menu_play=PLAY!
 menu_controls=Controls
 menu_options=Options
 menu_credits=Credits

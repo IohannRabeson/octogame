@@ -141,13 +141,19 @@ Game::~Game(void)
 
 void	Game::loadLevel(void)
 {
-	m_biomeManager.changeBiome(Progress::getInstance().getNextDestination(), 0x12345);
-	Progress::getInstance().setLastDestination(m_biomeManager.getCurrentBiome().getId());
-
+	Progress & progress = Progress::getInstance();
 	octo::AudioManager& audio = octo::Application::getAudioManager();
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
 
+	if (progress.isMenu())
+		m_biomeManager.changeBiome(Level::Rewards, 0x12345);
+	else
+	{
+		m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
+		progress.setLastDestination(m_biomeManager.getCurrentBiome().getId());
+	}
+
+	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
 	// Reset last values
 	postEffect.removeEffects();
 	ChallengeManager::getInstance().reset();

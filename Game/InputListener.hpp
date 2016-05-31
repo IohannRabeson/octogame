@@ -39,6 +39,7 @@ public:
 	void				removeInputListener(void);
 
 private:
+	bool					m_isListeners;
 	std::vector<OctoKeys>	m_inputs;
 	bool					m_joystickLT;
 	bool					m_joystickRT;

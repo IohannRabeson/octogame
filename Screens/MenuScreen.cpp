@@ -1,4 +1,4 @@
-#include "GameScreen.hpp"
+#include "MenuScreen.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
@@ -8,11 +8,10 @@
 #include <Options.hpp>
 #include <PostEffectManager.hpp>
 
-GameScreen::GameScreen(void) :
-	m_doSave(false)
+MenuScreen::MenuScreen(void)
 {}
 
-void	GameScreen::start()
+void	MenuScreen::start()
 {
 	Progress &				progress = Progress::getInstance();
 
@@ -24,13 +23,13 @@ void	GameScreen::start()
 	m_menu.setup();
 }
 
-void	GameScreen::pause()
+void	MenuScreen::pause()
 {
 	InputListener::removeInputListener();
 	m_menu.setKeyboard(false);
 }
 
-void	GameScreen::resume()
+void	MenuScreen::resume()
 {
 	octo::Application::getPostEffectManager().removeEffects();
 	Progress::getInstance().levelChanged();
@@ -40,7 +39,7 @@ void	GameScreen::resume()
 	m_game->loadLevel();
 }
 
-void	GameScreen::stop()
+void	MenuScreen::stop()
 {
 	octo::Application::getAudioManager().stopMusic(sf::Time::Zero);
 	Progress::getInstance().save();
@@ -49,30 +48,24 @@ void	GameScreen::stop()
 	m_menu.setKeyboard(false);
 }
 
-void	GameScreen::update(sf::Time frameTime)
+void	MenuScreen::update(sf::Time frameTime)
 {
 	AMenu::State				state = m_menu.getState();
 	octo::StateManager &		states = octo::Application::getStateManager();
-	octo::PostEffectManager &	postEffect = octo::Application::getPostEffectManager();
 	Progress &					progress = Progress::getInstance();
 
+	if (state == AMenu::State::Hide)
+		m_menu.setState(AMenu::State::Active);
 	m_menu.update(frameTime, m_game->getOctoBubblePosition());
-	if (state == AMenu::State::Active || state == AMenu::State::Draw)
+	m_game->update(frameTime);
+	if (progress.changeLevel())
 	{
-		postEffect.setAllShaderEnabled(false);
-		m_doSave = true;
-	}
-	else if (m_doSave)
-	{
-		progress.save();
-		m_doSave = false;
-	}
-	else
-	{
-		postEffect.setAllShaderEnabled(true);
-		m_menu.setKeyboard(false);
-		m_game->update(frameTime);
-		if (progress.changeLevel())
+		if (progress.isFirstTime())
+		{
+			progress.save();
+			states.change("zero");
+		}
+		else
 		{
 			progress.levelChanged();
 			states.change("transitionLevel");
@@ -80,24 +73,13 @@ void	GameScreen::update(sf::Time frameTime)
 	}
 }
 
-bool GameScreen::onInputPressed(InputListener::OctoKeys const & key)
+bool MenuScreen::onInputPressed(InputListener::OctoKeys const & key)
 {
-	switch (key)
-	{
-		case OctoKeys::Menu:
-			{
-				AMenu::State state = m_menu.getState();
-				if (state == AMenu::State::Hide)
-					m_menu.setState(AMenu::State::Active);
-				break;
-			}
-		default:
-			break;
-	}
-	return (true);
+	(void)key;
+	return true;
 }
 
-void	GameScreen::draw(sf::RenderTarget& render)const
+void	MenuScreen::draw(sf::RenderTarget& render)const
 {
 	m_game->draw(render, sf::RenderStates());
 	if (m_menu.getState() == AMenu::State::Active || m_menu.getState() == AMenu::State::Draw)

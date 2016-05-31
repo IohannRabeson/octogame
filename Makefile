@@ -28,6 +28,7 @@ SRC = $(SRC_PHYSICS)									\
 
 SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/GameScreen.cpp					\
+				Screens/MenuScreen.cpp					\
 				Screens/ResourceLoadingScreen.cpp		\
 				Screens/QuitScreen.cpp					\
 				Screens/TransitionLevelScreen.cpp		\

@@ -13,6 +13,7 @@
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
+	m_isMenu(true),
 	m_filename(octo::Application::getOptions().getPath() + "save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
@@ -34,6 +35,16 @@ Progress & Progress::getInstance()
 		m_instance.reset(new Progress());
 	}
 	return *m_instance;
+}
+
+bool	Progress::isMenu() const
+{
+	return m_isMenu;
+}
+
+void	Progress::setMenu(bool isMenu)
+{
+	m_isMenu = isMenu;
 }
 
 void	Progress::setup()
@@ -142,8 +153,11 @@ void	Progress::setNanoRobotCount(std::size_t count)
 
 void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 {
+	if (m_isMenu)
+		m_isMenu = false;
+	else
+		m_data.nextDestination = destination;
 	m_changeLevel = hasTransition;
-	m_data.nextDestination = destination;
 }
 
 Level	Progress::getNextDestination(void) const
@@ -153,7 +167,7 @@ Level	Progress::getNextDestination(void) const
 
 void	Progress::setLastDestination(Level destination)
 {
-	if (destination != Level::Default)
+	if (destination != Level::Default && destination != Level::Rewards)
 		m_data.lastDestination = destination;
 }
 

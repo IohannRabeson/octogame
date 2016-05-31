@@ -21,6 +21,9 @@ public:
 
 	static Progress & getInstance(void);
 
+	bool				isMenu() const;
+	void				setMenu(bool isMenu);
+
 	void				setLanguage(Language language);
 	Progress::Language	getLanguage(void) const;
 	ResourceKey			getTextFile(void) const;
@@ -157,6 +160,7 @@ private:
 	void				split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 	static std::unique_ptr<Progress>				m_instance;
+	bool											m_isMenu;
 	std::string										m_filename;
 	data											m_data;
 	bool											m_newSave;

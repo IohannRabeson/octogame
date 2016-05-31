@@ -64,7 +64,10 @@ CharacterOcto::CharacterOcto() :
 {
 	m_sound.reset(new OctoSound());
 
-	InputListener::addInputListener();
+	if (!m_progress.isMenu())
+		InputListener::addInputListener();
+	else
+		m_keyRight = true;
 
 	if (m_progress.canMoveMap())
 		giveNanoRobot(new GroundTransformNanoRobot());
@@ -91,7 +94,8 @@ CharacterOcto::CharacterOcto() :
 
 CharacterOcto::~CharacterOcto(void)
 {
-	InputListener::removeInputListener();
+	if (!m_progress.isMenu())
+		InputListener::removeInputListener();
 }
 
 void	CharacterOcto::setup(ABiome & biome)
