@@ -46,7 +46,7 @@ void	GameScreen::stop()
 	Progress::getInstance().save();
 	octo::Application::getPostEffectManager().removeEffects();
 	InputListener::removeInputListener();
-	m_game.release();
+	m_game.reset(nullptr);
 	m_menu.setKeyboard(false);
 }
 
