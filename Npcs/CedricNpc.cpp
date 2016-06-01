@@ -26,7 +26,7 @@ CedricNpc::CedricNpc(SkyCycle const & skyCycle) :
 	setTextOffset(sf::Vector2f(80.f, -50.f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::CedricNpc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
 
 	if (m_id == 0u)
 		setCurrentText(0u);

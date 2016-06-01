@@ -1,4 +1,13 @@
 #include "Game.hpp"
+#include "AGameObject.hpp"
+#include "AShape.hpp"
+#include "RectangleShape.hpp"
+#include "GenerativeLayer.hpp"
+#include "PhysicsEngine.hpp"
+#include "ChallengeManager.hpp"
+#include "CameraMovement.hpp"
+
+// Biomes
 #include "IceABiome.hpp"
 #include "IceBBiome.hpp"
 #include "IceCBiome.hpp"
@@ -12,6 +21,7 @@
 #include "WaterBBiome.hpp"
 #include "DefaultBiome.hpp"
 #include "RewardsBiome.hpp"
+
 #include "DemoIceABiome.hpp"
 #include "DemoIceBBiome.hpp"
 #include "DemoIceCBiome.hpp"
@@ -19,16 +29,15 @@
 #include "DemoDesertABiome.hpp"
 #include "DemoJungleABiome.hpp"
 #include "DemoWaterABiome.hpp"
-#include "GenerativeLayer.hpp"
-#include "PhysicsEngine.hpp"
-#include "AShape.hpp"
-#include "RectangleShape.hpp"
+
+//Objects
 #include "ElevatorStream.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
 #include "SpaceShip.hpp"
 #include "Concert.hpp"
-#include "AGameObject.hpp"
+
+//Nano
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "RepairShipNanoRobot.hpp"
@@ -36,6 +45,8 @@
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+
+//Npc
 //Script AddNpc Include
 #include "BirdBlueNpc.hpp"
 #include "StrangerSnowNpc.hpp"
@@ -71,8 +82,7 @@
 #include "WellKeeperNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
-#include "ChallengeManager.hpp"
-#include "CameraMovement.hpp"
+
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -248,21 +258,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				octo->onCollision(GameObjectType::Elevator, collisionDirection);
 			}
 			break;
-		case GameObjectType::Tent:
-			gameObjectCast<Tent>(gameObject)->startBalle();
-			break;
-		case GameObjectType::Concert:
-			gameObjectCast<Concert>(gameObject)->startBalle();
-			break;
-		case GameObjectType::Bouibouik:
-			gameObjectCast<Bouibouik>(gameObject)->startBalle();
-			break;
 		case GameObjectType::Portal:
 			if (gameObjectCast<Portal>(gameObject)->isActivated())
 				octo->usePortal(*gameObjectCast<Portal>(gameObject));
-			break;
-		case GameObjectType::CedricNpc:
-			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())
@@ -301,7 +299,15 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<WaterNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(static_cast<WaterNanoRobot *>(ptr));
+				m_octo->giveNanoRobot(ptr);
+			}
+			break;
+		case GameObjectType::RepairShipNanoRobot:
+			if (!gameObjectCast<RepairShipNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canRepairShip())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairShipNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(ptr);
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
@@ -312,13 +318,17 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
 			}
 			break;
-		case GameObjectType::RepairShipNanoRobot:
-			if (!gameObjectCast<RepairShipNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canRepairShip())
-			{
-				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairShipNanoRobot>(gameObject));
-				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(static_cast<RepairShipNanoRobot *>(ptr));
-			}
+		case GameObjectType::Tent:
+			gameObjectCast<Tent>(gameObject)->startBalle();
+			break;
+		case GameObjectType::Concert:
+			gameObjectCast<Concert>(gameObject)->startBalle();
+			break;
+		case GameObjectType::Bouibouik:
+			gameObjectCast<Bouibouik>(gameObject)->startBalle();
+			break;
+		case GameObjectType::CedricNpc:
+			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
 		default:
 			break;

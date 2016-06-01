@@ -14,7 +14,7 @@ ConstanceNpc::ConstanceNpc(void) :
 	setup();
 
 	m_puffTimerMax = sf::seconds(0.8f);
-	setupBox(this, static_cast<std::size_t>(GameObjectType::ConstanceNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void ConstanceNpc::setup(void)
