@@ -1467,7 +1467,7 @@ void	CharacterOcto::initAI(void)
 	m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
 	m_directionTimer = sf::seconds(m_generator.randomFloat(30.f, 300.f));
 	m_slowFallTimer = sf::seconds(m_generator.randomFloat(4.f, 10.f));
-	m_portalTimer = sf::seconds(m_generator.randomFloat(1.f, 2.f));
+	m_portalTimer = sf::seconds(m_generator.randomFloat(30.f, 60.f));
 	m_keyRight = true;
 	m_keyLeft = false;
 }
@@ -1519,15 +1519,12 @@ void	CharacterOcto::updateAI(sf::Time frameTime)
 	}
 
 	//Portal
-	/*
 	m_portalTimer -= frameTime;
 	if (m_portalTimer <= sf::Time::Zero)
 	{
-		m_portalTimer = sf::seconds(m_generator.randomFloat(1.f, 2.f));
 		caseAction();
 		casePortal();
 	}
-	*/
 
 	//Direction
 	m_directionTimer -= frameTime;
