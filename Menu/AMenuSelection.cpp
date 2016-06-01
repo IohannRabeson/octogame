@@ -65,21 +65,22 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 	for (std::size_t i = 0; i < m_menus.size(); i++)
 		m_menus[i]->update(frameTime, m_cursorPosition[i] + contentPosition);
 
-
 	if (getState() == AMenu::State::Active)
 	{
-		m_bubble.setType(m_type);
-		m_bubble.setPosition(position);
-		m_bubble.setActive(true);
-		m_bubble.update(frameTime);
-		m_cursor.setPosition(m_cursorPosition[m_indexCursor] + contentPosition);
 		setKeyboard(true);
+		m_bubble.setActive(true);
+		m_bubble.setType(m_type);
+		m_cursor.setPosition(m_cursorPosition[m_indexCursor] + contentPosition);
 	}
 	else
 	{
 		m_indexSave = m_indexCursor;
 		setKeyboard(false);
 	}
+	m_bubble.setPosition(position);
+	//TODO: Find better way to do that
+	m_bubble.setIndexCursor(m_indexCursor);
+	m_bubble.update(frameTime);
 }
 
 

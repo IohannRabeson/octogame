@@ -60,11 +60,15 @@ CharacterOcto::CharacterOcto() :
 	m_collisionSpaceShip(false),
 	m_repairShip(false),
 	m_inWater(false),
-	m_isDeadlyWater(false)
+	m_isDeadlyWater(false),
+	m_generator(std::to_string(time(0)))
 {
 	m_sound.reset(new OctoSound());
 
-	InputListener::addInputListener();
+	if (!m_progress.isMenu())
+		InputListener::addInputListener();
+	else
+		initAI();
 
 	if (m_progress.canMoveMap())
 		giveNanoRobot(new GroundTransformNanoRobot());
@@ -91,7 +95,8 @@ CharacterOcto::CharacterOcto() :
 
 CharacterOcto::~CharacterOcto(void)
 {
-	InputListener::removeInputListener();
+	if (!m_progress.isMenu())
+		InputListener::removeInputListener();
 }
 
 void	CharacterOcto::setup(ABiome & biome)
@@ -592,6 +597,9 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
+	if (Progress::getInstance().isMenu())
+		updateAI(frameTime);
+
 	if (m_onGround)
 	{
 		m_lastPositionOnGround = getPosition();
@@ -836,7 +844,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 	m_collisionPortal = true;
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
-		m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+		m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 		m_progress.setReverseSprite(m_originMove);
 		m_progress.setNextDestination(portal.getDestination());
 	}
@@ -987,7 +995,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 bool	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > sf::seconds(3.0f) && !m_inWater)
+	if (m_timeEventFall > sf::seconds(3.0f) && !m_inWater && !Progress::getInstance().isMenu())
 	{
 		m_sprite.setNextEvent(Death);
 		m_helmetParticle.canEmit(true);
@@ -1003,7 +1011,7 @@ bool	CharacterOcto::endDeath()
 	octo::Camera&				camera = octo::Application::getCamera();
 	sf::Vector2f const&			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 
-	m_progress.setOctoPos(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+	m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 	m_progress.setReverseSprite(m_originMove);
 	if (m_sprite.getCurrentEvent() == Death)
 	{
@@ -1448,8 +1456,91 @@ float	CharacterOcto::getWaterLevel() const
 	return m_waterLevel;
 }
 
-void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
+void	CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
 {
 	(void)position;
+}
+
+void	CharacterOcto::initAI(void)
+{
+	m_randomJumpTimer = sf::seconds(m_generator.randomFloat(1.f, 30.f));
+	m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
+	m_directionTimer = sf::seconds(m_generator.randomFloat(30.f, 300.f));
+	m_slowFallTimer = sf::seconds(m_generator.randomFloat(4.f, 10.f));
+	m_portalTimer = sf::seconds(m_generator.randomFloat(45.f, 90.f));
+	m_keyRight = true;
+	m_keyLeft = false;
+}
+
+void	CharacterOcto::updateAI(sf::Time frameTime)
+{
+	//Jump if blocked
+	m_jumpTimer -= frameTime;
+	if (m_jumpTimer <= sf::Time::Zero && m_numberOfJump == 0)
+	{
+		m_keySpace = false;
+		if (std::round(m_saveOctoPos.x) == std::round(getPosition().x))
+		{
+			m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
+			caseSpace();
+		}
+		m_saveOctoPos = getPosition();
+	}
+
+	//Random jump
+	m_randomJumpTimer -= frameTime;
+	if (m_randomJumpTimer <= sf::Time::Zero)
+	{
+		m_randomJumpTimer = sf::seconds(m_generator.randomFloat(1.f, 30.f));
+		m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
+		caseSpace();
+	}
+
+	//Double jump
+	if (m_numberOfJump == 1)
+	{
+		m_doubleJumpTimer -= frameTime;
+		if (m_doubleJumpTimer <= sf::Time::Zero)
+		{
+			m_keySpace = false;
+			caseSpace();
+		}
+	}
+
+	//SlowFall
+	m_slowFallTimer -= frameTime;
+	if (m_slowFallTimer <= sf::Time::Zero)
+	{
+		m_slowFallTimer = sf::seconds(m_generator.randomFloat(4.f, 10.f));
+		if (m_generator.randomBool(0.5f))
+			caseUp();
+		else
+			m_keyUp = false;
+	}
+
+	//Portal
+	m_portalTimer -= frameTime;
+	if (m_portalTimer <= sf::Time::Zero)
+	{
+		caseAction();
+		casePortal();
+	}
+
+	//Direction
+	m_directionTimer -= frameTime;
+	if (m_directionTimer <= sf::Time::Zero)
+	{
+		m_directionTimer = sf::seconds(m_generator.randomFloat(30.f, 300.f));
+		if (m_keyRight)
+		{
+			m_keyRight = false;
+			m_keyLeft = true;
+		}
+		else
+		{
+			m_keyRight = true;
+			m_keyLeft = false;
+		}
+	}
 }
 

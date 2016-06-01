@@ -18,6 +18,8 @@ Cloud::Cloud(SkyCycle * cycle) :
 	m_partCount(1u),
 	m_animator(4.f, 5.f, 4.f, 0.2f),
 	m_animation(1.f),
+	m_isCollide(false),
+	m_canWeather(false),
 	m_thunderCloud(false),
 	m_lightning(1),
 	m_lightningSize(0.f),
@@ -170,9 +172,8 @@ void Cloud::updateThunder(sf::Time frameTime, ABiome & biome, octo::VertexBuilde
 	}
 }
 
-void Cloud::updateRain(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position)
+void Cloud::updateRain(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position, float weather)
 {
-	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue();
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		sf::Vector2f size(m_values[i].size.x * 2.f, m_values[i].size.y);
@@ -189,9 +190,8 @@ void Cloud::updateRain(sf::Time frameTime, ABiome & biome, octo::VertexBuilder &
 	}
 }
 
-void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position)
+void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder & builder, sf::Vector2f const & position, float weather)
 {
-	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue() / 4.f;
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		sf::Vector2f size(m_values[i].size.x * 2.f, m_values[i].size.y);
@@ -206,15 +206,21 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 {
 	sf::Vector2f const & position = getPosition();
 
-	if (m_animator.getState() == DecorAnimator::State::Life)
+	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue() / 4.f;
+	if (m_animator.getState() == DecorAnimator::State::Life && weather == 0.f)
+		m_canWeather = true;
+	else if (m_animator.getState() != DecorAnimator::State::Life)
+		m_canWeather = false;
+
+	if (m_canWeather)
 	{
 		if (biome.canCreateThunder())
 			updateThunder(frameTime, biome, builder, position);
 
 		if (biome.canCreateRain())
-			updateRain(frameTime, biome, builder, position);
+			updateRain(frameTime, biome, builder, position, weather);
 		else if (biome.canCreateSnow())
-			updateSnow(frameTime, biome, builder, position);
+			updateSnow(frameTime, biome, builder, position, weather);
 	}
 
 	if (m_animator.update(frameTime))

@@ -40,7 +40,7 @@ void	DeathScreen::start()
 {
 	octo::Camera&			camera = octo::Application::getCamera();
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
-	sf::Vector2f const&		pos = Progress::getInstance().getOctoPos();
+	sf::Vector2f const&		pos = Progress::getInstance().getOctoPosTransition();
 	sf::Vector2f const&		cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 	sf::Vector2f			scale = sf::Vector2f(0.6f, 0.6f);
 

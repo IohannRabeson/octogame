@@ -19,6 +19,7 @@ LevelMenu::LevelMenu(void) :
 		m_names.push_back(L"Water A");
 		m_names.push_back(L"Water B");
 		m_names.push_back(L"Random");
+		m_names.push_back(L"Rewards");
 		m_names.push_back(L"Uknown");
 		m_names.push_back(L"Uknown");
 		m_names.push_back(L"Uknown");

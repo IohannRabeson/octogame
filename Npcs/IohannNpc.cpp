@@ -17,7 +17,7 @@ IohannNpc::IohannNpc(void) :
 	setTimerMax(sf::seconds(15.0f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::IohannNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void IohannNpc::setup(void)

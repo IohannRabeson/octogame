@@ -15,7 +15,7 @@ FranfranNpc::FranfranNpc(void) :
 	setup();
 
 	m_puffTimerMax = sf::seconds(0.8f);
-	setupBox(this, static_cast<std::size_t>(GameObjectType::FranfranNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void FranfranNpc::setup(void)

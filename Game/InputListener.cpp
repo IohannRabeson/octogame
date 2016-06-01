@@ -4,6 +4,7 @@
 #include "InputListener.hpp"
 
 InputListener::InputListener(void) :
+	m_isListeners(false),
 	m_joystickLT(false),
 	m_joystickRT(false),
 	m_joystickAxisX(false),
@@ -45,16 +46,24 @@ bool	InputListener::onInputReleased(InputListener::OctoKeys const &)
 
 void	InputListener::addInputListener(void)
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.addJoystickListener(this);
-	graphics.addKeyboardListener(this);
+	if (m_isListeners == false)
+	{
+		octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+		graphics.addJoystickListener(this);
+		graphics.addKeyboardListener(this);
+		m_isListeners = true;
+	}
 }
 
 void	InputListener::removeInputListener(void)
 {
-	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
-	graphics.removeJoystickListener(this);
-	graphics.removeKeyboardListener(this);
+	if (m_isListeners)
+	{
+		octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
+		graphics.removeJoystickListener(this);
+		graphics.removeKeyboardListener(this);
+		m_isListeners = false;
+	}
 }
 
 bool	InputListener::onPressed(sf::Event::KeyEvent const& event)

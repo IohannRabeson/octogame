@@ -2,6 +2,7 @@
 # define PROGRESS_HPP
 # include "GroundManager.hpp"
 # include "ResourceDefinitions.hpp"
+# include "AGameObject.hpp"
 # include "ABiome.hpp"
 # include "ChallengeManager.hpp"
 # include <SFML/System/Vector2.hpp>
@@ -19,6 +20,11 @@ public:
 	};
 
 	static Progress & getInstance(void);
+
+	bool				isMenu() const;
+	void				setMenu(bool isMenu);
+	//TODO: Set this value once the game is finished
+	bool				isGameFinished() const;
 
 	void				setLanguage(Language language);
 	Progress::Language	getLanguage(void) const;
@@ -77,10 +83,11 @@ public:
 	void				registerDeath(float deathPosX);
 	std::vector<int> &	getDeathPos(void);
 
-	void				registerNpc(ResourceKey const & key);
-	bool				meetNpc(ResourceKey const & key);
+	void				registerNpc(GameObjectType key);
+	bool				meetNpc(GameObjectType key);
 	std::size_t			getNpcCount();
 	std::size_t			getNpcMax();
+	std::vector<GameObjectType>	getNpcMet();
 
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);
@@ -95,6 +102,8 @@ public:
 
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
+	void				setOctoPosTransition(sf::Vector2f const & position) { m_octoPosTransition = position; }
+	sf::Vector2f const&	getOctoPosTransition() const { return m_octoPosTransition; }
 
 	void				setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool				getReverseSprite() const { return m_reverseSprite; }
@@ -155,6 +164,8 @@ private:
 	void				split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 	static std::unique_ptr<Progress>				m_instance;
+	bool											m_isMenu;
+	bool											m_isGameFinished;
 	std::string										m_filename;
 	data											m_data;
 	bool											m_newSave;
@@ -162,8 +173,9 @@ private:
 	bool											m_reverseSprite;
 	bool											m_spaceShipRepair;
 	sf::Vector2f									m_octoPos;
+	sf::Vector2f									m_octoPosTransition;
 
-	std::map<Level, std::map<std::string, bool>>	m_npc;
+	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
 	std::size_t										m_npcCount;
 	std::size_t										m_npcMax;
 	std::map<Level, std::vector<int>>				m_deathPos;

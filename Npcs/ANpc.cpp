@@ -11,7 +11,6 @@
 #include <cwchar>
 
 ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
-	m_id(npcId),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(5.f)),
@@ -25,9 +24,6 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_isMeetable(isMeetable)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	Progress & progress = Progress::getInstance();
-	if (m_isMeetable)
-		progress.registerNpc(npcId);
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
@@ -100,6 +96,7 @@ void ANpc::setupMachine(void)
 
 	setMachine(machine);
 	m_sprite.setNextEvent(Idle);
+
 }
 
 bool ANpc::canWalk(void) const
@@ -183,9 +180,14 @@ void ANpc::setVelocity(float velocity)
 
 void ANpc::setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask)
 {
+	Progress & progress = Progress::getInstance();
+
 	m_box->setGameObject(gameObject);
 	m_box->setCollisionType(type);
 	m_box->setCollisionMask(mask);
+
+	if (m_isMeetable)
+		progress.registerNpc(gameObject->getObjectType());
 }
 
 void ANpc::setTextOffset(sf::Vector2f const & offset)
@@ -223,9 +225,9 @@ void ANpc::setDisplayText(bool displayText)
 
 void ANpc::setActiveText(bool active)
 {
-	for (auto & text : m_texts)
-		text->setActive(active);
-	m_activeText = active;
+		for (auto & text : m_texts)
+			text->setActive(active);
+		m_activeText = active;
 }
 
 float ANpc::getScale(void) const
@@ -353,7 +355,7 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 		m_isDoubleJump = true;
 	else
 		m_isDoubleJump = false;
-	if (m_isMeetable && Progress::getInstance().meetNpc(m_id))
+	if (m_isMeetable && Progress::getInstance().meetNpc(m_box->getGameObject()->getObjectType()))
 		octo->collideZoomEvent(m_box->getPosition());
 }
 
@@ -431,7 +433,7 @@ void ANpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 
 void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
 {
-	if (m_displayText)
+	if (m_displayText && !Progress::getInstance().isMenu())
 	{
 		if (!m_isDoubleJump)
 			m_texts[m_currentText]->draw(render);

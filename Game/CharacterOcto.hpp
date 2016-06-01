@@ -61,6 +61,8 @@ public:
 
 	void					setup(ABiome & biome);
 	void					update(sf::Time frameTime);
+	void					initAI(void);
+	void					updateAI(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 	void					drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states)const;
 	void					drawText(sf::RenderTarget& render, sf::RenderStates states)const;
@@ -195,6 +197,15 @@ private:
 	bool						m_inWater;
 	bool						m_isDeadlyWater;
 	Events						m_prevEvent;
+
+	RandomGenerator									m_generator;
+	sf::Time										m_directionTimer;
+	sf::Time										m_jumpTimer;
+	sf::Time										m_randomJumpTimer;
+	sf::Time										m_doubleJumpTimer;
+	sf::Time										m_slowFallTimer;
+	sf::Time										m_portalTimer;
+	sf::Vector2f									m_saveOctoPos;
 };
 
 #endif
