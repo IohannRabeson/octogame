@@ -1,17 +1,37 @@
 #include "GroundManager.hpp"
+
+#include "ABiome.hpp"
 #include "TileShape.hpp"
 #include "RectangleShape.hpp"
 #include "PhysicsEngine.hpp"
+#include "MapInstance.hpp"
+#include "SkyCycle.hpp"
+#include "Progress.hpp"
+#include "Water.hpp"
+
+//Decors
 #include "ADecor.hpp"
-#include "ABiome.hpp"
 #include "Rainbow.hpp"
 #include "Rock.hpp"
 #include "Tree.hpp"
 #include "Mushroom.hpp"
 #include "Crystal.hpp"
 #include "GroundRock.hpp"
-#include "SkyCycle.hpp"
-#include "MapInstance.hpp"
+
+//Object
+#include "SpaceShip.hpp"
+#include "Bouibouik.hpp"
+#include "HouseFlatSnow.hpp"
+#include "EngineSnow.hpp"
+#include "WeirdHouseSnow.hpp"
+#include "Well.hpp"
+#include "Tent.hpp"
+#include "Pyramid.hpp"
+#include "Concert.hpp"
+#include "Firecamp.hpp"
+#include "Cage.hpp"
+
+//Npc
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 //Script AddNpc Include
@@ -45,22 +65,12 @@
 #include "OldDesertStaticNpc.hpp"
 #include "WellKeeperNpc.hpp"
 #include "VinceNpc.hpp"
-#include "SpaceShip.hpp"
-#include "Bouibouik.hpp"
-#include "HouseFlatSnow.hpp"
-#include "EngineSnow.hpp"
-#include "WeirdHouseSnow.hpp"
 #include "WolfNpc.hpp"
-#include "Well.hpp"
-#include "Tent.hpp"
-#include "Pyramid.hpp"
-#include "Concert.hpp"
-#include "Firecamp.hpp"
-#include "Cage.hpp"
 #include "Seb.hpp"
 #include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
-#include "Water.hpp"
+
+//NanoRobots
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "RepairShipNanoRobot.hpp"
@@ -68,7 +78,7 @@
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
-#include "Progress.hpp"
+
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <Camera.hpp>
@@ -465,6 +475,121 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 				}
 				break;
+
+			//NanoRobot
+			case GameObjectType::RepairNanoRobot:
+					if (!Progress::getInstance().canRepair())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
+				break;
+			case GameObjectType::GroundTransformNanoRobot:
+					if (!Progress::getInstance().canMoveMap())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
+				break;
+			case GameObjectType::WaterNanoRobot:
+					if (!Progress::getInstance().canUseWaterJump())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new WaterNanoRobot());
+				break;
+
+			//Object
+			case GameObjectType::SpaceShip:
+				{
+					SpaceShip * spaceship = new SpaceShip(SpaceShip::SpaceShipEvents::Broken);
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, spaceship);
+				}
+				break;
+			case GameObjectType::Bouibouik:
+				{
+					Bouibouik * simple = new Bouibouik();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::HouseFlatSnow:
+				{
+					HouseFlatSnow * simple = new HouseFlatSnow();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::EngineSnow:
+				{
+					EngineSnow * simple = new EngineSnow();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::WeirdHouseSnow:
+				{
+					WeirdHouseSnow * simple = new WeirdHouseSnow();
+					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::Tent:
+				{
+					Tent * simple = new Tent();
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::Well:
+				{
+					Well * simple = new Well();
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+			case GameObjectType::Concert:
+				{
+					Concert * simple = new Concert();
+					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
+				}
+				break;
+
+			//Npc
+			case GameObjectType::WolfNpc:
+				{
+					WolfNpc * npc = new WolfNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::ClementineNpc:
+				{
+					ClementineNpc * npc = new ClementineNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::FatNpc:
+				{
+					FatNpc * npc = new FatNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::PunkNpc:
+				{
+					PunkNpc * npc = new PunkNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::Snowman2Npc:
+				{
+					Snowman2Npc * npc = new Snowman2Npc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::GuiNpc:
+				{
+					GuiNpc * npc = new GuiNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::IohannNpc:
+				{
+					IohannNpc * npc = new IohannNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::CedricNpc:
 				{
 					CedricNpc * cedric = new CedricNpc(skyCycle);
@@ -638,66 +763,6 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					AmandineNpc * amandine = new AmandineNpc();
 					amandine->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, amandine);
-				}
-				break;
-			case GameObjectType::RepairNanoRobot:
-					if (!Progress::getInstance().canRepair())
-						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
-				break;
-			case GameObjectType::GroundTransformNanoRobot:
-					if (!Progress::getInstance().canMoveMap())
-						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
-				break;
-			case GameObjectType::WaterNanoRobot:
-					if (!Progress::getInstance().canUseWaterJump())
-						m_nanoRobots.emplace_back(gameObject.first, 3, new WaterNanoRobot());
-				break;
-			case GameObjectType::SpaceShip:
-				{
-					SpaceShip * spaceship = new SpaceShip(SpaceShip::SpaceShipEvents::Broken);
-					m_otherObjectsHigh.emplace_back(gameObject.first, 15, spaceship);
-				}
-				break;
-			case GameObjectType::Bouibouik:
-				{
-					Bouibouik * simple = new Bouibouik();
-					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
-			case GameObjectType::HouseFlatSnow:
-				{
-					HouseFlatSnow * simple = new HouseFlatSnow();
-					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
-			case GameObjectType::EngineSnow:
-				{
-					EngineSnow * simple = new EngineSnow();
-					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
-			case GameObjectType::WeirdHouseSnow:
-				{
-					WeirdHouseSnow * simple = new WeirdHouseSnow();
-					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
-			case GameObjectType::Tent:
-				{
-					Tent * simple = new Tent();
-					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
-			case GameObjectType::Well:
-				{
-					Well * simple = new Well();
-					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
-			case GameObjectType::Concert:
-				{
-					Concert * simple = new Concert();
-					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
 			default:
