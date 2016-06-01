@@ -48,7 +48,7 @@ void	Progress::setMenu(bool isMenu)
 	m_isMenu = isMenu;
 }
 
-bool	Progress::isGameFinished()
+bool	Progress::isGameFinished() const
 {
 	return m_isGameFinished;
 }

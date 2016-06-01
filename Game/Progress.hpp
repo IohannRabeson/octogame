@@ -24,7 +24,7 @@ public:
 	bool				isMenu() const;
 	void				setMenu(bool isMenu);
 	//TODO: Set this value once the game is finished
-	bool				isGameFinished();
+	bool				isGameFinished() const;
 
 	void				setLanguage(Language language);
 	Progress::Language	getLanguage(void) const;

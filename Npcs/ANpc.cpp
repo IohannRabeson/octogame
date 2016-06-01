@@ -11,7 +11,6 @@
 #include <cwchar>
 
 ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
-	m_id(npcId),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(5.f)),
@@ -24,8 +23,6 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_isDoubleJump(false),
 	m_isMeetable(isMeetable)
 {
-	//TODO: To remove
-	(void)m_id;
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
