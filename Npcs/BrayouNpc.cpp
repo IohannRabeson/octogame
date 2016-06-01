@@ -11,7 +11,7 @@ BrayouNpc::BrayouNpc(void) :
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void BrayouNpc::setup(void)

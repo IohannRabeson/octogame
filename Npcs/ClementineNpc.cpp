@@ -13,7 +13,7 @@ ClementineNpc::ClementineNpc(void) :
 	setTextOffset(sf::Vector2f(-20.f, -70.f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::ClementineNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void ClementineNpc::setup(void)

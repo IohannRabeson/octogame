@@ -14,7 +14,7 @@ JuNpc::JuNpc(void) :
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::JuNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void JuNpc::setup(void)
