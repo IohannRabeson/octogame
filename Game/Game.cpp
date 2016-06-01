@@ -508,6 +508,8 @@ void Game::moveMap(sf::Time frameTime)
 	}
 
 	updateBubbleGround(frameTime);
+	if (Progress::getInstance().isMenu())
+		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
 }
 
 void	Game::updateBubbleGround(sf::Time frameTime)
