@@ -6,8 +6,8 @@
 #include "PhysicsEngine.hpp"
 #include "ChallengeManager.hpp"
 #include "CameraMovement.hpp"
+
 // Biomes
-#include "DefaultBiome.hpp"
 #include "IceABiome.hpp"
 #include "IceBBiome.hpp"
 #include "IceCBiome.hpp"
@@ -19,6 +19,9 @@
 #include "JungleCBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
+#include "DefaultBiome.hpp"
+#include "RewardsBiome.hpp"
+
 #include "DemoIceABiome.hpp"
 #include "DemoIceBBiome.hpp"
 #include "DemoIceCBiome.hpp"
@@ -26,12 +29,14 @@
 #include "DemoDesertABiome.hpp"
 #include "DemoJungleABiome.hpp"
 #include "DemoWaterABiome.hpp"
+
 //Objects
 #include "ElevatorStream.hpp"
 #include "Bouibouik.hpp"
 #include "Tent.hpp"
 #include "SpaceShip.hpp"
 #include "Concert.hpp"
+
 //Nano
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
@@ -40,6 +45,7 @@
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+
 //Npc
 //Script AddNpc Include
 #include "BirdBlueNpc.hpp"
@@ -132,6 +138,7 @@ Game::Game(void) :
 		m_biomeManager.registerBiome<DemoWaterABiome>(Level::DemoWaterA);
 	}
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
+	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 }
 
 Game::~Game(void)
@@ -144,13 +151,19 @@ Game::~Game(void)
 
 void	Game::loadLevel(void)
 {
-	m_biomeManager.changeBiome(Progress::getInstance().getNextDestination(), 0x12345);
-	Progress::getInstance().setLastDestination(m_biomeManager.getCurrentBiome().getId());
-
+	Progress & progress = Progress::getInstance();
 	octo::AudioManager& audio = octo::Application::getAudioManager();
 	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
 
+	if (progress.isMenu())
+		m_biomeManager.changeBiome(Level::Rewards, 0x12345);
+	else
+	{
+		m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
+		progress.setLastDestination(m_biomeManager.getCurrentBiome().getId());
+	}
+
+	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
 	// Reset last values
 	postEffect.removeEffects();
 	ChallengeManager::getInstance().reset();
@@ -495,6 +508,8 @@ void Game::moveMap(sf::Time frameTime)
 	}
 
 	updateBubbleGround(frameTime);
+	if (Progress::getInstance().isMenu())
+		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
 }
 
 void	Game::updateBubbleGround(sf::Time frameTime)

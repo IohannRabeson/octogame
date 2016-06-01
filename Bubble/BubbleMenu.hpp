@@ -29,14 +29,18 @@ public:
 	virtual void						updateContent(sf::Time frameTime, sf::Vector2f const & position);
 	virtual void						drawContent(sf::RenderTarget & render, sf::RenderStates states) const;
 
+	void								setIndexCursor(std::size_t index);
+
 private:
 	static constexpr std::size_t	m_characterSize = 20u;
 
 	sf::Vector2f					m_contentSize;
 	sf::Font						m_font;
+	sf::Font						m_fontSelect;
 	//TODO: For mouse use return this array
 	std::vector<subMenu>			m_subMenus;
 	std::vector<sf::Vector2f>		m_cursorPosition;
+	std::size_t						m_indexCursor;
 };
 
 #endif

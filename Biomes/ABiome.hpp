@@ -30,6 +30,8 @@ enum class Level : std::size_t
 	WaterA,
 	WaterB,
 	Default,
+	Rewards,
+
 	DemoIceA,
 	DemoIceB,
 	DemoIceC,

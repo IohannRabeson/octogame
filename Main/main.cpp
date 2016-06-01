@@ -21,6 +21,7 @@
 #include "LogoScreen.hpp"
 #include "AnOctonautOdysseyScreen.hpp"
 #include "GameScreen.hpp"
+#include "MenuScreen.hpp"
 #include "ResourceLoadingScreen.hpp"
 #include "QuitScreen.hpp"
 #include "TransitionLevelScreen.hpp"
@@ -35,6 +36,7 @@ static void	setupStateManager(octo::StateManager& manager)
 {
 	manager.registerState<StateTest>("test");
 	manager.registerState<GameScreen>("game");
+	manager.registerState<MenuScreen>("menu");
 	manager.registerState<ResourceLoadingScreen>("loading");
 	manager.registerState<QuitScreen>("quit");
 	manager.registerState<TransitionScreen>("transition");

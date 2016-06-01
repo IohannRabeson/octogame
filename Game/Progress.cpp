@@ -13,6 +13,8 @@
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
 Progress::Progress() :
+	m_isMenu(true),
+	m_isGameFinished(false),
 	m_filename(octo::Application::getOptions().getPath() + "save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
@@ -34,6 +36,21 @@ Progress & Progress::getInstance()
 		m_instance.reset(new Progress());
 	}
 	return *m_instance;
+}
+
+bool	Progress::isMenu() const
+{
+	return m_isMenu;
+}
+
+void	Progress::setMenu(bool isMenu)
+{
+	m_isMenu = isMenu;
+}
+
+bool	Progress::isGameFinished() const
+{
+	return m_isGameFinished;
 }
 
 void	Progress::setup()
@@ -142,8 +159,9 @@ void	Progress::setNanoRobotCount(std::size_t count)
 
 void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 {
+	if (!m_isMenu)
+		m_data.nextDestination = destination;
 	m_changeLevel = hasTransition;
-	m_data.nextDestination = destination;
 }
 
 Level	Progress::getNextDestination(void) const
@@ -153,7 +171,7 @@ Level	Progress::getNextDestination(void) const
 
 void	Progress::setLastDestination(Level destination)
 {
-	if (destination != Level::Default)
+	if (destination != Level::Default && destination != Level::Rewards)
 		m_data.lastDestination = destination;
 }
 
@@ -265,15 +283,15 @@ bool	Progress::isMetPortal(Level destination)
 	return false;
 }
 
-void	Progress::registerNpc(ResourceKey const & key)
+void	Progress::registerNpc(GameObjectType key)
 {
-	if (!m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
+	if (!m_isMenu && !m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
 		m_npcMax++;
 }
 
-bool	Progress::meetNpc(ResourceKey const & key)
+bool	Progress::meetNpc(GameObjectType key)
 {
-	if (m_changeLevel == false && !m_npc[m_data.nextDestination][key])
+	if (!m_isMenu && m_changeLevel == false && !m_npc[m_data.nextDestination][key])
 	{
 		m_npc[m_data.nextDestination][key] = true;
 		return true;
@@ -289,7 +307,7 @@ void	Progress::saveNpc()
 		saveNpc += std::to_string(static_cast<int>(itLevel->first)) + " ";
 		for (auto it = itLevel->second.begin(); it != itLevel->second.end(); it++)
 		{
-			saveNpc += static_cast<std::string>(it->first);
+			saveNpc += std::to_string(static_cast<std::size_t>(it->first));
 			saveNpc += " " + std::to_string(it->second) + " ";
 		}
 		saveNpc += "\n";
@@ -313,9 +331,9 @@ void	Progress::loadNpc()
 		for (std::size_t i = 1; i < splitLine.size(); i += 2)
 		{
 			if (splitLine[i + 1] == "1")
-				m_npc[level].insert(std::make_pair(splitLine[i], true));
+				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoul(splitLine[i])), true));
 			else
-				m_npc[level].insert(std::make_pair(splitLine[i], false));
+				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoul(splitLine[i])), false));
 		}
 	}
 }
@@ -335,6 +353,24 @@ std::size_t	Progress::getNpcMax()
 {
 	m_npcMax = m_npc[m_data.lastDestination].size();
 	return m_npcMax;
+}
+
+std::vector<GameObjectType>	Progress::getNpcMet()
+{
+	std::vector<GameObjectType> npcList;
+
+	for (auto level = m_npc.begin(); level != m_npc.end(); level++)
+	{
+		if (level->first != Level::Rewards)
+		{
+			for (auto npc = level->second.begin(); npc != level->second.end(); npc++)
+			{
+				if (npc->second == true)
+					npcList.push_back(npc->first);
+			}
+		}
+	}
+	return std::move(npcList);
 }
 
 void	Progress::savePortals()
