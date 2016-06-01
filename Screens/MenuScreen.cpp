@@ -2,7 +2,7 @@
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
-#include <interpolations.hpp>
+#include <Interpolations.hpp>
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <StateManager.hpp>

@@ -104,7 +104,7 @@ void MainMenu::onSelection(void)
 		if (progress.isFirstTime())
 			states.change("zero");
 		else
-			states.change("game");
+			states.change("transition");
 	}
 	else
 		AMenuSelection::onSelection();

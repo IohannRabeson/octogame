@@ -102,6 +102,8 @@ public:
 
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
+	void				setOctoPosTransition(sf::Vector2f const & position) { m_octoPosTransition = position; }
+	sf::Vector2f const&	getOctoPosTransition() const { return m_octoPosTransition; }
 
 	void				setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool				getReverseSprite() const { return m_reverseSprite; }
@@ -171,6 +173,7 @@ private:
 	bool											m_reverseSprite;
 	bool											m_spaceShipRepair;
 	sf::Vector2f									m_octoPos;
+	sf::Vector2f									m_octoPosTransition;
 
 	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
 	std::size_t										m_npcCount;
