@@ -60,7 +60,8 @@ CharacterOcto::CharacterOcto() :
 	m_collisionSpaceShip(false),
 	m_repairShip(false),
 	m_inWater(false),
-	m_isDeadlyWater(false)
+	m_isDeadlyWater(false),
+	m_meetNpc(false)
 {
 	m_sound.reset(new OctoSound());
 
@@ -1361,6 +1362,16 @@ bool	CharacterOcto::isInAir(void)
 	return (!m_onGround);
 }
 
+bool	CharacterOcto::isMeetingNpc(void) const
+{
+	return m_meetNpc;
+}
+
+void	CharacterOcto::meetNpc(bool meetNpc)
+{
+	m_meetNpc = meetNpc;
+}
+
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
@@ -1447,9 +1458,3 @@ float	CharacterOcto::getWaterLevel() const
 {
 	return m_waterLevel;
 }
-
-void			CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
-{
-	(void)position;
-}
-

@@ -354,7 +354,7 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 	else
 		m_isDoubleJump = false;
 	if (m_isMeetable && Progress::getInstance().meetNpc(m_id))
-		octo->collideZoomEvent(m_box->getPosition());
+		octo->meetNpc(true);
 }
 
 void ANpc::updateState(void)

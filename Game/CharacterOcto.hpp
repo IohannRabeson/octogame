@@ -81,10 +81,11 @@ public:
 	void					collideSpaceShip(SpaceShip * spaceShip);
 	void					usePortal(Portal & portal);
 	void					startKonamiCode(bool canStart);
-	void					collideZoomEvent(sf::Vector2f const & position);
 	bool					isFalling(void);
 	bool					isRaising(void);
 	bool					isInAir(void);
+	bool					isMeetingNpc(void) const;
+	void					meetNpc(bool meetNpc);
 
 private:
 	bool					dieFall();
@@ -194,6 +195,7 @@ private:
 	bool						m_repairShip;
 	bool						m_inWater;
 	bool						m_isDeadlyWater;
+	bool						m_meetNpc;
 	Events						m_prevEvent;
 };
 
