@@ -30,7 +30,7 @@ public:
 	void collideZoom(sf::Time frametime);
 	void collideZoomEvent(sf::Vector2f const & npcPos);
 	void setEventFallTimer(sf::Time const & eventFallTimer);
-	void draw(sf::RenderTarget & render);
+	void debugDraw(sf::RenderTarget & render);
 
 	bool onInputPressed(InputListener::OctoKeys const & key);
 	bool onInputReleased(InputListener::OctoKeys const & key);

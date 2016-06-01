@@ -570,5 +570,5 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_octo->drawText(render, states);
 	m_groundBubble.draw(render, states);
 	render.draw(*m_konami);
-	m_cameraMovement->draw(render);
+	//m_cameraMovement->debugDraw(render);
 }

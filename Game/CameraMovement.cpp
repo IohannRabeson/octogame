@@ -109,12 +109,12 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	m_circle.setRadius(10.f);
 }
 
-void CameraMovement::draw(sf::RenderTarget &)
+void CameraMovement::debugDraw(sf::RenderTarget & render)
 {
-	//render.draw(m_circle);
-	//m_circle.setPosition(octo::Application::getCamera().getCenter());
-	//m_circle.setFillColor(sf::Color::Green);
-	//render.draw(m_circle);
+	render.draw(m_circle);
+	m_circle.setPosition(octo::Application::getCamera().getCenter());
+	m_circle.setFillColor(sf::Color::Green);
+	render.draw(m_circle);
 }
 
 void CameraMovement::collideZoom(sf::Time)
