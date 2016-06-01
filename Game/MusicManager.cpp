@@ -55,7 +55,7 @@ MusicManager::MusicManager() :
 		m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
 				sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
 		// cedric challenge BALLE
-		m_music[1] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
+		m_music[1] = AreaMusic(Level::JungleA, ACTION_FAST_OGG,
 				sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)));
 		// village demo
 		m_music[2] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
