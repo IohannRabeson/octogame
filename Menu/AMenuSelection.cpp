@@ -78,6 +78,8 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 		setKeyboard(false);
 	}
 	m_bubble.setPosition(position);
+	//TODO: Find better way to do that
+	m_bubble.setIndexCursor(m_indexCursor);
 	m_bubble.update(frameTime);
 }
 

@@ -1,6 +1,7 @@
 menu_no=Non
 menu_yes=Oui
 menu_play=JOUER!
+menu_new=Autre Menu
 menu_controls=Contrôles
 menu_options=Options
 menu_credits=Crédits

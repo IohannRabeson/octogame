@@ -24,6 +24,17 @@ class YesNoQuit : public YesNoMenu
 	inline void actionNo(void) { }
 };
 
+class YesNoNewMenu : public YesNoMenu
+{
+	inline void setIndex(void) { setIndexCursor(0); }
+	inline void actionYes(void)
+	{
+		octo::StateManager &	states = octo::Application::getStateManager();
+		states.change("menu");
+	}
+	inline void actionNo(void) { }
+};
+
 class YesNoReset : public YesNoMenu
 {
 	inline void setIndex(void) { setIndexCursor(0); }
@@ -49,7 +60,10 @@ void MainMenu::createMenus(void)
 	Progress &				progress = Progress::getInstance();
 
 	if (progress.isMenu())
+	{
 		addMenu(AMenu::getText("menu_play"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+		addMenu(AMenu::getText("menu_new"), std::unique_ptr<YesNoNewMenu>(new YesNoNewMenu()));
+	}
 	else
 		addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
 #ifndef NDEBUG

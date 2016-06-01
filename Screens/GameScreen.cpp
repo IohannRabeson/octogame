@@ -54,13 +54,11 @@ void	GameScreen::update(sf::Time frameTime)
 {
 	AMenu::State				state = m_menu.getState();
 	octo::StateManager &		states = octo::Application::getStateManager();
-	octo::PostEffectManager &	postEffect = octo::Application::getPostEffectManager();
 	Progress &					progress = Progress::getInstance();
 
 	m_menu.update(frameTime, m_game->getOctoBubblePosition());
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 	{
-		postEffect.setAllShaderEnabled(false);
 		m_doSave = true;
 	}
 	else if (m_doSave)
@@ -70,7 +68,6 @@ void	GameScreen::update(sf::Time frameTime)
 	}
 	else
 	{
-		postEffect.setAllShaderEnabled(true);
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
 		if (progress.changeLevel())

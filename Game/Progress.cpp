@@ -312,8 +312,6 @@ void	Progress::saveNpc()
 		}
 		saveNpc += "\n";
 	}
-	std::cout << "save" << std::endl;
-	std::cout << saveNpc << std::endl;
 	assert(saveNpc.size() < 10000);
 	std::strcpy(m_data.npc, saveNpc.c_str());
 }
@@ -322,10 +320,8 @@ void	Progress::loadNpc()
 {
 	std::istringstream savedNpc(m_data.npc);
 	std::string line;
-	std::cout << "load" << std::endl;
 	while (std::getline(savedNpc, line))
 	{
-		std::cout << line << std::endl;
 		std::vector<std::string> splitLine;
 		split(line, ' ', splitLine);
 

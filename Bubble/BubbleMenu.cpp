@@ -21,11 +21,12 @@ void BubbleMenu::setup(std::vector<std::wstring> const & subMenuTitle, sf::Color
 	m_cursorPosition.resize(subMenuTitle.size());
 
 	octo::ResourceManager& resources = octo::Application::getResourceManager();
-	m_font = resources.getFont(VERAMONO_TTF);
+	m_font = resources.getFont(CHINESETROOPS_TTF);
+	m_fontSelect = resources.getFont(VERAMONO_TTF);
 
 	for (std::size_t i = 0; i < m_subMenus.size(); i++)
 	{
-		m_subMenus[i].text.setFont(m_font);
+		m_subMenus[i].text.setFont(m_fontSelect);
 		m_subMenus[i].text.setColor(sf::Color(0, 0, 0));
 		m_subMenus[i].text.setCharacterSize(characterSize);
 		m_subMenus[i].text.setString(subMenuTitle[i]);
@@ -59,9 +60,13 @@ sf::Vector2f const & BubbleMenu::getContentSize() const
 void BubbleMenu::updateContent(sf::Time frameTime, sf::Vector2f const & position)
 {
 	(void)frameTime;
-	for (auto &subMenu : m_subMenus)
+	for (std::size_t i = 0; i < m_subMenus.size(); i++)
 	{
-		subMenu.text.setPosition(position + subMenu.position);
+		m_subMenus[i].text.setPosition(position + m_subMenus[i].position);
+		if (m_indexCursor == i)
+			m_subMenus[i].text.setFont(m_fontSelect);
+		else
+			m_subMenus[i].text.setFont(m_font);
 	}
 }
 
@@ -69,4 +74,9 @@ void BubbleMenu::drawContent(sf::RenderTarget & render, sf::RenderStates states)
 {
 	for (auto subMenu : m_subMenus)
 		render.draw(subMenu.text, states);
+}
+
+void BubbleMenu::setIndexCursor(std::size_t index)
+{
+	m_indexCursor = index;
 }

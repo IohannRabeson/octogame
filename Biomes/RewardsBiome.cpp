@@ -17,7 +17,7 @@ RewardsBiome::RewardsBiome() :
 	m_name("Rewards"),
 	m_id(Level::Rewards),
 	m_seed("Rewards"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomInt(2u, 50u))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(500))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.5f),
@@ -123,7 +123,8 @@ RewardsBiome::RewardsBiome() :
 #else
 	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
-
+	Progress & progress = Progress::getInstance();
+	m_mapSize = sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(progress.getNanoRobotCount() * 80u + 30u)),
 	m_randomSurfaceNumber = m_generator.randomInt(1u, 4u);
 	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;
@@ -134,15 +135,17 @@ RewardsBiome::RewardsBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// TODO define map position and number of map
-	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x - 40u);
+	std::size_t portalPos = m_generator.randomInt(200u, m_mapSize.x - 40u);
+	m_gameObjects[portalPos] = GameObjectType::Portal;
+	m_destinations.push_back(Level::Rewards);
 	m_interestPointPosX = portalPos;
 	
-	std::vector<GameObjectType> const & npcList = Progress::getInstance().getNpcMet();
+	std::vector<GameObjectType> const & npcList = progress.getNpcMet();
 	std::size_t total = 0;
 	for (std::size_t i = 0; i < npcList.size(); i++)
 	{
 		std::size_t delta = randomInt(10, 20);
-		m_gameObjects[40 + (i + 1) * delta] = npcList[i];
+		m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
 		total += delta;
 	}
 }
