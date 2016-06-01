@@ -60,12 +60,14 @@ private:
 	void updateRain(sf::Time frameTime,
 					ABiome & biome,
 					octo::VertexBuilder & builder,
-					sf::Vector2f const & position);
+					sf::Vector2f const & position,
+					float weather);
 
 	void updateSnow(sf::Time frameTime,
 					ABiome & biome,
 					octo::VertexBuilder & builder,
-					sf::Vector2f const & position);
+					sf::Vector2f const & position,
+					float weather);
 
 	sf::Vector2f					m_size;
 	std::size_t						m_partCount;
@@ -76,6 +78,7 @@ private:
 	float							m_animation;
 	bool							m_isCollide;
 
+	bool							m_canWeather;
 	std::vector<DropSystem *>		m_rain;
 	std::vector<DropSystem *>		m_snow;
 	std::vector<sf::Vector2f>		m_dropUpLeft;
