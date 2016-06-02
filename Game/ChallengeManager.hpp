@@ -23,7 +23,7 @@ public:
 	class AChallenge
 	{
 	public:
-		AChallenge(ResourceKey key, float challengeDuration, float intensity, sf::FloatRect const & area, ABiome::Type biomeType);
+		AChallenge(ResourceKey key, float challengeDuration, sf::FloatRect const & area, ABiome::Type biomeType);
 		virtual ~AChallenge(void);
 
 		void update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position);

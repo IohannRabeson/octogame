@@ -36,7 +36,7 @@ void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf:
 				if (it.second->canStartGlitch())
 				{
 					it.second->setGlitch(true);
-					it.second->setIntensity(biome.randomFloat(2.f, 10.f));
+					it.second->setIntensity(biome.randomFloat(0.033f, 0.16f));
 					it.second->setDuration(biome.randomFloat(0.25f, 0.75f));
 					it.second->start();
 				}
@@ -51,12 +51,12 @@ ChallengeManager::AChallenge & ChallengeManager::getEffect(Effect effect)
 	return (*m_challenges[effect]);
 }
 
-ChallengeManager::AChallenge::AChallenge(ResourceKey key, float challengeDuration, float intensity, sf::FloatRect const & area, ABiome::Type biomeType) :
+ChallengeManager::AChallenge::AChallenge(ResourceKey key, float challengeDuration, sf::FloatRect const & area, ABiome::Type biomeType) :
 	m_delayMax(sf::seconds(4.f)),
 	m_duration(sf::seconds(challengeDuration)),
 	m_area(area),
 	m_biomeType(biomeType),
-	m_intensity(intensity),
+	m_intensity(1.f),
 	m_validArea(false),
 	m_isGlitch(false)
 {
@@ -206,13 +206,13 @@ void ChallengeManager::AChallenge::setGlitch(bool isGlitch)
 
 // Duplicate
 ChallengeDuplicate::ChallengeDuplicate(void) :
-	AChallenge(VISION_TROUBLE_FRAG, 6.f, 60.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle),
+	AChallenge(VISION_TROUBLE_FRAG, 6.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle),
 	m_rotation(0.f)
 {}
 
 void ChallengeDuplicate::updateShader(sf::Time frametime)
 {
-	float length = octo::cosinusInterpolation(0.f, m_intensity, std::min(m_timer, m_duration) / m_duration);
+	float length = m_intensity * octo::cosinusInterpolation(0.f, 60.f, std::min(m_timer, m_duration) / m_duration);
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
 	m_rotation += frametime.asSeconds() / 5.f;
 	float x = std::cos(m_rotation * octo::Pi2 * 1.5f) * length / rect.width;
@@ -223,14 +223,14 @@ void ChallengeDuplicate::updateShader(sf::Time frametime)
 
 // Persistence
 ChallengePersistence::ChallengePersistence(void) :
-	AChallenge(PERSISTENCE_FRAG, 6.f, 60.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Desert)
+	AChallenge(PERSISTENCE_FRAG, 6.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Desert)
 {
 	m_shader.setParameter("intensity", 1.f);
 }
 
 void ChallengePersistence::updateShader(sf::Time)
 {
-	m_shader.setParameter("intensity", octo::linearInterpolation(1.f, 0.02f, std::min(m_timer, m_duration) / m_duration));
+	m_shader.setParameter("intensity", m_intensity * octo::linearInterpolation(1.f, 0.02f, std::min(m_timer, m_duration) / m_duration));
 }
 
 // Pixelate
