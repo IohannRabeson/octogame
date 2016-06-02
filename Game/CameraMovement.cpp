@@ -17,6 +17,8 @@ CameraMovement::CameraMovement(void) :
 	m_verticalAxis(0.f),
 	m_zoom(false)
 {
+	m_circle.setFillColor(sf::Color::Red);
+	m_circle.setRadius(10.f);
 	InputListener::addInputListener();
 }
 
@@ -28,28 +30,6 @@ CameraMovement::~CameraMovement(void)
 void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 {
 	octo::Camera & camera = octo::Application::getCamera();
-
-	if (octo.isMeetingNpc())
-	{
-		octo.meetNpc(false);
-		m_zoom = true;
-	}
-	if (m_zoom)
-	{
-		m_zoomTimer += frametime;
-		if (m_zoomTimer > m_zoomTimerMax)
-		{
-			m_zoomTimer = m_zoomTimerMax;
-			m_zoom = false;
-		}
-	}
-	else
-	{
-		m_zoomTimer -= frametime;
-		if (m_zoomTimer < sf::Time::Zero)
-			m_zoomTimer = sf::Time::Zero;
-	}
-	camera.setSize(octo::cosinusInterpolation(m_baseSize, m_baseSize * 0.75f, m_zoomTimer.asSeconds() / m_zoomTimerMax.asSeconds()));
 
 	if (octo.isRaising())
 		m_behavior = Behavior::OctoRaising;
@@ -125,14 +105,38 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		default:
 			break;
 	}
-	sf::Vector2f goal = sf::Vector2f(octo::linearInterpolation(goalRight, goalLeft, (m_horizontalTransition + 1.f) / 2.f),
-						octo::linearInterpolation(goalTop, goalBot, m_verticalTransition));
 
+	if (octo.isMeetingNpc())
+	{
+		octo.meetNpc(false);
+		m_zoom = true;
+	}
+	if (m_zoom)
+	{
+		m_zoomTimer += frametime;
+		m_speed *= 2.f;
+		if (m_zoomTimer > m_zoomTimerMax)
+		{
+			m_zoomTimer = m_zoomTimerMax;
+			m_zoom = false;
+		}
+	}
+	else
+	{
+		m_zoomTimer -= frametime;
+		if (m_zoomTimer < sf::Time::Zero)
+			m_zoomTimer = sf::Time::Zero;
+		else
+			m_speed *= 2.f;
+	}
+
+	sf::Vector2f goal = sf::Vector2f(octo::linearInterpolation(goalRight, goalLeft, (m_horizontalTransition + 1.f) / 2.f),
+									octo::linearInterpolation(goalTop, goalBot, m_verticalTransition));
+
+	camera.setSize(octo::cosinusInterpolation(m_baseSize, m_baseSize * 0.8f, m_zoomTimer.asSeconds() / m_zoomTimerMax.asSeconds()));
 	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()));
 
 	m_circle.setPosition(goal);
-	m_circle.setFillColor(sf::Color::Red);
-	m_circle.setRadius(10.f);
 }
 
 void CameraMovement::debugDraw(sf::RenderTarget & render)
