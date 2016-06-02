@@ -19,8 +19,14 @@ public:
 		FollowOcto,
 		OctoFalling,
 		OctoRaising,
-		ZoomNpc,
 		ControlledByPlayer
+	};
+
+	enum ZoomState
+	{
+		ZoomIn,
+		ZoomOut,
+		None
 	};
 
 	CameraMovement(void);
@@ -34,6 +40,7 @@ public:
 
 private:
 	Behavior		m_behavior;
+	ZoomState		m_zoomState;
 	sf::Vector2f	m_baseSize;
 	sf::Time		m_zoomTimer;
 	sf::Time		m_zoomTimerMax;
@@ -42,7 +49,6 @@ private:
 	float			m_horizontalTransition;
 	float			m_horizontalAxis;
 	float			m_verticalAxis;
-	bool			m_zoom;
 	sf::CircleShape	m_circle;
 
 };
