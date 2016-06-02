@@ -70,12 +70,12 @@ DesertCBiome::DesertCBiome() :
 	m_rockPartCount(3.f, 5.f),
 	m_rockColor(240, 110, 110),
 
-	m_treeDepth(9u, 9u),
-	m_treeSize(sf::Vector2f(50.f, 100.f), sf::Vector2f(50.f, 100.f)),
+	m_treeDepth(10u, 10u),
+	m_treeSize(sf::Vector2f(50.f, 150.f), sf::Vector2f(50.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
-	m_treeBeatMouvement(0.1f),
+	m_treeBeatMouvement(0.03f),
 	m_leafSize(sf::Vector2f(80.f, 80.f), sf::Vector2f(150.f, 150.f)),
 	m_leafColor(46, 133, 84),
 
@@ -146,6 +146,7 @@ DesertCBiome::DesertCBiome() :
 	m_treePos = {28, 35, 42, 50, 56, 61, 139, 147, 152, 167, 181, 194, 214};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::JungleA);
 	m_destinations.push_back(Level::DesertB);
 	m_destinations.push_back(Level::Rewards);
 }
