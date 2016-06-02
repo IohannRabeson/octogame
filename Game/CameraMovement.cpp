@@ -17,7 +17,6 @@ CameraMovement::CameraMovement(void) :
 	m_verticalAxis(0.f),
 	m_zoom(false)
 {
-	m_circle.setFillColor(sf::Color::Red);
 	m_circle.setRadius(10.f);
 	InputListener::addInputListener();
 }
@@ -141,6 +140,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 
 void CameraMovement::debugDraw(sf::RenderTarget & render)
 {
+	m_circle.setFillColor(sf::Color::Red);
 	render.draw(m_circle);
 	m_circle.setPosition(octo::Application::getCamera().getCenter());
 	m_circle.setFillColor(sf::Color::Green);

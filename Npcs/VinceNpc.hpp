@@ -5,7 +5,7 @@
 
 class SkyCycle;
 
-class VinceNpc : public ANpc, public AGameObject<GameObjectType::OldDesertStaticNpc>
+class VinceNpc : public ANpc, public AGameObject<GameObjectType::VinceNpc>
 {
 public:
 	VinceNpc(void);

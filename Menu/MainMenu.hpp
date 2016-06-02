@@ -18,6 +18,7 @@ public:
 	void	draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 	void	createMenus(void);
+	void	onSelection(void);
 
 private:
 	sf::RectangleShape			m_filter;

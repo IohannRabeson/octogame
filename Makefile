@@ -28,6 +28,7 @@ SRC = $(SRC_PHYSICS)									\
 
 SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/GameScreen.cpp					\
+				Screens/MenuScreen.cpp					\
 				Screens/ResourceLoadingScreen.cpp		\
 				Screens/QuitScreen.cpp					\
 				Screens/TransitionLevelScreen.cpp		\
@@ -155,6 +156,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
 				Biomes/HSL.cpp							\
 				Biomes/DefaultBiome.cpp					\
+				Biomes/RewardsBiome.cpp					\
 				Biomes/IceABiome.cpp					\
 				Biomes/IceBBiome.cpp					\
 				Biomes/IceCBiome.cpp					\

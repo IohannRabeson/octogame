@@ -35,7 +35,7 @@ void	TransitionLevelScreen::start()
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	octo::Camera&				camera = octo::Application::getCamera();
-	sf::Vector2f const&			pos = Progress::getInstance().getOctoPos();
+	sf::Vector2f const&			pos = Progress::getInstance().getOctoPosTransition();
 	sf::Vector2f const&			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 	sf::Vector2f				scale = sf::Vector2f(0.6f, 0.6f);
 

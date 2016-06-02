@@ -50,12 +50,6 @@ void	LevelZeroScreen::start()
 		Progress::getInstance().setNextDestination(Level::Default, false);
 		m_state = Rising;
 	}
-	else
-	{
-		m_menu.setup();
-		m_menu.setKeyboard(true);
-		m_menu.setState(AMenu::State::Active);
-	}
 }
 
 void	LevelZeroScreen::pause()
@@ -78,8 +72,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 	sf::FloatRect const &		cameraRect = camera.getRectangle();
 
 	m_timer += frameTime;
-	if (m_menu.getState() != AMenu::State::Active)
-		m_timerEnd += frameTime;
+	m_timerEnd += frameTime;
 
 	if (m_timer >= m_timerMax)
 		m_timer -= m_timerMax;
@@ -101,8 +94,6 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		sf::Color const & color = octo::linearInterpolation(sf::Color::Black, m_downColorBackground, interpolateValue);
 		m_spaceShip.setSmokeVelocity(sf::Vector2f(octo::linearInterpolation(-1400.f, -200.f, interpolateValue), 0.f));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
-		sf::Vector2f menuPosition(m_spaceShip.getPosition().x + 1070.f, m_spaceShip.getPosition().y + 90.f);
-		m_menu.update(frameTime, menuPosition);
 	}
 	else if (m_state == Falling)
 	{
@@ -138,7 +129,6 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-100.f, -1700.f, interpolateValue)));
 		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
 		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
-		m_menu.setKeyboard(false);
 	}
 	else if (m_state == Rising)
 	{
@@ -180,56 +170,47 @@ void	LevelZeroScreen::draw(sf::RenderTarget & render) const
 	for (std::size_t i = 0; i < m_starsCount; i++)
 		m_stars[i].draw(render);
 	m_spaceShip.drawFront(render, states);
-	if (m_menu.getState() == AMenu::State::Active)
-		render.draw(m_menu);
 }
 
 bool	LevelZeroScreen::onInputPressed(InputListener::OctoKeys const & key)
 {
-	if (m_menu.getState() != AMenu::State::Active)
+	switch (key)
 	{
-		switch (key)
+		case OctoKeys::Up:
+			m_keyUp = true;
+			break;
+		case OctoKeys::Down:
+			m_keyDown = true;
+			break;
+		case OctoKeys::SelectMenu:
+		case OctoKeys::Jump:
+		case OctoKeys::Menu:
 		{
-			case OctoKeys::Up:
-				m_keyUp = true;
-				break;
-			case OctoKeys::Down:
-				m_keyDown = true;
-				break;
-			case OctoKeys::SelectMenu:
-			case OctoKeys::Jump:
-			case OctoKeys::Menu:
-			{
-				octo::StateManager &	states = octo::Application::getStateManager();
-				octo::AudioManager &	audio = octo::Application::getAudioManager();
-	
-				states.change("transitionLevelZero");
-				audio.stopMusic(sf::seconds(0.1f));
-				break;
-			}
-			default:
-				break;
+			octo::StateManager &	states = octo::Application::getStateManager();
+			octo::AudioManager &	audio = octo::Application::getAudioManager();
+
+			states.change("transitionLevelZero");
+			audio.stopMusic(sf::seconds(0.1f));
+			break;
 		}
+		default:
+			break;
 	}
 	return true;
 }
 
 bool	LevelZeroScreen::onInputReleased(InputListener::OctoKeys const & key)
 {
-
-	if (m_menu.getState() != AMenu::State::Active)
+	switch (key)
 	{
-		switch (key)
-		{
-			case OctoKeys::Up:
-				m_keyUp = false;
-				break;
-			case OctoKeys::Down:
-				m_keyDown = false;
-				break;
-			default:
-				break;
-		}
+		case OctoKeys::Up:
+			m_keyUp = false;
+			break;
+		case OctoKeys::Down:
+			m_keyDown = false;
+			break;
+		default:
+			break;
 	}
 	return true;
 }

@@ -17,7 +17,7 @@ WolfNpc::WolfNpc(void) :
 	setTimerMax(sf::seconds(10.0f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::WolfNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void WolfNpc::setup(void)

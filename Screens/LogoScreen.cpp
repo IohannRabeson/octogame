@@ -118,15 +118,8 @@ void	LogoScreen::update(sf::Time frameTime)
 		if (m_index == m_count)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			Progress & progress = Progress::getInstance();
 			m_sound->stop();
-			if (progress.isFirstTime())
-			{
-				progress.save();
-				states.change("zero");
-			}
-			else
-				states.change("game");
+			states.change("menu");
 		}
 	}
 }
