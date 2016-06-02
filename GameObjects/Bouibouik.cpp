@@ -6,7 +6,7 @@
 #include "ResourceDefinitions.hpp"
 
 Bouibouik::Bouibouik(void) :
-	SimpleObject(BOUIBOUIK_BACK_OSS, PERSISTENCE_FRAG, 20.f),
+	SimpleObject(BOUIBOUIK_BACK_OSS, PERSISTENCE_FRAG, 24.f),
 	m_sound(true)
 {
 	typedef octo::SpriteAnimation::Frame	Frame;
@@ -27,6 +27,7 @@ Bouibouik::Bouibouik(void) :
 	m_spriteFront.play();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Bouibouik), static_cast<std::size_t>(GameObjectType::Player));
+	SimpleObject::startBalle();
 }
 
 Bouibouik::~Bouibouik(void)
@@ -80,9 +81,6 @@ void Bouibouik::update(sf::Time frameTime)
 	m_smoke2.update(frameTime);
 	sf::Shader & shader = getShader();
 
-	if (getStartBalle())
-	{
-		playSound();
 		float intensity;
 		sf::Time step = getEffectDuration() / 6.f;
 		if (getTimer() < step)
@@ -94,9 +92,6 @@ void Bouibouik::update(sf::Time frameTime)
 		else
 			intensity = octo::linearInterpolation(0.1f, 1.f, (getTimer() - 5.f * step) / step);
 		shader.setParameter("intensity", intensity);
-	}
-	else
-		m_sound = true;
 	if (getCollideWithOcto())
 	{
 		m_smoke.setVelocity(sf::Vector2f(0.f, -100.f));

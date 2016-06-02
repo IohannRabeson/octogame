@@ -146,7 +146,7 @@ DesertBBiome::DesertBBiome() :
 	m_treePos = {28, 35, 42, 50, 56, 61, 139, 147, 152, 167, 181, 194, 214};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::JungleA);
+	m_destinations.push_back(Level::DesertC);
 	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::Default);
 }
