@@ -21,7 +21,7 @@ ChallengeManager & ChallengeManager::getInstance(void)
 void ChallengeManager::reset(void)
 {
 	m_challenges.clear();
-	m_challenges[Effect::Duplicate].reset(new ChallengeDuplicate());
+	m_challenges[Effect::Duplicate].reset(new ChallengePersistence());
 }
 
 void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
@@ -66,6 +66,11 @@ ChallengeManager::AChallenge::AChallenge(ResourceKey key, float challengeDuratio
 	octo::PostEffect postEffectShader;
 	postEffectShader.resetShader(&m_shader);
 	m_index = postEffect.addEffect(std::move(postEffectShader));
+}
+
+ChallengeManager::AChallenge::~AChallenge(void)
+{
+	octo::Application::getPostEffectManager().removeEffect(m_index);
 }
 
 void ChallengeManager::AChallenge::update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position)
@@ -213,6 +218,18 @@ void ChallengeDuplicate::updateShader(sf::Time frametime)
 	float y = std::sin(m_rotation * octo::Pi2 * 2.f) * length / rect.height;
 	float z = std::sin(m_rotation * octo::Pi2) * length / rect.height;
 	m_shader.setParameter("offset", x, y, z);
+}
+
+// Persistence
+ChallengePersistence::ChallengePersistence(void) :
+	AChallenge(PERSISTENCE_FRAG, 6.f, 60.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle)
+{
+	m_shader.setParameter("intensity", 1.f);
+}
+
+void ChallengePersistence::updateShader(sf::Time)
+{
+	m_shader.setParameter("intensity", octo::linearInterpolation(1.f, 0.02f, std::min(m_timer, m_duration) / m_duration));
 }
 
 // Pixelate

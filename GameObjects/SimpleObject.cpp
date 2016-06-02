@@ -5,7 +5,7 @@
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
 
-SimpleObject::SimpleObject(ResourceKey key, ResourceKey shader, float duration) :
+SimpleObject::SimpleObject(ResourceKey key, ResourceKey , float duration) :
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_shaderIndex(0u),
 	m_timer(sf::Time::Zero),
@@ -14,15 +14,15 @@ SimpleObject::SimpleObject(ResourceKey key, ResourceKey shader, float duration) 
 	m_collideWithOcto(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+	//octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(key));
 	m_sprite.setScale(1.f, 1.f);
 
-	m_shader.loadFromMemory(resources.getText(shader), sf::Shader::Fragment);
-	octo::PostEffect postEffectShader;
-	postEffectShader.resetShader(&m_shader);
-	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+	//m_shader.loadFromMemory(resources.getText(shader), sf::Shader::Fragment);
+	//octo::PostEffect postEffectShader;
+	//postEffectShader.resetShader(&m_shader);
+	//m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
 }
 
 SimpleObject::~SimpleObject(void)
@@ -31,9 +31,9 @@ SimpleObject::~SimpleObject(void)
 
 void SimpleObject::startBalle(void)
 {
-	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	postEffect.enableEffect(m_shaderIndex, true);
-	m_startBalle = true;
+	//octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+	//postEffect.enableEffect(m_shaderIndex, true);
+	//m_startBalle = true;
 	m_collideWithOcto = true;
 }
 
@@ -106,17 +106,17 @@ void SimpleObject::setupBox(AGameObjectBase * gameObject, std::size_t type, std:
 
 void SimpleObject::update(sf::Time frameTime)
 {
-	if (m_startBalle)
-	{
-		m_timer += frameTime;
-		if (m_timer > m_effectDuration)
-		{
-			m_timer = sf::Time::Zero;
-			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-			postEffect.enableEffect(m_shaderIndex, false);
-			m_startBalle = false;
-		}
-	}
+	//if (m_startBalle)
+	//{
+	//	m_timer += frameTime;
+	//	if (m_timer > m_effectDuration)
+	//	{
+	//		m_timer = sf::Time::Zero;
+	//		//octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+	//		//postEffect.enableEffect(m_shaderIndex, false);
+	//		//m_startBalle = false;
+	//	}
+	//}
 	m_sprite.update(frameTime);
 	m_collideWithOcto = false;
 }

@@ -24,7 +24,7 @@ public:
 	{
 	public:
 		AChallenge(ResourceKey key, float challengeDuration, float intensity, sf::FloatRect const & area, ABiome::Type biomeType);
-		virtual ~AChallenge(void) = default;
+		virtual ~AChallenge(void);
 
 		void update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position);
 		void updateGlitch(sf::Time frametime, ABiome & biome);
@@ -86,5 +86,14 @@ public:
 private:
 	float	m_rotation;
 };
+
+class ChallengePersistence : public ChallengeManager::AChallenge
+{
+public:
+	ChallengePersistence(void);
+	virtual void updateShader(sf::Time frametime);
+
+};
+
 
 #endif
