@@ -7,12 +7,17 @@
 
 CameraMovement::CameraMovement(void) :
 	m_behavior(Behavior::FollowOcto),
+	m_baseSize(octo::Application::getCamera().getSize()),
+	m_zoomTimer(sf::Time::Zero),
+	m_zoomTimerMax(sf::seconds(4.f)),
 	m_speed(3.f),
 	m_verticalTransition(0.f),
 	m_horizontalTransition(0.f),
 	m_horizontalAxis(0.f),
-	m_verticalAxis(0.f)
+	m_verticalAxis(0.f),
+	m_zoom(false)
 {
+	m_circle.setRadius(10.f);
 	InputListener::addInputListener();
 }
 
@@ -88,43 +93,59 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 			m_horizontalTransition += m_horizontalAxis * frametime.asSeconds();
 			if (m_verticalTransition > 1.f)
 				m_verticalTransition = 1.f;
-			if (m_verticalTransition < 0.f)
+			else if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
 			if (m_horizontalTransition > 1.f)
 				m_horizontalTransition = 1.f;
-			if (m_horizontalTransition < -1.f)
+			else if (m_horizontalTransition < -1.f)
 				m_horizontalTransition = -1.f;
 			break;
 		}
 		default:
 			break;
 	}
-	sf::Vector2f goal = sf::Vector2f(octo::linearInterpolation(goalRight, goalLeft, (m_horizontalTransition + 1.f) / 2.f),
-						octo::linearInterpolation(goalTop, goalBot, m_verticalTransition));
 
+	if (octo.isMeetingNpc())
+	{
+		octo.meetNpc(false);
+		m_zoom = true;
+	}
+	if (m_zoom)
+	{
+		m_zoomTimer += frametime;
+		m_speed *= 2.f;
+		if (m_zoomTimer > m_zoomTimerMax)
+		{
+			m_zoomTimer = m_zoomTimerMax;
+			m_zoom = false;
+		}
+	}
+	else
+	{
+		m_zoomTimer -= frametime;
+		if (m_zoomTimer < sf::Time::Zero)
+			m_zoomTimer = sf::Time::Zero;
+		else
+			m_speed *= 2.f;
+	}
+
+	sf::Vector2f goal = sf::Vector2f(octo::linearInterpolation(goalRight, goalLeft, (m_horizontalTransition + 1.f) / 2.f),
+									octo::linearInterpolation(goalTop, goalBot, m_verticalTransition));
+
+	camera.setSize(octo::cosinusInterpolation(m_baseSize, m_baseSize * 0.8f, m_zoomTimer.asSeconds() / m_zoomTimerMax.asSeconds()));
 	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()));
 
 	m_circle.setPosition(goal);
-	m_circle.setFillColor(sf::Color::Red);
-	m_circle.setRadius(10.f);
 }
 
-void CameraMovement::draw(sf::RenderTarget &)
+void CameraMovement::debugDraw(sf::RenderTarget & render)
 {
-	//render.draw(m_circle);
-	//m_circle.setPosition(octo::Application::getCamera().getCenter());
-	//m_circle.setFillColor(sf::Color::Green);
-	//render.draw(m_circle);
+	m_circle.setFillColor(sf::Color::Red);
+	render.draw(m_circle);
+	m_circle.setPosition(octo::Application::getCamera().getCenter());
+	m_circle.setFillColor(sf::Color::Green);
+	render.draw(m_circle);
 }
-
-void CameraMovement::collideZoom(sf::Time)
-{}
-
-void CameraMovement::collideZoomEvent(sf::Vector2f const &)
-{}
-
-void CameraMovement::setEventFallTimer(sf::Time const &)
-{}
 
 bool CameraMovement::onInputPressed(InputListener::OctoKeys const & key)
 {

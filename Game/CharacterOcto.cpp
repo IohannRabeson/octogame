@@ -61,6 +61,7 @@ CharacterOcto::CharacterOcto() :
 	m_repairShip(false),
 	m_inWater(false),
 	m_isDeadlyWater(false),
+	m_meetNpc(false),
 	m_generator(std::to_string(time(0)))
 {
 	m_sound.reset(new OctoSound());
@@ -1369,6 +1370,16 @@ bool	CharacterOcto::isInAir(void)
 	return (!m_onGround);
 }
 
+bool	CharacterOcto::isMeetingNpc(void) const
+{
+	return m_meetNpc;
+}
+
+void	CharacterOcto::meetNpc(bool meetNpc)
+{
+	m_meetNpc = meetNpc;
+}
+
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
@@ -1456,11 +1467,6 @@ float	CharacterOcto::getWaterLevel() const
 	return m_waterLevel;
 }
 
-void	CharacterOcto::collideZoomEvent(sf::Vector2f const & position)
-{
-	(void)position;
-}
-
 void	CharacterOcto::initAI(void)
 {
 	m_randomJumpTimer = sf::seconds(m_generator.randomFloat(1.f, 30.f));
@@ -1543,4 +1549,3 @@ void	CharacterOcto::updateAI(sf::Time frameTime)
 		}
 	}
 }
-
