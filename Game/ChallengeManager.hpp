@@ -6,35 +6,27 @@
 # include <map>
 # include <memory>
 # include "ResourceDefinitions.hpp"
-# include "ABiome.hpp"
 # include "RandomGenerator.hpp"
+# include "ABiome.hpp"
 
 class ChallengeManager
 {
 public:
-	enum class Effect : std::size_t
-	{
-		Pixelate = 0u,
-		Persistence = 1u,
-		Duplicate = 2u,
-		Displacement = 4u
-	};
-
 	class AChallenge
 	{
 	public:
 		AChallenge(ResourceKey key, float challengeDuration, sf::FloatRect const & area, ABiome::Type biomeType);
 		virtual ~AChallenge(void);
-
+	
 		void update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position);
 		void updateGlitch(sf::Time frametime, ABiome & biome);
 		void updateChallenge(sf::Time frametime);
 		virtual void updateShader(sf::Time frametime) = 0;
-
+	
 		void start(void);
 		void stop(void);
 		bool enable(void) const;
-
+	
 		bool isFinished(void) const;
 		bool isGlitch(void) const;
 		bool canStartGlitch(void) const;
@@ -44,7 +36,7 @@ public:
 		void setIntensity(float intensity);
 		void setGlitch(bool isGlitch);
 		void validateArea(ABiome & biome, sf::Vector2f const & position);
-
+	
 	protected:
 		sf::Shader		m_shader;
 		std::size_t		m_index;
@@ -58,6 +50,14 @@ public:
 		float			m_intensity;
 		bool			m_validArea;
 		bool			m_isGlitch;
+	};
+
+	enum class Effect : std::size_t
+	{
+		Pixelate = 0u,
+		Persistence = 1u,
+		Duplicate = 2u,
+		Displacement = 4u
 	};
 
 	~ChallengeManager(void) = default;
@@ -76,24 +76,5 @@ private:
 	void addEffect(ResourceKey key, Effect effect);
 
 };
-
-class ChallengeDuplicate : public ChallengeManager::AChallenge
-{
-public:
-	ChallengeDuplicate(void);
-	virtual void updateShader(sf::Time frametime);
-
-private:
-	float	m_rotation;
-};
-
-class ChallengePersistence : public ChallengeManager::AChallenge
-{
-public:
-	ChallengePersistence(void);
-	virtual void updateShader(sf::Time frametime);
-
-};
-
 
 #endif

@@ -5,6 +5,7 @@
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "ChallengeManager.hpp"
+#include "Challenges.hpp"
 #include "CameraMovement.hpp"
 
 // Biomes
