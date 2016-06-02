@@ -15,7 +15,7 @@ DesertCBiome::DesertCBiome() :
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(500u, 180u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(250.f * 16.f, -1800.f),
+	m_octoStartPosition(238.f * 16.f, -1800.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
@@ -39,7 +39,7 @@ DesertCBiome::DesertCBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(10u, 20u),
-	m_treeCount(0u, 0u),
+	m_treeCount(1u, 1u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
@@ -53,7 +53,7 @@ DesertCBiome::DesertCBiome() :
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
-	m_canCreateTree(true),
+	m_canCreateTree(false),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(false),
@@ -135,12 +135,13 @@ DesertCBiome::DesertCBiome() :
 		m_octoStartPosition = sf::Vector2f(9800, -4950.f);
 
 	m_gameObjects[20] = GameObjectType::Portal;
-//	m_gameObjects[277] = GameObjectType::Portal;
+	m_gameObjects[235] = GameObjectType::Portal;
 	m_instances[150] = MAP_DESERT_C_TRAIL_OMP;
 	m_gameObjects[320] = GameObjectType::Bouibouik;
 
 	m_interestPointPosX = 500;
 
+	//TODO : TO remove
 	m_treePos = {28, 35, 42, 50, 56, 61, 139, 147, 152, 167, 181, 194, 214};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
@@ -252,7 +253,7 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f    , 130.f   , 150.f   , 244.f   , 245.f, 255.f, 253.f   , 350.f   , 370.f  , 500.f   };
-		std::vector<float> pointY = {0.f + n, 0.f + n , -2.f - n, -2.f - n, 0.f  , 0.f  , -2.f - n, -2.f - n, 0.f + n,  0.f + n};
+		std::vector<float> pointY = {0.f + n, 0.f + n , -2.f - n, -2.f - n, 6.5f , 6.5f , -2.f - n, -2.f - n, 0.f + n,  0.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -272,9 +273,9 @@ Map::TileColorGenerator DesertCBiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart = getRockColor();
 	sf::Color secondColorEnd = getRockColor();
-	float start1 = 40000.f / static_cast<float>(m_mapSize.y);
-	float start2 = 80000.f / static_cast<float>(m_mapSize.y);
-	float middle1 = 100000.f / static_cast<float>(m_mapSize.y);
+	float start1 = 70000.f / static_cast<float>(m_mapSize.y);
+	float start2 = 100000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = 120000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, start1, start2, middle1](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
