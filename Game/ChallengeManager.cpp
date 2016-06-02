@@ -21,7 +21,8 @@ ChallengeManager & ChallengeManager::getInstance(void)
 void ChallengeManager::reset(void)
 {
 	m_challenges.clear();
-	m_challenges[Effect::Duplicate].reset(new ChallengePersistence());
+	m_challenges[Effect::Duplicate].reset(new ChallengeDuplicate());
+	m_challenges[Effect::Persistence].reset(new ChallengePersistence());
 }
 
 void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
@@ -222,7 +223,7 @@ void ChallengeDuplicate::updateShader(sf::Time frametime)
 
 // Persistence
 ChallengePersistence::ChallengePersistence(void) :
-	AChallenge(PERSISTENCE_FRAG, 6.f, 60.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle)
+	AChallenge(PERSISTENCE_FRAG, 6.f, 60.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Desert)
 {
 	m_shader.setParameter("intensity", 1.f);
 }
@@ -233,3 +234,30 @@ void ChallengePersistence::updateShader(sf::Time)
 }
 
 // Pixelate
+//	if (getStartBalle())
+//	{
+//		float intensity;
+//		if (getTimer() < getEffectDuration() / 2.f)
+//			intensity = octo::linearInterpolation(0.f, 0.02f, getTimer() / (getEffectDuration() / 2.f));
+//		else
+//			intensity = octo::linearInterpolation(0.02f, 0.f, (getTimer() - getEffectDuration() / 2.f) / (getEffectDuration() / 2.f));
+//		shader.setParameter("pixel_threshold", intensity);
+//	}
+//	
+
+
+// CONCERT
+// init : 
+//	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+//	getShader().setParameter("resolution", rect.width, rect.height);
+//update
+//if (getStartBalle())
+//	{
+//		float time;
+//		if (getTimer() < getEffectDuration() / 2.f)
+//			time = octo::linearInterpolation(0.f, 1.f, getTimer() / (getEffectDuration() / 2.f));
+//		else
+//			time = octo::linearInterpolation(1.f, 0.f, (getTimer() - getEffectDuration() / 2.f) / (getEffectDuration() / 2.f));
+//		shader.setParameter("time", time);
+//	}
+//	S

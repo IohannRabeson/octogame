@@ -318,15 +318,6 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
 			}
 			break;
-		case GameObjectType::Tent:
-			gameObjectCast<Tent>(gameObject)->startBalle();
-			break;
-		case GameObjectType::Concert:
-			gameObjectCast<Concert>(gameObject)->startBalle();
-			break;
-		case GameObjectType::Bouibouik:
-			gameObjectCast<Bouibouik>(gameObject)->startBalle();
-			break;
 		case GameObjectType::CedricNpc:
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
