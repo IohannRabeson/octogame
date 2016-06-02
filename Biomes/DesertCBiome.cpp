@@ -13,7 +13,7 @@ DesertCBiome::DesertCBiome() :
 	m_name("Desert B"),
 	m_id(Level::DesertC),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(500u, 180u)),
+	m_mapSize(sf::Vector2u(600u, 180u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(238.f * 16.f, -1800.f),
 	m_transitionDuration(0.5f),
@@ -137,6 +137,7 @@ DesertCBiome::DesertCBiome() :
 	m_gameObjects[20] = GameObjectType::Portal;
 	m_gameObjects[235] = GameObjectType::Portal;
 	m_instances[150] = MAP_DESERT_C_TRAIL_OMP;
+	m_instances[350] = MAP_DESERT_C_TREE_OMP;
 	m_gameObjects[320] = GameObjectType::Bouibouik;
 
 	m_interestPointPosX = 500;
@@ -253,7 +254,7 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f    , 130.f   , 150.f   , 244.f   , 245.f, 255.f, 253.f   , 350.f   , 370.f  , 500.f   };
-		std::vector<float> pointY = {0.f + n, 0.f + n , -2.f - n, -2.f - n, 6.5f , 6.5f , -2.f - n, -2.f - n, 0.f + n,  0.f + n};
+		std::vector<float> pointY = {0.f + n, 0.f + n , -2.f - n, -2.f - n, 6.8f , 6.8f , -2.f - n, -2.f - n, 0.f + n,  0.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

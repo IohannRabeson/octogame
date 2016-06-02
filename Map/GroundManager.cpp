@@ -168,6 +168,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
 	m_npcFactory.registerCreator<ClementineNpc>(CLEMENTINE_OSS);
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
+	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
 	m_npcFactory.registerCreator<BirdBlueNpc>(BIRD_BLUE_OSS);
 	m_npcFactory.registerCreator<StrangerSnowNpc>(STRANGER_SNOW_OSS);
