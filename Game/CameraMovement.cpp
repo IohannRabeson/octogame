@@ -45,14 +45,10 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		m_zoomState = ZoomState::ZoomIn;
 	}
 
-	float goalTop = octo.getPosition().y;
-	goalTop -= camera.getRectangle().height / 5.f;
-	float goalBot = octo.getPosition().y;
-	goalBot += camera.getRectangle().height / 3.f;
-	float goalLeft = octo.getPosition().x;
-	goalLeft -= camera.getRectangle().width / 3.f;
-	float goalRight = octo.getPosition().x;
-	goalRight += camera.getRectangle().width / 3.f;
+	float goalTop = octo.getPosition().y - camera.getRectangle().height / 5.f;
+	float goalBot = octo.getPosition().y + camera.getRectangle().height / 3.f;
+	float goalLeft = octo.getPosition().x - camera.getRectangle().width / 3.f;
+	float goalRight = octo.getPosition().x + camera.getRectangle().width / 3.f;
 
 	switch (m_behavior)
 	{
@@ -137,7 +133,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	}
 
 	sf::Vector2f goal = sf::Vector2f(octo::linearInterpolation(goalRight, goalLeft, (m_horizontalTransition + 1.f) / 2.f),
-									octo::linearInterpolation(goalTop, goalBot, m_verticalTransition));
+									octo::linearInterpolation(goalTop, goalBot, (m_verticalTransition));
 
 	camera.setSize(octo::cosinusInterpolation(m_baseSize, m_baseSize * 0.8f, m_zoomTimer.asSeconds() / m_zoomTimerMax.asSeconds()));
 	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()));
