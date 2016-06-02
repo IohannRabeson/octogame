@@ -47,6 +47,7 @@ private:
 	bool					m_joystickAxisY;
 	bool					m_joystickAxisU;
 	bool					m_joystickAxisV;
+	bool					m_isShiftPressed;
 	float					m_triggerLimit;
 
 	// Keyboard
