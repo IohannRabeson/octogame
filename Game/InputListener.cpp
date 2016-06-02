@@ -11,6 +11,7 @@ InputListener::InputListener(void) :
 	m_joystickAxisY(false),
 	m_joystickAxisU(false),
 	m_joystickAxisV(false),
+	m_isShiftPressed(false),
 	m_triggerLimit(0.f)
 {
 	// Unix
@@ -71,20 +72,34 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 	switch (event.code)
 	{
 		case sf::Keyboard::Left:
-			onInputPressed(OctoKeys::Left);
+			if (m_isShiftPressed)
+				onInputPressed(OctoKeys::ViewLeft);
+			else
+				onInputPressed(OctoKeys::Left);
 			break;
 		case sf::Keyboard::Right:
-			onInputPressed(OctoKeys::Right);
+			if (m_isShiftPressed)
+				onInputPressed(OctoKeys::ViewRight);
+			else
+				onInputPressed(OctoKeys::Right);
 			break;
 		case sf::Keyboard::Space:
 			onInputPressed(OctoKeys::Jump);
 			break;
 		case sf::Keyboard::Up:
-			onInputPressed(OctoKeys::Up);
-			onInputPressed(OctoKeys::SlowFall);
+			if (m_isShiftPressed)
+				onInputPressed(OctoKeys::ViewUp);
+			else
+			{
+				onInputPressed(OctoKeys::Up);
+				onInputPressed(OctoKeys::SlowFall);
+			}
 			break;
 		case sf::Keyboard::Down:
-			onInputPressed(OctoKeys::Down);
+			if (m_isShiftPressed)
+				onInputPressed(OctoKeys::ViewDown);
+			else
+				onInputPressed(OctoKeys::Down);
 			break;
 		case sf::Keyboard::W:
 			onInputPressed(OctoKeys::Use);
@@ -103,6 +118,9 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::S:
 			onInputPressed(OctoKeys::Infos);
+			break;
+		case sf::Keyboard::LShift:
+			m_isShiftPressed = true;
 			break;
 		default:
 			break;
@@ -147,6 +165,13 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::S:
 			onInputReleased(OctoKeys::Infos);
+			break;
+		case sf::Keyboard::LShift:
+			onInputReleased(OctoKeys::ViewLeft);
+			onInputReleased(OctoKeys::ViewRight);
+			onInputReleased(OctoKeys::ViewUp);
+			onInputReleased(OctoKeys::ViewDown);
+			m_isShiftPressed = false;
 			break;
 		default:
 			break;
