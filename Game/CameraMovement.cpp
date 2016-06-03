@@ -133,7 +133,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	}
 
 	sf::Vector2f goal = sf::Vector2f(octo::linearInterpolation(goalRight, goalLeft, (m_horizontalTransition + 1.f) / 2.f),
-									octo::linearInterpolation(goalTop, goalBot, (m_verticalTransition));
+									octo::linearInterpolation(goalTop, goalBot, (m_verticalTransition)));
 
 	camera.setSize(octo::cosinusInterpolation(m_baseSize, m_baseSize * 0.8f, m_zoomTimer.asSeconds() / m_zoomTimerMax.asSeconds()));
 	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()));
