@@ -18,7 +18,20 @@ class ChallengePersistence : public ChallengeManager::AChallenge
 public:
 	ChallengePersistence(void);
 	virtual void updateShader(sf::Time frametime);
+};
 
+class ChallengePixelate : public ChallengeManager::AChallenge
+{
+public:
+	ChallengePixelate(void);
+	virtual void updateShader(sf::Time frametime);
+};
+
+class ChallengeDisplacement : public ChallengeManager::AChallenge
+{
+public:
+	ChallengeDisplacement(void);
+	virtual void updateShader(sf::Time frametime);
 };
 
 #endif

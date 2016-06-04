@@ -1,5 +1,5 @@
 uniform sampler2D texture;
-uniform float time;
+uniform float intensity;
 uniform vec2 resolution;
 
 float hash(float n) { return fract(sin(n) * 753.5453123); }
@@ -29,7 +29,7 @@ void main()
 	vec4 distortionValue = vec4(fbm(p, vec3(0.5, 2.0, 2.0)));
 	vec2 distortionOffset = distortionValue.xy;
 	distortionOffset -= vec2(0.5, 0.5);
-	distortionOffset *= 2.0 * 0.3 * time;
+	distortionOffset *= 2.0 * 0.3 * intensity;
 
 	vec2 distortionTexCoord = gl_TexCoord[0].xy + distortionOffset;
 	gl_FragColor = texture2D(texture, distortionTexCoord);

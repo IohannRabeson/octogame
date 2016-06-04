@@ -187,30 +187,24 @@ void ChallengePersistence::updateShader(sf::Time)
 }
 
 // Pixelate
-//	if (getStartBalle())
-//	{
-//		float intensity;
-//		if (getTimer() < getEffectDuration() / 2.f)
-//			intensity = octo::linearInterpolation(0.f, 0.02f, getTimer() / (getEffectDuration() / 2.f));
-//		else
-//			intensity = octo::linearInterpolation(0.02f, 0.f, (getTimer() - getEffectDuration() / 2.f) / (getEffectDuration() / 2.f));
-//		shader.setParameter("pixel_threshold", intensity);
-//	}
-//	
+ChallengePixelate::ChallengePixelate(void) :
+	AChallenge(PIXELATE_FRAG, 6.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle)
+{}
 
+void ChallengePixelate::updateShader(sf::Time)
+{
+	m_shader.setParameter("pixel_threshold", m_intensity * octo::linearInterpolation(0.f, 0.02f, std::min(m_timer, m_duration) / m_duration));
+}
 
-// CONCERT
-// init : 
-//	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
-//	getShader().setParameter("resolution", rect.width, rect.height);
-//update
-//if (getStartBalle())
-//	{
-//		float time;
-//		if (getTimer() < getEffectDuration() / 2.f)
-//			time = octo::linearInterpolation(0.f, 1.f, getTimer() / (getEffectDuration() / 2.f));
-//		else
-//			time = octo::linearInterpolation(1.f, 0.f, (getTimer() - getEffectDuration() / 2.f) / (getEffectDuration() / 2.f));
-//		shader.setParameter("time", time);
-//	}
-//	S
+// Displacement
+ChallengeDisplacement::ChallengeDisplacement(void) :
+	AChallenge(DISPLACEMENT_FRAG, 6.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle)
+{
+	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+	m_shader.setParameter("resolution", rect.width, rect.height);
+}
+
+void ChallengeDisplacement::updateShader(sf::Time)
+{
+	m_shader.setParameter("intensity", m_intensity * octo::linearInterpolation(0.f, 1.f, std::min(m_timer, m_duration) / m_duration));
+}
