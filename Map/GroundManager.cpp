@@ -541,6 +541,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				break;
 
 			//Npc
+//Script AddNpc Ground
 			case GameObjectType::WolfNpc:
 				{
 					WolfNpc * npc = new WolfNpc();
