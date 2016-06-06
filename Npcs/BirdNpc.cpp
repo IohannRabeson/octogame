@@ -9,10 +9,11 @@
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
 
+RandomGenerator BirdNpc::m_generator("random");
+
 BirdNpc::BirdNpc(ResourceKey const & npcId) :
 	ANpc(npcId, false),
 	m_animationEnd(false),
-	m_generator("random"),
 	m_speedLimit(m_generator.randomFloat(30.f, 150.f)),
 	m_flySpeed(sf::Vector2f(m_generator.randomFloat(200.f, 400.f), m_generator.randomFloat(-100.f, -300.f))),
 	m_timerDoubleJumpMax(sf::seconds(2.5f))
