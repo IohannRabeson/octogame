@@ -5,6 +5,7 @@ RandomGenerator DisappearNpc::m_generator("random");
 
 DisappearNpc::DisappearNpc(ResourceKey const & key) :
 	ANpc(key, false),
+	m_isVisible(true),
 	m_transparency(255.f)
 {
 	setSize(sf::Vector2f(25.f, 60.f));
@@ -76,6 +77,38 @@ void DisappearNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
+void DisappearNpc::makeDisappear(sf::Time frametime)
+{
+	m_randomAppearTimer -= frametime;
+	m_randomDisappearTimer -= frametime;
+
+	if (getCollideEventOcto())
+		m_isVisible = false;
+	if (m_randomDisappearTimer <= sf::Time::Zero)
+	{
+		m_isVisible = false;
+		m_randomDisappearTimer = sf::seconds(m_generator.randomFloat(10.f, 30.f));
+	}
+
+	if (!m_isVisible)
+	{
+		if (m_transparency - frametime.asSeconds() * 255.f > 0.f)
+			m_transparency -= frametime.asSeconds() * 255.f;
+		else
+		{
+			m_randomAppearTimer = sf::seconds(m_generator.randomFloat(1.f, 3.f));
+			m_isVisible = true;
+			setOrigin(sf::Vector2f(m_generator.randomFloat(20.f, 120.f), m_generator.randomFloat(50.f, 400.f)));
+		}
+	}
+	else if (m_randomAppearTimer <= sf::Time::Zero && m_transparency + frametime.asSeconds() * 255.f < 255.f)
+		m_transparency += frametime.asSeconds() * 255.f;
+
+//	m_randomDisappear -= frametime;
+//	if (m_randomDisappear <= sf::Time::Zero)
+//		m_randomDisappear = sf::seconds(m_generator.randomFloat(2.f, 5.f));
+}
+
 void DisappearNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
@@ -83,14 +116,8 @@ void DisappearNpc::update(sf::Time frametime)
 	updateState();
 	updatePhysics();
 
-	if (ANpc::getCollideEventOcto())
-		m_transparency -= frametime.asSeconds() * 255.f;
-	else
-		m_transparency += frametime.asSeconds() * 255.f;
-	if (m_transparency > 255.f)
-		m_transparency = 255.f;
-	else if (m_transparency < 0.f)
-		m_transparency = 0.f;
+	makeDisappear(frametime);
+
 	sprite.update(frametime);
 	sprite.setPosition(getBox()->getRenderPosition());
 	sprite.setColor(sf::Color(255, 255, 255, m_transparency));

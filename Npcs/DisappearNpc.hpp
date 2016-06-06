@@ -18,8 +18,13 @@ protected:
 	virtual void updateState(void);
 
 private:
+	void					makeDisappear(sf::Time frametime);
+
+	bool					m_isVisible;
 	static RandomGenerator	m_generator;
 	float					m_transparency;
+	sf::Time				m_randomDisappearTimer;
+	sf::Time				m_randomAppearTimer;
 };
 
 #endif
