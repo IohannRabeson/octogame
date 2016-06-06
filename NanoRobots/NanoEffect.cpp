@@ -17,7 +17,7 @@ NanoEffect::NanoEffect(void) :
 	m_state(State::Active),
 	m_isTransferHappen(false),
 	m_glowingTimerMax(sf::seconds(2.f)),
-	m_transferTimerMax(sf::seconds(6.f)),
+	m_transferTimerMax(sf::seconds(4.f)),
 	m_soundPlayed(false),
 	m_lastNanoCount(0u),
 	m_shaderIndex(0u)
