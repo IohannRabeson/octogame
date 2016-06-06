@@ -7,7 +7,7 @@ HouseFlatSnow::HouseFlatSnow(void) :
 	SimpleObject(HOUSE_FLAT_SNOW_OSS)
 {
 	typedef octo::SpriteAnimation::Frame	Frame;
-	setupAnimation({Frame(sf::seconds(0.2f), 0u)}, octo::LoopMode::Loop);
+	setupAnimation({Frame(sf::seconds(0.2f), 0u), Frame(sf::seconds(0.2f), 1u)}, octo::LoopMode::Loop);
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::HouseFlatSnow), static_cast<std::size_t>(GameObjectType::Player));
 }
