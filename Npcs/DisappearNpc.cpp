@@ -6,7 +6,8 @@ RandomGenerator DisappearNpc::m_generator("random");
 DisappearNpc::DisappearNpc(ResourceKey const & key) :
 	ANpc(key, false),
 	m_isVisible(true),
-	m_transparency(255.f)
+	m_transparency(0.f),
+	m_randomAppearTimer(sf::seconds(m_generator.randomFloat(1.f, 5.f)))
 {
 	setSize(sf::Vector2f(25.f, 60.f));
 	setOrigin(sf::Vector2f(90.f, m_generator.randomFloat(50.f, 400.f)));
