@@ -159,6 +159,7 @@ void NanoEffect::update(sf::Time frameTime)
 			if (m_randomTimer >= m_randomTimerMax)
 			{
 				m_randomTimer = sf::Time::Zero;
+				m_glowingTimer = sf::Time::Zero;
 				m_state = State::Random;
 			}
 			break;
