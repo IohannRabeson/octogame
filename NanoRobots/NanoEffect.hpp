@@ -8,6 +8,7 @@
 # include <SFML/Graphics/Text.hpp>
 # include <SFML/Graphics/RenderTarget.hpp>
 # include <SFML/Graphics/Drawable.hpp>
+# include <SFML/Graphics/Shader.hpp>
 # include <SFML/Graphics/Transformable.hpp>
 
 # include <memory>
@@ -22,6 +23,7 @@ public:
 		Active,
 		Transfer,
 		Random,
+		FadeOut,
 		Wait
 	};
 
@@ -77,6 +79,8 @@ private:
 	sf::Vector2f					m_nanoScaleOrigin;
 	sf::Vector2f					m_nanoScaleZoom;
 	sf::Vector2f					m_nanoScale;
+	sf::Shader						m_shader;
+	std::size_t						m_shaderIndex;
 };
 
 #endif
