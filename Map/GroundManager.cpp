@@ -35,6 +35,8 @@
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 //Script AddNpc Include
+#include "ForestSpirit2Npc.hpp"
+#include "ForestSpirit1Npc.hpp"
 #include "BirdBlueNpc.hpp"
 #include "StrangerSnowNpc.hpp"
 #include "StrangerGirlSnowNpc.hpp"
@@ -169,6 +171,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ClementineNpc>(CLEMENTINE_OSS);
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<ForestSpirit2Npc>(FOREST_SPIRIT_2_OSS);
+	m_npcFactory.registerCreator<ForestSpirit1Npc>(FOREST_SPIRIT_1_OSS);
 	m_npcFactory.registerCreator<BirdBlueNpc>(BIRD_BLUE_OSS);
 	m_npcFactory.registerCreator<StrangerSnowNpc>(STRANGER_SNOW_OSS);
 	m_npcFactory.registerCreator<StrangerGirlSnowNpc>(STRANGER_GIRL_SNOW_OSS);
@@ -541,6 +545,21 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				break;
 
 			//Npc
+//Script AddNpc Ground
+			case GameObjectType::ForestSpirit2Npc:
+				{
+					ForestSpirit2Npc * npc = new ForestSpirit2Npc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::ForestSpirit1Npc:
+				{
+					ForestSpirit1Npc * npc = new ForestSpirit1Npc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::WolfNpc:
 				{
 					WolfNpc * npc = new WolfNpc();
