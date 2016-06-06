@@ -103,10 +103,6 @@ void DisappearNpc::makeDisappear(sf::Time frametime)
 	}
 	else if (m_randomAppearTimer <= sf::Time::Zero && m_transparency + frametime.asSeconds() * 255.f < 255.f)
 		m_transparency += frametime.asSeconds() * 255.f;
-
-//	m_randomDisappear -= frametime;
-//	if (m_randomDisappear <= sf::Time::Zero)
-//		m_randomDisappear = sf::seconds(m_generator.randomFloat(2.f, 5.f));
 }
 
 void DisappearNpc::update(sf::Time frametime)
