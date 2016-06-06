@@ -48,6 +48,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/InputListener.cpp					\
 				Game/KonamiCode.cpp						\
 				Game/ChallengeManager.cpp				\
+				Game/Challenges.cpp						\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\
