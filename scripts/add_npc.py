@@ -81,7 +81,7 @@ for line in fileinput.input('Map/GroundManager.cpp', inplace=1):
         print "\t\t\tcase GameObjectType::" + className + ":\n",
         print "\t\t\t\t{\n",
         print "\t\t\t\t\t" + className + " * npc = new " + className + "();\n",
-        print "\t\t\t\t\tnpc->onFloor();\n",
+        print "\t\t\t\t\tnpc->onTheFloor();\n",
         print "\t\t\t\t\tm_npcsOnFloor.emplace_back(gameObject.first, 1, npc);\n",
         print "\t\t\t\t}\n",
         print "\t\t\t\tbreak;"
