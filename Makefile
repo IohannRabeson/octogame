@@ -105,7 +105,12 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/StrangerGirlSnowNpc.cpp			\
 				Npcs/StrangerSnowNpc.cpp				\
 				Npcs/BirdBlueNpc.cpp					\
+				Npcs/DisappearNpc.cpp					\
+				Npcs/ForestSpirit1Npc.cpp				\
+				Npcs/ForestSpirit2Npc.cpp				\
 #Script AddNpc
+
+
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
