@@ -268,7 +268,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<JumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::DoubleJumpNanoRobot:
@@ -276,7 +276,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::GroundTransformNanoRobot:
@@ -284,7 +284,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::SlowFallNanoRobot:
@@ -292,7 +292,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<SlowFallNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::WaterNanoRobot:
@@ -300,7 +300,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<WaterNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::RepairShipNanoRobot:
@@ -308,7 +308,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairShipNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
@@ -316,7 +316,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
+				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
 			}
 			break;
 		case GameObjectType::CedricNpc:

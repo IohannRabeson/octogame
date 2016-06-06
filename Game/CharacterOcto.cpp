@@ -789,14 +789,16 @@ void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 	m_eventBox->update();
 }
 
-void	CharacterOcto::giveNanoRobot(NanoRobot * robot)
+void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+	startKonamiCode(firstTime);
 }
 
-void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot)
+void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+	startKonamiCode(firstTime);
 	m_repairNanoRobot = robot;
 }
 
