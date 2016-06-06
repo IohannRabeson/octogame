@@ -23,6 +23,7 @@ CameraMovement::CameraMovement(void) :
 
 CameraMovement::~CameraMovement(void)
 {
+	octo::Application::getCamera().setSize(m_baseSize);
 	InputListener::removeInputListener();
 }
 
