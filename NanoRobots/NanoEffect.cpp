@@ -4,6 +4,9 @@
 #include <Application.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
+#include <GraphicsManager.hpp>
+#include <PostEffectManager.hpp>
+#include <Camera.hpp>
 
 NanoEffect::NanoEffect(void) :
 	m_vertices(new sf::Vertex[100]),
@@ -14,14 +17,24 @@ NanoEffect::NanoEffect(void) :
 	m_state(State::Active),
 	m_isTransferHappen(false),
 	m_glowingTimerMax(sf::seconds(2.f)),
-	m_transferTimerMax(sf::seconds(2.f)),
+	m_transferTimerMax(sf::seconds(6.f)),
 	m_soundPlayed(false),
-	m_lastNanoCount(0u)
+	m_lastNanoCount(0u),
+	m_shaderIndex(0u)
 {
 	m_generator.setSeed("random");
 	m_randomTimerMax = sf::seconds(m_generator.randomFloat(30.f, 90.f));
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 	m_lastNanoCount = Progress::getInstance().getNanoRobotCount();
+
+	octo::ResourceManager & resources = octo::Application::getResourceManager();
+	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+
+	m_shader.loadFromMemory(resources.getText(CIRCLE_RAINBOW_FRAG), sf::Shader::Fragment);
+	octo::PostEffect postEffectShader;
+	postEffectShader.resetShader(&m_shader);
+	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+	m_shader.setParameter("fade_out_size", 100.f);
 }
 
 void NanoEffect::playSound(void)
@@ -78,35 +91,54 @@ void NanoEffect::update(sf::Time frameTime)
 {
 	m_builder.clear();
 
+	m_glowingTimer += frameTime;
 	switch (m_state)
 	{
 		case State::Active:
 		{
-			m_glowingTimer += frameTime;
-			if (m_glowingTimer >= m_glowingTimerMax)
-				m_glowingTimer = sf::Time::Zero;
-			createEffect(m_size, m_position, m_glowingTimer / m_glowingTimerMax, m_color, m_builder);
+			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+			postEffect.enableEffect(m_shaderIndex, true);
+			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+			m_shader.setParameter("position", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
+			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
+			m_shader.setParameter("radius", 120.f);
+			m_shader.setParameter("alpha", 1.f);
+			m_shader.setParameter("color_size", 0.005f);
 			break;
 		}
 		case State::Transfer:
 		{
 			playSound();
 			m_transferTimer += frameTime;
+			float transition = std::min(m_transferTimer / m_transferTimerMax, 1.f);
+			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+			m_shader.setParameter("position", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
+			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
+			m_shader.setParameter("radius", octo::linearInterpolation(120.f, 1500.f, transition));
+			m_shader.setParameter("color_size", octo::linearInterpolation(0.005f, 0.001f, transition));
 			if (m_transferTimer >= m_transferTimerMax)
 			{
 				m_isTransferHappen = true;
 				m_transferTimer = sf::Time::Zero;
-				m_state = State::Wait;
+				m_randomTimer = sf::Time::Zero;
+				m_state = State::FadeOut;
 			}
-			float coef = m_transferTimer / m_transferTimerMax;
-			createEffect(m_size, m_position, coef, m_color, m_builder);
-			createEffect(m_size * 2.f, m_position, coef, m_color, m_builder);
-			createEffect(m_size * 3.f, m_position, coef, m_color, m_builder);
-
-			if (m_transferTimer <= m_transferTimerMax / 2.f)
-				m_nanoScale = octo::cosinusInterpolation(m_nanoScaleOrigin, m_nanoScaleZoom, m_transferTimer / (m_transferTimerMax / 2.f));
-			else if (m_transferTimer <= m_transferTimerMax)
-				m_nanoScale = octo::cosinusInterpolation(m_nanoScaleZoom, m_nanoScaleOrigin, (m_transferTimer - m_transferTimerMax / 2.f) / (m_transferTimerMax / 2.f));
+			break;
+		}
+		case State::FadeOut:
+		{
+			m_transferTimer += frameTime;
+			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+			m_shader.setParameter("position", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
+			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
+			m_shader.setParameter("alpha", 1.f - std::min(1.f, m_transferTimer / m_transferTimerMax));
+			if (m_transferTimer >= m_transferTimerMax)
+			{
+				m_transferTimer = sf::Time::Zero;
+				m_state = State::Wait;
+				octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+				postEffect.enableEffect(m_shaderIndex, false);
+			}
 			break;
 		}
 		case State::Random:
@@ -126,9 +158,7 @@ void NanoEffect::update(sf::Time frameTime)
 			m_randomTimer += frameTime;
 			if (m_randomTimer >= m_randomTimerMax)
 			{
-				m_glowingTimer = sf::Time::Zero;
 				m_randomTimer = sf::Time::Zero;
-				m_randomTimerMax = sf::seconds(m_generator.randomFloat(30.f, 90.f));
 				m_state = State::Random;
 			}
 			break;
@@ -145,7 +175,10 @@ void NanoEffect::update(sf::Time frameTime)
 void NanoEffect::onTransfer(void)
 {
 	if (m_isTransferHappen == false)
+	{
 		m_state = State::Transfer;
+		m_transferTimer = sf::Time::Zero;
+	}
 }
 
 void NanoEffect::setState(State state)
