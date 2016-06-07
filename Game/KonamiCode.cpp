@@ -20,13 +20,12 @@ KonamiCode::KonamiCode(void) :
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 
-	m_shader.loadFromMemory(resources.getText(KONAMI_FRAG), sf::Shader::Fragment);
+	m_shader.loadFromMemory(resources.getText(CIRCLE_RAINBOW_FRAG), sf::Shader::Fragment);
 	octo::PostEffect postEffectShader;
 	postEffectShader.resetShader(&m_shader);
 	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
-	m_shader.setParameter("time_factor", 2.f);
-	m_shader.setParameter("radius_factor", 0.0005f);
-	m_shader.setParameter("radius_gradient", 100.f);
+	m_shader.setParameter("color_size", 0.0005f);
+	m_shader.setParameter("fade_out_size", 100.f);
 
 	//Up;
 	//Up;
@@ -55,7 +54,7 @@ void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_timer += frameTime;
 		sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 		m_shader.setParameter("position", position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - position.y + screen.top);
-		m_shader.setParameter("time", m_timer / m_timerMax);
+		m_shader.setParameter("time", 2.f * m_timer / m_timerMax);
 		m_shader.setParameter("radius", (m_timer / m_timerMax) * 2000.f);
 		if (m_timer > m_timerMax)
 		{
@@ -69,7 +68,7 @@ void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_timerEnd += frameTime;
 		sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 		m_shader.setParameter("position", position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - position.y + screen.top);
-		m_shader.setParameter("time", m_timer / m_timerMax);
+		m_shader.setParameter("time", 2.f * m_timer / m_timerMax);
 		m_shader.setParameter("end_alpha", 1.f - (m_timerEnd / m_timerMax));
 		if (m_timerEnd > m_timerMax)
 		{

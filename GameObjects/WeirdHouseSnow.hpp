@@ -8,12 +8,10 @@ class WeirdHouseSnow : public SimpleObject, public AGameObject<GameObjectType::W
 {
 public:
 	WeirdHouseSnow(void);
-	virtual ~WeirdHouseSnow(void);
+	virtual ~WeirdHouseSnow(void) = default;
 
 	virtual void setPosition(sf::Vector2f const & position);
 
-	virtual void update(sf::Time frametime);
-	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 };
 
 #endif

@@ -126,6 +126,14 @@ JungleABiome::JungleABiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	for (std::size_t i = 830; i < 970; i += m_generator.randomInt(10u, 30u))
+	{
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
+		else
+			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
+	}
+
 	// Define game objects
 	m_instances[2] = MAP_DEMO_JUNGLE_A_CEDRIC_OMP;
 	m_instances[120] = MAP_DEMO_JUNGLE_A_TRAIL_OMP;

@@ -8,14 +8,10 @@ class EngineSnow : public SimpleObject, public AGameObject<GameObjectType::Engin
 {
 public:
 	EngineSnow(void);
-	virtual ~EngineSnow(void);
+	virtual ~EngineSnow(void) = default;
 
 	virtual void setPosition(sf::Vector2f const & position);
 
-	virtual void update(sf::Time frametime);
-	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
-
-private:
 };
 
 #endif

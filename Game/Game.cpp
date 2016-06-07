@@ -5,6 +5,7 @@
 #include "GenerativeLayer.hpp"
 #include "PhysicsEngine.hpp"
 #include "ChallengeManager.hpp"
+#include "Challenges.hpp"
 #include "CameraMovement.hpp"
 
 // Biomes
@@ -48,6 +49,8 @@
 
 //Npc
 //Script AddNpc Include
+#include "ForestSpirit2Npc.hpp"
+#include "ForestSpirit1Npc.hpp"
 #include "BirdBlueNpc.hpp"
 #include "StrangerSnowNpc.hpp"
 #include "StrangerGirlSnowNpc.hpp"
@@ -267,7 +270,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<JumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::DoubleJumpNanoRobot:
@@ -275,7 +278,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::GroundTransformNanoRobot:
@@ -283,7 +286,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::SlowFallNanoRobot:
@@ -291,7 +294,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<SlowFallNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::WaterNanoRobot:
@@ -299,7 +302,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<WaterNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::RepairShipNanoRobot:
@@ -307,7 +310,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairShipNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr);
+				m_octo->giveNanoRobot(ptr, true);
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
@@ -315,17 +318,8 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr));
+				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
 			}
-			break;
-		case GameObjectType::Tent:
-			gameObjectCast<Tent>(gameObject)->startBalle();
-			break;
-		case GameObjectType::Concert:
-			gameObjectCast<Concert>(gameObject)->startBalle();
-			break;
-		case GameObjectType::Bouibouik:
-			gameObjectCast<Bouibouik>(gameObject)->startBalle();
 			break;
 		case GameObjectType::CedricNpc:
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
@@ -347,6 +341,12 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::ForestSpirit2Npc:
+			gameObjectCast<ForestSpirit2Npc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::ForestSpirit1Npc:
+			gameObjectCast<ForestSpirit1Npc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::BirdBlueNpc:
 			gameObjectCast<BirdBlueNpc>(gameObject)->collideOctoEvent(octo);
 			break;

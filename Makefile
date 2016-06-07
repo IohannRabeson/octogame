@@ -48,6 +48,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/InputListener.cpp					\
 				Game/KonamiCode.cpp						\
 				Game/ChallengeManager.cpp				\
+				Game/Challenges.cpp						\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\
@@ -105,7 +106,12 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/StrangerGirlSnowNpc.cpp			\
 				Npcs/StrangerSnowNpc.cpp				\
 				Npcs/BirdBlueNpc.cpp					\
+				Npcs/DisappearNpc.cpp					\
+				Npcs/ForestSpirit1Npc.cpp				\
+				Npcs/ForestSpirit2Npc.cpp				\
 #Script AddNpc
+
+
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\

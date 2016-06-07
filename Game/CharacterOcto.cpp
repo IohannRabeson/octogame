@@ -133,6 +133,8 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::ForestSpirit2Npc)
+		| static_cast<std::size_t>(GameObjectType::ForestSpirit1Npc)
 		| static_cast<std::size_t>(GameObjectType::BirdBlueNpc)
 		| static_cast<std::size_t>(GameObjectType::StrangerSnowNpc)
 		| static_cast<std::size_t>(GameObjectType::StrangerGirlSnowNpc)
@@ -789,14 +791,16 @@ void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 	m_eventBox->update();
 }
 
-void	CharacterOcto::giveNanoRobot(NanoRobot * robot)
+void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+	startKonamiCode(firstTime);
 }
 
-void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot)
+void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+	startKonamiCode(firstTime);
 	m_repairNanoRobot = robot;
 }
 
