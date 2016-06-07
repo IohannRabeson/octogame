@@ -148,7 +148,7 @@ DesertABiome::DesertABiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::IceD);
-	m_destinations.push_back(Level::DesertB);
+	m_destinations.push_back(Level::DesertC);
 }
 
 void			DesertABiome::setup(std::size_t seed)

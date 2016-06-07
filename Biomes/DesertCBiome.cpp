@@ -18,8 +18,8 @@ DesertCBiome::DesertCBiome() :
 	m_octoStartPosition(123.f * 16.f, -2900.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(255, 245, 217),
-	m_tileEndColor(255, 252, 181),
+	m_tileStartColor(68, 64, 126),
+	m_tileEndColor(38, 34, 96),
 	m_waterLevel(10700.f),
 	m_waterColor(240, 110, 110, 180),
 	m_destinationIndex(0u),
@@ -146,8 +146,8 @@ DesertCBiome::DesertCBiome() :
 	m_treePos = {28, 35, 42, 50, 56, 61, 139, 147, 152, 167, 181, 194, 214};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::JungleA);
 	m_destinations.push_back(Level::DesertB);
+	m_destinations.push_back(Level::DesertA);
 }
 
 void			DesertCBiome::setup(std::size_t seed)
@@ -254,7 +254,7 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f    , 100.f  , 101.f   , 140.f   , 150.f   , 244.f   , 245.f, 255.f, 253.f   , 275.f   , 310.f   , 399.f   , 400.f  , 500.f   };
-		std::vector<float> pointY = {0.f + n, -1.f + n, -3.f + n, -3.f + n, -2.f - n, -2.f - n, 6.8f , 6.8f , -2.f - n, -2.f - n, -3.f + n, -3.f + n, 0.f + n, 0.f + n};
+		std::vector<float> pointY = {0.f + n, -1.f + n, -3.f + n, -3.f + n, -2.f - n, -2.f - n, 6.7f , 6.7f , -2.f - n, -2.f - n, -3.f + n, -3.f + n, 0.f + n, 0.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -272,9 +272,48 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DesertCBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = getRockColor();
-	sf::Color secondColorEnd = getRockColor();
-	float start1 = 70000.f / static_cast<float>(m_mapSize.y);
+	sf::Color secondColorStart(255, 245, 217);
+	sf::Color secondColorEnd(255, 252, 181);
+	float start1 = -50000.f / static_cast<float>(m_mapSize.y);
+	float start2 = -30000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = 80000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 90000.f / static_cast<float>(m_mapSize.y);
+	float end1 = 100000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 120000.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
+	{
+		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > start1 && y <= start2)
+		{
+			float ratio = (y - (start1)) / (start2 - start1);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
+		}
+		else if (y > start2 && y <= middle1)
+		{
+			float ratio = (y - (start2)) / (middle1 - start2);
+			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
+		}
+		else if (y > middle1 && y <= middle2)
+		{
+			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
+		}
+		else if (y >= middle2 && y < end1)
+		{
+			float ratio = (y - (middle2)) / (end1 - middle2);
+			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
+		}
+		else if (y >= end1 && y < end2)
+		{
+			float ratio = (y - (end1)) / (end2 - end1);
+			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
+		}
+		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
+	};
+
+	/*
+	sf::Color secondColorStart(255, 245, 217);
+	sf::Color secondColorEnd(255, 252, 181);
+	float start1 = 0000.f / static_cast<float>(m_mapSize.y);
 	float start2 = 100000.f / static_cast<float>(m_mapSize.y);
 	float middle1 = 120000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, start1, start2, middle1](Noise & noise, float x, float y, float z)
@@ -294,6 +333,7 @@ Map::TileColorGenerator DesertCBiome::getTileColorGenerator()
 			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
+	*/
 }
 
 sf::Color		DesertCBiome::getParticleColorGround()
