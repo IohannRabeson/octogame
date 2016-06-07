@@ -324,6 +324,12 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 		case GameObjectType::CedricNpc:
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
+		case GameObjectType::FannyNpc:
+			gameObjectCast<FannyNpc>(gameObject)->startBalle();
+			break;
+		case GameObjectType::WellKeeperNpc:
+			gameObjectCast<WellKeeperNpc>(gameObject)->stopBalle();
+			break;
 		default:
 			break;
 	}

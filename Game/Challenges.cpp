@@ -78,7 +78,7 @@ void ChallengeManager::AChallenge::updateChallenge(sf::Time frametime)
 	else // We leaved the area so the challenge is stopping
 	{
 		m_timer = std::min(m_timer, m_duration);
-		m_timer -= frametime * 10.f;
+		m_timer -= frametime;
 		if (m_timer < sf::Time::Zero)
 		{
 			m_timer = sf::Time::Zero;
@@ -176,9 +176,9 @@ void ChallengeDuplicate::updateShader(sf::Time frametime)
 
 // Persistence
 ChallengePersistence::ChallengePersistence(void) :
-	AChallenge(PERSISTENCE_FRAG, 6.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Desert)
+	AChallenge(PERSISTENCE_FRAG, 2.f, sf::FloatRect(sf::Vector2f(130.f * 16.f, -130.f * 16.f), sf::Vector2f(220.f * 16.f, 750.f * 16.f)), ABiome::Type::Desert)
 {
-	m_shader.setParameter("intensity", 1.f);
+	m_shader.setParameter("intensity", 0.5f);
 }
 
 void ChallengePersistence::updateShader(sf::Time)

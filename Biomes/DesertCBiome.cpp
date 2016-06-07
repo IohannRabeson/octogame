@@ -15,7 +15,7 @@ DesertCBiome::DesertCBiome() :
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(600u, 180u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(238.f * 16.f, -1800.f),
+	m_octoStartPosition(123.f * 16.f, -2900.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
@@ -134,11 +134,11 @@ DesertCBiome::DesertCBiome() :
 	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(9800, -4950.f);
 
-	m_gameObjects[20] = GameObjectType::Portal;
-	m_gameObjects[235] = GameObjectType::Portal;
+	m_gameObjects[120] = GameObjectType::Portal;
+	m_gameObjects[240] = GameObjectType::FannyNpc;
+	m_gameObjects[260] = GameObjectType::Bouibouik;
 	m_instances[150] = MAP_DESERT_C_TRAIL_OMP;
 	m_instances[350] = MAP_DESERT_C_TREE_OMP;
-	m_gameObjects[320] = GameObjectType::Bouibouik;
 
 	m_interestPointPosX = 500;
 
@@ -148,7 +148,6 @@ DesertCBiome::DesertCBiome() :
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::JungleA);
 	m_destinations.push_back(Level::DesertB);
-	m_destinations.push_back(Level::Rewards);
 }
 
 void			DesertCBiome::setup(std::size_t seed)
@@ -254,8 +253,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f    , 130.f   , 150.f   , 244.f   , 245.f, 255.f, 253.f   , 350.f   , 370.f  , 500.f   };
-		std::vector<float> pointY = {0.f + n, 0.f + n , -2.f - n, -2.f - n, 6.8f , 6.8f , -2.f - n, -2.f - n, 0.f + n,  0.f + n};
+		std::vector<float> pointX = {0.f    , 100.f  , 101.f   , 140.f   , 150.f   , 244.f   , 245.f, 255.f, 253.f   , 275.f   , 310.f   , 399.f   , 400.f  , 500.f   };
+		std::vector<float> pointY = {0.f + n, -1.f + n, -3.f + n, -3.f + n, -2.f - n, -2.f - n, 6.8f , 6.8f , -2.f - n, -2.f - n, -3.f + n, -3.f + n, 0.f + n, 0.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
