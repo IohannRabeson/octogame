@@ -83,6 +83,7 @@ public:
 	void					collideSpaceShip(SpaceShip * spaceShip);
 	void					usePortal(Portal & portal);
 	void					startKonamiCode(bool canStart);
+	void					startDrinkPotion(void);
 	bool					isFalling(void);
 	bool					isRaising(void);
 	bool					isInAir(void);

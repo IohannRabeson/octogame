@@ -322,6 +322,8 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::CedricNpc:
+			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable())
+				octo->startDrinkPotion();
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
 		default:
