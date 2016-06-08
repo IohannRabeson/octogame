@@ -18,8 +18,8 @@ DesertCBiome::DesertCBiome() :
 	m_octoStartPosition(123.f * 16.f, -2900.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(68, 64, 126),
-	m_tileEndColor(38, 34, 96),
+	m_tileStartColor(255, 245, 217),
+	m_tileEndColor(255, 252, 181),
 	m_waterLevel(10700.f),
 	m_waterColor(240, 110, 110, 180),
 	m_destinationIndex(0u),
@@ -272,15 +272,17 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DesertCBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart(255, 245, 217);
-	sf::Color secondColorEnd(255, 252, 181);
-	float start1 = -50000.f / static_cast<float>(m_mapSize.y);
-	float start2 = -30000.f / static_cast<float>(m_mapSize.y);
+	sf::Color secondColorStart = getRockColor();
+	sf::Color secondColorEnd = getRockColor();
+	sf::Color thirdColorStart(68, 64, 126);
+	sf::Color thirdColorEnd(38, 34, 96);
+	float start1 = 60000.f / static_cast<float>(m_mapSize.y);
+	float start2 = 70000.f / static_cast<float>(m_mapSize.y);
 	float middle1 = 80000.f / static_cast<float>(m_mapSize.y);
 	float middle2 = 90000.f / static_cast<float>(m_mapSize.y);
 	float end1 = 100000.f / static_cast<float>(m_mapSize.y);
-	float end2 = 120000.f / static_cast<float>(m_mapSize.y);
-	return [this, secondColorStart, secondColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
+	float end2 = 200000.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
 		if (y > start1 && y <= start2)
@@ -300,40 +302,15 @@ Map::TileColorGenerator DesertCBiome::getTileColorGenerator()
 		else if (y >= middle2 && y < end1)
 		{
 			float ratio = (y - (middle2)) / (end1 - middle2);
-			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
+			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, thirdColorStart, ratio), secondColorEnd, transition);
 		}
 		else if (y >= end1 && y < end2)
 		{
 			float ratio = (y - (end1)) / (end2 - end1);
-			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
+			return octo::linearInterpolation(thirdColorStart, octo::linearInterpolation(secondColorEnd, thirdColorEnd, ratio), transition);
 		}
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
-
-	/*
-	sf::Color secondColorStart(255, 245, 217);
-	sf::Color secondColorEnd(255, 252, 181);
-	float start1 = 0000.f / static_cast<float>(m_mapSize.y);
-	float start2 = 100000.f / static_cast<float>(m_mapSize.y);
-	float middle1 = 120000.f / static_cast<float>(m_mapSize.y);
-	return [this, secondColorStart, secondColorEnd, start1, start2, middle1](Noise & noise, float x, float y, float z)
-	{
-		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		if (y > start1 && y <= start2)
-		{
-			float ratio = (y - (start1)) / (start2 - start1);
-			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
-		}
-		else if (y > start2 && y <= middle1)
-		{
-			float ratio = (y - (start2)) / (middle1 - start2);
-			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
-		}
-		else if (y > middle1)
-			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
-		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
-	};
-	*/
 }
 
 sf::Color		DesertCBiome::getParticleColorGround()
