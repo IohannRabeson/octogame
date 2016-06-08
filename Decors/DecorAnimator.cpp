@@ -105,7 +105,6 @@ bool DecorAnimator::computeState(float frameTime)
 		}
 		case State::Sleep:
 		{
-			m_animation = m_finalAnimation;
 			break;
 		}
 		case State::Stop:
