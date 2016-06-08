@@ -12,7 +12,7 @@
 
 sf::Vector2f NanoRobot::m_laserConvergence;
 
-NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, float multiplier) :
+NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, InputListener::OctoKeys key, float multiplier) :
 	m_swarm(1),
 	m_uniformPopulation(1234u, &octo::Application::getResourceManager().getPalette(FROM_SEA1_OPA),
 						1.2f, 2.f, 6.f, 10.f, 32.f, 50.f,
@@ -40,7 +40,9 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_engine(std::time(0)),
 	m_soundDistri(0u, 2u),
 	m_popUp(false),
-	m_popUpTimerMax(sf::seconds(5.f))
+	m_popUpTimerMax(sf::seconds(5.f)),
+	m_stopSpeakingKey(key),
+	m_stopSpeakinKeyPress(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	InputListener::addInputListener();
@@ -272,6 +274,8 @@ void NanoRobot::updatePopUpInfo(sf::Time frametime)
 
 bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 {
+	if (m_stopSpeakingKey == key)
+		m_stopSpeakinKeyPress = true;
 	switch (key)
 	{
 		case OctoKeys::Infos:
@@ -283,6 +287,7 @@ bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 				m_infoBubble.setActive(true);
 				m_infoSetup = true;
 			}
+			break;
 		}
 		default:
 			break;
@@ -302,6 +307,7 @@ bool NanoRobot::onInputReleased(InputListener::OctoKeys const & key)
 				m_infoBubble.setActive(false);
 				m_infoSetup = false;
 			}
+			break;
 		}
 		default:
 			break;
@@ -428,7 +434,7 @@ void NanoRobot::update(sf::Time frametime)
 	if (m_isSpeaking)
 	{
 		m_timer += frametime;
-		if (m_timer > m_timerMax)
+		if (m_timer > m_timerMax && m_stopSpeakinKeyPress)
 		{
 			m_isSpeaking = false;
 			m_state = FollowOcto;

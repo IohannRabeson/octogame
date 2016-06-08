@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 WaterNanoRobot::WaterNanoRobot(void) :
-	NanoRobot(sf::Vector2f(11450, 1885.f), NANO_JUMP_WATER_OSS, 3, 963021512, sf::Vector2f(0.f, -19.f), 5.f)
+	NanoRobot(sf::Vector2f(11450, 1885.f), NANO_JUMP_WATER_OSS, 3, 963021512, sf::Vector2f(0.f, -19.f), InputListener::OctoKeys::Up, 5.f)
 {
 	setup(this);
 
