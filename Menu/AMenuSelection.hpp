@@ -30,7 +30,7 @@ public:
 	void				setBubbleType(ABubble::Type type);
 	void				setIndexCursor(std::size_t index);
 
-	std::size_t			getIndexCursor(void);
+	std::size_t			getIndexCursor(void) const;
 	void				setIsFontSelect(bool isFontSelect);
 
 private:
