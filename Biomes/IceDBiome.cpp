@@ -140,6 +140,7 @@ IceDBiome::IceDBiome() :
 	m_gameObjects[250] = GameObjectType::EngineSnow;
 	m_gameObjects[360] = GameObjectType::StrangerSnowNpc;
 	m_gameObjects[340] = GameObjectType::BirdBlueNpc;
+	m_gameObjects[396] = GameObjectType::Pedestal;
 	m_gameObjects[400] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
 	m_gameObjects[510] = GameObjectType::BirdBlueNpc;

@@ -49,6 +49,7 @@
 
 //Npc
 //Script AddNpc Include
+#include "Pedestal.hpp"
 #include "ForestSpirit2Npc.hpp"
 #include "ForestSpirit1Npc.hpp"
 #include "BirdBlueNpc.hpp"
@@ -351,6 +352,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::Pedestal:
+			gameObjectCast<Pedestal>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::ForestSpirit2Npc:
 			gameObjectCast<ForestSpirit2Npc>(gameObject)->collideOctoEvent(octo);
 			break;
