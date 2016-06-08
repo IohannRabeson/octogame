@@ -7,8 +7,6 @@
 # include <SFML/System/Time.hpp>
 # include <SFML/Graphics.hpp>
 
-# include <iostream>
-
 class CharacterOcto;
 
 class CameraMovement : public InputListener
