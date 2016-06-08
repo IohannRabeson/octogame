@@ -4,17 +4,12 @@
 #include <ctime>
 
 MusicSystem::MusicSystem() :
-	m_engine(std::time(0)),
-	m_creationTimeDistri(0.4f, 0.6f),
-	m_lifeTimeDistri(1.5f, 1.5f),
-	m_boolDistri(0.5f),
 	m_timer(sf::Time::Zero),
 	m_nextCreation(sf::Time::Zero),
 	m_color(sf::Color::Black),
 	m_canEmit(false)
 {
-	std::random_device rd;
-	m_engine.seed(rd());
+	m_generator.setSeed("random");
 	static float const		Size = 4.f;
 	MusicSystem::Prototype	prototype;
 
@@ -75,11 +70,11 @@ void	MusicSystem::update(sf::Time frameTime)
 		{
 			emplace(m_color, m_emitter, sf::Vector2f(1.f, 1.f), 0,
 					sf::Time::Zero,
-					sf::seconds(m_lifeTimeDistri(m_engine)),
-					m_boolDistri(m_engine));
+					sf::seconds(m_generator.randomFloat(1.3f, 1.5f)),
+					m_generator.randomBool(0.5f));
 		}
 		m_timer -= m_nextCreation;
-		m_nextCreation = sf::seconds(m_creationTimeDistri(m_engine));
+		m_nextCreation = sf::seconds(m_generator.randomFloat(0.4f, 0.6f));
 	}
 }
 

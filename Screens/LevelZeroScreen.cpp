@@ -20,6 +20,7 @@ LevelZeroScreen::LevelZeroScreen(void) :
 	m_isSoundPlayed(false),
 	m_isSoundExplodePlayed(false)
 {
+	m_generator.setSeed("random");
 }
 
 void	LevelZeroScreen::start()
