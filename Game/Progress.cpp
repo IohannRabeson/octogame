@@ -451,7 +451,14 @@ void		Progress::setGroundInfos(std::size_t current, std::size_t max, std::wstrin
 
 std::wstring const &Progress::getGroundInfos(void)
 {
+	if (!m_data.isGroundInfos)
+		m_groundInfos = L"";
 	return m_groundInfos;
+}
+
+void		Progress::setEnableGroundInfos(bool isEnable)
+{
+	m_data.isGroundInfos = isEnable;
 }
 
 void		Progress::setIsOctoOnInstance(bool isInstance)

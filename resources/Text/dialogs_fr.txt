@@ -18,6 +18,7 @@ options_video_vsync=Synchro Verticale
 options_language=Langues
 options_language_french=Français
 options_language_english=English
+options_help_infos=Aide
 credits_programming=Développement
 credits_graphics=Graphiques
 credits_sounds=Musiques/Sons
