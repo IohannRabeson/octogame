@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 DoubleJumpNanoRobot::DoubleJumpNanoRobot(sf::Vector2f const & position) :
-	NanoRobot(position, NANO_DOUBLE_JUMP_OSS, 3, 18524, sf::Vector2f(0.f, -22.f), 2.f)
+	NanoRobot(position, NANO_DOUBLE_JUMP_OSS, 3, 18524, sf::Vector2f(0.f, -22.f), InputListener::OctoKeys::Jump, 2.f)
 {
 	setup(this);
 

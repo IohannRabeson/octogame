@@ -52,7 +52,7 @@ public:
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
-	NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, float multiplier = 0.f);
+	NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, InputListener::OctoKeys key, float multiplier = 0.f);
 
 	std::unique_ptr<BubbleText> const & getCurrentText(void) const { return m_texts[m_textIndex]; }
 	void setInfoText(std::wstring const & infoText) { m_infoText = infoText; }
@@ -119,6 +119,8 @@ private:
 	bool										m_popUp;
 	sf::Time									m_popUpTimer;
 	sf::Time									m_popUpTimerMax;
+	InputListener::OctoKeys const				m_stopSpeakingKey;
+	bool										m_stopSpeakinKeyPress;
 };
 
 #endif

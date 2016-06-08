@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 JumpNanoRobot::JumpNanoRobot(sf::Vector2f const & position) :
-	NanoRobot(position, NANO_JUMP_OSS, 4, 654, sf::Vector2f(0.f, -24.f), 1.f)
+	NanoRobot(position, NANO_JUMP_OSS, 4, 654, sf::Vector2f(0.f, -24.f), InputListener::OctoKeys::Jump, 1.f)
 {
 	setup(this);
 
