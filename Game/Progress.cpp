@@ -471,6 +471,16 @@ bool		Progress::isOctoOnInstance(void)
 	return m_isOctoOnInstance;
 }
 
+void		Progress::setMapHighlight(bool isHighlight)
+{
+	m_isHighLight = isHighlight;
+}
+
+bool		Progress::isMapHighlight(void)
+{
+	return m_isHighLight;
+}
+
 void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)
 {
 	std::stringstream ss(s);

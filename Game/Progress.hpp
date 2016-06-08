@@ -99,6 +99,8 @@ public:
 	std::wstring const & getGroundInfos(void);
 	void				setEnableGroundInfos(bool isEnable);
 	bool				isEnableGroundInfos(void) const { return m_data.isGroundInfos; }
+	void				setMapHighlight(bool isHighlight);
+	bool				isMapHighlight(void);
 	void				setIsOctoOnInstance(bool isInstance);
 	bool				isOctoOnInstance(void);
 
@@ -191,6 +193,7 @@ private:
 	bool											m_isDemo;
 	std::wstring									m_groundInfos;
 	bool											m_isOctoOnInstance;
+	bool											m_isHighLight;
 };
 
 #endif
