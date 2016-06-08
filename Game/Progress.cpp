@@ -451,8 +451,6 @@ void		Progress::setGroundInfos(std::size_t current, std::size_t max, std::wstrin
 
 std::wstring const &Progress::getGroundInfos(void)
 {
-	if (!m_data.isGroundInfos)
-		m_groundInfos = L"";
 	return m_groundInfos;
 }
 
@@ -478,7 +476,9 @@ void		Progress::setMapHighlight(bool isHighlight)
 
 bool		Progress::isMapHighlight(void)
 {
-	return m_isHighLight;
+	if (m_data.isGroundInfos)
+		return m_isHighLight;
+	return false;
 }
 
 void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)

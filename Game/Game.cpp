@@ -525,17 +525,14 @@ void	Game::updateBubbleGround(sf::Time frameTime)
 	Progress & progress = Progress::getInstance();
 
 	m_timerGroundBubble += frameTime;
-	if (m_timerGroundBubble <= m_timerGroundBubbleMax && progress.isOctoOnInstance())
+	if (m_timerGroundBubble <= m_timerGroundBubbleMax && progress.isOctoOnInstance() && progress.isMapHighlight())
 	{
-		if (progress.isMapHighlight())
-		{
-			std::wstring const & groundInfos = progress.getGroundInfos();
-			m_groundBubble.setup(groundInfos, m_colorGround, 20u, 1000.f);
-			m_groundBubble.setPosition(m_octo->getPosition() + sf::Vector2f(0.f, -100.f));
-			m_groundBubble.update(frameTime);
-			//After update to avoid first update
-			m_groundBubble.setType(ABubble::Type::Think);
-		}
+		std::wstring const & groundInfos = progress.getGroundInfos();
+		m_groundBubble.setup(groundInfos, m_colorGround, 20u, 1000.f);
+		m_groundBubble.setPosition(m_octo->getPosition() + sf::Vector2f(0.f, -100.f));
+		m_groundBubble.update(frameTime);
+		//After update to avoid first update
+		m_groundBubble.setType(ABubble::Type::Think);
 	}
 	else
 		m_groundBubble.setType(ABubble::Type::None);
