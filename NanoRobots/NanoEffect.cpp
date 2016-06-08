@@ -99,7 +99,8 @@ void NanoEffect::update(sf::Time frameTime)
 			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 			postEffect.enableEffect(m_shaderIndex, true);
 			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-			m_shader.setParameter("position", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
+			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
+			m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
 			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
 			m_shader.setParameter("radius", 120.f);
 			m_shader.setParameter("alpha", 1.f);
@@ -112,7 +113,8 @@ void NanoEffect::update(sf::Time frameTime)
 			m_transferTimer += frameTime;
 			float transition = std::min(m_transferTimer / m_transferTimerMax, 1.f);
 			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-			m_shader.setParameter("position", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
+			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
+			m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
 			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
 			m_shader.setParameter("radius", octo::linearInterpolation(120.f, 1500.f, transition));
 			m_shader.setParameter("color_size", octo::linearInterpolation(0.005f, 0.001f, transition));
@@ -129,7 +131,8 @@ void NanoEffect::update(sf::Time frameTime)
 		{
 			m_transferTimer += frameTime;
 			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-			m_shader.setParameter("position", m_position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - m_position.y + screen.top);
+			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
+			m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
 			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
 			m_shader.setParameter("alpha", 1.f - std::min(1.f, m_transferTimer / m_transferTimerMax));
 			if (m_transferTimer >= m_transferTimerMax)
