@@ -134,6 +134,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::Pedestal)
 		| static_cast<std::size_t>(GameObjectType::ForestSpirit2Npc)
 		| static_cast<std::size_t>(GameObjectType::ForestSpirit1Npc)
 		| static_cast<std::size_t>(GameObjectType::BirdBlueNpc)

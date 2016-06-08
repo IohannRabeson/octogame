@@ -67,7 +67,9 @@ enum class GameObjectType : std::size_t
 	BrayouNpc					= (1 << 15) + 34,
 	ForestSpirit1Npc				= (1 << 15) + 35,
 	ForestSpirit2Npc				= (1 << 15) + 36,
+	Pedestal				= (1 << 15) + 37,
 //Script AddNpc
+
 
 
 };
