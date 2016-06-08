@@ -13,20 +13,22 @@ DesertCBiome::DesertCBiome() :
 	m_name("Desert B"),
 	m_id(Level::DesertC),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(500u, 180u)),
+	m_mapSize(sf::Vector2u(600u, 180u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(250.f * 16.f, -1800.f),
+	m_octoStartPosition(123.f * 16.f, -2900.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
-	m_waterLevel(3000.f),
+	m_waterLevel(10700.f),
 	m_waterColor(240, 110, 110, 180),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(255,156,103),
+	//m_skyDayColor(255,156,103),
+	//m_skyNightColor(8, 20, 26),
+	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(8, 20, 26),
 	m_nightLightColor(0, 197, 255, 130),
 	m_SunsetLightColor(238, 173, 181, 130),
@@ -37,7 +39,7 @@ DesertCBiome::DesertCBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(10u, 20u),
-	m_treeCount(13u, 13u),
+	m_treeCount(1u, 1u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
@@ -51,7 +53,7 @@ DesertCBiome::DesertCBiome() :
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
-	m_canCreateTree(true),
+	m_canCreateTree(false),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(false),
@@ -64,21 +66,21 @@ DesertCBiome::DesertCBiome() :
 	m_canCreateRainbow(false),
 	m_type(ABiome::Type::Desert),
 
-	m_rockSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 400.f)),
-	m_rockPartCount(50.f, 80.f),
+	m_rockSize(sf::Vector2f(15.f, 70.f), sf::Vector2f(30.f, 300.f)),
+	m_rockPartCount(3.f, 5.f),
 	m_rockColor(240, 110, 110),
 
-	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(15.f, 50.f), sf::Vector2f(30.f, 80.f)),
+	m_treeDepth(10u, 10u),
+	m_treeSize(sf::Vector2f(50.f, 150.f), sf::Vector2f(50.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
-	m_treeBeatMouvement(0.1f),
+	m_treeBeatMouvement(0.03f),
 	m_leafSize(sf::Vector2f(80.f, 80.f), sf::Vector2f(150.f, 150.f)),
 	m_leafColor(46, 133, 84),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
-	m_mushroomColor(77, 142, 126),
+	m_mushroomColor(100, 190, 226),
 	m_mushroomLifeTime(sf::seconds(10), sf::seconds(30)),
 
 	m_crystalSize(sf::Vector2f(40.f, 80.f), sf::Vector2f(70.f, 150.f)),
@@ -132,24 +134,20 @@ DesertCBiome::DesertCBiome() :
 	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(9800, -4950.f);
 
-	m_gameObjects[20] = GameObjectType::Portal;
-//	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
-//	m_gameObjects[90] = GameObjectType::Portal;
-//	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
-//	m_instances[240] = MAP_DESERT_B_TRAIL_A_OMP;
-//	m_instances[290] = MAP_DESERT_B_TRAIL_B_OMP;
-//	m_instances[415] = MAP_DESERT_B_TRAIL_C_OMP;
-//	m_instances[535] = MAP_DESERT_B_TRAIL_D_OMP;
+	m_gameObjects[120] = GameObjectType::Portal;
+	m_gameObjects[240] = GameObjectType::FannyNpc;
+	m_gameObjects[260] = GameObjectType::Bouibouik;
+	m_instances[150] = MAP_DESERT_C_TRAIL_OMP;
+	m_instances[350] = MAP_DESERT_C_TREE_OMP;
 
 	m_interestPointPosX = 500;
 
+	//TODO : TO remove
 	m_treePos = {28, 35, 42, 50, 56, 61, 139, 147, 152, 167, 181, 194, 214};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::DesertC);
 	m_destinations.push_back(Level::DesertB);
-	m_destinations.push_back(Level::JungleA);
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::DesertA);
 }
 
 void			DesertCBiome::setup(std::size_t seed)
@@ -255,8 +253,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f    , 130.f   , 150.f   , 350.f   , 330.f  , 500.f   };
-		std::vector<float> pointY = {2.f + n, 2.f + n , -2.f - n, -2.f - n, 2.f + n,  2.f + n};
+		std::vector<float> pointX = {0.f    , 100.f  , 101.f   , 140.f   , 150.f   , 244.f   , 245.f, 255.f, 253.f   , 275.f   , 310.f   , 399.f   , 400.f  , 500.f   };
+		std::vector<float> pointY = {0.f + n, -1.f + n, -3.f + n, -3.f + n, -2.f - n, -2.f - n, 6.7f , 6.7f , -2.f - n, -2.f - n, -3.f + n, -3.f + n, 0.f + n, 0.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -274,9 +272,43 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DesertCBiome::getTileColorGenerator()
 {
-	return [this](Noise & noise, float x, float y, float z)
+	sf::Color secondColorStart = getRockColor();
+	sf::Color secondColorEnd = getRockColor();
+	sf::Color thirdColorStart(68, 64, 126);
+	sf::Color thirdColorEnd(38, 34, 96);
+	float start1 = 60000.f / static_cast<float>(m_mapSize.y);
+	float start2 = 70000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = 80000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 90000.f / static_cast<float>(m_mapSize.y);
+	float end1 = 100000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 200000.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > start1 && y <= start2)
+		{
+			float ratio = (y - (start1)) / (start2 - start1);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
+		}
+		else if (y > start2 && y <= middle1)
+		{
+			float ratio = (y - (start2)) / (middle1 - start2);
+			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
+		}
+		else if (y > middle1 && y <= middle2)
+		{
+			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
+		}
+		else if (y >= middle2 && y < end1)
+		{
+			float ratio = (y - (middle2)) / (end1 - middle2);
+			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, thirdColorStart, ratio), secondColorEnd, transition);
+		}
+		else if (y >= end1 && y < end2)
+		{
+			float ratio = (y - (end1)) / (end2 - end1);
+			return octo::linearInterpolation(thirdColorStart, octo::linearInterpolation(secondColorEnd, thirdColorEnd, ratio), transition);
+		}
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }

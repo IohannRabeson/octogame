@@ -38,7 +38,7 @@ MusicManager::MusicManager() :
 
 	if (!Progress::getInstance().isDemo())
 	{
-		m_musicLevel.resize(8);
+		m_musicLevel.resize(9);
 		m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
 		m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
 		m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
@@ -49,8 +49,9 @@ MusicManager::MusicManager() :
 		m_musicLevel[5] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
 		m_musicLevel[6] = AreaMusic(Level::IceC, ICE_MUSIC_OGG, sf::FloatRect());
 		m_musicLevel[7] = AreaMusic(Level::IceD, ICE_MUSIC_D_OGG, sf::FloatRect());
+		m_musicLevel[8] = AreaMusic(Level::DesertC, MENU_OPUS_II_OGG, sf::FloatRect());
 
-		m_music.resize(6);
+		m_music.resize(7);
 		// Montagne
 		m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
 				sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
@@ -69,6 +70,9 @@ MusicManager::MusicManager() :
 		//run
 		m_music[5] = AreaMusic(Level::WaterA, MENU_OPUS_I_OGG,
 				sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
+		//desert c balle
+		m_music[6] = AreaMusic(Level::DesertC, MENU_OPUS_II_REVERSE_OGG,
+				sf::FloatRect(sf::Vector2f(130.f * 16.f, -130.f * 16.f), sf::Vector2f(220.f * 16.f, 750.f * 16.f)));
 	}
 	else
 	{

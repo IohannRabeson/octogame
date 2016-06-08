@@ -128,8 +128,6 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	{
 		m_count = m_countLeaf = 0u;
 		m_setLeaf = m_isLeaf;
-		if (!m_onInstance)
-			createTrunk(size, center, m_color, builder);
 	}
 
 	// Get current angle
@@ -193,7 +191,6 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	if (m_setLeaf == true && m_isLeaf == true)
 	{
 		m_setLeaf = false;
-		//createLeaf(m_leaf, m_leafColor, 5, builder);
 		createLeaf(m_octogonLeaf, m_leafColor, builder);
 	}
 
@@ -206,6 +203,8 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	octo::rotateVector(upTriangle, cosRight, sinRight);
 	builder.createTriangle(root.rightUp + center, root.leftUp + center, upTriangle + center + root.rightUp, color);
 
+	if (currentDepth == 0u && !m_onInstance)
+		createTrunk(size, center, m_color, builder);
 }
 
 void Tree::setup(ABiome& biome)

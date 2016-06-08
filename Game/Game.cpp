@@ -324,6 +324,12 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 		case GameObjectType::CedricNpc:
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
+		case GameObjectType::FannyNpc:
+			gameObjectCast<FannyNpc>(gameObject)->startBalle();
+			break;
+		case GameObjectType::WellKeeperNpc:
+			gameObjectCast<WellKeeperNpc>(gameObject)->stopBalle();
+			break;
 		default:
 			break;
 	}
@@ -486,8 +492,6 @@ void Game::moveMap(sf::Time frameTime)
 		{
 			if (m_keyGroundRight)
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-			else if (m_keyGroundLeft)
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
 			else
 				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
 			if (m_soundGeneration == nullptr)
