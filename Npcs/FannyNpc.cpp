@@ -2,18 +2,20 @@
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
+#include "ChallengeManager.hpp"
+#include "Progress.hpp"
 
 FannyNpc::FannyNpc(void) :
 	ANpc(FANNY_OSS)
 {
-	setSize(sf::Vector2f(1.f, 75.f));
+	setSize(sf::Vector2f(260.f, 75.f));
 	setOrigin(sf::Vector2f(90.f, 93.f));
 	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void FannyNpc::setup(void)
@@ -62,6 +64,12 @@ void FannyNpc::setupMachine(void)
 
 	setMachine(machine);
 	setNextEvent(Idle);
+}
+
+void FannyNpc::startBalle(void)
+{
+	if (!Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Persistence))
+		ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Persistence).start();
 }
 
 void FannyNpc::update(sf::Time frametime)

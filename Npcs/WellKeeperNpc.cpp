@@ -3,6 +3,7 @@
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
 #include "Progress.hpp"
+#include "ChallengeManager.hpp"
 
 WellKeeperNpc::WellKeeperNpc(void) :
 	ANpc(NPC_WELL_KEEPER_OSS)
@@ -14,7 +15,7 @@ WellKeeperNpc::WellKeeperNpc(void) :
 	setTextOffset(sf::Vector2f(20.f, 0.f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent) | static_cast<std::size_t>(GameObjectType::Player));
 }
 
 void WellKeeperNpc::setup(void)
@@ -30,8 +31,6 @@ void WellKeeperNpc::setup(void)
 
 	setupMachine();
 	setNextEvent(Idle);
-	if (Progress::getInstance().canUseWaterJump())
-		setCurrentText(1u);
 }
 
 void WellKeeperNpc::setupMachine(void)
@@ -49,6 +48,11 @@ void WellKeeperNpc::setupMachine(void)
 
 	setMachine(machine);
 	setNextEvent(Idle);
+}
+
+void WellKeeperNpc::stopBalle(void)
+{
+	Progress::getInstance().validateChallenge(ChallengeManager::Effect::Persistence);
 }
 
 void WellKeeperNpc::updateState(void)

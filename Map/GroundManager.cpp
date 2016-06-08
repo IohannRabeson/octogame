@@ -170,6 +170,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<IohannNpc>(IOHANN_OSS);
 	m_npcFactory.registerCreator<ClementineNpc>(CLEMENTINE_OSS);
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
+	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
 	m_npcFactory.registerCreator<ForestSpirit2Npc>(FOREST_SPIRIT_2_OSS);
 	m_npcFactory.registerCreator<ForestSpirit1Npc>(FOREST_SPIRIT_1_OSS);
@@ -180,6 +181,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<SnowGirl1Npc>(SNOWGIRL_1_OSS);
 	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
+	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
 	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
@@ -870,7 +872,7 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 		totalCount += treeCount;
 	}
 
-	if (deathTreePos.size())
+	if (deathTreePos.size() && biome.canCreateTree())
 	{
 		for (std::size_t i = 0; i < deathTreeCount; i++)
 		{
@@ -1262,7 +1264,7 @@ void GroundManager::placeMin(std::vector<GameObjectPosition<T>> & objects, Map::
 	float tmp = 0.f;
 	for (auto const & object : objects)
 	{
-		min = 0.f;
+		min = std::numeric_limits<float>::lowest();
 		for (std::size_t i = object.m_position; i < object.m_position + object.m_width; i++)
 		{
 			tmp = octo::linearInterpolation(prevDecors[i].second.y, currentDecors[i].second.y, transition);

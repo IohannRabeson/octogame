@@ -5,14 +5,16 @@
 #include <Interpolations.hpp>
 #include <Camera.hpp>
 
-ChallengeManager::AChallenge::AChallenge(ResourceKey key, float challengeDuration, sf::FloatRect const & area, ABiome::Type biomeType) :
-	m_delayMax(sf::seconds(4.f)),
+ChallengeManager::AChallenge::AChallenge(ResourceKey key, float challengeDuration, float delay, sf::FloatRect const & area, ABiome::Type biomeType, std::pair<float, float> glitchIntensityRange, std::pair<float, float> glitchDurationRange) :
+	m_delayMax(sf::seconds(delay)),
 	m_duration(sf::seconds(challengeDuration)),
 	m_area(area),
 	m_biomeType(biomeType),
 	m_intensity(1.f),
 	m_validArea(false),
-	m_isGlitch(false)
+	m_isGlitch(false),
+	m_glitchIntensityRange(glitchIntensityRange),
+	m_glitchDurationRange(glitchDurationRange)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
@@ -78,7 +80,7 @@ void ChallengeManager::AChallenge::updateChallenge(sf::Time frametime)
 	else // We leaved the area so the challenge is stopping
 	{
 		m_timer = std::min(m_timer, m_duration);
-		m_timer -= frametime * 10.f;
+		m_timer -= frametime;
 		if (m_timer < sf::Time::Zero)
 		{
 			m_timer = sf::Time::Zero;
@@ -127,9 +129,15 @@ bool ChallengeManager::AChallenge::isGlitch(void) const
 	return m_isGlitch;
 }
 
-bool ChallengeManager::AChallenge::canStartGlitch(void) const
+void ChallengeManager::AChallenge::startGlitch(ABiome & biome)
 {
-	return (m_glitchTimer <= sf::Time::Zero);
+	if (m_glitchTimer <= sf::Time::Zero)
+	{
+		setGlitch(true);
+		setIntensity(biome.randomFloat(m_glitchIntensityRange.first, m_glitchIntensityRange.second));
+		setDuration(biome.randomFloat(m_glitchDurationRange.first, m_glitchDurationRange.second));
+		start();
+	}
 }
 
 sf::Time ChallengeManager::AChallenge::getDuration(void) const
@@ -159,7 +167,7 @@ void ChallengeManager::AChallenge::setGlitch(bool isGlitch)
 
 // Duplicate
 ChallengeDuplicate::ChallengeDuplicate(void) :
-	AChallenge(VISION_TROUBLE_FRAG, 6.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle),
+	AChallenge(VISION_TROUBLE_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f)),
 	m_rotation(0.f)
 {}
 
@@ -176,19 +184,19 @@ void ChallengeDuplicate::updateShader(sf::Time frametime)
 
 // Persistence
 ChallengePersistence::ChallengePersistence(void) :
-	AChallenge(PERSISTENCE_FRAG, 6.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Desert)
+	AChallenge(PERSISTENCE_FRAG, 6.f, 1.f, sf::FloatRect(sf::Vector2f(130.f * 16.f, -130.f * 16.f), sf::Vector2f(220.f * 16.f, 750.f * 16.f)), ABiome::Type::Desert, std::pair<float, float>(0.7f, 0.9f), std::pair<float, float>(1.f, 2.f))
 {
 	m_shader.setParameter("intensity", 1.f);
 }
 
 void ChallengePersistence::updateShader(sf::Time)
 {
-	m_shader.setParameter("intensity", m_intensity * octo::linearInterpolation(1.f, 0.02f, std::min(m_timer, m_duration) / m_duration));
+	m_shader.setParameter("intensity", octo::linearInterpolation(1.f, 1.02f - m_intensity, std::min(m_timer, m_duration) / m_duration));
 }
 
 // Pixelate
 ChallengePixelate::ChallengePixelate(void) :
-	AChallenge(PIXELATE_FRAG, 6.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle)
+	AChallenge(PIXELATE_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
 {}
 
 void ChallengePixelate::updateShader(sf::Time)
@@ -198,7 +206,7 @@ void ChallengePixelate::updateShader(sf::Time)
 
 // Displacement
 ChallengeDisplacement::ChallengeDisplacement(void) :
-	AChallenge(DISPLACEMENT_FRAG, 6.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle)
+	AChallenge(DISPLACEMENT_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
 {
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
 	m_shader.setParameter("resolution", rect.width, rect.height);

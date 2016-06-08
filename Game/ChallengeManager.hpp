@@ -15,7 +15,7 @@ public:
 	class AChallenge
 	{
 	public:
-		AChallenge(ResourceKey key, float challengeDuration, sf::FloatRect const & area, ABiome::Type biomeType);
+		AChallenge(ResourceKey key, float challengeDuration, float delay, sf::FloatRect const & area, ABiome::Type biomeType, std::pair<float, float> glitchIntensityRange, std::pair<float, float> glitchDurationRange);
 		virtual ~AChallenge(void);
 	
 		void update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position);
@@ -29,7 +29,7 @@ public:
 	
 		bool isFinished(void) const;
 		bool isGlitch(void) const;
-		bool canStartGlitch(void) const;
+		void startGlitch(ABiome & biome);
 		sf::Time getDuration(void) const;
 		ABiome::Type getBiomeType(void) const;
 		void setDuration(float duration);
@@ -38,18 +38,20 @@ public:
 		void validateArea(ABiome & biome, sf::Vector2f const & position);
 	
 	protected:
-		sf::Shader		m_shader;
-		std::size_t		m_index;
-		sf::Time		m_delay;
-		sf::Time		m_delayMax;
-		sf::Time		m_timer;
-		sf::Time		m_duration;
-		sf::Time		m_glitchTimer;
-		sf::FloatRect	m_area;
-		ABiome::Type	m_biomeType;
-		float			m_intensity;
-		bool			m_validArea;
-		bool			m_isGlitch;
+		sf::Shader						m_shader;
+		std::size_t						m_index;
+		sf::Time						m_delay;
+		sf::Time						m_delayMax;
+		sf::Time						m_timer;
+		sf::Time						m_duration;
+		sf::Time						m_glitchTimer;
+		sf::FloatRect					m_area;
+		ABiome::Type					m_biomeType;
+		float							m_intensity;
+		bool							m_validArea;
+		bool							m_isGlitch;
+		std::pair<float, float>			m_glitchIntensityRange;
+		std::pair<float, float>			m_glitchDurationRange;
 	};
 
 	enum class Effect : std::size_t

@@ -135,7 +135,7 @@ RewardsBiome::RewardsBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// TODO define map position and number of map
-	std::size_t portalPos = m_generator.randomInt(200u, m_mapSize.x - 40u);
+	std::size_t portalPos = m_generator.randomInt(100u, m_mapSize.x - 40u);
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_destinations.push_back(Level::Rewards);
 	m_interestPointPosX = portalPos;
