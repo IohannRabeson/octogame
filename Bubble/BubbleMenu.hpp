@@ -30,6 +30,7 @@ public:
 	virtual void						drawContent(sf::RenderTarget & render, sf::RenderStates states) const;
 
 	void								setIndexCursor(std::size_t index);
+	void								setIsFontSelect(bool isFontSelect);
 
 private:
 	static constexpr std::size_t	m_characterSize = 20u;
@@ -37,6 +38,7 @@ private:
 	sf::Vector2f					m_contentSize;
 	sf::Font						m_font;
 	sf::Font						m_fontSelect;
+	bool							m_isFontSelect;
 	//TODO: For mouse use return this array
 	std::vector<subMenu>			m_subMenus;
 	std::vector<sf::Vector2f>		m_cursorPosition;

@@ -20,7 +20,7 @@ void CreditMenu::createMenus(void)
 	addMenu(L"Pierre Glory", nullptr);
 	addMenu(L"Jean-François Guerrin", nullptr);
 	addMenu(L"Fabien You", nullptr);
-
+	setIsFontSelect(false);
 }
 
 void CreditMenu::update(sf::Time frameTime, sf::Vector2f const & position)
