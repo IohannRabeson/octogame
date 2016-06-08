@@ -5,7 +5,9 @@
 
 #include "ResourceDefinitions.hpp"
 
-BubbleMenu::BubbleMenu(void)
+BubbleMenu::BubbleMenu(void) :
+	m_isFontSelect(true),
+	m_indexCursor(0u)
 {
 }
 
@@ -63,10 +65,15 @@ void BubbleMenu::updateContent(sf::Time frameTime, sf::Vector2f const & position
 	for (std::size_t i = 0; i < m_subMenus.size(); i++)
 	{
 		m_subMenus[i].text.setPosition(position + m_subMenus[i].position);
-		if (m_indexCursor == i)
-			m_subMenus[i].text.setFont(m_fontSelect);
+		if (m_isFontSelect)
+		{
+			if (m_indexCursor == i)
+				m_subMenus[i].text.setFont(m_fontSelect);
+			else
+				m_subMenus[i].text.setFont(m_font);
+		}
 		else
-			m_subMenus[i].text.setFont(m_font);
+			m_subMenus[i].text.setFont(m_fontSelect);
 	}
 }
 
@@ -79,4 +86,9 @@ void BubbleMenu::drawContent(sf::RenderTarget & render, sf::RenderStates states)
 void BubbleMenu::setIndexCursor(std::size_t index)
 {
 	m_indexCursor = index;
+}
+
+void BubbleMenu::setIsFontSelect(bool isFontSelect)
+{
+	m_isFontSelect = isFontSelect;
 }

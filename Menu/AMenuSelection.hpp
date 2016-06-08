@@ -31,6 +31,7 @@ public:
 	void				setIndexCursor(std::size_t index);
 
 	std::size_t			getIndexCursor(void);
+	void				setIsFontSelect(bool isFontSelect);
 
 private:
 	BubbleMenu									m_bubble;

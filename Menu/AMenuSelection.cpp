@@ -189,3 +189,7 @@ std::size_t AMenuSelection::getIndexCursor(void)
 	return m_indexCursor;
 }
 
+void AMenuSelection::setIsFontSelect(bool isFontSelect)
+{
+	m_bubble.setIsFontSelect(isFontSelect);
+}

@@ -14,6 +14,7 @@ ControlMenu::ControlMenu(void) :
 void ControlMenu::createMenus(void)
 {
 	addMenu(AMenu::getText("control_move"), nullptr);
+	setIsFontSelect(false);
 }
 
 void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
