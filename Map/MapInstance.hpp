@@ -29,6 +29,7 @@ public:
 	inline sf::IntRect const & getCornerPositions(void) const { return m_cornerPositions; }
 	inline std::size_t getDepth(void) { return static_cast<std::size_t>(m_depth); }
 	inline std::size_t getMaxDepth(void) { return m_tiles.depth(); }
+	inline bool		   isMapHighlight(void) { return m_isMapHighlight; }
 
 	static void setTransitionType(Tile & tile);
 
@@ -39,6 +40,7 @@ private:
 	octo::Array3D<Tile>				m_tiles;
 	octo::LevelMap const &			m_levelMap;
 	sf::IntRect						m_cornerPositions;
+	bool							m_isMapHighlight;
 	int								m_depth;
 	int								m_oldDepth;
 	octo::AudioManager::SoundPtr	m_soundPtr;

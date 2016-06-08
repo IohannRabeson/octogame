@@ -147,7 +147,8 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			}
 
 			if (m_isOctoOnInstance && m_octoPos.y <= m_instancesRect[m_instanceIndex].height
-				&& (offsetX >= m_instancesRect[m_instanceIndex].left && offsetX <= m_instancesRect[m_instanceIndex].width))
+				&& (offsetX >= m_instancesRect[m_instanceIndex].left && offsetX <= m_instancesRect[m_instanceIndex].width)
+				&& m_instances[m_instanceIndex]->isMapHighlight())
 			{
 				float interpolateValue = 0.4f;
 				if (offsetX < m_instancesRect[m_instanceIndex].left + interpolateOffset)
@@ -280,7 +281,8 @@ void Map::nextStep(void)
 			m_instances[i]->nextStep();
 			m_instanceIndex = i;
 			m_isOctoOnInstance = true;
-			Progress::getInstance().setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L">");
+			if (m_instances[i]->isMapHighlight())
+				Progress::getInstance().setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L">");
 			break;
 		}
 	}
@@ -298,7 +300,8 @@ void Map::previousStep(void)
 			m_instances[i]->previousStep();
 			m_instanceIndex = i;
 			m_isOctoOnInstance = true;
-			Progress::getInstance().setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L"<");
+			if (m_instances[i]->isMapHighlight())
+				Progress::getInstance().setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L"<");
 			break;
 		}
 	}
