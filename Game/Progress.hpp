@@ -100,7 +100,7 @@ public:
 	void				setEnableGroundInfos(bool isEnable);
 	bool				isEnableGroundInfos(void) const { return m_data.isGroundInfos; }
 	void				setMapHighlight(bool isHighlight);
-	bool				isMapHighlight(void);
+	bool				isMapHighlight(void) const;
 	void				setIsOctoOnInstance(bool isInstance);
 	bool				isOctoOnInstance(void);
 

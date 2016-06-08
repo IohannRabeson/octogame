@@ -27,9 +27,9 @@ public:
 	inline std::size_t getWidth(void) const { return m_tiles.columns(); }
 	inline std::size_t getHeight(void) const { return m_tiles.rows(); }
 	inline sf::IntRect const & getCornerPositions(void) const { return m_cornerPositions; }
-	inline std::size_t getDepth(void) { return static_cast<std::size_t>(m_depth); }
-	inline std::size_t getMaxDepth(void) { return m_tiles.depth(); }
-	inline bool		   isMapHighlight(void) { return m_isMapHighlight; }
+	inline std::size_t getDepth(void) const { return static_cast<std::size_t>(m_depth); }
+	inline std::size_t getMaxDepth(void) const { return m_tiles.depth(); }
+	inline bool		   isMapHighlight(void) const { return m_isMapHighlight; }
 
 	static void setTransitionType(Tile & tile);
 

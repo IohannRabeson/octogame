@@ -25,7 +25,8 @@ Progress::Progress() :
 	m_portalsCount(0u),
 	m_portalsMax(0u),
 	m_isDemo(false),
-	m_isOctoOnInstance(false)
+	m_isOctoOnInstance(false),
+	m_isHighLight(false)
 {
 }
 
@@ -474,7 +475,7 @@ void		Progress::setMapHighlight(bool isHighlight)
 	m_isHighLight = isHighlight;
 }
 
-bool		Progress::isMapHighlight(void)
+bool		Progress::isMapHighlight(void) const
 {
 	if (m_data.isGroundInfos)
 		return m_isHighLight;
