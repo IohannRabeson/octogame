@@ -322,9 +322,13 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::CedricNpc:
+			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable())
+				octo->startDrinkPotion();
 			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
 		case GameObjectType::FannyNpc:
+			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Persistence).enable())
+				octo->startDrinkPotion();
 			gameObjectCast<FannyNpc>(gameObject)->startBalle();
 			break;
 		case GameObjectType::WellKeeperNpc:

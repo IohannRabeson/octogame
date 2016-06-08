@@ -298,9 +298,18 @@ void	CharacterOcto::setupAnimation()
 	m_deathAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_drinkAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {25, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {99, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {100, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {101, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {102, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {103, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {104, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {105, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {106, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {107, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {108, sf::FloatRect(), sf::Vector2f()}),
 			});
-	m_drinkAnimation.setLoop(octo::LoopMode::Loop);
+	m_drinkAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_answerWolfAnimation.setFrames({
 			Frame(sf::seconds(0.4f), {56, sf::FloatRect(), sf::Vector2f()}),
@@ -372,6 +381,7 @@ void	CharacterOcto::setupMachine()
 	StatePtr					stateWaterJump;
 	StatePtr					statePortal;
 	StatePtr					stateKonami;
+	StatePtr					stateDrink;
 
 	stateIdle = std::make_shared<State>("Idle", m_idleAnimation, m_sprite);
 	stateLeft = std::make_shared<State>("Left", m_walkAnimation, m_sprite);
@@ -391,6 +401,7 @@ void	CharacterOcto::setupMachine()
 	stateWaterJump = std::make_shared<State>("WaterJump", m_elevatorAnimation, m_sprite);
 	statePortal = std::make_shared<State>("PortalEvent", m_portalAnimation, m_sprite);
 	stateKonami = std::make_shared<State>("KonamiCode", m_konamiCodeAnimation, m_sprite);
+	stateDrink = std::make_shared<State>("Drink", m_drinkAnimation, m_sprite);
 
 	machine.setStart(stateIdle);
 	machine.addTransition(Left, stateIdle, stateLeft);
@@ -472,6 +483,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Fall, stateWaterJump, stateFall);
 	machine.addTransition(Fall, statePortal, stateFall);
 	machine.addTransition(Fall, stateKonami, stateFall);
+	machine.addTransition(Fall, stateDrink, stateFall);
 
 	machine.addTransition(Dance, stateIdle, stateDance);
 
@@ -563,6 +575,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Idle, stateSartWaterJump, stateIdle);
 	machine.addTransition(Idle, statePortal, stateIdle);
 	machine.addTransition(Idle, stateKonami, stateIdle);
+	machine.addTransition(Idle, stateDrink, stateIdle);
 
 	machine.addTransition(PortalEvent, stateIdle, statePortal);
 	machine.addTransition(PortalEvent, stateLeft, statePortal);
@@ -596,6 +609,22 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(KonamiCode, stateSartWaterJump, stateKonami);
 	machine.addTransition(KonamiCode, statePortal, stateKonami);
 
+	machine.addTransition(Drink, stateIdle, stateDrink);
+	machine.addTransition(Drink, stateLeft, stateDrink);
+	machine.addTransition(Drink, stateRight, stateDrink);
+	machine.addTransition(Drink, stateJump, stateDrink);
+	machine.addTransition(Drink, stateDoubleJump, stateDrink);
+	machine.addTransition(Drink, stateFall, stateDrink);
+	machine.addTransition(Drink, stateDance, stateDrink);
+	machine.addTransition(Drink, stateStartSlowFall, stateDrink);
+	machine.addTransition(Drink, stateDeath, stateDrink);
+	machine.addTransition(Drink, stateStartElevator, stateDrink);
+	machine.addTransition(Drink, stateDanceMusic, stateDrink);
+	machine.addTransition(Drink, stateStartJump, stateDrink);
+	machine.addTransition(Drink, stateSlowFall, stateDrink);
+	machine.addTransition(Drink, stateSartWaterJump, stateDrink);
+	machine.addTransition(Drink, statePortal, stateDrink);
+
 	m_sprite.setMachine(machine);
 }
 
@@ -611,13 +640,13 @@ void	CharacterOcto::update(sf::Time frameTime)
 	}
 	m_onGroundDelay -= frameTime;
 	portalEvent();
-	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode)
+	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode && m_sprite.getCurrentEvent() != Drink)
 		commitPhysicsToGraphics();
 	m_sprite.update(frameTime);
 	resetTimeEvent();
 	timeEvent(frameTime);
 	inWater();
-	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode && endDeath())
+	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode && m_sprite.getCurrentEvent() != Drink && endDeath())
 	{
 		dance();
 		collisionElevatorUpdate();
@@ -635,7 +664,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		m_helmetParticle.update(frameTime);
 	m_sound->update(frameTime, static_cast<Events>(m_sprite.getCurrentEvent()),
 			m_inWater, m_onGround);
-	if (m_sprite.getCurrentEvent() == KonamiCode && m_sprite.isTerminated())
+	if ((m_sprite.getCurrentEvent() == Drink || m_sprite.getCurrentEvent() == KonamiCode) && m_sprite.isTerminated())
 	{
 		m_box->setApplyGravity(true);
 		if (m_onGround)
@@ -853,6 +882,15 @@ void	CharacterOcto::usePortal(Portal & portal)
 		m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 		m_progress.setReverseSprite(m_originMove);
 		m_progress.setNextDestination(portal.getDestination());
+	}
+}
+
+void	CharacterOcto::startDrinkPotion(void)
+{
+	if (m_sprite.getCurrentEvent() != Drink)
+	{
+		m_sprite.setNextEvent(Drink);
+		m_box->setApplyGravity(false);
 	}
 }
 
@@ -1316,6 +1354,7 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 {
 	if (m_sprite.getCurrentEvent() == Death
 			|| m_sprite.getCurrentEvent() == KonamiCode
+			|| m_sprite.getCurrentEvent() == Drink
 			|| m_sprite.getCurrentEvent() == PortalEvent)
 		return true;
 	switch (key)
@@ -1425,7 +1464,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			otherKeyReleased = true;
 			break;
 	}
-	if (state == Death || state == PortalEvent || state == KonamiCode || otherKeyReleased)
+	if (state == Death || state == PortalEvent || state == KonamiCode || state == Drink || otherKeyReleased)
 		return true;
 	if (!m_onGround && !m_keyUp && !m_keyElevator)
 	{
