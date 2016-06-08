@@ -529,7 +529,7 @@ void	Game::updateBubbleGround(sf::Time frameTime)
 	Progress & progress = Progress::getInstance();
 
 	m_timerGroundBubble += frameTime;
-	if (m_timerGroundBubble <= m_timerGroundBubbleMax && progress.isOctoOnInstance())
+	if (m_timerGroundBubble <= m_timerGroundBubbleMax && progress.isOctoOnInstance() && progress.isMapHighlight())
 	{
 		std::wstring const & groundInfos = progress.getGroundInfos();
 		m_groundBubble.setup(groundInfos, m_colorGround, 20u, 1000.f);

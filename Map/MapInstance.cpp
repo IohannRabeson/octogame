@@ -6,6 +6,7 @@
 
 MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_levelMap(octo::Application::getResourceManager().getLevelMap(resourceId)),
+	m_isMapHighlight(false),
 	m_depth(0),
 	m_oldDepth(0),
 	m_soundPtr(nullptr)
@@ -14,6 +15,7 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_cornerPositions.top = -m_levelMap.getMapSize().y + m_levelMap.getMapPosY();
 	m_cornerPositions.width = m_cornerPositions.left + m_levelMap.getMapSize().x;
 	m_cornerPositions.height = m_cornerPositions.top + m_levelMap.getMapSize().y;
+	m_isMapHighlight = m_levelMap.isMapHighlight();
 
 	// Init 3D TileMap
 	octo::Array3D<octo::LevelMap::TileType> const & map = m_levelMap.getMap();

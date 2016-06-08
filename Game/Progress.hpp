@@ -97,6 +97,10 @@ public:
 
 	void				setGroundInfos(std::size_t current, std::size_t max, std::wstring sign);
 	std::wstring const & getGroundInfos(void);
+	void				setEnableGroundInfos(bool isEnable);
+	bool				isEnableGroundInfos(void) const { return m_data.isGroundInfos; }
+	void				setMapHighlight(bool isHighlight);
+	bool				isMapHighlight(void) const;
 	void				setIsOctoOnInstance(bool isInstance);
 	bool				isOctoOnInstance(void);
 
@@ -133,7 +137,8 @@ private:
 			firstTime(true),
 			walk(false),
 			moveMap(false),
-			canOpenDoubleJump(false)
+			canOpenDoubleJump(false),
+			isGroundInfos(true)
 		{}
 
 		std::size_t		validateChallenge;
@@ -151,6 +156,7 @@ private:
 		bool			canOpenDoubleJump;
 		char			npc[10000];
 		char			portals[10000];
+		bool			isGroundInfos;
 	};
 
 	Progress();
@@ -187,6 +193,7 @@ private:
 	bool											m_isDemo;
 	std::wstring									m_groundInfos;
 	bool											m_isOctoOnInstance;
+	bool											m_isHighLight;
 };
 
 #endif

@@ -25,7 +25,8 @@ Progress::Progress() :
 	m_portalsCount(0u),
 	m_portalsMax(0u),
 	m_isDemo(false),
-	m_isOctoOnInstance(false)
+	m_isOctoOnInstance(false),
+	m_isHighLight(false)
 {
 }
 
@@ -454,6 +455,11 @@ std::wstring const &Progress::getGroundInfos(void)
 	return m_groundInfos;
 }
 
+void		Progress::setEnableGroundInfos(bool isEnable)
+{
+	m_data.isGroundInfos = isEnable;
+}
+
 void		Progress::setIsOctoOnInstance(bool isInstance)
 {
 	m_isOctoOnInstance = isInstance;
@@ -462,6 +468,18 @@ void		Progress::setIsOctoOnInstance(bool isInstance)
 bool		Progress::isOctoOnInstance(void)
 {
 	return m_isOctoOnInstance;
+}
+
+void		Progress::setMapHighlight(bool isHighlight)
+{
+	m_isHighLight = isHighlight;
+}
+
+bool		Progress::isMapHighlight(void) const
+{
+	if (m_data.isGroundInfos)
+		return m_isHighLight;
+	return false;
 }
 
 void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)
