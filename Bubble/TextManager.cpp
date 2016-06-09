@@ -39,6 +39,18 @@ void TextManager::loadTexts(void)
 		if (line.length())
 			line.pop_back();
 #endif
+		if (line.size() && line[0] == L'!')
+		{
+			m_priority[key] = ABubble::Priority::Important;
+			line.erase(0, 1);
+		}
+		else if (line.size() && line[0] == L'\"')
+		{
+			m_priority[key] = ABubble::Priority::Tips;
+			line.erase(0, 1);
+		}
+		else
+			m_priority[key] = ABubble::Priority::Bullshit;
 		m_texts[key].push_back(line);
 	}
 }
@@ -64,4 +76,9 @@ std::vector<std::wstring> const & TextManager::getTextsNpc(ResourceKey const & k
 			return (m_texts["joystick_" + static_cast<std::string>(key)]);
 	}
 	return m_texts[key];
+}
+
+ABubble::Priority const & TextManager::getPriority(ResourceKey const & key)
+{
+	return m_priority[key];
 }

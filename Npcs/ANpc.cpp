@@ -24,10 +24,11 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_isMeetable(isMeetable)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
+	TextManager & textManager = TextManager::getInstance();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
-	setTexts(TextManager::getInstance().getTextsNpc(npcId));
+	setTexts(textManager.getTextsNpc(npcId), textManager.getPriority(npcId));
 	if (m_texts.size())
 		m_displayText = true;
 }
@@ -200,7 +201,7 @@ void ANpc::setSize(sf::Vector2f const & size)
 	m_box->setSize(size);
 }
 
-void ANpc::setTexts(std::vector<std::wstring> const & texts)
+void ANpc::setTexts(std::vector<std::wstring> const & texts, ABubble::Priority priority)
 {
 	for (std::size_t i = 0u; i < texts.size(); i++)
 	{
@@ -208,6 +209,7 @@ void ANpc::setTexts(std::vector<std::wstring> const & texts)
 		bubble.reset(new BubbleText());
 		bubble->setup(texts[i], sf::Color::White);
 		bubble->setType(ABubble::Type::Speak);
+		bubble->setPriority(priority);
 		m_texts.push_back(std::move(bubble));
 	}
 }

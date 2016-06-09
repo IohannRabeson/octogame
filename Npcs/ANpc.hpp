@@ -21,7 +21,7 @@ public:
 	void setPosition(sf::Vector2f const & position);
 	void setOrigin(sf::Vector2f const & origin);
 	void setSize(sf::Vector2f const & size);
-	void setTexts(std::vector<std::wstring> const & texts);
+	void setTexts(std::vector<std::wstring> const & texts, ABubble::Priority priority);
 	void setCurrentText(int index);
 	void setScale(float scale);
 	void addMapOffset(float x, float y);
