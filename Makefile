@@ -110,7 +110,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ForestSpirit1Npc.cpp				\
 				Npcs/ForestSpirit2Npc.cpp				\
 				Npcs/Pedestal.cpp				\
+				Npcs/OverCoolNpc.cpp				\
 #Script AddNpc
+
 
 
 

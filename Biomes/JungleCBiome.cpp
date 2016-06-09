@@ -129,6 +129,7 @@ JungleCBiome::JungleCBiome() :
 	m_instances[300] = MAP_JUNGLE_C_TRAIL_OMP;
 	m_instances[760] = MAP_JUNGLE_C_PORTAL_OMP;
 	m_gameObjects[290] = GameObjectType::Portal;
+	m_gameObjects[250] = GameObjectType::OverCoolNpc;
 	m_gameObjects[400] = GameObjectType::Portal;
 	// Define game objects
 	m_gameObjects[170] = GameObjectType::BirdRedNpc;
