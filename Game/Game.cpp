@@ -604,7 +604,8 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
-	m_groundBubble.draw(render, states);
+	if (Progress::getInstance().isMapHighlight())
+		m_groundBubble.draw(render, states);
 	render.draw(*m_konami);
 	//m_cameraMovement->debugDraw(render);
 }

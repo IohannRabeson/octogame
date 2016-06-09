@@ -31,7 +31,7 @@ void AMenuSelection::setup(void)
 
 void AMenuSelection::setupBubble(void)
 {
-	m_bubble.setup(m_menuTitles, sf::Color(255, 255, 255, 255), m_characterSize);
+	m_bubble.setup(m_menuTitles, sf::Color(255, 255, 255, 150), m_characterSize);
 	m_bubble.setType(ABubble::None);
 
 	//create octogon for cursor
