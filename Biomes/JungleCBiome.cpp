@@ -13,7 +13,7 @@ JungleCBiome::JungleCBiome() :
 	m_name("Jungle A"),
 	m_id(Level::JungleC),
 	m_seed("sdf"),
-	m_mapSize(sf::Vector2u(600u, 200u)),
+	m_mapSize(sf::Vector2u(900u, 200u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(93.f * 16.f, -1150.f),
 	m_transitionDuration(0.5f),
@@ -129,14 +129,18 @@ JungleCBiome::JungleCBiome() :
 	m_instances[230] = MAP_JUNGLE_C_TRAIL_OMP;
 	m_instances[665] = MAP_JUNGLE_C_PARA_SIGN_OMP;
 	m_gameObjects[90] = GameObjectType::Portal;
-	m_gameObjects[565] = GameObjectType::WaterNanoRobot;
 	m_gameObjects[165] = GameObjectType::OverCoolNpc;
+	m_gameObjects[555] = GameObjectType::AmandineNpc;
+	m_gameObjects[595] = GameObjectType::FaustNpc;
+	m_gameObjects[630] = GameObjectType::ConstanceNpc;
+	m_gameObjects[700] = GameObjectType::Portal;
 
 	m_interestPointPosX = 290;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Default);
 	m_destinations.push_back(Level::IceA);
+	m_destinations.push_back(Level::WaterA);
 }
 
 void			JungleCBiome::setup(std::size_t seed)
@@ -248,8 +252,8 @@ Map::MapSurfaceGenerator JungleCBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		float m = n / 3.f;
-		std::vector<float> pointX = {0.f      , 200.f    , 235.f, 520.f, 522.f   , 550.f   , 553.f   , 580.f   , 584.f   , 658.f   , 660.f   , 691.f    , 700.f};
-		std::vector<float> pointY = {m - 1.45f, m - 1.45f, n    , n    , m - 1.5f, m - 1.5f, n - 0.3f, n - 0.3f, m - 2.3f, m - 2.3f, m - 0.3f, m - 0.3f, m - 1.15f};
+		std::vector<float> pointX = {0.f      , 200.f    , 235.f, 450.f, 465.f , 495.f   , 518.f  , 521.f    , 522.f   , 738.f   , 791.f   , 900.f};
+		std::vector<float> pointY = {m - 1.45f, m - 1.45f, n    , n    , -1.15f, m - 1.0f, m - 1.f, m - 1.05f, m - 1.55f, m - 1.6f, m - 0.3f, m - 0.3f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

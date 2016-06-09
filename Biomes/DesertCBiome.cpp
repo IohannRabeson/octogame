@@ -38,15 +38,15 @@ DesertCBiome::DesertCBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 1300.f),
 
-	m_rockCount(10u, 20u),
+	m_rockCount(100u, 110u),
 	m_treeCount(1u, 1u),
 	m_mushroomCount(3u, 40u),
-	m_crystalCount(10u, 15u),
+	m_crystalCount(30u, 40u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
 	m_rainbowCount(1u, 2u),
-	m_cloudCount(60u, 80u),
+	m_cloudCount(50u, 70u),
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),
@@ -66,18 +66,18 @@ DesertCBiome::DesertCBiome() :
 	m_canCreateRainbow(false),
 	m_type(ABiome::Type::Desert),
 
-	m_rockSize(sf::Vector2f(15.f, 70.f), sf::Vector2f(30.f, 300.f)),
+	m_rockSize(sf::Vector2f(15.f, 190.f), sf::Vector2f(30.f, 350.f)),
 	m_rockPartCount(3.f, 5.f),
 	m_rockColor(240, 110, 110),
 
-	m_treeDepth(10u, 10u),
-	m_treeSize(sf::Vector2f(50.f, 150.f), sf::Vector2f(50.f, 150.f)),
+	m_treeDepth(11u, 11u),
+	m_treeSize(sf::Vector2f(70.f, 200.f), sf::Vector2f(70.f, 200.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
-	m_treeColor(53, 44, 45),
+	m_treeColor(18, 14, 66),
 	m_treeAngle(15.f, 75.f),
 	m_treeBeatMouvement(0.03f),
-	m_leafSize(sf::Vector2f(80.f, 80.f), sf::Vector2f(150.f, 150.f)),
-	m_leafColor(46, 133, 84),
+	m_leafSize(sf::Vector2f(10.f, 10.f), sf::Vector2f(30.f, 30.f)),
+	m_leafColor(240, 110, 110),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
 	m_mushroomColor(100, 190, 226),
@@ -136,7 +136,7 @@ DesertCBiome::DesertCBiome() :
 
 	m_gameObjects[120] = GameObjectType::Portal;
 	m_gameObjects[240] = GameObjectType::FannyNpc;
-	m_gameObjects[260] = GameObjectType::Bouibouik;
+	m_gameObjects[370] = GameObjectType::Bouibouik;
 	m_instances[150] = MAP_DESERT_C_TRAIL_OMP;
 	m_instances[350] = MAP_DESERT_C_TREE_OMP;
 
@@ -253,8 +253,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f    , 100.f  , 101.f   , 140.f   , 150.f   , 244.f   , 245.f, 255.f, 253.f   , 275.f   , 310.f   , 399.f   , 400.f  , 500.f   };
-		std::vector<float> pointY = {0.f + n, -1.f + n, -3.f + n, -3.f + n, -2.f - n, -2.f - n, 6.7f , 6.7f , -2.f - n, -2.f - n, -3.f + n, -3.f + n, 0.f + n, 0.f + n};
+		std::vector<float> pointX = {0.f      , 100.f    , 101.f    , 115.f   , 244.f   , 245.f, 255.f, 253.f   , 275.f   , 310.f    , 393.f    , 403.f, 404.f    , 500.f   };
+		std::vector<float> pointY = {-10.f + n, -10.f + n, -2.5f - n, -2.f - n, -2.f - n, 6.7f , 6.7f , -2.f - n, -2.f - n, -2.5f + n, -2.5f + n, -3.f , -10.f + n, -10.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
