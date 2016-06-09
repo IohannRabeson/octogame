@@ -8,6 +8,7 @@ class OverCoolNpc : public BirdNpc, public AGameObject<GameObjectType::OverCoolN
 public:
 	OverCoolNpc(void);
 	virtual ~OverCoolNpc(void) = default;
+	virtual void setup(void);
 };
 
 #endif

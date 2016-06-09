@@ -11,8 +11,8 @@
 
 RandomGenerator BirdNpc::m_generator("random");
 
-BirdNpc::BirdNpc(ResourceKey const & npcId) :
-	ANpc(npcId, false),
+BirdNpc::BirdNpc(ResourceKey const & npcId, bool isMeetable) :
+	ANpc(npcId, isMeetable),
 	m_animationEnd(false),
 	m_speedLimit(m_generator.randomFloat(30.f, 150.f)),
 	m_flySpeed(sf::Vector2f(m_generator.randomFloat(200.f, 400.f), m_generator.randomFloat(-100.f, -300.f))),
@@ -162,7 +162,7 @@ void BirdNpc::computeFlight(sf::Time frametime)
 	float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
 	float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
 
-	if (sprite.getCurrentEvent() == Special2 || sprite.getCurrentEvent() == Special1)
+	if (sprite.getCurrentEvent() == Special2)
 	{
 		m_startPosition.x += m_flySpeed.x  * frametime.asSeconds();
 		if (m_startPosition.x >= rightLimit)
