@@ -35,6 +35,7 @@
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 //Script AddNpc Include
+#include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
 #include "ForestSpirit2Npc.hpp"
 #include "ForestSpirit1Npc.hpp"
@@ -173,6 +174,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<OverCoolNpc>(OVER_COOL_NPC_OSS);
 	m_npcFactory.registerCreator<Pedestal>(PEDESTAL_OSS);
 	m_npcFactory.registerCreator<ForestSpirit2Npc>(FOREST_SPIRIT_2_OSS);
 	m_npcFactory.registerCreator<ForestSpirit1Npc>(FOREST_SPIRIT_1_OSS);
@@ -550,6 +552,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::OverCoolNpc:
+				{
+					OverCoolNpc * npc = new OverCoolNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::Pedestal:
 				{
 					Pedestal * npc = new Pedestal();
