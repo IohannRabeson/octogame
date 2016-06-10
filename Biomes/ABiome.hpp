@@ -31,14 +31,6 @@ enum class Level : std::size_t
 	WaterB,
 	Default,
 	Rewards,
-
-	DemoIceA,
-	DemoIceB,
-	DemoIceC,
-	DemoIceD,
-	DemoDesertA,
-	DemoJungleA,
-	DemoWaterA,
 };
 
 class ABiome : public octo::NonCopyable

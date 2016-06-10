@@ -23,14 +23,6 @@
 #include "DefaultBiome.hpp"
 #include "RewardsBiome.hpp"
 
-#include "DemoIceABiome.hpp"
-#include "DemoIceBBiome.hpp"
-#include "DemoIceCBiome.hpp"
-#include "DemoIceDBiome.hpp"
-#include "DemoDesertABiome.hpp"
-#include "DemoJungleABiome.hpp"
-#include "DemoWaterABiome.hpp"
-
 //Objects
 #include "ElevatorStream.hpp"
 #include "Bouibouik.hpp"
@@ -118,30 +110,18 @@ Game::Game(void) :
 {
 	InputListener::addInputListener();
 
-	if (!Progress::getInstance().isDemo())
-	{
-		m_biomeManager.registerBiome<IceABiome>(Level::IceA);
-		m_biomeManager.registerBiome<IceBBiome>(Level::IceB);
-		m_biomeManager.registerBiome<IceCBiome>(Level::IceC);
-		m_biomeManager.registerBiome<IceDBiome>(Level::IceD);
-		m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
-		m_biomeManager.registerBiome<DesertBBiome>(Level::DesertB);
-		m_biomeManager.registerBiome<DesertCBiome>(Level::DesertC);
-		m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
-		m_biomeManager.registerBiome<JungleCBiome>(Level::JungleC);
-		m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
-		m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
-	}
-	else
-	{
-		m_biomeManager.registerBiome<DemoIceABiome>(Level::DemoIceA);
-		m_biomeManager.registerBiome<DemoIceBBiome>(Level::DemoIceB);
-		m_biomeManager.registerBiome<DemoIceCBiome>(Level::DemoIceC);
-		m_biomeManager.registerBiome<DemoIceDBiome>(Level::DemoIceD);
-		m_biomeManager.registerBiome<DemoDesertABiome>(Level::DemoDesertA);
-		m_biomeManager.registerBiome<DemoJungleABiome>(Level::DemoJungleA);
-		m_biomeManager.registerBiome<DemoWaterABiome>(Level::DemoWaterA);
-	}
+	m_biomeManager.registerBiome<IceABiome>(Level::IceA);
+	m_biomeManager.registerBiome<IceBBiome>(Level::IceB);
+	m_biomeManager.registerBiome<IceCBiome>(Level::IceC);
+	m_biomeManager.registerBiome<IceDBiome>(Level::IceD);
+	m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
+	m_biomeManager.registerBiome<DesertBBiome>(Level::DesertB);
+	m_biomeManager.registerBiome<DesertCBiome>(Level::DesertC);
+	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
+	m_biomeManager.registerBiome<JungleCBiome>(Level::JungleC);
+	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
+	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
+
 	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 }

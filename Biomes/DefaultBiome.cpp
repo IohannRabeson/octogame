@@ -138,7 +138,7 @@ DefaultBiome::DefaultBiome() :
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_gameObjects[23u] = GameObjectType::Portal;
 	m_interestPointPosX = portalPos;
-	if ((progress.getNanoRobotCount() >= 7 && progress.getLastDestination() == Level::IceA) || (progress.getNanoRobotCount() >= 6 && progress.isDemo()))
+	if ((progress.getNanoRobotCount() >= 7 && progress.getLastDestination() == Level::IceA) || (progress.getNanoRobotCount() >= 6))
 	{
 		m_destinations.push_back(Level::Default);
 		m_destinations.push_back(Level::Default);

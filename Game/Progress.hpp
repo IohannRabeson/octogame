@@ -75,7 +75,6 @@ public:
 	bool				canUseWaterJump();
 	bool				changeLevel() const;
 	void				levelChanged();
-	bool				isDemo() const;
 
 	void				registerLevel(Level const & biome);
 	std::vector<Level> const & getRegisteredLevels(void) const;
@@ -190,7 +189,6 @@ private:
 	std::size_t										m_portalsMax;
 	std::vector<Level>								m_levels;
 
-	bool											m_isDemo;
 	std::wstring									m_groundInfos;
 	bool											m_isOctoOnInstance;
 	bool											m_isHighLight;
