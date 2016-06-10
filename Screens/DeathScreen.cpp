@@ -44,6 +44,8 @@ void	DeathScreen::start()
 	sf::Vector2f const&		cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 	sf::Vector2f			scale = sf::Vector2f(0.6f, 0.6f);
 
+	InputListener::addInputListener();
+
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_DEATH_OSS));
 	m_sprite.setAnimation(m_animation);
 	m_sprite.play();
@@ -72,13 +74,14 @@ void	DeathScreen::stop()
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 
 	audio.playSound(resources.getSound(PORTAL_END_OGG));
+	InputListener::removeInputListener();
 }
 
 void	DeathScreen::update(sf::Time frameTime)
 {
 	octo::StateManager & states = octo::Application::getStateManager();
 	m_timeDeath += frameTime;
-	if (m_timeDeath > m_timeDeathMax)
+	if (m_timeDeath >= m_timeDeathMax)
 		states.change("game");
 	m_sprite.update(frameTime);
 }
@@ -97,4 +100,11 @@ void	DeathScreen::setSpriteSheet(octo::SpriteSheet const& spriteSheet)
 void	DeathScreen::setAnimation(octo::SpriteAnimation const& animation)
 {
 	m_sprite.setAnimation(animation);
+}
+
+bool	DeathScreen::onInputPressed(InputListener::OctoKeys const &)
+{
+	if (!Progress::getInstance().isFirstTime())
+		m_timeDeath = m_timeDeathMax;
+	return true;
 }
