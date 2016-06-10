@@ -15,7 +15,7 @@ DesertCBiome::DesertCBiome() :
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(600u, 180u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(123.f * 16.f, -2900.f),
+	m_octoStartPosition(123.f * 16.f, -2000.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
