@@ -3,6 +3,7 @@
 
 # include "DecorAnimator.hpp"
 # include "RandomGenerator.hpp"
+# include "MusicSystem.hpp"
 # include <AnimatedSprite.hpp>
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Text.hpp>
@@ -81,6 +82,8 @@ private:
 	sf::Vector2f					m_nanoScale;
 	sf::Shader						m_shader;
 	std::size_t						m_shaderIndex;
+	std::unique_ptr<MusicSystem>	m_particle;
+	sf::Time						m_particleTimer;
 };
 
 #endif
