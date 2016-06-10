@@ -233,10 +233,8 @@ void Portal::appear(void)
 
 bool Portal::isLock(void)
 {
-	if (m_destination == Level::WaterA && Progress::getInstance().getNanoRobotCount() < 4)
-		return true;
-	else if (Progress::getInstance().isDemo() && m_destination == Level::IceA)
-		return true;
+//	if (m_destination == Level::WaterA && Progress::getInstance().getNanoRobotCount() < 4)
+//		return true;
 	return false;
 }
 

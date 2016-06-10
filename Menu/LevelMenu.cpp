@@ -5,43 +5,25 @@
 LevelMenu::LevelMenu(void) :
 	m_index(0u)
 {
-	if (!Progress::getInstance().isDemo())
-	{
-		m_names.push_back(L"Ice A");
-		m_names.push_back(L"Ice B");
-		m_names.push_back(L"Ice C");
-		m_names.push_back(L"Ice D");
-		m_names.push_back(L"Desert A");
-		m_names.push_back(L"Desert B");
-		m_names.push_back(L"Desert C");
-		m_names.push_back(L"Jungle A");
-		m_names.push_back(L"Jungle C");
-		m_names.push_back(L"Water A");
-		m_names.push_back(L"Water B");
-		m_names.push_back(L"Random");
-		m_names.push_back(L"Rewards");
-		m_names.push_back(L"Uknown");
-		m_names.push_back(L"Uknown");
-		m_names.push_back(L"Uknown");
-		m_names.push_back(L"Uknown");
-		m_names.push_back(L"Uknown");
-		m_names.push_back(L"Uknown");
-	}
-	else
-	{
-		m_names.push_back(L"Ice A [DEMO]");
-		m_names.push_back(L"Ice B [DEMO]");
-		m_names.push_back(L"Ice C [DEMO]");
-		m_names.push_back(L"Ice D [DEMO]");
-		m_names.push_back(L"Desert A [DEMO]");
-		m_names.push_back(L"Jungle A [DEMO]");
-		m_names.push_back(L"Water A [DEMO]");
-		m_names.push_back(L"Random [DEMO]");
-		m_names.push_back(L"Uknown");
-		m_names.push_back(L"Uknown");
-		m_names.push_back(L"Uknown");
-		m_names.push_back(L"Uknown");
-	}
+	m_names.push_back(L"Ice A");
+	m_names.push_back(L"Ice B");
+	m_names.push_back(L"Ice C");
+	m_names.push_back(L"Ice D");
+	m_names.push_back(L"Desert A");
+	m_names.push_back(L"Desert B");
+	m_names.push_back(L"Desert C");
+	m_names.push_back(L"Jungle A");
+	m_names.push_back(L"Jungle C");
+	m_names.push_back(L"Water A");
+	m_names.push_back(L"Water B");
+	m_names.push_back(L"Random");
+	m_names.push_back(L"Rewards");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
+	m_names.push_back(L"Uknown");
 }
 
 void LevelMenu::createMenus(void)
