@@ -429,7 +429,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				else if (!decor.name.compare(DECOR_MUSHROOM_OSS))
 					adecor = new Mushroom();
 				else if (!decor.name.compare(DECOR_GROUND_OSS))
-					adecor = new GroundRock();
+					adecor = new GroundRock(true);
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
 				if (adecor)

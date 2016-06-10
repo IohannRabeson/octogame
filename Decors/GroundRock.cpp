@@ -3,9 +3,10 @@
 #include "Tile.hpp"
 #include <Camera.hpp>
 
-GroundRock::GroundRock(void) :
+GroundRock::GroundRock(bool onInstance) :
 	m_type(0u),
-	m_deep(0.f)
+	m_deep(0.f),
+	m_onInstance(onInstance)
 {
 }
 
@@ -35,7 +36,10 @@ void GroundRock::createGroundRock(std::size_t type, sf::Vector2f const & origin,
 void GroundRock::setup(ABiome& biome)
 {
 	m_type = biome.randomInt(0u, 4u);
-	m_deep = biome.randomFloat(0.f, octo::Camera().getSize().y / 2.f);
+	if (m_onInstance == false)
+		m_deep = biome.randomFloat(0.f, octo::Camera().getSize().y / 2.f);
+	else
+		m_deep = 0.f;
 	m_color = biome.getRockColor();
 }
 
