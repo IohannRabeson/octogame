@@ -39,6 +39,7 @@ void AMenuSelection::setupBubble(void)
 	m_cursor.setPointCount(8);
 	m_cursor.setOrigin(10, 10);
 	m_cursor.setRotation(360.f / 16.f);
+	m_cursor.setFillColor(sf::Color(255, 255, 255, 150));
 	m_cursorPosition = m_bubble.getCursorPosition();
 
 	for (std::size_t i = 0; i < m_menus.size(); i++)
