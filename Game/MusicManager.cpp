@@ -38,7 +38,7 @@ MusicManager::MusicManager() :
 
 	if (!Progress::getInstance().isDemo())
 	{
-		m_musicLevel.resize(9);
+		m_musicLevel.resize(11);
 		m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
 		m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
 		m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
@@ -50,6 +50,9 @@ MusicManager::MusicManager() :
 		m_musicLevel[6] = AreaMusic(Level::IceC, ICE_MUSIC_OGG, sf::FloatRect());
 		m_musicLevel[7] = AreaMusic(Level::IceD, ICE_MUSIC_D_OGG, sf::FloatRect());
 		m_musicLevel[8] = AreaMusic(Level::DesertC, MENU_OPUS_II_OGG, sf::FloatRect());
+		m_musicLevel[9] = AreaMusic(Level::JungleC, COLONISATION_OGG, sf::FloatRect());
+
+		m_musicLevel[10] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
 
 		m_music.resize(7);
 		// Montagne
