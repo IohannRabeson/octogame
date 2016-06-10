@@ -33,6 +33,7 @@ public:
 	virtual ~GroundManager(void) = default;
 
 	void setup(ABiome & biome, SkyCycle & cycle);
+	void setupGroundRock(ABiome & biome);
 	void update(float deltatime);
 	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
