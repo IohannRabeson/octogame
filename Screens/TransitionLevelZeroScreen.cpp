@@ -16,7 +16,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_bubble(new BubbleText[m_bubbleCount]),
 	m_time(sf::Time::Zero),
 	m_index(0u),
-	m_startTimerMax(sf::seconds(3.f)),
+	m_startTimerMax(sf::seconds(1.f)),
 	m_soundPlayed1(false),
 	m_soundPlayed2(false)
 {
