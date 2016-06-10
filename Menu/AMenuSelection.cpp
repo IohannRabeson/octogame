@@ -39,6 +39,7 @@ void AMenuSelection::setupBubble(void)
 	m_cursor.setPointCount(8);
 	m_cursor.setOrigin(10, 10);
 	m_cursor.setRotation(360.f / 16.f);
+	m_cursor.setFillColor(sf::Color(255, 255, 255, 150));
 	m_cursorPosition = m_bubble.getCursorPosition();
 
 	for (std::size_t i = 0; i < m_menus.size(); i++)
@@ -61,6 +62,10 @@ void AMenuSelection::setKeyboard(bool isKeyboard)
 
 void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 {
+	m_bubble.setPosition(position);
+	//TODO: Find better way to do that
+	m_bubble.setIndexCursor(m_indexCursor);
+	m_bubble.update(frameTime);
 	sf::Vector2f const & contentPosition = m_bubble.getContentUpLeft();
 	for (std::size_t i = 0; i < m_menus.size(); i++)
 		m_menus[i]->update(frameTime, m_cursorPosition[i] + contentPosition);
@@ -77,10 +82,6 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_indexSave = m_indexCursor;
 		setKeyboard(false);
 	}
-	m_bubble.setPosition(position);
-	//TODO: Find better way to do that
-	m_bubble.setIndexCursor(m_indexCursor);
-	m_bubble.update(frameTime);
 }
 
 

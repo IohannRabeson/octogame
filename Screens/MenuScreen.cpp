@@ -54,15 +54,17 @@ void	MenuScreen::stop()
 void	MenuScreen::update(sf::Time frameTime)
 {
 	AMenu::State				state = m_menu.getState();
-	sf::Vector2f const &		center = octo::Application::getCamera().getCenter();
-	sf::Vector2f const &		bubble = m_game->getOctoBubblePosition();
 	octo::StateManager &		states = octo::Application::getStateManager();
 	Progress &					progress = Progress::getInstance();
 
 	if (state == AMenu::State::Hide)
 		m_menu.setState(AMenu::State::Active);
 	m_game->update(frameTime);
+
+	sf::Vector2f const &		center = octo::Application::getCamera().getCenter();
+	sf::Vector2f const &		bubble = m_game->getOctoBubblePosition();
 	m_menu.update(frameTime, octo::linearInterpolation(center, bubble, 0.4f));
+
 	if (progress.changeLevel())
 	{
 		progress.levelChanged();

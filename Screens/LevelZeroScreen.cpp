@@ -44,7 +44,7 @@ void	LevelZeroScreen::start()
 		m_stars[i].setSpeed(sf::Vector2f(-speed, 0.f));
 	}
 
-	audio.startMusic(resource.getSound(ACTION_FAST_OGG), sf::milliseconds(1000.f));
+	audio.startMusic(resource.getSound(ACTION_FAST_OGG), sf::seconds(1.f));
 
 	if (Progress::getInstance().spaceShipIsRepair())
 	{
@@ -190,8 +190,8 @@ bool	LevelZeroScreen::onInputPressed(InputListener::OctoKeys const & key)
 			octo::StateManager &	states = octo::Application::getStateManager();
 			octo::AudioManager &	audio = octo::Application::getAudioManager();
 
-			states.change("transitionLevelZero");
 			audio.stopMusic(sf::seconds(0.1f));
+			states.change("transitionLevelZero");
 			break;
 		}
 		default:
