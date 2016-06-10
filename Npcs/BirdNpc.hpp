@@ -9,7 +9,7 @@ class SkyCycle;
 class BirdNpc : public ANpc
 {
 public:
-	BirdNpc(ResourceKey const & npcId);
+	BirdNpc(ResourceKey const & npcId, bool isMeetable = false);
 	virtual ~BirdNpc(void) = default;
 
 	virtual void setup(void);

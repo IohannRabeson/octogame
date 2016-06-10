@@ -13,15 +13,15 @@ JungleCBiome::JungleCBiome() :
 	m_name("Jungle A"),
 	m_id(Level::JungleC),
 	m_seed("sdf"),
-	m_mapSize(sf::Vector2u(1100u, 128u)),
+	m_mapSize(sf::Vector2u(900u, 200u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(294.f * 16.f, 1100.f),
+	m_octoStartPosition(93.f * 16.f, -1150.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
 	m_tileEndColor(0, 124, 104),
-	m_waterLevel(-1.f),
-	m_waterColor(0, 189, 168, 150),
+	m_waterLevel(1.f),
+	m_waterColor(196, 235, 1, 150),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),
@@ -117,8 +117,6 @@ JungleCBiome::JungleCBiome() :
 #else
 	m_mapSeed = 42u;//m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
-
-	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
 	m_particleColor.resize(colorCount);
@@ -126,34 +124,23 @@ JungleCBiome::JungleCBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_instances[300] = MAP_JUNGLE_C_TRAIL_OMP;
-	m_instances[760] = MAP_JUNGLE_C_PORTAL_OMP;
-	m_gameObjects[290] = GameObjectType::Portal;
-	m_gameObjects[250] = GameObjectType::OverCoolNpc;
-	m_gameObjects[400] = GameObjectType::Portal;
 	// Define game objects
-	m_gameObjects[170] = GameObjectType::BirdRedNpc;
-	m_gameObjects[180] = GameObjectType::BirdRedNpc;
-	m_gameObjects[240] = GameObjectType::BirdRedNpc;
-	m_gameObjects[700] = GameObjectType::BirdRedNpc;
-	for (std::size_t i = 830; i < 837; i++)
-		m_gameObjects[i] = GameObjectType::BirdRedNpc;
-	m_gameObjects[870] = GameObjectType::BirdRedNpc;
-	m_gameObjects[900] = GameObjectType::BirdRedNpc;
-	m_gameObjects[940] = GameObjectType::BirdRedNpc;
-	m_gameObjects[1000] = GameObjectType::BirdRedNpc;
-	for (std::size_t i = 1000; i < 1005; i++)
-		m_gameObjects[i] = GameObjectType::BirdRedNpc;
-	m_interestPointPosX = 500;
+	m_instances[135] = MAP_JUNGLE_C_PORTAL_OMP;
+	m_instances[230] = MAP_JUNGLE_C_TRAIL_OMP;
+	m_instances[665] = MAP_JUNGLE_C_PARA_SIGN_OMP;
+	m_gameObjects[90] = GameObjectType::Portal;
+	m_gameObjects[165] = GameObjectType::OverCoolNpc;
+	m_gameObjects[555] = GameObjectType::AmandineNpc;
+	m_gameObjects[595] = GameObjectType::FaustNpc;
+	m_gameObjects[630] = GameObjectType::ConstanceNpc;
+	m_gameObjects[700] = GameObjectType::Portal;
+
+	m_interestPointPosX = 290;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::WaterA);
-	m_destinations.push_back(Level::JungleA);
 	m_destinations.push_back(Level::Default);
-
-	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::WaterA)
-		m_octoStartPosition = sf::Vector2f(11900, -350.f);
+	m_destinations.push_back(Level::IceA);
+	m_destinations.push_back(Level::WaterA);
 }
 
 void			JungleCBiome::setup(std::size_t seed)
@@ -222,6 +209,11 @@ sf::Color	JungleCBiome::getWaterColor()
 	return m_waterColor;
 }
 
+bool		JungleCBiome::isDeadlyWater()
+{
+	return true;
+}
+
 std::map<std::size_t, std::string> const & JungleCBiome::getInstances()
 {
 	return m_instances;
@@ -257,20 +249,23 @@ Map::MapSurfaceGenerator JungleCBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 299.f / static_cast<float>(m_mapSize.x);
-		float middle1 = 699.f / static_cast<float>(m_mapSize.x);
-		float offset = 100.f / static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float bot = 0.5f;
+		float floatMapSize = static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
+		float m = n / 3.f;
+		std::vector<float> pointX = {0.f      , 200.f    , 235.f, 450.f, 465.f , 495.f   , 518.f  , 521.f    , 522.f   , 738.f   , 791.f   , 900.f};
+		std::vector<float> pointY = {m - 1.45f, m - 1.45f, n    , n    , -1.15f, m - 1.0f, m - 1.f, m - 1.05f, m - 1.55f, m - 1.6f, m - 0.3f, m - 0.3f};
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, bot, (x - start + offset) / offset);
-		else if (x > start && x <= middle1)
-			return n + 2.7f;
-		else if (x > middle1 && x <= middle1 + offset)
-			return octo::cosinusInterpolation(n, bot, (x - middle1 - offset) / offset);
-		else
-			return n;
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
 }
 
@@ -278,9 +273,9 @@ Map::TileColorGenerator JungleCBiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart(76, 70, 102);
 	sf::Color secondColorEnd(56, 50, 72);
-	float startTransition = 9500.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = 12000.f / static_cast<float>(m_mapSize.y);
-	float endTransition = 14000.f / static_cast<float>(m_mapSize.y);
+	float startTransition = 1000.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 5000.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 8000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;

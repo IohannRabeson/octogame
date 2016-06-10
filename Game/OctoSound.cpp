@@ -47,7 +47,7 @@ void	CharacterOcto::OctoSound::update(sf::Time frameTime, Events event, bool inW
 	if (m_soundTransition != nullptr)
 	{
 		m_timeSoundTransition += frameTime;
-		volume = (m_volumeEffect * audio.getSoundVolume()) * (1.f - (m_timeSoundTransition / m_timeSoundTransitionMax));
+		volume = (m_volumeEffect * 0.2f * audio.getSoundVolume()) * (1.f - (m_timeSoundTransition / m_timeSoundTransitionMax));
 		if (volume >= 0.f)
 			m_soundTransition->setVolume(volume);
 		if (m_soundTransition->getStatus() == sf::Sound::Stopped || volume < 0.f)
@@ -154,7 +154,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 				m_sound = audio.playSound(resources.getSound(OCTO_FEAR_OGG), m_volumeVoice);
 			}
 			if (m_transitionInWater)
-				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.6f, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.5f, m_pitchDistribution(m_engine));
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;
@@ -200,9 +200,9 @@ void	CharacterOcto::OctoSound::walkSound()
 	Level						level = Progress::getInstance().getNextDestination();
 
 	if (m_transitionInWater && m_soundTransition == nullptr)
-		m_soundTransition = audio.playSound(resources.getSound(TRANSITION_IN_WATER_OGG), m_volumeEffect);
+		m_soundTransition = audio.playSound(resources.getSound(TRANSITION_IN_WATER_OGG), m_volumeEffect * 0.05f);
 	if (m_transitionOutWater && m_soundTransition == nullptr)
-		m_soundTransition = audio.playSound(resources.getSound(TRANSITION_OUT_WATER_OGG), m_volumeEffect);
+		m_soundTransition = audio.playSound(resources.getSound(TRANSITION_OUT_WATER_OGG), m_volumeEffect * 0.05f);
 	if (m_inWater && (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped))
 	{
 		m_sound = audio.playSound(resources.getSound(OCTO_WALK_WATER_OGG), m_volumeEffect);
@@ -220,6 +220,8 @@ void	CharacterOcto::OctoSound::walkSound()
 				m_sound = audio.playSound(resources.getSound(OCTO_WALK_LEAF_OGG), m_volumeEffect);
 			break;
 		default:
+			if (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped)
+				m_sound = audio.playSound(resources.getSound(OCTO_WALK_ROCK_OGG), m_volumeEffect);
 			break;
 	}
 }

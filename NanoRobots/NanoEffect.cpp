@@ -20,10 +20,11 @@ NanoEffect::NanoEffect(void) :
 	m_transferTimerMax(sf::seconds(4.f)),
 	m_soundPlayed(false),
 	m_lastNanoCount(0u),
-	m_shaderIndex(0u)
+	m_shaderIndex(0u),
+	m_particle(new MusicSystem())
 {
 	m_generator.setSeed("random");
-	m_randomTimerMax = sf::seconds(m_generator.randomFloat(30.f, 90.f));
+	m_randomTimerMax = sf::seconds(m_generator.randomFloat(20.f, 50.f));
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 	m_lastNanoCount = Progress::getInstance().getNanoRobotCount();
 
@@ -50,18 +51,20 @@ void NanoEffect::playSound(void)
 		switch (soundChoose)
 		{
 			case 0u:
-				audio.playSound(resource.getSound(NANO_1_OGG), 0.4f, 1.f);
+				audio.playSound(resource.getSound(NANO_1_OGG), 0.3f, 1.f);
 				break;
 			case 1u:
-				audio.playSound(resource.getSound(NANO_2_OGG), 0.4f, 1.f);
+				audio.playSound(resource.getSound(NANO_2_OGG), 0.3f, 1.f);
 				break;
 			case 2u:
-				audio.playSound(resource.getSound(NANO_3_OGG), 0.4f, 1.f);
+				audio.playSound(resource.getSound(NANO_3_OGG), 0.3f, 1.f);
 				break;
 			default:
 				break;
 		}
 		m_soundPlayed = true;
+		m_particle->canEmit(true);
+		m_particleTimer = sf::seconds(8.f);
 	}
 }
 
@@ -91,6 +94,7 @@ void NanoEffect::update(sf::Time frameTime)
 {
 	m_builder.clear();
 
+	m_particleTimer -= frameTime;
 	m_glowingTimer += frameTime;
 	switch (m_state)
 	{
@@ -165,12 +169,19 @@ void NanoEffect::update(sf::Time frameTime)
 				m_glowingTimer = sf::Time::Zero;
 				m_state = State::Random;
 			}
+			if (m_particleTimer <= sf::Time::Zero)
+			{
+				m_soundPlayed = false;
+				m_particle->canEmit(false);
+			}
 			break;
 		}
 		default:
 			break;
 	}
 
+	m_particle->update(frameTime);
+	m_particle->setEmitter(m_position);
 	Progress const & progress = Progress::getInstance();
 	m_lastNanoCount = progress.getNanoRobotCount();
 	m_used = m_builder.getUsed();
@@ -192,6 +203,7 @@ void NanoEffect::setState(State state)
 
 void NanoEffect::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
+	m_particle->draw(render);
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 }
 
