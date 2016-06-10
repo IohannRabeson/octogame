@@ -13,15 +13,15 @@ DesertBBiome::DesertBBiome() :
 	m_name("Desert B"),
 	m_id(Level::DesertB),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(750u, 64u)),
+	m_mapSize(sf::Vector2u(650u, 64u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(56.f * 16.f, -1800.f),
+	m_octoStartPosition(63.f * 16.f, -200.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 245, 217),
 	m_tileEndColor(255, 252, 181),
-	m_waterLevel(1000.f),
-	m_waterColor(96, 204, 233, 180),
+	m_waterLevel(300.f),
+	m_waterColor(96, 204, 233, 0),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -39,7 +39,7 @@ DesertBBiome::DesertBBiome() :
 	m_rockCount(10u, 20u),
 	m_treeCount(13u, 13u),
 	m_mushroomCount(3u, 40u),
-	m_crystalCount(10u, 15u),
+	m_crystalCount(150u, 200u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
@@ -52,8 +52,8 @@ DesertBBiome::DesertBBiome() :
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
 	m_canCreateTree(true),
-	m_canCreateLeaf(true),
-	m_treeIsMoving(true),
+	m_canCreateLeaf(false),
+	m_treeIsMoving(false),
 	m_canCreateMushroom(false),
 	m_canCreateCrystal(true),
 	m_canCreateShineEffect(true),
@@ -69,7 +69,7 @@ DesertBBiome::DesertBBiome() :
 	m_rockColor(240, 110, 110),
 
 	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(15.f, 50.f), sf::Vector2f(30.f, 80.f)),
+	m_treeSize(sf::Vector2f(15.f, 30.f), sf::Vector2f(30.f, 60.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
@@ -81,7 +81,7 @@ DesertBBiome::DesertBBiome() :
 	m_mushroomColor(77, 142, 126),
 	m_mushroomLifeTime(sf::seconds(10), sf::seconds(30)),
 
-	m_crystalSize(sf::Vector2f(40.f, 80.f), sf::Vector2f(70.f, 150.f)),
+	m_crystalSize(sf::Vector2f(10.f, 80.f), sf::Vector2f(25.f, 150.f)),
 	m_crystalPartCount(2u, 8u),
 	m_crystalColor(18, 14, 66, 150),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
@@ -109,9 +109,7 @@ DesertBBiome::DesertBBiome() :
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
-	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f)),
-
-	m_indexTreePos(0u)
+	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
@@ -131,24 +129,22 @@ DesertBBiome::DesertBBiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(9800, -4950.f);
+	std::vector<int> const & deathPos = progress.getDeathPos();
+	if (progress.getLastDestination() == Level::DesertB && deathPos.size() && deathPos.back() >= 312.f)
+		m_octoStartPosition = sf::Vector2f(340.f * 16.f, -2500.f);
 
-	m_gameObjects[50] = GameObjectType::Portal;
-	m_instances[70] = MAP_DESERT_B_BRIDGE_OMP;
-	m_gameObjects[90] = GameObjectType::Portal;
-	m_instances[110] = MAP_DESERT_B_CAVE_OMP;
-	m_instances[240] = MAP_DESERT_B_TRAIL_A_OMP;
-	m_instances[290] = MAP_DESERT_B_TRAIL_B_OMP;
-	m_instances[415] = MAP_DESERT_B_TRAIL_C_OMP;
-	m_instances[535] = MAP_DESERT_B_TRAIL_D_OMP;
+	m_gameObjects[60] = GameObjectType::Portal;
+	m_instances[230] = MAP_DESERT_B_TRAIL_A_OMP;
+	m_instances[280] = MAP_DESERT_B_TRAIL_B_OMP;
+	m_instances[312] = MAP_DESERT_B_TRAIL_C_OMP;
+	m_instances[415] = MAP_DESERT_B_TRAIL_D_OMP;
+	m_instances[525] = MAP_DESERT_B_TRAIL_E_OMP;
 
 	m_interestPointPosX = 500;
-
-	m_treePos = {28, 35, 42, 50, 56, 61, 139, 147, 152, 167, 181, 194, 214};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::JungleA);
 	m_destinations.push_back(Level::DesertC);
-	m_destinations.push_back(Level::Default);
 }
 
 void			DesertBBiome::setup(std::size_t seed)
@@ -217,6 +213,11 @@ sf::Color	DesertBBiome::getWaterColor()
 	return m_waterColor;
 }
 
+bool		DesertBBiome::isDeadlyWater()
+{
+	return true;
+}
+
 std::map<std::size_t, std::string> const & DesertBBiome::getInstances()
 {
 	return m_instances;
@@ -252,42 +253,22 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start1 = 30.f / static_cast<float>(m_mapSize.x);
-		float end1 = 70.f / static_cast<float>(m_mapSize.x);
-		float start2 = 130.f / static_cast<float>(m_mapSize.x);
-		float end2 = 230.f / static_cast<float>(m_mapSize.x);
-		float startCave = 111.f / static_cast<float>(m_mapSize.x);
-		float endCave = 309.f / static_cast<float>(m_mapSize.x);
-		float offset1 = 5.f / static_cast<float>(m_mapSize.x);
-		float offset2 = 100.f / static_cast<float>(m_mapSize.x);
+		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float mapHigh = -3.9f;
-		float caveHighUpLeft = 0.f;
-		float caveHighUpRight = 0.35f;
-		float caveHighDown = 7.7f;
+		std::vector<float> pointX = { 0.f, 50.f, 55.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f   , 210.f   , 215.f, 750.f};
+		std::vector<float> pointY = { n  , n   , n - 0.8f, n - 0.8f, n   , n    , n - 1.0f, n - 1.0f, n    , n    , n - 1.2f, n - 1.2f, n    , n    , n - 1.4f, n - 1.4f, n    , n};
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
 
-		if (x > start1 - offset1 && x <= start1)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start1 + offset1) / offset1);
-		else if (x > start1 && x <= end1)
-			return mapHigh;
-		else if (x > end1 && x <= end1 + offset1)
-			return octo::cosinusInterpolation(n, mapHigh, (offset1 - x - end1) / offset1);
-		else if (x > start2 - offset1 && x <= start2)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start2 + offset1) / offset1);
-		else if (x > start2 && x <= end2)
-			return mapHigh;
-		else if (x > end2 && x <= end2 + offset1)
-			return octo::cosinusInterpolation(n, mapHigh, (offset1 - x - end2) / offset1);
-		if (x > startCave - offset1 && x <= startCave)
-			return octo::cosinusInterpolation(n, caveHighUpLeft, (x - startCave + offset1) / offset1);
-		else if (x > startCave && x <= endCave)
-			return caveHighDown;
-		else if (x > endCave && x <= endCave + offset2)
-			return octo::cosinusInterpolation(n, caveHighUpRight, (offset2 - x - endCave) / offset2);
-//		else if ((x > end2 + offset1 && m_mapSize.x) || (x > 0u && x < start1 - offset1))
-//			return 4.0f;
-		else
-			return n;
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
 }
 
@@ -503,7 +484,7 @@ sf::Color		DesertBBiome::getLeafColor()
 
 std::size_t		DesertBBiome::getTreePositionX()
 {
-	return m_treePos[m_indexTreePos++];
+	return randomInt(10u, m_mapSize.x - 1u);
 }
 
 sf::Vector2f	DesertBBiome::getCrystalSize()
@@ -523,13 +504,10 @@ sf::Color		DesertBBiome::getCrystalColor()
 
 int				DesertBBiome::getCrystalPosX()
 {
-	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
-	x += m_interestPointPosX - m_mapSize.x / 2.f;
-	if (x > static_cast<int>(m_mapSize.x))
-		x -= m_mapSize.x;
-	else if (x < 0)
-		x += m_mapSize.x;
-	return (static_cast<int>(x));
+	int pos = randomInt(10u, m_mapSize.x - 1u);
+	if ((pos >= 55 && pos <= 80) || (pos >= 110 && pos <= 130) || (pos >= 160 && pos <= 180))
+		return randomInt(10u, m_mapSize.x - 1u);
+	return pos;
 }
 
 bool			DesertBBiome::canCreateCrystal()
