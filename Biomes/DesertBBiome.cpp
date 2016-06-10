@@ -39,7 +39,7 @@ DesertBBiome::DesertBBiome() :
 	m_rockCount(10u, 20u),
 	m_treeCount(13u, 13u),
 	m_mushroomCount(3u, 40u),
-	m_crystalCount(150u, 200u),
+	m_crystalCount(130u, 170u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
@@ -234,12 +234,12 @@ std::vector<ParallaxScrolling::ALayer *> DesertBBiome::getLayers()
 			return noise.perlin(x * 1.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.perlin(x, y, 3, 2.f);
-	//	});
-	//vector.push_back(layer);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x, y, 3, 2.f);
+		});
+	vector.push_back(layer);
 	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
 	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 	//	{
@@ -274,9 +274,26 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DesertBBiome::getTileColorGenerator()
 {
-	return [this](Noise & noise, float x, float y, float z)
+	sf::Color secondColorStart(200, 35, 40);
+	sf::Color secondColorEnd(210, 65, 70);
+	float startTransition = 800.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 1600.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 3000.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > startTransition && y <= middleTransition)
+		{
+			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
+		}
+		else if (y > middleTransition && y <= endTransition)
+		{
+			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
+			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
+		}
+		if (y > endTransition)
+			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
@@ -505,7 +522,7 @@ sf::Color		DesertBBiome::getCrystalColor()
 int				DesertBBiome::getCrystalPosX()
 {
 	int pos = randomInt(10u, m_mapSize.x - 1u);
-	if ((pos >= 55 && pos <= 80) || (pos >= 110 && pos <= 130) || (pos >= 160 && pos <= 180))
+	if ((pos >= 55 && pos <= 90) || (pos >= 120 && pos <= 135) || (pos >= 165 && pos <= 175) || (pos >= 200 && pos <= 205))
 		return randomInt(10u, m_mapSize.x - 1u);
 	return pos;
 }
