@@ -24,7 +24,6 @@ Progress::Progress() :
 	m_npcMax(0u),
 	m_portalsCount(0u),
 	m_portalsMax(0u),
-	m_isDemo(false),
 	m_isOctoOnInstance(false),
 	m_isHighLight(false)
 {
@@ -244,11 +243,6 @@ bool	Progress::changeLevel() const
 void	Progress::levelChanged()
 {
 	m_changeLevel = false;
-}
-
-bool	Progress::isDemo() const
-{
-	return m_isDemo;
 }
 
 void	Progress::registerDeath(float deathPosX)
