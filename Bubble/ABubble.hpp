@@ -24,6 +24,13 @@ enum Type
 	Up
 };
 
+enum Priority
+{
+	Important,
+	Tips,
+	Bullshit
+};
+
 
 	ABubble(void);
 	virtual ~ABubble(void) = default;
@@ -42,6 +49,7 @@ enum Type
 	float							getSizeCorner(void) const;
 	bool							isActive(void) const;
 	void							setType(Type type);
+	void							setPriority(Priority priority);
 	void							setPosition(sf::Vector2f const & position);
 	void							setColor(sf::Color const & color);
 	void							setActive(bool isActive);
@@ -70,6 +78,18 @@ private:
 	void							createExtensionThink(sf::Vector2f const & position,
 														 sf::Color const & color,
 														 octo::VertexBuilder& builder);
+	
+	void							createSquare(sf::Vector2f const & size,
+												  sf::Vector2f const & origin,
+												  sf::Color const & color,
+												  octo::VertexBuilder & builder);
+
+	void							createRectangle(sf::Vector2f const & size,
+													sf::Vector2f const & origin,
+													sf::Color const & color,
+													octo::VertexBuilder & builder);
+
+	void							createInactiveLogo(sf::Vector2f const & size);
 
 	void							computePositionBubble(Type type,
 														  sf::Vector2f const & position);
@@ -81,6 +101,7 @@ private:
 	octo::VertexBuilder				m_builder;
 
 	Type							m_currentType;
+	Priority						m_priority;
 	sf::Vector2f					m_size;
 	sf::Vector2f					m_contentUpLeft;
 	sf::Vector2f					m_position;

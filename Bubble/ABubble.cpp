@@ -5,6 +5,7 @@ ABubble::ABubble(void) :
 	m_count(100),
 	m_used(0u),
 	m_currentType(Type::None),
+	m_priority(Priority::Bullshit),
 	m_color(255, 255, 255, 200),
 	m_isActive(false)
 {
@@ -89,6 +90,64 @@ void ABubble::createQuotePart(sf::Vector2f const & size, sf::Vector2f const & or
 	builder.createTriangle(rightDown, leftUpTriangle, downTriangle, color);
 }
 
+void ABubble::createSquare(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder & builder)
+{
+	sf::Vector2f leftUp(-size.x, -size.y);
+	sf::Vector2f rightUp(size.x, -size.y);
+	sf::Vector2f leftDown(-size.x, size.y);
+	sf::Vector2f rightDown(size.x, size.y);
+
+	leftUp += origin;
+	rightUp += origin;
+	leftDown += origin;
+	rightDown += origin;
+
+	builder.createQuad(leftUp, rightUp, rightDown, leftDown, color);
+}
+
+void ABubble::createRectangle(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder & builder)
+{
+	sf::Vector2f leftUp(-size.x, -size.y * 4.f);
+	sf::Vector2f rightUp(size.x, -size.y * 4.f);
+	sf::Vector2f leftDown(-size.x, size.y);
+	sf::Vector2f rightDown(size.x, size.y);
+
+	leftUp += origin;
+	rightUp += origin;
+	leftDown += origin;
+	rightDown += origin;
+
+	builder.createQuad(leftUp, rightUp, rightDown, leftDown, color);
+}
+
+void ABubble::createInactiveLogo(sf::Vector2f const & size)
+{
+	switch (m_priority)
+	{
+		case Priority::Tips:
+		{
+			createQuotePart(size / 2.f, m_positionBubble - sf::Vector2f(size.x, 0.f), sf::Color(75, 75, 75), m_builder);
+			createQuotePart(size / 2.f, m_positionBubble + sf::Vector2f(size.x, 0.f), sf::Color(75, 75, 75), m_builder);
+			break;
+		}
+		case Priority::Bullshit:
+		{
+			createSquare(size / 3.f, m_positionBubble, sf::Color(150, 150, 150), m_builder);
+			createSquare(size / 3.f, m_positionBubble - sf::Vector2f(size.x, 0.f), sf::Color(150, 150, 150), m_builder);
+			createSquare(size / 3.f, m_positionBubble + sf::Vector2f(size.x, 0.f), sf::Color(150, 150, 150), m_builder);
+			break;
+		}
+		case Priority::Important:
+		{
+			createRectangle(size / 3.f, m_positionBubble, sf::Color(0, 0, 0), m_builder);
+			createSquare(size / 3.f, m_positionBubble + sf::Vector2f(0.f, size.y), sf::Color(0, 0, 0), m_builder);
+			break;
+		}
+		default:
+			break;
+	}
+}
+
 void ABubble::computePositionBubble(Type type, sf::Vector2f const & position)
 {
 	if (type == Type::Speak || type == Type::Think)
@@ -130,8 +189,7 @@ void ABubble::update(sf::Time frameTime)
 		{
 			sf::Vector2f sizeInactive(m_sizeCorner / 2.f, m_sizeCorner / 2.f);
 			createOctogon(sizeInactive, m_sizeCorner, m_positionBubble, m_color, m_builder);
-			createQuotePart(sizeInactive / 2.f, m_positionBubble - sf::Vector2f(sizeInactive.x, 0.f), sf::Color(0, 0, 0), m_builder);
-			createQuotePart(sizeInactive / 2.f, m_positionBubble + sf::Vector2f(sizeInactive.x, 0.f), sf::Color(0, 0, 0), m_builder);
+			createInactiveLogo(sizeInactive);
 		}
 	}
 	m_used = m_builder.getUsed();
@@ -190,6 +248,11 @@ void ABubble::setColor(sf::Color const & color)
 void ABubble::setType(Type type)
 {
 	m_currentType = type;
+}
+
+void ABubble::setPriority(Priority priority)
+{
+	m_priority = priority;
 }
 
 void ABubble::setActive(bool isActive)
