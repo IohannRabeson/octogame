@@ -153,7 +153,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			{
 				m_sound = audio.playSound(resources.getSound(OCTO_FEAR_OGG), m_volumeVoice);
 			}
-			if (m_transitionInWater)
+			if (m_transitionInWater && Progress::getInstance().getNextDestination() != Level::DesertB)
 				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.5f, m_pitchDistribution(m_engine));
 			break;
 		case Idle:
