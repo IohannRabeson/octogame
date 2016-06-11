@@ -21,7 +21,8 @@ enum Type
 	Think,
 	Right,
 	Left,
-	Up
+	Up,
+	Menu
 };
 
 enum Priority

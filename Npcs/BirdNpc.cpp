@@ -216,7 +216,8 @@ void BirdNpc::collideOctoEvent(CharacterOcto * octo)
 	if (m_octoPosition.x > m_startPosition.x && m_flySpeed.x > 0.f && m_generator.randomBool(0.01f))
 	{
 		octo::CharacterSprite & sprite = getSprite();
-		sprite.setOrigin(getOrigin().x, getOrigin().y);
+		sf::Vector2f const & size = sprite.getLocalSize();
+		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
 		sprite.setScale(-getScale(), getScale());
 		m_flySpeed.x = -m_flySpeed.x;
 	}

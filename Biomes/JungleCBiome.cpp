@@ -129,11 +129,31 @@ JungleCBiome::JungleCBiome() :
 	m_instances[230] = MAP_JUNGLE_C_TRAIL_OMP;
 	m_instances[665] = MAP_JUNGLE_C_PARA_SIGN_OMP;
 	m_gameObjects[90] = GameObjectType::Portal;
+	m_gameObjects[40] = GameObjectType::BirdRedNpc;
 	m_gameObjects[165] = GameObjectType::OverCoolNpc;
+	m_gameObjects[110] = GameObjectType::BirdRedNpc;
 	m_gameObjects[555] = GameObjectType::AmandineNpc;
+	m_gameObjects[570] = GameObjectType::BirdRedNpc;
 	m_gameObjects[595] = GameObjectType::FaustNpc;
 	m_gameObjects[630] = GameObjectType::ConstanceNpc;
 	m_gameObjects[700] = GameObjectType::Portal;
+	for (std::size_t i = 0; i < 200; i += m_generator.randomInt(20u, 40u))
+	{
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
+		else
+			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
+	}
+	for (std::size_t i = 530; i < 730; i += m_generator.randomInt(20u, 30u))
+	{
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
+		else
+			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
+	}
+	for (std::size_t i = 530; i < 542; i += 2)
+		m_gameObjects[i] = GameObjectType::BirdRedNpc;
+
 
 	m_interestPointPosX = 290;
 

@@ -206,7 +206,7 @@ void ChallengePixelate::updateShader(sf::Time)
 
 // Displacement
 ChallengeDisplacement::ChallengeDisplacement(void) :
-	AChallenge(DISPLACEMENT_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
+	AChallenge(DISPLACEMENT_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
 {
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
 	m_shader.setParameter("resolution", rect.width, rect.height);

@@ -144,9 +144,6 @@ JungleABiome::JungleABiome() :
 	m_gameObjects[910] = GameObjectType::Portal;
 	m_gameObjects[955] = GameObjectType::VinceNpc;
 
-	for (std::size_t i = 850; i < 862; i += 2)
-		m_gameObjects[i] = GameObjectType::BirdRedNpc;
-
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
