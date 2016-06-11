@@ -24,6 +24,7 @@ public:
 	void nextStep(void);
 	void previousStep(void);
 	inline Tile const & get(std::size_t x, std::size_t y) const { return m_tiles(x, y, m_depth); }
+	inline Tile const & get(std::size_t x, std::size_t y, std::size_t z) const { return m_tiles(x, y, z); }
 	inline std::size_t getWidth(void) const { return m_tiles.columns(); }
 	inline std::size_t getHeight(void) const { return m_tiles.rows(); }
 	inline sf::IntRect const & getCornerPositions(void) const { return m_cornerPositions; }

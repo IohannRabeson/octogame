@@ -7,7 +7,7 @@
 class GroundRock : public ADecor
 {
 public:
-	GroundRock(void);
+	GroundRock(bool onInstance = false);
 	virtual ~GroundRock(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -19,6 +19,7 @@ private:
 	sf::Color				m_color;
 	std::size_t				m_type;
 	float					m_deep;
+	bool					m_onInstance;
 
 	void createGroundRock(std::size_t type,
 					sf::Vector2f const & origin,

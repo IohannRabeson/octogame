@@ -7,7 +7,6 @@
 #include "MapInstance.hpp"
 #include "SkyCycle.hpp"
 #include "Progress.hpp"
-#include "Water.hpp"
 
 //Decors
 #include "ADecor.hpp"
@@ -156,9 +155,52 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	updateOffset(0.f);
 }
 
+void GroundManager::setupGroundRock(ABiome & biome)
+{
+	std::vector<sf::Vector2f> positions;
+	auto const & instances = biome.getInstances();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+	for (auto & instance : instances)
+	{
+		octo::LevelMap const & levelMap = resources.getLevelMap(instance.second);
+		octo::Array3D<octo::LevelMap::TileType> const & map = levelMap.getMap();
+		for (std::size_t y = 0u; y < map.rows(); y++)
+		{
+			for (std::size_t x = 0u; x < map.columns(); x++)
+			{
+				if (biome.randomBool(0.01f) && map(x, y, 0) == octo::LevelMap::TileType::Square)
+				{
+					bool isEmpty = false;
+					sf::Vector2f position(x * Tile::TileSize, y * Tile::TileSize);
+					position.x += instance.first * Tile::TileSize - Map::OffsetX;
+					position.y += (-levelMap.getMapSize().y + levelMap.getMapPosY()) * Tile::TileSize - Map::OffsetY;
+					for (std::size_t z = 0u; z < map.depth(); z++)
+					{
+						if (map(x, y, z) != octo::LevelMap::TileType::Square)
+							isEmpty = true;
+					}
+					if (isEmpty == false)
+						positions.push_back(position);
+				}
+			}
+		}
+	}
+
+	for (auto & pos : positions)
+	{
+		ADecor * adecor = nullptr;
+		adecor = new GroundRock(true);
+		adecor->setPosition(sf::Vector2f(pos.x, pos.y + Tile::TileSize));
+		m_decorManagerInstanceFront.add(adecor);
+	}
+}
+
 void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 {
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+	setupGroundRock(biome);
+
 	m_npcFactory.registerCreator<ClassicNpc>(OCTO_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
@@ -429,7 +471,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				else if (!decor.name.compare(DECOR_MUSHROOM_OSS))
 					adecor = new Mushroom();
 				else if (!decor.name.compare(DECOR_GROUND_OSS))
-					adecor = new GroundRock();
+					adecor = new GroundRock(true);
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
 				if (adecor)
