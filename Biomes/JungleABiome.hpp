@@ -1,5 +1,5 @@
-#ifndef JUGNLEABIOME_HPP
-# define JUGNLEABIOME_HPP
+#ifndef JUNGLEABIOME_HPP
+# define JUNGLEABIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"

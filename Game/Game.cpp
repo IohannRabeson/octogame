@@ -17,6 +17,7 @@
 #include "DesertBBiome.hpp"
 #include "DesertCBiome.hpp"
 #include "JungleABiome.hpp"
+#include "JungleBBiome.hpp"
 #include "JungleCBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
@@ -118,6 +119,7 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<DesertBBiome>(Level::DesertB);
 	m_biomeManager.registerBiome<DesertCBiome>(Level::DesertC);
 	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
+	m_biomeManager.registerBiome<JungleBBiome>(Level::JungleB);
 	m_biomeManager.registerBiome<JungleCBiome>(Level::JungleC);
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
