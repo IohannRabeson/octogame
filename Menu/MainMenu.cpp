@@ -86,7 +86,7 @@ void MainMenu::createMenus(void)
 	else
 		setCharacterSize(30);
 
-	setBubbleType(ABubble::Type::Up);
+	setBubbleType(ABubble::Type::Menu);
 }
 
 void MainMenu::onSelection(void)
