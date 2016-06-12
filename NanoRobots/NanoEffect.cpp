@@ -36,6 +36,7 @@ NanoEffect::NanoEffect(void) :
 	postEffectShader.resetShader(&m_shader);
 	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
 	m_shader.setParameter("fade_out_size", 100.f);
+	m_shader.setParameter("alpha", 0.f);
 }
 
 void NanoEffect::playSound(void)
