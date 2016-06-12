@@ -1,5 +1,5 @@
-#ifndef JUNGLECBIOME_HPP
-# define JUNGLECBIOME_HPP
+#ifndef JUGNLEBBIOME_HPP
+# define JUGNLEBBIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -10,7 +10,7 @@
 # include <SFML/System/Vector2.hpp>
 
 
-class JungleCBiome : public ABiome
+class JungleBBiome : public ABiome
 {
 template<class T>
 struct Range
@@ -25,7 +25,7 @@ struct Range
 };
 
 public:
-	JungleCBiome();
+	JungleBBiome();
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;
