@@ -421,6 +421,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Left, stateSlowFall, stateLeft);
 	machine.addTransition(Left, stateSartWaterJump, stateLeft);
 	machine.addTransition(Left, stateWaterJump, stateLeft);
+	machine.addTransition(Left, stateDrink, stateLeft);
 
 	machine.addTransition(Right, stateIdle, stateRight);
 	machine.addTransition(Right, stateLeft, stateRight);
@@ -437,6 +438,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Right, stateSlowFall, stateRight);
 	machine.addTransition(Right, stateSartWaterJump, stateRight);
 	machine.addTransition(Right, stateWaterJump, stateRight);
+	machine.addTransition(Right, stateDrink, stateRight);
 
 	machine.addTransition(StartJump, stateIdle, stateStartJump);
 	machine.addTransition(StartJump, stateLeft, stateStartJump);
@@ -452,6 +454,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, stateSartWaterJump, stateStartJump);
 	machine.addTransition(StartJump, stateWaterJump, stateStartJump);
 	machine.addTransition(StartJump, statePortal, stateStartJump);
+	machine.addTransition(StartJump, stateDrink, stateStartJump);
 
 	machine.addTransition(Jump, stateStartJump, stateJump);
 
@@ -467,6 +470,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(DoubleJump, stateSartWaterJump, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateWaterJump, stateDoubleJump);
 	machine.addTransition(DoubleJump, statePortal, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateDrink, stateDoubleJump);
 
 	machine.addTransition(Fall, stateIdle, stateFall);
 	machine.addTransition(Fall, stateLeft, stateFall);
@@ -506,6 +510,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartSlowFall, stateSlowFall, stateStartSlowFall);
 	machine.addTransition(StartSlowFall, stateSartWaterJump, stateStartSlowFall);
 	machine.addTransition(StartSlowFall, stateWaterJump, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateDrink, stateStartSlowFall);
 
 	machine.addTransition(SlowFall, stateStartSlowFall, stateSlowFall);
 
