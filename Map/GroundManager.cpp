@@ -1158,7 +1158,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		m_transitionTimer = m_transitionTimerMax;
 	float transition = m_transitionTimer / m_transitionTimerMax;
 	float bottomBorder = cameraRect.top + cameraRect.height + Map::OffsetY;
-	float rightBorder = cameraRect.left + cameraRect.width + Map::OffsetX;
+	float rightBorder = cameraRect.left + cameraRect.width + Map::OffsetX + Tile::TileSize;
 	Tile * tile;
 	Tile * tilePrev;
 	TileShape * first;
