@@ -72,7 +72,8 @@ enum class GameObjectType : std::size_t
 	PortalBeach					= (1 << 15) + 39,
 	PortalJungle				= (1 << 15) + 40,
 	PortalDesert				= (1 << 15) + 41,
-	PortalSnow					= (1 << 15) + 42
+	PortalSnow					= (1 << 15) + 42,
+	PortalRandom				= (1 << 15) + 43
 //Script AddNpc
 
 
