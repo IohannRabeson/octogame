@@ -69,12 +69,32 @@ Portal::Portal(Level destination, ResourceKey key) :
 	});
 	m_animationOpening.setLoop(octo::LoopMode::NoLoop);
 
-	m_animationOpened.setFrames({
-		Frame(sf::seconds(0.8f), {0u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.8f), {1u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.8f), {2u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.8f), {3u, sf::FloatRect(), sf::Vector2f()}),
-	});
+	if (destination == Level::Rewards)
+	{
+		m_animationOpened.setFrames({
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
+		});
+	}
+	else
+	{
+		m_animationOpened.setFrames({
+			Frame(sf::seconds(0.8f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.8f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.8f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.8f), {3u, sf::FloatRect(), sf::Vector2f()}),
+		});
+	}
 	m_animationOpened.setLoop(octo::LoopMode::Loop);
 
 	//Setup state machine
@@ -106,7 +126,7 @@ Portal::Portal(Level destination, ResourceKey key) :
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
 
-	if (!progress.isMetPortal(m_destination))
+	if (!progress.isMetPortal(m_destination) && destination != Level::Rewards)
 		m_sprite.setNextEvent(Closed);
 	else
 		m_sprite.setNextEvent(Opened);
@@ -157,14 +177,14 @@ void Portal::update(sf::Time frametime)
 				m_sprite.setNextEvent(Opened);
 			else if (m_sprite.getCurrentEvent() == Events::Opened)
 			{
-			m_particles.setMaxParticle(m_timer / m_timerMax * static_cast<float>(m_maxParticle));
-			m_timer += frametime.asSeconds();
-			if (m_timer >= m_timerMax)
-			{
-				Progress::getInstance().meetPortal(m_destination);
-				m_state = Activated;
-				m_timer = m_timerMax;
-			}
+				m_particles.setMaxParticle(m_timer / m_timerMax * static_cast<float>(m_maxParticle));
+				m_timer += frametime.asSeconds();
+				if (m_timer >= m_timerMax)
+				{
+					Progress::getInstance().meetPortal(m_destination);
+					m_state = Activated;
+					m_timer = m_timerMax;
+				}
 			}
 			break;
 		}

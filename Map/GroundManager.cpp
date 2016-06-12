@@ -519,6 +519,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	{
 		switch (gameObject.second)
 		{
+			case GameObjectType::PortalRandom:
+				{
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_RANDOM_OSS));
+					portal->setBiome(biome);
+					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+				}
+				break;
 			case GameObjectType::PortalJungle:
 				{
 					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_JUNGLE_OSS));
