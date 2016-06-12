@@ -449,10 +449,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			position.x += instance.first * Tile::TileSize - Map::OffsetX;
 			position.y += (-levelMap.getMapSize().y + levelMap.getMapPosY()) * Tile::TileSize - Map::OffsetY;
 
-			if (!decor.name.compare(OBJECT_PORTAL_OSS))
+			if (!decor.name.substr(0, 13).compare("object_portal"))
 			{
-				//TODO care about get destination
-				std::unique_ptr<Portal> portal(new Portal(biome.getDestination()));
+				std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), decor.name.c_str()));
 				portal->setBiome(biome);
 				portal->setPosition(position + sf::Vector2f(50.f, 350.f));
 				m_otherOnInstance.push_back(std::move(portal));
@@ -520,9 +519,37 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	{
 		switch (gameObject.second)
 		{
+			case GameObjectType::PortalJungle:
+				{
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_JUNGLE_OSS));
+					portal->setBiome(biome);
+					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+				}
+				break;
+			case GameObjectType::PortalSnow:
+				{
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_SNOW_OSS));
+					portal->setBiome(biome);
+					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+				}
+				break;
+			case GameObjectType::PortalDesert:
+				{
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_DESERT_OSS));
+					portal->setBiome(biome);
+					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+				}
+				break;
+			case GameObjectType::PortalBeach:
+				{
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_BEACH_OSS));
+					portal->setBiome(biome);
+					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+				}
+				break;
 			case GameObjectType::Portal:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination()));
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_OSS));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 				}

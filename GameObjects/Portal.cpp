@@ -1,5 +1,4 @@
 #include "Portal.hpp"
-#include "ResourceDefinitions.hpp"
 #include "CircleShape.hpp"
 #include "PhysicsEngine.hpp"
 #include "Progress.hpp"
@@ -10,7 +9,7 @@
 #include <Camera.hpp>
 #include <cassert>
 
-Portal::Portal(Level destination) :
+Portal::Portal(Level destination, ResourceKey key) :
 	m_destination(destination),
 	m_position(40.f, 0.f),
 	m_shaderIndex(0u),
@@ -52,7 +51,7 @@ Portal::Portal(Level destination) :
 	//Setup Sprite
 	typedef octo::CharacterAnimation::Frame Frame;
 
-	m_sprite.setSpriteSheet(resources.getSpriteSheet(OBJECT_PORTAL_OSS));
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(key));
 
 	m_animationClosed.setFrames({
 		Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),

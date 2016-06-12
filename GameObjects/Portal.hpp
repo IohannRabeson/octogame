@@ -14,6 +14,7 @@
 # include "AGameObject.hpp"
 # include "ABiome.hpp"
 # include "IPlaceable.hpp"
+# include "ResourceDefinitions.hpp"
 
 # include <random>
 # include <ctime>
@@ -74,7 +75,7 @@ private:
 	};
 
 public:
-	Portal(Level destination);
+	Portal(Level destination, ResourceKey key);
 	virtual ~Portal(void);
 
 	void addMapOffset(float x, float y);
