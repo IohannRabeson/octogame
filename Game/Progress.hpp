@@ -125,6 +125,7 @@ private:
 		data(std::size_t nanoRobot, Level biome,
 				std::size_t musicVol, std::size_t soundVol,
 				bool fullscreen, bool vsync, Language language) :
+			validateChallenge(0u),
 			nanoRobotCount(nanoRobot),
 			nextDestination(biome),
 			lastDestination(biome),
