@@ -129,6 +129,7 @@ IceBBiome::IceBBiome() :
 	m_instances[50] = MAP_ICE_B_TRAIL_A_OMP;
 	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
 	m_instances[178] = MAP_ICE_B_TRAIL_C_OMP;
+	m_instances[370] = MAP_ICE_B_PORTAL_OMP;
 	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();
@@ -140,8 +141,8 @@ IceBBiome::IceBBiome() :
 
 	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_destinations.push_back(Level::IceC);
+	m_destinations.push_back(Level::Rewards);
 	m_destinations.push_back(Level::IceA);
-
 }
 
 void			IceBBiome::setup(std::size_t seed)
