@@ -10,9 +10,9 @@
 #include <iostream>
 
 JungleCBiome::JungleCBiome() :
-	m_name("Jungle A"),
+	m_name("Jungle C"),
 	m_id(Level::JungleC),
-	m_seed("sdf"),
+	m_seed("JungleC"),
 	m_mapSize(sf::Vector2u(900u, 200u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(93.f * 16.f, -1150.f),
@@ -155,7 +155,7 @@ JungleCBiome::JungleCBiome() :
 		m_gameObjects[i] = GameObjectType::BirdRedNpc;
 
 
-	m_interestPointPosX = 290;
+	m_interestPointPosX = 400;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Default);

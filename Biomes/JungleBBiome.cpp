@@ -12,15 +12,15 @@
 JungleBBiome::JungleBBiome() :
 	m_name("Jungle B"),
 	m_id(Level::JungleB),
-	m_seed("sdf"),
-	m_mapSize(sf::Vector2u(900u, 200u)),
+	m_seed("Jungle B"),
+	m_mapSize(sf::Vector2u(700u, 200u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(93.f * 16.f, -1150.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
 	m_tileEndColor(0, 124, 104),
-	m_waterLevel(1.f),
+	m_waterLevel(-1.f),
 	m_waterColor(196, 235, 1, 150),
 	m_destinationIndex(0u),
 
@@ -125,18 +125,9 @@ JungleBBiome::JungleBBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[135] = MAP_JUNGLE_C_PORTAL_OMP;
-	m_instances[230] = MAP_JUNGLE_C_TRAIL_OMP;
-	m_instances[665] = MAP_JUNGLE_C_PARA_SIGN_OMP;
+	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
 	m_gameObjects[90] = GameObjectType::Portal;
-	m_gameObjects[40] = GameObjectType::BirdRedNpc;
-	m_gameObjects[165] = GameObjectType::OverCoolNpc;
-	m_gameObjects[110] = GameObjectType::BirdRedNpc;
-	m_gameObjects[555] = GameObjectType::AmandineNpc;
-	m_gameObjects[570] = GameObjectType::BirdRedNpc;
-	m_gameObjects[595] = GameObjectType::FaustNpc;
-	m_gameObjects[630] = GameObjectType::ConstanceNpc;
-	m_gameObjects[700] = GameObjectType::Portal;
+	/*
 	for (std::size_t i = 0; i < 200; i += m_generator.randomInt(20u, 40u))
 	{
 		if (m_generator.randomBool(0.5))
@@ -153,14 +144,15 @@ JungleBBiome::JungleBBiome() :
 	}
 	for (std::size_t i = 530; i < 542; i += 2)
 		m_gameObjects[i] = GameObjectType::BirdRedNpc;
+	*/
 
 
 	m_interestPointPosX = 290;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Default);
-	m_destinations.push_back(Level::IceA);
-	m_destinations.push_back(Level::WaterA);
+	//m_destinations.push_back(Level::Default);
+	//m_destinations.push_back(Level::IceA);
+	m_destinations.push_back(Level::JungleC);
 }
 
 void			JungleBBiome::setup(std::size_t seed)
@@ -271,9 +263,9 @@ Map::MapSurfaceGenerator JungleBBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
-		float m = n / 3.f;
-		std::vector<float> pointX = {0.f      , 200.f    , 235.f, 450.f, 465.f , 495.f   , 518.f  , 521.f    , 522.f   , 738.f   , 791.f   , 900.f};
-		std::vector<float> pointY = {m - 1.45f, m - 1.45f, n    , n    , -1.15f, m - 1.0f, m - 1.f, m - 1.05f, m - 1.55f, m - 1.6f, m - 0.3f, m - 0.3f};
+		//float m = n / 3.f;
+		std::vector<float> pointX = {0.f, 44.f, 45.f, 55.f, 56.f, 700.f};
+		std::vector<float> pointY = {n  , n   , 15.f, 15.f, n   , n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
