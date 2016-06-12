@@ -136,8 +136,17 @@ RewardsBiome::RewardsBiome() :
 
 	// TODO define map position and number of map
 	std::size_t portalPos = m_generator.randomInt(100u, m_mapSize.x - 40u);
-	m_gameObjects[portalPos] = GameObjectType::Portal;
-	m_destinations.push_back(Level::Rewards);
+	if (progress.isMenu())
+	{
+		m_gameObjects[portalPos] = GameObjectType::PortalRandom;
+		m_destinations.push_back(Level::Rewards);
+	}
+	else
+	{
+		m_gameObjects[portalPos] = GameObjectType::Portal;
+		m_destinations.push_back(progress.getLastDestination());
+	}
+
 	m_interestPointPosX = portalPos;
 	
 	std::vector<GameObjectType> const & npcList = progress.getNpcMet();
