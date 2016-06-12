@@ -134,7 +134,7 @@ IceABiome::IceABiome() :
 	if (progress.getLastDestination() == Level::IceB)
 		m_octoStartPosition = sf::Vector2f(423 * 16.f, 0.f);
 
-	m_gameObjects[420] = GameObjectType::Portal;
+	m_gameObjects[420] = GameObjectType::PortalSnow;
 	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_destinations.push_back(Level::IceB);
 

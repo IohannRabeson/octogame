@@ -65,10 +65,14 @@ enum class GameObjectType : std::size_t
 	StrangerSnowNpc				= (1 << 15) + 32,
 	BirdBlueNpc					= (1 << 15) + 33,
 	BrayouNpc					= (1 << 15) + 34,
-	ForestSpirit1Npc				= (1 << 15) + 35,
-	ForestSpirit2Npc				= (1 << 15) + 36,
-	Pedestal				= (1 << 15) + 37,
-	OverCoolNpc				= (1 << 15) + 38,
+	ForestSpirit1Npc			= (1 << 15) + 35,
+	ForestSpirit2Npc			= (1 << 15) + 36,
+	Pedestal					= (1 << 15) + 37,
+	OverCoolNpc					= (1 << 15) + 38,
+	PortalBeach					= (1 << 15) + 39,
+	PortalJungle				= (1 << 15) + 40,
+	PortalDesert				= (1 << 15) + 41,
+	PortalSnow					= (1 << 15) + 42
 //Script AddNpc
 
 

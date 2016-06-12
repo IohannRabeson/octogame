@@ -135,7 +135,7 @@ IceCBiome::IceCBiome() :
 
 	//m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::IceD);
-	m_gameObjects[200] = GameObjectType::Portal;
+	m_gameObjects[200] = GameObjectType::PortalSnow;
 	m_destinations.push_back(Level::Default);
 
 }

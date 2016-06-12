@@ -138,7 +138,7 @@ IceBBiome::IceBBiome() :
 	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[320] = GameObjectType::BirdBlueNpc;
 
-	m_gameObjects[450] = GameObjectType::Portal;
+	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_destinations.push_back(Level::IceC);
 	m_destinations.push_back(Level::IceA);
 
