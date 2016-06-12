@@ -241,7 +241,7 @@ Map::MapSurfaceGenerator IceBBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {25.f, 50.f, 51.f, 299.f, 300.f, 325.f};
+		std::vector<float> pointX = {25.f, 50.f, 51.f, 317.f, 318.f, 325.f};
 		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.2f , 0.f  , n    };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
