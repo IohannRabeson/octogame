@@ -57,6 +57,7 @@ private:
 	sf::Color							m_colorGround;
 	sf::Time							m_timerGroundBubble;
 	sf::Time							m_timerGroundBubbleMax;
+	sf::Time							m_earlyMapMovement;
 
 	void			moveMap(sf::Time frameTime);
 	void			setupBubbleGround(void);
