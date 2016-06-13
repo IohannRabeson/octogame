@@ -122,6 +122,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Concert)
 		| static_cast<std::size_t>(GameObjectType::CedricNpc)
 		| static_cast<std::size_t>(GameObjectType::FannyNpc)
+		| static_cast<std::size_t>(GameObjectType::Snowman3Npc)
 		| static_cast<std::size_t>(GameObjectType::HouseFlatSnow)
 		| static_cast<std::size_t>(GameObjectType::EngineSnow)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
@@ -894,7 +895,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 
 void	CharacterOcto::startDrinkPotion(void)
 {
-	if (m_sprite.getCurrentEvent() != Drink)
+	if (m_sprite.getCurrentEvent() != Drink && !Progress::getInstance().isMenu())
 	{
 		m_sprite.setNextEvent(Drink);
 		m_box->setApplyGravity(false);

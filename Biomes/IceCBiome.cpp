@@ -135,9 +135,8 @@ IceCBiome::IceCBiome() :
 
 	//m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::IceD);
-	m_gameObjects[200] = GameObjectType::PortalSnow;
-	m_destinations.push_back(Level::Default);
-
+	m_gameObjects[300] = GameObjectType::PortalRandom;
+	m_destinations.push_back(Level::Rewards);
 }
 
 void			IceCBiome::setup(std::size_t seed)

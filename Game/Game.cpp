@@ -107,7 +107,8 @@ Game::Game(void) :
 	m_slowTimeInfosCoef(1.f),
 	m_skipFrames(0u),
 	m_skipFramesMax(3u),
-	m_timerGroundBubbleMax(sf::seconds(2.5f))
+	m_timerGroundBubbleMax(sf::seconds(2.5f)),
+	m_earlyMapMovement(sf::seconds(2.f))
 {
 	InputListener::addInputListener();
 
@@ -315,6 +316,11 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				octo->startDrinkPotion();
 			gameObjectCast<FannyNpc>(gameObject)->startBalle();
 			break;
+		case GameObjectType::Snowman3Npc:
+			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Pixelate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Pixelate))
+				octo->startDrinkPotion();
+			gameObjectCast<Snowman3Npc>(gameObject)->startBalle();
+			break;
 		case GameObjectType::WellKeeperNpc:
 			gameObjectCast<WellKeeperNpc>(gameObject)->stopBalle();
 			break;
@@ -506,8 +512,11 @@ void Game::moveMap(sf::Time frameTime)
 	}
 
 	updateBubbleGround(frameTime);
-	if (Progress::getInstance().isMenu())
-		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
+	m_earlyMapMovement -= frameTime;
+	if (Progress::getInstance().isMenu() || m_earlyMapMovement > sf::Time::Zero)
+	{
+		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
+	}
 }
 
 void	Game::updateBubbleGround(sf::Time frameTime)
@@ -576,10 +585,10 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
 	//m_musicPlayer.debugDraw(render);
-	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	m_groundManager->drawFront(render, states);
+	//m_physicsEngine.debugDraw(render);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
 	m_groundManager->drawWater(render, states);

@@ -695,6 +695,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
+			case GameObjectType::Snowman3Npc:
+				{
+					Snowman3Npc * npc = new Snowman3Npc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::GuiNpc:
 				{
 					GuiNpc * npc = new GuiNpc();
@@ -1168,7 +1175,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	if (m_transitionTimer > m_transitionTimerMax)
 		m_transitionTimer = m_transitionTimerMax;
 	float transition = m_transitionTimer / m_transitionTimerMax;
-	float bottomBorder = cameraRect.top + cameraRect.height + Map::OffsetY;
+	float bottomBorder = cameraRect.top + cameraRect.height + Map::OffsetY + Tile::TileSize;
 	float rightBorder = cameraRect.left + cameraRect.width + Map::OffsetX + Tile::TileSize;
 	Tile * tile;
 	Tile * tilePrev;

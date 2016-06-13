@@ -196,7 +196,7 @@ void ChallengePersistence::updateShader(sf::Time)
 
 // Pixelate
 ChallengePixelate::ChallengePixelate(void) :
-	AChallenge(PIXELATE_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
+	AChallenge(PIXELATE_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(64.f * 16.f, -160.f * 16.f), sf::Vector2f(30.f * 16.f, 50.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
 {}
 
 void ChallengePixelate::updateShader(sf::Time)
