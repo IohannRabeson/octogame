@@ -52,7 +52,7 @@ JungleBBiome::JungleBBiome() :
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
 	m_canCreateTree(true),
-	m_canCreateLeaf(true),
+	m_canCreateLeaf(false),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
 	m_canCreateCrystal(true),
@@ -64,12 +64,12 @@ JungleBBiome::JungleBBiome() :
 	m_canCreateRainbow(false),
 	m_type(ABiome::Type::Jungle),
 
-	m_rockSize(sf::Vector2f(50.f, 250.f), sf::Vector2f(150.f, 500.f)),
+	m_rockSize(sf::Vector2f(50.f, 50.f), sf::Vector2f(100.f, 100.f)),
 	m_rockPartCount(4.f, 10.f),
 	m_rockColor(56, 50, 72),
 
-	m_treeDepth(4u, 5u),
-	m_treeSize(sf::Vector2f(30.f, 300.f), sf::Vector2f(200.f, 300.f)),
+	m_treeDepth(3u, 4u),
+	m_treeSize(sf::Vector2f(30.f, 600.f), sf::Vector2f(200.f, 900.f)),
 	m_treeLifeTime(sf::seconds(90), sf::seconds(180)),
 	m_treeColor(40, 37, 44),
 	m_treeAngle(15.f, 35.f),
@@ -510,7 +510,7 @@ sf::Color		JungleBBiome::getLeafColor()
 
 std::size_t		JungleBBiome::getTreePositionX()
 {
-	return randomInt(1u, m_mapSize.x - 1u);
+	return randomInt(430u, m_mapSize.x - 1u);
 }
 
 sf::Vector2f	JungleBBiome::getCrystalSize()
