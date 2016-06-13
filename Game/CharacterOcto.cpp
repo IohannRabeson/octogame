@@ -895,7 +895,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 
 void	CharacterOcto::startDrinkPotion(void)
 {
-	if (m_sprite.getCurrentEvent() != Drink)
+	if (m_sprite.getCurrentEvent() != Drink && !Progress::getInstance().isMenu())
 	{
 		m_sprite.setNextEvent(Drink);
 		m_box->setApplyGravity(false);

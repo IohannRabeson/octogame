@@ -35,6 +35,7 @@ NanoEffect::NanoEffect(void) :
 	octo::PostEffect postEffectShader;
 	postEffectShader.resetShader(&m_shader);
 	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
 	m_shader.setParameter("fade_out_size", 100.f);
 	m_shader.setParameter("alpha", 0.f);
 }
