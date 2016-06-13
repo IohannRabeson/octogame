@@ -10,6 +10,7 @@ public:
 	virtual ~Snowman3Npc(void) = default;
 
 	virtual void setup(void);
+	void startBalle(void);
 
 protected:
 	virtual void setupMachine(void);

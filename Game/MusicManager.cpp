@@ -52,7 +52,7 @@ MusicManager::MusicManager() :
 
 	m_musicLevel[10] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
 
-	m_music.resize(7);
+	m_music.resize(8);
 	// Montagne
 	m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
@@ -74,6 +74,9 @@ MusicManager::MusicManager() :
 	//desert c balle
 	m_music[6] = AreaMusic(Level::DesertC, MENU_OPUS_II_REVERSE_OGG,
 			sf::FloatRect(sf::Vector2f(90.f * 16.f, -150.f * 16.f), sf::Vector2f(250.f * 16.f, 750.f * 16.f)));
+	//ice balle pixel
+	m_music[7] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
+			sf::FloatRect(sf::Vector2f(64.f * 16.f, -160.f * 16.f), sf::Vector2f(30.f * 16.f, 50.f * 16.f)));
 }
 
 MusicManager::~MusicManager()
