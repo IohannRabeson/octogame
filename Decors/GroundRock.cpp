@@ -45,6 +45,7 @@ void GroundRock::setup(ABiome& biome)
 
 void GroundRock::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
 {
-	sf::Vector2f const & position = getPosition();
+	sf::Vector2f position = getPosition();
+	position.y -= Tile::TileSize;
 	createGroundRock(m_type, position + sf::Vector2f(0.f, m_deep), m_color, builder);
 }
