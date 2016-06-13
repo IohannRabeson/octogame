@@ -459,6 +459,7 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 {
 	if (shape->getGameObject() && gameObjectCast<CharacterOcto>(shape->getGameObject()))
 	{
+		std::cout << collisionDirection.x << " " << collisionDirection.y << std::endl;
 		m_octo->onCollision(GameObjectType::Tile, collisionDirection);
 	}
 	(void)tileShape;
