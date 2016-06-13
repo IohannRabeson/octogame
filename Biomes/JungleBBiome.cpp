@@ -20,7 +20,7 @@ JungleBBiome::JungleBBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
 	m_tileEndColor(0, 124, 104),
-	m_waterLevel(-1.f),
+	m_waterLevel(7100.f),
 	m_waterColor(196, 235, 1, 150),
 	m_destinationIndex(0u),
 
@@ -53,7 +53,7 @@ JungleBBiome::JungleBBiome() :
 	m_canCreateRock(true),
 	m_canCreateTree(true),
 	m_canCreateLeaf(false),
-	m_treeIsMoving(true),
+	m_treeIsMoving(false),
 	m_canCreateMushroom(true),
 	m_canCreateCrystal(true),
 	m_canCreateShineEffect(true),
@@ -64,12 +64,12 @@ JungleBBiome::JungleBBiome() :
 	m_canCreateRainbow(false),
 	m_type(ABiome::Type::Jungle),
 
-	m_rockSize(sf::Vector2f(50.f, 50.f), sf::Vector2f(100.f, 100.f)),
+	m_rockSize(sf::Vector2f(30.f, 50.f), sf::Vector2f(40.f, 300.f)),
 	m_rockPartCount(4.f, 10.f),
 	m_rockColor(56, 50, 72),
 
-	m_treeDepth(3u, 4u),
-	m_treeSize(sf::Vector2f(30.f, 600.f), sf::Vector2f(200.f, 900.f)),
+	m_treeDepth(5u, 6u),
+	m_treeSize(sf::Vector2f(30.f, 200.f), sf::Vector2f(120.f, 350.f)),
 	m_treeLifeTime(sf::seconds(90), sf::seconds(180)),
 	m_treeColor(40, 37, 44),
 	m_treeAngle(15.f, 35.f),
@@ -126,6 +126,8 @@ JungleBBiome::JungleBBiome() :
 
 	// Define game objects
 	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
+	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
+	m_instances[405] = MAP_JUNGLE_A_ELEVATOR_OMP;
 	m_gameObjects[90] = GameObjectType::Portal;
 	/*
 	for (std::size_t i = 0; i < 200; i += m_generator.randomInt(20u, 40u))
@@ -152,7 +154,8 @@ JungleBBiome::JungleBBiome() :
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	//m_destinations.push_back(Level::Default);
 	//m_destinations.push_back(Level::IceA);
-	m_destinations.push_back(Level::JungleC);
+	m_destinations.push_back(Level::Rewards);
+	m_destinations.push_back(Level::JungleA);
 }
 
 void			JungleBBiome::setup(std::size_t seed)
@@ -264,8 +267,8 @@ Map::MapSurfaceGenerator JungleBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		//float m = n / 3.f;
-		std::vector<float> pointX = {0.f, 44.f, 45.f, 55.f, 56.f, 700.f};
-		std::vector<float> pointY = {n  , n   , 15.f, 15.f, n   , n};
+		std::vector<float> pointX = {0.f, 44.f     , 45.f, 55.f, 56.f     , 359.f, 381.f, 382.f, 385.f, 415.f, 420.f, 428.f, 700.f};
+		std::vector<float> pointY = {n  , n - 0.05f, 5.f , 5.f , n - 0.05f, -0.1f, 0.f  , 5.f  , 3.38f, 3.38f, 0.f  , -0.1f, n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -285,9 +288,9 @@ Map::TileColorGenerator JungleBBiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart(76, 70, 102);
 	sf::Color secondColorEnd(56, 50, 72);
-	float startTransition = 1000.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = 5000.f / static_cast<float>(m_mapSize.y);
-	float endTransition = 8000.f / static_cast<float>(m_mapSize.y);
+	float startTransition = 14000.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 40000.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 60000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
