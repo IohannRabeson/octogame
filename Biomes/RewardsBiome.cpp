@@ -148,7 +148,23 @@ RewardsBiome::RewardsBiome() :
 	}
 
 	m_interestPointPosX = portalPos;
-	
+
+	for (std::size_t i = 0u; i < m_mapSize.x - 1u; i += m_generator.randomInt(15u, 200u))
+	{
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
+		else
+			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
+	}
+
+	for (std::size_t i = 0u; i < m_mapSize.x - 1u; i += m_generator.randomInt(15u, 300u))
+	{
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::BirdBlueNpc;
+		else
+			m_gameObjects[i] = GameObjectType::BirdRedNpc;
+	}
+
 	std::vector<GameObjectType> const & npcList = progress.getNpcMet();
 	std::size_t total = 0;
 	for (std::size_t i = 0; i < npcList.size(); i++)
