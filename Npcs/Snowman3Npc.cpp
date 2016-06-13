@@ -1,4 +1,6 @@
 #include "Snowman3Npc.hpp"
+#include "Progress.hpp"
+#include "ChallengeManager.hpp"
 #include "RectangleShape.hpp"
 
 Snowman3Npc::Snowman3Npc(void) :
@@ -11,7 +13,7 @@ Snowman3Npc::Snowman3Npc(void) :
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void Snowman3Npc::setup(void)
@@ -63,6 +65,14 @@ void Snowman3Npc::setupMachine(void)
 
 	setMachine(machine);
 	setNextEvent(Idle);
+}
+
+void Snowman3Npc::startBalle(void)
+{
+	if (!Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Pixelate))
+		ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Pixelate).start();
+	else
+		Progress::getInstance().validateChallenge(ChallengeManager::Effect::Pixelate);
 }
 
 void Snowman3Npc::updateState(void)

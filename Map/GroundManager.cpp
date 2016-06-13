@@ -695,6 +695,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
+			case GameObjectType::Snowman3Npc:
+				{
+					Snowman3Npc * npc = new Snowman3Npc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::GuiNpc:
 				{
 					GuiNpc * npc = new GuiNpc();
