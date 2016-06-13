@@ -10,7 +10,7 @@
 #include <iostream>
 
 DesertCBiome::DesertCBiome() :
-	m_name("Desert B"),
+	m_name("Desert C"),
 	m_id(Level::DesertC),
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(600u, 180u)),
@@ -253,8 +253,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f      , 100.f    , 101.f    , 115.f   , 244.f   , 245.f, 255.f, 253.f   , 275.f   , 310.f    , 393.f    , 403.f, 404.f    , 500.f   };
-		std::vector<float> pointY = {-10.f + n, -10.f + n, -2.5f - n, -2.f - n, -2.f - n, 6.7f , 6.7f , -2.f - n, -2.f - n, -2.5f + n, -2.5f + n, -3.f , -10.f + n, -10.f + n};
+		std::vector<float> pointX = {0.f      , 100.f    , 101.f    , 115.f   , 244.f, 245.f, 255.f, 256.f, 275.f   , 310.f    , 393.f    , 403.f, 404.f    , 500.f   };
+		std::vector<float> pointY = {-10.f + n, -10.f + n, -2.5f - n, -2.f - n, -2.f , 6.7f , 6.7f , -2.f , -2.f - n, -2.5f + n, -2.5f + n, -3.f , -10.f + n, -10.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -263,7 +263,7 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 			if (x >= pointX[i] && x < pointX[i + 1])
 			{
 				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+				return octo::linearInterpolation(pointY[i], pointY[i + 1], coef);
 			}
 		}
 		return n;
