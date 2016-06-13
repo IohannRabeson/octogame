@@ -204,6 +204,7 @@ void	Game::update(sf::Time frameTime)
 	}
 	frameTime = frameTime / m_slowTimeInfosCoef;
 	// update the PhysicsEngine as first
+	m_cameraMovement->update(frameTime, *m_octo);
 	m_physicsEngine.update(frameTime.asSeconds());
 	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
@@ -216,7 +217,6 @@ void	Game::update(sf::Time frameTime)
 	m_skyManager->update(frameTime);
 	m_konami->update(frameTime, m_octo->getPosition());
 	m_octo->startKonamiCode(m_konami->canStartEvent());
-	m_cameraMovement->update(frameTime, *m_octo);
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
 }
 
@@ -595,7 +595,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
-	if (m_earlyMapMovement <= sf::Time::Zero)
+	if (m_earlyMapMovement < sf::seconds(-1.f))
 		m_groundBubble.draw(render, states);
 	render.draw(*m_konami);
 	//m_cameraMovement->debugDraw(render);
