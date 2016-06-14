@@ -13,7 +13,7 @@ IceCBiome::IceCBiome() :
 	m_name("Ice C"),
 	m_id(Level::IceC),
 	m_seed("Level_One"),
-	m_mapSize(sf::Vector2u(440u, 256u)),
+	m_mapSize(sf::Vector2u(540u, 256u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(1200.f, -2330.f),
 	m_transitionDuration(0.5f),
@@ -126,16 +126,20 @@ IceCBiome::IceCBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_instances[50] = MAP_ICE_C_TRAIL_OMP;
+	m_instances[10] = MAP_ICE_C_TRAIL_OMP;
 	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::IceD)
 		m_octoStartPosition = sf::Vector2f(4450, -1850.f);
 
-	//m_destinations.push_back(Level::IceB);
-	m_destinations.push_back(Level::IceD);
 	m_gameObjects[300] = GameObjectType::PortalRandom;
+	//m_destinations.push_back(Level::Rewards);
+	//m_destinations.push_back(Level::Rewards);
+	m_destinations.push_back(Level::IceB);
+	m_destinations.push_back(Level::Rewards);
+	m_destinations.push_back(Level::IceD);
+	m_destinations.push_back(Level::Rewards);
 	m_destinations.push_back(Level::Rewards);
 }
 
@@ -250,6 +254,8 @@ Map::TileColorGenerator IceCBiome::getTileColorGenerator()
 {
 	return [this](Noise & noise, float x, float y, float z)
 	{
+		if (y > -3000 && y < 4500)
+			return m_cloudColor;
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
