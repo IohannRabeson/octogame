@@ -15,7 +15,7 @@ IceCBiome::IceCBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(540u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(1200.f, -2330.f),
+	m_octoStartPosition(100.f * 16.f, -2330.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -134,12 +134,9 @@ IceCBiome::IceCBiome() :
 		m_octoStartPosition = sf::Vector2f(4450, -1850.f);
 
 	m_gameObjects[300] = GameObjectType::PortalRandom;
-	//m_destinations.push_back(Level::Rewards);
-	//m_destinations.push_back(Level::Rewards);
 	m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::Rewards);
 	m_destinations.push_back(Level::IceD);
-	m_destinations.push_back(Level::Rewards);
 	m_destinations.push_back(Level::Rewards);
 }
 
@@ -254,7 +251,7 @@ Map::TileColorGenerator IceCBiome::getTileColorGenerator()
 {
 	return [this](Noise & noise, float x, float y, float z)
 	{
-		if (y > -3000 && y < 4500)
+		if (y > -3000 && y < 500)
 			return m_cloudColor;
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
