@@ -551,7 +551,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 				}
 				break;
-			case GameObjectType::PortalBeach:
+			case GameObjectType::PortalWater:
 				{
 					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_BEACH_OSS));
 					portal->setBiome(biome);

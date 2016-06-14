@@ -127,13 +127,17 @@ JungleBBiome::JungleBBiome() :
 	// Define game objects
 	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
 	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
-	m_instances[405] = MAP_JUNGLE_A_ELEVATOR_OMP;
-	m_gameObjects[90] = GameObjectType::Portal;
+	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;
+	m_gameObjects[90] = GameObjectType::PortalJungle;
 
 	Progress & progress = Progress::getInstance();
 	std::vector<int> const & deathPos = progress.getDeathPos();
 	if (progress.getLastDestination() == Level::JungleB && deathPos.size() && deathPos.back() >= 300.f)
 		m_octoStartPosition = sf::Vector2f(310.f * 16.f, 4700.f);
+	else if (progress.getLastDestination() == Level::JungleC)
+		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -1600.f);
+	else if (progress.getLastDestination() == Level::Rewards)
+		m_octoStartPosition = sf::Vector2f(100.f * 16.f, 4300.f);
 	for (std::size_t i = 430u; i < m_mapSize.x - 10u; i += m_generator.randomInt(15u, 30u))
 	{
 		if (m_generator.randomBool(0.5))
@@ -157,9 +161,8 @@ JungleBBiome::JungleBBiome() :
 	m_interestPointPosX = 290;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	//m_destinations.push_back(Level::Default);
-	//m_destinations.push_back(Level::IceA);
 	m_destinations.push_back(Level::Rewards);
+	m_destinations.push_back(Level::JungleC);
 	m_destinations.push_back(Level::JungleA);
 }
 

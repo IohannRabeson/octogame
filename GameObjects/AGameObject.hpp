@@ -4,6 +4,7 @@
 
 enum class GameObjectType : std::size_t
 {
+	// Need mask
 	Player						= 1 << 0,
 	PlayerEvent					= 1 << 1,
 	Tile						= 1 << 2,
@@ -19,6 +20,7 @@ enum class GameObjectType : std::size_t
 	WaterNanoRobot				= 1 << 12,
 	Water						= 1 << 13,
 
+	//Object
 	Object						= (1 << 14),
 	SpaceShip					= (1 << 14) + 1,
 	Bouibouik					= (1 << 14) + 2,
@@ -29,7 +31,13 @@ enum class GameObjectType : std::size_t
 	Firecamp					= (1 << 14) + 7,
 	Concert						= (1 << 14) + 8,
 	Well						= (1 << 14) + 9,
+	PortalWater					= (1 << 14) + 10,
+	PortalJungle				= (1 << 14) + 11,
+	PortalDesert				= (1 << 14) + 12,
+	PortalSnow					= (1 << 14) + 13,
+	PortalRandom				= (1 << 14) + 14,
 
+	//Npc
 	Npc							= (1 << 15),
 	CedricNpc					= (1 << 15) + 1,
 	JuNpc						= (1 << 15) + 2,
@@ -69,11 +77,6 @@ enum class GameObjectType : std::size_t
 	ForestSpirit2Npc			= (1 << 15) + 36,
 	Pedestal					= (1 << 15) + 37,
 	OverCoolNpc					= (1 << 15) + 38,
-	PortalBeach					= (1 << 15) + 39,
-	PortalJungle				= (1 << 15) + 40,
-	PortalDesert				= (1 << 15) + 41,
-	PortalSnow					= (1 << 15) + 42,
-	PortalRandom				= (1 << 15) + 43
 //Script AddNpc
 
 
