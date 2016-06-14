@@ -43,6 +43,7 @@ public:
 	void							setNanoScale(sf::Vector2f const & scale);
 	void							onTransfer(void);
 	void							setState(State state);
+	void							setTravelling(bool travelling);
 
 private:
 	void							createLosange(sf::Vector2f const & size,
@@ -84,6 +85,7 @@ private:
 	std::size_t						m_shaderIndex;
 	std::unique_ptr<MusicSystem>	m_particle;
 	sf::Time						m_particleTimer;
+	bool							m_isTravelling;
 };
 
 #endif
