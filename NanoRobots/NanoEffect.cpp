@@ -21,7 +21,8 @@ NanoEffect::NanoEffect(void) :
 	m_soundPlayed(false),
 	m_lastNanoCount(0u),
 	m_shaderIndex(0u),
-	m_particle(new MusicSystem())
+	m_particle(new MusicSystem()),
+	m_isTravelling(true)
 {
 	m_generator.setSeed("random");
 	m_randomTimerMax = sf::seconds(m_generator.randomFloat(20.f, 50.f));
@@ -103,7 +104,10 @@ void NanoEffect::update(sf::Time frameTime)
 		case State::Active:
 		{
 			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-			postEffect.enableEffect(m_shaderIndex, true);
+			if (!m_isTravelling)
+				postEffect.enableEffect(m_shaderIndex, true);
+			else
+				postEffect.enableEffect(m_shaderIndex, false);
 			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
 			m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
@@ -201,6 +205,11 @@ void NanoEffect::onTransfer(void)
 void NanoEffect::setState(State state)
 {
 	m_state = state;
+}
+
+void NanoEffect::setTravelling(bool travelling)
+{
+	m_isTravelling = travelling;
 }
 
 void NanoEffect::draw(sf::RenderTarget & render, sf::RenderStates states) const
