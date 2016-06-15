@@ -135,6 +135,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::CheckPoint)
 		| static_cast<std::size_t>(GameObjectType::OverCoolNpc)
 		| static_cast<std::size_t>(GameObjectType::Pedestal)
 		| static_cast<std::size_t>(GameObjectType::ForestSpirit2Npc)
@@ -890,6 +891,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 		m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 		m_progress.setReverseSprite(m_originMove);
 		m_progress.setNextDestination(portal.getDestination());
+		m_progress.setRespawnType(Progress::RespawnType::Portal);
 	}
 }
 
@@ -1069,6 +1071,7 @@ bool	CharacterOcto::endDeath()
 	{
 		if (m_sprite.isTerminated())
 		{
+			m_progress.setRespawnType(Progress::RespawnType::Die);
 			octo::StateManager &		states = octo::Application::getStateManager();
 			states.change("octo_death");
 		}

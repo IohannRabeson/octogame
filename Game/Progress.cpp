@@ -464,6 +464,26 @@ bool		Progress::isOctoOnInstance(void)
 	return m_isOctoOnInstance;
 }
 
+void		Progress::setRespawnType(Progress::RespawnType type)
+{
+	m_data.respawnType = type;
+}
+
+Progress::RespawnType	Progress::getRespawnType(void) const
+{
+	return m_data.respawnType;
+}
+
+void				Progress::setCheckPointPosition(sf::Vector2f const & position)
+{
+	m_data.checkPointPosition = position;
+}
+
+sf::Vector2f const & Progress::getCheckPointPosition(void) const
+{
+	return m_data.checkPointPosition;
+}
+
 void		Progress::setMapHighlight(bool isHighlight)
 {
 	m_isHighLight = isHighlight;

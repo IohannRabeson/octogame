@@ -42,6 +42,7 @@
 
 //Npc
 //Script AddNpc Include
+#include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
 #include "ForestSpirit2Npc.hpp"
@@ -151,7 +152,19 @@ void	Game::loadLevel(void)
 		progress.setLastDestination(m_biomeManager.getCurrentBiome().getId());
 	}
 
-	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+	sf::Vector2f startPosition;
+	if (progress.getRespawnType() == Progress::RespawnType::Portal)
+	{
+		std::cout << "portal" << std::endl;
+		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+		progress.setCheckPointPosition(startPosition);
+	}
+	else // if octo died
+	{
+		std::cout << "die" << std::endl;
+		startPosition = progress.getCheckPointPosition();
+	}
+
 	// Reset last values
 	postEffect.removeEffects();
 	ChallengeManager::getInstance().reset();
@@ -341,6 +354,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::CheckPoint:
+			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::OverCoolNpc:
 			gameObjectCast<OverCoolNpc>(gameObject)->collideOctoEvent(octo);
 			break;

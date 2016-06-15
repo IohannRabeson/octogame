@@ -30,7 +30,10 @@ void NanoMenu::onSelection(void)
 	Progress & progress = Progress::getInstance();
 	progress.setNanoRobotCount(getIndexCursor());
 	if (progress.changeLevel() == false)
+	{
 		progress.setNextDestination(progress.getLastDestination());
+		progress.setRespawnType(Progress::RespawnType::Portal);
+	}
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();
