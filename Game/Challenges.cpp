@@ -216,3 +216,22 @@ void ChallengeDisplacement::updateShader(sf::Time)
 {
 	m_shader.setParameter("intensity", m_intensity * octo::linearInterpolation(0.f, 1.f, std::min(m_timer, m_duration) / m_duration));
 }
+
+// Blur
+ChallengeBlur::ChallengeBlur(void) :
+	AChallenge(KERNEL_POST_EFFECT_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Desert, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
+{
+	m_shader.setParameter("offset", 1.f / 300.f);
+	m_shader.setParameter("intensity", 0.f);
+	sf::Transform kernel(
+		1.f / 16.f, 2.f / 16.f, 1.f / 16.f,
+		2.f / 16.f, 4.f / 16.f, 2.f / 16.f,
+		1.f / 16.f, 2.f / 16.f, 1.f / 16.f
+		);
+	m_shader.setParameter("kernel", kernel);
+}
+
+void ChallengeBlur::updateShader(sf::Time)
+{
+	m_shader.setParameter("intensity", octo::linearInterpolation(0.f, m_intensity, std::min(m_timer, m_duration) / m_duration));
+}
