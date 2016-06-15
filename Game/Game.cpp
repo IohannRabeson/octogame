@@ -42,6 +42,7 @@
 
 //Npc
 //Script AddNpc Include
+#include "FabienNpc.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
 #include "ForestSpirit2Npc.hpp"
@@ -341,6 +342,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::FabienNpc:
+			gameObjectCast<FabienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::OverCoolNpc:
 			gameObjectCast<OverCoolNpc>(gameObject)->collideOctoEvent(octo);
 			break;
