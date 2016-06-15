@@ -49,6 +49,6 @@ void GroundRock::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
 	sf::Vector2f position = getPosition();
 	position.y -= Tile::TileSize;
 	//TODO:: Add to biome
-	if (!m_onInstance && Progress::getInstance().getNextDestination() != Level::IceC)
+	if (Progress::getInstance().getNextDestination() != Level::IceC)
 		createGroundRock(m_type, position + sf::Vector2f(0.f, m_deep), m_color, builder);
 }
