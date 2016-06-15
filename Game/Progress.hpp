@@ -18,6 +18,11 @@ public:
 		fr,
 		en
 	};
+	enum RespawnType
+	{
+		Portal = 0,
+		Die = 1
+	};
 
 	static Progress & getInstance(void);
 
@@ -102,6 +107,10 @@ public:
 	bool				isMapHighlight(void) const;
 	void				setIsOctoOnInstance(bool isInstance);
 	bool				isOctoOnInstance(void);
+	void				setRespawnType(RespawnType type);
+	RespawnType			getRespawnType(void) const;
+	void				setCheckPointPosition(sf::Vector2f const & position);
+	sf::Vector2f const &getCheckPointPosition(void) const;
 
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
@@ -138,25 +147,28 @@ private:
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false),
-			isGroundInfos(true)
+			isGroundInfos(true),
+			respawnType(Progress::RespawnType::Portal)
 		{}
 
-		std::size_t		validateChallenge;
-		std::size_t		nanoRobotCount;
-		Level			nextDestination;
-		Level			lastDestination;
-		std::size_t		musicVol;
-		std::size_t		soundVol;
-		bool			fullscreen;
-		bool			vsync;
-		Language		language;
-		bool			firstTime;
-		bool			walk;
-		bool			moveMap;
-		bool			canOpenDoubleJump;
-		char			npc[10000];
-		char			portals[10000];
-		bool			isGroundInfos;
+		sf::Vector2f			checkPointPosition;
+		std::size_t				validateChallenge;
+		std::size_t				nanoRobotCount;
+		Level					nextDestination;
+		Level					lastDestination;
+		std::size_t				musicVol;
+		std::size_t				soundVol;
+		bool					fullscreen;
+		bool					vsync;
+		Language				language;
+		bool					firstTime;
+		bool					walk;
+		bool					moveMap;
+		bool					canOpenDoubleJump;
+		char					npc[10000];
+		char					portals[10000];
+		bool					isGroundInfos;
+		Progress::RespawnType	respawnType;
 	};
 
 	Progress();
