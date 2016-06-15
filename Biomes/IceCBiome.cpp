@@ -15,23 +15,23 @@ IceCBiome::IceCBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(540u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(100.f * 16.f, -2330.f),
+	m_octoStartPosition(140.f * 16.f, -2100.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(227, 227, 227),
+	m_tileStartColor(85, 150, 179),
 	m_tileEndColor(27, 79, 101),
 	m_waterLevel(-1.f),
 	m_waterColor(255, 255, 255, 200),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(25.f)),
+	m_dayDuration(sf::seconds(60.f)),
 	m_startDayDuration(sf::seconds(9.f)),
-	m_skyDayColor(8, 20, 26),
-	m_skyNightColor(8, 20, 26),
-	m_nightLightColor(sf::Color::Transparent),
-	m_sunsetLightColor(sf::Color::Transparent),
-	m_wind(200.f),
-	m_rainDropPerSecond(10u, 30u),
+	m_skyDayColor(255, 154, 0),
+	m_skyNightColor(255, 154, 0),
+	m_nightLightColor(8, 20, 26, 50),
+	m_sunsetLightColor(161, 11, 11, 50),
+	m_wind(300.f),
+	m_rainDropPerSecond(1u, 2u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 1300.f),
@@ -41,10 +41,10 @@ IceCBiome::IceCBiome() :
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(4u, 8u),
 	m_starCount(500u, 800u),
-	m_sunCount(1u, 3u),
+	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
 	m_rainbowCount(1u, 2u),
-	m_cloudCount(40u, 60u),
+	m_cloudCount(200u, 250u),
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),
@@ -59,7 +59,7 @@ IceCBiome::IceCBiome() :
 	m_canCreateShineEffect(false),
 	m_canCreateCloud(true),
 	m_canCreateStar(true),
-	m_canCreateSun(false),
+	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
 	m_type(ABiome::Type::Ice),
@@ -88,8 +88,8 @@ IceCBiome::IceCBiome() :
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
-	m_cloudPartCount(6u, 10u),
+	m_cloudSize(sf::Vector2f(400.f, 400.f), sf::Vector2f(1000.f, 1000.f)),
+	m_cloudPartCount(1u, 1u),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
 
@@ -97,9 +97,9 @@ IceCBiome::IceCBiome() :
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
-	m_sunSize(sf::Vector2f(60.f, 60.f), sf::Vector2f(150.f, 150.f)),
+	m_sunSize(sf::Vector2f(60.f, 60.f), sf::Vector2f(60.f, 60.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 255, 200),
+	m_sunColor(255, 255, 254),
 
 	m_moonSize(sf::Vector2f(70.f, 50.f), sf::Vector2f(150.f, 150.f)),
 	m_moonColor(200, 200, 200),
@@ -248,12 +248,28 @@ Map::MapSurfaceGenerator IceCBiome::getMapSurfaceGenerator()
 }
 
 Map::TileColorGenerator IceCBiome::getTileColorGenerator()
-{
-	return [this](Noise & noise, float x, float y, float z)
+{	sf::Color secondColorStart(m_tileStartColor - sf::Color(0, 0, 0, 200));
+	sf::Color secondColorEnd(m_tileEndColor - sf::Color(0, 0, 0, 200));
+	float startTransition = -48;
+	float middleTransition = -28;
+	float endTransition = -8;
+	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
-		if (y > -3000 && y < 500)
+		if (y > -3000 && y < -48)
 			return m_cloudColor;
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > startTransition && y <= middleTransition)
+		{
+			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
+			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
+		}
+		else if (y > middleTransition && y <= endTransition)
+		{
+			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
+			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
+		}
+		if (y > endTransition)
+			return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
@@ -572,7 +588,7 @@ sf::Time		IceCBiome::getCloudLifeTime()
 
 sf::Color		IceCBiome::getCloudColor()
 {
-	return (randomColor(m_cloudColor));
+	return (m_cloudColor);
 }
 
 bool			IceCBiome::canCreateCloud()
