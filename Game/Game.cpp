@@ -317,7 +317,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			gameObjectCast<FannyNpc>(gameObject)->startBalle();
 			break;
 		case GameObjectType::Snowman3Npc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Pixelate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Pixelate))
+			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Blur).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Blur))
 				octo->startDrinkPotion();
 			gameObjectCast<Snowman3Npc>(gameObject)->startBalle();
 			break;
