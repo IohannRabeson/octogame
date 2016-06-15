@@ -84,7 +84,7 @@ void CheckPoint::updateState(void)
 	}
 }
 
-void CheckPoint::collideOctoEvent(CharacterOcto * octo)
+void CheckPoint::collideOctoEvent(CharacterOcto *)
 {
 	Progress::getInstance().setCheckPointPosition(m_startPosition);
 }
