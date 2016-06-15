@@ -34,4 +34,11 @@ public:
 	virtual void updateShader(sf::Time frametime);
 };
 
+class ChallengeBlur : public ChallengeManager::AChallenge
+{
+public:
+	ChallengeBlur(void);
+	virtual void updateShader(sf::Time frametime);
+};
+
 #endif
