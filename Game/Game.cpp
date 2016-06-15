@@ -155,15 +155,11 @@ void	Game::loadLevel(void)
 	sf::Vector2f startPosition;
 	if (progress.getRespawnType() == Progress::RespawnType::Portal)
 	{
-		std::cout << "portal" << std::endl;
 		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
 		progress.setCheckPointPosition(startPosition);
 	}
 	else // if octo died
-	{
-		std::cout << "die" << std::endl;
 		startPosition = progress.getCheckPointPosition();
-	}
 
 	// Reset last values
 	postEffect.removeEffects();
