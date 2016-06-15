@@ -6,10 +6,10 @@
 Snowman3Npc::Snowman3Npc(void) :
 	ANpc(SNOWMAN_3_OSS)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(170.f, 165.f));
+	setSize(sf::Vector2f(40.f, 75.f));
+	setOrigin(sf::Vector2f(110.f, 165.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-55.f, -65.f));
+	setTextOffset(sf::Vector2f(-5.f, -65.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
