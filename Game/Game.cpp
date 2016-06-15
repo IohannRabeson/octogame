@@ -43,6 +43,7 @@
 //Npc
 //Script AddNpc Include
 #include "FabienNpc.hpp"
+#include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
 #include "ForestSpirit2Npc.hpp"
@@ -152,7 +153,15 @@ void	Game::loadLevel(void)
 		progress.setLastDestination(m_biomeManager.getCurrentBiome().getId());
 	}
 
-	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+	sf::Vector2f startPosition;
+	if (progress.getRespawnType() == Progress::RespawnType::Portal)
+	{
+		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+		progress.setCheckPointPosition(startPosition);
+	}
+	else // if octo died
+		startPosition = progress.getCheckPointPosition();
+
 	// Reset last values
 	postEffect.removeEffects();
 	ChallengeManager::getInstance().reset();
@@ -344,6 +353,8 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 //Script AddNpc GameObject
 		case GameObjectType::FabienNpc:
 			gameObjectCast<FabienNpc>(gameObject)->collideOctoEvent(octo);
+		case GameObjectType::CheckPoint:
+			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::OverCoolNpc:
 			gameObjectCast<OverCoolNpc>(gameObject)->collideOctoEvent(octo);

@@ -35,6 +35,7 @@
 #include "CedricNpc.hpp"
 //Script AddNpc Include
 #include "FabienNpc.hpp"
+#include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
 #include "ForestSpirit2Npc.hpp"
@@ -218,6 +219,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
 	m_npcFactory.registerCreator<FabienNpc>(FABIEN_OSS);
+	m_npcFactory.registerCreator<CheckPoint>(CHECKPOINT_OSS);
 	m_npcFactory.registerCreator<OverCoolNpc>(OVER_COOL_NPC_OSS);
 	m_npcFactory.registerCreator<Pedestal>(PEDESTAL_OSS);
 	m_npcFactory.registerCreator<ForestSpirit2Npc>(FOREST_SPIRIT_2_OSS);
@@ -637,6 +639,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::FabienNpc:
 				{
 					FabienNpc * npc = new FabienNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::CheckPoint:
+				{
+					CheckPoint * npc = new CheckPoint();
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}

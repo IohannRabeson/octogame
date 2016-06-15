@@ -45,6 +45,7 @@ void LevelMenu::onSelection(void)
 {
 	std::vector<Level> const & levels = Progress::getInstance().getRegisteredLevels();
 	Progress::getInstance().setNextDestination(levels[getIndexCursor()]);
+	Progress::getInstance().setRespawnType(Progress::RespawnType::Portal);
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();
