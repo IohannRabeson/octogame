@@ -56,11 +56,11 @@ public:
 
 	enum class Effect : std::size_t
 	{
-		Pixelate = 0u,
-		Persistence = 1u,
-		Duplicate = 2u,
-		Displacement = 4u,
-		Blur = 8u
+		Pixelate = 1u,
+		Persistence = 2u,
+		Duplicate = 4u,
+		Displacement = 8u,
+		Blur = 16u
 	};
 
 	~ChallengeManager(void) = default;

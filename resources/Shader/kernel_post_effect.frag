@@ -15,5 +15,5 @@ void main()
 	col += texture2D(texture, gl_TexCoord[0].xy + vec2(0.0, -offset)).rgb * kernel[1][3];
 	col += texture2D(texture, gl_TexCoord[0].xy + vec2(offset, -offset)).rgb * kernel[3][3];
 
-	gl_FragColor = mix(texture2D(texture, gl_TexCoord[0].xt), vec4(col, 1.0), intensity);
+	gl_FragColor = mix(texture2D(texture, gl_TexCoord[0].st), vec4(col, 1.0), intensity);
 }
