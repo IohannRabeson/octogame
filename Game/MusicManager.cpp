@@ -36,7 +36,7 @@ MusicManager::MusicManager() :
 	musicKey[7] = SOUTERRAIN_LUGUBRE_OGG;
 	musicKey[8] = MENU_OPUS_I_OGG;
 
-	m_musicLevel.resize(11);
+	m_musicLevel.resize(12);
 	m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
@@ -48,11 +48,12 @@ MusicManager::MusicManager() :
 	m_musicLevel[6] = AreaMusic(Level::IceC, ICE_MUSIC_OGG, sf::FloatRect());
 	m_musicLevel[7] = AreaMusic(Level::IceD, ICE_MUSIC_D_OGG, sf::FloatRect());
 	m_musicLevel[8] = AreaMusic(Level::DesertC, MENU_OPUS_II_OGG, sf::FloatRect());
-	m_musicLevel[9] = AreaMusic(Level::JungleC, COLONISATION_OGG, sf::FloatRect());
+	m_musicLevel[9] = AreaMusic(Level::JungleB, COLONISATION_OGG, sf::FloatRect());
+	m_musicLevel[10] = AreaMusic(Level::JungleC, COLONISATION_OGG, sf::FloatRect());
 
 	m_musicLevel[10] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
 
-	m_music.resize(8);
+	m_music.resize(9);
 	// Montagne
 	m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
 			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
@@ -77,6 +78,9 @@ MusicManager::MusicManager() :
 	//ice balle pixel
 	m_music[7] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
 			sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)));
+	//jungle b cave
+	m_music[8] = AreaMusic(Level::JungleB, SOUTERRAIN_LUGUBRE_OGG,
+			sf::FloatRect(sf::Vector2f(30.f * 16.f, 110.f * 16.f), sf::Vector2f(380.f * 16.f, 420.f * 16.f)));
 }
 
 MusicManager::~MusicManager()
