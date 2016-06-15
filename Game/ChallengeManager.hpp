@@ -59,7 +59,8 @@ public:
 		Pixelate = 0u,
 		Persistence = 1u,
 		Duplicate = 2u,
-		Displacement = 4u
+		Displacement = 4u,
+		Blur = 8u
 	};
 
 	~ChallengeManager(void) = default;
