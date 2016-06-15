@@ -76,7 +76,7 @@ MusicManager::MusicManager() :
 			sf::FloatRect(sf::Vector2f(90.f * 16.f, -150.f * 16.f), sf::Vector2f(250.f * 16.f, 750.f * 16.f)));
 	//ice balle pixel
 	m_music[7] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
-			sf::FloatRect(sf::Vector2f(64.f * 16.f, -160.f * 16.f), sf::Vector2f(30.f * 16.f, 50.f * 16.f)));
+			sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)));
 }
 
 MusicManager::~MusicManager()

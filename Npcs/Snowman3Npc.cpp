@@ -3,8 +3,11 @@
 #include "ChallengeManager.hpp"
 #include "RectangleShape.hpp"
 
+std::size_t Snowman3Npc::m_count = 0u;
+
 Snowman3Npc::Snowman3Npc(void) :
-	ANpc(SNOWMAN_3_OSS)
+	ANpc(SNOWMAN_3_OSS),
+	m_id(m_count++)
 {
 	setSize(sf::Vector2f(40.f, 75.f));
 	setOrigin(sf::Vector2f(110.f, 165.f));
@@ -14,6 +17,16 @@ Snowman3Npc::Snowman3Npc(void) :
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
+
+	if (m_id == 0u)
+		setCurrentText(0u);
+	else
+		setCurrentText(1u);
+}
+
+Snowman3Npc::~Snowman3Npc(void)
+{
+	m_count = 0u;
 }
 
 void Snowman3Npc::setup(void)
@@ -69,10 +82,13 @@ void Snowman3Npc::setupMachine(void)
 
 void Snowman3Npc::startBalle(void)
 {
-	if (!Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Pixelate))
-		ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Pixelate).start();
+	if (m_id == 0u)
+	{
+		if (!Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Blur))
+			ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Blur).start();
+	}
 	else
-		Progress::getInstance().validateChallenge(ChallengeManager::Effect::Pixelate);
+		Progress::getInstance().validateChallenge(ChallengeManager::Effect::Blur);
 }
 
 void Snowman3Npc::updateState(void)

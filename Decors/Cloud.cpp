@@ -74,7 +74,8 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 	builder.createTriangle(origin, downMidLeft, upMidLeft, color);
 	builder.createTriangle(origin, upMidLeft, upLeft, color);
 
-	builder.createQuad(upLeft, upRight, recDownRight, upMidLeft, color);
+	if (Progress::getInstance().getNextDestination() != Level::IceC)
+		builder.createQuad(upLeft, upRight, recDownRight, upMidLeft, color);
 }
 
 bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & position, sf::Vector2f const & point) const

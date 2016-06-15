@@ -196,7 +196,7 @@ void ChallengePersistence::updateShader(sf::Time)
 
 // Pixelate
 ChallengePixelate::ChallengePixelate(void) :
-	AChallenge(PIXELATE_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(64.f * 16.f, -160.f * 16.f), sf::Vector2f(30.f * 16.f, 50.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
+	AChallenge(PIXELATE_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)), ABiome::Type::Random, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
 {}
 
 void ChallengePixelate::updateShader(sf::Time)
@@ -215,4 +215,23 @@ ChallengeDisplacement::ChallengeDisplacement(void) :
 void ChallengeDisplacement::updateShader(sf::Time)
 {
 	m_shader.setParameter("intensity", m_intensity * octo::linearInterpolation(0.f, 1.f, std::min(m_timer, m_duration) / m_duration));
+}
+
+// Blur
+ChallengeBlur::ChallengeBlur(void) :
+	AChallenge(KERNEL_POST_EFFECT_FRAG, 4.f, 1.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
+{
+	m_shader.setParameter("offset", 1.f / 150.f);
+	m_shader.setParameter("intensity", 0.f);
+	sf::Transform kernel(
+		1.f / 16.f, 2.f / 16.f, 1.f / 16.f,
+		2.f / 16.f, 4.f / 16.f, 2.f / 16.f,
+		1.f / 16.f, 2.f / 16.f, 1.f / 16.f
+		);
+	m_shader.setParameter("kernel", kernel);
+}
+
+void ChallengeBlur::updateShader(sf::Time)
+{
+	m_shader.setParameter("intensity", octo::linearInterpolation(0.f, m_intensity, std::min(m_timer, m_duration) / m_duration));
 }
