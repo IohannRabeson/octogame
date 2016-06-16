@@ -7,6 +7,7 @@
 #include "ChallengeManager.hpp"
 #include "Challenges.hpp"
 #include "CameraMovement.hpp"
+#include "PostEffectLayer.hpp"
 
 // Biomes
 #include "IceABiome.hpp"
@@ -164,6 +165,10 @@ void	Game::loadLevel(void)
 
 	// Reset last values
 	postEffect.removeEffects();
+	PostEffectLayer::getInstance().clear();
+	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG);
+
 	ChallengeManager::getInstance().reset();
 	audio.reset();
 	// Reset PhysycsEngine
@@ -207,6 +212,7 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
 	if (m_skipFrames < m_skipFramesMax)
 	{
 		m_skipFrames++;
