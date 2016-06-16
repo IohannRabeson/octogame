@@ -42,6 +42,7 @@
 
 //Npc
 //Script AddNpc Include
+#include "TVScreen.hpp"
 #include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
@@ -350,6 +351,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::TVScreen:
+			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::CheckPoint:
 			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
 			break;

@@ -112,7 +112,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/Pedestal.cpp				\
 				Npcs/OverCoolNpc.cpp				\
 				Npcs/CheckPoint.cpp				\
+				Npcs/TVScreen.cpp				\
 #Script AddNpc
+
 
 
 

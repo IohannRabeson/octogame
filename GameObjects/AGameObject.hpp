@@ -78,7 +78,9 @@ enum class GameObjectType : std::size_t
 	Pedestal					= (1 << 15) + 37,
 	OverCoolNpc					= (1 << 15) + 38,
 	CheckPoint				= (1 << 15) + 39,
+	TVScreen				= (1 << 15) + 40,
 //Script AddNpc
+
 
 
 
