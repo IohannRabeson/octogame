@@ -1,7 +1,7 @@
 #include "Pedestal.hpp"
 
 Pedestal::Pedestal(void) :
-	ANpc(PEDESTAL_OSS)
+	ANpc(PEDESTAL_OSS, false)
 {
 	setSize(sf::Vector2f(25.f, 50.f));
 	setOrigin(sf::Vector2f(90.f, 100.f));
