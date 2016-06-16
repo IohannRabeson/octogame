@@ -1,4 +1,5 @@
 #include "Challenges.hpp"
+#include "PostEffectLayer.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
@@ -6,6 +7,8 @@
 #include <Camera.hpp>
 
 ChallengeManager::AChallenge::AChallenge(ResourceKey key, float challengeDuration, float delay, sf::FloatRect const & area, ABiome::Type biomeType, std::pair<float, float> glitchIntensityRange, std::pair<float, float> glitchDurationRange) :
+	m_shader(PostEffectLayer::getInstance().getShader(key)),
+	m_index(PostEffectLayer::getInstance().getShaderIndex(key)),
 	m_delayMax(sf::seconds(delay)),
 	m_duration(sf::seconds(challengeDuration)),
 	m_area(area),
@@ -16,13 +19,6 @@ ChallengeManager::AChallenge::AChallenge(ResourceKey key, float challengeDuratio
 	m_glitchIntensityRange(glitchIntensityRange),
 	m_glitchDurationRange(glitchDurationRange)
 {
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
-
-	m_shader.loadFromMemory(resources.getText(key), sf::Shader::Fragment);
-	octo::PostEffect postEffectShader;
-	postEffectShader.resetShader(&m_shader);
-	m_index = postEffect.addEffect(std::move(postEffectShader));
 }
 
 ChallengeManager::AChallenge::~AChallenge(void)

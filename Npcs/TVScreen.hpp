@@ -1,8 +1,12 @@
 #ifndef TVSCREEN_HPP
 # define TVSCREEN_HPP
 
-# include <SFML/Graphics/Shader.hpp>
 # include "ANpc.hpp"
+
+namespace sf
+{
+	class Shader;
+}
 
 class TVScreen : public ANpc, public AGameObject<GameObjectType::TVScreen>
 {
@@ -17,8 +21,7 @@ protected:
 	virtual void updateState(void);
 
 private:
-	sf::Shader		m_shader;
-	std::size_t		m_shaderIndex;
+	sf::Shader &	m_shader;
 	sf::FloatRect	m_tvScreen;
 
 };

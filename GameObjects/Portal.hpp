@@ -2,7 +2,6 @@
 # define PORTAL_HPP
 
 # include <SFML/Graphics/RectangleShape.hpp>
-# include <SFML/Graphics/Shader.hpp>
 # include <SFML/System/Time.hpp>
 
 # include <AnimatedSprite.hpp>
@@ -11,15 +10,20 @@
 # include <Math.hpp>
 # include <Interpolations.hpp>
 
+# include "PostEffectLayer.hpp"
 # include "AGameObject.hpp"
 # include "ABiome.hpp"
 # include "IPlaceable.hpp"
-# include "ResourceDefinitions.hpp"
 
 # include <random>
 # include <ctime>
 
 class CircleShape;
+
+namespace sf
+{
+	class Shader;
+}
 
 class Portal : public AGameObject<GameObjectType::Portal>, public IPlaceable
 {
@@ -98,8 +102,7 @@ private:
 	PortalParticle			m_particles;
 	Level					m_destination;
 	sf::Vector2f			m_position;
-	sf::Shader				m_shader;
-	std::size_t				m_shaderIndex;
+	sf::Shader &			m_shader;
 	std::size_t				m_maxParticle;
 	State					m_state;
 	float					m_radius;

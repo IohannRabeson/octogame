@@ -1,12 +1,12 @@
 #include "TVScreen.hpp"
+#include "PostEffectLayer.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
-#include <ResourceManager.hpp>
-#include <PostEffectManager.hpp>
 #include <Camera.hpp>
 
 TVScreen::TVScreen(void) :
-	ANpc(TV_OSS)
+	ANpc(TV_OSS),
+	m_shader(PostEffectLayer::getInstance().getShader(DUPLICATE_SCREEN_FRAG))
 {
 	setSize(sf::Vector2f(25.f, 140.f));
 	setOrigin(sf::Vector2f(90.f, 100.f));
@@ -16,14 +16,6 @@ TVScreen::TVScreen(void) :
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
-
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
-
-	m_shader.loadFromMemory(resources.getText(DUPLICATE_SCREEN_FRAG), sf::Shader::Fragment);
-	octo::PostEffect postEffectShader;
-	postEffectShader.resetShader(&m_shader);
-	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
 
 	m_tvScreen.width = 480.f;
 	m_tvScreen.height = 270.f;
@@ -79,14 +71,13 @@ void TVScreen::setupMachine(void)
 
 void TVScreen::updateState(void)
 {
-	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
 	m_tvScreen.left = ANpc::getPosition().x;
 	m_tvScreen.top = ANpc::getPosition().y;
 
 	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 	if (screen.intersects(m_tvScreen))
 	{
-		postEffect.enableEffect(m_shaderIndex, true);
+		PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, true);
 		float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
 		float width = octo::Application::getGraphicsManager().getVideoMode().width;
 		float height = octo::Application::getGraphicsManager().getVideoMode().height;
@@ -98,7 +89,7 @@ void TVScreen::updateState(void)
 	}
 	else
 	{
-		postEffect.enableEffect(m_shaderIndex, false);
+		PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, false);
 	}
 
 	octo::CharacterSprite & sprite = getSprite();
