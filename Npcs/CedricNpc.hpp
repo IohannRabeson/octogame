@@ -33,7 +33,6 @@ protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
 	virtual void updatePhysics(void);
-	virtual bool canWalk(void) const;
 
 private:
 	static std::size_t			m_count;
