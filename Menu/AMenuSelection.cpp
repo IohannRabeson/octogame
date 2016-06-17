@@ -91,9 +91,11 @@ void AMenuSelection::draw(sf::RenderTarget & render, sf::RenderStates states) co
 		render.draw(*m_menus[i]);
 	AMenu::State const & state = getState();
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
+	{
 		render.draw(m_bubble, states);
-	if (state == AMenu::State::Active && m_menus.size())
-		render.draw(m_cursor);
+		if (state == AMenu::State::Active && m_menus.size())
+			render.draw(m_cursor);
+	}
 }
 
 bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
