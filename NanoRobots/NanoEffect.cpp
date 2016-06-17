@@ -1,5 +1,5 @@
 #include "NanoEffect.hpp"
-#include "ResourceDefinitions.hpp"
+#include "PostEffectLayer.hpp"
 #include "Progress.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
@@ -20,7 +20,8 @@ NanoEffect::NanoEffect(void) :
 	m_transferTimerMax(sf::seconds(4.f)),
 	m_soundPlayed(false),
 	m_lastNanoCount(0u),
-	m_shaderIndex(0u),
+	m_shader(PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG)),
+	m_shaderIndex(PostEffectLayer::getInstance().getShaderIndex(CIRCLE_RAINBOW_FRAG)),
 	m_particle(new MusicSystem()),
 	m_isTravelling(true)
 {
@@ -29,13 +30,6 @@ NanoEffect::NanoEffect(void) :
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 	m_lastNanoCount = Progress::getInstance().getNanoRobotCount();
 
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
-
-	m_shader.loadFromMemory(resources.getText(CIRCLE_RAINBOW_FRAG), sf::Shader::Fragment);
-	octo::PostEffect postEffectShader;
-	postEffectShader.resetShader(&m_shader);
-	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
 	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
 	m_shader.setParameter("fade_out_size", 100.f);
 	m_shader.setParameter("alpha", 0.f);

@@ -1,8 +1,14 @@
 #ifndef KONAMICODE_HPP
 # define KONAMICODE_HPP
 
-# include <SFML/Graphics.hpp>
 # include <DefaultGraphicsListeners.hpp>
+# include <SFML/Graphics/Drawable.hpp>
+# include <SFML/System/Time.hpp>
+
+namespace sf
+{
+	class Shader;
+}
 
 class KonamiCode : public octo::DefaultKeyboardListener, public sf::Drawable
 {
@@ -14,6 +20,7 @@ public:
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 	bool canStartEvent();
+
 private:
 	enum State
 	{
@@ -23,8 +30,7 @@ private:
 		End
 	};
 	std::size_t			m_index;
-	sf::Shader			m_shader;
-	std::size_t			m_shaderIndex;
+	sf::Shader &		m_shader;
 	State				m_state;
 	sf::Time			m_timer;
 	sf::Time			m_timerEnd;
