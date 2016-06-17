@@ -20,12 +20,14 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	// Init 3D TileMap
 	octo::Array3D<octo::LevelMap::TileType> const & map = m_levelMap.getMap();
 	m_tiles.resize(map.columns(), map.rows(), map.depth());
+	m_movementMask.resize(map.columns(), map.rows(), map.depth());
 
-	for (std::size_t z = 0; z < m_tiles.depth(); z++)
+	for (std::size_t x = 0; x < m_tiles.columns(); x++)
 	{
-		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 		{
-			for (std::size_t y = 0; y < m_tiles.rows(); y++)
+			octo::LevelMap::TileType type = map(x, y, 0);
+			for (std::size_t z = 0; z < m_tiles.depth(); z++)
 			{
 				//TODO use TileType in Tile
 				m_tiles(x, y, z).setTileType(map(x, y, z));
@@ -33,6 +35,52 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 					m_tiles(x, y, z).setIsEmpty(true);
 				else
 					m_tiles(x, y, z).setIsEmpty(false);
+
+				if (map(x, y, z) != type)
+					m_movementMask(x, y, 0) = 1.f;
+				else
+					m_movementMask(x, y, 0) = 0.f;
+			}
+		}
+	}
+	addRadiance(4u);
+}
+
+void MapInstance::addRadiance(std::size_t depth)
+{
+	bool invert = false;
+	for (std::size_t i = 0u; i < depth; i++)
+	{
+		if (invert == false)
+		{
+			for (std::size_t x = 1; x < m_movementMask.columns() - 1; x++)
+			{
+				for (std::size_t y = 1; y < m_movementMask.rows() - 1; y++)
+				{
+					if (m_movementMask(x, y, 0) > 0.f)
+					{
+							m_movementMask(x - 1, y, 0) = (m_movementMask(x, y, 0) + m_movementMask(x - 1, y, 0)) / 2.f;
+							m_movementMask(x + 1, y, 0) = (m_movementMask(x, y, 0) + m_movementMask(x + 1, y, 0)) / 2.f;
+							m_movementMask(x, y + 1, 0) = (m_movementMask(x, y, 0) + m_movementMask(x, y + 1, 0)) / 2.f;
+							m_movementMask(x, y - 1, 0) = (m_movementMask(x, y, 0) + m_movementMask(x, y - 1, 0)) / 2.f;
+					}
+				}
+			}
+		}
+		else
+		{
+			for (std::size_t y = m_movementMask.rows() - 1; y > 0; y--)
+			{
+				for (std::size_t x = m_movementMask.columns() - 1; x > 0 ; x--)
+				{
+					if (m_movementMask(x, y, 0) > 0.f)
+					{
+							m_movementMask(x - 1, y, 0) = (m_movementMask(x, y, 0) + m_movementMask(x - 1, y, 0)) / 2.f;
+							m_movementMask(x + 1, y, 0) = (m_movementMask(x, y, 0) + m_movementMask(x + 1, y, 0)) / 2.f;
+							m_movementMask(x, y + 1, 0) = (m_movementMask(x, y, 0) + m_movementMask(x, y + 1, 0)) / 2.f;
+							m_movementMask(x, y - 1, 0) = (m_movementMask(x, y, 0) + m_movementMask(x, y - 1, 0)) / 2.f;
+					}
+				}
 			}
 		}
 	}
