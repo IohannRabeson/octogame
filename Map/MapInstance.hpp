@@ -38,7 +38,10 @@ public:
 private:
 	MapInstance(void) = delete;
 	void setStartTransition(int transitionType, Tile & tile, int x, int y);
-	void addRadiance(std::size_t depth);
+	void smoothBorder(void);
+	void computeRadianceMask(std::size_t depth, float attenuate);
+	void averageVarianceFour(std::size_t x, std::size_t y, float attenuate);
+	void averageVarianceOne(std::size_t srcX, std::size_t srcY, std::size_t destX, std::size_t destY, float attenuate);
 
 	octo::Array3D<Tile>				m_tiles;
 	octo::Array3D<float>			m_movementMask;
