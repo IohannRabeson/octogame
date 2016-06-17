@@ -102,6 +102,7 @@ private:
 	octo::VertexBuilder				m_builder;
 
 	Type							m_currentType;
+	Type							m_lastType;
 	Priority						m_priority;
 	sf::Vector2f					m_size;
 	sf::Vector2f					m_contentUpLeft;
