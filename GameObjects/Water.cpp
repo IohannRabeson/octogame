@@ -9,8 +9,7 @@ Water::Water(ABiome & biome) :
 	m_shader(PostEffectLayer::getInstance().getShader(WATER_FRAG)),
 	m_waveCycle(sf::Time::Zero),
 	m_width(biome.getMapSize().x * Tile::TileSize),
-	m_limit(1000.f),
-	m_shaderIndex(0u)
+	m_limit(1000.f)
 {
 	m_rectLeft.setSize(sf::Vector2f(m_width, 10000.f));
 	m_rectLeft.setFillColor(biome.getWaterColor());
