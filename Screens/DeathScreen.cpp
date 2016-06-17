@@ -60,12 +60,12 @@ void	DeathScreen::start()
 
 void	DeathScreen::pause()
 {
-
+	InputListener::removeInputListener();
 }
 
 void	DeathScreen::resume()
 {
-
+	InputListener::addInputListener();
 }
 
 void	DeathScreen::stop()
