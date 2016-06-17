@@ -22,7 +22,8 @@ NanoEffect::NanoEffect(void) :
 	m_lastNanoCount(0u),
 	m_shaderIndex(0u),
 	m_particle(new MusicSystem()),
-	m_isTravelling(true)
+	m_isTravelling(true),
+	m_effectEnable(true)
 {
 	m_generator.setSeed("random");
 	m_randomTimerMax = sf::seconds(m_generator.randomFloat(20.f, 50.f));
@@ -104,7 +105,7 @@ void NanoEffect::update(sf::Time frameTime)
 		case State::Active:
 		{
 			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-			if (!m_isTravelling)
+			if (!m_isTravelling && m_effectEnable)
 				postEffect.enableEffect(m_shaderIndex, true);
 			else
 				postEffect.enableEffect(m_shaderIndex, false);
@@ -121,13 +122,16 @@ void NanoEffect::update(sf::Time frameTime)
 		{
 			playSound();
 			m_transferTimer += frameTime;
-			float transition = std::min(m_transferTimer / m_transferTimerMax, 1.f);
-			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-			m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
-			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
-			m_shader.setParameter("radius", octo::linearInterpolation(120.f, 1500.f, transition));
-			m_shader.setParameter("color_size", octo::linearInterpolation(0.005f, 0.001f, transition));
+			if (m_effectEnable)
+			{
+				float transition = std::min(m_transferTimer / m_transferTimerMax, 1.f);
+				sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+				float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
+				m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
+				m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
+				m_shader.setParameter("radius", octo::linearInterpolation(120.f, 1500.f, transition));
+				m_shader.setParameter("color_size", octo::linearInterpolation(0.005f, 0.001f, transition));
+			}
 			if (m_transferTimer >= m_transferTimerMax)
 			{
 				m_isTransferHappen = true;
@@ -210,6 +214,16 @@ void NanoEffect::setState(State state)
 void NanoEffect::setTravelling(bool travelling)
 {
 	m_isTravelling = travelling;
+}
+
+void NanoEffect::setEffectEnable(bool enable)
+{
+	m_effectEnable = enable;
+}
+
+bool NanoEffect::getEffectEnable(void) const
+{
+	return (m_effectEnable);
 }
 
 void NanoEffect::draw(sf::RenderTarget & render, sf::RenderStates states) const

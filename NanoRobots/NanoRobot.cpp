@@ -223,6 +223,11 @@ void NanoRobot::setTarget(sf::Vector2f const & target)
 	m_target = target;
 }
 
+void NanoRobot::setEffectEnable(bool enable)
+{
+	m_glowingEffect.setEffectEnable(enable);
+}
+
 void NanoRobot::setSwarmTarget(sf::Vector2f const & position)
 {
 	m_swarm.setTarget(position);
@@ -348,6 +353,11 @@ sf::Vector2f const & NanoRobot::getTargetPosition(void)
 	else
 		m_isTravelling = false;
 	return m_swarm.getTarget();
+}
+
+bool NanoRobot::getEffectEnable(void) const
+{
+	return m_glowingEffect.getEffectEnable();
 }
 
 NanoRobot::State NanoRobot::getState(void) const

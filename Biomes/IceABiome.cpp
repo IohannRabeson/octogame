@@ -135,7 +135,6 @@ IceABiome::IceABiome() :
 		m_octoStartPosition = sf::Vector2f(423 * 16.f, 0.f);
 
 	m_gameObjects[420] = GameObjectType::PortalSnow;
-	m_gameObjects[450] = GameObjectType::CheckPoint;
 	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_destinations.push_back(Level::IceB);
 

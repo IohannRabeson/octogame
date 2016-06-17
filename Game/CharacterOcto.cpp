@@ -834,13 +834,15 @@ void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
-	startKonamiCode(firstTime);
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
 }
 
 void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
-	startKonamiCode(firstTime);
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
 	m_repairNanoRobot = robot;
 }
 
