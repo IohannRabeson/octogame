@@ -56,6 +56,7 @@ void	DeathScreen::start()
 	}
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
+	std::cout << "Death screen start" << std::endl;
 }
 
 void	DeathScreen::pause()
@@ -75,6 +76,7 @@ void	DeathScreen::stop()
 
 	audio.playSound(resources.getSound(PORTAL_END_OGG));
 	InputListener::removeInputListener();
+	std::cout << "Death screen stop" << std::endl;
 }
 
 void	DeathScreen::update(sf::Time frameTime)
