@@ -1,13 +1,17 @@
 #ifndef CHALLENGEMANAGER_HPP
 # define CHALLENGEMANAGER_HPP
 
-# include <SFML/Graphics/Shader.hpp>
 # include <SFML/System/Time.hpp>
 # include <map>
 # include <memory>
 # include "ResourceDefinitions.hpp"
 # include "RandomGenerator.hpp"
 # include "ABiome.hpp"
+
+namespace sf
+{
+	class Shader;
+}
 
 class ChallengeManager
 {
@@ -17,16 +21,16 @@ public:
 	public:
 		AChallenge(ResourceKey key, float challengeDuration, float delay, sf::FloatRect const & area, ABiome::Type biomeType, std::pair<float, float> glitchIntensityRange, std::pair<float, float> glitchDurationRange);
 		virtual ~AChallenge(void);
-	
+
 		void update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position);
 		void updateGlitch(sf::Time frametime, ABiome & biome);
 		void updateChallenge(sf::Time frametime);
 		virtual void updateShader(sf::Time frametime) = 0;
-	
+
 		void start(void);
 		void stop(void);
 		bool enable(void) const;
-	
+
 		bool isFinished(void) const;
 		bool isGlitch(void) const;
 		void startGlitch(ABiome & biome);
@@ -36,9 +40,9 @@ public:
 		void setIntensity(float intensity);
 		void setGlitch(bool isGlitch);
 		void validateArea(ABiome & biome, sf::Vector2f const & position);
-	
+
 	protected:
-		sf::Shader						m_shader;
+		sf::Shader &					m_shader;
 		std::size_t						m_index;
 		sf::Time						m_delay;
 		sf::Time						m_delayMax;

@@ -57,8 +57,8 @@ public:
 
 	virtual void swapDepth(void);
 	virtual void registerDepth(void);
-	virtual void nextStep(void);
-	virtual void previousStep(void);
+	virtual bool nextStep(void);
+	virtual bool previousStep(void);
 	void registerOctoPos(sf::Vector2f const & octoPos);
 	bool isOctoOnInstance(sf::IntRect const & instanceRect, sf::Vector2i const & octoPos);
 

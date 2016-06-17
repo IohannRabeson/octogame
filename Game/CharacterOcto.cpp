@@ -135,6 +135,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::TVScreen)
 		| static_cast<std::size_t>(GameObjectType::FabienNpc)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint)
 		| static_cast<std::size_t>(GameObjectType::OverCoolNpc)
@@ -834,13 +835,15 @@ void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
-	startKonamiCode(firstTime);
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
 }
 
 void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
-	startKonamiCode(firstTime);
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
 	m_repairNanoRobot = robot;
 }
 

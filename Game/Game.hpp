@@ -53,15 +53,9 @@ private:
 	std::size_t							m_skipFrames;
 	std::size_t							m_skipFramesMax;
 
-	BubbleText							m_groundBubble;
-	sf::Color							m_colorGround;
-	sf::Time							m_timerGroundBubble;
-	sf::Time							m_timerGroundBubbleMax;
 	sf::Time							m_earlyMapMovement;
 
 	void			moveMap(sf::Time frameTime);
-	void			setupBubbleGround(void);
-	void			updateBubbleGround(sf::Time frameTime);
 	bool			onInputPressed(InputListener::OctoKeys const & key);
 	bool			onInputReleased(InputListener::OctoKeys const & key);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);

@@ -5,6 +5,7 @@ ABubble::ABubble(void) :
 	m_count(100),
 	m_used(0u),
 	m_currentType(Type::None),
+	m_lastType(Type::None),
 	m_priority(Priority::Bullshit),
 	m_color(255, 255, 255, 200),
 	m_isActive(false)
@@ -193,11 +194,13 @@ void ABubble::update(sf::Time frameTime)
 		}
 	}
 	m_used = m_builder.getUsed();
+	m_lastType = m_currentType;
 }
 
 void ABubble::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	if (m_currentType != Type::None)
+	//TODO: Find the problem insteas of avoiding it
+	if (m_currentType != Type::None && m_lastType == m_currentType)
 	{
 		render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 		if (m_isActive)

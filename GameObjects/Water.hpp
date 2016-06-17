@@ -1,9 +1,16 @@
 #ifndef WATER_HPP
 # define WATER_HPP
 
-# include <SFML/Graphics.hpp>
+# include <SFML/Graphics/Texture.hpp>
+# include <SFML/Graphics/RectangleShape.hpp>
+# include <SFML/System/Time.hpp>
 # include "AGameObject.hpp"
 # include "IPlaceable.hpp"
+
+namespace sf
+{
+	class Shader;
+}
 
 class ABiome;
 
@@ -24,7 +31,7 @@ private:
 	sf::Texture				m_distorsionTexture;
 	sf::RectangleShape		m_rectLeft;
 	sf::RectangleShape		m_rectRight;
-	sf::Shader				m_shader;
+	sf::Shader &			m_shader;
 	sf::Time				m_waveCycle;
 	float					m_width;
 	float					m_limit;

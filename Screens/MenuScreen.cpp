@@ -23,6 +23,7 @@ void	MenuScreen::start()
 	m_game.reset(new Game());
 	m_game->loadLevel();
 	m_menu.setup();
+	std::cout << "Menu screen start" << std::endl;
 }
 
 void	MenuScreen::pause()
@@ -49,6 +50,7 @@ void	MenuScreen::stop()
 	InputListener::removeInputListener();
 	m_game.reset(nullptr);
 	m_menu.setKeyboard(false);
+	std::cout << "Menu screen stop" << std::endl;
 }
 
 void	MenuScreen::update(sf::Time frameTime)

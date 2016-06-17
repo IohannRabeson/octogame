@@ -7,6 +7,7 @@
 #include "ChallengeManager.hpp"
 #include "Challenges.hpp"
 #include "CameraMovement.hpp"
+#include "PostEffectLayer.hpp"
 
 // Biomes
 #include "IceABiome.hpp"
@@ -42,6 +43,7 @@
 
 //Npc
 //Script AddNpc Include
+#include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
@@ -109,7 +111,6 @@ Game::Game(void) :
 	m_slowTimeInfosCoef(1.f),
 	m_skipFrames(0u),
 	m_skipFramesMax(3u),
-	m_timerGroundBubbleMax(sf::seconds(2.5f)),
 	m_earlyMapMovement(sf::seconds(2.f))
 {
 	InputListener::addInputListener();
@@ -164,6 +165,17 @@ void	Game::loadLevel(void)
 
 	// Reset last values
 	postEffect.removeEffects();
+	PostEffectLayer::getInstance().clear();
+	PostEffectLayer::getInstance().registerShader(CIRCLE_RAINBOW_FRAG);
+	PostEffectLayer::getInstance().registerShader(VISION_TROUBLE_FRAG);
+	PostEffectLayer::getInstance().registerShader(PERSISTENCE_FRAG);
+	PostEffectLayer::getInstance().registerShader(PIXELATE_FRAG);
+	PostEffectLayer::getInstance().registerShader(DISPLACEMENT_FRAG);
+	PostEffectLayer::getInstance().registerShader(KERNEL_POST_EFFECT_FRAG);
+	PostEffectLayer::getInstance().registerShader(WATER_FRAG);
+	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG);
+
 	ChallengeManager::getInstance().reset();
 	audio.reset();
 	// Reset PhysycsEngine
@@ -190,14 +202,6 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
-	setupBubbleGround();
-}
-
-void	Game::setupBubbleGround(void)
-{
-	m_colorGround = m_biomeManager.getCurrentBiome().getTileEndColor();
-	m_groundBubble.setType(ABubble::Type::None);
-	m_groundBubble.setActive(true);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -207,6 +211,7 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
 	if (m_skipFrames < m_skipFramesMax)
 	{
 		m_skipFrames++;
@@ -351,8 +356,12 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::TVScreen:
+			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::FabienNpc:
 			gameObjectCast<FabienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::CheckPoint:
 			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -523,33 +532,13 @@ void Game::moveMap(sf::Time frameTime)
 				m_soundGeneration->setVolume(volume);
 			}
 		}
-		m_timerGroundBubble = sf::Time::Zero;
 	}
 
-	updateBubbleGround(frameTime);
 	m_earlyMapMovement -= frameTime;
 	if (Progress::getInstance().isMenu() || m_earlyMapMovement > sf::Time::Zero)
 	{
 		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 	}
-}
-
-void	Game::updateBubbleGround(sf::Time frameTime)
-{
-	Progress & progress = Progress::getInstance();
-
-	m_timerGroundBubble += frameTime;
-	if (m_timerGroundBubble <= m_timerGroundBubbleMax && progress.isOctoOnInstance() && progress.isMapHighlight())
-	{
-		std::wstring const & groundInfos = progress.getGroundInfos();
-		m_groundBubble.setup(groundInfos, m_colorGround, 20u, 1000.f);
-		m_groundBubble.setPosition(m_octo->getPosition() + sf::Vector2f(0.f, -100.f));
-		m_groundBubble.update(frameTime);
-		//After update to avoid first update
-		m_groundBubble.setType(ABubble::Type::Think);
-	}
-	else
-		m_groundBubble.setType(ABubble::Type::None);
 }
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
@@ -610,8 +599,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
-	if (m_earlyMapMovement < sf::seconds(-1.f))
-		m_groundBubble.draw(render, states);
 	render.draw(*m_konami);
 	//m_cameraMovement->debugDraw(render);
 }
