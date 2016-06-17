@@ -353,6 +353,7 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 //Script AddNpc GameObject
 		case GameObjectType::FabienNpc:
 			gameObjectCast<FabienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::CheckPoint:
 			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
 			break;
