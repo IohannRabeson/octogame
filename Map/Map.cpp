@@ -276,7 +276,6 @@ bool Map::nextStep(void)
 			m_isOctoOnInstance = m_instances[i]->nextStep();
 			m_instanceIndex = i;
 			progress.setMapHighlight(m_instances[i]->isMapHighlight());
-			progress.setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L">");
 			return true;
 		}
 	}
@@ -297,7 +296,6 @@ bool Map::previousStep(void)
 			m_isOctoOnInstance = m_instances[i]->previousStep();
 			m_instanceIndex = i;
 			progress.setMapHighlight(m_instances[i]->isMapHighlight());
-			progress.setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L"<");
 			return true;
 		}
 	}

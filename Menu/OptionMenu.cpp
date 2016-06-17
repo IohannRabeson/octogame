@@ -12,18 +12,14 @@ class YesNoGroundInfos : public YesNoMenu
 public:
 	void setIndex(void)
 	{
-		Progress const & progress = Progress::getInstance();
-		setIndexCursor(progress.isEnableGroundInfos());
+//		Progress const & progress = Progress::getInstance();
+//		setIndexCursor(progress.isEnableGroundInfos());
 	}
 	void actionYes(void)
 	{
-		Progress & progress = Progress::getInstance();
-		progress.setEnableGroundInfos(true);
 	}
 	void actionNo(void)
 	{
-		Progress & progress = Progress::getInstance();
-		progress.setEnableGroundInfos(false);
 	}
 };
 
