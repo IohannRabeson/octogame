@@ -92,11 +92,13 @@ void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 	for (auto element : m_elements)
 	{
 		elementX = element->getPosition().x;
-		if (element->isDisabledIfOutOfScreen() == false ||
+		if (element->isDisabledIfOutOfScreen() == true &&
 			(elementX >= minVisibleX && elementX <= maxVisibleX))
 		{
 			element->update(frameTime, m_builder, *m_biome);
 		}
+		else
+			element->update(frameTime, m_builder, *m_biome);
 	}
 	m_used = m_builder.getUsed();
 }
