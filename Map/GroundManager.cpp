@@ -35,6 +35,7 @@
 #include "CedricNpc.hpp"
 //Script AddNpc Include
 #include "TVScreen.hpp"
+#include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
@@ -219,6 +220,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
 	m_npcFactory.registerCreator<TVScreen>(TV_OSS);
+	m_npcFactory.registerCreator<FabienNpc>(FABIEN_OSS);
 	m_npcFactory.registerCreator<CheckPoint>(CHECKPOINT_OSS);
 	m_npcFactory.registerCreator<OverCoolNpc>(OVER_COOL_NPC_OSS);
 	m_npcFactory.registerCreator<Pedestal>(PEDESTAL_OSS);
@@ -639,6 +641,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::TVScreen:
 				{
 					TVScreen * npc = new TVScreen();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::FabienNpc:
+				{
+					FabienNpc * npc = new FabienNpc();
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}

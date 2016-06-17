@@ -136,6 +136,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
 		| static_cast<std::size_t>(GameObjectType::TVScreen)
+		| static_cast<std::size_t>(GameObjectType::FabienNpc)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint)
 		| static_cast<std::size_t>(GameObjectType::OverCoolNpc)
 		| static_cast<std::size_t>(GameObjectType::Pedestal)

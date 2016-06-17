@@ -134,6 +134,7 @@ DesertBBiome::DesertBBiome() :
 		m_octoStartPosition = sf::Vector2f(340.f * 16.f, -2500.f);
 
 	m_gameObjects[60] = GameObjectType::Portal;
+	m_gameObjects[125] = GameObjectType::FabienNpc;
 	m_instances[230] = MAP_DESERT_B_TRAIL_A_OMP;
 	m_instances[280] = MAP_DESERT_B_TRAIL_B_OMP;
 	m_instances[312] = MAP_DESERT_B_TRAIL_C_OMP;

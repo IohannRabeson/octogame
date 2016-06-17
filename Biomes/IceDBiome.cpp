@@ -147,7 +147,7 @@ IceDBiome::IceDBiome() :
 	m_instances[551] = MAP_ICE_D_TRAIL_OMP;
 	m_gameObjects[630] = GameObjectType::StrangerGirlSnowNpc;
 	m_destinations.push_back(Level::DesertA);
-	m_destinations.push_back(Level::IceB);
+	m_destinations.push_back(Level::IceC);
 }
 
 void			IceDBiome::setup(std::size_t seed)
