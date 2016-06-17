@@ -35,7 +35,6 @@ private:
 	sf::Time				m_waveCycle;
 	float					m_width;
 	float					m_limit;
-	std::size_t				m_shaderIndex;
 
 };
 

@@ -117,7 +117,7 @@ void	LogoScreen::update(sf::Time frameTime)
 			if (m_index == 8u)
 				audio.playSound(resources.getSound(OCTO_GREETING_OGG), 1.f);
 		}
-		if (m_index == m_count)
+		if (m_index >= m_count)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
 			m_sound->stop();
@@ -136,6 +136,10 @@ void	LogoScreen::draw(sf::RenderTarget& render)const
 bool	LogoScreen::onInputPressed(InputListener::OctoKeys const &)
 {
 	if (!Progress::getInstance().isFirstTime())
-		m_index = m_count - 1;
+	{
+		octo::StateManager & states = octo::Application::getStateManager();
+		m_sound->stop();
+		states.change("menu");
+	}
 	return true;
 }
