@@ -132,6 +132,7 @@ IceBBiome::IceBBiome() :
 	m_instances[50] = MAP_ICE_B_TRAIL_A_OMP;
 	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
 	m_instances[178] = MAP_ICE_B_TRAIL_C_OMP;
+	m_instances[219] = MAP_ICE_B_TRAIL_D_OMP;
 	m_instances[370] = MAP_ICE_B_PORTAL_OMP;
 	m_interestPointPosX = 530;
 

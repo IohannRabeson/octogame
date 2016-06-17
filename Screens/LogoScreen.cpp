@@ -136,6 +136,10 @@ void	LogoScreen::draw(sf::RenderTarget& render)const
 bool	LogoScreen::onInputPressed(InputListener::OctoKeys const &)
 {
 	if (!Progress::getInstance().isFirstTime())
-		m_index = m_count - 1;
+	{
+		octo::StateManager & states = octo::Application::getStateManager();
+		m_sound->stop();
+		states.change("menu");
+	}
 	return true;
 }
