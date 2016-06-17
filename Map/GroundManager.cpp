@@ -157,6 +157,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	updateOffset(0.f);
 }
 
+//TODO: Use movement mask
 void GroundManager::setupGroundRock(ABiome & biome)
 {
 	std::vector<sf::Vector2f> positions;
