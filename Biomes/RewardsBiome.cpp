@@ -66,6 +66,7 @@ RewardsBiome::RewardsBiome() :
 	m_canCreateSun(m_generator.randomBool(0.7f)),
 	m_canCreateMoon(m_generator.randomBool(0.8f)),
 	m_canCreateRainbow(m_generator.randomBool(0.4f)),
+	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Random),
 
 	m_rockSize(sf::Vector2f(m_generator.randomFloat(2.f, 50.f), m_generator.randomFloat(10.f, 60.f)), sf::Vector2f(m_generator.randomFloat(50.f, 100.f), m_generator.randomFloat(200.f, 600.f))),
@@ -743,6 +744,11 @@ sf::Time		RewardsBiome::getRainbowIntervalTime()
 bool			RewardsBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+float	RewardsBiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
 }
 
 ABiome::Type	RewardsBiome::getType() const

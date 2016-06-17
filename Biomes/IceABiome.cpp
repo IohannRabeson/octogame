@@ -62,6 +62,7 @@ IceABiome::IceABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(5.f, 50.f), sf::Vector2f(20.f, 70.f)),
@@ -696,6 +697,11 @@ sf::Time		IceABiome::getRainbowIntervalTime()
 bool			IceABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+float	IceABiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
 }
 
 ABiome::Type	IceABiome::getType() const
