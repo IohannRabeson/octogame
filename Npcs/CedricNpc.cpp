@@ -326,3 +326,8 @@ void CedricNpc::updatePhysics(void)
 	}
 	box->setVelocity(velocity);
 }
+
+bool CedricNpc::canWalk(void) const
+{
+	return false;
+}
