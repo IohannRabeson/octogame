@@ -146,7 +146,7 @@ void MapInstance::playSound(void)
 		m_soundPtr = nullptr;
 }
 
-void MapInstance::nextStep(void)
+bool MapInstance::nextStep(void)
 {
 	m_depth++;
 	if (m_depth >= static_cast<int>(m_tiles.depth()))
@@ -155,13 +155,15 @@ void MapInstance::nextStep(void)
 		{
 			m_depth = m_tiles.depth() - 1u;
 			playSound();
+			return false;
 		}
 		else
 			m_depth = 0;
 	}
+	return true;
 }
 
-void MapInstance::previousStep(void)
+bool MapInstance::previousStep(void)
 {
 	m_depth--;
 	if (m_depth < 0)
@@ -170,10 +172,12 @@ void MapInstance::previousStep(void)
 		{
 			m_depth = 0u;
 			playSound();
+			return false;
 		}
 		else
 			m_depth = m_tiles.depth() - 1u;
 	}
+	return true;
 }
 
 void MapInstance::setTransitionType(Tile & tile)

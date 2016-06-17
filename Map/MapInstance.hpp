@@ -21,8 +21,8 @@ public:
 	void playSound(void);
 	void swapDepth(void);
 	void registerDepth(void);
-	void nextStep(void);
-	void previousStep(void);
+	bool nextStep(void);
+	bool previousStep(void);
 	inline Tile const & get(std::size_t x, std::size_t y) const { return m_tiles(x, y, m_depth); }
 	inline Tile const & get(std::size_t x, std::size_t y, std::size_t z) const { return m_tiles(x, y, z); }
 	inline float const & getMovementMask(std::size_t x, std::size_t y) const { return m_movementMask(x, y, 0); }

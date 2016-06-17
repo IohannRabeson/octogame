@@ -263,7 +263,7 @@ void Map::registerDepth(void)
 		instance->registerDepth();
 }
 
-void Map::nextStep(void)
+bool Map::nextStep(void)
 {
 	m_depth += m_transitionStep;
 	m_isOctoOnInstance = false;
@@ -273,18 +273,18 @@ void Map::nextStep(void)
 		{
 			Progress & progress = Progress::getInstance();
 
-			m_instances[i]->nextStep();
+			m_isOctoOnInstance = m_instances[i]->nextStep();
 			m_instanceIndex = i;
-			m_isOctoOnInstance = true;
 			progress.setMapHighlight(m_instances[i]->isMapHighlight());
 			progress.setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L">");
-			break;
+			return true;
 		}
 	}
+	return false;
 	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
 }
 
-void Map::previousStep(void)
+bool Map::previousStep(void)
 {
 	m_depth -= m_transitionStep;
 	m_isOctoOnInstance = false;
@@ -294,14 +294,14 @@ void Map::previousStep(void)
 		{
 			Progress & progress = Progress::getInstance();
 
-			m_instances[i]->previousStep();
+			m_isOctoOnInstance = m_instances[i]->previousStep();
 			m_instanceIndex = i;
-			m_isOctoOnInstance = true;
 			progress.setMapHighlight(m_instances[i]->isMapHighlight());
 			progress.setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L"<");
-			break;
+			return true;
 		}
 	}
+	return false;
 	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
 }
 
