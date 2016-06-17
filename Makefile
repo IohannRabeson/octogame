@@ -49,6 +49,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/KonamiCode.cpp						\
 				Game/ChallengeManager.cpp				\
 				Game/Challenges.cpp						\
+				Game/PostEffectLayer.cpp				\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\
@@ -109,6 +110,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/DisappearNpc.cpp					\
 				Npcs/ForestSpirit1Npc.cpp				\
 				Npcs/ForestSpirit2Npc.cpp				\
+				Npcs/TVScreen.cpp						\
 				Npcs/Pedestal.cpp						\
 				Npcs/OverCoolNpc.cpp					\
 				Npcs/FabienNpc.cpp						\
