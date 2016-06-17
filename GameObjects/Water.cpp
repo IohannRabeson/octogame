@@ -34,6 +34,7 @@ Water::Water(ABiome & biome) :
 
 	m_shader.setParameter("distortionMapTexture", m_distorsionTexture);
 	m_shader.setParameter("max_factor", 0.15f);
+	m_shader.setParameter("activate_persistence", biome.getWaterPersistence());
 
 	PostEffectLayer::getInstance().enableShader(WATER_FRAG, true);
 }

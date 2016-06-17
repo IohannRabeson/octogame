@@ -29,6 +29,7 @@ GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 	targets.push_back(sf::Vector2f(147.f, 358.f));
 	setTargets(targets, 1.f);
 	setLaserColor(sf::Color::Blue);
+	NanoRobot::setEffectEnable(false);
 }
 
 void GroundTransformNanoRobot::update(sf::Time frameTime)

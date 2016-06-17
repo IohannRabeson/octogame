@@ -48,6 +48,8 @@ public:
 	void							onTransfer(void);
 	void							setState(State state);
 	void							setTravelling(bool travelling);
+	void							setEffectEnable(bool enable);
+	bool							getEffectEnable(void) const;
 
 private:
 	void							createLosange(sf::Vector2f const & size,
@@ -90,6 +92,7 @@ private:
 	std::unique_ptr<MusicSystem>	m_particle;
 	sf::Time						m_particleTimer;
 	bool							m_isTravelling;
+	bool							m_effectEnable;
 };
 
 #endif

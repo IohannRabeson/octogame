@@ -8,6 +8,7 @@ uniform float limit;
 uniform float offset_limit;
 uniform float height;
 uniform float max_factor;
+uniform float activate_persistence;
 
 void main()
 {
@@ -50,8 +51,8 @@ void main()
 
 		vec2 distortedTextureCoordinate = gl_TexCoord[0].st + distortionPositionOffset;
 
-		gl_FragColor = gl_Color * texture2D(texture, distortedTextureCoordinate);
+		gl_FragColor = vec4(texture2D(texture, distortedTextureCoordinate).rgb, mix(1.0, max_factor + 0.02 - factor, activate_persistence));
 	}
 	else
-		gl_FragColor = gl_Color * texture2D(texture, gl_TexCoord[0].st);
+		gl_FragColor = texture2D(texture, gl_TexCoord[0].st);
 }
