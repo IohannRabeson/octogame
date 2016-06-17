@@ -99,10 +99,6 @@ public:
 	std::size_t			getPortalsCount();
 	std::size_t			getPortalsMax();
 
-	void				setGroundInfos(std::size_t current, std::size_t max, std::wstring sign);
-	std::wstring const & getGroundInfos(void);
-	void				setEnableGroundInfos(bool isEnable);
-	bool				isEnableGroundInfos(void) const { return m_data.isGroundInfos; }
 	void				setMapHighlight(bool isHighlight);
 	bool				isMapHighlight(void) const;
 	void				setIsOctoOnInstance(bool isInstance);
@@ -147,7 +143,6 @@ private:
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false),
-			isGroundInfos(true),
 			respawnType(Progress::RespawnType::Portal)
 		{}
 
@@ -167,7 +162,6 @@ private:
 		bool					canOpenDoubleJump;
 		char					npc[10000];
 		char					portals[10000];
-		bool					isGroundInfos;
 		Progress::RespawnType	respawnType;
 	};
 
@@ -202,7 +196,6 @@ private:
 	std::size_t										m_portalsMax;
 	std::vector<Level>								m_levels;
 
-	std::wstring									m_groundInfos;
 	bool											m_isOctoOnInstance;
 	bool											m_isHighLight;
 };

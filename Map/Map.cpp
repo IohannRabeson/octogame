@@ -74,7 +74,6 @@ void Map::init(ABiome & biome)
 
 void Map::computeMapRange(int startX, int endX, int startY, int endY)
 {
-	static const float interpolateOffset = 5.f;
 	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
 	int height; // The height of the generated map
 	int offsetX; // The tile position adjust to avoid negativ offset (because map is circular)
@@ -147,16 +146,10 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 			}
 
 			if (m_isOctoOnInstance && m_octoPos.y <= m_instancesRect[m_instanceIndex].height
-				&& (offsetX >= m_instancesRect[m_instanceIndex].left && offsetX <= m_instancesRect[m_instanceIndex].width)
-				&& m_instances[m_instanceIndex]->isMapHighlight())
-			{
-				float interpolateValue = 0.4f;
-				if (offsetX < m_instancesRect[m_instanceIndex].left + interpolateOffset)
-					interpolateValue = interpolateValue * ((offsetX - m_instancesRect[m_instanceIndex].left) / interpolateOffset);
-				else if (offsetX > m_instancesRect[m_instanceIndex].width - interpolateOffset)
-					interpolateValue = interpolateValue * ((m_instancesRect[m_instanceIndex].width - offsetX) / interpolateOffset);
-				m_tiles.get(x, y)->setStartColor(octo::linearInterpolation(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth), m_moveColor, interpolateValue));
-			}
+				&& (offsetX >= m_instancesRect[m_instanceIndex].left && offsetX < m_instancesRect[m_instanceIndex].width)
+				&& m_instances[m_instanceIndex]->isMapHighlight()
+				&& m_instances[m_instanceIndex]->getMovementMask(offsetX - m_instances[m_instanceIndex]->getCornerPositions().left, offsetY - m_instances[m_instanceIndex]->getCornerPositions().top) >= 0.f)
+				m_tiles.get(x, y)->setStartColor(octo::linearInterpolation(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth), m_moveColor, m_instances[m_instanceIndex]->getMovementMask(offsetX - m_instances[m_instanceIndex]->getCornerPositions().left, offsetY - m_instances[m_instanceIndex]->getCornerPositions().top) * 0.5f));
 			else
 				m_tiles.get(x, y)->setStartColor(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth));
 		}
@@ -270,7 +263,7 @@ void Map::registerDepth(void)
 		instance->registerDepth();
 }
 
-void Map::nextStep(void)
+bool Map::nextStep(void)
 {
 	m_depth += m_transitionStep;
 	m_isOctoOnInstance = false;
@@ -280,18 +273,17 @@ void Map::nextStep(void)
 		{
 			Progress & progress = Progress::getInstance();
 
-			m_instances[i]->nextStep();
+			m_isOctoOnInstance = m_instances[i]->nextStep();
 			m_instanceIndex = i;
-			m_isOctoOnInstance = true;
 			progress.setMapHighlight(m_instances[i]->isMapHighlight());
-			progress.setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L">");
-			break;
+			return true;
 		}
 	}
+	return false;
 	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
 }
 
-void Map::previousStep(void)
+bool Map::previousStep(void)
 {
 	m_depth -= m_transitionStep;
 	m_isOctoOnInstance = false;
@@ -301,14 +293,13 @@ void Map::previousStep(void)
 		{
 			Progress & progress = Progress::getInstance();
 
-			m_instances[i]->previousStep();
+			m_isOctoOnInstance = m_instances[i]->previousStep();
 			m_instanceIndex = i;
-			m_isOctoOnInstance = true;
 			progress.setMapHighlight(m_instances[i]->isMapHighlight());
-			progress.setGroundInfos(m_instances[i]->getDepth(), m_instances[i]->getMaxDepth(), L"<");
-			break;
+			return true;
 		}
 	}
+	return false;
 	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
 }
 

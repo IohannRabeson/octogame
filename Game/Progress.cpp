@@ -424,36 +424,6 @@ std::size_t	Progress::getPortalsMax()
 	return m_portalsMax;
 }
 
-void		Progress::setGroundInfos(std::size_t current, std::size_t max, std::wstring sign)
-{
-	m_groundInfos.clear();
-	if (isJoystick())
-		m_groundInfos = L"[LT] ";
-	else
-		m_groundInfos = L"[S] ";
-	for (std::size_t i = 0u; i < max; i++)
-	{
-		if (i == current)
-			m_groundInfos += sign;
-		else
-			m_groundInfos += L"-";
-	}
-	if (isJoystick())
-		m_groundInfos += L" [RT]";
-	else
-		m_groundInfos += L" [F]";
-}
-
-std::wstring const &Progress::getGroundInfos(void)
-{
-	return m_groundInfos;
-}
-
-void		Progress::setEnableGroundInfos(bool isEnable)
-{
-	m_data.isGroundInfos = isEnable;
-}
-
 void		Progress::setIsOctoOnInstance(bool isInstance)
 {
 	m_isOctoOnInstance = isInstance;
@@ -491,9 +461,7 @@ void		Progress::setMapHighlight(bool isHighlight)
 
 bool		Progress::isMapHighlight(void) const
 {
-	if (m_data.isGroundInfos)
-		return m_isHighLight;
-	return false;
+	return m_isHighLight;
 }
 
 void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)
