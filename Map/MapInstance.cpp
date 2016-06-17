@@ -57,7 +57,7 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 }
 
 //TODO: Can be factorized if performance gain is necessary
-void MapInstance::smoothBorder()
+void MapInstance::smoothBorder(void)
 {
 	std::size_t attenuateBorder = 20u;
 	for (std::size_t x = 0; x < m_movementMask.columns(); x++)
