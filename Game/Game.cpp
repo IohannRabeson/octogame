@@ -507,7 +507,7 @@ void Game::moveMap(sf::Time frameTime)
 		m_groundSoundTime -= frameTime;
 		if (m_groundSoundTime < sf::Time::Zero)
 			m_groundSoundTime = sf::Time::Zero;
-		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
+		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax) * audio.getSoundVolume();
 		m_soundGeneration->setVolume(volume);
 	}
 	if (m_keyGroundRight || m_keyGroundLeft || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
@@ -529,7 +529,7 @@ void Game::moveMap(sf::Time frameTime)
 				if (m_groundSoundTime > m_groundSoundTimeMax)
 					m_groundSoundTime = m_groundSoundTimeMax;
 				volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
-				m_soundGeneration->setVolume(volume);
+				m_soundGeneration->setVolume(volume * audio.getSoundVolume());
 			}
 		}
 	}

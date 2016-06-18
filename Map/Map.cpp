@@ -147,9 +147,12 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 
 			if (m_isOctoOnInstance && m_octoPos.y <= m_instancesRect[m_instanceIndex].height
 				&& (offsetX >= m_instancesRect[m_instanceIndex].left && offsetX < m_instancesRect[m_instanceIndex].width)
+				&& (offsetY >= m_instancesRect[m_instanceIndex].top && offsetY < m_instancesRect[m_instanceIndex].height)
 				&& m_instances[m_instanceIndex]->isMapHighlight()
-				&& m_instances[m_instanceIndex]->getMovementMask(offsetX - m_instances[m_instanceIndex]->getCornerPositions().left, offsetY - m_instances[m_instanceIndex]->getCornerPositions().top) >= 0.f)
+				&& m_isOctoOnInstance && m_instances[m_instanceIndex]->getMovementMask(offsetX - m_instances[m_instanceIndex]->getCornerPositions().left, offsetY - m_instances[m_instanceIndex]->getCornerPositions().top) >= 0.f)
+			{
 				m_tiles.get(x, y)->setStartColor(octo::linearInterpolation(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth), m_moveColor, m_instances[m_instanceIndex]->getMovementMask(offsetX - m_instances[m_instanceIndex]->getCornerPositions().left, offsetY - m_instances[m_instanceIndex]->getCornerPositions().top) * 0.5f));
+			}
 			else
 				m_tiles.get(x, y)->setStartColor(m_tileColor(static_cast<float>(offsetPosX), static_cast<float>(offsetY), noiseDepth));
 		}

@@ -7,7 +7,7 @@ CheckPoint::CheckPoint(void) :
 	m_firstFrame(true)
 {
 	setSize(sf::Vector2f(30.f, 85.f));
-	setOrigin(sf::Vector2f(50.f, 275.f));
+	setOrigin(sf::Vector2f(27.f, 275.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(-20.f, -10.f));
 	setTimerMax(sf::seconds(8.0f));

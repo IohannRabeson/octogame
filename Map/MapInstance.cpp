@@ -20,12 +20,13 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	// Init 3D TileMap
 	octo::Array3D<octo::LevelMap::TileType> const & map = m_levelMap.getMap();
 	m_tiles.resize(map.columns(), map.rows(), map.depth());
-	m_movementMask.resize(map.columns(), map.rows(), map.depth());
+	m_movementMask.resize(map.columns(), map.rows(), 2u);
 
 	for (std::size_t x = 0; x < m_tiles.columns(); x++)
 	{
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
 		{
+			octo::LevelMap::TileType type = map(x, y, 0);
 			for (std::size_t z = 0; z < m_tiles.depth(); z++)
 			{
 				//TODO use TileType in Tile
@@ -36,19 +37,15 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 					m_tiles(x, y, z).setIsEmpty(false);
 
 				// Pre compute radiance mask
-				octo::LevelMap::TileType type = map(x, y, 0);
-				for (std::size_t z = 0; z < m_tiles.depth(); z++)
+				if (map(x, y, z) != type || m_movementMask(x, y, 1) == 1.f)
 				{
-					if (map(x, y, z) != type)
-					{
-						m_movementMask(x, y, 0) = 1.f; // Tile changing
-						break;
-					}
-					else if (map(x, y, z) == octo::LevelMap::TileType::Empty)
-						m_movementMask(x, y, 0) = -1.f; // Tile empty and not changing
-					else
-						m_movementMask(x, y, 0) = 0.f; // Tile full not changing
+					m_movementMask(x, y, 0) = 1.f; // Tile changing
+					m_movementMask(x, y, 1) = 1.f; // Tile has changed
 				}
+				else if (map(x, y, z) == octo::LevelMap::TileType::Empty)
+					m_movementMask(x, y, 0) = -1.f; // Tile empty and not changing
+				else
+					m_movementMask(x, y, 0) = 0.f; // Tile full not changing
 			}
 		}
 	}

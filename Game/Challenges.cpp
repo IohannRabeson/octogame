@@ -163,7 +163,7 @@ void ChallengeManager::AChallenge::setGlitch(bool isGlitch)
 
 // Duplicate
 ChallengeDuplicate::ChallengeDuplicate(void) :
-	AChallenge(VISION_TROUBLE_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f)),
+	AChallenge(VISION_TROUBLE_FRAG, 4.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(400.f * 16.f, 2200.f)), ABiome::Type::Jungle, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f)),
 	m_rotation(0.f)
 {}
 
