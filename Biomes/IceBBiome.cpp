@@ -28,7 +28,7 @@ IceBBiome::IceBBiome() :
 	m_startDayDuration(sf::seconds(9.f)),
 	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(130, 79, 8, 100),
-	m_nightLightColor(8, 20, 26, 149),
+	m_nightLightColor(8, 20, 26, 90),
 	m_sunsetLightColor(136 , 0, 30, 20),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
