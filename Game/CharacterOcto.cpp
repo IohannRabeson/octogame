@@ -810,6 +810,9 @@ void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisi
 		case GameObjectType::Tile:
 			if (std::abs(collisionDirection.x) >= 16.f)
 			{
+				//First reset the death timer
+				m_timeEventDeath = sf::Time::Zero;
+				// Then adjust octo position
 				if (PhysicsEngine::getInstance().isUpdated())
 					m_box->setPosition(getPhysicsPosition() + sf::Vector2f(-collisionDirection.x, -8.f));
 				else
