@@ -31,7 +31,7 @@ void NanoMenu::onSelection(void)
 	progress.setNanoRobotCount(getIndexCursor());
 	if (progress.changeLevel() == false)
 	{
-		progress.setNextDestination(progress.getLastDestination());
+		progress.setNextDestination(progress.getCurrentDestination());
 		progress.setRespawnType(Progress::RespawnType::Portal);
 	}
 

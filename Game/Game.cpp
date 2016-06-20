@@ -151,7 +151,7 @@ void	Game::loadLevel(void)
 	else
 	{
 		m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
-		progress.setLastDestination(m_biomeManager.getCurrentBiome().getId());
+		progress.setCurrentDestination(m_biomeManager.getCurrentBiome().getId());
 	}
 
 	sf::Vector2f startPosition;

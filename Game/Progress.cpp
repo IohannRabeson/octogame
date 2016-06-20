@@ -170,7 +170,10 @@ void	Progress::setNanoRobotCount(std::size_t count)
 void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 {
 	if (!m_isMenu)
+	{
+		m_data.lastDestination = m_data.currentDestination;
 		m_data.nextDestination = destination;
+	}
 	m_changeLevel = hasTransition;
 }
 
@@ -179,9 +182,20 @@ Level	Progress::getNextDestination(void) const
 	return m_data.nextDestination;
 }
 
+void	Progress::setCurrentDestination(Level destination)
+{
+	if (destination != Level::Rewards)
+		m_data.currentDestination = destination;
+}
+
+Level	Progress::getCurrentDestination(void) const
+{
+	return m_data.currentDestination;
+}
+
 void	Progress::setLastDestination(Level destination)
 {
-	if (destination != Level::Random && destination != Level::Rewards)
+	if (destination != Level::Rewards)
 		m_data.lastDestination = destination;
 }
 
