@@ -25,6 +25,10 @@ BirdNpc::BirdNpc(ResourceKey const & npcId, bool isMeetable) :
 	setTextOffset(sf::Vector2f(100.f, -80.f));
 	setup();
 
+	octo::ResourceManager&	resources = octo::Application::getResourceManager();
+	m_shader.loadFromMemory(resources.getText(HUE_FRAG), sf::Shader::Fragment);
+	m_shader.setParameter("texture", sf::Shader::CurrentTexture);
+	m_shader.setParameter("hue", 0.0);
 	setTimerMax(sf::seconds(m_generator.randomFloat(5.f, 10.f)));
 }
 
@@ -233,6 +237,7 @@ void BirdNpc::collideOctoEvent(CharacterOcto * octo)
 
 void BirdNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
+	states.shader = &m_shader;
 	if (!m_animationEnd)
 		ANpc::draw(render, states);
 }
