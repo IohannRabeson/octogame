@@ -1210,6 +1210,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	TileShape * first;
 	sf::Vertex * last;
 	bool updateLast;
+	bool isScreenFullOfTiles = false;
 
 	// Update tiles
 	m_verticesCount = 0u;
@@ -1227,6 +1228,8 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 					updateLast = false;
 				continue;
 			}
+			if (y == 0u)
+				isScreenFullOfTiles = true;
 			if (first)
 			{
 				// Avoid to compute A LOT of transition under the screen
@@ -1274,6 +1277,11 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			m_tileShapes[x]->setVertex(&m_vertices[0u]);
 			m_tileShapes[x]->setEndVertex(&m_vertices[0u]);
 		}
+	}
+	if (isScreenFullOfTiles)
+	{
+		Progress::getInstance().setNextDestination(Progress::getInstance().getNextDestination());
+		return;
 	}
 
 	// Update decors

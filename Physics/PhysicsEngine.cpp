@@ -20,6 +20,7 @@ PhysicsEngine::PhysicsEngine(void) :
 	m_magnitude(0.f),
 	m_iterationCount(0u),
 	m_tileCollision(false),
+	m_isUpdated(false),
 	m_contactListener(nullptr)
 {}
 
@@ -198,6 +199,11 @@ void PhysicsEngine::unregisterAllTiles(void)
 	m_tileCollision = false;
 }
 
+bool PhysicsEngine::isUpdated(void) const
+{
+	return (m_isUpdated);
+}
+
 void PhysicsEngine::update(float deltatime)
 {
 	static float accumulator = 0.f;
@@ -206,10 +212,12 @@ void PhysicsEngine::update(float deltatime)
 	if (deltatime > 0.2f)
 		deltatime = 0.2f;
 	accumulator += deltatime;
+	m_isUpdated = false;
 
 	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
 	while (accumulator > dt)
 	{
+		m_isUpdated = true;
 		accumulator -= dt;
 		// Check if shape is out of screen
 		for (auto & shape : m_shapes)

@@ -54,6 +54,9 @@ public:
 	inline void setTileCollision(bool tileCollision) { m_tileCollision = tileCollision; }
 	inline bool getTileCollision(void) const { return m_tileCollision; }
 
+	/*! Is the physics engine updated this frame */
+	bool isUpdated(void) const;
+
 	/*! Used by the ShapeBuilder to register a PolygonShape */
 	void registerShape(PolygonShape * shape);
 
@@ -178,6 +181,7 @@ private:
 	float												m_magnitude;
 	std::size_t											m_iterationCount;
 	bool												m_tileCollision;
+	bool												m_isUpdated;
 
 	void init(void);
 
