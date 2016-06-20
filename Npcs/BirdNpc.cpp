@@ -135,7 +135,7 @@ void BirdNpc::updateState(void)
 
 void BirdNpc::caseDoubleJump(sf::Time frametime)
 {
-	if ((ANpc::isDoubleJump() || m_timerDoubleJump != sf::Time::Zero))
+	if ((ANpc::isDoubleJump() || m_timerDoubleJump != sf::Time::Zero) && getSprite().getCurrentEvent() == Special2)
 	{
 		if (m_timerDoubleJump == sf::Time::Zero)
 		{

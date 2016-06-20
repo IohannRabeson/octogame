@@ -22,6 +22,7 @@ void ChallengeManager::reset(void)
 	m_challenges[Effect::Persistence].reset(new ChallengePersistence());
 	m_challenges[Effect::Pixelate].reset(new ChallengePixelate());
 	m_challenges[Effect::Displacement].reset(new ChallengeDisplacement());
+	m_challenges[Effect::Blur].reset(new ChallengeBlur());
 }
 
 void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)

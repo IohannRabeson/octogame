@@ -24,12 +24,12 @@ IceABiome::IceABiome() :
 	m_waterColor(255, 255, 255, 200),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(45.f)),
-	m_startDayDuration(sf::seconds(9.f)),
+	m_dayDuration(sf::seconds(35.f)),
+	m_startDayDuration(sf::seconds(20.f)),
 	m_skyDayColor(8, 20, 26),
-	m_skyNightColor(8, 20, 26),
-	m_nightLightColor(sf::Color::Transparent),
-	m_sunsetLightColor(sf::Color::Transparent),
+	m_skyNightColor(78, 47, 4, 130),
+	m_nightLightColor(8, 20, 26, 50),
+	m_sunsetLightColor(61, 0, 13, 20),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -41,7 +41,7 @@ IceABiome::IceABiome() :
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(4u, 8u),
 	m_starCount(500u, 800u),
-	m_sunCount(1u, 3u),
+	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
 	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
@@ -59,9 +59,10 @@ IceABiome::IceABiome() :
 	m_canCreateShineEffect(false),
 	m_canCreateCloud(true),
 	m_canCreateStar(true),
-	m_canCreateSun(false),
+	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(5.f, 50.f), sf::Vector2f(20.f, 70.f)),
@@ -97,9 +98,9 @@ IceABiome::IceABiome() :
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
-	m_sunSize(sf::Vector2f(60.f, 60.f), sf::Vector2f(150.f, 150.f)),
+	m_sunSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(7.f, 7.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 255, 200),
+	m_sunColor(208, 220, 226),
 
 	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 100.f)),
 	m_moonColor(200, 200, 200),
@@ -696,6 +697,11 @@ sf::Time		IceABiome::getRainbowIntervalTime()
 bool			IceABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+float	IceABiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
 }
 
 ABiome::Type	IceABiome::getType() const

@@ -66,6 +66,7 @@ RewardsBiome::RewardsBiome() :
 	m_canCreateSun(m_generator.randomBool(0.7f)),
 	m_canCreateMoon(m_generator.randomBool(0.8f)),
 	m_canCreateRainbow(m_generator.randomBool(0.4f)),
+	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Random),
 
 	m_rockSize(sf::Vector2f(m_generator.randomFloat(2.f, 50.f), m_generator.randomFloat(10.f, 60.f)), sf::Vector2f(m_generator.randomFloat(50.f, 100.f), m_generator.randomFloat(200.f, 600.f))),
@@ -136,10 +137,35 @@ RewardsBiome::RewardsBiome() :
 
 	// TODO define map position and number of map
 	std::size_t portalPos = m_generator.randomInt(100u, m_mapSize.x - 40u);
-	m_gameObjects[portalPos] = GameObjectType::Portal;
-	m_destinations.push_back(Level::Rewards);
+	if (progress.isMenu())
+	{
+		m_gameObjects[portalPos] = GameObjectType::PortalRandom;
+		m_destinations.push_back(Level::Rewards);
+	}
+	else
+	{
+		m_gameObjects[portalPos] = GameObjectType::Portal;
+		m_destinations.push_back(progress.getLastDestination());
+	}
+
 	m_interestPointPosX = portalPos;
-	
+
+	for (std::size_t i = 0u; i < m_mapSize.x - 1u; i += m_generator.randomInt(15u, 200u))
+	{
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
+		else
+			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
+	}
+
+	for (std::size_t i = 0u; i < m_mapSize.x - 1u; i += m_generator.randomInt(15u, 300u))
+	{
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::BirdBlueNpc;
+		else
+			m_gameObjects[i] = GameObjectType::BirdRedNpc;
+	}
+
 	std::vector<GameObjectType> const & npcList = progress.getNpcMet();
 	std::size_t total = 0;
 	for (std::size_t i = 0; i < npcList.size(); i++)
@@ -718,6 +744,11 @@ sf::Time		RewardsBiome::getRainbowIntervalTime()
 bool			RewardsBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+float	RewardsBiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
 }
 
 ABiome::Type	RewardsBiome::getType() const

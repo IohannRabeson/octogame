@@ -13,6 +13,7 @@ LevelMenu::LevelMenu(void) :
 	m_names.push_back(L"Desert B");
 	m_names.push_back(L"Desert C");
 	m_names.push_back(L"Jungle A");
+	m_names.push_back(L"Jungle B");
 	m_names.push_back(L"Jungle C");
 	m_names.push_back(L"Water A");
 	m_names.push_back(L"Water B");
@@ -44,6 +45,7 @@ void LevelMenu::onSelection(void)
 {
 	std::vector<Level> const & levels = Progress::getInstance().getRegisteredLevels();
 	Progress::getInstance().setNextDestination(levels[getIndexCursor()]);
+	Progress::getInstance().setRespawnType(Progress::RespawnType::Portal);
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();

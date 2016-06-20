@@ -39,6 +39,7 @@ public:
 	void setTextIndex(std::size_t index);
 	sf::Vector2f const & getPosition(void) const;
 	sf::Vector2f const & getTargetPosition(void);
+	bool getEffectEnable(void) const;
 	NanoRobot::State getState(void) const;
 	bool isTravelling(void) const;
 
@@ -64,6 +65,7 @@ protected:
 	void setLaserColor(sf::Color const & color);
 	void setRepairShipPosition(sf::Vector2f const & position);
 	void setTargets(std::vector<sf::Vector2f> const & targets, float travelDuration);
+	void setEffectEnable(bool enable);
 	void setSwarmTarget(sf::Vector2f const & position);
 	void makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
 	void playSoundRepair(void);

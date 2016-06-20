@@ -182,12 +182,12 @@ Level	Progress::getLastDestination(void) const
 
 void	Progress::validateChallenge(ChallengeManager::Effect effect)
 {
-	m_data.validateChallenge |= (1u << static_cast<int>(effect));
+	m_data.validateChallenge |= static_cast<int>(effect);
 }
 
 bool	Progress::isValidateChallenge(ChallengeManager::Effect effect)
 {
-	return m_data.validateChallenge & (1u << static_cast<int>(effect));
+	return m_data.validateChallenge & static_cast<int>(effect);
 }
 
 bool	Progress::canMoveMap()
@@ -424,36 +424,6 @@ std::size_t	Progress::getPortalsMax()
 	return m_portalsMax;
 }
 
-void		Progress::setGroundInfos(std::size_t current, std::size_t max, std::wstring sign)
-{
-	m_groundInfos.clear();
-	if (isJoystick())
-		m_groundInfos = L"[LT] ";
-	else
-		m_groundInfos = L"[S] ";
-	for (std::size_t i = 0u; i < max; i++)
-	{
-		if (i == current)
-			m_groundInfos += sign;
-		else
-			m_groundInfos += L"-";
-	}
-	if (isJoystick())
-		m_groundInfos += L" [RT]";
-	else
-		m_groundInfos += L" [F]";
-}
-
-std::wstring const &Progress::getGroundInfos(void)
-{
-	return m_groundInfos;
-}
-
-void		Progress::setEnableGroundInfos(bool isEnable)
-{
-	m_data.isGroundInfos = isEnable;
-}
-
 void		Progress::setIsOctoOnInstance(bool isInstance)
 {
 	m_isOctoOnInstance = isInstance;
@@ -464,6 +434,26 @@ bool		Progress::isOctoOnInstance(void)
 	return m_isOctoOnInstance;
 }
 
+void		Progress::setRespawnType(Progress::RespawnType type)
+{
+	m_data.respawnType = type;
+}
+
+Progress::RespawnType	Progress::getRespawnType(void) const
+{
+	return m_data.respawnType;
+}
+
+void				Progress::setCheckPointPosition(sf::Vector2f const & position)
+{
+	m_data.checkPointPosition = position;
+}
+
+sf::Vector2f const & Progress::getCheckPointPosition(void) const
+{
+	return m_data.checkPointPosition;
+}
+
 void		Progress::setMapHighlight(bool isHighlight)
 {
 	m_isHighLight = isHighlight;
@@ -471,9 +461,7 @@ void		Progress::setMapHighlight(bool isHighlight)
 
 bool		Progress::isMapHighlight(void) const
 {
-	if (m_data.isGroundInfos)
-		return m_isHighLight;
-	return false;
+	return m_isHighLight;
 }
 
 void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)

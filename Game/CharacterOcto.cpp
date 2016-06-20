@@ -122,6 +122,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Concert)
 		| static_cast<std::size_t>(GameObjectType::CedricNpc)
 		| static_cast<std::size_t>(GameObjectType::FannyNpc)
+		| static_cast<std::size_t>(GameObjectType::Snowman3Npc)
 		| static_cast<std::size_t>(GameObjectType::HouseFlatSnow)
 		| static_cast<std::size_t>(GameObjectType::EngineSnow)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
@@ -134,6 +135,9 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::TVScreen)
+		| static_cast<std::size_t>(GameObjectType::FabienNpc)
+		| static_cast<std::size_t>(GameObjectType::CheckPoint)
 		| static_cast<std::size_t>(GameObjectType::OverCoolNpc)
 		| static_cast<std::size_t>(GameObjectType::Pedestal)
 		| static_cast<std::size_t>(GameObjectType::ForestSpirit2Npc)
@@ -838,13 +842,15 @@ void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
-	startKonamiCode(firstTime);
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
 }
 
 void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
-	startKonamiCode(firstTime);
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
 	m_repairNanoRobot = robot;
 }
 
@@ -896,12 +902,13 @@ void	CharacterOcto::usePortal(Portal & portal)
 		m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 		m_progress.setReverseSprite(m_originMove);
 		m_progress.setNextDestination(portal.getDestination());
+		m_progress.setRespawnType(Progress::RespawnType::Portal);
 	}
 }
 
 void	CharacterOcto::startDrinkPotion(void)
 {
-	if (m_sprite.getCurrentEvent() != Drink)
+	if (m_sprite.getCurrentEvent() != Drink && !Progress::getInstance().isMenu())
 	{
 		m_sprite.setNextEvent(Drink);
 		m_box->setApplyGravity(false);
@@ -1075,6 +1082,7 @@ bool	CharacterOcto::endDeath()
 	{
 		if (m_sprite.isTerminated())
 		{
+			m_progress.setRespawnType(Progress::RespawnType::Die);
 			octo::StateManager &		states = octo::Application::getStateManager();
 			states.change("octo_death");
 		}

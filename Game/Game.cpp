@@ -7,6 +7,7 @@
 #include "ChallengeManager.hpp"
 #include "Challenges.hpp"
 #include "CameraMovement.hpp"
+#include "PostEffectLayer.hpp"
 
 // Biomes
 #include "IceABiome.hpp"
@@ -17,6 +18,7 @@
 #include "DesertBBiome.hpp"
 #include "DesertCBiome.hpp"
 #include "JungleABiome.hpp"
+#include "JungleBBiome.hpp"
 #include "JungleCBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
@@ -41,6 +43,9 @@
 
 //Npc
 //Script AddNpc Include
+#include "TVScreen.hpp"
+#include "FabienNpc.hpp"
+#include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
 #include "ForestSpirit2Npc.hpp"
@@ -106,7 +111,7 @@ Game::Game(void) :
 	m_slowTimeInfosCoef(1.f),
 	m_skipFrames(0u),
 	m_skipFramesMax(3u),
-	m_timerGroundBubbleMax(sf::seconds(2.5f))
+	m_earlyMapMovement(sf::seconds(2.f))
 {
 	InputListener::addInputListener();
 
@@ -118,6 +123,7 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<DesertBBiome>(Level::DesertB);
 	m_biomeManager.registerBiome<DesertCBiome>(Level::DesertC);
 	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
+	m_biomeManager.registerBiome<JungleBBiome>(Level::JungleB);
 	m_biomeManager.registerBiome<JungleCBiome>(Level::JungleC);
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
@@ -148,9 +154,28 @@ void	Game::loadLevel(void)
 		progress.setLastDestination(m_biomeManager.getCurrentBiome().getId());
 	}
 
-	sf::Vector2f const & startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+	sf::Vector2f startPosition;
+	if (progress.getRespawnType() == Progress::RespawnType::Portal)
+	{
+		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+		progress.setCheckPointPosition(startPosition);
+	}
+	else // if octo died
+		startPosition = progress.getCheckPointPosition();
+
 	// Reset last values
 	postEffect.removeEffects();
+	PostEffectLayer::getInstance().clear();
+	PostEffectLayer::getInstance().registerShader(CIRCLE_RAINBOW_FRAG);
+	PostEffectLayer::getInstance().registerShader(VISION_TROUBLE_FRAG);
+	PostEffectLayer::getInstance().registerShader(PERSISTENCE_FRAG);
+	PostEffectLayer::getInstance().registerShader(PIXELATE_FRAG);
+	PostEffectLayer::getInstance().registerShader(DISPLACEMENT_FRAG);
+	PostEffectLayer::getInstance().registerShader(KERNEL_POST_EFFECT_FRAG);
+	PostEffectLayer::getInstance().registerShader(WATER_FRAG);
+	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG);
+
 	ChallengeManager::getInstance().reset();
 	audio.reset();
 	// Reset PhysycsEngine
@@ -177,14 +202,6 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
-	setupBubbleGround();
-}
-
-void	Game::setupBubbleGround(void)
-{
-	m_colorGround = m_biomeManager.getCurrentBiome().getTileEndColor();
-	m_groundBubble.setType(ABubble::Type::None);
-	m_groundBubble.setActive(true);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -194,6 +211,7 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
 	if (m_skipFrames < m_skipFramesMax)
 	{
 		m_skipFrames++;
@@ -201,6 +219,7 @@ void	Game::update(sf::Time frameTime)
 	}
 	frameTime = frameTime / m_slowTimeInfosCoef;
 	// update the PhysicsEngine as first
+	m_cameraMovement->update(frameTime, *m_octo);
 	m_physicsEngine.update(frameTime.asSeconds());
 	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
@@ -213,7 +232,6 @@ void	Game::update(sf::Time frameTime)
 	m_skyManager->update(frameTime);
 	m_konami->update(frameTime, m_octo->getPosition());
 	m_octo->startKonamiCode(m_konami->canStartEvent());
-	m_cameraMovement->update(frameTime, *m_octo);
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
 }
 
@@ -313,6 +331,11 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				octo->startDrinkPotion();
 			gameObjectCast<FannyNpc>(gameObject)->startBalle();
 			break;
+		case GameObjectType::Snowman3Npc:
+			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Blur).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Blur))
+				octo->startDrinkPotion();
+			gameObjectCast<Snowman3Npc>(gameObject)->startBalle();
+			break;
 		case GameObjectType::WellKeeperNpc:
 			gameObjectCast<WellKeeperNpc>(gameObject)->stopBalle();
 			break;
@@ -333,6 +356,15 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::TVScreen:
+			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::FabienNpc:
+			gameObjectCast<FabienNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::CheckPoint:
+			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::OverCoolNpc:
 			gameObjectCast<OverCoolNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -476,7 +508,7 @@ void Game::moveMap(sf::Time frameTime)
 		m_groundSoundTime -= frameTime;
 		if (m_groundSoundTime < sf::Time::Zero)
 			m_groundSoundTime = sf::Time::Zero;
-		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
+		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax) * audio.getSoundVolume();
 		m_soundGeneration->setVolume(volume);
 	}
 	if (m_keyGroundRight || m_keyGroundLeft || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
@@ -498,33 +530,16 @@ void Game::moveMap(sf::Time frameTime)
 				if (m_groundSoundTime > m_groundSoundTimeMax)
 					m_groundSoundTime = m_groundSoundTimeMax;
 				volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
-				m_soundGeneration->setVolume(volume);
+				m_soundGeneration->setVolume(volume * audio.getSoundVolume());
 			}
 		}
-		m_timerGroundBubble = sf::Time::Zero;
 	}
 
-	updateBubbleGround(frameTime);
-	if (Progress::getInstance().isMenu())
-		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-}
-
-void	Game::updateBubbleGround(sf::Time frameTime)
-{
-	Progress & progress = Progress::getInstance();
-
-	m_timerGroundBubble += frameTime;
-	if (m_timerGroundBubble <= m_timerGroundBubbleMax && progress.isOctoOnInstance() && progress.isMapHighlight())
+	m_earlyMapMovement -= frameTime;
+	if (Progress::getInstance().isMenu() || m_earlyMapMovement > sf::Time::Zero)
 	{
-		std::wstring const & groundInfos = progress.getGroundInfos();
-		m_groundBubble.setup(groundInfos, m_colorGround, 20u, 1000.f);
-		m_groundBubble.setPosition(m_octo->getPosition() + sf::Vector2f(0.f, -100.f));
-		m_groundBubble.update(frameTime);
-		//After update to avoid first update
-		m_groundBubble.setType(ABubble::Type::Think);
+		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 	}
-	else
-		m_groundBubble.setType(ABubble::Type::None);
 }
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
@@ -575,17 +590,16 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
 	//m_musicPlayer.debugDraw(render);
-	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	m_groundManager->drawFront(render, states);
+	//m_physicsEngine.debugDraw(render);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
-	m_groundBubble.draw(render, states);
 	render.draw(*m_konami);
 	//m_cameraMovement->debugDraw(render);
 }

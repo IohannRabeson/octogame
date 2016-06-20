@@ -62,6 +62,7 @@ JungleABiome::JungleABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Jungle),
 
 	m_rockSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 100.f)),
@@ -139,7 +140,6 @@ JungleABiome::JungleABiome() :
 	m_instances[120] = MAP_JUNGLE_A_TRAIL_OMP;
 	m_instances[500] = MAP_JUNGLE_A_DOUBLE_JUMP_OMP;
 	m_instances[600] = MAP_JUNGLE_A_VILLAGE_OMP;
-	m_instances[865] = MAP_JUNGLE_A_ELEVATOR_OMP;
 	m_gameObjects[880] = GameObjectType::LucienNpc;
 	m_gameObjects[910] = GameObjectType::Portal;
 	m_gameObjects[955] = GameObjectType::VinceNpc;
@@ -147,7 +147,7 @@ JungleABiome::JungleABiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::JungleC);
+	m_destinations.push_back(Level::JungleB);
 	m_destinations.push_back(Level::DesertC);
 
 	Progress & progress = Progress::getInstance();
@@ -719,6 +719,11 @@ sf::Time		JungleABiome::getRainbowIntervalTime()
 bool			JungleABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+float	JungleABiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
 }
 
 ABiome::Type	JungleABiome::getType() const

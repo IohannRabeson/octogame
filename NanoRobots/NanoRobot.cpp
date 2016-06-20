@@ -223,6 +223,11 @@ void NanoRobot::setTarget(sf::Vector2f const & target)
 	m_target = target;
 }
 
+void NanoRobot::setEffectEnable(bool enable)
+{
+	m_glowingEffect.setEffectEnable(enable);
+}
+
 void NanoRobot::setSwarmTarget(sf::Vector2f const & position)
 {
 	m_swarm.setTarget(position);
@@ -350,6 +355,11 @@ sf::Vector2f const & NanoRobot::getTargetPosition(void)
 	return m_swarm.getTarget();
 }
 
+bool NanoRobot::getEffectEnable(void) const
+{
+	return m_glowingEffect.getEffectEnable();
+}
+
 NanoRobot::State NanoRobot::getState(void) const
 {
 	return m_state;
@@ -383,6 +393,7 @@ void NanoRobot::update(sf::Time frametime)
 	sf::Vector2f const & pos = m_swarm.getFirefly(0u).position;
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() / 2.f);
 
+	m_glowingEffect.setTravelling(m_isTravelling);
 	if (m_box)
 	{
 		m_box->setPosition(pos.x - m_box->getRadius(), pos.y - m_box->getRadius());

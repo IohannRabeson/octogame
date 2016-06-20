@@ -62,6 +62,7 @@ DesertBBiome::DesertBBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_waterPersistence(1.f),
 	m_type(ABiome::Type::Desert),
 
 	m_rockSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 400.f)),
@@ -134,6 +135,8 @@ DesertBBiome::DesertBBiome() :
 		m_octoStartPosition = sf::Vector2f(340.f * 16.f, -2500.f);
 
 	m_gameObjects[60] = GameObjectType::Portal;
+	m_gameObjects[125] = GameObjectType::FabienNpc;
+	m_gameObjects[208] = GameObjectType::CheckPoint;
 	m_instances[230] = MAP_DESERT_B_TRAIL_A_OMP;
 	m_instances[280] = MAP_DESERT_B_TRAIL_B_OMP;
 	m_instances[312] = MAP_DESERT_B_TRAIL_C_OMP;
@@ -709,6 +712,11 @@ sf::Time		DesertBBiome::getRainbowIntervalTime()
 bool			DesertBBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+float	DesertBBiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
 }
 
 ABiome::Type	DesertBBiome::getType() const

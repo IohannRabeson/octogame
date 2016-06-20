@@ -34,6 +34,9 @@
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 //Script AddNpc Include
+#include "TVScreen.hpp"
+#include "FabienNpc.hpp"
+#include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
 #include "ForestSpirit2Npc.hpp"
@@ -155,6 +158,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	updateOffset(0.f);
 }
 
+//TODO: Use movement mask
 void GroundManager::setupGroundRock(ABiome & biome)
 {
 	std::vector<sf::Vector2f> positions;
@@ -216,6 +220,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<TVScreen>(TV_OSS);
+	m_npcFactory.registerCreator<FabienNpc>(FABIEN_OSS);
+	m_npcFactory.registerCreator<CheckPoint>(CHECKPOINT_OSS);
 	m_npcFactory.registerCreator<OverCoolNpc>(OVER_COOL_NPC_OSS);
 	m_npcFactory.registerCreator<Pedestal>(PEDESTAL_OSS);
 	m_npcFactory.registerCreator<ForestSpirit2Npc>(FOREST_SPIRIT_2_OSS);
@@ -379,6 +386,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(HOUSE_SNOW_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(HUGE_FLUE_SNOW_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HUGE_FLUE_SNOW_OSS, scale, position, 1u, 0.4f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -519,6 +530,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	{
 		switch (gameObject.second)
 		{
+			case GameObjectType::PortalRandom:
+				{
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_RANDOM_OSS));
+					portal->setBiome(biome);
+					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+				}
+				break;
 			case GameObjectType::PortalJungle:
 				{
 					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_JUNGLE_OSS));
@@ -540,7 +558,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 				}
 				break;
-			case GameObjectType::PortalBeach:
+			case GameObjectType::PortalWater:
 				{
 					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_BEACH_OSS));
 					portal->setBiome(biome);
@@ -621,6 +639,27 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::TVScreen:
+				{
+					TVScreen * npc = new TVScreen();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::FabienNpc:
+				{
+					FabienNpc * npc = new FabienNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::CheckPoint:
+				{
+					CheckPoint * npc = new CheckPoint();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::OverCoolNpc:
 				{
 					OverCoolNpc * npc = new OverCoolNpc();
@@ -680,6 +719,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			case GameObjectType::Snowman2Npc:
 				{
 					Snowman2Npc * npc = new Snowman2Npc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::Snowman3Npc:
+				{
+					Snowman3Npc * npc = new Snowman3Npc();
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
@@ -1157,7 +1203,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	if (m_transitionTimer > m_transitionTimerMax)
 		m_transitionTimer = m_transitionTimerMax;
 	float transition = m_transitionTimer / m_transitionTimerMax;
-	float bottomBorder = cameraRect.top + cameraRect.height + Map::OffsetY;
+	float bottomBorder = cameraRect.top + cameraRect.height + Map::OffsetY + Tile::TileSize;
 	float rightBorder = cameraRect.left + cameraRect.width + Map::OffsetX + Tile::TileSize;
 	Tile * tile;
 	Tile * tilePrev;

@@ -27,9 +27,9 @@ IceBBiome::IceBBiome() :
 	m_dayDuration(sf::seconds(45.f)),
 	m_startDayDuration(sf::seconds(9.f)),
 	m_skyDayColor(8, 20, 26),
-	m_skyNightColor(8, 20, 26),
-	m_nightLightColor(sf::Color::Transparent),
-	m_sunsetLightColor(sf::Color::Transparent),
+	m_skyNightColor(130, 79, 8, 100),
+	m_nightLightColor(8, 20, 26, 90),
+	m_sunsetLightColor(136 , 0, 30, 20),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -62,6 +62,7 @@ IceBBiome::IceBBiome() :
 	m_canCreateSun(false),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(10.f, 140.f), sf::Vector2f(30.f, 200.f)),
@@ -126,22 +127,28 @@ IceBBiome::IceBBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	m_gameObjects[390] = GameObjectType::EngineSnow;
+
 	m_instances[50] = MAP_ICE_B_TRAIL_A_OMP;
 	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
 	m_instances[178] = MAP_ICE_B_TRAIL_C_OMP;
+	m_instances[219] = MAP_ICE_B_TRAIL_D_OMP;
+	m_instances[370] = MAP_ICE_B_PORTAL_OMP;
 	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::IceD)
-		m_octoStartPosition = sf::Vector2f(278.f * 16.f, 1850.f);
+	if (progress.getLastDestination() == Level::IceC)
+		m_octoStartPosition = sf::Vector2f(279.f * 16.f, 1640.f);
+	if (progress.getLastDestination() == Level::Rewards)
+		m_octoStartPosition = sf::Vector2f(367.f * 16.f, -2100.f);
 
 	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[320] = GameObjectType::BirdBlueNpc;
 
 	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_destinations.push_back(Level::IceC);
+	m_destinations.push_back(Level::Rewards);
 	m_destinations.push_back(Level::IceA);
-
 }
 
 void			IceBBiome::setup(std::size_t seed)
@@ -241,8 +248,9 @@ Map::MapSurfaceGenerator IceBBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {25.f, 50.f, 51.f, 299.f, 300.f, 325.f};
-		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.2f , 0.f  , n    };
+		float m = noise.fBm(x, y, 3, 3.f, 0.3f) / 4.f;
+		std::vector<float> pointX = {25.f, 50.f, 51.f, 317.f, 318.f, 325.f, 370.f    , 410.f    , 500.f};
+		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.2f , 0.f  , n    , m + 0.04f, m + 0.04f, n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -696,6 +704,11 @@ sf::Time		IceBBiome::getRainbowIntervalTime()
 bool			IceBBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+float	IceBBiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
 }
 
 ABiome::Type	IceBBiome::getType() const

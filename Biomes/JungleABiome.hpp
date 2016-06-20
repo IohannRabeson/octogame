@@ -1,5 +1,5 @@
-#ifndef JUGNLEABIOME_HPP
-# define JUGNLEABIOME_HPP
+#ifndef JUNGLEABIOME_HPP
+# define JUNGLEABIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -140,6 +140,7 @@ public:
 	virtual sf::Time									getRainbowLifeTime();
 	virtual sf::Time									getRainbowIntervalTime();
 	virtual bool										canCreateRainbow();
+	virtual float									getWaterPersistence() const;
 	virtual ABiome::Type									getType() const;
 
 	virtual float										randomFloat(float min, float max);
@@ -207,6 +208,7 @@ private:
 	bool												m_canCreateSun;
 	bool												m_canCreateMoon;
 	bool												m_canCreateRainbow;
+	float											m_waterPersistence;
 	ABiome::Type											m_type;
 
 	Range<sf::Vector2f>									m_rockSize;

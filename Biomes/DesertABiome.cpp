@@ -62,6 +62,7 @@ DesertABiome::DesertABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 400.f)),
@@ -134,7 +135,7 @@ DesertABiome::DesertABiome() :
 
 	// Define game objects
 	m_gameObjects[220] = GameObjectType::JuNpc;
-	m_gameObjects[250] = GameObjectType::Portal;
+	m_gameObjects[250] = GameObjectType::PortalSnow;
 	m_instances[23] = MAP_DESERT_A_WAVE_OMP;
 	m_instances[250] = MAP_DESERT_A_JUMP_OMP;
 	m_gameObjects[70] = GameObjectType::TurbanNpc;
@@ -714,6 +715,11 @@ sf::Time		DesertABiome::getRainbowIntervalTime()
 bool			DesertABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+float	DesertABiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
 }
 
 ABiome::Type	DesertABiome::getType() const

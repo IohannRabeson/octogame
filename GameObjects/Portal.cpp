@@ -5,14 +5,13 @@
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
-#include <PostEffectManager.hpp>
 #include <Camera.hpp>
 #include <cassert>
 
 Portal::Portal(Level destination, ResourceKey key) :
 	m_destination(destination),
 	m_position(40.f, 0.f),
-	m_shaderIndex(0u),
+	m_shader(PostEffectLayer::getInstance().getShader(VORTEX_FRAG)),
 	m_maxParticle(40u),
 	m_state(State::Disappear),
 	m_radius(100.f),
@@ -21,14 +20,9 @@ Portal::Portal(Level destination, ResourceKey key) :
 	m_box(PhysicsEngine::getShapeBuilder().createCircle())
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 	Progress & progress = Progress::getInstance();
 	progress.registerPortal(destination);
 
-	m_shader.loadFromMemory(resources.getText(VORTEX_FRAG), sf::Shader::Fragment);
-	octo::PostEffect postEffectShader;
-	postEffectShader.resetShader(&m_shader);
-	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
 	m_shader.setParameter("time_max", m_timerMax);
 
 	m_box->setGameObject(this);
@@ -69,12 +63,32 @@ Portal::Portal(Level destination, ResourceKey key) :
 	});
 	m_animationOpening.setLoop(octo::LoopMode::NoLoop);
 
-	m_animationOpened.setFrames({
-		Frame(sf::seconds(0.8f), {0u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.8f), {1u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.8f), {2u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.8f), {3u, sf::FloatRect(), sf::Vector2f()}),
-	});
+	if (destination == Level::Rewards)
+	{
+		m_animationOpened.setFrames({
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
+		});
+	}
+	else
+	{
+		m_animationOpened.setFrames({
+			Frame(sf::seconds(0.8f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.8f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.8f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.8f), {3u, sf::FloatRect(), sf::Vector2f()}),
+		});
+	}
 	m_animationOpened.setLoop(octo::LoopMode::Loop);
 
 	//Setup state machine
@@ -106,7 +120,7 @@ Portal::Portal(Level destination, ResourceKey key) :
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
 
-	if (!progress.isMetPortal(m_destination))
+	if (!progress.isMetPortal(m_destination) && destination != Level::Rewards)
 		m_sprite.setNextEvent(Closed);
 	else
 		m_sprite.setNextEvent(Opened);
@@ -135,8 +149,6 @@ sf::Vector2f const & Portal::getPosition(void) const
 void Portal::update(sf::Time frametime)
 {
 	m_particles.update(frametime);
-	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-	postEffect.enableEffect(m_shaderIndex, false);
 
 	if (m_timer >= m_timerMax)
 		m_isActive = true;
@@ -157,14 +169,14 @@ void Portal::update(sf::Time frametime)
 				m_sprite.setNextEvent(Opened);
 			else if (m_sprite.getCurrentEvent() == Events::Opened)
 			{
-			m_particles.setMaxParticle(m_timer / m_timerMax * static_cast<float>(m_maxParticle));
-			m_timer += frametime.asSeconds();
-			if (m_timer >= m_timerMax)
-			{
-				Progress::getInstance().meetPortal(m_destination);
-				m_state = Activated;
-				m_timer = m_timerMax;
-			}
+				m_particles.setMaxParticle(m_timer / m_timerMax * static_cast<float>(m_maxParticle));
+				m_timer += frametime.asSeconds();
+				if (m_timer >= m_timerMax)
+				{
+					Progress::getInstance().meetPortal(m_destination);
+					m_state = Activated;
+					m_timer = m_timerMax;
+				}
 			}
 			break;
 		}
@@ -188,7 +200,7 @@ void Portal::update(sf::Time frametime)
 		if (m_position.y + m_radius > screen.top && m_position.y - m_radius < screen.top + screen.height)
 		{
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-			postEffect.enableEffect(m_shaderIndex, true);
+			PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, true);
 			m_shader.setParameter("time", m_timer);
 			m_shader.setParameter("radius", m_radius * zoomFactor);
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);

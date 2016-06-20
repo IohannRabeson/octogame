@@ -28,7 +28,7 @@ IceDBiome::IceDBiome() :
 	m_startDayDuration(sf::seconds(9.f)),
 	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(8, 20, 26),
-	m_nightLightColor(sf::Color::Transparent),
+	m_nightLightColor(8, 20, 26, 80),
 	m_sunsetLightColor(sf::Color::Transparent),
 	m_wind(200.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -62,6 +62,7 @@ IceDBiome::IceDBiome() :
 	m_canCreateSun(false),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(30.f, 100.f), sf::Vector2f(70.f, 200.f)),
@@ -147,7 +148,7 @@ IceDBiome::IceDBiome() :
 	m_instances[551] = MAP_ICE_D_TRAIL_OMP;
 	m_gameObjects[630] = GameObjectType::StrangerGirlSnowNpc;
 	m_destinations.push_back(Level::DesertA);
-	m_destinations.push_back(Level::IceB);
+	m_destinations.push_back(Level::IceC);
 }
 
 void			IceDBiome::setup(std::size_t seed)
@@ -707,6 +708,11 @@ sf::Time		IceDBiome::getRainbowIntervalTime()
 bool			IceDBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+float	IceDBiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
 }
 
 ABiome::Type	IceDBiome::getType() const

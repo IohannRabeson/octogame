@@ -1,6 +1,7 @@
 #include "GroundRock.hpp"
 #include "ABiome.hpp"
 #include "Tile.hpp"
+#include "Progress.hpp"
 #include <Camera.hpp>
 
 GroundRock::GroundRock(bool onInstance) :
@@ -45,6 +46,9 @@ void GroundRock::setup(ABiome& biome)
 
 void GroundRock::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
 {
-	sf::Vector2f const & position = getPosition();
-	createGroundRock(m_type, position + sf::Vector2f(0.f, m_deep), m_color, builder);
+	sf::Vector2f position = getPosition();
+	position.y -= Tile::TileSize;
+	//TODO:: Add to biome
+	if (Progress::getInstance().getNextDestination() != Level::IceC)
+		createGroundRock(m_type, position + sf::Vector2f(0.f, m_deep), m_color, builder);
 }

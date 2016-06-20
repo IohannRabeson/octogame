@@ -9,10 +9,14 @@
 # include <SFML/Graphics/Text.hpp>
 # include <SFML/Graphics/RenderTarget.hpp>
 # include <SFML/Graphics/Drawable.hpp>
-# include <SFML/Graphics/Shader.hpp>
 # include <SFML/Graphics/Transformable.hpp>
 
 # include <memory>
+
+namespace sf
+{
+	class Shader;
+}
 
 class NanoEffect : public sf::Drawable,
 				public sf::Transformable
@@ -43,6 +47,9 @@ public:
 	void							setNanoScale(sf::Vector2f const & scale);
 	void							onTransfer(void);
 	void							setState(State state);
+	void							setTravelling(bool travelling);
+	void							setEffectEnable(bool enable);
+	bool							getEffectEnable(void) const;
 
 private:
 	void							createLosange(sf::Vector2f const & size,
@@ -80,10 +87,12 @@ private:
 	sf::Vector2f					m_nanoScaleOrigin;
 	sf::Vector2f					m_nanoScaleZoom;
 	sf::Vector2f					m_nanoScale;
-	sf::Shader						m_shader;
+	sf::Shader &					m_shader;
 	std::size_t						m_shaderIndex;
 	std::unique_ptr<MusicSystem>	m_particle;
 	sf::Time						m_particleTimer;
+	bool							m_isTravelling;
+	bool							m_effectEnable;
 };
 
 #endif

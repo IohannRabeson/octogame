@@ -8,8 +8,8 @@ public:
 
 		virtual void swapDepth(void) = 0;
 		virtual void registerDepth(void) = 0;
-		virtual void nextStep(void) = 0;
-		virtual void previousStep(void) = 0;
+		virtual bool nextStep(void) = 0;
+		virtual bool previousStep(void) = 0;
 
 };
 

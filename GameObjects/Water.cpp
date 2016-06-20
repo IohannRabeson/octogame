@@ -1,16 +1,15 @@
 #include "Water.hpp"
 #include "ABiome.hpp"
-#include "ResourceDefinitions.hpp"
+#include "PostEffectLayer.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
-#include <PostEffectManager.hpp>
 #include <Camera.hpp>
 
 Water::Water(ABiome & biome) :
+	m_shader(PostEffectLayer::getInstance().getShader(WATER_FRAG)),
 	m_waveCycle(sf::Time::Zero),
 	m_width(biome.getMapSize().x * Tile::TileSize),
-	m_limit(1000.f),
-	m_shaderIndex(0u)
+	m_limit(1000.f)
 {
 	m_rectLeft.setSize(sf::Vector2f(m_width, 10000.f));
 	m_rectLeft.setFillColor(biome.getWaterColor());
@@ -34,12 +33,9 @@ Water::Water(ABiome & biome) :
 
 	m_shader.setParameter("distortionMapTexture", m_distorsionTexture);
 	m_shader.setParameter("max_factor", 0.15f);
+	m_shader.setParameter("activate_persistence", biome.getWaterPersistence());
 
-	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
-	octo::PostEffect postEffectShader;
-	postEffectShader.resetShader(&m_shader);
-	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
-	postEffect.enableEffect(m_shaderIndex, true);
+	PostEffectLayer::getInstance().enableShader(WATER_FRAG, true);
 }
 
 Water::~Water(void)

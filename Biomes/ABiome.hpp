@@ -26,6 +26,7 @@ enum class Level : std::size_t
 	DesertB,
 	DesertC,
 	JungleA,
+	JungleB,
 	JungleC,
 	WaterA,
 	WaterB,
@@ -83,6 +84,7 @@ public:
 
 	virtual float										getWind() = 0;
 	virtual bool										canCreateRain() = 0;
+	virtual float										getWaterPersistence() const = 0;
 	virtual std::size_t									getRainDropPerSecond() = 0;
 	virtual sf::Time									getSunnyTime() = 0;
 	virtual sf::Time									getRainingTime() = 0;

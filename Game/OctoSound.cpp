@@ -213,15 +213,15 @@ void	CharacterOcto::OctoSound::walkSound()
 	{
 		case Level::DesertA:
 			if (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped)
-				m_sound = audio.playSound(resources.getSound(OCTO_WALK_ROCK_OGG), m_volumeEffect);
+				m_sound = audio.playSound(resources.getSound(OCTO_WALK_ROCK_OGG), m_volumeEffect * 0.3f);
 			break;
 		case Level::JungleA:
 			if (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped)
-				m_sound = audio.playSound(resources.getSound(OCTO_WALK_LEAF_OGG), m_volumeEffect);
+				m_sound = audio.playSound(resources.getSound(OCTO_WALK_LEAF_OGG), m_volumeEffect * 0.3f);
 			break;
 		default:
 			if (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped)
-				m_sound = audio.playSound(resources.getSound(OCTO_WALK_ROCK_OGG), m_volumeEffect);
+				m_sound = audio.playSound(resources.getSound(OCTO_WALK_ROCK_OGG), m_volumeEffect * 0.3f);
 			break;
 	}
 }

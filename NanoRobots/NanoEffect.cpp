@@ -1,5 +1,5 @@
 #include "NanoEffect.hpp"
-#include "ResourceDefinitions.hpp"
+#include "PostEffectLayer.hpp"
 #include "Progress.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
@@ -20,21 +20,18 @@ NanoEffect::NanoEffect(void) :
 	m_transferTimerMax(sf::seconds(4.f)),
 	m_soundPlayed(false),
 	m_lastNanoCount(0u),
-	m_shaderIndex(0u),
-	m_particle(new MusicSystem())
+	m_shader(PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG)),
+	m_shaderIndex(PostEffectLayer::getInstance().getShaderIndex(CIRCLE_RAINBOW_FRAG)),
+	m_particle(new MusicSystem()),
+	m_isTravelling(true),
+	m_effectEnable(true)
 {
 	m_generator.setSeed("random");
 	m_randomTimerMax = sf::seconds(m_generator.randomFloat(20.f, 50.f));
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 	m_lastNanoCount = Progress::getInstance().getNanoRobotCount();
 
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
-
-	m_shader.loadFromMemory(resources.getText(CIRCLE_RAINBOW_FRAG), sf::Shader::Fragment);
-	octo::PostEffect postEffectShader;
-	postEffectShader.resetShader(&m_shader);
-	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
 	m_shader.setParameter("fade_out_size", 100.f);
 	m_shader.setParameter("alpha", 0.f);
 }
@@ -102,7 +99,10 @@ void NanoEffect::update(sf::Time frameTime)
 		case State::Active:
 		{
 			octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
-			postEffect.enableEffect(m_shaderIndex, true);
+			if (!m_isTravelling && m_effectEnable)
+				postEffect.enableEffect(m_shaderIndex, true);
+			else
+				postEffect.enableEffect(m_shaderIndex, false);
 			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
 			m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
@@ -116,13 +116,16 @@ void NanoEffect::update(sf::Time frameTime)
 		{
 			playSound();
 			m_transferTimer += frameTime;
-			float transition = std::min(m_transferTimer / m_transferTimerMax, 1.f);
-			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-			m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
-			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
-			m_shader.setParameter("radius", octo::linearInterpolation(120.f, 1500.f, transition));
-			m_shader.setParameter("color_size", octo::linearInterpolation(0.005f, 0.001f, transition));
+			if (m_effectEnable)
+			{
+				float transition = std::min(m_transferTimer / m_transferTimerMax, 1.f);
+				sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+				float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
+				m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
+				m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
+				m_shader.setParameter("radius", octo::linearInterpolation(120.f, 1500.f, transition));
+				m_shader.setParameter("color_size", octo::linearInterpolation(0.005f, 0.001f, transition));
+			}
 			if (m_transferTimer >= m_transferTimerMax)
 			{
 				m_isTransferHappen = true;
@@ -200,6 +203,21 @@ void NanoEffect::onTransfer(void)
 void NanoEffect::setState(State state)
 {
 	m_state = state;
+}
+
+void NanoEffect::setTravelling(bool travelling)
+{
+	m_isTravelling = travelling;
+}
+
+void NanoEffect::setEffectEnable(bool enable)
+{
+	m_effectEnable = enable;
+}
+
+bool NanoEffect::getEffectEnable(void) const
+{
+	return (m_effectEnable);
 }
 
 void NanoEffect::draw(sf::RenderTarget & render, sf::RenderStates states) const
