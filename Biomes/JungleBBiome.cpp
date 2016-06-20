@@ -70,7 +70,7 @@ JungleBBiome::JungleBBiome() :
 	m_rockColor(56, 50, 72),
 
 	m_treeDepth(5u, 6u),
-	m_treeSize(sf::Vector2f(30.f, 200.f), sf::Vector2f(120.f, 350.f)),
+	m_treeSize(sf::Vector2f(30.f, 150.f), sf::Vector2f(120.f, 250.f)),
 	m_treeLifeTime(sf::seconds(90), sf::seconds(180)),
 	m_treeColor(40, 37, 44),
 	m_treeAngle(15.f, 35.f),
