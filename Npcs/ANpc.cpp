@@ -435,7 +435,7 @@ void ANpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 
 void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
 {
-	if (m_displayText && !Progress::getInstance().isMenu())
+	if (m_displayText && Progress::getInstance().isBubbleNpc())
 	{
 		if (!m_isDoubleJump)
 			m_texts[m_currentText]->draw(render);
