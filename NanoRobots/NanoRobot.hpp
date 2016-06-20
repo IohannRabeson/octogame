@@ -76,6 +76,8 @@ protected:
 	static sf::Vector2f const & getLaserConvergence(void);
 
 private:
+	sf::Vector2f computeInterestPosition(sf::Vector2f const & position);
+
 	FireflySwarm								m_swarm;
 	FireflySwarm::UniformPopulation				m_uniformPopulation;
 	FireflySwarm::SpawnMode						m_spawnMode;
@@ -123,6 +125,7 @@ private:
 	sf::Time									m_popUpTimerMax;
 	InputListener::OctoKeys const				m_stopSpeakingKey;
 	bool										m_stopSpeakinKeyPress;
+	sf::Vector2f								m_lastPos;
 };
 
 #endif

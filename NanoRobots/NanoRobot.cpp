@@ -235,7 +235,8 @@ void NanoRobot::setSwarmTarget(sf::Vector2f const & position)
 
 void NanoRobot::setPosition(sf::Vector2f const & position)
 {
-	sf::Vector2f pos = position + sf::Vector2f(0.f, -200.f);
+	sf::Vector2f const & pos = computeInterestPosition(position);
+
 	if (m_startLastAnimation)
 		return;
 	if (std::abs(pos.x - m_swarm.getFirefly(0u).position.x) > 400.f)
@@ -245,6 +246,24 @@ void NanoRobot::setPosition(sf::Vector2f const & position)
 	m_swarm.setTarget(pos);
 }
 
+sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
+{
+	Progress & progress = Progress::getInstance();
+	sf::Vector2f const & interestPoint = progress.getInterestPoint();
+	sf::Vector2f pos;
+	if (interestPoint.x != 0.f && interestPoint.y != 0.f && m_state != Idle)
+	{
+		pos = interestPoint - position;
+		octo::normalize(pos);
+		pos = position + pos * 300.f;
+		if (m_lastPos.x != position.x && m_lastPos.y != position.y)
+			pos += sf::Vector2f(0.f, -300.f);
+	}
+	else
+		pos = position + sf::Vector2f(0.f, -200.f);
+	m_lastPos = position;
+	return pos;
+}
 bool NanoRobot::isTravelling(void) const
 {
 	return m_isTravelling;
