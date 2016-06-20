@@ -255,7 +255,7 @@ std::vector<int> & Progress::getDeathPos()
 
 void	Progress::registerPortal(Level destination)
 {
-	m_portals[m_data.nextDestination].insert(std::make_pair(destination, false)).second;
+	m_portals[m_data.nextDestination].insert(std::make_pair(destination, false));
 }
 
 bool	Progress::meetPortal(Level destination)
