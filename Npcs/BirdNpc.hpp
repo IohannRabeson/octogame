@@ -3,6 +3,7 @@
 
 # include "ANpc.hpp"
 # include "RandomGenerator.hpp"
+# include <SFML/Graphics/Shader.hpp>
 
 class SkyCycle;
 
@@ -39,6 +40,7 @@ private:
 	bool					m_isDoubleJumpTic;
 	sf::Time				m_timerDoubleJump;
 	sf::Time				m_timerDoubleJumpMax;
+	sf::Shader				m_shader;
 };
 
 #endif
