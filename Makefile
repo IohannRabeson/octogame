@@ -164,7 +164,7 @@ SRC_MAP =		Map/Map.cpp								\
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
 				Biomes/HSL.cpp							\
-				Biomes/DefaultBiome.cpp					\
+				Biomes/RandomBiome.cpp					\
 				Biomes/RewardsBiome.cpp					\
 				Biomes/IceABiome.cpp					\
 				Biomes/IceBBiome.cpp					\

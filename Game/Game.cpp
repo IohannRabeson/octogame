@@ -22,7 +22,7 @@
 #include "JungleCBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
-#include "DefaultBiome.hpp"
+#include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
 
 //Objects
@@ -128,7 +128,7 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 
-	m_biomeManager.registerBiome<DefaultBiome>(Level::Default);
+	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 }
 

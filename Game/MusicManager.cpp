@@ -41,7 +41,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::WaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
-	m_musicLevel[4] = AreaMusic(Level::Default,
+	m_musicLevel[4] = AreaMusic(Level::Random,
 			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
 
 	m_musicLevel[5] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());

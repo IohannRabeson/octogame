@@ -63,7 +63,7 @@ Portal::Portal(Level destination, ResourceKey key) :
 	});
 	m_animationOpening.setLoop(octo::LoopMode::NoLoop);
 
-	if (destination == Level::Rewards || destination == Level::Default)
+	if (destination == Level::Rewards || destination == Level::Random)
 	{
 		m_animationOpened.setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
@@ -120,7 +120,7 @@ Portal::Portal(Level destination, ResourceKey key) :
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
 
-	if (!progress.isMetPortal(m_destination) && destination != Level::Rewards && destination != Level::Default)
+	if (!progress.isMetPortal(m_destination) && destination != Level::Rewards && destination != Level::Random)
 		m_sprite.setNextEvent(Closed);
 	else
 		m_sprite.setNextEvent(Opened);

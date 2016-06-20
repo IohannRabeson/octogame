@@ -181,7 +181,7 @@ Level	Progress::getNextDestination(void) const
 
 void	Progress::setLastDestination(Level destination)
 {
-	if (destination != Level::Default && destination != Level::Rewards)
+	if (destination != Level::Random && destination != Level::Rewards)
 		m_data.lastDestination = destination;
 }
 

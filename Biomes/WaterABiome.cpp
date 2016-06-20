@@ -155,7 +155,7 @@ WaterABiome::WaterABiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::JungleC);
 	m_destinations.push_back(Level::WaterB);
 }

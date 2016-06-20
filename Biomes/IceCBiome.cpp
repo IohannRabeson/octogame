@@ -134,12 +134,12 @@ IceCBiome::IceCBiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::IceD)
 		m_octoStartPosition = sf::Vector2f(185.f * 16.f, -850.f);
-	if (progress.getLastDestination() == Level::Default)
+	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(239.f * 16.f, -1350.f);
 
 	m_gameObjects[400] = GameObjectType::PortalRandom;
 	m_destinations.push_back(Level::IceB);
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceD);
 }
 

@@ -157,7 +157,7 @@ JungleCBiome::JungleCBiome() :
 	m_interestPointPosX = 400;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Default);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::JungleB);
 	m_destinations.push_back(Level::WaterA);
 }
