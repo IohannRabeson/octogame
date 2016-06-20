@@ -18,6 +18,7 @@ public:
 		fr,
 		en
 	};
+
 	enum RespawnType
 	{
 		Portal = 0,
@@ -96,8 +97,9 @@ public:
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);
 	bool				isMetPortal(Level destination);
-	std::size_t			getPortalsCount();
-	std::size_t			getPortalsMax();
+	void				setPortalPosition(Level destination, sf::Vector2f const & position);
+	void				removePortalPosition(Level destination);
+	sf::Vector2f		getInterestPoint();
 
 	void				setMapHighlight(bool isHighlight);
 	bool				isMapHighlight(void) const;
@@ -192,8 +194,7 @@ private:
 	std::size_t										m_npcMax;
 	std::map<Level, std::vector<int>>				m_deathPos;
 	std::map<Level, std::map<Level, bool>>			m_portals;
-	std::size_t										m_portalsCount;
-	std::size_t										m_portalsMax;
+	std::map<Level, sf::Vector2f>					m_portalsToDiscover;
 	std::vector<Level>								m_levels;
 
 	bool											m_isOctoOnInstance;

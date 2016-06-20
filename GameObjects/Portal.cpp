@@ -148,6 +148,8 @@ sf::Vector2f const & Portal::getPosition(void) const
 
 void Portal::update(sf::Time frametime)
 {
+	Progress & progress = Progress::getInstance();
+	progress.setPortalPosition(m_destination, m_position);
 	m_particles.update(frametime);
 
 	if (m_timer >= m_timerMax)
