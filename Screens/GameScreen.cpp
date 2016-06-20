@@ -22,7 +22,6 @@ void	GameScreen::start()
 	m_game.reset(new Game());
 	m_game->loadLevel();
 	m_menu.setup();
-	std::cout << "Game screen start" << std::endl;
 }
 
 void	GameScreen::pause()
@@ -49,7 +48,6 @@ void	GameScreen::stop()
 	InputListener::removeInputListener();
 	m_game.reset(nullptr);
 	m_menu.setKeyboard(false);
-	std::cout << "Game screen start" << std::endl;
 }
 
 void	GameScreen::update(sf::Time frameTime)
@@ -61,10 +59,12 @@ void	GameScreen::update(sf::Time frameTime)
 	m_menu.update(frameTime, m_game->getOctoBubblePosition());
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 	{
+		progress.setBubbleNpc(false);
 		m_doSave = true;
 	}
 	else if (m_doSave)
 	{
+		progress.setBubbleNpc(true);
 		progress.save();
 		m_doSave = false;
 	}

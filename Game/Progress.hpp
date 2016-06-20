@@ -27,8 +27,10 @@ public:
 
 	static Progress & getInstance(void);
 
-	bool				isMenu() const;
+	bool				isMenu(void) const;
 	void				setMenu(bool isMenu);
+	bool				isBubbleNpc(void) const;
+	void				setBubbleNpc(bool isBubbleNpc);
 	//TODO: Set this value once the game is finished
 	bool				isGameFinished() const;
 
@@ -179,6 +181,7 @@ private:
 
 	static std::unique_ptr<Progress>				m_instance;
 	bool											m_isMenu;
+	bool											m_isBubbleNpc;
 	bool											m_isGameFinished;
 	std::string										m_filename;
 	data											m_data;
