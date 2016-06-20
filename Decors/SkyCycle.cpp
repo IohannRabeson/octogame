@@ -263,7 +263,7 @@ void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 	if (biome.canCreateRain() || biome.canCreateSnow())
 		computeDrop(frameTime, biome);
 	if (m_rainSound && biome.canCreateRain() && !biome.canCreateSnow() && biome.getId() != Level::WaterA)
-		m_rainSound->setVolume(m_weather / m_dropTimerMax.asSeconds() * 10);
+		m_rainSound->setVolume(m_weather / m_dropTimerMax.asSeconds() * octo::Application::getAudioManager().getSoundVolume() * 0.5f);
 	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
 	{
 		computeThunder(frameTime, biome);
