@@ -6,17 +6,18 @@
 #include "Progress.hpp"
 #include <Interpolations.hpp>
 
+#include <ctime>
 #include <limits>
 #include <iostream>
 
 std::size_t DefaultBiome::m_seedId = 110u;
 
 DefaultBiome::DefaultBiome() :
-	m_generator(std::to_string(m_seedId++)),
+	m_generator(std::to_string(std::time(0))),
 	m_name("Default"),
 	m_id(Level::Default),
 	m_seed("Default"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomInt(2u, 400u))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(500))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.5f),
@@ -73,7 +74,7 @@ DefaultBiome::DefaultBiome() :
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
 	//TODO: Value to improve
-	m_treeDepth(m_generator.randomInt(4u, 6u), m_generator.randomInt(6u, 9u)),
+	m_treeDepth(m_generator.randomInt(4u, 5u), m_generator.randomInt(6u, 7u)),
 	m_treeSize(sf::Vector2f(m_generator.randomFloat(2.f, 20.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(20.f, 100.f), m_generator.randomFloat(100.f, 600.f))),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
@@ -123,7 +124,8 @@ DefaultBiome::DefaultBiome() :
 #else
 	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
-
+	Progress & progress = Progress::getInstance();
+	m_mapSize = sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(progress.getNanoRobotCount() * 60u + 30u)),
 	m_randomSurfaceNumber = m_generator.randomInt(1u, 4u);
 	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;
@@ -134,20 +136,26 @@ DefaultBiome::DefaultBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// TODO define map position and number of map
-	std::size_t portalPos = m_generator.randomInt(1u, m_mapSize.x - 40u);
-	Progress & progress = Progress::getInstance();
+	std::size_t portalPos = m_octoStartPosition.x;
 	m_gameObjects[portalPos] = GameObjectType::Portal;
-	m_gameObjects[23u] = GameObjectType::Portal;
+	m_destinations.push_back(progress.getLastDestination());
+
 	m_interestPointPosX = portalPos;
-	if ((progress.getNanoRobotCount() >= 7 && progress.getLastDestination() == Level::IceA) || (progress.getNanoRobotCount() >= 6))
+
+	for (std::size_t i = 0u; i < m_mapSize.x - 1u; i += m_generator.randomInt(15u, 200u))
 	{
-		m_destinations.push_back(Level::Default);
-		m_destinations.push_back(Level::Default);
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
+		else
+			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
 	}
-	else
+
+	for (std::size_t i = 0u; i < m_mapSize.x - 1u; i += m_generator.randomInt(15u, 300u))
 	{
-		m_destinations.push_back(progress.getLastDestination());
-		m_destinations.push_back(progress.getLastDestination());
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::BirdBlueNpc;
+		else
+			m_gameObjects[i] = GameObjectType::BirdRedNpc;
 	}
 }
 
