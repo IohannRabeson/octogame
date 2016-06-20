@@ -1210,7 +1210,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	TileShape * first;
 	sf::Vertex * last;
 	bool updateLast;
-	bool isScreenFullOfTiles = false;
+	bool isScreenFullOfTiles = true;
 
 	// Update tiles
 	m_verticesCount = 0u;
@@ -1219,6 +1219,8 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		first = nullptr;
 		last = nullptr;
 		updateLast = true;
+		if (m_tiles->get(x, 0).isTransitionType(Tile::e_transition_none))
+			isScreenFullOfTiles = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
@@ -1228,8 +1230,6 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 					updateLast = false;
 				continue;
 			}
-			if (y == 0u)
-				isScreenFullOfTiles = true;
 			if (first)
 			{
 				// Avoid to compute A LOT of transition under the screen
