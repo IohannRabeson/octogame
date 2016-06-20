@@ -62,11 +62,13 @@ void	GameScreen::update(sf::Time frameTime)
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 	{
 		m_doSave = true;
+		progress.setMenu(true);
 	}
 	else if (m_doSave)
 	{
 		progress.save();
 		m_doSave = false;
+		progress.setMenu(false);
 	}
 	else
 	{
