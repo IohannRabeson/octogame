@@ -204,7 +204,6 @@ bool PhysicsEngine::isUpdated(void) const
 	return (m_isUpdated);
 }
 
-#include <iostream>
 void PhysicsEngine::update(float deltatime)
 {
 	static float accumulator = 0.f;
