@@ -139,7 +139,7 @@ IceBBiome::IceBBiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::IceC)
 		m_octoStartPosition = sf::Vector2f(279.f * 16.f, 1640.f);
-	if (progress.getLastDestination() == Level::Rewards)
+	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(367.f * 16.f, -2100.f);
 
 	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
@@ -147,7 +147,7 @@ IceBBiome::IceBBiome() :
 
 	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_destinations.push_back(Level::IceC);
-	m_destinations.push_back(Level::Rewards);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceA);
 }
 

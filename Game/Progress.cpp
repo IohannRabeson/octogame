@@ -170,7 +170,11 @@ void	Progress::setNanoRobotCount(std::size_t count)
 void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 {
 	if (!m_isMenu)
+	{
+		if (destination != m_data.currentDestination)
+			m_data.lastDestination = m_data.currentDestination;
 		m_data.nextDestination = destination;
+	}
 	m_changeLevel = hasTransition;
 }
 
@@ -179,9 +183,20 @@ Level	Progress::getNextDestination(void) const
 	return m_data.nextDestination;
 }
 
+void	Progress::setCurrentDestination(Level destination)
+{
+	if (destination != Level::Rewards)
+		m_data.currentDestination = destination;
+}
+
+Level	Progress::getCurrentDestination(void) const
+{
+	return m_data.currentDestination;
+}
+
 void	Progress::setLastDestination(Level destination)
 {
-	if (destination != Level::Default && destination != Level::Rewards)
+	if (destination != Level::Rewards)
 		m_data.lastDestination = destination;
 }
 
@@ -257,24 +272,24 @@ void	Progress::levelChanged()
 
 void	Progress::registerDeath(float deathPosX)
 {
-	m_deathPos[m_data.nextDestination].push_back(static_cast<int>(deathPosX / Tile::TileSize));
+	m_deathPos[m_data.currentDestination].push_back(static_cast<int>(deathPosX / Tile::TileSize));
 }
 
 std::vector<int> & Progress::getDeathPos()
 {
-	return m_deathPos[m_data.nextDestination];
+	return m_deathPos[m_data.currentDestination];
 }
 
 void	Progress::registerPortal(Level destination)
 {
-	m_portals[m_data.nextDestination].insert(std::make_pair(destination, false));
+	m_portals[m_data.currentDestination].insert(std::make_pair(destination, false));
 }
 
 bool	Progress::meetPortal(Level destination)
 {
-	if (m_changeLevel == false && !m_portals[m_data.nextDestination][destination])
+	if (m_changeLevel == false && !m_portals[m_data.currentDestination][destination])
 	{
-		m_portals[m_data.nextDestination][destination] = true;
+		m_portals[m_data.currentDestination][destination] = true;
 		return true;
 	}
 	return false;
@@ -282,7 +297,7 @@ bool	Progress::meetPortal(Level destination)
 
 bool	Progress::isMetPortal(Level destination)
 {
-	if (m_changeLevel == false && m_portals[m_data.nextDestination][destination])
+	if (m_changeLevel == false && m_portals[m_data.currentDestination][destination])
 		return true;
 	return false;
 }
@@ -350,15 +365,15 @@ void	Progress::loadPortals()
 
 void	Progress::registerNpc(GameObjectType key)
 {
-	if (!m_isMenu && !m_npc[m_data.nextDestination].insert(std::make_pair(key, false)).second)
+	if (!m_isMenu && !m_npc[m_data.currentDestination].insert(std::make_pair(key, false)).second)
 		m_npcMax++;
 }
 
 bool	Progress::meetNpc(GameObjectType key)
 {
-	if (!m_isMenu && m_changeLevel == false && !m_npc[m_data.nextDestination][key])
+	if (!m_isMenu && m_changeLevel == false && !m_npc[m_data.currentDestination][key])
 	{
-		m_npc[m_data.nextDestination][key] = true;
+		m_npc[m_data.currentDestination][key] = true;
 		return true;
 	}
 	return false;

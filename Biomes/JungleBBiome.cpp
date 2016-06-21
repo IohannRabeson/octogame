@@ -137,7 +137,7 @@ JungleBBiome::JungleBBiome() :
 		m_octoStartPosition = sf::Vector2f(310.f * 16.f, 4700.f);
 	else if (progress.getLastDestination() == Level::JungleC)
 		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -1600.f);
-	else if (progress.getLastDestination() == Level::Rewards)
+	else if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(100.f * 16.f, 4300.f);
 	for (std::size_t i = 430u; i < m_mapSize.x - 10u; i += m_generator.randomInt(15u, 30u))
 	{
@@ -162,7 +162,7 @@ JungleBBiome::JungleBBiome() :
 	m_interestPointPosX = 290;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Rewards);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::JungleC);
 	m_destinations.push_back(Level::JungleA);
 }

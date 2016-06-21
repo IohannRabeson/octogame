@@ -1,5 +1,5 @@
-#ifndef DEFAULTBIOME_HPP
-# define DEFAULTBIOME_HPP
+#ifndef RANDOMBIOME_HPP
+# define RANDOMBIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -10,7 +10,7 @@
 # include <SFML/System/Vector2.hpp>
 
 
-class DefaultBiome : public ABiome
+class RandomBiome : public ABiome
 {
 template<class T>
 struct Range
@@ -25,7 +25,7 @@ struct Range
 };
 
 public:
-	DefaultBiome();
+	RandomBiome();
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;

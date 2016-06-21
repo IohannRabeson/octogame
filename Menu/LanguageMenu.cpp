@@ -25,7 +25,7 @@ void LanguageMenu::onSelection(void)
 	progress.setLanguage(static_cast<Progress::Language>(getIndexCursor()));
 	TextManager::getInstance().loadTexts();
 	if (progress.changeLevel() == false)
-		progress.setNextDestination(progress.getLastDestination());
+		progress.setNextDestination(progress.getCurrentDestination());
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();

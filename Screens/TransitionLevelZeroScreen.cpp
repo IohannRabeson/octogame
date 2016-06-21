@@ -34,7 +34,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	std::wstring wkey;
 	std::wstring line;
 	std::string keyName;
-	if (Progress::getInstance().getNextDestination() != Level::Default)
+	if (Progress::getInstance().getNextDestination() != Level::Random)
 		keyName = "transitionLevelZero";
 	else
 		keyName = "transitionLevelZeroToRandom";
@@ -85,7 +85,7 @@ void	TransitionLevelZeroScreen::resume()
 
 void	TransitionLevelZeroScreen::stop()
 {
-	if (Progress::getInstance().getNextDestination() != Level::Default)
+	if (Progress::getInstance().getNextDestination() != Level::Random)
 	{
 		Progress::getInstance().setFirstTime(false);
 		Progress::getInstance().save();
