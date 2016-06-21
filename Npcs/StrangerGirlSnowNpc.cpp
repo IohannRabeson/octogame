@@ -5,9 +5,9 @@ StrangerGirlSnowNpc::StrangerGirlSnowNpc(void) :
 	ANpc(STRANGER_GIRL_SNOW_OSS)
 {
 	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(170.f, 165.f));
+	setOrigin(sf::Vector2f(125.f, 165.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-55.f, -65.f));
+	setTextOffset(sf::Vector2f(-10.f, -65.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
