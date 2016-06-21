@@ -99,6 +99,7 @@ npc_well_keeper.oss=Waow… Ca faisait un moment que je n'avais vu personne ici.
 clementine.oss=Hé, coucou toi ! On m’a parlé d’un lieu caché, unique, incroyable… Il est quelque part derrière ce portail, alors j’y vais ! Regarde, il ressemble à ça !
 snowman_2.oss=Reflechis un peu plus!
 snowman_1.oss=Je crois que j'ai besoin de vacances au soleil…
+snowman_1.oss=AH ! C'est mieux ici !
 snowman_3.oss=Tu veux essayer mes lunettes ?
 snowman_3.oss=Rends les moi ! Je ne voit plus rien.
 snowgirl_1.oss=N'ai pas peur. Laisse toi tomber dans le vide !

@@ -135,7 +135,7 @@ IceDBiome::IceDBiome() :
 
 	m_gameObjects[30] = GameObjectType::PortalSnow;
 	m_gameObjects[100] = GameObjectType::HouseFlatSnow;
-	m_gameObjects[150] = GameObjectType::Snowman1Npc;
+	m_instances[139] = MAP_ICE_D_PORTAL_RANDOM_OMP;
 	m_gameObjects[190] = GameObjectType::BirdBlueNpc;
 	m_instances[220] = MAP_ICE_D_ELEVATOR_OMP;
 	m_gameObjects[250] = GameObjectType::EngineSnow;

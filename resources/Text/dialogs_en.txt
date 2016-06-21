@@ -101,6 +101,7 @@ clementine.oss=Hey, hello you ! I’ve been told about a secret place, unique, u
 clementine.oss=Hé, coucou toi ! On m’a parlé d’un lieu caché, unique, incroyable… Il est quelque part derrière ce portail, alors j’y vais ! Regarde, il ressemble à ça !
 snowman_2.oss="Think more!
 snowman_1.oss=Maybe I need sun and hollidays…
+snowman_1.oss=OH ! It's better here !
 snowman_3.oss=Do you want to try my glasses ?
 snowman_3.oss=Give it back ! I cannot see anything.
 snowgirl_1.oss="Don't be affraid. Let yourself fall into the void !

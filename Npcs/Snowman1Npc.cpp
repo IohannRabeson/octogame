@@ -5,9 +5,9 @@ Snowman1Npc::Snowman1Npc(void) :
 	ANpc(SNOWMAN_1_OSS)
 {
 	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(170.f, 165.f));
+	setOrigin(sf::Vector2f(125.f, 165.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-55.f, -65.f));
+	setTextOffset(sf::Vector2f(-10.f, -65.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
@@ -63,6 +63,11 @@ void Snowman1Npc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
+	if (getPosition().y > -70.f * 16.f)
+		setCurrentText(0u);
+	else
+		setCurrentText(1u);
+
 	if (sprite.getCurrentEvent() == Special1)
 	{
 		if (sprite.isTerminated())
@@ -83,4 +88,5 @@ void Snowman1Npc::updateState(void)
 			sprite.setNextEvent(Special1);
 		}
 	}
+
 }
