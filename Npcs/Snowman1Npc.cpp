@@ -63,7 +63,7 @@ void Snowman1Npc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (getPosition().y > -70.f * 16.f)
+	if (getPosition().y > -95.f * 16.f)
 		setCurrentText(0u);
 	else
 		setCurrentText(1u);
