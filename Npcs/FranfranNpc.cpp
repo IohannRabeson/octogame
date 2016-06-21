@@ -7,8 +7,8 @@
 FranfranNpc::FranfranNpc(void) :
 	ANpc(FRANFRAN_OSS)
 {
-	setSize(sf::Vector2f(1.f, 145.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setSize(sf::Vector2f(30.f, 145.f));
+	setOrigin(sf::Vector2f(75.f, 100.f));
 	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -50.f));
