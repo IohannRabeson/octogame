@@ -24,6 +24,7 @@ void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
 	if (progress.canMoveMap() && m_isCreatedMoveMap == false)
 	{
 		addMenu(AMenu::getText("control_ground"), nullptr);
+		addMenu(AMenu::getText("control_camera"), nullptr);
 		addMenu(AMenu::getText("control_portal"), nullptr);
 		m_isCreatedMoveMap = true;
 		setupBubble();
