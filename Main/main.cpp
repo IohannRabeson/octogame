@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2015/09/25 11:40:41 by jbalestr         ###   ########.fr       */
+/*   Updated: 2016/06/22 15:29:42 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #include "DeathScreen.hpp"
 #include "AGameObject.hpp"
 #include "MusicManager.hpp"
+#include "LaboratoryEndScreen.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
@@ -46,6 +47,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<TransitionLevelZeroScreen>("transitionLevelZero");
 	manager.registerState<LogoScreen>("logo");
 	manager.registerState<AnOctonautOdysseyScreen>("anoctonautodyssey");
+	manager.registerState<LaboratoryEndScreen>("laboratory_end");
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 }
 

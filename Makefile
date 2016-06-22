@@ -38,6 +38,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/LevelZeroScreen.cpp				\
 				Screens/LogoScreen.cpp					\
 				Screens/AnOctonautOdysseyScreen.cpp		\
+				Screens/LaboratoryEndScreen.cpp			\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
