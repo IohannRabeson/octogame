@@ -12,13 +12,13 @@ void	LaboratoryEndScreen::start()
 {
 	InputListener::addInputListener();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
-	m_startTexture = resources.getTexture(LOGO_01_PNG);
+	m_background = resources.getTexture(LOGO_01_PNG);
 
 	octo::Camera & camera = octo::Application::getCamera();
 	octo::Application::getCamera().setCenter(camera.getRectangle().width / 2.f, camera.getRectangle().height / 2.f);
-	m_startSprite.setTexture(m_startTexture);
-	m_startSprite.setOrigin(m_startSprite.getLocalBounds().width / 2.f, m_startSprite.getLocalBounds().height / 2.f);
-	m_startSprite.setPosition(octo::Application::getCamera().getCenter());
+	m_backgroundSprite.setTexture(m_background);
+	m_backgroundSprite.setOrigin(m_backgroundSprite.getLocalBounds().width / 2.f, m_backgroundSprite.getLocalBounds().height / 2.f);
+	m_backgroundSprite.setPosition(octo::Application::getCamera().getCenter());
 
 	m_ju.setPosition(sf::Vector2f(500.f, 500.f));
 	m_lu.setPosition(sf::Vector2f(600.f, 500.f));
@@ -51,7 +51,7 @@ void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
 {
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
-	render.draw(m_startSprite);
+	render.draw(m_backgroundSprite);
 	render.draw(m_ju);
 	render.draw(m_lu);
 	render.draw(m_fran);

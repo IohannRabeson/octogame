@@ -26,8 +26,8 @@ public:
 	virtual bool	onInputReleased(InputListener::OctoKeys const & key);
 
 private:
-	sf::Texture			m_startTexture;
-	sf::Sprite			m_startSprite;
+	sf::Texture			m_background;
+	sf::Sprite			m_backgroundSprite;
 	ScientistJu			m_ju;
 	ScientistLu			m_lu;
 	ScientistFran		m_fran;
