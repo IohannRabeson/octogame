@@ -34,6 +34,10 @@
 #include "ClassicNpc.hpp"
 #include "CedricNpc.hpp"
 //Script AddNpc Include
+#include "ScientistCedric.hpp"
+#include "ScientistLu.hpp"
+#include "ScientistFran.hpp"
+#include "ScientistJu.hpp"
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
@@ -220,6 +224,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<ScientistCedric>(SCIENTISTCEDRIC_OSS);
+	m_npcFactory.registerCreator<ScientistLu>(SCIENTISTLU_OSS);
+	m_npcFactory.registerCreator<ScientistFran>(SCIENTISTFRAN_OSS);
+	m_npcFactory.registerCreator<ScientistJu>(SCIENTISTJU_OSS);
 	m_npcFactory.registerCreator<TVScreen>(TV_OSS);
 	m_npcFactory.registerCreator<FabienNpc>(FABIEN_OSS);
 	m_npcFactory.registerCreator<CheckPoint>(CHECKPOINT_OSS);
@@ -639,6 +647,34 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::ScientistCedric:
+				{
+					ScientistCedric * npc = new ScientistCedric();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::ScientistLu:
+				{
+					ScientistLu * npc = new ScientistLu();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::ScientistFran:
+				{
+					ScientistFran * npc = new ScientistFran();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::ScientistJu:
+				{
+					ScientistJu * npc = new ScientistJu();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::TVScreen:
 				{
 					TVScreen * npc = new TVScreen();

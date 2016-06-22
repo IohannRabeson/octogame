@@ -5,6 +5,10 @@
 # include <SFML/Graphics/Texture.hpp>
 # include <SFML/Graphics/Sprite.hpp>
 # include "InputListener.hpp"
+# include "ScientistJu.hpp"
+# include "ScientistLu.hpp"
+# include "ScientistFran.hpp"
+# include "ScientistCedric.hpp"
 
 class LaboratoryEndScreen : public octo::AbstractState,
 						public InputListener
@@ -24,6 +28,10 @@ public:
 private:
 	sf::Texture			m_startTexture;
 	sf::Sprite			m_startSprite;
+	ScientistJu			m_ju;
+	ScientistLu			m_lu;
+	ScientistFran		m_fran;
+	ScientistCedric		m_cedric;
 
 };
 

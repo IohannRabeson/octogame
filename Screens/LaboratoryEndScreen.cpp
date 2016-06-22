@@ -10,14 +10,20 @@ LaboratoryEndScreen::LaboratoryEndScreen(void)
 
 void	LaboratoryEndScreen::start()
 {
-//	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	InputListener::addInputListener();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	m_startTexture = resources.getTexture(LOGO_01_PNG);
 
+	octo::Camera & camera = octo::Application::getCamera();
+	octo::Application::getCamera().setCenter(camera.getRectangle().width / 2.f, camera.getRectangle().height / 2.f);
 	m_startSprite.setTexture(m_startTexture);
 	m_startSprite.setOrigin(m_startSprite.getLocalBounds().width / 2.f, m_startSprite.getLocalBounds().height / 2.f);
 	m_startSprite.setPosition(octo::Application::getCamera().getCenter());
-	InputListener::addInputListener();
+
+	m_ju.setPosition(sf::Vector2f(500.f, 500.f));
+	m_lu.setPosition(sf::Vector2f(600.f, 500.f));
+	m_fran.setPosition(sf::Vector2f(700.f, 500.f));
+	m_cedric.setPosition(sf::Vector2f(800.f, 500.f));
 }
 
 void	LaboratoryEndScreen::pause()
@@ -35,7 +41,10 @@ void	LaboratoryEndScreen::stop()
 
 void	LaboratoryEndScreen::update(sf::Time frameTime)
 {
-	(void)frameTime;
+	m_ju.update(frameTime);
+	m_lu.update(frameTime);
+	m_fran.update(frameTime);
+	m_cedric.update(frameTime);
 }
 
 void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
@@ -43,6 +52,10 @@ void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
 	render.draw(m_startSprite);
+	render.draw(m_ju);
+	render.draw(m_lu);
+	render.draw(m_fran);
+	render.draw(m_cedric);
 }
 
 bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)
