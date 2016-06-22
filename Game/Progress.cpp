@@ -6,9 +6,7 @@
 #include <Options.hpp>
 #include <AudioManager.hpp>
 #include <GraphicsManager.hpp>
-
 #include <fstream>
-#include <stdlib.h>
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
