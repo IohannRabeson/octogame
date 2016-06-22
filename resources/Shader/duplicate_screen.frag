@@ -7,7 +7,6 @@ uniform vec2 sub_top_right;
 uniform vec2 sub_size;
 uniform float offset;
 uniform float reverse;
-uniform float activate;
 uniform float line_progress;
 uniform mat4 kernel;
 
@@ -64,7 +63,7 @@ void main(void)
 	vec2 br = vec2(top_right.x, bot_left.y);
 	if (inBox)
 		gl_FragColor = col;
-	else if (activate)
+	else
 	{
 		if (cross(tl, vec2(0.0, 1.0), texCoord) < 0.0 && cross(bot_left, vec2(0.0), texCoord) > 0.0) // left
 		{
@@ -74,7 +73,7 @@ void main(void)
 			if (length(vec2(bot_left.x, bot_left.y + t * size.y) - texCoord) / length(vec2(bot_left.x, bot_left.y + t * size.y) - vec2(0.0, t)) < line_progress)
 				gl_FragColor = vec4(mix(texture2D(texture, vec2(0.0, t)).rgb, kernel_color(vec2(0.0, t)), 1.0 - reverse), 1.0);
 			else
-				gl_FragColor = texture2D(texture, texCoord);
+				gl_FragColor = col;
 		}
 		else if (cross(tl, vec2(0.0, 1.0), texCoord) > 0.0 && cross(top_right, vec2(1.0), texCoord) < 0.0) // top
 		{
@@ -84,7 +83,7 @@ void main(void)
 			if (length(vec2(tl.x + t * size.x, tl.y) - texCoord) / length(vec2(tl.x + t * size.x, tl.y) - vec2(t, 1.0)) < line_progress)
 				gl_FragColor = vec4(mix(texture2D(texture, vec2(t, 1.0)).rgb, kernel_color(vec2(t, 1.0)), 1.0 - reverse), 1.0);
 			else
-				gl_FragColor = texture2D(texture, texCoord);
+				gl_FragColor = col;
 		}
 		else if (cross(top_right, vec2(1.0), texCoord) > 0.0 && cross(br, vec2(1.0, 0.0), texCoord) < 0.0) // right
 		{
@@ -94,7 +93,7 @@ void main(void)
 			if (length(vec2(br.x, br.y + t * size.y) - texCoord) / length(vec2(br.x, br.y + t * size.y) - vec2(1.0, t)) < line_progress)
 				gl_FragColor = vec4(mix(texture2D(texture, vec2(1.0, t)).rgb, kernel_color(vec2(1.0, t)), 1.0 - reverse), 1.0);
 			else
-				gl_FragColor = texture2D(texture, texCoord);
+				gl_FragColor = col;
 		}
 		else if (cross(br, vec2(1.0, 0.0), texCoord) > 0.0 && cross(bot_left, vec2(0.0), texCoord) < 0.0) // bottom
 		{
@@ -104,11 +103,9 @@ void main(void)
 			if (length(vec2(bot_left.x + t * size.x, bot_left.y) - texCoord) / length(vec2(bot_left.x + t * size.x, bot_left.y) - vec2(t, 0.0)) < line_progress)
 				gl_FragColor = vec4(mix(texture2D(texture, vec2(t, 0.0)).rgb, kernel_color(vec2(t, 0.0)), 1.0 - reverse), 1.0);
 			else
-				gl_FragColor = texture2D(texture, texCoord);
+				gl_FragColor = col;
 		}
 		else
-			gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+			gl_FragColor = col;
 	}
-	else
-		gl_FragColor = texture2D(texture, texCoord);
 }

@@ -172,9 +172,20 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader(PIXELATE_FRAG, PIXELATE_FRAG);
 	PostEffectLayer::getInstance().registerShader(DISPLACEMENT_FRAG, DISPLACEMENT_FRAG);
 	PostEffectLayer::getInstance().registerShader(KERNEL_POST_EFFECT_FRAG, KERNEL_POST_EFFECT_FRAG);
+	PostEffectLayer::getInstance().registerShader("render_black_kernel", KERNEL_POST_EFFECT_FRAG);
 	PostEffectLayer::getInstance().registerShader(WATER_FRAG, WATER_FRAG);
 	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
+
+	sf::Transform kernel(
+			-1.f, -1.f, -1.f,
+			-1.f, 8.f, -1.f,
+			-1.f, -1.f, -1.f
+		);
+	sf::Shader & shader = PostEffectLayer::getInstance().getShader("render_black_kernel");
+	shader.setParameter("kernel", kernel);
+	shader.setParameter("offset", 1.f / 300.f);
+	shader.setParameter("intensity", 1.f);
 
 	ChallengeManager::getInstance().reset();
 	audio.reset();
@@ -233,6 +244,10 @@ void	Game::update(sf::Time frameTime)
 	m_konami->update(frameTime, m_octo->getPosition());
 	m_octo->startKonamiCode(m_konami->canStartEvent());
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
+	if (Progress::getInstance().getRenderShader() == Progress::RenderShader::BlackKernel)
+		PostEffectLayer::getInstance().enableShader("render_black_kernel", true);
+	else
+		PostEffectLayer::getInstance().enableShader("render_black_kernel", false);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)

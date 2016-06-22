@@ -12,6 +12,13 @@ class CharacterOcto;
 class TVScreen : public ANpc, public AGameObject<GameObjectType::TVScreen>
 {
 public:
+	enum State
+	{
+		None,
+		Zoom,
+		Reversed
+	};
+
 	TVScreen(void);
 	virtual ~TVScreen(void) = default;
 
@@ -25,10 +32,10 @@ protected:
 
 private:
 	sf::Shader &	m_shader;
+	State			m_state;
 	sf::FloatRect	m_tvScreen;
 	sf::Time		m_timer;
 	sf::Time		m_duration;
-	bool			m_startZoom;
 	bool			m_reverse;
 
 };

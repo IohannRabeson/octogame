@@ -446,6 +446,16 @@ Progress::RespawnType	Progress::getRespawnType(void) const
 	return m_data.respawnType;
 }
 
+void		Progress::setRenderShader(Progress::RenderShader renderShader)
+{
+	m_data.renderShader = renderShader;
+}
+
+Progress::RenderShader	Progress::getRenderShader(void) const
+{
+	return m_data.renderShader;
+}
+
 void				Progress::setCheckPointPosition(sf::Vector2f const & position)
 {
 	m_data.checkPointPosition = position;

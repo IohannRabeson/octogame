@@ -25,6 +25,12 @@ public:
 		Die = 1
 	};
 
+	enum RenderShader
+	{
+		Normal,
+		BlackKernel
+	};
+
 	static Progress & getInstance(void);
 
 	bool				isMenu() const;
@@ -107,6 +113,8 @@ public:
 	bool				isOctoOnInstance(void);
 	void				setRespawnType(RespawnType type);
 	RespawnType			getRespawnType(void) const;
+	void				setRenderShader(RenderShader renderShader);
+	RenderShader		getRenderShader(void) const;
 	void				setCheckPointPosition(sf::Vector2f const & position);
 	sf::Vector2f const &getCheckPointPosition(void) const;
 
@@ -145,7 +153,8 @@ private:
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false),
-			respawnType(Progress::RespawnType::Portal)
+			respawnType(Progress::RespawnType::Portal),
+			renderShader(RenderShader::Normal)
 		{}
 
 		sf::Vector2f			checkPointPosition;
@@ -165,6 +174,7 @@ private:
 		char					npc[10000];
 		char					portals[10000];
 		Progress::RespawnType	respawnType;
+		Progress::RenderShader	renderShader;
 	};
 
 	Progress();

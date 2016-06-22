@@ -1,5 +1,6 @@
 #include "TVScreen.hpp"
 #include "PostEffectLayer.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Interpolations.hpp>
@@ -8,10 +9,10 @@
 TVScreen::TVScreen(void) :
 	ANpc(TV_OSS),
 	m_shader(PostEffectLayer::getInstance().getShader(DUPLICATE_SCREEN_FRAG)),
+	m_state(None),
 	m_timer(sf::Time::Zero),
-	m_duration(sf::seconds(1.f)),
-	m_startZoom(false),
-	m_reverse(true)
+	m_duration(sf::seconds(0.5f)),
+	m_reverse(false)
 {
 	setSize(sf::Vector2f(25.f, 140.f));
 	setOrigin(sf::Vector2f(90.f, 700.f));
@@ -30,7 +31,9 @@ TVScreen::TVScreen(void) :
 			-1.f, -1.f, -1.f
 		);
 	m_shader.setParameter("kernel", kernel);
-	m_shader.setParameter("reverse", 0.0);
+	m_reverse = Progress::getInstance().getRenderShader() != Progress::RenderShader::Normal;
+	m_shader.setParameter("reverse", m_reverse);
+	m_shader.setParameter("line_progress", 0.f);
 }
 
 void TVScreen::setup(void)
@@ -76,31 +79,46 @@ void TVScreen::update(sf::Time frametime)
 	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 	if (screen.intersects(m_tvScreen))
 	{
+		Progress::getInstance().setRenderShader(Progress::RenderShader::Normal);
 		PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, true);
-		float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
 		float width = octo::Application::getGraphicsManager().getVideoMode().width;
 		float height = octo::Application::getGraphicsManager().getVideoMode().height;
+		float zoomFactor = height / screen.height;
 		pos = sf::Vector2f(((m_tvScreen.left - screen.left) * zoomFactor) / width, (height + (-m_tvScreen.top + screen.top) * zoomFactor) / height);
 		size = sf::Vector2f(m_tvScreen.width * zoomFactor / width, m_tvScreen.height * zoomFactor / height);
 	}
 	else
 	{
 		PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, false);
+		if (m_reverse)
+			Progress::getInstance().setRenderShader(Progress::RenderShader::BlackKernel);
+		else
+			Progress::getInstance().setRenderShader(Progress::RenderShader::Normal);
 	}
-	m_shader.setParameter("activate", 0.f);
-	if (m_startZoom)
+
+	switch (m_state)
 	{
-		m_timer += frametime;
-		m_shader.setParameter("activate", 1.f);
-		if (m_timer >= m_duration)
-		{
-			m_startZoom = false;
-			m_shader.setParameter("activate", 0.f);
-			m_shader.setParameter("reverse", m_reverse);
-			m_reverse = !m_reverse;
-			m_timer = sf::Time::Zero;
-		}
+		case None:
+			break;
+		case Zoom:
+			m_timer += frametime;
+			m_shader.setParameter("line_progress", std::min(1.f, (m_timer * 4.f) / m_duration));
+			if (m_timer >= m_duration)
+			{
+				Progress::getInstance().setRenderShader(Progress::RenderShader::BlackKernel);
+				m_reverse = !m_reverse;
+				m_shader.setParameter("line_progress", 0.f);
+				m_shader.setParameter("reverse", m_reverse);
+				m_timer = sf::Time::Zero;
+				m_state = Reversed;
+			}
+			break;
+		case Reversed:
+			break;
+		default:
+			break;
 	}
+
 	sf::Vector2f sub_pos = sf::Vector2f(pos.x + pos.x * size.x, pos.y + pos.y * size.y);
 	sf::Vector2f sub_size = sf::Vector2f(size.x * size.x, size.y * size.y);
 	sub_pos = octo::linearInterpolation(sub_pos, pos, std::min(1.f, m_timer / m_duration));
@@ -121,5 +139,6 @@ void TVScreen::updateState(void)
 void TVScreen::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
-	m_startZoom = true;
+	if (m_state == None)
+		m_state = Zoom;
 }
