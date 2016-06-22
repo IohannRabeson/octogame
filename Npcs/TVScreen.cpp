@@ -9,13 +9,12 @@ TVScreen::TVScreen(void) :
 	ANpc(TV_OSS),
 	m_shader(PostEffectLayer::getInstance().getShader(DUPLICATE_SCREEN_FRAG)),
 	m_timer(sf::Time::Zero),
-	m_duration(sf::seconds(6.f)),
+	m_duration(sf::seconds(1.f)),
 	m_startZoom(false),
 	m_reverse(true)
 {
 	setSize(sf::Vector2f(25.f, 140.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
-	setScale(0.8f);
+	setOrigin(sf::Vector2f(90.f, 700.f));
 	setTextOffset(sf::Vector2f(-20.f, -10.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
@@ -41,6 +40,8 @@ void TVScreen::setup(void)
 	getIdleAnimation().setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
@@ -64,12 +65,11 @@ void TVScreen::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-#include <iostream>
 void TVScreen::update(sf::Time frametime)
 {
 	ANpc::update(frametime);
-	m_tvScreen.left = ANpc::getPosition().x;
-	m_tvScreen.top = ANpc::getPosition().y;
+	m_tvScreen.left = ANpc::getPosition().x - 22.f;
+	m_tvScreen.top = ANpc::getPosition().y - 187.f;
 	sf::Vector2f pos;
 	sf::Vector2f size;
 
@@ -87,12 +87,15 @@ void TVScreen::update(sf::Time frametime)
 	{
 		PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, false);
 	}
+	m_shader.setParameter("activate", 0.f);
 	if (m_startZoom)
 	{
 		m_timer += frametime;
+		m_shader.setParameter("activate", 1.f);
 		if (m_timer >= m_duration)
 		{
 			m_startZoom = false;
+			m_shader.setParameter("activate", 0.f);
 			m_shader.setParameter("reverse", m_reverse);
 			m_reverse = !m_reverse;
 			m_timer = sf::Time::Zero;
