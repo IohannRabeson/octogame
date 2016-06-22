@@ -14,10 +14,10 @@ public:
 
 	static PostEffectLayer & getInstance(void);
 
-	sf::Shader & getShader(ResourceKey key);
-	std::size_t getShaderIndex(ResourceKey key);
-	void registerShader(ResourceKey key);
-	void enableShader(ResourceKey key, bool enable);
+	sf::Shader & getShader(std::string const & name);
+	std::size_t getShaderIndex(std::string const & name);
+	void registerShader(std::string const & name, ResourceKey key);
+	void enableShader(std::string const & name, bool enable);
 
 	void clear(void);
 

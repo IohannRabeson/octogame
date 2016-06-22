@@ -166,15 +166,15 @@ void	Game::loadLevel(void)
 	// Reset last values
 	postEffect.removeEffects();
 	PostEffectLayer::getInstance().clear();
-	PostEffectLayer::getInstance().registerShader(CIRCLE_RAINBOW_FRAG);
-	PostEffectLayer::getInstance().registerShader(VISION_TROUBLE_FRAG);
-	PostEffectLayer::getInstance().registerShader(PERSISTENCE_FRAG);
-	PostEffectLayer::getInstance().registerShader(PIXELATE_FRAG);
-	PostEffectLayer::getInstance().registerShader(DISPLACEMENT_FRAG);
-	PostEffectLayer::getInstance().registerShader(KERNEL_POST_EFFECT_FRAG);
-	PostEffectLayer::getInstance().registerShader(WATER_FRAG);
-	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG);
-	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG);
+	PostEffectLayer::getInstance().registerShader(CIRCLE_RAINBOW_FRAG, CIRCLE_RAINBOW_FRAG);
+	PostEffectLayer::getInstance().registerShader(VISION_TROUBLE_FRAG, VISION_TROUBLE_FRAG);
+	PostEffectLayer::getInstance().registerShader(PERSISTENCE_FRAG, PERSISTENCE_FRAG);
+	PostEffectLayer::getInstance().registerShader(PIXELATE_FRAG, PIXELATE_FRAG);
+	PostEffectLayer::getInstance().registerShader(DISPLACEMENT_FRAG, DISPLACEMENT_FRAG);
+	PostEffectLayer::getInstance().registerShader(KERNEL_POST_EFFECT_FRAG, KERNEL_POST_EFFECT_FRAG);
+	PostEffectLayer::getInstance().registerShader(WATER_FRAG, WATER_FRAG);
+	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
 
 	ChallengeManager::getInstance().reset();
 	audio.reset();
