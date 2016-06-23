@@ -149,6 +149,7 @@ IceDBiome::IceDBiome() :
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
 	m_gameObjects[510] = GameObjectType::BirdBlueNpc;
 	m_instances[551] = MAP_ICE_D_TRAIL_OMP;
+	m_gameObjects[640] = GameObjectType::CheckPoint;
 	m_gameObjects[630] = GameObjectType::StrangerGirlSnowNpc;
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::DesertA);
