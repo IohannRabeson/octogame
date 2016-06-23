@@ -19,17 +19,17 @@ DesertABiome::DesertABiome() :
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(245, 222, 130),
-	m_tileEndColor(215, 213, 189),
+	m_tileEndColor(245, 243, 219),
 	m_waterLevel(-1.f),
 	m_waterColor(96, 204, 233, 180),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(106, 50, 106),
-	m_skyNightColor(106, 50, 106),
-	m_nightLightColor(205, 170, 205, 130),
-	m_SunsetLightColor(238, 173, 181, 130),
+	m_skyDayColor(255, 150, 242),
+	m_skyNightColor(166, 10, 92),
+	m_nightLightColor(134, 63, 215, 130),
+	m_SunsetLightColor(255, 59, 59, 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -72,7 +72,7 @@ DesertABiome::DesertABiome() :
 	m_treeDepth(6u, 8u),
 	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
-	m_treeColor(208, 184, 98),
+	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
 	m_treeBeatMouvement(0.06f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
@@ -262,8 +262,8 @@ Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DesertABiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = m_particleColor[0];
-	sf::Color secondColorEnd = m_particleColor[1];
+	sf::Color secondColorStart = getLeafColor();
+	sf::Color secondColorEnd = m_particleColor[0];
 	float start1 = -14700.f / static_cast<float>(m_mapSize.y);
 	float start2 = -14000.f / static_cast<float>(m_mapSize.y);
 	float middle1 = -13000.f / static_cast<float>(m_mapSize.y);
