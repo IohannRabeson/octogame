@@ -1219,7 +1219,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		first = nullptr;
 		last = nullptr;
 		updateLast = true;
-		if (m_tiles->get(x, 0).isTransitionType(Tile::e_transition_none))
+		if (m_tiles->get(x, 0).isTransitionType(Tile::e_transition_none) || m_tiles->get(x, 0).isEmpty())
 			isScreenFullOfTiles = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
