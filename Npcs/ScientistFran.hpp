@@ -1,19 +1,13 @@
 #ifndef SCIENTISTFRAN_HPP
 # define SCIENTISTFRAN_HPP
 
-# include "ANpc.hpp"
+# include "ScientistNpc.hpp"
 
-class ScientistFran : public ANpc, public AGameObject<GameObjectType::ScientistFran>
+class ScientistFran : public ScientistNpc, public AGameObject<GameObjectType::ScientistFran>
 {
 public:
 	ScientistFran(void);
 	virtual ~ScientistFran(void) = default;
-
-	virtual void setup(void);
-
-protected:
-	virtual void setupMachine(void);
-	virtual void updateState(void);
 
 };
 

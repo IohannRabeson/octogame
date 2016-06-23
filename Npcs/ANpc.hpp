@@ -24,6 +24,7 @@ public:
 	void setTexts(std::vector<std::wstring> const & texts, ABubble::Priority priority);
 	void setCurrentText(int index);
 	void setScale(float scale);
+	void setDisplayText(bool displayText);
 	void addMapOffset(float x, float y);
 	void onTheFloor(void);
 	sf::Vector2f const & getPosition(void) const;
@@ -56,7 +57,6 @@ protected:
 	void setNextEvent(Events event);
 	void setMachine(octo::FiniteStateMachine const & machine);
 	void setVelocity(float velocity);
-	void setDisplayText(bool displayText);
 	void setActiveText(bool active);
 	void setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask);
 	void setTextOffset(sf::Vector2f const & offset);
@@ -74,6 +74,7 @@ protected:
 	sf::Vector2f const & getOrigin(void) const;
 	sf::FloatRect const & getArea(void) const;
 	RectangleShape * getBox(void);
+	std::vector<std::unique_ptr<BubbleText>> & getTexts(void);
 	octo::CharacterSprite & getSprite(void);
 	octo::CharacterAnimation & getIdleAnimation(void);
 	octo::CharacterAnimation & getWalkAnimation(void);

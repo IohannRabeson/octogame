@@ -2,7 +2,6 @@
 # define LABORATORYENDSCREEN_HPP
 
 # include <AbstractState.hpp>
-# include <SFML/Graphics/Texture.hpp>
 # include <SFML/Graphics/Sprite.hpp>
 # include "InputListener.hpp"
 # include "ScientistJu.hpp"
@@ -11,9 +10,18 @@
 # include "ScientistCedric.hpp"
 
 class LaboratoryEndScreen : public octo::AbstractState,
-						public InputListener
+							public InputListener
 {
 public:
+	enum State
+	{
+		Appear,
+		Dialogs,
+		CedricPutPotion,
+		VisualEffect,
+		Disappear
+	};
+
 	LaboratoryEndScreen(void);
 	virtual void	start();
 	virtual void	pause();
@@ -26,8 +34,11 @@ public:
 	virtual bool	onInputReleased(InputListener::OctoKeys const & key);
 
 private:
-	sf::Texture			m_background;
-	sf::Sprite			m_backgroundSprite;
+	State				m_state;
+	sf::Time			m_timer;
+	sf::Time			m_timeBeforeNextText;
+	sf::Time			m_appearDuration;
+	sf::Sprite			m_background;
 	ScientistJu			m_ju;
 	ScientistLu			m_lu;
 	ScientistFran		m_fran;
