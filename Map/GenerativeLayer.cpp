@@ -10,7 +10,7 @@ GenerativeLayer::GenerativeLayer(void) :
 	GenerativeLayer(sf::Color::Yellow, sf::Vector2f(0.5f, 0.5f), sf::Vector2u(512u, 128u), 16.f, 20, 0.f, 1.f, 20.f)
 {}
 
-GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration) :
+GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration, float deltaOffset) :
 	ALayer(speed),
 	m_camera(octo::Application::getCamera()),
 	m_positions(0u),
@@ -25,6 +25,7 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	m_botOpacity(botOpacity),
 	m_highestY(0.f),
 	m_heightOffset(heightOffset),
+	m_deltaOffset(deltaOffset),
 	m_widthScreen(octo::Application::getGraphicsManager().getVideoMode().width / m_tileSize + 4u),
 	m_verticesCount(0u)
 {
@@ -48,10 +49,10 @@ void GenerativeLayer::setup(void)
 
 	for (std::size_t i = 0u; i < getMapSize().x; i++)
 	{
-		m_positions[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize + 30000.f;
-		m_positions[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize + 30000.f;
-		m_positionsPrev[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize + 30000.f;
-		m_positionsPrev[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize + 30000.f;
+		m_positions[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize + m_deltaOffset;
+		m_positions[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize + m_deltaOffset;
+		m_positionsPrev[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize + m_deltaOffset;
+		m_positionsPrev[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize + m_deltaOffset;
 	}
 
 	computeVertices(m_positions);

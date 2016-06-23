@@ -227,19 +227,19 @@ std::vector<ParallaxScrolling::ALayer *> DesertCBiome::getLayers()
 	sf::Color color = getCrystalColor();
 	color.a = 255;
 
-	GenerativeLayer * layer = new GenerativeLayer(color, sf::Vector2f(0.2f, 0.1f), mapSize, 8.f, 280, 0.2f, 0.7f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(color, sf::Vector2f(0.2f, 0.1f), mapSize, 8.f, 280, 0.2f, 0.7f, -1.f, 30000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 2.f, y * 10.f, 2, 12.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(color, sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -500, 0.1f, 0.7f, 11.f);
+	layer = new GenerativeLayer(color, sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -500, 0.1f, 0.7f, 11.f, 30000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(color, sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -550, 0.1f, 0.7f, 6.f);
+	layer = new GenerativeLayer(color, sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -550, 0.1f, 0.7f, 6.f, 30000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 10.f, y);
