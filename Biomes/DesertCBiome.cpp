@@ -21,7 +21,7 @@ DesertCBiome::DesertCBiome() :
 	m_tileStartColor(245, 222, 130),
 	m_tileEndColor(245, 243, 219),
 	m_waterLevel(10700.f),
-	m_waterColor(240, 110, 110, 180),
+	m_waterColor(166, 10, 92, 180),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(30.f)),
@@ -78,9 +78,9 @@ DesertCBiome::DesertCBiome() :
 	m_leafSize(sf::Vector2f(10.f, 10.f), sf::Vector2f(30.f, 30.f)),
 	m_leafColor(240, 110, 110),
 
-	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
-	m_mushroomColor(100, 190, 226),
-	m_mushroomLifeTime(sf::seconds(10), sf::seconds(30)),
+	m_mushroomSize(sf::Vector2f(30.f, 30.f), sf::Vector2f(150.f, 150.f)),
+	m_mushroomColor(255, 59, 59),
+	m_mushroomLifeTime(sf::seconds(5.f), sf::seconds(10.f)),
 
 	m_crystalSize(sf::Vector2f(40.f, 80.f), sf::Vector2f(70.f, 150.f)),
 	m_crystalPartCount(2u, 8u),
@@ -227,7 +227,7 @@ std::vector<ParallaxScrolling::ALayer *> DesertCBiome::getLayers()
 	sf::Color color = getCrystalColor();
 	color.a = 255;
 
-	GenerativeLayer * layer = new GenerativeLayer(color, sf::Vector2f(0.2f, 0.1f), mapSize, 8.f, 290, 0.1f, 0.7f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(color, sf::Vector2f(0.2f, 0.1f), mapSize, 8.f, 280, 0.2f, 0.7f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 2.f, y * 10.f, 2, 12.f);
