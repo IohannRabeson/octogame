@@ -1,6 +1,10 @@
 #include "LaboratoryEndScreen.hpp"
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
+#include "ScientistJu.hpp"
+#include "ScientistLu.hpp"
+#include "ScientistFran.hpp"
+#include "ScientistCedric.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
@@ -9,7 +13,9 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_state(Appear),
 	m_timer(sf::Time::Zero),
 	m_timeBeforeNextText(sf::seconds(1.f)),
-	m_appearDuration(sf::seconds(2.f))
+	m_appearDuration(sf::seconds(2.f)),
+	m_textIndex(0u),
+	m_lastTextIndex(0u)
 {
 }
 
@@ -26,10 +32,20 @@ void	LaboratoryEndScreen::start()
 	m_background.setOrigin(m_background.getLocalBounds().width / 2.f, m_background.getLocalBounds().height / 2.f);
 	m_background.setPosition(octo::Application::getCamera().getCenter());
 
-	m_ju.setPosition(sf::Vector2f(500.f, 500.f));
-	m_lu.setPosition(sf::Vector2f(800.f, 800.f));
-	m_fran.setPosition(sf::Vector2f(1200.f, 900.f));
-	m_cedric.setPosition(sf::Vector2f(800.f, 500.f));
+	m_npcs.emplace_back(new ScientistJu());
+	m_npcs.emplace_back(new ScientistLu());
+	m_npcs.emplace_back(new ScientistFran());
+	m_npcs.emplace_back(new ScientistCedric());
+	m_npcs[0]->setPosition(sf::Vector2f(500.f, 500.f));
+	m_npcs[1]->setPosition(sf::Vector2f(800.f, 800.f));
+	m_npcs[2]->setPosition(sf::Vector2f(1200.f, 900.f));
+	m_npcs[3]->setPosition(sf::Vector2f(800.f, 300.f));
+
+	for (auto & it : m_npcs)
+		it->setDisplayText(false);
+
+	for (auto & it : m_npcs)
+		m_lastTextIndex = std::max(m_lastTextIndex, it->getLastIndex());
 }
 
 void	LaboratoryEndScreen::pause()
@@ -56,26 +72,35 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			{
 				m_timer = sf::Time::Zero;
 				m_state = State::Dialogs;
+				for (auto & it : m_npcs)
+				{
+					it->setDisplayText(true);
+					it->updateText(true);
+				}
 			}
-			m_ju.setDisplayText(false);
-			m_lu.setDisplayText(false);
-			m_fran.setDisplayText(false);
-			m_cedric.setDisplayText(false);
 			break;
 		case Dialogs:
-			m_ju.setDisplayText(true);
-			m_lu.setDisplayText(true);
-			m_fran.setDisplayText(true);
-			m_cedric.setDisplayText(true);
+			m_timer += frameTime;
+			if (m_timer >= m_timeBeforeNextText)
+			{
+				m_timer = sf::Time::Zero;
+				m_textIndex++;
+				if (m_textIndex > m_lastTextIndex)
+				{
+					for (auto & it : m_npcs)
+						it->setDisplayText(false);
+					m_state = State::CedricPutPotion;
+				}
+			}
+			for (auto & it : m_npcs)
+				it->setTextIndex(m_textIndex);
 			break;
 		default:
 			break;
 	}
 
-	m_ju.update(frameTime);
-	m_lu.update(frameTime);
-	m_fran.update(frameTime);
-	m_cedric.update(frameTime);
+	for (auto & it : m_npcs)
+		it->update(frameTime);
 }
 
 void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
@@ -83,14 +108,10 @@ void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
 	render.draw(m_background);
-	render.draw(m_ju);
-	render.draw(m_lu);
-	render.draw(m_fran);
-	render.draw(m_cedric);
-	m_ju.drawText(render, states);
-	m_lu.drawText(render, states);
-	m_fran.drawText(render, states);
-	m_cedric.drawText(render, states);
+	for (auto & it : m_npcs)
+		render.draw(*it);
+	for (auto & it : m_npcs)
+		it->drawText(render, states);
 }
 
 bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)

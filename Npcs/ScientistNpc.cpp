@@ -5,7 +5,9 @@
 #include <vector>
 
 ScientistNpc::ScientistNpc(ResourceKey key) :
-	ANpc(key)
+	ANpc(key),
+	m_currentIndex(0u),
+	m_updateText(false)
 {
 	setSize(sf::Vector2f(25.f, 140.f));
 	setOrigin(sf::Vector2f(90.f, 100.f));
@@ -79,7 +81,17 @@ void ScientistNpc::setupMachine(void)
 
 void ScientistNpc::updateText(sf::Time frametime)
 {
-	int index = 0u;
+	if (!m_updateText)
+		return;
+
+	auto it = m_indexText.find(m_currentIndex);
+	if (it == m_indexText.end())
+	{
+		setDisplayText(false);
+		return;
+	}
+	setDisplayText(true);
+	std::size_t index = it->second;
 	setCurrentText(index);
 	auto & texts = ANpc::getTexts();
 	texts[index]->setActive(true);
@@ -107,4 +119,22 @@ void ScientistNpc::updateState(void)
 			sprite.setNextEvent(Special1);
 		}
 	}
+}
+
+void ScientistNpc::setTextIndex(std::size_t index)
+{
+	m_currentIndex = index;
+}
+
+std::size_t ScientistNpc::getLastIndex(void) const
+{
+	std::size_t max = 0u;
+	for (auto const & index : m_indexText)
+		max = std::max(max, index.first);
+	return (max);
+}
+
+void ScientistNpc::updateText(bool update)
+{
+	m_updateText = update;
 }

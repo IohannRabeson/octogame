@@ -4,10 +4,8 @@
 # include <AbstractState.hpp>
 # include <SFML/Graphics/Sprite.hpp>
 # include "InputListener.hpp"
-# include "ScientistJu.hpp"
-# include "ScientistLu.hpp"
-# include "ScientistFran.hpp"
-# include "ScientistCedric.hpp"
+# include "ScientistNpc.hpp"
+# include <memory>
 
 class LaboratoryEndScreen : public octo::AbstractState,
 							public InputListener
@@ -34,15 +32,14 @@ public:
 	virtual bool	onInputReleased(InputListener::OctoKeys const & key);
 
 private:
-	State				m_state;
-	sf::Time			m_timer;
-	sf::Time			m_timeBeforeNextText;
-	sf::Time			m_appearDuration;
-	sf::Sprite			m_background;
-	ScientistJu			m_ju;
-	ScientistLu			m_lu;
-	ScientistFran		m_fran;
-	ScientistCedric		m_cedric;
+	std::vector<std::unique_ptr<ScientistNpc>>	m_npcs;
+	State										m_state;
+	sf::Time									m_timer;
+	sf::Time									m_timeBeforeNextText;
+	sf::Time									m_appearDuration;
+	sf::Sprite									m_background;
+	std::size_t									m_textIndex;
+	std::size_t									m_lastTextIndex;
 
 };
 
