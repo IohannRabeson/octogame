@@ -139,7 +139,6 @@ DesertABiome::DesertABiome() :
 	m_instances[23] = MAP_DESERT_A_WAVE_OMP;
 	m_instances[250] = MAP_DESERT_A_JUMP_OMP;
 	m_gameObjects[70] = GameObjectType::TurbanNpc;
-//	m_gameObjects[256] = GameObjectType::FannyNpc;
 	m_gameObjects[410] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[420] = GameObjectType::Tent;
 	m_gameObjects[370] = GameObjectType::Portal;
@@ -210,8 +209,6 @@ Level	DesertABiome::getDestination()
 
 float	DesertABiome::getWaterLevel()
 {
-	if (Progress::getInstance().canUseWaterJump())
-		return 1400.f;
 	return m_waterLevel;
 }
 
@@ -230,7 +227,7 @@ std::vector<ParallaxScrolling::ALayer *> DesertABiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -50, 0.1f, 0.7f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -50, 1.f, 0.1f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 1.f, y, 2, 2.f);

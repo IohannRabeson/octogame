@@ -48,10 +48,10 @@ void GenerativeLayer::setup(void)
 
 	for (std::size_t i = 0u; i < getMapSize().x; i++)
 	{
-		m_positions[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize;
-		m_positions[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize;
-		m_positionsPrev[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize;
-		m_positionsPrev[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize;
+		m_positions[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize + 30000.f;
+		m_positions[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize + 30000.f;
+		m_positionsPrev[(i * 4u) + 2u].y = static_cast<float>(getMapSize().y) * m_tileSize + 30000.f;
+		m_positionsPrev[(i * 4u) + 3u].y = static_cast<float>(getMapSize().y) * m_tileSize + 30000.f;
 	}
 
 	computeVertices(m_positions);

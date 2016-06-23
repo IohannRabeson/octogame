@@ -18,27 +18,25 @@ DesertCBiome::DesertCBiome() :
 	m_octoStartPosition(123.f * 16.f, -2000.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(255, 245, 217),
-	m_tileEndColor(255, 252, 181),
+	m_tileStartColor(245, 222, 130),
+	m_tileEndColor(245, 243, 219),
 	m_waterLevel(10700.f),
 	m_waterColor(240, 110, 110, 180),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(100.f)),
+	m_dayDuration(sf::seconds(30.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	//m_skyDayColor(255,156,103),
-	//m_skyNightColor(8, 20, 26),
-	m_skyDayColor(8, 20, 26),
-	m_skyNightColor(8, 20, 26),
-	m_nightLightColor(0, 197, 255, 130),
-	m_SunsetLightColor(238, 173, 181, 130),
+	m_skyDayColor(255, 150, 242),
+	m_skyNightColor(166, 10, 92),
+	m_nightLightColor(134, 63, 215, 130),
+	m_SunsetLightColor(255, 59, 59, 130),
 	m_wind(50.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 1300.f),
 
-	m_rockCount(100u, 110u),
+	m_rockCount(150u, 210u),
 	m_treeCount(1u, 1u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(30u, 40u),
@@ -67,9 +65,9 @@ DesertCBiome::DesertCBiome() :
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Desert),
 
-	m_rockSize(sf::Vector2f(15.f, 190.f), sf::Vector2f(30.f, 350.f)),
+	m_rockSize(sf::Vector2f(30.f, 150.f), sf::Vector2f(50.f, 250.f)),
 	m_rockPartCount(3.f, 5.f),
-	m_rockColor(240, 110, 110),
+	m_rockColor(255, 232, 170),
 
 	m_treeDepth(11u, 11u),
 	m_treeSize(sf::Vector2f(70.f, 200.f), sf::Vector2f(70.f, 200.f)),
@@ -226,25 +224,27 @@ std::vector<ParallaxScrolling::ALayer *> DesertCBiome::getLayers()
 {
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
+	sf::Color color = getCrystalColor();
+	color.a = 255;
 
-	GenerativeLayer * layer = new GenerativeLayer(octo::linearInterpolation(m_particleColor[0u], m_particleColor[1u], 0.5f), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 0.7f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(color, sf::Vector2f(0.2f, 0.1f), mapSize, 8.f, 290, 0.1f, 0.7f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 1.f, y, 2, 2.f);
+			return noise.perlin(x * 2.f, y * 10.f, 2, 12.f);
 		});
 	vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.perlin(x, y, 3, 2.f);
-	//	});
-	//vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.noise(x * 1.1f, y);
-	//	});
-	//vector.push_back(layer);
+	layer = new GenerativeLayer(color, sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -500, 0.1f, 0.7f, 11.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x, y, 3, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(color, sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -550, 0.1f, 0.7f, 6.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 10.f, y);
+		});
+	vector.push_back(layer);
 	return vector;
 }
 
@@ -281,7 +281,7 @@ Map::TileColorGenerator DesertCBiome::getTileColorGenerator()
 	float start2 = 70000.f / static_cast<float>(m_mapSize.y);
 	float middle1 = 80000.f / static_cast<float>(m_mapSize.y);
 	float middle2 = 90000.f / static_cast<float>(m_mapSize.y);
-	float end1 = 100000.f / static_cast<float>(m_mapSize.y);
+	float end1 = 120000.f / static_cast<float>(m_mapSize.y);
 	float end2 = 200000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
