@@ -15,7 +15,7 @@ DesertCBiome::DesertCBiome() :
 	m_seed("Cailloux"),
 	m_mapSize(sf::Vector2u(600u, 180u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(143.f * 16.f, -2500.f),
+	m_octoStartPosition(143.f * 16.f, -2700.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(245, 222, 130),
@@ -130,12 +130,15 @@ DesertCBiome::DesertCBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::JungleA)
-		m_octoStartPosition = sf::Vector2f(9800, -4950.f);
+//	if (progress.getLastDestination() == Level::JungleA)
+		m_octoStartPosition = sf::Vector2f(370.f * 16.f, -2700.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(335.f * 16.f, 1880.f);
 
 	m_gameObjects[140] = GameObjectType::PortalDesert;
 	m_gameObjects[240] = GameObjectType::FannyNpc;
-	m_gameObjects[360] = GameObjectType::Bouibouik;
+	m_gameObjects[365] = GameObjectType::Bouibouik;
+	m_instances[390] = MAP_DESERT_C_SECRET_NPC_OMP;
 	m_instances[150] = MAP_DESERT_C_TRAIL_OMP;
 	m_instances[350] = MAP_DESERT_C_TREE_OMP;
 
@@ -255,8 +258,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f      , 100.f    , 102.f   , 105.f   , 110.f   , 118.f    , 127.f    , 155.f    , 230.f   , 240.f, 244.f, 245.f, 255.f, 256.f, 260.f, 275.f   , 310.f    , 383.f    , 390.f, 395.f   , 399.f   , 402.f   , 404.f    , 500.f   };
-		std::vector<float> pointY = {-10.f + n, -10.f + n, -7.f - n, -4.f - n, -3.f - n, -2.8f - n, -2.5f - n, -2.5f - n, -2.f - n, -2.f , -2.f , 6.7f , 6.7f , -2.f , -2.f , -2.f - n, -2.5f - n, -2.5f - n, -3.f , -4.f - n, -5.f - n, -6.f - n, -10.f + n, -10.f + n};
+		std::vector<float> pointX = {0.f      , 100.f    , 102.f   , 105.f   , 110.f   , 118.f    , 127.f    , 155.f    , 230.f   , 240.f, 244.f, 245.f, 255.f, 256.f, 260.f, 275.f   , 310.f    , 383.f    , 390.f     , 395.f   , 399.f   , 402.f   , 404.f    , 600.f   };
+		std::vector<float> pointY = {-10.f + n, -10.f + n, -7.f - n, -4.f - n, -3.f - n, -2.8f - n, -2.5f - n, -2.5f - n, -2.f - n, -2.f , -2.f , 6.7f , 6.7f , -2.f , -2.f , -2.f - n, -2.5f - n, -2.5f - n, -2.5f - n , -4.f - n, -5.f - n, -6.f - n, -10.f + n, -10.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
