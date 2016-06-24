@@ -132,7 +132,7 @@ DesertABiome::DesertABiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertB)
 		m_octoStartPosition = sf::Vector2f(373 * 16.f, -1130.f);
-	//if (progress.getLastDestination() == Level::DesertB)
+	if (progress.getLastDestination() == Level::DesertB)
 		m_octoStartPosition = sf::Vector2f(510 * 16.f, -2700.f);
 
 	// Define game objects

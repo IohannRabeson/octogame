@@ -130,7 +130,7 @@ DesertCBiome::DesertCBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	Progress & progress = Progress::getInstance();
-//	if (progress.getLastDestination() == Level::JungleA)
+	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(370.f * 16.f, -2700.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(335.f * 16.f, 1880.f);
