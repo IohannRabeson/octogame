@@ -177,16 +177,6 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
 
-	sf::Transform kernel(
-			-1.f, -1.f, -1.f,
-			-1.f, 8.f, -1.f,
-			-1.f, -1.f, -1.f
-		);
-	sf::Shader & shader = PostEffectLayer::getInstance().getShader("render_black_kernel");
-	shader.setParameter("kernel", kernel);
-	shader.setParameter("offset", 1.f / 300.f);
-	shader.setParameter("intensity", 1.f);
-
 	ChallengeManager::getInstance().reset();
 	audio.reset();
 	// Reset PhysycsEngine
@@ -244,10 +234,6 @@ void	Game::update(sf::Time frameTime)
 	m_konami->update(frameTime, m_octo->getPosition());
 	m_octo->startKonamiCode(m_konami->canStartEvent());
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
-	if (Progress::getInstance().getRenderShader() == Progress::RenderShader::BlackKernel)
-		PostEffectLayer::getInstance().enableShader("render_black_kernel", true);
-	else
-		PostEffectLayer::getInstance().enableShader("render_black_kernel", false);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)

@@ -32,6 +32,7 @@ protected:
 
 private:
 	sf::Shader &	m_shader;
+	sf::Shader &	m_shaderReverse;
 	State			m_state;
 	sf::FloatRect	m_tvScreen;
 	sf::Time		m_timer;

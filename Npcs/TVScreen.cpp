@@ -1,6 +1,5 @@
 #include "TVScreen.hpp"
 #include "PostEffectLayer.hpp"
-#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Interpolations.hpp>
@@ -9,6 +8,7 @@
 TVScreen::TVScreen(void) :
 	ANpc(TV_OSS),
 	m_shader(PostEffectLayer::getInstance().getShader(DUPLICATE_SCREEN_FRAG)),
+	m_shaderReverse(PostEffectLayer::getInstance().getShader("render_black_kernel")),
 	m_state(None),
 	m_timer(sf::Time::Zero),
 	m_duration(sf::seconds(0.5f)),
@@ -31,9 +31,12 @@ TVScreen::TVScreen(void) :
 			-1.f, -1.f, -1.f
 		);
 	m_shader.setParameter("kernel", kernel);
-	m_reverse = Progress::getInstance().getRenderShader() != Progress::RenderShader::Normal;
 	m_shader.setParameter("reverse", m_reverse);
 	m_shader.setParameter("line_progress", 0.f);
+	m_shaderReverse.setParameter("kernel", kernel);
+	m_shaderReverse.setParameter("offset", 1.f / 300.f);
+	m_shaderReverse.setParameter("intensity", 1.f);
+	PostEffectLayer::getInstance().enableShader("render_black_kernel", m_reverse);
 }
 
 void TVScreen::setup(void)
@@ -79,7 +82,7 @@ void TVScreen::update(sf::Time frametime)
 	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 	if (screen.intersects(m_tvScreen))
 	{
-		Progress::getInstance().setRenderShader(Progress::RenderShader::Normal);
+		PostEffectLayer::getInstance().enableShader("render_black_kernel", false);
 		PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, true);
 		float width = octo::Application::getGraphicsManager().getVideoMode().width;
 		float height = octo::Application::getGraphicsManager().getVideoMode().height;
@@ -90,10 +93,7 @@ void TVScreen::update(sf::Time frametime)
 	else
 	{
 		PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, false);
-		if (m_reverse)
-			Progress::getInstance().setRenderShader(Progress::RenderShader::BlackKernel);
-		else
-			Progress::getInstance().setRenderShader(Progress::RenderShader::Normal);
+		PostEffectLayer::getInstance().enableShader("render_black_kernel", m_reverse);
 	}
 
 	switch (m_state)
@@ -105,7 +105,6 @@ void TVScreen::update(sf::Time frametime)
 			m_shader.setParameter("line_progress", std::min(1.f, (m_timer * 4.f) / m_duration));
 			if (m_timer >= m_duration)
 			{
-				Progress::getInstance().setRenderShader(Progress::RenderShader::BlackKernel);
 				m_reverse = !m_reverse;
 				m_shader.setParameter("line_progress", 0.f);
 				m_shader.setParameter("reverse", m_reverse);
@@ -119,18 +118,18 @@ void TVScreen::update(sf::Time frametime)
 			break;
 	}
 
-	sf::Vector2f sub_pos = sf::Vector2f(pos.x + pos.x * size.x, pos.y + pos.y * size.y);
-	sf::Vector2f sub_size = sf::Vector2f(size.x * size.x, size.y * size.y);
-	sub_pos = octo::linearInterpolation(sub_pos, pos, std::min(1.f, m_timer / m_duration));
-	sub_size = octo::linearInterpolation(sub_size, size, std::min(1.f, m_timer / m_duration));
+	//sf::Vector2f sub_pos = sf::Vector2f(pos.x + pos.x * size.x, pos.y + pos.y * size.y);
+	//sf::Vector2f sub_size = sf::Vector2f(size.x * size.x, size.y * size.y);
+	//sub_pos = octo::linearInterpolation(sub_pos, pos, std::min(1.f, m_timer / m_duration));
+	//sub_size = octo::linearInterpolation(sub_size, size, std::min(1.f, m_timer / m_duration));
 	pos = octo::linearInterpolation(pos, sf::Vector2f(0.f, 0.f), std::min(1.f, m_timer / m_duration));
 	size = octo::linearInterpolation(size, sf::Vector2f(1.f, 1.f), std::min(1.f, m_timer / m_duration));
 	m_shader.setParameter("bot_left", pos);
 	m_shader.setParameter("top_right", pos.x + size.x, pos.y + size.y);
 	m_shader.setParameter("size", size);
-	m_shader.setParameter("sub_bot_left", sub_pos);
-	m_shader.setParameter("sub_top_right", sub_pos.x + sub_size.x, sub_pos.y + sub_size.y);
-	m_shader.setParameter("sub_size", sub_size);
+	//m_shader.setParameter("sub_bot_left", sub_pos);
+	//m_shader.setParameter("sub_top_right", sub_pos.x + sub_size.x, sub_pos.y + sub_size.y);
+	//m_shader.setParameter("sub_size", sub_size);
 }
 
 void TVScreen::updateState(void)
