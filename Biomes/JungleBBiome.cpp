@@ -70,7 +70,7 @@ JungleBBiome::JungleBBiome() :
 	m_rockColor(56, 50, 72),
 
 	m_treeDepth(5u, 6u),
-	m_treeSize(sf::Vector2f(30.f, 200.f), sf::Vector2f(120.f, 350.f)),
+	m_treeSize(sf::Vector2f(30.f, 150.f), sf::Vector2f(120.f, 250.f)),
 	m_treeLifeTime(sf::seconds(90), sf::seconds(180)),
 	m_treeColor(40, 37, 44),
 	m_treeAngle(15.f, 35.f),
@@ -137,7 +137,7 @@ JungleBBiome::JungleBBiome() :
 		m_octoStartPosition = sf::Vector2f(310.f * 16.f, 4700.f);
 	else if (progress.getLastDestination() == Level::JungleC)
 		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -1600.f);
-	else if (progress.getLastDestination() == Level::Rewards)
+	else if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(100.f * 16.f, 4300.f);
 	for (std::size_t i = 430u; i < m_mapSize.x - 10u; i += m_generator.randomInt(15u, 30u))
 	{
@@ -162,7 +162,7 @@ JungleBBiome::JungleBBiome() :
 	m_interestPointPosX = 290;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Rewards);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::JungleC);
 	m_destinations.push_back(Level::JungleA);
 }

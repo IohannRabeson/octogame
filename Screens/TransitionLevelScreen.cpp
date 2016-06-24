@@ -50,7 +50,6 @@ void	TransitionLevelScreen::start()
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
 	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.7f);
-	std::cout << "Transition level screen start" << std::endl;
 }
 
 void	TransitionLevelScreen::pause()
@@ -70,7 +69,6 @@ void	TransitionLevelScreen::stop()
 	if (m_sound != nullptr)
 		m_sound->stop();
 	audio.playSound(resources.getSound(PORTAL_END_OGG));
-	std::cout << "Transition level screen stop" << std::endl;
 }
 
 void	TransitionLevelScreen::update(sf::Time frameTime)

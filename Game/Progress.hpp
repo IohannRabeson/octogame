@@ -27,8 +27,10 @@ public:
 
 	static Progress & getInstance(void);
 
-	bool				isMenu() const;
+	bool				isMenu(void) const;
 	void				setMenu(bool isMenu);
+	bool				isBubbleNpc(void) const;
+	void				setBubbleNpc(bool isBubbleNpc);
 	//TODO: Set this value once the game is finished
 	bool				isGameFinished() const;
 
@@ -44,6 +46,9 @@ public:
 
 	void				setNextDestination(Level const & destination, bool hasTransition = true);
 	Level				getNextDestination(void) const;
+
+	void				setCurrentDestination(Level destination);
+	Level				getCurrentDestination(void) const;
 
 	void				setLastDestination(Level destination);
 	Level				getLastDestination(void) const;
@@ -135,6 +140,7 @@ private:
 			validateChallenge(0u),
 			nanoRobotCount(nanoRobot),
 			nextDestination(biome),
+			currentDestination(biome),
 			lastDestination(biome),
 			musicVol(musicVol),
 			soundVol(soundVol),
@@ -152,6 +158,7 @@ private:
 		std::size_t				validateChallenge;
 		std::size_t				nanoRobotCount;
 		Level					nextDestination;
+		Level					currentDestination;
 		Level					lastDestination;
 		std::size_t				musicVol;
 		std::size_t				soundVol;
@@ -179,6 +186,7 @@ private:
 
 	static std::unique_ptr<Progress>				m_instance;
 	bool											m_isMenu;
+	bool											m_isBubbleNpc;
 	bool											m_isGameFinished;
 	std::string										m_filename;
 	data											m_data;

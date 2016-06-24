@@ -63,7 +63,7 @@ Portal::Portal(Level destination, ResourceKey key) :
 	});
 	m_animationOpening.setLoop(octo::LoopMode::NoLoop);
 
-	if (destination == Level::Rewards)
+	if (destination == Level::Rewards || destination == Level::Random)
 	{
 		m_animationOpened.setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
@@ -120,7 +120,7 @@ Portal::Portal(Level destination, ResourceKey key) :
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
 
-	if (!progress.isMetPortal(m_destination) && destination != Level::Rewards)
+	if (!progress.isMetPortal(m_destination) && destination != Level::Rewards && destination != Level::Random)
 		m_sprite.setNextEvent(Closed);
 	else
 		m_sprite.setNextEvent(Opened);
@@ -168,7 +168,9 @@ void Portal::update(sf::Time frametime)
 		case Appear:
 		{
 			if (m_sprite.getCurrentEvent() == Events::Opening && m_sprite.isTerminated())
+			{
 				m_sprite.setNextEvent(Opened);
+			}
 			else if (m_sprite.getCurrentEvent() == Events::Opened)
 			{
 				m_particles.setMaxParticle(m_timer / m_timerMax * static_cast<float>(m_maxParticle));
@@ -186,11 +188,14 @@ void Portal::update(sf::Time frametime)
 			m_particles.setMaxParticle(m_maxParticle);
 			break;
 		case Disappear:
-			m_particles.setMaxParticle(0u);
-			m_particles.clear();
+			m_particles.setTransparency(std::min(1.f, (m_timer / m_timerMax)));
 			m_timer -= frametime.asSeconds();
 			if (m_timer <= 0.f)
+			{
 				m_timer = 0.f;
+				m_particles.setMaxParticle(0u);
+				m_particles.clear();
+			}
 			break;
 		default:
 			break;
@@ -241,7 +246,10 @@ void Portal::appear(void)
 	if (m_sprite.getCurrentEvent() == Events::Closed)
 		m_state = State::FirstAppear;
 	else
+	{
+		m_particles.setTransparency(1.f);
 		m_state = State::Appear;
+	}
 }
 
 bool Portal::isLock(void)
@@ -270,7 +278,8 @@ Portal::PortalParticle::PortalParticle(void) :
 	m_lifeTimeDistri(1.f, 2.f),
 	m_directionDistri(0.f, octo::Pi2),
 	m_distanceDistri(m_radius, m_radius * 2.f),
-	m_biome(nullptr)
+	m_biome(nullptr),
+	m_transparency(1.f)
 {}
 
 void Portal::PortalParticle::update(sf::Time frameTime)
@@ -308,7 +317,7 @@ void Portal::PortalParticle::updateParticle(sf::Time frameTime, Particle& partic
 	std::get<Component::Position>(particle) = octo::linearInterpolation(std::get<MyComponent::Start>(particle), std::get<MyComponent::End>(particle), std::get<MyComponent::Time>(particle) / std::get<MyComponent::Life>(particle));
 	std::get<Component::Rotation>(particle) += AngularVelocity * frameTime.asSeconds();
 	std::get<MyComponent::Time>(particle) += frameTime;
-	std::get<Component::Color>(particle).a = 255 - 255 * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds()));
+	std::get<Component::Color>(particle).a = m_transparency * (255 - 255 * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds())));
 }
 
 bool Portal::PortalParticle::isDeadParticle(Particle const& particle)

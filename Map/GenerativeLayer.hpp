@@ -17,7 +17,7 @@ public:
 	typedef std::function<float(Noise & noise, float x, float y)>	BackgroundSurfaceGenerator;
 
 	GenerativeLayer(void);
-	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration);
+	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration, float deltaOffset = 0.f);
 	virtual ~GenerativeLayer(void) = default;
 
 	void setup(void);
@@ -49,6 +49,7 @@ private:
 	float								m_botOpacity;
 	float								m_highestY;
 	int									m_heightOffset;
+	float								m_deltaOffset;
 	std::size_t							m_widthScreen;
 	std::size_t							m_verticesCount;
 	BackgroundSurfaceGeneratorBind		m_backgroundSurface;

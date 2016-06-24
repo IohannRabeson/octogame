@@ -82,7 +82,6 @@ LogoScreen::LogoScreen() :
 void	LogoScreen::start()
 {
 	InputListener::addInputListener();
-	std::cout << "Logo screen start" << std::endl;
 }
 
 void	LogoScreen::pause()
@@ -96,7 +95,6 @@ void	LogoScreen::resume()
 void	LogoScreen::stop()
 {
 	InputListener::removeInputListener();
-	std::cout << "Logo screen stop" << std::endl;
 }
 
 

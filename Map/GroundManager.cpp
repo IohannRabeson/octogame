@@ -1210,7 +1210,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	TileShape * first;
 	sf::Vertex * last;
 	bool updateLast;
-	bool isScreenFullOfTiles = true;
+	std::size_t countFilledTiles = 0u;
 
 	// Update tiles
 	m_verticesCount = 0u;
@@ -1219,11 +1219,11 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		first = nullptr;
 		last = nullptr;
 		updateLast = true;
-		if (m_tiles->get(x, 0).isTransitionType(Tile::e_transition_none))
-			isScreenFullOfTiles = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
+			if (!tile->isEmpty())
+				countFilledTiles++;
 			if (tile->isTransitionType(Tile::e_transition_none))
 			{
 				if (first && tile->isEmpty())
@@ -1278,7 +1278,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			m_tileShapes[x]->setEndVertex(&m_vertices[0u]);
 		}
 	}
-	if (isScreenFullOfTiles)
+	if (countFilledTiles >= 9500)
 	{
 		Progress::getInstance().setNextDestination(Progress::getInstance().getNextDestination());
 		return;

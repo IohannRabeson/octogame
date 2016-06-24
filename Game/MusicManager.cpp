@@ -41,7 +41,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
 	m_musicLevel[3] = AreaMusic(Level::WaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
-	m_musicLevel[4] = AreaMusic(Level::Default,
+	m_musicLevel[4] = AreaMusic(Level::Random,
 			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
 
 	m_musicLevel[5] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
@@ -75,7 +75,7 @@ MusicManager::MusicManager() :
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
 	//desert c balle
 	m_music[6] = AreaMusic(Level::DesertC, MENU_OPUS_II_REVERSE_OGG,
-			sf::FloatRect(sf::Vector2f(90.f * 16.f, -150.f * 16.f), sf::Vector2f(250.f * 16.f, 750.f * 16.f)));
+			sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(250.f * 16.f, 750.f * 16.f)));
 	//ice balle pixel
 	m_music[7] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
 			sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)));

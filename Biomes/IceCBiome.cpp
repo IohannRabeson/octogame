@@ -15,7 +15,7 @@ IceCBiome::IceCBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(540u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(118.f * 16.f, -3750.f),
+	m_octoStartPosition(120.f * 16.f, -3750.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(85, 150, 179),
@@ -134,14 +134,12 @@ IceCBiome::IceCBiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::IceD)
 		m_octoStartPosition = sf::Vector2f(185.f * 16.f, -850.f);
-	if (progress.getLastDestination() == Level::Rewards)
+	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(239.f * 16.f, -1350.f);
 
-	m_gameObjects[400] = GameObjectType::PortalRandom;
 	m_destinations.push_back(Level::IceB);
-	m_destinations.push_back(Level::Rewards);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceD);
-	m_destinations.push_back(Level::Rewards);
 }
 
 void			IceCBiome::setup(std::size_t seed)

@@ -111,8 +111,8 @@ void CheckPoint::update(sf::Time frametime)
 		if (m_timer > m_timerMax)
 			m_timer = sf::Time::Zero;
 		m_builder.clear();
-		createEffect(m_size, getPosition() + sf::Vector2f(15.f, -170.f), std::pow(m_timer / m_timerMax, 0.867f), m_color, m_builder);
-		createEffect(m_size, getPosition() + sf::Vector2f(15.f, -170.f), std::pow(m_timer / m_timerMax, 0.12f), m_color, m_builder);
+		createEffect(m_size, getPosition() + sf::Vector2f(15.f, -200.f), std::pow(m_timer / m_timerMax, 0.867f), m_color, m_builder);
+		createEffect(m_size, getPosition() + sf::Vector2f(15.f, -200.f), std::pow(m_timer / m_timerMax, 0.12f), m_color, m_builder);
 		m_used = m_builder.getUsed();
 	}
 }

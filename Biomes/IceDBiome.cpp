@@ -132,10 +132,13 @@ IceDBiome::IceDBiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertA)
 		m_octoStartPosition = sf::Vector2f(257.f * 16.f, -93.f * 16.f);
+	else if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(124.f * 16.f, -113.f * 16.f);
 
 	m_gameObjects[30] = GameObjectType::PortalSnow;
 	m_gameObjects[100] = GameObjectType::HouseFlatSnow;
-	m_gameObjects[150] = GameObjectType::Snowman1Npc;
+	m_instances[139] = MAP_ICE_D_SECRET_WAY_OMP;
+	m_instances[118] = MAP_ICE_D_PORTAL_RANDOM_OMP;
 	m_gameObjects[190] = GameObjectType::BirdBlueNpc;
 	m_instances[220] = MAP_ICE_D_ELEVATOR_OMP;
 	m_gameObjects[250] = GameObjectType::EngineSnow;
@@ -146,7 +149,9 @@ IceDBiome::IceDBiome() :
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
 	m_gameObjects[510] = GameObjectType::BirdBlueNpc;
 	m_instances[551] = MAP_ICE_D_TRAIL_OMP;
+	m_gameObjects[640] = GameObjectType::CheckPoint;
 	m_gameObjects[630] = GameObjectType::StrangerGirlSnowNpc;
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::IceC);
 }
@@ -232,16 +237,28 @@ std::vector<ParallaxScrolling::ALayer *> IceDBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 12.f, -10, 0.3f, 0.8f, 6.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x, y, 3.f, 4.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.5f, 0.3f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 1.1f, y);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -20, 0.2f, 0.8f, 6.f, 100.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x * 1.f, y, 4.f, 4.f);
 		});
 	vector.push_back(layer);
 	return vector;

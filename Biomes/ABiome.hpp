@@ -30,7 +30,7 @@ enum class Level : std::size_t
 	JungleC,
 	WaterA,
 	WaterB,
-	Default,
+	Random,
 	Rewards,
 };
 
