@@ -131,7 +131,8 @@ void GenerativeLayer::update(float deltatime, ABiome &)
 	}
 	float transition = m_transitionTimer / m_transitionTimerDuration;
 	sf::FloatRect const & rect = m_camera.getRectangle();
-	float offsetX = (rect.left * getSpeed().x) / m_tileSize;
+	//TODO : Keep an eyes on that
+	float offsetX = (rect.left * getSpeed().x) / m_tileSize + 1000000.f;
 	int offsetBackground = static_cast<int>(offsetX);
 	offsetX -= static_cast<float>(offsetBackground);
 	offsetX *= m_tileSize;
