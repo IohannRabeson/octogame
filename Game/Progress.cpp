@@ -295,6 +295,16 @@ bool	Progress::meetPortal(Level destination)
 	return false;
 }
 
+bool	Progress::meetPortal(Level source, Level destination)
+{
+	if (m_changeLevel == false && !m_portals[source][destination])
+	{
+		m_portals[source][destination] = true;
+		return true;
+	}
+	return false;
+}
+
 bool	Progress::isMetPortal(Level destination)
 {
 	if (m_changeLevel == false && m_portals[m_data.currentDestination][destination])

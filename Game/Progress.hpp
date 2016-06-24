@@ -101,6 +101,7 @@ public:
 
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);
+	bool				meetPortal(Level source, Level destination);
 	bool				isMetPortal(Level destination);
 	void				setPortalPosition(Level destination, sf::Vector2f const & position);
 	void				removePortalPosition(Level destination);
