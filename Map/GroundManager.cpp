@@ -1278,7 +1278,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			m_tileShapes[x]->setEndVertex(&m_vertices[0u]);
 		}
 	}
-	if (countFilledTiles >= m_tiles->getColumns() * m_tiles->getRows())
+	if (countFilledTiles >= 9500)
 	{
 		Progress::getInstance().setNextDestination(Progress::getInstance().getNextDestination());
 		return;
