@@ -9,6 +9,8 @@ uniform float offset_limit;
 uniform float height;
 uniform float max_factor;
 uniform float activate_persistence;
+uniform float offset;
+uniform mat4 kernel;
 
 void main()
 {
@@ -51,8 +53,18 @@ void main()
 
 		vec2 distortedTextureCoordinate = gl_TexCoord[0].st + distortionPositionOffset;
 
-		gl_FragColor = vec4(texture2D(texture, distortedTextureCoordinate).rgb, mix(1.0, max_factor + 0.02 - factor, activate_persistence));
+		vec3 col = texture2D(texture, distortedTextureCoordinate + vec2(-offset, offset)).rgb * kernel[0][0];
+		col += texture2D(texture, distortedTextureCoordinate + vec2(0.0, offset)).rgb * kernel[1][0];
+		col += texture2D(texture, distortedTextureCoordinate + vec2(offset, offset)).rgb * kernel[3][0];
+		col += texture2D(texture, distortedTextureCoordinate + vec2(-offset, 0.0)).rgb * kernel[0][1];
+		col += texture2D(texture, distortedTextureCoordinate + vec2(0.0, 0.0)).rgb * kernel[1][1];
+		col += texture2D(texture, distortedTextureCoordinate + vec2(offset, 0.0)).rgb * kernel[3][1];
+		col += texture2D(texture, distortedTextureCoordinate + vec2(-offset, -offset)).rgb * kernel[0][3];
+		col += texture2D(texture, distortedTextureCoordinate + vec2(0.0, -offset)).rgb * kernel[1][3];
+		col += texture2D(texture, distortedTextureCoordinate + vec2(offset, -offset)).rgb * kernel[3][3];
+
+		gl_FragColor = mix(texture2D(texture, distortedTextureCoordinate), vec4(col, 1.0), activate_persistence * factor / max_factor);
 	}
 	else
-		gl_FragColor = texture2D(texture, gl_TexCoord[0].st);
+		gl_FragColor = texture2D(texture, gl_TexCoord[0].xy);
 }

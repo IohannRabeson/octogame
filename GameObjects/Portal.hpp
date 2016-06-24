@@ -60,6 +60,7 @@ private:
 		inline void setColor(sf::Color const & color) { m_color = color; }
 		inline void setEmitter(sf::Vector2f const & emitter) { m_emitter = emitter; }
 		inline void setMaxParticle(std::size_t maxParticle) { m_maxParticle = maxParticle; }
+		inline void setTransparency(float transarency) { m_transparency = transarency; }
 		void update(sf::Time frameTime);
 
 	private:
@@ -76,6 +77,7 @@ private:
 		Dist			m_directionDistri;
 		Dist			m_distanceDistri;
 		ABiome *		m_biome;
+		float			m_transparency;
 	};
 
 public:
