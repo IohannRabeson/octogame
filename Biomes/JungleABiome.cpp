@@ -147,12 +147,15 @@ JungleABiome::JungleABiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::JungleB);
-	m_destinations.push_back(Level::DesertC);
+	m_destinations.push_back(Level::DesertB);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::JungleC)
-		m_octoStartPosition = sf::Vector2f(490.f * 16.f, 2400.f);
+	if (progress.getLastDestination() == Level::JungleB)
+		m_octoStartPosition = sf::Vector2f(580.f * 16.f, -2400.f);
+	else if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -3000.f);
 }
 
 void			JungleABiome::setup(std::size_t seed)

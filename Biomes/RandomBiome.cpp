@@ -125,6 +125,7 @@ RandomBiome::RandomBiome() :
 	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 	Progress & progress = Progress::getInstance();
+	progress.meetPortal(progress.getLastDestination(), Level::Random);
 	m_mapSize = sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(progress.getNanoRobotCount() * 60u + 30u)),
 	m_randomSurfaceNumber = m_generator.randomInt(1u, 4u);
 	// Create a set a 20 colors for particles

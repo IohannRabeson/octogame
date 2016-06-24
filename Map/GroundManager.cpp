@@ -1278,11 +1278,13 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			m_tileShapes[x]->setEndVertex(&m_vertices[0u]);
 		}
 	}
+	/*
 	if (countFilledTiles >= 9500)
 	{
 		Progress::getInstance().setNextDestination(Progress::getInstance().getNextDestination());
 		return;
 	}
+	*/
 
 	// Update decors
 	Map::Decors const & current = m_tiles->getDecorsPosition();
