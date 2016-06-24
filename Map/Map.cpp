@@ -283,7 +283,7 @@ bool Map::nextStep(void)
 		}
 	}
 	return false;
-	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
+	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance); // ??????
 }
 
 bool Map::previousStep(void)
@@ -303,7 +303,7 @@ bool Map::previousStep(void)
 		}
 	}
 	return false;
-	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
+	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance); // ??????
 }
 
 void Map::setMapSurfaceGenerator(MapSurfaceGenerator mapSurface)
