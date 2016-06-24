@@ -130,9 +130,6 @@ DesertBBiome::DesertBBiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(9800, -4950.f);
-	std::vector<int> const & deathPos = progress.getDeathPos();
-	if (progress.getLastDestination() == Level::DesertB && deathPos.size() && deathPos.back() >= 312.f)
-		m_octoStartPosition = sf::Vector2f(340.f * 16.f, -2500.f);
 
 	m_gameObjects[60] = GameObjectType::PortalDesert;
 	m_gameObjects[125] = GameObjectType::FabienNpc;
