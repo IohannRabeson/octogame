@@ -22,6 +22,7 @@ Progress::Progress() :
 	m_spaceShipRepair(false),
 	m_npcCount(0u),
 	m_npcMax(0u),
+	m_countRandomDiscover(0u),
 	m_isOctoOnInstance(false),
 	m_isHighLight(false)
 {
@@ -306,6 +307,8 @@ bool	Progress::meetPortal(Level source, Level destination)
 
 std::size_t Progress::countRandomDiscover(void)
 {
+	if (m_countRandomDiscover != 0u)
+		return m_countRandomDiscover;
 	std::size_t count = 0u;
 	for (auto level : m_portals)
 	{
