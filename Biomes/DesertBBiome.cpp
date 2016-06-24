@@ -134,7 +134,7 @@ DesertBBiome::DesertBBiome() :
 	if (progress.getLastDestination() == Level::DesertB && deathPos.size() && deathPos.back() >= 312.f)
 		m_octoStartPosition = sf::Vector2f(340.f * 16.f, -2500.f);
 
-	m_gameObjects[60] = GameObjectType::Portal;
+	m_gameObjects[60] = GameObjectType::PortalDesert;
 	m_gameObjects[125] = GameObjectType::FabienNpc;
 	m_gameObjects[208] = GameObjectType::CheckPoint;
 	m_instances[230] = MAP_DESERT_B_TRAIL_A_OMP;
