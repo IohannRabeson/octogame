@@ -13,7 +13,7 @@ DesertABiome::DesertABiome() :
 	m_name("Desert A"),
 	m_id(Level::DesertA),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(520u, 128u)),
+	m_mapSize(sf::Vector2u(540u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(253.f * 16.f, 53.f * 16.f),
 	m_transitionDuration(0.5f),
@@ -131,7 +131,9 @@ DesertABiome::DesertABiome() :
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertB)
-		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
+		m_octoStartPosition = sf::Vector2f(373 * 16.f, -1130.f);
+	//if (progress.getLastDestination() == Level::DesertB)
+		m_octoStartPosition = sf::Vector2f(510 * 16.f, -2700.f);
 
 	// Define game objects
 	m_gameObjects[220] = GameObjectType::JuNpc;
@@ -141,12 +143,14 @@ DesertABiome::DesertABiome() :
 	m_gameObjects[70] = GameObjectType::TurbanNpc;
 	m_gameObjects[410] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[420] = GameObjectType::Tent;
-	m_gameObjects[370] = GameObjectType::Portal;
+	m_gameObjects[370] = GameObjectType::PortalDesert;
+	m_instances[440] = MAP_DESERT_A_SECRET_OMP;
 	m_interestPointPosX = 263;
 
 	m_treePos = {347, 352, 359, 367, 380, 381, 393, 430, 433, 455, 460, 464, 473};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceD);
 	m_destinations.push_back(Level::DesertC);
 }
