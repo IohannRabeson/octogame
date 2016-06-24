@@ -8,7 +8,6 @@
 #include <GraphicsManager.hpp>
 
 #include <fstream>
-#include <stdlib.h>
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
