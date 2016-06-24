@@ -304,6 +304,20 @@ bool	Progress::meetPortal(Level source, Level destination)
 	return false;
 }
 
+std::size_t Progress::countRandomDiscover(void)
+{
+	std::size_t count = 0u;
+	for (auto level : m_portals)
+	{
+		for (auto portal : level.second)
+		{
+			if (portal.first == Level::Random)
+				count++;
+		}
+	}
+	return count;
+}
+
 bool	Progress::isMetPortal(Level destination)
 {
 	if (m_changeLevel == false && m_portals[m_data.currentDestination][destination])

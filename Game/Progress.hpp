@@ -102,6 +102,7 @@ public:
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);
 	bool				meetPortal(Level source, Level destination);
+	std::size_t			countRandomDiscover(void);
 	bool				isMetPortal(Level destination);
 	void				setPortalPosition(Level destination, sf::Vector2f const & position);
 	void				removePortalPosition(Level destination);
