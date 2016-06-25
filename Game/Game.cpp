@@ -323,22 +323,8 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			}
 			break;
 		case GameObjectType::CedricNpc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate))
+			if (gameObjectCast<CedricNpc>(gameObject)->startBalle())
 				octo->startDrinkPotion();
-			gameObjectCast<CedricNpc>(gameObject)->startBalle();
-			break;
-		case GameObjectType::FannyNpc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Persistence).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Persistence))
-				octo->startDrinkPotion();
-			gameObjectCast<FannyNpc>(gameObject)->startBalle();
-			break;
-		case GameObjectType::Snowman3Npc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Blur).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Blur))
-				octo->startDrinkPotion();
-			gameObjectCast<Snowman3Npc>(gameObject)->startBalle();
-			break;
-		case GameObjectType::WellKeeperNpc:
-			gameObjectCast<WellKeeperNpc>(gameObject)->stopBalle();
 			break;
 		default:
 			break;

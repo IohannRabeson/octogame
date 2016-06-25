@@ -50,11 +50,6 @@ void WellKeeperNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-void WellKeeperNpc::stopBalle(void)
-{
-	Progress::getInstance().validateChallenge(ChallengeManager::Effect::Persistence);
-}
-
 void WellKeeperNpc::updateState(void)
 {
 	if (Progress::getInstance().canUseWaterJump())
