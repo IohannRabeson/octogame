@@ -34,6 +34,7 @@
 #include "ClassicNpc.hpp"
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
@@ -236,6 +237,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
 	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
+	m_npcFactory.registerCreator(CEDRIC_END_OSS, [&biome](){ return new CedricEndNpc(biome.getType()); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(HOUSE_ORANGE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
@@ -639,6 +641,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::CedricEndNpc:
+				{
+					CedricEndNpc * npc = new CedricEndNpc(biome.getType());
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::TVScreen:
 				{
 					TVScreen * npc = new TVScreen();

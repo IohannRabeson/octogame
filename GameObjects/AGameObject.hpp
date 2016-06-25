@@ -80,7 +80,9 @@ enum class GameObjectType : std::size_t
 	CheckPoint					= (1 << 15) + 39,
 	TVScreen					= (1 << 15) + 40,
 	FabienNpc					= (1 << 15) + 41,
+	CedricEndNpc				= (1 << 15) + 42,
 //Script AddNpc
+
 };
 
 /*!

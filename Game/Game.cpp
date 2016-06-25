@@ -43,6 +43,7 @@
 
 //Npc
 //Script AddNpc Include
+#include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
@@ -326,6 +327,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			if (gameObjectCast<CedricStartNpc>(gameObject)->startBalle())
 				octo->startDrinkPotion();
 			break;
+		case GameObjectType::CedricEndNpc:
+			gameObjectCast<CedricEndNpc>(gameObject)->stopBalle();
+			break;
 		default:
 			break;
 	}
@@ -343,6 +347,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::CedricEndNpc:
+			gameObjectCast<CedricEndNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::TVScreen:
 			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
 			break;

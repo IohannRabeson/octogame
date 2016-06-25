@@ -1,11 +1,11 @@
-#include "CedricStartNpc.hpp"
+#include "CedricEndNpc.hpp"
 #include "Progress.hpp"
 #include "RectangleShape.hpp"
 #include "ChallengeManager.hpp"
 #include <ResourceManager.hpp>
 
-CedricStartNpc::CedricStartNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_START_OSS)
+CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
+	ANpc(CEDRIC_END_OSS)
 {
 	setSize(sf::Vector2f(200.f, 100.f));
 	setOrigin(sf::Vector2f(-30.f, 68.f));
@@ -38,7 +38,7 @@ CedricStartNpc::CedricStartNpc(ABiome::Type biomeType) :
 	setCurrentText(0u);
 }
 
-void CedricStartNpc::setup(void)
+void CedricEndNpc::setup(void)
 {
 	setupIdleAnimation({
 			FramePair(0.4f, 2u),
@@ -147,7 +147,7 @@ void CedricStartNpc::setup(void)
 	setupMachine();
 }
 
-void CedricStartNpc::setupMachine(void)
+void CedricEndNpc::setupMachine(void)
 {
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
@@ -169,19 +169,12 @@ void CedricStartNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-bool CedricStartNpc::startBalle(void)
+void CedricEndNpc::stopBalle(void)
 {
-	if (!ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect))
-	{
-		ChallengeManager::getInstance().getEffect(m_effect).start();
-		return (true);
-	}
-	return (false);
-	//else
-	//Progress::getInstance().validateChallenge(ChallengeManager::Effect::Duplicate);
+	Progress::getInstance().validateChallenge(m_effect);
 }
 
-void CedricStartNpc::update(sf::Time frametime)
+void CedricEndNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
@@ -198,7 +191,7 @@ void CedricStartNpc::update(sf::Time frametime)
 	resetVariables();
 }
 
-void CedricStartNpc::updateState(void)
+void CedricEndNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 	if (sprite.getCurrentEvent() == Idle)

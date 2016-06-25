@@ -1,17 +1,17 @@
-#ifndef CEDRICSTARTNPC_HPP
-# define CEDRICSTARTNPC_HPP
+#ifndef CEDRICENDNPC_HPP
+# define CEDRICENDNPC_HPP
 
 # include "ANpc.hpp"
 # include "ABiome.hpp"
 # include "ChallengeManager.hpp"
 
-class CedricStartNpc : public ANpc, public AGameObject<GameObjectType::CedricStartNpc>
+class CedricEndNpc : public ANpc, public AGameObject<GameObjectType::CedricEndNpc>
 {
 public:
-	CedricStartNpc(ABiome::Type biomeType);
-	virtual ~CedricStartNpc(void) = default;
+	CedricEndNpc(ABiome::Type biomeType);
+	virtual ~CedricEndNpc(void) = default;
 
-	bool startBalle(void);
+	void stopBalle(void);
 
 	virtual void setup(void);
 	virtual void update(sf::Time frametime);
