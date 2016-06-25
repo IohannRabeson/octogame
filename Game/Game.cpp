@@ -220,8 +220,8 @@ void	Game::update(sf::Time frameTime)
 	}
 	frameTime = frameTime / m_slowTimeInfosCoef;
 	// update the PhysicsEngine as first
-	m_cameraMovement->update(frameTime, *m_octo);
 	m_physicsEngine.update(frameTime.asSeconds());
+	m_cameraMovement->update(frameTime, *m_octo);
 	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
