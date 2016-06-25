@@ -41,6 +41,42 @@ CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
 void CedricEndNpc::setup(void)
 {
 	setupIdleAnimation({
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 32u),
+			FramePair(0.4f, 33u),
+			FramePair(0.4f, 32u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u)}, octo::LoopMode::Loop);
+
+	setupSpecial1Animation({
+			FramePair(0.3f, 40u),
+			FramePair(0.3f, 41u),
+			FramePair(0.3f, 42u),
+			FramePair(0.3f, 43u),
+			FramePair(0.3f, 44u),
+			FramePair(0.3f, 45u),
+			FramePair(0.3f, 46u),
+			FramePair(0.3f, 47u)}, octo::LoopMode::NoLoop);
+
+	setupAnimation(m_idleDayAnimation, {
 			FramePair(0.4f, 2u),
 			FramePair(0.4f, 5u),
 			FramePair(0.4f, 6u),
@@ -66,84 +102,6 @@ void CedricEndNpc::setup(void)
 			FramePair(0.4f, 6u),
 			FramePair(0.4f, 5u)}, octo::LoopMode::Loop);
 
-	setupWalkAnimation({
-			FramePair(0.2f, 0u),
-			FramePair(0.2f, 1u),
-			FramePair(0.2f, 0u),
-			FramePair(0.2f, 3u),
-			FramePair(0.2f, 4u),
-			FramePair(0.2f, 3u),
-			FramePair(0.2f, 2u)}, octo::LoopMode::Loop);
-
-	setupSpecial1Animation({
-			FramePair(0.2f, 10u),
-			FramePair(0.2f, 11u),
-			FramePair(0.2f, 12u),
-			FramePair(0.2f, 13u),
-			FramePair(0.2f, 14u)}, octo::LoopMode::NoLoop);
-
-	setupSpecial2Animation({
-			FramePair(0.2f, 15u),
-			FramePair(0.2f, 16u),
-			FramePair(0.2f, 17u),
-			FramePair(0.2f, 18u),
-			FramePair(0.2f, 19u),
-			FramePair(0.2f, 20u),
-			FramePair(0.2f, 21u),
-			FramePair(0.2f, 22u)}, octo::LoopMode::NoLoop);
-
-	//setupAnimation(m_idleAnimationNight, {
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 32u),
-	//		FramePair(0.4f, 33u),
-	//		FramePair(0.4f, 32u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u)}, octo::LoopMode::Loop);
-
-	//setupAnimation(m_walkAnimationNight, {
-	//		FramePair(0.2f, 25u),
-	//		FramePair(0.2f, 26u),
-	//		FramePair(0.2f, 25u),
-	//		FramePair(0.2f, 28u),
-	//		FramePair(0.2f, 29u),
-	//		FramePair(0.2f, 28u),
-	//		FramePair(0.2f, 27u)}, octo::LoopMode::Loop);
-
-	//setupAnimation(m_special1AnimationNight, {
-	//		FramePair(0.2f, 35u),
-	//		FramePair(0.2f, 36u),
-	//		FramePair(0.2f, 37u),
-	//		FramePair(0.2f, 38u),
-	//		FramePair(0.2f, 39u)}, octo::LoopMode::NoLoop);
-
-	//setupAnimation(m_special2AnimationNight, {
-	//		FramePair(0.2f, 40u),
-	//		FramePair(0.2f, 41u),
-	//		FramePair(0.2f, 42u),
-	//		FramePair(0.2f, 43u),
-	//		FramePair(0.2f, 44u),
-	//		FramePair(0.2f, 45u),
-	//		FramePair(0.2f, 46u),
-	//		FramePair(0.2f, 47u)}, octo::LoopMode::NoLoop);
-
 	setupMachine();
 }
 
@@ -155,15 +113,19 @@ void CedricEndNpc::setupMachine(void)
 	octo::FiniteStateMachine	machine;
 	StatePtr					idle;
 	StatePtr					special1;
+	StatePtr					idleDay;
 
 	idle = std::make_shared<State>("0", getIdleAnimation(), getSprite());
 	special1 = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
+	idleDay = std::make_shared<State>("2", m_idleDayAnimation, getSprite());
 
 	machine.setStart(idle);
 	machine.addTransition(Idle, idle, idle);
-	machine.addTransition(Idle, idle, special1);
 
-	machine.addTransition(Special1, special1, idle);
+	machine.addTransition(Special1, idle, special1);
+
+	machine.addTransition(IdleDay, idleDay, idleDay);
+	machine.addTransition(IdleDay, special1, idleDay);
 
 	setMachine(machine);
 	setNextEvent(Idle);
@@ -171,7 +133,11 @@ void CedricEndNpc::setupMachine(void)
 
 void CedricEndNpc::stopBalle(void)
 {
-	Progress::getInstance().validateChallenge(m_effect);
+	if (ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
+	{
+		getSprite().setNextEvent(Special1);
+		Progress::getInstance().validateChallenge(m_effect);
+	}
 }
 
 void CedricEndNpc::update(sf::Time frametime)
@@ -192,8 +158,8 @@ void CedricEndNpc::update(sf::Time frametime)
 void CedricEndNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
-	if (sprite.getCurrentEvent() == Idle)
+	if (sprite.getCurrentEvent() == Special1 && sprite.isTerminated())
 	{
-		sprite.setNextEvent(Special1);
+		sprite.setNextEvent(IdleDay);
 	}
 }
