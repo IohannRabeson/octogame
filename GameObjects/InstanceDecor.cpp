@@ -2,6 +2,13 @@
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
+InstanceDecor::InstanceDecor(ResourceKey key)
+{
+	octo::ResourceManager & resources = octo::Application::getResourceManager();
+
+	m_sprite.setSpriteSheet(resources.getSpriteSheet(key));
+}
+
 InstanceDecor::InstanceDecor(ResourceKey key, sf::Vector2f const & scale, sf::Vector2f const & position, std::size_t nbFrames, float frameDuration)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();

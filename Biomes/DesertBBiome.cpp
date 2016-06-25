@@ -133,7 +133,7 @@ DesertBBiome::DesertBBiome() :
 
 	m_gameObjects[60] = GameObjectType::PortalDesert;
 	m_gameObjects[125] = GameObjectType::FabienNpc;
-	m_gameObjects[208] = GameObjectType::CheckPoint;
+	m_gameObjects[210] = GameObjectType::CheckPoint;
 	m_instances[230] = MAP_DESERT_B_TRAIL_A_OMP;
 	m_instances[280] = MAP_DESERT_B_TRAIL_B_OMP;
 	m_instances[312] = MAP_DESERT_B_TRAIL_C_OMP;
