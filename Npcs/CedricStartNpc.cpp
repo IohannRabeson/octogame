@@ -12,7 +12,7 @@
 #include <Interpolations.hpp>
 
 CedricStartNpc::CedricStartNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_OSS)
+	ANpc(CEDRIC_START_OSS)
 {
 	setSize(sf::Vector2f(200.f, 100.f));
 	setOrigin(sf::Vector2f(-30.f, 68.f));
@@ -164,11 +164,16 @@ void CedricStartNpc::setupMachine(void)
 
 	octo::FiniteStateMachine	machine;
 	StatePtr					idle;
+	StatePtr					special1;
 
 	idle = std::make_shared<State>("0", getIdleAnimation(), getSprite());
+	special1 = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
 
 	machine.setStart(idle);
 	machine.addTransition(Idle, idle, idle);
+	machine.addTransition(Idle, idle, special1);
+
+	machine.addTransition(Special1, special1, idle);
 
 	setMachine(machine);
 	setNextEvent(Idle);
