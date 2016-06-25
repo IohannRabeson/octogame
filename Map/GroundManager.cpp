@@ -32,7 +32,7 @@
 
 //Npc
 #include "ClassicNpc.hpp"
-#include "CedricNpc.hpp"
+#include "CedricStartNpc.hpp"
 //Script AddNpc Include
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
@@ -235,7 +235,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
-	m_npcFactory.registerCreator(CEDRIC_OSS, [&biome](){ return new CedricNpc(biome.getType()); });
+	m_npcFactory.registerCreator(CEDRIC_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(HOUSE_ORANGE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
@@ -744,9 +744,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
-			case GameObjectType::CedricNpc:
+			case GameObjectType::CedricStartNpc:
 				{
-					CedricNpc * cedric = new CedricNpc(biome.getType());
+					CedricStartNpc * cedric = new CedricStartNpc(biome.getType());
 					cedric->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, cedric);
 				}

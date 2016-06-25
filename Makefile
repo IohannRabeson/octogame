@@ -72,7 +72,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
-				Npcs/CedricNpc.cpp						\
+				Npcs/CedricStartNpc.cpp					\
 				Npcs/FranfranNpc.cpp					\
 				Npcs/JuNpc.cpp							\
 				Npcs/FannyNpc.cpp						\

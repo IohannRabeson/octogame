@@ -61,7 +61,7 @@
 #include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
-#include "CedricNpc.hpp"
+#include "CedricStartNpc.hpp"
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
 #include "ClementineNpc.hpp"
@@ -322,8 +322,8 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
 			}
 			break;
-		case GameObjectType::CedricNpc:
-			if (gameObjectCast<CedricNpc>(gameObject)->startBalle())
+		case GameObjectType::CedricStartNpc:
+			if (gameObjectCast<CedricStartNpc>(gameObject)->startBalle())
 				octo->startDrinkPotion();
 			break;
 		default:
@@ -418,8 +418,8 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::JuNpc:
 			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::CedricNpc:
-			gameObjectCast<CedricNpc>(gameObject)->collideOctoEvent(octo);
+		case GameObjectType::CedricStartNpc:
+			gameObjectCast<CedricStartNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::FannyNpc:
 			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);
