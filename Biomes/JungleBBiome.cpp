@@ -26,19 +26,19 @@ JungleBBiome::JungleBBiome() :
 
 	m_dayDuration(sf::seconds(80.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(20, 20, 20),
-	m_skyNightColor(0, 0, 0),
+	m_skyDayColor(252, 252, 160),
+	m_skyNightColor(175, 177, 18),
 	m_nightLightColor(0, 0, 0, 130),
-	m_SunsetLightColor(252, 252, 190, 130),
+	m_SunsetLightColor(255, 182, 0, 100),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(60u, 80u),
+	m_rockCount(10u, 15u),
 	m_treeCount(40u, 50u),
-	m_mushroomCount(39u, 40u),
+	m_mushroomCount(70u, 90u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
 	m_sunCount(4u, 5u),
@@ -78,7 +78,7 @@ JungleBBiome::JungleBBiome() :
 	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(250.f, 250.f)),
 	m_leafColor(0, 90, 67),
 
-	m_mushroomSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(200.f, 300.f)),
+	m_mushroomSize(sf::Vector2f(30.f, 150.f), sf::Vector2f(300.f, 900.f)),
 	m_mushroomColor(255, 182, 0),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
@@ -248,30 +248,42 @@ std::vector<ParallaxScrolling::ALayer *> JungleBBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -25, 0.1f, 1.f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(getRockColor(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, 10, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 1.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	layer = new GenerativeLayer(getRockColor(), sf::Vector2f(0.3f, 0.5f), mapSize, 10.f, 5, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-		return noise.perlin(x, y, 3, 2.f);
+		return noise.perlin(x, y, 3, 4.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	layer = new GenerativeLayer(getRockColor(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, 0, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-		return noise.perlin(x, y, 3, 2.f);
+		return noise.perlin(x, y + 100.f, 3, 2.f);
 		});
 	vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.noise(x * 1.1f, y);
-	//	});
-	//vector.push_back(layer);
+	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.5f, 0.3f), mapSize, 12.f, 0, 0.1f, 0.3f, 6.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 1.1f, y);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.6f, 0.2f), sf::Vector2u(mapSize.x, mapSize.y * 1.6f), 12.f, -90, 0.4f, 0.3f, 6.f, 3000.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 20.f, y);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.7f, 0.1f), sf::Vector2u(mapSize.x, mapSize.y * 1.2f), 12.f, -330, 0.5f, 0.1f, 6.f, 4000.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 20.f, y + 100.f);
+		});
+	vector.push_back(layer);
 	return vector;
 }
 
@@ -303,9 +315,9 @@ Map::TileColorGenerator JungleBBiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart(76, 70, 102);
 	sf::Color secondColorEnd(56, 50, 72);
-	float startTransition = 14000.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = 40000.f / static_cast<float>(m_mapSize.y);
-	float endTransition = 60000.f / static_cast<float>(m_mapSize.y);
+	float startTransition = -12000.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 6000.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 30000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
