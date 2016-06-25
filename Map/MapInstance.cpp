@@ -145,10 +145,12 @@ void MapInstance::playSound(void)
 
 bool MapInstance::nextStep(void)
 {
-	m_depth++;
+	Progress & progress = Progress::getInstance();
+	if (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover()))
+		m_depth++;
 	if (m_depth >= static_cast<int>(m_tiles.depth()))
 	{
-		if (Progress::getInstance().getNextDestination() != Level::JungleA)
+		if (progress.getNextDestination() != Level::JungleA)
 		{
 			m_depth = m_tiles.depth() - 1u;
 			playSound();
@@ -162,10 +164,11 @@ bool MapInstance::nextStep(void)
 
 bool MapInstance::previousStep(void)
 {
+	Progress const & progress = Progress::getInstance();
 	m_depth--;
 	if (m_depth < 0)
 	{
-		if (Progress::getInstance().getNextDestination() != Level::JungleA)
+		if (progress.getNextDestination() != Level::JungleA)
 		{
 			m_depth = 0u;
 			playSound();

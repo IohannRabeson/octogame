@@ -101,7 +101,11 @@ public:
 
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);
+	bool				meetPortal(Level source, Level destination);
+	std::size_t			countRandomDiscover(void);
 	bool				isMetPortal(Level destination);
+	void				setRandomDiscoverCount(std::size_t count) { m_countRandomDiscover = count; };
+	std::size_t			getRandomDiscoverCount() const { return m_countRandomDiscover; }
 	void				setPortalPosition(Level destination, sf::Vector2f const & position);
 	void				removePortalPosition(Level destination);
 	sf::Vector2f		getInterestPoint();
@@ -204,6 +208,7 @@ private:
 	std::map<Level, std::map<Level, bool>>			m_portals;
 	std::map<Level, sf::Vector2f>					m_portalsToDiscover;
 	std::vector<Level>								m_levels;
+	std::size_t										m_countRandomDiscover;
 
 	bool											m_isOctoOnInstance;
 	bool											m_isHighLight;

@@ -177,7 +177,8 @@ void Portal::update(sf::Time frametime)
 				m_timer += frametime.asSeconds();
 				if (m_timer >= m_timerMax)
 				{
-					Progress::getInstance().meetPortal(m_destination);
+					if (m_destination != Level::Random)
+						Progress::getInstance().meetPortal(m_destination);
 					m_state = Activated;
 					m_timer = m_timerMax;
 				}
@@ -241,7 +242,7 @@ void Portal::setRadius(float radius)
 
 void Portal::appear(void)
 {
-	if (m_state == Activated || isLock())
+	if (m_state == Activated || isLock() || (Progress::getInstance().isMetPortal(m_destination) && m_destination == Level::Random))
 		return;
 	if (m_sprite.getCurrentEvent() == Events::Closed)
 		m_state = State::FirstAppear;
