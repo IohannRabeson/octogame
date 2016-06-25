@@ -5,13 +5,13 @@
 #include <ResourceManager.hpp>
 
 CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_START_OSS)
+	ANpc(CEDRIC_START_OSS, false)
 {
-	setSize(sf::Vector2f(200.f, 100.f));
-	setOrigin(sf::Vector2f(-30.f, 68.f));
+	setSize(sf::Vector2f(50.f, 100.f));
+	setOrigin(sf::Vector2f(60.f, 68.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(80.f, -50.f));
+	setTextOffset(sf::Vector2f(0.f, -50.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
@@ -133,7 +133,7 @@ void CedricEndNpc::setupMachine(void)
 
 void CedricEndNpc::stopBalle(void)
 {
-	if (ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
+	if (!Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
 	{
 		getSprite().setNextEvent(Special1);
 		Progress::getInstance().validateChallenge(m_effect);
