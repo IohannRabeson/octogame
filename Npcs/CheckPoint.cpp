@@ -1,9 +1,12 @@
 #include "CheckPoint.hpp"
 #include "CharacterOcto.hpp"
 #include "Progress.hpp"
+#include "RectangleShape.hpp"
+#include "PhysicsEngine.hpp"
 
-CheckPoint::CheckPoint(void) :
-	ANpc(CHECKPOINT_OSS),
+CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position) :
+	InstanceDecor(CHECKPOINT_OSS),
+	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_count(100),
 	m_used(0u),
 	m_timer(sf::Time::Zero),
@@ -14,65 +17,40 @@ CheckPoint::CheckPoint(void) :
 	m_firstFrame(true),
 	m_isValidated(false)
 {
-	setSize(sf::Vector2f(30.f, 85.f));
-	setOrigin(sf::Vector2f(27.f, 275.f));
-	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -10.f));
-	setTimerMax(sf::seconds(8.0f));
-	setup();
+	m_box->setSize(sf::Vector2f(30.f, 85.f));
+	m_sprite.setOrigin(sf::Vector2f(0.f, -10.f));
+	m_sprite.setScale(scale);
+	m_sprite.setPosition(position);
+	m_box->setPosition(getPosition() + sf::Vector2f(30.f, 300.f));
+	m_box->update();
 
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
-	setTimer(sf::Time::Zero);
-	setTimerMax(sf::seconds(4.f));
-}
+	m_box->setGameObject(this);
+	m_box->setApplyGravity(false);
+	m_box->setType(AShape::Type::e_trigger);
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::CheckPoint));
+	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 
-void CheckPoint::setup(void)
-{
-	typedef octo::CharacterAnimation::Frame			Frame;
+	octo::SpriteAnimation::FrameList	frames;
+	frames.emplace_back(sf::seconds(0.4f), 0u);
+	frames.emplace_back(sf::seconds(0.4f), 1u);
+	m_animation.setFrames(frames);
+	m_animation.setLoop(octo::LoopMode::Loop);
 
-	getIdleAnimation().setFrames({
-			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
-			});
-	getIdleAnimation().setLoop(octo::LoopMode::Loop);
+	frames.clear();
+	frames.emplace_back(sf::seconds(0.4f), 2u);
+	frames.emplace_back(sf::seconds(0.4f), 3u);
+	frames.emplace_back(sf::seconds(0.4f), 4u);
+	frames.emplace_back(sf::seconds(0.4f), 5u);
+	frames.emplace_back(sf::seconds(0.4f), 6u);
+	frames.emplace_back(sf::seconds(0.4f), 7u);
+	frames.emplace_back(sf::seconds(0.4f), 8u);
+	frames.emplace_back(sf::seconds(0.4f), 9u);
+	m_animationValidated.setFrames(frames);
+	m_animationValidated.setLoop(octo::LoopMode::Loop);
 
-	getSpecial1Animation().setFrames({
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			});
-	getSpecial1Animation().setLoop(octo::LoopMode::Loop);
-
-	setupMachine();
-}
-
-void CheckPoint::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idleState;
-	StatePtr					special1State;
-
-	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-	special1State = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
-
-	machine.setStart(idleState);
-	machine.addTransition(Idle, idleState, idleState);
-	machine.addTransition(Idle, special1State, idleState);
-
-	machine.addTransition(Special1, idleState, special1State);
-	machine.addTransition(Special1, special1State, special1State);
-
-	setMachine(machine);
-	setNextEvent(Idle);
+	m_sprite.setAnimation(m_animation);
+	m_sprite.play();
 }
 
 void CheckPoint::createLosange(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
@@ -99,7 +77,7 @@ void CheckPoint::createEffect(sf::Vector2f const & size, sf::Vector2f const & or
 
 void CheckPoint::update(sf::Time frametime)
 {
-	ANpc::update(frametime);
+	InstanceDecor::update(frametime);
 	if (m_firstFrame)
 	{
 		m_firstFrame = false;
@@ -111,27 +89,38 @@ void CheckPoint::update(sf::Time frametime)
 		if (m_timer > m_timerMax)
 			m_timer = sf::Time::Zero;
 		m_builder.clear();
-		createEffect(m_size, getPosition() + sf::Vector2f(15.f, -200.f), std::pow(m_timer / m_timerMax, 0.867f), m_color, m_builder);
-		createEffect(m_size, getPosition() + sf::Vector2f(15.f, -200.f), std::pow(m_timer / m_timerMax, 0.12f), m_color, m_builder);
+		createEffect(m_size, getPosition() + sf::Vector2f(47.f, 20.f), std::pow(m_timer / m_timerMax, 0.867f), m_color, m_builder);
+		createEffect(m_size, getPosition() + sf::Vector2f(47.f, 20.f), std::pow(m_timer / m_timerMax, 0.12f), m_color, m_builder);
 		m_used = m_builder.getUsed();
 	}
 }
 
-void CheckPoint::updateState(void)
+void CheckPoint::addMapOffset(float x, float y)
 {
+	InstanceDecor::addMapOffset(x, y);
+	m_box->setPosition(m_box->getPosition() + sf::Vector2f(x, y));
+	m_box->update();
+}
+
+void CheckPoint::setPosition(sf::Vector2f const & position)
+{
+	InstanceDecor::setPosition(position);
+	m_box->setPosition(position - sf::Vector2f(70.f, 90.f));
+	m_box->update();
 }
 
 void CheckPoint::collideOctoEvent(CharacterOcto *)
 {
-	octo::CharacterSprite & sprite = getSprite();
+	if (!m_isValidated)
+	{
+		m_sprite.setAnimation(m_animationValidated);
+		Progress::getInstance().setCheckPointPosition(m_startPosition);
+	}
 	m_isValidated = true;
-	if (sprite.getCurrentEvent() == Idle)
-		sprite.setNextEvent(Special1);
-	Progress::getInstance().setCheckPointPosition(m_startPosition);
 }
 
 void CheckPoint::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
-	ANpc::draw(render, states);
+	InstanceDecor::draw(render, states);
 }
