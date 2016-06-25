@@ -18,11 +18,19 @@ public:
 	virtual float getHeight(void) const { return 0.f; }
 
 protected:
+	enum CedricEvents
+	{
+		IdleNight = Special2 + 1,
+		Special2Night
+	};
+
 	virtual void setupMachine(void);
 	virtual void updateState(void);
 
 private:
 	ChallengeManager::Effect	m_effect;
+	octo::CharacterAnimation	m_idleNightAnimation;
+	octo::CharacterAnimation	m_special2NightAnimation;
 
 };
 

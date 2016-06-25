@@ -66,83 +66,54 @@ void CedricStartNpc::setup(void)
 			FramePair(0.4f, 6u),
 			FramePair(0.4f, 5u)}, octo::LoopMode::Loop);
 
-	setupWalkAnimation({
-			FramePair(0.2f, 0u),
-			FramePair(0.2f, 1u),
-			FramePair(0.2f, 0u),
-			FramePair(0.2f, 3u),
-			FramePair(0.2f, 4u),
-			FramePair(0.2f, 3u),
-			FramePair(0.2f, 2u)}, octo::LoopMode::Loop);
-
 	setupSpecial1Animation({
-			FramePair(0.2f, 10u),
-			FramePair(0.2f, 11u),
-			FramePair(0.2f, 12u),
-			FramePair(0.2f, 13u),
-			FramePair(0.2f, 14u)}, octo::LoopMode::NoLoop);
+			FramePair(0.3f, 10u),
+			FramePair(0.3f, 11u),
+			FramePair(0.3f, 12u),
+			FramePair(0.3f, 13u),
+			FramePair(0.8f, 14u),
+			FramePair(0.3f, 17u),
+			FramePair(0.3f, 18u),
+			FramePair(0.3f, 19u),
+			FramePair(0.3f, 20u),
+			FramePair(0.3f, 21u),
+			FramePair(0.3f, 22u)}, octo::LoopMode::NoLoop);
 
-	setupSpecial2Animation({
-			FramePair(0.2f, 15u),
-			FramePair(0.2f, 16u),
-			FramePair(0.2f, 17u),
-			FramePair(0.2f, 18u),
-			FramePair(0.2f, 19u),
-			FramePair(0.2f, 20u),
-			FramePair(0.2f, 21u),
-			FramePair(0.2f, 22u)}, octo::LoopMode::NoLoop);
+	setupAnimation(m_idleNightAnimation, {
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 27u),
+			FramePair(0.4f, 30u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 32u),
+			FramePair(0.4f, 33u),
+			FramePair(0.4f, 32u),
+			FramePair(0.4f, 31u),
+			FramePair(0.4f, 30u)}, octo::LoopMode::Loop);
 
-	//setupAnimation(m_idleAnimationNight, {
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 27u),
-	//		FramePair(0.4f, 30u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 32u),
-	//		FramePair(0.4f, 33u),
-	//		FramePair(0.4f, 32u),
-	//		FramePair(0.4f, 31u),
-	//		FramePair(0.4f, 30u)}, octo::LoopMode::Loop);
-
-	//setupAnimation(m_walkAnimationNight, {
-	//		FramePair(0.2f, 25u),
-	//		FramePair(0.2f, 26u),
-	//		FramePair(0.2f, 25u),
-	//		FramePair(0.2f, 28u),
-	//		FramePair(0.2f, 29u),
-	//		FramePair(0.2f, 28u),
-	//		FramePair(0.2f, 27u)}, octo::LoopMode::Loop);
-
-	//setupAnimation(m_special1AnimationNight, {
-	//		FramePair(0.2f, 35u),
-	//		FramePair(0.2f, 36u),
-	//		FramePair(0.2f, 37u),
-	//		FramePair(0.2f, 38u),
-	//		FramePair(0.2f, 39u)}, octo::LoopMode::NoLoop);
-
-	//setupAnimation(m_special2AnimationNight, {
-	//		FramePair(0.2f, 40u),
-	//		FramePair(0.2f, 41u),
-	//		FramePair(0.2f, 42u),
-	//		FramePair(0.2f, 43u),
-	//		FramePair(0.2f, 44u),
-	//		FramePair(0.2f, 45u),
-	//		FramePair(0.2f, 46u),
-	//		FramePair(0.2f, 47u)}, octo::LoopMode::NoLoop);
+	setupAnimation(m_special2NightAnimation, {
+			FramePair(0.3f, 40u),
+			FramePair(0.3f, 41u),
+			FramePair(0.3f, 42u),
+			FramePair(0.3f, 43u),
+			FramePair(0.3f, 44u),
+			FramePair(0.3f, 45u),
+			FramePair(0.3f, 46u),
+			FramePair(0.3f, 47u)}, octo::LoopMode::NoLoop);
 
 	setupMachine();
 }
@@ -155,15 +126,23 @@ void CedricStartNpc::setupMachine(void)
 	octo::FiniteStateMachine	machine;
 	StatePtr					idle;
 	StatePtr					special1;
+	StatePtr					idleNight;
+	StatePtr					special2Night;
 
 	idle = std::make_shared<State>("0", getIdleAnimation(), getSprite());
 	special1 = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
+	idleNight = std::make_shared<State>("2", m_idleNightAnimation, getSprite());
+	special2Night = std::make_shared<State>("3", m_special2NightAnimation, getSprite());
 
 	machine.setStart(idle);
 	machine.addTransition(Idle, idle, idle);
-	machine.addTransition(Idle, idle, special1);
+	machine.addTransition(Idle, special2Night, idle);
 
-	machine.addTransition(Special1, special1, idle);
+	machine.addTransition(Special1, idle, special1);
+
+	machine.addTransition(IdleNight, special1, idleNight);
+
+	machine.addTransition(Special2Night, idleNight, special2Night);
 
 	setMachine(machine);
 	setNextEvent(Idle);
@@ -171,14 +150,13 @@ void CedricStartNpc::setupMachine(void)
 
 bool CedricStartNpc::startBalle(void)
 {
-	if (!ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect))
+	if (!ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
 	{
 		ChallengeManager::getInstance().getEffect(m_effect).start();
+		getSprite().setNextEvent(Special1);
 		return (true);
 	}
 	return (false);
-	//else
-	//Progress::getInstance().validateChallenge(ChallengeManager::Effect::Duplicate);
 }
 
 void CedricStartNpc::update(sf::Time frametime)
@@ -193,16 +171,21 @@ void CedricStartNpc::update(sf::Time frametime)
 
 	updateText(frametime);
 
-	//if (m_id == 0u && ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable())
-	//	setCurrentText(1u);
+	if (!ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect) && sprite.getCurrentEvent() == IdleNight)
+		sprite.setNextEvent(Special2Night);
+
 	resetVariables();
 }
 
 void CedricStartNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
-	if (sprite.getCurrentEvent() == Idle)
+	if (sprite.getCurrentEvent() == Special1 && sprite.isTerminated())
 	{
-		sprite.setNextEvent(Special1);
+		sprite.setNextEvent(IdleNight);
+	}
+	else if (sprite.getCurrentEvent() == Special2Night && sprite.isTerminated())
+	{
+		sprite.setNextEvent(Idle);
 	}
 }

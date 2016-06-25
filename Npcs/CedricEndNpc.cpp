@@ -5,7 +5,7 @@
 #include <ResourceManager.hpp>
 
 CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_END_OSS)
+	ANpc(CEDRIC_START_OSS)
 {
 	setSize(sf::Vector2f(200.f, 100.f));
 	setOrigin(sf::Vector2f(-30.f, 68.f));
@@ -186,8 +186,6 @@ void CedricEndNpc::update(sf::Time frametime)
 
 	updateText(frametime);
 
-	//if (m_id == 0u && ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable())
-	//	setCurrentText(1u);
 	resetVariables();
 }
 

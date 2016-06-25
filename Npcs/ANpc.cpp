@@ -227,9 +227,9 @@ void ANpc::setDisplayText(bool displayText)
 
 void ANpc::setActiveText(bool active)
 {
-		for (auto & text : m_texts)
-			text->setActive(active);
-		m_activeText = active;
+	for (auto & text : m_texts)
+		text->setActive(active);
+	m_activeText = active;
 }
 
 float ANpc::getScale(void) const
