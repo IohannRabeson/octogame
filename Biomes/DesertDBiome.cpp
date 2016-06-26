@@ -13,7 +13,7 @@ DesertDBiome::DesertDBiome() :
 	m_name("Desert B"),
 	m_id(Level::DesertD),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(650u, 64u)),
+	m_mapSize(sf::Vector2u(900u, 64u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(63.f * 16.f, -200.f),
 	m_transitionDuration(0.5f),
@@ -133,6 +133,7 @@ DesertDBiome::DesertDBiome() :
 
 	m_gameObjects[60] = GameObjectType::PortalDesert;
 	m_instances[120] = MAP_DESERT_D_TRAIL_OMP;
+	m_gameObjects[80] = GameObjectType::TVScreen;
 
 	m_interestPointPosX = 500;
 
@@ -243,7 +244,7 @@ Map::MapSurfaceGenerator DesertDBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = { 0.f, 50.f, 55.f    , 90.f    , 95.f};
+		std::vector<float> pointX = { 0.f, 50.f, 55.f    , 140.f    , 145.f};
 		std::vector<float> pointY = { n  , n   , n - 0.8f, n - 0.8f, n   };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
