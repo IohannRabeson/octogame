@@ -27,7 +27,7 @@ TVScreen::TVScreen(void) :
 	m_shader.setParameter("offset", 1.f / 400.f);
 	sf::Transform kernel(
 			-1.f, -1.f, -1.f,
-			-1.f, 8.f, -1.f,
+			-1.f, 9.f, -1.f,
 			-1.f, -1.f, -1.f
 		);
 	m_shader.setParameter("kernel", kernel);

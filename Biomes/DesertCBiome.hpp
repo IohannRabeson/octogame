@@ -41,6 +41,7 @@ public:
 	virtual Level										getDestination();
 	virtual float										getWaterLevel();
 	virtual sf::Color									getWaterColor();
+	virtual bool										isDeadlyWater();
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -261,9 +262,6 @@ private:
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
 	sf::Color											randomColor(sf::Color const & color);
-
-	std::vector<int>									m_treePos;
-	std::size_t											m_indexTreePos;
 };
 
 #endif

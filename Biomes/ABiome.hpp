@@ -25,6 +25,7 @@ enum class Level : std::size_t
 	DesertA,
 	DesertB,
 	DesertC,
+	DesertD,
 	JungleA,
 	JungleB,
 	JungleC,
