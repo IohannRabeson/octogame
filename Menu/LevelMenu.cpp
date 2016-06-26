@@ -12,6 +12,7 @@ LevelMenu::LevelMenu(void) :
 	m_names.push_back(L"Desert A");
 	m_names.push_back(L"Desert B");
 	m_names.push_back(L"Desert C");
+	m_names.push_back(L"Desert D");
 	m_names.push_back(L"Jungle A");
 	m_names.push_back(L"Jungle B");
 	m_names.push_back(L"Jungle C");
