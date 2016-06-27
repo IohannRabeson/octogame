@@ -1699,6 +1699,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 		objectHigh.m_gameObject->drawFront(render, states);
 	for (auto & objectLow : m_otherObjectsLow)
 		objectLow.m_gameObject->drawFront(render, states);
+	for (auto & npc : m_npcs)
+		npc->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
