@@ -3,6 +3,9 @@
 #include "Progress.hpp"
 #include "RectangleShape.hpp"
 #include "PhysicsEngine.hpp"
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <AudioManager.hpp>
 
 CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	InstanceDecor(CHECKPOINT_OSS),
@@ -113,6 +116,9 @@ void CheckPoint::collideOctoEvent(CharacterOcto *)
 {
 	if (!m_isValidated)
 	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+		audio.playSound(resources.getSound(OCTO_ANGRY_OGG), 1.f);
 		m_sprite.setAnimation(m_animationValidated);
 		Progress::getInstance().setCheckPointPosition(m_startPosition);
 	}

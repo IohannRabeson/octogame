@@ -141,3 +141,12 @@ void TVScreen::collideOctoEvent(CharacterOcto * octo)
 	if (m_state == None)
 		m_state = Zoom;
 }
+
+void TVScreen::draw(sf::RenderTarget &, sf::RenderStates) const
+{
+}
+
+void TVScreen::drawFront(sf::RenderTarget & render, sf::RenderStates state) const
+{
+	ANpc::draw(render, state);
+}
