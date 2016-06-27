@@ -1691,6 +1691,10 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->draw(render, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->draw(render, states);
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->drawFront(render, states);
 	for (auto & elevator : m_elevators)
@@ -1707,10 +1711,6 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerInstanceFront, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->draw(render, states);
-	for (auto & nano : m_nanoRobots)
-		nano.m_gameObject->draw(render, states);
-	for (auto & nano : m_nanoRobotOnInstance)
-		nano->draw(render, states);
 	for (auto & decor : m_instanceDecors)
 		decor->drawFront(render, states);
 }
