@@ -2,26 +2,28 @@
 # define CHECKPOINT_HPP
 
 # include <VertexBuilder.hpp>
-# include "ANpc.hpp"
+# include "InstanceDecor.hpp"
+# include "AGameObject.hpp"
+# include <memory>
 
 class CharacterOcto;
+class RectangleShape;
 
-class CheckPoint : public ANpc, public AGameObject<GameObjectType::CheckPoint>
+class CheckPoint : public InstanceDecor, public AGameObject<GameObjectType::CheckPoint>
 {
 public:
-	CheckPoint(void);
+	CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position);
 	virtual ~CheckPoint(void) = default;
 
-	virtual void setup(void);
-	virtual void collideOctoEvent(CharacterOcto * octo);
+	void collideOctoEvent(CharacterOcto * octo);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual void update(sf::Time frametime);
 
-protected:
-	virtual void setupMachine(void);
-	virtual void updateState(void);
+	virtual void addMapOffset(float x, float y);
+	virtual void setPosition(sf::Vector2f const & position);
 
 private:
+	RectangleShape *				m_box;
 	std::size_t						m_count;
 	std::size_t						m_used;
 	sf::Time						m_timer;
@@ -34,6 +36,7 @@ private:
 	sf::Vector2f					m_startPosition;
 	bool							m_firstFrame;
 	bool							m_isValidated;
+	octo::SpriteAnimation			m_animationValidated;
 
 	void createLosange(sf::Vector2f const & size,
 											sf::Vector2f const & origin,

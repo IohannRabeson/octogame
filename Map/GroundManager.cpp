@@ -223,7 +223,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 //Script AddNpc Factory
 	m_npcFactory.registerCreator<TVScreen>(TV_OSS);
 	m_npcFactory.registerCreator<FabienNpc>(FABIEN_OSS);
-	m_npcFactory.registerCreator<CheckPoint>(CHECKPOINT_OSS);
 	m_npcFactory.registerCreator<OverCoolNpc>(OVER_COOL_NPC_OSS);
 	m_npcFactory.registerCreator<Pedestal>(PEDESTAL_OSS);
 	m_npcFactory.registerCreator<ForestSpirit2Npc>(FOREST_SPIRIT_2_OSS);
@@ -240,6 +239,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator(CEDRIC_END_OSS, [&biome](){ return new CedricEndNpc(biome.getType()); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
+	m_decorFactory.registerCreator(CHECKPOINT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new CheckPoint(scale, position);
+			});
 	m_decorFactory.registerCreator(HOUSE_ORANGE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(HOUSE_ORANGE_OSS, scale, position, 3u);
@@ -664,9 +667,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				break;
 			case GameObjectType::CheckPoint:
 				{
-					CheckPoint * npc = new CheckPoint();
-					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					CheckPoint * npc = new CheckPoint(sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f));
+					m_otherObjectsLow.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::OverCoolNpc:

@@ -69,6 +69,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/HouseFlatSnow.cpp			\
 				GameObjects/EngineSnow.cpp				\
 				GameObjects/WeirdHouseSnow.cpp			\
+				GameObjects/CheckPoint.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
@@ -114,8 +115,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/Pedestal.cpp						\
 				Npcs/OverCoolNpc.cpp					\
 				Npcs/FabienNpc.cpp						\
-				Npcs/CheckPoint.cpp						\
-				Npcs/CedricEndNpc.cpp				\
+				Npcs/CedricEndNpc.cpp					\
 #Script AddNpc
 
 

@@ -9,6 +9,7 @@
 class InstanceDecor : public IPlaceable
 {
 public:
+	InstanceDecor(ResourceKey key);
 	InstanceDecor(ResourceKey key, sf::Vector2f const & scale, sf::Vector2f const & position, std::size_t nbFrames, float frameDuration = 0.2f);
 	virtual ~InstanceDecor(void);
 
@@ -22,12 +23,10 @@ public:
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 protected:
-
-	void setupAnimation(std::initializer_list<octo::SpriteAnimation::Frame> list);
-
-private:
 	octo::AnimatedSprite		m_sprite;
 	octo::SpriteAnimation		m_animation;
+
+	void setupAnimation(std::initializer_list<octo::SpriteAnimation::Frame> list);
 
 };
 
