@@ -86,7 +86,10 @@ void MainMenu::createMenus(void)
 	else
 		setCharacterSize(30);
 
-	setBubbleType(ABubble::Type::Menu);
+	if (progress.isMenu())
+		setBubbleType(ABubble::Type::Menu);
+	else
+		setBubbleType(ABubble::Type::Think);
 }
 
 void MainMenu::onSelection(void)
