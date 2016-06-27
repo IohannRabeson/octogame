@@ -1682,6 +1682,8 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	for (auto & npc : m_npcsOnFloor)
+		npc.m_gameObject->drawFront(render, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render, states);
 	for (auto & objectHigh : m_otherObjectsHigh)

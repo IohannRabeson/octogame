@@ -24,6 +24,8 @@ public:
 
 	virtual void setup(void);
 	virtual void collideOctoEvent(CharacterOcto * octo);
+	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
+	virtual void drawFront(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
 	virtual void setupMachine(void);
