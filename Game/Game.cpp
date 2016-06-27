@@ -44,6 +44,7 @@
 
 //Npc
 //Script AddNpc Include
+#include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
@@ -62,7 +63,7 @@
 #include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
-#include "CedricNpc.hpp"
+#include "CedricStartNpc.hpp"
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
 #include "ClementineNpc.hpp"
@@ -324,23 +325,12 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
 			}
 			break;
-		case GameObjectType::CedricNpc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate))
+		case GameObjectType::CedricStartNpc:
+			if (gameObjectCast<CedricStartNpc>(gameObject)->startBalle())
 				octo->startDrinkPotion();
-			gameObjectCast<CedricNpc>(gameObject)->startBalle();
 			break;
-		case GameObjectType::FannyNpc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Persistence).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Persistence))
-				octo->startDrinkPotion();
-			gameObjectCast<FannyNpc>(gameObject)->startBalle();
-			break;
-		case GameObjectType::Snowman3Npc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Blur).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Blur))
-				octo->startDrinkPotion();
-			gameObjectCast<Snowman3Npc>(gameObject)->startBalle();
-			break;
-		case GameObjectType::WellKeeperNpc:
-			gameObjectCast<WellKeeperNpc>(gameObject)->stopBalle();
+		case GameObjectType::CedricEndNpc:
+			gameObjectCast<CedricEndNpc>(gameObject)->stopBalle();
 			break;
 		default:
 			break;
@@ -359,6 +349,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::CedricEndNpc:
+			gameObjectCast<CedricEndNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::TVScreen:
 			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -434,8 +427,8 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::JuNpc:
 			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::CedricNpc:
-			gameObjectCast<CedricNpc>(gameObject)->collideOctoEvent(octo);
+		case GameObjectType::CedricStartNpc:
+			gameObjectCast<CedricStartNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::FannyNpc:
 			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);

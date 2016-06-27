@@ -73,7 +73,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
-				Npcs/CedricNpc.cpp						\
+				Npcs/CedricStartNpc.cpp					\
 				Npcs/FranfranNpc.cpp					\
 				Npcs/JuNpc.cpp							\
 				Npcs/FannyNpc.cpp						\
@@ -115,7 +115,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/Pedestal.cpp						\
 				Npcs/OverCoolNpc.cpp					\
 				Npcs/FabienNpc.cpp						\
+				Npcs/CedricEndNpc.cpp					\
 #Script AddNpc
+
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

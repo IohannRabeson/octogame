@@ -12,7 +12,6 @@ public:
 	virtual ~WellKeeperNpc(void) = default;
 
 	virtual void setup(void);
-	void stopBalle(void);
 
 protected:
 	virtual void setupMachine(void);

@@ -10,15 +10,11 @@ public:
 	virtual ~Snowman3Npc(void);
 
 	virtual void setup(void);
-	void startBalle(void);
 
 protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
 
-private:
-	static std::size_t	m_count;
-	std::size_t			m_id;
 };
 
 #endif

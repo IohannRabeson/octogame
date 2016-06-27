@@ -39,7 +39,7 @@ enum class GameObjectType : std::size_t
 
 	//Npc
 	Npc							= (1 << 15),
-	CedricNpc					= (1 << 15) + 1,
+	CedricStartNpc				= (1 << 15) + 1,
 	JuNpc						= (1 << 15) + 2,
 	OldDesertStaticNpc			= (1 << 15) + 3,
 	GuiNpc						= (1 << 15) + 4,
@@ -80,7 +80,9 @@ enum class GameObjectType : std::size_t
 	CheckPoint					= (1 << 15) + 39,
 	TVScreen					= (1 << 15) + 40,
 	FabienNpc					= (1 << 15) + 41,
+	CedricEndNpc				= (1 << 15) + 42,
 //Script AddNpc
+
 };
 
 /*!

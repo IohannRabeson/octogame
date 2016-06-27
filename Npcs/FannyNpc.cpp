@@ -66,12 +66,6 @@ void FannyNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-void FannyNpc::startBalle(void)
-{
-	if (!Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Persistence))
-		ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Persistence).start();
-}
-
 void FannyNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
