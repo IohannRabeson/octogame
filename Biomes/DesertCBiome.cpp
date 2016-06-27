@@ -124,7 +124,7 @@ DesertCBiome::DesertCBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::JungleA)
+	if (progress.getLastDestination() == Level::DesertD)
 		m_octoStartPosition = sf::Vector2f(602.f * 16.f, -3150.f);
 
 	m_gameObjects[60] = GameObjectType::PortalDesert;
@@ -139,7 +139,7 @@ DesertCBiome::DesertCBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::JungleA);
+	m_destinations.push_back(Level::DesertD);
 	m_destinations.push_back(Level::DesertB);
 }
 
