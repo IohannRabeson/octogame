@@ -141,7 +141,7 @@ JungleABiome::JungleABiome() :
 	m_instances[500] = MAP_JUNGLE_A_DOUBLE_JUMP_OMP;
 	m_instances[600] = MAP_JUNGLE_A_VILLAGE_OMP;
 	m_gameObjects[880] = GameObjectType::LucienNpc;
-	m_gameObjects[910] = GameObjectType::Portal;
+	m_gameObjects[910] = GameObjectType::PortalDesert;
 	m_gameObjects[955] = GameObjectType::VinceNpc;
 
 	m_interestPointPosX = 500;
@@ -149,7 +149,7 @@ JungleABiome::JungleABiome() :
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::JungleB);
-	m_destinations.push_back(Level::DesertB);
+	m_destinations.push_back(Level::DesertD);
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleB)
