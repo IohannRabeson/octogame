@@ -30,7 +30,7 @@ class YesNoNewMenu : public YesNoMenu
 	inline void actionYes(void)
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
-		states.change("menu");
+		states.change("laboratory_end");
 	}
 	inline void actionNo(void) { }
 };

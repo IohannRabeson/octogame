@@ -38,6 +38,8 @@ private:
 	sf::Time									m_timeBeforeNextText;
 	sf::Time									m_appearDuration;
 	sf::Sprite									m_background;
+	sf::Sprite									m_water;
+	sf::Sprite									m_foreground;
 	std::size_t									m_textIndex;
 	std::size_t									m_lastTextIndex;
 
