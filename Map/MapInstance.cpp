@@ -131,18 +131,6 @@ void MapInstance::registerDepth(void)
 	m_oldDepth = m_depth;
 }
 
-void MapInstance::playSound(void)
-{
-	if (m_soundPtr == nullptr)
-	{
-		octo::AudioManager& audio = octo::Application::getAudioManager();
-		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		m_soundPtr = audio.playSound(resources.getSound(OCTO_NO_OGG), 1.f);
-	}
-	else if (m_soundPtr->getStatus() == sf::SoundSource::Stopped)
-		m_soundPtr = nullptr;
-}
-
 bool MapInstance::nextStep(void)
 {
 	Progress & progress = Progress::getInstance();
@@ -153,7 +141,6 @@ bool MapInstance::nextStep(void)
 		if (progress.getNextDestination() != Level::JungleA)
 		{
 			m_depth = m_tiles.depth() - 1u;
-			playSound();
 			return false;
 		}
 		else
@@ -171,7 +158,6 @@ bool MapInstance::previousStep(void)
 		if (progress.getNextDestination() != Level::JungleA)
 		{
 			m_depth = 0u;
-			playSound();
 			return false;
 		}
 		else

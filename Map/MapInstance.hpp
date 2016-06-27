@@ -18,7 +18,6 @@ public:
 	MapInstance(std::size_t position, std::string const & resourceId);
 	virtual ~MapInstance(void) = default;
 
-	void playSound(void);
 	void swapDepth(void);
 	void registerDepth(void);
 	bool nextStep(void);
