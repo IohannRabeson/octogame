@@ -270,12 +270,12 @@ void	Progress::levelChanged()
 	m_changeLevel = false;
 }
 
-void	Progress::registerDeath(float deathPosX)
+void	Progress::registerDeath(sf::Vector2f const & position)
 {
-	m_deathPos[m_data.currentDestination].push_back(static_cast<int>(deathPosX / Tile::TileSize));
+	m_deathPos[m_data.currentDestination].push_back(position);
 }
 
-std::vector<int> & Progress::getDeathPos()
+std::vector<sf::Vector2f> & Progress::getDeathPos()
 {
 	return m_deathPos[m_data.currentDestination];
 }
