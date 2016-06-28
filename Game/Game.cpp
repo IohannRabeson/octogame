@@ -270,6 +270,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			if (gameObjectCast<Portal>(gameObject)->isActivated())
 				octo->usePortal(*gameObjectCast<Portal>(gameObject));
 			break;
+		case GameObjectType::CheckPoint:
+			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())
 			{
