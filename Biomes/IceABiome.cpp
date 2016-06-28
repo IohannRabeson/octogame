@@ -134,7 +134,7 @@ IceABiome::IceABiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::IceB)
 		m_octoStartPosition = sf::Vector2f(423 * 16.f, 0.f);
-//	if (progress.getLastDestination() == Level::Random)
+	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(404.f * 16.f, -1250.f);
 
 	m_gameObjects[420] = GameObjectType::PortalSnow;

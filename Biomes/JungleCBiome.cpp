@@ -135,6 +135,7 @@ JungleCBiome::JungleCBiome() :
 	m_gameObjects[645] = GameObjectType::BirdRedNpc;
 	m_gameObjects[670] = GameObjectType::FaustNpc;
 	m_gameObjects[705] = GameObjectType::ConstanceNpc;
+	m_gameObjects[730] = GameObjectType::WaterNanoRobot;
 	m_gameObjects[755] = GameObjectType::PortalWater;
 	for (std::size_t i = 0; i < 200; i += m_generator.randomInt(20u, 40u))
 	{
