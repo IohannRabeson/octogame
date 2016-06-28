@@ -155,6 +155,7 @@ private:
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false),
+			deathCount(0u),
 			respawnType(Progress::RespawnType::Portal)
 		{}
 
@@ -175,6 +176,8 @@ private:
 		bool					canOpenDoubleJump;
 		char					npc[10000];
 		char					portals[10000];
+		char					deaths[20000];
+		std::size_t				deathCount;
 		Progress::RespawnType	respawnType;
 	};
 
@@ -186,6 +189,8 @@ private:
 	void				loadNpc();
 	void				savePortals();
 	void				loadPortals();
+	void				saveDeaths();
+	void				loadDeaths();
 	void				split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 	static std::unique_ptr<Progress>				m_instance;
@@ -204,7 +209,7 @@ private:
 	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
 	std::size_t										m_npcCount;
 	std::size_t										m_npcMax;
-	std::map<Level, std::vector<sf::Vector2i>>		m_deathPos;
+	std::map<Level, std::vector<sf::Vector2i>>		m_deaths;
 	std::map<Level, std::map<Level, bool>>			m_portals;
 	std::map<Level, sf::Vector2f>					m_portalsToDiscover;
 	std::vector<Level>								m_levels;
