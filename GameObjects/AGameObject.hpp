@@ -79,8 +79,10 @@ enum class GameObjectType : std::size_t
 	OverCoolNpc					= (1 << 15) + 38,
 	CheckPoint					= (1 << 15) + 39,
 	TVScreen					= (1 << 15) + 40,
-	FabienNpc					= (1 << 15) + 41,
-	CedricEndNpc				= (1 << 15) + 42,
+	TVBlack						= (1 << 15) + 41,
+	TVWhite						= (1 << 15) + 42,
+	FabienNpc					= (1 << 15) + 43,
+	CedricEndNpc				= (1 << 15) + 44,
 //Script AddNpc
 
 };

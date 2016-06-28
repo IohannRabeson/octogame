@@ -19,7 +19,7 @@ public:
 		Reversed
 	};
 
-	TVScreen(void);
+	TVScreen(std::string const & kernelName = "render_black_kernel");
 	virtual ~TVScreen(void) = default;
 
 	virtual void setup(void);
@@ -39,6 +39,7 @@ private:
 	sf::FloatRect	m_tvScreen;
 	sf::Time		m_timer;
 	sf::Time		m_duration;
+	std::string		m_kernelName;
 	bool			m_reverse;
 
 };
