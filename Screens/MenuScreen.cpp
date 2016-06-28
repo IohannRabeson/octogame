@@ -20,6 +20,7 @@ void	MenuScreen::start()
 
 	progress.load("save.osv");
 	progress.setMenu(true);
+	progress.setRespawnType(Progress::RespawnType::Portal);
 	m_game.reset(new Game());
 	m_game->loadLevel();
 	m_menu.setup();
