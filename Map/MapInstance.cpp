@@ -6,7 +6,7 @@
 
 MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_levelMap(octo::Application::getResourceManager().getLevelMap(resourceId)),
-	m_isMapHighlight(false),
+	m_isMapHighlight(true), // TODO: Useless, to remove
 	m_depth(0),
 	m_oldDepth(0),
 	m_soundPtr(nullptr)

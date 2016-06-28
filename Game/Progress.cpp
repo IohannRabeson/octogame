@@ -247,7 +247,7 @@ bool	Progress::canDoubleJump()
 
 bool	Progress::canSlowFall()
 {
-	return (m_data.nanoRobotCount > 4);
+	return (m_data.nanoRobotCount > 5);
 }
 
 bool	Progress::canUseElevator()
@@ -257,7 +257,7 @@ bool	Progress::canUseElevator()
 
 bool	Progress::canUseWaterJump()
 {
-	return (m_data.nanoRobotCount > 5);
+	return (m_data.nanoRobotCount > 4);
 }
 
 bool	Progress::changeLevel() const

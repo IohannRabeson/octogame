@@ -10,24 +10,24 @@
 
 DeathScreen::DeathScreen() :
 	m_timeDeath(sf::Time::Zero),
-	m_timeDeathMax(sf::seconds(2.13f))
+	m_timeDeathMax(sf::seconds(1.25f))
 {
 	octo::SpriteAnimation::FrameList	frames;
 
-	frames.emplace_back(sf::seconds(1.f), 0);
-	frames.emplace_back(sf::seconds(0.1f), 1);
-	frames.emplace_back(sf::seconds(0.1f), 2);
-	frames.emplace_back(sf::seconds(0.1f), 3);
-	frames.emplace_back(sf::seconds(0.1f), 4);
-	frames.emplace_back(sf::seconds(0.1f), 5);
-	frames.emplace_back(sf::seconds(0.1f), 6);
-	frames.emplace_back(sf::seconds(0.1f), 7);
-	frames.emplace_back(sf::seconds(0.1f), 8);
-	frames.emplace_back(sf::seconds(0.1f), 9);
-	frames.emplace_back(sf::seconds(0.1f), 10);
-	frames.emplace_back(sf::seconds(0.1f), 11);
-	frames.emplace_back(sf::seconds(0.1f), 12);
-	frames.emplace_back(sf::seconds(0.1f), 13);
+	frames.emplace_back(sf::seconds(0.6f), 0);
+	frames.emplace_back(sf::seconds(0.05f), 1);
+	frames.emplace_back(sf::seconds(0.05f), 2);
+	frames.emplace_back(sf::seconds(0.05f), 3);
+	frames.emplace_back(sf::seconds(0.05f), 4);
+	frames.emplace_back(sf::seconds(0.05f), 5);
+	frames.emplace_back(sf::seconds(0.05f), 6);
+	frames.emplace_back(sf::seconds(0.05f), 7);
+	frames.emplace_back(sf::seconds(0.05f), 8);
+	frames.emplace_back(sf::seconds(0.05f), 9);
+	frames.emplace_back(sf::seconds(0.05f), 10);
+	frames.emplace_back(sf::seconds(0.05f), 11);
+	frames.emplace_back(sf::seconds(0.05f), 12);
+	frames.emplace_back(sf::seconds(0.05f), 13);
 	m_animation.setFrames(frames);
 	m_animation.setLoop(octo::LoopMode::NoLoop);
 }
