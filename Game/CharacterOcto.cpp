@@ -126,7 +126,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::HouseFlatSnow)
 		| static_cast<std::size_t>(GameObjectType::EngineSnow)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
-		| static_cast<std::size_t>(GameObjectType::Bouibouik);
+		| static_cast<std::size_t>(GameObjectType::Bouibouik)
+		| static_cast<std::size_t>(GameObjectType::CheckPoint);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
@@ -1054,7 +1055,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 bool	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > sf::seconds(3.0f) && !m_inWater && !Progress::getInstance().isMenu())
+	if (m_timeEventFall > sf::seconds(2.3f) && !m_inWater && !Progress::getInstance().isMenu())
 	{
 		m_sprite.setNextEvent(Death);
 		m_helmetParticle.canEmit(true);
