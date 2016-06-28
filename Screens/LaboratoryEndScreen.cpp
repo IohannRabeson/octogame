@@ -7,6 +7,7 @@
 #include "ScientistCedric.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <PostEffectManager.hpp>
 #include <Camera.hpp>
 
 #include <Console.hpp>
@@ -15,6 +16,8 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_timer(sf::Time::Zero),
 	m_timeBeforeNextText(sf::seconds(1.f)),
 	m_appearDuration(sf::seconds(2.f)),
+	m_cedricPutPotionTimer(sf::seconds(3.f)),
+	m_changeColorAqua(sf::seconds(2.f)),
 	m_textIndex(0u),
 	m_lastTextIndex(0u)
 {
@@ -28,7 +31,15 @@ void	LaboratoryEndScreen::start()
 	Progress::getInstance().setBubbleNpc(true);
 
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
+	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 	octo::Camera & camera = octo::Application::getCamera();
+
+	octo::PostEffect postEffectShader;
+	m_shaderPostEffect.loadFromMemory(resources.getText(LABORATORY_EFFECT_FRAG), sf::Shader::Fragment);
+	postEffectShader.resetShader(&m_shader);
+	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
+	m_shaderPostEffect.setParameter("resolution", 1.f, 1.f);//camera.getRectangle().width, camera.getRectangle().height);
+	postEffect.enableEffect(m_shaderIndex, false);
 
 	camera.setCenter(camera.getRectangle().width / 2.f, camera.getRectangle().height / 2.f);
 	m_background.setTexture(resources.getTexture(LABO_BG_PNG));
@@ -48,13 +59,17 @@ void	LaboratoryEndScreen::start()
 	m_npcs[0]->setPosition(sf::Vector2f(200.f, 883.f));
 	m_npcs[1]->setPosition(sf::Vector2f(950.f, 883.f));
 	m_npcs[2]->setPosition(sf::Vector2f(1600.f, 847.f));
-	m_npcs[3]->setPosition(sf::Vector2f(350.f, 577.f));
+	m_npcs[3]->setPosition(sf::Vector2f(-70.f, 577.f));
 
 	for (auto & it : m_npcs)
 		it->setDisplayText(false);
 
 	for (auto & it : m_npcs)
 		m_lastTextIndex = std::max(m_lastTextIndex, it->getLastIndex());
+
+	m_shader.loadFromMemory(resources.getText(HUE_FRAG), sf::Shader::Fragment);
+	m_shader.setParameter("texture", sf::Shader::CurrentTexture);
+	m_shader.setParameter("hue", 0.f);
 }
 
 void	LaboratoryEndScreen::pause()
@@ -104,6 +119,31 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			for (auto & it : m_npcs)
 				it->setTextIndex(m_textIndex);
 			break;
+		case CedricPutPotion:
+			m_timer += frameTime;
+			m_npcs[3]->setPosition(octo::linearInterpolation(sf::Vector2f(-70.f, 577.f), sf::Vector2f(350.f, 577.f), std::min(1.f, m_timer / m_cedricPutPotionTimer)));
+			if (m_timer >= m_cedricPutPotionTimer)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = ChangeAquaColor;
+			}
+			break;
+		case ChangeAquaColor:
+			{
+				m_timer += frameTime;
+				m_shader.setParameter("hue", octo::linearInterpolation(0.f, 0.4f, std::min(1.f, m_timer / m_changeColorAqua)));
+				if (m_timer >= m_changeColorAqua)
+				{
+					m_timer = sf::Time::Zero;
+					m_state = StartShaderEffect;
+					//octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, true);
+				}
+			}
+			break;
+		case StartShaderEffect:
+			//std::cout << "shader" << std::endl;
+			//m_shaderPostEffect.setParameter("time", frameTime.asSeconds());
+			break;
 		default:
 			break;
 	}
@@ -117,7 +157,9 @@ void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
 	render.draw(m_background);
-	render.draw(m_water);
+	states.shader = &m_shader;
+	render.draw(m_water, states);
+	states.shader = nullptr;
 	for (auto & it : m_npcs)
 		render.draw(*it);
 	render.draw(m_foreground);
