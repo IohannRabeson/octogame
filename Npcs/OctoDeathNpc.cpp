@@ -99,7 +99,7 @@ void OctoDeathNpc::update(sf::Time frametime)
 
 void OctoDeathNpc::updatePhysics(void)
 {
-	if (getPosition().y >= m_waterLevel - 20.f)
+	if (getPosition().y >= m_waterLevel - 20.f && m_waterLevel > 0)
 	{
 		if (m_isCollide)
 		{
