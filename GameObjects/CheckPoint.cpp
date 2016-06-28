@@ -32,7 +32,7 @@ CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position
 	m_box->setApplyGravity(false);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::CheckPoint));
-	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
 
 	octo::SpriteAnimation::FrameList	frames;
 	frames.emplace_back(sf::seconds(0.4f), 0u);
