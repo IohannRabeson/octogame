@@ -20,6 +20,8 @@ public:
 		VisualEffect,
 		ChangeAquaColor,
 		StartShaderEffect,
+		DisappearShaderEffect,
+		StopShaderEffect,
 		Disappear
 	};
 
@@ -38,17 +40,21 @@ private:
 	std::vector<std::unique_ptr<ScientistNpc>>	m_npcs;
 	State										m_state;
 	sf::Time									m_timer;
+	sf::Time									m_globalTimer;
 	sf::Time									m_timeBeforeNextText;
 	sf::Time									m_appearDuration;
 	sf::Time									m_cedricPutPotionTimer;
 	sf::Time									m_changeColorAqua;
+	sf::Time									m_appearTimerPostEffect;
+	sf::Time									m_startPostEffectDuration;
+	sf::Time									m_disappearTimerPostEffect;
+	sf::Time									m_endPostEffectDuration;
 	sf::Sprite									m_background;
 	sf::Sprite									m_water;
 	sf::Sprite									m_foreground;
 	std::size_t									m_textIndex;
 	std::size_t									m_lastTextIndex;
 	sf::Shader									m_shader;
-	sf::Shader									m_shaderPostEffect;
 	std::size_t									m_shaderIndex;
 
 };

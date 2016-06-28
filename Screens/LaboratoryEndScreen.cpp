@@ -12,12 +12,17 @@
 
 #include <Console.hpp>
 LaboratoryEndScreen::LaboratoryEndScreen(void) :
-	m_state(Appear),
+	m_state(ChangeAquaColor),
 	m_timer(sf::Time::Zero),
+	m_globalTimer(sf::Time::Zero),
 	m_timeBeforeNextText(sf::seconds(1.f)),
 	m_appearDuration(sf::seconds(2.f)),
 	m_cedricPutPotionTimer(sf::seconds(3.f)),
 	m_changeColorAqua(sf::seconds(2.f)),
+	m_appearTimerPostEffect(sf::seconds(1.f)),
+	m_startPostEffectDuration(sf::seconds(5.f)),
+	m_disappearTimerPostEffect(sf::seconds(1.f)),
+	m_endPostEffectDuration(sf::seconds(5.f)),
 	m_textIndex(0u),
 	m_lastTextIndex(0u)
 {
@@ -33,13 +38,6 @@ void	LaboratoryEndScreen::start()
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 	octo::Camera & camera = octo::Application::getCamera();
-
-	octo::PostEffect postEffectShader;
-	m_shaderPostEffect.loadFromMemory(resources.getText(LABORATORY_EFFECT_FRAG), sf::Shader::Fragment);
-	postEffectShader.resetShader(&m_shader);
-	m_shaderIndex = postEffect.addEffect(std::move(postEffectShader));
-	m_shaderPostEffect.setParameter("resolution", 1.f, 1.f);//camera.getRectangle().width, camera.getRectangle().height);
-	postEffect.enableEffect(m_shaderIndex, false);
 
 	camera.setCenter(camera.getRectangle().width / 2.f, camera.getRectangle().height / 2.f);
 	m_background.setTexture(resources.getTexture(LABO_BG_PNG));
@@ -70,6 +68,13 @@ void	LaboratoryEndScreen::start()
 	m_shader.loadFromMemory(resources.getText(HUE_FRAG), sf::Shader::Fragment);
 	m_shader.setParameter("texture", sf::Shader::CurrentTexture);
 	m_shader.setParameter("hue", 0.f);
+
+	postEffect.removeEffects();
+	PostEffectLayer::getInstance().clear();
+	PostEffectLayer::getInstance().registerShader(LABORATORY_EFFECT_FRAG);
+
+	PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("resolution", camera.getRectangle().width, camera.getRectangle().height);
+	PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, false);
 }
 
 void	LaboratoryEndScreen::pause()
@@ -129,20 +134,45 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			}
 			break;
 		case ChangeAquaColor:
+			m_timer += frameTime;
+			m_shader.setParameter("hue", octo::linearInterpolation(0.f, 0.4f, std::min(1.f, m_timer / m_changeColorAqua)));
+			if (m_timer >= m_changeColorAqua)
 			{
-				m_timer += frameTime;
-				m_shader.setParameter("hue", octo::linearInterpolation(0.f, 0.4f, std::min(1.f, m_timer / m_changeColorAqua)));
-				if (m_timer >= m_changeColorAqua)
-				{
-					m_timer = sf::Time::Zero;
-					m_state = StartShaderEffect;
-					//octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, true);
-				}
+				m_timer = sf::Time::Zero;
+				m_state = StartShaderEffect;
+				PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, true);
 			}
 			break;
 		case StartShaderEffect:
-			//std::cout << "shader" << std::endl;
-			//m_shaderPostEffect.setParameter("time", frameTime.asSeconds());
+			m_timer += frameTime;
+			m_globalTimer += frameTime;
+			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("appear", std::min(1.f, m_timer / m_appearTimerPostEffect));
+			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
+			if (m_timer >= m_startPostEffectDuration)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = DisappearShaderEffect;
+			}
+			break;
+		case DisappearShaderEffect:
+			m_timer += frameTime;
+			m_globalTimer += frameTime;
+			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("disappear", std::min(1.f, m_timer / m_disappearTimerPostEffect));
+			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
+			if (m_timer >= m_disappearTimerPostEffect)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = StopShaderEffect;
+			}
+		case StopShaderEffect:
+			m_timer += frameTime;
+			m_globalTimer += frameTime;
+			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
+			if (m_timer >= m_endPostEffectDuration)
+			{
+				PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, false);
+				octo::Application::getStateManager().change("menu");
+			}
 			break;
 		default:
 			break;
