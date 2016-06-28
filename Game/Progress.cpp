@@ -272,10 +272,11 @@ void	Progress::levelChanged()
 
 void	Progress::registerDeath(sf::Vector2f const & position)
 {
-	m_deathPos[m_data.currentDestination].push_back(position);
+	sf::Vector2i const & pos = sf::Vector2i(static_cast<int>(position.x), static_cast<int>(position.y + 1u));
+	m_deathPos[m_data.currentDestination].push_back(pos);
 }
 
-std::vector<sf::Vector2f> & Progress::getDeathPos()
+std::vector<sf::Vector2i> & Progress::getDeathPos()
 {
 	return m_deathPos[m_data.currentDestination];
 }

@@ -91,7 +91,7 @@ public:
 	std::vector<Level> const & getRegisteredLevels(void) const;
 
 	void						registerDeath(sf::Vector2f const & position);
-	std::vector<sf::Vector2f> &	getDeathPos(void);
+	std::vector<sf::Vector2i> &	getDeathPos(void);
 
 	void				registerNpc(GameObjectType key);
 	bool				meetNpc(GameObjectType key);
@@ -204,7 +204,7 @@ private:
 	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
 	std::size_t										m_npcCount;
 	std::size_t										m_npcMax;
-	std::map<Level, std::vector<sf::Vector2f>>		m_deathPos;
+	std::map<Level, std::vector<sf::Vector2i>>		m_deathPos;
 	std::map<Level, std::map<Level, bool>>			m_portals;
 	std::map<Level, sf::Vector2f>					m_portalsToDiscover;
 	std::vector<Level>								m_levels;
