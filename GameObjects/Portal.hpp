@@ -9,6 +9,7 @@
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
 # include <Interpolations.hpp>
+# include <AudioManager.hpp>
 
 # include "PostEffectLayer.hpp"
 # include "AGameObject.hpp"
@@ -101,17 +102,21 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	PortalParticle			m_particles;
-	Level					m_destination;
-	sf::Vector2f			m_position;
-	sf::Shader &			m_shader;
-	std::size_t				m_maxParticle;
-	State					m_state;
-	float					m_radius;
-	float					m_timer;
-	float					m_timerMax;
-	CircleShape *			m_box;
-	bool					m_isActive;
+	void updateSound(void);
+
+	PortalParticle				m_particles;
+	Level						m_destination;
+	sf::Vector2f				m_position;
+	sf::Shader &				m_shader;
+	std::size_t					m_maxParticle;
+	State						m_state;
+	float						m_radius;
+	float						m_timer;
+	float						m_timerMax;
+	CircleShape *				m_box;
+	bool						m_isActive;
+	std::shared_ptr<sf::Sound>	m_sound;
+	float						m_soundVolume;
 
 	octo::CharacterAnimation	m_animationOpened;
 	octo::CharacterAnimation	m_animationOpening;
