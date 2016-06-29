@@ -116,7 +116,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/OverCoolNpc.cpp					\
 				Npcs/FabienNpc.cpp						\
 				Npcs/CedricEndNpc.cpp					\
+				Npcs/OctoDeathNpc.cpp				\
 #Script AddNpc
+
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\

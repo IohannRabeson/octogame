@@ -136,6 +136,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::OctoDeathNpc)
 		| static_cast<std::size_t>(GameObjectType::CedricEndNpc)
 		| static_cast<std::size_t>(GameObjectType::TVScreen)
 		| static_cast<std::size_t>(GameObjectType::FabienNpc)
@@ -1060,7 +1061,7 @@ bool	CharacterOcto::dieFall()
 		m_sprite.setNextEvent(Death);
 		m_helmetParticle.canEmit(true);
 		m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
-		Progress::getInstance().registerDeath(getPosition().x);
+		Progress::getInstance().registerDeath(getPosition());
 		return true;
 	}
 	return false;
@@ -1117,7 +1118,7 @@ void	CharacterOcto::inWater()
 				m_sprite.setNextEvent(Death);
 				m_helmetParticle.canEmit(true);
 				m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
-				progress.registerDeath(getPosition().x);
+				progress.registerDeath(getPosition());
 			}
 		}
 		m_waterParticle.clear();
