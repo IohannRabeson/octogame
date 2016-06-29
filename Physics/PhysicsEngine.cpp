@@ -752,8 +752,8 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 	}
 	for (auto const & shape : m_shapes)
 		shape->debugDraw(render);
-	//for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
-	//	m_tileShapes(i, 0u)->debugDraw(render);
+	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
+		m_tileShapes(i, 0u)->debugDraw(render);
 }
 
 // Nested Class Projection

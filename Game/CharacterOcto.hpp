@@ -94,6 +94,7 @@ public:
 	bool					isOnGround(void) const;
 	bool					isMeetingNpc(void) const;
 	void					meetNpc(bool meetNpc);
+	void					resetCollidingTileCount(void);
 
 private:
 	bool					dieFall();
@@ -204,22 +205,19 @@ private:
 	bool						m_inWater;
 	bool						m_isDeadlyWater;
 	bool						m_meetNpc;
+	bool						m_replaceOcto;
 	Events						m_prevEvent;
 
-	RandomGenerator									m_generator;
-	sf::Time										m_directionTimer;
-	sf::Time										m_jumpTimer;
-	sf::Time										m_randomJumpTimer;
-	sf::Time										m_doubleJumpTimer;
-	sf::Time										m_slowFallTimer;
-	sf::Time										m_portalTimer;
-	sf::Vector2f									m_saveOctoPos;
-
-	sf::Vertex v[10];
-	sf::Vector2f									m_highestPosition;
-public:
-	int c = 0;
-	bool m_replaceOcto = false;
+	RandomGenerator				m_generator;
+	sf::Time					m_directionTimer;
+	sf::Time					m_jumpTimer;
+	sf::Time					m_randomJumpTimer;
+	sf::Time					m_doubleJumpTimer;
+	sf::Time					m_slowFallTimer;
+	sf::Time					m_portalTimer;
+	sf::Vector2f				m_saveOctoPos;
+	sf::Vector2f				m_highestPosition;
+	std::vector<sf::Vector2f>	m_collidingTile;
 
 };
 

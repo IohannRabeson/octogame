@@ -1651,44 +1651,54 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 
 void GroundManager::update(float deltatime)
 {
-	m_transitionTimer += deltatime;
+	static float accumulator = 0.f;
+	static const float dt = 1.f / 60.f;
 
-	// Get the top left of the camera view
-	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
-	m_offset.x = rect.left;
-	m_offset.y = rect.top;
+	if (deltatime > 0.2f)
+		deltatime = 0.2f;
+	accumulator += deltatime;
 
-	if (m_transitionTimer >= m_transitionTimerMax)
+	while (accumulator > dt)
 	{
-		bool compute = false;
-		if (m_nextState == GenerationState::Next)
+		accumulator -= dt;
+		m_transitionTimer += dt;
+		// Get the top left of the camera view
+		sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
+		m_offset.x = rect.left;
+		m_offset.y = rect.top;
+
+		if (m_transitionTimer >= m_transitionTimerMax)
 		{
-			compute = true;
-			m_tilesPrev->registerOctoPos(m_octoPosState);
-			m_tilesPrev->nextStep();
-			m_tiles->registerOctoPos(m_octoPosState);
-			m_tiles->registerDepth();
-			m_tiles->nextStep();
-			m_nextState = GenerationState::None;
+			bool compute = false;
+			if (m_nextState == GenerationState::Next)
+			{
+				compute = true;
+				m_tilesPrev->registerOctoPos(m_octoPosState);
+				m_tilesPrev->nextStep();
+				m_tiles->registerOctoPos(m_octoPosState);
+				m_tiles->registerDepth();
+				m_tiles->nextStep();
+				m_nextState = GenerationState::None;
+			}
+			else if (m_nextState == GenerationState::Previous)
+			{
+				compute = true;
+				m_tilesPrev->registerOctoPos(m_octoPosState);
+				m_tilesPrev->previousStep();
+				m_tiles->registerOctoPos(m_octoPosState);
+				m_tiles->registerDepth();
+				m_tiles->previousStep();
+				m_nextState = GenerationState::None;
+			}
+			if (compute)
+			{
+				m_transitionTimer = 0.f;
+				swapMap();
+			}
 		}
-		else if (m_nextState == GenerationState::Previous)
-		{
-			compute = true;
-			m_tilesPrev->registerOctoPos(m_octoPosState);
-			m_tilesPrev->previousStep();
-			m_tiles->registerOctoPos(m_octoPosState);
-			m_tiles->registerDepth();
-			m_tiles->previousStep();
-			m_nextState = GenerationState::None;
-		}
-		if (compute)
-		{
-			m_transitionTimer = 0.f;
-			swapMap();
-		}
+		updateOffset(deltatime);
+		updateTransition(rect);
 	}
-	updateOffset(deltatime);
-	updateTransition(rect);
 	updateDecors(sf::seconds(deltatime));
 	updateGameObjects(sf::seconds(deltatime));
 }
