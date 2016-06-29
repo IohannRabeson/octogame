@@ -2,9 +2,6 @@ uniform sampler2D texture; // Our render texture
 uniform vec2 bot_left;
 uniform vec2 top_right;
 uniform vec2 size;
-uniform vec2 sub_bot_left;
-uniform vec2 sub_top_right;
-uniform vec2 sub_size;
 uniform float offset;
 uniform float reverse;
 uniform float line_progress;

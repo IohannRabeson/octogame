@@ -126,18 +126,11 @@ void TVScreen::update(sf::Time frametime)
 				break;
 		}
 	
-		//sf::Vector2f sub_pos = sf::Vector2f(pos.x + pos.x * size.x, pos.y + pos.y * size.y);
-		//sf::Vector2f sub_size = sf::Vector2f(size.x * size.x, size.y * size.y);
-		//sub_pos = octo::linearInterpolation(sub_pos, pos, std::min(1.f, m_timer / m_duration));
-		//sub_size = octo::linearInterpolation(sub_size, size, std::min(1.f, m_timer / m_duration));
 		pos = octo::linearInterpolation(pos, sf::Vector2f(0.f, 0.f), std::min(1.f, m_timer / m_duration));
 		size = octo::linearInterpolation(size, sf::Vector2f(1.f, 1.f), std::min(1.f, m_timer / m_duration));
 		m_shader.setParameter("bot_left", pos);
 		m_shader.setParameter("top_right", pos.x + size.x, pos.y + size.y);
 		m_shader.setParameter("size", size);
-		//m_shader.setParameter("sub_bot_left", sub_pos);
-		//m_shader.setParameter("sub_top_right", sub_pos.x + sub_size.x, sub_pos.y + sub_size.y);
-		//m_shader.setParameter("sub_size", sub_size);
 	}
 	else
 	{
