@@ -131,7 +131,7 @@ void	CharacterOcto::OctoSound::startEvent(Events event)
 		case Death:
 			if (m_onGround)
 				audio.playSound(resources.getSound(EXPLODE_HELMET_OGG), m_volumeEffect);
-			m_sound = audio.playSound(resources.getSound(OCTO_DEATH_OGG), m_volumeVoice);
+			audio.playSound(resources.getSound(OCTO_DEATH_OGG), m_volumeVoice);
 		default:
 			break;
 	}
@@ -149,7 +149,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			break;
 		case Fall:
 			m_timeEventFall += frameTime;
-			if (m_timeEventFall > sf::seconds(1.3f) && m_sound == nullptr)
+			if (m_timeEventFall > sf::seconds(1.6f) && m_sound == nullptr)
 			{
 				m_sound = audio.playSound(resources.getSound(OCTO_FEAR_OGG), m_volumeVoice);
 			}

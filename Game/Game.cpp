@@ -107,7 +107,7 @@ Game::Game(void) :
 	m_keyGroundRight(false),
 	m_keyGroundLeft(false),
 	m_soundGeneration(nullptr),
-	m_groundVolume(100.f),
+	m_groundVolume(0.7f),
 	m_groundSoundTime(sf::Time::Zero),
 	m_groundSoundTimeMax(sf::seconds(0.6f)),
 	m_slowTimeInfosCoef(1.f),
@@ -145,9 +145,10 @@ Game::~Game(void)
 
 void	Game::loadLevel(void)
 {
-	Progress & progress = Progress::getInstance();
-	octo::AudioManager& audio = octo::Application::getAudioManager();
-	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+	Progress &					progress = Progress::getInstance();
+	octo::AudioManager&			audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
 
 	if (progress.isMenu())
 		m_biomeManager.changeBiome(Level::Rewards, 0x12345);
@@ -206,6 +207,10 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
+
+	audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
+	m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
+	m_soundGeneration->setLoop(true);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -498,43 +503,28 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 void Game::moveMap(sf::Time frameTime)
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft)
-	{
+	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && m_groundSoundTime > sf::Time::Zero)
 		m_groundSoundTime -= frameTime;
-		if (m_groundSoundTime < sf::Time::Zero)
-			m_groundSoundTime = sf::Time::Zero;
-		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax) * audio.getSoundVolume();
-		m_soundGeneration->setVolume(volume);
-	}
-	if (m_keyGroundRight || m_keyGroundLeft || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
+
+	if ((m_keyGroundRight || m_keyGroundLeft) && Progress::getInstance().canMoveMap())
 	{
-		if (Progress::getInstance().canMoveMap())
-		{
-			if (m_keyGroundRight)
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-			else
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-			if (m_soundGeneration == nullptr)
-			{
-				m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
-				m_soundGeneration->setLoop(true);
-			}
-			else
-			{
-				m_groundSoundTime += frameTime;
-				if (m_groundSoundTime > m_groundSoundTimeMax)
-					m_groundSoundTime = m_groundSoundTimeMax;
-				volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
-				m_soundGeneration->setVolume(volume * audio.getSoundVolume());
-			}
-		}
+		if (m_keyGroundRight)
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
+		else
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
+
+		if (m_groundSoundTime < m_groundSoundTimeMax)
+			m_groundSoundTime += frameTime;
 	}
+	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
+	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
 
 	m_earlyMapMovement -= frameTime;
-	if (Progress::getInstance().isMenu() || m_earlyMapMovement > sf::Time::Zero)
+	if (Progress::getInstance().isMenu()
+		|| m_earlyMapMovement > sf::Time::Zero
+		|| (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
 	{
 		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 	}

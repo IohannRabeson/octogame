@@ -107,7 +107,7 @@ void MainMenu::onSelection(void)
 		if (progress.isFirstTime())
 			states.change("zero");
 		else
-			states.change("transition");
+			states.change("transitionLevel");
 	}
 	else
 		AMenuSelection::onSelection();

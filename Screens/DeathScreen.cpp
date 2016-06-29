@@ -38,8 +38,9 @@ DeathScreen::~DeathScreen()
 
 void	DeathScreen::start()
 {
-	octo::Camera&			camera = octo::Application::getCamera();
+	octo::AudioManager &	audio = octo::Application::getAudioManager();
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
+	octo::Camera&			camera = octo::Application::getCamera();
 	sf::Vector2f const&		pos = Progress::getInstance().getOctoPosTransition();
 	sf::Vector2f const&		cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 	sf::Vector2f			scale = sf::Vector2f(0.6f, 0.6f);
@@ -56,6 +57,7 @@ void	DeathScreen::start()
 	}
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
+	audio.playSound(resources.getSound(PORTAL_START_OGG), 0.7f);
 }
 
 void	DeathScreen::pause()
@@ -70,10 +72,6 @@ void	DeathScreen::resume()
 
 void	DeathScreen::stop()
 {
-	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	octo::ResourceManager &		resources = octo::Application::getResourceManager();
-
-	audio.playSound(resources.getSound(PORTAL_END_OGG));
 	InputListener::removeInputListener();
 }
 
