@@ -222,7 +222,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
-	m_npcFactory.registerCreator<TVScreen>(TV_OSS);
 	m_npcFactory.registerCreator<FabienNpc>(FABIEN_OSS);
 	m_npcFactory.registerCreator<OverCoolNpc>(OVER_COOL_NPC_OSS);
 	m_npcFactory.registerCreator<Pedestal>(PEDESTAL_OSS);
@@ -239,6 +238,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator(OCTO_DEATH_HELMET_OSS, [&biome](){ return new OctoDeathNpc(biome.getWaterLevel()); });
 	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
 	m_npcFactory.registerCreator(CEDRIC_END_OSS, [&biome](){ return new CedricEndNpc(biome.getType()); });
+	m_npcFactory.registerCreator(TV_BLACK_OSS, [](){ return new TVScreen("render_black_kernel"); });
+	m_npcFactory.registerCreator(TV_WHITE_OSS, [](){ return new TVScreen("render_white_kernel"); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(CHECKPOINT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
@@ -669,9 +670,16 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
-			case GameObjectType::TVScreen:
+			case GameObjectType::TVWhite:
 				{
-					TVScreen * npc = new TVScreen();
+					TVScreen * npc = new TVScreen("render_white_kernel");
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::TVBlack:
+				{
+					TVScreen * npc = new TVScreen("render_black_kernel");
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
@@ -1709,6 +1717,10 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->draw(render, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->draw(render, states);
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->drawFront(render, states);
 	for (auto & elevator : m_elevators)
@@ -1725,10 +1737,6 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerInstanceFront, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->draw(render, states);
-	for (auto & nano : m_nanoRobots)
-		nano.m_gameObject->draw(render, states);
-	for (auto & nano : m_nanoRobotOnInstance)
-		nano->draw(render, states);
 	for (auto & decor : m_instanceDecors)
 		decor->drawFront(render, states);
 }

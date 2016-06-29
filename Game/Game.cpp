@@ -177,6 +177,7 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader(DISPLACEMENT_FRAG, DISPLACEMENT_FRAG);
 	PostEffectLayer::getInstance().registerShader(KERNEL_POST_EFFECT_FRAG, KERNEL_POST_EFFECT_FRAG);
 	PostEffectLayer::getInstance().registerShader("render_black_kernel", KERNEL_POST_EFFECT_FRAG);
+	PostEffectLayer::getInstance().registerShader("render_white_kernel", KERNEL_POST_EFFECT_FRAG);
 	PostEffectLayer::getInstance().registerShader(WATER_FRAG, WATER_FRAG);
 	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
@@ -594,10 +595,10 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	//m_musicPlayer.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
+	m_octo->drawNanoRobot(render, states);
 	m_groundManager->drawFront(render, states);
 	//m_physicsEngine.debugDraw(render);
 	render.draw(m_skyManager->getDecorsFront(), states);
-	m_octo->drawNanoRobot(render, states);
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
