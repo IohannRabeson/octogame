@@ -107,7 +107,7 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 	{
 		octo::AudioManager &		audio = octo::Application::getAudioManager();
 		octo::ResourceManager &		resources = octo::Application::getResourceManager();
-		audio.playSound(resources.getSound(MENU_SOUND_OGG), 0.2f);
+		audio.playSound(resources.getSound(MENU_SOUND_OGG), 0.15f);
 
 		m_input = true;
 		switch (key)

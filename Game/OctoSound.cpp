@@ -161,7 +161,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;
-			if (m_timeEventIdle > sf::seconds(12.f) && m_sound == nullptr)
+			if (m_timeEventIdle > sf::seconds(20.f) && m_sound == nullptr)
 			{
 				m_sound = audio.playSound(resources.getSound(OCTO_MONOLOGUE_OGG), m_volumeVoice);
 			}

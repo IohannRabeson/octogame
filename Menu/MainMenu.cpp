@@ -4,6 +4,9 @@
 #include "CreditMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "Progress.hpp"
+#include "ResourceDefinitions.hpp"
+#include <AudioManager.hpp>
+#include <ResourceManager.hpp>
 #include <Camera.hpp>
 #include <Application.hpp>
 
@@ -107,7 +110,12 @@ void MainMenu::onSelection(void)
 		if (progress.isFirstTime())
 			states.change("zero");
 		else
+		{
+			octo::AudioManager &		audio = octo::Application::getAudioManager();
+			octo::ResourceManager &		resources = octo::Application::getResourceManager();
+			audio.playSound(resources.getSound(OCTO_USE_POTION_OGG), 0.7f);
 			states.change("transitionLevel");
+		}
 	}
 	else
 		AMenuSelection::onSelection();
