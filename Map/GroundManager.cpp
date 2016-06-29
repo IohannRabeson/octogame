@@ -34,6 +34,7 @@
 #include "ClassicNpc.hpp"
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "OctoDeathNpc.hpp"
 #include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
@@ -221,7 +222,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
-	m_npcFactory.registerCreator<TVScreen>(TV_OSS);
 	m_npcFactory.registerCreator<FabienNpc>(FABIEN_OSS);
 	m_npcFactory.registerCreator<OverCoolNpc>(OVER_COOL_NPC_OSS);
 	m_npcFactory.registerCreator<Pedestal>(PEDESTAL_OSS);
@@ -235,8 +235,11 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
+	m_npcFactory.registerCreator(OCTO_DEATH_HELMET_OSS, [&biome](){ return new OctoDeathNpc(biome.getWaterLevel()); });
 	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
 	m_npcFactory.registerCreator(CEDRIC_END_OSS, [&biome](){ return new CedricEndNpc(biome.getType()); });
+	m_npcFactory.registerCreator(TV_BLACK_OSS, [](){ return new TVScreen("render_black_kernel"); });
+	m_npcFactory.registerCreator(TV_WHITE_OSS, [](){ return new TVScreen("render_white_kernel"); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(CHECKPOINT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
@@ -530,6 +533,15 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		}
 	}
 
+	std::vector<sf::Vector2i> & deathPos = Progress::getInstance().getDeathPos();
+	for (std::size_t i = 0; i < deathPos.size(); i++)
+	{
+		std::unique_ptr<ANpc> npc;
+		npc.reset(m_npcFactory.create(OCTO_DEATH_HELMET_OSS));
+		npc->setPosition(sf::Vector2f(deathPos[i].x, deathPos[i].y));
+		m_npcs.push_back(std::move(npc));
+	}
+
 	auto & gameObjects = biome.getGameObjects();
 	for (auto & gameObject : gameObjects)
 	{
@@ -644,6 +656,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::OctoDeathNpc:
+				{
+					OctoDeathNpc * npc = new OctoDeathNpc(biome.getWaterLevel());
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::CedricEndNpc:
 				{
 					CedricEndNpc * npc = new CedricEndNpc(biome.getType());
@@ -651,9 +670,16 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
-			case GameObjectType::TVScreen:
+			case GameObjectType::TVWhite:
 				{
-					TVScreen * npc = new TVScreen();
+					TVScreen * npc = new TVScreen("render_white_kernel");
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::TVBlack:
+				{
+					TVScreen * npc = new TVScreen("render_black_kernel");
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
@@ -1691,6 +1717,10 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->draw(render, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->draw(render, states);
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->drawFront(render, states);
 	for (auto & elevator : m_elevators)
@@ -1707,10 +1737,6 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerInstanceFront, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->draw(render, states);
-	for (auto & nano : m_nanoRobots)
-		nano.m_gameObject->draw(render, states);
-	for (auto & nano : m_nanoRobotOnInstance)
-		nano->draw(render, states);
 	for (auto & decor : m_instanceDecors)
 		decor->drawFront(render, states);
 }

@@ -133,10 +133,7 @@ JungleBBiome::JungleBBiome() :
 	m_gameObjects[90] = GameObjectType::PortalJungle;
 
 	Progress & progress = Progress::getInstance();
-	std::vector<int> const & deathPos = progress.getDeathPos();
-	if (progress.getLastDestination() == Level::JungleB && deathPos.size() && deathPos.back() >= 300.f)
-		m_octoStartPosition = sf::Vector2f(310.f * 16.f, 4700.f);
-	else if (progress.getLastDestination() == Level::JungleC)
+	if (progress.getLastDestination() == Level::JungleC)
 		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -1600.f);
 	else if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(100.f * 16.f, 4300.f);
