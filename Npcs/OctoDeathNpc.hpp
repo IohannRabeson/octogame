@@ -1,0 +1,29 @@
+#ifndef OCTODEATHNPC_HPP
+# define OCTODEATHNPC_HPP
+
+# include "ANpc.hpp"
+# include "SmokeSystem.hpp"
+
+class OctoDeathNpc : public ANpc, public AGameObject<GameObjectType::OctoDeathNpc>
+{
+public:
+	OctoDeathNpc(float waterLevel);
+	virtual ~OctoDeathNpc(void) = default;
+
+	virtual void setup(void);
+	virtual void update(sf::Time frametime);
+	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
+
+protected:
+	virtual void setupMachine(void);
+	virtual void updatePhysics(void);
+	virtual void updateState(void);
+
+private:
+	bool			m_isCollide;
+	float			m_waterLevel;
+	bool			m_fallingWater;
+	SmokeSystem		m_smoke;
+};
+
+#endif

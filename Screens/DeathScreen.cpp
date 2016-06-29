@@ -89,7 +89,8 @@ void	DeathScreen::update(sf::Time frameTime)
 void	DeathScreen::draw(sf::RenderTarget& render)const
 {
 	render.clear();
-	render.draw(m_sprite);
+	if (m_timeDeath < m_timeDeathMax)
+		render.draw(m_sprite);
 }
 
 void	DeathScreen::setSpriteSheet(octo::SpriteSheet const& spriteSheet)

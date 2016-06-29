@@ -34,6 +34,7 @@
 #include "ClassicNpc.hpp"
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "OctoDeathNpc.hpp"
 #include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
@@ -235,6 +236,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
+	m_npcFactory.registerCreator(OCTO_DEATH_HELMET_OSS, [&biome](){ return new OctoDeathNpc(biome.getWaterLevel()); });
 	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
 	m_npcFactory.registerCreator(CEDRIC_END_OSS, [&biome](){ return new CedricEndNpc(biome.getType()); });
 
@@ -530,6 +532,15 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		}
 	}
 
+	std::vector<sf::Vector2i> & deathPos = Progress::getInstance().getDeathPos();
+	for (std::size_t i = 0; i < deathPos.size(); i++)
+	{
+		std::unique_ptr<ANpc> npc;
+		npc.reset(m_npcFactory.create(OCTO_DEATH_HELMET_OSS));
+		npc->setPosition(sf::Vector2f(deathPos[i].x, deathPos[i].y));
+		m_npcs.push_back(std::move(npc));
+	}
+
 	auto & gameObjects = biome.getGameObjects();
 	for (auto & gameObject : gameObjects)
 	{
@@ -644,6 +655,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::OctoDeathNpc:
+				{
+					OctoDeathNpc * npc = new OctoDeathNpc(biome.getWaterLevel());
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::CedricEndNpc:
 				{
 					CedricEndNpc * npc = new CedricEndNpc(biome.getType());
