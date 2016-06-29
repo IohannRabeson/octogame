@@ -5,15 +5,12 @@
 # include <DefaultGraphicsListeners.hpp>
 
 # include "AGameObject.hpp"
-# include "Progress.hpp"
-# include "RectangleShape.hpp"
-# include "CircleShape.hpp"
-# include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
 # include "PloufSystem.hpp"
 # include "WaterDropSystem.hpp"
 # include "InputListener.hpp"
+# include "RandomGenerator.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -21,6 +18,13 @@
 class ElevatorStream;
 class RepairNanoRobot;
 class SpaceShip;
+class RectangleShape;
+class CircleShape;
+class TileShape;
+class Progress;
+class NanoRobot;
+class ABiome;
+class Portal;
 
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	public InputListener,
@@ -69,7 +73,7 @@ public:
 
 	bool					onInputPressed(InputListener::OctoKeys const & key);
 	bool					onInputReleased(InputListener::OctoKeys const & key);
-	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
+	void					onCollision(TileShape * tileshape, GameObjectType type, sf::Vector2f const& collisionDirection);
 	void					setTopElevator(float top);
 	sf::Vector2f const &	getPhysicsPosition() const;
 	sf::Vector2f const &	getPosition() const;
@@ -86,7 +90,8 @@ public:
 	void					startDrinkPotion(void);
 	bool					isFalling(void);
 	bool					isRaising(void);
-	bool					isInAir(void);
+	bool					isInAir(void) const;
+	bool					isOnGround(void) const;
 	bool					isMeetingNpc(void) const;
 	void					meetNpc(bool meetNpc);
 
@@ -209,6 +214,13 @@ private:
 	sf::Time										m_slowFallTimer;
 	sf::Time										m_portalTimer;
 	sf::Vector2f									m_saveOctoPos;
+
+	sf::Vertex v[10];
+	sf::Vector2f									m_highestPosition;
+public:
+	int c = 0;
+	bool m_replaceOcto = false;
+
 };
 
 #endif

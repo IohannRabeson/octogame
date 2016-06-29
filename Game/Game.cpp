@@ -217,6 +217,8 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	m_octo->c = 0;
+	//std::cout << "GAME UPDATE" << std::endl;
 	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
 	if (m_skipFrames < m_skipFramesMax)
 	{
@@ -264,7 +266,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
 			{
 				octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
-				octo->onCollision(GameObjectType::Elevator, collisionDirection);
+				octo->onCollision(nullptr, GameObjectType::Elevator, collisionDirection);
 			}
 			break;
 		case GameObjectType::Portal:
@@ -495,9 +497,8 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 {
 	if (shape->getGameObject() && gameObjectCast<CharacterOcto>(shape->getGameObject()))
 	{
-		m_octo->onCollision(GameObjectType::Tile, collisionDirection);
+		m_octo->onCollision(tileShape, GameObjectType::Tile, collisionDirection);
 	}
-	(void)tileShape;
 }
 
 void Game::moveMap(sf::Time frameTime)

@@ -10,6 +10,11 @@
 #include "PhysicsEngine.hpp"
 #include "ElevatorStream.hpp"
 #include "SpaceShip.hpp"
+#include "RectangleShape.hpp"
+#include "CircleShape.hpp"
+#include "TileShape.hpp"
+#include "Progress.hpp"
+#include "NanoRobot.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "RepairShipNanoRobot.hpp"
@@ -17,6 +22,7 @@
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+#include "Portal.hpp"
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -738,6 +744,57 @@ void	CharacterOcto::update(sf::Time frameTime)
 	}
 
 	Progress::getInstance().setOctoPos(getPosition());
+
+	std::cout << "UPDATE" << std::endl;
+	if (m_replaceOcto && c)
+	{
+		m_replaceOcto = false;
+		m_highestPosition.y = m_box->getPosition().y;
+		for (int i = 0; i < c; i += 2)
+		{
+			if (m_box->getGlobalBounds().left >= v[i].position.x && m_box->getGlobalBounds().left <= v[i + 1].position.x)
+			{
+				std::cout << "left" << std::endl;
+				sf::Vector2f pos;
+				pos.x = m_box->getGlobalBounds().left;
+				pos.y = octo::linearInterpolation(v[i].position.y, v[i + 1].position.y, (m_box->getGlobalBounds().left - v[i].position.x) / Tile::TileSize);
+				if (pos.y < m_highestPosition.y)
+				{
+					m_highestPosition.y = pos.y;
+					std::cout << "succeed" << std::endl;
+				}
+			}
+			if (m_box->getGlobalBounds().left + m_box->getGlobalBounds().width >= v[i].position.x && m_box->getGlobalBounds().left + m_box->getGlobalBounds().width <= v[i + 1].position.x)
+			{
+				std::cout << "right" << std::endl;
+				sf::Vector2f pos;
+				pos.x = m_box->getGlobalBounds().left + m_box->getGlobalBounds().width;
+				pos.y = octo::linearInterpolation(v[i].position.y, v[i + 1].position.y, (m_box->getGlobalBounds().left + m_box->getGlobalBounds().width - v[i].position.x) / Tile::TileSize);
+				if (pos.y < m_highestPosition.y)
+				{
+					m_highestPosition.y = pos.y;
+					std::cout << "succeed" << std::endl;
+				}
+			}
+			if (v[i].position.x >= m_box->getGlobalBounds().left && v[i + 1].position.x <= m_box->getGlobalBounds().left + m_box->getGlobalBounds().width)
+			{
+				std::cout << "middle" << std::endl;
+				if (v[i].position.y < m_highestPosition.y)
+				{
+					m_highestPosition.y = v[i].position.y;
+					std::cout << "middle 1" << std::endl;
+				}
+				if (v[i + 1].position.y < m_highestPosition.y)
+				{
+					m_highestPosition.y = v[i + 1].position.y;
+					std::cout << "middle 2" << std::endl;
+				}
+			}
+		}
+		m_box->setPosition(sf::Vector2f(m_box->getPosition().x - m_highestPosition.x, m_highestPosition.y - m_box->getGlobalBounds().height));
+		std::cout << c << " | " << -m_highestPosition.x << " " << m_highestPosition.y << std::endl;
+	}
+	m_highestPosition.x = 0.f;
 }
 
 void	CharacterOcto::portalEvent()
@@ -784,6 +841,22 @@ void	CharacterOcto::resetTimeEvent()
 	}
 }
 
+void drawCross(sf::RenderTarget & render, sf::Vector2f const & position, sf::Color const & color)
+{
+	sf::Vector2f sizeX(10.f, 0.f);
+	sf::Vector2f sizeY(0.f, 10.f);
+
+	sf::Vertex line[] =
+	{
+		sf::Vertex(position - sizeX, color),
+		sf::Vertex(position + sizeX, color),
+		sf::Vertex(position - sizeY, color),
+		sf::Vertex(position + sizeY, color),
+	};
+
+	render.draw(line, 4, sf::Lines);
+}
+
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
 	m_inkParticle.draw(render);
@@ -791,6 +864,9 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_helmetParticle.draw(render);
 	m_ploufParticle.draw(render);
 	m_waterParticle.draw(render);
+	drawCross(render, m_highestPosition, sf::Color::White);
+	drawCross(render, m_box->getPosition(), sf::Color::Black);
+	drawCross(render, sf::Vector2f(m_box->getPosition().x, m_highestPosition.y - m_box->getGlobalBounds().height), sf::Color::Magenta);
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
@@ -805,13 +881,20 @@ void	CharacterOcto::drawText(sf::RenderTarget& render, sf::RenderStates states =
 		robot->drawText(render, states);
 }
 
-
-void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisionDirection)
+void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::Vector2f const& collisionDirection)
 {
 	switch(type)
 	{
 		case GameObjectType::Tile:
-			if (collisionDirection.x == 0 && collisionDirection.y < 0)
+			std::cout << collisionDirection.x <<" " << collisionDirection.y << std::endl;
+			if (std::abs(collisionDirection.x) >= Tile::TileSize)
+			{
+				m_replaceOcto = true;
+				v[c++] = tileshape->getVertex(0u);
+				v[c++] = tileshape->getVertex(1u);
+				m_highestPosition.x += collisionDirection.x;
+			}
+			if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
 				m_collisionTile = true;
 			break;
 		case GameObjectType::Elevator:
@@ -1428,7 +1511,7 @@ bool	CharacterOcto::isRaising(void)
 	return state == WaterJump;
 }
 
-bool	CharacterOcto::isInAir(void)
+bool	CharacterOcto::isInAir(void) const
 {
 	return (!m_onGround);
 }
@@ -1436,6 +1519,11 @@ bool	CharacterOcto::isInAir(void)
 bool	CharacterOcto::isMeetingNpc(void) const
 {
 	return m_meetNpc;
+}
+
+bool	CharacterOcto::isOnGround(void) const
+{
+	return m_onGround;
 }
 
 void	CharacterOcto::meetNpc(bool meetNpc)

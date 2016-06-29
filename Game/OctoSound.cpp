@@ -1,5 +1,6 @@
 #include "OctoSound.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
