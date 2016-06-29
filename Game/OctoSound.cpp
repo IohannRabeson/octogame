@@ -14,6 +14,7 @@ CharacterOcto::OctoSound::OctoSound() :
 	m_timeSoundIn(sf::Time::Zero),
 	m_timeSoundTransition(sf::Time::Zero),
 	m_timeSoundTransitionMax(sf::seconds(1.f)),
+	m_timeDrinkSound(sf::seconds(1.f)),
 	m_inWater(false),
 	m_onGround(false),
 	m_landing(false),
@@ -130,12 +131,14 @@ void	CharacterOcto::OctoSound::startEvent(Events event)
 			break;
 		case Death:
 			if (m_onGround)
-				audio.playSound(resources.getSound(EXPLODE_HELMET_OGG), m_volumeEffect);
+				audio.playSound(resources.getSound(EXPLODE_HELMET_OGG), m_volumeEffect * 0.5f);
 			audio.playSound(resources.getSound(OCTO_DEATH_OGG), m_volumeVoice);
+			break;
 		default:
 			break;
 	}
 }
+
 void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
@@ -149,7 +152,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			break;
 		case Fall:
 			m_timeEventFall += frameTime;
-			if (m_timeEventFall > sf::seconds(1.6f) && m_sound == nullptr)
+			if (m_timeEventFall > sf::seconds(1.8f) && m_sound == nullptr)
 			{
 				m_sound = audio.playSound(resources.getSound(OCTO_FEAR_OGG), m_volumeVoice);
 			}
@@ -187,6 +190,14 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 		case WaterJump:
 			if (m_transitionInWater || m_transitionOutWater)
 				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.8f, m_pitchDistribution(m_engine));
+			break;
+		case Drink:
+			m_timeDrinkSound -= frameTime;
+			if (m_timeDrinkSound <= sf::Time::Zero)
+			{
+				audio.playSound(resources.getSound(OCTO_USE_POTION_OGG), m_volumeVoice);
+				m_timeDrinkSound = sf::seconds(1.f);
+			}
 			break;
 		default:
 			break;
