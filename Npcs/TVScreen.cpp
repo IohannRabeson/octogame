@@ -6,7 +6,7 @@
 #include <Camera.hpp>
 
 TVScreen::TVScreen(std::string const & kernelName) :
-	ANpc(TV_BLACK_OSS),
+	ANpc(TV_BLACK_OSS, false),
 	m_shader(PostEffectLayer::getInstance().getShader(DUPLICATE_SCREEN_FRAG)),
 	m_shaderReverse(PostEffectLayer::getInstance().getShader(kernelName)),
 	m_state(None),
