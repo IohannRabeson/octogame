@@ -186,7 +186,6 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
 			if (m_timer >= m_endPostEffectDuration)
 			{
-				PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, false);
 				octo::Application::getStateManager().change("menu");
 			}
 			break;
