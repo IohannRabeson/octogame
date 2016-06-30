@@ -18,6 +18,7 @@ void RandomDiscoverMenu::createMenus(void)
 	addMenu(L"5", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(L"6", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(L"7", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"8", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
 	std::size_t nbRandomDiscover = static_cast<std::size_t>(Progress::getInstance().getRandomDiscoverCount());
 	if (nbRandomDiscover >= 7u)

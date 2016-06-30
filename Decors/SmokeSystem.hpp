@@ -30,6 +30,7 @@ public:
 	void			setEmitTimeRange(float min, float max);
 	void			setGrowTimeRange(float min, float max);
 	void			setLifeTimeRange(float min, float max);
+	void			setScaleRange(float min, float max);
 	void			setCanEmit(bool canEmit);
 
 private:

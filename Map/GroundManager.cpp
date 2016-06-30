@@ -34,6 +34,7 @@
 #include "ClassicNpc.hpp"
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "Rocket.hpp"
 #include "OctoDeathNpc.hpp"
 #include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
@@ -222,6 +223,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<Rocket>(ROCKET_OSS);
 	m_npcFactory.registerCreator<FabienNpc>(FABIEN_OSS);
 	m_npcFactory.registerCreator<OverCoolNpc>(OVER_COOL_NPC_OSS);
 	m_npcFactory.registerCreator<Pedestal>(PEDESTAL_OSS);
@@ -656,6 +658,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::Rocket:
+				{
+					Rocket * npc = new Rocket();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::OctoDeathNpc:
 				{
 					OctoDeathNpc * npc = new OctoDeathNpc(biome.getWaterLevel());

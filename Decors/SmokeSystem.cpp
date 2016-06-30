@@ -212,6 +212,11 @@ void	SmokeSystem::setLifeTimeRange(float min, float max)
 	m_lifeTimeDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
 }
 
+void	SmokeSystem::setScaleRange(float min, float max)
+{
+	m_scaleDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
+}
+
 void	SmokeSystem::setCanEmit(bool canEmit)
 {
 	m_canEmit = canEmit;
