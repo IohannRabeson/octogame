@@ -262,8 +262,14 @@ void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 	computeDayNight(frameTime);
 	if (biome.canCreateRain() || biome.canCreateSnow())
 		computeDrop(frameTime, biome);
-	if (m_rainSound && biome.canCreateRain() && !biome.canCreateSnow() && biome.getId() != Level::WaterA)
-		m_rainSound->setVolume(m_weather / m_dropTimerMax.asSeconds() * octo::Application::getAudioManager().getSoundVolume() * 0.5f);
+	if (m_rainSound && biome.canCreateRain() && !biome.canCreateSnow())
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		float volume = m_weather / m_dropTimerMax.asSeconds();
+		if (volume > 1.f)
+			volume = 1.f;
+		m_rainSound->setVolume(volume * audio.getSoundVolume() * 0.1f);
+	}
 	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
 	{
 		computeThunder(frameTime, biome);

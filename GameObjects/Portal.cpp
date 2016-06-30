@@ -17,8 +17,10 @@ Portal::Portal(Level destination, ResourceKey key) :
 	m_radius(100.f),
 	m_timer(0.f),
 	m_timerMax(1.0f),
-	m_box(PhysicsEngine::getShapeBuilder().createCircle())
+	m_box(PhysicsEngine::getShapeBuilder().createCircle()),
+	m_soundVolume(0.9f)
 {
+	//octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	Progress & progress = Progress::getInstance();
 	progress.registerPortal(destination);
@@ -126,6 +128,10 @@ Portal::Portal(Level destination, ResourceKey key) :
 		m_sprite.setNextEvent(Opened);
 
 	m_state = Disappear;
+
+	//TODO : To change to the good sound
+	//m_sound = audio.playSound(resources.getSound(MENU_SOUND_OGG), 0.f);
+	//m_sound->setLoop(true);
 }
 
 Portal::~Portal(void)
@@ -216,6 +222,7 @@ void Portal::update(sf::Time frametime)
 		}
 	}
 
+	//updateSound();
 	m_sprite.update(frametime);
 	m_state = Disappear;
 }
@@ -251,6 +258,15 @@ void Portal::appear(void)
 		m_particles.setTransparency(1.f);
 		m_state = State::Appear;
 	}
+}
+
+void Portal::updateSound(void)
+{
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	float						volume = 0.f;
+
+	volume = m_soundVolume * (m_timer / m_timerMax);
+	m_sound->setVolume(volume * audio.getSoundVolume());
 }
 
 bool Portal::isLock(void)

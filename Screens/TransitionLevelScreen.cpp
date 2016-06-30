@@ -64,11 +64,6 @@ void	TransitionLevelScreen::resume()
 
 void	TransitionLevelScreen::stop()
 {
-	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	octo::ResourceManager &		resources = octo::Application::getResourceManager();
-	if (m_sound != nullptr)
-		m_sound->stop();
-	audio.playSound(resources.getSound(PORTAL_END_OGG));
 }
 
 void	TransitionLevelScreen::update(sf::Time frameTime)
