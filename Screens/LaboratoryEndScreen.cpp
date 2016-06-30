@@ -5,11 +5,14 @@
 #include "ScientistLu.hpp"
 #include "ScientistFran.hpp"
 #include "ScientistCedric.hpp"
+#include "IceABiome.hpp"
+#include "Tree.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
 #include <Camera.hpp>
 
+#include <Console.hpp>
 LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_state(Appear),
 	m_timer(sf::Time::Zero),
@@ -25,8 +28,16 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_endPostEffectDuration(sf::seconds(5.f)),
 	m_textIndex(0u),
 	m_lastTextIndex(0u),
-	m_stopDialog(false)
+	m_stopDialog(false),
+	m_biome(nullptr),
+	m_decorManager(10000)
 {
+	octo::Application::getConsole().addCommand(L"test", [this](sf::Vector2f const & p)
+			{
+	for (auto it = m_decorManager.begin(); it != m_decorManager.end(); it++)
+	{
+		(*it)->setPosition(p);
+		}});
 }
 
 void	LaboratoryEndScreen::start()
@@ -74,6 +85,12 @@ void	LaboratoryEndScreen::start()
 
 	PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("resolution", camera.getRectangle().width, camera.getRectangle().height);
 	PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, false);
+
+	m_biome.reset(new IceABiome());
+	m_decorManager.setup(m_biome.get());
+	Tree * tree = new Tree(true);
+	tree->setPosition(sf::Vector2f(1275.f, 662.f));
+	m_decorManager.add(tree);
 }
 
 void	LaboratoryEndScreen::pause()
@@ -90,7 +107,6 @@ void	LaboratoryEndScreen::stop()
 	Progress::getInstance().setBubbleNpc(false);
 }
 
-#include <iostream>
 void	LaboratoryEndScreen::update(sf::Time frameTime)
 {
 	switch (m_state)
@@ -195,6 +211,8 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 
 	for (auto & it : m_npcs)
 		it->update(frameTime);
+
+	m_decorManager.update(frameTime, octo::Application::getCamera());
 }
 
 void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
@@ -210,6 +228,7 @@ void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
 	render.draw(m_foreground);
 	for (auto & it : m_npcs)
 		it->drawText(render, states);
+	render.draw(m_decorManager, states);
 }
 
 bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)

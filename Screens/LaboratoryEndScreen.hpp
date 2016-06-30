@@ -2,11 +2,14 @@
 # define LABORATORYENDSCREEN_HPP
 
 # include "InputListener.hpp"
-# include "ScientistNpc.hpp"
+# include "DecorManager.hpp"
 # include <AbstractState.hpp>
 # include <SFML/Graphics/Sprite.hpp>
 # include <SFML/Graphics/Shader.hpp>
 # include <memory>
+
+class ScientistNpc;
+class ABiome;
 
 class LaboratoryEndScreen : public octo::AbstractState,
 							public InputListener
@@ -59,6 +62,8 @@ private:
 	sf::Shader									m_shader;
 	std::size_t									m_shaderIndex;
 	bool										m_stopDialog;
+	std::unique_ptr<ABiome>						m_biome;
+	DecorManager								m_decorManager;
 
 };
 
