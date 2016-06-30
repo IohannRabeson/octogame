@@ -127,13 +127,6 @@ IceABiome::IceABiome() :
 	m_gameObjects[150] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 420;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
-	//m_gameObjects[220] = GameObjectType::Rocket;
-	//m_gameObjects[240] = GameObjectType::Rocket;
-	m_gameObjects[260] = GameObjectType::Rocket;
-	//m_gameObjects[280] = GameObjectType::Rocket;
-	//m_gameObjects[300] = GameObjectType::Rocket;
-	//m_gameObjects[320] = GameObjectType::Rocket;
-	m_gameObjects[340] = GameObjectType::Rocket;
 	m_instances[70] = MAP_ICE_A_TRAIL_LEFT_OMP;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
 	m_instances[170] = MAP_ICE_A_TRAIL_RIGHT_OMP;
