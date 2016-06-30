@@ -205,7 +205,7 @@ void NanoEffect::onTransfer(void)
 	}
 }
 
-NanoEffect::State NanoEffect::getState(void)
+NanoEffect::State NanoEffect::getState(void) const
 {
 	return m_state;
 }
