@@ -27,8 +27,6 @@ public:
 	{
 		Active,
 		Transfer,
-		ToDiscover,
-		Discover,
 		Random,
 		FadeOut,
 		Wait,
