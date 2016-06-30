@@ -1,5 +1,6 @@
 #ifndef OCTOSOUND_HPP
 # define OCTOSOUND_HPP
+
 # include "CharacterOcto.hpp"
 # include <AudioManager.hpp>
 

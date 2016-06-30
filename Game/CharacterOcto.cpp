@@ -10,6 +10,11 @@
 #include "PhysicsEngine.hpp"
 #include "ElevatorStream.hpp"
 #include "SpaceShip.hpp"
+#include "RectangleShape.hpp"
+#include "CircleShape.hpp"
+#include "TileShape.hpp"
+#include "Progress.hpp"
+#include "NanoRobot.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "RepairShipNanoRobot.hpp"
@@ -17,6 +22,7 @@
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+#include "Portal.hpp"
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -62,6 +68,7 @@ CharacterOcto::CharacterOcto() :
 	m_inWater(false),
 	m_isDeadlyWater(false),
 	m_meetNpc(false),
+	m_replaceOcto(false),
 	m_generator(std::to_string(time(0)))
 {
 	m_sound.reset(new OctoSound());
@@ -738,6 +745,48 @@ void	CharacterOcto::update(sf::Time frameTime)
 	}
 
 	Progress::getInstance().setOctoPos(getPosition());
+
+	if (m_replaceOcto && m_collidingTile.size())
+	{
+		m_replaceOcto = false;
+		m_highestPosition.y = m_box->getPosition().y;
+		for (std::size_t i = 0; i < m_collidingTile.size(); i += 2)
+		{
+			if (m_box->getGlobalBounds().left >= m_collidingTile[i].x && m_box->getGlobalBounds().left <= m_collidingTile[i + 1].x)
+			{
+				sf::Vector2f pos;
+				pos.x = m_box->getGlobalBounds().left;
+				pos.y = octo::linearInterpolation(m_collidingTile[i].y, m_collidingTile[i + 1].y, (m_box->getGlobalBounds().left - m_collidingTile[i].x) / Tile::TileSize);
+				if (pos.y < m_highestPosition.y)
+				{
+					m_highestPosition.y = pos.y;
+				}
+			}
+			if (m_box->getGlobalBounds().left + m_box->getGlobalBounds().width >= m_collidingTile[i].x && m_box->getGlobalBounds().left + m_box->getGlobalBounds().width <= m_collidingTile[i + 1].x)
+			{
+				sf::Vector2f pos;
+				pos.x = m_box->getGlobalBounds().left + m_box->getGlobalBounds().width;
+				pos.y = octo::linearInterpolation(m_collidingTile[i].y, m_collidingTile[i + 1].y, (m_box->getGlobalBounds().left + m_box->getGlobalBounds().width - m_collidingTile[i].x) / Tile::TileSize);
+				if (pos.y < m_highestPosition.y)
+				{
+					m_highestPosition.y = pos.y;
+				}
+			}
+			if (m_collidingTile[i].x >= m_box->getGlobalBounds().left && m_collidingTile[i + 1].x <= m_box->getGlobalBounds().left + m_box->getGlobalBounds().width)
+			{
+				if (m_collidingTile[i].y < m_highestPosition.y)
+				{
+					m_highestPosition.y = m_collidingTile[i].y;
+				}
+				if (m_collidingTile[i + 1].y < m_highestPosition.y)
+				{
+					m_highestPosition.y = m_collidingTile[i + 1].y;
+				}
+			}
+		}
+		m_box->setPosition(sf::Vector2f(m_box->getPosition().x - m_highestPosition.x, m_highestPosition.y - m_box->getGlobalBounds().height));
+	}
+	m_highestPosition.x = 0.f;
 }
 
 void	CharacterOcto::portalEvent()
@@ -805,13 +854,19 @@ void	CharacterOcto::drawText(sf::RenderTarget& render, sf::RenderStates states =
 		robot->drawText(render, states);
 }
 
-
-void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisionDirection)
+void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::Vector2f const& collisionDirection)
 {
 	switch(type)
 	{
 		case GameObjectType::Tile:
-			if (collisionDirection.x == 0 && collisionDirection.y < 0)
+			if (std::abs(collisionDirection.x) >= Tile::TileSize)
+			{
+				m_replaceOcto = true;
+				m_collidingTile.push_back(tileshape->getVertex(0u));
+				m_collidingTile.push_back(tileshape->getVertex(1u));
+				m_highestPosition.x += collisionDirection.x;
+			}
+			if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
 				m_collisionTile = true;
 			break;
 		case GameObjectType::Elevator:
@@ -1428,7 +1483,7 @@ bool	CharacterOcto::isRaising(void)
 	return state == WaterJump;
 }
 
-bool	CharacterOcto::isInAir(void)
+bool	CharacterOcto::isInAir(void) const
 {
 	return (!m_onGround);
 }
@@ -1436,6 +1491,16 @@ bool	CharacterOcto::isInAir(void)
 bool	CharacterOcto::isMeetingNpc(void) const
 {
 	return m_meetNpc;
+}
+
+void	CharacterOcto::resetCollidingTileCount(void)
+{
+	m_collidingTile.clear();
+}
+
+bool	CharacterOcto::isOnGround(void) const
+{
+	return m_onGround;
 }
 
 void	CharacterOcto::meetNpc(bool meetNpc)
