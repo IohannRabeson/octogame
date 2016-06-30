@@ -16,7 +16,7 @@ TVScreen::TVScreen(std::string const & kernelName) :
 	m_reverse(false)
 {
 	setSize(sf::Vector2f(25.f, 140.f));
-	setOrigin(sf::Vector2f(90.f, 700.f));
+	setOrigin(sf::Vector2f(290.f, 700.f));
 	setTextOffset(sf::Vector2f(-20.f, -10.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
@@ -88,7 +88,7 @@ void TVScreen::setupMachine(void)
 void TVScreen::update(sf::Time frametime)
 {
 	ANpc::update(frametime);
-	m_tvScreen.left = ANpc::getPosition().x - 22.f;
+	m_tvScreen.left = ANpc::getPosition().x - 222.f;
 	m_tvScreen.top = ANpc::getPosition().y - 187.f;
 	sf::Vector2f pos;
 	sf::Vector2f size;
