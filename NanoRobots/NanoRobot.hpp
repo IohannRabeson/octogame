@@ -126,6 +126,7 @@ private:
 	InputListener::OctoKeys const				m_stopSpeakingKey;
 	bool										m_stopSpeakinKeyPress;
 	sf::Vector2f								m_lastPos;
+	sf::Vector2f								m_lastInterestPos;
 };
 
 #endif

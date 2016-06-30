@@ -256,12 +256,32 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 		pos = interestPoint - position;
 		octo::normalize(pos);
 		pos = position + pos * 300.f;
-		if (m_lastPos.x != position.x && m_lastPos.y != position.y)
+		if (m_lastPos.x != position.x || m_lastPos.y != position.y)
+		{
 			pos += sf::Vector2f(0.f, -300.f);
+			m_positionBehavior->setRadius(300.f);
+			if (m_glowingEffect.getState() != NanoEffect::State::Random && m_glowingEffect.getState() != NanoEffect::State::Discover)
+				m_glowingEffect.setState(NanoEffect::State::None);
+		}
+		else
+		{
+			m_positionBehavior->setRadius(100.f);
+			if (m_glowingEffect.getState() != NanoEffect::State::Random && m_glowingEffect.getState() != NanoEffect::State::Discover)
+				m_glowingEffect.setState(NanoEffect::State::Wait);
+		}
 	}
 	else
+	{
+		if (m_glowingEffect.getState() != NanoEffect::State::Random && m_glowingEffect.getState() != NanoEffect::State::Discover)
+			m_glowingEffect.setState(NanoEffect::State::None);
 		pos = position + sf::Vector2f(0.f, -200.f);
+	}
+
+	if (interestPoint.x != m_lastInterestPos.x && interestPoint.y != m_lastInterestPos.y)
+		m_glowingEffect.setState(NanoEffect::State::ToDiscover);
+
 	m_lastPos = position;
+	m_lastInterestPos = interestPoint;
 	return pos;
 }
 bool NanoRobot::isTravelling(void) const

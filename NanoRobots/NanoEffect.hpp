@@ -27,9 +27,12 @@ public:
 	{
 		Active,
 		Transfer,
+		ToDiscover,
+		Discover,
 		Random,
 		FadeOut,
-		Wait
+		Wait,
+		None
 	};
 
 	NanoEffect(void);
@@ -47,6 +50,7 @@ public:
 	void							setNanoScale(sf::Vector2f const & scale);
 	void							onTransfer(void);
 	void							setState(State state);
+	State							getState(void);
 	void							setTravelling(bool travelling);
 	void							setEffectEnable(bool enable);
 	bool							getEffectEnable(void) const;
