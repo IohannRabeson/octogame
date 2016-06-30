@@ -24,7 +24,8 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_disappearTimerPostEffect(sf::seconds(1.f)),
 	m_endPostEffectDuration(sf::seconds(5.f)),
 	m_textIndex(0u),
-	m_lastTextIndex(0u)
+	m_lastTextIndex(0u),
+	m_stopDialog(false)
 {
 }
 
@@ -89,6 +90,7 @@ void	LaboratoryEndScreen::stop()
 	Progress::getInstance().setBubbleNpc(false);
 }
 
+#include <iostream>
 void	LaboratoryEndScreen::update(sf::Time frameTime)
 {
 	switch (m_state)
@@ -103,24 +105,31 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 				{
 					it->setDisplayText(true);
 					it->updateText(true);
+					it->setTextIndex(m_textIndex);
 				}
 			}
 			break;
 		case Dialogs:
 			m_timer += frameTime;
-			if (m_timer >= m_timeBeforeNextText)
+			if (m_timer >= m_timeBeforeNextText || m_stopDialog)
 			{
 				m_timer = sf::Time::Zero;
 				m_textIndex++;
-				if (m_textIndex > m_lastTextIndex)
+				if (m_textIndex > m_lastTextIndex || m_stopDialog)
 				{
 					for (auto & it : m_npcs)
+					{
 						it->setDisplayText(false);
+						it->updateText(false);
+					}
 					m_state = State::CedricWalk;
 				}
+				else
+				{
+					for (auto & it : m_npcs)
+						it->setTextIndex(m_textIndex);
+				}
 			}
-			for (auto & it : m_npcs)
-				it->setTextIndex(m_textIndex);
 			break;
 		case CedricWalk:
 			m_timer += frameTime;
@@ -209,6 +218,7 @@ bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)
 	switch (key)
 	{
 		case OctoKeys::Menu:
+			m_stopDialog = true;
 			break;
 		default:
 			break;

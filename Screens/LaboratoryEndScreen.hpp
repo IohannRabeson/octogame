@@ -58,6 +58,7 @@ private:
 	std::size_t									m_lastTextIndex;
 	sf::Shader									m_shader;
 	std::size_t									m_shaderIndex;
+	bool										m_stopDialog;
 
 };
 
