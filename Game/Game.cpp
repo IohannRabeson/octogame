@@ -586,9 +586,9 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	//m_musicPlayer.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
-	m_octo->drawNanoRobot(render, states);
 	m_groundManager->drawFront(render, states);
 	//m_physicsEngine.debugDraw(render);
+	m_octo->drawNanoRobot(render, states);
 	render.draw(m_skyManager->getDecorsFront(), states);
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);

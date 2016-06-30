@@ -357,7 +357,7 @@ std::size_t Progress::countRandomDiscover(void)
 	{
 		for (auto portal : level.second)
 		{
-			if (portal.first == Level::Random)
+			if (portal.first == Level::Random && portal.second == true)
 				count++;
 		}
 	}

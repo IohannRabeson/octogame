@@ -27,7 +27,7 @@ NanoEffect::NanoEffect(void) :
 	m_effectEnable(true)
 {
 	m_generator.setSeed("random");
-	m_randomTimerMax = sf::seconds(m_generator.randomFloat(20.f, 50.f));
+	m_randomTimerMax = sf::seconds(m_generator.randomFloat(2.f, 6.f));
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
 	m_lastNanoCount = Progress::getInstance().getNanoRobotCount();
 
@@ -159,7 +159,8 @@ void NanoEffect::update(sf::Time frameTime)
 			if (m_glowingTimer >= m_glowingTimerMax)
 			{
 				m_glowingTimer = sf::Time::Zero;
-				m_state = State::Wait;
+				m_state = State::None;
+				m_randomTimerMax = sf::seconds(m_generator.randomFloat(2.f, 6.f));
 			}
 			createEffect(m_size, m_position, m_glowingTimer / m_glowingTimerMax, m_color, m_builder);
 			break;
@@ -180,6 +181,10 @@ void NanoEffect::update(sf::Time frameTime)
 			}
 			break;
 		}
+		case State::None:
+			m_glowingTimer = sf::Time::Zero;
+			m_particle->canEmit(false);
+			break;
 		default:
 			break;
 	}
@@ -198,6 +203,11 @@ void NanoEffect::onTransfer(void)
 		m_state = State::Transfer;
 		m_transferTimer = sf::Time::Zero;
 	}
+}
+
+NanoEffect::State NanoEffect::getState(void) const
+{
+	return m_state;
 }
 
 void NanoEffect::setState(State state)
