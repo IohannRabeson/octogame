@@ -12,11 +12,12 @@
 
 #include <Console.hpp>
 LaboratoryEndScreen::LaboratoryEndScreen(void) :
-	m_state(ChangeAquaColor),
+	m_state(CedricWalk),
 	m_timer(sf::Time::Zero),
 	m_globalTimer(sf::Time::Zero),
 	m_timeBeforeNextText(sf::seconds(1.f)),
 	m_appearDuration(sf::seconds(2.f)),
+	m_cedricWalkTimer(sf::seconds(3.f)),
 	m_cedricPutPotionTimer(sf::seconds(3.f)),
 	m_changeColorAqua(sf::seconds(2.f)),
 	m_appearTimerPostEffect(sf::seconds(1.f)),
@@ -27,7 +28,7 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_lastTextIndex(0u)
 {
 	octo::Application::getConsole().addCommand(L"lu", [this](sf::Vector2f const & p)
-			{m_npcs[1]->setPosition(sf::Vector2f(p.x, p.y));});
+			{m_npcs[2]->setPosition(sf::Vector2f(p.x, p.y));});
 }
 
 void	LaboratoryEndScreen::start()
@@ -54,9 +55,9 @@ void	LaboratoryEndScreen::start()
 	m_npcs.emplace_back(new ScientistLu());
 	m_npcs.emplace_back(new ScientistFran());
 	m_npcs.emplace_back(new ScientistCedric());
-	m_npcs[0]->setPosition(sf::Vector2f(200.f, 883.f));
-	m_npcs[1]->setPosition(sf::Vector2f(950.f, 883.f));
-	m_npcs[2]->setPosition(sf::Vector2f(1600.f, 847.f));
+	m_npcs[0]->setPosition(sf::Vector2f(200.f, 827.f));
+	m_npcs[1]->setPosition(sf::Vector2f(950.f, 827.f));
+	m_npcs[2]->setPosition(sf::Vector2f(1600.f, 790.f));
 	m_npcs[3]->setPosition(sf::Vector2f(-70.f, 577.f));
 
 	for (auto & it : m_npcs)
@@ -118,15 +119,24 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 				{
 					for (auto & it : m_npcs)
 						it->setDisplayText(false);
-					m_state = State::CedricPutPotion;
+					m_state = State::CedricWalk;
 				}
 			}
 			for (auto & it : m_npcs)
 				it->setTextIndex(m_textIndex);
 			break;
-		case CedricPutPotion:
+		case CedricWalk:
 			m_timer += frameTime;
 			m_npcs[3]->setPosition(octo::linearInterpolation(sf::Vector2f(-70.f, 577.f), sf::Vector2f(350.f, 577.f), std::min(1.f, m_timer / m_cedricPutPotionTimer)));
+			if (m_timer >= m_cedricWalkTimer)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = CedricPutPotion;
+				m_npcs[3]->setNextEvent(ANpc::Events::Special1);
+			}
+			break;
+		case CedricPutPotion:
+			m_timer += frameTime;
 			if (m_timer >= m_cedricPutPotionTimer)
 			{
 				m_timer = sf::Time::Zero;

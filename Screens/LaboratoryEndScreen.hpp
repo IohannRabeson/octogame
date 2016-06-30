@@ -16,6 +16,7 @@ public:
 	{
 		Appear,
 		Dialogs,
+		CedricWalk,
 		CedricPutPotion,
 		VisualEffect,
 		ChangeAquaColor,
@@ -43,6 +44,7 @@ private:
 	sf::Time									m_globalTimer;
 	sf::Time									m_timeBeforeNextText;
 	sf::Time									m_appearDuration;
+	sf::Time									m_cedricWalkTimer;
 	sf::Time									m_cedricPutPotionTimer;
 	sf::Time									m_changeColorAqua;
 	sf::Time									m_appearTimerPostEffect;

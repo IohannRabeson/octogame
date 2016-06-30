@@ -15,6 +15,16 @@ class CharacterOcto;
 class ANpc : public sf::Drawable, public IPlaceable
 {
 public:
+	enum Events
+	{
+		Left,
+		Idle,
+		Right,
+		Jump,
+		DoubleJump,
+		Special1,
+		Special2
+	};
 	virtual ~ANpc(void);
 
 	void setArea(sf::FloatRect const & area);
@@ -25,6 +35,7 @@ public:
 	void setCurrentText(int index);
 	void setScale(float scale);
 	void setDisplayText(bool displayText);
+	void setNextEvent(Events event);
 	void addMapOffset(float x, float y);
 	void onTheFloor(void);
 	sf::Vector2f const & getPosition(void) const;
@@ -37,16 +48,6 @@ public:
 	virtual float getHeight(void) const;
 
 protected:
-	enum Events
-	{
-		Left,
-		Idle,
-		Right,
-		Jump,
-		DoubleJump,
-		Special1,
-		Special2
-	};
 
 	typedef std::pair<float, std::size_t>	FramePair;
 
@@ -54,7 +55,6 @@ protected:
 
 	void setTimer(sf::Time time);
 	void setTimerMax(sf::Time timerMax);
-	void setNextEvent(Events event);
 	void setMachine(octo::FiniteStateMachine const & machine);
 	void setVelocity(float velocity);
 	void setActiveText(bool active);
