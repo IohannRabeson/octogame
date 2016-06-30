@@ -10,9 +10,8 @@
 #include <PostEffectManager.hpp>
 #include <Camera.hpp>
 
-#include <Console.hpp>
 LaboratoryEndScreen::LaboratoryEndScreen(void) :
-	m_state(CedricWalk),
+	m_state(Appear),
 	m_timer(sf::Time::Zero),
 	m_globalTimer(sf::Time::Zero),
 	m_timeBeforeNextText(sf::seconds(1.f)),
@@ -27,8 +26,6 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_textIndex(0u),
 	m_lastTextIndex(0u)
 {
-	octo::Application::getConsole().addCommand(L"lu", [this](sf::Vector2f const & p)
-			{m_npcs[2]->setPosition(sf::Vector2f(p.x, p.y));});
 }
 
 void	LaboratoryEndScreen::start()
