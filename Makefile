@@ -117,7 +117,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/FabienNpc.cpp						\
 				Npcs/CedricEndNpc.cpp					\
 				Npcs/OctoDeathNpc.cpp				\
+				Npcs/Rocket.cpp				\
 #Script AddNpc
+
 
 
 
