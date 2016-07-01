@@ -3,6 +3,7 @@
 # include "InputListener.hpp"
 # include <AbstractState.hpp>
 # include <AnimatedSprite.hpp>
+# include <AudioManager.hpp>
 
 # include <SFML/Graphics/Sprite.hpp>
 
@@ -23,11 +24,14 @@ public:
 
 	void			setSpriteSheet(octo::SpriteSheet const& spriteSheet);
 	void			setAnimation(octo::SpriteAnimation const& animation);
+
 private:
+	float						m_volumeDefault;
+	std::shared_ptr<sf::Sound>	m_sound;
 	octo::AnimatedSprite		m_sprite;
 	octo::SpriteAnimation		m_animation;
-	sf::Time					m_timeDeath;
-	sf::Time					m_timeDeathMax;
+	sf::Time					m_timeTransition;
+	sf::Time					m_timeTransitionMax;
 };
 
 #endif

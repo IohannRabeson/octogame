@@ -1,18 +1,22 @@
 #include "DeathScreen.hpp"
 
 #include <Application.hpp>
-#include <AudioManager.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
+#include <Interpolations.hpp>
 
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
 
 DeathScreen::DeathScreen() :
-	m_timeDeath(sf::Time::Zero),
-	m_timeDeathMax(sf::seconds(1.25f))
+	m_sound(nullptr),
+	m_timeTransition(sf::Time::Zero),
+	m_timeTransitionMax(sf::seconds(1.25f))
 {
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::SpriteAnimation::FrameList	frames;
+
+	m_volumeDefault = audio.getSoundVolume();
 
 	frames.emplace_back(sf::seconds(0.6f), 0);
 	frames.emplace_back(sf::seconds(0.05f), 1);
@@ -38,7 +42,6 @@ DeathScreen::~DeathScreen()
 
 void	DeathScreen::start()
 {
-	octo::AudioManager &	audio = octo::Application::getAudioManager();
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	octo::Camera&			camera = octo::Application::getCamera();
 	sf::Vector2f const&		pos = Progress::getInstance().getOctoPosTransition();
@@ -57,7 +60,6 @@ void	DeathScreen::start()
 	}
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
-	audio.playSound(resources.getSound(PORTAL_START_OGG), 0.7f);
 }
 
 void	DeathScreen::pause()
@@ -73,21 +75,36 @@ void	DeathScreen::resume()
 void	DeathScreen::stop()
 {
 	InputListener::removeInputListener();
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+
+	audio.setSoundVolume(m_volumeDefault);
 }
 
 void	DeathScreen::update(sf::Time frameTime)
 {
-	octo::StateManager & states = octo::Application::getStateManager();
-	m_timeDeath += frameTime;
-	if (m_timeDeath >= m_timeDeathMax)
+	octo::ResourceManager&		resources = octo::Application::getResourceManager();
+	octo::StateManager &		states = octo::Application::getStateManager();
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+
+	m_timeTransition += frameTime;
+	if (!m_sound && m_timeTransition > sf::seconds(0.75f))
+		m_sound = audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_OGG), 0.5f);
+
+	if (m_timeTransition >= m_timeTransitionMax)
 		states.change("game");
-	m_sprite.update(frameTime);
+	else
+	{
+		audio.setSoundVolume(octo::linearInterpolation(m_volumeDefault, 0.f, std::pow(m_timeTransition / m_timeTransitionMax, 2)));
+		if (m_sound)
+			m_sound->setVolume(0.5f * m_volumeDefault);
+		m_sprite.update(frameTime);
+	}
 }
 
 void	DeathScreen::draw(sf::RenderTarget& render)const
 {
 	render.clear();
-	if (m_timeDeath < m_timeDeathMax)
+	if (m_timeTransition < m_timeTransitionMax)
 		render.draw(m_sprite);
 }
 
@@ -104,6 +121,6 @@ void	DeathScreen::setAnimation(octo::SpriteAnimation const& animation)
 bool	DeathScreen::onInputPressed(InputListener::OctoKeys const &)
 {
 	if (!Progress::getInstance().isFirstTime())
-		m_timeDeath = m_timeDeathMax;
+		m_timeTransition = m_timeTransitionMax;
 	return true;
 }
