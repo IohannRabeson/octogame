@@ -213,6 +213,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
+	m_npcFactory.registerCreator<ConstanceNpc>(CONSTANCE_OSS);
+	m_npcFactory.registerCreator<FaustNpc>(NPC_FAUST_OSS);
+	m_npcFactory.registerCreator<AmandineNpc>(AMANDINE_OSS);
 	m_npcFactory.registerCreator<Snowman2Npc>(SNOWMAN_2_OSS);
 	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
