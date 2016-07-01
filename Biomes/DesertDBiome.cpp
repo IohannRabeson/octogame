@@ -37,7 +37,7 @@ DesertDBiome::DesertDBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(10u, 20u),
-	m_treeCount(40u, 40u),
+	m_treeCount(30u, 30u),
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(130u, 170u),
 	m_starCount(500u, 800u),
@@ -52,8 +52,8 @@ DesertDBiome::DesertDBiome() :
 	m_canCreateSnow(false),
 	m_canCreateRock(false),
 	m_canCreateTree(true),
-	m_canCreateLeaf(false),
-	m_treeIsMoving(false),
+	m_canCreateLeaf(true),
+	m_treeIsMoving(true),
 	m_canCreateMushroom(false),
 	m_canCreateCrystal(true),
 	m_canCreateShineEffect(true),
@@ -65,17 +65,17 @@ DesertDBiome::DesertDBiome() :
 	m_waterPersistence(1.f),
 	m_type(ABiome::Type::Desert),
 
-	m_rockSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 400.f)),
+	m_rockSize(sf::Vector2f(5.f, 70.f), sf::Vector2f(20.f, 100.f)),
 	m_rockPartCount(50.f, 80.f),
 	m_rockColor(255, 232, 170),
 
-	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(15.f, 30.f), sf::Vector2f(30.f, 60.f)),
-	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
-	m_treeColor(18, 14, 66),
-	m_treeAngle(15.f, 75.f),
+	m_treeDepth(4u, 5u),
+	m_treeSize(sf::Vector2f(4.f, 15.f), sf::Vector2f(8.f, 30.f)),
+	m_treeLifeTime(sf::seconds(4), sf::seconds(10)),
+	m_treeColor(245, 222, 130),
+	m_treeAngle(5.f, 10.f),
 	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(80.f, 80.f), sf::Vector2f(150.f, 150.f)),
+	m_leafSize(sf::Vector2f(10.f, 10.f), sf::Vector2f(30.f, 30.f)),
 	m_leafColor(46, 133, 84),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
@@ -509,7 +509,7 @@ sf::Color		DesertDBiome::getLeafColor()
 
 std::size_t		DesertDBiome::getTreePositionX()
 {
-	return randomInt(10u, m_mapSize.x - 1u);
+	return randomInt(24.f, 50.f);
 }
 
 sf::Vector2f	DesertDBiome::getCrystalSize()

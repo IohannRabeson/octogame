@@ -85,7 +85,9 @@ enum class GameObjectType : std::size_t
 	CedricEndNpc				= (1 << 15) + 44,
 	OctoDeathNpc				= (1 << 15) + 45,
 	Rocket				= (1 << 15) + 46,
+	LongChairNpc				= (1 << 15) + 47,
 //Script AddNpc
+
 
 
 
