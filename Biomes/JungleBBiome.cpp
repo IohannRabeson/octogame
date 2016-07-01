@@ -132,7 +132,6 @@ JungleBBiome::JungleBBiome() :
 	m_instances[387] = MAP_JUNGLE_B_FLUE_PART_OMP;
 	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;
 	m_instances[35] = MAP_JUNGLE_B_CLIFF_OMP;
-	m_gameObjects[25] = GameObjectType::CheckPoint;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleC)
@@ -146,20 +145,8 @@ JungleBBiome::JungleBBiome() :
 		else
 			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
 	}
-	/*
-	for (std::size_t i = 530; i < 730; i += m_generator.randomInt(20u, 30u))
-	{
-		if (m_generator.randomBool(0.5))
-			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
-		else
-			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
-	}
-	for (std::size_t i = 0; i < 542; i += m_generator.randomInt(70u, 250u))
-		m_gameObjects[i] = GameObjectType::BirdRedNpc;
-	*/
 
-
-	m_interestPointPosX = 290;
+	m_interestPointPosX = 80;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
