@@ -218,6 +218,16 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_inkParticle.setLifeTimeRange(0.4f, 0.5f);
 	m_inkParticle.setScaleFactor(30.f);
 	m_inkParticle.setColor(sf::Color(0, 0, 0));
+
+	m_bubbleParticle.setup(sf::Vector2f(1.5f, 1.5f));
+	m_bubbleParticle.setVelocity(sf::Vector2f(0.f, -70.f));
+	m_bubbleParticle.setEmitTimeRange(0.2f, 0.3f);
+	m_bubbleParticle.setGrowTimeRange(0.4f, 0.6f);
+	m_bubbleParticle.setLifeTimeRange(1.f, 1.8f);
+	m_bubbleParticle.setScaleFactor(10.f);
+	m_bubbleParticle.setDispersion(80.f);
+	m_bubbleParticle.setColor(sf::Color(255, 255, 255, 100));
+	m_bubbleParticle.setCanEmit(false);
 }
 
 void	CharacterOcto::setupAnimation()
@@ -740,6 +750,13 @@ void	CharacterOcto::update(sf::Time frameTime)
 	else
 		m_inkParticle.setCanEmit(false);
 
+	m_bubbleParticle.setPosition(m_box->getBaryCenter());
+	m_bubbleParticle.update(frameTime);
+	if (getPosition().y > m_waterLevel + 40.f && m_inWater)
+		m_bubbleParticle.setCanEmit(true);
+	else
+		m_bubbleParticle.setCanEmit(false);
+
 	for (auto & robot : m_nanoRobots)
 	{
 		robot->update(frameTime);
@@ -842,6 +859,7 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_helmetParticle.draw(render);
 	m_ploufParticle.draw(render);
 	m_waterParticle.draw(render);
+	m_bubbleParticle.draw(render);
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
