@@ -156,6 +156,7 @@ private:
 	HelmetSystem				m_helmetParticle;
 	PloufSystem					m_ploufParticle;
 	WaterDropSystem				m_waterParticle;
+	SmokeSystem					m_bubbleParticle;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;

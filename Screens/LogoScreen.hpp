@@ -5,6 +5,7 @@
 # include <AudioManager.hpp>
 
 # include "InputListener.hpp"
+# include "RandomGenerator.hpp"
 # include "ResourceDefinitions.hpp"
 
 # include <vector>
@@ -27,6 +28,7 @@ private:
 	virtual bool onInputPressed(InputListener::OctoKeys const & key);
 
 private:
+	RandomGenerator					m_generator;
 	std::size_t						m_count;
 	std::vector<ResourceKey>		m_key;
 	std::vector<sf::Texture>		m_startTextures;

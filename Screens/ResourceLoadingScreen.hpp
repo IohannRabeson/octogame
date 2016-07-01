@@ -16,6 +16,7 @@
 # include <AudioManager.hpp>
 
 # include "ResourceDefinitions.hpp"
+# include "RandomGenerator.hpp"
 
 # include <string>
 # include <vector>
@@ -38,6 +39,7 @@ private:
 	virtual void	draw(sf::RenderTarget& render)const;
 	virtual void	onNoMoreLoading();	
 private:
+	RandomGenerator					m_generator;
 	std::size_t						m_count;
 	std::vector<ResourceKey>		m_key;
 	std::vector<sf::Texture>		m_startTextures;

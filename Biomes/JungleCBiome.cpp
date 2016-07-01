@@ -15,7 +15,7 @@ JungleCBiome::JungleCBiome() :
 	m_seed("JungleC"),
 	m_mapSize(sf::Vector2u(900u, 200u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(93.f * 16.f, -650.f),
+	m_octoStartPosition(33.f * 16.f, -650.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
@@ -127,16 +127,16 @@ JungleCBiome::JungleCBiome() :
 
 	// Define game objects
 	m_instances[230] = MAP_JUNGLE_C_TRAIL_OMP;
-	m_gameObjects[90] = GameObjectType::PortalJungle;
+	m_instances[40] = MAP_JUNGLE_C_GUI_OMP;
+	m_gameObjects[30] = GameObjectType::PortalJungle;
 	m_gameObjects[40] = GameObjectType::BirdRedNpc;
-	m_gameObjects[165] = GameObjectType::OverCoolNpc;
+	m_gameObjects[175] = GameObjectType::OverCoolNpc;
 	m_gameObjects[110] = GameObjectType::BirdRedNpc;
-	m_gameObjects[630] = GameObjectType::AmandineNpc;
-	m_gameObjects[645] = GameObjectType::BirdRedNpc;
-	m_gameObjects[670] = GameObjectType::FaustNpc;
-	m_gameObjects[705] = GameObjectType::ConstanceNpc;
-	m_gameObjects[730] = GameObjectType::WaterNanoRobot;
-	m_gameObjects[755] = GameObjectType::PortalWater;
+	m_instances[613] = MAP_JUNGLE_C_SMALL_VILLAGE_OMP;
+	m_gameObjects[740] = GameObjectType::Pedestal;
+	m_gameObjects[744] = GameObjectType::WaterNanoRobot;
+	m_instances[815] = MAP_JUNGLE_C_PORTAL_OMP;
+	m_gameObjects[830] = GameObjectType::CanouilleNpc;
 	for (std::size_t i = 0; i < 200; i += m_generator.randomInt(20u, 40u))
 	{
 		if (m_generator.randomBool(0.5))
@@ -144,7 +144,7 @@ JungleCBiome::JungleCBiome() :
 		else
 			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
 	}
-	for (std::size_t i = 605; i < 805; i += m_generator.randomInt(20u, 30u))
+	for (std::size_t i = 605; i < 755; i += m_generator.randomInt(20u, 30u))
 	{
 		if (m_generator.randomBool(0.5))
 			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
@@ -159,8 +159,8 @@ JungleCBiome::JungleCBiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
-	m_destinations.push_back(Level::JungleB);
 	m_destinations.push_back(Level::WaterA);
+	m_destinations.push_back(Level::JungleB);
 }
 
 void			JungleCBiome::setup(std::size_t seed)
@@ -272,8 +272,8 @@ Map::MapSurfaceGenerator JungleCBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		float m = n / 3.f;
-		std::vector<float> pointX = {0.f      , 200.f    , 235.f, 563.f, 570.f    , 784.f   , 820.f   , 900.f};
-		std::vector<float> pointY = {m - 1.15f, m - 1.15f, n    , n    , m - 1.71f, m - 1.6f, m - 0.3f, m - 0.3f};
+		std::vector<float> pointX = {0.f      , 40.f  , 150.f  , 200.f    , 235.f   , 450.f   , 563.f   , 570.f    , 610.f    , 615.f, 684.f , 734.f  , 750.f  , 800.f    , 900.f};
+		std::vector<float> pointY = {m - 1.15f, -1.17f, -1.17f , m - 1.15f, n - 0.6f, n + 0.5f, n - 0.5f, m - 1.71f, m - 1.71f, -1.2f, -1.28f, m - 1.f, m - 1.f, m - 0.65f, m - 0.65f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

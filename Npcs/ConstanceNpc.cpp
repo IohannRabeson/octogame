@@ -6,8 +6,8 @@
 ConstanceNpc::ConstanceNpc(void) :
 	ANpc(CONSTANCE_OSS)
 {
-	setSize(sf::Vector2f(1.f, 145.f));
-	setOrigin(sf::Vector2f(90.f, 68.f));
+	setSize(sf::Vector2f(20.f, 145.f));
+	setOrigin(sf::Vector2f(80.f, 68.f));
 	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -30.f));

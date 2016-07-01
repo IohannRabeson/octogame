@@ -14,8 +14,6 @@ Snowman3Npc::Snowman3Npc(void) :
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
-
-	setCurrentText(0u);
 }
 
 Snowman3Npc::~Snowman3Npc(void)

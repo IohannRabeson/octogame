@@ -4,6 +4,7 @@
 # include "AMenu.hpp"
 # include "BubbleMenu.hpp"
 # include "InputListener.hpp"
+# include "RandomGenerator.hpp"
 # include <GraphicsManager.hpp>
 # include <SFML/Graphics/CircleShape.hpp>
 
@@ -34,6 +35,7 @@ public:
 	void				setIsFontSelect(bool isFontSelect);
 
 private:
+	RandomGenerator								m_generator;
 	BubbleMenu									m_bubble;
 	ABubble::Type								m_type;
 	std::size_t									m_characterSize;

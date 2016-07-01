@@ -3,9 +3,11 @@
 #include "RectangleShape.hpp"
 #include "ChallengeManager.hpp"
 #include <ResourceManager.hpp>
+#include <Application.hpp>
+#include <AudioManager.hpp>
 
 CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_START_OSS, false)
+	ANpc(CEDRIC_END_OSS, false)
 {
 	setSize(sf::Vector2f(50.f, 100.f));
 	setOrigin(sf::Vector2f(60.f, 68.f));
@@ -135,6 +137,10 @@ void CedricEndNpc::stopBalle(void)
 {
 	if (!Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
 	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+
+		audio.playSound(resources.getSound(OCTO_STOP_BALLE_OGG), 0.7f);
 		getSprite().setNextEvent(Special1);
 		Progress::getInstance().validateChallenge(m_effect);
 	}

@@ -6,8 +6,8 @@
 AmandineNpc::AmandineNpc(void) :
 	ANpc(AMANDINE_OSS)
 {
-	setSize(sf::Vector2f(1.f, 75.f));
-	setOrigin(sf::Vector2f(90.f, 165.f));
+	setSize(sf::Vector2f(20.f, 75.f));
+	setOrigin(sf::Vector2f(80.f, 165.f));
 	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -100.f));
