@@ -133,10 +133,11 @@ JungleCBiome::JungleCBiome() :
 	m_gameObjects[110] = GameObjectType::BirdRedNpc;
 	m_gameObjects[630] = GameObjectType::AmandineNpc;
 	m_gameObjects[645] = GameObjectType::BirdRedNpc;
-	m_gameObjects[670] = GameObjectType::FaustNpc;
-	m_gameObjects[705] = GameObjectType::ConstanceNpc;
+	m_gameObjects[650] = GameObjectType::FaustNpc;
+	m_gameObjects[675] = GameObjectType::ConstanceNpc;
 	m_gameObjects[730] = GameObjectType::WaterNanoRobot;
-	m_gameObjects[755] = GameObjectType::PortalWater;
+	//m_gameObjects[755] = GameObjectType::PortalWater;
+	m_instances[815] = MAP_JUNGLE_C_PORTAL_OMP;
 	for (std::size_t i = 0; i < 200; i += m_generator.randomInt(20u, 40u))
 	{
 		if (m_generator.randomBool(0.5))
@@ -272,8 +273,8 @@ Map::MapSurfaceGenerator JungleCBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		float m = n / 3.f;
-		std::vector<float> pointX = {0.f      , 200.f    , 235.f, 563.f, 570.f    , 784.f   , 820.f   , 900.f};
-		std::vector<float> pointY = {m - 1.15f, m - 1.15f, n    , n    , m - 1.71f, m - 1.6f, m - 0.3f, m - 0.3f};
+		std::vector<float> pointX = {0.f      , 200.f    , 235.f, 563.f, 570.f    , 610.f    , 615.f   , 680.f   , 734.f  , 750.f  , 800.f    , 900.f};
+		std::vector<float> pointY = {m - 1.15f, m - 1.15f, n    , n    , m - 1.71f, m - 1.71f, m - 1.2f, m - 1.2f, m - 1.f, m - 1.f, m - 0.65f, m - 0.65f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
