@@ -9,6 +9,7 @@
 #include <cassert>
 
 Portal::Portal(Level destination, ResourceKey key) :
+	m_generator("random"),
 	m_destination(destination),
 	m_position(40.f, 0.f),
 	m_shader(PostEffectLayer::getInstance().getShader(VORTEX_FRAG)),
@@ -130,7 +131,7 @@ Portal::Portal(Level destination, ResourceKey key) :
 	m_state = Disappear;
 
 	//TODO : To change to the good sound
-	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.f);
+	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.f, m_generator.randomFloat(0.9f, 1.1f));
 	m_sound->setLoop(true);
 }
 

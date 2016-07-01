@@ -15,6 +15,7 @@
 # include "AGameObject.hpp"
 # include "ABiome.hpp"
 # include "IPlaceable.hpp"
+# include "RandomGenerator.hpp"
 
 # include <random>
 # include <ctime>
@@ -104,6 +105,7 @@ public:
 private:
 	void updateSound(void);
 
+	RandomGenerator				m_generator;
 	PortalParticle				m_particles;
 	Level						m_destination;
 	sf::Vector2f				m_position;

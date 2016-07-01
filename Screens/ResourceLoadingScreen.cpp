@@ -23,6 +23,7 @@
 
 ResourceLoadingScreen::ResourceLoadingScreen() :
 	AbstractResourceLoadingState(),
+	m_generator("random"),
 	m_count(23u),
 	m_index(0u)
 {
@@ -107,6 +108,7 @@ void	ResourceLoadingScreen::start()
 	AbstractResourceLoadingState::start();
 	octo::AudioManager& audio = octo::Application::getAudioManager();
 	m_sound = audio.playSound(octo::Application::getResourceManager().getSound(REPAIR_WITH_LAZER_OGG), 0.3f);
+	m_sound->setLoop(true);
 }
 
 void	ResourceLoadingScreen::stop()
@@ -144,11 +146,11 @@ void	ResourceLoadingScreen::updateScreen(sf::Time frameTime)
 	m_timer += frameTime;
 	if (m_timer > m_timerMax[m_index])
 	{
-		if (m_index == 4u || m_index == 14u)
+		if (m_index == 1u || m_index == 5u || m_index == 7u || m_index == 9u || m_index == 12u || m_index == 15u)
 		{
 			octo::AudioManager& audio = octo::Application::getAudioManager();
 			octo::ResourceManager& resources = octo::Application::getResourceManager();
-			audio.playSound(resources.getSound(LOGO_SOUND_OGG), 1.f);
+			audio.playSound(resources.getSound(LOGO_SOUND_OGG), 0.15f, m_generator.randomFloat(0.95f, 1.05f));
 			if (m_index == 8u)
 				audio.playSound(resources.getSound(OCTO_GREETING_OGG), 1.f);
 		}
