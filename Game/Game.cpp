@@ -44,6 +44,7 @@
 
 //Npc
 //Script AddNpc Include
+#include "LongChairNpc.hpp"
 #include "Rocket.hpp"
 #include "OctoDeathNpc.hpp"
 #include "CedricEndNpc.hpp"
@@ -362,6 +363,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::LongChairNpc:
+			gameObjectCast<LongChairNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::Rocket:
 			gameObjectCast<Rocket>(gameObject)->collideOctoEvent(octo);
 			break;

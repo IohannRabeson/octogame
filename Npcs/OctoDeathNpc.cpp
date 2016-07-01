@@ -3,10 +3,11 @@
 
 #include <iostream>
 
-OctoDeathNpc::OctoDeathNpc(float waterLevel) :
+OctoDeathNpc::OctoDeathNpc(float waterLevel, sf::Color waterColor) :
 	ANpc(OCTO_DEATH_HELMET_OSS, false),
 	m_isCollide(false),
 	m_waterLevel(waterLevel),
+	m_waterColor(waterColor),
 	m_fallingWater(true)
 {
 	setSize(sf::Vector2f(10.f, 15.f));
@@ -51,7 +52,7 @@ void OctoDeathNpc::setup(void)
 	m_smoke.setLifeTimeRange(0.6f, 0.8f);
 	m_smoke.setScaleFactor(5.f);
 	m_smoke.setDispersion(80.f);
-	m_smoke.setColor(sf::Color(154, 213, 141, 150));
+	m_smoke.setColor(m_waterColor);
 	m_smoke.setCanEmit(false);
 }
 
@@ -99,7 +100,7 @@ void OctoDeathNpc::update(sf::Time frametime)
 
 void OctoDeathNpc::updatePhysics(void)
 {
-	if (getPosition().y >= m_waterLevel - 20.f && m_waterLevel > 0)
+	if (getPosition().y >= m_waterLevel - 20.f && m_waterLevel > 0 && m_waterColor.a > 0)
 	{
 		if (m_isCollide)
 		{

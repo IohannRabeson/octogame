@@ -46,16 +46,16 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		m_zoomState = ZoomState::ZoomIn;
 	}
 
-	float goalTop = octo.getPosition().y - camera.getRectangle().height / 5.f;
-	float goalBot = octo.getPosition().y + camera.getRectangle().height / 3.f;
-	float goalLeft = octo.getPosition().x - camera.getRectangle().width / 3.f;
-	float goalRight = octo.getPosition().x + camera.getRectangle().width / 3.f;
+	float goalTop = octo.getPosition().y - camera.getRectangle().height / 4.f;
+	float goalBot = octo.getPosition().y + camera.getRectangle().height / 4.f;
+	float goalLeft = octo.getPosition().x - camera.getRectangle().width / 4.f;
+	float goalRight = octo.getPosition().x + camera.getRectangle().width / 4.f;
 
 	switch (m_behavior)
 	{
 		case Behavior::FollowOcto:
 		{
-			m_speed = 3.f;
+			m_speed = 2.5f;
 			m_verticalTransition -= 0.3f * frametime.asSeconds();
 			if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
@@ -67,7 +67,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		}
 		case Behavior::OctoFalling:
 		{
-			m_speed = 3.f;
+			m_speed = 2.5f;
 			m_verticalTransition += 0.5f * frametime.asSeconds();
 			if (m_verticalTransition > 1.f)
 				m_verticalTransition = 1.f;

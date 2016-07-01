@@ -7,7 +7,7 @@
 class OctoDeathNpc : public ANpc, public AGameObject<GameObjectType::OctoDeathNpc>
 {
 public:
-	OctoDeathNpc(float waterLevel);
+	OctoDeathNpc(float waterLevel, sf::Color waterColor);
 	virtual ~OctoDeathNpc(void) = default;
 
 	virtual void setup(void);
@@ -22,6 +22,7 @@ protected:
 private:
 	bool			m_isCollide;
 	float			m_waterLevel;
+	sf::Color		m_waterColor;
 	bool			m_fallingWater;
 	SmokeSystem		m_smoke;
 };
