@@ -140,12 +140,12 @@ IceDBiome::IceDBiome() :
 	m_instances[139] = MAP_ICE_D_SECRET_WAY_OMP;
 	m_instances[118] = MAP_ICE_D_PORTAL_RANDOM_OMP;
 	m_gameObjects[190] = GameObjectType::BirdBlueNpc;
-	m_instances[220] = MAP_ICE_D_ELEVATOR_OMP;
-	m_gameObjects[250] = GameObjectType::EngineSnow;
-	m_gameObjects[360] = GameObjectType::StrangerSnowNpc;
+	m_instances[210] = MAP_ICE_D_ELEVATOR_OMP;
+	m_gameObjects[270] = GameObjectType::Pedestal;
+	m_gameObjects[274] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[330] = GameObjectType::EngineSnow;
 	m_gameObjects[340] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[396] = GameObjectType::Pedestal;
-	m_gameObjects[400] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[390] = GameObjectType::StrangerSnowNpc;
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
 	m_gameObjects[510] = GameObjectType::BirdBlueNpc;
 	m_instances[551] = MAP_ICE_D_TRAIL_OMP;

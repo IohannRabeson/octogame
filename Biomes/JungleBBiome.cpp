@@ -13,7 +13,7 @@ JungleBBiome::JungleBBiome() :
 	m_name("Jungle B"),
 	m_id(Level::JungleB),
 	m_seed("Jungle B"),
-	m_mapSize(sf::Vector2u(700u, 200u)),
+	m_mapSize(sf::Vector2u(550u, 200u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(93.f * 16.f, 1000.f),
 	m_transitionDuration(0.5f),
@@ -37,7 +37,7 @@ JungleBBiome::JungleBBiome() :
 	m_lightningSize(700.f, 2500.f),
 
 	m_rockCount(10u, 15u),
-	m_treeCount(40u, 50u),
+	m_treeCount(30u, 40u),
 	m_mushroomCount(70u, 90u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
@@ -127,10 +127,12 @@ JungleBBiome::JungleBBiome() :
 
 	// Define game objects
 	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
+	m_gameObjects[90] = GameObjectType::PortalJungle;
 	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
 	m_instances[387] = MAP_JUNGLE_B_FLUE_PART_OMP;
 	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;
-	m_gameObjects[90] = GameObjectType::PortalJungle;
+	m_instances[35] = MAP_JUNGLE_B_CLIFF_OMP;
+	m_gameObjects[25] = GameObjectType::CheckPoint;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleC)
@@ -292,8 +294,8 @@ Map::MapSurfaceGenerator JungleBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		//float m = n / 3.f;
-		std::vector<float> pointX = {0.f, 44.f     , 45.f, 55.f, 56.f     , 359.f, 381.f, 382.f, 385.f, 415.f, 420.f, 428.f, 700.f};
-		std::vector<float> pointY = {n  , n - 0.05f, 5.f , 5.f , n - 0.05f, -0.1f, 0.f  , 5.f  , 3.38f, 3.38f, 0.f  , -0.1f, n};
+		std::vector<float> pointX = {0.f     , 35.f , 44.f    , 45.f, 55.f, 56.f , 60.f , 90.f          , 200.f    , 339.f, 359.f, 381.f, 382.f, 385.f, 415.f, 417.f , 465.f, 550.f};
+		std::vector<float> pointY = {n - 1.2f, -1.7f, n - 1.2f, 5.f , 5.f , -0.1f, -0.6f, n / 2.f - 0.7f, n - 0.7f, -0.1f, -0.1f, 0.f  , 5.f  , 3.38f, 3.38f, -1.05f, -1.1f, n - 1.1f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
