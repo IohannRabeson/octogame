@@ -154,6 +154,7 @@ bool CedricStartNpc::startBalle(void)
 	{
 		ChallengeManager::getInstance().getEffect(m_effect).start();
 		getSprite().setNextEvent(Special1);
+		setCurrentText(1u);
 		return (true);
 	}
 	return (false);

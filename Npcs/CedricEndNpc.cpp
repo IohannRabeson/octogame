@@ -7,7 +7,7 @@
 #include <AudioManager.hpp>
 
 CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_START_OSS, false)
+	ANpc(CEDRIC_END_OSS, false)
 {
 	setSize(sf::Vector2f(50.f, 100.f));
 	setOrigin(sf::Vector2f(60.f, 68.f));
