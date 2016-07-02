@@ -127,13 +127,16 @@ IceBBiome::IceBBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[390] = GameObjectType::EngineSnow;
 
+	m_gameObjects[40] = GameObjectType::JuGlitchNpc;
 	m_instances[50] = MAP_ICE_B_TRAIL_A_OMP;
 	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
 	m_instances[178] = MAP_ICE_B_TRAIL_C_OMP;
 	m_instances[219] = MAP_ICE_B_TRAIL_D_OMP;
 	m_instances[370] = MAP_ICE_B_PORTAL_OMP;
+	m_gameObjects[385] = GameObjectType::WindowGlitchNpc;
+	m_gameObjects[390] = GameObjectType::EngineSnow;
+	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();
@@ -145,7 +148,6 @@ IceBBiome::IceBBiome() :
 	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[320] = GameObjectType::BirdBlueNpc;
 
-	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_destinations.push_back(Level::IceC);
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceA);
