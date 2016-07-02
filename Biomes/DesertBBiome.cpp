@@ -137,6 +137,7 @@ DesertBBiome::DesertBBiome() :
 
 	m_gameObjects[140] = GameObjectType::PortalDesert;
 	m_gameObjects[240] = GameObjectType::CedricStartNpc;
+	m_gameObjects[335] = GameObjectType::FranGlitchNpc;
 	m_gameObjects[365] = GameObjectType::Bouibouik;
 	m_instances[390] = MAP_DESERT_B_SECRET_NPC_OMP;
 	m_instances[150] = MAP_DESERT_B_TRAIL_OMP;
