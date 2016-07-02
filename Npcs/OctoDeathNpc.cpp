@@ -10,8 +10,8 @@ OctoDeathNpc::OctoDeathNpc(float waterLevel, sf::Color waterColor) :
 	m_waterColor(waterColor),
 	m_fallingWater(true)
 {
-	setSize(sf::Vector2f(10.f, 15.f));
-	setOrigin(sf::Vector2f(27.f, 10.f));
+	setSize(sf::Vector2f(15.f, 15.f));
+	setOrigin(sf::Vector2f(36.f, 10.f));
 	setScale(0.6f);
 	setTimerMax(sf::seconds(8.0f));
 	setup();
