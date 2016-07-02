@@ -13,18 +13,18 @@ CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position
 	m_count(100),
 	m_used(0u),
 	m_timer(sf::Time::Zero),
-	m_timerMax(sf::seconds(3.f)),
+	m_timerMax(sf::seconds(1.65f)),
 	m_vertices(new sf::Vertex[m_count]),
 	m_size(150.f, 150.f),
 	m_color(255, 255, 255, 200),
 	m_firstFrame(true),
 	m_isValidated(false)
 {
-	m_box->setSize(sf::Vector2f(30.f, 85.f));
+	m_box->setSize(sf::Vector2f(30.f, 285.f));
 	m_sprite.setOrigin(sf::Vector2f(0.f, -10.f));
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(position);
-	m_box->setPosition(getPosition() + sf::Vector2f(30.f, 300.f));
+	m_box->setPosition(getPosition() + sf::Vector2f(30.f, 100.f));
 	m_box->update();
 
 	m_builder = octo::VertexBuilder(m_vertices.get(), m_count);
@@ -41,14 +41,14 @@ CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position
 	m_animation.setLoop(octo::LoopMode::Loop);
 
 	frames.clear();
-	frames.emplace_back(sf::seconds(0.4f), 2u);
-	frames.emplace_back(sf::seconds(0.4f), 3u);
-	frames.emplace_back(sf::seconds(0.4f), 4u);
-	frames.emplace_back(sf::seconds(0.4f), 5u);
-	frames.emplace_back(sf::seconds(0.4f), 6u);
-	frames.emplace_back(sf::seconds(0.4f), 7u);
-	frames.emplace_back(sf::seconds(0.4f), 8u);
-	frames.emplace_back(sf::seconds(0.4f), 9u);
+	frames.emplace_back(sf::seconds(0.20f), 2u);
+	frames.emplace_back(sf::seconds(0.15f), 3u);
+	frames.emplace_back(sf::seconds(0.10f), 4u);
+	frames.emplace_back(sf::seconds(0.15f), 5u);
+	frames.emplace_back(sf::seconds(0.20f), 6u);
+	frames.emplace_back(sf::seconds(0.25f), 7u);
+	frames.emplace_back(sf::seconds(0.30f), 8u);
+	frames.emplace_back(sf::seconds(0.30f), 9u);
 	m_animationValidated.setFrames(frames);
 	m_animationValidated.setLoop(octo::LoopMode::Loop);
 
@@ -108,7 +108,7 @@ void CheckPoint::addMapOffset(float x, float y)
 void CheckPoint::setPosition(sf::Vector2f const & position)
 {
 	InstanceDecor::setPosition(position);
-	m_box->setPosition(position - sf::Vector2f(70.f, 90.f));
+	m_box->setPosition(position - sf::Vector2f(70.f, 288.f));
 	m_box->update();
 }
 
