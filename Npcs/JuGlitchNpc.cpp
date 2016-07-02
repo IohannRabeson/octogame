@@ -5,7 +5,7 @@ JuGlitchNpc::JuGlitchNpc(void) :
 	DisappearNpc(JU_GLITCH_OSS, 30.f, 120.f, false)
 {
 	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(125.f, 165.f));
+	setOrigin(sf::Vector2f(125.f, 158.f));
 	setScale(0.8f);
 	setup();
 
