@@ -6,6 +6,7 @@
 
 MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_levelMap(octo::Application::getResourceManager().getLevelMap(resourceId)),
+	m_reverse(false),
 	m_isMapHighlight(true), // TODO: Useless, to remove
 	m_depth(0),
 	m_oldDepth(0),
@@ -134,36 +135,37 @@ void MapInstance::registerDepth(void)
 bool MapInstance::nextStep(void)
 {
 	Progress & progress = Progress::getInstance();
-	if (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover()))
+
+	if (m_depth >= static_cast<int>(m_tiles.depth() - 1)
+		&& (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover())))
+		m_reverse = true;
+	else if (m_depth <= 0)
+		m_reverse = false;
+
+	if (m_reverse == false)
 		m_depth++;
-	if (m_depth >= static_cast<int>(m_tiles.depth()))
-	{
-		if (progress.getNextDestination() != Level::JungleA)
-		{
-			m_depth = m_tiles.depth() - 1u;
-			return false;
-		}
-		else
-			m_depth = 0;
-	}
+	else
+		m_depth--;
+
 	return true;
 }
 
 bool MapInstance::previousStep(void)
 {
-	Progress const & progress = Progress::getInstance();
-	m_depth--;
-	if (m_depth < 0)
-	{
-		if (progress.getNextDestination() != Level::JungleA)
-		{
-			m_depth = 0u;
-			return false;
-		}
-		else
-			m_depth = m_tiles.depth() - 1u;
-	}
+	Progress & progress = Progress::getInstance();
+
+	if (m_depth <= 0)
+		m_reverse = true;
+	else if (m_depth >= static_cast<int>(m_tiles.depth() - 1)  && (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover())))
+		m_reverse = false;
+
+	if (m_reverse == false)
+		m_depth--;
+	else
+		m_depth++;
+
 	return true;
+
 }
 
 void MapInstance::setTransitionType(Tile & tile)

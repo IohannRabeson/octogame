@@ -46,6 +46,7 @@ private:
 	octo::Array3D<float>			m_movementMask;
 	octo::LevelMap const &			m_levelMap;
 	sf::IntRect						m_cornerPositions;
+	bool							m_reverse;
 	bool							m_isMapHighlight;
 	int								m_depth;
 	int								m_oldDepth;
