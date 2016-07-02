@@ -135,18 +135,19 @@ void MapInstance::registerDepth(void)
 bool MapInstance::nextStep(void)
 {
 	Progress & progress = Progress::getInstance();
-
-	if (m_depth >= static_cast<int>(m_tiles.depth() - 1)
-		&& (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover())))
-		m_reverse = true;
-	else if (m_depth <= 0)
-		m_reverse = false;
-
-	if (m_reverse == false)
-		m_depth++;
-	else
-		m_depth--;
-
+	if (m_tiles.depth() != 1u)
+	{
+		if (m_depth >= static_cast<int>(m_tiles.depth() - 1)
+			&& (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover())))
+			m_reverse = true;
+		else if (m_depth <= 0)
+			m_reverse = false;
+	
+		if (m_reverse == false)
+			m_depth++;
+		else
+			m_depth--;
+	}
 	return true;
 }
 
@@ -154,16 +155,18 @@ bool MapInstance::previousStep(void)
 {
 	Progress & progress = Progress::getInstance();
 
-	if (m_depth <= 0)
-		m_reverse = true;
-	else if (m_depth >= static_cast<int>(m_tiles.depth() - 1)  && (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover())))
-		m_reverse = false;
-
-	if (m_reverse == false)
-		m_depth--;
-	else
-		m_depth++;
-
+	if (m_tiles.depth() != 1u)
+	{
+		if (m_depth <= 0)
+			m_reverse = true;
+		else if (m_depth >= static_cast<int>(m_tiles.depth() - 1)  && (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover())))
+			m_reverse = false;
+	
+		if (m_reverse == false)
+			m_depth--;
+		else
+			m_depth++;
+	}
 	return true;
 
 }
