@@ -413,6 +413,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(HUGE_FLUE_SNOW_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(TEMPLE_DESERT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TEMPLE_DESERT_OSS, scale, position, 3u, 0.2f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();

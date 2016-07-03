@@ -133,6 +133,7 @@ DesertDBiome::DesertDBiome() :
 	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(33.f * 16.f, -550.f);
 
+	m_gameObjects[5] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[30] = GameObjectType::PortalJungle;
 	m_gameObjects[110] = GameObjectType::PortalDesert;
 	m_instances[120] = MAP_DESERT_D_TRAIL_OMP;
