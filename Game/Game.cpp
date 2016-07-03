@@ -44,6 +44,10 @@
 
 //Npc
 //Script AddNpc Include
+#include "WindowGlitchNpc.hpp"
+#include "FranGlitchNpc.hpp"
+#include "JuGlitchNpc.hpp"
+#include "LuGlitchNpc.hpp"
 #include "LongChairNpc.hpp"
 #include "Rocket.hpp"
 #include "OctoDeathNpc.hpp"
@@ -363,6 +367,18 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::WindowGlitchNpc:
+			gameObjectCast<WindowGlitchNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::FranGlitchNpc:
+			gameObjectCast<FranGlitchNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::JuGlitchNpc:
+			gameObjectCast<JuGlitchNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::LuGlitchNpc:
+			gameObjectCast<LuGlitchNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::LongChairNpc:
 			gameObjectCast<LongChairNpc>(gameObject)->collideOctoEvent(octo);
 			break;

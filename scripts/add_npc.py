@@ -15,15 +15,15 @@ if len(sys.argv) != 3:
 className = sys.argv[1]
 spriteName = sys.argv[2]
 
-shutil.copy2('Npcs/PeaNpc.cpp', 'Npcs/' + className + ".cpp")
+shutil.copy2('Npcs/Snowman1Npc.cpp', 'Npcs/' + className + ".cpp")
 for line in fileinput.input('Npcs/' + className + '.cpp', inplace=1):
-    line = line.replace('PeaNpc', className)
-    print (line.replace('PEA_OSS', spriteName)),
+    line = line.replace('Snowman1Npc', className)
+    print (line.replace('SNOWMAN_1_OSS', spriteName)),
 
-shutil.copy2('Npcs/PeaNpc.hpp', 'Npcs/' + className + ".hpp")
+shutil.copy2('Npcs/Snowman1Npc.hpp', 'Npcs/' + className + ".hpp")
 for line in fileinput.input('Npcs/' + className + '.hpp', inplace=1):
-    line = line.replace('PeaNpc', className)
-    print (line.replace('PEA_HPP', className.upper() + '_HPP')),
+    line = line.replace('Snowman1Npc', className)
+    print (line.replace('SNOWMAN1NPC_HPP', className.upper() + '_HPP')),
 
 for line in fileinput.input('Game/CharacterOcto.cpp', inplace=1):
     if line.startswith('//Script AddNpc'):

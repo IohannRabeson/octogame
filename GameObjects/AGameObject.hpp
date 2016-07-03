@@ -86,7 +86,15 @@ enum class GameObjectType : std::size_t
 	OctoDeathNpc				= (1 << 15) + 45,
 	Rocket				= (1 << 15) + 46,
 	LongChairNpc				= (1 << 15) + 47,
+	LuGlitchNpc				= (1 << 15) + 48,
+	JuGlitchNpc				= (1 << 15) + 49,
+	FranGlitchNpc				= (1 << 15) + 50,
+	WindowGlitchNpc				= (1 << 15) + 51,
 //Script AddNpc
+
+
+
+
 
 
 

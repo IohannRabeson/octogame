@@ -12,7 +12,7 @@
 DesertABiome::DesertABiome() :
 	m_name("Desert A"),
 	m_id(Level::DesertA),
-	m_seed("Cailloux"),
+	m_seed("CaillouX"),
 	m_mapSize(sf::Vector2u(540u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(253.f * 16.f, 53.f * 16.f),
@@ -136,15 +136,17 @@ DesertABiome::DesertABiome() :
 		m_octoStartPosition = sf::Vector2f(510 * 16.f, -2700.f);
 
 	// Define game objects
-	m_gameObjects[220] = GameObjectType::JuNpc;
-	m_gameObjects[250] = GameObjectType::PortalSnow;
 	m_instances[23] = MAP_DESERT_A_WAVE_OMP;
-	m_instances[250] = MAP_DESERT_A_JUMP_OMP;
 	m_gameObjects[70] = GameObjectType::TurbanNpc;
+	m_gameObjects[220] = GameObjectType::JuNpc;
+	m_instances[250] = MAP_DESERT_A_JUMP_OMP;
+	m_gameObjects[250] = GameObjectType::PortalSnow;
+	m_gameObjects[320] = GameObjectType::WindowGlitchNpc;
+	m_gameObjects[370] = GameObjectType::PortalDesert;
 	m_gameObjects[410] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[420] = GameObjectType::Tent;
-	m_gameObjects[370] = GameObjectType::PortalDesert;
 	m_instances[440] = MAP_DESERT_A_SECRET_OMP;
+	m_gameObjects[500] = GameObjectType::JuGlitchNpc;
 	m_interestPointPosX = 263;
 
 	m_treePos = {347, 352, 359, 367, 380, 381, 393, 430, 433, 455, 460, 464, 473};

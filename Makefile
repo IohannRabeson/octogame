@@ -119,7 +119,15 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/OctoDeathNpc.cpp				\
 				Npcs/Rocket.cpp				\
 				Npcs/LongChairNpc.cpp				\
+				Npcs/LuGlitchNpc.cpp				\
+				Npcs/JuGlitchNpc.cpp				\
+				Npcs/FranGlitchNpc.cpp				\
+				Npcs/WindowGlitchNpc.cpp				\
 #Script AddNpc
+
+
+
+
 
 
 

@@ -8,7 +8,7 @@
 FannyNpc::FannyNpc(void) :
 	ANpc(FANNY_OSS)
 {
-	setSize(sf::Vector2f(260.f, 75.f));
+	setSize(sf::Vector2f(60.f, 75.f));
 	setOrigin(sf::Vector2f(90.f, 93.f));
 	setScale(0.8f);
 	setVelocity(50.f);
