@@ -6,6 +6,7 @@
 #include <Options.hpp>
 #include <AudioManager.hpp>
 #include <GraphicsManager.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include <fstream>
 
@@ -99,12 +100,13 @@ void	Progress::init()
 	loadDeaths();
 }
 
-void	Progress::save()
+void	Progress::save(float timePlayed)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 
 	m_data.fullscreen = graphics.isFullscreen();
 	m_data.vsync = graphics.isVerticalSyncEnabled();
+	m_data.timePlayed += timePlayed / 60.f;
 
 	saveNpc();
 	savePortals();

@@ -14,6 +14,13 @@ CreditMenu::CreditMenu(void) :
 
 void CreditMenu::createMenus(void)
 {
+	float timePlayed = Progress::getInstance().getTimePlayed();
+	std::size_t minutes = static_cast<std::size_t>(timePlayed);
+	std::size_t seconds = static_cast<std::size_t>((timePlayed - minutes) * 60.f);
+
+	addMenu(AMenu::getText("credits_time") + L" :", nullptr);
+	addMenu(std::to_wstring(minutes) + L"\'" + std::to_wstring(seconds), nullptr);
+	addMenu(L"", nullptr);
 	addMenu(AMenu::getText("credits_programming") + L" :", nullptr);
 	addMenu(L"Julien Balestrieri", nullptr);
 	addMenu(L"François Corbel", nullptr);
@@ -27,6 +34,7 @@ void CreditMenu::createMenus(void)
 	addMenu(L"Pierre Glory", nullptr);
 	addMenu(L"Jean-François Guerrin", nullptr);
 	addMenu(L"Fabien You", nullptr);
+
 	setIsFontSelect(false);
 }
 
