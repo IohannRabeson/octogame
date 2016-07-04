@@ -34,7 +34,7 @@ CharacterOcto::CharacterOcto() :
 	m_danceDistribution(2.f, 6.f),
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
-	m_timeSlowFallMax(sf::seconds(2.0f)),
+	m_timeSlowFallMax(sf::seconds(2.5f)),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
