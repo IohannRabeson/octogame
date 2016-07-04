@@ -34,6 +34,7 @@ CharacterOcto::CharacterOcto() :
 	m_danceDistribution(2.f, 6.f),
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
+	m_timeSlowFallMax(sf::seconds(2.0f)),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
@@ -202,6 +203,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_timeEventDeath = sf::Time::Zero;
 	m_timeEventInk = sf::Time::Zero;
 	m_timeRepairSpaceShip = sf::Time::Zero;
+	m_timeSlowFall = sf::Time::Zero;
 	setupAnimation();
 	setupMachine();
 	m_sprite.setScale(m_spriteScale, m_spriteScale);
@@ -840,6 +842,8 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 		case DoubleJump:
 			m_timeEventInk += frameTime;
 			break;
+		case SlowFall:
+			m_timeSlowFall += frameTime;
 		default:
 			break;
 	}
@@ -1015,6 +1019,7 @@ void	CharacterOcto::collisionTileUpdate()
 			m_numberOfJump = 0;
 			m_onGround = true;
 			m_afterJump = false;
+			m_timeSlowFall = sf::Time::Zero;
 			if (dieFall())
 				return;
 			if (m_keyLeft)
@@ -1062,7 +1067,7 @@ void	CharacterOcto::onSky(Events event)
 		case Fall:
 			if (m_keyUp)
 			{
-				if (m_progress.canSlowFall())
+				if (m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
 					m_sprite.setNextEvent(StartSlowFall);
 			}
 			if (m_keyElevator)
@@ -1072,6 +1077,8 @@ void	CharacterOcto::onSky(Events event)
 			}
 			break;
 		case SlowFall:
+			if (m_timeSlowFall > m_timeSlowFallMax)
+				m_sprite.setNextEvent(Fall);
 			break;
 		case StartElevator:
 		case Elevator:
@@ -1092,6 +1099,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 	if (m_collisionElevator)
 	{
 		m_timeEventFall = sf::Time::Zero;
+		m_timeSlowFall = sf::Time::Zero;
 		m_onElevator = true;
 		if (m_sprite.getCurrentEvent() == StartElevator)
 		{
@@ -1299,7 +1307,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 
 	if (m_keyUp)
 	{
-		if (event == StartSlowFall || event == SlowFall)
+		if ((event == StartSlowFall || event == SlowFall))
 		{
 			if (event == StartSlowFall)
 				velocity.x *= 1.3f;
