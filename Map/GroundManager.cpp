@@ -115,7 +115,7 @@ GroundManager::GroundManager(void) :
 	m_decorManagerGround(15000),
 	m_decorManagerInstanceBack(100000),
 	m_decorManagerInstanceFront(100000),
-	m_nextState(GenerationState::Next),
+	m_nextState(GenerationState::None),
 	m_water(nullptr)
 {}
 
@@ -158,12 +158,16 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	// Init game objects
 	setupGameObjects(biome);
 
-	swapMap();
 	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
 	m_offset.x = rect.left;
 	m_offset.y = rect.top;
 	//m_oldOffset = sf::Vector2i(m_offset / 16.f);
 	updateOffset(0.f);
+
+	//avoid empty columns
+	//TODO: Find if the problem is in swapMp
+	for (std::size_t i = 0u; i <= 1u; i++)
+		swapMap();
 }
 
 //TODO: Use movement mask

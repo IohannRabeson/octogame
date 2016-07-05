@@ -119,8 +119,7 @@ Game::Game(void) :
 	m_groundSoundTimeMax(sf::seconds(0.6f)),
 	m_slowTimeInfosCoef(1.f),
 	m_skipFrames(0u),
-	m_skipFramesMax(3u),
-	m_earlyMapMovement(sf::seconds(2.f))
+	m_skipFramesMax(3u)
 {
 	InputListener::addInputListener();
 
@@ -550,13 +549,8 @@ void Game::moveMap(sf::Time frameTime)
 	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
 
-	m_earlyMapMovement -= frameTime;
-	if (Progress::getInstance().isMenu()
-		|| m_earlyMapMovement > sf::Time::Zero
-		|| (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
-	{
+	if (Progress::getInstance().isMenu() || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
 		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-	}
 }
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
