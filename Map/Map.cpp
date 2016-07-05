@@ -298,7 +298,9 @@ bool Map::previousStep(void)
 
 			m_isOctoOnInstance = m_instances[i]->previousStep();
 			m_instanceIndex = i;
-			progress.setMapHighlight(m_instances[i]->isMapHighlight());
+			//TODO : To remove
+			//progress.setMapHighlight(m_instances[i]->isMapHighlight());
+			progress.setMapHighlight(true);
 			return true;
 		}
 	}
