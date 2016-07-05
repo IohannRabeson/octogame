@@ -981,7 +981,8 @@ void	CharacterOcto::usePortal(Portal & portal)
 		m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 		m_progress.setReverseSprite(m_originMove);
 		m_progress.setNextDestination(portal.getDestination());
-		m_progress.setRespawnType(Progress::RespawnType::Portal);
+		if (!m_progress.isMenu())
+			m_progress.setRespawnType(Progress::RespawnType::Portal);
 	}
 }
 

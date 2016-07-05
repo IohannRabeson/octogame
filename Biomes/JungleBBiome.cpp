@@ -15,7 +15,7 @@ JungleBBiome::JungleBBiome() :
 	m_seed("Jungle B"),
 	m_mapSize(sf::Vector2u(550u, 200u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(93.f * 16.f, 1000.f),
+	m_octoStartPosition(93.f * 16.f, 400.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
