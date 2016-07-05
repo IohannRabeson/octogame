@@ -96,8 +96,9 @@ void SkyCycle::setup(ABiome & biome)
 
 void SkyCycle::computeDayNight(sf::Time frameTime)
 {
-	if (m_timerStart > sf::Time::Zero)
-		frameTime *= m_timerMax.asSeconds() / 100.f * m_timerStart.asSeconds();
+	float speedCoef = m_timerMax.asSeconds() / 100.f * m_timerStart.asSeconds();
+	if (speedCoef >= 1.f)
+		frameTime *= speedCoef;
 	m_timerStart -= frameTime;
 	m_timer += frameTime;
 	if (m_timer >= m_timerMax)

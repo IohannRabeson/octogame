@@ -154,23 +154,25 @@ void	Game::loadLevel(void)
 	octo::AudioManager&			audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
+	sf::Vector2f				startPosition;
 
 	if (progress.isMenu())
+	{
 		m_biomeManager.changeBiome(Level::Rewards, 0x12345);
+		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+	}
 	else
 	{
 		m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
 		progress.setCurrentDestination(m_biomeManager.getCurrentBiome().getId());
+		if (progress.getRespawnType() == Progress::RespawnType::Portal)
+		{
+			startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+			progress.setCheckPointPosition(startPosition);
+		}
+		else // if octo died
+			startPosition = progress.getCheckPointPosition();
 	}
-
-	sf::Vector2f startPosition;
-	if (progress.getRespawnType() == Progress::RespawnType::Portal)
-	{
-		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
-		progress.setCheckPointPosition(startPosition);
-	}
-	else // if octo died
-		startPosition = progress.getCheckPointPosition();
 
 	// Reset last values
 	postEffect.removeEffects();
