@@ -1166,7 +1166,6 @@ bool	CharacterOcto::endDeath()
 	{
 		if (m_sprite.isTerminated())
 		{
-			m_progress.setRespawnType(Progress::RespawnType::Die);
 			octo::StateManager &		states = octo::Application::getStateManager();
 			states.change("octo_death");
 		}
