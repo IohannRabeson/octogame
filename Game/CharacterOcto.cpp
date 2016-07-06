@@ -116,6 +116,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_isDeadlyWater = biome.isDeadlyWater();
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
+	m_box->setType(AShape::Type::e_dynamic);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Player));
 	std::size_t mask = static_cast<std::size_t>(GameObjectType::Portal)
 		| static_cast<std::size_t>(GameObjectType::GroundTransformNanoRobot)
@@ -135,7 +136,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::EngineSnow)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik)
-		| static_cast<std::size_t>(GameObjectType::CheckPoint);
+		| static_cast<std::size_t>(GameObjectType::CheckPoint)
+		| static_cast<std::size_t>(GameObjectType::Decor);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
@@ -886,6 +888,20 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 {
 	switch(type)
 	{
+		case GameObjectType::Decor:
+			std::cout << "Octo " << collisionDirection.x << "|" << collisionDirection.y << std::endl;
+			/*
+			if (std::abs(collisionDirection.x) >= Tile::TileSize)
+			{
+				m_replaceOcto = true;
+				m_collidingTile.push_back(tileshape->getVertex(0u));
+				m_collidingTile.push_back(tileshape->getVertex(1u));
+				m_highestPosition.x += collisionDirection.x;
+			}
+			*/
+			if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
+				m_collisionTile = true;
+			break;
 		case GameObjectType::Tile:
 			if (std::abs(collisionDirection.x) >= Tile::TileSize)
 			{

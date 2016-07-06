@@ -1,5 +1,7 @@
 #include "Mushroom.hpp"
 #include "ABiome.hpp"
+#include "ConvexShape.hpp"
+#include "PhysicsEngine.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -8,13 +10,22 @@
 
 Mushroom::Mushroom(void) :
 	m_pointCount(5u),
+	m_isPhysic(true),
+	m_box(PhysicsEngine::getShapeBuilder().createConvex()),
 	m_animator(0.5f, 4.f, 5.f, 0.2f),
 	m_animation(1.f),
 	m_bouncingTimer(sf::Time::Zero),
 	m_bouncingTimerMax(sf::seconds(5.f)),
 	m_bouncingBool(true),
+	m_bouncingValue(0.f),
 	m_sound(true)
 {
+	m_box->setGameObject(this);
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Mushroom));
+	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
+	m_box->setType(AShape::Type::e_static);
+	m_box->setApplyGravity(false);
+	m_box->setVertexCount(4u);
 }
 
 void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float bouncingValue, octo::VertexBuilder& builder)
@@ -40,10 +51,25 @@ void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & or
 		m_leftFinal[i] += origin;
 	}
 
+	// Tige
 	builder.createQuad(m_leftFinal[0], m_leftFinal[4], m_rightFinal[4], m_rightFinal[0], sf::Color(255, 255, 255));
+	// Up part
 	builder.createQuad(m_leftFinal[1], m_leftFinal[2], m_rightFinal[2], m_rightFinal[1], color);
+	// Bottom part
 	builder.createQuad(m_leftFinal[2], m_leftFinal[3], m_rightFinal[3], m_rightFinal[2], color);
 	builder.createTriangle(m_leftFinal[4], m_rightFinal[4], sf::Vector2f(0.f, unit) + origin, sf::Color(255, 255, 255));
+
+	if (m_isPhysic && size.y >= 200.f)
+	{
+		builder.createQuad(m_leftFinal[1], m_leftFinal[2], m_rightFinal[2], m_rightFinal[1], sf::Color(255, 255, 255, 100));
+		builder.createQuad(m_leftFinal[2], m_leftFinal[3], m_rightFinal[3], m_rightFinal[2], sf::Color(255, 255, 255, 100));
+
+		m_box->setVertex(2u, m_leftFinal[2]);
+		m_box->setVertex(3u, m_leftFinal[1]);
+		m_box->setVertex(0u, m_rightFinal[1]);
+		m_box->setVertex(1u, m_rightFinal[2]);
+		m_box->update();
+	}
 }
 
 void Mushroom::setup(ABiome& biome)
@@ -102,6 +128,7 @@ void Mushroom::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& 
 
 	playSound(biome, position);
 
-	float bouncingValue = computeBouncingValue(frameTime);
-	createMushroom(m_size * m_animation, position, m_color, bouncingValue, builder);
+	createMushroom(m_size * m_animation, position, m_color, m_bouncingValue, builder);
+	//one frame delay because of the phisics
+	m_bouncingValue = computeBouncingValue(frameTime);
 }

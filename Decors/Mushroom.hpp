@@ -5,6 +5,8 @@
 # include "DecorAnimator.hpp"
 # include <SFML/Graphics/Color.hpp>
 
+class ConvexShape;
+
 class Mushroom : public ADecor
 {
 public:
@@ -24,12 +26,15 @@ private:
 	std::vector<sf::Vector2f>	m_leftSecond;
 	std::vector<sf::Vector2f>	m_leftFinal;
 	std::vector<sf::Vector2f>	m_rightFinal;
+	bool						m_isPhysic;
+	ConvexShape *				m_box;
 
 	DecorAnimator				m_animator;
 	float						m_animation;
 	sf::Time					m_bouncingTimer;
 	sf::Time					m_bouncingTimerMax;
 	bool						m_bouncingBool;
+	float						m_bouncingValue;
 	bool						m_sound;
 
 	void createMushroom(sf::Vector2f const & size,

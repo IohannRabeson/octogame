@@ -475,6 +475,7 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 	{
 		if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
 		{
+			//TODO : There are probably useless conditions here
 			if ((pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_static)
 				&& (pairs[i].m_shapeB->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeB->getType() == AShape::Type::e_static))
 			{
@@ -482,8 +483,10 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 				{
 					m_mtv /= 2.f;
 					pairs[i].m_collisionDirection = m_mtv;
-					pairs[i].m_shapeA->addEngineVelocity(m_mtv.x, m_mtv.y);
-					pairs[i].m_shapeB->addEngineVelocity(-m_mtv.x, -m_mtv.y);
+					if (pairs[i].m_shapeA->getType() != AShape::Type::e_static)
+						pairs[i].m_shapeA->addEngineVelocity(m_mtv.x, m_mtv.y);
+					if (pairs[i].m_shapeB->getType() != AShape::Type::e_static)
+						pairs[i].m_shapeB->addEngineVelocity(-m_mtv.x, -m_mtv.y);
 				}
 			}
 			pairs[i].m_isColliding = true;
