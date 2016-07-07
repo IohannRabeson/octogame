@@ -23,9 +23,9 @@ Mushroom::Mushroom(void) :
 	m_box->setGameObject(this);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Mushroom));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
-	m_box->setType(AShape::Type::e_static);
+	m_box->setType(AShape::Type::e_kinematic);
 	m_box->setApplyGravity(false);
-	m_box->setVertexCount(4u);
+	m_box->setVertexCount(6u);
 }
 
 void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float bouncingValue, octo::VertexBuilder& builder)
@@ -64,10 +64,12 @@ void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & or
 		builder.createQuad(m_leftFinal[1], m_leftFinal[2], m_rightFinal[2], m_rightFinal[1], sf::Color(255, 255, 255, 150 * bouncingValue));
 		builder.createQuad(m_leftFinal[2], m_leftFinal[3], m_rightFinal[3], m_rightFinal[2], sf::Color(255, 255, 255, 150 * bouncingValue));
 
-		m_box->setVertex(2u, m_leftFinal[2]);
-		m_box->setVertex(3u, m_leftFinal[1]);
-		m_box->setVertex(0u, m_rightFinal[1]);
-		m_box->setVertex(1u, m_rightFinal[2]);
+		m_box->setVertex(0u, m_leftFinal[3]);
+		m_box->setVertex(1u, m_leftFinal[2]);
+		m_box->setVertex(2u, m_leftFinal[1]);
+		m_box->setVertex(3u, m_rightFinal[1]);
+		m_box->setVertex(4u, m_rightFinal[2]);
+		m_box->setVertex(5u, m_rightFinal[3]);
 		m_box->setType(AShape::Type::e_static);
 		m_box->update();
 	}

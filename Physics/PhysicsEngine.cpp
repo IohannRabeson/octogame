@@ -481,7 +481,10 @@ void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 			{
 				if (pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_kinematic)
 				{
-					m_mtv /= 2.f;
+					//TODO : Not generic
+					//m_mtv /= 2.f;
+					m_mtv *= 1.9f;
+					m_mtv.x = 0.f;
 					pairs[i].m_collisionDirection = m_mtv;
 					if (pairs[i].m_shapeA->getType() != AShape::Type::e_static)
 						pairs[i].m_shapeA->addEngineVelocity(m_mtv.x, m_mtv.y);
@@ -509,7 +512,7 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 				pair.m_shapeB->addEngineVelocity(vel);
 				if (computeCollision(pair.m_shapeA, pair.m_shapeB))
 				{
-					if (pair.m_shapeB->isType(AShape::Type::e_dynamic))
+					if (pair.m_shapeB->isType(AShape::Type::e_dynamic) || pair.m_shapeB->isType(AShape::Type::e_kinematic))
 					{
 						if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
 						{
