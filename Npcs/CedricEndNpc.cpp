@@ -133,6 +133,12 @@ void CedricEndNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
+void CedricEndNpc::collideOctoEvent(CharacterOcto * octo)
+{
+	ANpc::collideOctoEvent(octo);
+	stopBalle();
+}
+
 void CedricEndNpc::stopBalle(void)
 {
 	if (!Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
@@ -155,6 +161,8 @@ void CedricEndNpc::update(sf::Time frametime)
 	sprite.update(frametime);
 	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
 	sprite.setPosition(bounds.left, bounds.top);
+	if (Progress::getInstance().isValidateChallenge(m_effect))
+		setDisplayText(false);
 
 	updateText(frametime);
 
@@ -169,3 +177,10 @@ void CedricEndNpc::updateState(void)
 		sprite.setNextEvent(IdleDay);
 	}
 }
+
+void CedricEndNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
+{
+	if (!Progress::getInstance().isValidateChallenge(m_effect))
+		ANpc::draw(render, states);
+}
+

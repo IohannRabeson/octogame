@@ -343,9 +343,6 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
 			}
 			break;
-		case GameObjectType::CedricEndNpc:
-			gameObjectCast<CedricEndNpc>(gameObject)->stopBalle();
-			break;
 		default:
 			break;
 	}
@@ -385,8 +382,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<OctoDeathNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::CedricStartNpc:
-//			if (gameObjectCast<CedricStartNpc>(gameObject)->startBalle())
-//				octo->startDrinkPotion();
 			gameObjectCast<CedricStartNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::CedricEndNpc:

@@ -8,7 +8,7 @@
 #include <Application.hpp>
 
 CedricStartNpc::CedricStartNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_START_OSS, false),
+	ANpc(CEDRIC_START_OSS),
 	m_throwPotionTimerMax(sf::seconds(1.f))
 {
 	setSize(sf::Vector2f(50.f, 100.f));
@@ -197,7 +197,6 @@ void CedricStartNpc::updatePotion(sf::Time frametime)
 	m_potion.setRotation(720.f * coef);
 
 	m_potion.setPosition(octo::cosinusInterpolation(getPosition() + sf::Vector2f(-4.f, 50.f), m_octoPosition, coef));
-
 }
 
 void CedricStartNpc::update(sf::Time frametime)
@@ -210,7 +209,10 @@ void CedricStartNpc::update(sf::Time frametime)
 	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
 	sprite.setPosition(bounds.left, bounds.top);
 
-	updatePotion(frametime);
+	if (!Progress::getInstance().isValidateChallenge(m_effect))
+		updatePotion(frametime);
+	else
+		setDisplayText(false);
 	updateText(frametime);
 
 	if (!ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect) && sprite.getCurrentEvent() == IdleNight)
@@ -236,6 +238,7 @@ void CedricStartNpc::updateState(void)
 
 void CedricStartNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	ANpc::draw(render, states);
+	if (!Progress::getInstance().isValidateChallenge(m_effect))
+		ANpc::draw(render, states);
 	m_potion.draw(render, states);
 }
