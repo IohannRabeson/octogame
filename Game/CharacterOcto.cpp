@@ -889,7 +889,6 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 	switch(type)
 	{
 		case GameObjectType::Decor:
-			std::cout << "Octo " << collisionDirection.x << "|" << collisionDirection.y << std::endl;
 			/*
 			if (std::abs(collisionDirection.x) >= Tile::TileSize)
 			{

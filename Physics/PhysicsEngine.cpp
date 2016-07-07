@@ -509,7 +509,7 @@ void PhysicsEngine::narrowPhaseTile(std::vector<std::vector<Pair<TileShape *, T>
 				pair.m_shapeB->addEngineVelocity(vel);
 				if (computeCollision(pair.m_shapeA, pair.m_shapeB))
 				{
-					if (!pair.m_shapeB->isType(AShape::Type::e_trigger))
+					if (pair.m_shapeB->isType(AShape::Type::e_dynamic))
 					{
 						if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
 						{

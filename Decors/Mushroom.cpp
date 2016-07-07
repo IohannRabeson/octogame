@@ -59,15 +59,21 @@ void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & or
 	builder.createQuad(m_leftFinal[2], m_leftFinal[3], m_rightFinal[3], m_rightFinal[2], color);
 	builder.createTriangle(m_leftFinal[4], m_rightFinal[4], sf::Vector2f(0.f, unit) + origin, sf::Color(255, 255, 255));
 
-	if (m_isPhysic && size.y >= 200.f)
+	if (m_isPhysic)
 	{
-		builder.createQuad(m_leftFinal[1], m_leftFinal[2], m_rightFinal[2], m_rightFinal[1], sf::Color(255, 255, 255, 100));
-		builder.createQuad(m_leftFinal[2], m_leftFinal[3], m_rightFinal[3], m_rightFinal[2], sf::Color(255, 255, 255, 100));
+		builder.createQuad(m_leftFinal[1], m_leftFinal[2], m_rightFinal[2], m_rightFinal[1], sf::Color(255, 255, 255, 150 * bouncingValue));
+		builder.createQuad(m_leftFinal[2], m_leftFinal[3], m_rightFinal[3], m_rightFinal[2], sf::Color(255, 255, 255, 150 * bouncingValue));
 
 		m_box->setVertex(2u, m_leftFinal[2]);
 		m_box->setVertex(3u, m_leftFinal[1]);
 		m_box->setVertex(0u, m_rightFinal[1]);
 		m_box->setVertex(1u, m_rightFinal[2]);
+		m_box->setType(AShape::Type::e_static);
+		m_box->update();
+	}
+	else
+	{
+		m_box->setType(AShape::Type::e_trigger);
 		m_box->update();
 	}
 }
@@ -128,7 +134,6 @@ void Mushroom::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& 
 
 	playSound(biome, position);
 
-	createMushroom(m_size * m_animation, position, m_color, m_bouncingValue, builder);
-	//one frame delay because of the phisics
 	m_bouncingValue = computeBouncingValue(frameTime);
+	createMushroom(m_size * m_animation, position, m_color, m_bouncingValue, builder);
 }
