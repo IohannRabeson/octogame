@@ -114,6 +114,11 @@ void NanoEffect::update(sf::Time frameTime)
 		}
 		case State::Transfer:
 		{
+			if (m_transferTimer <= m_transferTimerMax / 2.f)
+				m_nanoScale = octo::cosinusInterpolation(m_nanoScaleOrigin, m_nanoScaleZoom, m_transferTimer / (m_transferTimerMax / 2.f));
+			else if (m_transferTimer <= m_transferTimerMax)
+				m_nanoScale = octo::cosinusInterpolation(m_nanoScaleZoom, m_nanoScaleOrigin, (m_transferTimer - m_transferTimerMax / 2.f) / (m_transferTimerMax / 2.f));
+
 			playSound();
 			m_transferTimer += frameTime;
 			if (m_effectEnable)
