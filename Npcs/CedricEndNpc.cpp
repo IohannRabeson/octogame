@@ -161,8 +161,6 @@ void CedricEndNpc::update(sf::Time frametime)
 	sprite.update(frametime);
 	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
 	sprite.setPosition(bounds.left, bounds.top);
-	if (Progress::getInstance().isValidateChallenge(m_effect))
-		setDisplayText(false);
 
 	updateText(frametime);
 
@@ -180,7 +178,6 @@ void CedricEndNpc::updateState(void)
 
 void CedricEndNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	if (!Progress::getInstance().isValidateChallenge(m_effect))
-		ANpc::draw(render, states);
+	ANpc::draw(render, states);
 }
 
