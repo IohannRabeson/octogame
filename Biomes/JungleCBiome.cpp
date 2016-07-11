@@ -72,6 +72,7 @@ JungleCBiome::JungleCBiome() :
 
 	m_grassSizeY(20.f, 70.f),
 	m_grassColor(m_tileStartColor),
+	m_grassIndex(0u),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(30.f, 300.f), sf::Vector2f(200.f, 300.f)),
@@ -599,6 +600,14 @@ float	JungleCBiome::getGrassSizeY()
 sf::Color	JungleCBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	JungleCBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
 }
 
 bool			JungleCBiome::canCreateRock()

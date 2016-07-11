@@ -72,6 +72,7 @@ DesertDBiome::DesertDBiome() :
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
+	m_grassIndex(0u),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(4.f, 15.f), sf::Vector2f(8.f, 30.f)),
@@ -591,6 +592,14 @@ float	DesertDBiome::getGrassSizeY()
 sf::Color	DesertDBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	DesertDBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
 }
 
 bool			DesertDBiome::canCreateRock()

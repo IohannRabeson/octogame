@@ -111,6 +111,7 @@ public:
 
 	virtual float										getGrassSizeY() = 0;
 	virtual sf::Color									getGrassColor() = 0;
+	virtual std::size_t									getGrassPosX() = 0;
 	virtual bool										canCreateGrass() = 0;
 
 	virtual std::size_t									getTreeDepth() = 0;

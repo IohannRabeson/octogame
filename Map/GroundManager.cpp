@@ -1164,16 +1164,18 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	{
 		for (std::size_t i = 0; i < grassCount; i++)
 		{
+			int x = biome.getGrassPosX();
 			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
-			m_tiles->registerDecor(i);
-			m_tilesPrev->registerDecor(i);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += grassCount;
 		for (std::size_t i = 0; i < grassCount; i++)
 		{
+			int x = biome.getGrassPosX();
 			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
-			m_tiles->registerDecor(i);
-			m_tilesPrev->registerDecor(i);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += grassCount;
 	}

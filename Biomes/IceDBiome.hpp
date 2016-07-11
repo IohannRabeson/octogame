@@ -85,6 +85,7 @@ public:
 
 	virtual float									getGrassSizeY();
 	virtual sf::Color									getGrassColor();
+	virtual std::size_t									getGrassPosX();
 	virtual bool										canCreateRock();
 
 	virtual std::size_t									getTreeDepth();
@@ -221,6 +222,7 @@ private:
 
 	Range<float>											m_grassSizeY;
 	sf::Color											m_grassColor;
+	std::size_t											m_grassIndex;
 
 	Range<std::size_t>									m_treeDepth;
 	Range<sf::Vector2f>									m_treeSize;

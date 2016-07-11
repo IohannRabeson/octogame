@@ -71,6 +71,7 @@ WaterBBiome::WaterBBiome() :
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
+	m_grassIndex(0u),
 
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(5.f, 50.f), sf::Vector2f(10.f, 55.f)),
@@ -654,6 +655,14 @@ float	WaterBBiome::getGrassSizeY()
 sf::Color	WaterBBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	WaterBBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
 }
 
 bool			WaterBBiome::canCreateRock()

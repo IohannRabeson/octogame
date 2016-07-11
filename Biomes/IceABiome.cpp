@@ -72,6 +72,7 @@ IceABiome::IceABiome() :
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
+	m_grassIndex(0u),
 
 	m_treeDepth(5u, 5u),
 	m_treeSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 150.f)),
@@ -575,6 +576,14 @@ float	IceABiome::getGrassSizeY()
 sf::Color	IceABiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	IceABiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
 }
 
 bool			IceABiome::canCreateRock()

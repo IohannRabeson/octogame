@@ -76,6 +76,7 @@ RandomBiome::RandomBiome() :
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
+	m_grassIndex(0u),
 
 	//TODO: Value to improve
 	m_treeDepth(m_generator.randomInt(4u, 5u), m_generator.randomInt(6u, 7u)),
@@ -679,6 +680,14 @@ float	RandomBiome::getGrassSizeY()
 sf::Color	RandomBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	RandomBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
 }
 
 bool			RandomBiome::canCreateRock()
