@@ -17,12 +17,25 @@ public:
 						ABiome& biome);
 
 private:
-	sf::Color				m_color;
-	DecorAnimator			m_animator;
-	float					m_animation;
-	float					m_animationSpeed;
+	sf::Vector2f				m_size;
+	sf::Color					m_color;
+	DecorAnimator				m_animator;
+	float						m_animation;
+	float						m_animationSpeed;
+	sf::Time					m_movementTimer;
+	sf::Time					m_movementTimerMax;
+	std::size_t					m_numberOfTargets;
+	std::vector<sf::Vector2f>	m_leftTargets;
+	std::vector<sf::Vector2f>	m_rightTargets;
+	bool						m_sideTarget;
+	std::size_t					m_indexLeftTarget;
+	std::size_t					m_indexRightTarget;
+	sf::Vector2f				m_lastOctoPosition;
 
-	void createGrass(sf::Vector2f const & origin,
+	void computeMovement(sf::Time frameTime);
+
+	void createGrass(sf::Vector2f const & size,
+					sf::Vector2f const & origin,
 					sf::Color const & color,
 					octo::VertexBuilder& builder);
 };
