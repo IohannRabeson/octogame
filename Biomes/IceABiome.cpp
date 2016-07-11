@@ -62,6 +62,7 @@ IceABiome::IceABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
@@ -703,6 +704,11 @@ sf::Time		IceABiome::getRainbowIntervalTime()
 bool			IceABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	IceABiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	IceABiome::getWaterPersistence() const

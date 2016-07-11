@@ -1160,7 +1160,7 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	}
 
 	//TODO: Add in Biome
-	//if (biome.canCreateGrass())
+	if (biome.canCreateGrass())
 	{
 		for (std::size_t i = 0; i < grassCount; i++)
 		{

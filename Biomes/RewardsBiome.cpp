@@ -66,6 +66,7 @@ RewardsBiome::RewardsBiome() :
 	m_canCreateSun(m_generator.randomBool(0.7f)),
 	m_canCreateMoon(m_generator.randomBool(0.8f)),
 	m_canCreateRainbow(m_generator.randomBool(0.4f)),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Random),
 
@@ -744,6 +745,11 @@ sf::Time		RewardsBiome::getRainbowIntervalTime()
 bool			RewardsBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	RewardsBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	RewardsBiome::getWaterPersistence() const

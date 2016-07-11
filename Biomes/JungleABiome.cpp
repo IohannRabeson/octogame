@@ -62,6 +62,7 @@ JungleABiome::JungleABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Jungle),
 
@@ -722,6 +723,11 @@ sf::Time		JungleABiome::getRainbowIntervalTime()
 bool			JungleABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	JungleABiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	JungleABiome::getWaterPersistence() const

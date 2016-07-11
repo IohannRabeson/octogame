@@ -62,6 +62,7 @@ DesertCBiome::DesertCBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(false),
 	m_waterPersistence(1.f),
 	m_type(ABiome::Type::Desert),
 
@@ -699,6 +700,11 @@ sf::Time		DesertCBiome::getRainbowIntervalTime()
 bool			DesertCBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	DesertCBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	DesertCBiome::getWaterPersistence() const

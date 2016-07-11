@@ -11,10 +11,10 @@ if len(sys.argv) != 2:
   exit();
 
 mypath = sys.argv[1]
-var_name = "m_type"
-type_name = "ABiome::Type"
-func_name = "getType() const"
-init_value = "ABiome::Type::Ice"
+var_name = "m_canCreateGrass"
+type_name = "bool"
+func_name = "canCreateGrass()"
+init_value = "false"
 
 def add_line_hpp(filename):
   for line in fileinput.input(mypath + filename, inplace=1):

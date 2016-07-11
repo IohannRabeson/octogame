@@ -138,6 +138,7 @@ public:
 	virtual sf::Time									getRainbowLifeTime();
 	virtual sf::Time									getRainbowIntervalTime();
 	virtual bool										canCreateRainbow();
+	virtual bool									canCreateGrass();
 	virtual float									getWaterPersistence() const;
 	virtual ABiome::Type									getType() const;
 
@@ -206,6 +207,7 @@ private:
 	bool												m_canCreateSun;
 	bool												m_canCreateMoon;
 	bool												m_canCreateRainbow;
+	bool											m_canCreateGrass;
 	float											m_waterPersistence;
 	ABiome::Type											m_type;
 

@@ -61,6 +61,7 @@ WaterABiome::WaterABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(true),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
 
@@ -793,6 +794,11 @@ sf::Time		WaterABiome::getRainbowIntervalTime()
 bool			WaterABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	WaterABiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	WaterABiome::getWaterPersistence() const

@@ -62,6 +62,7 @@ DesertABiome::DesertABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
@@ -724,6 +725,11 @@ sf::Time		DesertABiome::getRainbowIntervalTime()
 bool			DesertABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	DesertABiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	DesertABiome::getWaterPersistence() const

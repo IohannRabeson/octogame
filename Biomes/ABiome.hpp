@@ -165,6 +165,8 @@ public:
 	virtual sf::Time									getRainbowIntervalTime() = 0;
 	virtual bool										canCreateRainbow() = 0;
 
+	virtual bool										canCreateGrass() = 0;
+
 	virtual float										randomFloat(float min, float max) = 0;
 	virtual int											randomInt(int min, int max) = 0;
 	virtual bool										randomBool(float percent) = 0;
