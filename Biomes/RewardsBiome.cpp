@@ -17,7 +17,7 @@ RewardsBiome::RewardsBiome() :
 	m_name("Rewards"),
 	m_id(Level::Rewards),
 	m_seed("Rewards"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(500))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(450u, 850u), m_generator.randomPiecewise(500))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.7f),
@@ -168,10 +168,17 @@ RewardsBiome::RewardsBiome() :
 
 	std::vector<GameObjectType> const & npcList = progress.getNpcMet();
 	std::size_t total = 0;
+	bool isCedric = false;
 	for (std::size_t i = 0; i < npcList.size(); i++)
 	{
 		std::size_t delta = randomInt(10, 20);
-		m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
+		if (npcList[i] != GameObjectType::CedricStartNpc)
+			m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
+		else if (isCedric == false)
+		{
+			m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
+			isCedric = true;
+		}
 		total += delta;
 	}
 }

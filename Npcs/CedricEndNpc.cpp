@@ -133,6 +133,12 @@ void CedricEndNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
+void CedricEndNpc::collideOctoEvent(CharacterOcto * octo)
+{
+	ANpc::collideOctoEvent(octo);
+	stopBalle();
+}
+
 void CedricEndNpc::stopBalle(void)
 {
 	if (!Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
@@ -169,3 +175,9 @@ void CedricEndNpc::updateState(void)
 		sprite.setNextEvent(IdleDay);
 	}
 }
+
+void CedricEndNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
+{
+	ANpc::draw(render, states);
+}
+

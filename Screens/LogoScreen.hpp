@@ -31,7 +31,6 @@ private:
 	RandomGenerator					m_generator;
 	std::size_t						m_count;
 	std::vector<ResourceKey>		m_key;
-	std::vector<sf::Texture>		m_startTextures;
 	std::vector<sf::Sprite>			m_startSprites;
 	std::size_t						m_index;
 	sf::Time						m_timer;
