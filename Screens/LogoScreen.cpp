@@ -66,7 +66,6 @@ LogoScreen::LogoScreen() :
 	m_timerMax[22] = sf::seconds(0.04f);
 	m_timerMax[23] = sf::seconds(0.06f);
 
-	m_startTextures.resize(m_count);
 	m_startSprites.resize(m_count);
 
 	for (std::size_t i = 0u; i < m_count; i++)
