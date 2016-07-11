@@ -71,6 +71,7 @@ IceCBiome::IceCBiome() :
 	m_rockColor(0, 31, 63),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
 
 	m_treeDepth(5u, 7u),
 	m_treeSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(50.f, 250.f)),
@@ -555,6 +556,11 @@ sf::Color		IceCBiome::getRockColor()
 float	IceCBiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	IceCBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
 }
 
 bool			IceCBiome::canCreateRock()

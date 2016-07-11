@@ -71,6 +71,7 @@ DesertDBiome::DesertDBiome() :
 	m_rockColor(255, 232, 170),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(4.f, 15.f), sf::Vector2f(8.f, 30.f)),
@@ -585,6 +586,11 @@ sf::Color		DesertDBiome::getRockColor()
 float	DesertDBiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	DesertDBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
 }
 
 bool			DesertDBiome::canCreateRock()

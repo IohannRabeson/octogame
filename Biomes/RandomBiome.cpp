@@ -75,6 +75,7 @@ RandomBiome::RandomBiome() :
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
 
 	//TODO: Value to improve
 	m_treeDepth(m_generator.randomInt(4u, 5u), m_generator.randomInt(6u, 7u)),
@@ -673,6 +674,11 @@ sf::Color		RandomBiome::getRockColor()
 float	RandomBiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	RandomBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
 }
 
 bool			RandomBiome::canCreateRock()

@@ -62,7 +62,7 @@ JungleABiome::JungleABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
-	m_canCreateGrass(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Jungle),
 
@@ -71,6 +71,7 @@ JungleABiome::JungleABiome() :
 	m_rockColor(56, 50, 72),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(30.f, 300.f), sf::Vector2f(200.f, 300.f)),
@@ -586,6 +587,11 @@ sf::Color		JungleABiome::getRockColor()
 float	JungleABiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	JungleABiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
 }
 
 bool			JungleABiome::canCreateRock()

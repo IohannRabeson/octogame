@@ -12,7 +12,7 @@ if len(sys.argv) != 2:
 
 mypath = sys.argv[1]
 var_name = "m_grassColor"
-type_name = "Range<sf::Color>"
+type_name = "sf::Color"
 func_name = "getGrassColor()"
 return_name = "sf::Color"
 init_value = "m_tileStartColor"
@@ -45,7 +45,7 @@ def add_line_cpp(filename):
       print line,
       print "\n" + return_name + "\t" + os.path.splitext(filename)[0] + "::" + func_name + "\n",
       print "{\n",
-      print "\treturn randomRangeFloat(" + var_name + ");\n",
+      print "\treturn randomColor(" + var_name + ");\n",
       print "}\n",
       skip_line = False
     else:

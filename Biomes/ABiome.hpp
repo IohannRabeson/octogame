@@ -109,8 +109,9 @@ public:
 	virtual sf::Color									getRockColor() = 0;
 	virtual bool										canCreateRock() = 0;
 
-	virtual bool										canCreateGrass() = 0;
 	virtual float										getGrassSizeY() = 0;
+	virtual sf::Color									getGrassColor() = 0;
+	virtual bool										canCreateGrass() = 0;
 
 	virtual std::size_t									getTreeDepth() = 0;
 	virtual sf::Vector2f								getTreeSize() = 0;

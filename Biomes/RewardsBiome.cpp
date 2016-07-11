@@ -75,6 +75,7 @@ RewardsBiome::RewardsBiome() :
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
 
 	//TODO: Value to improve
 	m_treeDepth(m_generator.randomInt(4u, 5u), m_generator.randomInt(6u, 7u)),
@@ -608,6 +609,11 @@ sf::Color		RewardsBiome::getRockColor()
 float	RewardsBiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	RewardsBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
 }
 
 bool			RewardsBiome::canCreateRock()

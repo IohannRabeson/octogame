@@ -70,6 +70,7 @@ WaterBBiome::WaterBBiome() :
 	m_rockColor(60, 72, 84),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
 
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(5.f, 50.f), sf::Vector2f(10.f, 55.f)),
@@ -648,6 +649,11 @@ sf::Color		WaterBBiome::getRockColor()
 float	WaterBBiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	WaterBBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
 }
 
 bool			WaterBBiome::canCreateRock()
