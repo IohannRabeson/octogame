@@ -1068,7 +1068,7 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	std::size_t mushroomCount = static_cast<std::size_t>(biome.getMushroomCount() / 2.f);
 	std::size_t crystalCount = static_cast<std::size_t>(biome.getCrystalCount() / 2);
 	std::size_t groundRockCount = biome.getGroundRockCount();
-	std::size_t grassCount = biome.getMapSize().x;
+	std::size_t grassCount = biome.getGrassCount();
 	std::size_t totalCount = 0u;
 
 	if (biome.canCreateRainbow())

@@ -76,6 +76,7 @@ RewardsBiome::RewardsBiome() :
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
 	//TODO: Value to improve
@@ -615,6 +616,11 @@ float	RewardsBiome::getGrassSizeY()
 sf::Color	RewardsBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	RewardsBiome::getGrassCount()
+{
+	return m_grassCount;
 }
 
 std::size_t	RewardsBiome::getGrassPosX()

@@ -72,6 +72,7 @@ IceBBiome::IceBBiome() :
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
 	m_treeDepth(5u, 5u),
@@ -579,6 +580,11 @@ float	IceBBiome::getGrassSizeY()
 sf::Color	IceBBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	IceBBiome::getGrassCount()
+{
+	return m_grassCount;
 }
 
 std::size_t	IceBBiome::getGrassPosX()

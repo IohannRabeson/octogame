@@ -11,11 +11,11 @@ if len(sys.argv) != 2:
   exit();
 
 mypath = sys.argv[1]
-var_name = "m_grassIndex"
+var_name = "m_grassCount"
 type_name = "std::size_t"
-func_name = "getGrassPosX()"
+func_name = "getGrassCount()"
 return_name = "std::size_t"
-init_value = "0u"
+init_value = "m_mapSize.x"
 
 def add_line_hpp(filename):
   for line in fileinput.input(mypath + filename, inplace=1):
@@ -45,9 +45,6 @@ def add_line_cpp(filename):
       print line,
       print "\n" + return_name + "\t" + os.path.splitext(filename)[0] + "::" + func_name + "\n",
       print "{\n",
-      print "\tm_grassIndex++;\n",
-      print "\tif (m_grassIndex >= m_mapSize.x)\n",
-      print "\t\tm_grassIndex = 0u;\n",
       print "\treturn " + var_name + ";\n",
       print "}\n",
       skip_line = False

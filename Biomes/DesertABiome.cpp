@@ -62,7 +62,7 @@ DesertABiome::DesertABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
-	m_canCreateGrass(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
@@ -71,8 +71,9 @@ DesertABiome::DesertABiome() :
 	m_rockColor(255, 232, 170),
 
 	m_grassSizeY(30.f, 60.f),
-	m_grassColor(m_tileStartColor),
-	m_grassIndex(0u),
+	m_grassColor(46, 133, 84),
+	m_grassCount(120u),
+	m_grassIndex(350u),
 
 	m_treeDepth(6u, 8u),
 	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 150.f)),
@@ -597,11 +598,16 @@ sf::Color	DesertABiome::getGrassColor()
 	return randomColor(m_grassColor);
 }
 
+std::size_t	DesertABiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
 std::size_t	DesertABiome::getGrassPosX()
 {
 	m_grassIndex++;
-	if (m_grassIndex >= m_mapSize.x)
-		m_grassIndex = 0u;
+	if (m_grassIndex >= 470)
+		m_grassIndex = 350u;
 	return m_grassIndex;
 }
 

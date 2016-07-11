@@ -72,6 +72,7 @@ DesertCBiome::DesertCBiome() :
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
 	m_treeDepth(6u, 8u),
@@ -570,6 +571,11 @@ float	DesertCBiome::getGrassSizeY()
 sf::Color	DesertCBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	DesertCBiome::getGrassCount()
+{
+	return m_grassCount;
 }
 
 std::size_t	DesertCBiome::getGrassPosX()

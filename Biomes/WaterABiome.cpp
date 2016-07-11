@@ -71,6 +71,7 @@ WaterABiome::WaterABiome() :
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
 	m_treeDepth(6u, 7u),
@@ -664,6 +665,11 @@ float	WaterABiome::getGrassSizeY()
 sf::Color	WaterABiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	WaterABiome::getGrassCount()
+{
+	return m_grassCount;
 }
 
 std::size_t	WaterABiome::getGrassPosX()

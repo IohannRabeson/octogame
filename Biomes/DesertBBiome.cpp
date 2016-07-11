@@ -62,7 +62,7 @@ DesertBBiome::DesertBBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
-	m_canCreateGrass(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Desert),
 
@@ -70,8 +70,9 @@ DesertBBiome::DesertBBiome() :
 	m_rockPartCount(3.f, 5.f),
 	m_rockColor(255, 232, 170),
 
-	m_grassSizeY(30.f, 60.f),
-	m_grassColor(m_tileStartColor),
+	m_grassSizeY(80.f, 230.f),
+	m_grassColor(46, 133, 84),
+	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
 	m_treeDepth(11u, 11u),
@@ -265,7 +266,7 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f      , 100.f    , 102.f   , 105.f   , 110.f   , 118.f    , 127.f    , 155.f    , 230.f   , 240.f, 244.f, 245.f, 255.f, 256.f, 260.f, 275.f   , 310.f    , 383.f    , 390.f     , 395.f   , 399.f   , 402.f   , 404.f    , 600.f   };
-		std::vector<float> pointY = {-10.f + n, -10.f + n, -7.f - n, -4.f - n, -3.f - n, -2.8f - n, -2.5f - n, -2.5f - n, -2.f - n, -2.f , -2.f , 6.7f , 6.7f , -2.f , -2.f , -2.f - n, -2.5f - n, -2.5f - n, -2.5f - n , -4.f - n, -5.f - n, -6.f - n, -10.f + n, -10.f + n};
+		std::vector<float> pointY = {-10.f + n, -10.f + n, -7.f - n, -4.f - n, -3.f - n, -2.8f - n, -2.5f - n, -2.5f - n, -2.f - n, -2.f , -2.f , 6.73f , 6.73f , -2.f , -2.f , -2.f - n, -2.5f - n, -2.5f - n, -2.5f - n , -4.f - n, -5.f - n, -6.f - n, -10.f + n, -10.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -604,6 +605,11 @@ float	DesertBBiome::getGrassSizeY()
 sf::Color	DesertBBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	DesertBBiome::getGrassCount()
+{
+	return m_grassCount;
 }
 
 std::size_t	DesertBBiome::getGrassPosX()

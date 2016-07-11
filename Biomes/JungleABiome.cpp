@@ -72,6 +72,7 @@ JungleABiome::JungleABiome() :
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
 	m_treeDepth(4u, 5u),
@@ -593,6 +594,11 @@ float	JungleABiome::getGrassSizeY()
 sf::Color	JungleABiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
+}
+
+std::size_t	JungleABiome::getGrassCount()
+{
+	return m_grassCount;
 }
 
 std::size_t	JungleABiome::getGrassPosX()
