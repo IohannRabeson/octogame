@@ -74,6 +74,8 @@ RewardsBiome::RewardsBiome() :
 	m_rockPartCount(m_generator.randomInt(2.f, 4.f), m_generator.randomFloat(4.f, 20.f)),
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
+	m_grassSizeY(30.f, 60.f),
+
 	//TODO: Value to improve
 	m_treeDepth(m_generator.randomInt(4u, 5u), m_generator.randomInt(6u, 7u)),
 	m_treeSize(sf::Vector2f(m_generator.randomFloat(2.f, 20.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(20.f, 100.f), m_generator.randomFloat(100.f, 600.f))),
@@ -601,6 +603,11 @@ std::size_t		RewardsBiome::getRockPartCount()
 sf::Color		RewardsBiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
+}
+
+float	RewardsBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
 }
 
 bool			RewardsBiome::canCreateRock()

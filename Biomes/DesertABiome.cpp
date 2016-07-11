@@ -70,6 +70,8 @@ DesertABiome::DesertABiome() :
 	m_rockPartCount(50.f, 80.f),
 	m_rockColor(255, 232, 170),
 
+	m_grassSizeY(30.f, 60.f),
+
 	m_treeDepth(6u, 8u),
 	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
@@ -581,6 +583,11 @@ std::size_t		DesertABiome::getRockPartCount()
 sf::Color		DesertABiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
+}
+
+float	DesertABiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
 }
 
 bool			DesertABiome::canCreateRock()

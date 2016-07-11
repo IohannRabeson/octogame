@@ -70,6 +70,8 @@ JungleBBiome::JungleBBiome() :
 	m_rockPartCount(4.f, 10.f),
 	m_rockColor(56, 50, 72),
 
+	m_grassSizeY(30.f, 60.f),
+
 	m_treeDepth(5u, 6u),
 	m_treeSize(sf::Vector2f(30.f, 150.f), sf::Vector2f(120.f, 250.f)),
 	m_treeLifeTime(sf::seconds(90), sf::seconds(180)),
@@ -595,6 +597,11 @@ std::size_t		JungleBBiome::getRockPartCount()
 sf::Color		JungleBBiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
+}
+
+float	JungleBBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
 }
 
 bool			JungleBBiome::canCreateRock()

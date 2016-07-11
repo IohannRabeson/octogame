@@ -82,6 +82,8 @@ public:
 	virtual sf::Vector2f								getRockSize();
 	virtual std::size_t									getRockPartCount();
 	virtual sf::Color									getRockColor();
+
+	virtual float									getGrassSizeY();
 	virtual bool										canCreateRock();
 
 	virtual std::size_t									getTreeDepth();
@@ -215,6 +217,8 @@ private:
 	Range<sf::Vector2f>									m_rockSize;
 	Range<std::size_t>									m_rockPartCount;
 	sf::Color											m_rockColor;
+
+	Range<float>											m_grassSizeY;
 
 	Range<std::size_t>									m_treeDepth;
 	Range<sf::Vector2f>									m_treeSize;

@@ -69,6 +69,8 @@ WaterABiome::WaterABiome() :
 	m_rockPartCount(10.f, 15.f),
 	m_rockColor(60, 72, 84),
 
+	m_grassSizeY(30.f, 60.f),
+
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
@@ -650,6 +652,11 @@ std::size_t		WaterABiome::getRockPartCount()
 sf::Color		WaterABiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
+}
+
+float	WaterABiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
 }
 
 bool			WaterABiome::canCreateRock()

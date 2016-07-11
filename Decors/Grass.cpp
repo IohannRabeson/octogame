@@ -41,7 +41,7 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 
 void Grass::setup(ABiome& biome)
 {
-	m_size = sf::Vector2f(Tile::TileSize, biome.randomFloat(70.f, 150.f));
+	m_size = sf::Vector2f(Tile::TileSize, biome.getGrassSizeY());
 	m_color = biome.getRockColor();
 	m_animator.setup(biome.getMushroomLifeTime());
 

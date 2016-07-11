@@ -109,6 +109,9 @@ public:
 	virtual sf::Color									getRockColor() = 0;
 	virtual bool										canCreateRock() = 0;
 
+	virtual bool										canCreateGrass() = 0;
+	virtual float										getGrassSizeY() = 0;
+
 	virtual std::size_t									getTreeDepth() = 0;
 	virtual sf::Vector2f								getTreeSize() = 0;
 	virtual sf::Time									getTreeLifeTime() = 0;
@@ -164,8 +167,6 @@ public:
 	virtual sf::Time									getRainbowLifeTime() = 0;
 	virtual sf::Time									getRainbowIntervalTime() = 0;
 	virtual bool										canCreateRainbow() = 0;
-
-	virtual bool										canCreateGrass() = 0;
 
 	virtual float										randomFloat(float min, float max) = 0;
 	virtual int											randomInt(int min, int max) = 0;

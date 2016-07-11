@@ -11,18 +11,19 @@ if len(sys.argv) != 2:
   exit();
 
 mypath = sys.argv[1]
-var_name = "m_canCreateGrass"
-type_name = "bool"
-func_name = "canCreateGrass()"
-init_value = "false"
+var_name = "m_grassColor"
+type_name = "Range<sf::Color>"
+func_name = "getGrassColor()"
+return_name = "sf::Color"
+init_value = "m_tileStartColor"
 
 def add_line_hpp(filename):
   for line in fileinput.input(mypath + filename, inplace=1):
-    if line.find('canCreateRainbow()') != -1:
+    if line.find('getGrassSizeY()') != -1:
     #add prototype of the fonction
       print line,
-      print "\tvirtual " + type_name + "\t\t\t\t\t\t\t\t\t" + func_name + ";"
-    elif line.find('m_canCreateRainbow') != -1:
+      print "\tvirtual " + return_name + "\t\t\t\t\t\t\t\t\t" + func_name + ";"
+    elif line.find('m_grassSizeY') != -1:
     #add variable definition
       print line,
       print "\t" + type_name + "\t\t\t\t\t\t\t\t\t\t\t" + var_name + ";"
@@ -32,19 +33,19 @@ def add_line_hpp(filename):
 def add_line_cpp(filename):
   skip_line = False
   for line in fileinput.input(mypath + filename, inplace=1):
-    if line.find('m_canCreateRainbow(') != -1:
+    if line.find('m_grassSizeY(') != -1:
     #init variable in constructor
       print line,
       print "\t" + var_name + "(" + init_value + "),"
-    elif line.find('return (m_canCreateRainbow)') != -1:
+    elif line.find('m_grassSizeY)') != -1:
       skip_line = True
       print line,
     elif skip_line == True:
     #add definition of the function
       print line,
-      print "\n" + type_name + "\t" + os.path.splitext(filename)[0] + "::" + func_name + "\n",
+      print "\n" + return_name + "\t" + os.path.splitext(filename)[0] + "::" + func_name + "\n",
       print "{\n",
-      print "\treturn " + var_name + ";\n",
+      print "\treturn randomRangeFloat(" + var_name + ");\n",
       print "}\n",
       skip_line = False
     else:

@@ -70,6 +70,8 @@ IceBBiome::IceBBiome() :
 	m_rockPartCount(2.f, 10.f),
 	m_rockColor(0, 31, 63),
 
+	m_grassSizeY(30.f, 60.f),
+
 	m_treeDepth(5u, 5u),
 	m_treeSize(sf::Vector2f(100.f, 50.f), sf::Vector2f(200.f, 100.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
@@ -565,6 +567,11 @@ std::size_t		IceBBiome::getRockPartCount()
 sf::Color		IceBBiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
+}
+
+float	IceBBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
 }
 
 bool			IceBBiome::canCreateRock()
