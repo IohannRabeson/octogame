@@ -94,7 +94,7 @@ void TVScreen::update(sf::Time frametime)
 	sf::Vector2f size;
 
 	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-	if (screen.intersects(m_tvScreen))
+	if ((m_tvScreen.left > screen.left && m_tvScreen.left < screen.left + screen.width) || (m_tvScreen.left + m_tvScreen.width > screen.left && m_tvScreen.left + m_tvScreen.width < screen.left + screen.width))
 	{
 		PostEffectLayer::getInstance().enableShader(m_kernelName, false);
 		PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, true);
