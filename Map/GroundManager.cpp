@@ -16,6 +16,7 @@
 #include "Mushroom.hpp"
 #include "Crystal.hpp"
 #include "GroundRock.hpp"
+#include "Grass.hpp"
 
 //Object
 #include "SpaceShip.hpp"
@@ -1067,6 +1068,7 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	std::size_t mushroomCount = static_cast<std::size_t>(biome.getMushroomCount() / 2.f);
 	std::size_t crystalCount = static_cast<std::size_t>(biome.getCrystalCount() / 2);
 	std::size_t groundRockCount = biome.getGroundRockCount();
+	std::size_t grassCount = biome.getMapSize().x;
 	std::size_t totalCount = 0u;
 
 	if (biome.canCreateRainbow())
@@ -1155,6 +1157,25 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += crystalCount;
+	}
+
+	//TODO: Add in Biome
+	//if (biome.canCreateGrass())
+	{
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(i);
+			m_tilesPrev->registerDecor(i);
+		}
+		totalCount += grassCount;
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(i);
+			m_tilesPrev->registerDecor(i);
+		}
+		totalCount += grassCount;
 	}
 
 	for (std::size_t i = 0; i < groundRockCount; i++)
