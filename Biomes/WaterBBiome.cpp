@@ -21,6 +21,7 @@ WaterBBiome::WaterBBiome() :
 	m_tileEndColor(249, 237, 188),
 	m_waterLevel(1.f),
 	m_waterColor(3, 57, 108, 130),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(30.f)),
@@ -225,6 +226,11 @@ float	WaterBBiome::getWaterLevel()
 sf::Color	WaterBBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	WaterBBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 std::map<std::size_t, std::string> const & WaterBBiome::getInstances()

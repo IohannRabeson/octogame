@@ -22,6 +22,7 @@ DesertBBiome::DesertBBiome() :
 	m_tileEndColor(245, 243, 219),
 	m_waterLevel(10700.f),
 	m_waterColor(166, 10, 92, 180),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(30.f)),
@@ -224,6 +225,11 @@ float	DesertBBiome::getWaterLevel()
 sf::Color	DesertBBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	DesertBBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 std::map<std::size_t, std::string> const & DesertBBiome::getInstances()

@@ -22,6 +22,7 @@ JungleCBiome::JungleCBiome() :
 	m_tileEndColor(40, 164, 144),
 	m_waterLevel(300.f),
 	m_waterColor(196, 235, 1, 150),
+	m_secondWaterColor(0, 189, 168, 150),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),
@@ -226,6 +227,11 @@ float	JungleCBiome::getWaterLevel()
 sf::Color	JungleCBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	JungleCBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 bool		JungleCBiome::isDeadlyWater()

@@ -22,6 +22,7 @@ IceCBiome::IceCBiome() :
 	m_tileEndColor(27, 79, 101),
 	m_waterLevel(-1.f),
 	m_waterColor(255, 255, 255, 200),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(60.f)),
@@ -212,6 +213,11 @@ float	IceCBiome::getWaterLevel()
 sf::Color	IceCBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	IceCBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 std::map<std::size_t, std::string> const & IceCBiome::getInstances()

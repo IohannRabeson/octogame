@@ -41,6 +41,7 @@ public:
 	virtual Level										getDestination();
 	virtual float										getWaterLevel();
 	virtual sf::Color									getWaterColor();
+	virtual sf::Color									getSecondWaterColor();
 	virtual bool										isDeadlyWater();
 	virtual sf::Color									getColorMoveInstance();
 
@@ -169,6 +170,7 @@ private:
 	sf::Color											m_tileEndColor;
 	float												m_waterLevel;
 	sf::Color											m_waterColor;
+	sf::Color											m_secondWaterColor;
 
 	std::map<std::size_t, std::string>					m_instances;
 	std::map<std::size_t, GameObjectType>				m_gameObjects;

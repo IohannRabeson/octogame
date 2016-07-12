@@ -9,11 +9,12 @@
 
 Water::Water(ABiome & biome) :
 	m_waterColor(biome.getWaterColor()),
+	m_secondWaterColor(biome.getSecondWaterColor()),
 	m_shader(PostEffectLayer::getInstance().getShader(WATER_FRAG)),
 	m_waveCycle(sf::Time::Zero),
 	m_width(biome.getMapSize().x * Tile::TileSize),
 	m_limit(1000.f),
-	m_timeChangeColorMax(sf::seconds(2.f))
+	m_timeChangeColorMax(sf::seconds(7.f))
 {
 	m_rectLeft.setSize(sf::Vector2f(m_width, 10000.f));
 	m_rectLeft.setFillColor(m_waterColor);
@@ -70,8 +71,6 @@ void Water::addMapOffset(float width)
 
 void Water::changeColor(sf::Time frameTime)
 {
-	sf::Color color = sf::Color::Blue;
-	color.a = 100.f;
 	Progress & progress = Progress::getInstance();
 	if (progress.canUseWaterJump())
 	{
@@ -79,8 +78,8 @@ void Water::changeColor(sf::Time frameTime)
 			m_timeChangeColor += frameTime;
 		else
 			m_timeChangeColor = m_timeChangeColorMax;
-		m_rectLeft.setFillColor(octo::cosinusInterpolation(m_waterColor, color, m_timeChangeColor / m_timeChangeColorMax));
-		m_rectRight.setFillColor(octo::cosinusInterpolation(m_waterColor, color, m_timeChangeColor / m_timeChangeColorMax));
+		m_rectLeft.setFillColor(octo::cosinusInterpolation(m_waterColor, m_secondWaterColor, m_timeChangeColor / m_timeChangeColorMax));
+		m_rectRight.setFillColor(octo::cosinusInterpolation(m_waterColor, m_secondWaterColor, m_timeChangeColor / m_timeChangeColorMax));
 	}
 }
 

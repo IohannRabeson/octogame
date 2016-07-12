@@ -22,6 +22,7 @@ IceDBiome::IceDBiome() :
 	m_tileEndColor(27, 79, 101),
 	m_waterLevel(1000.f),
 	m_waterColor(255, 255, 255, 200),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(65.f)),
@@ -228,6 +229,11 @@ float	IceDBiome::getWaterLevel()
 sf::Color	IceDBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	IceDBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 bool		IceDBiome::isDeadlyWater()

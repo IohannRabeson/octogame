@@ -31,6 +31,7 @@ private:
 	void changeColor(sf::Time frameTime);
 
 	sf::Color				m_waterColor;
+	sf::Color				m_secondWaterColor;
 	sf::Texture				m_distorsionTexture;
 	sf::RectangleShape		m_rectLeft;
 	sf::RectangleShape		m_rectRight;
