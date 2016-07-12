@@ -62,12 +62,18 @@ JungleDBiome::JungleDBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Jungle),
 
 	m_rockSize(sf::Vector2f(50.f, 100.f), sf::Vector2f(150.f, 200.f)),
 	m_rockPartCount(4.f, 10.f),
 	m_rockColor(56, 50, 72),
+
+	m_grassSizeY(60.f, 100.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(30.f, 300.f), sf::Vector2f(200.f, 300.f)),
@@ -149,7 +155,7 @@ JungleDBiome::JungleDBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::JungleB);
+	m_destinations.push_back(Level::JungleD);
 	m_destinations.push_back(Level::JungleD);
 	m_destinations.push_back(Level::Random);
 }
@@ -593,6 +599,29 @@ bool			JungleDBiome::canCreateRock()
 	return (m_canCreateRock);
 }
 
+float	JungleDBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	JungleDBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	JungleDBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	JungleDBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 sf::Vector2f	JungleDBiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
@@ -730,6 +759,11 @@ sf::Time		JungleDBiome::getRainbowIntervalTime()
 bool			JungleDBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	JungleDBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	JungleDBiome::getWaterPersistence() const
