@@ -210,6 +210,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/GroundRock.cpp					\
 				Decors/Sky.cpp							\
 				Decors/SunLight.cpp						\
+				Decors/Grass.cpp						\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
 				Decors/SmokeSystem.cpp					\

@@ -62,12 +62,18 @@ JungleCBiome::JungleCBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Jungle),
 
 	m_rockSize(sf::Vector2f(50.f, 100.f), sf::Vector2f(150.f, 200.f)),
 	m_rockPartCount(4.f, 10.f),
 	m_rockColor(56, 50, 72),
+
+	m_grassSizeY(20.f, 70.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(30.f, 300.f), sf::Vector2f(200.f, 300.f)),
@@ -587,6 +593,29 @@ sf::Color		JungleCBiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	JungleCBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	JungleCBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	JungleCBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	JungleCBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			JungleCBiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -729,6 +758,11 @@ sf::Time		JungleCBiome::getRainbowIntervalTime()
 bool			JungleCBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	JungleCBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	JungleCBiome::getWaterPersistence() const
