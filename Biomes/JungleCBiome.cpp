@@ -13,9 +13,9 @@ JungleCBiome::JungleCBiome() :
 	m_name("Jungle C"),
 	m_id(Level::JungleC),
 	m_seed("Jungle C"),
-	m_mapSize(sf::Vector2u(915u, 64u)),
+	m_mapSize(sf::Vector2u(920u, 64u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(129.f * 16.f, -1650.f),
+	m_octoStartPosition(134.f * 16.f, -1650.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
@@ -70,7 +70,7 @@ JungleCBiome::JungleCBiome() :
 	m_rockPartCount(4.f, 10.f),
 	m_rockColor(56, 50, 72),
 
-	m_grassSizeY(20.f, 70.f),
+	m_grassSizeY(50.f, 170.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -135,9 +135,11 @@ JungleCBiome::JungleCBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-//	Progress & progress = Progress::getInstance();
-//	if (progress.getLastDestination() == Level::JungleD)
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() == Level::JungleD)
 		m_octoStartPosition = sf::Vector2f(868.f * 16.f, 100.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(167.f * 16.f, -2600.f);
 
 	m_gameObjects[5] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[40] = GameObjectType::BirdRedNpc;
@@ -262,8 +264,8 @@ Map::MapSurfaceGenerator JungleCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = { 0.f , 20.f, 40.f   , 70.f   , 140.f, 145.f, 155.f, 915.f};
-		std::vector<float> pointY = { 0.1f, n   , n + 6.f, n + 6.f, n    , -0.2f, 0.2f , 0.2f};
+		std::vector<float> pointX = { 0.f , 20.f, 40.f   , 70.f   , 110.f, 120.f, 155.f, 915.f};
+		std::vector<float> pointY = { -0.1f, n   , n + 6.f, n + 6.f, n    , -0.2f, 0.2f , 0.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -525,7 +527,7 @@ sf::Color		JungleCBiome::getLeafColor()
 
 std::size_t		JungleCBiome::getTreePositionX()
 {
-	return randomInt(6.f, 60.f);
+	return randomInt(6.f, 110.f);
 }
 
 sf::Vector2f	JungleCBiome::getCrystalSize()
