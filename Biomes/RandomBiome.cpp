@@ -26,6 +26,7 @@ RandomBiome::RandomBiome() :
 	m_tileEndColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_waterLevel(m_generator.randomInt(400u, 3000u)),
 	m_waterColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(40, 150)),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(m_generator.randomFloat(20.f, 150.f))),
@@ -232,6 +233,11 @@ float	RandomBiome::getWaterLevel()
 sf::Color	RandomBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	RandomBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 std::map<std::size_t, std::string> const & RandomBiome::getInstances()

@@ -28,6 +28,10 @@ public:
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 private:
+	void changeColor(sf::Time frameTime);
+
+	sf::Color				m_waterColor;
+	sf::Color				m_secondWaterColor;
 	sf::Texture				m_distorsionTexture;
 	sf::RectangleShape		m_rectLeft;
 	sf::RectangleShape		m_rectRight;
@@ -36,6 +40,8 @@ private:
 	float					m_width;
 	float					m_limit;
 
+	sf::Time				m_timeChangeColor;
+	sf::Time				m_timeChangeColorMax;
 };
 
 #endif

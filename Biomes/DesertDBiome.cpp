@@ -22,6 +22,7 @@ DesertDBiome::DesertDBiome() :
 	m_tileEndColor(245, 243, 249),
 	m_waterLevel(300.f),
 	m_waterColor(96, 204, 233, 0),
+	m_secondWaterColor(96, 204, 233, 140),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -215,6 +216,11 @@ float	DesertDBiome::getWaterLevel()
 sf::Color	DesertDBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	DesertDBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 bool		DesertDBiome::isDeadlyWater()

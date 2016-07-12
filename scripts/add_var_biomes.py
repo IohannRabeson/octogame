@@ -11,19 +11,19 @@ if len(sys.argv) != 2:
   exit();
 
 mypath = sys.argv[1]
-var_name = "m_grassCount"
-type_name = "std::size_t"
-func_name = "getGrassCount()"
-return_name = "std::size_t"
-init_value = "m_mapSize.x"
+var_name = "m_secondWaterColor"
+type_name = "sf::Color"
+func_name = "getSecondWaterColor()"
+return_name = "sf::Color"
+init_value = "m_waterColor"
 
 def add_line_hpp(filename):
   for line in fileinput.input(mypath + filename, inplace=1):
-    if line.find('getGrassColor()') != -1:
+    if line.find('getWaterColor()') != -1:
     #add prototype of the fonction
       print line,
       print "\tvirtual " + return_name + "\t\t\t\t\t\t\t\t\t" + func_name + ";"
-    elif line.find('m_grassColor') != -1:
+    elif line.find('m_waterColor') != -1:
     #add variable definition
       print line,
       print "\t" + type_name + "\t\t\t\t\t\t\t\t\t\t\t" + var_name + ";"
@@ -33,11 +33,11 @@ def add_line_hpp(filename):
 def add_line_cpp(filename):
   skip_line = False
   for line in fileinput.input(mypath + filename, inplace=1):
-    if line.find('m_grassColor(') != -1:
+    if line.find('m_waterColor(') != -1:
     #init variable in constructor
       print line,
       print "\t" + var_name + "(" + init_value + "),"
-    elif line.find('m_grassColor)') != -1:
+    elif line.find('m_waterColor;') != -1:
       skip_line = True
       print line,
     elif skip_line == True:
