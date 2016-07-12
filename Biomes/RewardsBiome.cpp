@@ -66,12 +66,18 @@ RewardsBiome::RewardsBiome() :
 	m_canCreateSun(m_generator.randomBool(0.7f)),
 	m_canCreateMoon(m_generator.randomBool(0.8f)),
 	m_canCreateRainbow(m_generator.randomBool(0.4f)),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Random),
 
 	m_rockSize(sf::Vector2f(m_generator.randomFloat(2.f, 50.f), m_generator.randomFloat(10.f, 60.f)), sf::Vector2f(m_generator.randomFloat(50.f, 100.f), m_generator.randomFloat(200.f, 600.f))),
 	m_rockPartCount(m_generator.randomInt(2.f, 4.f), m_generator.randomFloat(4.f, 20.f)),
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	//TODO: Value to improve
 	m_treeDepth(m_generator.randomInt(4u, 5u), m_generator.randomInt(6u, 7u)),
@@ -609,6 +615,29 @@ sf::Color		RewardsBiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	RewardsBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	RewardsBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	RewardsBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	RewardsBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			RewardsBiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -751,6 +780,11 @@ sf::Time		RewardsBiome::getRainbowIntervalTime()
 bool			RewardsBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	RewardsBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	RewardsBiome::getWaterPersistence() const

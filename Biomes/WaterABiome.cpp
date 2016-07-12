@@ -61,12 +61,18 @@ WaterABiome::WaterABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(true),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
 
 	m_rockSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(40.f, 300.f)),
 	m_rockPartCount(10.f, 15.f),
 	m_rockColor(60, 72, 84),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
@@ -651,6 +657,29 @@ sf::Color		WaterABiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	WaterABiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	WaterABiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	WaterABiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	WaterABiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			WaterABiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -793,6 +822,11 @@ sf::Time		WaterABiome::getRainbowIntervalTime()
 bool			WaterABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	WaterABiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	WaterABiome::getWaterPersistence() const

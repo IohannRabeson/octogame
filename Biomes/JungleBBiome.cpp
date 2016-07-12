@@ -62,12 +62,18 @@ JungleBBiome::JungleBBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Jungle),
 
 	m_rockSize(sf::Vector2f(30.f, 50.f), sf::Vector2f(40.f, 300.f)),
 	m_rockPartCount(4.f, 10.f),
 	m_rockColor(56, 50, 72),
+
+	m_grassSizeY(60.f, 100.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(5u, 6u),
 	m_treeSize(sf::Vector2f(30.f, 150.f), sf::Vector2f(120.f, 250.f)),
@@ -281,7 +287,7 @@ Map::MapSurfaceGenerator JungleBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		//float m = n / 3.f;
-		std::vector<float> pointX = {0.f     , 35.f , 44.f    , 45.f, 55.f, 56.f , 60.f , 90.f          , 200.f    , 339.f, 359.f, 381.f, 382.f, 385.f, 415.f, 417.f , 465.f, 550.f};
+		std::vector<float> pointX = {0.f     , 35.f , 44.f    , 45.f, 55.f, 56.f , 60.f , 90.f          , 200.f    , 339.f, 359.f, 381.f, 382.f, 389.f, 415.f, 417.f , 465.f, 550.f};
 		std::vector<float> pointY = {n - 1.2f, -1.7f, n - 1.2f, 5.f , 5.f , -0.1f, -0.6f, n / 2.f - 0.7f, n - 0.7f, -0.1f, -0.1f, 0.f  , 5.f  , 3.38f, 3.38f, -1.05f, -1.1f, n - 1.1f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
@@ -596,6 +602,29 @@ sf::Color		JungleBBiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	JungleBBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	JungleBBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	JungleBBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	JungleBBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			JungleBBiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -738,6 +767,11 @@ sf::Time		JungleBBiome::getRainbowIntervalTime()
 bool			JungleBBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	JungleBBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	JungleBBiome::getWaterPersistence() const

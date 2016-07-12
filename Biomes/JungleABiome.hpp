@@ -83,6 +83,11 @@ public:
 	virtual sf::Vector2f								getRockSize();
 	virtual std::size_t									getRockPartCount();
 	virtual sf::Color									getRockColor();
+
+	virtual float									getGrassSizeY();
+	virtual sf::Color									getGrassColor();
+	virtual std::size_t									getGrassCount();
+	virtual std::size_t									getGrassPosX();
 	virtual bool										canCreateRock();
 
 	virtual std::size_t									getTreeDepth();
@@ -140,6 +145,7 @@ public:
 	virtual sf::Time									getRainbowLifeTime();
 	virtual sf::Time									getRainbowIntervalTime();
 	virtual bool										canCreateRainbow();
+	virtual bool									canCreateGrass();
 	virtual float									getWaterPersistence() const;
 	virtual ABiome::Type									getType() const;
 
@@ -208,12 +214,18 @@ private:
 	bool												m_canCreateSun;
 	bool												m_canCreateMoon;
 	bool												m_canCreateRainbow;
+	bool											m_canCreateGrass;
 	float											m_waterPersistence;
 	ABiome::Type											m_type;
 
 	Range<sf::Vector2f>									m_rockSize;
 	Range<std::size_t>									m_rockPartCount;
 	sf::Color											m_rockColor;
+
+	Range<float>											m_grassSizeY;
+	sf::Color											m_grassColor;
+	std::size_t											m_grassCount;
+	std::size_t											m_grassIndex;
 
 	Range<std::size_t>									m_treeDepth;
 	Range<sf::Vector2f>									m_treeSize;
