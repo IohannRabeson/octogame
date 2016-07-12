@@ -57,7 +57,7 @@ void Grass::setup(ABiome& biome)
 
 void Grass::computeMovement(sf::Time frameTime)
 {
-	sf::Vector2f position = getPosition();
+	sf::Vector2f const & position = getPosition();
 	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
 	float dist = std::sqrt(std::pow(position.x - octoPosition.x, 2u) + std::pow(position.y - octoPosition.y, 2u));
 
@@ -93,7 +93,7 @@ void Grass::computeMovement(sf::Time frameTime)
 
 void Grass::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 {
-	sf::Vector2f position = getPosition();
+	sf::Vector2f const & position = getPosition();
 
 	computeMovement(frameTime);
 	m_animator.update(frameTime * m_animationSpeed);
