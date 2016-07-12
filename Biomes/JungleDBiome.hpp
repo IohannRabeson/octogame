@@ -1,5 +1,5 @@
-#ifndef JUNGLECBIOME_HPP
-# define JUNGLECBIOME_HPP
+#ifndef JUNGLEDBIOME_HPP
+# define JUNGLEDBIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -10,7 +10,7 @@
 # include <SFML/System/Vector2.hpp>
 
 
-class JungleCBiome : public ABiome
+class JungleDBiome : public ABiome
 {
 template<class T>
 struct Range
@@ -25,7 +25,7 @@ struct Range
 };
 
 public:
-	JungleCBiome();
+	JungleDBiome();
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;
@@ -82,12 +82,12 @@ public:
 	virtual sf::Vector2f								getRockSize();
 	virtual std::size_t									getRockPartCount();
 	virtual sf::Color									getRockColor();
-	virtual bool										canCreateRock();
 
-	virtual float										getGrassSizeY();
+	virtual float									getGrassSizeY();
 	virtual sf::Color									getGrassColor();
 	virtual std::size_t									getGrassCount();
 	virtual std::size_t									getGrassPosX();
+	virtual bool										canCreateRock();
 
 	virtual std::size_t									getTreeDepth();
 	virtual sf::Vector2f								getTreeSize();
@@ -213,15 +213,15 @@ private:
 	bool												m_canCreateSun;
 	bool												m_canCreateMoon;
 	bool												m_canCreateRainbow;
-	bool												m_canCreateGrass;
-	float												m_waterPersistence;
-	ABiome::Type										m_type;
+	bool											m_canCreateGrass;
+	float											m_waterPersistence;
+	ABiome::Type											m_type;
 
 	Range<sf::Vector2f>									m_rockSize;
 	Range<std::size_t>									m_rockPartCount;
 	sf::Color											m_rockColor;
 
-	Range<float>										m_grassSizeY;
+	Range<float>											m_grassSizeY;
 	sf::Color											m_grassColor;
 	std::size_t											m_grassCount;
 	std::size_t											m_grassIndex;
@@ -277,4 +277,3 @@ private:
 };
 
 #endif
-

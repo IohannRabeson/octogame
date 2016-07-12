@@ -29,6 +29,7 @@ enum class Level : std::size_t
 	JungleA,
 	JungleB,
 	JungleC,
+	JungleD,
 	WaterA,
 	WaterB,
 	Random,
