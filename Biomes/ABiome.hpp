@@ -45,7 +45,8 @@ public:
 		Jungle,
 		Desert,
 		Water,
-		Random
+		Random,
+		None
 	};
 
 	virtual ~ABiome();

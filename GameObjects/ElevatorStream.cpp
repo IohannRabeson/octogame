@@ -192,13 +192,13 @@ ElevatorStream::ElevatorStream() :
 
 	setupSprite();
 
-	m_smoke.setup(sf::Vector2f(4.f, 4.f));
-	m_smoke.setVelocity(sf::Vector2f(0.f, -80.f));
-	m_smoke.setEmitTimeRange(0.2f, 0.3f);
+	m_smoke.setup(sf::Vector2f(5.f, 5.f));
+	m_smoke.setVelocity(sf::Vector2f(0.f, -120.f));
+	m_smoke.setEmitTimeRange(0.15f, 0.3f);
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
-	m_smoke.setLifeTimeRange(0.6f, 1.2f);
-	m_smoke.setScaleFactor(25.f);
-	m_smoke.setDispersion(80.f);
+	m_smoke.setLifeTimeRange(0.6f, 1.5f);
+	m_smoke.setScaleFactor(35.f);
+	m_smoke.setDispersion(200.f);
 	m_smoke.setColor(sf::Color(180, 180, 180, 220));
 }
 
@@ -240,8 +240,9 @@ void	ElevatorStream::setupSprite(void)
 void	ElevatorStream::setHeight(float height)
 {
 	sf::Vector2f const &	sizeBox = m_box->getSize();
+	float const marginBot = 100.f;
 
-	m_box->setSize(sizeBox.x, height);
+	m_box->setSize(sizeBox.x, height + marginBot);
 	m_particles->setHeight(height);
 }
 
@@ -286,7 +287,7 @@ void	ElevatorStream::setPosition(sf::Vector2f const & position)
 	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
 	m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
 
-	m_smoke.setPosition(m_position + sf::Vector2f(-getWidth() / 2.f, -50.f));
+	m_smoke.setPosition(m_position + sf::Vector2f(0.f, -50.f));
 	m_particles->setPosition(m_position + sf::Vector2f(0.f, -100.f));
 	setHeight(m_position.y - getTopY() - 100.f);
 }

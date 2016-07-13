@@ -67,7 +67,7 @@ RandomBiome::RandomBiome() :
 	m_canCreateSun(m_generator.randomBool(0.7f)),
 	m_canCreateMoon(m_generator.randomBool(0.8f)),
 	m_canCreateRainbow(m_generator.randomBool(0.4f)),
-	m_canCreateGrass(false),
+	m_canCreateGrass(m_generator.randomBool(0.5f)),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Random),
 
@@ -75,7 +75,7 @@ RandomBiome::RandomBiome() :
 	m_rockPartCount(m_generator.randomInt(2.f, 4.f), m_generator.randomFloat(4.f, 20.f)),
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
-	m_grassSizeY(30.f, 60.f),
+	m_grassSizeY(m_generator.randomFloat(10.f, 60.f), m_generator.randomFloat(60.f, 200.f)),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
