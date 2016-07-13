@@ -65,7 +65,7 @@ DesertDBiome::DesertDBiome() :
 	m_canCreateRainbow(false),
 	m_canCreateGrass(false),
 	m_waterPersistence(1.f),
-	m_type(ABiome::Type::Desert),
+	m_type(ABiome::Type::None),
 
 	m_rockSize(sf::Vector2f(5.f, 70.f), sf::Vector2f(20.f, 100.f)),
 	m_rockPartCount(50.f, 80.f),
