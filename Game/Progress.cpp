@@ -59,6 +59,16 @@ void	Progress::setBubbleNpc(bool isBubbleNpc)
 	m_isBubbleNpc = isBubbleNpc;
 }
 
+Progress::MenuType	Progress::getMenuType(void)
+{
+	return m_data.menuType;
+}
+
+void	Progress::setMenuType(MenuType type)
+{
+	m_data.menuType = type;
+}
+
 bool	Progress::isGameFinished() const
 {
 	return m_isGameFinished;
