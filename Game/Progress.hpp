@@ -25,6 +25,12 @@ public:
 		Die = 1
 	};
 
+	enum class MenuType : std::size_t
+	{
+		Classic,
+		Simple
+	};
+
 	static Progress & getInstance(void);
 
 	float				getTimePlayed() const { return m_data.timePlayed; }
@@ -32,6 +38,8 @@ public:
 	void				setMenu(bool isMenu);
 	bool				isBubbleNpc(void) const;
 	void				setBubbleNpc(bool isBubbleNpc);
+	MenuType			getMenuType(void);
+	void				setMenuType(MenuType type);
 	//TODO: Set this value once the game is finished
 	bool				isGameFinished() const;
 
@@ -153,6 +161,7 @@ private:
 			fullscreen(fullscreen),
 			vsync(vsync),
 			language(language),
+			menuType(MenuType::Classic),
 			firstTime(true),
 			walk(false),
 			moveMap(false),
@@ -173,6 +182,7 @@ private:
 		bool					fullscreen;
 		bool					vsync;
 		Language				language;
+		MenuType				menuType;
 		bool					firstTime;
 		bool					walk;
 		bool					moveMap;

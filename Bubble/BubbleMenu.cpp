@@ -1,4 +1,5 @@
 #include "BubbleMenu.hpp"
+#include "Progress.hpp"
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -65,7 +66,7 @@ void BubbleMenu::updateContent(sf::Time frameTime, sf::Vector2f const & position
 	for (std::size_t i = 0; i < m_subMenus.size(); i++)
 	{
 		m_subMenus[i].text.setPosition(position + m_subMenus[i].position);
-		if (m_isFontSelect)
+		if (m_isFontSelect && Progress::getInstance().getMenuType() == Progress::MenuType::Classic)
 		{
 			if (m_indexCursor == i)
 				m_subMenus[i].text.setFont(m_fontSelect);
