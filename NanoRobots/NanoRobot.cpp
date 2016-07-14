@@ -76,7 +76,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	{
 		std::unique_ptr<BubbleText> bubble;
 		bubble.reset(new BubbleText());
-		bubble->setup(nanoTexts[i], sf::Color::White);
+		bubble->setup(nanoTexts[i], sf::Color::White, 30u);
 		bubble->setType(ABubble::Type::Speak);
 		bubble->setActive(true);
 		m_texts.push_back(std::move(bubble));
