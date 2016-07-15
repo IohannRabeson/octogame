@@ -6,6 +6,7 @@
 #include <Options.hpp>
 #include <AudioManager.hpp>
 #include <GraphicsManager.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include <fstream>
 
@@ -58,6 +59,16 @@ void	Progress::setBubbleNpc(bool isBubbleNpc)
 	m_isBubbleNpc = isBubbleNpc;
 }
 
+Progress::MenuType	Progress::getMenuType(void)
+{
+	return m_data.menuType;
+}
+
+void	Progress::setMenuType(MenuType type)
+{
+	m_data.menuType = type;
+}
+
 bool	Progress::isGameFinished() const
 {
 	return m_isGameFinished;
@@ -99,12 +110,13 @@ void	Progress::init()
 	loadDeaths();
 }
 
-void	Progress::save()
+void	Progress::save(float timePlayed)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 
 	m_data.fullscreen = graphics.isFullscreen();
 	m_data.vsync = graphics.isVerticalSyncEnabled();
+	m_data.timePlayed += timePlayed / 60.f;
 
 	saveNpc();
 	savePortals();

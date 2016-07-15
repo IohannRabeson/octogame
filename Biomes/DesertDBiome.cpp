@@ -22,6 +22,7 @@ DesertDBiome::DesertDBiome() :
 	m_tileEndColor(245, 243, 249),
 	m_waterLevel(300.f),
 	m_waterColor(96, 204, 233, 0),
+	m_secondWaterColor(96, 204, 233, 140),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
@@ -62,12 +63,18 @@ DesertDBiome::DesertDBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(false),
 	m_waterPersistence(1.f),
-	m_type(ABiome::Type::Desert),
+	m_type(ABiome::Type::None),
 
 	m_rockSize(sf::Vector2f(5.f, 70.f), sf::Vector2f(20.f, 100.f)),
 	m_rockPartCount(50.f, 80.f),
 	m_rockColor(255, 232, 170),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(4.f, 15.f), sf::Vector2f(8.f, 30.f)),
@@ -209,6 +216,11 @@ float	DesertDBiome::getWaterLevel()
 sf::Color	DesertDBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	DesertDBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 bool		DesertDBiome::isDeadlyWater()
@@ -579,6 +591,29 @@ sf::Color		DesertDBiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	DesertDBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	DesertDBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	DesertDBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	DesertDBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			DesertDBiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -721,6 +756,11 @@ sf::Time		DesertDBiome::getRainbowIntervalTime()
 bool			DesertDBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	DesertDBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	DesertDBiome::getWaterPersistence() const

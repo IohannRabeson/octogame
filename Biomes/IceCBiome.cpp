@@ -22,6 +22,7 @@ IceCBiome::IceCBiome() :
 	m_tileEndColor(27, 79, 101),
 	m_waterLevel(-1.f),
 	m_waterColor(255, 255, 255, 200),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(60.f)),
@@ -62,12 +63,18 @@ IceCBiome::IceCBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(50.f, 100.f), sf::Vector2f(100.f, 200.f)),
 	m_rockPartCount(2.f, 10.f),
 	m_rockColor(0, 31, 63),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(5u, 7u),
 	m_treeSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(50.f, 250.f)),
@@ -206,6 +213,11 @@ float	IceCBiome::getWaterLevel()
 sf::Color	IceCBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	IceCBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 std::map<std::size_t, std::string> const & IceCBiome::getInstances()
@@ -549,6 +561,29 @@ sf::Color		IceCBiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	IceCBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	IceCBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	IceCBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	IceCBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			IceCBiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -689,6 +724,11 @@ sf::Time		IceCBiome::getRainbowIntervalTime()
 bool			IceCBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	IceCBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	IceCBiome::getWaterPersistence() const

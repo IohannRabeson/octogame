@@ -22,6 +22,7 @@ JungleABiome::JungleABiome() :
 	m_tileEndColor(0, 124, 104),
 	m_waterLevel(10.f),
 	m_waterColor(196, 235, 1, 150),
+	m_secondWaterColor(0, 189, 168, 150),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),
@@ -62,12 +63,18 @@ JungleABiome::JungleABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Jungle),
 
 	m_rockSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 100.f)),
 	m_rockPartCount(6.f, 15.f),
 	m_rockColor(56, 50, 72),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(30.f, 300.f), sf::Vector2f(200.f, 300.f)),
@@ -224,6 +231,11 @@ sf::Color	JungleABiome::getWaterColor()
 	return m_waterColor;
 }
 
+sf::Color	JungleABiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
+}
+
 bool		JungleABiome::isDeadlyWater()
 {
 	return true;
@@ -265,8 +277,8 @@ Map::MapSurfaceGenerator JungleABiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f, 603.f, 605.f , 697.f , 696.f , 737.f , 738.f , 820.f , 850.f           , 980.f           , 984.f   };
-		std::vector<float> pointY = {n  , n    , -1.97f, -1.95f, -0.43f, -0.43f, -1.97f, -1.97f, n / 1.5f - 1.43f, n / 1.5f - 1.43f, n - 0.3f};
+		std::vector<float> pointX = {0.f, 603.f, 605.f , 650.f , 697.f , 696.f , 737.f , 738.f , 770.f , 790.f , 820.f , 850.f           , 980.f           , 984.f   };
+		std::vector<float> pointY = {n  , n    , -1.97f, -1.95f, -1.95f, -0.43f, -0.43f, -1.97f, -1.95f, -1.95f, -1.97f, n / 1.5f - 1.43f, n / 1.5f - 1.43f, n - 0.3f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -580,6 +592,29 @@ sf::Color		JungleABiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	JungleABiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	JungleABiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	JungleABiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	JungleABiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			JungleABiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -722,6 +757,11 @@ sf::Time		JungleABiome::getRainbowIntervalTime()
 bool			JungleABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	JungleABiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	JungleABiome::getWaterPersistence() const

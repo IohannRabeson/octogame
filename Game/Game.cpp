@@ -21,6 +21,7 @@
 #include "JungleABiome.hpp"
 #include "JungleBBiome.hpp"
 #include "JungleCBiome.hpp"
+#include "JungleDBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
 #include "RandomBiome.hpp"
@@ -119,8 +120,7 @@ Game::Game(void) :
 	m_groundSoundTimeMax(sf::seconds(0.6f)),
 	m_slowTimeInfosCoef(1.f),
 	m_skipFrames(0u),
-	m_skipFramesMax(3u),
-	m_earlyMapMovement(sf::seconds(2.f))
+	m_skipFramesMax(3u)
 {
 	InputListener::addInputListener();
 
@@ -135,6 +135,7 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
 	m_biomeManager.registerBiome<JungleBBiome>(Level::JungleB);
 	m_biomeManager.registerBiome<JungleCBiome>(Level::JungleC);
+	m_biomeManager.registerBiome<JungleDBiome>(Level::JungleD);
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 
@@ -147,7 +148,6 @@ Game::~Game(void)
 	if (m_soundGeneration != nullptr)
 		m_soundGeneration->stop();
 	InputListener::removeInputListener();
-	Progress::getInstance().save();
 }
 
 void	Game::loadLevel(void)
@@ -156,23 +156,25 @@ void	Game::loadLevel(void)
 	octo::AudioManager&			audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
+	sf::Vector2f				startPosition;
 
 	if (progress.isMenu())
+	{
 		m_biomeManager.changeBiome(Level::Rewards, 0x12345);
+		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+	}
 	else
 	{
 		m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
 		progress.setCurrentDestination(m_biomeManager.getCurrentBiome().getId());
+		if (progress.getRespawnType() == Progress::RespawnType::Portal)
+		{
+			startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+			progress.setCheckPointPosition(startPosition);
+		}
+		else // if octo died
+			startPosition = progress.getCheckPointPosition();
 	}
-
-	sf::Vector2f startPosition;
-	if (progress.getRespawnType() == Progress::RespawnType::Portal)
-	{
-		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
-		progress.setCheckPointPosition(startPosition);
-	}
-	else // if octo died
-		startPosition = progress.getCheckPointPosition();
 
 	// Reset last values
 	postEffect.removeEffects();
@@ -343,13 +345,6 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
 			}
 			break;
-		case GameObjectType::CedricStartNpc:
-			if (gameObjectCast<CedricStartNpc>(gameObject)->startBalle())
-				octo->startDrinkPotion();
-			break;
-		case GameObjectType::CedricEndNpc:
-			gameObjectCast<CedricEndNpc>(gameObject)->stopBalle();
-			break;
 		default:
 			break;
 	}
@@ -387,6 +382,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::OctoDeathNpc:
 			gameObjectCast<OctoDeathNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::CedricStartNpc:
+			gameObjectCast<CedricStartNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::CedricEndNpc:
 			gameObjectCast<CedricEndNpc>(gameObject)->collideOctoEvent(octo);
@@ -465,9 +463,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::JuNpc:
 			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::CedricStartNpc:
-			gameObjectCast<CedricStartNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::FannyNpc:
 			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);
@@ -551,13 +546,8 @@ void Game::moveMap(sf::Time frameTime)
 	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
 
-	m_earlyMapMovement -= frameTime;
-	if (Progress::getInstance().isMenu()
-		|| m_earlyMapMovement > sf::Time::Zero
-		|| (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
-	{
+	if (Progress::getInstance().isMenu() || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
 		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-	}
 }
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
@@ -573,6 +563,7 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			Progress::getInstance().moveMap();
 			break;
 		case OctoKeys::Infos:
+			m_cameraMovement->shake(5.f, 1.f, 0.01f);
 			m_slowTimeInfosCoef = 10.f;
 			break;
 		default:

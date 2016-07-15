@@ -16,6 +16,7 @@
 #include "Mushroom.hpp"
 #include "Crystal.hpp"
 #include "GroundRock.hpp"
+#include "Grass.hpp"
 
 //Object
 #include "SpaceShip.hpp"
@@ -115,7 +116,7 @@ GroundManager::GroundManager(void) :
 	m_decorManagerGround(15000),
 	m_decorManagerInstanceBack(100000),
 	m_decorManagerInstanceFront(100000),
-	m_nextState(GenerationState::Next),
+	m_nextState(GenerationState::None),
 	m_water(nullptr)
 {}
 
@@ -158,12 +159,16 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	// Init game objects
 	setupGameObjects(biome);
 
-	swapMap();
 	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
 	m_offset.x = rect.left;
 	m_offset.y = rect.top;
 	//m_oldOffset = sf::Vector2i(m_offset / 16.f);
 	updateOffset(0.f);
+
+	//avoid empty columns
+	//TODO: Find if the problem is in swapMp
+	for (std::size_t i = 0u; i <= 1u; i++)
+		swapMap();
 }
 
 //TODO: Use movement mask
@@ -1063,6 +1068,7 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	std::size_t mushroomCount = static_cast<std::size_t>(biome.getMushroomCount() / 2.f);
 	std::size_t crystalCount = static_cast<std::size_t>(biome.getCrystalCount() / 2);
 	std::size_t groundRockCount = biome.getGroundRockCount();
+	std::size_t grassCount = biome.getGrassCount();
 	std::size_t totalCount = 0u;
 
 	if (biome.canCreateRainbow())
@@ -1151,6 +1157,27 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += crystalCount;
+	}
+
+	//TODO: Add in Biome
+	if (biome.canCreateGrass())
+	{
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
 	}
 
 	for (std::size_t i = 0; i < groundRockCount; i++)

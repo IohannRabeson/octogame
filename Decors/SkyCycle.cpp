@@ -12,8 +12,7 @@ SkyCycle::SkyCycle(void) :
 	m_weather(0.f),
 	m_dropPerSecond(0u),
 	m_dropAppear(true),
-	m_engine(std::time(0)),
-	m_distriThunder(0u, 2u),
+	m_generator("random"),
 	m_thunder(0.f),
 	m_thunderState(0u),
 	m_boolThunder(false)
@@ -76,6 +75,7 @@ bool SkyCycle::isNight(void) const
 void SkyCycle::setup(ABiome & biome)
 {
 	m_timerMax = biome.getDayDuration();
+	m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
 	m_timerDayMax = m_timerMax / 4.f;
 	m_timerNightMax = m_timerMax / 4.f;
 	newDropCycle(biome);
@@ -96,6 +96,10 @@ void SkyCycle::setup(ABiome & biome)
 
 void SkyCycle::computeDayNight(sf::Time frameTime)
 {
+	float speedCoef = m_timerMax.asSeconds() / 100.f * m_timerStart.asSeconds();
+	if (speedCoef >= 1.f)
+		frameTime *= speedCoef;
+	m_timerStart -= frameTime;
 	m_timer += frameTime;
 	if (m_timer >= m_timerMax)
 		m_timer = sf::Time::Zero;
@@ -246,7 +250,7 @@ void SkyCycle::playSound(ABiome & biome)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		std::size_t thunderType = m_distriThunder(m_engine);
+		std::size_t thunderType = m_generator.randomInt(0u, 2u);
 		if (thunderType == 0u)
 			audio.playSound(resources.getSound(THUNDER1_STEREO_OGG), 0.4f, biome.randomFloat(0.5f, 1.5f));
 		else if (thunderType == 1u)

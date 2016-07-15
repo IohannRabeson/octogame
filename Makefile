@@ -116,22 +116,14 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/OverCoolNpc.cpp					\
 				Npcs/FabienNpc.cpp						\
 				Npcs/CedricEndNpc.cpp					\
-				Npcs/OctoDeathNpc.cpp				\
-				Npcs/Rocket.cpp				\
-				Npcs/LongChairNpc.cpp				\
-				Npcs/LuGlitchNpc.cpp				\
-				Npcs/JuGlitchNpc.cpp				\
-				Npcs/FranGlitchNpc.cpp				\
+				Npcs/OctoDeathNpc.cpp					\
+				Npcs/Rocket.cpp							\
+				Npcs/LongChairNpc.cpp					\
+				Npcs/LuGlitchNpc.cpp					\
+				Npcs/JuGlitchNpc.cpp					\
+				Npcs/FranGlitchNpc.cpp					\
 				Npcs/WindowGlitchNpc.cpp				\
 #Script AddNpc
-
-
-
-
-
-
-
-
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
@@ -145,6 +137,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
 				Menu/LanguageMenu.cpp					\
+				Menu/MenuTypeMenu.cpp					\
 				Menu/SoundVolumeMenu.cpp				\
 				Menu/MusicVolumeMenu.cpp				\
 				Menu/ControlMenu.cpp					\
@@ -194,6 +187,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/JungleABiome.cpp					\
 				Biomes/JungleBBiome.cpp					\
 				Biomes/JungleCBiome.cpp					\
+				Biomes/JungleDBiome.cpp					\
 				Biomes/WaterABiome.cpp					\
 				Biomes/WaterBBiome.cpp					\
 
@@ -217,6 +211,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/GroundRock.cpp					\
 				Decors/Sky.cpp							\
 				Decors/SunLight.cpp						\
+				Decors/Grass.cpp						\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
 				Decors/SmokeSystem.cpp					\

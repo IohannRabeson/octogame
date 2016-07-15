@@ -1,22 +1,27 @@
 #include "Water.hpp"
 #include "ABiome.hpp"
 #include "PostEffectLayer.hpp"
+#include "Progress.hpp"
+#include <Interpolations.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
 
 Water::Water(ABiome & biome) :
+	m_waterColor(biome.getWaterColor()),
+	m_secondWaterColor(biome.getSecondWaterColor()),
 	m_shader(PostEffectLayer::getInstance().getShader(WATER_FRAG)),
 	m_waveCycle(sf::Time::Zero),
 	m_width(biome.getMapSize().x * Tile::TileSize),
-	m_limit(1000.f)
+	m_limit(1000.f),
+	m_timeChangeColorMax(sf::seconds(7.f))
 {
 	m_rectLeft.setSize(sf::Vector2f(m_width, 10000.f));
-	m_rectLeft.setFillColor(biome.getWaterColor());
+	m_rectLeft.setFillColor(m_waterColor);
 	m_rectLeft.setOutlineColor(sf::Color::Red);
 
 	m_rectRight.setSize(sf::Vector2f(m_width, 10000.f));
-	m_rectRight.setFillColor(biome.getWaterColor());
+	m_rectRight.setFillColor(m_waterColor);
 	m_rectRight.setOutlineColor(sf::Color::Red);
 
 	m_limit = biome.getWaterLevel();
@@ -64,6 +69,20 @@ void Water::addMapOffset(float width)
 	setPosition(sf::Vector2f(m_rectLeft.getPosition() + sf::Vector2f(width, 0.f)));
 }
 
+void Water::changeColor(sf::Time frameTime)
+{
+	Progress & progress = Progress::getInstance();
+	if (progress.canUseWaterJump())
+	{
+		if (m_timeChangeColor < m_timeChangeColorMax)
+			m_timeChangeColor += frameTime;
+		else
+			m_timeChangeColor = m_timeChangeColorMax;
+		m_rectLeft.setFillColor(octo::cosinusInterpolation(m_waterColor, m_secondWaterColor, m_timeChangeColor / m_timeChangeColorMax));
+		m_rectRight.setFillColor(octo::cosinusInterpolation(m_waterColor, m_secondWaterColor, m_timeChangeColor / m_timeChangeColorMax));
+	}
+}
+
 void Water::update(sf::Time frameTime)
 {
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
@@ -78,6 +97,7 @@ void Water::update(sf::Time frameTime)
 		ratio = 1.f;
 	m_shader.setParameter("offset_limit", ratio);
 	m_shader.setParameter("height", 1.f - ratio);
+	changeColor(frameTime);
 }
 
 void Water::draw(sf::RenderTarget & render, sf::RenderStates states) const
