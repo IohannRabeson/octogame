@@ -36,31 +36,32 @@ MusicManager::MusicManager() :
 	musicKey[7] = SOUTERRAIN_LUGUBRE_OGG;
 	musicKey[8] = MENU_OPUS_I_OGG;
 
-	m_musicLevel.resize(13);
+	m_musicLevel.resize(15);
 	m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
-	m_musicLevel[1] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
-	m_musicLevel[2] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
-	m_musicLevel[3] = AreaMusic(Level::WaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
-	m_musicLevel[4] = AreaMusic(Level::Random,
-			musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
-
-	m_musicLevel[5] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
-	m_musicLevel[6] = AreaMusic(Level::IceC, ICE_MUSIC_OGG, sf::FloatRect());
-	m_musicLevel[7] = AreaMusic(Level::IceD, ICE_MUSIC_D_OGG, sf::FloatRect());
-	m_musicLevel[8] = AreaMusic(Level::DesertC, MENU_OPUS_II_OGG, sf::FloatRect());
+	m_musicLevel[1] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
+	m_musicLevel[2] = AreaMusic(Level::IceC, MENU_OPUS_III_OGG, sf::FloatRect());
+	m_musicLevel[3] = AreaMusic(Level::IceD, ICE_MUSIC_D_OGG, sf::FloatRect());
+	m_musicLevel[4] = AreaMusic(Level::DesertA, MENU_OPUS_II_OGG, sf::FloatRect());
+	m_musicLevel[5] = AreaMusic(Level::DesertB, MENU_OPUS_I_OGG, sf::FloatRect());
+	m_musicLevel[6] = AreaMusic(Level::DesertC, MENU_OPUS_II_OGG, sf::FloatRect());
+	m_musicLevel[7] = AreaMusic(Level::DesertD, MENU_OPUS_III_OGG, sf::FloatRect());
+	m_musicLevel[8] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
 	m_musicLevel[9] = AreaMusic(Level::JungleB, COLONISATION_OGG, sf::FloatRect());
-	m_musicLevel[10] = AreaMusic(Level::JungleC, COLONISATION_OGG, sf::FloatRect());
+	m_musicLevel[10] = AreaMusic(Level::JungleC, ACTION_FAST_OGG, sf::FloatRect());
+	m_musicLevel[11] = AreaMusic(Level::JungleD, COLONISATION_OGG, sf::FloatRect());
+	m_musicLevel[12] = AreaMusic(Level::WaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
+	m_musicLevel[13] = AreaMusic(Level::Random, musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
 
-	m_musicLevel[11] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
-	m_musicLevel[12] = AreaMusic(Level::DesertB, MENU_OPUS_II_OGG, sf::FloatRect());
+	m_musicLevel[14] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
+
 
 	m_music.resize(9);
-	// Montagne
-	m_music[0] = AreaMusic(Level::DesertA, MENU_OPUS_III_OGG,
-			sf::FloatRect(sf::Vector2f(340.f * 16.f, -3400.f), sf::Vector2f(3300.f, 1900.f)));
+	//desert b balle
+//	m_music[6] = AreaMusic(Level::DesertB, MENU_OPUS_II_REVERSE_OGG,
+//			sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(200.f * 16.f, 700.f * 16.f)));
 	// cedric challenge BALLE
-	m_music[1] = AreaMusic(Level::JungleA, ACTION_FAST_OGG,
-			sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)));
+//	m_music[1] = AreaMusic(Level::JungleA, MENU_OPUS_II_REVERSE_OGG,
+//			sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)));
 	// village
 	m_music[2] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
 			sf::FloatRect(sf::Vector2f(590.f * 16.f, -2000.f), sf::Vector2f(220.f * 16.f, 2300.f)));
@@ -73,12 +74,9 @@ MusicManager::MusicManager() :
 	//run
 	m_music[5] = AreaMusic(Level::WaterA, MENU_OPUS_I_OGG,
 			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
-	//desert c balle
-	m_music[6] = AreaMusic(Level::DesertC, MENU_OPUS_II_REVERSE_OGG,
-			sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(250.f * 16.f, 750.f * 16.f)));
 	//ice balle pixel
-	m_music[7] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
-			sf::FloatRect(sf::Vector2f(50.f * 16.f, -240.f * 16.f), sf::Vector2f(120.f * 16.f, 185.f * 16.f)));
+//	m_music[7] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
+//			sf::FloatRect(sf::Vector2f(50.f * 16.f, -240.f * 16.f), sf::Vector2f(120.f * 16.f, 185.f * 16.f)));
 	//jungle b cave
 	m_music[8] = AreaMusic(Level::JungleB, SOUTERRAIN_LUGUBRE_OGG,
 			sf::FloatRect(sf::Vector2f(30.f * 16.f, 110.f * 16.f), sf::Vector2f(380.f * 16.f, 420.f * 16.f)));

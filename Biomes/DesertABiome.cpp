@@ -40,7 +40,7 @@ DesertABiome::DesertABiome() :
 	m_rockCount(10u, 20u),
 	m_treeCount(13u, 13u),
 	m_mushroomCount(3u, 40u),
-	m_crystalCount(10u, 15u),
+	m_crystalCount(18u, 19u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
@@ -154,7 +154,7 @@ DesertABiome::DesertABiome() :
 	m_gameObjects[420] = GameObjectType::Tent;
 	m_instances[440] = MAP_DESERT_A_SECRET_OMP;
 	m_gameObjects[500] = GameObjectType::JuGlitchNpc;
-	m_interestPointPosX = 263;
+	m_interestPointPosX = 50;
 
 	m_treePos = {347, 352, 359, 367, 380, 381, 393, 430, 433, 455, 460, 464, 473};
 

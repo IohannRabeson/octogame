@@ -25,6 +25,7 @@ public:
 		void update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position);
 		void updateGlitch(sf::Time frametime, ABiome & biome);
 		void updateChallenge(sf::Time frametime);
+		void updatePitch(float maxVariation);
 		virtual void updateShader(sf::Time frametime) = 0;
 
 		void start(void);
