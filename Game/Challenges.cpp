@@ -1,5 +1,6 @@
 #include "Challenges.hpp"
 #include "PostEffectLayer.hpp"
+#include <AudioManager.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
@@ -59,6 +60,8 @@ void ChallengeManager::AChallenge::updateGlitch(sf::Time frametime, ABiome & bio
 		setGlitch(false);
 		m_glitchTimer = sf::seconds(biome.randomFloat(10.f, 30.f));
 	}
+
+	updatePitch(0.005f);
 	updateShader(frametime);
 }
 
@@ -84,7 +87,17 @@ void ChallengeManager::AChallenge::updateChallenge(sf::Time frametime)
 			stop();
 		}
 	}
+
+	updatePitch(0.04f);
 	updateShader(frametime);
+}
+
+void ChallengeManager::AChallenge::updatePitch(float maxVariation)
+{
+	float pitch = 1.f - ((std::min(m_timer, m_duration) / m_duration) * maxVariation);
+	octo::AudioManager::SoundPtr music = octo::Application::getAudioManager().getMusicSound();
+	if (music)
+		music->setPitch(pitch);
 }
 
 void ChallengeManager::AChallenge::validateArea(ABiome & biome, sf::Vector2f const & position)
