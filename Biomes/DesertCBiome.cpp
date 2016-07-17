@@ -13,7 +13,7 @@ DesertCBiome::DesertCBiome() :
 	m_name("Desert B"),
 	m_id(Level::DesertC),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(650u, 64u)),
+	m_mapSize(sf::Vector2u(850u, 64u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(63.f * 16.f, -200.f),
 	m_transitionDuration(0.5f),
@@ -146,6 +146,7 @@ DesertCBiome::DesertCBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::DesertD);
 	m_destinations.push_back(Level::DesertB);
 }
@@ -257,8 +258,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = { 0.f, 50.f, 55.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f   , 210.f   , 215.f, 750.f};
-		std::vector<float> pointY = { n  , n   , n - 0.8f, n - 0.8f, n   , n    , n - 1.0f, n - 1.0f, n    , n    , n - 1.2f, n - 1.2f, n    , n    , n - 1.4f, n - 1.4f, n    , n};
+		std::vector<float> pointX = { 0.f, 50.f, 55.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f   , 210.f   , 215.f, 400.f, 600.f  , 750.f};
+		std::vector<float> pointY = { n  , n   , n - 0.8f, n - 0.8f, n   , n    , n - 1.0f, n - 1.0f, n    , n    , n - 1.2f, n - 1.2f, n    , n    , n - 1.4f, n - 1.4f, n    , n    , n + 4.f, n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
