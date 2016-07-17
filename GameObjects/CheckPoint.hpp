@@ -34,7 +34,6 @@ private:
 	sf::Color						m_color;
 
 	sf::Vector2f					m_startPosition;
-	bool							m_firstFrame;
 	bool							m_isValidated;
 	octo::SpriteAnimation			m_animationValidated;
 
