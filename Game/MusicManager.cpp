@@ -47,7 +47,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[7] = AreaMusic(Level::DesertD, MENU_OPUS_III_OGG, sf::FloatRect());
 	m_musicLevel[8] = AreaMusic(Level::JungleA, COLONISATION_OGG, sf::FloatRect());
 	m_musicLevel[9] = AreaMusic(Level::JungleB, COLONISATION_OGG, sf::FloatRect());
-	m_musicLevel[10] = AreaMusic(Level::JungleC, ACTION_FAST_OGG, sf::FloatRect());
+	m_musicLevel[10] = AreaMusic(Level::JungleC, ACTION_SLOW_OGG, sf::FloatRect());
 	m_musicLevel[11] = AreaMusic(Level::JungleD, COLONISATION_OGG, sf::FloatRect());
 	m_musicLevel[12] = AreaMusic(Level::WaterA, BALLADE_MENTALE_OGG, sf::FloatRect());
 	m_musicLevel[13] = AreaMusic(Level::Random, musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
@@ -55,31 +55,25 @@ MusicManager::MusicManager() :
 	m_musicLevel[14] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
 
 
-	m_music.resize(9);
-	//desert b balle
-//	m_music[6] = AreaMusic(Level::DesertB, MENU_OPUS_II_REVERSE_OGG,
-//			sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(200.f * 16.f, 700.f * 16.f)));
-	// cedric challenge BALLE
-//	m_music[1] = AreaMusic(Level::JungleA, MENU_OPUS_II_REVERSE_OGG,
-//			sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)));
-	// village
-	m_music[2] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
-			sf::FloatRect(sf::Vector2f(590.f * 16.f, -2000.f), sf::Vector2f(220.f * 16.f, 2300.f)));
-	//concert BALLE
-	m_music[3] = AreaMusic(Level::WaterA, MENU_OPUS_II_REVERSE_OGG,
-			sf::FloatRect(sf::Vector2f(700.f * 16.f, -3400.f), sf::Vector2f(70.f * 16.f, 1350.f)));
-	//water
-	m_music[4] = AreaMusic(Level::WaterA, SOUTERRAIN_LUGUBRE_OGG,
-			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
-	//run
-	m_music[5] = AreaMusic(Level::WaterA, MENU_OPUS_I_OGG,
-			sf::FloatRect(sf::Vector2f(125.f * 16.f, -6000.f), sf::Vector2f(415.f * 16.f, 5200.f)));
-	//ice balle pixel
-//	m_music[7] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
-//			sf::FloatRect(sf::Vector2f(50.f * 16.f, -240.f * 16.f), sf::Vector2f(120.f * 16.f, 185.f * 16.f)));
+	m_music.resize(6);
+	//ice balle
+	m_music[0] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
+			sf::FloatRect(sf::Vector2f(50.f * 16.f, -240.f * 16.f), sf::Vector2f(120.f * 16.f, 185.f * 16.f)));
+	//desert balle
+	m_music[1] = AreaMusic(Level::DesertB, MENU_OPUS_II_REVERSE_OGG,
+			sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(200.f * 16.f, 700.f * 16.f)));
+	// jungle balle
+	m_music[2] = AreaMusic(Level::JungleA, MENU_OPUS_II_REVERSE_OGG,
+			sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)));
 	//jungle b cave
-	m_music[8] = AreaMusic(Level::JungleB, SOUTERRAIN_LUGUBRE_OGG,
+	m_music[3] = AreaMusic(Level::JungleB, SOUTERRAIN_LUGUBRE_OGG,
 			sf::FloatRect(sf::Vector2f(30.f * 16.f, 110.f * 16.f), sf::Vector2f(380.f * 16.f, 420.f * 16.f)));
+	// village
+	m_music[4] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
+			sf::FloatRect(sf::Vector2f(590.f * 16.f, -2000.f), sf::Vector2f(220.f * 16.f, 2300.f)));
+	// water
+	m_music[5] = AreaMusic(Level::WaterA, SOUTERRAIN_LUGUBRE_OGG,
+			sf::FloatRect(sf::Vector2f(0.f, 1.f), sf::Vector2f(1200.f * 16.f, 3200.f)));
 }
 
 MusicManager::~MusicManager()

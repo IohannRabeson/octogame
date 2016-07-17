@@ -61,7 +61,7 @@ void ChallengeManager::AChallenge::updateGlitch(sf::Time frametime, ABiome & bio
 		m_glitchTimer = sf::seconds(biome.randomFloat(10.f, 30.f));
 	}
 
-	updatePitch(0.01f);
+	updatePitch(0.005f);
 	updateShader(frametime);
 }
 
@@ -88,7 +88,7 @@ void ChallengeManager::AChallenge::updateChallenge(sf::Time frametime)
 		}
 	}
 
-	updatePitch(0.065f);
+	updatePitch(0.04f);
 	updateShader(frametime);
 }
 
