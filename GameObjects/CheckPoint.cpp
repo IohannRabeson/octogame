@@ -17,7 +17,6 @@ CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position
 	m_vertices(new sf::Vertex[m_count]),
 	m_size(150.f, 150.f),
 	m_color(255, 255, 255, 200),
-	m_firstFrame(true),
 	m_isValidated(false)
 {
 	m_box->setSize(sf::Vector2f(50.f, 390.f));
@@ -81,11 +80,6 @@ void CheckPoint::createEffect(sf::Vector2f const & size, sf::Vector2f const & or
 void CheckPoint::update(sf::Time frametime)
 {
 	InstanceDecor::update(frametime);
-	if (m_firstFrame)
-	{
-		m_firstFrame = false;
-		m_startPosition = getPosition() + sf::Vector2f(28.f, 0.f);
-	}
 	if (m_isValidated)
 	{
 		m_timer += frametime;
@@ -120,11 +114,11 @@ void CheckPoint::collideOctoEvent(CharacterOcto *)
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
 		Progress & progress = Progress::getInstance();
 
+		m_startPosition = getPosition() + sf::Vector2f(28.f, 0.f);
 		audio.playSound(resources.getSound(OCTO_ANGRY_OGG), 0.5f);
 		m_sprite.setAnimation(m_animationValidated);
 		progress.setCheckPointPosition(m_startPosition);
 		progress.setRespawnType(Progress::RespawnType::Die);
-
 	}
 	m_isValidated = true;
 }
