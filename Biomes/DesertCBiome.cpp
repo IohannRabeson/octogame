@@ -13,7 +13,7 @@ DesertCBiome::DesertCBiome() :
 	m_name("Desert B"),
 	m_id(Level::DesertC),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(650u, 64u)),
+	m_mapSize(sf::Vector2u(850u, 64u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(63.f * 16.f, -200.f),
 	m_transitionDuration(0.5f),
