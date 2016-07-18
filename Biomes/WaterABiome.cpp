@@ -11,15 +11,15 @@
 WaterABiome::WaterABiome() :
 	m_name("Water A"),
 	m_id(Level::WaterA),
-	m_seed("Vince"),
-	m_mapSize(sf::Vector2u(1300u, 200u)),
+	m_seed("Water A"),
+	m_mapSize(sf::Vector2u(700u, 32u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(40.f * 16.f, -1050.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 193, 177),
 	m_tileEndColor(249, 237, 188),
-	m_waterLevel(1.f),
+	m_waterLevel(300.f),
 	m_waterColor(3, 57, 108, 130),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
@@ -134,30 +134,7 @@ WaterABiome::WaterABiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[140] = MAP_WATER_A_TRAIL_SLOWFALL_OMP;
-	m_instances[785] = MAP_WATER_A_PARA_SIGN_OMP;
-//	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[75] = GameObjectType::BrayouNpc;
-	m_gameObjects[149] = GameObjectType::EvaNpc;
-	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-//	m_gameObjects[668] = GameObjectType::PeaNpc;
-//	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
-//	m_gameObjects[730] = GameObjectType::Concert;
-	m_gameObjects[745] = GameObjectType::Portal;
-
-	m_gameObjects[200] = GameObjectType::JellyfishNpc;
-	m_gameObjects[270] = GameObjectType::JellyfishNpc;
-	m_gameObjects[420] = GameObjectType::JellyfishNpc;
-	m_gameObjects[540] = GameObjectType::JellyfishNpc;
-	m_gameObjects[715] = GameObjectType::JellyfishNpc;
-	m_gameObjects[810] = GameObjectType::JellyfishNpc;
-	m_gameObjects[980] = GameObjectType::JellyfishNpc;
-
-	m_gameObjects[1120] = GameObjectType::JellyfishNpc;
-	m_gameObjects[1140] = GameObjectType::JellyfishNpc;
-	m_gameObjects[1160] = GameObjectType::JellyfishNpc;
-	m_gameObjects[1250] = GameObjectType::JellyfishNpc;
+	m_instances[140] = MAP_WATER_A_TRAIL_OMP;
 
 	m_interestPointPosX = 500;
 
@@ -248,13 +225,7 @@ std::vector<ParallaxScrolling::ALayer *> WaterABiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 1.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 		return noise.perlin(x, y, 3, 2.f);
@@ -271,87 +242,24 @@ std::vector<ParallaxScrolling::ALayer *> WaterABiome::getLayers()
 
 Map::MapSurfaceGenerator WaterABiome::getMapSurfaceGenerator()
 {
-	auto fun = [](float x, float a)
+	return [this](Noise & noise, float x, float y)
 	{
-		// n.b.: this Logistic Sigmoid has been normalized.
+		float floatMapSize = static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		std::vector<float> pointX = {0.f, 140.f, m_mapSize.x * 1.f};
+		std::vector<float> pointY = {n  , 0.f  , n};
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
 
-		float epsilon = 0.0001f;
-		float min_param_a = 0.f + epsilon;
-		float max_param_a = 1.f - epsilon;
-		a = std::max(min_param_a, std::min(max_param_a, a));
-		a = (1.f / (1.f - a) - 1.f);
-
-		float A = 1.f / (1.f + std::exp(0 -((x-0.5)*a*2.0)));
-		float B = 1.f / (1.f + std::exp(a));
-		float C = 1.f / (1.f + std::exp(0-a));
-		float y = (A-B)/(C-B);
-		return y;
-	};
-	return [fun, this](Noise & noise, float x, float y)
-	{
-		static const float startHill1 = 40.f / static_cast<float>(m_mapSize.x);
-		static const float middleHill1 = 140.f / static_cast<float>(m_mapSize.x);
-		static const float endHill1 = 150.f / static_cast<float>(m_mapSize.x);
-		static const float startHill2 = 620.f / static_cast<float>(m_mapSize.x);
-		static const float endHill2 = 670.f / static_cast<float>(m_mapSize.x);
-		static const float startHill3 = 700.f / static_cast<float>(m_mapSize.x);
-		static const float endHill3 = 750.f / static_cast<float>(m_mapSize.x);
-		static const float startHill4 = 1000.f / static_cast<float>(m_mapSize.x);
-		static const float endHill4 = 1080.f / static_cast<float>(m_mapSize.x);
-		static const float offset = 40.f / static_cast<float>(m_mapSize.x);
-		static const float offsetSlim = 40.f / static_cast<float>(m_mapSize.x);
-		static const float offsetSlim2 = 5.f / static_cast<float>(m_mapSize.x);
-		static const float curveValue = 0.980f;
-
-		float n = noise.fBm(x, y, 3, 3.f, 0.6f);
-		float bot1 = n / 10.0f + 0.1f;
-		float bot2 = n / 10.0f + 0.4f;
-		float topHill1 = n / 10.0f - 1.45f;
-		float topMiddleHill1 = n / 10.0f - 1.05f;
-		float topHill2 = n / 15.0f - 1.6f;
-		float topHill3 = n / 15.0f - 2.5f;
-		float topHill4 = n / 15.0f - 1.15f;
-
-		if (x > startHill1 - offset && x <= startHill1)
-			return octo::cosinusInterpolation(n, topHill1, (x - startHill1 + offset) / offset);
-		else if (x <= middleHill1 - offset)
-			return topHill1;
-		else if (x <= middleHill1)
-			return octo::cosinusInterpolation(topHill1, topMiddleHill1, (x - middleHill1 + offset) / offset);
-		else if (x <= endHill1)
-			return topMiddleHill1;
-		else if (x <= endHill1 + offsetSlim2)
-			return bot1 - std::abs(bot1 - topMiddleHill1) * fun((endHill1 + offsetSlim2 - x) / offsetSlim2, 0.70f);
-
-		else if (x <= startHill2)
-			return bot1;
-		else if (x <= startHill2 + offsetSlim)
-			return bot1 - std::abs(bot1 - topHill2) * fun(1.f - ((startHill2 + offsetSlim - x)) / offsetSlim, curveValue);
-		else if (x <= endHill2)
-			return topHill2;
-		else if (x <= endHill2 + offsetSlim)
-			return bot2 - std::abs(bot2 - topHill2) * fun((endHill2 + offsetSlim - x) / offsetSlim, 0.87f);
-
-		else if (x <= startHill3)
-			return bot2;
-		else if (x <= startHill3 + offsetSlim)
-			return bot2 - std::abs(bot2 - topHill3) * fun(1.f - ((startHill3 + offsetSlim - x)) / offsetSlim, curveValue);
-		else if (x <= endHill3)
-			return topHill3;
-		else if (x <= endHill3 + offsetSlim)
-			return bot1 - std::abs(bot1 - topHill3) * fun((endHill3 + offsetSlim - x) / offsetSlim, curveValue);
-
-		else if (x <= startHill4)
-			return bot1;
-		else if (x <= startHill4 + offsetSlim)
-			return bot1 - std::abs(bot1 - topHill4) * fun(1.f - ((startHill4 + offsetSlim - x)) / offsetSlim, curveValue);
-		else if (x <= endHill4)
-			return topHill4;
-		else if (x <= endHill4 + offsetSlim)
-			return n - std::abs(n - topHill4) * fun((endHill4 + offsetSlim - x) / offsetSlim, curveValue);
-
-		else
-			return n;
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
 }
 
