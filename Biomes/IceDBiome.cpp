@@ -150,8 +150,8 @@ IceDBiome::IceDBiome() :
 	m_instances[210] = MAP_ICE_D_ELEVATOR_OMP;
 	m_gameObjects[180] = GameObjectType::CheckPoint;
 	m_gameObjects[235] = GameObjectType::WindowGlitchNpc;
-	m_gameObjects[270] = GameObjectType::Pedestal;
-	m_gameObjects[274] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[250] = GameObjectType::Pedestal;
+	m_gameObjects[254] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[330] = GameObjectType::EngineSnow;
 	m_gameObjects[340] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[390] = GameObjectType::StrangerSnowNpc;
