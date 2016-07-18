@@ -133,6 +133,8 @@ DesertCBiome::DesertCBiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertD)
 		m_octoStartPosition = sf::Vector2f(602.f * 16.f, -3150.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(790.f * 16.f, -2050.f);
 
 	m_gameObjects[60] = GameObjectType::PortalDesert;
 	m_gameObjects[125] = GameObjectType::FabienNpc;

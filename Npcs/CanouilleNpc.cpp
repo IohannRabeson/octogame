@@ -84,7 +84,4 @@ void CanouilleNpc::updateState(void)
 			sprite.setNextEvent(Special1);
 		}
 	}
-
-	if (Progress::getInstance().canDoubleJump())
-		setCurrentText(1u);
 }
