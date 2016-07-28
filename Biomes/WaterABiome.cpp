@@ -17,8 +17,8 @@ WaterABiome::WaterABiome() :
 	m_octoStartPosition(40.f * 16.f, -1050.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(255, 193, 177),
-	m_tileEndColor(249, 237, 188),
+	m_tileStartColor(250, 229, 205),
+	m_tileEndColor(244, 201, 154),
 	m_waterLevel(300.f),
 	m_waterColor(3, 57, 108, 130),
 	m_secondWaterColor(m_waterColor),
@@ -26,8 +26,8 @@ WaterABiome::WaterABiome() :
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(153, 204, 255),
-	m_skyNightColor(255, 90, 61),
+	m_skyDayColor(3, 57, 108),
+	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
 	m_SunsetLightColor(255, 147, 46, 130),
 	m_wind(100.f),
@@ -36,22 +36,22 @@ WaterABiome::WaterABiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(30u, 35u),
+	m_rockCount(10u, 15u),
 	m_treeCount(30u, 30u),
 	m_mushroomCount(390u, 400u),
-	m_crystalCount(70u, 100u),
+	m_crystalCount(20u, 30u),
 	m_starCount(500u, 800u),
-	m_sunCount(3u, 3u),
-	m_moonCount(1u, 1u),
-	m_rainbowCount(4u, 5u),
-	m_cloudCount(10u, 15u),
+	m_sunCount(1u, 1u),
+	m_moonCount(2u, 2u),
+	m_rainbowCount(2u, 2u),
+	m_cloudCount(30u, 40u),
 	m_groundRockCount(200u, 400u),
 
 	m_canCreateRain(true),
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
-	m_canCreateTree(true),
+	m_canCreateTree(false),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
@@ -66,9 +66,9 @@ WaterABiome::WaterABiome() :
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
 
-	m_rockSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(40.f, 300.f)),
-	m_rockPartCount(10.f, 15.f),
-	m_rockColor(60, 72, 84),
+	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(20.f, 200.f)),
+	m_rockPartCount(4.f, 8.f),
+	m_rockColor(159, 24, 24),
 
 	m_grassSizeY(30.f, 60.f),
 	m_grassColor(m_tileStartColor),
@@ -85,17 +85,17 @@ WaterABiome::WaterABiome() :
 	m_leafColor(0, 255, 159, 150.f),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
-	m_mushroomColor(60, 0, 53, 150.f),
+	m_mushroomColor(255, 0, 0, 150.f),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
-	m_crystalSize(sf::Vector2f(5.f, 30.f), sf::Vector2f(20.f, 80.f)),
-	m_crystalPartCount(15u, 25u),
-	m_crystalColor(162, 121, 143, 150),
-	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
-	m_shineEffectColor(255, 255, 255, 100),
+	m_crystalSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(40.f, 350.f)),
+	m_crystalPartCount(3u, 6u),
+	m_crystalColor(103, 157, 208, 50),
+	m_shineEffectSize(sf::Vector2f(200.f, 200.f), sf::Vector2f(300.f, 300.f)),
+	m_shineEffectColor(153, 207, 255, 130),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(400.f, 200.f), sf::Vector2f(800.f, 400.f)),
+	m_cloudSize(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudPartCount(3u, 4u),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
@@ -106,17 +106,17 @@ WaterABiome::WaterABiome() :
 
 	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 255, 255),
+	m_sunColor(159, 24, 24),
 
-	m_moonSize(sf::Vector2f(300.f, 300.f), sf::Vector2f(400.f, 400.f)),
+	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_moonColor(255, 255, 255),
 	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
 
-	m_rainbowThickness(70.f, 120.f),
-	m_rainbowPartSize(50.f, 150.f),
+	m_rainbowThickness(60.f, 100.f),
+	m_rainbowPartSize(30.f, 100.f),
 	m_rainbowLoopCount(1u, 4u),
-	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
-	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
+	m_rainbowLifeTime(sf::seconds(5.f), sf::seconds(10.f)),
+	m_rainbowIntervalTime(sf::seconds(5.f), sf::seconds(10.f))
 {
 	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
@@ -225,18 +225,63 @@ std::vector<ParallaxScrolling::ALayer *> WaterABiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 5, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-		return noise.perlin(x, y, 3, 2.f);
+			return noise.perlin(x / 2.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
+	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 0, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.noise(x * 1.1f, y);
+			return noise.perlin(x / 2.f + 100.f, y + 100.f, 2, 2.f);
 		});
 	vector.push_back(layer);
+	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 10.f, -5, 0.1f, 0.4f, 11.f, 40.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x / 2.f + 200.f, y + 200.f, 2, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.7f, 0.2f), mapSize, 10.f, -10, 0.1f, 0.4f, 11.f, 40.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x / 2.f + 300.f, y + 300.f, 2, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.8f, 0.1f), mapSize, 10.f, -15, 0.1f, 0.4f, 11.f, 40.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x / 2.f + 400.f, y + 400.f, 2, 2.f);
+		});
+	vector.push_back(layer);
+	/*
+	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x * 20.f, y, 2, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 40, 0.1f, 0.4f, 11.f, 40.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
+		});
+	vector.push_back(layer);
+	mapSize.y = mapSize.y / 2u;
+	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 12.f, 20, 0.2f, 0.4f, 6.f, 40.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x * 20.f, y, 2, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.7f, 0.2f), mapSize, 12.f, 10, 0.2f, 0.4f, 6.f, 40.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
+		});
+	vector.push_back(layer);
+	*/
 	return vector;
 }
 
@@ -246,8 +291,8 @@ Map::MapSurfaceGenerator WaterABiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f, 140.f, m_mapSize.x * 1.f};
-		std::vector<float> pointY = {n  , 0.f  , n};
+		std::vector<float> pointX = {0.f, 140.f, 141.f, m_mapSize.x * 1.f};
+		std::vector<float> pointY = {n  , 0.f  , 1.4f  , 1.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -265,27 +310,28 @@ Map::MapSurfaceGenerator WaterABiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator WaterABiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart(143, 93, 195);
-	sf::Color secondColorEnd(61, 14, 111);
-	float startTransition = 1000.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = 5000.f / static_cast<float>(m_mapSize.y);
-	float endTransition = 8000.f / static_cast<float>(m_mapSize.y);
+	sf::Color secondColorStart = getRockColor();
+	sf::Color secondColorEnd = getRockColor();
+	float startTransition = -1200.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = -1000.f / static_cast<float>(m_mapSize.y);
+	float endTransition = -800.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		if (y > startTransition && y <= middleTransition)
+		if (y <= startTransition)
+			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
+		else if (y > startTransition && y <= middleTransition)
 		{
 			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
-			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
+			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
 		}
 		else if (y > middleTransition && y <= endTransition)
 		{
 			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
-			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
+			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
 		}
-		if (y > endTransition)
-			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
-		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
+		else
+			return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
 
