@@ -98,6 +98,8 @@ public:
 
 private:
 	bool					dieFall();
+	bool					dieGrass();
+	void					kill();
 	bool					endDeath();
 	void					portalEvent();
 	void					dance();

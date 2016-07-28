@@ -671,6 +671,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 	if (Progress::getInstance().isMenu())
 		updateAI(frameTime);
 
+	dieGrass();
+
 	if (m_onGround)
 	{
 		m_lastPositionOnGround = getPosition();
@@ -1141,14 +1143,34 @@ void	CharacterOcto::collisionElevatorUpdate()
 	}
 }
 
+void	CharacterOcto::kill()
+{
+	Progress & progress = Progress::getInstance();
+
+	m_sprite.setNextEvent(Death);
+	m_helmetParticle.canEmit(true);
+	m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
+	progress.registerDeath(getPosition());
+	progress.setKillOcto(false);
+}
+
 bool	CharacterOcto::dieFall()
 {
 	if (m_timeEventFall > sf::seconds(2.3f) && !m_inWater && !Progress::getInstance().isMenu())
 	{
-		m_sprite.setNextEvent(Death);
-		m_helmetParticle.canEmit(true);
-		m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
-		Progress::getInstance().registerDeath(getPosition());
+		kill();
+		return true;
+	}
+	return false;
+}
+
+bool	CharacterOcto::dieGrass()
+{
+	Progress & progress = Progress::getInstance();
+
+	if (progress.getKillOcto() && !progress.isMenu())
+	{
+		kill();
 		return true;
 	}
 	return false;
@@ -1201,10 +1223,7 @@ void	CharacterOcto::inWater()
 			Progress & progress = Progress::getInstance();
 			if (m_isDeadlyWater && !progress.canUseWaterJump())
 			{
-				m_sprite.setNextEvent(Death);
-				m_helmetParticle.canEmit(true);
-				m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
-				progress.registerDeath(getPosition());
+				kill();
 			}
 		}
 		m_waterParticle.clear();

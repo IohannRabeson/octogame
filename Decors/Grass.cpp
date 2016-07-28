@@ -74,6 +74,7 @@ void Grass::computeMovement(sf::Time frameTime)
 		m_sideTarget = !m_sideTarget;
 		if (dist <= 60.f && m_lastOctoPosition.x != octoPosition.x)
 		{
+			Progress::getInstance().setKillOcto(true);
 			if (octoPosition.x < m_lastOctoPosition.x)
 				m_indexLeftTarget = m_numberOfTargets - 1;
 			else if (octoPosition.x > m_lastOctoPosition.x)
