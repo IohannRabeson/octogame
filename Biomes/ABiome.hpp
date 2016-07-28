@@ -68,6 +68,7 @@ public:
 	virtual sf::Color									getWaterColor() = 0;
 	virtual sf::Color									getSecondWaterColor() = 0;
 	virtual bool										isDeadlyWater() { return false; };
+	virtual bool										isDeadlyGrass() { return false; };
 	virtual sf::Color									getColorMoveInstance() { return sf::Color::White; };
 	virtual float										getTransitionStep() { return 3.f; };
 

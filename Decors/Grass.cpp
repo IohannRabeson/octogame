@@ -7,6 +7,7 @@
 #include <Math.hpp>
 
 Grass::Grass(bool) :
+	m_isDeadlyGrass(false),
 	m_animator(1.f, 5.f, 1.f, 0.3f, 1.f),
 	m_animation(0.f),
 	m_animationSpeed(1.f),
@@ -43,6 +44,7 @@ void Grass::setup(ABiome& biome)
 {
 	m_size = sf::Vector2f(Tile::TileSize, biome.getGrassSizeY());
 	m_color = biome.getGrassColor();
+	m_isDeadlyGrass = biome.isDeadlyGrass();
 	m_animator.setup(biome.getMushroomLifeTime());
 
 	m_leftTargets.resize(m_numberOfTargets);
@@ -58,7 +60,8 @@ void Grass::setup(ABiome& biome)
 void Grass::computeMovement(sf::Time frameTime)
 {
 	sf::Vector2f const & position = getPosition();
-	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
+	Progress & progress = Progress::getInstance();
+	sf::Vector2f const & octoPosition = progress.getOctoPos();
 	float dist = std::sqrt(std::pow(position.x - octoPosition.x, 2u) + std::pow(position.y - octoPosition.y, 2u));
 
 	if (dist <= 60.f && m_lastOctoPosition.x != octoPosition.x)
@@ -74,7 +77,8 @@ void Grass::computeMovement(sf::Time frameTime)
 		m_sideTarget = !m_sideTarget;
 		if (dist <= 60.f && m_lastOctoPosition.x != octoPosition.x)
 		{
-			Progress::getInstance().setKillOcto(true);
+			if (m_isDeadlyGrass)
+				progress.setKillOcto(true);
 			if (octoPosition.x < m_lastOctoPosition.x)
 				m_indexLeftTarget = m_numberOfTargets - 1;
 			else if (octoPosition.x > m_lastOctoPosition.x)

@@ -11,11 +11,11 @@ if len(sys.argv) != 2:
   exit();
 
 mypath = sys.argv[1]
-var_name = "m_secondWaterColor"
-type_name = "sf::Color"
-func_name = "getSecondWaterColor()"
-return_name = "sf::Color"
-init_value = "m_waterColor"
+var_name = "m_isDeadlyGrass"
+type_name = "bool"
+func_name = "isDeadlyGrass()"
+return_name = "bool"
+init_value = "false"
 
 def add_line_hpp(filename):
   for line in fileinput.input(mypath + filename, inplace=1):

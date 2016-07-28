@@ -62,7 +62,7 @@ WaterABiome::WaterABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(true),
-	m_canCreateGrass(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
 

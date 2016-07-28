@@ -19,6 +19,7 @@ public:
 private:
 	sf::Vector2f				m_size;
 	sf::Color					m_color;
+	bool						m_isDeadlyGrass;
 	DecorAnimator				m_animator;
 	float						m_animation;
 	float						m_animationSpeed;
