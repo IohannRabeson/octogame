@@ -16,9 +16,13 @@ ShineEffect::ShineEffect() :
 {
 }
 
+void ShineEffect::setSize(sf::Vector2f const & size)
+{
+	m_size = size;
+}
+
 void ShineEffect::setup(ABiome& biome)
 {
-	m_size = biome.getShineEffectSize();
 	m_color = biome.getShineEffectColor();
 	m_angle = biome.getShineEffectRotateAngle();
 	m_sizeHeart = m_size / 50.f;

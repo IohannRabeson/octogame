@@ -3,6 +3,7 @@
 
 # include "ADecor.hpp"
 # include "DecorAnimator.hpp"
+# include "ShineEffect.hpp"
 # include <SFML/Graphics/Color.hpp>
 
 class Grass : public ADecor
@@ -21,6 +22,7 @@ private:
 	sf::Color					m_color;
 	bool						m_isDeadlyGrass;
 	sf::Vector2f				m_up;
+	ShineEffect					m_shine;
 	DecorAnimator				m_animator;
 	float						m_animation;
 	float						m_animationSpeed;

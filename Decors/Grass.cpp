@@ -23,6 +23,7 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 {
 	sf::Vector2f downLeft(0.f, 0.f);
 	sf::Vector2f downRight(size.x, 0.f);
+	sf::Vector2f downMid(size.x / 2.f, 0.f);
 	sf::Vector2f upLeft(-size.x, -size.y);
 	sf::Vector2f upRight(size.x * 2.f, -size.y);
 
@@ -33,10 +34,17 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 
 	downLeft += origin;
 	downRight += origin;
+	downMid += origin;
 	m_up.y *= m_animation;
 	m_up += origin;
 
-	builder.createTriangle(m_up, downRight, downLeft, color);
+	if (!m_isDeadlyGrass)
+		builder.createTriangle(m_up, downRight, downLeft, color);
+	else
+	{
+		builder.createTriangle(m_up, downLeft, downMid, color + sf::Color(10, 10, 10, 0));
+		builder.createTriangle(m_up, downRight, downMid, color);
+	}
 }
 
 void Grass::setup(ABiome& biome)
@@ -54,6 +62,11 @@ void Grass::setup(ABiome& biome)
 		m_rightTargets[i] = sf::Vector2f(m_size.x + m_size.x * ((i + 1) / m_numberOfTargets), -m_size.y);
 	}
 
+	if (m_isDeadlyGrass)
+	{
+		m_shine.setSize(biome.getShineEffectSize() / 4.f);
+		m_shine.setup(biome);
+	}
 }
 
 void Grass::computeMovement(sf::Time frameTime)
@@ -96,14 +109,19 @@ void Grass::computeMovement(sf::Time frameTime)
 	m_lastOctoPosition = octoPosition;
 }
 
-void Grass::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
+void Grass::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome & biome)
 {
 	sf::Vector2f const & position = getPosition();
 
 	computeMovement(frameTime);
 	m_animator.update(frameTime * m_animationSpeed);
 	m_animation = m_animator.getAnimation();
-	//TODO:: Add to biome
-	if (Progress::getInstance().getCurrentDestination() != Level::IceC)
-		createGrass(m_size, position, m_color, builder);
+
+	createGrass(m_size, position, m_color, builder);
+
+	if (m_animation > 0.f && m_isDeadlyGrass)
+	{
+		m_shine.setPosition(m_up);
+		m_shine.update(frameTime, builder, biome);
+	}
 }
