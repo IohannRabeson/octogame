@@ -26,18 +26,17 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 	sf::Vector2f upLeft(-size.x, -size.y);
 	sf::Vector2f upRight(size.x * 2.f, -size.y);
 
-	sf::Vector2f up;
 	if (!m_sideTarget)
-		up = octo::cosinusInterpolation(m_leftTargets[m_indexLeftTarget], m_rightTargets[m_indexRightTarget], m_movementTimer / m_movementTimerMax);
+		m_up = octo::cosinusInterpolation(m_leftTargets[m_indexLeftTarget], m_rightTargets[m_indexRightTarget], m_movementTimer / m_movementTimerMax);
 	else
-		up = octo::cosinusInterpolation(m_rightTargets[m_indexRightTarget], m_leftTargets[m_indexLeftTarget], m_movementTimer / m_movementTimerMax);
+		m_up = octo::cosinusInterpolation(m_rightTargets[m_indexRightTarget], m_leftTargets[m_indexLeftTarget], m_movementTimer / m_movementTimerMax);
 
 	downLeft += origin;
 	downRight += origin;
-	up.y *= m_animation;
-	up += origin;
+	m_up.y *= m_animation;
+	m_up += origin;
 
-	builder.createTriangle(up, downRight, downLeft, color);
+	builder.createTriangle(m_up, downRight, downLeft, color);
 }
 
 void Grass::setup(ABiome& biome)
@@ -59,13 +58,16 @@ void Grass::setup(ABiome& biome)
 
 void Grass::computeMovement(sf::Time frameTime)
 {
-	sf::Vector2f const & position = getPosition();
 	Progress & progress = Progress::getInstance();
 	sf::Vector2f const & octoPosition = progress.getOctoPos();
-	float dist = std::sqrt(std::pow(position.x - octoPosition.x, 2u) + std::pow(position.y - octoPosition.y, 2u));
+	float dist = std::sqrt(std::pow(m_up.x - octoPosition.x, 2u) + std::pow(m_up.y - octoPosition.y, 2u));
 
 	if (dist <= 60.f && m_lastOctoPosition.x != octoPosition.x)
+	{
+		if (m_isDeadlyGrass)
+			progress.setKillOcto(true);
 		m_animationSpeed = 1.f + (dist / 60.f);
+	}
 	else if (m_animationSpeed >= 0.2f)
 		m_animationSpeed -= frameTime.asSeconds();
 
@@ -77,8 +79,6 @@ void Grass::computeMovement(sf::Time frameTime)
 		m_sideTarget = !m_sideTarget;
 		if (dist <= 60.f && m_lastOctoPosition.x != octoPosition.x)
 		{
-			if (m_isDeadlyGrass)
-				progress.setKillOcto(true);
 			if (octoPosition.x < m_lastOctoPosition.x)
 				m_indexLeftTarget = m_numberOfTargets - 1;
 			else if (octoPosition.x > m_lastOctoPosition.x)

@@ -1145,13 +1145,16 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 void	CharacterOcto::kill()
 {
-	Progress & progress = Progress::getInstance();
+	if (m_sprite.getCurrentEvent() != Death)
+	{
+		Progress & progress = Progress::getInstance();
 
-	m_sprite.setNextEvent(Death);
-	m_helmetParticle.canEmit(true);
-	m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
-	progress.registerDeath(getPosition());
-	progress.setKillOcto(false);
+		m_sprite.setNextEvent(Death);
+		m_helmetParticle.canEmit(true);
+		m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
+		progress.registerDeath(getPosition());
+		progress.setKillOcto(false);
+	}
 }
 
 bool	CharacterOcto::dieFall()

@@ -106,6 +106,7 @@ void	Progress::init()
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
 	m_isOctoOnInstance = false;
+	m_killOcto = false;
 	loadNpc();
 	loadPortals();
 	loadDeaths();

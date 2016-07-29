@@ -14,7 +14,7 @@ WaterABiome::WaterABiome() :
 	m_seed("Water A"),
 	m_mapSize(sf::Vector2u(700u, 32u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(40.f * 16.f, -1050.f),
+	m_octoStartPosition(80.f * 16.f, -1050.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -62,7 +62,7 @@ WaterABiome::WaterABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(true),
-	m_canCreateGrass(true),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
 
@@ -70,8 +70,8 @@ WaterABiome::WaterABiome() :
 	m_rockPartCount(4.f, 8.f),
 	m_rockColor(159, 24, 24),
 
-	m_grassSizeY(30.f, 60.f),
-	m_grassColor(m_tileStartColor),
+	m_grassSizeY(60.f, 90.f),
+	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
