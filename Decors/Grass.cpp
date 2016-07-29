@@ -52,7 +52,11 @@ void Grass::setup(ABiome& biome)
 	m_size = sf::Vector2f(Tile::TileSize, biome.getGrassSizeY());
 	m_color = biome.getGrassColor();
 	m_isDeadlyGrass = biome.isDeadlyGrass();
-	m_animator.setup(biome.getMushroomLifeTime());
+	if (!m_isDeadlyGrass)
+		m_animator.setup(biome.getMushroomLifeTime());
+	else
+		//TODO: Find a better way to do that
+		m_animator.setup(sf::seconds(100000.f));
 
 	m_leftTargets.resize(m_numberOfTargets);
 	m_rightTargets.resize(m_numberOfTargets);
