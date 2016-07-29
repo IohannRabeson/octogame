@@ -14,7 +14,7 @@ WaterABiome::WaterABiome() :
 	m_seed("Water A"),
 	m_mapSize(sf::Vector2u(700u, 32u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(80.f * 16.f, -1050.f),
+	m_octoStartPosition(25.f * 16.f, 1050.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -70,7 +70,7 @@ WaterABiome::WaterABiome() :
 	m_rockPartCount(4.f, 8.f),
 	m_rockColor(159, 24, 24),
 
-	m_grassSizeY(60.f, 90.f),
+	m_grassSizeY(60.f, 70.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -134,13 +134,14 @@ WaterABiome::WaterABiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
+	m_gameObjects[25] = GameObjectType::PortalWater;
 	m_instances[140] = MAP_WATER_A_TRAIL_OMP;
 
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::JungleC);
-	m_destinations.push_back(Level::WaterB);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::WaterB);
 }
 
@@ -292,7 +293,7 @@ Map::MapSurfaceGenerator WaterABiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f, 140.f, 141.f, m_mapSize.x * 1.f};
-		std::vector<float> pointY = {n  , 0.f  , 1.4f  , 1.f};
+		std::vector<float> pointY = {n  , 0.f  , 1.4f  , 0.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
