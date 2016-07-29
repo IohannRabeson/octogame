@@ -1,4 +1,7 @@
 2;500x400x80x1
+!skeleton_1.oss(368;4720) : [0.7/0.7]0
+!skeleton_2.oss(1168;4128) : [1/1]0
+!skeleton_3.oss(2080;4944) : [1/1]0
 !decor_grass.oss(1184;4272) : [1/1]0
 !decor_grass.oss(1200;4256) : [1/1]0
 !decor_grass.oss(1216;4272) : [1/1]0
@@ -40,9 +43,6 @@
 !decor_grass.oss(2496;4880) : [1/1]0
 !decor_grass.oss(2528;4880) : [1/1]0
 !decor_grass.oss(2576;4880) : [1/1]0
-!skeleton_1.oss(368;4720) : [0.7/0.7]0
-!skeleton_2.oss(1168;4128) : [1/1]0
-!skeleton_3.oss(2080;4944) : [1/1]0
 !decor_grass.oss(2288;5072) : [1/1]0
 !decor_grass.oss(2272;5072) : [1/1]0
 !decor_grass.oss(2240;5072) : [1/1]0

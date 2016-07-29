@@ -51,6 +51,8 @@ void Grass::setup(ABiome& biome)
 {
 	m_size = sf::Vector2f(Tile::TileSize, biome.getGrassSizeY());
 	m_color = biome.getGrassColor();
+	m_colorNormal = biome.getGrassColor();
+	m_colorDeadly = biome.getSkyDayColor();
 	m_isDeadlyGrass = biome.isDeadlyGrass();
 	if (!m_isDeadlyGrass)
 		m_animator.setup(biome.getMushroomLifeTime());
@@ -79,9 +81,12 @@ void Grass::computeMovement(sf::Time frameTime)
 	sf::Vector2f const & octoPosition = progress.getOctoPos();
 	float dist = std::sqrt(std::pow(m_up.x - octoPosition.x, 2u) + std::pow(m_up.y - octoPosition.y, 2u));
 
+	if (m_isDeadlyGrass && dist < 600.f)
+		m_color = octo::cosinusInterpolation(m_colorDeadly, m_colorNormal, dist / 600.f);
+
 	if (dist <= 60.f && m_lastOctoPosition.x != octoPosition.x)
 	{
-		if (m_isDeadlyGrass)
+		if (m_isDeadlyGrass && (m_up.x - octoPosition.x > -16.f && m_up.x - octoPosition.x < 16.f))
 			progress.setKillOcto(true);
 		m_animationSpeed = 1.f + (dist / 60.f);
 	}
