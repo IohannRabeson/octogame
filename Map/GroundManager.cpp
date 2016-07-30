@@ -516,6 +516,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					adecor = new GroundRock(true);
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
+				else if (!decor.name.compare(DECOR_GRASS_OSS))
+					adecor = new Grass();
 				if (adecor)
 				{
 					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));

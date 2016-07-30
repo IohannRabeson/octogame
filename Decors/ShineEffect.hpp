@@ -10,6 +10,7 @@ public:
 	ShineEffect(void);
 	virtual ~ShineEffect(void) = default;
 
+	void		 setSize(sf::Vector2f const & size);
 	virtual void setup(ABiome& biome);
 	virtual void update(sf::Time frameTime,
 						octo::VertexBuilder& builder,
