@@ -89,3 +89,4 @@ snowgirl_1.oss=!Tu devrait utiliser [SHIFT + FLECHES] pour regarder autour de to
 joystick_snowgirl_1.oss=!Tu devrait utiliser [JOYSTICK DROIT] pour regarder autour de toi.
 stranger_girl_snow.oss=Sois prudent petit poulpe, l'eau est bien trop froide pour toi !
 brayou.oss=Ne frotte pas tes tentacules aux herbes, elles sont coupantes !
+lucien.oss=!Si tu tombe de trop haut utilise le double saut.
