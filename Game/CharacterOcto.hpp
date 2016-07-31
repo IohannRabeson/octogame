@@ -156,6 +156,8 @@ private:
 
 	SmokeSystem					m_inkParticle;
 	HelmetSystem				m_helmetParticle;
+	sf::Color					m_waterColor;
+	sf::Color					m_secondWaterColor;
 	PloufSystem					m_ploufParticle;
 	WaterDropSystem				m_waterParticle;
 	SmokeSystem					m_bubbleParticle;

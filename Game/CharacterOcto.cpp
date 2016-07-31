@@ -208,6 +208,9 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_sprite.setScale(m_spriteScale, m_spriteScale);
 	m_sprite.restart();
 
+	m_waterColor = biome.getWaterColor();
+	m_secondWaterColor = biome.getSecondWaterColor();
+
 	m_ploufParticle.canEmit(false);
 	m_ploufParticle.setColor(biome.getWaterColor());
 
@@ -743,11 +746,20 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
 
-	m_ploufParticle.setEmitter(m_box->getBaryCenter());
+	m_ploufParticle.setEmitter(sf::Vector2f(m_box->getBaryCenter().x, m_waterLevel));
 	m_ploufParticle.update(frameTime);
-	m_waterParticle.setEmitter(m_box->getBaryCenter()
-			+ sf::Vector2f(-m_box->getSize().x / 2.f, m_box->getSize().y / 2.f));
+	m_waterParticle.setEmitter(m_box->getBaryCenter() + sf::Vector2f(-m_box->getSize().x / 2.f, m_box->getSize().y / 2.f));
 	m_waterParticle.update(frameTime);
+	if (!m_progress.canUseWaterJump())
+	{
+		m_ploufParticle.setColor(m_waterColor);
+		m_waterParticle.setColor(m_waterColor);
+	}
+	else
+	{
+		m_ploufParticle.setColor(m_secondWaterColor);
+		m_waterParticle.setColor(m_secondWaterColor);
+	}
 	m_inkParticle.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
 	{
@@ -1216,7 +1228,7 @@ void	CharacterOcto::inWater()
 {
 	bool	emit = false;
 
-	if (m_waterLevel != -1.f && m_box->getBaryCenter().y > m_waterLevel)
+	if (m_waterLevel != -1.f && m_box->getBaryCenter().y + m_box->getSize().y / 2.f > m_waterLevel)
 	{
 		if (!m_inWater)
 		{
@@ -1225,9 +1237,7 @@ void	CharacterOcto::inWater()
 			m_inWater = true;
 			Progress & progress = Progress::getInstance();
 			if (m_isDeadlyWater && !progress.canUseWaterJump())
-			{
 				kill();
-			}
 		}
 		m_waterParticle.clear();
 	}
