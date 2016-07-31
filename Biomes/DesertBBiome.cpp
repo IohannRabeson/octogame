@@ -71,7 +71,7 @@ DesertBBiome::DesertBBiome() :
 	m_rockPartCount(3.f, 5.f),
 	m_rockColor(255, 232, 170),
 
-	m_grassSizeY(80.f, 230.f),
+	m_grassSizeY(80.f, 150.f),
 	m_grassColor(46, 133, 84),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
