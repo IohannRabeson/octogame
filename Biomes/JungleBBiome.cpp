@@ -143,7 +143,7 @@ JungleBBiome::JungleBBiome() :
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleC)
-		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -1600.f);
+		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -450.f);
 	else if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(100.f * 16.f, 4300.f);
 	for (std::size_t i = 430u; i < m_mapSize.x - 10u; i += m_generator.randomInt(15u, 30u))
