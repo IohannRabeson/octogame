@@ -161,6 +161,11 @@ JungleDBiome::JungleDBiome() :
 	for (std::size_t i = 585; i < 598; i += 2)
 		m_gameObjects[i] = GameObjectType::BirdRedNpc;
 
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() == Level::JungleD)
+		m_octoStartPosition = sf::Vector2f(835.f * 16.f, -71.f * 16.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(346.f * 16.f, -280.f * 16.f);
 
 	m_interestPointPosX = 400;
 
