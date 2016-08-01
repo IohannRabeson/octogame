@@ -176,6 +176,25 @@ void	Game::loadLevel(void)
 			startPosition = progress.getCheckPointPosition();
 	}
 
+	auto & gameObjects = m_biomeManager.getCurrentBiome().getGameObjects();
+	int portalCount = 0u;
+	for (auto & gameObject : gameObjects)
+	{
+		switch (gameObject.second)
+		{
+			case GameObjectType::PortalRandom:
+			case GameObjectType::PortalJungle:
+			case GameObjectType::PortalSnow:
+			case GameObjectType::PortalDesert:
+			case GameObjectType::PortalWater:
+			case GameObjectType::Portal:
+				portalCount++;
+				break;
+			default:
+				break;
+		}
+	}
+
 	// Reset last values
 	postEffect.removeEffects();
 	PostEffectLayer::getInstance().clear();
@@ -189,6 +208,13 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader("render_white_kernel", KERNEL_POST_EFFECT_FRAG);
 	PostEffectLayer::getInstance().registerShader(WATER_FRAG, WATER_FRAG);
 	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader("vortex_red", VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader("vortex_blue", VORTEX_FRAG);
+	for (int i = 0u; i < portalCount; i++)
+	{
+		std::string name = "vortex_" + std::to_string(i);
+		PostEffectLayer::getInstance().registerShader(name.c_str(), VORTEX_FRAG);
+	}
 	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
 
 	ChallengeManager::getInstance().reset();
