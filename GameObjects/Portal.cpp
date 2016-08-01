@@ -8,7 +8,7 @@
 #include <Camera.hpp>
 #include <cassert>
 
-Portal::Portal(Level destination, ResourceKey key, ResourceKey shader) :
+Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color centerColor) :
 	m_generator("random"),
 	m_shaderName(shader),
 	m_destination(destination),
@@ -28,6 +28,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader) :
 	progress.registerPortal(destination);
 
 	m_shader.setParameter("time_max", m_timerMax);
+	m_shader.setParameter("center_color", centerColor);
 
 	m_box->setGameObject(this);
 	m_box->setApplyGravity(false);

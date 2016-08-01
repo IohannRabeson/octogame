@@ -83,7 +83,7 @@ private:
 	};
 
 public:
-	Portal(Level destination, ResourceKey key, ResourceKey shader);
+	Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color centerColor = sf::Color::Black);
 	virtual ~Portal(void);
 
 	void addMapOffset(float x, float y);

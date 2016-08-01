@@ -208,6 +208,8 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader("render_white_kernel", KERNEL_POST_EFFECT_FRAG);
 	PostEffectLayer::getInstance().registerShader(WATER_FRAG, WATER_FRAG);
 	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader("vortex_red", VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader("vortex_blue", VORTEX_FRAG);
 	for (int i = 0u; i < portalCount; i++)
 	{
 		std::string name = "vortex_" + std::to_string(i);
