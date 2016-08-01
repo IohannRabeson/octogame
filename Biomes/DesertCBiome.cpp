@@ -21,7 +21,7 @@ DesertCBiome::DesertCBiome() :
 	m_tileStartColor(245, 222, 130),
 	m_tileEndColor(245, 243, 249),
 	m_waterLevel(300.f),
-	m_waterColor(46, 133, 84, 100),
+	m_waterColor(46, 133, 84, 0),
 	m_secondWaterColor(96, 204, 233, 130),
 	m_destinationIndex(0u),
 
