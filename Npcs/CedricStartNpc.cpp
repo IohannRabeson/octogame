@@ -169,6 +169,7 @@ bool CedricStartNpc::startBalle(void)
 void CedricStartNpc::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
+	octo->enableCutscene(true);
 	float coef = m_throwPotionTimer / m_throwPotionTimerMax;
 
 	m_octoPosition = octo->getPosition();

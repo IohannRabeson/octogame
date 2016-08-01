@@ -25,6 +25,10 @@ class Progress;
 class NanoRobot;
 class ABiome;
 class Portal;
+namespace sf
+{
+	class Shader;
+}
 
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	public InputListener,
@@ -95,6 +99,7 @@ public:
 	bool					isMeetingNpc(void) const;
 	void					meetNpc(bool meetNpc);
 	void					resetCollidingTileCount(void);
+	void					enableCutscene(bool enable);
 
 private:
 	bool					dieFall();
@@ -211,6 +216,7 @@ private:
 	bool						m_isDeadlyWater;
 	bool						m_meetNpc;
 	bool						m_replaceOcto;
+	bool						m_enableCutscene;
 	Events						m_prevEvent;
 
 	RandomGenerator				m_generator;
@@ -220,9 +226,12 @@ private:
 	sf::Time					m_doubleJumpTimer;
 	sf::Time					m_slowFallTimer;
 	sf::Time					m_portalTimer;
+	sf::Time					m_cutsceneTimer;
+	sf::Time					m_cutsceneTimerMax;
 	sf::Vector2f				m_saveOctoPos;
 	sf::Vector2f				m_highestPosition;
 	std::vector<sf::Vector2f>	m_collidingTile;
+	sf::Shader &				m_cutsceneShader;
 
 };
 

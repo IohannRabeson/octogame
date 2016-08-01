@@ -70,7 +70,10 @@ CharacterOcto::CharacterOcto() :
 	m_isDeadlyWater(false),
 	m_meetNpc(false),
 	m_replaceOcto(false),
-	m_generator(std::to_string(time(0)))
+	m_enableCutscene(false),
+	m_generator(std::to_string(time(0))),
+	m_cutsceneTimerMax(sf::seconds(1.f)),
+	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
 
@@ -813,6 +816,19 @@ void	CharacterOcto::update(sf::Time frameTime)
 		m_box->setPosition(sf::Vector2f(m_box->getPosition().x - m_highestPosition.x, m_highestPosition.y - m_box->getGlobalBounds().height));
 	}
 	m_highestPosition.x = 0.f;
+
+	if (m_enableCutscene)
+	{
+		m_cutsceneTimer += frameTime;
+		if (m_cutsceneTimer > m_cutsceneTimerMax)
+			m_cutsceneTimer = m_cutsceneTimerMax;
+	}
+	else
+	{
+		m_cutsceneTimer -= frameTime;
+		if (m_cutsceneTimer <= sf::Time::Zero)
+			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
+	}
 }
 
 void	CharacterOcto::portalEvent()
@@ -1559,6 +1575,18 @@ bool	CharacterOcto::isOnGround(void) const
 void	CharacterOcto::meetNpc(bool meetNpc)
 {
 	m_meetNpc = meetNpc;
+}
+
+void	CharacterOcto::enableCutscene(bool enable)
+{
+	if (enable && !m_enableCutscene)
+	{
+		PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, true);
+		m_cutsceneTimer = sf::Time::Zero;
+	}
+	else
+		m_cutsceneTimer = std::min(m_cutsceneTimer, m_cutsceneTimerMax);
+	m_enableCutscene = enable;
 }
 
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)

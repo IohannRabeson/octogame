@@ -190,6 +190,7 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader(WATER_FRAG, WATER_FRAG);
 	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
+	PostEffectLayer::getInstance().registerShader(CUTSCENE_FRAG, CUTSCENE_FRAG);
 
 	ChallengeManager::getInstance().reset();
 	audio.reset();
