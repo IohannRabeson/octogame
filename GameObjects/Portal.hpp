@@ -83,7 +83,7 @@ private:
 	};
 
 public:
-	Portal(Level destination, ResourceKey key);
+	Portal(Level destination, ResourceKey key, ResourceKey shader);
 	virtual ~Portal(void);
 
 	void addMapOffset(float x, float y);
@@ -107,6 +107,7 @@ private:
 
 	RandomGenerator				m_generator;
 	PortalParticle				m_particles;
+	std::string					m_shaderName;
 	Level						m_destination;
 	sf::Vector2f				m_position;
 	sf::Shader &				m_shader;

@@ -8,11 +8,12 @@
 #include <Camera.hpp>
 #include <cassert>
 
-Portal::Portal(Level destination, ResourceKey key) :
+Portal::Portal(Level destination, ResourceKey key, ResourceKey shader) :
 	m_generator("random"),
+	m_shaderName(shader),
 	m_destination(destination),
 	m_position(40.f, 0.f),
-	m_shader(PostEffectLayer::getInstance().getShader(VORTEX_FRAG)),
+	m_shader(PostEffectLayer::getInstance().getShader(m_shaderName)),
 	m_maxParticle(40u),
 	m_state(State::Disappear),
 	m_radius(100.f),
@@ -215,7 +216,7 @@ void Portal::update(sf::Time frametime)
 		if (m_position.y + m_radius > screen.top && m_position.y - m_radius < screen.top + screen.height)
 		{
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-			PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, true);
+			PostEffectLayer::getInstance().enableShader(m_shaderName, true);
 			m_shader.setParameter("time", m_timer);
 			m_shader.setParameter("radius", m_radius * zoomFactor);
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
