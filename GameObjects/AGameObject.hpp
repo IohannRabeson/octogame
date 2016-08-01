@@ -36,6 +36,8 @@ enum class GameObjectType : std::size_t
 	PortalDesert				= (1 << 14) + 12,
 	PortalSnow					= (1 << 14) + 13,
 	PortalRandom				= (1 << 14) + 14,
+	PortalRed					= (1 << 14) + 15,
+	PortalBlue					= (1 << 14) + 16,
 
 	//Npc
 	Npc							= (1 << 15),

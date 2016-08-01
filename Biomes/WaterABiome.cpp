@@ -19,7 +19,7 @@ WaterABiome::WaterABiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
-	m_waterLevel(300.f),
+	m_waterLevel(340.f),
 	m_waterColor(3, 57, 108, 130),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),

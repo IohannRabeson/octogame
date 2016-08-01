@@ -494,7 +494,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			if (!decor.name.substr(0, 13).compare("object_portal"))
 			{
-				std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), decor.name.c_str()));
+				std::unique_ptr<Portal> portal;
+				if (!decor.name.compare("object_portal_red.oss"))
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_red", sf::Color::Red));
+				if (!decor.name.compare("object_portal_blue.oss"))
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_blue", sf::Color::Blue));
+				else
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), VORTEX_FRAG));
 				portal->setBiome(biome);
 				portal->setPosition(position + sf::Vector2f(50.f, 350.f));
 				m_otherOnInstance.push_back(std::move(portal));
@@ -569,50 +575,64 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	}
 
 	auto & gameObjects = biome.getGameObjects();
+	std::size_t portalCount = 0;
+
 	for (auto & gameObject : gameObjects)
 	{
 		switch (gameObject.second)
 		{
 			case GameObjectType::PortalRandom:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_RANDOM_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_RANDOM_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::PortalJungle:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_JUNGLE_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_JUNGLE_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::PortalSnow:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_SNOW_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_SNOW_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::PortalDesert:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_DESERT_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_DESERT_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::PortalWater:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_BEACH_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_BEACH_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::Portal:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 

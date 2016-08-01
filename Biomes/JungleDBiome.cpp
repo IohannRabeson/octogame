@@ -161,6 +161,11 @@ JungleDBiome::JungleDBiome() :
 	for (std::size_t i = 585; i < 598; i += 2)
 		m_gameObjects[i] = GameObjectType::BirdRedNpc;
 
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() == Level::JungleD)
+		m_octoStartPosition = sf::Vector2f(835.f * 16.f, -71.f * 16.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(346.f * 16.f, -280.f * 16.f);
 
 	m_interestPointPosX = 400;
 
@@ -284,7 +289,7 @@ Map::MapSurfaceGenerator JungleDBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		float m = n / 3.f;
-		std::vector<float> pointX = {0.f      , 40.f  , 150.f  , 200.f    , 235.f   , 450.f   , 563.f, 570.f    , 610.f    , 615.f, 684.f , 734.f  , 750.f  , 800.f    , 900.f};
+		std::vector<float> pointX = {0.f      , 40.f  , 150.f  , 200.f    , 225.f   , 350.f   , 563.f, 570.f    , 610.f    , 615.f, 684.f , 734.f  , 750.f  , 800.f    , 900.f};
 		std::vector<float> pointY = {m - 1.15f, -1.17f, -1.17f , m - 1.15f, n - 0.6f, n + 0.5f, 0.5f , m - 1.71f, m - 1.71f, -1.2f, -1.28f, m - 1.f, m - 1.f, m - 0.65f, m - 0.65f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
