@@ -326,7 +326,7 @@ Map::TileColorGenerator JungleCBiome::getTileColorGenerator()
 			float ratio = (y - (end1)) / (end2 - end1);
 			return octo::linearInterpolation(thirdColorStart, octo::linearInterpolation(secondColorEnd, thirdColorEnd, ratio), transition);
 		}
-		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
+		return octo::linearInterpolation(thirdColorStart, thirdColorEnd, transition);
 	};
 }
 
