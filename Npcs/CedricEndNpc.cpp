@@ -133,11 +133,9 @@ void CedricEndNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-#include "CharacterOcto.hpp"
 void CedricEndNpc::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
-	octo->enableCutscene(false);
 	stopBalle();
 }
 

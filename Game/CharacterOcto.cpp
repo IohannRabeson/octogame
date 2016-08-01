@@ -77,6 +77,8 @@ CharacterOcto::CharacterOcto() :
 {
 	m_sound.reset(new OctoSound());
 
+	m_cutsceneShader.setParameter("height", 0.15);
+
 	if (!m_progress.isMenu())
 		InputListener::addInputListener();
 	else
@@ -822,10 +824,12 @@ void	CharacterOcto::update(sf::Time frameTime)
 		m_cutsceneTimer += frameTime;
 		if (m_cutsceneTimer > m_cutsceneTimerMax)
 			m_cutsceneTimer = m_cutsceneTimerMax;
+		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
 	}
 	else
 	{
 		m_cutsceneTimer -= frameTime;
+		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
 		if (m_cutsceneTimer <= sf::Time::Zero)
 			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
 	}
