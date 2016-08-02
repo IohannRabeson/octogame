@@ -6,7 +6,7 @@
 #include <Interpolations.hpp>
 #include <Math.hpp>
 
-Grass::Grass(bool) :
+Grass::Grass(bool onInstance) :
 	m_isDeadlyGrass(false),
 	m_animator(1.f, 5.f, 1.f, 0.3f, 1.f),
 	m_animation(0.f),
@@ -15,7 +15,9 @@ Grass::Grass(bool) :
 	m_numberOfTargets(10u),
 	m_sideTarget(false),
 	m_indexLeftTarget(0u),
-	m_indexRightTarget(0u)
+	m_indexRightTarget(0u),
+	m_onInstance(onInstance),
+	m_isShining(false)
 {
 }
 
@@ -68,8 +70,9 @@ void Grass::setup(ABiome& biome)
 		m_rightTargets[i] = sf::Vector2f(m_size.x + m_size.x * ((i + 1) / m_numberOfTargets), -m_size.y);
 	}
 
-	if (m_isDeadlyGrass)
+	if (m_isDeadlyGrass && (biome.randomBool(0.1f) || m_onInstance))
 	{
+		m_isShining = true;
 		m_shine.setSize(biome.getShineEffectSize() / 4.f);
 		m_shine.setup(biome);
 	}
@@ -128,7 +131,7 @@ void Grass::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome & bi
 
 	createGrass(m_size, position, m_color, builder);
 
-	if (m_animation > 0.f && m_isDeadlyGrass)
+	if (m_animation > 0.f && m_isDeadlyGrass && m_isShining)
 	{
 		m_shine.setPosition(m_up);
 		m_shine.update(frameTime, builder, biome);

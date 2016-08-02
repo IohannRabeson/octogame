@@ -37,6 +37,8 @@ private:
 	std::size_t					m_indexLeftTarget;
 	std::size_t					m_indexRightTarget;
 	sf::Vector2f				m_lastOctoPosition;
+	bool						m_onInstance;
+	bool						m_isShining;
 
 	void computeMovement(sf::Time frameTime);
 
