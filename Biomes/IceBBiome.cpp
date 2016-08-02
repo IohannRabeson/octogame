@@ -142,7 +142,7 @@ IceBBiome::IceBBiome() :
 	m_instances[219] = MAP_ICE_B_TRAIL_D_OMP;
 	m_instances[370] = MAP_ICE_B_PORTAL_OMP;
 	m_gameObjects[385] = GameObjectType::WindowGlitchNpc;
-	m_gameObjects[390] = GameObjectType::EngineSnow;
+	m_gameObjects[340] = GameObjectType::Rocket;
 	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_interestPointPosX = 530;
 

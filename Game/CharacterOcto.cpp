@@ -134,6 +134,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::EngineSnow)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik)
+		| static_cast<std::size_t>(GameObjectType::RocketDoor)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint);
 	m_box->setCollisionMask(mask);
 
