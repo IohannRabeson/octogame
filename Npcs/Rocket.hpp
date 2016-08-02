@@ -29,13 +29,15 @@ private:
 		Waiting,
 		OctoEntering,
 		StartCutscene,
-		RocketFlying
+		StartSmoke
 	};
 
 	CircleShape *					m_enterRocketShape;
 	State							m_state;
 	std::size_t						m_smokesCount;
 	std::unique_ptr<SmokeSystem[]>	m_smokes;
+	sf::Time						m_timerBefore;
+	sf::Time						m_timerBeforeMax;
 	sf::Time						m_timerFirstBlast;
 	sf::Time						m_timerFirstBlastMax;
 	sf::Time						m_timerSecondBlast;
@@ -43,6 +45,8 @@ private:
 	sf::Time						m_timerOctoEntering;
 	sf::Time						m_timerOctoEnteringMax;
 	sf::Vector2f					m_octoPosition;
+	sf::Vector2f					m_lastPosition;
+	sf::Vector2f					m_lastPositionDoor;
 };
 
 #endif

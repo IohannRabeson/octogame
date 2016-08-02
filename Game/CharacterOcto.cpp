@@ -71,6 +71,7 @@ CharacterOcto::CharacterOcto() :
 	m_meetNpc(false),
 	m_replaceOcto(false),
 	m_enableCutscene(false),
+	m_isEndingInRocket(false),
 	m_generator(std::to_string(time(0))),
 	m_cutsceneTimerMax(sf::seconds(1.f)),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
@@ -1575,6 +1576,16 @@ bool	CharacterOcto::isInAir(void) const
 bool	CharacterOcto::isMeetingNpc(void) const
 {
 	return m_meetNpc;
+}
+
+bool	CharacterOcto::isEndingInRocket(void) const
+{
+	return m_isEndingInRocket;
+}
+
+void	CharacterOcto::endInRocket(void)
+{
+	m_isEndingInRocket = true;
 }
 
 void	CharacterOcto::resetCollidingTileCount(void)
