@@ -42,7 +42,7 @@ public:
 	virtual sf::Color									getWaterColor();
 	virtual sf::Color									getSecondWaterColor();
 	virtual float										getTransitionStep() { return 0.5f; };
-	virtual bool										isDeadlyGrass() { return true; };
+	//virtual bool										isDeadlyGrass() { return true; };
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();

@@ -55,7 +55,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[14] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
 
 
-	m_music.resize(5);
+	m_music.resize(6);
 	//ice balle
 	m_music[0] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
 			sf::FloatRect(sf::Vector2f(50.f * 16.f, -240.f * 16.f), sf::Vector2f(120.f * 16.f, 185.f * 16.f)));
@@ -71,6 +71,9 @@ MusicManager::MusicManager() :
 	// village
 	m_music[4] = AreaMusic(Level::JungleA, ACTION_SLOW_OGG,
 			sf::FloatRect(sf::Vector2f(590.f * 16.f, -2000.f), sf::Vector2f(220.f * 16.f, 2300.f)));
+	// water balle
+	m_music[5] = AreaMusic(Level::WaterB, MENU_OPUS_II_REVERSE_OGG,
+			sf::FloatRect(sf::Vector2f(25.f * 16.f, -200.f * 16.f), sf::Vector2f(600.f * 16.f, 400.f * 16.f)));
 }
 
 MusicManager::~MusicManager()

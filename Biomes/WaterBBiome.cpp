@@ -14,7 +14,7 @@ WaterBBiome::WaterBBiome() :
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(700u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(20.f * 16.f, -50.f),
+	m_octoStartPosition(2.f * 16.f, -50.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -47,10 +47,10 @@ WaterBBiome::WaterBBiome() :
 	m_cloudCount(30u, 40u),
 	m_groundRockCount(200u, 400u),
 
-	m_canCreateRain(true),
+	m_canCreateRain(false),
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
-	m_canCreateRock(true),
+	m_canCreateRock(false),
 	m_canCreateTree(false),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
@@ -61,7 +61,7 @@ WaterBBiome::WaterBBiome() :
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
-	m_canCreateRainbow(true),
+	m_canCreateRainbow(false),
 	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
@@ -134,15 +134,16 @@ WaterBBiome::WaterBBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[140] = MAP_WATER_B_TRAIL_OMP;
 	m_gameObjects[20] = GameObjectType::Portal;
 
+	m_gameObjects[40] = GameObjectType::CedricStartNpc;
 	m_gameObjects[50] = GameObjectType::JellyfishNpc;
 	m_gameObjects[70] = GameObjectType::JellyfishNpc;
 	m_gameObjects[390] = GameObjectType::JellyfishNpc;
 	m_gameObjects[430] = GameObjectType::JellyfishNpc;
 	m_gameObjects[540] = GameObjectType::JellyfishNpc;
 	m_gameObjects[610] = GameObjectType::JellyfishNpc;
+	m_gameObjects[640] = GameObjectType::CedricEndNpc;
 	/*
 	m_instances[785] = MAP_WATER_A_PARA_SIGN_OMP;
 	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
@@ -275,7 +276,22 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		return noise.fBm(x, y, 3, 3.f, 0.6f);
+		float floatMapSize = static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		std::vector<float> pointX = {0.f, 20.f, 50.f , 55.f , 95.f , 100.f , 130.f};
+		std::vector<float> pointY = {n  , n   , -0.4f, -1.4f, -1.4f, -0.5f, n};
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
+
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::linearInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
 }
 
