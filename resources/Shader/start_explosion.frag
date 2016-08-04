@@ -1,6 +1,6 @@
 uniform sampler2D texture;
 uniform float time;
-uniform vec2 resolution;
+uniform float intensity;
 
 vec2 hash2v (vec2 p)
 {
@@ -18,7 +18,7 @@ float voronoi (vec2 p)
 		for (float x=-1.0; x<=1.0; x+=1.0)
 		{
 			vec2 b = vec2(x, y);
-			float  h = distance(hash2v(g+b)+b, f);
+			float h = distance(hash2v(g+b)+b, f);
 			res = min(res, h);
 		}
 	}
@@ -33,13 +33,12 @@ float sdPlane(vec2 p)
 void main(void)
 {
 	vec2 p = gl_TexCoord[0].xy * 0.2 - 1.0;
-	p.x *= resolution.x / resolution.y;
 	p *= 40.0 * time;
 
 	vec4 distortionValue = vec4(sdPlane(p));
 	vec2 distortionOffset = distortionValue.xy;
 	distortionOffset -= vec2(0.5, 0.5);
-	distortionOffset *= 2.0 * 0.05;
+	distortionOffset *= 2.0 * 0.05 * intensity;
 
 	vec2 distortionTexCoord = gl_TexCoord[0].xy + distortionOffset;
 	gl_FragColor = texture2D(texture, distortionTexCoord);

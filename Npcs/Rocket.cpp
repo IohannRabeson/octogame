@@ -3,12 +3,15 @@
 #include "RectangleShape.hpp"
 #include "CircleShape.hpp"
 #include "CharacterOcto.hpp"
+#include "PostEffectLayer.hpp"
 #include <Application.hpp>
 #include <Interpolations.hpp>
+#include <GraphicsManager.hpp>
 #include <StateManager.hpp>
 
 Rocket::Rocket(void) :
 	ANpc(ROCKET_OSS),
+	m_shader(PostEffectLayer::getInstance().getShader(START_EXPLOSION_FRAG)),
 	m_enterRocketShape(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_state(Waiting),
 	m_smokesCount(3),
@@ -121,13 +124,18 @@ void Rocket::update(sf::Time frametime)
 			m_timerOctoEntering += frametime;
 			if (m_timerOctoEntering >= m_timerOctoEnteringMax)
 			{
-				m_timerOctoEntering = m_timerOctoEnteringMax;
+				m_timerOctoEntering = sf::Time::Zero;
+				m_timerOctoEnteringMax = sf::seconds(15.f);
+				PostEffectLayer::getInstance().enableShader(START_EXPLOSION_FRAG, true);
 				m_state = StartSmoke;
 			}
 			m_lastPosition = getPosition();
 			m_lastPositionDoor = m_enterRocketShape->getPosition();
 			break;
 		case StartSmoke:
+			m_timerOctoEntering += frametime;
+			m_shader.setParameter("time", m_timerOctoEntering.asSeconds());
+			m_shader.setParameter("intensity", octo::linearInterpolation(0.f, 0.3f, std::min(1.f, m_timerOctoEntering / m_timerOctoEnteringMax)));
 			if (m_timerBefore < m_timerBeforeMax)
 				m_timerBefore += frametime;
 			else

@@ -6,6 +6,10 @@
 
 class CircleShape;
 class CharacterOcto;
+namespace sf
+{
+	class Shader;
+}
 
 class Rocket : public ANpc, public AGameObject<GameObjectType::Rocket>
 {
@@ -31,6 +35,7 @@ private:
 		StartSmoke
 	};
 
+	sf::Shader &					m_shader;
 	CircleShape *					m_enterRocketShape;
 	State							m_state;
 	std::size_t						m_smokesCount;
