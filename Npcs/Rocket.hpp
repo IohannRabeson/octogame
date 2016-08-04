@@ -51,6 +51,7 @@ private:
 	sf::Vector2f					m_octoPosition;
 	sf::Vector2f					m_lastPosition;
 	sf::Vector2f					m_lastPositionDoor;
+	bool							m_stopCameraMovement;
 };
 
 #endif

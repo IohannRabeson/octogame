@@ -19,7 +19,8 @@ Rocket::Rocket(void) :
 	m_timerBeforeMax(sf::seconds(3.f)),
 	m_timerFirstBlastMax(sf::seconds(5.f)),
 	m_timerSecondBlastMax(sf::seconds(5.f)),
-	m_timerOctoEnteringMax(sf::seconds(1.f))
+	m_timerOctoEnteringMax(sf::seconds(1.f)),
+	m_stopCameraMovement(false)
 {
 	setSize(sf::Vector2f(267.f, 1426.f));
 	setOrigin(sf::Vector2f(0.f, 0.f));
@@ -104,13 +105,15 @@ void Rocket::collideOctoEvent(CharacterOcto * octo)
 			octo->setStartPosition(octo::linearInterpolation(m_octoPosition, m_enterRocketShape->getPosition(), m_timerOctoEntering / m_timerOctoEnteringMax));
 			break;
 		case StartSmoke:
-			octo->endInRocket();
 			octo->enableCutscene(true);
 			octo->setStartPosition(m_enterRocketShape->getPosition());
 			break;
 		default:
 			break;
 	}
+
+	if (m_stopCameraMovement)
+		octo->endInRocket();
 }
 
 void Rocket::update(sf::Time frametime)
@@ -171,9 +174,9 @@ void Rocket::update(sf::Time frametime)
 				{
 					m_smokes[i].setVelocity(sf::Vector2f(0.f, 30.f * (1.f + m_timerFirstBlast.asSeconds() + m_timerSecondBlast.asSeconds())));
 					if (m_timerFirstBlast == m_timerFirstBlastMax)
-							m_smokes[i].setEmitTimeRange(0.01f, 0.05f);
+						m_smokes[i].setEmitTimeRange(0.01f, 0.05f);
 					else if (m_timerSecondBlast > m_timerSecondBlastMax)
-							m_smokes[i].setCanEmit(false);
+						m_smokes[i].setCanEmit(false);
 				}
 			}
 			if (m_timerBefore >= m_timerBeforeMax)
@@ -186,6 +189,7 @@ void Rocket::update(sf::Time frametime)
 				}
 				else if (m_timerSecondBlast < m_timerSecondBlastMax)
 				{
+					m_stopCameraMovement = true;
 					box->setPosition(octo::cosinusInterpolation(m_lastPosition + sf::Vector2f(0.f, -400.f), m_lastPosition + sf::Vector2f(0.f, -3500.f), m_timerSecondBlast / m_timerSecondBlastMax));
 					m_enterRocketShape->setPosition(octo::cosinusInterpolation(m_lastPositionDoor + sf::Vector2f(0.f, -400.f), m_lastPositionDoor + sf::Vector2f(0.f, -3500.f), m_timerSecondBlast / m_timerSecondBlastMax));
 				}
