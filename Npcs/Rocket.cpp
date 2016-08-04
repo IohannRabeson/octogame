@@ -48,6 +48,7 @@ void Rocket::setup(void)
 
 	for (std::size_t i = 0u; i < m_smokesCount; i++)
 	{
+		m_smokes[i].setVelocity(sf::Vector2f(0.f, 100.f));
 		m_smokes[i].setup(sf::Vector2f(10.f, 10.f));
 		m_smokes[i].setLifeTimeRange(0.2f, 0.4f);
 	}
@@ -73,7 +74,7 @@ void Rocket::setupMachine(void)
 void Rocket::setPosition(sf::Vector2f const & position)
 {
 	ANpc::setPosition(position);
-	m_enterRocketShape->setPosition(position.x + 30.f, position.y - 880.f);
+	m_enterRocketShape->setPosition(position.x + 60.f, position.y - 850.f);
 	m_enterRocketShape->update();
 	m_smokes[0].setPosition(position + sf::Vector2f(20.f, 1350.f));
 	m_smokes[1].setPosition(position + sf::Vector2f(132.f, 1350.f));
