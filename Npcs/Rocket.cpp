@@ -11,7 +11,7 @@
 
 Rocket::Rocket(void) :
 	ANpc(ROCKET_OSS),
-	m_shader(PostEffectLayer::getInstance().getShader(START_EXPLOSION_FRAG)),
+	m_shader(PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG)),
 	m_enterRocketShape(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_state(Waiting),
 	m_smokesCount(3),
@@ -130,7 +130,7 @@ void Rocket::update(sf::Time frametime)
 			{
 				m_timerOctoEntering = sf::Time::Zero;
 				m_timerOctoEnteringMax = sf::seconds(15.f);
-				PostEffectLayer::getInstance().enableShader(START_EXPLOSION_FRAG, true);
+				PostEffectLayer::getInstance().enableShader(ROCKET_TAKEOFF_FRAG, true);
 				m_state = StartSmoke;
 			}
 			m_lastPosition = getPosition();
