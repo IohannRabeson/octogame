@@ -3,7 +3,9 @@
 #include "RectangleShape.hpp"
 #include "CircleShape.hpp"
 #include "CharacterOcto.hpp"
+#include <Application.hpp>
 #include <Interpolations.hpp>
+#include <StateManager.hpp>
 
 Rocket::Rocket(void) :
 	ANpc(ROCKET_OSS),
@@ -91,19 +93,18 @@ void Rocket::collideOctoEvent(CharacterOcto * octo)
 	switch (m_state)
 	{
 		case Waiting:
-			octo->endInRocket();
 			m_octoPosition = octo->getPhysicsPosition();
 			m_state = OctoEntering;
 			break;
 		case OctoEntering:
 			octo->setStartPosition(octo::linearInterpolation(m_octoPosition, m_enterRocketShape->getPosition(), m_timerOctoEntering / m_timerOctoEnteringMax));
 			break;
-		case StartCutscene:
+		case StartSmoke:
+			octo->endInRocket();
 			octo->enableCutscene(true);
-			m_state = StartSmoke;
+			octo->setStartPosition(m_enterRocketShape->getPosition());
 			break;
 		default:
-			octo->setStartPosition(m_enterRocketShape->getPosition());
 			break;
 	}
 }
@@ -121,7 +122,7 @@ void Rocket::update(sf::Time frametime)
 			if (m_timerOctoEntering >= m_timerOctoEnteringMax)
 			{
 				m_timerOctoEntering = m_timerOctoEnteringMax;
-				m_state = StartCutscene;
+				m_state = StartSmoke;
 			}
 			m_lastPosition = getPosition();
 			m_lastPositionDoor = m_enterRocketShape->getPosition();
@@ -140,7 +141,10 @@ void Rocket::update(sf::Time frametime)
 					if (m_timerSecondBlast < m_timerSecondBlastMax)
 						m_timerSecondBlast += frametime;
 					else
+					{
 						m_timerSecondBlast = m_timerSecondBlastMax;
+						octo::Application::getStateManager().change("menu");
+					}
 				}
 			}
 

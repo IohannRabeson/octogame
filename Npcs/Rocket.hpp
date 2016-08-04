@@ -28,7 +28,6 @@ private:
 	{
 		Waiting,
 		OctoEntering,
-		StartCutscene,
 		StartSmoke
 	};
 

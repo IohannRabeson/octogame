@@ -1586,6 +1586,7 @@ bool	CharacterOcto::isEndingInRocket(void) const
 void	CharacterOcto::endInRocket(void)
 {
 	m_isEndingInRocket = true;
+	m_box->setApplyGravity(false);
 }
 
 void	CharacterOcto::resetCollidingTileCount(void)
