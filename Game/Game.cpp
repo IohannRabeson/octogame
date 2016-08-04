@@ -216,7 +216,7 @@ void	Game::loadLevel(void)
 		PostEffectLayer::getInstance().registerShader(name.c_str(), VORTEX_FRAG);
 	}
 	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
-	PostEffectLayer::getInstance().registerShader(START_EXPLOSION_FRAG, START_EXPLOSION_FRAG);
+	PostEffectLayer::getInstance().registerShader(ROCKET_TAKEOFF_FRAG, ROCKET_TAKEOFF_FRAG);
 	PostEffectLayer::getInstance().registerShader(CUTSCENE_FRAG, CUTSCENE_FRAG);
 
 	ChallengeManager::getInstance().reset();

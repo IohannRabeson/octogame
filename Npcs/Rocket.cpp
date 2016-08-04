@@ -13,7 +13,7 @@
 
 Rocket::Rocket(void) :
 	ANpc(ROCKET_OSS),
-	m_shader(PostEffectLayer::getInstance().getShader(START_EXPLOSION_FRAG)),
+	m_shader(PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG)),
 	m_enterRocketShape(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_state(Waiting),
 	m_smokesCount(3),
@@ -22,7 +22,8 @@ Rocket::Rocket(void) :
 	m_timerFirstBlastMax(sf::seconds(5.f)),
 	m_timerSecondBlastMax(sf::seconds(5.f)),
 	m_timerOctoEnteringMax(sf::seconds(1.f)),
-	m_sound(false)
+	m_sound(true),
+	m_stopCameraMovement(false)
 {
 	setSize(sf::Vector2f(267.f, 1426.f));
 	setOrigin(sf::Vector2f(0.f, 0.f));
@@ -116,16 +117,18 @@ void Rocket::collideOctoEvent(CharacterOcto * octo)
 			break;
 		case OctoEntering:
 			octo->setStartPosition(octo::linearInterpolation(m_octoPosition, m_enterRocketShape->getPosition(), m_timerOctoEntering / m_timerOctoEnteringMax));
-			playSound();
 			break;
 		case StartSmoke:
-			octo->endInRocket();
+			playSound();
 			octo->enableCutscene(true);
 			octo->setStartPosition(m_enterRocketShape->getPosition());
 			break;
 		default:
 			break;
 	}
+
+	if (m_stopCameraMovement)
+		octo->endInRocket();
 }
 
 void Rocket::update(sf::Time frametime)
@@ -142,7 +145,7 @@ void Rocket::update(sf::Time frametime)
 			{
 				m_timerOctoEntering = sf::Time::Zero;
 				m_timerOctoEnteringMax = sf::seconds(15.f);
-				PostEffectLayer::getInstance().enableShader(START_EXPLOSION_FRAG, true);
+				PostEffectLayer::getInstance().enableShader(ROCKET_TAKEOFF_FRAG, true);
 				m_state = StartSmoke;
 			}
 			m_lastPosition = getPosition();
@@ -186,9 +189,9 @@ void Rocket::update(sf::Time frametime)
 				{
 					m_smokes[i].setVelocity(sf::Vector2f(0.f, 30.f * (1.f + m_timerFirstBlast.asSeconds() + m_timerSecondBlast.asSeconds())));
 					if (m_timerFirstBlast == m_timerFirstBlastMax)
-							m_smokes[i].setEmitTimeRange(0.01f, 0.05f);
+						m_smokes[i].setEmitTimeRange(0.01f, 0.05f);
 					else if (m_timerSecondBlast > m_timerSecondBlastMax)
-							m_smokes[i].setCanEmit(false);
+						m_smokes[i].setCanEmit(false);
 				}
 			}
 			if (m_timerBefore >= m_timerBeforeMax)
@@ -201,6 +204,8 @@ void Rocket::update(sf::Time frametime)
 				}
 				else if (m_timerSecondBlast < m_timerSecondBlastMax)
 				{
+					if (m_timerSecondBlast > m_timerSecondBlastMax / 2.f)
+						m_stopCameraMovement = true;
 					box->setPosition(octo::cosinusInterpolation(m_lastPosition + sf::Vector2f(0.f, -400.f), m_lastPosition + sf::Vector2f(0.f, -3500.f), m_timerSecondBlast / m_timerSecondBlastMax));
 					m_enterRocketShape->setPosition(octo::cosinusInterpolation(m_lastPositionDoor + sf::Vector2f(0.f, -400.f), m_lastPositionDoor + sf::Vector2f(0.f, -3500.f), m_timerSecondBlast / m_timerSecondBlastMax));
 				}
