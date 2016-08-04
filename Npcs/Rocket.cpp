@@ -5,6 +5,8 @@
 #include "CharacterOcto.hpp"
 #include "PostEffectLayer.hpp"
 #include <Application.hpp>
+#include <AudioManager.hpp>
+#include <ResourceManager.hpp>
 #include <Interpolations.hpp>
 #include <GraphicsManager.hpp>
 #include <StateManager.hpp>
@@ -19,7 +21,8 @@ Rocket::Rocket(void) :
 	m_timerBeforeMax(sf::seconds(3.f)),
 	m_timerFirstBlastMax(sf::seconds(5.f)),
 	m_timerSecondBlastMax(sf::seconds(5.f)),
-	m_timerOctoEnteringMax(sf::seconds(1.f))
+	m_timerOctoEnteringMax(sf::seconds(1.f)),
+	m_sound(false)
 {
 	setSize(sf::Vector2f(267.f, 1426.f));
 	setOrigin(sf::Vector2f(0.f, 0.f));
@@ -91,6 +94,17 @@ void Rocket::addMapOffset(float x, float y)
 	m_smokes[2].setPosition(m_smokes[2].getPosition() + sf::Vector2f(244.f, 1350.f));
 }
 
+void Rocket::playSound(void)
+{
+	if (m_sound)
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+		audio.playSound(resources.getSound(ROCKET_AIR_BLAST_OGG), 0.7f);
+		m_sound = false;
+	}
+}
+
 void Rocket::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
@@ -102,6 +116,7 @@ void Rocket::collideOctoEvent(CharacterOcto * octo)
 			break;
 		case OctoEntering:
 			octo->setStartPosition(octo::linearInterpolation(m_octoPosition, m_enterRocketShape->getPosition(), m_timerOctoEntering / m_timerOctoEnteringMax));
+			playSound();
 			break;
 		case StartSmoke:
 			octo->endInRocket();
