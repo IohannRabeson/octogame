@@ -139,15 +139,19 @@ DesertDBiome::DesertDBiome() :
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleA)
 		m_octoStartPosition = sf::Vector2f(33.f * 16.f, -550.f);
+	else if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(10.f * 16.f, -1900.f);
 
 	m_gameObjects[5] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[30] = GameObjectType::PortalJungle;
 	m_gameObjects[110] = GameObjectType::PortalDesert;
 	m_instances[120] = MAP_DESERT_D_TRAIL_OMP;
+	m_instances[15] = MAP_DESERT_D_PORTAL_OMP;
 
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::JungleA);
 	m_destinations.push_back(Level::DesertC);
 }
@@ -259,8 +263,8 @@ Map::MapSurfaceGenerator DesertDBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = { 0.f , 20.f, 25.f , 49.f , 50.f , 51.f , 52.f , 53.f  , 140.f, 145.f, 915.f};
-		std::vector<float> pointY = { 0.1f, n   , -1.8f, -1.8f, -0.75f, -0.6f, -0.5f, -0.45f, -0.5f, 0.2f, 0.2f};
+		std::vector<float> pointX = { 0.f , 20.f    , 25.f , 49.f , 50.f , 51.f , 52.f , 53.f  , 140.f, 145.f, 915.f};
+		std::vector<float> pointY = { 0.0f, n - 0.2f, -1.8f, -1.8f, -0.75f, -0.6f, -0.5f, -0.45f, -0.5f, 0.2f, 0.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
