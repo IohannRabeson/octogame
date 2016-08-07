@@ -40,7 +40,7 @@ DesertDBiome::DesertDBiome() :
 	m_rockCount(10u, 20u),
 	m_treeCount(30u, 30u),
 	m_mushroomCount(3u, 40u),
-	m_crystalCount(130u, 170u),
+	m_crystalCount(100u, 120u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
@@ -546,13 +546,7 @@ sf::Color		DesertDBiome::getCrystalColor()
 
 int				DesertDBiome::getCrystalPosX()
 {
-	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
-	x += m_interestPointPosX - m_mapSize.x / 2.f;
-	if (x > static_cast<int>(m_mapSize.x))
-		x -= m_mapSize.x;
-	else if (x < 0)
-		x += m_mapSize.x;
-	return (static_cast<int>(x));
+	return (randomInt(1u, m_mapSize.x));
 }
 
 bool			DesertDBiome::canCreateCrystal()
