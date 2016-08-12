@@ -12,9 +12,9 @@ WaterBBiome::WaterBBiome() :
 	m_name("Water B"),
 	m_id(Level::WaterB),
 	m_seed("Vince"),
-	m_mapSize(sf::Vector2u(700u, 128u)),
+	m_mapSize(sf::Vector2u(750u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(2.f * 16.f, -50.f),
+	m_octoStartPosition(2.f * 16.f, -1350.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -62,7 +62,7 @@ WaterBBiome::WaterBBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
-	m_canCreateGrass(true),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
 
@@ -70,7 +70,7 @@ WaterBBiome::WaterBBiome() :
 	m_rockPartCount(4.f, 8.f),
 	m_rockColor(159, 24, 24),
 
-	m_grassSizeY(100.f, 300.f),
+	m_grassSizeY(110.f, 130.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
@@ -134,9 +134,10 @@ WaterBBiome::WaterBBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
+	m_instances[20] = MAP_WATER_B_TRAIL_OMP;
 	m_gameObjects[20] = GameObjectType::Portal;
 
-	m_gameObjects[40] = GameObjectType::CedricStartNpc;
+	m_gameObjects[46] = GameObjectType::CedricStartNpc;
 	m_gameObjects[50] = GameObjectType::JellyfishNpc;
 	m_gameObjects[70] = GameObjectType::JellyfishNpc;
 	m_gameObjects[390] = GameObjectType::JellyfishNpc;
@@ -145,7 +146,6 @@ WaterBBiome::WaterBBiome() :
 	m_gameObjects[610] = GameObjectType::JellyfishNpc;
 	m_gameObjects[640] = GameObjectType::CedricEndNpc;
 	/*
-	m_instances[785] = MAP_WATER_A_PARA_SIGN_OMP;
 	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
 	m_gameObjects[40] = GameObjectType::Portal;
 	m_gameObjects[75] = GameObjectType::BrayouNpc;
@@ -278,8 +278,8 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f, 20.f, 50.f , 55.f , 95.f , 100.f , 130.f};
-		std::vector<float> pointY = {n  , n   , -0.4f, -1.4f, -1.4f, -0.5f, n};
+		std::vector<float> pointX = {0.f     , 30.f    , 32.f , 33.f , 59.f , 60.f , 62.f    , 750.f};
+		std::vector<float> pointY = {n - 2.2f, n - 2.2f, -1.6f, 2.97f, 2.97f, -1.6f, n - 2.2f, n - 2.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

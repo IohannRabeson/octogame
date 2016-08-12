@@ -25,7 +25,7 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 {
 	sf::Vector2f downLeft(0.f, 0.f);
 	sf::Vector2f downRight(size.x, 0.f);
-	sf::Vector2f downMid(size.x / 2.f, 0.f);
+	sf::Vector2f downMid(size.x / 2.f, size.x / 2.f);
 	sf::Vector2f upLeft(-size.x, -size.y);
 	sf::Vector2f upRight(size.x * 2.f, -size.y);
 
@@ -51,7 +51,7 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 
 void Grass::setup(ABiome& biome)
 {
-	m_size = sf::Vector2f(Tile::TileSize, biome.getGrassSizeY());
+	m_size = sf::Vector2f(Tile::TileSize * 6u, biome.getGrassSizeY());
 	m_color = biome.getGrassColor();
 	m_colorNormal = biome.getGrassColor();
 	m_colorDeadly = biome.getSkyDayColor();
