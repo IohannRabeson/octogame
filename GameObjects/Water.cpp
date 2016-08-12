@@ -36,6 +36,8 @@ Water::Water(ABiome & biome) :
 	// Setting smooth to true lets us use small maps even on larger images
 	m_distorsionTexture.setSmooth(true);
 
+	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+	m_shader.setParameter("resolution", rect.width, rect.height);
 	m_shader.setParameter("distortionMapTexture", m_distorsionTexture);
 	m_shader.setParameter("max_factor", 0.15f);
 	m_shader.setParameter("activate_persistence", biome.getWaterPersistence());
@@ -86,6 +88,7 @@ void Water::changeColor(sf::Time frameTime)
 void Water::update(sf::Time frameTime)
 {
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+	m_shader.setParameter("camera_offset", rect.left, rect.top);
 	m_waveCycle += frameTime;
 	m_shader.setParameter("time", m_waveCycle.asSeconds());
 	m_shader.setParameter("distortionFactor", 0.15f);
