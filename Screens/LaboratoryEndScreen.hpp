@@ -3,6 +3,7 @@
 
 # include "InputListener.hpp"
 # include "DecorManager.hpp"
+# include "ScientistOcto.hpp"
 # include <AbstractState.hpp>
 # include <SFML/Graphics/Sprite.hpp>
 # include <SFML/Graphics/Shader.hpp>
@@ -43,6 +44,7 @@ public:
 private:
 	std::vector<std::unique_ptr<ScientistNpc>>	m_npcs;
 	State										m_state;
+	ScientistOcto								m_octo;
 	sf::Time									m_timer;
 	sf::Time									m_globalTimer;
 	sf::Time									m_timeBeforeNextText;

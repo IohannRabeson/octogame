@@ -121,6 +121,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ScientistLu.cpp					\
 				Npcs/ScientistCedric.cpp				\
 				Npcs/ScientistNpc.cpp					\
+				Npcs/ScientistOcto.cpp					\
 #Script AddNpc
 
 

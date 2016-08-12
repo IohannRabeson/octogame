@@ -33,11 +33,9 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_decorManager(10000)
 {
 	octo::Application::getConsole().addCommand(L"test", [this](sf::Vector2f const & p)
-			{
-	for (auto it = m_decorManager.begin(); it != m_decorManager.end(); it++)
 	{
-		(*it)->setPosition(p);
-		}});
+		m_octo.setPosition(p);
+		});
 }
 
 void	LaboratoryEndScreen::start()
@@ -68,6 +66,8 @@ void	LaboratoryEndScreen::start()
 	m_npcs[1]->setPosition(sf::Vector2f(950.f, 827.f));
 	m_npcs[2]->setPosition(sf::Vector2f(1600.f, 790.f));
 	m_npcs[3]->setPosition(sf::Vector2f(-70.f, 577.f));
+
+	m_octo.setPosition(sf::Vector2f(700.f, 770.f));
 
 	for (auto & it : m_npcs)
 		it->setDisplayText(false);
@@ -213,6 +213,7 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 		it->update(frameTime);
 
 	m_decorManager.update(frameTime, octo::Application::getCamera());
+	m_octo.update(frameTime);
 }
 
 void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
@@ -220,6 +221,7 @@ void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
 	render.draw(m_background);
+	render.draw(m_octo);
 	states.shader = &m_shader;
 	render.draw(m_water, states);
 	states.shader = nullptr;
