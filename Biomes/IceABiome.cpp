@@ -72,6 +72,7 @@ IceABiome::IceABiome() :
 	m_rockColor(0, 31, 63),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -578,6 +579,11 @@ sf::Color		IceABiome::getRockColor()
 float	IceABiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+float	IceABiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
 }
 
 sf::Color	IceABiome::getGrassColor()

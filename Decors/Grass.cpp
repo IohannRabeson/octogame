@@ -53,7 +53,7 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 
 void Grass::setup(ABiome& biome)
 {
-	m_size = sf::Vector2f(Tile::TileSize * 6u, biome.getGrassSizeY());
+	m_size = sf::Vector2f(biome.getGrassSizeX(), biome.getGrassSizeY());
 	m_color = biome.getGrassColor();
 	m_colorNormal = biome.getGrassColor();
 	m_colorDeadly = biome.getSkyDayColor();

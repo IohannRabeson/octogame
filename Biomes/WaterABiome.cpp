@@ -71,6 +71,7 @@ WaterABiome::WaterABiome() :
 	m_rockColor(159, 24, 24),
 
 	m_grassSizeY(60.f, 70.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -642,6 +643,11 @@ sf::Color		WaterABiome::getRockColor()
 float	WaterABiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+float	WaterABiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
 }
 
 sf::Color	WaterABiome::getGrassColor()

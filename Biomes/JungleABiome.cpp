@@ -72,6 +72,7 @@ JungleABiome::JungleABiome() :
 	m_rockColor(56, 50, 72),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -593,6 +594,11 @@ sf::Color		JungleABiome::getRockColor()
 float	JungleABiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+float	JungleABiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
 }
 
 sf::Color	JungleABiome::getGrassColor()
