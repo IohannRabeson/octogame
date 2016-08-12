@@ -367,6 +367,9 @@ void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 {
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
 	{
+		//TODO: Search for another solution
+		// Hack to avoid screensaver with controller
+		sf::Mouse::setPosition(sf::Vector2i(5, 5));
 		assert(event.button < m_inputs.size());
 		onInputPressed(m_inputs[event.button]);
 	}

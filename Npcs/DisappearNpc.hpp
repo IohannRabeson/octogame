@@ -7,7 +7,7 @@
 class DisappearNpc : public ANpc
 {
 public:
-	DisappearNpc(ResourceKey const & key);
+	DisappearNpc(ResourceKey const & key, float alphaMin = 200.f, float alphaMax = 255.f, bool isFlying = true);
 	virtual ~DisappearNpc(void) = default;
 
 	virtual void setup(void);
@@ -21,8 +21,13 @@ private:
 	void					makeDisappear(sf::Time frametime);
 
 	bool					m_isVisible;
+	bool					m_isFlying;
 	static RandomGenerator	m_generator;
-	float					m_transparency;
+	float					m_alphaCurrent;
+	float					m_alphaTarget;
+	float const				m_alphaMin;
+	float const				m_alphaMax;
+	float					m_alphaAlmostDisappear;
 	sf::Time				m_randomDisappearTimer;
 	sf::Time				m_randomAppearTimer;
 };

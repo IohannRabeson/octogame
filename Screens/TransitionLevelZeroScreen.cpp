@@ -100,7 +100,7 @@ void	TransitionLevelZeroScreen::playSound(std::size_t index)
 		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_2_OGG), 0.5f);
 		m_soundPlayed1 = true;
 	}
-	if (m_soundPlayed2 == false && index == 3u)
+	if (m_soundPlayed2 == false && index == 2u)
 	{
 		octo::Application::getAudioManager().playSound(octo::Application::getResourceManager().getSound(NANO_3_OGG), 0.5f);
 		m_soundPlayed2 = true;
@@ -120,6 +120,7 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 		m_startTimer += frameTime;
 		return;
 	}
+	playSound(m_index);
 	m_time += frameTime;
 	for (std::size_t i = 0; i < m_bubbleCount; i++)
 		m_bubble[i].setType(ABubble::Type::None);
@@ -128,10 +129,8 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 	m_bubble[m_index].update(frameTime);
 	if (m_time > m_timerMax[m_index])
 	{
-		playSound(m_index);
 		m_time = sf::Time::Zero;
 		m_index++;
-		playSound(m_index);
 	}
 
 	m_sprite.update(frameTime);

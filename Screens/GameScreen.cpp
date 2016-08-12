@@ -22,6 +22,7 @@ void	GameScreen::start()
 	m_game.reset(new Game());
 	m_game->loadLevel();
 	m_menu.setup();
+	m_timePlayed.restart();
 }
 
 void	GameScreen::pause()
@@ -38,12 +39,13 @@ void	GameScreen::resume()
 	InputListener::addInputListener();
 	m_game.reset(new Game());
 	m_game->loadLevel();
+	m_timePlayed.restart();
 }
 
 void	GameScreen::stop()
 {
 	octo::Application::getAudioManager().stopMusic(sf::Time::Zero);
-	Progress::getInstance().save();
+	Progress::getInstance().save(m_timePlayed.getElapsedTime().asSeconds());
 	octo::Application::getPostEffectManager().removeEffects();
 	InputListener::removeInputListener();
 	m_game.reset(nullptr);

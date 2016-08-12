@@ -11,18 +11,19 @@ if len(sys.argv) != 2:
   exit();
 
 mypath = sys.argv[1]
-var_name = "m_type"
-type_name = "ABiome::Type"
-func_name = "getType() const"
-init_value = "ABiome::Type::Ice"
+var_name = "m_isDeadlyGrass"
+type_name = "bool"
+func_name = "isDeadlyGrass()"
+return_name = "bool"
+init_value = "false"
 
 def add_line_hpp(filename):
   for line in fileinput.input(mypath + filename, inplace=1):
-    if line.find('canCreateRainbow()') != -1:
+    if line.find('getWaterColor()') != -1:
     #add prototype of the fonction
       print line,
-      print "\tvirtual " + type_name + "\t\t\t\t\t\t\t\t\t" + func_name + ";"
-    elif line.find('m_canCreateRainbow') != -1:
+      print "\tvirtual " + return_name + "\t\t\t\t\t\t\t\t\t" + func_name + ";"
+    elif line.find('m_waterColor') != -1:
     #add variable definition
       print line,
       print "\t" + type_name + "\t\t\t\t\t\t\t\t\t\t\t" + var_name + ";"
@@ -32,17 +33,17 @@ def add_line_hpp(filename):
 def add_line_cpp(filename):
   skip_line = False
   for line in fileinput.input(mypath + filename, inplace=1):
-    if line.find('m_canCreateRainbow(') != -1:
+    if line.find('m_waterColor(') != -1:
     #init variable in constructor
       print line,
       print "\t" + var_name + "(" + init_value + "),"
-    elif line.find('return (m_canCreateRainbow)') != -1:
+    elif line.find('m_waterColor;') != -1:
       skip_line = True
       print line,
     elif skip_line == True:
     #add definition of the function
       print line,
-      print "\n" + type_name + "\t" + os.path.splitext(filename)[0] + "::" + func_name + "\n",
+      print "\n" + return_name + "\t" + os.path.splitext(filename)[0] + "::" + func_name + "\n",
       print "{\n",
       print "\treturn " + var_name + ";\n",
       print "}\n",

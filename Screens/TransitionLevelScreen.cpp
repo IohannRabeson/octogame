@@ -3,6 +3,7 @@
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
+#include <Interpolations.hpp>
 
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
@@ -12,7 +13,10 @@ TransitionLevelScreen::TransitionLevelScreen() :
 	m_timeTransition(sf::Time::Zero),
 	m_timeTransitionMax(sf::seconds(0.8f))
 {
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::SpriteAnimation::FrameList	frames;
+
+	m_volumeDefault = audio.getSoundVolume();
 
 	frames.emplace_back(sf::seconds(0.1f), 6);
 	frames.emplace_back(sf::seconds(0.1f), 7);
@@ -49,7 +53,7 @@ void	TransitionLevelScreen::start()
 	}
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
-	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.7f);
+	m_sound = audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_OGG), 0.5f);
 }
 
 void	TransitionLevelScreen::pause()
@@ -65,24 +69,29 @@ void	TransitionLevelScreen::resume()
 void	TransitionLevelScreen::stop()
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	octo::ResourceManager &		resources = octo::Application::getResourceManager();
-	if (m_sound != nullptr)
-		m_sound->stop();
-	audio.playSound(resources.getSound(PORTAL_END_OGG));
+	audio.setSoundVolume(m_volumeDefault);
 }
 
 void	TransitionLevelScreen::update(sf::Time frameTime)
 {
-	octo::StateManager & states = octo::Application::getStateManager();
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::StateManager &		states = octo::Application::getStateManager();
+
 	m_timeTransition += frameTime;
-	if (m_timeTransition  > m_timeTransitionMax)
+	if (m_timeTransition > m_timeTransitionMax)
 		states.change("game");
-	m_sprite.update(frameTime);
+	else
+	{
+		audio.setSoundVolume(octo::linearInterpolation(m_volumeDefault, 0.f, std::pow(m_timeTransition / m_timeTransitionMax, 2)));
+		m_sound->setVolume(0.5f * m_volumeDefault);
+		m_sprite.update(frameTime);
+	}
 }
 
 void	TransitionLevelScreen::draw(sf::RenderTarget& render)const
 {
 	render.clear();
-	render.draw(m_sprite);
+	if (m_timeTransition <= m_timeTransitionMax)
+		render.draw(m_sprite);
 }
 

@@ -42,7 +42,7 @@ void Cage::addMapOffset(float x, float y)
 
 void Cage::setPosition(sf::Vector2f const & position)
 {
-	Cage::setPosition(position);
+	InstanceDecor::setPosition(position);
 	m_spriteFront.setPosition(position);
 }
 

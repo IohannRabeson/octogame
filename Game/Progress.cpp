@@ -6,9 +6,9 @@
 #include <Options.hpp>
 #include <AudioManager.hpp>
 #include <GraphicsManager.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include <fstream>
-#include <stdlib.h>
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
 
@@ -21,8 +21,10 @@ Progress::Progress() :
 	m_changeLevel(false),
 	m_reverseSprite(false),
 	m_spaceShipRepair(false),
+	m_killOcto(false),
 	m_npcCount(0u),
 	m_npcMax(0u),
+	m_countRandomDiscover(0u),
 	m_isOctoOnInstance(false),
 	m_isHighLight(false)
 {
@@ -56,6 +58,16 @@ bool	Progress::isBubbleNpc() const
 void	Progress::setBubbleNpc(bool isBubbleNpc)
 {
 	m_isBubbleNpc = isBubbleNpc;
+}
+
+Progress::MenuType	Progress::getMenuType(void)
+{
+	return m_data.menuType;
+}
+
+void	Progress::setMenuType(MenuType type)
+{
+	m_data.menuType = type;
 }
 
 bool	Progress::isGameFinished() const
@@ -94,20 +106,24 @@ void	Progress::init()
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
 	m_isOctoOnInstance = false;
+	m_killOcto = false;
 	loadNpc();
 	loadPortals();
+	loadDeaths();
 }
 
-void	Progress::save()
+void	Progress::save(float timePlayed)
 {
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 
 	m_data.fullscreen = graphics.isFullscreen();
 	m_data.vsync = graphics.isVerticalSyncEnabled();
+	m_data.timePlayed += timePlayed / 60.f;
 
 	saveNpc();
 	savePortals();
 	saveToFile();
+	saveDeaths();
 }
 
 void	Progress::saveToFile()
@@ -126,6 +142,7 @@ void	Progress::reset()
 	m_spaceShipRepair = false;
 	m_npc.clear();
 	m_portals.clear();
+	m_deaths.clear();
 	setup();
 	save();
 }
@@ -247,7 +264,7 @@ bool	Progress::canDoubleJump()
 
 bool	Progress::canSlowFall()
 {
-	return (m_data.nanoRobotCount > 4);
+	return (m_data.nanoRobotCount > 5);
 }
 
 bool	Progress::canUseElevator()
@@ -257,7 +274,7 @@ bool	Progress::canUseElevator()
 
 bool	Progress::canUseWaterJump()
 {
-	return (m_data.nanoRobotCount > 5);
+	return (m_data.nanoRobotCount > 4);
 }
 
 bool	Progress::changeLevel() const
@@ -270,14 +287,54 @@ void	Progress::levelChanged()
 	m_changeLevel = false;
 }
 
-void	Progress::registerDeath(float deathPosX)
+void	Progress::registerDeath(sf::Vector2f const & position)
 {
-	m_deathPos[m_data.currentDestination].push_back(static_cast<int>(deathPosX / Tile::TileSize));
+	sf::Vector2i const & pos = sf::Vector2i(static_cast<int>(position.x), static_cast<int>(position.y + 1u));
+	m_deaths[m_data.currentDestination].insert(m_deaths[m_data.currentDestination].begin(), pos);
+	if (m_deaths[m_data.currentDestination].size() > 15)
+		m_deaths[m_data.currentDestination].pop_back();
+	m_data.deathCount += 1u;
 }
 
-std::vector<int> & Progress::getDeathPos()
+std::vector<sf::Vector2i> & Progress::getDeathPos()
 {
-	return m_deathPos[m_data.currentDestination];
+	return m_deaths[m_data.currentDestination];
+}
+
+void	Progress::saveDeaths()
+{
+	std::string saveDeaths;
+	for (auto itLevel = m_deaths.begin(); itLevel != m_deaths.end(); itLevel++)
+	{
+		saveDeaths += std::to_string(static_cast<int>(itLevel->first)) + " ";
+		for (std::size_t i = 0u; i < itLevel->second.size(); i++)
+		{
+			saveDeaths += std::to_string(itLevel->second[i].x);
+			saveDeaths += " " + std::to_string(itLevel->second[i].y) + " ";
+		}
+		saveDeaths += "\n";
+	}
+	assert(saveDeaths.size() < 20000);
+	std::strcpy(m_data.deaths, saveDeaths.c_str());
+}
+
+void	Progress::loadDeaths()
+{
+	std::istringstream savedDeaths(m_data.deaths);
+	std::string line;
+	while (std::getline(savedDeaths, line))
+	{
+		std::vector<std::string> splitLine;
+		split(line, ' ', splitLine);
+
+		Level level = static_cast<Level>(stoi(splitLine[0]));
+		m_deaths[level].clear();
+
+		for (std::size_t i = 1; i < splitLine.size(); i += 2)
+		{
+			m_deaths[level].push_back(sf::Vector2i(stoi(splitLine[i]), stoi(splitLine[i + 1])));
+		}
+	}
 }
 
 void	Progress::registerPortal(Level destination)
@@ -293,6 +350,32 @@ bool	Progress::meetPortal(Level destination)
 		return true;
 	}
 	return false;
+}
+
+bool	Progress::meetPortal(Level source, Level destination)
+{
+	if (m_changeLevel == false && !m_portals[source][destination])
+	{
+		m_portals[source][destination] = true;
+		return true;
+	}
+	return false;
+}
+
+std::size_t Progress::countRandomDiscover(void)
+{
+	if (m_countRandomDiscover != 0u)
+		return m_countRandomDiscover;
+	std::size_t count = 0u;
+	for (auto level : m_portals)
+	{
+		for (auto portal : level.second)
+		{
+			if (portal.first == Level::Random && portal.second == true)
+				count++;
+		}
+	}
+	return count;
 }
 
 bool	Progress::isMetPortal(Level destination)

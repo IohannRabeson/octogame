@@ -25,9 +25,11 @@ enum class Level : std::size_t
 	DesertA,
 	DesertB,
 	DesertC,
+	DesertD,
 	JungleA,
 	JungleB,
 	JungleC,
+	JungleD,
 	WaterA,
 	WaterB,
 	Random,
@@ -43,7 +45,8 @@ public:
 		Jungle,
 		Desert,
 		Water,
-		Random
+		Random,
+		None
 	};
 
 	virtual ~ABiome();
@@ -63,7 +66,9 @@ public:
 	virtual Level										getDestination() = 0;
 	virtual float										getWaterLevel() = 0;
 	virtual sf::Color									getWaterColor() = 0;
+	virtual sf::Color									getSecondWaterColor() = 0;
 	virtual bool										isDeadlyWater() { return false; };
+	virtual bool										isDeadlyGrass() { return false; };
 	virtual sf::Color									getColorMoveInstance() { return sf::Color::White; };
 	virtual float										getTransitionStep() { return 3.f; };
 
@@ -107,6 +112,12 @@ public:
 	virtual std::size_t									getRockPartCount() = 0;
 	virtual sf::Color									getRockColor() = 0;
 	virtual bool										canCreateRock() = 0;
+
+	virtual float										getGrassSizeY() = 0;
+	virtual sf::Color									getGrassColor() = 0;
+	virtual std::size_t									getGrassCount() = 0;
+	virtual std::size_t									getGrassPosX() = 0;
+	virtual bool										canCreateGrass() = 0;
 
 	virtual std::size_t									getTreeDepth() = 0;
 	virtual sf::Vector2f								getTreeSize() = 0;

@@ -76,7 +76,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	{
 		std::unique_ptr<BubbleText> bubble;
 		bubble.reset(new BubbleText());
-		bubble->setup(nanoTexts[i], sf::Color::White);
+		bubble->setup(nanoTexts[i], sf::Color::White, 30u, 500.f);
 		bubble->setType(ABubble::Type::Speak);
 		bubble->setActive(true);
 		m_texts.push_back(std::move(bubble));
@@ -250,17 +250,43 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 {
 	Progress & progress = Progress::getInstance();
 	sf::Vector2f const & interestPoint = progress.getInterestPoint();
-	sf::Vector2f pos;
-	if (interestPoint.x != 0.f && interestPoint.y != 0.f && m_state != Idle)
+	NanoEffect::State const & effectState = m_glowingEffect.getState();
+	sf::Vector2f pos = position;
+	sf::Vector2f direction = interestPoint - position;
+
+	if (interestPoint.x != 0.f && interestPoint.y != 0.f
+		&& effectState != NanoEffect::State::Active
+		&& effectState != NanoEffect::State::Transfer
+		&& effectState != NanoEffect::State::FadeOut)
 	{
-		pos = interestPoint - position;
-		octo::normalize(pos);
-		pos = position + pos * 300.f;
-		if (m_lastPos.x != position.x && m_lastPos.y != position.y)
-			pos += sf::Vector2f(0.f, -300.f);
+		float dist = std::sqrt(std::pow(interestPoint.x - position.x, 2) + std::pow(interestPoint.y - position.y, 2));
+		if (dist < 800.f)
+		{
+			pos += direction;
+			m_positionBehavior->setRadius(dist / 2.f);
+			if (m_glowingEffect.getState() != NanoEffect::State::Random)
+				m_glowingEffect.setState(NanoEffect::State::Wait);
+		}
+		else if (dist > 600.f)
+		{
+			direction = interestPoint - position;
+			octo::normalize(direction);
+			pos += direction * 300.f;
+
+			if (m_lastPos.x != position.x || m_lastPos.y != position.y)
+			{
+				pos.y -= 300.f;
+				m_positionBehavior->setRadius(300.f);
+				if (m_glowingEffect.getState() != NanoEffect::State::Random)
+					m_glowingEffect.setState(NanoEffect::State::None);
+			}
+			else
+				m_positionBehavior->setRadius(100.f);
+		}
 	}
 	else
-		pos = position + sf::Vector2f(0.f, -200.f);
+		pos.y -= 200.f;
+
 	m_lastPos = position;
 	return pos;
 }

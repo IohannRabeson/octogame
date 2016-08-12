@@ -21,7 +21,7 @@ PostEffectLayer & PostEffectLayer::getInstance(void)
 	return *m_instance;
 }
 
-void PostEffectLayer::registerShader(ResourceKey key)
+void PostEffectLayer::registerShader(std::string const & name, ResourceKey key)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
@@ -31,12 +31,12 @@ void PostEffectLayer::registerShader(ResourceKey key)
 	shader->loadFromMemory(resources.getText(key), sf::Shader::Fragment);
 	postEffectShader.resetShader(shader);
 	std::size_t shaderIndex = postEffect.addEffect(std::move(postEffectShader));
-	m_shaders.emplace(key, std::make_pair(shaderIndex, shader));
+	m_shaders.emplace(name, std::make_pair(shaderIndex, shader));
 }
 
-void PostEffectLayer::enableShader(ResourceKey key, bool enable)
+void PostEffectLayer::enableShader(std::string const & name, bool enable)
 {
-	octo::Application::getPostEffectManager().enableEffect(getShaderIndex(key), enable);
+	octo::Application::getPostEffectManager().enableEffect(getShaderIndex(name), enable);
 }
 
 void PostEffectLayer::clear(void)
@@ -46,14 +46,14 @@ void PostEffectLayer::clear(void)
 	m_shaders.clear();
 }
 
-sf::Shader & PostEffectLayer::getShader(ResourceKey key)
+sf::Shader & PostEffectLayer::getShader(std::string const & name)
 {
-	return (*m_shaders[key].second);
+	return (*m_shaders[name].second);
 }
 
-std::size_t PostEffectLayer::getShaderIndex(ResourceKey key)
+std::size_t PostEffectLayer::getShaderIndex(std::string const & name)
 {
-	auto it = m_shaders.find(key);
+	auto it = m_shaders.find(name);
 	if (it != m_shaders.end())
 		return (it->second.first);
 	return (0u);

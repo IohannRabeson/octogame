@@ -4,6 +4,9 @@
 #include "CreditMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "Progress.hpp"
+#include "ResourceDefinitions.hpp"
+#include <AudioManager.hpp>
+#include <ResourceManager.hpp>
 #include <Camera.hpp>
 #include <Application.hpp>
 
@@ -30,7 +33,7 @@ class YesNoNewMenu : public YesNoMenu
 	inline void actionYes(void)
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
-		states.change("laboratory_end");
+		states.change("menu");
 	}
 	inline void actionNo(void) { }
 };
@@ -86,7 +89,10 @@ void MainMenu::createMenus(void)
 	else
 		setCharacterSize(30);
 
-	setBubbleType(ABubble::Type::Menu);
+	if (progress.isMenu())
+		setBubbleType(ABubble::Type::Menu);
+	else
+		setBubbleType(ABubble::Type::Think);
 }
 
 void MainMenu::onSelection(void)
@@ -104,7 +110,12 @@ void MainMenu::onSelection(void)
 		if (progress.isFirstTime())
 			states.change("zero");
 		else
-			states.change("transition");
+		{
+			octo::AudioManager &		audio = octo::Application::getAudioManager();
+			octo::ResourceManager &		resources = octo::Application::getResourceManager();
+			audio.playSound(resources.getSound(OCTO_GREETING_OGG), 0.7f);
+			states.change("transitionLevel");
+		}
 	}
 	else
 		AMenuSelection::onSelection();

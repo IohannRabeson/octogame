@@ -1,5 +1,6 @@
 #ifndef OCTOSOUND_HPP
 # define OCTOSOUND_HPP
+
 # include "CharacterOcto.hpp"
 # include <AudioManager.hpp>
 
@@ -44,6 +45,7 @@ private:
 	sf::Time										m_timeSoundIn;
 	sf::Time										m_timeSoundTransition;
 	sf::Time										m_timeSoundTransitionMax;
+	sf::Time										m_timeDrinkSound;
 	bool											m_inWater;
 	bool											m_onGround;
 	bool											m_landing;

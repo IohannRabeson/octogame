@@ -59,8 +59,8 @@ void JuNpc::setup(void)
 
 	getSprite().setScale(-getScale(), getScale());
 
-	if (Progress::getInstance().canUseWaterJump() == true)
-		setCurrentText(1u);
+//	if (Progress::getInstance().canUseWaterJump() == true)
+//		setCurrentText(1u);
 	setupMachine();
 }
 

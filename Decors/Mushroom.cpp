@@ -98,7 +98,8 @@ void Mushroom::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& 
 	if (m_animator.update(frameTime))
 		newMushroom(biome);
 	m_animation = m_animator.getAnimation();
-	sf::Vector2f const & position = getPosition();
+	sf::Vector2f position = getPosition();
+	position.x += 8.f;
 
 	playSound(biome, position);
 

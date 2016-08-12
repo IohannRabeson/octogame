@@ -22,6 +22,7 @@ IceBBiome::IceBBiome() :
 	m_tileEndColor(87, 139, 161),
 	m_waterLevel(-1.f),
 	m_waterColor(255, 255, 255, 200),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(45.f)),
@@ -62,12 +63,18 @@ IceBBiome::IceBBiome() :
 	m_canCreateSun(false),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(10.f, 140.f), sf::Vector2f(30.f, 200.f)),
 	m_rockPartCount(2.f, 10.f),
 	m_rockColor(0, 31, 63),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(5u, 5u),
 	m_treeSize(sf::Vector2f(100.f, 50.f), sf::Vector2f(200.f, 100.f)),
@@ -127,25 +134,27 @@ IceBBiome::IceBBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[390] = GameObjectType::EngineSnow;
 
+	m_gameObjects[40] = GameObjectType::JuGlitchNpc;
 	m_instances[50] = MAP_ICE_B_TRAIL_A_OMP;
 	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
 	m_instances[178] = MAP_ICE_B_TRAIL_C_OMP;
 	m_instances[219] = MAP_ICE_B_TRAIL_D_OMP;
-	m_instances[370] = MAP_ICE_B_PORTAL_OMP;
+	m_instances[317] = MAP_ICE_B_PORTAL_OMP;
+	m_gameObjects[385] = GameObjectType::WindowGlitchNpc;
+	m_gameObjects[390] = GameObjectType::EngineSnow;
+	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_interestPointPosX = 530;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::IceC)
 		m_octoStartPosition = sf::Vector2f(279.f * 16.f, 1640.f);
 	if (progress.getLastDestination() == Level::Random)
-		m_octoStartPosition = sf::Vector2f(367.f * 16.f, -2100.f);
+		m_octoStartPosition = sf::Vector2f(320.f * 16.f, 2000.f);
 
 	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[320] = GameObjectType::BirdBlueNpc;
 
-	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_destinations.push_back(Level::IceC);
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceA);
@@ -217,6 +226,11 @@ sf::Color	IceBBiome::getWaterColor()
 	return m_waterColor;
 }
 
+sf::Color	IceBBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
+}
+
 std::map<std::size_t, std::string> const & IceBBiome::getInstances()
 {
 	return m_instances;
@@ -249,8 +263,8 @@ Map::MapSurfaceGenerator IceBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float m = noise.fBm(x, y, 3, 3.f, 0.3f) / 4.f;
-		std::vector<float> pointX = {25.f, 50.f, 51.f, 317.f, 318.f, 325.f, 370.f    , 410.f    , 500.f};
-		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.2f , 0.f  , n    , m + 0.04f, m + 0.04f, n};
+		std::vector<float> pointX = {25.f, 50.f, 51.f, 317.f, 318.f, 356.f, 357.f, 380.f    , 410.f    , 500.f};
+		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.2f , 0.4f , 0.4f , 0.15f, m + 0.04f, m + 0.04f, n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -564,6 +578,29 @@ sf::Color		IceBBiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	IceBBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	IceBBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	IceBBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	IceBBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			IceBBiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -704,6 +741,11 @@ sf::Time		IceBBiome::getRainbowIntervalTime()
 bool			IceBBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	IceBBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	IceBBiome::getWaterPersistence() const

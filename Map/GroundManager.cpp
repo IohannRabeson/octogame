@@ -16,6 +16,7 @@
 #include "Mushroom.hpp"
 #include "Crystal.hpp"
 #include "GroundRock.hpp"
+#include "Grass.hpp"
 
 //Object
 #include "SpaceShip.hpp"
@@ -32,12 +33,20 @@
 
 //Npc
 #include "ClassicNpc.hpp"
-#include "CedricNpc.hpp"
+#include "CedricStartNpc.hpp"
 //Script AddNpc Include
 #include "ScientistCedric.hpp"
 #include "ScientistLu.hpp"
 #include "ScientistFran.hpp"
 #include "ScientistJu.hpp"
+#include "WindowGlitchNpc.hpp"
+#include "FranGlitchNpc.hpp"
+#include "JuGlitchNpc.hpp"
+#include "LuGlitchNpc.hpp"
+#include "LongChairNpc.hpp"
+#include "Rocket.hpp"
+#include "OctoDeathNpc.hpp"
+#include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
@@ -111,7 +120,7 @@ GroundManager::GroundManager(void) :
 	m_decorManagerGround(15000),
 	m_decorManagerInstanceBack(100000),
 	m_decorManagerInstanceFront(100000),
-	m_nextState(GenerationState::Next),
+	m_nextState(GenerationState::None),
 	m_water(nullptr)
 {}
 
@@ -152,14 +161,18 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	setupDecors(biome, cycle);
 
 	// Init game objects
-	setupGameObjects(biome, cycle);
+	setupGameObjects(biome);
 
-	swapMap();
 	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
 	m_offset.x = rect.left;
 	m_offset.y = rect.top;
 	//m_oldOffset = sf::Vector2i(m_offset / 16.f);
 	updateOffset(0.f);
+
+	//avoid empty columns
+	//TODO: Find if the problem is in swapMp
+	for (std::size_t i = 0u; i <= 1u; i++)
+		swapMap();
 }
 
 //TODO: Use movement mask
@@ -204,7 +217,7 @@ void GroundManager::setupGroundRock(ABiome & biome)
 	}
 }
 
-void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
+void GroundManager::setupGameObjects(ABiome & biome)
 {
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	setupGroundRock(biome);
@@ -213,6 +226,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
+	m_npcFactory.registerCreator<ConstanceNpc>(CONSTANCE_OSS);
+	m_npcFactory.registerCreator<FaustNpc>(NPC_FAUST_OSS);
+	m_npcFactory.registerCreator<AmandineNpc>(AMANDINE_OSS);
 	m_npcFactory.registerCreator<Snowman2Npc>(SNOWMAN_2_OSS);
 	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
@@ -228,9 +244,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<ScientistLu>(SCIENTISTLU_OSS);
 	m_npcFactory.registerCreator<ScientistFran>(SCIENTISTFRAN_OSS);
 	m_npcFactory.registerCreator<ScientistJu>(SCIENTISTJU_OSS);
-	m_npcFactory.registerCreator<TVScreen>(TV_OSS);
+	m_npcFactory.registerCreator<WindowGlitchNpc>(WINDOW_GLITCH_OSS);
+	m_npcFactory.registerCreator<FranGlitchNpc>(FRAN_GLITCH_OSS);
+	m_npcFactory.registerCreator<JuGlitchNpc>(JU_GLITCH_OSS);
+	m_npcFactory.registerCreator<LuGlitchNpc>(LU_GLITCH_OSS);
+	m_npcFactory.registerCreator<LongChairNpc>(NPC_LONGCHAIR_OSS);
+	m_npcFactory.registerCreator<Rocket>(ROCKET_OSS);
 	m_npcFactory.registerCreator<FabienNpc>(FABIEN_OSS);
-	m_npcFactory.registerCreator<CheckPoint>(CHECKPOINT_OSS);
 	m_npcFactory.registerCreator<OverCoolNpc>(OVER_COOL_NPC_OSS);
 	m_npcFactory.registerCreator<Pedestal>(PEDESTAL_OSS);
 	m_npcFactory.registerCreator<ForestSpirit2Npc>(FOREST_SPIRIT_2_OSS);
@@ -243,9 +263,17 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
-	m_npcFactory.registerCreator(CEDRIC_OSS, [&skyCycle](){ return new CedricNpc(skyCycle); });
+	m_npcFactory.registerCreator(OCTO_DEATH_HELMET_OSS, [&biome](){ return new OctoDeathNpc(biome.getWaterLevel(), biome.getWaterColor()); });
+	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
+	m_npcFactory.registerCreator(CEDRIC_END_OSS, [&biome](){ return new CedricEndNpc(biome.getType()); });
+	m_npcFactory.registerCreator(TV_BLACK_OSS, [](){ return new TVScreen("render_black_kernel"); });
+	m_npcFactory.registerCreator(TV_WHITE_OSS, [](){ return new TVScreen("render_white_kernel"); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
+	m_decorFactory.registerCreator(CHECKPOINT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new CheckPoint(scale, position);
+			});
 	m_decorFactory.registerCreator(HOUSE_ORANGE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(HOUSE_ORANGE_OSS, scale, position, 3u);
@@ -398,6 +426,10 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 			{
 				return new InstanceDecor(HUGE_FLUE_SNOW_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(TEMPLE_DESERT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TEMPLE_DESERT_OSS, scale, position, 3u, 0.2f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -470,7 +502,13 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 
 			if (!decor.name.substr(0, 13).compare("object_portal"))
 			{
-				std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), decor.name.c_str()));
+				std::unique_ptr<Portal> portal;
+				if (!decor.name.compare("object_portal_red.oss"))
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_red", sf::Color::Red));
+				if (!decor.name.compare("object_portal_blue.oss"))
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_blue", sf::Color::Blue));
+				else
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), VORTEX_FRAG));
 				portal->setBiome(biome);
 				portal->setPosition(position + sf::Vector2f(50.f, 350.f));
 				m_otherOnInstance.push_back(std::move(portal));
@@ -492,6 +530,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					adecor = new GroundRock(true);
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
+				else if (!decor.name.compare(DECOR_GRASS_OSS))
+					adecor = new Grass();
 				if (adecor)
 				{
 					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));
@@ -533,51 +573,74 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 		}
 	}
 
+	std::vector<sf::Vector2i> & deathPos = Progress::getInstance().getDeathPos();
+	for (std::size_t i = 0; i < deathPos.size(); i++)
+	{
+		std::unique_ptr<ANpc> npc;
+		npc.reset(m_npcFactory.create(OCTO_DEATH_HELMET_OSS));
+		npc->setPosition(sf::Vector2f(deathPos[i].x, deathPos[i].y));
+		m_npcs.push_back(std::move(npc));
+	}
+
 	auto & gameObjects = biome.getGameObjects();
+	std::size_t portalCount = 0;
+
 	for (auto & gameObject : gameObjects)
 	{
 		switch (gameObject.second)
 		{
 			case GameObjectType::PortalRandom:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_RANDOM_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_RANDOM_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::PortalJungle:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_JUNGLE_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_JUNGLE_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::PortalSnow:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_SNOW_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_SNOW_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::PortalDesert:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_DESERT_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_DESERT_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::PortalWater:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_BEACH_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_BEACH_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 			case GameObjectType::Portal:
 				{
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_OSS));
+					std::string name = "vortex_" + std::to_string(portalCount);
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_OSS, name.c_str()));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
+					portalCount++;
 				}
 				break;
 
@@ -675,9 +738,72 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
-			case GameObjectType::TVScreen:
+			case GameObjectType::WindowGlitchNpc:
 				{
-					TVScreen * npc = new TVScreen();
+					WindowGlitchNpc * npc = new WindowGlitchNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::FranGlitchNpc:
+				{
+					FranGlitchNpc * npc = new FranGlitchNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::JuGlitchNpc:
+				{
+					JuGlitchNpc * npc = new JuGlitchNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::LuGlitchNpc:
+				{
+					LuGlitchNpc * npc = new LuGlitchNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::LongChairNpc:
+				{
+					LongChairNpc * npc = new LongChairNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::Rocket:
+				{
+					Rocket * npc = new Rocket();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::OctoDeathNpc:
+				{
+					OctoDeathNpc * npc = new OctoDeathNpc(biome.getWaterLevel(), biome.getWaterColor());
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::CedricEndNpc:
+				{
+					CedricEndNpc * npc = new CedricEndNpc(biome.getType());
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::TVWhite:
+				{
+					TVScreen * npc = new TVScreen("render_white_kernel");
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::TVBlack:
+				{
+					TVScreen * npc = new TVScreen("render_black_kernel");
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
@@ -691,9 +817,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 				break;
 			case GameObjectType::CheckPoint:
 				{
-					CheckPoint * npc = new CheckPoint();
-					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					CheckPoint * npc = new CheckPoint(sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f));
+					m_otherObjectsLow.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::OverCoolNpc:
@@ -780,9 +905,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & skyCycle)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
-			case GameObjectType::CedricNpc:
+			case GameObjectType::CedricStartNpc:
 				{
-					CedricNpc * cedric = new CedricNpc(skyCycle);
+					CedricStartNpc * cedric = new CedricStartNpc(biome.getType());
 					cedric->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, cedric);
 				}
@@ -1001,6 +1126,7 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	std::size_t mushroomCount = static_cast<std::size_t>(biome.getMushroomCount() / 2.f);
 	std::size_t crystalCount = static_cast<std::size_t>(biome.getCrystalCount() / 2);
 	std::size_t groundRockCount = biome.getGroundRockCount();
+	std::size_t grassCount = biome.getGrassCount();
 	std::size_t totalCount = 0u;
 
 	if (biome.canCreateRainbow())
@@ -1089,6 +1215,27 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += crystalCount;
+	}
+
+	//TODO: Add in Biome
+	if (biome.canCreateGrass())
+	{
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
 	}
 
 	for (std::size_t i = 0; i < groundRockCount; i++)
@@ -1246,7 +1393,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	TileShape * first;
 	sf::Vertex * last;
 	bool updateLast;
-	bool isScreenFullOfTiles = true;
+	std::size_t countFilledTiles = 0u;
 
 	// Update tiles
 	m_verticesCount = 0u;
@@ -1255,11 +1402,11 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		first = nullptr;
 		last = nullptr;
 		updateLast = true;
-		if (m_tiles->get(x, 0).isTransitionType(Tile::e_transition_none))
-			isScreenFullOfTiles = false;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
+			if (!tile->isEmpty())
+				countFilledTiles++;
 			if (tile->isTransitionType(Tile::e_transition_none))
 			{
 				if (first && tile->isEmpty())
@@ -1314,11 +1461,13 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			m_tileShapes[x]->setEndVertex(&m_vertices[0u]);
 		}
 	}
-	if (isScreenFullOfTiles)
+	/*
+	if (countFilledTiles >= 9500)
 	{
 		Progress::getInstance().setNextDestination(Progress::getInstance().getNextDestination());
 		return;
 	}
+	*/
 
 	// Update decors
 	Map::Decors const & current = m_tiles->getDecorsPosition();
@@ -1648,44 +1797,54 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 
 void GroundManager::update(float deltatime)
 {
-	m_transitionTimer += deltatime;
+	static float accumulator = 0.f;
+	static const float dt = 1.f / 60.f;
 
-	// Get the top left of the camera view
-	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
-	m_offset.x = rect.left;
-	m_offset.y = rect.top;
+	if (deltatime > 0.2f)
+		deltatime = 0.2f;
+	accumulator += deltatime;
 
-	if (m_transitionTimer >= m_transitionTimerMax)
+	while (accumulator > dt)
 	{
-		bool compute = false;
-		if (m_nextState == GenerationState::Next)
+		accumulator -= dt;
+		m_transitionTimer += dt;
+		// Get the top left of the camera view
+		sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
+		m_offset.x = rect.left;
+		m_offset.y = rect.top;
+
+		if (m_transitionTimer >= m_transitionTimerMax)
 		{
-			compute = true;
-			m_tilesPrev->registerOctoPos(m_octoPosState);
-			m_tilesPrev->nextStep();
-			m_tiles->registerOctoPos(m_octoPosState);
-			m_tiles->registerDepth();
-			m_tiles->nextStep();
-			m_nextState = GenerationState::None;
+			bool compute = false;
+			if (m_nextState == GenerationState::Next)
+			{
+				compute = true;
+				m_tilesPrev->registerOctoPos(m_octoPosState);
+				m_tilesPrev->nextStep();
+				m_tiles->registerOctoPos(m_octoPosState);
+				m_tiles->registerDepth();
+				m_tiles->nextStep();
+				m_nextState = GenerationState::None;
+			}
+			else if (m_nextState == GenerationState::Previous)
+			{
+				compute = true;
+				m_tilesPrev->registerOctoPos(m_octoPosState);
+				m_tilesPrev->previousStep();
+				m_tiles->registerOctoPos(m_octoPosState);
+				m_tiles->registerDepth();
+				m_tiles->previousStep();
+				m_nextState = GenerationState::None;
+			}
+			if (compute)
+			{
+				m_transitionTimer = 0.f;
+				swapMap();
+			}
 		}
-		else if (m_nextState == GenerationState::Previous)
-		{
-			compute = true;
-			m_tilesPrev->registerOctoPos(m_octoPosState);
-			m_tilesPrev->previousStep();
-			m_tiles->registerOctoPos(m_octoPosState);
-			m_tiles->registerDepth();
-			m_tiles->previousStep();
-			m_nextState = GenerationState::None;
-		}
-		if (compute)
-		{
-			m_transitionTimer = 0.f;
-			swapMap();
-		}
+		updateOffset(deltatime);
+		updateTransition(rect);
 	}
-	updateOffset(deltatime);
-	updateTransition(rect);
 	updateDecors(sf::seconds(deltatime));
 	updateGameObjects(sf::seconds(deltatime));
 }
@@ -1714,22 +1873,26 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->draw(render, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->draw(render, states);
+	for (auto & npc : m_npcsOnFloor)
+		npc.m_gameObject->drawFront(render, states);
 	for (auto & elevator : m_elevators)
 		elevator.m_gameObject->drawFront(render, states);
 	for (auto & objectHigh : m_otherObjectsHigh)
 		objectHigh.m_gameObject->drawFront(render, states);
 	for (auto & objectLow : m_otherObjectsLow)
 		objectLow.m_gameObject->drawFront(render, states);
+	for (auto & npc : m_npcs)
+		npc->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
 	render.draw(m_decorManagerInstanceFront, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->draw(render, states);
-	for (auto & nano : m_nanoRobots)
-		nano.m_gameObject->draw(render, states);
-	for (auto & nano : m_nanoRobotOnInstance)
-		nano->draw(render, states);
 	for (auto & decor : m_instanceDecors)
 		decor->drawFront(render, states);
 }

@@ -5,7 +5,7 @@
 CanouilleNpc::CanouilleNpc(void) :
 	ANpc(NPC_CANOUILLE_OSS)
 {
-	setSize(sf::Vector2f(300.f, 700.f));
+	setSize(sf::Vector2f(300.f, 330.f));
 	setOrigin(sf::Vector2f(-40.f, 0.f));
 	setScale(1.0f);
 	setTextOffset(sf::Vector2f(137.f, 10.f));
@@ -84,7 +84,4 @@ void CanouilleNpc::updateState(void)
 			sprite.setNextEvent(Special1);
 		}
 	}
-
-	if (Progress::getInstance().canDoubleJump())
-		setCurrentText(1u);
 }

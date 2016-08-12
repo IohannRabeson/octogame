@@ -21,6 +21,7 @@ private:
 	MainMenu				m_menu;
 	std::unique_ptr<Game>	m_game;
 	bool					m_doSave;
+	sf::Clock				m_timePlayed;
 
 	virtual bool onInputPressed(InputListener::OctoKeys const & key);
 };

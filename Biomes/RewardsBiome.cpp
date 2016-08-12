@@ -17,15 +17,16 @@ RewardsBiome::RewardsBiome() :
 	m_name("Rewards"),
 	m_id(Level::Rewards),
 	m_seed("Rewards"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(500))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(450u, 850u), m_generator.randomPiecewise(500))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
-	m_transitionDuration(0.5f),
+	m_transitionDuration(0.7f),
 	m_interestPointPosX(45u),
 	m_tileStartColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_tileEndColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_waterLevel(m_generator.randomInt(400u, 3000u)),
 	m_waterColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(40, 150)),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(m_generator.randomFloat(20.f, 150.f))),
@@ -66,12 +67,18 @@ RewardsBiome::RewardsBiome() :
 	m_canCreateSun(m_generator.randomBool(0.7f)),
 	m_canCreateMoon(m_generator.randomBool(0.8f)),
 	m_canCreateRainbow(m_generator.randomBool(0.4f)),
+	m_canCreateGrass(m_generator.randomBool(0.5f)),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Random),
 
 	m_rockSize(sf::Vector2f(m_generator.randomFloat(2.f, 50.f), m_generator.randomFloat(10.f, 60.f)), sf::Vector2f(m_generator.randomFloat(50.f, 100.f), m_generator.randomFloat(200.f, 600.f))),
 	m_rockPartCount(m_generator.randomInt(2.f, 4.f), m_generator.randomFloat(4.f, 20.f)),
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
+
+	m_grassSizeY(m_generator.randomFloat(10.f, 60.f), m_generator.randomFloat(60.f, 200.f)),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	//TODO: Value to improve
 	m_treeDepth(m_generator.randomInt(4u, 5u), m_generator.randomInt(6u, 7u)),
@@ -168,10 +175,17 @@ RewardsBiome::RewardsBiome() :
 
 	std::vector<GameObjectType> const & npcList = progress.getNpcMet();
 	std::size_t total = 0;
+	bool isCedric = false;
 	for (std::size_t i = 0; i < npcList.size(); i++)
 	{
 		std::size_t delta = randomInt(10, 20);
-		m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
+		if (npcList[i] != GameObjectType::CedricStartNpc && npcList[i] != GameObjectType::WolfNpc)
+			m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
+		else if (isCedric == false && npcList[i] != GameObjectType::WolfNpc)
+		{
+			m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
+			isCedric = true;
+		}
 		total += delta;
 	}
 }
@@ -240,6 +254,11 @@ float	RewardsBiome::getWaterLevel()
 sf::Color	RewardsBiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	RewardsBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 std::map<std::size_t, std::string> const & RewardsBiome::getInstances()
@@ -602,6 +621,29 @@ sf::Color		RewardsBiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	RewardsBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	RewardsBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	RewardsBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	RewardsBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			RewardsBiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -744,6 +786,11 @@ sf::Time		RewardsBiome::getRainbowIntervalTime()
 bool			RewardsBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	RewardsBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	RewardsBiome::getWaterPersistence() const

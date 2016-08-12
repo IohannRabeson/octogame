@@ -25,12 +25,21 @@ public:
 		Die = 1
 	};
 
+	enum class MenuType : std::size_t
+	{
+		Classic,
+		Simple
+	};
+
 	static Progress & getInstance(void);
 
+	float				getTimePlayed() const { return m_data.timePlayed; }
 	bool				isMenu(void) const;
 	void				setMenu(bool isMenu);
 	bool				isBubbleNpc(void) const;
 	void				setBubbleNpc(bool isBubbleNpc);
+	MenuType			getMenuType(void);
+	void				setMenuType(MenuType type);
 	//TODO: Set this value once the game is finished
 	bool				isGameFinished() const;
 
@@ -90,8 +99,8 @@ public:
 	void				registerLevel(Level const & biome);
 	std::vector<Level> const & getRegisteredLevels(void) const;
 
-	void				registerDeath(float deathPosX);
-	std::vector<int> &	getDeathPos(void);
+	void						registerDeath(sf::Vector2f const & position);
+	std::vector<sf::Vector2i> &	getDeathPos(void);
 
 	void				registerNpc(GameObjectType key);
 	bool				meetNpc(GameObjectType key);
@@ -101,7 +110,11 @@ public:
 
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);
+	bool				meetPortal(Level source, Level destination);
+	std::size_t			countRandomDiscover(void);
 	bool				isMetPortal(Level destination);
+	void				setRandomDiscoverCount(std::size_t count) { m_countRandomDiscover = count; };
+	std::size_t			getRandomDiscoverCount() const { return m_countRandomDiscover; }
 	void				setPortalPosition(Level destination, sf::Vector2f const & position);
 	void				removePortalPosition(Level destination);
 	sf::Vector2f		getInterestPoint();
@@ -119,12 +132,14 @@ public:
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
 	void				setOctoPosTransition(sf::Vector2f const & position) { m_octoPosTransition = position; }
 	sf::Vector2f const&	getOctoPosTransition() const { return m_octoPosTransition; }
+	void				setKillOcto(bool killOcto) { m_killOcto = killOcto; }
+	bool				getKillOcto(void) { return m_killOcto; }
 
 	void				setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool				getReverseSprite() const { return m_reverseSprite; }
 
 	void				load(std::string const & filename);
-	void				save();
+	void				save(float timePlayed = 0.f);
 	void				reset();
 
 private:
@@ -137,6 +152,7 @@ private:
 		data(std::size_t nanoRobot, Level biome,
 				std::size_t musicVol, std::size_t soundVol,
 				bool fullscreen, bool vsync, Language language) :
+			timePlayed(0.f),
 			validateChallenge(0u),
 			nanoRobotCount(nanoRobot),
 			nextDestination(biome),
@@ -147,13 +163,16 @@ private:
 			fullscreen(fullscreen),
 			vsync(vsync),
 			language(language),
+			menuType(MenuType::Classic),
 			firstTime(true),
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false),
+			deathCount(0u),
 			respawnType(Progress::RespawnType::Portal)
 		{}
 
+		float					timePlayed;
 		sf::Vector2f			checkPointPosition;
 		std::size_t				validateChallenge;
 		std::size_t				nanoRobotCount;
@@ -165,12 +184,15 @@ private:
 		bool					fullscreen;
 		bool					vsync;
 		Language				language;
+		MenuType				menuType;
 		bool					firstTime;
 		bool					walk;
 		bool					moveMap;
 		bool					canOpenDoubleJump;
 		char					npc[10000];
 		char					portals[10000];
+		char					deaths[20000];
+		std::size_t				deathCount;
 		Progress::RespawnType	respawnType;
 	};
 
@@ -182,6 +204,8 @@ private:
 	void				loadNpc();
 	void				savePortals();
 	void				loadPortals();
+	void				saveDeaths();
+	void				loadDeaths();
 	void				split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 	static std::unique_ptr<Progress>				m_instance;
@@ -196,14 +220,16 @@ private:
 	bool											m_spaceShipRepair;
 	sf::Vector2f									m_octoPos;
 	sf::Vector2f									m_octoPosTransition;
+	bool											m_killOcto;
 
 	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
 	std::size_t										m_npcCount;
 	std::size_t										m_npcMax;
-	std::map<Level, std::vector<int>>				m_deathPos;
+	std::map<Level, std::vector<sf::Vector2i>>		m_deaths;
 	std::map<Level, std::map<Level, bool>>			m_portals;
 	std::map<Level, sf::Vector2f>					m_portalsToDiscover;
 	std::vector<Level>								m_levels;
+	std::size_t										m_countRandomDiscover;
 
 	bool											m_isOctoOnInstance;
 	bool											m_isHighLight;

@@ -15,7 +15,6 @@ public:
 	virtual void update(sf::Time frametime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual float getHeight(void) const { return 0.f; }
-	virtual void startBalle(void);
 
 protected:
 	virtual void setupMachine(void);

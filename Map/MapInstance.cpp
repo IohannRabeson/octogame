@@ -6,7 +6,8 @@
 
 MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 	m_levelMap(octo::Application::getResourceManager().getLevelMap(resourceId)),
-	m_isMapHighlight(false),
+	m_reverse(false),
+	m_isMapHighlight(true), // TODO: Useless, to remove
 	m_depth(0),
 	m_oldDepth(0),
 	m_soundPtr(nullptr)
@@ -131,50 +132,43 @@ void MapInstance::registerDepth(void)
 	m_oldDepth = m_depth;
 }
 
-void MapInstance::playSound(void)
-{
-	if (m_soundPtr == nullptr)
-	{
-		octo::AudioManager& audio = octo::Application::getAudioManager();
-		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		m_soundPtr = audio.playSound(resources.getSound(OCTO_NO_OGG), 1.f);
-	}
-	else if (m_soundPtr->getStatus() == sf::SoundSource::Stopped)
-		m_soundPtr = nullptr;
-}
-
 bool MapInstance::nextStep(void)
 {
-	m_depth++;
-	if (m_depth >= static_cast<int>(m_tiles.depth()))
+	Progress & progress = Progress::getInstance();
+	if (m_tiles.depth() != 1u)
 	{
-		if (Progress::getInstance().getNextDestination() != Level::JungleA)
-		{
-			m_depth = m_tiles.depth() - 1u;
-			playSound();
-			return false;
-		}
+		if (m_depth >= static_cast<int>(m_tiles.depth() - 1)
+			&& (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover())))
+			m_reverse = true;
+		else if (m_depth <= 0)
+			m_reverse = false;
+	
+		if (m_reverse == false)
+			m_depth++;
 		else
-			m_depth = 0;
+			m_depth--;
 	}
 	return true;
 }
 
 bool MapInstance::previousStep(void)
 {
-	m_depth--;
-	if (m_depth < 0)
+	Progress & progress = Progress::getInstance();
+
+	if (m_tiles.depth() != 1u)
 	{
-		if (Progress::getInstance().getNextDestination() != Level::JungleA)
-		{
-			m_depth = 0u;
-			playSound();
-			return false;
-		}
+		if (m_depth <= 0)
+			m_reverse = true;
+		else if (m_depth >= static_cast<int>(m_tiles.depth() - 1)  && (progress.getCurrentDestination() != Level::Random || m_depth < static_cast<int>(progress.countRandomDiscover())))
+			m_reverse = false;
+	
+		if (m_reverse == false)
+			m_depth--;
 		else
-			m_depth = m_tiles.depth() - 1u;
+			m_depth++;
 	}
 	return true;
+
 }
 
 void MapInstance::setTransitionType(Tile & tile)

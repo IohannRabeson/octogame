@@ -283,7 +283,7 @@ bool Map::nextStep(void)
 		}
 	}
 	return false;
-	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
+	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance); // ??????
 }
 
 bool Map::previousStep(void)
@@ -298,12 +298,14 @@ bool Map::previousStep(void)
 
 			m_isOctoOnInstance = m_instances[i]->previousStep();
 			m_instanceIndex = i;
-			progress.setMapHighlight(m_instances[i]->isMapHighlight());
+			//TODO : To remove
+			//progress.setMapHighlight(m_instances[i]->isMapHighlight());
+			progress.setMapHighlight(true);
 			return true;
 		}
 	}
 	return false;
-	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance);
+	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance); // ??????
 }
 
 void Map::setMapSurfaceGenerator(MapSurfaceGenerator mapSurface)

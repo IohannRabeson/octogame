@@ -9,11 +9,13 @@
 # include <ParticleSystem.hpp>
 # include <Math.hpp>
 # include <Interpolations.hpp>
+# include <AudioManager.hpp>
 
 # include "PostEffectLayer.hpp"
 # include "AGameObject.hpp"
 # include "ABiome.hpp"
 # include "IPlaceable.hpp"
+# include "RandomGenerator.hpp"
 
 # include <random>
 # include <ctime>
@@ -60,6 +62,7 @@ private:
 		inline void setColor(sf::Color const & color) { m_color = color; }
 		inline void setEmitter(sf::Vector2f const & emitter) { m_emitter = emitter; }
 		inline void setMaxParticle(std::size_t maxParticle) { m_maxParticle = maxParticle; }
+		inline void setTransparency(float transarency) { m_transparency = transarency; }
 		void update(sf::Time frameTime);
 
 	private:
@@ -76,10 +79,11 @@ private:
 		Dist			m_directionDistri;
 		Dist			m_distanceDistri;
 		ABiome *		m_biome;
+		float			m_transparency;
 	};
 
 public:
-	Portal(Level destination, ResourceKey key);
+	Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color centerColor = sf::Color::Black);
 	virtual ~Portal(void);
 
 	void addMapOffset(float x, float y);
@@ -99,17 +103,23 @@ public:
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	PortalParticle			m_particles;
-	Level					m_destination;
-	sf::Vector2f			m_position;
-	sf::Shader &			m_shader;
-	std::size_t				m_maxParticle;
-	State					m_state;
-	float					m_radius;
-	float					m_timer;
-	float					m_timerMax;
-	CircleShape *			m_box;
-	bool					m_isActive;
+	void updateSound(void);
+
+	RandomGenerator				m_generator;
+	PortalParticle				m_particles;
+	std::string					m_shaderName;
+	Level						m_destination;
+	sf::Vector2f				m_position;
+	sf::Shader &				m_shader;
+	std::size_t					m_maxParticle;
+	State						m_state;
+	float						m_radius;
+	float						m_timer;
+	float						m_timerMax;
+	CircleShape *				m_box;
+	bool						m_isActive;
+	std::shared_ptr<sf::Sound>	m_sound;
+	float						m_soundVolume;
 
 	octo::CharacterAnimation	m_animationOpened;
 	octo::CharacterAnimation	m_animationOpening;

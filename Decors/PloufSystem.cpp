@@ -70,7 +70,7 @@ void	PloufSystem::updateParticle(sf::Time frameTime, Particle& particle)
 	std::get<MyComponent::Time>(particle) += frameTime;
 	float ratio = std::get<MyComponent::Time>(particle) / std::get<MyComponent::Life>(particle);
 	std::get<Component::Position>(particle) += sf::Vector2f(0.f, 200.f) * ratio * frameTime.asSeconds();
-	std::get<Component::Color>(particle).a = 255.f * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds()));
+	std::get<Component::Color>(particle).a = m_color.a * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds()));
 }
 
 bool	PloufSystem::isDeadParticle(Particle const& particle)

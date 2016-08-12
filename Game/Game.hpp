@@ -53,8 +53,6 @@ private:
 	std::size_t							m_skipFrames;
 	std::size_t							m_skipFramesMax;
 
-	sf::Time							m_earlyMapMovement;
-
 	void			moveMap(sf::Time frameTime);
 	bool			onInputPressed(InputListener::OctoKeys const & key);
 	bool			onInputReleased(InputListener::OctoKeys const & key);

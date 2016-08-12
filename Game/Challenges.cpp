@@ -1,5 +1,6 @@
 #include "Challenges.hpp"
 #include "PostEffectLayer.hpp"
+#include <AudioManager.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
@@ -59,6 +60,8 @@ void ChallengeManager::AChallenge::updateGlitch(sf::Time frametime, ABiome & bio
 		setGlitch(false);
 		m_glitchTimer = sf::seconds(biome.randomFloat(10.f, 30.f));
 	}
+
+	updatePitch(0.005f);
 	updateShader(frametime);
 }
 
@@ -84,7 +87,17 @@ void ChallengeManager::AChallenge::updateChallenge(sf::Time frametime)
 			stop();
 		}
 	}
+
+	updatePitch(0.04f);
 	updateShader(frametime);
+}
+
+void ChallengeManager::AChallenge::updatePitch(float maxVariation)
+{
+	float pitch = 1.f - ((std::min(m_timer, m_duration) / m_duration) * maxVariation);
+	octo::AudioManager::SoundPtr music = octo::Application::getAudioManager().getMusicSound();
+	if (music)
+		music->setPitch(pitch);
 }
 
 void ChallengeManager::AChallenge::validateArea(ABiome & biome, sf::Vector2f const & position)
@@ -180,7 +193,7 @@ void ChallengeDuplicate::updateShader(sf::Time frametime)
 
 // Persistence
 ChallengePersistence::ChallengePersistence(void) :
-	AChallenge(PERSISTENCE_FRAG, 6.f, 1.f, sf::FloatRect(sf::Vector2f(90.f * 16.f, -150.f * 16.f), sf::Vector2f(250.f * 16.f, 750.f * 16.f)), ABiome::Type::Desert, std::pair<float, float>(0.7f, 0.9f), std::pair<float, float>(1.f, 2.f))
+	AChallenge(PERSISTENCE_FRAG, 3.f, 1.5f, sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(250.f * 16.f, 720.f * 16.f)), ABiome::Type::Desert, std::pair<float, float>(0.7f, 0.9f), std::pair<float, float>(1.f, 2.f))
 {
 	m_shader.setParameter("intensity", 1.f);
 }
@@ -192,7 +205,7 @@ void ChallengePersistence::updateShader(sf::Time)
 
 // Pixelate
 ChallengePixelate::ChallengePixelate(void) :
-	AChallenge(PIXELATE_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)), ABiome::Type::Random, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
+	AChallenge(PIXELATE_FRAG, 3.f, 4.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)), ABiome::Type::Water, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
 {}
 
 void ChallengePixelate::updateShader(sf::Time)
@@ -202,7 +215,7 @@ void ChallengePixelate::updateShader(sf::Time)
 
 // Displacement
 ChallengeDisplacement::ChallengeDisplacement(void) :
-	AChallenge(DISPLACEMENT_FRAG, 6.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Jungle, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
+	AChallenge(DISPLACEMENT_FRAG, 3.f, 4.f, sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)), ABiome::Type::Water, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
 {
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
 	m_shader.setParameter("resolution", rect.width, rect.height);
@@ -215,7 +228,7 @@ void ChallengeDisplacement::updateShader(sf::Time)
 
 // Blur
 ChallengeBlur::ChallengeBlur(void) :
-	AChallenge(KERNEL_POST_EFFECT_FRAG, 4.f, 1.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
+	AChallenge(KERNEL_POST_EFFECT_FRAG, 4.f, 1.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -240.f * 16.f), sf::Vector2f(120.f * 16.f, 185.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.5f, 0.75f), std::pair<float, float>(0.75f, 1.75f))
 {
 	m_shader.setParameter("offset", 1.f / 150.f);
 	m_shader.setParameter("intensity", 0.f);

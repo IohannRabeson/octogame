@@ -10,6 +10,11 @@
 #include "PhysicsEngine.hpp"
 #include "ElevatorStream.hpp"
 #include "SpaceShip.hpp"
+#include "RectangleShape.hpp"
+#include "CircleShape.hpp"
+#include "TileShape.hpp"
+#include "Progress.hpp"
+#include "NanoRobot.hpp"
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "RepairShipNanoRobot.hpp"
@@ -17,6 +22,7 @@
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+#include "Portal.hpp"
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -28,6 +34,7 @@ CharacterOcto::CharacterOcto() :
 	m_danceDistribution(2.f, 6.f),
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
+	m_timeSlowFallMax(sf::seconds(2.5f)),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
@@ -62,9 +69,16 @@ CharacterOcto::CharacterOcto() :
 	m_inWater(false),
 	m_isDeadlyWater(false),
 	m_meetNpc(false),
-	m_generator(std::to_string(time(0)))
+	m_replaceOcto(false),
+	m_enableCutscene(false),
+	m_autoDisableCutscene(false),
+	m_generator(std::to_string(time(0))),
+	m_cutsceneTimerMax(sf::seconds(2.f)),
+	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
+
+	m_cutsceneShader.setParameter("height", 0.15);
 
 	if (!m_progress.isMenu())
 		InputListener::addInputListener();
@@ -120,13 +134,13 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::Tent)
 		| static_cast<std::size_t>(GameObjectType::Concert)
-		| static_cast<std::size_t>(GameObjectType::CedricNpc)
 		| static_cast<std::size_t>(GameObjectType::FannyNpc)
 		| static_cast<std::size_t>(GameObjectType::Snowman3Npc)
 		| static_cast<std::size_t>(GameObjectType::HouseFlatSnow)
 		| static_cast<std::size_t>(GameObjectType::EngineSnow)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
-		| static_cast<std::size_t>(GameObjectType::Bouibouik);
+		| static_cast<std::size_t>(GameObjectType::Bouibouik)
+		| static_cast<std::size_t>(GameObjectType::CheckPoint);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
@@ -140,6 +154,14 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::ScientistFran)
 		| static_cast<std::size_t>(GameObjectType::ScientistJu)
 		| static_cast<std::size_t>(GameObjectType::ScientistJu)
+		| static_cast<std::size_t>(GameObjectType::WindowGlitchNpc)
+		| static_cast<std::size_t>(GameObjectType::FranGlitchNpc)
+		| static_cast<std::size_t>(GameObjectType::JuGlitchNpc)
+		| static_cast<std::size_t>(GameObjectType::LuGlitchNpc)
+		| static_cast<std::size_t>(GameObjectType::LongChairNpc)
+		| static_cast<std::size_t>(GameObjectType::Rocket)
+		| static_cast<std::size_t>(GameObjectType::OctoDeathNpc)
+		| static_cast<std::size_t>(GameObjectType::CedricEndNpc)
 		| static_cast<std::size_t>(GameObjectType::TVScreen)
 		| static_cast<std::size_t>(GameObjectType::FabienNpc)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint)
@@ -156,7 +178,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Snowman1Npc)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::SpaceShip)
-		| static_cast<std::size_t>(GameObjectType::CedricNpc)
+		| static_cast<std::size_t>(GameObjectType::CedricStartNpc)
 		| static_cast<std::size_t>(GameObjectType::FannyNpc)
 		| static_cast<std::size_t>(GameObjectType::FranfranNpc)
 		| static_cast<std::size_t>(GameObjectType::IohannNpc)
@@ -191,10 +213,14 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_timeEventDeath = sf::Time::Zero;
 	m_timeEventInk = sf::Time::Zero;
 	m_timeRepairSpaceShip = sf::Time::Zero;
+	m_timeSlowFall = sf::Time::Zero;
 	setupAnimation();
 	setupMachine();
 	m_sprite.setScale(m_spriteScale, m_spriteScale);
 	m_sprite.restart();
+
+	m_waterColor = biome.getWaterColor();
+	m_secondWaterColor = biome.getSecondWaterColor();
 
 	m_ploufParticle.canEmit(false);
 	m_ploufParticle.setColor(biome.getWaterColor());
@@ -211,6 +237,16 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_inkParticle.setLifeTimeRange(0.4f, 0.5f);
 	m_inkParticle.setScaleFactor(30.f);
 	m_inkParticle.setColor(sf::Color(0, 0, 0));
+
+	m_bubbleParticle.setup(sf::Vector2f(1.5f, 1.5f));
+	m_bubbleParticle.setVelocity(sf::Vector2f(0.f, -70.f));
+	m_bubbleParticle.setEmitTimeRange(0.2f, 0.3f);
+	m_bubbleParticle.setGrowTimeRange(0.4f, 0.6f);
+	m_bubbleParticle.setLifeTimeRange(1.f, 1.8f);
+	m_bubbleParticle.setScaleFactor(10.f);
+	m_bubbleParticle.setDispersion(80.f);
+	m_bubbleParticle.setColor(sf::Color(255, 255, 255, 100));
+	m_bubbleParticle.setCanEmit(false);
 }
 
 void	CharacterOcto::setupAnimation()
@@ -649,6 +685,8 @@ void	CharacterOcto::update(sf::Time frameTime)
 	if (Progress::getInstance().isMenu())
 		updateAI(frameTime);
 
+	dieGrass();
+
 	if (m_onGround)
 	{
 		m_lastPositionOnGround = getPosition();
@@ -719,11 +757,20 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
 
-	m_ploufParticle.setEmitter(m_box->getBaryCenter());
+	m_ploufParticle.setEmitter(sf::Vector2f(m_box->getBaryCenter().x, m_waterLevel));
 	m_ploufParticle.update(frameTime);
-	m_waterParticle.setEmitter(m_box->getBaryCenter()
-			+ sf::Vector2f(-m_box->getSize().x / 2.f, m_box->getSize().y / 2.f));
+	m_waterParticle.setEmitter(m_box->getBaryCenter() + sf::Vector2f(-m_box->getSize().x / 2.f, m_box->getSize().y / 2.f));
 	m_waterParticle.update(frameTime);
+	if (!m_progress.canUseWaterJump())
+	{
+		m_ploufParticle.setColor(m_waterColor);
+		m_waterParticle.setColor(m_waterColor);
+	}
+	else
+	{
+		m_ploufParticle.setColor(m_secondWaterColor);
+		m_waterParticle.setColor(m_secondWaterColor);
+	}
 	m_inkParticle.update(frameTime);
 	if (m_timeEventInk > sf::Time::Zero && m_timeEventInk < sf::seconds(0.07f))
 	{
@@ -733,6 +780,13 @@ void	CharacterOcto::update(sf::Time frameTime)
 	else
 		m_inkParticle.setCanEmit(false);
 
+	m_bubbleParticle.setPosition(m_box->getBaryCenter());
+	m_bubbleParticle.update(frameTime);
+	if (getPosition().y > m_waterLevel + 40.f && m_inWater)
+		m_bubbleParticle.setCanEmit(true);
+	else
+		m_bubbleParticle.setCanEmit(false);
+
 	for (auto & robot : m_nanoRobots)
 	{
 		robot->update(frameTime);
@@ -740,6 +794,67 @@ void	CharacterOcto::update(sf::Time frameTime)
 	}
 
 	Progress::getInstance().setOctoPos(getPosition());
+
+	if (m_replaceOcto && m_collidingTile.size())
+	{
+		m_replaceOcto = false;
+		m_highestPosition.y = m_box->getPosition().y;
+		for (std::size_t i = 0; i < m_collidingTile.size(); i += 2)
+		{
+			if (m_box->getGlobalBounds().left >= m_collidingTile[i].x && m_box->getGlobalBounds().left <= m_collidingTile[i + 1].x)
+			{
+				sf::Vector2f pos;
+				pos.x = m_box->getGlobalBounds().left;
+				pos.y = octo::linearInterpolation(m_collidingTile[i].y, m_collidingTile[i + 1].y, (m_box->getGlobalBounds().left - m_collidingTile[i].x) / Tile::TileSize);
+				if (pos.y < m_highestPosition.y)
+				{
+					m_highestPosition.y = pos.y;
+				}
+			}
+			if (m_box->getGlobalBounds().left + m_box->getGlobalBounds().width >= m_collidingTile[i].x && m_box->getGlobalBounds().left + m_box->getGlobalBounds().width <= m_collidingTile[i + 1].x)
+			{
+				sf::Vector2f pos;
+				pos.x = m_box->getGlobalBounds().left + m_box->getGlobalBounds().width;
+				pos.y = octo::linearInterpolation(m_collidingTile[i].y, m_collidingTile[i + 1].y, (m_box->getGlobalBounds().left + m_box->getGlobalBounds().width - m_collidingTile[i].x) / Tile::TileSize);
+				if (pos.y < m_highestPosition.y)
+				{
+					m_highestPosition.y = pos.y;
+				}
+			}
+			if (m_collidingTile[i].x >= m_box->getGlobalBounds().left && m_collidingTile[i + 1].x <= m_box->getGlobalBounds().left + m_box->getGlobalBounds().width)
+			{
+				if (m_collidingTile[i].y < m_highestPosition.y)
+				{
+					m_highestPosition.y = m_collidingTile[i].y;
+				}
+				if (m_collidingTile[i + 1].y < m_highestPosition.y)
+				{
+					m_highestPosition.y = m_collidingTile[i + 1].y;
+				}
+			}
+		}
+		m_box->setPosition(sf::Vector2f(m_box->getPosition().x - m_highestPosition.x, m_highestPosition.y - m_box->getGlobalBounds().height));
+	}
+	m_highestPosition.x = 0.f;
+
+	if (m_enableCutscene)
+	{
+		m_cutsceneTimer += frameTime;
+		if (m_cutsceneTimer > m_cutsceneTimerMax)
+		{
+			m_cutsceneTimer = m_cutsceneTimerMax;
+			if (m_autoDisableCutscene)
+				m_enableCutscene = false;
+		}
+		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
+	}
+	else
+	{
+		m_cutsceneTimer -= frameTime;
+		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
+		if (m_cutsceneTimer <= sf::Time::Zero)
+			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
+	}
 }
 
 void	CharacterOcto::portalEvent()
@@ -770,6 +885,8 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 		case DoubleJump:
 			m_timeEventInk += frameTime;
 			break;
+		case SlowFall:
+			m_timeSlowFall += frameTime;
 		default:
 			break;
 	}
@@ -793,6 +910,7 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_helmetParticle.draw(render);
 	m_ploufParticle.draw(render);
 	m_waterParticle.draw(render);
+	m_bubbleParticle.draw(render);
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
@@ -807,23 +925,19 @@ void	CharacterOcto::drawText(sf::RenderTarget& render, sf::RenderStates states =
 		robot->drawText(render, states);
 }
 
-
-void	CharacterOcto::onCollision(GameObjectType type, sf::Vector2f const& collisionDirection)
+void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::Vector2f const& collisionDirection)
 {
 	switch(type)
 	{
 		case GameObjectType::Tile:
-			if (std::abs(collisionDirection.x) >= 16.f)
+			if (std::abs(collisionDirection.x) >= Tile::TileSize)
 			{
-				//First reset the death timer
-				m_timeEventDeath = sf::Time::Zero;
-				// Then adjust octo position
-				if (PhysicsEngine::getInstance().isUpdated())
-					m_box->setPosition(getPhysicsPosition() + sf::Vector2f(-collisionDirection.x, -8.f));
-				else
-					m_box->setPosition(getPhysicsPosition() + sf::Vector2f(0.f, -8.f));
+				m_replaceOcto = true;
+				m_collidingTile.push_back(tileshape->getVertex(0u));
+				m_collidingTile.push_back(tileshape->getVertex(1u));
+				m_highestPosition.x += collisionDirection.x;
 			}
-			if (collisionDirection.x == 0 && collisionDirection.y < 0)
+			if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
 				m_collisionTile = true;
 			break;
 		case GameObjectType::Elevator:
@@ -852,6 +966,8 @@ void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
 	if (robot->getEffectEnable())
 		startKonamiCode(firstTime);
+	if (firstTime)
+		enableCutscene(true, true);
 }
 
 void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
@@ -860,6 +976,8 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 	if (robot->getEffectEnable())
 		startKonamiCode(firstTime);
 	m_repairNanoRobot = robot;
+	if (firstTime)
+		enableCutscene(true, true);
 }
 
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
@@ -910,7 +1028,8 @@ void	CharacterOcto::usePortal(Portal & portal)
 		m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 		m_progress.setReverseSprite(m_originMove);
 		m_progress.setNextDestination(portal.getDestination());
-		m_progress.setRespawnType(Progress::RespawnType::Portal);
+		if (!m_progress.isMenu())
+			m_progress.setRespawnType(Progress::RespawnType::Portal);
 	}
 }
 
@@ -948,6 +1067,7 @@ void	CharacterOcto::collisionTileUpdate()
 			m_numberOfJump = 0;
 			m_onGround = true;
 			m_afterJump = false;
+			m_timeSlowFall = sf::Time::Zero;
 			if (dieFall())
 				return;
 			if (m_keyLeft)
@@ -995,7 +1115,7 @@ void	CharacterOcto::onSky(Events event)
 		case Fall:
 			if (m_keyUp)
 			{
-				if (m_progress.canSlowFall())
+				if (m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
 					m_sprite.setNextEvent(StartSlowFall);
 			}
 			if (m_keyElevator)
@@ -1005,6 +1125,8 @@ void	CharacterOcto::onSky(Events event)
 			}
 			break;
 		case SlowFall:
+			if (m_timeSlowFall > m_timeSlowFallMax)
+				m_sprite.setNextEvent(Fall);
 			break;
 		case StartElevator:
 		case Elevator:
@@ -1025,6 +1147,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 	if (m_collisionElevator)
 	{
 		m_timeEventFall = sf::Time::Zero;
+		m_timeSlowFall = sf::Time::Zero;
 		m_onElevator = true;
 		if (m_sprite.getCurrentEvent() == StartElevator)
 		{
@@ -1066,14 +1189,37 @@ void	CharacterOcto::collisionElevatorUpdate()
 	}
 }
 
-bool	CharacterOcto::dieFall()
+void	CharacterOcto::kill()
 {
-	if (m_timeEventFall > sf::seconds(3.0f) && !m_inWater && !Progress::getInstance().isMenu())
+	if (m_sprite.getCurrentEvent() != Death)
 	{
+		Progress & progress = Progress::getInstance();
+
 		m_sprite.setNextEvent(Death);
 		m_helmetParticle.canEmit(true);
 		m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
-		Progress::getInstance().registerDeath(getPosition().x);
+		progress.registerDeath(getPosition());
+		progress.setKillOcto(false);
+	}
+}
+
+bool	CharacterOcto::dieFall()
+{
+	if (m_timeEventFall > sf::seconds(2.3f) && !m_inWater && !Progress::getInstance().isMenu())
+	{
+		kill();
+		return true;
+	}
+	return false;
+}
+
+bool	CharacterOcto::dieGrass()
+{
+	Progress & progress = Progress::getInstance();
+
+	if (progress.getKillOcto() && !progress.isMenu())
+	{
+		kill();
 		return true;
 	}
 	return false;
@@ -1090,7 +1236,6 @@ bool	CharacterOcto::endDeath()
 	{
 		if (m_sprite.isTerminated())
 		{
-			m_progress.setRespawnType(Progress::RespawnType::Die);
 			octo::StateManager &		states = octo::Application::getStateManager();
 			states.change("octo_death");
 		}
@@ -1117,20 +1262,16 @@ void	CharacterOcto::inWater()
 {
 	bool	emit = false;
 
-	if (m_waterLevel != -1.f && m_box->getBaryCenter().y > m_waterLevel)
+	if (m_waterLevel != -1.f && m_box->getBaryCenter().y + m_box->getSize().y / 2.f > m_waterLevel)
 	{
 		if (!m_inWater)
 		{
 			m_numberOfJump = 0;
 			emit = true;
 			m_inWater = true;
-			if (m_isDeadlyWater)
-			{
-				m_sprite.setNextEvent(Death);
-				m_helmetParticle.canEmit(true);
-				m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
-				Progress::getInstance().registerDeath(getPosition().x);
-			}
+			Progress & progress = Progress::getInstance();
+			if (m_isDeadlyWater && !progress.canUseWaterJump())
+				kill();
 		}
 		m_waterParticle.clear();
 	}
@@ -1231,7 +1372,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 
 	if (m_keyUp)
 	{
-		if (event == StartSlowFall || event == SlowFall)
+		if ((event == StartSlowFall || event == SlowFall))
 		{
 			if (event == StartSlowFall)
 				velocity.x *= 1.3f;
@@ -1439,7 +1580,7 @@ bool	CharacterOcto::isRaising(void)
 	return state == WaterJump;
 }
 
-bool	CharacterOcto::isInAir(void)
+bool	CharacterOcto::isInAir(void) const
 {
 	return (!m_onGround);
 }
@@ -1449,9 +1590,32 @@ bool	CharacterOcto::isMeetingNpc(void) const
 	return m_meetNpc;
 }
 
+void	CharacterOcto::resetCollidingTileCount(void)
+{
+	m_collidingTile.clear();
+}
+
+bool	CharacterOcto::isOnGround(void) const
+{
+	return m_onGround;
+}
+
 void	CharacterOcto::meetNpc(bool meetNpc)
 {
 	m_meetNpc = meetNpc;
+}
+
+void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
+{
+	if (enable && !m_enableCutscene)
+	{
+		PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, true);
+		m_cutsceneTimer = sf::Time::Zero;
+	}
+	else
+		m_cutsceneTimer = std::min(m_cutsceneTimer, m_cutsceneTimerMax);
+	m_enableCutscene = enable;
+	m_autoDisableCutscene = autoDisable;
 }
 
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)

@@ -90,6 +90,7 @@ void Crystal::setup(ABiome& biome)
 		m_values[i].color = m_color + sf::Color(deltaColor, deltaColor, deltaColor, deltaColor);
 	}
 	m_animator.setup();
+	m_shine.setSize(biome.getShineEffectSize());
 	m_shine.setup(biome);
 	m_shineTimerMax = sf::seconds(m_shine.getAnimator().getAnimationTime());
 	m_shineCrystalNumber = biome.randomInt(0, m_partCount - 1);

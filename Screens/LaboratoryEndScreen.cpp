@@ -81,7 +81,7 @@ void	LaboratoryEndScreen::start()
 
 	postEffect.removeEffects();
 	PostEffectLayer::getInstance().clear();
-	PostEffectLayer::getInstance().registerShader(LABORATORY_EFFECT_FRAG);
+	PostEffectLayer::getInstance().registerShader(LABORATORY_EFFECT_FRAG, LABORATORY_EFFECT_FRAG);
 
 	PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("resolution", camera.getRectangle().width, camera.getRectangle().height);
 	PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, false);

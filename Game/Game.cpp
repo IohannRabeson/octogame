@@ -17,9 +17,11 @@
 #include "DesertABiome.hpp"
 #include "DesertBBiome.hpp"
 #include "DesertCBiome.hpp"
+#include "DesertDBiome.hpp"
 #include "JungleABiome.hpp"
 #include "JungleBBiome.hpp"
 #include "JungleCBiome.hpp"
+#include "JungleDBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
 #include "RandomBiome.hpp"
@@ -47,6 +49,14 @@
 #include "ScientistLu.hpp"
 #include "ScientistFran.hpp"
 #include "ScientistJu.hpp"
+#include "WindowGlitchNpc.hpp"
+#include "FranGlitchNpc.hpp"
+#include "JuGlitchNpc.hpp"
+#include "LuGlitchNpc.hpp"
+#include "LongChairNpc.hpp"
+#include "Rocket.hpp"
+#include "OctoDeathNpc.hpp"
+#include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
@@ -65,7 +75,7 @@
 #include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
-#include "CedricNpc.hpp"
+#include "CedricStartNpc.hpp"
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
 #include "ClementineNpc.hpp"
@@ -109,13 +119,12 @@ Game::Game(void) :
 	m_keyGroundRight(false),
 	m_keyGroundLeft(false),
 	m_soundGeneration(nullptr),
-	m_groundVolume(100.f),
+	m_groundVolume(0.7f),
 	m_groundSoundTime(sf::Time::Zero),
 	m_groundSoundTimeMax(sf::seconds(0.6f)),
 	m_slowTimeInfosCoef(1.f),
 	m_skipFrames(0u),
-	m_skipFramesMax(3u),
-	m_earlyMapMovement(sf::seconds(2.f))
+	m_skipFramesMax(3u)
 {
 	InputListener::addInputListener();
 
@@ -126,9 +135,11 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<DesertABiome>(Level::DesertA);
 	m_biomeManager.registerBiome<DesertBBiome>(Level::DesertB);
 	m_biomeManager.registerBiome<DesertCBiome>(Level::DesertC);
+	m_biomeManager.registerBiome<DesertDBiome>(Level::DesertD);
 	m_biomeManager.registerBiome<JungleABiome>(Level::JungleA);
 	m_biomeManager.registerBiome<JungleBBiome>(Level::JungleB);
 	m_biomeManager.registerBiome<JungleCBiome>(Level::JungleC);
+	m_biomeManager.registerBiome<JungleDBiome>(Level::JungleD);
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 
@@ -141,44 +152,75 @@ Game::~Game(void)
 	if (m_soundGeneration != nullptr)
 		m_soundGeneration->stop();
 	InputListener::removeInputListener();
-	Progress::getInstance().save();
 }
 
 void	Game::loadLevel(void)
 {
-	Progress & progress = Progress::getInstance();
-	octo::AudioManager& audio = octo::Application::getAudioManager();
-	octo::PostEffectManager& postEffect = octo::Application::getPostEffectManager();
+	Progress &					progress = Progress::getInstance();
+	octo::AudioManager&			audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+	octo::PostEffectManager&	postEffect = octo::Application::getPostEffectManager();
+	sf::Vector2f				startPosition;
 
 	if (progress.isMenu())
+	{
 		m_biomeManager.changeBiome(Level::Rewards, 0x12345);
+		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+	}
 	else
 	{
 		m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
 		progress.setCurrentDestination(m_biomeManager.getCurrentBiome().getId());
+		if (progress.getRespawnType() == Progress::RespawnType::Portal)
+		{
+			startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
+			progress.setCheckPointPosition(startPosition);
+		}
+		else // if octo died
+			startPosition = progress.getCheckPointPosition();
 	}
 
-	sf::Vector2f startPosition;
-	if (progress.getRespawnType() == Progress::RespawnType::Portal)
+	auto & gameObjects = m_biomeManager.getCurrentBiome().getGameObjects();
+	int portalCount = 0u;
+	for (auto & gameObject : gameObjects)
 	{
-		startPosition = m_biomeManager.getCurrentBiome().getOctoStartPosition();
-		progress.setCheckPointPosition(startPosition);
+		switch (gameObject.second)
+		{
+			case GameObjectType::PortalRandom:
+			case GameObjectType::PortalJungle:
+			case GameObjectType::PortalSnow:
+			case GameObjectType::PortalDesert:
+			case GameObjectType::PortalWater:
+			case GameObjectType::Portal:
+				portalCount++;
+				break;
+			default:
+				break;
+		}
 	}
-	else // if octo died
-		startPosition = progress.getCheckPointPosition();
 
 	// Reset last values
 	postEffect.removeEffects();
 	PostEffectLayer::getInstance().clear();
-	PostEffectLayer::getInstance().registerShader(CIRCLE_RAINBOW_FRAG);
-	PostEffectLayer::getInstance().registerShader(VISION_TROUBLE_FRAG);
-	PostEffectLayer::getInstance().registerShader(PERSISTENCE_FRAG);
-	PostEffectLayer::getInstance().registerShader(PIXELATE_FRAG);
-	PostEffectLayer::getInstance().registerShader(DISPLACEMENT_FRAG);
-	PostEffectLayer::getInstance().registerShader(KERNEL_POST_EFFECT_FRAG);
-	PostEffectLayer::getInstance().registerShader(WATER_FRAG);
-	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG);
-	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG);
+	PostEffectLayer::getInstance().registerShader(CIRCLE_RAINBOW_FRAG, CIRCLE_RAINBOW_FRAG);
+	PostEffectLayer::getInstance().registerShader(VISION_TROUBLE_FRAG, VISION_TROUBLE_FRAG);
+	PostEffectLayer::getInstance().registerShader(PERSISTENCE_FRAG, PERSISTENCE_FRAG);
+	PostEffectLayer::getInstance().registerShader(PIXELATE_FRAG, PIXELATE_FRAG);
+	PostEffectLayer::getInstance().registerShader(DISPLACEMENT_FRAG, DISPLACEMENT_FRAG);
+	PostEffectLayer::getInstance().registerShader(KERNEL_POST_EFFECT_FRAG, KERNEL_POST_EFFECT_FRAG);
+	PostEffectLayer::getInstance().registerShader("render_black_kernel", KERNEL_POST_EFFECT_FRAG);
+	PostEffectLayer::getInstance().registerShader("render_white_kernel", KERNEL_POST_EFFECT_FRAG);
+	PostEffectLayer::getInstance().registerShader(WATER_FRAG, WATER_FRAG);
+	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader("vortex_red", VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader("vortex_blue", VORTEX_FRAG);
+	for (int i = 0u; i < portalCount; i++)
+	{
+		std::string name = "vortex_" + std::to_string(i);
+		PostEffectLayer::getInstance().registerShader(name.c_str(), VORTEX_FRAG);
+	}
+	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
+	PostEffectLayer::getInstance().registerShader(CUTSCENE_FRAG, CUTSCENE_FRAG);
 
 	ChallengeManager::getInstance().reset();
 	audio.reset();
@@ -206,6 +248,10 @@ void	Game::loadLevel(void)
 	m_parallaxScrolling->setup(m_biomeManager.getCurrentBiome(), *m_skyCycle);
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
+
+	audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
+	m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
+	m_soundGeneration->setLoop(true);
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -215,6 +261,8 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	m_octo->resetCollidingTileCount();
+	//std::cout << "GAME UPDATE" << std::endl;
 	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
 	if (m_skipFrames < m_skipFramesMax)
 	{
@@ -223,8 +271,8 @@ void	Game::update(sf::Time frameTime)
 	}
 	frameTime = frameTime / m_slowTimeInfosCoef;
 	// update the PhysicsEngine as first
-	m_cameraMovement->update(frameTime, *m_octo);
 	m_physicsEngine.update(frameTime.asSeconds());
+	m_cameraMovement->update(frameTime, *m_octo);
 	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
@@ -262,12 +310,15 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
 			{
 				octo->setTopElevator(gameObjectCast<ElevatorStream>(gameObject)->getTopY());
-				octo->onCollision(GameObjectType::Elevator, collisionDirection);
+				octo->onCollision(nullptr, GameObjectType::Elevator, collisionDirection);
 			}
 			break;
 		case GameObjectType::Portal:
 			if (gameObjectCast<Portal>(gameObject)->isActivated())
 				octo->usePortal(*gameObjectCast<Portal>(gameObject));
+			break;
+		case GameObjectType::CheckPoint:
+			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::JumpNanoRobot:
 			if (!gameObjectCast<JumpNanoRobot>(gameObject)->isTravelling() && !Progress::getInstance().canJump())
@@ -325,24 +376,6 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
 			}
 			break;
-		case GameObjectType::CedricNpc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate))
-				octo->startDrinkPotion();
-			gameObjectCast<CedricNpc>(gameObject)->startBalle();
-			break;
-		case GameObjectType::FannyNpc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Persistence).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Persistence))
-				octo->startDrinkPotion();
-			gameObjectCast<FannyNpc>(gameObject)->startBalle();
-			break;
-		case GameObjectType::Snowman3Npc:
-			if (!ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Blur).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Blur))
-				octo->startDrinkPotion();
-			gameObjectCast<Snowman3Npc>(gameObject)->startBalle();
-			break;
-		case GameObjectType::WellKeeperNpc:
-			gameObjectCast<WellKeeperNpc>(gameObject)->stopBalle();
-			break;
 		default:
 			break;
 	}
@@ -371,6 +404,32 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::ScientistJu:
 			gameObjectCast<ScientistJu>(gameObject)->collideOctoEvent(octo);
+		case GameObjectType::WindowGlitchNpc:
+			gameObjectCast<WindowGlitchNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::FranGlitchNpc:
+			gameObjectCast<FranGlitchNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::JuGlitchNpc:
+			gameObjectCast<JuGlitchNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::LuGlitchNpc:
+			gameObjectCast<LuGlitchNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::LongChairNpc:
+			gameObjectCast<LongChairNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Rocket:
+			gameObjectCast<Rocket>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::OctoDeathNpc:
+			gameObjectCast<OctoDeathNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::CedricStartNpc:
+			gameObjectCast<CedricStartNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::CedricEndNpc:
+			gameObjectCast<CedricEndNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::TVScreen:
 			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
@@ -447,9 +506,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::JuNpc:
 			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::CedricNpc:
-			gameObjectCast<CedricNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::FannyNpc:
 			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -507,54 +563,33 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 {
 	if (shape->getGameObject() && gameObjectCast<CharacterOcto>(shape->getGameObject()))
 	{
-		m_octo->onCollision(GameObjectType::Tile, collisionDirection);
+		m_octo->onCollision(tileShape, GameObjectType::Tile, collisionDirection);
 	}
-	(void)tileShape;
 }
 
 void Game::moveMap(sf::Time frameTime)
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft)
-	{
+	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && m_groundSoundTime > sf::Time::Zero)
 		m_groundSoundTime -= frameTime;
-		if (m_groundSoundTime < sf::Time::Zero)
-			m_groundSoundTime = sf::Time::Zero;
-		volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax) * audio.getSoundVolume();
-		m_soundGeneration->setVolume(volume);
-	}
-	if (m_keyGroundRight || m_keyGroundLeft || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
-	{
-		if (Progress::getInstance().canMoveMap())
-		{
-			if (m_keyGroundRight)
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-			else
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-			if (m_soundGeneration == nullptr)
-			{
-				m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
-				m_soundGeneration->setLoop(true);
-			}
-			else
-			{
-				m_groundSoundTime += frameTime;
-				if (m_groundSoundTime > m_groundSoundTimeMax)
-					m_groundSoundTime = m_groundSoundTimeMax;
-				volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
-				m_soundGeneration->setVolume(volume * audio.getSoundVolume());
-			}
-		}
-	}
 
-	m_earlyMapMovement -= frameTime;
-	if (Progress::getInstance().isMenu() || m_earlyMapMovement > sf::Time::Zero)
+	if ((m_keyGroundRight || m_keyGroundLeft) && Progress::getInstance().canMoveMap())
 	{
-		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
+		if (m_keyGroundRight)
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
+		else
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
+
+		if (m_groundSoundTime < m_groundSoundTimeMax)
+			m_groundSoundTime += frameTime;
 	}
+	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
+	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
+
+	if (Progress::getInstance().isMenu() || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
+		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 }
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
@@ -570,6 +605,7 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			Progress::getInstance().moveMap();
 			break;
 		case OctoKeys::Infos:
+			m_cameraMovement->shake(5.f, 1.f, 0.01f);
 			m_slowTimeInfosCoef = 10.f;
 			break;
 		default:
@@ -605,12 +641,12 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
 	//m_musicPlayer.debugDraw(render);
+	//m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	m_groundManager->drawFront(render, states);
-	//m_physicsEngine.debugDraw(render);
-	render.draw(m_skyManager->getDecorsFront(), states);
 	m_octo->drawNanoRobot(render, states);
+	render.draw(m_skyManager->getDecorsFront(), states);
 	m_groundManager->drawWater(render, states);
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);

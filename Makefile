@@ -70,10 +70,11 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/HouseFlatSnow.cpp			\
 				GameObjects/EngineSnow.cpp				\
 				GameObjects/WeirdHouseSnow.cpp			\
+				GameObjects/CheckPoint.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClassicNpc.cpp						\
-				Npcs/CedricNpc.cpp						\
+				Npcs/CedricStartNpc.cpp					\
 				Npcs/FranfranNpc.cpp					\
 				Npcs/JuNpc.cpp							\
 				Npcs/FannyNpc.cpp						\
@@ -115,13 +116,20 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/Pedestal.cpp						\
 				Npcs/OverCoolNpc.cpp					\
 				Npcs/FabienNpc.cpp						\
-				Npcs/CheckPoint.cpp						\
 				Npcs/ScientistJu.cpp					\
 				Npcs/ScientistFran.cpp					\
 				Npcs/ScientistLu.cpp					\
 				Npcs/ScientistCedric.cpp				\
 				Npcs/ScientistNpc.cpp					\
 				Npcs/ScientistOcto.cpp					\
+				Npcs/CedricEndNpc.cpp					\
+				Npcs/OctoDeathNpc.cpp					\
+				Npcs/Rocket.cpp							\
+				Npcs/LongChairNpc.cpp					\
+				Npcs/LuGlitchNpc.cpp					\
+				Npcs/JuGlitchNpc.cpp					\
+				Npcs/FranGlitchNpc.cpp					\
+				Npcs/WindowGlitchNpc.cpp				\
 #Script AddNpc
 
 
@@ -141,6 +149,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
 				Menu/LanguageMenu.cpp					\
+				Menu/MenuTypeMenu.cpp					\
 				Menu/SoundVolumeMenu.cpp				\
 				Menu/MusicVolumeMenu.cpp				\
 				Menu/ControlMenu.cpp					\
@@ -150,6 +159,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/CheatCodeMenu.cpp					\
 				Menu/LevelMenu.cpp						\
 				Menu/NanoMenu.cpp						\
+				Menu/RandomDiscoverMenu.cpp				\
 				Menu/EmptyMenu.cpp						\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
@@ -185,9 +195,11 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/DesertABiome.cpp					\
 				Biomes/DesertBBiome.cpp					\
 				Biomes/DesertCBiome.cpp					\
+				Biomes/DesertDBiome.cpp					\
 				Biomes/JungleABiome.cpp					\
 				Biomes/JungleBBiome.cpp					\
 				Biomes/JungleCBiome.cpp					\
+				Biomes/JungleDBiome.cpp					\
 				Biomes/WaterABiome.cpp					\
 				Biomes/WaterBBiome.cpp					\
 
@@ -211,6 +223,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/GroundRock.cpp					\
 				Decors/Sky.cpp							\
 				Decors/SunLight.cpp						\
+				Decors/Grass.cpp						\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
 				Decors/SmokeSystem.cpp					\

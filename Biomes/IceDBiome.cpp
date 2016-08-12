@@ -22,6 +22,7 @@ IceDBiome::IceDBiome() :
 	m_tileEndColor(27, 79, 101),
 	m_waterLevel(1000.f),
 	m_waterColor(255, 255, 255, 200),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(65.f)),
@@ -62,12 +63,18 @@ IceDBiome::IceDBiome() :
 	m_canCreateSun(false),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(30.f, 100.f), sf::Vector2f(70.f, 200.f)),
 	m_rockPartCount(3.f, 10.f),
 	m_rockColor(0, 31, 63),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(5u, 7u),
 	m_treeSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(50.f, 250.f)),
@@ -140,16 +147,19 @@ IceDBiome::IceDBiome() :
 	m_instances[139] = MAP_ICE_D_SECRET_WAY_OMP;
 	m_instances[118] = MAP_ICE_D_PORTAL_RANDOM_OMP;
 	m_gameObjects[190] = GameObjectType::BirdBlueNpc;
-	m_instances[220] = MAP_ICE_D_ELEVATOR_OMP;
-	m_gameObjects[250] = GameObjectType::EngineSnow;
-	m_gameObjects[360] = GameObjectType::StrangerSnowNpc;
+	m_instances[210] = MAP_ICE_D_ELEVATOR_OMP;
+	m_gameObjects[180] = GameObjectType::CheckPoint;
+	m_gameObjects[235] = GameObjectType::WindowGlitchNpc;
+	m_gameObjects[250] = GameObjectType::Pedestal;
+	m_gameObjects[254] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[330] = GameObjectType::EngineSnow;
 	m_gameObjects[340] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[396] = GameObjectType::Pedestal;
-	m_gameObjects[400] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[390] = GameObjectType::StrangerSnowNpc;
+	m_gameObjects[425] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
 	m_gameObjects[510] = GameObjectType::BirdBlueNpc;
 	m_instances[551] = MAP_ICE_D_TRAIL_OMP;
-	m_gameObjects[630] = GameObjectType::StrangerGirlSnowNpc;
+	m_gameObjects[640] = GameObjectType::StrangerGirlSnowNpc;
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::IceC);
@@ -221,6 +231,11 @@ sf::Color	IceDBiome::getWaterColor()
 	return m_waterColor;
 }
 
+sf::Color	IceDBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
+}
+
 bool		IceDBiome::isDeadlyWater()
 {
 	return true;
@@ -236,16 +251,28 @@ std::vector<ParallaxScrolling::ALayer *> IceDBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 12.f, -10, 0.3f, 0.8f, 6.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x, y, 3.f, 4.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.5f, 0.3f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 1.1f, y);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -20, 0.2f, 0.8f, 6.f, 100.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.perlin(x * 1.f, y, 4.f, 4.f);
 		});
 	vector.push_back(layer);
 	return vector;
@@ -257,8 +284,8 @@ Map::MapSurfaceGenerator IceDBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {/*house*/50.f, 100.f, 127.f, 132.f, 138.f, 160.f, 166.f, 171.f, 220.f, 260.f,/*lake*/500.f, 550.f, 551.f, 620.f, 621.f, 740.f};
-		std::vector<float> pointY = {/*house*/n   , -1.f , -1.f , 5.f  , -1.f , -1.f , 5.f  , -1.f , -1.f , n    ,/*lake*/n    , 0.8f  , 4.f , 4.f  , 2.f  , n    };
+		std::vector<float> pointX = {/*house*/50.f, 100.f, 127.f, 132.f, 138.f, 160.f, 166.f, 171.f, 206.f, 240.f,/*lake*/500.f, 550.f, 551.f, 620.f, 621.f, 740.f};
+		std::vector<float> pointY = {/*house*/n   , -1.f , -1.f , 7.3f , -1.f , -1.f , 7.3f , -1.f , -1.f , n    ,/*lake*/n    , 0.8f  , 4.f , 4.f  , 2.f  , n    };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -572,6 +599,29 @@ sf::Color		IceDBiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	IceDBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	IceDBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	IceDBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	IceDBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			IceDBiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -712,6 +762,11 @@ sf::Time		IceDBiome::getRainbowIntervalTime()
 bool			IceDBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	IceDBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	IceDBiome::getWaterPersistence() const

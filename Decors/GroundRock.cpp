@@ -38,7 +38,7 @@ void GroundRock::setup(ABiome& biome)
 {
 	m_type = biome.randomInt(0u, 4u);
 	if (m_onInstance == false)
-		m_deep = biome.randomFloat(0.f, octo::Camera().getSize().y / 2.f);
+		m_deep = biome.randomFloat(16.f, octo::Camera().getSize().y);
 	else
 		m_deep = 0.f;
 	m_color = biome.getRockColor();

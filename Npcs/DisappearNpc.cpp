@@ -3,10 +3,15 @@
 
 RandomGenerator DisappearNpc::m_generator("random");
 
-DisappearNpc::DisappearNpc(ResourceKey const & key) :
+DisappearNpc::DisappearNpc(ResourceKey const & key, float alphaMin, float alphaMax, bool isFlying) :
 	ANpc(key, false),
 	m_isVisible(true),
-	m_transparency(0.f),
+	m_isFlying(isFlying),
+	m_alphaCurrent(0.f),
+	m_alphaTarget(m_generator.randomFloat(alphaMin, alphaMax)),
+	m_alphaMin(alphaMin),
+	m_alphaMax(alphaMax),
+	m_alphaAlmostDisappear(m_generator.randomFloat(0.f, 2.5f)),
 	m_randomAppearTimer(sf::seconds(m_generator.randomFloat(1.f, 5.f)))
 {
 	setSize(sf::Vector2f(25.f, 60.f));
@@ -37,22 +42,6 @@ void DisappearNpc::setup(void)
 			});
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
-	getSpecial1Animation().setFrames({
-			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
-			});
-	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
-
 	setupMachine();
 }
 
@@ -63,16 +52,11 @@ void DisappearNpc::setupMachine(void)
 
 	octo::FiniteStateMachine	machine;
 	StatePtr					idleState;
-	StatePtr					special1State;
 
 	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-	special1State = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
 
 	machine.setStart(idleState);
 	machine.addTransition(Idle, idleState, idleState);
-	machine.addTransition(Idle, special1State, idleState);
-
-	machine.addTransition(Special1, idleState, special1State);
 
 	setMachine(machine);
 	setNextEvent(Idle);
@@ -88,22 +72,25 @@ void DisappearNpc::makeDisappear(sf::Time frametime)
 	if (m_randomDisappearTimer <= sf::Time::Zero)
 	{
 		m_isVisible = false;
-		m_randomDisappearTimer = sf::seconds(m_generator.randomFloat(10.f, 30.f));
+		m_randomDisappearTimer = sf::seconds(m_generator.randomFloat(1.f, 15.f));
 	}
 
 	if (!m_isVisible)
 	{
-		if (m_transparency - frametime.asSeconds() * 255.f > 0.f)
-			m_transparency -= frametime.asSeconds() * 255.f;
+		if (m_alphaCurrent - frametime.asSeconds() * m_alphaTarget > 2.f)
+			m_alphaCurrent -= frametime.asSeconds() * m_alphaTarget;
 		else
 		{
-			m_randomAppearTimer = sf::seconds(m_generator.randomFloat(1.f, 3.f));
+			m_randomAppearTimer = sf::seconds(m_generator.randomFloat(1.f, 15.f));
+			m_alphaTarget = m_generator.randomFloat(m_alphaMin, m_alphaMax);
+			m_alphaAlmostDisappear = m_generator.randomFloat(0.f, 2.0f);
 			m_isVisible = true;
-			setOrigin(sf::Vector2f(m_generator.randomFloat(20.f, 120.f), m_generator.randomFloat(50.f, 400.f)));
+			if (m_isFlying)
+				setOrigin(sf::Vector2f(m_generator.randomFloat(20.f, 120.f), m_generator.randomFloat(50.f, 400.f)));
 		}
 	}
-	else if (m_randomAppearTimer <= sf::Time::Zero && m_transparency + frametime.asSeconds() * 255.f < 255.f)
-		m_transparency += frametime.asSeconds() * 255.f;
+	else if (m_randomAppearTimer <= sf::Time::Zero && m_alphaCurrent + frametime.asSeconds() * m_alphaTarget < m_alphaTarget)
+		m_alphaCurrent += frametime.asSeconds() * m_alphaTarget;
 }
 
 void DisappearNpc::update(sf::Time frametime)
@@ -117,7 +104,7 @@ void DisappearNpc::update(sf::Time frametime)
 
 	sprite.update(frametime);
 	sprite.setPosition(getBox()->getRenderPosition());
-	sprite.setColor(sf::Color(255, 255, 255, m_transparency));
+	sprite.setColor(sf::Color(255, 255, 255, m_alphaCurrent));
 
 	updateText(frametime);
 	resetVariables();
@@ -125,22 +112,4 @@ void DisappearNpc::update(sf::Time frametime)
 
 void DisappearNpc::updateState(void)
 {
-	octo::CharacterSprite & sprite = getSprite();
-
-	if (sprite.getCurrentEvent() == Special1)
-	{
-		if (sprite.isTerminated())
-		{
-			sprite.setNextEvent(Idle);
-			addTimer(-getTimer());
-		}
-	}
-	else if (sprite.getCurrentEvent() == Idle)
-	{
-		if (getTimer() >= getTimerMax())
-		{
-			addTimer(-getTimerMax());
-			sprite.setNextEvent(Special1);
-		}
-	}
 }

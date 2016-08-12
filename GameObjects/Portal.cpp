@@ -8,22 +8,27 @@
 #include <Camera.hpp>
 #include <cassert>
 
-Portal::Portal(Level destination, ResourceKey key) :
+Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color centerColor) :
+	m_generator("random"),
+	m_shaderName(shader),
 	m_destination(destination),
 	m_position(40.f, 0.f),
-	m_shader(PostEffectLayer::getInstance().getShader(VORTEX_FRAG)),
+	m_shader(PostEffectLayer::getInstance().getShader(m_shaderName)),
 	m_maxParticle(40u),
 	m_state(State::Disappear),
 	m_radius(100.f),
 	m_timer(0.f),
 	m_timerMax(1.0f),
-	m_box(PhysicsEngine::getShapeBuilder().createCircle())
+	m_box(PhysicsEngine::getShapeBuilder().createCircle()),
+	m_soundVolume(0.6f)
 {
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	Progress & progress = Progress::getInstance();
 	progress.registerPortal(destination);
 
 	m_shader.setParameter("time_max", m_timerMax);
+	m_shader.setParameter("center_color", centerColor);
 
 	m_box->setGameObject(this);
 	m_box->setApplyGravity(false);
@@ -126,6 +131,10 @@ Portal::Portal(Level destination, ResourceKey key) :
 		m_sprite.setNextEvent(Opened);
 
 	m_state = Disappear;
+
+	//TODO : To change to the good sound
+	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.f, m_generator.randomFloat(0.9f, 1.1f));
+	m_sound->setLoop(true);
 }
 
 Portal::~Portal(void)
@@ -168,14 +177,17 @@ void Portal::update(sf::Time frametime)
 		case Appear:
 		{
 			if (m_sprite.getCurrentEvent() == Events::Opening && m_sprite.isTerminated())
+			{
 				m_sprite.setNextEvent(Opened);
+			}
 			else if (m_sprite.getCurrentEvent() == Events::Opened)
 			{
 				m_particles.setMaxParticle(m_timer / m_timerMax * static_cast<float>(m_maxParticle));
 				m_timer += frametime.asSeconds();
 				if (m_timer >= m_timerMax)
 				{
-					Progress::getInstance().meetPortal(m_destination);
+					if (m_destination != Level::Random)
+						Progress::getInstance().meetPortal(m_destination);
 					m_state = Activated;
 					m_timer = m_timerMax;
 				}
@@ -186,11 +198,14 @@ void Portal::update(sf::Time frametime)
 			m_particles.setMaxParticle(m_maxParticle);
 			break;
 		case Disappear:
-			m_particles.setMaxParticle(0u);
-			m_particles.clear();
+			m_particles.setTransparency(std::min(1.f, (m_timer / m_timerMax)));
 			m_timer -= frametime.asSeconds();
 			if (m_timer <= 0.f)
+			{
 				m_timer = 0.f;
+				m_particles.setMaxParticle(0u);
+				m_particles.clear();
+			}
 			break;
 		default:
 			break;
@@ -202,7 +217,7 @@ void Portal::update(sf::Time frametime)
 		if (m_position.y + m_radius > screen.top && m_position.y - m_radius < screen.top + screen.height)
 		{
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-			PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, true);
+			PostEffectLayer::getInstance().enableShader(m_shaderName, true);
 			m_shader.setParameter("time", m_timer);
 			m_shader.setParameter("radius", m_radius * zoomFactor);
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
@@ -210,6 +225,7 @@ void Portal::update(sf::Time frametime)
 		}
 	}
 
+	updateSound();
 	m_sprite.update(frametime);
 	m_state = Disappear;
 }
@@ -236,12 +252,24 @@ void Portal::setRadius(float radius)
 
 void Portal::appear(void)
 {
-	if (m_state == Activated || isLock())
+	if (m_state == Activated || isLock() || (Progress::getInstance().isMetPortal(m_destination) && m_destination == Level::Random))
 		return;
 	if (m_sprite.getCurrentEvent() == Events::Closed)
 		m_state = State::FirstAppear;
 	else
+	{
+		m_particles.setTransparency(1.f);
 		m_state = State::Appear;
+	}
+}
+
+void Portal::updateSound(void)
+{
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	float						volume = 0.f;
+
+	volume = m_soundVolume * (m_timer / m_timerMax);
+	m_sound->setVolume(volume * audio.getSoundVolume());
 }
 
 bool Portal::isLock(void)
@@ -270,7 +298,8 @@ Portal::PortalParticle::PortalParticle(void) :
 	m_lifeTimeDistri(1.f, 2.f),
 	m_directionDistri(0.f, octo::Pi2),
 	m_distanceDistri(m_radius, m_radius * 2.f),
-	m_biome(nullptr)
+	m_biome(nullptr),
+	m_transparency(1.f)
 {}
 
 void Portal::PortalParticle::update(sf::Time frameTime)
@@ -308,7 +337,7 @@ void Portal::PortalParticle::updateParticle(sf::Time frameTime, Particle& partic
 	std::get<Component::Position>(particle) = octo::linearInterpolation(std::get<MyComponent::Start>(particle), std::get<MyComponent::End>(particle), std::get<MyComponent::Time>(particle) / std::get<MyComponent::Life>(particle));
 	std::get<Component::Rotation>(particle) += AngularVelocity * frameTime.asSeconds();
 	std::get<MyComponent::Time>(particle) += frameTime;
-	std::get<Component::Color>(particle).a = 255 - 255 * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds()));
+	std::get<Component::Color>(particle).a = m_transparency * (255 - 255 * std::max(0.f, (1.f - std::get<MyComponent::Time>(particle).asSeconds() / std::get<MyComponent::Life>(particle).asSeconds())));
 }
 
 bool Portal::PortalParticle::isDeadParticle(Particle const& particle)

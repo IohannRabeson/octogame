@@ -1,8 +1,12 @@
 #include "AMenuSelection.hpp"
+#include "ResourceDefinitions.hpp"
+#include <AudioManager.hpp>
+#include <ResourceManager.hpp>
 #include <Application.hpp>
 #include <assert.h>
 
 AMenuSelection::AMenuSelection(void) :
+	m_generator("random"),
 	m_type(ABubble::Type::Right),
 	m_characterSize(20u),
 	m_indexCursor(0u),
@@ -102,6 +106,10 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 {
 	if (!m_input)
 	{
+		octo::AudioManager &		audio = octo::Application::getAudioManager();
+		octo::ResourceManager &		resources = octo::Application::getResourceManager();
+		audio.playSound(resources.getSound(MENU_SOUND_OGG), 0.15f, m_generator.randomFloat(0.98f, 1.02f));
+
 		m_input = true;
 		switch (key)
 		{

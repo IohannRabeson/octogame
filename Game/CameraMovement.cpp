@@ -11,6 +11,10 @@ CameraMovement::CameraMovement(void) :
 	m_baseSize(octo::Application::getCamera().getSize()),
 	m_zoomTimer(sf::Time::Zero),
 	m_zoomTimerMax(sf::seconds(3.f)),
+	m_shakeTimer(sf::Time::Zero),
+	m_shakeDuration(sf::seconds(1.f)),
+	m_waveDuration(sf::seconds(1.f)),
+	m_shakeIntensity(0.f),
 	m_speed(3.f),
 	m_verticalTransition(0.f),
 	m_horizontalTransition(0.f),
@@ -46,16 +50,16 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		m_zoomState = ZoomState::ZoomIn;
 	}
 
-	float goalTop = octo.getPosition().y - camera.getRectangle().height / 5.f;
-	float goalBot = octo.getPosition().y + camera.getRectangle().height / 3.f;
-	float goalLeft = octo.getPosition().x - camera.getRectangle().width / 3.f;
-	float goalRight = octo.getPosition().x + camera.getRectangle().width / 3.f;
+	float goalTop = octo.getPosition().y - camera.getRectangle().height / 4.f;
+	float goalBot = octo.getPosition().y + camera.getRectangle().height / 4.f;
+	float goalLeft = octo.getPosition().x - camera.getRectangle().width / 4.f;
+	float goalRight = octo.getPosition().x + camera.getRectangle().width / 4.f;
 
 	switch (m_behavior)
 	{
 		case Behavior::FollowOcto:
 		{
-			m_speed = 3.f;
+			m_speed = 2.5f;
 			m_verticalTransition -= 0.3f * frametime.asSeconds();
 			if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
@@ -67,7 +71,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		}
 		case Behavior::OctoFalling:
 		{
-			m_speed = 3.f;
+			m_speed = 2.5f;
 			m_verticalTransition += 0.5f * frametime.asSeconds();
 			if (m_verticalTransition > 1.f)
 				m_verticalTransition = 1.f;
@@ -136,10 +140,46 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	sf::Vector2f goal = sf::Vector2f(octo::linearInterpolation(goalRight, goalLeft, (m_horizontalTransition + 1.f) / 2.f),
 									octo::linearInterpolation(goalTop, goalBot, (m_verticalTransition)));
 
+	if (m_shakeTimer < m_shakeDuration)
+	{
+		m_shakeTimer += frametime;
+		m_waveTimer += frametime;
+		if (m_waveTimer >= m_waveDuration)
+		{
+			m_prevShakeOffset = m_shakeOffset;
+			m_shakeOffset.x = m_noise.perlin(m_shakeTimer.asSeconds(), 0.f, 3, 2.f);
+			m_shakeOffset.y = m_noise.perlin(0.f, m_shakeTimer.asSeconds(), 3, 2.f);
+			octo::normalize(m_shakeOffset);
+			m_shakeOffset *= m_shakeIntensity;
+			m_waveTimer -= m_waveDuration;
+		}
+		if (m_shakeTimer >= m_shakeDuration)
+		{
+			m_prevShakeOffset = octo::linearInterpolation(m_prevShakeOffset, m_shakeOffset, std::min(1.f, m_waveTimer/ m_waveDuration));
+			m_shakeOffset = sf::Vector2f(0.f, 0.f);
+			m_waveTimer = sf::Time::Zero;
+		}
+	}
+	else
+	{
+		if (m_waveTimer < m_waveDuration)
+			m_waveTimer += frametime;
+	}
+
+	sf::Vector2f offset = octo::linearInterpolation(m_prevShakeOffset, m_shakeOffset, std::min(1.f, m_waveTimer/ m_waveDuration));
 	camera.setSize(octo::cosinusInterpolation(m_baseSize, m_baseSize * 0.85f, m_zoomTimer.asSeconds() / m_zoomTimerMax.asSeconds()));
-	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()));
+	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()) + offset);
 
 	m_circle.setPosition(goal);
+}
+
+void CameraMovement::shake(float duration, float intensity, float waveDuration)
+{
+	m_shakeTimer = sf::Time::Zero;
+	m_shakeDuration = sf::seconds(duration);
+	m_shakeIntensity = intensity;
+	m_waveDuration = sf::seconds(waveDuration);
+	m_waveTimer = m_waveDuration;
 }
 
 void CameraMovement::debugDraw(sf::RenderTarget & render)

@@ -13,32 +13,33 @@ JungleBBiome::JungleBBiome() :
 	m_name("Jungle B"),
 	m_id(Level::JungleB),
 	m_seed("Jungle B"),
-	m_mapSize(sf::Vector2u(700u, 200u)),
+	m_mapSize(sf::Vector2u(550u, 200u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(93.f * 16.f, 1000.f),
+	m_octoStartPosition(93.f * 16.f, 400.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
 	m_tileEndColor(0, 124, 104),
 	m_waterLevel(7100.f),
 	m_waterColor(196, 235, 1, 150),
+	m_secondWaterColor(134, 160, 191, 150),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(20, 20, 20),
-	m_skyNightColor(0, 0, 0),
-	m_nightLightColor(0, 0, 0, 130),
-	m_SunsetLightColor(252, 252, 190, 130),
+	m_skyDayColor(252, 252, 160),
+	m_skyNightColor(175, 177, 18),
+	m_nightLightColor(0, 0, 0, 80),
+	m_SunsetLightColor(255, 182, 0, 100),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(60u, 80u),
-	m_treeCount(40u, 50u),
-	m_mushroomCount(39u, 40u),
+	m_rockCount(10u, 15u),
+	m_treeCount(30u, 40u),
+	m_mushroomCount(70u, 90u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
 	m_sunCount(4u, 5u),
@@ -62,12 +63,18 @@ JungleBBiome::JungleBBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Jungle),
 
 	m_rockSize(sf::Vector2f(30.f, 50.f), sf::Vector2f(40.f, 300.f)),
 	m_rockPartCount(4.f, 10.f),
 	m_rockColor(56, 50, 72),
+
+	m_grassSizeY(60.f, 100.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(5u, 6u),
 	m_treeSize(sf::Vector2f(30.f, 150.f), sf::Vector2f(120.f, 250.f)),
@@ -78,7 +85,7 @@ JungleBBiome::JungleBBiome() :
 	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(250.f, 250.f)),
 	m_leafColor(0, 90, 67),
 
-	m_mushroomSize(sf::Vector2f(20.f, 100.f), sf::Vector2f(200.f, 300.f)),
+	m_mushroomSize(sf::Vector2f(30.f, 150.f), sf::Vector2f(300.f, 900.f)),
 	m_mushroomColor(255, 182, 0),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
@@ -127,16 +134,16 @@ JungleBBiome::JungleBBiome() :
 
 	// Define game objects
 	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
-	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
-	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;
 	m_gameObjects[90] = GameObjectType::PortalJungle;
+	m_gameObjects[325] = GameObjectType::LucienNpc;
+	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
+	m_instances[387] = MAP_JUNGLE_B_FLUE_PART_OMP;
+	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;
+	m_instances[35] = MAP_JUNGLE_B_CLIFF_OMP;
 
 	Progress & progress = Progress::getInstance();
-	std::vector<int> const & deathPos = progress.getDeathPos();
-	if (progress.getLastDestination() == Level::JungleB && deathPos.size() && deathPos.back() >= 300.f)
-		m_octoStartPosition = sf::Vector2f(310.f * 16.f, 4700.f);
-	else if (progress.getLastDestination() == Level::JungleC)
-		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -1600.f);
+	if (progress.getLastDestination() == Level::JungleC)
+		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -450.f);
 	else if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(100.f * 16.f, 4300.f);
 	for (std::size_t i = 430u; i < m_mapSize.x - 10u; i += m_generator.randomInt(15u, 30u))
@@ -146,20 +153,8 @@ JungleBBiome::JungleBBiome() :
 		else
 			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
 	}
-	/*
-	for (std::size_t i = 530; i < 730; i += m_generator.randomInt(20u, 30u))
-	{
-		if (m_generator.randomBool(0.5))
-			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
-		else
-			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
-	}
-	for (std::size_t i = 0; i < 542; i += m_generator.randomInt(70u, 250u))
-		m_gameObjects[i] = GameObjectType::BirdRedNpc;
-	*/
 
-
-	m_interestPointPosX = 290;
+	m_interestPointPosX = 80;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
@@ -233,6 +228,11 @@ sf::Color	JungleBBiome::getWaterColor()
 	return m_waterColor;
 }
 
+sf::Color	JungleBBiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
+}
+
 bool		JungleBBiome::isDeadlyWater()
 {
 	return true;
@@ -248,30 +248,42 @@ std::vector<ParallaxScrolling::ALayer *> JungleBBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -25, 0.1f, 1.f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(getRockColor(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, 10, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 1.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	layer = new GenerativeLayer(getRockColor(), sf::Vector2f(0.3f, 0.5f), mapSize, 10.f, 5, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-		return noise.perlin(x, y, 3, 2.f);
+		return noise.perlin(x, y, 3, 4.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	layer = new GenerativeLayer(getRockColor(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, 0, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-		return noise.perlin(x, y, 3, 2.f);
+		return noise.perlin(x, y + 100.f, 3, 2.f);
 		});
 	vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.noise(x * 1.1f, y);
-	//	});
-	//vector.push_back(layer);
+	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.5f, 0.3f), mapSize, 12.f, 0, 0.1f, 0.3f, 6.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 1.1f, y);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.6f, 0.2f), sf::Vector2u(mapSize.x, mapSize.y * 1.6f), 12.f, -90, 0.4f, 0.3f, 6.f, 3000.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 20.f, y);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.7f, 0.1f), sf::Vector2u(mapSize.x, mapSize.y * 1.2f), 12.f, -330, 0.5f, 0.1f, 6.f, 4000.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 20.f, y + 100.f);
+		});
+	vector.push_back(layer);
 	return vector;
 }
 
@@ -282,8 +294,8 @@ Map::MapSurfaceGenerator JungleBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		//float m = n / 3.f;
-		std::vector<float> pointX = {0.f, 44.f     , 45.f, 55.f, 56.f     , 359.f, 381.f, 382.f, 385.f, 415.f, 420.f, 428.f, 700.f};
-		std::vector<float> pointY = {n  , n - 0.05f, 5.f , 5.f , n - 0.05f, -0.1f, 0.f  , 5.f  , 3.38f, 3.38f, 0.f  , -0.1f, n};
+		std::vector<float> pointX = {0.f     , 35.f , 44.f    , 45.f, 55.f, 56.f , 60.f , 90.f          , 200.f    , 320.f, 359.f, 381.f, 382.f, 389.f, 415.f, 417.f , 465.f, 550.f};
+		std::vector<float> pointY = {n - 1.2f, -1.7f, n - 1.2f, 5.f , 5.f , -0.1f, -0.6f, n / 2.f - 0.7f, n - 0.7f, -0.1f, -0.1f, 0.f  , 5.f  , 3.38f, 3.38f, -1.05f, -1.1f, n - 1.1f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -303,9 +315,9 @@ Map::TileColorGenerator JungleBBiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart(76, 70, 102);
 	sf::Color secondColorEnd(56, 50, 72);
-	float startTransition = 14000.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = 40000.f / static_cast<float>(m_mapSize.y);
-	float endTransition = 60000.f / static_cast<float>(m_mapSize.y);
+	float startTransition = -12000.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 6000.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 30000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
@@ -597,6 +609,29 @@ sf::Color		JungleBBiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	JungleBBiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+sf::Color	JungleBBiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	JungleBBiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	JungleBBiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			JungleBBiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -739,6 +774,11 @@ sf::Time		JungleBBiome::getRainbowIntervalTime()
 bool			JungleBBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	JungleBBiome::canCreateGrass()
+{
+	return m_canCreateGrass;
 }
 
 float	JungleBBiome::getWaterPersistence() const

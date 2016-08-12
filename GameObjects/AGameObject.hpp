@@ -36,10 +36,12 @@ enum class GameObjectType : std::size_t
 	PortalDesert				= (1 << 14) + 12,
 	PortalSnow					= (1 << 14) + 13,
 	PortalRandom				= (1 << 14) + 14,
+	PortalRed					= (1 << 14) + 15,
+	PortalBlue					= (1 << 14) + 16,
 
 	//Npc
 	Npc							= (1 << 15),
-	CedricNpc					= (1 << 15) + 1,
+	CedricStartNpc				= (1 << 15) + 1,
 	JuNpc						= (1 << 15) + 2,
 	OldDesertStaticNpc			= (1 << 15) + 3,
 	GuiNpc						= (1 << 15) + 4,
@@ -84,6 +86,16 @@ enum class GameObjectType : std::size_t
 	ScientistFran				= (1 << 15) + 43,
 	ScientistLu					= (1 << 15) + 44,
 	ScientistCedric				= (1 << 15) + 45,
+	TVBlack						= (1 << 15) + 46,
+	TVWhite						= (1 << 15) + 47,
+	CedricEndNpc				= (1 << 15) + 48,
+	OctoDeathNpc				= (1 << 15) + 49,
+	Rocket						= (1 << 15) + 50,
+	LongChairNpc				= (1 << 15) + 51,
+	LuGlitchNpc					= (1 << 15) + 52,
+	JuGlitchNpc					= (1 << 15) + 53,
+	FranGlitchNpc				= (1 << 15) + 54,
+	WindowGlitchNpc				= (1 << 15) + 55,
 //Script AddNpc
 
 

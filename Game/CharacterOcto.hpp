@@ -5,15 +5,12 @@
 # include <DefaultGraphicsListeners.hpp>
 
 # include "AGameObject.hpp"
-# include "Progress.hpp"
-# include "RectangleShape.hpp"
-# include "CircleShape.hpp"
-# include "NanoRobot.hpp"
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
 # include "PloufSystem.hpp"
 # include "WaterDropSystem.hpp"
 # include "InputListener.hpp"
+# include "RandomGenerator.hpp"
 
 # include <SFML/Graphics/Drawable.hpp>
 # include <array>
@@ -21,6 +18,17 @@
 class ElevatorStream;
 class RepairNanoRobot;
 class SpaceShip;
+class RectangleShape;
+class CircleShape;
+class TileShape;
+class Progress;
+class NanoRobot;
+class ABiome;
+class Portal;
+namespace sf
+{
+	class Shader;
+}
 
 class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	public InputListener,
@@ -69,7 +77,7 @@ public:
 
 	bool					onInputPressed(InputListener::OctoKeys const & key);
 	bool					onInputReleased(InputListener::OctoKeys const & key);
-	void					onCollision(GameObjectType type, sf::Vector2f const& collisionDirection);
+	void					onCollision(TileShape * tileshape, GameObjectType type, sf::Vector2f const& collisionDirection);
 	void					setTopElevator(float top);
 	sf::Vector2f const &	getPhysicsPosition() const;
 	sf::Vector2f const &	getPosition() const;
@@ -86,12 +94,17 @@ public:
 	void					startDrinkPotion(void);
 	bool					isFalling(void);
 	bool					isRaising(void);
-	bool					isInAir(void);
+	bool					isInAir(void) const;
+	bool					isOnGround(void) const;
 	bool					isMeetingNpc(void) const;
 	void					meetNpc(bool meetNpc);
+	void					resetCollidingTileCount(void);
+	void					enableCutscene(bool enable, bool autoDisable = false);
 
 private:
 	bool					dieFall();
+	bool					dieGrass();
+	void					kill();
 	bool					endDeath();
 	void					portalEvent();
 	void					dance();
@@ -148,8 +161,11 @@ private:
 
 	SmokeSystem					m_inkParticle;
 	HelmetSystem				m_helmetParticle;
+	sf::Color					m_waterColor;
+	sf::Color					m_secondWaterColor;
 	PloufSystem					m_ploufParticle;
 	WaterDropSystem				m_waterParticle;
+	SmokeSystem					m_bubbleParticle;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;
@@ -157,6 +173,8 @@ private:
 	sf::Time					m_timeEventInk;
 	sf::Time					m_timeRepairSpaceShip;
 	sf::Time					m_timeRepairSpaceShipMax;
+	sf::Time					m_timeSlowFall;
+	sf::Time					m_timeSlowFallMax;
 	float						m_spriteScale;
 	float						m_maxJumpWaterVelocity;
 	float						m_pixelSecondJump;
@@ -199,16 +217,25 @@ private:
 	bool						m_inWater;
 	bool						m_isDeadlyWater;
 	bool						m_meetNpc;
+	bool						m_replaceOcto;
+	bool						m_enableCutscene;
+	bool						m_autoDisableCutscene;
 	Events						m_prevEvent;
 
-	RandomGenerator									m_generator;
-	sf::Time										m_directionTimer;
-	sf::Time										m_jumpTimer;
-	sf::Time										m_randomJumpTimer;
-	sf::Time										m_doubleJumpTimer;
-	sf::Time										m_slowFallTimer;
-	sf::Time										m_portalTimer;
-	sf::Vector2f									m_saveOctoPos;
+	RandomGenerator				m_generator;
+	sf::Time					m_directionTimer;
+	sf::Time					m_jumpTimer;
+	sf::Time					m_randomJumpTimer;
+	sf::Time					m_doubleJumpTimer;
+	sf::Time					m_slowFallTimer;
+	sf::Time					m_portalTimer;
+	sf::Time					m_cutsceneTimer;
+	sf::Time					m_cutsceneTimerMax;
+	sf::Vector2f				m_saveOctoPos;
+	sf::Vector2f				m_highestPosition;
+	std::vector<sf::Vector2f>	m_collidingTile;
+	sf::Shader &				m_cutsceneShader;
+
 };
 
 #endif
