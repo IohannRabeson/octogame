@@ -20,7 +20,7 @@ WaterBBiome::WaterBBiome() :
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
 	m_waterLevel(100.f),
-	m_waterColor(3, 57, 108, 130),
+	m_waterColor(3, 57, 108, 60),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
@@ -70,8 +70,8 @@ WaterBBiome::WaterBBiome() :
 	m_rockPartCount(4.f, 8.f),
 	m_rockColor(159, 24, 24),
 
-	m_grassSizeY(110.f, 130.f),
-	m_grassSizeX(14.f, 16.f),
+	m_grassSizeY(90.f, 110.f),
+	m_grassSizeX(40.f, 70.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
@@ -138,7 +138,7 @@ WaterBBiome::WaterBBiome() :
 	m_instances[20] = MAP_WATER_B_TRAIL_OMP;
 	m_gameObjects[20] = GameObjectType::Portal;
 
-	//m_gameObjects[46] = GameObjectType::CedricStartNpc;
+	m_gameObjects[46] = GameObjectType::CedricStartNpc;
 	m_gameObjects[50] = GameObjectType::JellyfishNpc;
 	m_gameObjects[70] = GameObjectType::JellyfishNpc;
 	m_gameObjects[390] = GameObjectType::JellyfishNpc;

@@ -39,9 +39,11 @@ void ShineEffect::playSound(ABiome & biome, sf::Vector2f const & position)
 			m_isSound = true;
 		else if (m_animator.getState() == DecorAnimator::State::Die && m_isSound == true)
 		{
-			octo::AudioManager& audio = octo::Application::getAudioManager();
-			octo::ResourceManager& resources = octo::Application::getResourceManager();
-			audio.playSound(resources.getSound(CRYSTAL_OGG), 1.f, biome.randomFloat(0.2f, 1.f), sf::Vector3f(position.x, position.y, 0.f), 50.f, 0.5f);
+			(void)biome;
+			(void)position;
+//			octo::AudioManager& audio = octo::Application::getAudioManager();
+//			octo::ResourceManager& resources = octo::Application::getResourceManager();
+//			audio.playSound(resources.getSound(CRYSTAL_OGG), 1.f, biome.randomFloat(0.2f, 1.f), sf::Vector3f(position.x, position.y, 0.f), 50.f, 0.5f);
 			m_isSound = false;
 		}
 }
