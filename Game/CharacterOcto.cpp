@@ -72,8 +72,9 @@ CharacterOcto::CharacterOcto() :
 	m_replaceOcto(false),
 	m_enableCutscene(false),
 	m_isEndingInRocket(false),
+	m_autoDisableCutscene(false),
 	m_generator(std::to_string(time(0))),
-	m_cutsceneTimerMax(sf::seconds(1.f)),
+	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
@@ -837,7 +838,11 @@ void	CharacterOcto::update(sf::Time frameTime)
 	{
 		m_cutsceneTimer += frameTime;
 		if (m_cutsceneTimer > m_cutsceneTimerMax)
+		{
 			m_cutsceneTimer = m_cutsceneTimerMax;
+			if (m_autoDisableCutscene)
+				m_enableCutscene = false;
+		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
 	}
 	else
@@ -958,6 +963,8 @@ void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
 	if (robot->getEffectEnable())
 		startKonamiCode(firstTime);
+	if (firstTime)
+		enableCutscene(true, true);
 }
 
 void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
@@ -966,6 +973,8 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 	if (robot->getEffectEnable())
 		startKonamiCode(firstTime);
 	m_repairNanoRobot = robot;
+	if (firstTime)
+		enableCutscene(true, true);
 }
 
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
@@ -1604,7 +1613,7 @@ void	CharacterOcto::meetNpc(bool meetNpc)
 	m_meetNpc = meetNpc;
 }
 
-void	CharacterOcto::enableCutscene(bool enable)
+void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
 {
 	if (enable && !m_enableCutscene)
 	{
@@ -1614,6 +1623,7 @@ void	CharacterOcto::enableCutscene(bool enable)
 	else
 		m_cutsceneTimer = std::min(m_cutsceneTimer, m_cutsceneTimerMax);
 	m_enableCutscene = enable;
+	m_autoDisableCutscene = autoDisable;
 }
 
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)

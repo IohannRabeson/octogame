@@ -137,13 +137,15 @@ WaterABiome::WaterABiome() :
 	m_gameObjects[25] = GameObjectType::PortalWater;
 	m_gameObjects[120] = GameObjectType::BrayouNpc;
 	m_instances[140] = MAP_WATER_A_TRAIL_OMP;
+	m_gameObjects[610] = GameObjectType::JellyfishNpc;
+	m_gameObjects[580] = GameObjectType::JellyfishNpc;
 
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::JungleC);
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::WaterB);
+	m_destinations.push_back(Level::JungleD);
 }
 
 void			WaterABiome::setup(std::size_t seed)
@@ -294,7 +296,7 @@ Map::MapSurfaceGenerator WaterABiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f, 140.f, 141.f, 639.f, 640.f, m_mapSize.x * 1.f};
-		std::vector<float> pointY = {n  , 0.f  , 3.f  , 3.f  , 0.f  , n};
+		std::vector<float> pointY = {n  , 0.f  , 3.8f , 3.8f , 0.f  , n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -314,26 +316,44 @@ Map::TileColorGenerator WaterABiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart = getRockColor();
 	sf::Color secondColorEnd = getRockColor();
-	float startTransition = -1200.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = -1000.f / static_cast<float>(m_mapSize.y);
-	float endTransition = -800.f / static_cast<float>(m_mapSize.y);
-	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
+	sf::Color thirdColorStart(53, 107, 208);
+	sf::Color thirdColorEnd(103, 157, 208);
+	float start1 = -1900.f / static_cast<float>(m_mapSize.y);
+	float start2 = -1200.f / static_cast<float>(m_mapSize.y);
+	float middle1 = 0.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
+	float end1 = 1000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 1700.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		if (y <= startTransition)
+		if (y <= start1)
 			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
-		else if (y > startTransition && y <= middleTransition)
+		else if (y > start1 && y <= start2)
 		{
-			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
+			float ratio = (y - (start1)) / (start2 - start1);
 			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
 		}
-		else if (y > middleTransition && y <= endTransition)
+		else if (y > start2 && y <= middle1)
 		{
-			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
+			float ratio = (y - (start2)) / (middle1 - start2);
 			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
 		}
-		else
+		else if (y > middle1 && y <= middle2)
+		{
 			return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
+		}
+		else if (y >= middle2 && y < end1)
+		{
+			float ratio = (y - (middle2)) / (end1 - middle2);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, thirdColorStart, ratio), m_tileEndColor, transition);
+		}
+		else if (y >= end1 && y < end2)
+		{
+			float ratio = (y - (end1)) / (end2 - end1);
+			return octo::linearInterpolation(thirdColorStart, octo::linearInterpolation(m_tileEndColor, thirdColorEnd, ratio), transition);
+		}
+		return octo::linearInterpolation(thirdColorStart, thirdColorEnd, transition);
 	};
 }
 
