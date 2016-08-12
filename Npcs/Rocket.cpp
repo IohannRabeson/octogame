@@ -78,11 +78,11 @@ void Rocket::setupMachine(void)
 void Rocket::setPosition(sf::Vector2f const & position)
 {
 	ANpc::setPosition(position);
-	m_enterRocketShape->setPosition(position.x + 60.f, position.y - 850.f);
+	m_enterRocketShape->setPosition(position.x + 80.f, position.y - 830.f);
 	m_enterRocketShape->update();
-	m_smokes[0].setPosition(position + sf::Vector2f(20.f, 1350.f));
-	m_smokes[1].setPosition(position + sf::Vector2f(132.f, 1350.f));
-	m_smokes[2].setPosition(position + sf::Vector2f(244.f, 1350.f));
+	m_smokes[0].setPosition(position + sf::Vector2f(40.f, 1350.f));
+	m_smokes[1].setPosition(position + sf::Vector2f(152.f, 1350.f));
+	m_smokes[2].setPosition(position + sf::Vector2f(264.f, 1350.f));
 }
 
 void Rocket::addMapOffset(float x, float y)
@@ -90,9 +90,9 @@ void Rocket::addMapOffset(float x, float y)
 	ANpc::addMapOffset(x, y);
 	m_enterRocketShape->setPosition(m_enterRocketShape->getPosition().x + x, m_enterRocketShape->getPosition().y + y);
 	m_enterRocketShape->update();
-	m_smokes[0].setPosition(m_smokes[0].getPosition() + sf::Vector2f(20.f, 1350.f));
-	m_smokes[1].setPosition(m_smokes[1].getPosition() + sf::Vector2f(132.f, 1350.f));
-	m_smokes[2].setPosition(m_smokes[2].getPosition() + sf::Vector2f(244.f, 1350.f));
+	m_smokes[0].setPosition(m_smokes[0].getPosition() + sf::Vector2f(40.f, 1350.f));
+	m_smokes[1].setPosition(m_smokes[1].getPosition() + sf::Vector2f(152.f, 1350.f));
+	m_smokes[2].setPosition(m_smokes[2].getPosition() + sf::Vector2f(264.f, 1350.f));
 }
 
 void Rocket::playSound(void)
@@ -228,15 +228,15 @@ void Rocket::update(sf::Time frametime)
 
 	if (m_timerFirstBlast < m_timerFirstBlastMax * 0.8f)
 	{
-		m_smokes[0].setPosition(ANpc::getPosition() + sf::Vector2f(20.f, 1350.f));
-		m_smokes[1].setPosition(ANpc::getPosition() + sf::Vector2f(132.f, 1350.f));
-		m_smokes[2].setPosition(ANpc::getPosition() + sf::Vector2f(244.f, 1350.f));
+		m_smokes[0].setPosition(ANpc::getPosition() + sf::Vector2f(40.f, 1350.f));
+		m_smokes[1].setPosition(ANpc::getPosition() + sf::Vector2f(152.f, 1350.f));
+		m_smokes[2].setPosition(ANpc::getPosition() + sf::Vector2f(264.f, 1350.f));
 	}
 	else
 	{
-		m_smokes[0].setPosition(ANpc::getPosition() + sf::Vector2f(60.f, 1450.f));
-		m_smokes[1].setPosition(ANpc::getPosition() + sf::Vector2f(132.f, 1450.f));
-		m_smokes[2].setPosition(ANpc::getPosition() + sf::Vector2f(204.f, 1450.f));
+		m_smokes[0].setPosition(ANpc::getPosition() + sf::Vector2f(80.f, 1450.f));
+		m_smokes[1].setPosition(ANpc::getPosition() + sf::Vector2f(152.f, 1450.f));
+		m_smokes[2].setPosition(ANpc::getPosition() + sf::Vector2f(224.f, 1450.f));
 	}
 	for (std::size_t i = 0u; i < m_smokesCount; i++)
 		m_smokes[i].update(frametime);
