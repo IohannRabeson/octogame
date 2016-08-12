@@ -6,7 +6,8 @@
 #include <Interpolations.hpp>
 #include <Math.hpp>
 
-Grass::Grass(bool onInstance) :
+Grass::Grass(bool onInstance, bool reverse) :
+	m_reverse(reverse),
 	m_isDeadlyGrass(false),
 	m_animator(1.f, 5.f, 1.f, 0.3f, 1.f),
 	m_animation(0.f),
@@ -23,11 +24,12 @@ Grass::Grass(bool onInstance) :
 
 void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	sf::Vector2f downLeft(0.f, 0.f);
-	sf::Vector2f downRight(size.x, 0.f);
-	sf::Vector2f downMid(size.x / 2.f, size.x / 2.f);
-	sf::Vector2f upLeft(-size.x, -size.y);
-	sf::Vector2f upRight(size.x * 2.f, -size.y);
+	sf::Vector2f downLeft(-size.x / 2.f, 0.f);
+	sf::Vector2f downRight(size.x / 2.f, 0.f);
+	sf::Vector2f downMid(0.f, size.x / 2.f);
+
+	if (m_reverse)
+		downMid.y *= -1.f;
 
 	if (!m_sideTarget)
 		m_up = octo::cosinusInterpolation(m_leftTargets[m_indexLeftTarget], m_rightTargets[m_indexRightTarget], m_movementTimer / m_movementTimerMax);
@@ -66,8 +68,16 @@ void Grass::setup(ABiome& biome)
 	m_rightTargets.resize(m_numberOfTargets);
 	for (std::size_t i = 0u; i < m_numberOfTargets; i++)
 	{
-		m_leftTargets[i] = sf::Vector2f(-m_size.x * ((i + 1) / m_numberOfTargets), -m_size.y);
-		m_rightTargets[i] = sf::Vector2f(m_size.x + m_size.x * ((i + 1) / m_numberOfTargets), -m_size.y);
+		if (!m_reverse)
+		{
+			m_leftTargets[i] = sf::Vector2f(-m_size.x * ((i + 1) / m_numberOfTargets), -m_size.y);
+			m_rightTargets[i] = sf::Vector2f(m_size.x + m_size.x * ((i + 1) / m_numberOfTargets), -m_size.y);
+		}
+		else
+		{
+			m_leftTargets[i] = sf::Vector2f(-m_size.x * ((i + 1) / m_numberOfTargets), m_size.y);
+			m_rightTargets[i] = sf::Vector2f(m_size.x + m_size.x * ((i + 1) / m_numberOfTargets), m_size.y);
+		}
 	}
 
 	if (m_isDeadlyGrass && (biome.randomBool(0.1f) || m_onInstance))

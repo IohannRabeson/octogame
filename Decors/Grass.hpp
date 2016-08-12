@@ -9,7 +9,7 @@
 class Grass : public ADecor
 {
 public:
-	Grass(bool onInstance = false);
+	Grass(bool onInstance = false, bool reverse = false);
 	virtual ~Grass(void) = default;
 
 	virtual void setup(ABiome& biome);
@@ -18,6 +18,7 @@ public:
 						ABiome& biome);
 
 private:
+	bool						m_reverse;
 	sf::Vector2f				m_size;
 	sf::Color					m_color;
 	sf::Color					m_colorNormal;

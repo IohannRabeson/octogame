@@ -137,7 +137,7 @@ WaterBBiome::WaterBBiome() :
 	m_instances[20] = MAP_WATER_B_TRAIL_OMP;
 	m_gameObjects[20] = GameObjectType::Portal;
 
-	m_gameObjects[46] = GameObjectType::CedricStartNpc;
+	//m_gameObjects[46] = GameObjectType::CedricStartNpc;
 	m_gameObjects[50] = GameObjectType::JellyfishNpc;
 	m_gameObjects[70] = GameObjectType::JellyfishNpc;
 	m_gameObjects[390] = GameObjectType::JellyfishNpc;
