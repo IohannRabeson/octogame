@@ -303,12 +303,12 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 				if (event.position < -m_triggerLimit && !m_joystickRT)
 				{
 					m_joystickRT = true;
-					//onInputPressed(OctoKeys::GroundLeft);
+					onInputPressed(OctoKeys::GroundLeft);
 				}
 				else if (event.position >= -m_triggerLimit && m_joystickRT)
 				{
 					m_joystickRT = false;
-					//onInputReleased(OctoKeys::GroundLeft);
+					onInputReleased(OctoKeys::GroundLeft);
 				}
 			}
 		}
@@ -338,12 +338,12 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 			if (event.position > m_triggerLimit && !m_joystickLT)
 			{
 				m_joystickLT = true;
-				//onInputPressed(OctoKeys::GroundLeft);
+				onInputPressed(OctoKeys::GroundLeft);
 			}
 			else if (event.position <= m_triggerLimit && m_joystickLT)
 			{
 				m_joystickLT = false;
-				//onInputReleased(OctoKeys::GroundLeft);
+				onInputReleased(OctoKeys::GroundLeft);
 			}
 		}
 		if (event.axis == sf::Joystick::Z) //RT
