@@ -216,6 +216,7 @@ void	Game::loadLevel(void)
 		PostEffectLayer::getInstance().registerShader(name.c_str(), VORTEX_FRAG);
 	}
 	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
+	PostEffectLayer::getInstance().registerShader(ROCKET_TAKEOFF_FRAG, ROCKET_TAKEOFF_FRAG);
 	PostEffectLayer::getInstance().registerShader(CUTSCENE_FRAG, CUTSCENE_FRAG);
 
 	ChallengeManager::getInstance().reset();
@@ -372,6 +373,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
 			}
 			break;
+		case GameObjectType::Rocket:
+			gameObjectCast<Rocket>(gameObject)->collideOctoEvent(octo);
+			break;
 		default:
 			break;
 	}
@@ -403,9 +407,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::LongChairNpc:
 			gameObjectCast<LongChairNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::Rocket:
-			gameObjectCast<Rocket>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::OctoDeathNpc:
 			gameObjectCast<OctoDeathNpc>(gameObject)->collideOctoEvent(octo);

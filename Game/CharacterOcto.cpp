@@ -71,6 +71,7 @@ CharacterOcto::CharacterOcto() :
 	m_meetNpc(false),
 	m_replaceOcto(false),
 	m_enableCutscene(false),
+	m_isEndingInRocket(false),
 	m_autoDisableCutscene(false),
 	m_generator(std::to_string(time(0))),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
@@ -140,6 +141,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::EngineSnow)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik)
+		| static_cast<std::size_t>(GameObjectType::RocketDoor)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint);
 	m_box->setCollisionMask(mask);
 
@@ -1583,6 +1585,17 @@ bool	CharacterOcto::isInAir(void) const
 bool	CharacterOcto::isMeetingNpc(void) const
 {
 	return m_meetNpc;
+}
+
+bool	CharacterOcto::isEndingInRocket(void) const
+{
+	return m_isEndingInRocket;
+}
+
+void	CharacterOcto::endInRocket(void)
+{
+	m_isEndingInRocket = true;
+	m_box->setApplyGravity(false);
 }
 
 void	CharacterOcto::resetCollidingTileCount(void)
