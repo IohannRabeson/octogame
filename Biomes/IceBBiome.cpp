@@ -141,7 +141,7 @@ IceBBiome::IceBBiome() :
 	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
 	m_instances[178] = MAP_ICE_B_TRAIL_C_OMP;
 	m_instances[219] = MAP_ICE_B_TRAIL_D_OMP;
-	m_instances[370] = MAP_ICE_B_PORTAL_OMP;
+	m_instances[317] = MAP_ICE_B_PORTAL_OMP;
 	m_gameObjects[385] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[390] = GameObjectType::EngineSnow;
 	m_gameObjects[450] = GameObjectType::PortalSnow;
@@ -151,7 +151,7 @@ IceBBiome::IceBBiome() :
 	if (progress.getLastDestination() == Level::IceC)
 		m_octoStartPosition = sf::Vector2f(279.f * 16.f, 1640.f);
 	if (progress.getLastDestination() == Level::Random)
-		m_octoStartPosition = sf::Vector2f(367.f * 16.f, -30.f);
+		m_octoStartPosition = sf::Vector2f(320.f * 16.f, 2000.f);
 
 	m_gameObjects[400] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[320] = GameObjectType::BirdBlueNpc;
@@ -264,8 +264,8 @@ Map::MapSurfaceGenerator IceBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float m = noise.fBm(x, y, 3, 3.f, 0.3f) / 4.f;
-		std::vector<float> pointX = {25.f, 50.f, 51.f, 317.f, 318.f, 325.f, 370.f    , 410.f    , 500.f};
-		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.2f , 0.f  , n    , m + 0.04f, m + 0.04f, n};
+		std::vector<float> pointX = {25.f, 50.f, 51.f, 317.f, 318.f, 356.f, 357.f, 380.f    , 410.f    , 500.f};
+		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.2f , 0.4f , 0.4f , 0.15f, m + 0.04f, m + 0.04f, n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

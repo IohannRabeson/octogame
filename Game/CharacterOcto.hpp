@@ -97,9 +97,11 @@ public:
 	bool					isInAir(void) const;
 	bool					isOnGround(void) const;
 	bool					isMeetingNpc(void) const;
+	bool					isEndingInRocket(void) const;
+	void					endInRocket(void);
 	void					meetNpc(bool meetNpc);
 	void					resetCollidingTileCount(void);
-	void					enableCutscene(bool enable);
+	void					enableCutscene(bool enable, bool autoDisable = false);
 
 private:
 	bool					dieFall();
@@ -219,6 +221,8 @@ private:
 	bool						m_meetNpc;
 	bool						m_replaceOcto;
 	bool						m_enableCutscene;
+	bool						m_isEndingInRocket;
+	bool						m_autoDisableCutscene;
 	Events						m_prevEvent;
 
 	RandomGenerator				m_generator;
