@@ -523,7 +523,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
 				else if (!decor.name.compare(DECOR_GRASS_OSS))
-					adecor = new Grass();
+					adecor = new Grass(true, false);
+				else if (!decor.name.compare(DECOR_GRASS_REVERSE_OSS))
+					adecor = new Grass(true, true);
 				if (adecor)
 				{
 					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));
@@ -1366,7 +1368,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		first = nullptr;
 		last = nullptr;
 		updateLast = true;
-		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
+		for (int y = m_tiles->getRows() - 1; y >= 0 ; y--)
 		{
 			tile = &m_tiles->get(x, y);
 			if (!tile->isEmpty())
@@ -1380,8 +1382,8 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			if (first)
 			{
 				// Avoid to compute A LOT of transition under the screen
-				if ((tile->getStartTransition(0u).y > bottomBorder && tilePrev->getStartTransition(0u).y > bottomBorder)
-						|| (tilePrev->getStartTransition(1u).x < cameraRect.left && tile->getStartTransition(1u).x < cameraRect.left)
+				if (/*(tile->getStartTransition(0u).y > bottomBorder && tilePrev->getStartTransition(0u).y > bottomBorder)
+						||*/ (tilePrev->getStartTransition(1u).x < cameraRect.left && tile->getStartTransition(1u).x < cameraRect.left)
 						|| (tilePrev->getStartTransition(0u).x > rightBorder && tile->getStartTransition(0u).x > rightBorder))
 					break;
 			}
@@ -1407,18 +1409,18 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			m_vertices[m_verticesCount + 3u].position.x = m_vertices[m_verticesCount + 0u].position.x;
 
 			// Update physics information
-			if (!first)
+			if (!first && (tile->getStartTransition(0u).y < bottomBorder && tilePrev->getStartTransition(0u).y < bottomBorder))
 			{
 				first = m_tileShapes[x];
-				m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount]);
+				m_tileShapes[x]->setEndVertex(&m_vertices[m_verticesCount]);
 				m_tileShapes[x]->setGameObject(tilePrev);
 			}
 			if (updateLast)
-				last = &m_vertices[m_verticesCount + 2u];
+				last = &m_vertices[m_verticesCount];
 			m_verticesCount += 4u;
 		}
 		if (first)
-			first->setEndVertex(last);
+			first->setVertex(last);
 		else
 		{
 			m_tileShapes[x]->setVertex(&m_vertices[0u]);
