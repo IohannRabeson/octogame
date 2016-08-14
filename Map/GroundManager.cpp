@@ -523,9 +523,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
 				else if (!decor.name.compare(DECOR_GRASS_OSS))
-					adecor = new Grass(true, false);
-				else if (!decor.name.compare(DECOR_GRASS_REVERSE_OSS))
-					adecor = new Grass(true, true);
+					adecor = new Grass(true);
 				if (adecor)
 				{
 					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));
