@@ -9,7 +9,7 @@
 Grass::Grass(bool onInstance, bool reverse) :
 	m_reverse(reverse),
 	m_isDeadlyGrass(false),
-	m_animator(1.f, 5.f, 1.f, 0.3f, 1.f),
+	m_animator(1.f, 0.f, 1.f, 0.3f, 1.f),
 	m_animation(0.f),
 	m_animationSpeed(1.f),
 	m_movementTimerMax(sf::seconds(0.5f)),
@@ -43,10 +43,13 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 	m_up += origin;
 
 	if (!m_isDeadlyGrass)
-		builder.createTriangle(m_up, downRight, downLeft, color);
+	{
+		builder.createTriangle(m_up, downLeft, downMid, color);
+		builder.createTriangle(m_up, downRight, downMid, color);
+	}
 	else
 	{
-		builder.createTriangle(m_up, downLeft, downMid, color + sf::Color(10, 10, 10, 0));
+		builder.createTriangle(m_up, downLeft, downMid, color + sf::Color(15, 15, 15, 0));
 		builder.createTriangle(m_up, downRight, downMid, color);
 	}
 }
@@ -62,7 +65,7 @@ void Grass::setup(ABiome& biome)
 		m_animator.setup(biome.getMushroomLifeTime());
 	else
 		//TODO: Find a better way to do that
-		m_animator.setup(sf::seconds(100000.f));
+		m_animator.setup();
 
 	m_leftTargets.resize(m_numberOfTargets);
 	m_rightTargets.resize(m_numberOfTargets);
@@ -70,13 +73,13 @@ void Grass::setup(ABiome& biome)
 	{
 		if (!m_reverse)
 		{
-			m_leftTargets[i] = sf::Vector2f(-m_size.x * ((i + 1) / m_numberOfTargets), -m_size.y);
-			m_rightTargets[i] = sf::Vector2f(m_size.x + m_size.x * ((i + 1) / m_numberOfTargets), -m_size.y);
+			m_leftTargets[i] = sf::Vector2f((-m_size.x / 2.f) - (m_size.x / 2.f + Tile::TileSize / 2.f) * ((i + 1) / m_numberOfTargets), -m_size.y);
+			m_rightTargets[i] = sf::Vector2f((m_size.x / 2.f) + (m_size.x / 2.f + Tile::TileSize / 2.f) * ((i + 1) / m_numberOfTargets), -m_size.y);
 		}
 		else
 		{
-			m_leftTargets[i] = sf::Vector2f(-m_size.x * ((i + 1) / m_numberOfTargets), m_size.y);
-			m_rightTargets[i] = sf::Vector2f(m_size.x + m_size.x * ((i + 1) / m_numberOfTargets), m_size.y);
+			m_leftTargets[i] = sf::Vector2f((-m_size.x / 2.f) - (m_size.x / 2.f + Tile::TileSize / 2.f) * ((i + 1) / m_numberOfTargets), m_size.y);
+			m_rightTargets[i] = sf::Vector2f((m_size.x / 2.f) + (m_size.x / 2.f + Tile::TileSize / 2.f) * ((i + 1) / m_numberOfTargets), m_size.y);
 		}
 	}
 
@@ -97,11 +100,16 @@ void Grass::computeMovement(sf::Time frameTime)
 	if (m_isDeadlyGrass && dist < 600.f)
 		m_color = octo::cosinusInterpolation(m_colorDeadly, m_colorNormal, dist / 600.f);
 
-	if (dist <= 60.f && m_lastOctoPosition.x != octoPosition.x)
+	if ((dist <= 60.f && m_lastOctoPosition.x != octoPosition.x) || (progress.getOctoDoubleJump() && dist <= 200.f))
 	{
 		if (m_isDeadlyGrass && (m_up.x - octoPosition.x > -16.f && m_up.x - octoPosition.x < 16.f))
 			progress.setKillOcto(true);
-		m_animationSpeed = 1.f + (dist / 60.f);
+
+		if (dist <= 60.f)
+			m_animationSpeed = 1.f + (dist / 60.f);
+		else
+			m_animationSpeed = 1.f + (dist / 300.f);
+
 	}
 	else if (m_animationSpeed >= 0.2f)
 		m_animationSpeed -= frameTime.asSeconds();
@@ -111,21 +119,26 @@ void Grass::computeMovement(sf::Time frameTime)
 
 	if (m_movementTimer > m_movementTimerMax)
 	{
-		m_sideTarget = !m_sideTarget;
-		if (dist <= 60.f && m_lastOctoPosition.x != octoPosition.x)
+		if (!m_sideTarget && m_indexLeftTarget > 0u)
+			m_indexLeftTarget--;
+		else if (m_sideTarget && m_indexRightTarget > 0u)
+			m_indexRightTarget--;
+
+		if (dist <= 60.f)
 		{
-			if (octoPosition.x < m_lastOctoPosition.x)
+			if (octoPosition.x < m_lastOctoPosition.x && !m_sideTarget)
 				m_indexLeftTarget = m_numberOfTargets - 1;
-			else if (octoPosition.x > m_lastOctoPosition.x)
+			else if (octoPosition.x > m_lastOctoPosition.x && m_sideTarget)
 				m_indexRightTarget = m_numberOfTargets - 1;
 		}
-		else
+		else if (progress.getOctoDoubleJump() && dist <= 200.f)
 		{
-			if (m_sideTarget && m_indexLeftTarget > 0u)
-				m_indexLeftTarget--;
-			else if (!m_sideTarget && m_indexRightTarget > 0u)
-				m_indexRightTarget--;
+			if (octoPosition.x > getPosition().x && !m_sideTarget)
+				m_indexLeftTarget = m_numberOfTargets - 1;
+			else if (octoPosition.x < getPosition().x && m_sideTarget)
+				m_indexRightTarget = m_numberOfTargets - 1;
 		}
+		m_sideTarget = !m_sideTarget;
 		m_movementTimer = sf::Time::Zero;
 	}
 	m_lastOctoPosition = octoPosition;

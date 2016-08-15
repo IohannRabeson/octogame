@@ -14,12 +14,12 @@ WaterCBiome::WaterCBiome() :
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(750u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(30.f * 16.f, 2350.f),
+	m_octoStartPosition(30.f * 16.f, 4350.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
-	m_waterLevel(100.f),
+	m_waterLevel(400.f),
 	m_waterColor(3, 57, 108, 60),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
@@ -70,7 +70,7 @@ WaterCBiome::WaterCBiome() :
 	m_rockPartCount(4.f, 8.f),
 	m_rockColor(159, 24, 24),
 
-	m_grassSizeY(90.f, 110.f),
+	m_grassSizeY(90.f, 91.f),
 	m_grassSizeX(40.f, 70.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x / 2),
@@ -279,8 +279,8 @@ Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f     , 30.f    , 32.f , 33.f , 59.f , 60.f , 62.f    , 750.f};
-		std::vector<float> pointY = {n - 2.2f, n - 2.2f, -1.6f, 2.97f, 2.97f, -1.6f, n - 2.2f, n - 2.2f};
+		std::vector<float> pointX = {0.f     , 750.f};
+		std::vector<float> pointY = {n - 6.2f, n - 6.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -302,12 +302,12 @@ Map::TileColorGenerator WaterCBiome::getTileColorGenerator()
 	sf::Color secondColorEnd = getRockColor();
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -2900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -2200.f / static_cast<float>(m_mapSize.y);
-	float middle1 = -1000.f / static_cast<float>(m_mapSize.y);
-	float middle2 = 0.f / static_cast<float>(m_mapSize.y);
-	float end1 = 1500.f / static_cast<float>(m_mapSize.y);
-	float end2 = 2700.f / static_cast<float>(m_mapSize.y);
+	float start1 = -22000.f / static_cast<float>(m_mapSize.y);
+	float start2 = -18000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -8000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = -3000.f / static_cast<float>(m_mapSize.y);
+	float end1 = 2000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 7000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;

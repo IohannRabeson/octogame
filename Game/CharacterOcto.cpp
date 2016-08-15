@@ -1649,6 +1649,11 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::SlowFall:
 			m_keyUp = false;
+			if (state == WaterJump || state == SlowFall)
+			{
+				m_afterJump = true;
+				m_afterJumpVelocity = m_pixelSecondAfterJump;
+			}
 			if (!m_keyE)
 				m_keyElevator = false;
 			break;
@@ -1703,8 +1708,13 @@ sf::Vector2f	CharacterOcto::getBubblePosition() const
 
 bool	CharacterOcto::getDoubleJump()
 {
+	Progress & progress = Progress::getInstance();
 	if (m_sprite.getCurrentEvent() == DoubleJump)
+	{
+		progress.setOctoDoubleJump(true);
 		return true;
+	}
+	progress.setOctoDoubleJump(false);
 	return false;
 }
 
