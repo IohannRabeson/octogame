@@ -15,7 +15,7 @@ WaterCBiome::WaterCBiome() :
 	m_mapSize(sf::Vector2u(750u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(30.f * 16.f, 4350.f),
-	m_transitionDuration(0.5f),
+	m_transitionDuration(2.f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
