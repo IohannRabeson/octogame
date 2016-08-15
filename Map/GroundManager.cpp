@@ -139,15 +139,18 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 
 	// Init physics
 	ShapeBuilder & builder = PhysicsEngine::getShapeBuilder();
-	m_tileShapes.resize(m_tiles->getColumns(), nullptr);
-	PhysicsEngine::getInstance().setTileMapSize(sf::Vector2i(m_tiles->getColumns(), m_tiles->getRows()));
+	m_tileShapes.resize(m_tiles->getColumns(), 2u, nullptr);
+	PhysicsEngine::getInstance().setTileMapSize(sf::Vector2i(m_tiles->getColumns(), 2u/*m_tiles->getRows()*/));
 
 	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
 	{
-		m_tileShapes[x] = builder.createTile(x, 0u);
-		m_tileShapes[x]->setVertex(&m_vertices[0u]);
-		m_tileShapes[x]->setEndVertex(&m_vertices[0u]);
-		m_tileShapes[x]->setGameObject(nullptr);
+		for (std::size_t y = 0u; y < 2u; y++)
+		{
+			m_tileShapes(x, y) = builder.createTile(x, y);
+			m_tileShapes(x, y)->setVertex(&m_vertices[0u]);
+			m_tileShapes(x, y)->setEndVertex(&m_vertices[0u]);
+			m_tileShapes(x, y)->setGameObject(nullptr);
+		}
 	}
 
 	m_transitionTimerMax = biome.getTransitionDuration();
@@ -1359,6 +1362,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	TileShape * first;
 	sf::Vertex * last;
 	bool updateLast;
+	std::size_t physicsLineCount = 0u;
 	std::size_t countFilledTiles = 0u;
 
 	// Update tiles
@@ -1367,6 +1371,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	{
 		first = nullptr;
 		last = nullptr;
+		physicsLineCount = 0u;
 		updateLast = true;
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
@@ -1376,7 +1381,17 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			if (tile->isTransitionType(Tile::e_transition_none))
 			{
 				if (first && tile->isEmpty())
+				{
 					updateLast = false;
+					if (physicsLineCount == 0u)
+					{
+						first->setEndVertex(last);
+						first = nullptr;
+						last = nullptr;
+						updateLast = true;
+						physicsLineCount++;
+					}
+				}
 				continue;
 			}
 			if (first)
@@ -1411,20 +1426,20 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			// Update physics information
 			if (!first)
 			{
-				first = m_tileShapes[x];
-				m_tileShapes[x]->setVertex(&m_vertices[m_verticesCount]);
-				m_tileShapes[x]->setGameObject(tilePrev);
+				first = m_tileShapes(x, physicsLineCount);
+				m_tileShapes(x, physicsLineCount)->setVertex(&m_vertices[m_verticesCount]);
+				m_tileShapes(x, physicsLineCount)->setGameObject(tilePrev);
 			}
 			if (updateLast)
-				last = &m_vertices[m_verticesCount + 2u];
+				last = &m_vertices[m_verticesCount];
 			m_verticesCount += 4u;
 		}
 		if (first)
 			first->setEndVertex(last);
 		else
 		{
-			m_tileShapes[x]->setVertex(&m_vertices[0u]);
-			m_tileShapes[x]->setEndVertex(&m_vertices[0u]);
+			m_tileShapes(x, physicsLineCount)->setVertex(&m_vertices[0u]);
+			m_tileShapes(x, physicsLineCount)->setEndVertex(&m_vertices[0u]);
 		}
 	}
 	/*
