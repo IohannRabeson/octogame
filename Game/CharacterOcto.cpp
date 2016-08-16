@@ -36,7 +36,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
 	m_timeSlowFallMax(sf::seconds(2.5f)),
 	m_spriteScale(0.6f),
-	m_maxJumpWaterVelocity(-3000.f),
+	m_maxJumpWaterVelocity(-3100.f),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondSlowFall(-300.f),
 	m_pixelSecondWalk(320.f),
