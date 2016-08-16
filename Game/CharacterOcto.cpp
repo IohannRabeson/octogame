@@ -1081,6 +1081,8 @@ void	CharacterOcto::collisionTileUpdate()
 
 void	CharacterOcto::onSky(Events event)
 {
+	Progress & progress = Progress::getInstance();
+	progress.setOctoDoubleJump(false);
 	switch (event)
 	{
 		case StartJump:
@@ -1090,6 +1092,7 @@ void	CharacterOcto::onSky(Events event)
 		case WaterJump:
 		case Jump:
 		case DoubleJump:
+			progress.setOctoDoubleJump(true);
 			if (m_box->getGlobalBounds().top > m_previousTop
 					&& m_jumpVelocity != m_pixelSecondJump)
 			{
@@ -1708,13 +1711,8 @@ sf::Vector2f	CharacterOcto::getBubblePosition() const
 
 bool	CharacterOcto::getDoubleJump()
 {
-	Progress & progress = Progress::getInstance();
 	if (m_sprite.getCurrentEvent() == DoubleJump)
-	{
-		progress.setOctoDoubleJump(true);
 		return true;
-	}
-	progress.setOctoDoubleJump(false);
 	return false;
 }
 

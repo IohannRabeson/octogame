@@ -9,7 +9,7 @@
 Grass::Grass(bool onInstance, bool reverse) :
 	m_reverse(reverse),
 	m_isDeadlyGrass(false),
-	m_animator(1.f, 0.f, 1.f, 0.3f, 1.f),
+	m_animator(0.2f, 0.f, 1.f, 0.3f, 1.f),
 	m_animation(0.f),
 	m_animationSpeed(1.f),
 	m_movementTimerMax(sf::seconds(0.5f)),
@@ -29,7 +29,7 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 	sf::Vector2f downMid(0.f, size.x / 2.f);
 
 	if (m_reverse)
-		downMid.y *= -1.f;
+		downMid.y = -downMid.y;
 
 	if (!m_sideTarget)
 		m_up = octo::cosinusInterpolation(m_leftTargets[m_indexLeftTarget], m_rightTargets[m_indexRightTarget], m_movementTimer / m_movementTimerMax);
@@ -102,13 +102,13 @@ void Grass::computeMovement(sf::Time frameTime)
 
 	if ((dist <= 60.f && m_lastOctoPosition.x != octoPosition.x) || (progress.getOctoDoubleJump() && dist <= 200.f))
 	{
-		if (m_isDeadlyGrass && (m_up.x - octoPosition.x > -16.f && m_up.x - octoPosition.x < 16.f))
+		if (dist <= 40.f && m_isDeadlyGrass && (m_up.x - octoPosition.x > -16.f && m_up.x - octoPosition.x < 16.f))
 			progress.setKillOcto(true);
 
 		if (dist <= 60.f)
 			m_animationSpeed = 1.f + (dist / 60.f);
 		else
-			m_animationSpeed = 1.f + (dist / 300.f);
+			m_animationSpeed = 1.f + (dist / 200.f);
 
 	}
 	else if (m_animationSpeed >= 0.2f)
@@ -146,7 +146,7 @@ void Grass::computeMovement(sf::Time frameTime)
 
 void Grass::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome & biome)
 {
-	sf::Vector2f const & position = getPosition();
+	sf::Vector2f const & position = getPosition() + sf::Vector2f(Tile::TileSize / 2.f, 0.f);
 
 	computeMovement(frameTime);
 	m_animator.update(frameTime * m_animationSpeed);
