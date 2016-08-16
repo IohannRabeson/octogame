@@ -14,7 +14,7 @@ WaterCBiome::WaterCBiome() :
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(750u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(30.f * 16.f, 4350.f),
+	m_octoStartPosition(60.f * 16.f, 5150.f),
 	m_transitionDuration(2.f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -71,7 +71,7 @@ WaterCBiome::WaterCBiome() :
 	m_rockColor(159, 24, 24),
 
 	m_grassSizeY(90.f, 91.f),
-	m_grassSizeX(30.f, 40.f),
+	m_grassSizeX(50.f, 70.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
@@ -279,8 +279,8 @@ Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f     , 750.f};
-		std::vector<float> pointY = {n - 6.2f, n - 6.2f};
+		std::vector<float> pointX = {0.f     , 307.f   , 308.f, 442.f, 443.f   , 570.f   , 592.f  , 593.f, 612.f, 613.f  , 640.f   , 750.f};
+		std::vector<float> pointY = {n - 6.2f, n - 5.5f, 4.6f , 4.6f , n - 6.2f, n - 6.2f, -4.615f, 4.6f , 4.6f , -4.615f, n - 5.5f, n - 6.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -289,7 +289,7 @@ Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 			if (x >= pointX[i] && x < pointX[i + 1])
 			{
 				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::linearInterpolation(pointY[i], pointY[i + 1], coef);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
 			}
 		}
 		return n;
