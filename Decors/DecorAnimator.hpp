@@ -3,6 +3,7 @@
 
 # include <SFML/System/Time.hpp>
 # include <random>
+# include "RandomGenerator.hpp"
 
 // TODO: This class needs to be rebuilt from scratch (too messy)
 // if m_lifeTimerMax == 0.f there isn't life state (default)
@@ -37,29 +38,31 @@ enum class State
 	DecorAnimator::State	getState(void) const;
 
 private:
-	State			m_currentState;
-	State			m_lastState;
-	float			m_animation;
-	float			m_finalAnimation;
-	float			m_saveFinalAnimation;
+	static RandomGenerator	m_generator;
 
-	float			m_startTimer;
-	float			m_startTimerMax;
-	float			m_lifeTimer;
-	float			m_lifeTimerMax;
-	float			m_growTimer;
-	float			m_growTimerMax;
-	float			m_dieTimer;
-	float			m_dieTimerMax;
-	float			m_dieSpeed;
-	float			m_beatTimer;
-	float			m_beatTimerMax;
-	bool			m_beatDirection;
-	float			m_beatDelta;
-	float			m_beatDeltaValue;
+	State					m_currentState;
+	State					m_lastState;
+	float					m_animation;
+	float					m_finalAnimation;
+	float					m_saveFinalAnimation;
 
-	bool			computeState(float frameTime);
-	void			computeBeat(float frameTime);
+	float					m_startTimer;
+	float					m_startTimerMax;
+	float					m_lifeTimer;
+	float					m_lifeTimerMax;
+	float					m_growTimer;
+	float					m_growTimerMax;
+	float					m_dieTimer;
+	float					m_dieTimerMax;
+	float					m_dieSpeed;
+	float					m_beatTimer;
+	float					m_beatTimerMax;
+	bool					m_beatDirection;
+	float					m_beatDelta;
+	float					m_beatDeltaValue;
+
+	bool					computeState(float frameTime);
+	void					computeBeat(float frameTime);
 };
 
 #endif

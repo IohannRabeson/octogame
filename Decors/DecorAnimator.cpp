@@ -2,6 +2,8 @@
 #include "RandomGenerator.hpp"
 #include <Interpolations.hpp>
 
+RandomGenerator DecorAnimator::m_generator("random");
+
 DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, float delta, float start) :
 	m_currentState(State::Grow),
 	m_lastState(State::Grow),
@@ -21,11 +23,9 @@ DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, floa
 	m_beatDelta(delta),
 	m_beatDeltaValue(0.f)
 {
-	RandomGenerator generator;
-	generator.setSeed("random");
-	m_finalAnimation = 1.0f - m_beatDelta + generator.randomFloat(0.f, 0.1f);
+	m_finalAnimation = 1.0f - m_beatDelta + m_generator.randomFloat(0.f, 0.1f);
 	m_saveFinalAnimation = m_finalAnimation;
-	m_startTimerMax = generator.randomFloat(0.f, start);
+	m_startTimerMax = m_generator.randomFloat(0.f, start);
 }
 
 void DecorAnimator::computeBeat(float frameTime)

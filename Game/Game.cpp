@@ -123,6 +123,9 @@ Game::Game(void) :
 	m_skipFrames(0u),
 	m_skipFramesMax(3u)
 {
+    octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	octo::Application::getPostEffectManager().createRender(graphics.getVideoMode());
+
 	InputListener::addInputListener();
 
 	m_biomeManager.registerBiome<IceABiome>(Level::IceA);
