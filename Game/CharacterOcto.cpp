@@ -1473,6 +1473,7 @@ void	CharacterOcto::caseSpace()
 		}
 		else if (m_numberOfJump == 1 && m_progress.canDoubleJump())
 		{
+			m_timeSlowFall = sf::Time::Zero;
 			m_sprite.setNextEvent(DoubleJump);
 			m_afterJump = false;
 			m_jumpVelocity = m_pixelSecondJump;
@@ -1500,7 +1501,7 @@ void CharacterOcto::caseUp()
 			m_keyElevator = true;
 			m_sprite.setNextEvent(StartElevator);
 		}
-		else if (!m_onGround && !m_inWater && m_progress.canSlowFall())
+		else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
 			m_sprite.setNextEvent(StartSlowFall);
 	}
 }

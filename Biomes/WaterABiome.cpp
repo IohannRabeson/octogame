@@ -51,7 +51,7 @@ WaterABiome::WaterABiome() :
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
-	m_canCreateTree(false),
+	m_canCreateTree(true),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
@@ -77,13 +77,13 @@ WaterABiome::WaterABiome() :
 	m_grassIndex(0u),
 
 	m_treeDepth(6u, 7u),
-	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
+	m_treeSize(sf::Vector2f(5.f, 100.f), sf::Vector2f(20.f, 120.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(0, 255, 159),
+	m_treeColor(103, 157, 208, 50),
 	m_treeAngle(-180.f, 180.f),
-	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(40.f, 40.f)),
-	m_leafColor(0, 255, 159, 150.f),
+	m_treeBeatMouvement(0.01f),
+	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(150.f, 150.f)),
+	m_leafColor(103, 157, 208, 50),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(255, 0, 0, 150.f),
@@ -145,7 +145,7 @@ WaterABiome::WaterABiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
-	m_destinations.push_back(Level::WaterB);
+	m_destinations.push_back(Level::WaterC);
 	m_destinations.push_back(Level::JungleD);
 }
 
@@ -561,17 +561,7 @@ sf::Color		WaterABiome::getLeafColor()
 
 std::size_t		WaterABiome::getTreePositionX()
 {
-	std::size_t pos;
-	bool isValidPos = false;
-	while (isValidPos == false)
-	{
-		pos = randomInt(1u, m_mapSize.x - 1u);
-			if ((pos >= 0.f && pos <= 150.f + 20.f) || (pos >= 620.f - 20.f && pos <= 750.f + 20.f) || (pos >= 1000.f - 20.f && pos <= 1080.f + 30.f))
-				isValidPos = false;
-			else
-				isValidPos = true;
-	}
-	return pos;
+	return randomInt(1u, m_mapSize.x - 1u);
 }
 
 sf::Vector2f	WaterABiome::getCrystalSize()
@@ -883,10 +873,9 @@ sf::Color		WaterABiome::randomColorLeaf(sf::Color const & color)
 {
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
-	tmp.Hue += m_generator.randomFloat(-180.f, 180.f);
-	tmp.Luminance += m_generator.randomFloat(-20.f, 0.f);
+	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);
+	tmp.Luminance += m_generator.randomFloat(-10.f, 10.f);
 	sf::Color newColor = tmp.TurnToRGB();
 	newColor.a = color.a;
 	return (newColor);
-
 }

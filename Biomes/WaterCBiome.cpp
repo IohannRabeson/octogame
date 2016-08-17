@@ -14,7 +14,7 @@ WaterCBiome::WaterCBiome() :
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(750u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(60.f * 16.f, 5150.f),
+	m_octoStartPosition(88.f * 16.f, 5250.f),
 	m_transitionDuration(2.f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -136,26 +136,18 @@ WaterCBiome::WaterCBiome() :
 
 	// Define game objects
 	m_instances[20] = MAP_WATER_C_TRAIL_OMP;
-	m_gameObjects[20] = GameObjectType::Portal;
+	//m_gameObjects[20] = GameObjectType::Portal;
 
-	m_gameObjects[640] = GameObjectType::CedricEndNpc;
-	/*
-	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[75] = GameObjectType::BrayouNpc;
-	m_gameObjects[149] = GameObjectType::EvaNpc;
-	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-	m_gameObjects[668] = GameObjectType::PeaNpc;
-	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
-	m_gameObjects[730] = GameObjectType::Concert;
-	*/
+	m_gameObjects[450] = GameObjectType::Pedestal;
+	m_gameObjects[454] = GameObjectType::SlowFallNanoRobot;
+	m_gameObjects[640] = GameObjectType::PeaNpc;
 
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
-	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::WaterA);
+	m_destinations.push_back(Level::WaterC);
 }
 
 void			WaterCBiome::setup(std::size_t seed)
@@ -284,8 +276,8 @@ Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f     , 307.f   , 308.f, 442.f, 443.f   , 570.f   , 591.f  , 592.f, 612.f, 613.f  , 640.f   , 750.f};
-		std::vector<float> pointY = {n - 6.2f, n - 5.5f, 4.6f , 4.6f , n - 6.2f, n - 6.2f, -4.618f, 4.6f , 4.6f , -4.415f, n - 5.5f, n - 6.2f};
+		std::vector<float> pointX = {0.f     , 307.f   , 308.f, 442.f, 443.f   , 470.f   , 570.f   , 591.f  , 592.f, 612.f, 613.f  , 640.f   , 750.f};
+		std::vector<float> pointY = {n - 6.2f, n - 6.5f, 4.6f , 4.6f , n - 7.2f, n - 7.2f, n - 6.2f, -4.618f, 4.6f , 4.6f , -4.415f, n - 5.5f, n - 6.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

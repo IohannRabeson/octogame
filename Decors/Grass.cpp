@@ -100,7 +100,7 @@ void Grass::computeMovement(sf::Time frameTime)
 	if (m_isDeadlyGrass && dist < 600.f)
 		m_color = octo::cosinusInterpolation(m_colorDeadly, m_colorNormal, dist / 600.f);
 
-	if ((dist <= 60.f && m_lastOctoPosition.x != octoPosition.x) || (progress.getOctoDoubleJump() && dist <= 200.f))
+	if ((dist <= 60.f && m_lastOctoPosition.x != octoPosition.x) || (progress.getOctoDoubleJump() && dist <= 200.f && octoPosition.x > m_up.x))
 	{
 		if (dist <= 40.f && m_isDeadlyGrass && (m_up.x - octoPosition.x > -16.f && m_up.x - octoPosition.x < 16.f))
 			progress.setKillOcto(true);
@@ -131,7 +131,7 @@ void Grass::computeMovement(sf::Time frameTime)
 			else if (octoPosition.x > m_lastOctoPosition.x && m_sideTarget)
 				m_indexRightTarget = m_numberOfTargets - 1;
 		}
-		else if (progress.getOctoDoubleJump() && dist <= 200.f)
+		else if (progress.getOctoDoubleJump() && dist <= 200.f && octoPosition.x > m_up.x)
 		{
 			if (octoPosition.x > getPosition().x && !m_sideTarget)
 				m_indexLeftTarget = m_numberOfTargets - 1;

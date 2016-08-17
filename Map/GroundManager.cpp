@@ -648,6 +648,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					if (!Progress::getInstance().canRepair())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
 				break;
+			case GameObjectType::SlowFallNanoRobot:
+					if (!Progress::getInstance().canSlowFall())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new SlowFallNanoRobot(sf::Vector2f(0.f, 0.f)));
 			case GameObjectType::GroundTransformNanoRobot:
 					if (!Progress::getInstance().canMoveMap())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
