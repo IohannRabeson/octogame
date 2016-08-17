@@ -116,14 +116,12 @@ void EvaNpc::updateState(void)
 	}
 	else if (sprite.getCurrentEvent() == Idle)
 	{
-		if (getCollideEventOcto())
-		{
-			setDisplayText(true);
-		}
-		else
-		{
+		//if (getCollideEventOcto())
+		//	setDisplayText(true);
+		//else
+		//sprite.setNextEvent(StartSpecial1);
+		if (!getCollideEventOcto())
 			sprite.setNextEvent(StartSpecial1);
-		}
 	}
 	else
 		m_particles.canEmit(true);

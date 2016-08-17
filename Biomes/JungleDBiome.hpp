@@ -85,6 +85,7 @@ public:
 	virtual sf::Color									getRockColor();
 
 	virtual float									getGrassSizeY();
+	virtual float									getGrassSizeX();
 	virtual sf::Color									getGrassColor();
 	virtual std::size_t									getGrassCount();
 	virtual std::size_t									getGrassPosX();
@@ -224,6 +225,7 @@ private:
 	sf::Color											m_rockColor;
 
 	Range<float>											m_grassSizeY;
+	Range<float>											m_grassSizeX;
 	sf::Color											m_grassColor;
 	std::size_t											m_grassCount;
 	std::size_t											m_grassIndex;

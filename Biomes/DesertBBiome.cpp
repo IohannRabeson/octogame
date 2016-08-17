@@ -72,6 +72,7 @@ DesertBBiome::DesertBBiome() :
 	m_rockColor(255, 232, 170),
 
 	m_grassSizeY(80.f, 150.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(46, 133, 84),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -606,6 +607,11 @@ sf::Color		DesertBBiome::getRockColor()
 float	DesertBBiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
+}
+
+float	DesertBBiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
 }
 
 sf::Color	DesertBBiome::getGrassColor()

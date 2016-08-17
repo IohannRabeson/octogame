@@ -9,7 +9,7 @@
 
 ShineEffect::ShineEffect() :
 	m_angle(0.f),
-	m_animator(3.f, 3.f, 0.f, 0.0f, 0.f),
+	m_animator(3.f, 3.f, 0.f, 0.0f, 10.f),
 	m_animation(1.f),
 	m_isShineEffect(true),
 	m_isSound(true)

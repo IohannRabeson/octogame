@@ -1,5 +1,5 @@
-#ifndef DESERTABIOME_HPP
-# define DESERTABIOME_HPP
+#ifndef WATERCBIOME_HPP
+# define WATERCBIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -9,8 +9,7 @@
 
 # include <SFML/System/Vector2.hpp>
 
-
-class DesertABiome : public ABiome
+class WaterCBiome : public ABiome
 {
 template<class T>
 struct Range
@@ -25,7 +24,7 @@ struct Range
 };
 
 public:
-	DesertABiome();
+	WaterCBiome();
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;
@@ -42,6 +41,8 @@ public:
 	virtual float										getWaterLevel();
 	virtual sf::Color									getWaterColor();
 	virtual sf::Color									getSecondWaterColor();
+	virtual float										getTransitionStep() { return 0.5f; };
+	virtual bool										isDeadlyGrass() { return true; };
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -277,9 +278,7 @@ private:
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
 	sf::Color											randomColor(sf::Color const & color);
-
-	std::vector<int>									m_treePos;
-	std::size_t											m_indexTreePos;
+	sf::Color											randomColorLeaf(sf::Color const & color);
 };
 
 #endif

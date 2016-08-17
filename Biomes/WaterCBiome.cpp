@@ -1,4 +1,4 @@
-#include "WaterBBiome.hpp"
+#include "WaterCBiome.hpp"
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
@@ -8,18 +8,18 @@
 #include <limits>
 #include <iostream>
 
-WaterBBiome::WaterBBiome() :
+WaterCBiome::WaterCBiome() :
 	m_name("Water B"),
-	m_id(Level::WaterB),
+	m_id(Level::WaterC),
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(750u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(2.f * 16.f, -1350.f),
-	m_transitionDuration(0.5f),
+	m_octoStartPosition(88.f * 16.f, 5250.f),
+	m_transitionDuration(2.f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
-	m_waterLevel(100.f),
+	m_waterLevel(400.f),
 	m_waterColor(3, 57, 108, 60),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
@@ -36,7 +36,7 @@ WaterBBiome::WaterBBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(10u, 15u),
+	m_rockCount(5u, 7u),
 	m_treeCount(30u, 30u),
 	m_mushroomCount(390u, 400u),
 	m_crystalCount(20u, 30u),
@@ -50,12 +50,12 @@ WaterBBiome::WaterBBiome() :
 	m_canCreateRain(false),
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
-	m_canCreateRock(false),
-	m_canCreateTree(false),
+	m_canCreateRock(true),
+	m_canCreateTree(true),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
-	m_canCreateCrystal(true),
+	m_canCreateCrystal(false),
 	m_canCreateShineEffect(true),
 	m_canCreateCloud(true),
 	m_canCreateStar(true),
@@ -70,8 +70,8 @@ WaterBBiome::WaterBBiome() :
 	m_rockPartCount(4.f, 8.f),
 	m_rockColor(159, 24, 24),
 
-	m_grassSizeY(90.f, 110.f),
-	m_grassSizeX(40.f, 70.f),
+	m_grassSizeY(90.f, 91.f),
+	m_grassSizeX(50.f, 70.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
@@ -79,17 +79,17 @@ WaterBBiome::WaterBBiome() :
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(0, 255, 159),
+	m_treeColor(103, 157, 208, 50),
 	m_treeAngle(-180.f, 180.f),
-	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(40.f, 40.f)),
-	m_leafColor(0, 255, 159, 150.f),
+	m_treeBeatMouvement(0.01f),
+	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(150.f, 150.f)),
+	m_leafColor(103, 157, 208, 50),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(255, 0, 0, 150.f),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
-	m_crystalSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(40.f, 350.f)),
+	m_crystalSize(sf::Vector2f(80.f, 250.f), sf::Vector2f(100.f, 450.f)),
 	m_crystalPartCount(3u, 6u),
 	m_crystalColor(103, 157, 208, 50),
 	m_shineEffectSize(sf::Vector2f(200.f, 200.f), sf::Vector2f(300.f, 300.f)),
@@ -135,152 +135,149 @@ WaterBBiome::WaterBBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[20] = MAP_WATER_B_TRAIL_OMP;
-	m_gameObjects[20] = GameObjectType::Portal;
+	m_instances[20] = MAP_WATER_C_TRAIL_OMP;
+	//m_gameObjects[20] = GameObjectType::Portal;
 
-	m_gameObjects[46] = GameObjectType::CedricStartNpc;
-	m_gameObjects[50] = GameObjectType::JellyfishNpc;
-	m_gameObjects[70] = GameObjectType::JellyfishNpc;
-	m_gameObjects[390] = GameObjectType::JellyfishNpc;
-	m_gameObjects[430] = GameObjectType::JellyfishNpc;
-	m_gameObjects[540] = GameObjectType::JellyfishNpc;
-	m_gameObjects[610] = GameObjectType::JellyfishNpc;
-	m_gameObjects[640] = GameObjectType::CedricEndNpc;
-	/*
-	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[75] = GameObjectType::BrayouNpc;
-	m_gameObjects[149] = GameObjectType::EvaNpc;
-	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-	m_gameObjects[668] = GameObjectType::PeaNpc;
-	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
-	m_gameObjects[730] = GameObjectType::Concert;
-	*/
+	m_gameObjects[450] = GameObjectType::Pedestal;
+	m_gameObjects[454] = GameObjectType::SlowFallNanoRobot;
+	m_gameObjects[640] = GameObjectType::PeaNpc;
 
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::DesertA);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::WaterA);
+	m_destinations.push_back(Level::WaterC);
 }
 
-void			WaterBBiome::setup(std::size_t seed)
+void			WaterCBiome::setup(std::size_t seed)
 {
 	(void)seed;
 }
 
-std::string		WaterBBiome::getName()const
+std::string		WaterCBiome::getName()const
 {
 	return (m_name);
 }
 
-Level			WaterBBiome::getId()const
+Level			WaterCBiome::getId()const
 {
 	return m_id;
 }
 
 //TODO:: We'll probably need a setter for mapSize
-sf::Vector2u	WaterBBiome::getMapSize()
+sf::Vector2u	WaterCBiome::getMapSize()
 {
 	return (m_mapSize);
 }
 
-std::size_t		WaterBBiome::getMapSeed()
+std::size_t		WaterCBiome::getMapSeed()
 {
 	return m_mapSeed;
 }
 
-sf::Vector2f	WaterBBiome::getMapSizeFloat()
+sf::Vector2f	WaterCBiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
 }
 
-sf::Vector2f	WaterBBiome::getOctoStartPosition()
+sf::Vector2f	WaterCBiome::getOctoStartPosition()
 {
 	return m_octoStartPosition;
 }
 
-float			WaterBBiome::getTransitionDuration()
+float			WaterCBiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				WaterBBiome::getInterestPointPosX()
+int				WaterCBiome::getInterestPointPosX()
 {
 	return (m_interestPointPosX);
 }
 
-std::map<std::size_t, GameObjectType> const &	WaterBBiome::getGameObjects()
+std::map<std::size_t, GameObjectType> const &	WaterCBiome::getGameObjects()
 {
 	return m_gameObjects;
 }
 
-Level	WaterBBiome::getDestination()
+Level	WaterCBiome::getDestination()
 {
 	return m_destinations[m_destinationIndex++];
 }
 
-float	WaterBBiome::getWaterLevel()
+float	WaterCBiome::getWaterLevel()
 {
 	return m_waterLevel;
 }
 
-sf::Color	WaterBBiome::getWaterColor()
+sf::Color	WaterCBiome::getWaterColor()
 {
 	return m_waterColor;
 }
 
-sf::Color	WaterBBiome::getSecondWaterColor()
+sf::Color	WaterCBiome::getSecondWaterColor()
 {
 	return m_secondWaterColor;
 }
 
-std::map<std::size_t, std::string> const & WaterBBiome::getInstances()
+std::map<std::size_t, std::string> const & WaterCBiome::getInstances()
 {
 	return m_instances;
 }
 
-std::vector<ParallaxScrolling::ALayer *> WaterBBiome::getLayers()
+std::vector<ParallaxScrolling::ALayer *> WaterCBiome::getLayers()
 {
 	sf::Vector2u mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
+	GenerativeLayer * layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.2f, 0.6f), sf::Vector2u(mapSize.x, mapSize.y / 3.f), 8.f, 250, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
+			return noise.perlin(x * 1.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 40, 0.1f, 0.4f, 11.f, 40.f);
+	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.4f, 0.4f), sf::Vector2u(mapSize.x, mapSize.y / 3.f), 12.f, 270, 0.1f, 0.3f, 1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
+			return noise.noise(x * 1.1f, y);
 		});
 	vector.push_back(layer);
-	mapSize.y = mapSize.y / 2u;
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 12.f, 20, 0.2f, 0.4f, 6.f, 40.f);
+	layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 2.5f), 12.f, 350, 0.1f, 0.3f, 2.f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
+			return noise.noise(x * 25.f, y);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.7f, 0.2f), mapSize, 12.f, 10, 0.2f, 0.4f, 6.f, 40.f);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 300, 0.1f, 0.3f, 2.f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
+			return noise.noise(x * 30.f, y);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 100, 0.2f, 0.3f, 1.5f, 2000.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 35.f, y + 100);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.7f, 0.1f), sf::Vector2u(mapSize.x, mapSize.y * 5.5f), 12.f, -50, 0.3f, 0.3f, 1.f, 3000.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 40.f, y + 200.f);
 		});
 	vector.push_back(layer);
 	return vector;
 }
 
-Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
+Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f     , 30.f    , 32.f , 33.f , 59.f , 60.f , 62.f    , 750.f};
-		std::vector<float> pointY = {n - 2.2f, n - 2.2f, -1.6f, 2.97f, 2.97f, -1.6f, n - 2.2f, n - 2.2f};
+		std::vector<float> pointX = {0.f     , 307.f   , 308.f, 442.f, 443.f   , 470.f   , 570.f   , 591.f  , 592.f, 612.f, 613.f  , 640.f   , 750.f};
+		std::vector<float> pointY = {n - 6.2f, n - 6.5f, 4.6f , 4.6f , n - 7.2f, n - 7.2f, n - 6.2f, -4.618f, 4.6f , 4.6f , -4.415f, n - 5.5f, n - 6.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -289,25 +286,25 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 			if (x >= pointX[i] && x < pointX[i + 1])
 			{
 				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::linearInterpolation(pointY[i], pointY[i + 1], coef);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
 			}
 		}
 		return n;
 	};
 }
 
-Map::TileColorGenerator WaterBBiome::getTileColorGenerator()
+Map::TileColorGenerator WaterCBiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart = getRockColor();
 	sf::Color secondColorEnd = getRockColor();
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -1900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -1200.f / static_cast<float>(m_mapSize.y);
-	float middle1 = 0.f / static_cast<float>(m_mapSize.y);
-	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
-	float end1 = 1000.f / static_cast<float>(m_mapSize.y);
-	float end2 = 1700.f / static_cast<float>(m_mapSize.y);
+	float start1 = -40000.f / static_cast<float>(m_mapSize.y);
+	float start2 = -18000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -8000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 4000.f / static_cast<float>(m_mapSize.y);
+	float end1 = 18000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 35000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
@@ -341,68 +338,68 @@ Map::TileColorGenerator WaterBBiome::getTileColorGenerator()
 	};
 }
 
-sf::Color		WaterBBiome::getParticleColorGround()
+sf::Color		WaterCBiome::getParticleColorGround()
 {
 	std::size_t colorIndex = randomInt(0u, 19u);
 	return (m_particleColor[colorIndex]);
 }
 
-sf::Color		WaterBBiome::getTileStartColor()
+sf::Color		WaterCBiome::getTileStartColor()
 {
 	return (m_tileStartColor);
 }
 
-sf::Color		WaterBBiome::getTileEndColor()
+sf::Color		WaterCBiome::getTileEndColor()
 {
 	return (m_tileEndColor);
 }
 
-sf::Time		WaterBBiome::getDayDuration()
+sf::Time		WaterCBiome::getDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Time		WaterBBiome::getStartDayDuration()
+sf::Time		WaterCBiome::getStartDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Color		WaterBBiome::getSkyDayColor()
+sf::Color		WaterCBiome::getSkyDayColor()
 {
 	return (m_skyDayColor);
 }
 
-sf::Color		WaterBBiome::getSkyNightColor()
+sf::Color		WaterCBiome::getSkyNightColor()
 {
 	return (m_skyNightColor);
 }
 
-sf::Color		WaterBBiome::getNightLightColor()
+sf::Color		WaterCBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
 }
 
-sf::Color		WaterBBiome::getSunsetLightColor()
+sf::Color		WaterCBiome::getSunsetLightColor()
 {
 	return (m_SunsetLightColor);
 }
 
-float			WaterBBiome::getWind()
+float			WaterCBiome::getWind()
 {
 	return (m_wind);
 }
 
-void			WaterBBiome::setWind(float wind)
+void			WaterCBiome::setWind(float wind)
 {
 	m_wind = wind;
 }
 
-bool			WaterBBiome::canCreateRain()
+bool			WaterCBiome::canCreateRain()
 {
 	return (m_canCreateRain);
 }
 
-std::size_t		WaterBBiome::getRainDropPerSecond()
+std::size_t		WaterCBiome::getRainDropPerSecond()
 {
 	std::size_t value = randomRangeSizeT(m_rainDropPerSecond);
 	if (value <= m_rainDropPerSecondMax)
@@ -411,158 +408,158 @@ std::size_t		WaterBBiome::getRainDropPerSecond()
 		return (m_rainDropPerSecondMax);
 }
 
-sf::Time		WaterBBiome::getSunnyTime()
+sf::Time		WaterCBiome::getSunnyTime()
 {
 	return (randomRangeTime(m_sunnyTime));
 }
 
-sf::Time		WaterBBiome::getRainingTime()
+sf::Time		WaterCBiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
 }
 
-bool			WaterBBiome::canCreateThunder()
+bool			WaterCBiome::canCreateThunder()
 {
 	return (m_canCreateThunder);
 }
 
-float			WaterBBiome::getLightningSize()
+float			WaterCBiome::getLightningSize()
 {
 	return (randomRangeFloat(m_lightningSize));
 }
 
-bool			WaterBBiome::canCreateSnow()
+bool			WaterCBiome::canCreateSnow()
 {
 	return (m_canCreateSnow);
 }
 
-std::size_t		WaterBBiome::getRockCount()
+std::size_t		WaterCBiome::getRockCount()
 {
 	return (randomRangeSizeT(m_rockCount));
 }
 
-std::size_t		WaterBBiome::getTreeCount()
+std::size_t		WaterCBiome::getTreeCount()
 {
 	return (randomRangeSizeT(m_treeCount));
 }
 
-std::size_t		WaterBBiome::getMushroomCount()
+std::size_t		WaterCBiome::getMushroomCount()
 {
 	return (randomRangeSizeT(m_mushroomCount));
 }
 
-std::size_t		WaterBBiome::getCrystalCount()
+std::size_t		WaterCBiome::getCrystalCount()
 {
 	return (randomRangeSizeT(m_crystalCount));
 }
 
-std::size_t		WaterBBiome::getStarCount()
+std::size_t		WaterCBiome::getStarCount()
 {
 	return (randomRangeSizeT(m_starCount));
 }
 
-std::size_t		WaterBBiome::getSunCount()
+std::size_t		WaterCBiome::getSunCount()
 {
 	return (randomRangeSizeT(m_sunCount));
 }
 
-std::size_t		WaterBBiome::getMoonCount()
+std::size_t		WaterCBiome::getMoonCount()
 {
 	return (randomRangeSizeT(m_moonCount));
 }
 
-std::size_t		WaterBBiome::getRainbowCount()
+std::size_t		WaterCBiome::getRainbowCount()
 {
 	return (randomRangeSizeT(m_rainbowCount));
 }
 
-std::size_t		WaterBBiome::getCloudCount()
+std::size_t		WaterCBiome::getCloudCount()
 {
 	return (randomRangeSizeT(m_cloudCount));
 }
 
-std::size_t		WaterBBiome::getGroundRockCount()
+std::size_t		WaterCBiome::getGroundRockCount()
 {
 	return (randomRangeSizeT(m_groundRockCount));
 }
 
-std::size_t	WaterBBiome::getTreeDepth()
+std::size_t	WaterCBiome::getTreeDepth()
 {
 	return (randomRangeSizeT(m_treeDepth));
 }
 
-sf::Vector2f	WaterBBiome::getTreeSize()
+sf::Vector2f	WaterCBiome::getTreeSize()
 {
 	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Time		WaterBBiome::getTreeLifeTime()
+sf::Time		WaterCBiome::getTreeLifeTime()
 {
 	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Color		WaterBBiome::getTreeColor()
+sf::Color		WaterCBiome::getTreeColor()
 {
 	return (randomColorLeaf(m_treeColor));
 }
 
-float			WaterBBiome::getTreeAngle()
+float			WaterCBiome::getTreeAngle()
 {
 	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			WaterBBiome::getTreeIsMoving()
+bool			WaterCBiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-float			WaterBBiome::getTreeBeatMouvement()
+float			WaterCBiome::getTreeBeatMouvement()
 {
 	return (m_treeBeatMouvement);
 }
 
-bool			WaterBBiome::canCreateTree()
+bool			WaterCBiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			WaterBBiome::canCreateLeaf()
+bool			WaterCBiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	WaterBBiome::getLeafSize()
+sf::Vector2f	WaterCBiome::getLeafSize()
 {
 	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		WaterBBiome::getLeafColor()
+sf::Color		WaterCBiome::getLeafColor()
 {
 	return (randomColorLeaf(m_leafColor));
 }
 
-std::size_t		WaterBBiome::getTreePositionX()
+std::size_t		WaterCBiome::getTreePositionX()
 {
 	return randomInt(1u, m_mapSize.x - 1u);
 }
 
-sf::Vector2f	WaterBBiome::getCrystalSize()
+sf::Vector2f	WaterCBiome::getCrystalSize()
 {
 	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		WaterBBiome::getCrystalPartCount()
+std::size_t		WaterCBiome::getCrystalPartCount()
 {
 	return (randomRangeSizeT(m_crystalPartCount));
 }
 
-sf::Color		WaterBBiome::getCrystalColor()
+sf::Color		WaterCBiome::getCrystalColor()
 {
 	return (randomColor(m_crystalColor));
 }
 
-int				WaterBBiome::getCrystalPosX()
+int				WaterCBiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_interestPointPosX - m_mapSize.x / 2.f;
@@ -573,67 +570,67 @@ int				WaterBBiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			WaterBBiome::canCreateCrystal()
+bool			WaterCBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	WaterBBiome::getShineEffectSize()
+sf::Vector2f	WaterCBiome::getShineEffectSize()
 {
 	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		WaterBBiome::getShineEffectColor()
+sf::Color		WaterCBiome::getShineEffectColor()
 {
 	return (randomColor(m_shineEffectColor));
 }
 
-float			WaterBBiome::getShineEffectRotateAngle()
+float			WaterCBiome::getShineEffectRotateAngle()
 {
 	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			WaterBBiome::canCreateShineEffect()
+bool			WaterCBiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	WaterBBiome::getRockSize()
+sf::Vector2f	WaterCBiome::getRockSize()
 {
 	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		WaterBBiome::getRockPartCount()
+std::size_t		WaterCBiome::getRockPartCount()
 {
 	return (randomRangeSizeT(m_rockPartCount));
 }
 
-sf::Color		WaterBBiome::getRockColor()
+sf::Color		WaterCBiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
 }
 
-float	WaterBBiome::getGrassSizeY()
+float	WaterCBiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
 }
 
-float	WaterBBiome::getGrassSizeX()
+float	WaterCBiome::getGrassSizeX()
 {
 	return randomRangeFloat(m_grassSizeX);
 }
 
-sf::Color	WaterBBiome::getGrassColor()
+sf::Color	WaterCBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
 }
 
-std::size_t	WaterBBiome::getGrassCount()
+std::size_t	WaterCBiome::getGrassCount()
 {
 	return m_grassCount;
 }
 
-std::size_t	WaterBBiome::getGrassPosX()
+std::size_t	WaterCBiome::getGrassPosX()
 {
 	m_grassIndex += randomInt(2u, 4u);
 	if (m_grassIndex >= m_mapSize.x)
@@ -641,192 +638,192 @@ std::size_t	WaterBBiome::getGrassPosX()
 	return m_grassIndex;
 }
 
-bool			WaterBBiome::canCreateRock()
+bool			WaterCBiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	WaterBBiome::getMushroomSize()
+sf::Vector2f	WaterCBiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
 }
 
-sf::Color		WaterBBiome::getMushroomColor()
+sf::Color		WaterCBiome::getMushroomColor()
 {
 	return (randomColor(m_mushroomColor));
 }
 
-sf::Time		WaterBBiome::getMushroomLifeTime()
+sf::Time		WaterCBiome::getMushroomLifeTime()
 {
 	return (randomRangeTime(m_mushroomLifeTime));
 }
 
-bool			WaterBBiome::canCreateMushroom()
+bool			WaterCBiome::canCreateMushroom()
 {
 	return (m_canCreateMushroom);
 }
 
-sf::Vector2f	WaterBBiome::getCloudSize()
+sf::Vector2f	WaterCBiome::getCloudSize()
 {
 	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		WaterBBiome::getCloudPartCount()
+std::size_t		WaterCBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
-sf::Time		WaterBBiome::getCloudLifeTime()
+sf::Time		WaterCBiome::getCloudLifeTime()
 {
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		WaterBBiome::getCloudColor()
+sf::Color		WaterCBiome::getCloudColor()
 {
 	return (randomColor(m_cloudColor));
 }
 
-bool			WaterBBiome::canCreateCloud()
+bool			WaterCBiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	WaterBBiome::getStarSize()
+sf::Vector2f	WaterCBiome::getStarSize()
 {
 	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		WaterBBiome::getStarColor()
+sf::Color		WaterCBiome::getStarColor()
 {
 	return (randomColor(m_starColor));
 }
 
-sf::Time		WaterBBiome::getStarLifeTime()
+sf::Time		WaterCBiome::getStarLifeTime()
 {
 	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			WaterBBiome::canCreateStar()
+bool			WaterCBiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	WaterBBiome::getSunSize()
+sf::Vector2f 	WaterCBiome::getSunSize()
 {
 	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-std::size_t		WaterBBiome::getSunPartCount()
+std::size_t		WaterCBiome::getSunPartCount()
 {
 	return (randomRangeSizeT(m_sunPartCount));
 }
 
-sf::Color		WaterBBiome::getSunColor()
+sf::Color		WaterCBiome::getSunColor()
 {
 	if (m_sunColor == sf::Color(255, 255, 255))
 		return m_sunColor;
 	return (randomColor(m_sunColor));
 }
 
-bool			WaterBBiome::canCreateSun()
+bool			WaterCBiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	WaterBBiome::getMoonSize()
+sf::Vector2f 	WaterCBiome::getMoonSize()
 {
 	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		WaterBBiome::getMoonColor()
+sf::Color		WaterCBiome::getMoonColor()
 {
 	return (randomColor(m_moonColor));
 }
 
-sf::Time		WaterBBiome::getMoonLifeTime()
+sf::Time		WaterCBiome::getMoonLifeTime()
 {
 	return (randomRangeTime(m_moonLifeTime));
 }
 
-bool			WaterBBiome::canCreateMoon()
+bool			WaterCBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-float			WaterBBiome::getRainbowThickness()
+float			WaterCBiome::getRainbowThickness()
 {
 	return (randomRangeFloat(m_rainbowThickness));
 }
 
-float			WaterBBiome::getRainbowPartSize()
+float			WaterCBiome::getRainbowPartSize()
 {
 	return (randomRangeFloat(m_rainbowPartSize));
 }
 
-std::size_t		WaterBBiome::getRainbowLoopCount()
+std::size_t		WaterCBiome::getRainbowLoopCount()
 {
 	return (randomRangeSizeT(m_rainbowLoopCount));
 }
 
-sf::Time		WaterBBiome::getRainbowLifeTime()
+sf::Time		WaterCBiome::getRainbowLifeTime()
 {
 	return (randomRangeTime(m_rainbowLifeTime));
 }
 
-sf::Time		WaterBBiome::getRainbowIntervalTime()
+sf::Time		WaterCBiome::getRainbowIntervalTime()
 {
 	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
-bool			WaterBBiome::canCreateRainbow()
+bool			WaterCBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
 }
 
-bool	WaterBBiome::canCreateGrass()
+bool	WaterCBiome::canCreateGrass()
 {
 	return m_canCreateGrass;
 }
 
-float	WaterBBiome::getWaterPersistence() const
+float	WaterCBiome::getWaterPersistence() const
 {
 	return m_waterPersistence;
 }
 
-ABiome::Type	WaterBBiome::getType() const
+ABiome::Type	WaterCBiome::getType() const
 {
 	return m_type;
 }
 
 
-float			WaterBBiome::randomFloat(float min, float max)
+float			WaterCBiome::randomFloat(float min, float max)
 {
 	return (m_generator.randomFloat(min, max));
 }
 
-int				WaterBBiome::randomInt(int min, int max)
+int				WaterCBiome::randomInt(int min, int max)
 {
 	return (m_generator.randomInt(min, max));
 }
 
-bool			WaterBBiome::randomBool(float percent)
+bool			WaterCBiome::randomBool(float percent)
 {
 	return (m_generator.randomBool(percent));
 }
 
-float			WaterBBiome::randomRangeFloat(Range<float> const & range)
+float			WaterCBiome::randomRangeFloat(Range<float> const & range)
 {
 	return (randomFloat(range.min, range.max));
 }
 
-int				WaterBBiome::randomRangeSizeT(Range<std::size_t> const & range)
+int				WaterCBiome::randomRangeSizeT(Range<std::size_t> const & range)
 {
 	return (randomInt(range.min, range.max));
 }
 
-sf::Vector2f	WaterBBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+sf::Vector2f	WaterCBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 {
 	sf::Vector2f tmp;
 	tmp.x = randomFloat(range.min.x, range.max.x);
@@ -834,13 +831,13 @@ sf::Vector2f	WaterBBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 	return tmp;
 }
 
-sf::Time		WaterBBiome::randomRangeTime(Range<sf::Time> const & range)
+sf::Time		WaterCBiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }
 
-sf::Color		WaterBBiome::randomColor(sf::Color const & color)
+sf::Color		WaterCBiome::randomColor(sf::Color const & color)
 {
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
@@ -849,17 +846,14 @@ sf::Color		WaterBBiome::randomColor(sf::Color const & color)
 	sf::Color newColor = tmp.TurnToRGB();
 	newColor.a = color.a;
 	return (newColor);
-
 }
 
-sf::Color		WaterBBiome::randomColorLeaf(sf::Color const & color)
+sf::Color		WaterCBiome::randomColorLeaf(sf::Color const & color)
 {
-	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
-	tmp.Hue += m_generator.randomFloat(-180.f, 180.f);
-	tmp.Luminance += m_generator.randomFloat(-20.f, 0.f);
+	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);
+	tmp.Luminance += m_generator.randomFloat(-10.f, 10.f);
 	sf::Color newColor = tmp.TurnToRGB();
 	newColor.a = color.a;
 	return (newColor);
-
 }

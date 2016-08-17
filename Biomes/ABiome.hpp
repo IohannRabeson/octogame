@@ -32,6 +32,7 @@ enum class Level : std::size_t
 	JungleD,
 	WaterA,
 	WaterB,
+	WaterC,
 	Random,
 	Rewards,
 };
@@ -114,6 +115,7 @@ public:
 	virtual bool										canCreateRock() = 0;
 
 	virtual float										getGrassSizeY() = 0;
+	virtual float										getGrassSizeX() = 0;
 	virtual sf::Color									getGrassColor() = 0;
 	virtual std::size_t									getGrassCount() = 0;
 	virtual std::size_t									getGrassPosX() = 0;

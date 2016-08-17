@@ -1081,6 +1081,8 @@ void	CharacterOcto::collisionTileUpdate()
 
 void	CharacterOcto::onSky(Events event)
 {
+	Progress & progress = Progress::getInstance();
+	progress.setOctoDoubleJump(false);
 	switch (event)
 	{
 		case StartJump:
@@ -1090,6 +1092,7 @@ void	CharacterOcto::onSky(Events event)
 		case WaterJump:
 		case Jump:
 		case DoubleJump:
+			progress.setOctoDoubleJump(true);
 			if (m_box->getGlobalBounds().top > m_previousTop
 					&& m_jumpVelocity != m_pixelSecondJump)
 			{
@@ -1470,6 +1473,7 @@ void	CharacterOcto::caseSpace()
 		}
 		else if (m_numberOfJump == 1 && m_progress.canDoubleJump())
 		{
+			m_timeSlowFall = sf::Time::Zero;
 			m_sprite.setNextEvent(DoubleJump);
 			m_afterJump = false;
 			m_jumpVelocity = m_pixelSecondJump;
@@ -1497,7 +1501,7 @@ void CharacterOcto::caseUp()
 			m_keyElevator = true;
 			m_sprite.setNextEvent(StartElevator);
 		}
-		else if (!m_onGround && !m_inWater && m_progress.canSlowFall())
+		else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
 			m_sprite.setNextEvent(StartSlowFall);
 	}
 }
@@ -1649,6 +1653,11 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::SlowFall:
 			m_keyUp = false;
+			if (state == WaterJump || state == SlowFall)
+			{
+				m_afterJump = true;
+				m_afterJumpVelocity = m_pixelSecondAfterJump;
+			}
 			if (!m_keyE)
 				m_keyElevator = false;
 			break;
