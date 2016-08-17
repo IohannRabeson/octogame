@@ -258,7 +258,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
+	m_npcFactory.registerCreator<JellyfishNpc>(JELLYFISH_OSS);
 	m_npcFactory.registerCreator(OCTO_DEATH_HELMET_OSS, [&biome](){ return new OctoDeathNpc(biome.getWaterLevel(), biome.getWaterColor()); });
+	m_npcFactory.registerCreator(EVA_OSS, [&biome](){ return new EvaNpc(biome.getWaterColor()); });
 	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
 	m_npcFactory.registerCreator(CEDRIC_END_OSS, [&biome](){ return new CedricEndNpc(biome.getType()); });
 	m_npcFactory.registerCreator(TV_BLACK_OSS, [](){ return new TVScreen("render_black_kernel"); });

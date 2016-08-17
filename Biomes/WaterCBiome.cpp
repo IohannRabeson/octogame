@@ -36,7 +36,7 @@ WaterCBiome::WaterCBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(10u, 15u),
+	m_rockCount(5u, 7u),
 	m_treeCount(30u, 30u),
 	m_mushroomCount(390u, 400u),
 	m_crystalCount(20u, 30u),
@@ -50,12 +50,12 @@ WaterCBiome::WaterCBiome() :
 	m_canCreateRain(false),
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
-	m_canCreateRock(false),
-	m_canCreateTree(false),
+	m_canCreateRock(true),
+	m_canCreateTree(true),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
-	m_canCreateCrystal(true),
+	m_canCreateCrystal(false),
 	m_canCreateShineEffect(true),
 	m_canCreateCloud(true),
 	m_canCreateStar(true),
@@ -79,17 +79,17 @@ WaterCBiome::WaterCBiome() :
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(0, 255, 159),
+	m_treeColor(103, 157, 208, 50),
 	m_treeAngle(-180.f, 180.f),
-	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(40.f, 40.f)),
-	m_leafColor(0, 255, 159, 150.f),
+	m_treeBeatMouvement(0.01f),
+	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(150.f, 150.f)),
+	m_leafColor(103, 157, 208, 50),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(255, 0, 0, 150.f),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
-	m_crystalSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(40.f, 350.f)),
+	m_crystalSize(sf::Vector2f(80.f, 250.f), sf::Vector2f(100.f, 450.f)),
 	m_crystalPartCount(3u, 6u),
 	m_crystalColor(103, 157, 208, 50),
 	m_shineEffectSize(sf::Vector2f(200.f, 200.f), sf::Vector2f(300.f, 300.f)),
@@ -138,13 +138,6 @@ WaterCBiome::WaterCBiome() :
 	m_instances[20] = MAP_WATER_C_TRAIL_OMP;
 	m_gameObjects[20] = GameObjectType::Portal;
 
-	m_gameObjects[46] = GameObjectType::CedricStartNpc;
-	m_gameObjects[50] = GameObjectType::JellyfishNpc;
-	m_gameObjects[70] = GameObjectType::JellyfishNpc;
-	m_gameObjects[390] = GameObjectType::JellyfishNpc;
-	m_gameObjects[430] = GameObjectType::JellyfishNpc;
-	m_gameObjects[540] = GameObjectType::JellyfishNpc;
-	m_gameObjects[610] = GameObjectType::JellyfishNpc;
 	m_gameObjects[640] = GameObjectType::CedricEndNpc;
 	/*
 	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
@@ -160,6 +153,7 @@ WaterCBiome::WaterCBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::WaterA);
 }
@@ -245,29 +239,40 @@ std::vector<ParallaxScrolling::ALayer *> WaterCBiome::getLayers()
 	sf::Vector2u mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
+	GenerativeLayer * layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.2f, 0.6f), sf::Vector2u(mapSize.x, mapSize.y / 3.f), 8.f, 250, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
+			return noise.perlin(x * 1.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 40, 0.1f, 0.4f, 11.f, 40.f);
+	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.4f, 0.4f), sf::Vector2u(mapSize.x, mapSize.y / 3.f), 12.f, 270, 0.1f, 0.3f, 1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
+			return noise.noise(x * 1.1f, y);
 		});
 	vector.push_back(layer);
-	mapSize.y = mapSize.y / 2u;
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 12.f, 20, 0.2f, 0.4f, 6.f, 40.f);
+	layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 2.5f), 12.f, 350, 0.1f, 0.3f, 2.f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
+			return noise.noise(x * 25.f, y);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.7f, 0.2f), mapSize, 12.f, 10, 0.2f, 0.4f, 6.f, 40.f);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 300, 0.1f, 0.3f, 2.f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
+			return noise.noise(x * 30.f, y);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 100, 0.2f, 0.3f, 1.5f, 2000.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 35.f, y + 100);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.7f, 0.1f), sf::Vector2u(mapSize.x, mapSize.y * 5.5f), 12.f, -50, 0.3f, 0.3f, 1.f, 3000.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x * 40.f, y + 200.f);
 		});
 	vector.push_back(layer);
 	return vector;
@@ -279,8 +284,8 @@ Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f     , 307.f   , 308.f, 442.f, 443.f   , 570.f   , 592.f  , 593.f, 612.f, 613.f  , 640.f   , 750.f};
-		std::vector<float> pointY = {n - 6.2f, n - 5.5f, 4.6f , 4.6f , n - 6.2f, n - 6.2f, -4.615f, 4.6f , 4.6f , -4.615f, n - 5.5f, n - 6.2f};
+		std::vector<float> pointX = {0.f     , 307.f   , 308.f, 442.f, 443.f   , 570.f   , 591.f  , 592.f, 612.f, 613.f  , 640.f   , 750.f};
+		std::vector<float> pointY = {n - 6.2f, n - 5.5f, 4.6f , 4.6f , n - 6.2f, n - 6.2f, -4.618f, 4.6f , 4.6f , -4.415f, n - 5.5f, n - 6.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -302,12 +307,12 @@ Map::TileColorGenerator WaterCBiome::getTileColorGenerator()
 	sf::Color secondColorEnd = getRockColor();
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -22000.f / static_cast<float>(m_mapSize.y);
+	float start1 = -40000.f / static_cast<float>(m_mapSize.y);
 	float start2 = -18000.f / static_cast<float>(m_mapSize.y);
 	float middle1 = -8000.f / static_cast<float>(m_mapSize.y);
-	float middle2 = -3000.f / static_cast<float>(m_mapSize.y);
-	float end1 = 2000.f / static_cast<float>(m_mapSize.y);
-	float end2 = 7000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 4000.f / static_cast<float>(m_mapSize.y);
+	float end1 = 18000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 35000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
@@ -849,17 +854,14 @@ sf::Color		WaterCBiome::randomColor(sf::Color const & color)
 	sf::Color newColor = tmp.TurnToRGB();
 	newColor.a = color.a;
 	return (newColor);
-
 }
 
 sf::Color		WaterCBiome::randomColorLeaf(sf::Color const & color)
 {
-	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
-	tmp.Hue += m_generator.randomFloat(-180.f, 180.f);
-	tmp.Luminance += m_generator.randomFloat(-20.f, 0.f);
+	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);
+	tmp.Luminance += m_generator.randomFloat(-10.f, 10.f);
 	sf::Color newColor = tmp.TurnToRGB();
 	newColor.a = color.a;
 	return (newColor);
-
 }

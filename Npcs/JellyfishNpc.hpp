@@ -2,6 +2,7 @@
 # define JELLYFISH_HPP
 
 # include "ANpc.hpp"
+# include "RandomGenerator.hpp"
 
 class SkyCycle;
 
@@ -25,9 +26,13 @@ protected:
 	void		 computeBehavior(sf::Time frametime);
 
 private:
-	sf::Vector2f	m_octoPosition;
-	float			m_waterLevel;
-	bool			m_isMet;
+	static RandomGenerator	m_generator;
+
+	sf::Vector2f			m_octoPosition;
+	float					m_waterLevel;
+	bool					m_isMet;
+	float					m_speed;
+	sf::Vector2f			m_shift;
 };
 
 #endif
