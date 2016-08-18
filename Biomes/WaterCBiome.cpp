@@ -37,7 +37,7 @@ WaterCBiome::WaterCBiome() :
 	m_lightningSize(700.f, 2500.f),
 
 	m_rockCount(5u, 7u),
-	m_treeCount(30u, 30u),
+	m_treeCount(5u, 10u),
 	m_mushroomCount(390u, 400u),
 	m_crystalCount(20u, 30u),
 	m_starCount(500u, 800u),
