@@ -141,7 +141,7 @@ void CedricEndNpc::collideOctoEvent(CharacterOcto * octo)
 
 void CedricEndNpc::stopBalle(void)
 {
-	if (!Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
+	if (ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
