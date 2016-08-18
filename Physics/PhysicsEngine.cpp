@@ -222,7 +222,11 @@ void PhysicsEngine::update(float deltatime)
 		// Check if shape is out of screen
 		for (auto & shape : m_shapes)
 		{
-			shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));
+			//TODO: Find a proper way to do that
+			if (shape->getType() != AShape::Type::e_trigger)
+				shape->setOutOfScreen(!camRect.contains(sf::Vector2f(shape->getBaryCenter().x, shape->getBaryCenter().y + shape->getGlobalBounds().height / 2.f)));
+			else
+				shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));
 			// Add gravity
 			if (!shape->getSleep())
 			{
