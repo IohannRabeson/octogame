@@ -607,6 +607,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartWaterJump, statePortal, stateSartWaterJump);
 
 	machine.addTransition(WaterJump, stateSartWaterJump, stateWaterJump);
+	machine.addTransition(WaterJump, stateStartJump, stateWaterJump);
 
 	machine.addTransition(Idle, stateIdle, stateIdle);
 	machine.addTransition(Idle, stateLeft, stateIdle);
@@ -1264,15 +1265,18 @@ void	CharacterOcto::inWater()
 
 	if (m_waterLevel != -1.f && m_box->getBaryCenter().y + m_box->getSize().y / 2.f > m_waterLevel)
 	{
+		Progress & progress = Progress::getInstance();
+
 		if (!m_inWater)
 		{
 			m_numberOfJump = 0;
 			emit = true;
 			m_inWater = true;
-			Progress & progress = Progress::getInstance();
-			if (m_isDeadlyWater && !progress.canUseWaterJump())
-				kill();
 		}
+
+		if (m_isDeadlyWater && !progress.canUseWaterJump())
+			kill();
+
 		m_waterParticle.clear();
 	}
 	else if (m_inWater)

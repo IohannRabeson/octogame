@@ -92,7 +92,7 @@ void Water::update(sf::Time frameTime)
 	m_waveCycle += frameTime;
 	m_shader.setParameter("time", m_waveCycle.asSeconds());
 	m_shader.setParameter("distortionFactor", 0.15f);
-	m_shader.setParameter("riseFactor", 0.1f);
+	m_shader.setParameter("riseFactor", -0.1f);
 	float limit = rect.height - (m_limit - rect.top);
 	m_shader.setParameter("limit", limit);
 	float ratio = limit / rect.height;
