@@ -22,6 +22,8 @@ Progress::Progress() :
 	m_reverseSprite(false),
 	m_spaceShipRepair(false),
 	m_killOcto(false),
+	m_isDoubleJump(false),
+	m_resetDoubleJump(false),
 	m_npcCount(0u),
 	m_npcMax(0u),
 	m_countRandomDiscover(0u),

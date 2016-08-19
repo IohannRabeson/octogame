@@ -151,6 +151,9 @@ public:
 
 	virtual sf::Vector2f								getCloudSize() = 0;
 	virtual std::size_t									getCloudPartCount() = 0;
+	virtual float										getCloudMinY() = 0;
+	virtual float										getCloudMaxY() = 0;
+	virtual sf::Vector2f								getCloudSpeed() = 0;
 	virtual sf::Time									getCloudLifeTime() = 0;
 	virtual sf::Color									getCloudColor() = 0;
 	virtual bool										canCreateCloud() = 0;

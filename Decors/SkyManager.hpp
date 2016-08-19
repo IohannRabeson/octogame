@@ -36,16 +36,11 @@ private:
 						sf::Vector2f const & cameraSize,
 						sf::Vector2f const & cameraCenter);
 
-	void setupClouds(ABiome & biome,
-					sf::Vector2f const & cameraSize,
-					sf::Vector2f const & cameraCenter,
-					sf::Vector2f const & mapSize);
+	void setupClouds(ABiome & biome);
 
 	DecorManager				m_decorManagerBack;
 	DecorManager				m_decorManagerFront;
 	DecorManager				m_decorManagerFilter;
-	float						m_wind;
-	sf::Vector2f				m_mapSizeFloat;
 
 	SkyCycle *					m_cycle;
 
@@ -59,8 +54,6 @@ private:
 	std::vector<sf::Vector2f>	m_originMoons;
 	sf::Vector2f				m_originRotateStar;
 	std::vector<sf::Vector2f>	m_originStars;
-	std::vector<sf::Vector2f>	m_originCloudsBack;
-	std::vector<sf::Vector2f>	m_originCloudsFront;
 
 	float						m_parallaxSpeedY;
 };

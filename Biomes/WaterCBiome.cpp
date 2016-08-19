@@ -98,6 +98,9 @@ WaterCBiome::WaterCBiome() :
 
 	m_cloudSize(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudPartCount(3u, 4u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-4000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
 
@@ -671,6 +674,21 @@ sf::Vector2f	WaterCBiome::getCloudSize()
 std::size_t		WaterCBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	WaterCBiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	WaterCBiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	WaterCBiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		WaterCBiome::getCloudLifeTime()
