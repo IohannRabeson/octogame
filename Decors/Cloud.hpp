@@ -79,6 +79,8 @@ private:
 	float							m_cloudMaxX;
 	float							m_cloudMinY;
 	float							m_cloudMaxY;
+	float							m_cos;
+	float							m_sin;
 	sf::Color						m_color;
 	std::vector<OctogonValue>		m_values;
 

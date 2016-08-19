@@ -19,14 +19,14 @@ WaterBBiome::WaterBBiome() :
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
-	m_waterLevel(100.f),
+	m_waterLevel(-1.f),
 	m_waterColor(3, 57, 108, 60),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(3, 57, 108),
+	m_skyDayColor(255, 0, 0),
 	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
 	m_SunsetLightColor(255, 147, 46, 130),
@@ -44,7 +44,7 @@ WaterBBiome::WaterBBiome() :
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
 	m_rainbowCount(2u, 2u),
-	m_cloudCount(30u, 40u),
+	m_cloudCount(140u, 160u),
 	m_groundRockCount(200u, 400u),
 
 	m_canCreateRain(false),
@@ -76,14 +76,14 @@ WaterBBiome::WaterBBiome() :
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
 
-	m_treeDepth(6u, 7u),
-	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
+	m_treeDepth(2u, 3u),
+	m_treeSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(50.f, 100.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(0, 255, 159),
+	m_treeColor(103, 157, 208, 50),
 	m_treeAngle(-180.f, 180.f),
 	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(40.f, 40.f)),
-	m_leafColor(0, 255, 159, 150.f),
+	m_leafSize(sf::Vector2f(250.f, 250.f), sf::Vector2f(400.f, 400.f)),
+	m_leafColor(103, 157, 208, 75),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(255, 0, 0, 150.f),
@@ -96,13 +96,13 @@ WaterBBiome::WaterBBiome() :
 	m_shineEffectColor(153, 207, 255, 130),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(300.f, 300.f), sf::Vector2f(400.f, 400.f)),
+	m_cloudSize(sf::Vector2f(500.f, 500.f), sf::Vector2f(800.f, 800.f)),
 	m_cloudPartCount(1u, 1u),
-	m_cloudMaxY(m_waterLevel),
+	m_cloudMaxY(2000.f),
 	m_cloudMinY(-4000.f),
 	m_cloudSpeed(sf::Vector2f(0.f, -140.f), sf::Vector2f(0.f, -150.f)),
-	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
-	m_cloudColor(255, 255, 255, 100),
+	m_cloudLifeTime(sf::seconds(600), sf::seconds(900)),
+	m_cloudColor(103, 157, 208, 120),
 
 	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
 	m_starColor(255, 255, 255),
@@ -143,16 +143,6 @@ WaterBBiome::WaterBBiome() :
 	m_gameObjects[70] = GameObjectType::JellyfishNpc;
 	m_gameObjects[390] = GameObjectType::JellyfishNpc;
 	m_gameObjects[340] = GameObjectType::CedricEndNpc;
-	/*
-	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[75] = GameObjectType::BrayouNpc;
-	m_gameObjects[149] = GameObjectType::EvaNpc;
-	m_gameObjects[1050] = GameObjectType::JeffMouffyNpc;
-	m_gameObjects[668] = GameObjectType::PeaNpc;
-	m_gameObjects[710] = GameObjectType::WaterNanoRobot;
-	m_gameObjects[730] = GameObjectType::Concert;
-	*/
 
 	m_interestPointPosX = 500;
 
@@ -239,9 +229,10 @@ std::map<std::size_t, std::string> const & WaterBBiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> WaterBBiome::getLayers()
 {
-	sf::Vector2u mapSize = getMapSize();
+	//sf::Vector2u mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
+	/*
 	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
@@ -267,6 +258,7 @@ std::vector<ParallaxScrolling::ALayer *> WaterBBiome::getLayers()
 			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
 		});
 	vector.push_back(layer);
+	*/
 	return vector;
 }
 
@@ -695,7 +687,7 @@ sf::Time		WaterBBiome::getCloudLifeTime()
 
 sf::Color		WaterBBiome::getCloudColor()
 {
-	return (randomColor(m_cloudColor));
+	return (randomColorLeaf(m_cloudColor));
 }
 
 bool			WaterBBiome::canCreateCloud()
@@ -866,10 +858,9 @@ sf::Color		WaterBBiome::randomColor(sf::Color const & color)
 
 sf::Color		WaterBBiome::randomColorLeaf(sf::Color const & color)
 {
-	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
-	tmp.Hue += m_generator.randomFloat(-180.f, 180.f);
-	tmp.Luminance += m_generator.randomFloat(-20.f, 0.f);
+	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);
+	tmp.Luminance += m_generator.randomFloat(-10.f, 10.f);
 	sf::Color newColor = tmp.TurnToRGB();
 	newColor.a = color.a;
 	return (newColor);

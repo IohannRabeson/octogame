@@ -95,10 +95,17 @@ void SkyManager::setupClouds(ABiome & biome)
 	if (biome.canCreateCloud())
 	{
 		m_cloudCount = biome.getCloudCount();
-		for (size_t i = 0; i < m_cloudCount; i++)
+		if (biome.getCloudSpeed().y == 0.f)
 		{
-			m_decorManagerFront.add(new Cloud(m_cycle));
+			for (size_t i = 0; i < m_cloudCount; i++)
+				m_decorManagerFront.add(new Cloud(m_cycle));
 		}
+		else
+		{
+			for (size_t i = 0; i < m_cloudCount; i++)
+				m_decorManagerBack.add(new Cloud(m_cycle));
+		}
+
 	}
 }
 
