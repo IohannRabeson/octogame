@@ -12,11 +12,9 @@
 #include <Camera.hpp>
 
 SkyManager::SkyManager(void) :
-	//TODO:Estimate how much vertex we need
 	m_decorManagerBack(50000),
 	m_decorManagerFront(100000),
 	m_decorManagerFilter(24),
-	m_wind(0.f),
 	m_cycle(nullptr),
 	m_sunCount(0u),
 	m_moonCount(0u),
@@ -92,20 +90,14 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 	}
 }
 
-void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & cameraCenter, sf::Vector2f const & mapSize)
+void SkyManager::setupClouds(ABiome & biome)
 {
 	if (biome.canCreateCloud())
 	{
 		m_cloudCount = biome.getCloudCount();
-		m_cloudSpeed = biome.getCloudSpeed();
-		m_originCloudsFront.resize(m_cloudCount);
-		float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
-		float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
 		for (size_t i = 0; i < m_cloudCount; i++)
 		{
 			m_decorManagerFront.add(new Cloud(m_cycle));
-			m_originCloudsFront[i].x = biome.randomFloat(leftLimit, rightLimit);
-			m_originCloudsFront[i].y = biome.randomFloat(-mapSize.y * 1.5f, -cameraSize.y);
 		}
 	}
 }
@@ -122,14 +114,10 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 	//sf::Vector2f const & cameraCenter = cameraSize / 2.f;
 	sf::Vector2f const & cameraCenter = camera.getCenter();
 
-	m_mapSizeFloat = biome.getMapSizeFloat();
-	m_waterLevel = biome.getWaterLevel();
-	m_wind = biome.getWind();
-
 	m_decorManagerBack.add(new Sky(m_cycle));
 	setupStars(biome, cameraSize);
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
-	setupClouds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
+	setupClouds(biome);
 	m_decorManagerFilter.add(new SunLight(m_cycle));
 }
 
@@ -138,7 +126,6 @@ void SkyManager::update(sf::Time frameTime)
 	octo::Camera const & camera = octo::Application::getCamera();
 	sf::FloatRect const & rec = camera.getRectangle();
 	sf::Vector2f cameraCenter = camera.getCenter();
-	sf::Vector2f cameraSize = camera.getSize();
 	sf::Vector2f offsetCamera(rec.left, rec.top * m_parallaxSpeedY);
 	float angle = m_cycle->getCycleValue() * 360.f * octo::Deg2Rad;
 	float cos = std::cos(angle);
@@ -154,30 +141,6 @@ void SkyManager::update(sf::Time frameTime)
 	for (auto it = m_originMoons.begin(); it != m_originMoons.end(); it++)
 		m_originRotateStar = setRotatePosition(decorBack++, *it, m_originRotate, offsetCamera, cos, sin);
 
-	float cloudMove = (m_wind + m_cloudSpeed.x) * frameTime.asSeconds();
-	float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
-	float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
-	float upLimit = cameraCenter.y - cameraSize.y * 2.f;
-	DecorManager::Iterator decorFront = m_decorManagerFront.begin();
-	for (auto it = m_originCloudsFront.begin(); it != m_originCloudsFront.end(); it++)
-	{
-		it->x += cloudMove;
-		if (it->x >= rightLimit)
-			it->x = leftLimit;
-		else if (it->x <= leftLimit)
-			it->x = rightLimit;
-
-		if (m_cloudSpeed.y != 0.f)
-		{
-			it->y += m_cloudSpeed.y * frameTime.asSeconds();
-			if (it->y <= upLimit)
-				it->y = m_waterLevel;
-			else if (it->y >= m_waterLevel)
-				it->y = upLimit;
-		}
-		(*decorFront)->setPosition(*it);
-		decorFront++;
-	}
 	(*m_decorManagerFilter.begin())->setPosition(cameraCenter);
 	m_decorManagerBack.update(frameTime, camera);
 	m_decorManagerFront.update(frameTime, camera);

@@ -69,8 +69,16 @@ private:
 					sf::Vector2f const & position,
 					float weather);
 
+	void updatePosition(sf::Time frameTime);
+
+	sf::Vector2f					m_position;
 	sf::Vector2f					m_size;
 	std::size_t						m_partCount;
+	sf::Vector2f					m_speed;
+	float							m_cloudMinX;
+	float							m_cloudMaxX;
+	float							m_cloudMinY;
+	float							m_cloudMaxY;
 	sf::Color						m_color;
 	std::vector<OctogonValue>		m_values;
 

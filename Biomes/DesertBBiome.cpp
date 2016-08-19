@@ -99,6 +99,8 @@ DesertBBiome::DesertBBiome() :
 
 	m_cloudSize(sf::Vector2f(400.f, 200.f), sf::Vector2f(1000.f, 600.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-4000.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(2), sf::seconds(10)),
 	m_cloudColor(255, 255, 255, 150),
@@ -666,6 +668,16 @@ sf::Vector2f	DesertBBiome::getCloudSize()
 std::size_t		DesertBBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	DesertBBiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	DesertBBiome::getCloudMinY()
+{
+	return (m_cloudMinY);
 }
 
 sf::Vector2f	DesertBBiome::getCloudSpeed()

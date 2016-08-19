@@ -16,6 +16,10 @@ Cloud::Cloud(void) :
 
 Cloud::Cloud(SkyCycle * cycle) :
 	m_partCount(1u),
+	m_cloudMinX(0.f),
+	m_cloudMaxX(0.f),
+	m_cloudMinY(0.f),
+	m_cloudMaxY(0.f),
 	m_animator(4.f, 5.f, 4.f, 0.2f),
 	m_animation(1.f),
 	m_isCollide(false),
@@ -122,8 +126,14 @@ void Cloud::setupLightning(ABiome & biome)
 
 void Cloud::setup(ABiome& biome)
 {
+	octo::Camera const & camera = octo::Application::getCamera();
+
 	m_color = biome.getCloudColor();
 	m_partCount = biome.getCloudPartCount();
+	m_cloudMinX = camera.getCenter().x - camera.getSize().x * 2.f;
+	m_cloudMaxX = camera.getCenter().x + camera.getSize().x * 2.f;
+	m_cloudMinY = biome.getCloudMinY();
+	m_cloudMaxY = biome.getCloudMaxY();
 	m_values.resize(m_partCount);
 	m_rain.resize(m_partCount);
 	m_snow.resize(m_partCount);
@@ -144,6 +154,8 @@ void Cloud::setup(ABiome& biome)
 void Cloud::newCloud(ABiome & biome)
 {
 	m_size = biome.getCloudSize();
+	m_speed = sf::Vector2f(biome.getCloudSpeed().x + biome.getWind(), biome.getCloudSpeed().y);
+	m_position = sf::Vector2f(biome.randomFloat(m_cloudMinX, m_cloudMaxX), biome.randomFloat(m_cloudMinY, m_cloudMaxY));
 
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
@@ -205,9 +217,28 @@ void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder &
 	}
 }
 
+void Cloud::updatePosition(sf::Time frameTime)
+{
+	m_position.x += m_speed.x * frameTime.asSeconds();
+	if (m_position.x >= m_cloudMaxX)
+		m_position.x = m_cloudMinX;
+	else if (m_position.x <= m_cloudMinX)
+		m_position.x = m_cloudMaxX;
+
+	if (m_speed.y != 0.f)
+	{
+		m_position.y += m_speed.y * frameTime.asSeconds();
+		if (m_position.y >= m_cloudMaxY)
+			m_position.y = m_cloudMinY;
+		else if (m_position.y <= m_cloudMinY)
+			m_position.y = m_cloudMaxY;
+	}
+	setPosition(m_position);
+}
+
 void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
-	sf::Vector2f const & position = getPosition();
+	updatePosition(frameTime);
 
 	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue() / 4.f;
 	if (m_animator.getState() == DecorAnimator::State::Life && weather == 0.f)
@@ -218,19 +249,19 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	if (m_canWeather)
 	{
 		if (biome.canCreateThunder())
-			updateThunder(frameTime, biome, builder, position);
+			updateThunder(frameTime, biome, builder, m_position);
 
 		if (biome.canCreateRain())
-			updateRain(frameTime, biome, builder, position, weather);
+			updateRain(frameTime, biome, builder, m_position, weather);
 		else if (biome.canCreateSnow())
-			updateSnow(frameTime, biome, builder, position, weather);
+			updateSnow(frameTime, biome, builder, m_position, weather);
 	}
 
 	if (m_animator.update(frameTime))
 		newCloud(biome);
 	m_animation = m_animator.getAnimation();
 
-	createCloud(m_values, position, m_partCount, m_color, builder);
+	createCloud(m_values, m_position, m_partCount, m_color, builder);
 
 	if (m_isCollide)
 	{
