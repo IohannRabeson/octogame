@@ -85,6 +85,7 @@ public:
 	bool					getDoubleJump(void);
 	float					getWaterLevel(void) const;
 	void					setStartPosition(sf::Vector2f const & position);
+	void					resetDoubleJump(bool reset);
 	void					giveNanoRobot(NanoRobot * robot, bool firstTime = false);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime = false);
 	void					repairElevator(ElevatorStream & elevator);

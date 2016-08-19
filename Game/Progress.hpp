@@ -137,6 +137,9 @@ public:
 	void				setOctoDoubleJump(bool isDoubleJump) { m_isDoubleJump = isDoubleJump; }
 	bool				getOctoDoubleJump(void) { return m_isDoubleJump; }
 
+	void				resetDoubleJump(bool reset) { m_resetDoubleJump = reset; }
+	bool				isResetDoubleJump(void) const { return m_resetDoubleJump; }
+
 	void				setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool				getReverseSprite() const { return m_reverseSprite; }
 
@@ -224,6 +227,7 @@ private:
 	sf::Vector2f									m_octoPosTransition;
 	bool											m_killOcto;
 	bool											m_isDoubleJump;
+	bool											m_resetDoubleJump;
 
 	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
 	std::size_t										m_npcCount;

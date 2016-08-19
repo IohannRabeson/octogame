@@ -95,7 +95,9 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 	for (std::size_t i = 0; i < partCount; i++)
 	{
 		if (isOctogonContain(values[i].size * m_animation, values[i].origin + origin, octoPosition))
+		{
 			m_isCollide = true;
+		}
 		createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
 	}
 }
@@ -231,5 +233,9 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	createCloud(m_values, position, m_partCount, m_color, builder);
 
 	if (m_isCollide)
+	{
+		if (m_animator.getState() != DecorAnimator::State::Die)
+			Progress::getInstance().resetDoubleJump(true);
 		m_animator.die();
+	}
 }

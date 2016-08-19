@@ -504,6 +504,7 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(DoubleJump, stateLeft, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateRight, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateJump, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateDoubleJump, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateFall, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateStartSlowFall, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateElevator, stateDoubleJump);
@@ -680,8 +681,12 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime)
 {
-	if (Progress::getInstance().isMenu())
+	Progress & progress = Progress::getInstance();
+	if (progress.isMenu())
 		updateAI(frameTime);
+
+	if (progress.isResetDoubleJump())
+		resetDoubleJump(true);
 
 	dieGrass();
 
@@ -791,7 +796,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
 
-	Progress::getInstance().setOctoPos(getPosition());
+	progress.setOctoPos(getPosition());
 
 	if (m_replaceOcto && m_collidingTile.size())
 	{
@@ -957,6 +962,15 @@ void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 	m_box->update();
 	m_eventBox->setPosition(position);
 	m_eventBox->update();
+}
+
+void	CharacterOcto::resetDoubleJump(bool reset)
+{
+	if (reset && m_numberOfJump > 1)
+	{
+		m_numberOfJump = 1;
+		Progress::getInstance().resetDoubleJump(false);
+	}
 }
 
 void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
