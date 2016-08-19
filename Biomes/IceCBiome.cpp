@@ -99,6 +99,7 @@ IceCBiome::IceCBiome() :
 
 	m_cloudSize(sf::Vector2f(400.f, 400.f), sf::Vector2f(1000.f, 1000.f)),
 	m_cloudPartCount(1u, 1u),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
 
@@ -623,6 +624,11 @@ sf::Vector2f	IceCBiome::getCloudSize()
 std::size_t		IceCBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+sf::Vector2f	IceCBiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		IceCBiome::getCloudLifeTime()

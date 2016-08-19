@@ -121,6 +121,7 @@ public:
 
 	virtual sf::Vector2f								getCloudSize();
 	virtual std::size_t									getCloudPartCount();
+	virtual sf::Vector2f									getCloudSpeed();
 	virtual sf::Time									getCloudLifeTime();
 	virtual sf::Color									getCloudColor();
 	virtual bool										canCreateCloud();
@@ -252,6 +253,7 @@ private:
 
 	Range<sf::Vector2f>									m_cloudSize;
 	Range<std::size_t>									m_cloudPartCount;
+	Range<sf::Vector2f>											m_cloudSpeed;
 	Range<sf::Time>										m_cloudLifeTime;
 	sf::Color											m_cloudColor;
 

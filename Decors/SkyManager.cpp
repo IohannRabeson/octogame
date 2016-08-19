@@ -97,6 +97,7 @@ void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf
 	if (biome.canCreateCloud())
 	{
 		m_cloudCount = biome.getCloudCount();
+		m_cloudSpeed = biome.getCloudSpeed();
 		m_originCloudsFront.resize(m_cloudCount);
 		float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
 		float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
@@ -122,6 +123,7 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 	sf::Vector2f const & cameraCenter = camera.getCenter();
 
 	m_mapSizeFloat = biome.getMapSizeFloat();
+	m_waterLevel = biome.getWaterLevel();
 	m_wind = biome.getWind();
 
 	m_decorManagerBack.add(new Sky(m_cycle));
@@ -152,17 +154,27 @@ void SkyManager::update(sf::Time frameTime)
 	for (auto it = m_originMoons.begin(); it != m_originMoons.end(); it++)
 		m_originRotateStar = setRotatePosition(decorBack++, *it, m_originRotate, offsetCamera, cos, sin);
 
-	float windMove = m_wind * frameTime.asSeconds();
+	float cloudMove = (m_wind + m_cloudSpeed.x) * frameTime.asSeconds();
 	float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
 	float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
+	float upLimit = cameraCenter.y - cameraSize.y * 2.f;
 	DecorManager::Iterator decorFront = m_decorManagerFront.begin();
 	for (auto it = m_originCloudsFront.begin(); it != m_originCloudsFront.end(); it++)
 	{
-		it->x += windMove;
+		it->x += cloudMove;
 		if (it->x >= rightLimit)
 			it->x = leftLimit;
 		else if (it->x <= leftLimit)
 			it->x = rightLimit;
+
+		if (m_cloudSpeed.y != 0.f)
+		{
+			it->y += m_cloudSpeed.y * frameTime.asSeconds();
+			if (it->y <= upLimit)
+				it->y = m_waterLevel;
+			else if (it->y >= m_waterLevel)
+				it->y = upLimit;
+		}
 		(*decorFront)->setPosition(*it);
 		decorFront++;
 	}

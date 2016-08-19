@@ -44,7 +44,9 @@ private:
 	DecorManager				m_decorManagerBack;
 	DecorManager				m_decorManagerFront;
 	DecorManager				m_decorManagerFilter;
+	float						m_waterLevel;
 	float						m_wind;
+	sf::Vector2f				m_cloudSpeed;
 	sf::Vector2f				m_mapSizeFloat;
 
 	SkyCycle *					m_cycle;

@@ -12,7 +12,7 @@ WaterBBiome::WaterBBiome() :
 	m_name("Water B"),
 	m_id(Level::WaterB),
 	m_seed("Vince"),
-	m_mapSize(sf::Vector2u(750u, 128u)),
+	m_mapSize(sf::Vector2u(450u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(2.f * 16.f, -1350.f),
 	m_transitionDuration(0.5f),
@@ -30,7 +30,7 @@ WaterBBiome::WaterBBiome() :
 	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
 	m_SunsetLightColor(255, 147, 46, 130),
-	m_wind(100.f),
+	m_wind(0.f),
 	m_rainDropPerSecond(10u, 15u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
@@ -50,8 +50,8 @@ WaterBBiome::WaterBBiome() :
 	m_canCreateRain(false),
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
-	m_canCreateRock(false),
-	m_canCreateTree(false),
+	m_canCreateRock(true),
+	m_canCreateTree(true),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
@@ -61,7 +61,7 @@ WaterBBiome::WaterBBiome() :
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
-	m_canCreateRainbow(false),
+	m_canCreateRainbow(true),
 	m_canCreateGrass(false),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
@@ -96,8 +96,9 @@ WaterBBiome::WaterBBiome() :
 	m_shineEffectColor(153, 207, 255, 130),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
-	m_cloudPartCount(3u, 4u),
+	m_cloudSize(sf::Vector2f(300.f, 300.f), sf::Vector2f(400.f, 400.f)),
+	m_cloudPartCount(1u, 1u),
+	m_cloudSpeed(sf::Vector2f(0.f, -140.f), sf::Vector2f(0.f, -150.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
 
@@ -135,17 +136,11 @@ WaterBBiome::WaterBBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[20] = MAP_WATER_B_TRAIL_OMP;
-	m_gameObjects[20] = GameObjectType::Portal;
-
 	m_gameObjects[46] = GameObjectType::CedricStartNpc;
 	m_gameObjects[50] = GameObjectType::JellyfishNpc;
 	m_gameObjects[70] = GameObjectType::JellyfishNpc;
 	m_gameObjects[390] = GameObjectType::JellyfishNpc;
-	m_gameObjects[430] = GameObjectType::JellyfishNpc;
-	m_gameObjects[540] = GameObjectType::JellyfishNpc;
-	m_gameObjects[610] = GameObjectType::JellyfishNpc;
-	m_gameObjects[640] = GameObjectType::CedricEndNpc;
+	m_gameObjects[340] = GameObjectType::CedricEndNpc;
 	/*
 	m_instances[900] = MAP_WATER_A_PORTAL_OMP;
 	m_gameObjects[40] = GameObjectType::Portal;
@@ -279,8 +274,8 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f     , 30.f    , 32.f , 33.f , 59.f , 60.f , 62.f    , 750.f};
-		std::vector<float> pointY = {n - 2.2f, n - 2.2f, -1.6f, 2.97f, 2.97f, -1.6f, n - 2.2f, n - 2.2f};
+		std::vector<float> pointX = {0.f, 750.f};
+		std::vector<float> pointY = {n  , n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -674,6 +669,11 @@ sf::Vector2f	WaterBBiome::getCloudSize()
 std::size_t		WaterBBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+sf::Vector2f	WaterBBiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		WaterBBiome::getCloudLifeTime()
