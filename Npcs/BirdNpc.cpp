@@ -179,13 +179,13 @@ void BirdNpc::update(sf::Time frametime)
 void BirdNpc::updatePhysics(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
-	if (sprite.getCurrentEvent() == Special2 || sprite.getCurrentEvent() == Special1)
-	{
-		RectangleShape * box = getBox();
+	RectangleShape * box = getBox();
 
+	if (sprite.getCurrentEvent() == Special2 || sprite.getCurrentEvent() == Special1)
 		box->setPosition(m_startPosition);
-		box->update();
-	}
+	else
+		m_startPosition = box->getPosition();
+	box->update();
 }
 
 void BirdNpc::collideOctoEvent(CharacterOcto * octo)
@@ -209,7 +209,6 @@ void BirdNpc::collideOctoEvent(CharacterOcto * octo)
 		sprite.setScale(getScale(), getScale());
 		m_flySpeed.x = -m_flySpeed.x;
 	}
-
 }
 
 void BirdNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
