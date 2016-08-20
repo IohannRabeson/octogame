@@ -30,7 +30,7 @@ WaterABiome::WaterABiome() :
 	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
 	m_SunsetLightColor(255, 147, 46, 130),
-	m_wind(100.f),
+	m_wind(30.f),
 	m_rainDropPerSecond(10u, 15u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
@@ -51,7 +51,7 @@ WaterABiome::WaterABiome() :
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
-	m_canCreateTree(true),
+	m_canCreateTree(false),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
@@ -96,10 +96,10 @@ WaterABiome::WaterABiome() :
 	m_shineEffectColor(153, 207, 255, 130),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
-	m_cloudPartCount(3u, 4u),
-	m_cloudMaxY(-1000.f),
-	m_cloudMinY(-4000.f),
+	m_cloudSize(sf::Vector2f(50.f, 10.f), sf::Vector2f(100.f, 20.f)),
+	m_cloudPartCount(3u, 5u),
+	m_cloudMaxY(m_waterLevel),
+	m_cloudMinY(m_waterLevel),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
@@ -233,18 +233,19 @@ std::vector<ParallaxScrolling::ALayer *> WaterABiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 5, 0.1f, 0.4f, 11.f, 40.f);
+	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 12.f, 5, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x / 2.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 0, 0.1f, 0.4f, 11.f, 40.f);
+	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 12.f, 0, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x / 2.f + 100.f, y + 100.f, 2, 2.f);
 		});
 	vector.push_back(layer);
+	/*
 	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 10.f, -5, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
@@ -263,6 +264,7 @@ std::vector<ParallaxScrolling::ALayer *> WaterABiome::getLayers()
 			return noise.perlin(x / 2.f + 400.f, y + 400.f, 2, 2.f);
 		});
 	vector.push_back(layer);
+	*/
 	/*
 	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)

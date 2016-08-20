@@ -234,7 +234,7 @@ std::vector<ParallaxScrolling::ALayer *> WaterCBiome::getLayers()
 	sf::Vector2u mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.2f, 0.6f), sf::Vector2u(mapSize.x, mapSize.y / 3.f), 8.f, 250, 0.1f, 1.f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.2f, 0.6f), sf::Vector2u(mapSize.x, mapSize.y / 3.f), 12.f, 250, 0.1f, 1.f, -1.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 1.f, y, 2, 2.f);
@@ -246,6 +246,7 @@ std::vector<ParallaxScrolling::ALayer *> WaterCBiome::getLayers()
 			return noise.noise(x * 1.1f, y);
 		});
 	vector.push_back(layer);
+	/*
 	layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 2.5f), 12.f, 350, 0.1f, 0.3f, 2.f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
@@ -270,6 +271,7 @@ std::vector<ParallaxScrolling::ALayer *> WaterCBiome::getLayers()
 			return noise.noise(x * 40.f, y + 200.f);
 		});
 	vector.push_back(layer);
+	*/
 	return vector;
 }
 
