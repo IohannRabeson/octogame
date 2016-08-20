@@ -172,7 +172,9 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			if (m_timeEventElevator > sf::seconds(1.f) && m_sound == nullptr)
 				m_sound = audio.playSound(resources.getSound(OCTO_START_ELEVATOR_OGG), m_volumeEffect);
 			break;
-		case SlowFall:
+		case SlowFall1:
+		case SlowFall2:
+		case SlowFall3:
 			if (m_sound == nullptr)
 			{
 				m_sound = audio.playSound(resources.getSound(OCTO_SLOWFALL_OGG), m_volumeEffect * 0.7f);

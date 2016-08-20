@@ -50,11 +50,13 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Drink,
 		StartElevator,
 		Elevator = 13,
-		SlowFall,
+		SlowFall1,
+		SlowFall2,
+		SlowFall3,
 		StartWaterJump,
 		WaterJump,
 		PortalEvent,
-		KonamiCode = 18
+		KonamiCode = 21
 	};
 public:
 	friend class OctoEvent;
@@ -143,7 +145,9 @@ private:
 	octo::CharacterAnimation	m_danceWithMusicAnimation;
 	octo::CharacterAnimation	m_answerWolfAnimation;
 	octo::CharacterAnimation	m_startSlowFallAnimation;
-	octo::CharacterAnimation	m_slowFallAnimation;
+	octo::CharacterAnimation	m_slowFallAnimation1;
+	octo::CharacterAnimation	m_slowFallAnimation2;
+	octo::CharacterAnimation	m_slowFallAnimation3;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
 	octo::CharacterAnimation	m_startElevatorAnimation;
