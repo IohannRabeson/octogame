@@ -171,6 +171,7 @@ void Cloud::newCloud(ABiome & biome)
 {
 	m_size = biome.getCloudSize();
 	m_speed.x = biome.getCloudSpeed().x + biome.getWind();
+	m_speed.x = biome.randomFloat(m_speed.x - 20.f, m_speed.x + 20.f);
 	m_speed.y = biome.randomFloat(biome.getCloudSpeed().y * 1.5f, biome.getCloudSpeed().y * 0.5f);
 
 	if (m_speed.y == 0.f)

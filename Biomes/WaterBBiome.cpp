@@ -77,7 +77,7 @@ WaterBBiome::WaterBBiome() :
 	m_grassIndex(0u),
 
 	m_treeDepth(2u, 3u),
-	m_treeSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(50.f, 100.f)),
+	m_treeSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(50.f, 300.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
 	m_treeColor(103, 157, 208, 50),
 	m_treeAngle(-180.f, 180.f),
