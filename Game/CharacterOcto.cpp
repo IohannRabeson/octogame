@@ -40,7 +40,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondSlowFall(-300.f),
 	m_pixelSecondWalk(320.f),
-	m_pixelSecondAfterJump(-500.f),
+	m_pixelSecondAfterJump(-400.f),
 	m_pixelSecondAfterFullJump(-400.f),
 	m_pixelSecondMultiplier(800.f),
 	m_deltaPositionY(27.f),
