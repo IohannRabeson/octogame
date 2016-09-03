@@ -141,10 +141,14 @@ void Cloud::setupLightning(ABiome & biome)
 
 void Cloud::setup(ABiome& biome)
 {
+	octo::Camera const & camera = octo::Application::getCamera();
+
 	m_color = biome.getCloudColor();
 	m_partCount = biome.getCloudPartCount();
 	m_cloudMinY = biome.getCloudMinY();
 	m_cloudMaxY = biome.getCloudMaxY();
+	m_cloudMinX = camera.getCenter().x - camera.getSize().x * 2.f;
+	m_cloudMaxX = camera.getCenter().x + camera.getSize().x * 2.f;
 	m_position = sf::Vector2f(biome.randomFloat(m_cloudMinX, m_cloudMaxX), biome.randomFloat(m_cloudMinY, m_cloudMaxY));
 	m_values.resize(m_partCount);
 	m_rain.resize(m_partCount);
@@ -167,6 +171,7 @@ void Cloud::newCloud(ABiome & biome)
 {
 	m_size = biome.getCloudSize();
 	m_speed.x = biome.getCloudSpeed().x + biome.getWind();
+	m_speed.x = biome.randomFloat(m_speed.x - 20.f, m_speed.x + 20.f);
 	m_speed.y = biome.randomFloat(biome.getCloudSpeed().y * 1.5f, biome.getCloudSpeed().y * 0.5f);
 
 	if (m_speed.y == 0.f)
