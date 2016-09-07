@@ -40,8 +40,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Right,
 		Left,
 		StartJump,
-		Jump,
-		DoubleJump = 5,
+		DoubleJump = 4,
 		Fall,
 		Dance,
 		DanceWithMusic,
@@ -49,14 +48,14 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Death,
 		Drink,
 		StartElevator,
-		Elevator = 13,
+		Elevator = 12,
 		SlowFall1,
 		SlowFall2,
 		SlowFall3,
 		StartWaterJump,
 		WaterJump,
 		PortalEvent,
-		KonamiCode = 21
+		KonamiCode = 20
 	};
 public:
 	friend class OctoEvent;

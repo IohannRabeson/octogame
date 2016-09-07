@@ -41,7 +41,7 @@ CharacterOcto::CharacterOcto() :
 	m_pixelSecondSlowFall(-300.f),
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-400.f),
-	m_pixelSecondAfterFullJump(-400.f),
+	m_pixelSecondAfterFullJump(-500.f),
 	m_pixelSecondMultiplier(800.f),
 	m_deltaPositionY(27.f),
 	m_numberOfJump(0),
@@ -286,13 +286,6 @@ void	CharacterOcto::setupAnimation()
 	});
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
-	m_jumpAnimation.setFrames({
-			Frame(sf::seconds(0.3f), {26, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {27, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {28, sf::FloatRect(), sf::Vector2f()}),
-			});
-	m_jumpAnimation.setLoop(octo::LoopMode::NoLoop);
-
 	m_fallAnimation.setFrames({
 			Frame(sf::seconds(0.3f), {27, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {28, sf::FloatRect(), sf::Vector2f()}),
@@ -426,7 +419,6 @@ void	CharacterOcto::setupMachine()
 	StatePtr					stateIdle;
 	StatePtr					stateLeft;
 	StatePtr					stateRight;
-	StatePtr					stateJump;
 	StatePtr					stateDoubleJump;
 	StatePtr					stateFall;
 	StatePtr					stateDance;
@@ -448,8 +440,7 @@ void	CharacterOcto::setupMachine()
 	stateIdle = std::make_shared<State>("Idle", m_idleAnimation, m_sprite);
 	stateLeft = std::make_shared<State>("Left", m_walkAnimation, m_sprite);
 	stateRight = std::make_shared<State>("Right", m_walkAnimation, m_sprite);
-	stateJump = std::make_shared<State>("Jump", m_jumpAnimation, m_sprite);
-	stateDoubleJump = std::make_shared<State>("DoubleJump", m_jumpAnimation, m_sprite);
+	stateDoubleJump = std::make_shared<State>("DoubleJump", m_startJumpAnimation, m_sprite);
 	stateFall = std::make_shared<State>("Fall", m_fallAnimation, m_sprite);
 	stateDance = std::make_shared<State>("Dance", m_danceAnimation, m_sprite);
 	stateStartSlowFall = std::make_shared<State>("StartSlowFall", m_startSlowFallAnimation, m_sprite);
@@ -471,7 +462,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Left, stateIdle, stateLeft);
 	machine.addTransition(Left, stateLeft, stateLeft);
 	machine.addTransition(Left, stateRight, stateLeft);
-	machine.addTransition(Left, stateJump, stateLeft);
 	machine.addTransition(Left, stateDoubleJump, stateLeft);
 	machine.addTransition(Left, stateFall, stateLeft);
 	machine.addTransition(Left, stateDance, stateLeft);
@@ -490,7 +480,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Right, stateIdle, stateRight);
 	machine.addTransition(Right, stateLeft, stateRight);
 	machine.addTransition(Right, stateRight, stateRight);
-	machine.addTransition(Right, stateJump, stateRight);
 	machine.addTransition(Right, stateDoubleJump, stateRight);
 	machine.addTransition(Right, stateFall, stateRight);
 	machine.addTransition(Right, stateDance, stateRight);
@@ -509,7 +498,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, stateIdle, stateStartJump);
 	machine.addTransition(StartJump, stateLeft, stateStartJump);
 	machine.addTransition(StartJump, stateRight, stateStartJump);
-	machine.addTransition(StartJump, stateJump, stateStartJump);
 	machine.addTransition(StartJump, stateDoubleJump, stateStartJump);
 	machine.addTransition(StartJump, stateFall, stateStartJump);
 	machine.addTransition(StartJump, stateStartSlowFall, stateStartJump);
@@ -524,12 +512,9 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartJump, statePortal, stateStartJump);
 	machine.addTransition(StartJump, stateDrink, stateStartJump);
 
-	machine.addTransition(Jump, stateStartJump, stateJump);
-
 	machine.addTransition(DoubleJump, stateIdle, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateLeft, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateRight, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateJump, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateDoubleJump, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateFall, stateDoubleJump);
 	machine.addTransition(DoubleJump, stateStartSlowFall, stateDoubleJump);
@@ -546,7 +531,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Fall, stateIdle, stateFall);
 	machine.addTransition(Fall, stateLeft, stateFall);
 	machine.addTransition(Fall, stateRight, stateFall);
-	machine.addTransition(Fall, stateJump, stateFall);
 	machine.addTransition(Fall, stateDoubleJump, stateFall);
 	machine.addTransition(Fall, stateFall, stateFall);
 	machine.addTransition(Fall, stateDance, stateFall);
@@ -571,7 +555,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartSlowFall, stateIdle, stateStartSlowFall);
 	machine.addTransition(StartSlowFall, stateLeft, stateStartSlowFall);
 	machine.addTransition(StartSlowFall, stateRight, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateJump, stateStartSlowFall);
 	machine.addTransition(StartSlowFall, stateDoubleJump, stateStartSlowFall);
 	machine.addTransition(StartSlowFall, stateFall, stateStartSlowFall);
 	machine.addTransition(StartSlowFall, stateDance, stateStartSlowFall);
@@ -603,7 +586,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Death, stateIdle, stateDeath);
 	machine.addTransition(Death, stateLeft, stateDeath);
 	machine.addTransition(Death, stateRight, stateDeath);
-	machine.addTransition(Death, stateJump, stateDeath);
 	machine.addTransition(Death, stateDoubleJump, stateDeath);
 	machine.addTransition(Death, stateFall, stateDeath);
 	machine.addTransition(Death, stateDance, stateDeath);
@@ -619,7 +601,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartElevator, stateIdle, stateStartElevator);
 	machine.addTransition(StartElevator, stateLeft, stateStartElevator);
 	machine.addTransition(StartElevator, stateRight, stateStartElevator);
-	machine.addTransition(StartElevator, stateJump, stateStartElevator);
 	machine.addTransition(StartElevator, stateDoubleJump, stateStartElevator);
 	machine.addTransition(StartElevator, stateFall, stateStartElevator);
 	machine.addTransition(StartElevator, stateDance, stateStartElevator);
@@ -639,7 +620,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(StartWaterJump, stateIdle, stateSartWaterJump);
 	machine.addTransition(StartWaterJump, stateLeft, stateSartWaterJump);
 	machine.addTransition(StartWaterJump, stateRight, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateJump, stateSartWaterJump);
 	machine.addTransition(StartWaterJump, stateDoubleJump, stateSartWaterJump);
 	machine.addTransition(StartWaterJump, stateFall, stateSartWaterJump);
 	machine.addTransition(StartWaterJump, stateDance, stateSartWaterJump);
@@ -662,7 +642,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Idle, stateIdle, stateIdle);
 	machine.addTransition(Idle, stateLeft, stateIdle);
 	machine.addTransition(Idle, stateRight, stateIdle);
-	machine.addTransition(Idle, stateJump, stateIdle);
 	machine.addTransition(Idle, stateDoubleJump, stateIdle);
 	machine.addTransition(Idle, stateFall, stateIdle);
 	machine.addTransition(Idle, stateDance, stateIdle);
@@ -682,7 +661,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(PortalEvent, stateIdle, statePortal);
 	machine.addTransition(PortalEvent, stateLeft, statePortal);
 	machine.addTransition(PortalEvent, stateRight, statePortal);
-	machine.addTransition(PortalEvent, stateJump, statePortal);
 	machine.addTransition(PortalEvent, stateDoubleJump, statePortal);
 	machine.addTransition(PortalEvent, stateFall, statePortal);
 	machine.addTransition(PortalEvent, stateDance, statePortal);
@@ -700,7 +678,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(KonamiCode, stateIdle, stateKonami);
 	machine.addTransition(KonamiCode, stateLeft, stateKonami);
 	machine.addTransition(KonamiCode, stateRight, stateKonami);
-	machine.addTransition(KonamiCode, stateJump, stateKonami);
 	machine.addTransition(KonamiCode, stateDoubleJump, stateKonami);
 	machine.addTransition(KonamiCode, stateFall, stateKonami);
 	machine.addTransition(KonamiCode, stateDance, stateKonami);
@@ -718,7 +695,6 @@ void	CharacterOcto::setupMachine()
 	machine.addTransition(Drink, stateIdle, stateDrink);
 	machine.addTransition(Drink, stateLeft, stateDrink);
 	machine.addTransition(Drink, stateRight, stateDrink);
-	machine.addTransition(Drink, stateJump, stateDrink);
 	machine.addTransition(Drink, stateDoubleJump, stateDrink);
 	machine.addTransition(Drink, stateFall, stateDrink);
 	machine.addTransition(Drink, stateDance, stateDrink);
@@ -1159,12 +1135,8 @@ void	CharacterOcto::onSky(Events event)
 	progress.setOctoDoubleJump(false);
 	switch (event)
 	{
-		case StartJump:
-			if (m_sprite.isTerminated())
-				m_sprite.setNextEvent(Jump);
-			break;
 		case WaterJump:
-		case Jump:
+		case StartJump:
 		case DoubleJump:
 			progress.setOctoDoubleJump(true);
 			if (m_box->getGlobalBounds().top > m_previousTop
@@ -1394,14 +1366,17 @@ void	CharacterOcto::randomJumpAnimation()
 				Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
 				Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
 				Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.2f), {28, sf::FloatRect(), sf::Vector2f()}),
 				});
 		m_startJumpAnimation.setLoop(octo::LoopMode::NoLoop);
 	}
 	else
 	{
 		m_startJumpAnimation.setFrames({
-				Frame(sf::seconds(0.3f), {25, sf::FloatRect(), sf::Vector2f()}),
-				Frame(sf::seconds(0.3f), {26, sf::FloatRect(), sf::Vector2f()})
+				Frame(sf::seconds(0.4f), {25, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.4f), {26, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.4f), {27, sf::FloatRect(), sf::Vector2f()}),
+				Frame(sf::seconds(0.4f), {28, sf::FloatRect(), sf::Vector2f()}),
 				});
 		m_startJumpAnimation.setLoop(octo::LoopMode::NoLoop);
 	}
@@ -1454,7 +1429,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 		}
 	}
 	if (m_keySpace && m_numberOfJump < 3 &&
-			(event == Jump || event == DoubleJump || event == StartJump))
+			(event == DoubleJump || event == StartJump))
 	{
 		velocity.y = m_jumpVelocity;
 		m_jumpVelocity += m_pixelSecondMultiplier * frametime;
@@ -1742,7 +1717,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Jump:
 			m_keySpace = false;
-			if (state == Jump || state == DoubleJump || state == StartJump)
+			if (state == DoubleJump || state == StartJump)
 			{
 				m_afterJump = true;
 				m_afterJumpVelocity = m_pixelSecondAfterJump;
@@ -1778,7 +1753,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 	{
 		if (state != Fall)
 		{
-			if (state != StartJump && state != Jump && state != DoubleJump)
+			if (state != StartJump && state != DoubleJump)
 				m_sprite.setNextEvent(Fall);
 		}
 	}
