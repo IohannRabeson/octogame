@@ -215,7 +215,6 @@ void ChallengePixelate::updateShader(sf::Time)
 
 // Displacement
 ChallengeDisplacement::ChallengeDisplacement(void) :
-	//AChallenge(DISPLACEMENT_FRAG, 8.f, 3.f, sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(250.f * 16.f, 720.f * 16.f)), ABiome::Type::Desert, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
 	AChallenge(DISPLACEMENT_FRAG, 8.f, 3.f, sf::FloatRect(sf::Vector2f(25.f * 16.f, -200.f * 16.f), sf::Vector2f(600.f * 16.f, 700.f * 16.f)), ABiome::Type::Water, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
 {
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
@@ -224,7 +223,7 @@ ChallengeDisplacement::ChallengeDisplacement(void) :
 
 void ChallengeDisplacement::updateShader(sf::Time)
 {
-	m_shader.setParameter("intensity", m_intensity * octo::linearInterpolation(0.f, 0.7f, std::min(m_timer, m_duration) / m_duration));
+	m_shader.setParameter("intensity", m_intensity * octo::linearInterpolation(0.f, 0.4f, std::min(m_timer, m_duration) / m_duration));
 }
 
 // Blur
