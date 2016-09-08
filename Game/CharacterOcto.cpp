@@ -297,12 +297,6 @@ void	CharacterOcto::setupAnimation()
 			});
 	m_dieFallAnimation.setLoop(octo::LoopMode::Loop);
 
-	//TODO define frame
-	m_danceAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
-			});
-	m_danceAnimation.setLoop(octo::LoopMode::Loop);
-
 	m_startSlowFallAnimation.setFrames({
 			Frame(sf::seconds(0.2f), {49, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {50, sf::FloatRect(), sf::Vector2f()}),
@@ -416,20 +410,19 @@ void	CharacterOcto::setupMachine()
 	StatePtr					stateDoubleJump;
 	StatePtr					stateFall;
 	StatePtr					stateDieFall;
-	StatePtr					stateDance;
 	StatePtr					stateStartSlowFall;
 	StatePtr					stateDeath;
 	StatePtr					stateStartElevator;
 	StatePtr					stateElevator;
-	StatePtr					stateDanceMusic;
+	StatePtr					stateWait;
 	StatePtr					stateStartJump;
 	StatePtr					stateSlowFall1;
 	StatePtr					stateSlowFall2;
 	StatePtr					stateSlowFall3;
-	StatePtr					stateSartWaterJump;
+	StatePtr					stateStartWaterJump;
 	StatePtr					stateWaterJump;
-	StatePtr					statePortal;
-	StatePtr					stateKonami;
+	StatePtr					statePortalEvent;
+	StatePtr					stateKonamiCode;
 	StatePtr					stateDrink;
 
 	stateIdle = std::make_shared<State>("Idle", m_idleAnimation, m_sprite);
@@ -438,306 +431,442 @@ void	CharacterOcto::setupMachine()
 	stateDoubleJump = std::make_shared<State>("DoubleJump", m_startJumpAnimation, m_sprite);
 	stateFall = std::make_shared<State>("Fall", m_fallAnimation, m_sprite);
 	stateDieFall = std::make_shared<State>("DieFall", m_dieFallAnimation, m_sprite);
-	stateDance = std::make_shared<State>("Dance", m_danceAnimation, m_sprite);
+	stateWait = std::make_shared<State>("Wait", m_waitAnimation, m_sprite);
 	stateStartSlowFall = std::make_shared<State>("StartSlowFall", m_startSlowFallAnimation, m_sprite);
 	stateDeath = std::make_shared<State>("Death", m_deathAnimation, m_sprite);
 	stateStartElevator = std::make_shared<State>("StartElevator", m_startElevatorAnimation, m_sprite);
 	stateElevator = std::make_shared<State>("Elevator", m_elevatorAnimation, m_sprite);
-	stateDanceMusic = std::make_shared<State>("DanceWithMusic", m_danceWithMusicAnimation, m_sprite);
 	stateStartJump = std::make_shared<State>("StartJump", m_startJumpAnimation, m_sprite);
 	stateSlowFall1 = std::make_shared<State>("SlowFall1", m_slowFallAnimation1, m_sprite);
 	stateSlowFall2 = std::make_shared<State>("SlowFall2", m_slowFallAnimation2, m_sprite);
 	stateSlowFall3 = std::make_shared<State>("SlowFall3", m_slowFallAnimation3, m_sprite);
-	stateSartWaterJump = std::make_shared<State>("StartWaterJump", m_startElevatorAnimation, m_sprite);
+	stateStartWaterJump = std::make_shared<State>("StartWaterJump", m_startElevatorAnimation, m_sprite);
 	stateWaterJump = std::make_shared<State>("WaterJump", m_elevatorAnimation, m_sprite);
-	statePortal = std::make_shared<State>("PortalEvent", m_portalAnimation, m_sprite);
-	stateKonami = std::make_shared<State>("KonamiCode", m_konamiCodeAnimation, m_sprite);
+	statePortalEvent = std::make_shared<State>("PortalEvent", m_portalAnimation, m_sprite);
+	stateKonamiCode = std::make_shared<State>("KonamiCode", m_konamiCodeAnimation, m_sprite);
 	stateDrink = std::make_shared<State>("Drink", m_drinkAnimation, m_sprite);
 
 	machine.setStart(stateIdle);
-	machine.addTransition(Left, stateIdle, stateLeft);
-	machine.addTransition(Left, stateLeft, stateLeft);
-	machine.addTransition(Left, stateRight, stateLeft);
-	machine.addTransition(Left, stateDoubleJump, stateLeft);
-	machine.addTransition(Left, stateFall, stateLeft);
-	machine.addTransition(Left, stateDieFall, stateLeft);
-	machine.addTransition(Left, stateDance, stateLeft);
-	machine.addTransition(Left, stateStartSlowFall, stateLeft);
-	machine.addTransition(Left, stateDeath, stateLeft);
-	machine.addTransition(Left, stateStartElevator, stateLeft);
-	machine.addTransition(Left, stateDanceMusic, stateLeft);
-	machine.addTransition(Left, stateStartJump, stateLeft);
-	machine.addTransition(Left, stateSlowFall1, stateLeft);
-	machine.addTransition(Left, stateSlowFall2, stateLeft);
-	machine.addTransition(Left, stateSlowFall3, stateLeft);
-	machine.addTransition(Left, stateSartWaterJump, stateLeft);
-	machine.addTransition(Left, stateWaterJump, stateLeft);
-	machine.addTransition(Left, stateDrink, stateLeft);
-
-	machine.addTransition(Right, stateIdle, stateRight);
-	machine.addTransition(Right, stateLeft, stateRight);
-	machine.addTransition(Right, stateRight, stateRight);
-	machine.addTransition(Right, stateDoubleJump, stateRight);
-	machine.addTransition(Right, stateFall, stateRight);
-	machine.addTransition(Right, stateDieFall, stateRight);
-	machine.addTransition(Right, stateDance, stateRight);
-	machine.addTransition(Right, stateStartSlowFall, stateRight);
-	machine.addTransition(Right, stateDeath, stateRight);
-	machine.addTransition(Right, stateStartElevator, stateRight);
-	machine.addTransition(Right, stateDanceMusic, stateRight);
-	machine.addTransition(Right, stateStartJump, stateRight);
-	machine.addTransition(Right, stateSlowFall1, stateLeft);
-	machine.addTransition(Right, stateSlowFall2, stateLeft);
-	machine.addTransition(Right, stateSlowFall3, stateLeft);
-	machine.addTransition(Right, stateSartWaterJump, stateRight);
-	machine.addTransition(Right, stateWaterJump, stateRight);
-	machine.addTransition(Right, stateDrink, stateRight);
-
-	machine.addTransition(StartJump, stateIdle, stateStartJump);
-	machine.addTransition(StartJump, stateLeft, stateStartJump);
-	machine.addTransition(StartJump, stateRight, stateStartJump);
-	machine.addTransition(StartJump, stateDoubleJump, stateStartJump);
-	machine.addTransition(StartJump, stateFall, stateStartJump);
-	machine.addTransition(StartJump, stateDieFall, stateStartJump);
-	machine.addTransition(StartJump, stateStartSlowFall, stateStartJump);
-	machine.addTransition(StartJump, stateDeath, stateStartJump);
-	machine.addTransition(StartJump, stateDanceMusic, stateStartJump);
-	machine.addTransition(StartJump, stateStartJump, stateStartJump);
-	machine.addTransition(StartJump, stateSlowFall1, stateStartJump);
-	machine.addTransition(StartJump, stateSlowFall2, stateStartJump);
-	machine.addTransition(StartJump, stateSlowFall3, stateStartJump);
-	machine.addTransition(StartJump, stateSartWaterJump, stateStartJump);
-	machine.addTransition(StartJump, stateWaterJump, stateStartJump);
-	machine.addTransition(StartJump, statePortal, stateStartJump);
-	machine.addTransition(StartJump, stateDrink, stateStartJump);
-
-	machine.addTransition(DoubleJump, stateIdle, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateLeft, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateRight, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateDoubleJump, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateFall, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateDieFall, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateStartSlowFall, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateElevator, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateStartJump, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateSlowFall1, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateSlowFall2, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateSlowFall3, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateSartWaterJump, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateWaterJump, stateDoubleJump);
-	machine.addTransition(DoubleJump, statePortal, stateDoubleJump);
-	machine.addTransition(DoubleJump, stateDrink, stateDoubleJump);
-
-	machine.addTransition(Fall, stateIdle, stateFall);
-	machine.addTransition(Fall, stateLeft, stateFall);
-	machine.addTransition(Fall, stateRight, stateFall);
-	machine.addTransition(Fall, stateDoubleJump, stateFall);
-	machine.addTransition(Fall, stateFall, stateFall);
-	machine.addTransition(Fall, stateDieFall, stateFall);
-	machine.addTransition(Fall, stateDance, stateFall);
-	machine.addTransition(Fall, stateStartSlowFall, stateFall);
-	machine.addTransition(Fall, stateStartElevator, stateFall);
-	machine.addTransition(Fall, stateElevator, stateFall);
-	machine.addTransition(Fall, stateDanceMusic, stateFall);
-	machine.addTransition(Fall, stateStartJump, stateFall);
-	machine.addTransition(Fall, stateSlowFall1, stateFall);
-	machine.addTransition(Fall, stateSlowFall2, stateFall);
-	machine.addTransition(Fall, stateSlowFall3, stateFall);
-	machine.addTransition(Fall, stateSartWaterJump, stateFall);
-	machine.addTransition(Fall, stateWaterJump, stateFall);
-	machine.addTransition(Fall, statePortal, stateFall);
-	machine.addTransition(Fall, stateKonami, stateFall);
-	machine.addTransition(Fall, stateDrink, stateFall);
-
-	machine.addTransition(DieFall, stateFall, stateDieFall);
-	machine.addTransition(DieFall, stateIdle, stateDieFall);
-	machine.addTransition(DieFall, stateLeft, stateDieFall);
-	machine.addTransition(DieFall, stateRight, stateDieFall);
-	machine.addTransition(DieFall, stateDoubleJump, stateDieFall);
-	machine.addTransition(DieFall, stateDieFall, stateDieFall);
-	machine.addTransition(DieFall, stateDance, stateDieFall);
-	machine.addTransition(DieFall, stateStartSlowFall, stateDieFall);
-	machine.addTransition(DieFall, stateStartElevator, stateDieFall);
-	machine.addTransition(DieFall, stateElevator, stateDieFall);
-	machine.addTransition(DieFall, stateDanceMusic, stateDieFall);
-	machine.addTransition(DieFall, stateStartJump, stateDieFall);
-	machine.addTransition(DieFall, stateSlowFall1, stateDieFall);
-	machine.addTransition(DieFall, stateSlowFall2, stateDieFall);
-	machine.addTransition(DieFall, stateSlowFall3, stateDieFall);
-	machine.addTransition(DieFall, stateSartWaterJump, stateDieFall);
-	machine.addTransition(DieFall, stateWaterJump, stateDieFall);
-	machine.addTransition(DieFall, statePortal, stateDieFall);
-	machine.addTransition(DieFall, stateKonami, stateDieFall);
-	machine.addTransition(DieFall, stateDrink, stateDieFall);
-
-	machine.addTransition(Dance, stateIdle, stateDance);
-
-	machine.addTransition(DanceWithMusic, stateIdle, stateDanceMusic);
-
-	machine.addTransition(StartSlowFall, stateIdle, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateLeft, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateRight, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateDoubleJump, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateFall, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateDieFall, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateDance, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateStartSlowFall, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateStartElevator, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateElevator, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateDanceMusic, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateStartJump, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateSlowFall1, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateSlowFall2, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateSlowFall3, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateSartWaterJump, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateWaterJump, stateStartSlowFall);
-	machine.addTransition(StartSlowFall, stateDrink, stateStartSlowFall);
-
-	machine.addTransition(SlowFall1, stateStartSlowFall, stateSlowFall1);
-	machine.addTransition(SlowFall1, stateSlowFall1, stateSlowFall1);
-	machine.addTransition(SlowFall1, stateSlowFall2, stateSlowFall1);
-	machine.addTransition(SlowFall1, stateSlowFall3, stateSlowFall1);
-	machine.addTransition(SlowFall2, stateStartSlowFall, stateSlowFall2);
-	machine.addTransition(SlowFall2, stateSlowFall1, stateSlowFall2);
-	machine.addTransition(SlowFall2, stateSlowFall2, stateSlowFall2);
-	machine.addTransition(SlowFall2, stateSlowFall3, stateSlowFall2);
-	machine.addTransition(SlowFall3, stateStartSlowFall, stateSlowFall3);
-	machine.addTransition(SlowFall3, stateSlowFall1, stateSlowFall3);
-	machine.addTransition(SlowFall3, stateSlowFall2, stateSlowFall3);
-	machine.addTransition(SlowFall3, stateSlowFall3, stateSlowFall3);
-
-	machine.addTransition(Death, stateIdle, stateDeath);
-	machine.addTransition(Death, stateLeft, stateDeath);
-	machine.addTransition(Death, stateRight, stateDeath);
-	machine.addTransition(Death, stateDoubleJump, stateDeath);
-	machine.addTransition(Death, stateFall, stateDeath);
-	machine.addTransition(Death, stateDieFall, stateDeath);
-	machine.addTransition(Death, stateDance, stateDeath);
-	machine.addTransition(Death, stateStartSlowFall, stateDeath);
-	machine.addTransition(Death, stateDanceMusic, stateDeath);
-	machine.addTransition(Death, stateStartJump, stateDeath);
-	machine.addTransition(Death, stateSlowFall1, stateDeath);
-	machine.addTransition(Death, stateSlowFall2, stateDeath);
-	machine.addTransition(Death, stateSlowFall3, stateDeath);
-	machine.addTransition(Death, stateSartWaterJump, stateDeath);
-	machine.addTransition(Death, stateWaterJump, stateDeath);
-
-	machine.addTransition(StartElevator, stateIdle, stateStartElevator);
-	machine.addTransition(StartElevator, stateLeft, stateStartElevator);
-	machine.addTransition(StartElevator, stateRight, stateStartElevator);
-	machine.addTransition(StartElevator, stateDoubleJump, stateStartElevator);
-	machine.addTransition(StartElevator, stateFall, stateStartElevator);
-	machine.addTransition(StartElevator, stateDieFall, stateStartElevator);
-	machine.addTransition(StartElevator, stateDance, stateStartElevator);
-	machine.addTransition(StartElevator, stateStartSlowFall, stateStartElevator);
-	machine.addTransition(StartElevator, stateStartElevator, stateStartElevator);
-	machine.addTransition(StartElevator, stateElevator, stateStartElevator);
-	machine.addTransition(StartElevator, stateDanceMusic, stateStartElevator);
-	machine.addTransition(StartElevator, stateStartJump, stateStartElevator);
-	machine.addTransition(StartElevator, stateSlowFall1, stateStartElevator);
-	machine.addTransition(StartElevator, stateSlowFall2, stateStartElevator);
-	machine.addTransition(StartElevator, stateSlowFall3, stateStartElevator);
-	machine.addTransition(StartElevator, stateSartWaterJump, stateStartElevator);
-	machine.addTransition(StartElevator, stateWaterJump, stateStartElevator);
-
-	machine.addTransition(Elevator, stateStartElevator, stateElevator);
-
-	machine.addTransition(StartWaterJump, stateIdle, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateLeft, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateRight, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateDoubleJump, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateFall, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateDieFall, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateDance, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateStartSlowFall, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateDeath, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateStartElevator, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateElevator, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateDanceMusic, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateStartJump, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateSlowFall1, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateSlowFall2, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateSlowFall3, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateSartWaterJump, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, stateWaterJump, stateSartWaterJump);
-	machine.addTransition(StartWaterJump, statePortal, stateSartWaterJump);
-
-	machine.addTransition(WaterJump, stateSartWaterJump, stateWaterJump);
-	machine.addTransition(WaterJump, stateStartJump, stateWaterJump);
 
 	machine.addTransition(Idle, stateIdle, stateIdle);
-	machine.addTransition(Idle, stateLeft, stateIdle);
 	machine.addTransition(Idle, stateRight, stateIdle);
+	machine.addTransition(Idle, stateLeft, stateIdle);
+	machine.addTransition(Idle, stateStartJump, stateIdle);
 	machine.addTransition(Idle, stateDoubleJump, stateIdle);
 	machine.addTransition(Idle, stateFall, stateIdle);
 	machine.addTransition(Idle, stateDieFall, stateIdle);
-	machine.addTransition(Idle, stateDance, stateIdle);
+	machine.addTransition(Idle, stateWait, stateIdle);
 	machine.addTransition(Idle, stateStartSlowFall, stateIdle);
 	machine.addTransition(Idle, stateDeath, stateIdle);
+	machine.addTransition(Idle, stateDrink, stateIdle);
 	machine.addTransition(Idle, stateStartElevator, stateIdle);
-	machine.addTransition(Idle, stateDanceMusic, stateIdle);
-	machine.addTransition(Idle, stateStartJump, stateIdle);
+	machine.addTransition(Idle, stateElevator, stateIdle);
 	machine.addTransition(Idle, stateSlowFall1, stateIdle);
 	machine.addTransition(Idle, stateSlowFall2, stateIdle);
 	machine.addTransition(Idle, stateSlowFall3, stateIdle);
-	machine.addTransition(Idle, stateSartWaterJump, stateIdle);
-	machine.addTransition(Idle, statePortal, stateIdle);
-	machine.addTransition(Idle, stateKonami, stateIdle);
-	machine.addTransition(Idle, stateDrink, stateIdle);
+	machine.addTransition(Idle, stateStartWaterJump, stateIdle);
+	machine.addTransition(Idle, stateWaterJump, stateIdle);
+	machine.addTransition(Idle, statePortalEvent, stateIdle);
+	machine.addTransition(Idle, stateKonamiCode, stateIdle);
 
-	machine.addTransition(PortalEvent, stateIdle, statePortal);
-	machine.addTransition(PortalEvent, stateLeft, statePortal);
-	machine.addTransition(PortalEvent, stateRight, statePortal);
-	machine.addTransition(PortalEvent, stateDoubleJump, statePortal);
-	machine.addTransition(PortalEvent, stateFall, statePortal);
-	machine.addTransition(PortalEvent, stateDieFall, statePortal);
-	machine.addTransition(PortalEvent, stateDance, statePortal);
-	machine.addTransition(PortalEvent, stateStartSlowFall, statePortal);
-	machine.addTransition(PortalEvent, stateDeath, statePortal);
-	machine.addTransition(PortalEvent, stateStartElevator, statePortal);
-	machine.addTransition(PortalEvent, stateDanceMusic, statePortal);
-	machine.addTransition(PortalEvent, stateStartJump, statePortal);
-	machine.addTransition(PortalEvent, stateSlowFall1, statePortal);
-	machine.addTransition(PortalEvent, stateSlowFall2, statePortal);
-	machine.addTransition(PortalEvent, stateSlowFall3, statePortal);
-	machine.addTransition(PortalEvent, stateSartWaterJump, statePortal);
-	machine.addTransition(PortalEvent, stateWaterJump, statePortal);
+	machine.addTransition(Right, stateIdle, stateRight);
+	machine.addTransition(Right, stateRight, stateRight);
+	machine.addTransition(Right, stateLeft, stateRight);
+	machine.addTransition(Right, stateStartJump, stateRight);
+	machine.addTransition(Right, stateDoubleJump, stateRight);
+	machine.addTransition(Right, stateFall, stateRight);
+	machine.addTransition(Right, stateDieFall, stateRight);
+	machine.addTransition(Right, stateWait, stateRight);
+	machine.addTransition(Right, stateStartSlowFall, stateRight);
+	machine.addTransition(Right, stateDeath, stateRight);
+	machine.addTransition(Right, stateDrink, stateRight);
+	machine.addTransition(Right, stateStartElevator, stateRight);
+	machine.addTransition(Right, stateElevator, stateRight);
+	machine.addTransition(Right, stateSlowFall1, stateRight);
+	machine.addTransition(Right, stateSlowFall2, stateRight);
+	machine.addTransition(Right, stateSlowFall3, stateRight);
+	machine.addTransition(Right, stateStartWaterJump, stateRight);
+	machine.addTransition(Right, stateWaterJump, stateRight);
+	machine.addTransition(Right, statePortalEvent, stateRight);
+	machine.addTransition(Right, stateKonamiCode, stateRight);
 
-	machine.addTransition(KonamiCode, stateIdle, stateKonami);
-	machine.addTransition(KonamiCode, stateLeft, stateKonami);
-	machine.addTransition(KonamiCode, stateRight, stateKonami);
-	machine.addTransition(KonamiCode, stateDoubleJump, stateKonami);
-	machine.addTransition(KonamiCode, stateFall, stateKonami);
-	machine.addTransition(KonamiCode, stateDieFall, stateKonami);
-	machine.addTransition(KonamiCode, stateDance, stateKonami);
-	machine.addTransition(KonamiCode, stateStartSlowFall, stateKonami);
-	machine.addTransition(KonamiCode, stateDeath, stateKonami);
-	machine.addTransition(KonamiCode, stateStartElevator, stateKonami);
-	machine.addTransition(KonamiCode, stateDanceMusic, stateKonami);
-	machine.addTransition(KonamiCode, stateStartJump, stateKonami);
-	machine.addTransition(KonamiCode, stateSlowFall1, stateKonami);
-	machine.addTransition(KonamiCode, stateSlowFall2, stateKonami);
-	machine.addTransition(KonamiCode, stateSlowFall3, stateKonami);
-	machine.addTransition(KonamiCode, stateSartWaterJump, stateKonami);
-	machine.addTransition(KonamiCode, statePortal, stateKonami);
+	machine.addTransition(Left, stateIdle, stateLeft);
+	machine.addTransition(Left, stateRight, stateLeft);
+	machine.addTransition(Left, stateLeft, stateLeft);
+	machine.addTransition(Left, stateStartJump, stateLeft);
+	machine.addTransition(Left, stateDoubleJump, stateLeft);
+	machine.addTransition(Left, stateFall, stateLeft);
+	machine.addTransition(Left, stateDieFall, stateLeft);
+	machine.addTransition(Left, stateWait, stateLeft);
+	machine.addTransition(Left, stateStartSlowFall, stateLeft);
+	machine.addTransition(Left, stateDeath, stateLeft);
+	machine.addTransition(Left, stateDrink, stateLeft);
+	machine.addTransition(Left, stateStartElevator, stateLeft);
+	machine.addTransition(Left, stateElevator, stateLeft);
+	machine.addTransition(Left, stateSlowFall1, stateLeft);
+	machine.addTransition(Left, stateSlowFall2, stateLeft);
+	machine.addTransition(Left, stateSlowFall3, stateLeft);
+	machine.addTransition(Left, stateStartWaterJump, stateLeft);
+	machine.addTransition(Left, stateWaterJump, stateLeft);
+	machine.addTransition(Left, statePortalEvent, stateLeft);
+	machine.addTransition(Left, stateKonamiCode, stateLeft);
+
+	machine.addTransition(StartJump, stateIdle, stateStartJump);
+	machine.addTransition(StartJump, stateRight, stateStartJump);
+	machine.addTransition(StartJump, stateLeft, stateStartJump);
+	machine.addTransition(StartJump, stateStartJump, stateStartJump);
+	machine.addTransition(StartJump, stateDoubleJump, stateStartJump);
+	machine.addTransition(StartJump, stateFall, stateStartJump);
+	machine.addTransition(StartJump, stateDieFall, stateStartJump);
+	machine.addTransition(StartJump, stateWait, stateStartJump);
+	machine.addTransition(StartJump, stateStartSlowFall, stateStartJump);
+	machine.addTransition(StartJump, stateDeath, stateStartJump);
+	machine.addTransition(StartJump, stateDrink, stateStartJump);
+	machine.addTransition(StartJump, stateStartElevator, stateStartJump);
+	machine.addTransition(StartJump, stateElevator, stateStartJump);
+	machine.addTransition(StartJump, stateSlowFall1, stateStartJump);
+	machine.addTransition(StartJump, stateSlowFall2, stateStartJump);
+	machine.addTransition(StartJump, stateSlowFall3, stateStartJump);
+	machine.addTransition(StartJump, stateStartWaterJump, stateStartJump);
+	machine.addTransition(StartJump, stateWaterJump, stateStartJump);
+	machine.addTransition(StartJump, statePortalEvent, stateStartJump);
+	machine.addTransition(StartJump, stateKonamiCode, stateStartJump);
+
+	machine.addTransition(DoubleJump, stateIdle, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateRight, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateLeft, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateStartJump, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateDoubleJump, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateFall, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateDieFall, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateWait, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateStartSlowFall, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateDeath, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateDrink, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateStartElevator, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateElevator, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateSlowFall1, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateSlowFall2, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateSlowFall3, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateStartWaterJump, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateWaterJump, stateDoubleJump);
+	machine.addTransition(DoubleJump, statePortalEvent, stateDoubleJump);
+	machine.addTransition(DoubleJump, stateKonamiCode, stateDoubleJump);
+
+	machine.addTransition(Fall, stateIdle, stateFall);
+	machine.addTransition(Fall, stateRight, stateFall);
+	machine.addTransition(Fall, stateLeft, stateFall);
+	machine.addTransition(Fall, stateStartJump, stateFall);
+	machine.addTransition(Fall, stateDoubleJump, stateFall);
+	machine.addTransition(Fall, stateFall, stateFall);
+	machine.addTransition(Fall, stateDieFall, stateFall);
+	machine.addTransition(Fall, stateWait, stateFall);
+	machine.addTransition(Fall, stateStartSlowFall, stateFall);
+	machine.addTransition(Fall, stateDeath, stateFall);
+	machine.addTransition(Fall, stateDrink, stateFall);
+	machine.addTransition(Fall, stateStartElevator, stateFall);
+	machine.addTransition(Fall, stateElevator, stateFall);
+	machine.addTransition(Fall, stateSlowFall1, stateFall);
+	machine.addTransition(Fall, stateSlowFall2, stateFall);
+	machine.addTransition(Fall, stateSlowFall3, stateFall);
+	machine.addTransition(Fall, stateStartWaterJump, stateFall);
+	machine.addTransition(Fall, stateWaterJump, stateFall);
+	machine.addTransition(Fall, statePortalEvent, stateFall);
+	machine.addTransition(Fall, stateKonamiCode, stateFall);
+
+	machine.addTransition(DieFall, stateIdle, stateDieFall);
+	machine.addTransition(DieFall, stateRight, stateDieFall);
+	machine.addTransition(DieFall, stateLeft, stateDieFall);
+	machine.addTransition(DieFall, stateStartJump, stateDieFall);
+	machine.addTransition(DieFall, stateDoubleJump, stateDieFall);
+	machine.addTransition(DieFall, stateFall, stateDieFall);
+	machine.addTransition(DieFall, stateDieFall, stateDieFall);
+	machine.addTransition(DieFall, stateWait, stateDieFall);
+	machine.addTransition(DieFall, stateStartSlowFall, stateDieFall);
+	machine.addTransition(DieFall, stateDeath, stateDieFall);
+	machine.addTransition(DieFall, stateDrink, stateDieFall);
+	machine.addTransition(DieFall, stateStartElevator, stateDieFall);
+	machine.addTransition(DieFall, stateElevator, stateDieFall);
+	machine.addTransition(DieFall, stateSlowFall1, stateDieFall);
+	machine.addTransition(DieFall, stateSlowFall2, stateDieFall);
+	machine.addTransition(DieFall, stateSlowFall3, stateDieFall);
+	machine.addTransition(DieFall, stateStartWaterJump, stateDieFall);
+	machine.addTransition(DieFall, stateWaterJump, stateDieFall);
+	machine.addTransition(DieFall, statePortalEvent, stateDieFall);
+	machine.addTransition(DieFall, stateKonamiCode, stateDieFall);
+
+	machine.addTransition(Wait, stateIdle, stateWait);
+	machine.addTransition(Wait, stateRight, stateWait);
+	machine.addTransition(Wait, stateLeft, stateWait);
+	machine.addTransition(Wait, stateStartJump, stateWait);
+	machine.addTransition(Wait, stateDoubleJump, stateWait);
+	machine.addTransition(Wait, stateFall, stateWait);
+	machine.addTransition(Wait, stateDieFall, stateWait);
+	machine.addTransition(Wait, stateWait, stateWait);
+	machine.addTransition(Wait, stateStartSlowFall, stateWait);
+	machine.addTransition(Wait, stateDeath, stateWait);
+	machine.addTransition(Wait, stateDrink, stateWait);
+	machine.addTransition(Wait, stateStartElevator, stateWait);
+	machine.addTransition(Wait, stateElevator, stateWait);
+	machine.addTransition(Wait, stateSlowFall1, stateWait);
+	machine.addTransition(Wait, stateSlowFall2, stateWait);
+	machine.addTransition(Wait, stateSlowFall3, stateWait);
+	machine.addTransition(Wait, stateStartWaterJump, stateWait);
+	machine.addTransition(Wait, stateWaterJump, stateWait);
+	machine.addTransition(Wait, statePortalEvent, stateWait);
+	machine.addTransition(Wait, stateKonamiCode, stateWait);
+
+	machine.addTransition(StartSlowFall, stateIdle, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateRight, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateLeft, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateStartJump, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateDoubleJump, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateFall, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateDieFall, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateWait, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateStartSlowFall, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateDeath, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateDrink, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateStartElevator, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateElevator, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateSlowFall1, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateSlowFall2, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateSlowFall3, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateStartWaterJump, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateWaterJump, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, statePortalEvent, stateStartSlowFall);
+	machine.addTransition(StartSlowFall, stateKonamiCode, stateStartSlowFall);
+
+	machine.addTransition(Death, stateIdle, stateDeath);
+	machine.addTransition(Death, stateRight, stateDeath);
+	machine.addTransition(Death, stateLeft, stateDeath);
+	machine.addTransition(Death, stateStartJump, stateDeath);
+	machine.addTransition(Death, stateDoubleJump, stateDeath);
+	machine.addTransition(Death, stateFall, stateDeath);
+	machine.addTransition(Death, stateDieFall, stateDeath);
+	machine.addTransition(Death, stateWait, stateDeath);
+	machine.addTransition(Death, stateStartSlowFall, stateDeath);
+	machine.addTransition(Death, stateDeath, stateDeath);
+	machine.addTransition(Death, stateDrink, stateDeath);
+	machine.addTransition(Death, stateStartElevator, stateDeath);
+	machine.addTransition(Death, stateElevator, stateDeath);
+	machine.addTransition(Death, stateSlowFall1, stateDeath);
+	machine.addTransition(Death, stateSlowFall2, stateDeath);
+	machine.addTransition(Death, stateSlowFall3, stateDeath);
+	machine.addTransition(Death, stateStartWaterJump, stateDeath);
+	machine.addTransition(Death, stateWaterJump, stateDeath);
+	machine.addTransition(Death, statePortalEvent, stateDeath);
+	machine.addTransition(Death, stateKonamiCode, stateDeath);
 
 	machine.addTransition(Drink, stateIdle, stateDrink);
-	machine.addTransition(Drink, stateLeft, stateDrink);
 	machine.addTransition(Drink, stateRight, stateDrink);
+	machine.addTransition(Drink, stateLeft, stateDrink);
+	machine.addTransition(Drink, stateStartJump, stateDrink);
 	machine.addTransition(Drink, stateDoubleJump, stateDrink);
 	machine.addTransition(Drink, stateFall, stateDrink);
 	machine.addTransition(Drink, stateDieFall, stateDrink);
-	machine.addTransition(Drink, stateDance, stateDrink);
+	machine.addTransition(Drink, stateWait, stateDrink);
 	machine.addTransition(Drink, stateStartSlowFall, stateDrink);
 	machine.addTransition(Drink, stateDeath, stateDrink);
+	machine.addTransition(Drink, stateDrink, stateDrink);
 	machine.addTransition(Drink, stateStartElevator, stateDrink);
-	machine.addTransition(Drink, stateDanceMusic, stateDrink);
-	machine.addTransition(Drink, stateStartJump, stateDrink);
+	machine.addTransition(Drink, stateElevator, stateDrink);
 	machine.addTransition(Drink, stateSlowFall1, stateDrink);
 	machine.addTransition(Drink, stateSlowFall2, stateDrink);
 	machine.addTransition(Drink, stateSlowFall3, stateDrink);
-	machine.addTransition(Drink, stateSartWaterJump, stateDrink);
-	machine.addTransition(Drink, statePortal, stateDrink);
+	machine.addTransition(Drink, stateStartWaterJump, stateDrink);
+	machine.addTransition(Drink, stateWaterJump, stateDrink);
+	machine.addTransition(Drink, statePortalEvent, stateDrink);
+	machine.addTransition(Drink, stateKonamiCode, stateDrink);
+
+	machine.addTransition(StartElevator, stateIdle, stateStartElevator);
+	machine.addTransition(StartElevator, stateRight, stateStartElevator);
+	machine.addTransition(StartElevator, stateLeft, stateStartElevator);
+	machine.addTransition(StartElevator, stateStartJump, stateStartElevator);
+	machine.addTransition(StartElevator, stateDoubleJump, stateStartElevator);
+	machine.addTransition(StartElevator, stateFall, stateStartElevator);
+	machine.addTransition(StartElevator, stateDieFall, stateStartElevator);
+	machine.addTransition(StartElevator, stateWait, stateStartElevator);
+	machine.addTransition(StartElevator, stateStartSlowFall, stateStartElevator);
+	machine.addTransition(StartElevator, stateDeath, stateStartElevator);
+	machine.addTransition(StartElevator, stateDrink, stateStartElevator);
+	machine.addTransition(StartElevator, stateStartElevator, stateStartElevator);
+	machine.addTransition(StartElevator, stateElevator, stateStartElevator);
+	machine.addTransition(StartElevator, stateSlowFall1, stateStartElevator);
+	machine.addTransition(StartElevator, stateSlowFall2, stateStartElevator);
+	machine.addTransition(StartElevator, stateSlowFall3, stateStartElevator);
+	machine.addTransition(StartElevator, stateStartWaterJump, stateStartElevator);
+	machine.addTransition(StartElevator, stateWaterJump, stateStartElevator);
+	machine.addTransition(StartElevator, statePortalEvent, stateStartElevator);
+	machine.addTransition(StartElevator, stateKonamiCode, stateStartElevator);
+
+	machine.addTransition(Elevator, stateIdle, stateElevator);
+	machine.addTransition(Elevator, stateRight, stateElevator);
+	machine.addTransition(Elevator, stateLeft, stateElevator);
+	machine.addTransition(Elevator, stateStartJump, stateElevator);
+	machine.addTransition(Elevator, stateDoubleJump, stateElevator);
+	machine.addTransition(Elevator, stateFall, stateElevator);
+	machine.addTransition(Elevator, stateDieFall, stateElevator);
+	machine.addTransition(Elevator, stateWait, stateElevator);
+	machine.addTransition(Elevator, stateStartSlowFall, stateElevator);
+	machine.addTransition(Elevator, stateDeath, stateElevator);
+	machine.addTransition(Elevator, stateDrink, stateElevator);
+	machine.addTransition(Elevator, stateStartElevator, stateElevator);
+	machine.addTransition(Elevator, stateElevator, stateElevator);
+	machine.addTransition(Elevator, stateSlowFall1, stateElevator);
+	machine.addTransition(Elevator, stateSlowFall2, stateElevator);
+	machine.addTransition(Elevator, stateSlowFall3, stateElevator);
+	machine.addTransition(Elevator, stateStartWaterJump, stateElevator);
+	machine.addTransition(Elevator, stateWaterJump, stateElevator);
+	machine.addTransition(Elevator, statePortalEvent, stateElevator);
+	machine.addTransition(Elevator, stateKonamiCode, stateElevator);
+
+	machine.addTransition(SlowFall1, stateIdle, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateRight, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateLeft, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateStartJump, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateDoubleJump, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateFall, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateDieFall, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateWait, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateStartSlowFall, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateDeath, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateDrink, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateStartElevator, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateElevator, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateSlowFall1, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateSlowFall2, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateSlowFall3, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateStartWaterJump, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateWaterJump, stateSlowFall1);
+	machine.addTransition(SlowFall1, statePortalEvent, stateSlowFall1);
+	machine.addTransition(SlowFall1, stateKonamiCode, stateSlowFall1);
+
+	machine.addTransition(SlowFall2, stateIdle, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateRight, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateLeft, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateStartJump, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateDoubleJump, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateFall, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateDieFall, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateWait, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateStartSlowFall, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateDeath, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateDrink, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateStartElevator, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateElevator, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateSlowFall1, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateSlowFall2, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateSlowFall3, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateStartWaterJump, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateWaterJump, stateSlowFall2);
+	machine.addTransition(SlowFall2, statePortalEvent, stateSlowFall2);
+	machine.addTransition(SlowFall2, stateKonamiCode, stateSlowFall2);
+
+	machine.addTransition(SlowFall3, stateIdle, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateRight, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateLeft, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateStartJump, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateDoubleJump, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateFall, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateDieFall, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateWait, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateStartSlowFall, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateDeath, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateDrink, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateStartElevator, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateElevator, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateSlowFall1, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateSlowFall2, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateSlowFall3, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateStartWaterJump, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateWaterJump, stateSlowFall3);
+	machine.addTransition(SlowFall3, statePortalEvent, stateSlowFall3);
+	machine.addTransition(SlowFall3, stateKonamiCode, stateSlowFall3);
+
+	machine.addTransition(StartWaterJump, stateIdle, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateRight, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateLeft, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateStartJump, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateDoubleJump, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateFall, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateDieFall, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateWait, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateStartSlowFall, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateDeath, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateDrink, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateStartElevator, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateElevator, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateSlowFall1, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateSlowFall2, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateSlowFall3, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateStartWaterJump, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateWaterJump, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, statePortalEvent, stateStartWaterJump);
+	machine.addTransition(StartWaterJump, stateKonamiCode, stateStartWaterJump);
+
+	machine.addTransition(WaterJump, stateIdle, stateWaterJump);
+	machine.addTransition(WaterJump, stateRight, stateWaterJump);
+	machine.addTransition(WaterJump, stateLeft, stateWaterJump);
+	machine.addTransition(WaterJump, stateStartJump, stateWaterJump);
+	machine.addTransition(WaterJump, stateDoubleJump, stateWaterJump);
+	machine.addTransition(WaterJump, stateFall, stateWaterJump);
+	machine.addTransition(WaterJump, stateDieFall, stateWaterJump);
+	machine.addTransition(WaterJump, stateWait, stateWaterJump);
+	machine.addTransition(WaterJump, stateStartSlowFall, stateWaterJump);
+	machine.addTransition(WaterJump, stateDeath, stateWaterJump);
+	machine.addTransition(WaterJump, stateDrink, stateWaterJump);
+	machine.addTransition(WaterJump, stateStartElevator, stateWaterJump);
+	machine.addTransition(WaterJump, stateElevator, stateWaterJump);
+	machine.addTransition(WaterJump, stateSlowFall1, stateWaterJump);
+	machine.addTransition(WaterJump, stateSlowFall2, stateWaterJump);
+	machine.addTransition(WaterJump, stateSlowFall3, stateWaterJump);
+	machine.addTransition(WaterJump, stateStartWaterJump, stateWaterJump);
+	machine.addTransition(WaterJump, stateWaterJump, stateWaterJump);
+	machine.addTransition(WaterJump, statePortalEvent, stateWaterJump);
+	machine.addTransition(WaterJump, stateKonamiCode, stateWaterJump);
+
+	machine.addTransition(PortalEvent, stateIdle, statePortalEvent);
+	machine.addTransition(PortalEvent, stateRight, statePortalEvent);
+	machine.addTransition(PortalEvent, stateLeft, statePortalEvent);
+	machine.addTransition(PortalEvent, stateStartJump, statePortalEvent);
+	machine.addTransition(PortalEvent, stateDoubleJump, statePortalEvent);
+	machine.addTransition(PortalEvent, stateFall, statePortalEvent);
+	machine.addTransition(PortalEvent, stateDieFall, statePortalEvent);
+	machine.addTransition(PortalEvent, stateWait, statePortalEvent);
+	machine.addTransition(PortalEvent, stateStartSlowFall, statePortalEvent);
+	machine.addTransition(PortalEvent, stateDeath, statePortalEvent);
+	machine.addTransition(PortalEvent, stateDrink, statePortalEvent);
+	machine.addTransition(PortalEvent, stateStartElevator, statePortalEvent);
+	machine.addTransition(PortalEvent, stateElevator, statePortalEvent);
+	machine.addTransition(PortalEvent, stateSlowFall1, statePortalEvent);
+	machine.addTransition(PortalEvent, stateSlowFall2, statePortalEvent);
+	machine.addTransition(PortalEvent, stateSlowFall3, statePortalEvent);
+	machine.addTransition(PortalEvent, stateStartWaterJump, statePortalEvent);
+	machine.addTransition(PortalEvent, stateWaterJump, statePortalEvent);
+	machine.addTransition(PortalEvent, statePortalEvent, statePortalEvent);
+	machine.addTransition(PortalEvent, stateKonamiCode, statePortalEvent);
+
+	machine.addTransition(KonamiCode, stateIdle, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateRight, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateLeft, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateStartJump, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateDoubleJump, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateFall, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateDieFall, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateWait, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateStartSlowFall, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateDeath, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateDrink, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateStartElevator, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateElevator, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateSlowFall1, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateSlowFall2, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateSlowFall3, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateStartWaterJump, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateWaterJump, stateKonamiCode);
+	machine.addTransition(KonamiCode, statePortalEvent, stateKonamiCode);
+	machine.addTransition(KonamiCode, stateKonamiCode, stateKonamiCode);
 
 	m_sprite.setMachine(machine);
 }
@@ -768,7 +897,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	inWater();
 	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode && m_sprite.getCurrentEvent() != Drink && endDeath())
 	{
-		dance();
+		wait();
 		dieFall();
 		collisionElevatorUpdate();
 		collisionTileUpdate();
@@ -1344,7 +1473,7 @@ bool	CharacterOcto::endDeath()
 	return true;
 }
 
-void	CharacterOcto::dance()
+void	CharacterOcto::wait()
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
 	Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
@@ -1357,7 +1486,7 @@ void	CharacterOcto::dance()
 		{
 			case 0:
 			{
-				m_danceWithMusicAnimation.setFrames({
+				m_waitAnimation.setFrames({
 						Frame(sf::seconds(0.2f), {21, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.2f), {22, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.4f), {23, sf::FloatRect(), sf::Vector2f()}),
@@ -1368,12 +1497,12 @@ void	CharacterOcto::dance()
 						Frame(sf::seconds(0.2f), {22, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.2f), {21, sf::FloatRect(), sf::Vector2f()}),
 						});
-				m_danceWithMusicAnimation.setLoop(octo::LoopMode::NoLoop);
+				m_waitAnimation.setLoop(octo::LoopMode::NoLoop);
 				break;
 			}
 			case 1:
 			{
-				m_danceWithMusicAnimation.setFrames({
+				m_waitAnimation.setFrames({
 						Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.2f), {78, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.2f), {79, sf::FloatRect(), sf::Vector2f()}),
@@ -1382,14 +1511,14 @@ void	CharacterOcto::dance()
 						Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
 						});
-				m_danceWithMusicAnimation.setLoop(octo::LoopMode::NoLoop);
+				m_waitAnimation.setLoop(octo::LoopMode::NoLoop);
 				break;
 			}
 		}
-		m_sprite.setNextEvent(DanceWithMusic);
+		m_sprite.setNextEvent(Wait);
 	}
 
-	if (event == DanceWithMusic && m_sprite.isTerminated())
+	if (event == Wait && m_sprite.isTerminated())
 		m_sprite.setNextEvent(Idle);
 }
 
@@ -1837,7 +1966,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 	}
 	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyUp)
 	{
-		if (state != Dance || state != DanceWithMusic)
+		if (state != Wait)
 		{
 			m_sprite.setNextEvent(Idle);
 		}
