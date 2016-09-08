@@ -187,7 +187,6 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			}
 			break;
 		case StartJump:
-		case Jump:
 		case DoubleJump:
 		case StartWaterJump:
 		case WaterJump:
