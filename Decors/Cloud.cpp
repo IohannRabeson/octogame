@@ -16,6 +16,7 @@ Cloud::Cloud(void) :
 
 Cloud::Cloud(SkyCycle * cycle) :
 	m_partCount(1u),
+	m_isSpecialCloud(false),
 	m_cloudMinX(0.f),
 	m_cloudMaxX(0.f),
 	m_cloudMinY(0.f),
@@ -59,7 +60,7 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 
 	sf::Vector2f recDownRight(0.f, -size.y + sizeCorner.y);
 
-	if (m_speed.y != 0.f)
+	if (m_isSpecialCloud)
 	{
 		octo::rotateVector(upLeft, m_cos, m_sin);
 		octo::rotateVector(upRight, m_cos, m_sin);
@@ -82,7 +83,7 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 	recDownRight += origin;
 
 	sf::Color deltaColor = color;
-	if (m_speed.y != 0.f)
+	if (m_isSpecialCloud)
 		deltaColor = color + sf::Color(7, 7, 7, 0);
 	builder.createTriangle(origin, upLeft, upRight, deltaColor);
 	builder.createTriangle(origin, upRight, upMidRight, deltaColor);
@@ -114,10 +115,11 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 	for (std::size_t i = 0; i < partCount; i++)
 	{
 		if (isOctogonContain(values[i].size * m_animation, values[i].origin + origin, octoPosition))
-		{
 			m_isCollide = true;
-		}
-		createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
+		if (!m_isSpecialCloud)
+			createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
+		else
+			createOctogon(values[i].size * (2.f - m_animation), values[i].sizeCorner * (2.f - m_animation), values[i].origin + origin, color, builder);
 	}
 }
 
@@ -145,6 +147,7 @@ void Cloud::setup(ABiome& biome)
 
 	m_color = biome.getCloudColor();
 	m_partCount = biome.getCloudPartCount();
+	m_isSpecialCloud = biome.isSpecialCloud();
 	m_cloudMinY = biome.getCloudMinY();
 	m_cloudMaxY = biome.getCloudMaxY();
 	m_cloudMinX = camera.getCenter().x - camera.getSize().x * 2.f;
@@ -174,7 +177,7 @@ void Cloud::newCloud(ABiome & biome)
 	m_speed.x = biome.randomFloat(m_speed.x - 20.f, m_speed.x + 20.f);
 	m_speed.y = biome.randomFloat(biome.getCloudSpeed().y * 1.5f, biome.getCloudSpeed().y * 0.5f);
 
-	if (m_speed.y == 0.f)
+	if (!m_isSpecialCloud)
 		m_position = sf::Vector2f(biome.randomFloat(m_cloudMinX, m_cloudMaxX), biome.randomFloat(m_cloudMinY, m_cloudMaxY));
 	else
 	{
@@ -256,7 +259,7 @@ void Cloud::updatePosition(sf::Time frameTime)
 	else if (m_position.x <= m_cloudMinX)
 		m_position.x = m_cloudMaxX;
 
-	if (m_speed.y != 0.f)
+	if (m_isSpecialCloud)
 	{
 		m_position.y += m_speed.y * frameTime.asSeconds();
 		if (m_position.y >= m_cloudMaxY)
@@ -301,7 +304,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 
 	if (m_isCollide)
 	{
-		if (m_animator.getState() != DecorAnimator::State::Die)
+		if ((Progress::getInstance().canRepairShip() || m_isSpecialCloud) && m_animator.getState() != DecorAnimator::State::Die)
 			Progress::getInstance().resetDoubleJump(true);
 		m_animator.die();
 	}

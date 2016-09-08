@@ -75,6 +75,7 @@ private:
 	sf::Vector2f					m_size;
 	std::size_t						m_partCount;
 	sf::Vector2f					m_speed;
+	bool							m_isSpecialCloud;
 	float							m_cloudMinX;
 	float							m_cloudMaxX;
 	float							m_cloudMinY;
