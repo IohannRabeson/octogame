@@ -40,9 +40,9 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Right,
 		Left,
 		StartJump,
-		Jump,
-		DoubleJump = 5,
+		DoubleJump = 4,
 		Fall,
+		DieFall,
 		Dance,
 		DanceWithMusic,
 		StartSlowFall,
@@ -141,6 +141,7 @@ private:
 	octo::CharacterAnimation	m_startJumpAnimation;
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
+	octo::CharacterAnimation	m_dieFallAnimation;
 	octo::CharacterAnimation	m_danceAnimation;
 	octo::CharacterAnimation	m_danceWithMusicAnimation;
 	octo::CharacterAnimation	m_answerWolfAnimation;
@@ -162,9 +163,6 @@ private:
 	std::vector<std::unique_ptr<NanoRobot>>			m_nanoRobots;
 	RepairNanoRobot *								m_repairNanoRobot;
 	Progress &										m_progress;
-	std::mt19937									m_engine;
-	std::uniform_int_distribution<std::size_t>		m_jumpDistribution;
-	std::uniform_real_distribution<float>			m_danceDistribution;
 
 	SmokeSystem					m_inkParticle;
 	HelmetSystem				m_helmetParticle;
