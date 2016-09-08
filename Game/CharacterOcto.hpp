@@ -40,23 +40,22 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Right,
 		Left,
 		StartJump,
-		DoubleJump = 4,
+		DoubleJump,
 		Fall,
 		DieFall,
-		Dance,
-		DanceWithMusic,
+		Wait,
 		StartSlowFall,
 		Death,
 		Drink,
 		StartElevator,
-		Elevator = 13,
+		Elevator,
 		SlowFall1,
 		SlowFall2,
 		SlowFall3,
 		StartWaterJump,
 		WaterJump,
 		PortalEvent,
-		KonamiCode = 21
+		KonamiCode
 	};
 public:
 	friend class OctoEvent;
@@ -112,7 +111,7 @@ private:
 	void					kill();
 	bool					endDeath();
 	void					portalEvent();
-	void					dance();
+	void					wait();
 	void					inWater();
 	void					randomJumpAnimation();
 	void					timeEvent(sf::Time frameTime);
@@ -142,8 +141,7 @@ private:
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
 	octo::CharacterAnimation	m_dieFallAnimation;
-	octo::CharacterAnimation	m_danceAnimation;
-	octo::CharacterAnimation	m_danceWithMusicAnimation;
+	octo::CharacterAnimation	m_waitAnimation;
 	octo::CharacterAnimation	m_answerWolfAnimation;
 	octo::CharacterAnimation	m_startSlowFallAnimation;
 	octo::CharacterAnimation	m_slowFallAnimation1;
