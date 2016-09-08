@@ -163,9 +163,6 @@ private:
 	std::vector<std::unique_ptr<NanoRobot>>			m_nanoRobots;
 	RepairNanoRobot *								m_repairNanoRobot;
 	Progress &										m_progress;
-	std::mt19937									m_engine;
-	std::uniform_int_distribution<std::size_t>		m_jumpDistribution;
-	std::uniform_real_distribution<float>			m_danceDistribution;
 
 	SmokeSystem					m_inkParticle;
 	HelmetSystem				m_helmetParticle;

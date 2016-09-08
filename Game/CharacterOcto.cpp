@@ -29,9 +29,6 @@ CharacterOcto::CharacterOcto() :
 	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_repairNanoRobot(nullptr),
 	m_progress(Progress::getInstance()),
-	m_engine(std::time(0)),
-	m_jumpDistribution(0, 4),
-	m_danceDistribution(2.f, 6.f),
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
 	m_timeSlowFallMax(sf::seconds(2.5f)),
@@ -73,7 +70,7 @@ CharacterOcto::CharacterOcto() :
 	m_enableCutscene(false),
 	m_isEndingInRocket(false),
 	m_autoDisableCutscene(false),
-	m_generator(std::to_string(time(0))),
+	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
@@ -305,17 +302,6 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_danceAnimation.setLoop(octo::LoopMode::Loop);
-
-	m_danceWithMusicAnimation.setFrames({
-			Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {78, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {79, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
-			});
-	m_danceWithMusicAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_startSlowFallAnimation.setFrames({
 			Frame(sf::seconds(0.2f), {49, sf::FloatRect(), sf::Vector2f()}),
@@ -1360,14 +1346,49 @@ bool	CharacterOcto::endDeath()
 
 void	CharacterOcto::dance()
 {
+	typedef octo::CharacterAnimation::Frame			Frame;
 	Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	if (m_timeEventIdle > m_timeEventIdleMax && event == Idle)
 	{
-		m_timeEventIdleMax = sf::seconds(m_danceDistribution(m_engine));
-		if (octo::Application::getAudioManager().getMusicVolume() > 0.f)
-			m_sprite.setNextEvent(DanceWithMusic);
+		m_timeEventIdleMax = sf::seconds(m_generator.randomFloat(3.f, 10.f));
+
+		switch (m_generator.randomInt(0, 1))
+		{
+			case 0:
+			{
+				m_danceWithMusicAnimation.setFrames({
+						Frame(sf::seconds(0.2f), {21, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {22, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {23, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {22, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {21, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {22, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {23, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {22, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {21, sf::FloatRect(), sf::Vector2f()}),
+						});
+				m_danceWithMusicAnimation.setLoop(octo::LoopMode::NoLoop);
+				break;
+			}
+			case 1:
+			{
+				m_danceWithMusicAnimation.setFrames({
+						Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {78, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {79, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {80, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
+						});
+				m_danceWithMusicAnimation.setLoop(octo::LoopMode::NoLoop);
+				break;
+			}
+		}
+		m_sprite.setNextEvent(DanceWithMusic);
 	}
+
 	if (event == DanceWithMusic && m_sprite.isTerminated())
 		m_sprite.setNextEvent(Idle);
 }
@@ -1406,7 +1427,7 @@ void	CharacterOcto::randomJumpAnimation()
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
 
-	if(!m_jumpDistribution(m_engine))
+	if (m_generator.randomBool(0.2f))
 	{
 		m_startJumpAnimation.setFrames({
 				Frame(sf::seconds(0.2f), {77, sf::FloatRect(), sf::Vector2f()}),
