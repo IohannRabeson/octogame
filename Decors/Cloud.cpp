@@ -9,12 +9,15 @@
 
 #include "ResourceDefinitions.hpp"
 
+std::size_t Cloud::m_count = 0;
+
 Cloud::Cloud(void) :
 	Cloud(nullptr)
 {
 }
 
 Cloud::Cloud(SkyCycle * cycle) :
+	m_id(++m_count),
 	m_partCount(1u),
 	m_isSpecialCloud(false),
 	m_cloudMinX(0.f),
@@ -313,10 +316,13 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 
 	createCloud(m_values, m_position, m_partCount, m_color, builder);
 
-	if (m_isCollide && m_animator.getState() != DecorAnimator::State::Die)
+	if (m_isCollide)
 	{
 		if ((Progress::getInstance().canRepairShip() || m_isSpecialCloud))
-			Progress::getInstance().resetDoubleJump(true);
-		m_animator.die();
+			Progress::getInstance().setInCloud(true, m_id);
+		if (m_animator.getState() != DecorAnimator::State::Die)
+			m_animator.die();
 	}
+	else
+		Progress::getInstance().setInCloud(false, m_id);
 }

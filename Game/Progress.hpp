@@ -136,9 +136,8 @@ public:
 	bool				getKillOcto(void) { return m_killOcto; }
 	void				setOctoDoubleJump(bool isDoubleJump) { m_isDoubleJump = isDoubleJump; }
 	bool				getOctoDoubleJump(void) { return m_isDoubleJump; }
-
-	void				resetDoubleJump(bool reset) { m_resetDoubleJump = reset; }
-	bool				isResetDoubleJump(void) const { return m_resetDoubleJump; }
+	void				setInCloud(bool inCloud, std::size_t cloudId);
+	bool				isInCloud(void) const { return m_isInCloud; }
 
 	void				setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool				getReverseSprite() const { return m_reverseSprite; }
@@ -227,7 +226,8 @@ private:
 	sf::Vector2f									m_octoPosTransition;
 	bool											m_killOcto;
 	bool											m_isDoubleJump;
-	bool											m_resetDoubleJump;
+	bool											m_isInCloud;
+	std::size_t										m_cloudId;
 
 	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
 	std::size_t										m_npcCount;

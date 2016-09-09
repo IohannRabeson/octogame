@@ -71,6 +71,9 @@ private:
 
 	void updatePosition(sf::Time frameTime);
 
+	static std::size_t				m_count;
+
+	std::size_t						m_id;
 	sf::Vector2f					m_position;
 	sf::Vector2f					m_size;
 	std::size_t						m_partCount;

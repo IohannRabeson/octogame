@@ -877,9 +877,6 @@ void	CharacterOcto::update(sf::Time frameTime)
 	if (progress.isMenu())
 		updateAI(frameTime);
 
-	if (progress.isResetDoubleJump())
-		resetDoubleJump(true);
-
 	dieGrass();
 
 	if (m_onGround)
@@ -1158,15 +1155,6 @@ void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 	m_box->update();
 	m_eventBox->setPosition(position);
 	m_eventBox->update();
-}
-
-void	CharacterOcto::resetDoubleJump(bool reset)
-{
-	if (reset && m_numberOfJump > 1)
-	{
-		m_numberOfJump = 1;
-		Progress::getInstance().resetDoubleJump(false);
-	}
 }
 
 void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
@@ -1524,12 +1512,11 @@ void	CharacterOcto::wait()
 
 void	CharacterOcto::inWater()
 {
+	Progress & progress = Progress::getInstance();
 	bool	emit = false;
 
-	if (m_waterLevel != -1.f && m_box->getBaryCenter().y + m_box->getSize().y / 2.f > m_waterLevel)
+	if (progress.isInCloud() || (m_waterLevel != -1.f && m_box->getBaryCenter().y + m_box->getSize().y / 2.f > m_waterLevel))
 	{
-		Progress & progress = Progress::getInstance();
-
 		if (!m_inWater)
 		{
 			m_numberOfJump = 0;
@@ -1548,7 +1535,7 @@ void	CharacterOcto::inWater()
 		m_inWater = false;
 		m_waterParticle.canEmit(true);
 	}
-	if (emit)
+	if (emit && !progress.isInCloud())
 		m_ploufParticle.canEmit(true);
 }
 
