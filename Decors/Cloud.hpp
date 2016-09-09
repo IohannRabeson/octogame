@@ -91,6 +91,9 @@ private:
 	DecorAnimator					m_animator;
 	float							m_animation;
 	bool							m_isCollide;
+	bool							m_hasCollided;
+	sf::Time						m_timerInCloud;
+	sf::Time						m_timerInCloudMax;
 
 	bool							m_canWeather;
 	std::vector<DropSystem *>		m_rain;

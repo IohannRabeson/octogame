@@ -117,6 +117,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
 	m_waterLevel = biome.getWaterLevel();
+	m_sound->setWaterLevel(m_waterLevel);
 	m_isDeadlyWater = biome.isDeadlyWater();
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
@@ -1757,7 +1758,7 @@ void CharacterOcto::caseUp()
 	if (!m_keyUp)
 	{
 		m_keyUp = true;
-		if (m_inWater && m_progress.canUseWaterJump())
+		if (m_inWater && m_progress.canUseWaterJump() && !Progress::getInstance().isInCloud())
 		{
 			m_jumpVelocity = m_pixelSecondJump * 0.9f;
 			m_sprite.setNextEvent(StartWaterJump);

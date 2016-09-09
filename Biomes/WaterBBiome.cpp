@@ -44,7 +44,7 @@ WaterBBiome::WaterBBiome() :
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
 	m_rainbowCount(2u, 2u),
-	m_cloudCount(480u, 490u),
+	m_cloudCount(180u, 190u),
 	m_groundRockCount(200u, 400u),
 
 	m_canCreateRain(false),
@@ -98,9 +98,9 @@ WaterBBiome::WaterBBiome() :
 
 	m_cloudSize(sf::Vector2f(500.f, 500.f), sf::Vector2f(800.f, 800.f)),
 	m_cloudPartCount(1u, 1u),
-	m_cloudMaxY(7000.f),
+	m_cloudMaxY(6500.f),
 	m_cloudMinY(-4000.f),
-	m_cloudSpeed(sf::Vector2f(0.f, -140.f), sf::Vector2f(0.f, -350.f)),
+	m_cloudSpeed(sf::Vector2f(0.f, -140.f), sf::Vector2f(0.f, -250.f)),
 	m_cloudLifeTime(sf::seconds(600), sf::seconds(900)),
 	m_cloudColor(103, 157, 208, 120),
 

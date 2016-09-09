@@ -86,11 +86,15 @@ void	CharacterOcto::OctoSound::environmentEvent(bool inWater, bool onGround)
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+	Progress const &			progress = Progress::getInstance();
 
-	if (!m_inWater && inWater)
-		m_transitionInWater = true;
-	if (m_inWater && !inWater)
-		m_transitionOutWater = true;
+	if (progress.getOctoPos().y > m_waterLevel - 80.f)
+	{
+		if (!m_inWater && inWater)
+			m_transitionInWater = true;
+		if (m_inWater && !inWater)
+			m_transitionOutWater = true;
+	}
 	m_inWater = inWater;
 	if (!m_onGround && onGround)
 		m_landing = true;
@@ -158,7 +162,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 				m_sound = audio.playSound(resources.getSound(OCTO_FEAR_OGG), m_volumeVoice);
 			}
 			if (m_transitionInWater && Progress::getInstance().getNextDestination() != Level::DesertB)
-				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.1f, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.2f, m_pitchDistribution(m_engine));
 			break;
 		case Idle:
 			m_timeEventIdle += frameTime;
@@ -183,7 +187,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			if (m_transitionInWater)
 			{
 				m_sound->stop();
-				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.1f, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.2f, m_pitchDistribution(m_engine));
 			}
 			break;
 		case StartJump:
@@ -191,7 +195,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 		case StartWaterJump:
 		case WaterJump:
 			if (m_transitionInWater || m_transitionOutWater)
-				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.3f, m_pitchDistribution(m_engine));
+				audio.playSound(resources.getSound(PLOUF_OGG), m_volumeEffect * 0.2f, m_pitchDistribution(m_engine));
 			break;
 		case Drink:
 			m_timeDrinkSound -= frameTime;
