@@ -48,7 +48,7 @@ bool Cloud::isDisabledIfOutOfScreen()const
 
 void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color color, octo::VertexBuilder& builder)
 {
-	color.a *= m_animation;
+	color.a *= m_animation < 0 ? 0 : m_animation;
 	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
 	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
 	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
@@ -114,12 +114,23 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 	m_isCollide = false;
 	for (std::size_t i = 0; i < partCount; i++)
 	{
-		if (isOctogonContain(values[i].size * m_animation, values[i].origin + origin, octoPosition))
-			m_isCollide = true;
+		sf::Vector2f size;
+		sf::Vector2f sizeCorner;
+
 		if (!m_isSpecialCloud)
-			createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
+		{
+			size = values[i].size * m_animation;
+			sizeCorner = values[i].sizeCorner * m_animation;
+		}
 		else
-			createOctogon(values[i].size * (2.f - m_animation), values[i].sizeCorner * (2.f - m_animation), values[i].origin + origin, color, builder);
+		{
+			size = values[i].size * (2.f - m_animation);
+			sizeCorner = values[i].sizeCorner * (2.f - m_animation);
+		}
+
+		if (isOctogonContain(size, values[i].origin + origin, octoPosition))
+			m_isCollide = true;
+		createOctogon(size, sizeCorner, values[i].origin + origin, color, builder);
 	}
 }
 
@@ -302,9 +313,9 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 
 	createCloud(m_values, m_position, m_partCount, m_color, builder);
 
-	if (m_isCollide)
+	if (m_isCollide && m_animator.getState() != DecorAnimator::State::Die)
 	{
-		if ((Progress::getInstance().canRepairShip() || m_isSpecialCloud) && m_animator.getState() != DecorAnimator::State::Die)
+		if ((Progress::getInstance().canRepairShip() || m_isSpecialCloud))
 			Progress::getInstance().resetDoubleJump(true);
 		m_animator.die();
 	}

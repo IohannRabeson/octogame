@@ -12,14 +12,14 @@ WaterBBiome::WaterBBiome() :
 	m_name("Water B"),
 	m_id(Level::WaterB),
 	m_seed("Vince"),
-	m_mapSize(sf::Vector2u(450u, 128u)),
+	m_mapSize(sf::Vector2u(550u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(2.f * 16.f, -1350.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
-	m_waterLevel(-1.f),
+	m_waterLevel(7000.f),
 	m_waterColor(3, 57, 108, 60),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
@@ -44,7 +44,7 @@ WaterBBiome::WaterBBiome() :
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
 	m_rainbowCount(2u, 2u),
-	m_cloudCount(140u, 160u),
+	m_cloudCount(480u, 490u),
 	m_groundRockCount(200u, 400u),
 
 	m_canCreateRain(false),
@@ -98,9 +98,9 @@ WaterBBiome::WaterBBiome() :
 
 	m_cloudSize(sf::Vector2f(500.f, 500.f), sf::Vector2f(800.f, 800.f)),
 	m_cloudPartCount(1u, 1u),
-	m_cloudMaxY(2000.f),
+	m_cloudMaxY(7000.f),
 	m_cloudMinY(-4000.f),
-	m_cloudSpeed(sf::Vector2f(0.f, -140.f), sf::Vector2f(0.f, -150.f)),
+	m_cloudSpeed(sf::Vector2f(0.f, -140.f), sf::Vector2f(0.f, -350.f)),
 	m_cloudLifeTime(sf::seconds(600), sf::seconds(900)),
 	m_cloudColor(103, 157, 208, 120),
 
@@ -138,6 +138,7 @@ WaterBBiome::WaterBBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
+	m_instances[25] = MAP_WATER_B_CAVE_OMP;
 	m_gameObjects[46] = GameObjectType::CedricStartNpc;
 	m_gameObjects[50] = GameObjectType::JellyfishNpc;
 	m_gameObjects[70] = GameObjectType::JellyfishNpc;
