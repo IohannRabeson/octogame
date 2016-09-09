@@ -23,7 +23,8 @@ Progress::Progress() :
 	m_spaceShipRepair(false),
 	m_killOcto(false),
 	m_isDoubleJump(false),
-	m_resetDoubleJump(false),
+	m_isInCloud(false),
+	m_cloudId(0u),
 	m_npcCount(0u),
 	m_npcMax(0u),
 	m_countRandomDiscover(0u),
@@ -566,6 +567,20 @@ void				Progress::setCheckPointPosition(sf::Vector2f const & position)
 sf::Vector2f const & Progress::getCheckPointPosition(void) const
 {
 	return m_data.checkPointPosition;
+}
+
+void		Progress::setInCloud(bool inCloud, std::size_t cloudId)
+{
+	if (inCloud && m_cloudId == 0u)
+	{
+		m_isInCloud = true;
+		m_cloudId = cloudId;
+	}
+	if (!inCloud && cloudId == m_cloudId)
+	{
+		m_isInCloud = false;
+		m_cloudId = 0u;
+	}
 }
 
 void		Progress::setMapHighlight(bool isHighlight)

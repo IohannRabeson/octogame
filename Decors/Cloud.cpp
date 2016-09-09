@@ -9,12 +9,15 @@
 
 #include "ResourceDefinitions.hpp"
 
+std::size_t Cloud::m_count = 0;
+
 Cloud::Cloud(void) :
 	Cloud(nullptr)
 {
 }
 
 Cloud::Cloud(SkyCycle * cycle) :
+	m_id(++m_count),
 	m_partCount(1u),
 	m_isSpecialCloud(false),
 	m_cloudMinX(0.f),
@@ -24,6 +27,8 @@ Cloud::Cloud(SkyCycle * cycle) :
 	m_animator(4.f, 5.f, 4.f, 0.2f),
 	m_animation(1.f),
 	m_isCollide(false),
+	m_hasCollided(false),
+	m_timerInCloudMax(sf::seconds(0.6f)),
 	m_canWeather(false),
 	m_thunderCloud(false),
 	m_lightning(1),
@@ -48,7 +53,7 @@ bool Cloud::isDisabledIfOutOfScreen()const
 
 void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCorner, sf::Vector2f const & origin, sf::Color color, octo::VertexBuilder& builder)
 {
-	color.a *= m_animation;
+	color.a *= m_animation < 0 ? 0 : m_animation;
 	sf::Vector2f upLeft(-size.x + sizeCorner.x, -size.y);
 	sf::Vector2f upRight(size.x - sizeCorner.x, -size.y);
 	sf::Vector2f upMidLeft(-size.x, -size.y + sizeCorner.y);
@@ -100,7 +105,7 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 
 bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & position, sf::Vector2f const & point) const
 {
-	if (!m_isCollide && (point.x > position.x - size.x && point.x < position.x + size.x)
+	if ((point.x > position.x - size.x && point.x < position.x + size.x)
 		&& (point.y > position.y - size.y && point.y < position.y + size.y))
 	{
 		return true;
@@ -111,15 +116,25 @@ bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & pos
 void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f const & origin, std::size_t partCount, sf::Color const & color, octo::VertexBuilder& builder)
 {
 	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
-	m_isCollide = false;
 	for (std::size_t i = 0; i < partCount; i++)
 	{
-		if (isOctogonContain(values[i].size * m_animation, values[i].origin + origin, octoPosition))
-			m_isCollide = true;
+		sf::Vector2f size;
+		sf::Vector2f sizeCorner;
+
 		if (!m_isSpecialCloud)
-			createOctogon(values[i].size * m_animation, values[i].sizeCorner * m_animation, values[i].origin + origin, color, builder);
+		{
+			size = values[i].size * m_animation;
+			sizeCorner = values[i].sizeCorner * m_animation;
+		}
 		else
-			createOctogon(values[i].size * (2.f - m_animation), values[i].sizeCorner * (2.f - m_animation), values[i].origin + origin, color, builder);
+		{
+			float coefCollide = (1.0f - ((m_timerInCloud / m_timerInCloudMax) * 0.4f));
+			size = values[i].size * (2.f - m_animation) * coefCollide;
+			sizeCorner = values[i].sizeCorner * (2.f - m_animation) * coefCollide;
+		}
+
+		m_isCollide = isOctogonContain(size, values[i].origin + origin, octoPosition);
+		createOctogon(size, sizeCorner, values[i].origin + origin, color, builder);
 	}
 }
 
@@ -148,6 +163,8 @@ void Cloud::setup(ABiome& biome)
 	m_color = biome.getCloudColor();
 	m_partCount = biome.getCloudPartCount();
 	m_isSpecialCloud = biome.isSpecialCloud();
+	if (m_isSpecialCloud)
+		m_animator = DecorAnimator(1.f, 2.f, 4.f, 0.2f);
 	m_cloudMinY = biome.getCloudMinY();
 	m_cloudMaxY = biome.getCloudMaxY();
 	m_cloudMinX = camera.getCenter().x - camera.getSize().x * 2.f;
@@ -176,6 +193,8 @@ void Cloud::newCloud(ABiome & biome)
 	m_speed.x = biome.getCloudSpeed().x + biome.getWind();
 	m_speed.x = biome.randomFloat(m_speed.x - 20.f, m_speed.x + 20.f);
 	m_speed.y = biome.randomFloat(biome.getCloudSpeed().y * 1.5f, biome.getCloudSpeed().y * 0.5f);
+	m_hasCollided = false;
+	m_timerInCloud = sf::Time::Zero;
 
 	if (!m_isSpecialCloud)
 		m_position = sf::Vector2f(biome.randomFloat(m_cloudMinX, m_cloudMaxX), biome.randomFloat(m_cloudMinY, m_cloudMaxY));
@@ -302,10 +321,22 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 
 	createCloud(m_values, m_position, m_partCount, m_color, builder);
 
-	if (m_isCollide)
+	if (m_isCollide && m_animator.getState() != DecorAnimator::State::Die)
 	{
-		if ((Progress::getInstance().canRepairShip() || m_isSpecialCloud) && m_animator.getState() != DecorAnimator::State::Die)
-			Progress::getInstance().resetDoubleJump(true);
-		m_animator.die();
+		m_hasCollided = true;
+		if ((Progress::getInstance().canRepairShip() || m_isSpecialCloud) && m_animator.getState() != DecorAnimator::State::Grow)
+			Progress::getInstance().setInCloud(true, m_id);
+		else
+			m_animator.die();
+	}
+	else
+		Progress::getInstance().setInCloud(false, m_id);
+
+	if (m_hasCollided)
+	{
+		if (m_timerInCloud <= m_timerInCloudMax)
+			m_timerInCloud += frameTime;
+		else
+			m_animator.die();
 	}
 }

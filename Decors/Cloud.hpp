@@ -71,6 +71,9 @@ private:
 
 	void updatePosition(sf::Time frameTime);
 
+	static std::size_t				m_count;
+
+	std::size_t						m_id;
 	sf::Vector2f					m_position;
 	sf::Vector2f					m_size;
 	std::size_t						m_partCount;
@@ -88,6 +91,9 @@ private:
 	DecorAnimator					m_animator;
 	float							m_animation;
 	bool							m_isCollide;
+	bool							m_hasCollided;
+	sf::Time						m_timerInCloud;
+	sf::Time						m_timerInCloudMax;
 
 	bool							m_canWeather;
 	std::vector<DropSystem *>		m_rain;
