@@ -72,6 +72,7 @@ CharacterOcto::CharacterOcto() :
 	m_autoDisableCutscene(false),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
+	m_cutscenePauseTimerMax(sf::seconds(2.f)),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
@@ -989,6 +990,12 @@ void	CharacterOcto::update(sf::Time frameTime)
 
 	progress.setOctoPos(getPosition());
 
+	replaceOcto();
+	updateCutscene(frameTime);
+}
+
+void	CharacterOcto::replaceOcto(void)
+{
 	if (m_replaceOcto && m_collidingTile.size())
 	{
 		m_replaceOcto = false;
@@ -1030,14 +1037,18 @@ void	CharacterOcto::update(sf::Time frameTime)
 		m_box->setPosition(sf::Vector2f(m_box->getPosition().x - m_highestPosition.x, m_highestPosition.y - m_box->getGlobalBounds().height));
 	}
 	m_highestPosition.x = 0.f;
+}
 
+void	CharacterOcto::updateCutscene(sf::Time frameTime)
+{
 	if (m_enableCutscene)
 	{
 		m_cutsceneTimer += frameTime;
 		if (m_cutsceneTimer > m_cutsceneTimerMax)
 		{
 			m_cutsceneTimer = m_cutsceneTimerMax;
-			if (m_autoDisableCutscene)
+			m_cutscenePauseTimer += frameTime;
+			if (m_autoDisableCutscene && m_cutscenePauseTimer > m_cutscenePauseTimerMax)
 				m_enableCutscene = false;
 		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
@@ -1134,7 +1145,7 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 				m_collidingTile.push_back(tileshape->getVertex(1u));
 				m_highestPosition.x += collisionDirection.x;
 			}
-			if (collisionDirection.x == 0.f && collisionDirection.y != 0.f)
+			if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
 				m_collisionTile = true;
 			break;
 		case GameObjectType::Elevator:
