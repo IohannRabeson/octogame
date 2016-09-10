@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -12,9 +13,9 @@ WaterBBiome::WaterBBiome() :
 	m_name("Water B"),
 	m_id(Level::WaterB),
 	m_seed("Vince"),
-	m_mapSize(sf::Vector2u(550u, 128u)),
+	m_mapSize(sf::Vector2u(700u, 180u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(2.f * 16.f, -1350.f),
+	m_octoStartPosition(450.f * 16.f, -14350.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -44,7 +45,7 @@ WaterBBiome::WaterBBiome() :
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
 	m_rainbowCount(2u, 2u),
-	m_cloudCount(180u, 190u),
+	m_cloudCount(480u, 490u),
 	m_groundRockCount(200u, 400u),
 
 	m_canCreateRain(false),
@@ -98,8 +99,8 @@ WaterBBiome::WaterBBiome() :
 
 	m_cloudSize(sf::Vector2f(500.f, 500.f), sf::Vector2f(800.f, 800.f)),
 	m_cloudPartCount(1u, 1u),
-	m_cloudMaxY(6500.f),
-	m_cloudMinY(-4000.f),
+	m_cloudMaxY(1500.f),
+	m_cloudMinY(-14000.f),
 	m_cloudSpeed(sf::Vector2f(0.f, -140.f), sf::Vector2f(0.f, -250.f)),
 	m_cloudLifeTime(sf::seconds(600), sf::seconds(900)),
 	m_cloudColor(103, 157, 208, 120),
@@ -138,14 +139,28 @@ WaterBBiome::WaterBBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_instances[25] = MAP_WATER_B_CAVE_OMP;
-	m_gameObjects[46] = GameObjectType::CedricStartNpc;
-	m_gameObjects[50] = GameObjectType::JellyfishNpc;
-	m_gameObjects[70] = GameObjectType::JellyfishNpc;
-	m_gameObjects[390] = GameObjectType::JellyfishNpc;
-	m_gameObjects[340] = GameObjectType::CedricEndNpc;
+	//m_instances[25] = MAP_WATER_B_CAVE_OMP;
+	m_gameObjects[300] = GameObjectType::CedricStartNpc;
+	m_gameObjects[20] = GameObjectType::CedricEndNpc;
+	m_gameObjects[20] = GameObjectType::CedricEndNpc;
+	m_gameObjects[30] = GameObjectType::Concert;
 
 	m_interestPointPosX = 500;
+
+	Progress & progress = Progress::getInstance();
+	std::list<GameObjectType> const & npcList = progress.getNpcMet();
+
+	for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
+	{
+		std::size_t index;
+		
+		if (randomBool(0.5f))
+			index = randomInt(10u, 140u);
+		else
+			index = randomInt(560u, 680u);
+
+		m_gameObjects[index] = *npc;
+	}
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::DesertA);
@@ -268,9 +283,10 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 	return [this](Noise & noise, float x, float y)
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f, 750.f};
-		std::vector<float> pointY = {n  , n};
+		float n = noise.fBm(x, y, 3, 3.f, 0.8f);
+		float m = n / 10.f;
+		std::vector<float> pointX = {0.f     , 150.f   , 151.f, 549.f, 550.f   , 700.f   };
+		std::vector<float> pointY = {m - 10.f, m - 10.f, n    , n    , m - 10.f, m - 10.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -292,12 +308,12 @@ Map::TileColorGenerator WaterBBiome::getTileColorGenerator()
 	sf::Color secondColorEnd = getRockColor();
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -1900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -1200.f / static_cast<float>(m_mapSize.y);
-	float middle1 = 0.f / static_cast<float>(m_mapSize.y);
-	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
-	float end1 = 1000.f / static_cast<float>(m_mapSize.y);
-	float end2 = 1700.f / static_cast<float>(m_mapSize.y);
+	float start1 = -50900.f / static_cast<float>(m_mapSize.y);
+	float start2 = -30200.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -10000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 0.f / static_cast<float>(m_mapSize.y);
+	float end1 = 5000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 17000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;

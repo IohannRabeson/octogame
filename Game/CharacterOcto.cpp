@@ -1876,7 +1876,7 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 bool	CharacterOcto::isFalling(void)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
-	if ((state == Fall || state == DieFall || state == SlowFall1 || state == SlowFall2 || state == SlowFall3) && m_lastPositionOnGround.y < getPosition().y)
+	if ((state == Fall && (m_lastPositionOnGround.y < getPosition().y || m_inWater)) || state == DieFall || state == SlowFall1 || state == SlowFall2 || state == SlowFall3)
 		return true;
 	return false;
 }

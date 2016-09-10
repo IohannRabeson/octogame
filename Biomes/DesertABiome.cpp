@@ -286,23 +286,6 @@ Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 		}
 		return n;
 	};
-	return [this](Noise & noise, float x, float y)
-	{
-		float start = 350.f / static_cast<float>(m_mapSize.x);
-		float end = 470.f / static_cast<float>(m_mapSize.x);
-		float offset = 10.f / static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float mapHigh = n / 3.f - 1.9f;
-
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start + offset) / offset);
-		else if (x > start && x <= end)
-			return mapHigh;
-		else if (x > end && x <= end + offset)
-			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
-		else
-			return n;
-	};
 }
 
 Map::TileColorGenerator DesertABiome::getTileColorGenerator()
