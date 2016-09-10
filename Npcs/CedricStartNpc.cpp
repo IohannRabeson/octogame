@@ -254,5 +254,6 @@ void CedricStartNpc::draw(sf::RenderTarget & render, sf::RenderStates states) co
 {
 	if (!Progress::getInstance().isValidateChallenge(m_effect))
 		ANpc::draw(render, states);
-	m_potion.draw(render, states);
+	if (m_throwPotionTimer != sf::Time::Zero)
+		m_potion.draw(render, states);
 }

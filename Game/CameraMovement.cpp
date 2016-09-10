@@ -49,9 +49,9 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		octo.meetNpc(false);
 		m_zoomState = ZoomState::ZoomIn;
 	}
-	if (octo.isEndingInRocket())
+	if (octo.isStopFollowCamera())
 	{
-		m_behavior = EndingInRocket;
+		m_behavior = StopFollowOcto;
 	}
 
 	float goalTop = octo.getPosition().y - camera.getRectangle().height / 4.f;
@@ -112,7 +112,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 				m_horizontalTransition = -1.f;
 			break;
 		}
-		case Behavior::EndingInRocket:
+		case Behavior::StopFollowOcto:
 		{
 			m_speed = 0.f;
 			break;

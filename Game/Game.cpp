@@ -596,7 +596,7 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			Progress::getInstance().moveMap();
 			break;
 		case OctoKeys::Infos:
-			m_cameraMovement->shake(5.f, 1.f, 0.01f);
+			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
 			m_slowTimeInfosCoef = 10.f;
 			break;
 		default:
