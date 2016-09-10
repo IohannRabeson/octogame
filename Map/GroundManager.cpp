@@ -427,6 +427,18 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(TEMPLE_DESERT_OSS, scale, position, 3u, 0.2f);
 			});
+	m_decorFactory.registerCreator(PIPE_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PIPE_1_OSS, scale, position, 1u, 0.2f);
+			});
+	m_decorFactory.registerCreator(PIPE_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PIPE_2_OSS, scale, position, 1u, 0.2f);
+			});
+	m_decorFactory.registerCreator(POTION_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(POTION_OSS, scale, position, 1u, 0.2f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();

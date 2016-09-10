@@ -139,7 +139,6 @@ JungleBBiome::JungleBBiome() :
 	// Define game objects
 	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
 	m_gameObjects[90] = GameObjectType::PortalJungle;
-	m_gameObjects[325] = GameObjectType::LucienNpc;
 	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
 	m_instances[387] = MAP_JUNGLE_B_FLUE_PART_OMP;
 	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;

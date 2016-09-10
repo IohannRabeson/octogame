@@ -157,7 +157,7 @@ DesertABiome::DesertABiome() :
 	m_gameObjects[410] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[420] = GameObjectType::Tent;
 	m_instances[440] = MAP_DESERT_A_SECRET_OMP;
-	m_gameObjects[500] = GameObjectType::JuGlitchNpc;
+	m_gameObjects[520] = GameObjectType::JuGlitchNpc;
 	m_interestPointPosX = 50;
 
 	m_treePos = {347, 352, 359, 367, 380, 381, 393, 430, 433, 455, 460, 464, 473};
@@ -266,6 +266,26 @@ std::vector<ParallaxScrolling::ALayer *> DesertABiome::getLayers()
 
 Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 {
+	return [this](Noise & noise, float x, float y)
+	{
+		float floatMapSize = static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		float m = n / 5.f;
+		std::vector<float> pointX = {0.f, 250.f, 300.f, 335.f, 340.f    , 350.f    , 470.f    , 480.f    , 485.f, 515.f, 565.f};
+		std::vector<float> pointY = {n  , n    , m    , m    , -0.2f + m, -1.9f + m, -1.9f + m, -0.2f + m, m    , m    , n};
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
+
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
+	};
 	return [this](Noise & noise, float x, float y)
 	{
 		float start = 350.f / static_cast<float>(m_mapSize.x);

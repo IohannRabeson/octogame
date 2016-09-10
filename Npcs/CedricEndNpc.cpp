@@ -2,6 +2,7 @@
 #include "Progress.hpp"
 #include "RectangleShape.hpp"
 #include "ChallengeManager.hpp"
+#include "CharacterOcto.hpp"
 #include <ResourceManager.hpp>
 #include <Application.hpp>
 #include <AudioManager.hpp>
@@ -137,6 +138,20 @@ void CedricEndNpc::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
 	stopBalle();
+
+	octo::CharacterSprite & sprite = getSprite();
+	sf::Vector2f const & size = sprite.getLocalSize();
+
+	if (octo->getPosition().x < getPosition().x)
+	{
+		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
+		sprite.setScale(-getScale(), getScale());
+	}
+	else
+	{
+		sprite.setOrigin(getOrigin().x, getOrigin().y);
+		sprite.setScale(getScale(), getScale());
+	}
 }
 
 void CedricEndNpc::stopBalle(void)

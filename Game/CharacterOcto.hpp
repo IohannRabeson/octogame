@@ -133,6 +133,10 @@ private:
 
 private:
 	class OctoSound;
+
+	void replaceOcto(void);
+	void updateCutscene(sf::Time frameTime);
+
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
@@ -177,6 +181,9 @@ private:
 	sf::Time					m_timeRepairSpaceShipMax;
 	sf::Time					m_timeSlowFall;
 	sf::Time					m_timeSlowFallMax;
+	sf::Time					m_timeStopVelocity;
+	sf::Time					m_timeStopVelocityMax;
+	float						m_factorDirectionVelocityX;
 	float						m_spriteScale;
 	float						m_maxJumpWaterVelocity;
 	float						m_pixelSecondJump;
@@ -234,6 +241,8 @@ private:
 	sf::Time					m_portalTimer;
 	sf::Time					m_cutsceneTimer;
 	sf::Time					m_cutsceneTimerMax;
+	sf::Time					m_cutscenePauseTimer;
+	sf::Time					m_cutscenePauseTimerMax;
 	sf::Vector2f				m_saveOctoPos;
 	sf::Vector2f				m_highestPosition;
 	std::vector<sf::Vector2f>	m_collidingTile;

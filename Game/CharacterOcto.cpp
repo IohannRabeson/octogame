@@ -32,6 +32,9 @@ CharacterOcto::CharacterOcto() :
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
 	m_timeSlowFallMax(sf::seconds(2.5f)),
+	m_timeStopVelocity(sf::seconds(0.06f)),
+	m_timeStopVelocityMax(sf::seconds(0.06f)),
+	m_factorDirectionVelocityX(1.f),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
@@ -72,6 +75,7 @@ CharacterOcto::CharacterOcto() :
 	m_autoDisableCutscene(false),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
+	m_cutscenePauseTimerMax(sf::seconds(2.f)),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
@@ -989,6 +993,12 @@ void	CharacterOcto::update(sf::Time frameTime)
 
 	progress.setOctoPos(getPosition());
 
+	replaceOcto();
+	updateCutscene(frameTime);
+}
+
+void	CharacterOcto::replaceOcto(void)
+{
 	if (m_replaceOcto && m_collidingTile.size())
 	{
 		m_replaceOcto = false;
@@ -1030,14 +1040,18 @@ void	CharacterOcto::update(sf::Time frameTime)
 		m_box->setPosition(sf::Vector2f(m_box->getPosition().x - m_highestPosition.x, m_highestPosition.y - m_box->getGlobalBounds().height));
 	}
 	m_highestPosition.x = 0.f;
+}
 
+void	CharacterOcto::updateCutscene(sf::Time frameTime)
+{
 	if (m_enableCutscene)
 	{
 		m_cutsceneTimer += frameTime;
 		if (m_cutsceneTimer > m_cutsceneTimerMax)
 		{
 			m_cutsceneTimer = m_cutsceneTimerMax;
-			if (m_autoDisableCutscene)
+			m_cutscenePauseTimer += frameTime;
+			if (m_autoDisableCutscene && m_cutscenePauseTimer > m_cutscenePauseTimerMax)
 				m_enableCutscene = false;
 		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
@@ -1134,7 +1148,7 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 				m_collidingTile.push_back(tileshape->getVertex(1u));
 				m_highestPosition.x += collisionDirection.x;
 			}
-			if (collisionDirection.x == 0.f && collisionDirection.y != 0.f)
+			if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
 				m_collisionTile = true;
 			break;
 		case GameObjectType::Elevator:
@@ -1423,9 +1437,12 @@ bool	CharacterOcto::dieFall()
 {
 	if (m_timeEventFall > sf::seconds(2.3f) && m_sprite.getCurrentEvent() != DieFall)
 		m_sprite.setNextEvent(DieFall);
-	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater && !Progress::getInstance().isMenu())
+	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater)
 	{
-		kill();
+		if (!Progress::getInstance().isMenu())
+			kill();
+		else
+			m_sprite.setNextEvent(Idle);
 		return true;
 	}
 	return false;
@@ -1607,13 +1624,21 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 
 	if (m_progress.canWalk())
 	{
-		if (m_keyLeft)
+		if (m_keyLeft || m_keyRight)
 		{
-			velocity.x = (-1.f * m_pixelSecondWalk);
+			if (m_keyLeft)
+				m_factorDirectionVelocityX = -1.f;
+			if (m_keyRight)
+				m_factorDirectionVelocityX = 1.f;
+
+			velocity.x = m_factorDirectionVelocityX * m_pixelSecondWalk;
+			m_timeStopVelocity = sf::Time::Zero;
 		}
-		else if (m_keyRight)
+		else if (m_timeStopVelocity <= m_timeStopVelocityMax)
 		{
-			velocity.x = m_pixelSecondWalk;
+			if (!m_onGround)
+				velocity.x = m_pixelSecondWalk * m_factorDirectionVelocityX * (1.f - (m_timeStopVelocity / m_timeStopVelocityMax));
+			m_timeStopVelocity += sf::seconds(frametime);
 		}
 	}
 	if (m_keySpace && m_numberOfJump < 3 &&
