@@ -157,7 +157,7 @@ DesertABiome::DesertABiome() :
 	m_gameObjects[410] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[420] = GameObjectType::Tent;
 	m_instances[440] = MAP_DESERT_A_SECRET_OMP;
-	m_gameObjects[500] = GameObjectType::JuGlitchNpc;
+	m_gameObjects[520] = GameObjectType::JuGlitchNpc;
 	m_interestPointPosX = 50;
 
 	m_treePos = {347, 352, 359, 367, 380, 381, 393, 430, 433, 455, 460, 464, 473};
