@@ -105,7 +105,7 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 
 bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & position, sf::Vector2f const & point) const
 {
-	if ((point.x > position.x - size.x && point.x < position.x + size.x)
+	if (!m_isCollide && (point.x > position.x - size.x && point.x < position.x + size.x)
 		&& (point.y > position.y - size.y && point.y < position.y + size.y))
 	{
 		return true;
@@ -116,6 +116,8 @@ bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & pos
 void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f const & origin, std::size_t partCount, sf::Color const & color, octo::VertexBuilder& builder)
 {
 	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
+
+	m_isCollide = false;
 	for (std::size_t i = 0; i < partCount; i++)
 	{
 		sf::Vector2f size;
@@ -133,7 +135,8 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 			sizeCorner = values[i].sizeCorner * (2.f - m_animation) * coefCollide;
 		}
 
-		m_isCollide = isOctogonContain(size, values[i].origin + origin, octoPosition);
+		if (isOctogonContain(size, values[i].origin + origin, octoPosition))
+			m_isCollide = true;
 		createOctogon(size, sizeCorner, values[i].origin + origin, color, builder);
 	}
 }
