@@ -32,6 +32,9 @@ CharacterOcto::CharacterOcto() :
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
 	m_timeSlowFallMax(sf::seconds(2.5f)),
+	m_timeStopVelocity(sf::seconds(0.5f)),
+	m_timeStopVelocityMax(sf::seconds(0.5f)),
+	m_factorDirectionVelocityX(1.f),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
@@ -1434,9 +1437,12 @@ bool	CharacterOcto::dieFall()
 {
 	if (m_timeEventFall > sf::seconds(2.3f) && m_sprite.getCurrentEvent() != DieFall)
 		m_sprite.setNextEvent(DieFall);
-	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater && !Progress::getInstance().isMenu())
+	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater)
 	{
-		kill();
+		if (!Progress::getInstance().isMenu())
+			kill();
+		else
+			m_sprite.setNextEvent(Idle);
 		return true;
 	}
 	return false;
@@ -1618,13 +1624,20 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 
 	if (m_progress.canWalk())
 	{
-		if (m_keyLeft)
+		if (m_keyLeft || m_keyRight)
 		{
-			velocity.x = (-1.f * m_pixelSecondWalk);
+			if (m_keyLeft)
+				m_factorDirectionVelocityX = -1.f;
+			if (m_keyRight)
+				m_factorDirectionVelocityX = 1.f;
+
+			velocity.x = m_factorDirectionVelocityX * m_pixelSecondWalk;
+			m_timeStopVelocity = sf::Time::Zero;
 		}
-		else if (m_keyRight)
+		else if (!m_onGround && m_timeStopVelocity <= m_timeStopVelocityMax)
 		{
-			velocity.x = m_pixelSecondWalk;
+			velocity.x = m_pixelSecondWalk * m_factorDirectionVelocityX * (1.f - (m_timeStopVelocity / m_timeStopVelocityMax));
+			m_timeStopVelocity += sf::seconds(frametime);
 		}
 	}
 	if (m_keySpace && m_numberOfJump < 3 &&

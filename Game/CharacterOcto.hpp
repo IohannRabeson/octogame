@@ -181,6 +181,9 @@ private:
 	sf::Time					m_timeRepairSpaceShipMax;
 	sf::Time					m_timeSlowFall;
 	sf::Time					m_timeSlowFallMax;
+	sf::Time					m_timeStopVelocity;
+	sf::Time					m_timeStopVelocityMax;
+	float						m_factorDirectionVelocityX;
 	float						m_spriteScale;
 	float						m_maxJumpWaterVelocity;
 	float						m_pixelSecondJump;
