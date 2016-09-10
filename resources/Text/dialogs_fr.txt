@@ -82,5 +82,5 @@ npc_canouille.oss="C'est quoi ce truc la haut ?
 snowgirl_1.oss=!Tu devrait utiliser [SHIFT + FLECHES] pour regarder autour de toi.
 joystick_snowgirl_1.oss=!Tu devrait utiliser [JOYSTICK DROIT] pour regarder autour de toi.
 brayou.oss=Ne frotte pas tes tentacules aux herbes, elles sont coupantes !
-lucien.oss=!Si tu tombe de trop haut utilise le double saut.
+guillaume.oss=!Si tu tombe de trop haut utilise le double saut.
 pea.oss=!C'est fini pour aujourd'hui, la suite n'existe pas encore.

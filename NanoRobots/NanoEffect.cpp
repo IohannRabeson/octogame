@@ -49,13 +49,13 @@ void NanoEffect::playSound(void)
 		switch (soundChoose)
 		{
 			case 0u:
-				audio.playSound(resource.getSound(NANO_1_OGG), 0.3f, 1.f);
+				audio.playSound(resource.getSound(NANO_1_OGG), 0.3f, 1.f, sf::Vector3f(m_position.x, m_position.y, 100.f), 100.f, 5.f);
 				break;
 			case 1u:
-				audio.playSound(resource.getSound(NANO_2_OGG), 0.3f, 1.f);
+				audio.playSound(resource.getSound(NANO_2_OGG), 0.3f, 1.f, sf::Vector3f(m_position.x, m_position.y, 100.f), 100.f, 5.f);
 				break;
 			case 2u:
-				audio.playSound(resource.getSound(NANO_3_OGG), 0.3f, 1.f);
+				audio.playSound(resource.getSound(NANO_3_OGG), 0.3f, 1.f, sf::Vector3f(m_position.x, m_position.y, 100.f), 100.f, 5.f);
 				break;
 			default:
 				break;

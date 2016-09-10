@@ -133,7 +133,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	m_state = Disappear;
 
 	//TODO : To change to the good sound
-	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.f, m_generator.randomFloat(0.9f, 1.1f));
+	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.f, m_generator.randomFloat(0.9f, 1.1f), sf::Vector3f(m_box->getBaryCenter().x, m_box->getBaryCenter().y, 0.f) , 500.f, 40.f);
 	m_sound->setLoop(true);
 }
 
