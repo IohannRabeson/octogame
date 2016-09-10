@@ -106,7 +106,7 @@ public:
 	bool				meetNpc(GameObjectType key);
 	std::size_t			getNpcCount();
 	std::size_t			getNpcMax();
-	std::vector<GameObjectType>	getNpcMet();
+	std::list<GameObjectType>	getNpcMet();
 
 	void				registerPortal(Level destination);
 	bool				meetPortal(Level destination);

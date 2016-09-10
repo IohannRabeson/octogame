@@ -521,21 +521,21 @@ std::size_t	Progress::getNpcMax()
 	return m_npcMax;
 }
 
-std::vector<GameObjectType>	Progress::getNpcMet()
+std::list<GameObjectType>	Progress::getNpcMet()
 {
-	std::vector<GameObjectType> npcList;
+	std::list<GameObjectType> npcList;
 
 	for (auto level = m_npc.begin(); level != m_npc.end(); level++)
 	{
-		if (level->first != Level::Rewards)
+		for (auto npc = level->second.begin(); npc != level->second.end(); npc++)
 		{
-			for (auto npc = level->second.begin(); npc != level->second.end(); npc++)
-			{
-				if (npc->second == true)
-					npcList.push_back(npc->first);
-			}
+			if (npc->second == true)
+				npcList.push_back(npc->first);
 		}
 	}
+	npcList.sort();
+	npcList.unique();
+
 	return std::move(npcList);
 }
 

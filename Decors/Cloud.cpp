@@ -44,6 +44,7 @@ Cloud::~Cloud(void)
 		delete m_rain[i];
 		delete m_snow[i];
 	}
+	m_count--;
 }
 
 bool Cloud::isDisabledIfOutOfScreen()const

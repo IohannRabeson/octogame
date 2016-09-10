@@ -228,8 +228,11 @@ void Map::registerDecor(int x)
 
 void Map::registerWideDecor(std::size_t x)
 {
-	assert(x < m_mapSize.x);
-	m_wideDecorPositions[x].first = true;
+	//assert(x < m_mapSize.x);
+	if (x < m_mapSize.x)
+		m_wideDecorPositions[x].first = true;
+	else
+		std::cout << "error : registerWideDecor() failed on index : " << x << std::endl;
 }
 
 void Map::swapDepth(void)
