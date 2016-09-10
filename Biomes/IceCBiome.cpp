@@ -224,6 +224,11 @@ sf::Color	IceCBiome::getSecondWaterColor()
 	return m_secondWaterColor;
 }
 
+sf::Time	IceCBiome::getTimeDieVoid()
+{
+	return (sf::seconds(3.f));
+}
+
 std::map<std::size_t, std::string> const & IceCBiome::getInstances()
 {
 	return m_instances;
@@ -231,29 +236,8 @@ std::map<std::size_t, std::string> const & IceCBiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> IceCBiome::getLayers()
 {
-	//sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	/*
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 10.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x, y, 3, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.noise(x * 1.1f, y);
-		});
-	vector.push_back(layer);
-	*/
 	return vector;
 }
 
@@ -261,7 +245,7 @@ Map::MapSurfaceGenerator IceCBiome::getMapSurfaceGenerator()
 {
 	return [](Noise & noise, float x, float y)
 	{
-		return noise.fBm(x, y, 3, 3.f, 0.3f);
+		return noise.fBm(x, y, 3, 3.f, 0.3f) + 10.f;
 	};
 }
 

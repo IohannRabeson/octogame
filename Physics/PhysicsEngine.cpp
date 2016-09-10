@@ -223,7 +223,7 @@ void PhysicsEngine::update(float deltatime)
 		for (auto & shape : m_shapes)
 		{
 			//TODO: Find a proper way to do that
-			if (shape->getType() != AShape::Type::e_trigger)
+			if (shape->getType() != AShape::Type::e_trigger && shape->getCollisionType() != static_cast<std::size_t>(GameObjectType::Player))
 				shape->setOutOfScreen(!camRect.contains(sf::Vector2f(shape->getBaryCenter().x, shape->getBaryCenter().y + shape->getGlobalBounds().height / 2.f)));
 			else
 				shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));

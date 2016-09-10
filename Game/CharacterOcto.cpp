@@ -29,6 +29,7 @@ CharacterOcto::CharacterOcto() :
 	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_repairNanoRobot(nullptr),
 	m_progress(Progress::getInstance()),
+	m_timeEventDieFallMax(sf::seconds(2.3f)),
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
 	m_timeSlowFallMax(sf::seconds(2.5f)),
@@ -71,7 +72,7 @@ CharacterOcto::CharacterOcto() :
 	m_meetNpc(false),
 	m_replaceOcto(false),
 	m_enableCutscene(false),
-	m_isEndingInRocket(false),
+	m_stopFollowCamera(false),
 	m_autoDisableCutscene(false),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
@@ -123,6 +124,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_waterLevel = biome.getWaterLevel();
 	m_sound->setWaterLevel(m_waterLevel);
 	m_isDeadlyWater = biome.isDeadlyWater();
+	m_timeEventDieVoidMax = biome.getTimeDieVoid();
 	m_box->setGameObject(this);
 	m_box->setSize(sf::Vector2f(30.f, 85.f));
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Player));
@@ -1433,19 +1435,31 @@ void	CharacterOcto::kill()
 	}
 }
 
-bool	CharacterOcto::dieFall()
+void	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > sf::seconds(2.3f) && m_sprite.getCurrentEvent() != DieFall)
+	if (m_timeEventFall > m_timeEventDieFallMax && m_sprite.getCurrentEvent() != DieFall)
 		m_sprite.setNextEvent(DieFall);
+	else if (m_timeEventDieVoidMax != sf::Time::Zero)
+	{
+		if (m_timeEventFall > m_timeEventDieVoidMax)
+		{
+			float const speedOutOfScreen = m_timeEventFall.asSeconds() - m_timeEventDieVoidMax.asSeconds();
+
+			stopFollowCamera(true);
+			m_box->setPosition(m_box->getPosition() + sf::Vector2f(0.f, speedOutOfScreen * 40.f));
+			m_sprite.setOrigin(m_sprite.getOrigin() - sf::Vector2f(0.f, speedOutOfScreen * 10.f));
+		}
+		if (m_timeEventFall > m_timeEventDieVoidMax + sf::seconds(0.6f))
+			kill();
+	}
+
 	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater)
 	{
 		if (!Progress::getInstance().isMenu())
 			kill();
 		else
 			m_sprite.setNextEvent(Idle);
-		return true;
 	}
-	return false;
 }
 
 bool	CharacterOcto::dieGrass()
@@ -1883,14 +1897,19 @@ bool	CharacterOcto::isMeetingNpc(void) const
 	return m_meetNpc;
 }
 
-bool	CharacterOcto::isEndingInRocket(void) const
+bool	CharacterOcto::isStopFollowCamera(void) const
 {
-	return m_isEndingInRocket;
+	return m_stopFollowCamera;
+}
+
+void	CharacterOcto::stopFollowCamera(bool stop)
+{
+	m_stopFollowCamera = stop;
 }
 
 void	CharacterOcto::endInRocket(void)
 {
-	m_isEndingInRocket = true;
+	stopFollowCamera(true);
 	m_box->setApplyGravity(false);
 }
 

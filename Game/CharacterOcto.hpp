@@ -98,14 +98,15 @@ public:
 	bool					isInAir(void) const;
 	bool					isOnGround(void) const;
 	bool					isMeetingNpc(void) const;
-	bool					isEndingInRocket(void) const;
+	bool					isStopFollowCamera(void) const;
+	void					stopFollowCamera(bool stop);
 	void					endInRocket(void);
 	void					meetNpc(bool meetNpc);
 	void					resetCollidingTileCount(void);
 	void					enableCutscene(bool enable, bool autoDisable = false);
 
 private:
-	bool					dieFall();
+	void					dieFall();
 	bool					dieGrass();
 	void					kill();
 	bool					endDeath();
@@ -173,6 +174,8 @@ private:
 	WaterDropSystem				m_waterParticle;
 	SmokeSystem					m_bubbleParticle;
 	sf::Time					m_timeEventFall;
+	sf::Time					m_timeEventDieFallMax;
+	sf::Time					m_timeEventDieVoidMax;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;
 	sf::Time					m_timeEventDeath;
@@ -228,7 +231,7 @@ private:
 	bool						m_meetNpc;
 	bool						m_replaceOcto;
 	bool						m_enableCutscene;
-	bool						m_isEndingInRocket;
+	bool						m_stopFollowCamera;
 	bool						m_autoDisableCutscene;
 	Events						m_prevEvent;
 
