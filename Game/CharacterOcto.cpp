@@ -32,8 +32,8 @@ CharacterOcto::CharacterOcto() :
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
 	m_timeSlowFallMax(sf::seconds(2.5f)),
-	m_timeStopVelocity(sf::seconds(0.5f)),
-	m_timeStopVelocityMax(sf::seconds(0.5f)),
+	m_timeStopVelocity(sf::seconds(0.06f)),
+	m_timeStopVelocityMax(sf::seconds(0.06f)),
 	m_factorDirectionVelocityX(1.f),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
@@ -1634,9 +1634,10 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 			velocity.x = m_factorDirectionVelocityX * m_pixelSecondWalk;
 			m_timeStopVelocity = sf::Time::Zero;
 		}
-		else if (!m_onGround && m_timeStopVelocity <= m_timeStopVelocityMax)
+		else if (m_timeStopVelocity <= m_timeStopVelocityMax)
 		{
-			velocity.x = m_pixelSecondWalk * m_factorDirectionVelocityX * (1.f - (m_timeStopVelocity / m_timeStopVelocityMax));
+			if (!m_onGround)
+				velocity.x = m_pixelSecondWalk * m_factorDirectionVelocityX * (1.f - (m_timeStopVelocity / m_timeStopVelocityMax));
 			m_timeStopVelocity += sf::seconds(frametime);
 		}
 	}
