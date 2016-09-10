@@ -2,6 +2,7 @@
 #include "Progress.hpp"
 #include "RectangleShape.hpp"
 #include "ChallengeManager.hpp"
+#include "CharacterOcto.hpp"
 #include <ResourceManager.hpp>
 #include <Application.hpp>
 #include <AudioManager.hpp>

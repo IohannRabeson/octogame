@@ -268,6 +268,26 @@ Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
+		float floatMapSize = static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		float m = n / 5.f;
+		std::vector<float> pointX = {0.f, 250.f, 300.f, 335.f, 340.f    , 350.f    , 470.f    , 480.f    , 485.f, 515.f, 565.f};
+		std::vector<float> pointY = {n  , n    , m    , m    , -0.2f + m, -1.9f + m, -1.9f + m, -0.2f + m, m    , m    , n};
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
+
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
+	};
+	return [this](Noise & noise, float x, float y)
+	{
 		float start = 350.f / static_cast<float>(m_mapSize.x);
 		float end = 470.f / static_cast<float>(m_mapSize.x);
 		float offset = 10.f / static_cast<float>(m_mapSize.x);
