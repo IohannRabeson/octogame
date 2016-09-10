@@ -38,7 +38,6 @@ private:
 	sf::Time					m_throwPotionTimer;
 	sf::Time					m_throwPotionTimerMax;
 	sf::Vector2f				m_octoPosition;
-
 };
 
 #endif
