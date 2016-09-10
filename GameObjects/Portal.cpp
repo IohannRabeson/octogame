@@ -17,8 +17,8 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	m_maxParticle(40u),
 	m_state(State::Disappear),
 	m_radius(100.f),
-	m_timer(0.f),
-	m_timerMax(1.0f),
+	m_timerActivate(0.f),
+	m_timerActivateMax(1.0f),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle()),
 	m_soundVolume(0.6f)
 {
@@ -27,7 +27,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	Progress & progress = Progress::getInstance();
 	progress.registerPortal(destination);
 
-	m_shader.setParameter("time_max", m_timerMax);
+	m_shader.setParameter("time_max", m_timerActivateMax);
 	m_shader.setParameter("center_color", centerColor);
 
 	m_box->setGameObject(this);
@@ -161,11 +161,6 @@ void Portal::update(sf::Time frametime)
 	progress.setPortalPosition(m_destination, m_position);
 	m_particles.update(frametime);
 
-	if (m_timer >= m_timerMax)
-		m_isActive = true;
-	else
-		m_isActive = false;
-
 	switch (m_state)
 	{
 		case FirstAppear:
@@ -182,14 +177,15 @@ void Portal::update(sf::Time frametime)
 			}
 			else if (m_sprite.getCurrentEvent() == Events::Opened)
 			{
-				m_particles.setMaxParticle(m_timer / m_timerMax * static_cast<float>(m_maxParticle));
-				m_timer += frametime.asSeconds();
-				if (m_timer >= m_timerMax)
+				m_particles.setMaxParticle(m_timerActivate / m_timerActivateMax * static_cast<float>(m_maxParticle));
+				m_timerActivate += frametime.asSeconds();
+				m_isActive = true;
+				if (m_timerActivate >= m_timerActivateMax)
 				{
 					if (m_destination != Level::Random)
 						Progress::getInstance().meetPortal(m_destination);
 					m_state = Activated;
-					m_timer = m_timerMax;
+					m_timerActivate = m_timerActivateMax;
 				}
 			}
 			break;
@@ -198,11 +194,12 @@ void Portal::update(sf::Time frametime)
 			m_particles.setMaxParticle(m_maxParticle);
 			break;
 		case Disappear:
-			m_particles.setTransparency(std::min(1.f, (m_timer / m_timerMax)));
-			m_timer -= frametime.asSeconds();
-			if (m_timer <= 0.f)
+			m_particles.setTransparency(std::min(1.f, (m_timerActivate / m_timerActivateMax)));
+			m_timerActivate -= frametime.asSeconds();
+			m_isActive = false;
+			if (m_timerActivate <= 0.f)
 			{
-				m_timer = 0.f;
+				m_timerActivate = 0.f;
 				m_particles.setMaxParticle(0u);
 				m_particles.clear();
 			}
@@ -218,7 +215,7 @@ void Portal::update(sf::Time frametime)
 		{
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
 			PostEffectLayer::getInstance().enableShader(m_shaderName, true);
-			m_shader.setParameter("time", m_timer);
+			m_shader.setParameter("time", m_timerActivate);
 			m_shader.setParameter("radius", m_radius * zoomFactor);
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
 			m_shader.setParameter("center", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
@@ -268,7 +265,7 @@ void Portal::updateSound(void)
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float						volume = 0.f;
 
-	volume = m_soundVolume * (m_timer / m_timerMax);
+	volume = m_soundVolume * (m_timerActivate / m_timerActivateMax);
 	m_sound->setVolume(volume * audio.getSoundVolume());
 }
 

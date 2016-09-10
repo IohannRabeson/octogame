@@ -114,8 +114,8 @@ private:
 	std::size_t					m_maxParticle;
 	State						m_state;
 	float						m_radius;
-	float						m_timer;
-	float						m_timerMax;
+	float						m_timerActivate;
+	float						m_timerActivateMax;
 	CircleShape *				m_box;
 	bool						m_isActive;
 	std::shared_ptr<sf::Sound>	m_sound;
