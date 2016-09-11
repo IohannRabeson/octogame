@@ -439,6 +439,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(POTION_OSS, scale, position, 1u, 0.2f);
 			});
+	m_decorFactory.registerCreator(REFINERY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(REFINERY_OSS, scale, position, 4u, 0.2f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
