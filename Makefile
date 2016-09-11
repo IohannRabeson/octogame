@@ -176,6 +176,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/HSL.cpp							\
 				Biomes/RandomBiome.cpp					\
 				Biomes/RewardsBiome.cpp					\
+				Biomes/RandomGameBiome.cpp				\
 				Biomes/IceABiome.cpp					\
 				Biomes/IceBBiome.cpp					\
 				Biomes/IceCBiome.cpp					\

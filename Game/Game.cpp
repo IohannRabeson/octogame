@@ -27,6 +27,7 @@
 #include "WaterCBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
+#include "RandomGameBiome.hpp"
 
 //Objects
 #include "ElevatorStream.hpp"
@@ -146,6 +147,7 @@ Game::Game(void) :
 
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
+	m_biomeManager.registerBiome<RandomGameBiome>(Level::RandomGame);
 }
 
 Game::~Game(void)
@@ -170,7 +172,10 @@ void	Game::loadLevel(void)
 	}
 	else
 	{
-		m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
+		if (progress.isGameFinished())
+			m_biomeManager.changeBiome(Level::RandomGame, 0x12345);
+		else
+			m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
 		progress.setCurrentDestination(m_biomeManager.getCurrentBiome().getId());
 		if (progress.getRespawnType() == Progress::RespawnType::Portal)
 		{
