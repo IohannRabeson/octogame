@@ -181,12 +181,7 @@ RewardsBiome::RewardsBiome() :
 
 	for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
 	{
-		std::size_t index;
-		
-		if (randomBool(0.5f))
-			index = randomInt(10u, 140u);
-		else
-			index = randomInt(560u, 680u);
+		std::size_t index = randomInt(10u, m_mapSize.x - 10u);
 
 		m_gameObjects[index] = *npc;
 	}
