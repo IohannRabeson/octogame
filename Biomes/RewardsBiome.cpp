@@ -177,20 +177,18 @@ RewardsBiome::RewardsBiome() :
 			m_gameObjects[i] = GameObjectType::BirdRedNpc;
 	}
 
-	std::vector<GameObjectType> const & npcList = progress.getNpcMet();
-	std::size_t total = 0;
-	bool isCedric = false;
-	for (std::size_t i = 0; i < npcList.size(); i++)
+	std::list<GameObjectType> const & npcList = progress.getNpcMet();
+
+	for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
 	{
-		std::size_t delta = randomInt(10, 20);
-		if (npcList[i] != GameObjectType::CedricStartNpc && npcList[i] != GameObjectType::WolfNpc)
-			m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
-		else if (isCedric == false && npcList[i] != GameObjectType::WolfNpc)
-		{
-			m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
-			isCedric = true;
-		}
-		total += delta;
+		std::size_t index;
+		
+		if (randomBool(0.5f))
+			index = randomInt(10u, 140u);
+		else
+			index = randomInt(560u, 680u);
+
+		m_gameObjects[index] = *npc;
 	}
 }
 
