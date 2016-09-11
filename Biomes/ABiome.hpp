@@ -35,6 +35,7 @@ enum class Level : std::size_t
 	WaterC,
 	Random,
 	Rewards,
+	RandomGame,
 };
 
 class ABiome : public octo::NonCopyable
