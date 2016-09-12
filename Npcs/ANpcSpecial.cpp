@@ -1,12 +1,10 @@
 #include "ANpcSpecial.hpp"
+#include "Progress.hpp"
 
 ANpcSpecial::ANpcSpecial(ResourceKey const & npcId, bool isMeetable) :
 	ANpc(npcId, isMeetable),
 	m_canDoSpecial(true)
 {
-	setSize(sf::Vector2f(75.f, 325.f));
-	setOrigin(sf::Vector2f(60.f, -150.f));
-	setScale(0.8f);
 	setTextOffset(sf::Vector2f(10.f, 150.f));
 	setTimerMax(sf::seconds(8.0f));
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SpecialNpc), static_cast<std::size_t>(GameObjectType::Player));
@@ -46,6 +44,16 @@ void ANpcSpecial::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
+	if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
+	{
+		getSprite().setOrigin(getSprite().getLocalSize().x - getOrigin().x, getOrigin().y);
+		getSprite().setScale(-getScale(), getScale());
+	}
+	else
+	{
+		getSprite().setOrigin(getOrigin());
+		getSprite().setScale(getScale(), getScale());
+	}
 	if (sprite.getCurrentEvent() == Idle && getCollideEventOcto() && m_canDoSpecial)
 	{
 		m_canDoSpecial = false;
