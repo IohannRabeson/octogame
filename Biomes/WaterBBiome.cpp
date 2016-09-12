@@ -17,7 +17,7 @@ WaterBBiome::WaterBBiome() :
 	m_mapSeed(42u),
 	//m_octoStartPosition(100.f * 16.f, -14350.f),
 	m_octoStartPosition(400.f * 16.f, -350.f),
-	m_transitionDuration(0.5f),
+	m_transitionDuration(1.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
@@ -72,8 +72,8 @@ WaterBBiome::WaterBBiome() :
 	m_rockPartCount(4.f, 8.f),
 	m_rockColor(159, 24, 24),
 
-	m_grassSizeY(90.f, 110.f),
-	m_grassSizeX(40.f, 70.f),
+	m_grassSizeY(40.f, 50.f),
+	m_grassSizeX(15.f, 30.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
@@ -141,8 +141,7 @@ WaterBBiome::WaterBBiome() :
 
 	// Define game objects
 	m_instances[100] = MAP_WATER_B_TRAIL_OMP;
-	m_gameObjects[300] = GameObjectType::CedricStartNpc;
-	m_gameObjects[20] = GameObjectType::CedricEndNpc;
+	m_gameObjects[400] = GameObjectType::CedricStartNpc;
 	m_gameObjects[20] = GameObjectType::CedricEndNpc;
 	m_gameObjects[30] = GameObjectType::Concert;
 
