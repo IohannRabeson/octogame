@@ -114,7 +114,7 @@ void CheckPoint::collideOctoEvent(CharacterOcto *)
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
 		Progress & progress = Progress::getInstance();
 
-		m_startPosition = getPosition() + sf::Vector2f(28.f, 0.f);
+		m_startPosition = getPosition() + sf::Vector2f(28.f, 250.f);
 		audio.playSound(resources.getSound(OCTO_ANGRY_OGG), 0.5f);
 		m_sprite.setAnimation(m_animationValidated);
 		progress.setCheckPointPosition(m_startPosition);

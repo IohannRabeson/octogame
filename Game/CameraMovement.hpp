@@ -17,7 +17,8 @@ public:
 		FollowOcto,
 		OctoFalling,
 		OctoRaising,
-		ControlledByPlayer
+		ControlledByPlayer,
+		EndingInRocket
 	};
 
 	enum ZoomState

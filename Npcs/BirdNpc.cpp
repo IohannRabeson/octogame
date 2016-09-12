@@ -15,8 +15,7 @@ BirdNpc::BirdNpc(ResourceKey const & npcId, bool isMeetable) :
 	ANpc(npcId, isMeetable),
 	m_animationEnd(false),
 	m_speedLimit(m_generator.randomFloat(30.f, 150.f)),
-	m_flySpeed(sf::Vector2f(m_generator.randomFloat(200.f, 400.f), m_generator.randomFloat(-100.f, -300.f))),
-	m_timerDoubleJumpMax(sf::seconds(2.5f))
+	m_flySpeed(sf::Vector2f(m_generator.randomFloat(200.f, 400.f), m_generator.randomFloat(-100.f, -300.f)))
 {
 	setSize(sf::Vector2f(10.f, 45.f));
 	setOrigin(sf::Vector2f(90.f, 27.f));
@@ -137,26 +136,6 @@ void BirdNpc::updateState(void)
 		sprite.setNextEvent(Special2);
 }
 
-void BirdNpc::caseDoubleJump(sf::Time frametime)
-{
-	if ((ANpc::isDoubleJump() || m_timerDoubleJump != sf::Time::Zero) && getSprite().getCurrentEvent() == Special2)
-	{
-		if (m_timerDoubleJump == sf::Time::Zero)
-		{
-			if (m_octoPosition.y < m_startPosition.y)
-				m_isDoubleJumpTic = true;
-			m_nextPosition = m_startPosition + sf::Vector2f(0.f, 150.f);
-		}
-		m_timerDoubleJump += frametime;
-		if (m_isDoubleJumpTic)
-			m_startPosition.y = octo::cosinusInterpolation(m_startPosition.y, m_nextPosition.y, m_timerDoubleJump / m_timerDoubleJumpMax);
-		if (m_timerDoubleJump >= m_timerDoubleJumpMax && !ANpc::isDoubleJump())
-			m_timerDoubleJump = sf::Time::Zero;
-	}
-	else
-		m_isDoubleJumpTic = false;
-}
-
 void BirdNpc::computeFlight(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
@@ -185,15 +164,13 @@ void BirdNpc::update(sf::Time frametime)
 {
 	addTimer(frametime);
 	computeFlight(frametime);
-	caseDoubleJump(frametime);
 
 	updateState();
 	updatePhysics();
 
 	octo::CharacterSprite & sprite = getSprite();
-	sf::Vector2f const & center = getBox()->getRenderPosition();
 	sprite.update(frametime);
-	sprite.setPosition(center);
+	sprite.setPosition(m_startPosition);
 
 	updateText(frametime);
 	resetVariables();

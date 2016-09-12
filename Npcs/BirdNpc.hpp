@@ -37,9 +37,6 @@ private:
 	sf::Vector2f			m_octoPosition;
 	float					m_speedLimit;
 	sf::Vector2f			m_flySpeed;
-	bool					m_isDoubleJumpTic;
-	sf::Time				m_timerDoubleJump;
-	sf::Time				m_timerDoubleJumpMax;
 	sf::Shader				m_shader;
 };
 

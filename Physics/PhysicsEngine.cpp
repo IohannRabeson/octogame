@@ -236,8 +236,11 @@ void PhysicsEngine::update(float deltatime)
 		// Tile don't move so we update them now
 		for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
 		{
-			if (!m_tileShapes.get(i, 0u)->getSleep())
-				m_tileShapes.get(i, 0u)->update();
+			for (std::size_t j = 0u; j < m_tileShapes.rows(); j++)
+			{
+				if (!m_tileShapes.get(i, j)->getSleep())
+					m_tileShapes.get(i, j)->update();
+			}
 		}
 		// Determine which pairs of objects might be colliding
 		broadPhase();
@@ -332,24 +335,27 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<std::v
 		{
 			if (x < 0 || x >= static_cast<int>(m_tileShapes.columns()))
 				continue;
-			if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
-				continue;
-			shapeAABB = shape->getGlobalBounds();
-			shapeAABB.left += shape->getEngineVelocity().x;
-			shapeAABB.top += shape->getEngineVelocity().y;
-			if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds(), shapeAABB))
+			for (int y = 0; y < static_cast<int>(m_tileShapes.rows()); y++)
 			{
-				std::size_t i;
-				for (i = 0u; i < pairs.size(); i++)
+				if (shape->getSleep() || m_tileShapes(x, y)->getSleep())
+					continue;
+				shapeAABB = shape->getGlobalBounds();
+				shapeAABB.left += shape->getEngineVelocity().x;
+				shapeAABB.top += shape->getEngineVelocity().y;
+				if (shapeAABB.intersects(m_tileShapes(x, y)->getGlobalBounds(), shapeAABB))
 				{
-					if (pairs[i].size() == 0u || m_tileShapes(x, 0)->getGlobalBounds().top == pairs[i][0u].m_shapeA->getGlobalBounds().top)
+					std::size_t i;
+					for (i = 0u; i < pairs.size(); i++)
 					{
-						pairs[i].emplace_back(m_tileShapes(x, 0), shape, shapeAABB.width * shapeAABB.height);
-						break;
+						if (pairs[i].size() == 0u || m_tileShapes(x, y)->getGlobalBounds().top == pairs[i][0u].m_shapeA->getGlobalBounds().top)
+						{
+							pairs[i].emplace_back(m_tileShapes(x, y), shape, shapeAABB.width * shapeAABB.height);
+							break;
+						}
 					}
+					if (i > count)
+						count = i;
 				}
-				if (i > count)
-					count = i;
 			}
 		}
 	}
@@ -753,7 +759,10 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 	for (auto const & shape : m_shapes)
 		shape->debugDraw(render);
 	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
-		m_tileShapes(i, 0u)->debugDraw(render);
+	{
+		for (std::size_t j = 0u; j < m_tileShapes.rows(); j++)
+			m_tileShapes(i, j)->debugDraw(render);
+	}
 }
 
 // Nested Class Projection

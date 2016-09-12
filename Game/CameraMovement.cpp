@@ -49,6 +49,10 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		octo.meetNpc(false);
 		m_zoomState = ZoomState::ZoomIn;
 	}
+	if (octo.isEndingInRocket())
+	{
+		m_behavior = EndingInRocket;
+	}
 
 	float goalTop = octo.getPosition().y - camera.getRectangle().height / 4.f;
 	float goalBot = octo.getPosition().y + camera.getRectangle().height / 4.f;
@@ -106,6 +110,11 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 				m_horizontalTransition = 1.f;
 			else if (m_horizontalTransition < -1.f)
 				m_horizontalTransition = -1.f;
+			break;
+		}
+		case Behavior::EndingInRocket:
+		{
+			m_speed = 0.f;
 			break;
 		}
 		default:
