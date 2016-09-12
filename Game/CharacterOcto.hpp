@@ -98,10 +98,12 @@ public:
 	bool					isInAir(void) const;
 	bool					isOnGround(void) const;
 	bool					isMeetingNpc(void) const;
+	bool					isMeetingPortal(void) const;
 	bool					isStopFollowCamera(void) const;
 	void					stopFollowCamera(bool stop);
 	void					endInRocket(void);
 	void					meetNpc(bool meetNpc);
+	void					meetPortal(bool meetPortal);
 	void					resetCollidingTileCount(void);
 	void					enableCutscene(bool enable, bool autoDisable = false);
 
@@ -229,6 +231,7 @@ private:
 	bool						m_inWater;
 	bool						m_isDeadlyWater;
 	bool						m_meetNpc;
+	bool						m_meetPortal;
 	bool						m_replaceOcto;
 	bool						m_enableCutscene;
 	bool						m_stopFollowCamera;

@@ -400,6 +400,8 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
 			break;
 		case GameObjectType::Portal:
+			if (gameObjectCast<Portal>(gameObject)->isFirstAppear())
+				octo->meetPortal(true);
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject

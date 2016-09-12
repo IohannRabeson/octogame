@@ -70,6 +70,7 @@ CharacterOcto::CharacterOcto() :
 	m_inWater(false),
 	m_isDeadlyWater(false),
 	m_meetNpc(false),
+	m_meetPortal(false),
 	m_replaceOcto(false),
 	m_enableCutscene(false),
 	m_stopFollowCamera(false),
@@ -1897,6 +1898,11 @@ bool	CharacterOcto::isMeetingNpc(void) const
 	return m_meetNpc;
 }
 
+bool	CharacterOcto::isMeetingPortal(void) const
+{
+	return m_meetPortal;
+}
+
 bool	CharacterOcto::isStopFollowCamera(void) const
 {
 	return m_stopFollowCamera;
@@ -1926,6 +1932,11 @@ bool	CharacterOcto::isOnGround(void) const
 void	CharacterOcto::meetNpc(bool meetNpc)
 {
 	m_meetNpc = meetNpc;
+}
+
+void	CharacterOcto::meetPortal(bool meetPortal)
+{
+	m_meetPortal = meetPortal;
 }
 
 void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)

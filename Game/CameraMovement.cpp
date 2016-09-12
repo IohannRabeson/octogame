@@ -44,6 +44,11 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		else
 			m_behavior = Behavior::FollowOcto;
 	}
+	if (octo.isMeetingPortal())
+	{
+		octo.meetPortal(false);
+		m_zoomState = ZoomState::ZoomIn;
+	}
 	if (octo.isMeetingNpc())
 	{
 		octo.meetNpc(false);
