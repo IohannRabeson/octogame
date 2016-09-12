@@ -17,7 +17,7 @@ WaterBBiome::WaterBBiome() :
 	m_mapSeed(42u),
 	//m_octoStartPosition(100.f * 16.f, -14350.f),
 	m_octoStartPosition(400.f * 16.f, -350.f),
-	m_transitionDuration(1.5f),
+	m_transitionDuration(2.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
@@ -38,7 +38,7 @@ WaterBBiome::WaterBBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(10u, 15u),
+	m_rockCount(40u, 45u),
 	m_treeCount(30u, 30u),
 	m_mushroomCount(390u, 400u),
 	m_crystalCount(20u, 30u),
@@ -53,7 +53,7 @@ WaterBBiome::WaterBBiome() :
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
-	m_canCreateTree(true),
+	m_canCreateTree(false),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
@@ -74,25 +74,25 @@ WaterBBiome::WaterBBiome() :
 
 	m_grassSizeY(60.f, 70.f),
 	m_grassSizeX(25.f, 40.f),
-	m_grassColor(159, 24, 24, 150),
+	m_grassColor(244, 201, 154, 150),
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
 
-	m_treeDepth(2u, 3u),
-	m_treeSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(50.f, 300.f)),
+	m_treeDepth(3u, 4u),
+	m_treeSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(20.f, 100.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
 	m_treeColor(103, 157, 208, 50),
 	m_treeAngle(-180.f, 180.f),
-	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(250.f, 250.f), sf::Vector2f(400.f, 400.f)),
+	m_treeBeatMouvement(0.4f),
+	m_leafSize(sf::Vector2f(25.f, 25.f), sf::Vector2f(70.f, 70.f)),
 	m_leafColor(103, 157, 208, 75),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(255, 0, 0, 150.f),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
-	m_crystalSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(40.f, 350.f)),
-	m_crystalPartCount(3u, 6u),
+	m_crystalSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(35.f, 200.f)),
+	m_crystalPartCount(5u, 8u),
 	m_crystalColor(103, 157, 208, 50),
 	m_shineEffectSize(sf::Vector2f(200.f, 200.f), sf::Vector2f(300.f, 300.f)),
 	m_shineEffectColor(153, 207, 255, 130),
@@ -142,7 +142,7 @@ WaterBBiome::WaterBBiome() :
 	// Define game objects
 	m_instances[100] = MAP_WATER_B_TRAIL_OMP;
 	m_gameObjects[400] = GameObjectType::CedricStartNpc;
-	m_gameObjects[20] = GameObjectType::CedricEndNpc;
+	m_gameObjects[680] = GameObjectType::CedricEndNpc;
 	m_gameObjects[30] = GameObjectType::Concert;
 
 	m_interestPointPosX = 500;
@@ -159,7 +159,8 @@ WaterBBiome::WaterBBiome() :
 		else
 			index = randomInt(610u, 699u);
 
-		m_gameObjects[index] = *npc;
+		if (*npc != GameObjectType::CedricStartNpc)
+			m_gameObjects[index] = *npc;
 	}
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
