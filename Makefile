@@ -123,6 +123,8 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/JuGlitchNpc.cpp					\
 				Npcs/FranGlitchNpc.cpp					\
 				Npcs/WindowGlitchNpc.cpp				\
+				Npcs/ANpcSpecial.cpp					\
+				Npcs/CavemanNpc.cpp						\
 #Script AddNpc
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\

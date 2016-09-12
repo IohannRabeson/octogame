@@ -93,6 +93,8 @@ enum class GameObjectType : std::size_t
 	JuGlitchNpc					= (1 << 15) + 50,
 	FranGlitchNpc				= (1 << 15) + 51,
 	WindowGlitchNpc				= (1 << 15) + 52,
+	SpecialNpc					= (1 << 15) + 53,
+	CavemanNpc					= (1 << 15) + 54,
 //Script AddNpc
 
 
