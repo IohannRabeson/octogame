@@ -70,7 +70,7 @@ CharacterOcto::CharacterOcto() :
 	m_inWater(false),
 	m_isDeadlyWater(false),
 	m_meetNpc(false),
-	m_meetPortal(false),
+	m_collidePortalEvent(false),
 	m_replaceOcto(false),
 	m_enableCutscene(false),
 	m_stopFollowCamera(false),
@@ -953,6 +953,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionPortal = false;
+	m_collidePortalEvent = false;
 	m_collisionElevatorEvent = false;
 	m_collisionSpaceShip = false;
 	m_previousTop = m_box->getGlobalBounds().top;
@@ -1898,9 +1899,9 @@ bool	CharacterOcto::isMeetingNpc(void) const
 	return m_meetNpc;
 }
 
-bool	CharacterOcto::isMeetingPortal(void) const
+bool	CharacterOcto::isCollidingPortal(void) const
 {
-	return m_meetPortal;
+	return m_collidePortalEvent;
 }
 
 bool	CharacterOcto::isStopFollowCamera(void) const
@@ -1934,9 +1935,9 @@ void	CharacterOcto::meetNpc(bool meetNpc)
 	m_meetNpc = meetNpc;
 }
 
-void	CharacterOcto::meetPortal(bool meetPortal)
+void	CharacterOcto::collidePortalEvent(bool collidePortal)
 {
-	m_meetPortal = meetPortal;
+	m_collidePortalEvent = collidePortal;
 }
 
 void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
