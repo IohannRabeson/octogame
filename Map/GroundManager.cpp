@@ -89,6 +89,7 @@
 #include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
 #include "CavemanNpc.hpp"
+#include "ElliotNpc.hpp"
 
 //NanoRobots
 #include "GroundTransformNanoRobot.hpp"
@@ -275,6 +276,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator(TV_BLACK_OSS, [](){ return new TVScreen("render_black_kernel"); });
 	m_npcFactory.registerCreator(TV_WHITE_OSS, [](){ return new TVScreen("render_white_kernel"); });
 	m_npcFactory.registerCreator(CAVEMAN_OSS, [](){ return new CavemanNpc(); });
+	m_npcFactory.registerCreator(ELLIOT_OSS, [](){ return new ElliotNpc(); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(CHECKPOINT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
@@ -738,6 +740,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::ElliotNpc:
+				{
+					ElliotNpc * npc = new ElliotNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::CavemanNpc:
 				{
 					CavemanNpc * npc = new CavemanNpc();
