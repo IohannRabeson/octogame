@@ -47,6 +47,10 @@
 
 //Npc
 //Script AddNpc Include
+#include "ScientistCedric.hpp"
+#include "ScientistLu.hpp"
+#include "ScientistFran.hpp"
+#include "ScientistJu.hpp"
 #include "WindowGlitchNpc.hpp"
 #include "FranGlitchNpc.hpp"
 #include "JuGlitchNpc.hpp"
@@ -404,6 +408,17 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::ScientistCedric:
+			gameObjectCast<ScientistCedric>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::ScientistLu:
+			gameObjectCast<ScientistLu>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::ScientistFran:
+			gameObjectCast<ScientistFran>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::ScientistJu:
+			gameObjectCast<ScientistJu>(gameObject)->collideOctoEvent(octo);
 		case GameObjectType::WindowGlitchNpc:
 			gameObjectCast<WindowGlitchNpc>(gameObject)->collideOctoEvent(octo);
 			break;

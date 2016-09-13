@@ -81,22 +81,23 @@ enum class GameObjectType : std::size_t
 	OverCoolNpc					= (1 << 15) + 38,
 	CheckPoint					= (1 << 15) + 39,
 	TVScreen					= (1 << 15) + 40,
-	TVBlack						= (1 << 15) + 41,
-	TVWhite						= (1 << 15) + 42,
-	FabienNpc					= (1 << 15) + 43,
-	CedricEndNpc				= (1 << 15) + 44,
-	OctoDeathNpc				= (1 << 15) + 45,
-	Rocket						= (1 << 15) + 46,
-	RocketDoor					= (1 << 15) + 47,
-	LongChairNpc				= (1 << 15) + 48,
-	LuGlitchNpc					= (1 << 15) + 49,
-	JuGlitchNpc					= (1 << 15) + 50,
-	FranGlitchNpc				= (1 << 15) + 51,
-	WindowGlitchNpc				= (1 << 15) + 52,
+	FabienNpc					= (1 << 15) + 41,
+	ScientistJu					= (1 << 15) + 42,
+	ScientistFran				= (1 << 15) + 43,
+	ScientistLu					= (1 << 15) + 44,
+	ScientistCedric				= (1 << 15) + 45,
+	TVBlack						= (1 << 15) + 46,
+	TVWhite						= (1 << 15) + 47,
+	CedricEndNpc				= (1 << 15) + 48,
+	OctoDeathNpc				= (1 << 15) + 49,
+	Rocket						= (1 << 15) + 50,
+	LongChairNpc				= (1 << 15) + 51,
+	LuGlitchNpc					= (1 << 15) + 52,
+	JuGlitchNpc					= (1 << 15) + 53,
+	FranGlitchNpc				= (1 << 15) + 54,
+	WindowGlitchNpc				= (1 << 15) + 55,
+	RocketDoor					= (1 << 15) + 56,
 //Script AddNpc
-
-
-
 
 
 
