@@ -3,11 +3,11 @@
 
 # include "ANpc.hpp"
 
-class ANpcSpecial : public ANpc, public AGameObject<GameObjectType::SpecialNpc>
+class ASpecialNpc : public ANpc, public AGameObject<GameObjectType::SpecialNpc>
 {
 public:
-	ANpcSpecial(ResourceKey const & npcId, bool isMeetable = true);
-	virtual ~ANpcSpecial(void) = default;
+	ASpecialNpc(ResourceKey const & npcId, bool isMeetable = true);
+	virtual ~ASpecialNpc(void) = default;
 
 	virtual void setup(void) = 0;
 	virtual void update(sf::Time frameTime);

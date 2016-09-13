@@ -1,9 +1,9 @@
 #ifndef CAVEMANNPC_HPP
 # define CAVEMANNPC_HPP
 
-# include "ANpcSpecial.hpp"
+# include "ASpecialNpc.hpp"
 
-class CavemanNpc : public ANpcSpecial
+class CavemanNpc : public ASpecialNpc
 {
 public:
 	CavemanNpc(void);

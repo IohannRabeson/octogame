@@ -1,7 +1,7 @@
-#include "ANpcSpecial.hpp"
+#include "ASpecialNpc.hpp"
 #include "Progress.hpp"
 
-ANpcSpecial::ANpcSpecial(ResourceKey const & npcId, bool isMeetable) :
+ASpecialNpc::ASpecialNpc(ResourceKey const & npcId, bool isMeetable) :
 	ANpc(npcId, isMeetable),
 	m_canDoSpecial(true)
 {
@@ -10,7 +10,7 @@ ANpcSpecial::ANpcSpecial(ResourceKey const & npcId, bool isMeetable) :
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SpecialNpc), static_cast<std::size_t>(GameObjectType::Player));
 }
 
-void ANpcSpecial::setupMachine(void)
+void ASpecialNpc::setupMachine(void)
 {
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
@@ -33,14 +33,14 @@ void ANpcSpecial::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-void ANpcSpecial::update(sf::Time frameTime)
+void ASpecialNpc::update(sf::Time frameTime)
 {
 	if (!getCollideEventOcto())
 		m_canDoSpecial = true;
 	ANpc::update(frameTime);
 }
 
-void ANpcSpecial::updateState(void)
+void ASpecialNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 

@@ -96,7 +96,7 @@
 #include "WellKeeperNpc.hpp"
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
-#include "ANpcSpecial.hpp"
+#include "ASpecialNpc.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -315,7 +315,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 	switch (gameObject->getObjectType())
 	{
 		case GameObjectType::SpecialNpc:
-			gameObjectCast<ANpcSpecial>(gameObject)->collideOctoEvent(octo);
+			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::Elevator:
 			if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
