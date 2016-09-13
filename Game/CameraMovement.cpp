@@ -7,9 +7,9 @@
 
 CameraMovement::CameraMovement(void) :
 	m_behavior(Behavior::FollowOcto),
-	m_zoomState(ZoomState::None),
+	m_zoomState(ZoomState::ZoomIn),
 	m_baseSize(octo::Application::getCamera().getSize()),
-	m_zoomTimer(sf::Time::Zero),
+	m_zoomTimer(sf::seconds(3.f)),
 	m_zoomTimerMax(sf::seconds(3.f)),
 	m_shakeTimer(sf::Time::Zero),
 	m_shakeDuration(sf::seconds(1.f)),
