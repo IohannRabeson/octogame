@@ -76,6 +76,7 @@ RewardsBiome::RewardsBiome() :
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
 	m_grassSizeY(m_generator.randomFloat(10.f, 60.f), m_generator.randomFloat(60.f, 200.f)),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -104,6 +105,9 @@ RewardsBiome::RewardsBiome() :
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-4000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 200),
 
@@ -173,20 +177,13 @@ RewardsBiome::RewardsBiome() :
 			m_gameObjects[i] = GameObjectType::BirdRedNpc;
 	}
 
-	std::vector<GameObjectType> const & npcList = progress.getNpcMet();
-	std::size_t total = 0;
-	bool isCedric = false;
-	for (std::size_t i = 0; i < npcList.size(); i++)
+	std::list<GameObjectType> const & npcList = progress.getNpcMet();
+
+	for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
 	{
-		std::size_t delta = randomInt(10, 20);
-		if (npcList[i] != GameObjectType::CedricStartNpc && npcList[i] != GameObjectType::WolfNpc)
-			m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
-		else if (isCedric == false && npcList[i] != GameObjectType::WolfNpc)
-		{
-			m_gameObjects[m_generator.randomInt(10u, m_mapSize.x - 10u)] = npcList[i];
-			isCedric = true;
-		}
-		total += delta;
+		std::size_t index = randomInt(10u, m_mapSize.x - 10u);
+
+		m_gameObjects[index] = *npc;
 	}
 }
 
@@ -626,6 +623,11 @@ float	RewardsBiome::getGrassSizeY()
 	return randomRangeFloat(m_grassSizeY);
 }
 
+float	RewardsBiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
 sf::Color	RewardsBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
@@ -677,6 +679,21 @@ sf::Vector2f	RewardsBiome::getCloudSize()
 std::size_t		RewardsBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	RewardsBiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	RewardsBiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	RewardsBiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		RewardsBiome::getCloudLifeTime()

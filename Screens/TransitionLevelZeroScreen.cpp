@@ -7,6 +7,7 @@
 #include <ResourceManager.hpp>
 #include <AudioManager.hpp>
 #include "ResourceDefinitions.hpp"
+#include "TextManager.hpp"
 
 #include <sstream>
 #include <cwchar>
@@ -22,6 +23,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 {
 	octo::Camera&			camera = octo::Application::getCamera();
 	octo::ResourceManager &	resources = octo::Application::getResourceManager();
+	TextManager & textManager = TextManager::getInstance();
 	camera.setCenter(0.f, 0.f);
 	m_timerMax.resize(m_bubbleCount);
 	m_timerMax[0] = sf::seconds(5.5f);
@@ -30,28 +32,20 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_timerMax[3] = sf::seconds(8.f);
 	m_timerMax[4] = sf::seconds(9.f);
 
-	std::wstringstream f(resources.getText(Progress::getInstance().getTextFile()).toWideString());
-	std::wstring wkey;
-	std::wstring line;
 	std::string keyName;
 	if (Progress::getInstance().getNextDestination() != Level::Random)
 		keyName = "transitionLevelZero";
 	else
 		keyName = "transitionLevelZeroToRandom";
-	wchar_t delim = '=';
-	std::size_t i = 0;
-	while (std::getline(f, wkey, delim))
+
+	std::vector<std::wstring> const & texts = textManager.getTexts(keyName);
+	for (std::size_t i = 0u; i < texts.size(); i++)
 	{
-		std::getline(f, line);
-		std::string key(wkey.begin(), wkey.end());
-		if (!key.compare(keyName))
-		{
-			m_bubble[i].setup(line, sf::Color::White, 28u, 700.f);
-			m_bubble[i].setPosition(camera.getCenter());
-			m_bubble[i].setType(ABubble::Type::None);
-			m_bubble[i].setActive(true);
-			i++;
-		}
+		m_bubble[i].setup(texts[i], sf::Color::White, 28u, 700.f);
+		m_bubble[i].setPosition(camera.getCenter());
+		m_bubble[i].setType(ABubble::Type::None);
+		m_bubble[i].setActive(true);
+		i++;
 	}
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(NANO_GROUND_TRANSFORM_OSS));

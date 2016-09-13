@@ -174,6 +174,20 @@ void CedricStartNpc::collideOctoEvent(CharacterOcto * octo)
 	m_octoPosition = octo->getPosition();
 	if (coef >= 1.f && startBalle())
 		octo->startDrinkPotion();
+
+	octo::CharacterSprite & sprite = getSprite();
+	sf::Vector2f const & size = sprite.getLocalSize();
+
+	if (octo->getPosition().x < getPosition().x)
+	{
+		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
+		sprite.setScale(-getScale(), getScale());
+	}
+	else
+	{
+		sprite.setOrigin(getOrigin().x, getOrigin().y);
+		sprite.setScale(getScale(), getScale());
+	}
 }
 
 void CedricStartNpc::updatePotion(sf::Time frametime)
@@ -240,5 +254,6 @@ void CedricStartNpc::draw(sf::RenderTarget & render, sf::RenderStates states) co
 {
 	if (!Progress::getInstance().isValidateChallenge(m_effect))
 		ANpc::draw(render, states);
-	m_potion.draw(render, states);
+	if (m_throwPotionTimer != sf::Time::Zero)
+		m_potion.draw(render, states);
 }

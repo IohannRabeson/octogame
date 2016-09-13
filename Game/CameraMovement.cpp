@@ -7,9 +7,9 @@
 
 CameraMovement::CameraMovement(void) :
 	m_behavior(Behavior::FollowOcto),
-	m_zoomState(ZoomState::None),
+	m_zoomState(ZoomState::ZoomIn),
 	m_baseSize(octo::Application::getCamera().getSize()),
-	m_zoomTimer(sf::Time::Zero),
+	m_zoomTimer(sf::seconds(3.f)),
 	m_zoomTimerMax(sf::seconds(3.f)),
 	m_shakeTimer(sf::Time::Zero),
 	m_shakeDuration(sf::seconds(1.f)),
@@ -44,14 +44,18 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		else
 			m_behavior = Behavior::FollowOcto;
 	}
+	if (octo.isCollidingPortal())
+	{
+		m_zoomState = ZoomState::ZoomIn;
+	}
 	if (octo.isMeetingNpc())
 	{
 		octo.meetNpc(false);
 		m_zoomState = ZoomState::ZoomIn;
 	}
-	if (octo.isEndingInRocket())
+	if (octo.isStopFollowCamera())
 	{
-		m_behavior = EndingInRocket;
+		m_behavior = StopFollowOcto;
 	}
 
 	float goalTop = octo.getPosition().y - camera.getRectangle().height / 4.f;
@@ -112,7 +116,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 				m_horizontalTransition = -1.f;
 			break;
 		}
-		case Behavior::EndingInRocket:
+		case Behavior::StopFollowOcto:
 		{
 			m_speed = 0.f;
 			break;

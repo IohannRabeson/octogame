@@ -27,19 +27,10 @@ void	GameScreen::start()
 
 void	GameScreen::pause()
 {
-	InputListener::removeInputListener();
-	m_menu.setKeyboard(false);
 }
 
 void	GameScreen::resume()
 {
-	octo::Application::getPostEffectManager().removeEffects();
-	Progress::getInstance().levelChanged();
-
-	InputListener::addInputListener();
-	m_game.reset(new Game());
-	m_game->loadLevel();
-	m_timePlayed.restart();
 }
 
 void	GameScreen::stop()

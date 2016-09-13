@@ -22,6 +22,9 @@ Progress::Progress() :
 	m_reverseSprite(false),
 	m_spaceShipRepair(false),
 	m_killOcto(false),
+	m_isDoubleJump(false),
+	m_isInCloud(false),
+	m_cloudId(0u),
 	m_npcCount(0u),
 	m_npcMax(0u),
 	m_countRandomDiscover(0u),
@@ -518,21 +521,21 @@ std::size_t	Progress::getNpcMax()
 	return m_npcMax;
 }
 
-std::vector<GameObjectType>	Progress::getNpcMet()
+std::list<GameObjectType>	Progress::getNpcMet()
 {
-	std::vector<GameObjectType> npcList;
+	std::list<GameObjectType> npcList;
 
 	for (auto level = m_npc.begin(); level != m_npc.end(); level++)
 	{
-		if (level->first != Level::Rewards)
+		for (auto npc = level->second.begin(); npc != level->second.end(); npc++)
 		{
-			for (auto npc = level->second.begin(); npc != level->second.end(); npc++)
-			{
-				if (npc->second == true)
-					npcList.push_back(npc->first);
-			}
+			if (npc->second == true)
+				npcList.push_back(npc->first);
 		}
 	}
+	npcList.sort();
+	npcList.unique();
+
 	return std::move(npcList);
 }
 
@@ -564,6 +567,20 @@ void				Progress::setCheckPointPosition(sf::Vector2f const & position)
 sf::Vector2f const & Progress::getCheckPointPosition(void) const
 {
 	return m_data.checkPointPosition;
+}
+
+void		Progress::setInCloud(bool inCloud, std::size_t cloudId)
+{
+	if (inCloud && m_cloudId == 0u)
+	{
+		m_isInCloud = true;
+		m_cloudId = cloudId;
+	}
+	if (!inCloud && cloudId == m_cloudId)
+	{
+		m_isInCloud = false;
+		m_cloudId = 0u;
+	}
 }
 
 void		Progress::setMapHighlight(bool isHighlight)

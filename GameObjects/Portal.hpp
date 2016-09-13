@@ -97,6 +97,7 @@ public:
 	inline void disappear(void) { m_state = State::Disappear; }
 	inline bool isActivated(void) const { return m_isActive; }
 	inline bool isOpening(void) { return m_sprite.getCurrentEvent() == Opening; }
+	inline bool isFirstAppear(void) { return m_sprite.getCurrentEvent() == FirstAppear; }
 	inline Level getDestination(void) const { return m_destination; }
 
 	void update(sf::Time frameTime);
@@ -114,8 +115,8 @@ private:
 	std::size_t					m_maxParticle;
 	State						m_state;
 	float						m_radius;
-	float						m_timer;
-	float						m_timerMax;
+	float						m_timerActivate;
+	float						m_timerActivateMax;
 	CircleShape *				m_box;
 	bool						m_isActive;
 	std::shared_ptr<sf::Sound>	m_sound;

@@ -5,12 +5,16 @@
 #include "CharacterOcto.hpp"
 #include <Interpolations.hpp>
 
+RandomGenerator JellyfishNpc::m_generator("random");
+
 JellyfishNpc::JellyfishNpc(void) :
 	ANpc(JELLYFISH_OSS, false),
 	m_waterLevel(0.f),
-	m_isMet(false)
+	m_isMet(false),
+	m_speed(m_generator.randomFloat(7.f, 13.f)),
+	m_shift(m_generator.randomFloat(-50.f, 50.f), m_generator.randomFloat(-50.f, 50.f))
 {
-	setSize(sf::Vector2f(10.f, 300.f));
+	setSize(sf::Vector2f(10.f, 10.f));
 	setOrigin(sf::Vector2f(60.f, 75.f));
 	setScale(0.8f);
 	setVelocity(50.f);
@@ -18,6 +22,7 @@ JellyfishNpc::JellyfishNpc(void) :
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	getBox()->setApplyGravity(false);
 }
 
 void JellyfishNpc::setup(void)
@@ -25,13 +30,13 @@ void JellyfishNpc::setup(void)
 	typedef octo::CharacterAnimation::Frame			Frame;
 
 	getIdleAnimation().setFrames({
-			Frame(sf::seconds(1.f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
@@ -44,7 +49,11 @@ void JellyfishNpc::setup(void)
 			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::Loop);
 
@@ -99,26 +108,30 @@ void JellyfishNpc::computeBehavior(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 	RectangleShape * box = getBox();
+	sf::Vector2f position = octo::linearInterpolation(m_octoPosition, box->getPosition(), 1.f - frametime.asSeconds());
+
 	if (sprite.getCurrentEvent() == Special1)
 	{
-		sf::Vector2f position = octo::linearInterpolation(m_octoPosition, box->getPosition(), 1.f - frametime.asSeconds());
-		if (position.y > m_waterLevel + 200.f)
-			box->setPosition(position);
-		float angle = octo::rad2Deg(std::atan2(box->getPosition().y - m_octoPosition.y, box->getPosition().x - m_octoPosition.x)) - 90.f;
-		if (angle < 0.f)
-			angle += 360.f;
-		//float diff = angle - sprite.getRotation();
-		//sprite.rotate(diff * frametime.asSeconds() * 2.f);
-		sprite.setRotation(angle);
+		float dist = std::sqrt(std::pow(position.x - m_octoPosition.x, 2u) + std::pow(position.y - m_octoPosition.y, 2u));
+		if (position.y > m_waterLevel + 200.f && dist >= 100.f)
+		{
+			box->setVelocity((position - box->getPosition()) * (dist / m_speed));
+			float angle = octo::rad2Deg(std::atan2(box->getPosition().y - m_octoPosition.y, box->getPosition().x - m_octoPosition.x)) - 90.f;
+			if (angle < 0.f)
+				angle += 360.f;
+			//float diff = angle - sprite.getRotation();
+			//sprite.rotate(diff * frametime.asSeconds() * 2.f);
+			sprite.setRotation(angle);
+		}
 	}
 	else if (m_isMet)
 	{
+		if (position.y > m_waterLevel + 200.f)
+			box->setVelocity((position - box->getPosition()) * 20.f);
 		if (sprite.getRotation() > 180.f)
 			sprite.setRotation(octo::linearInterpolation(360.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
 		else
 			sprite.setRotation(octo::linearInterpolation(0.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
-		if (box->getPosition().y > m_waterLevel + 200.f)
-			box->setPosition(sf::Vector2f(box->getPosition().x, box->getPosition().y - frametime.asSeconds() * 150.f));
 	}
 }
 
@@ -140,7 +153,7 @@ void JellyfishNpc::updatePhysics(void)
 void JellyfishNpc::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
-	m_octoPosition = octo->getPosition();
+	m_octoPosition = octo->getPosition() + m_shift;
 	if (!m_isMet)
 		m_isMet = true;
 	if (m_waterLevel == 0.f)

@@ -2,10 +2,16 @@
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
+#include "Progress.hpp"
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <AudioManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 LucienNpc::LucienNpc(void) :
 	ANpc(LUCIEN_OSS),
-	m_side(true)
+	m_side(true),
+	m_sound(true)
 {
 	setSize(sf::Vector2f(25.f, 75.f));
 	setOrigin(sf::Vector2f(90.f, 100.f));
@@ -121,12 +127,25 @@ void LucienNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
+void LucienNpc::playSound(void)
+{
+	if (m_sound)
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+
+		audio.playSound(resources.getSound(LU_OGG), 0.2f, 1.f, sf::Vector3f(getBox()->getBaryCenter().x, getBox()->getBaryCenter().y, 0.f), 500.f, 40.f);
+		m_sound = false;
+	}
+}
+
 void LucienNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
 	if (sprite.getCurrentEvent() == Special1)
 	{
+		playSound();
 		if (sprite.isTerminated())
 		{
 			sprite.setNextEvent(Idle);
@@ -136,10 +155,12 @@ void LucienNpc::updateState(void)
 			sprite.setScale(-getScale(), getScale());
 			addTimer(-getTimer());
 			m_side = false;
+			m_sound = true;
 		}
 	}
 	else if (sprite.getCurrentEvent() == Special2)
 	{
+		playSound();
 		if (sprite.isTerminated())
 		{
 			sprite.setNextEvent(Idle);
@@ -148,6 +169,7 @@ void LucienNpc::updateState(void)
 			sprite.setScale(getScale(), getScale());
 			addTimer(-getTimer());
 			m_side = true;
+			m_sound = true;
 		}
 	}
 	else if (sprite.getCurrentEvent() == Idle)

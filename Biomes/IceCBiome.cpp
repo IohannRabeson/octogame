@@ -72,6 +72,7 @@ IceCBiome::IceCBiome() :
 	m_rockColor(0, 31, 63),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -98,6 +99,9 @@ IceCBiome::IceCBiome() :
 
 	m_cloudSize(sf::Vector2f(400.f, 400.f), sf::Vector2f(1000.f, 1000.f)),
 	m_cloudPartCount(1u, 1u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-7000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
 
@@ -220,6 +224,11 @@ sf::Color	IceCBiome::getSecondWaterColor()
 	return m_secondWaterColor;
 }
 
+sf::Time	IceCBiome::getTimeDieVoid()
+{
+	return (sf::seconds(3.f));
+}
+
 std::map<std::size_t, std::string> const & IceCBiome::getInstances()
 {
 	return m_instances;
@@ -227,29 +236,8 @@ std::map<std::size_t, std::string> const & IceCBiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> IceCBiome::getLayers()
 {
-	//sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	/*
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 10.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x, y, 3, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.noise(x * 1.1f, y);
-		});
-	vector.push_back(layer);
-	*/
 	return vector;
 }
 
@@ -257,7 +245,7 @@ Map::MapSurfaceGenerator IceCBiome::getMapSurfaceGenerator()
 {
 	return [](Noise & noise, float x, float y)
 	{
-		return noise.fBm(x, y, 3, 3.f, 0.3f);
+		return noise.fBm(x, y, 3, 3.f, 0.3f) + 10.f;
 	};
 }
 
@@ -566,6 +554,11 @@ float	IceCBiome::getGrassSizeY()
 	return randomRangeFloat(m_grassSizeY);
 }
 
+float	IceCBiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
 sf::Color	IceCBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
@@ -617,6 +610,21 @@ sf::Vector2f	IceCBiome::getCloudSize()
 std::size_t		IceCBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	IceCBiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	IceCBiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	IceCBiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		IceCBiome::getCloudLifeTime()

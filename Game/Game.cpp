@@ -24,8 +24,10 @@
 #include "JungleDBiome.hpp"
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
+#include "WaterCBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
+#include "RandomGameBiome.hpp"
 
 //Objects
 #include "ElevatorStream.hpp"
@@ -126,6 +128,9 @@ Game::Game(void) :
 	m_skipFrames(0u),
 	m_skipFramesMax(3u)
 {
+    octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	octo::Application::getPostEffectManager().createRender(graphics.getVideoMode());
+
 	InputListener::addInputListener();
 
 	m_biomeManager.registerBiome<IceABiome>(Level::IceA);
@@ -142,9 +147,11 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<JungleDBiome>(Level::JungleD);
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
+	m_biomeManager.registerBiome<WaterCBiome>(Level::WaterC);
 
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
+	m_biomeManager.registerBiome<RandomGameBiome>(Level::RandomGame);
 }
 
 Game::~Game(void)
@@ -169,7 +176,10 @@ void	Game::loadLevel(void)
 	}
 	else
 	{
-		m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
+		if (progress.isGameFinished())
+			m_biomeManager.changeBiome(Level::RandomGame, 0x12345);
+		else
+			m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
 		progress.setCurrentDestination(m_biomeManager.getCurrentBiome().getId());
 		if (progress.getRespawnType() == Progress::RespawnType::Portal)
 		{
@@ -276,7 +286,7 @@ void	Game::update(sf::Time frameTime)
 	m_cameraMovement->update(frameTime, *m_octo);
 	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
-	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 0.f));
+	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 100.f));
 	m_octo->update(frameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
 	moveMap(frameTime);
@@ -394,6 +404,7 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
 			break;
 		case GameObjectType::Portal:
+			octo->collidePortalEvent(true);
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
@@ -606,7 +617,7 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			Progress::getInstance().moveMap();
 			break;
 		case OctoKeys::Infos:
-			m_cameraMovement->shake(5.f, 1.f, 0.01f);
+			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
 			m_slowTimeInfosCoef = 10.f;
 			break;
 		default:

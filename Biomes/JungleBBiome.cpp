@@ -72,6 +72,7 @@ JungleBBiome::JungleBBiome() :
 	m_rockColor(56, 50, 72),
 
 	m_grassSizeY(60.f, 100.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -98,6 +99,9 @@ JungleBBiome::JungleBBiome() :
 
 	m_cloudSize(sf::Vector2f(300.f, 200.f), sf::Vector2f(600.f, 400.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(1000.f),
+	m_cloudMinY(-2500.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
 
@@ -135,7 +139,6 @@ JungleBBiome::JungleBBiome() :
 	// Define game objects
 	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
 	m_gameObjects[90] = GameObjectType::PortalJungle;
-	m_gameObjects[325] = GameObjectType::LucienNpc;
 	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
 	m_instances[387] = MAP_JUNGLE_B_FLUE_PART_OMP;
 	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;
@@ -614,6 +617,11 @@ float	JungleBBiome::getGrassSizeY()
 	return randomRangeFloat(m_grassSizeY);
 }
 
+float	JungleBBiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
 sf::Color	JungleBBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
@@ -665,6 +673,21 @@ sf::Vector2f	JungleBBiome::getCloudSize()
 std::size_t		JungleBBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	JungleBBiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	JungleBBiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	JungleBBiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		JungleBBiome::getCloudLifeTime()

@@ -188,6 +188,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/HSL.cpp							\
 				Biomes/RandomBiome.cpp					\
 				Biomes/RewardsBiome.cpp					\
+				Biomes/RandomGameBiome.cpp				\
 				Biomes/IceABiome.cpp					\
 				Biomes/IceBBiome.cpp					\
 				Biomes/IceCBiome.cpp					\
@@ -202,6 +203,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/JungleDBiome.cpp					\
 				Biomes/WaterABiome.cpp					\
 				Biomes/WaterBBiome.cpp					\
+				Biomes/WaterCBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\

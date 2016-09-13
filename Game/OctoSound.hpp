@@ -10,6 +10,8 @@ public:
 	OctoSound();
 	~OctoSound();
 	void	update(sf::Time frameTime, Events event, bool inWater, bool onGround);
+	void	setWaterLevel(float waterLevel) {m_waterLevel = waterLevel; };
+
 private:
 	struct soundFade
 	{
@@ -47,6 +49,7 @@ private:
 	sf::Time										m_timeSoundTransitionMax;
 	sf::Time										m_timeDrinkSound;
 	bool											m_inWater;
+	float											m_waterLevel;
 	bool											m_onGround;
 	bool											m_landing;
 	bool											m_transitionInWater;

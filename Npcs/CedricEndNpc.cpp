@@ -2,6 +2,7 @@
 #include "Progress.hpp"
 #include "RectangleShape.hpp"
 #include "ChallengeManager.hpp"
+#include "CharacterOcto.hpp"
 #include <ResourceManager.hpp>
 #include <Application.hpp>
 #include <AudioManager.hpp>
@@ -137,11 +138,25 @@ void CedricEndNpc::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
 	stopBalle();
+
+	octo::CharacterSprite & sprite = getSprite();
+	sf::Vector2f const & size = sprite.getLocalSize();
+
+	if (octo->getPosition().x < getPosition().x)
+	{
+		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
+		sprite.setScale(-getScale(), getScale());
+	}
+	else
+	{
+		sprite.setOrigin(getOrigin().x, getOrigin().y);
+		sprite.setScale(getScale(), getScale());
+	}
 }
 
 void CedricEndNpc::stopBalle(void)
 {
-	if (!Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
+	if (ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();

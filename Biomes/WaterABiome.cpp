@@ -30,7 +30,7 @@ WaterABiome::WaterABiome() :
 	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
 	m_SunsetLightColor(255, 147, 46, 130),
-	m_wind(100.f),
+	m_wind(30.f),
 	m_rainDropPerSecond(10u, 15u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
@@ -71,18 +71,19 @@ WaterABiome::WaterABiome() :
 	m_rockColor(159, 24, 24),
 
 	m_grassSizeY(60.f, 70.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
 	m_treeDepth(6u, 7u),
-	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
+	m_treeSize(sf::Vector2f(5.f, 100.f), sf::Vector2f(20.f, 120.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(0, 255, 159),
+	m_treeColor(103, 157, 208, 50),
 	m_treeAngle(-180.f, 180.f),
-	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(40.f, 40.f)),
-	m_leafColor(0, 255, 159, 150.f),
+	m_treeBeatMouvement(0.01f),
+	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(150.f, 150.f)),
+	m_leafColor(103, 157, 208, 50),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(255, 0, 0, 150.f),
@@ -95,8 +96,11 @@ WaterABiome::WaterABiome() :
 	m_shineEffectColor(153, 207, 255, 130),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
-	m_cloudPartCount(3u, 4u),
+	m_cloudSize(sf::Vector2f(50.f, 10.f), sf::Vector2f(100.f, 20.f)),
+	m_cloudPartCount(3u, 5u),
+	m_cloudMaxY(m_waterLevel),
+	m_cloudMinY(m_waterLevel),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
 
@@ -144,7 +148,7 @@ WaterABiome::WaterABiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
-	m_destinations.push_back(Level::WaterB);
+	m_destinations.push_back(Level::WaterC);
 	m_destinations.push_back(Level::JungleD);
 }
 
@@ -229,18 +233,19 @@ std::vector<ParallaxScrolling::ALayer *> WaterABiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 5, 0.1f, 0.4f, 11.f, 40.f);
+	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 12.f, 5, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x / 2.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 0, 0.1f, 0.4f, 11.f, 40.f);
+	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 12.f, 0, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x / 2.f + 100.f, y + 100.f, 2, 2.f);
 		});
 	vector.push_back(layer);
+	/*
 	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 10.f, -5, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
@@ -259,6 +264,7 @@ std::vector<ParallaxScrolling::ALayer *> WaterABiome::getLayers()
 			return noise.perlin(x / 2.f + 400.f, y + 400.f, 2, 2.f);
 		});
 	vector.push_back(layer);
+	*/
 	/*
 	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
@@ -560,17 +566,7 @@ sf::Color		WaterABiome::getLeafColor()
 
 std::size_t		WaterABiome::getTreePositionX()
 {
-	std::size_t pos;
-	bool isValidPos = false;
-	while (isValidPos == false)
-	{
-		pos = randomInt(1u, m_mapSize.x - 1u);
-			if ((pos >= 0.f && pos <= 150.f + 20.f) || (pos >= 620.f - 20.f && pos <= 750.f + 20.f) || (pos >= 1000.f - 20.f && pos <= 1080.f + 30.f))
-				isValidPos = false;
-			else
-				isValidPos = true;
-	}
-	return pos;
+	return randomInt(1u, m_mapSize.x - 1u);
 }
 
 sf::Vector2f	WaterABiome::getCrystalSize()
@@ -644,6 +640,11 @@ float	WaterABiome::getGrassSizeY()
 	return randomRangeFloat(m_grassSizeY);
 }
 
+float	WaterABiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
 sf::Color	WaterABiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
@@ -695,6 +696,21 @@ sf::Vector2f	WaterABiome::getCloudSize()
 std::size_t		WaterABiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	WaterABiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	WaterABiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	WaterABiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		WaterABiome::getCloudLifeTime()
@@ -877,10 +893,9 @@ sf::Color		WaterABiome::randomColorLeaf(sf::Color const & color)
 {
 	//TODO: Take time to make something good here. This is shit
 	HSL tmp = TurnToHSL(color);
-	tmp.Hue += m_generator.randomFloat(-180.f, 180.f);
-	tmp.Luminance += m_generator.randomFloat(-20.f, 0.f);
+	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);
+	tmp.Luminance += m_generator.randomFloat(-10.f, 10.f);
 	sf::Color newColor = tmp.TurnToRGB();
 	newColor.a = color.a;
 	return (newColor);
-
 }

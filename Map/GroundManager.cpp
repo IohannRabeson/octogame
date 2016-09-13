@@ -266,7 +266,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
+	m_npcFactory.registerCreator<JellyfishNpc>(JELLYFISH_OSS);
 	m_npcFactory.registerCreator(OCTO_DEATH_HELMET_OSS, [&biome](){ return new OctoDeathNpc(biome.getWaterLevel(), biome.getWaterColor()); });
+	m_npcFactory.registerCreator(EVA_OSS, [&biome](){ return new EvaNpc(biome.getWaterColor()); });
 	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
 	m_npcFactory.registerCreator(CEDRIC_END_OSS, [&biome](){ return new CedricEndNpc(biome.getType()); });
 	m_npcFactory.registerCreator(TV_BLACK_OSS, [](){ return new TVScreen("render_black_kernel"); });
@@ -433,6 +435,22 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(TEMPLE_DESERT_OSS, scale, position, 3u, 0.2f);
 			});
+	m_decorFactory.registerCreator(PIPE_1_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PIPE_1_OSS, scale, position, 1u, 0.2f);
+			});
+	m_decorFactory.registerCreator(PIPE_2_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(PIPE_2_OSS, scale, position, 1u, 0.2f);
+			});
+	m_decorFactory.registerCreator(POTION_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(POTION_OSS, scale, position, 1u, 0.2f);
+			});
+	m_decorFactory.registerCreator(REFINERY_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(REFINERY_OSS, scale, position, 4u, 0.2f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -534,7 +552,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
 				else if (!decor.name.compare(DECOR_GRASS_OSS))
-					adecor = new Grass(true);
+					adecor = new Grass(true, false);
+				else if (!decor.name.compare(DECOR_GRASS_REVERSE_OSS))
+					adecor = new Grass(true, true);
 				if (adecor)
 				{
 					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));
@@ -652,6 +672,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					if (!Progress::getInstance().canRepair())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new RepairNanoRobot());
 				break;
+			case GameObjectType::SlowFallNanoRobot:
+					if (!Progress::getInstance().canSlowFall())
+						m_nanoRobots.emplace_back(gameObject.first, 3, new SlowFallNanoRobot(sf::Vector2f(0.f, 0.f)));
 			case GameObjectType::GroundTransformNanoRobot:
 					if (!Progress::getInstance().canMoveMap())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new GroundTransformNanoRobot());
@@ -1461,6 +1484,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			if (!first)
 			{
 				first = m_tileShapes(x, physicsLineCount);
+				first->setSleep(false);
 				m_tileShapes(x, physicsLineCount)->setVertex(&m_vertices[m_verticesCount]);
 				m_tileShapes(x, physicsLineCount)->setGameObject(tilePrev);
 			}
@@ -1471,10 +1495,9 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		if (first)
 			first->setEndVertex(last);
 		else
-		{
-			m_tileShapes(x, physicsLineCount)->setVertex(&m_vertices[0u]);
-			m_tileShapes(x, physicsLineCount)->setEndVertex(&m_vertices[0u]);
-		}
+			m_tileShapes(x, physicsLineCount)->setSleep(true);
+		if (physicsLineCount == 0u)
+			m_tileShapes(x, 1u)->setSleep(true);
 	}
 	/*
 	if (countFilledTiles >= 9500)

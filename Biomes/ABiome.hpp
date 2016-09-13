@@ -32,8 +32,10 @@ enum class Level : std::size_t
 	JungleD,
 	WaterA,
 	WaterB,
+	WaterC,
 	Random,
 	Rewards,
+	RandomGame,
 };
 
 class ABiome : public octo::NonCopyable
@@ -69,6 +71,8 @@ public:
 	virtual sf::Color									getSecondWaterColor() = 0;
 	virtual bool										isDeadlyWater() { return false; };
 	virtual bool										isDeadlyGrass() { return false; };
+	virtual bool										isSpecialCloud() { return false; };
+	virtual sf::Time									getTimeDieVoid() { return sf::Time::Zero; };
 	virtual sf::Color									getColorMoveInstance() { return sf::Color::White; };
 	virtual float										getTransitionStep() { return 3.f; };
 
@@ -114,6 +118,7 @@ public:
 	virtual bool										canCreateRock() = 0;
 
 	virtual float										getGrassSizeY() = 0;
+	virtual float										getGrassSizeX() = 0;
 	virtual sf::Color									getGrassColor() = 0;
 	virtual std::size_t									getGrassCount() = 0;
 	virtual std::size_t									getGrassPosX() = 0;
@@ -149,6 +154,9 @@ public:
 
 	virtual sf::Vector2f								getCloudSize() = 0;
 	virtual std::size_t									getCloudPartCount() = 0;
+	virtual float										getCloudMinY() = 0;
+	virtual float										getCloudMaxY() = 0;
+	virtual sf::Vector2f								getCloudSpeed() = 0;
 	virtual sf::Time									getCloudLifeTime() = 0;
 	virtual sf::Color									getCloudColor() = 0;
 	virtual bool										canCreateCloud() = 0;

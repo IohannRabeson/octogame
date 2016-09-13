@@ -76,6 +76,7 @@ RandomBiome::RandomBiome() :
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
 	m_grassSizeY(m_generator.randomFloat(10.f, 60.f), m_generator.randomFloat(60.f, 200.f)),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -104,6 +105,9 @@ RandomBiome::RandomBiome() :
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-4000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 200),
 
@@ -684,6 +688,11 @@ float	RandomBiome::getGrassSizeY()
 	return randomRangeFloat(m_grassSizeY);
 }
 
+float	RandomBiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
 sf::Color	RandomBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
@@ -735,6 +744,21 @@ sf::Vector2f	RandomBiome::getCloudSize()
 std::size_t		RandomBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	RandomBiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	RandomBiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	RandomBiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		RandomBiome::getCloudLifeTime()

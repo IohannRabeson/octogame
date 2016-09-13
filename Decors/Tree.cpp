@@ -81,7 +81,7 @@ void Tree::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCor
 	downMidLeft += origin;
 	downMidRight += origin;
 
-	sf::Color deltaColor = color + sf::Color(7, 7, 7);
+	sf::Color deltaColor = color + sf::Color(7, 7, 7, 0);
 	builder.createTriangle(origin, upLeft, upRight, deltaColor);
 	builder.createTriangle(origin, upRight, upMidRight, deltaColor);
 	builder.createTriangle(origin, upMidRight, downMidRight, deltaColor);
@@ -98,7 +98,7 @@ void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, fl
 	sf::Vector2f tmpRightUp = quad.rightUp + quad.center;
 
 	builder.createTriangle(tmpRightUp, quad.rightDown + quad.center, tmpLeftDown, color);
-	sf::Color tmpColor(deltaColor + color.r, deltaColor + color.g, deltaColor + color.b);
+	sf::Color tmpColor(deltaColor + color.r, deltaColor + color.g, deltaColor + color.b, color.a);
 	builder.createTriangle(tmpLeftDown, quad.leftUp + quad.center, tmpRightUp, tmpColor);
 }
 
@@ -141,7 +141,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	// Init color
 	//TODO: find a smart way to compute deltaColor
 	float colorChange = currentDepth * 5.f + 1;
-	sf::Color color = sf::Color(m_color.r + colorChange, m_color.g + colorChange, m_color.b + colorChange);
+	sf::Color color = sf::Color(m_color.r + colorChange, m_color.g + colorChange, m_color.b + colorChange, m_color.a);
 
 	// Compute root rectangle
 	QuadValue root;
@@ -198,7 +198,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	createBiColorQuad(root, color, 5, builder);
 
 	// Fill empty space with triangle
-	color += sf::Color(5, 5, 5);
+	color += sf::Color(5, 5, 5, 0);
 	sf::Vector2f upTriangle(-rightSize.x, 0.f);
 	octo::rotateVector(upTriangle, cosRight, sinRight);
 	builder.createTriangle(root.rightUp + center, root.leftUp + center, upTriangle + center + root.rightUp, color);
@@ -252,7 +252,7 @@ void Tree::playSound(ABiome & biome, sf::Vector2f const & position)
 		float volume = 0.7f;
 		if (m_size.y < 100.f)
 			volume *= m_size.y / 100.f;
-		audio.playSound(resources.getSound(TREE_OGG), volume, biome.randomFloat(0.8f, 1.f), sf::Vector3f(position.x, position.y, 0.f), 100.f, 0.5f);
+		audio.playSound(resources.getSound(TREE_OGG), volume, biome.randomFloat(0.8f, 1.f), sf::Vector3f(position.x, position.y, 0.f), 500.f, 40.f);
 		m_sound = false;
 	}
 }

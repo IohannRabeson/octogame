@@ -222,7 +222,11 @@ void PhysicsEngine::update(float deltatime)
 		// Check if shape is out of screen
 		for (auto & shape : m_shapes)
 		{
-			shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));
+			//TODO: Find a proper way to do that
+			if (shape->getType() != AShape::Type::e_trigger && shape->getCollisionType() != static_cast<std::size_t>(GameObjectType::Player))
+				shape->setOutOfScreen(!camRect.contains(sf::Vector2f(shape->getBaryCenter().x, shape->getBaryCenter().y + shape->getGlobalBounds().height / 2.f)));
+			else
+				shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));
 			// Add gravity
 			if (!shape->getSleep())
 			{
@@ -761,7 +765,10 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
 	{
 		for (std::size_t j = 0u; j < m_tileShapes.rows(); j++)
-			m_tileShapes(i, j)->debugDraw(render);
+		{
+			if (!m_tileShapes(i, j)->getSleep())
+				m_tileShapes(i, j)->debugDraw(render);
+		}
 	}
 }
 

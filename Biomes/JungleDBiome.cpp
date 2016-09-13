@@ -72,6 +72,7 @@ JungleDBiome::JungleDBiome() :
 	m_rockColor(56, 50, 72),
 
 	m_grassSizeY(20.f, 70.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -98,6 +99,9 @@ JungleDBiome::JungleDBiome() :
 
 	m_cloudSize(sf::Vector2f(300.f, 200.f), sf::Vector2f(600.f, 400.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-4000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
 
@@ -609,6 +613,11 @@ float	JungleDBiome::getGrassSizeY()
 	return randomRangeFloat(m_grassSizeY);
 }
 
+float	JungleDBiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
 sf::Color	JungleDBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
@@ -660,6 +669,21 @@ sf::Vector2f	JungleDBiome::getCloudSize()
 std::size_t		JungleDBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	JungleDBiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	JungleDBiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	JungleDBiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		JungleDBiome::getCloudLifeTime()

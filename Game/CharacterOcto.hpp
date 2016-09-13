@@ -40,21 +40,22 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		Right,
 		Left,
 		StartJump,
-		Jump,
-		DoubleJump = 5,
+		DoubleJump,
 		Fall,
-		Dance,
-		DanceWithMusic,
+		DieFall,
+		Wait,
 		StartSlowFall,
 		Death,
 		Drink,
 		StartElevator,
-		Elevator = 13,
-		SlowFall,
+		Elevator,
+		SlowFall1,
+		SlowFall2,
+		SlowFall3,
 		StartWaterJump,
 		WaterJump,
 		PortalEvent,
-		KonamiCode = 18
+		KonamiCode
 	};
 public:
 	friend class OctoEvent;
@@ -97,19 +98,22 @@ public:
 	bool					isInAir(void) const;
 	bool					isOnGround(void) const;
 	bool					isMeetingNpc(void) const;
-	bool					isEndingInRocket(void) const;
+	bool					isCollidingPortal(void) const;
+	bool					isStopFollowCamera(void) const;
+	void					stopFollowCamera(bool stop);
 	void					endInRocket(void);
 	void					meetNpc(bool meetNpc);
+	void					collidePortalEvent(bool collidePortal);
 	void					resetCollidingTileCount(void);
 	void					enableCutscene(bool enable, bool autoDisable = false);
 
 private:
-	bool					dieFall();
+	void					dieFall();
 	bool					dieGrass();
 	void					kill();
 	bool					endDeath();
 	void					portalEvent();
-	void					dance();
+	void					wait();
 	void					inWater();
 	void					randomJumpAnimation();
 	void					timeEvent(sf::Time frameTime);
@@ -132,17 +136,23 @@ private:
 
 private:
 	class OctoSound;
+
+	void replaceOcto(void);
+	void updateCutscene(sf::Time frameTime);
+
 	octo::CharacterSprite		m_sprite;
 	octo::CharacterAnimation	m_idleAnimation;
 	octo::CharacterAnimation	m_walkAnimation;
 	octo::CharacterAnimation	m_startJumpAnimation;
 	octo::CharacterAnimation	m_jumpAnimation;
 	octo::CharacterAnimation	m_fallAnimation;
-	octo::CharacterAnimation	m_danceAnimation;
-	octo::CharacterAnimation	m_danceWithMusicAnimation;
+	octo::CharacterAnimation	m_dieFallAnimation;
+	octo::CharacterAnimation	m_waitAnimation;
 	octo::CharacterAnimation	m_answerWolfAnimation;
 	octo::CharacterAnimation	m_startSlowFallAnimation;
-	octo::CharacterAnimation	m_slowFallAnimation;
+	octo::CharacterAnimation	m_slowFallAnimation1;
+	octo::CharacterAnimation	m_slowFallAnimation2;
+	octo::CharacterAnimation	m_slowFallAnimation3;
 	octo::CharacterAnimation	m_deathAnimation;
 	octo::CharacterAnimation	m_drinkAnimation;
 	octo::CharacterAnimation	m_startElevatorAnimation;
@@ -157,9 +167,6 @@ private:
 	std::vector<std::unique_ptr<NanoRobot>>			m_nanoRobots;
 	RepairNanoRobot *								m_repairNanoRobot;
 	Progress &										m_progress;
-	std::mt19937									m_engine;
-	std::uniform_int_distribution<std::size_t>		m_jumpDistribution;
-	std::uniform_real_distribution<float>			m_danceDistribution;
 
 	SmokeSystem					m_inkParticle;
 	HelmetSystem				m_helmetParticle;
@@ -169,6 +176,8 @@ private:
 	WaterDropSystem				m_waterParticle;
 	SmokeSystem					m_bubbleParticle;
 	sf::Time					m_timeEventFall;
+	sf::Time					m_timeEventDieFallMax;
+	sf::Time					m_timeEventDieVoidMax;
 	sf::Time					m_timeEventIdle;
 	sf::Time					m_timeEventIdleMax;
 	sf::Time					m_timeEventDeath;
@@ -177,6 +186,9 @@ private:
 	sf::Time					m_timeRepairSpaceShipMax;
 	sf::Time					m_timeSlowFall;
 	sf::Time					m_timeSlowFallMax;
+	sf::Time					m_timeStopVelocity;
+	sf::Time					m_timeStopVelocityMax;
+	float						m_factorDirectionVelocityX;
 	float						m_spriteScale;
 	float						m_maxJumpWaterVelocity;
 	float						m_pixelSecondJump;
@@ -219,9 +231,10 @@ private:
 	bool						m_inWater;
 	bool						m_isDeadlyWater;
 	bool						m_meetNpc;
+	bool						m_collidePortalEvent;
 	bool						m_replaceOcto;
 	bool						m_enableCutscene;
-	bool						m_isEndingInRocket;
+	bool						m_stopFollowCamera;
 	bool						m_autoDisableCutscene;
 	Events						m_prevEvent;
 
@@ -234,6 +247,8 @@ private:
 	sf::Time					m_portalTimer;
 	sf::Time					m_cutsceneTimer;
 	sf::Time					m_cutsceneTimerMax;
+	sf::Time					m_cutscenePauseTimer;
+	sf::Time					m_cutscenePauseTimerMax;
 	sf::Vector2f				m_saveOctoPos;
 	sf::Vector2f				m_highestPosition;
 	std::vector<sf::Vector2f>	m_collidingTile;

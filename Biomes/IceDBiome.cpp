@@ -72,6 +72,7 @@ IceDBiome::IceDBiome() :
 	m_rockColor(0, 31, 63),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
@@ -98,6 +99,9 @@ IceDBiome::IceDBiome() :
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-4000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
 
@@ -604,6 +608,11 @@ float	IceDBiome::getGrassSizeY()
 	return randomRangeFloat(m_grassSizeY);
 }
 
+float	IceDBiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
 sf::Color	IceDBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
@@ -655,6 +664,21 @@ sf::Vector2f	IceDBiome::getCloudSize()
 std::size_t		IceDBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	IceDBiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	IceDBiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	IceDBiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		IceDBiome::getCloudLifeTime()

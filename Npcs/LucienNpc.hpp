@@ -16,7 +16,9 @@ protected:
 	virtual void updateState(void);
 
 private:
+	void		playSound(void);
 	bool		m_side;
+	bool		m_sound;
 
 };
 

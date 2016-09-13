@@ -72,6 +72,7 @@ DesertABiome::DesertABiome() :
 	m_rockColor(255, 232, 170),
 
 	m_grassSizeY(30.f, 60.f),
+	m_grassSizeX(14.f, 16.f),
 	m_grassColor(46, 133, 84),
 	m_grassCount(120u),
 	m_grassIndex(350u),
@@ -98,6 +99,9 @@ DesertABiome::DesertABiome() :
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-4000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
 
@@ -153,7 +157,7 @@ DesertABiome::DesertABiome() :
 	m_gameObjects[410] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[420] = GameObjectType::Tent;
 	m_instances[440] = MAP_DESERT_A_SECRET_OMP;
-	m_gameObjects[500] = GameObjectType::JuGlitchNpc;
+	m_gameObjects[520] = GameObjectType::JuGlitchNpc;
 	m_interestPointPosX = 50;
 
 	m_treePos = {347, 352, 359, 367, 380, 381, 393, 430, 433, 455, 460, 464, 473};
@@ -264,20 +268,23 @@ Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 350.f / static_cast<float>(m_mapSize.x);
-		float end = 470.f / static_cast<float>(m_mapSize.x);
-		float offset = 10.f / static_cast<float>(m_mapSize.x);
+		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float mapHigh = n / 3.f - 1.9f;
+		float m = n / 5.f;
+		std::vector<float> pointX = {0.f, 250.f, 300.f, 335.f, 340.f    , 350.f    , 470.f    , 480.f    , 485.f, 515.f, 565.f};
+		std::vector<float> pointY = {n  , n    , m    , m    , -0.2f + m, -1.9f + m, -1.9f + m, -0.2f + m, m    , m    , n};
+		for (std::size_t i = 0u; i < pointX.size(); i++)
+			pointX[i] /= floatMapSize;
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start + offset) / offset);
-		else if (x > start && x <= end)
-			return mapHigh;
-		else if (x > end && x <= end + offset)
-			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
-		else
-			return n;
+		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		{
+			if (x >= pointX[i] && x < pointX[i + 1])
+			{
+				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
 }
 
@@ -599,6 +606,11 @@ float	DesertABiome::getGrassSizeY()
 	return randomRangeFloat(m_grassSizeY);
 }
 
+float	DesertABiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
 sf::Color	DesertABiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
@@ -650,6 +662,21 @@ sf::Vector2f	DesertABiome::getCloudSize()
 std::size_t		DesertABiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	DesertABiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	DesertABiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	DesertABiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		DesertABiome::getCloudLifeTime()
