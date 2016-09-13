@@ -17,7 +17,7 @@ WaterBBiome::WaterBBiome() :
 	m_mapSeed(42u),
 	//m_octoStartPosition(100.f * 16.f, -14350.f),
 	m_octoStartPosition(400.f * 16.f, -350.f),
-	m_transitionDuration(2.5f),
+	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
@@ -141,7 +141,6 @@ WaterBBiome::WaterBBiome() :
 
 	// Define game objects
 	m_instances[100] = MAP_WATER_B_TRAIL_OMP;
-	m_gameObjects[400] = GameObjectType::CedricStartNpc;
 	m_gameObjects[680] = GameObjectType::CedricEndNpc;
 	m_gameObjects[30] = GameObjectType::Concert;
 
@@ -269,7 +268,7 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 	return [this](Noise & noise, float x, float y)
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 0.8f);
+		float n = noise.fBm(x, y, 3, 3.f, 1.0f);
 		float m = n / 10.f;
 		std::vector<float> pointX = {0.f     , 80.f    , 100.f, 101.f, 150.f, 180.f, 520.f, 550.f, 599.f, 600.f, 620.f   , 700.f   };
 		std::vector<float> pointY = {m - 10.f, m - 10.f, -10.f, -1.0f, -1.0f, n    , n    , -1.0f, -1.0f, -10.f, m - 10.f, m - 10.f};
@@ -294,11 +293,11 @@ Map::TileColorGenerator WaterBBiome::getTileColorGenerator()
 	sf::Color secondColorStart = getRockColor();
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -200900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -130200.f / static_cast<float>(m_mapSize.y);
-	float middle1 = -120000.f / static_cast<float>(m_mapSize.y);
-	float middle2 = -800000.f / static_cast<float>(m_mapSize.y);
-	float end1 = 0.f / static_cast<float>(m_mapSize.y);
+	float start1 = -200000.f / static_cast<float>(m_mapSize.y);
+	float start2 = -130000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -105000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = -100000.f / static_cast<float>(m_mapSize.y);
+	float end1 = -10000.f / static_cast<float>(m_mapSize.y);
 	float end2 = 17000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
