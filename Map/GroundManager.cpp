@@ -1448,6 +1448,7 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			if (!first)
 			{
 				first = m_tileShapes(x, physicsLineCount);
+				first->setSleep(false);
 				m_tileShapes(x, physicsLineCount)->setVertex(&m_vertices[m_verticesCount]);
 				m_tileShapes(x, physicsLineCount)->setGameObject(tilePrev);
 			}
@@ -1458,10 +1459,9 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		if (first)
 			first->setEndVertex(last);
 		else
-		{
-			m_tileShapes(x, physicsLineCount)->setVertex(&m_vertices[0u]);
-			m_tileShapes(x, physicsLineCount)->setEndVertex(&m_vertices[0u]);
-		}
+			m_tileShapes(x, physicsLineCount)->setSleep(true);
+		if (physicsLineCount == 0u)
+			m_tileShapes(x, 1u)->setSleep(true);
 	}
 	/*
 	if (countFilledTiles >= 9500)

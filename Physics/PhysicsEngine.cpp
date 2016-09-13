@@ -765,7 +765,10 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
 	{
 		for (std::size_t j = 0u; j < m_tileShapes.rows(); j++)
-			m_tileShapes(i, j)->debugDraw(render);
+		{
+			if (!m_tileShapes(i, j)->getSleep())
+				m_tileShapes(i, j)->debugDraw(render);
+		}
 	}
 }
 
