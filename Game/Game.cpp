@@ -604,7 +604,9 @@ void Game::moveMap(sf::Time frameTime)
 	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
 
-	if (Progress::getInstance().isMenu() || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
+	if (Progress::getInstance().isMenu() ||
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Displacement)))
 		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 }
 
@@ -621,6 +623,7 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			Progress::getInstance().moveMap();
 			break;
 		case OctoKeys::Infos:
+			std::cout << "OctoPos(" << m_octo->getPosition().x << ", " << m_octo->getPosition().y << ")" << std::endl;
 			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
 			m_slowTimeInfosCoef = 10.f;
 			break;

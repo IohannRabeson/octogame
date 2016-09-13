@@ -15,12 +15,13 @@ WaterBBiome::WaterBBiome() :
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(700u, 180u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(450.f * 16.f, -14350.f),
+	//m_octoStartPosition(100.f * 16.f, -14350.f),
+	m_octoStartPosition(400.f * 16.f, -350.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
 	m_tileEndColor(244, 201, 154),
-	m_waterLevel(7000.f),
+	m_waterLevel(1000.f),
 	m_waterColor(3, 57, 108, 60),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
@@ -37,7 +38,7 @@ WaterBBiome::WaterBBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(10u, 15u),
+	m_rockCount(40u, 45u),
 	m_treeCount(30u, 30u),
 	m_mushroomCount(390u, 400u),
 	m_crystalCount(20u, 30u),
@@ -52,7 +53,7 @@ WaterBBiome::WaterBBiome() :
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
-	m_canCreateTree(true),
+	m_canCreateTree(false),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
@@ -71,27 +72,27 @@ WaterBBiome::WaterBBiome() :
 	m_rockPartCount(4.f, 8.f),
 	m_rockColor(159, 24, 24),
 
-	m_grassSizeY(90.f, 110.f),
-	m_grassSizeX(40.f, 70.f),
-	m_grassColor(159, 24, 24, 150),
+	m_grassSizeY(60.f, 70.f),
+	m_grassSizeX(25.f, 40.f),
+	m_grassColor(244, 201, 154, 150),
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
 
-	m_treeDepth(2u, 3u),
-	m_treeSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(50.f, 300.f)),
+	m_treeDepth(3u, 4u),
+	m_treeSize(sf::Vector2f(10.f, 50.f), sf::Vector2f(20.f, 100.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
 	m_treeColor(103, 157, 208, 50),
 	m_treeAngle(-180.f, 180.f),
-	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(250.f, 250.f), sf::Vector2f(400.f, 400.f)),
+	m_treeBeatMouvement(0.4f),
+	m_leafSize(sf::Vector2f(25.f, 25.f), sf::Vector2f(70.f, 70.f)),
 	m_leafColor(103, 157, 208, 75),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(255, 0, 0, 150.f),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
-	m_crystalSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(40.f, 350.f)),
-	m_crystalPartCount(3u, 6u),
+	m_crystalSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(35.f, 200.f)),
+	m_crystalPartCount(5u, 8u),
 	m_crystalColor(103, 157, 208, 50),
 	m_shineEffectSize(sf::Vector2f(200.f, 200.f), sf::Vector2f(300.f, 300.f)),
 	m_shineEffectColor(153, 207, 255, 130),
@@ -100,7 +101,7 @@ WaterBBiome::WaterBBiome() :
 	m_cloudSize(sf::Vector2f(500.f, 500.f), sf::Vector2f(800.f, 800.f)),
 	m_cloudPartCount(1u, 1u),
 	m_cloudMaxY(1500.f),
-	m_cloudMinY(-14000.f),
+	m_cloudMinY(-13000.f),
 	m_cloudSpeed(sf::Vector2f(0.f, -140.f), sf::Vector2f(0.f, -250.f)),
 	m_cloudLifeTime(sf::seconds(600), sf::seconds(900)),
 	m_cloudColor(103, 157, 208, 120),
@@ -139,10 +140,8 @@ WaterBBiome::WaterBBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	//m_instances[25] = MAP_WATER_B_CAVE_OMP;
-	m_gameObjects[300] = GameObjectType::CedricStartNpc;
-	m_gameObjects[20] = GameObjectType::CedricEndNpc;
-	m_gameObjects[20] = GameObjectType::CedricEndNpc;
+	m_instances[100] = MAP_WATER_B_TRAIL_OMP;
+	m_gameObjects[680] = GameObjectType::CedricEndNpc;
 	m_gameObjects[30] = GameObjectType::Concert;
 
 	m_interestPointPosX = 500;
@@ -155,11 +154,12 @@ WaterBBiome::WaterBBiome() :
 		std::size_t index;
 		
 		if (randomBool(0.5f))
-			index = randomInt(10u, 140u);
+			index = randomInt(1u, 90u);
 		else
-			index = randomInt(560u, 680u);
+			index = randomInt(610u, 699u);
 
-		m_gameObjects[index] = *npc;
+		if (*npc != GameObjectType::CedricStartNpc)
+			m_gameObjects[index] = *npc;
 	}
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
@@ -245,10 +245,9 @@ std::map<std::size_t, std::string> const & WaterBBiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> WaterBBiome::getLayers()
 {
-	//sf::Vector2u mapSize = getMapSize();
+	sf::Vector2u mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	/*
 	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
@@ -261,20 +260,6 @@ std::vector<ParallaxScrolling::ALayer *> WaterBBiome::getLayers()
 			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
 		});
 	vector.push_back(layer);
-	mapSize.y = mapSize.y / 2u;
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 12.f, 20, 0.2f, 0.4f, 6.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.7f, 0.2f), mapSize, 12.f, 10, 0.2f, 0.4f, 6.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	*/
 	return vector;
 }
 
@@ -283,10 +268,10 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 	return [this](Noise & noise, float x, float y)
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 0.8f);
+		float n = noise.fBm(x, y, 3, 3.f, 1.0f);
 		float m = n / 10.f;
-		std::vector<float> pointX = {0.f     , 150.f   , 151.f, 549.f, 550.f   , 700.f   };
-		std::vector<float> pointY = {m - 10.f, m - 10.f, n    , n    , m - 10.f, m - 10.f};
+		std::vector<float> pointX = {0.f     , 80.f    , 100.f, 101.f, 150.f, 180.f, 520.f, 550.f, 599.f, 600.f, 620.f   , 700.f   };
+		std::vector<float> pointY = {m - 10.f, m - 10.f, -10.f, -1.0f, -1.0f, n    , n    , -1.0f, -1.0f, -10.f, m - 10.f, m - 10.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -304,15 +289,15 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator WaterBBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = getRockColor();
 	sf::Color secondColorEnd = getRockColor();
+	sf::Color secondColorStart = getRockColor();
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -50900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -30200.f / static_cast<float>(m_mapSize.y);
-	float middle1 = -10000.f / static_cast<float>(m_mapSize.y);
-	float middle2 = 0.f / static_cast<float>(m_mapSize.y);
-	float end1 = 5000.f / static_cast<float>(m_mapSize.y);
+	float start1 = -200000.f / static_cast<float>(m_mapSize.y);
+	float start2 = -130000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -105000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = -100000.f / static_cast<float>(m_mapSize.y);
+	float end1 = -10000.f / static_cast<float>(m_mapSize.y);
 	float end2 = 17000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
