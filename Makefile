@@ -38,6 +38,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/LevelZeroScreen.cpp				\
 				Screens/LogoScreen.cpp					\
 				Screens/AnOctonautOdysseyScreen.cpp		\
+				Screens/LaboratoryEndScreen.cpp			\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
@@ -115,6 +116,12 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/Pedestal.cpp						\
 				Npcs/OverCoolNpc.cpp					\
 				Npcs/FabienNpc.cpp						\
+				Npcs/ScientistJu.cpp					\
+				Npcs/ScientistFran.cpp					\
+				Npcs/ScientistLu.cpp					\
+				Npcs/ScientistCedric.cpp				\
+				Npcs/ScientistNpc.cpp					\
+				Npcs/ScientistOcto.cpp					\
 				Npcs/CedricEndNpc.cpp					\
 				Npcs/OctoDeathNpc.cpp					\
 				Npcs/Rocket.cpp							\
@@ -126,6 +133,11 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ASpecialNpc.cpp					\
 				Npcs/CavemanNpc.cpp						\
 #Script AddNpc
+
+
+
+
+
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

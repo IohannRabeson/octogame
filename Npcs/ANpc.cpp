@@ -277,6 +277,11 @@ RectangleShape * ANpc::getBox(void)
 	return m_box;
 }
 
+std::vector<std::unique_ptr<BubbleText>> & ANpc::getTexts(void)
+{
+	return m_texts;
+}
+
 octo::CharacterSprite & ANpc::getSprite(void)
 {
 	return m_sprite;
@@ -438,7 +443,9 @@ void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
 	if (m_displayText && Progress::getInstance().isBubbleNpc())
 	{
 		if (!m_isDoubleJump)
+		{
 			m_texts[m_currentText]->draw(render);
+		}
 		else
 			m_texts[m_texts.size() - 1]->draw(render);
 	}

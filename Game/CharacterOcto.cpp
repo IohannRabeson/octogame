@@ -70,6 +70,7 @@ CharacterOcto::CharacterOcto() :
 	m_inWater(false),
 	m_isDeadlyWater(false),
 	m_meetNpc(false),
+	m_collidePortalEvent(false),
 	m_replaceOcto(false),
 	m_enableCutscene(false),
 	m_stopFollowCamera(false),
@@ -156,6 +157,11 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::ScientistCedric)
+		| static_cast<std::size_t>(GameObjectType::ScientistLu)
+		| static_cast<std::size_t>(GameObjectType::ScientistFran)
+		| static_cast<std::size_t>(GameObjectType::ScientistJu)
+		| static_cast<std::size_t>(GameObjectType::ScientistJu)
 		| static_cast<std::size_t>(GameObjectType::WindowGlitchNpc)
 		| static_cast<std::size_t>(GameObjectType::FranGlitchNpc)
 		| static_cast<std::size_t>(GameObjectType::JuGlitchNpc)
@@ -953,6 +959,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionPortal = false;
+	m_collidePortalEvent = false;
 	m_collisionElevatorEvent = false;
 	m_collisionSpaceShip = false;
 	m_previousTop = m_box->getGlobalBounds().top;
@@ -1898,6 +1905,11 @@ bool	CharacterOcto::isMeetingNpc(void) const
 	return m_meetNpc;
 }
 
+bool	CharacterOcto::isCollidingPortal(void) const
+{
+	return m_collidePortalEvent;
+}
+
 bool	CharacterOcto::isStopFollowCamera(void) const
 {
 	return m_stopFollowCamera;
@@ -1927,6 +1939,11 @@ bool	CharacterOcto::isOnGround(void) const
 void	CharacterOcto::meetNpc(bool meetNpc)
 {
 	m_meetNpc = meetNpc;
+}
+
+void	CharacterOcto::collidePortalEvent(bool collidePortal)
+{
+	m_collidePortalEvent = collidePortal;
 }
 
 void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
