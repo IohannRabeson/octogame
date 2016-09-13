@@ -5,6 +5,7 @@
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
+#include <PostEffectManager.hpp>
 
 LevelZeroScreen::LevelZeroScreen(void) :
 	m_spaceShip(SpaceShip::Flying),
@@ -18,7 +19,8 @@ LevelZeroScreen::LevelZeroScreen(void) :
 	m_keyUp(false),
 	m_keyDown(false),
 	m_isSoundPlayed(false),
-	m_isSoundExplodePlayed(false)
+	m_isSoundExplodePlayed(false),
+	m_blinkShaderState(false)
 {
 	m_generator.setSeed("random");
 }
@@ -51,6 +53,13 @@ void	LevelZeroScreen::start()
 		Progress::getInstance().setNextDestination(Level::Random, false);
 		m_state = Rising;
 	}
+
+	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
+	postEffect.removeEffects();
+	PostEffectLayer::getInstance().clear();
+	PostEffectLayer::getInstance().registerShader(COLOR_SATURATION_FRAG, COLOR_SATURATION_FRAG);
+	PostEffectLayer::getInstance().getShader(COLOR_SATURATION_FRAG).setParameter("value", 1.f);
+	PostEffectLayer::getInstance().enableShader(COLOR_SATURATION_FRAG, false);
 }
 
 void	LevelZeroScreen::pause()
@@ -74,6 +83,15 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 
 	m_timer += frameTime;
 	m_timerEnd += frameTime;
+
+	m_timerBlinkShader += frameTime;
+	if (m_timerBlinkShader >= sf::seconds(0.5f))
+	{
+		m_timerBlinkShader = sf::Time::Zero;
+
+		m_blinkShaderState = !m_blinkShaderState;
+		PostEffectLayer::getInstance().enableShader(COLOR_SATURATION_FRAG, m_blinkShaderState);
+	}
 
 	if (m_timer >= m_timerMax)
 		m_timer -= m_timerMax;

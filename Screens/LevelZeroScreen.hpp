@@ -44,12 +44,14 @@ private:
 	sf::Time						m_timerMax;
 	sf::Time						m_timerEnd;
 	sf::Time						m_timerEndMax;
+	sf::Time						m_timerBlinkShader;
 	State							m_state;
 	float							m_offsetCamera;
 	bool							m_keyUp;
 	bool							m_keyDown;
 	bool							m_isSoundPlayed;
 	bool							m_isSoundExplodePlayed;
+	bool							m_blinkShaderState;
 	std::shared_ptr<sf::Sound>		m_ground;
 
 	void createBackground(sf::Vector2f const & position, sf::Color const & downColor);
