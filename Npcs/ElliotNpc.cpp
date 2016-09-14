@@ -1,7 +1,7 @@
 #include "ElliotNpc.hpp"
 
 ElliotNpc::ElliotNpc(void) :
-	ASpecialNpc(ELLIOT_OSS)
+	ASpecialNpc(ELLIOT_OSS, false)
 {
 	setSize(sf::Vector2f(75.f, 165.f));
 	setOrigin(sf::Vector2f(60.f, 88.f));

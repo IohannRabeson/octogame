@@ -1,9 +1,10 @@
 #include "ASpecialNpc.hpp"
 #include "Progress.hpp"
 
-ASpecialNpc::ASpecialNpc(ResourceKey const & npcId, bool isMeetable) :
-	ANpc(npcId, isMeetable),
-	m_canDoSpecial(true)
+ASpecialNpc::ASpecialNpc(ResourceKey const & npcId, bool followOcto, bool isMeetable) :
+	ANpc(npcId, followOcto, isMeetable),
+	m_canDoSpecial(true),
+	m_followOcto(followOcto)
 {
 	setTextOffset(sf::Vector2f(10.f, 150.f));
 	setTimerMax(sf::seconds(8.0f));
@@ -44,15 +45,18 @@ void ASpecialNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
+	if (m_followOcto)
 	{
-		getSprite().setOrigin(getSprite().getLocalSize().x - getOrigin().x, getOrigin().y);
-		getSprite().setScale(-getScale(), getScale());
-	}
-	else
-	{
-		getSprite().setOrigin(getOrigin());
-		getSprite().setScale(getScale(), getScale());
+		if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
+		{
+			getSprite().setOrigin(getSprite().getLocalSize().x - getOrigin().x, getOrigin().y);
+			getSprite().setScale(-getScale(), getScale());
+		}
+		else
+		{
+			getSprite().setOrigin(getOrigin());
+			getSprite().setScale(getScale(), getScale());
+		}
 	}
 	if (sprite.getCurrentEvent() == Idle && getCollideEventOcto() && m_canDoSpecial)
 	{
