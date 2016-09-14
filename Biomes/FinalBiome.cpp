@@ -15,10 +15,10 @@ FinalBiome::FinalBiome() :
 	m_mapSize(sf::Vector2u(1600u, 16u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(450.f * 16.f, -50.f),
-	m_transitionDuration(0.5f),
+	m_transitionDuration(3.0f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(52, 247, 61),
-	m_tileEndColor(46, 147, 60),
+	m_tileStartColor(58, 0, 92),
+	m_tileEndColor(109, 0, 179),
 	m_waterLevel(-1.f),
 	m_waterColor(3, 57, 108, 130),
 	m_secondWaterColor(m_waterColor),
@@ -26,9 +26,9 @@ FinalBiome::FinalBiome() :
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(8, 161, 255),
-	m_skyNightColor(8, 161, 255),
-	m_nightLightColor(8, 161, 255, 140),
+	m_skyDayColor(52, 247, 61),
+	m_skyNightColor(52, 247, 61),
+	m_nightLightColor(103, 0, 154, 140),
 	m_SunsetLightColor(52, 247, 61, 180),
 	m_wind(30.f),
 	m_rainDropPerSecond(20u, 35u),
@@ -37,14 +37,14 @@ FinalBiome::FinalBiome() :
 	m_lightningSize(700.f, 2500.f),
 
 	m_rockCount(10u, 15u),
-	m_treeCount(60u, 60u),
-	m_mushroomCount(10u, 100u),
+	m_treeCount(30u, 30u),
+	m_mushroomCount(50u, 50u),
 	m_crystalCount(20u, 30u),
-	m_starCount(430u, 450u),
+	m_starCount(530u, 550u),
 	m_sunCount(3u, 3u),
 	m_moonCount(3u, 4u),
 	m_rainbowCount(2u, 2u),
-	m_cloudCount(80u, 80u),
+	m_cloudCount(150u, 150u),
 	m_groundRockCount(200u, 400u),
 
 	m_canCreateRain(true),
@@ -66,34 +66,33 @@ FinalBiome::FinalBiome() :
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
 
-	m_rockSize(sf::Vector2f(10.f, 200.f), sf::Vector2f(20.f, 300.f)),
-	m_rockPartCount(4.f, 8.f),
-	m_rockColor(sf::Color::White),
+	m_rockSize(sf::Vector2f(20.f, 200.f), sf::Vector2f(40.f, 300.f)),
+	m_rockPartCount(10.f, 16.f),
+	m_rockColor(sf::Color::Black),
 
-	m_grassSizeY(60.f, 70.f),
-	m_grassSizeX(14.f, 16.f),
-	m_grassColor(52, 247, 61),
+	m_grassSizeY(40.f, 150.f),
+	m_grassSizeX(10.f, 30.f),
+	m_grassColor(250, 240, 250),
 	m_grassCount(m_mapSize.x),
-	m_grassIndex(0u),
 
-	m_treeDepth(6u, 7u),
-	m_treeSize(sf::Vector2f(80.f, 100.f), sf::Vector2f(140.f, 300.f)),
+	m_treeDepth(8u, 8u),
+	m_treeSize(sf::Vector2f(30.f, 80.f), sf::Vector2f(70.f, 300.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(1, 46, 109),
-	m_treeAngle(10.f, 60.f),
-	m_treeBeatMouvement(0.01f),
-	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(150.f, 150.f)),
-	m_leafColor(46, 147, 60, 200),
+	m_treeColor(58, 0, 92),
+	m_treeAngle(-100.f, 100.f),
+	m_treeBeatMouvement(0.04f),
+	m_leafSize(sf::Vector2f(70.f, 10.f), sf::Vector2f(150.f, 150.f)),
+	m_leafColor(212, 5, 238),
 
-	m_mushroomSize(sf::Vector2f(10.f, 80.f), sf::Vector2f(30.f, 200.f)),
-	m_mushroomColor(158, 202, 131),
+	m_mushroomSize(sf::Vector2f(40.f, 150.f), sf::Vector2f(100.f, 600.f)),
+	m_mushroomColor(255, 244, 0),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
 	m_crystalSize(sf::Vector2f(2.f, 100.f), sf::Vector2f(40.f, 200.f)),
 	m_crystalPartCount(6u, 10u),
-	m_crystalColor(248, 195, 0),
+	m_crystalColor(52, 247, 61, 180),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
-	m_shineEffectColor(153, 207, 255, 130),
+	m_shineEffectColor(255, 255, 255, 130),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
 	m_cloudSize(sf::Vector2f(100.f, 150.f), sf::Vector2f(400.f, 800.f)),
@@ -104,13 +103,13 @@ FinalBiome::FinalBiome() :
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
 
-	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(105.f, 105.f)),
+	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(35.f, 35.f)),
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
 	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 255, 200),
+	m_sunColor(255, 255, 255),
 
 	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_moonColor(255, 255, 255),
@@ -237,8 +236,9 @@ Map::MapSurfaceGenerator FinalBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f , 299.f, 300.f, 1300.f, 1301.f, 1600.f};
-		std::vector<float> pointY = {20.f, 20.f , n    , n     , 20.f  , n     };
+		float m = n * 5.f;
+		std::vector<float> pointX = {0.f  , 299.f, 300.f, 750.f, 805.f, 945.f, 1000.f, 1300.f, 1301.f, 1600.f};
+		std::vector<float> pointY = {900.f, 900.f , n    , m    , -3.4f, -3.5f, m     , n     , 900.f, 900.f };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -506,11 +506,11 @@ std::size_t		FinalBiome::getTreePositionX()
 
 	if (randomBool(0.75f))
 	{
-		x = static_cast<int>(m_generator.randomPiecewise(500.f)) + 300.f;
+		x = static_cast<int>(m_generator.randomPiecewise(500.f)) + 325.f;
 	}
 	else
 	{
-		x = static_cast<int>(m_generator.randomPiecewise(350.f)) + 950.f;
+		x = static_cast<int>(m_generator.randomPiecewise(350.f)) + 925.f;
 	}
 	return (static_cast<int>(x));
 }
@@ -603,10 +603,7 @@ std::size_t	FinalBiome::getGrassCount()
 
 std::size_t	FinalBiome::getGrassPosX()
 {
-	m_grassIndex++;
-	if (m_grassIndex >= m_mapSize.x)
-		m_grassIndex = 0u;
-	return m_grassIndex;
+	return (randomInt(1u, m_mapSize.x));
 }
 
 bool			FinalBiome::canCreateRock()

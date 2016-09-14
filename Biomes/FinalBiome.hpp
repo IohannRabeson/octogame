@@ -42,6 +42,7 @@ public:
 	virtual sf::Color									getWaterColor();
 	virtual sf::Color									getSecondWaterColor();
 	virtual float										getTransitionStep() { return 0.5f; };
+	virtual sf::Time									getTimeDieVoid() { return sf::seconds(2.4f); };
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -230,7 +231,6 @@ private:
 	Range<float>											m_grassSizeX;
 	sf::Color											m_grassColor;
 	std::size_t											m_grassCount;
-	std::size_t											m_grassIndex;
 
 	Range<std::size_t>									m_treeDepth;
 	Range<sf::Vector2f>									m_treeSize;
