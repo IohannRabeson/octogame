@@ -157,7 +157,8 @@ IceABiome::IceABiome() :
 
 	m_gameObjects[344] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[360] = GameObjectType::AmandineNpc;
-	m_gameObjects[350] = GameObjectType::BrayouNpc;
+	m_gameObjects[340] = GameObjectType::BrayouNpc;
+	m_gameObjects[320] = GameObjectType::CanouilleNpc;
 	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_gameObjects[490] = GameObjectType::BirdBlueNpc;
 

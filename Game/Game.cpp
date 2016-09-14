@@ -74,7 +74,6 @@
 #include "Snowman3Npc.hpp"
 #include "Snowman1Npc.hpp"
 #include "FranfranNpc.hpp"
-#include "CanouilleNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "CedricStartNpc.hpp"
@@ -525,9 +524,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::TurbanNpc:
 			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::CanouilleNpc:
-			gameObjectCast<CanouilleNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::JeffMouffyNpc:
 			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -651,7 +647,7 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getDecorsBack(), states);
 	render.draw(*m_parallaxScrolling, states);
 	//m_musicPlayer.debugDraw(render);
-	//m_physicsEngine.debugDraw(render);
+	m_physicsEngine.debugDraw(render);
 	m_groundManager->drawBack(render, states);
 	render.draw(*m_octo, states);
 	m_groundManager->drawFront(render, states);
