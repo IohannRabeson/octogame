@@ -156,10 +156,7 @@ IceABiome::IceABiome() :
 	m_destinations.push_back(Level::IceB);
 
 	m_gameObjects[344] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[360] = GameObjectType::AmandineNpc;
-	m_gameObjects[340] = GameObjectType::BrayouNpc;
-	m_gameObjects[320] = GameObjectType::CanouilleNpc;
-	m_gameObjects[300] = GameObjectType::ClementineNpc;
+	m_gameObjects[200] = GameObjectType::ConstanceNpc;
 	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_gameObjects[490] = GameObjectType::BirdBlueNpc;
 
