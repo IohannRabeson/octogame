@@ -15,8 +15,7 @@ WaterBBiome::WaterBBiome() :
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(700u, 180u)),
 	m_mapSeed(42u),
-	//m_octoStartPosition(100.f * 16.f, -14350.f),
-	m_octoStartPosition(400.f * 16.f, -350.f),
+	m_octoStartPosition(604.f * 16.f, -180.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -143,6 +142,7 @@ WaterBBiome::WaterBBiome() :
 	m_instances[100] = MAP_WATER_B_TRAIL_OMP;
 	m_gameObjects[680] = GameObjectType::CedricEndNpc;
 	m_gameObjects[30] = GameObjectType::Concert;
+	m_gameObjects[80] = GameObjectType::PortalWater;
 
 	m_interestPointPosX = 500;
 
@@ -162,9 +162,15 @@ WaterBBiome::WaterBBiome() :
 			m_gameObjects[index] = *npc;
 	}
 
+	if (progress.getLastDestination() == Level::WaterC)
+		m_octoStartPosition = sf::Vector2f(784.f * 16.f, -13050.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(363.f * 16.f, -15130.f);
+
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::WaterA);
+	m_destinations.push_back(Level::Random);
+	m_destinations.push_back(Level::WaterC);
 }
 
 void			WaterBBiome::setup(std::size_t seed)

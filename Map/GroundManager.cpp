@@ -234,6 +234,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<ConstanceNpc>(CONSTANCE_OSS);
 	m_npcFactory.registerCreator<FaustNpc>(NPC_FAUST_OSS);
 	m_npcFactory.registerCreator<AmandineNpc>(AMANDINE_OSS);
+	m_npcFactory.registerCreator<PeaNpc>(PEA_OSS);
 	m_npcFactory.registerCreator<Snowman2Npc>(SNOWMAN_2_OSS);
 	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
@@ -546,6 +547,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					adecor = new Tree(true);
 				else if (!decor.name.compare(DECOR_ROCK_OSS))
 					adecor = new Rock();
+				else if (!decor.name.compare(DECOR_GRASS_OSS))
+					adecor = new Grass(true, false);
+				else if (!decor.name.compare(DECOR_GRASS_REVERSE_OSS))
+					adecor = new Grass(true, true);
 				else if (!decor.name.compare(DECOR_CRYSTAL_OSS))
 					adecor = new Crystal();
 				else if (!decor.name.compare(DECOR_MUSHROOM_OSS))
@@ -554,10 +559,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					adecor = new GroundRock(true);
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
-				else if (!decor.name.compare(DECOR_GRASS_OSS))
-					adecor = new Grass(true, false);
-				else if (!decor.name.compare(DECOR_GRASS_REVERSE_OSS))
-					adecor = new Grass(true, true);
 				if (adecor)
 				{
 					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));
@@ -1166,26 +1167,6 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	std::size_t grassCount = biome.getGrassCount();
 	std::size_t totalCount = 0u;
 
-	if (biome.canCreateGrass())
-	{
-		for (std::size_t i = 0; i < grassCount; i++)
-		{
-			int x = biome.getGrassPosX();
-			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
-			m_tiles->registerDecor(x);
-			m_tilesPrev->registerDecor(x);
-		}
-		totalCount += grassCount;
-		for (std::size_t i = 0; i < grassCount; i++)
-		{
-			int x = biome.getGrassPosX();
-			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
-			m_tiles->registerDecor(x);
-			m_tilesPrev->registerDecor(x);
-		}
-		totalCount += grassCount;
-	}
-
 	if (biome.canCreateRainbow())
 	{
 		for (std::size_t i = 0; i < rainbowCount; i++)
@@ -1252,6 +1233,26 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += mushroomCount;
+	}
+
+	if (biome.canCreateGrass())
+	{
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
 	}
 
 	if (biome.canCreateCrystal())

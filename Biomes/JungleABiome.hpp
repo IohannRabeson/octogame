@@ -232,7 +232,6 @@ private:
 	Range<float>											m_grassSizeX;
 	sf::Color											m_grassColor;
 	std::size_t											m_grassCount;
-	std::size_t											m_grassIndex;
 
 	Range<std::size_t>									m_treeDepth;
 	Range<sf::Vector2f>									m_treeSize;
