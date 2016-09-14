@@ -1,7 +1,5 @@
 #include "FaustNpc.hpp"
 
-#include <Application.hpp>
-#include <Console.hpp>
 FaustNpc::FaustNpc(void) :
 	ASpecialNpc(NPC_FAUST_OSS, false)
 {
@@ -9,21 +7,6 @@ FaustNpc::FaustNpc(void) :
 	setOrigin(sf::Vector2f(20.f, 110.f));
 	setScale(0.8f);
 	setup();
-	octo::Application::getConsole().addCommand(L"ori", [this](sf::Vector2f const & p)
-	{
-		setOrigin(p);
-		std::cout << "origin " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"size", [this](sf::Vector2f const & p)
-	{
-		setSize(p);
-		std::cout << "size " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"texOff", [this](sf::Vector2f const & p)
-	{
-		setTextOffset(p);
-		std::cout << "textOff " << p.x << " " << p.y << std::endl;
-		});
 }
 
 void FaustNpc::setup(void)

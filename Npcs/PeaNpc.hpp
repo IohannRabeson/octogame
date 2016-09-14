@@ -1,19 +1,15 @@
 #ifndef PEA_HPP
 # define PEA_HPP
 
-# include "ANpc.hpp"
+# include "ASpecialNpc.hpp"
 
-class PeaNpc : public ANpc, public AGameObject<GameObjectType::PeaNpc>
+class PeaNpc : public ASpecialNpc
 {
 public:
 	PeaNpc(void);
 	virtual ~PeaNpc(void) = default;
 
 	virtual void setup(void);
-
-protected:
-	virtual void setupMachine(void);
-	virtual void updateState(void);
 
 };
 

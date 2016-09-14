@@ -78,9 +78,7 @@
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
 #include "FatNpc.hpp"
-#include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
-#include "JeffMouffyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
 #include "WolfNpc.hpp"
@@ -491,9 +489,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::PierreNpc:
 			gameObjectCast<PierreNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::PeaNpc:
-			gameObjectCast<PeaNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::Snowman2Npc:
 			gameObjectCast<Snowman2Npc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -508,9 +503,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::TurbanNpc:
 			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::JeffMouffyNpc:
-			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::JellyfishNpc:
 			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
