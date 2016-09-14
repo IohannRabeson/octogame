@@ -1,7 +1,5 @@
 #include "EvaNpc.hpp"
 
-#include <Application.hpp>
-#include <Console.hpp>
 EvaNpc::EvaNpc(sf::Color const & color) :
 	AUniqueNpc(EVA_OSS)
 {
@@ -13,21 +11,6 @@ EvaNpc::EvaNpc(sf::Color const & color) :
 	setup();
 
 	m_particles.setColor(color);
-	octo::Application::getConsole().addCommand(L"ori", [this](sf::Vector2f const & p)
-	{
-		setOrigin(p);
-		std::cout << "origin " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"size", [this](sf::Vector2f const & p)
-	{
-		setSize(p);
-		std::cout << "size " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"texOff", [this](sf::Vector2f const & p)
-	{
-		setTextOffset(p);
-		std::cout << "textOff " << p.x << " " << p.y << std::endl;
-		});
 }
 
 void EvaNpc::setup(void)
