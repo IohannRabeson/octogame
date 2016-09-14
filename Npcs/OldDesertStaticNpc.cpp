@@ -1,19 +1,30 @@
 #include "OldDesertStaticNpc.hpp"
-#include "RectangleShape.hpp"
-#include "SkyCycle.hpp"
-#include "CircleShape.hpp"
 
+#include <Application.hpp>
+#include <Console.hpp>
 OldDesertStaticNpc::OldDesertStaticNpc(void) :
-	ANpc(NPC_OLD_MAN_DESERT_STATIC_OSS)
+	AIdleNpc(NPC_OLD_MAN_DESERT_STATIC_OSS)
 {
-	setSize(sf::Vector2f(1.f, 75.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setSize(sf::Vector2f(50.f, 120.f));
+	setOrigin(sf::Vector2f(75.f, 44.f));
 	setScale(0.8f);
-	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	octo::Application::getConsole().addCommand(L"ori", [this](sf::Vector2f const & p)
+	{
+		setOrigin(p);
+		std::cout << "origin " << p.x << " " << p.y << std::endl;
+		});
+	octo::Application::getConsole().addCommand(L"size", [this](sf::Vector2f const & p)
+	{
+		setSize(p);
+		std::cout << "size " << p.x << " " << p.y << std::endl;
+		});
+	octo::Application::getConsole().addCommand(L"texOff", [this](sf::Vector2f const & p)
+	{
+		setTextOffset(p);
+		std::cout << "textOff " << p.x << " " << p.y << std::endl;
+		});
 }
 
 void OldDesertStaticNpc::setup(void)
@@ -31,33 +42,3 @@ void OldDesertStaticNpc::setup(void)
 
 	setupMachine();
 }
-
-void OldDesertStaticNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idle;
-
-	idle = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-
-	machine.setStart(idle);
-	machine.addTransition(Idle, idle, idle);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
-void OldDesertStaticNpc::update(sf::Time frametime)
-{
-	octo::CharacterSprite & sprite = getSprite();
-
-	sprite.update(frametime);
-	sf::Vector2f const & center = getBox()->getRenderPosition();
-	sprite.setPosition(center);
-
-	updateText(frametime);
-	resetVariables();
-}
-
