@@ -36,14 +36,14 @@ FinalBiome::FinalBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
-	m_rockCount(10u, 15u),
-	m_treeCount(30u, 30u),
-	m_mushroomCount(50u, 50u),
+	m_rockCount(20u, 20u),
+	m_treeCount(20u, 20u),
+	m_mushroomCount(100u, 100u),
 	m_crystalCount(20u, 30u),
 	m_starCount(530u, 550u),
 	m_sunCount(3u, 3u),
 	m_moonCount(3u, 4u),
-	m_rainbowCount(2u, 2u),
+	m_rainbowCount(0u, 0u),
 	m_cloudCount(150u, 150u),
 	m_groundRockCount(200u, 400u),
 
@@ -84,13 +84,13 @@ FinalBiome::FinalBiome() :
 	m_leafSize(sf::Vector2f(70.f, 10.f), sf::Vector2f(150.f, 150.f)),
 	m_leafColor(212, 5, 238),
 
-	m_mushroomSize(sf::Vector2f(40.f, 150.f), sf::Vector2f(100.f, 600.f)),
-	m_mushroomColor(255, 244, 0),
+	m_mushroomSize(sf::Vector2f(40.f, 50.f), sf::Vector2f(100.f, 500.f)),
+	m_mushroomColor(58, 0, 92),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
-	m_crystalSize(sf::Vector2f(2.f, 100.f), sf::Vector2f(40.f, 200.f)),
+	m_crystalSize(sf::Vector2f(2.f, 100.f), sf::Vector2f(70.f, 250.f)),
 	m_crystalPartCount(6u, 10u),
-	m_crystalColor(52, 247, 61, 180),
+	m_crystalColor(253, 255, 0, 140),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(255, 255, 255, 130),
 	m_shineEffectRotateAngle(100.f, 200.f),
@@ -107,7 +107,7 @@ FinalBiome::FinalBiome() :
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
-	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
+	m_sunSize(sf::Vector2f(200.f, 200.f), sf::Vector2f(300.f, 300.f)),
 	m_sunPartCount(2u, 4u),
 	m_sunColor(255, 255, 255),
 

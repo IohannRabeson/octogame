@@ -45,7 +45,7 @@ void Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & orig
 	downMid += origin;
 	downRight += origin;
 
-	sf::Color tmpAddColor(5, 5, 5, 0);
+	sf::Color tmpAddColor(5, 5, 5, 10);
 
 	// Down right
 	color += tmpAddColor;

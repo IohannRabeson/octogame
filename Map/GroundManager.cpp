@@ -1164,6 +1164,26 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	std::size_t grassCount = biome.getGrassCount();
 	std::size_t totalCount = 0u;
 
+	if (biome.canCreateGrass())
+	{
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
+	}
+
 	if (biome.canCreateRainbow())
 	{
 		for (std::size_t i = 0; i < rainbowCount; i++)
@@ -1250,27 +1270,6 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += crystalCount;
-	}
-
-	//TODO: Add in Biome
-	if (biome.canCreateGrass())
-	{
-		for (std::size_t i = 0; i < grassCount; i++)
-		{
-			int x = biome.getGrassPosX();
-			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
-			m_tiles->registerDecor(x);
-			m_tilesPrev->registerDecor(x);
-		}
-		totalCount += grassCount;
-		for (std::size_t i = 0; i < grassCount; i++)
-		{
-			int x = biome.getGrassPosX();
-			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
-			m_tiles->registerDecor(x);
-			m_tilesPrev->registerDecor(x);
-		}
-		totalCount += grassCount;
 	}
 
 	for (std::size_t i = 0; i < groundRockCount; i++)
@@ -1935,9 +1934,9 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	for (auto & npc : m_npcs)
 		npc->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
+	render.draw(m_decorManagerInstanceFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
-	render.draw(m_decorManagerInstanceFront, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->draw(render, states);
 	for (auto & decor : m_instanceDecors)
