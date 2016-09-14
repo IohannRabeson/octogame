@@ -140,7 +140,7 @@ JungleDBiome::JungleDBiome() :
 	m_instances[40] = MAP_JUNGLE_D_GUI_OMP;
 	m_gameObjects[30] = GameObjectType::PortalJungle;
 	m_gameObjects[40] = GameObjectType::BirdRedNpc;
-	m_gameObjects[175] = GameObjectType::OverCoolNpc;
+	m_gameObjects[145] = GameObjectType::OverCoolNpc;
 	m_gameObjects[110] = GameObjectType::BirdRedNpc;
 	m_instances[613] = MAP_JUNGLE_D_SMALL_VILLAGE_OMP;
 	m_gameObjects[740] = GameObjectType::Pedestal;
