@@ -147,8 +147,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik)
 		| static_cast<std::size_t>(GameObjectType::RocketDoor)
-		| static_cast<std::size_t>(GameObjectType::CheckPoint)
-		| static_cast<std::size_t>(GameObjectType::SpecialNpc);
+		| static_cast<std::size_t>(GameObjectType::CheckPoint);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
@@ -197,19 +196,19 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::LucienNpc)
 		| static_cast<std::size_t>(GameObjectType::OldDesertStaticNpc)
 		| static_cast<std::size_t>(GameObjectType::VinceNpc)
-		| static_cast<std::size_t>(GameObjectType::AmandineNpc)
 		| static_cast<std::size_t>(GameObjectType::FaustNpc)
 		| static_cast<std::size_t>(GameObjectType::WolfNpc)
 		| static_cast<std::size_t>(GameObjectType::ConstanceNpc)
 		| static_cast<std::size_t>(GameObjectType::JeffMouffyNpc)
 		| static_cast<std::size_t>(GameObjectType::JellyfishNpc)
 		| static_cast<std::size_t>(GameObjectType::BirdRedNpc)
-		| static_cast<std::size_t>(GameObjectType::BrayouNpc)
 		| static_cast<std::size_t>(GameObjectType::ClementineNpc)
 		| static_cast<std::size_t>(GameObjectType::CanouilleNpc)
 		| static_cast<std::size_t>(GameObjectType::WellKeeperNpc)
 		| static_cast<std::size_t>(GameObjectType::TurbanNpc)
-		| static_cast<std::size_t>(GameObjectType::Snowman2Npc);
+		| static_cast<std::size_t>(GameObjectType::Snowman2Npc)
+		| static_cast<std::size_t>(GameObjectType::IdleNpc)
+		| static_cast<std::size_t>(GameObjectType::SpecialNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
 	m_eventBox->setType(AShape::Type::e_trigger);

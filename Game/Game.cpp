@@ -87,11 +87,9 @@
 #include "JeffMouffyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
-#include "AmandineNpc.hpp"
 #include "FaustNpc.hpp"
 #include "WolfNpc.hpp"
 #include "ConstanceNpc.hpp"
-#include "BrayouNpc.hpp"
 #include "Snowman2Npc.hpp"
 #include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
@@ -319,12 +317,6 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 {
 	switch (gameObject->getObjectType())
 	{
-		case GameObjectType::IdleNpc:
-			gameObjectCast<AIdleNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::SpecialNpc:
-			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::Elevator:
 			if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
 			{
@@ -408,6 +400,10 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 	(void)collisionDirection;
 	switch (gameObject->getObjectType())
 	{
+		case GameObjectType::IdleNpc:
+		case GameObjectType::SpecialNpc:
+			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::Elevator:
 			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
 			break;
@@ -504,9 +500,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::PeaNpc:
 			gameObjectCast<PeaNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BrayouNpc:
-			gameObjectCast<BrayouNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::Snowman2Npc:
 			gameObjectCast<Snowman2Npc>(gameObject)->collideOctoEvent(octo);

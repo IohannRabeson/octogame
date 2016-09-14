@@ -8,7 +8,7 @@ ASpecialNpc::ASpecialNpc(ResourceKey const & npcId, bool followOcto, bool isMeet
 {
 	setTextOffset(sf::Vector2f(10.f, 150.f));
 	setTimerMax(sf::seconds(8.0f));
-	setupBox(this, static_cast<std::size_t>(GameObjectType::SpecialNpc), static_cast<std::size_t>(GameObjectType::Player));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::SpecialNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void ASpecialNpc::setupMachine(void)
