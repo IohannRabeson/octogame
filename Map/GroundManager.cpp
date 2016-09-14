@@ -32,7 +32,6 @@
 #include "Cage.hpp"
 
 //Npc
-#include "ClassicNpc.hpp"
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
 #include "ScientistCedric.hpp"
@@ -228,7 +227,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	setupGroundRock(biome);
 
-	m_npcFactory.registerCreator<ClassicNpc>(OCTO_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);

@@ -73,7 +73,6 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/CheckPoint.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
-				Npcs/ClassicNpc.cpp						\
 				Npcs/CedricStartNpc.cpp					\
 				Npcs/FranfranNpc.cpp					\
 				Npcs/JuNpc.cpp							\
