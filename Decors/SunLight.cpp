@@ -1,6 +1,7 @@
 #include "SunLight.hpp"
 #include "ABiome.hpp"
 #include "SkyCycle.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <Camera.hpp>
 #include <Interpolations.hpp>
@@ -71,6 +72,16 @@ void SunLight::setup(ABiome& biome)
 	m_colorNight = biome.getNightLightColor();
 	m_colorSunset = biome.getSunsetLightColor();
 	m_colorDay = sf::Color::Transparent;
+
+	m_colorDay = biome.getSunsetLightColor();
+
+	//TODO: Not clean, to add in biome
+	if (Progress::getInstance().getCurrentDestination() == Level::Final)
+	{
+		m_colorDay = biome.getSunsetLightColor();
+		m_colorDay.a = 80.f;
+	}
+
 	m_colorDayRaining = sf::Color(100, 100, 100, 100);
 }
 
@@ -88,7 +99,8 @@ void SunLight::computeDayColorValue(sf::Time frameTime, ABiome &)
 		if (m_timerRain > sf::Time::Zero)
 			m_timerRain -= frameTime;
 	}
-	m_colorDay = octo::linearInterpolation(sf::Color::Transparent, m_colorDayRaining, m_timerRain / m_timerRainMax);
+	if (Progress::getInstance().getCurrentDestination() != Level::Final)
+		m_colorDay = octo::linearInterpolation(sf::Color::Transparent, m_colorDayRaining, m_timerRain / m_timerRainMax);
 }
 
 void SunLight::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)

@@ -121,6 +121,7 @@ GroundManager::GroundManager(void) :
 	m_decorManagerGround(15000),
 	m_decorManagerInstanceBack(100000),
 	m_decorManagerInstanceFront(100000),
+	m_decorManagerInstanceGround(50000),
 	m_nextState(GenerationState::None),
 	m_water(nullptr)
 {}
@@ -217,7 +218,7 @@ void GroundManager::setupGroundRock(ABiome & biome)
 		ADecor * adecor = nullptr;
 		adecor = new GroundRock(true);
 		adecor->setPosition(sf::Vector2f(pos.x, pos.y + Tile::TileSize));
-		m_decorManagerInstanceFront.add(adecor);
+		m_decorManagerInstanceGround.add(adecor);
 	}
 }
 
@@ -560,7 +561,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				if (adecor)
 				{
 					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));
-					if (decor.isFront || !decor.name.compare(DECOR_GROUND_OSS))
+					if (decor.isFront)
 						m_decorManagerInstanceFront.add(adecor);
 					else
 						m_decorManagerInstanceBack.add(adecor);
@@ -1153,6 +1154,7 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	m_decorManagerGround.setup(&biome);
 	m_decorManagerInstanceBack.setup(&biome);
 	m_decorManagerInstanceFront.setup(&biome);
+	m_decorManagerInstanceGround.setup(&biome);
 	std::size_t mapSizeX = biome.getMapSize().x;
 
 	std::size_t treeCount = biome.getTreeCount();
@@ -1163,6 +1165,26 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	std::size_t groundRockCount = biome.getGroundRockCount();
 	std::size_t grassCount = biome.getGrassCount();
 	std::size_t totalCount = 0u;
+
+	if (biome.canCreateGrass())
+	{
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
+		for (std::size_t i = 0; i < grassCount; i++)
+		{
+			int x = biome.getGrassPosX();
+			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += grassCount;
+	}
 
 	if (biome.canCreateRainbow())
 	{
@@ -1250,27 +1272,6 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += crystalCount;
-	}
-
-	//TODO: Add in Biome
-	if (biome.canCreateGrass())
-	{
-		for (std::size_t i = 0; i < grassCount; i++)
-		{
-			int x = biome.getGrassPosX();
-			m_decorManagerBack.add(DecorManager::DecorTypes::Grass);
-			m_tiles->registerDecor(x);
-			m_tilesPrev->registerDecor(x);
-		}
-		totalCount += grassCount;
-		for (std::size_t i = 0; i < grassCount; i++)
-		{
-			int x = biome.getGrassPosX();
-			m_decorManagerFront.add(DecorManager::DecorTypes::Grass);
-			m_tiles->registerDecor(x);
-			m_tilesPrev->registerDecor(x);
-		}
-		totalCount += grassCount;
 	}
 
 	for (std::size_t i = 0; i < groundRockCount; i++)
@@ -1602,6 +1603,14 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			(*it)->setPosition((*it)->getPosition() - sf::Vector2f(mapSizeX, 0.f));
 	}
 
+	for (auto it = m_decorManagerInstanceGround.begin(); it != m_decorManagerInstanceGround.end(); it++)
+	{
+		if ((*it)->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			(*it)->setPosition((*it)->getPosition() + sf::Vector2f(mapSizeX, 0.f));
+		else if ((*it)->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			(*it)->setPosition((*it)->getPosition() - sf::Vector2f(mapSizeX, 0.f));
+	}
+
 	for (auto const & robot : m_nanoRobotOnInstance)
 	{
 		if (robot->getTargetPosition().x < m_offset.x - mapSizeX / 2.f)
@@ -1812,6 +1821,7 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerGround.update(deltatime, camera);
 	m_decorManagerInstanceBack.update(deltatime, camera);
 	m_decorManagerInstanceFront.update(deltatime, camera);
+	m_decorManagerInstanceGround.update(deltatime, camera);
 }
 
 void GroundManager::updateGameObjects(sf::Time frametime)
@@ -1935,9 +1945,10 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	for (auto & npc : m_npcs)
 		npc->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
+	render.draw(m_decorManagerInstanceFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
-	render.draw(m_decorManagerInstanceFront, states);
+	render.draw(m_decorManagerInstanceGround, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->draw(render, states);
 	for (auto & decor : m_instanceDecors)

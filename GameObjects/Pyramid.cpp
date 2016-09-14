@@ -19,8 +19,8 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_spriteTop.play();
 
 	octo::SpriteAnimation::FrameList	framesWater;
-	framesWater.emplace_back(sf::seconds(0.2f), 0u);
-	framesWater.emplace_back(sf::seconds(0.2f), 1u);
+	framesWater.emplace_back(sf::seconds(0.1f), 0u);
+	framesWater.emplace_back(sf::seconds(0.1f), 1u);
 	m_animationWater.setFrames(framesWater);
 	m_animationWater.setLoop(octo::LoopMode::Loop);
 
@@ -50,7 +50,7 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 		m_animationBlocs[i].setLoop(octo::LoopMode::Loop);
 
 		m_spriteBlocs[i].setSpriteSheet(resources.getSpriteSheet(PYRAMID_BLOC_1_OSS));
-		m_spriteBlocs[i].setScale(scale);
+		m_spriteBlocs[i].setScale(sf::Vector2f(0.98f, 0.98f));
 		m_spriteBlocs[i].setAnimation(m_animationBlocs[i]);
 		m_spriteBlocs[i].play();
 	}
@@ -71,6 +71,7 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 
 		m_spriteBlocs[i].setSpriteSheet(resources.getSpriteSheet(PYRAMID_BLOC_2_OSS));
 		m_spriteBlocs[i].setScale(scale);
+		m_spriteBlocs[i].setScale(sf::Vector2f(0.98f, 0.98f));
 		m_spriteBlocs[i].setAnimation(m_animationBlocs[i]);
 		m_spriteBlocs[i].play();
 	}
@@ -88,6 +89,7 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 
 		m_spriteBlocs[i].setSpriteSheet(resources.getSpriteSheet(PYRAMID_BLOC_3_OSS));
 		m_spriteBlocs[i].setScale(scale);
+		m_spriteBlocs[i].setScale(sf::Vector2f(0.98f, 0.98f));
 		m_spriteBlocs[i].setAnimation(m_animationBlocs[i]);
 		m_spriteBlocs[i].play();
 	}

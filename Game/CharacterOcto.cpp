@@ -77,7 +77,7 @@ CharacterOcto::CharacterOcto() :
 	m_autoDisableCutscene(false),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
-	m_cutscenePauseTimerMax(sf::seconds(2.f)),
+	m_cutscenePauseTimerMax(sf::seconds(4.f)),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());

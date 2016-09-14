@@ -206,6 +206,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/WaterABiome.cpp					\
 				Biomes/WaterBBiome.cpp					\
 				Biomes/WaterCBiome.cpp					\
+				Biomes/FinalBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
