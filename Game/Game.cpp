@@ -84,7 +84,6 @@
 #include "JeffMouffyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "VinceNpc.hpp"
-#include "FaustNpc.hpp"
 #include "WolfNpc.hpp"
 #include "Snowman2Npc.hpp"
 #include "OldDesertStaticNpc.hpp"
@@ -501,9 +500,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::Snowman2Npc:
 			gameObjectCast<Snowman2Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FaustNpc:
-			gameObjectCast<FaustNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::WolfNpc:
 			gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);

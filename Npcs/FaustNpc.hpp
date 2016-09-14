@@ -1,19 +1,15 @@
 #ifndef FAUST_HPP
 # define FAUST_HPP
 
-# include "ANpc.hpp"
+# include "ASpecialNpc.hpp"
 
-class FaustNpc : public ANpc, public AGameObject<GameObjectType::FaustNpc>
+class FaustNpc : public ASpecialNpc
 {
 public:
 	FaustNpc(void);
 	virtual ~FaustNpc(void) = default;
 
 	virtual void setup(void);
-
-protected:
-	virtual void setupMachine(void);
-	virtual void updateState(void);
 
 };
 
