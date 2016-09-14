@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -147,10 +148,16 @@ WaterCBiome::WaterCBiome() :
 
 	m_interestPointPosX = 500;
 
+	Progress & progress = Progress::getInstance();
+//	if (progress.getLastDestination() == Level::WaterB)
+//		m_octoStartPosition = sf::Vector2f(594.f * 16.f, 1030.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(492.f * 16.f, -3130.f);
+
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
-	m_destinations.push_back(Level::WaterA);
-	m_destinations.push_back(Level::WaterC);
+	m_destinations.push_back(Level::WaterB);
+	m_destinations.push_back(Level::Final);
 }
 
 void			WaterCBiome::setup(std::size_t seed)
