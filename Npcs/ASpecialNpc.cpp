@@ -2,7 +2,7 @@
 #include "Progress.hpp"
 
 ASpecialNpc::ASpecialNpc(ResourceKey const & npcId, bool followOcto, bool isMeetable) :
-	ANpc(npcId, followOcto, isMeetable),
+	ANpc(npcId, isMeetable),
 	m_canDoSpecial(true),
 	m_followOcto(followOcto)
 {
