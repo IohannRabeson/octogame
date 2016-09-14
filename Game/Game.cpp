@@ -511,9 +511,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::Snowman2Npc:
 			gameObjectCast<Snowman2Npc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::AmandineNpc:
-			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::FaustNpc:
 			gameObjectCast<FaustNpc>(gameObject)->collideOctoEvent(octo);
 			break;
