@@ -1,7 +1,5 @@
 #include "CanouilleNpc.hpp"
 
-#include <Application.hpp>
-#include <Console.hpp>
 CanouilleNpc::CanouilleNpc(void) :
 	ASpecialNpc(NPC_CANOUILLE_OSS)
 {
@@ -10,21 +8,6 @@ CanouilleNpc::CanouilleNpc(void) :
 	setScale(1.0f);
 	setTextOffset(sf::Vector2f(0.f, -100.f));
 	setup();
-	octo::Application::getConsole().addCommand(L"ori", [this](sf::Vector2f const & p)
-	{
-		setOrigin(p);
-		std::cout << "origin " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"size", [this](sf::Vector2f const & p)
-	{
-		setSize(p);
-		std::cout << "size " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"texOff", [this](sf::Vector2f const & p)
-	{
-		setTextOffset(p);
-		std::cout << "textOff " << p.x << " " << p.y << std::endl;
-		});
 }
 
 void CanouilleNpc::setup(void)
