@@ -89,6 +89,7 @@
 #include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
 #include "CavemanNpc.hpp"
+#include "CavemanClimbingNpc.hpp"
 #include "ElliotNpc.hpp"
 
 //NanoRobots
@@ -276,6 +277,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator(TV_BLACK_OSS, [](){ return new TVScreen("render_black_kernel"); });
 	m_npcFactory.registerCreator(TV_WHITE_OSS, [](){ return new TVScreen("render_white_kernel"); });
 	m_npcFactory.registerCreator(CAVEMAN_OSS, [](){ return new CavemanNpc(); });
+	m_npcFactory.registerCreator(CAVEMAN_CLIMBING_OSS, [](){ return new CavemanClimbingNpc(); });
 	m_npcFactory.registerCreator(ELLIOT_OSS, [](){ return new ElliotNpc(); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
@@ -750,6 +752,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			case GameObjectType::CavemanNpc:
 				{
 					CavemanNpc * npc = new CavemanNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::CavemanClimbingNpc:
+				{
+					CavemanClimbingNpc * npc = new CavemanClimbingNpc();
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}

@@ -101,6 +101,7 @@
 #include "LucienNpc.hpp"
 #include "IohannNpc.hpp"
 #include "ASpecialNpc.hpp"
+#include "AIdleNpc.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -318,6 +319,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 {
 	switch (gameObject->getObjectType())
 	{
+		case GameObjectType::IdleNpc:
+			gameObjectCast<AIdleNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::SpecialNpc:
 			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
 			break;

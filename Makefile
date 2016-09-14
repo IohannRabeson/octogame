@@ -131,7 +131,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/FranGlitchNpc.cpp					\
 				Npcs/WindowGlitchNpc.cpp				\
 				Npcs/ASpecialNpc.cpp					\
+				Npcs/AIdleNpc.cpp						\
 				Npcs/CavemanNpc.cpp						\
+				Npcs/CavemanClimbingNpc.cpp				\
 				Npcs/ElliotNpc.cpp						\
 #Script AddNpc
 
