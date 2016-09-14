@@ -156,8 +156,7 @@ IceABiome::IceABiome() :
 	m_destinations.push_back(Level::IceB);
 
 	m_gameObjects[344] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[200] = GameObjectType::JeffMouffyNpc;
-	m_gameObjects[240] = GameObjectType::PeaNpc;
+	m_gameObjects[200] = GameObjectType::JuNpc;
 	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_gameObjects[490] = GameObjectType::BirdBlueNpc;
 

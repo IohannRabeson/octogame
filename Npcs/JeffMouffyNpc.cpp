@@ -2,8 +2,6 @@
 #include "RectangleShape.hpp"
 #include <Interpolations.hpp>
 
-#include <Application.hpp>
-#include <Console.hpp>
 JeffMouffyNpc::JeffMouffyNpc(void) :
 	ASpecialNpc(JEFF_MOUFFY_OSS, false),
 	m_startTimer(false),
@@ -15,21 +13,6 @@ JeffMouffyNpc::JeffMouffyNpc(void) :
 	setTextOffset(sf::Vector2f(100.f, -10.f));
 	setTimerMax(sf::seconds(5.f));
 	setup();
-	octo::Application::getConsole().addCommand(L"ori", [this](sf::Vector2f const & p)
-	{
-		setOrigin(p);
-		std::cout << "origin " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"size", [this](sf::Vector2f const & p)
-	{
-		setSize(p);
-		std::cout << "size " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"texOff", [this](sf::Vector2f const & p)
-	{
-		setTextOffset(p);
-		std::cout << "textOff " << p.x << " " << p.y << std::endl;
-		});
 }
 
 void JeffMouffyNpc::setup(void)
