@@ -150,7 +150,7 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 	m_biomeManager.registerBiome<WaterCBiome>(Level::WaterC);
-	m_biomeManager.registerBiome<WaterCBiome>(Level::Final);
+	m_biomeManager.registerBiome<FinalBiome>(Level::Final);
 
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);

@@ -9,49 +9,49 @@
 #include <iostream>
 
 FinalBiome::FinalBiome() :
-	m_name("Water A"),
+	m_name("Final"),
 	m_id(Level::Final),
-	m_seed("Water A"),
-	m_mapSize(sf::Vector2u(700u, 32u)),
+	m_seed("Final"),
+	m_mapSize(sf::Vector2u(1600u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(25.f * 16.f, 50.f),
+	m_octoStartPosition(450.f * 16.f, -50.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(250, 229, 205),
-	m_tileEndColor(244, 201, 154),
-	m_waterLevel(340.f),
+	m_tileStartColor(52, 247, 61),
+	m_tileEndColor(46, 147, 60),
+	m_waterLevel(-1.f),
 	m_waterColor(3, 57, 108, 130),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(3, 57, 108),
-	m_skyNightColor(255, 0, 0),
-	m_nightLightColor(255, 90, 61, 130),
-	m_SunsetLightColor(255, 147, 46, 130),
+	m_skyDayColor(8, 161, 255),
+	m_skyNightColor(8, 161, 255),
+	m_nightLightColor(8, 161, 255, 140),
+	m_SunsetLightColor(52, 247, 61, 180),
 	m_wind(30.f),
-	m_rainDropPerSecond(10u, 15u),
+	m_rainDropPerSecond(20u, 35u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
 
 	m_rockCount(10u, 15u),
-	m_treeCount(30u, 30u),
-	m_mushroomCount(390u, 400u),
+	m_treeCount(60u, 60u),
+	m_mushroomCount(10u, 100u),
 	m_crystalCount(20u, 30u),
-	m_starCount(500u, 800u),
-	m_sunCount(1u, 1u),
-	m_moonCount(2u, 2u),
+	m_starCount(430u, 450u),
+	m_sunCount(3u, 3u),
+	m_moonCount(3u, 4u),
 	m_rainbowCount(2u, 2u),
-	m_cloudCount(30u, 40u),
+	m_cloudCount(80u, 80u),
 	m_groundRockCount(200u, 400u),
 
 	m_canCreateRain(true),
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
 	m_canCreateRock(true),
-	m_canCreateTree(false),
+	m_canCreateTree(true),
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
@@ -62,55 +62,55 @@ FinalBiome::FinalBiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(true),
-	m_canCreateGrass(false),
+	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Water),
 
-	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(20.f, 200.f)),
+	m_rockSize(sf::Vector2f(10.f, 200.f), sf::Vector2f(20.f, 300.f)),
 	m_rockPartCount(4.f, 8.f),
-	m_rockColor(159, 24, 24),
+	m_rockColor(sf::Color::White),
 
 	m_grassSizeY(60.f, 70.f),
 	m_grassSizeX(14.f, 16.f),
-	m_grassColor(159, 24, 24, 150),
+	m_grassColor(52, 247, 61),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
 	m_treeDepth(6u, 7u),
-	m_treeSize(sf::Vector2f(5.f, 100.f), sf::Vector2f(20.f, 120.f)),
+	m_treeSize(sf::Vector2f(80.f, 100.f), sf::Vector2f(140.f, 300.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(103, 157, 208, 50),
-	m_treeAngle(-180.f, 180.f),
+	m_treeColor(1, 46, 109),
+	m_treeAngle(10.f, 60.f),
 	m_treeBeatMouvement(0.01f),
 	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(150.f, 150.f)),
-	m_leafColor(103, 157, 208, 50),
+	m_leafColor(46, 147, 60, 200),
 
-	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
-	m_mushroomColor(255, 0, 0, 150.f),
+	m_mushroomSize(sf::Vector2f(10.f, 80.f), sf::Vector2f(30.f, 200.f)),
+	m_mushroomColor(158, 202, 131),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
-	m_crystalSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(40.f, 350.f)),
-	m_crystalPartCount(3u, 6u),
-	m_crystalColor(103, 157, 208, 50),
-	m_shineEffectSize(sf::Vector2f(200.f, 200.f), sf::Vector2f(300.f, 300.f)),
+	m_crystalSize(sf::Vector2f(2.f, 100.f), sf::Vector2f(40.f, 200.f)),
+	m_crystalPartCount(6u, 10u),
+	m_crystalColor(248, 195, 0),
+	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(153, 207, 255, 130),
 	m_shineEffectRotateAngle(100.f, 200.f),
 
-	m_cloudSize(sf::Vector2f(50.f, 10.f), sf::Vector2f(100.f, 20.f)),
+	m_cloudSize(sf::Vector2f(100.f, 150.f), sf::Vector2f(400.f, 800.f)),
 	m_cloudPartCount(3u, 5u),
-	m_cloudMaxY(m_waterLevel),
-	m_cloudMinY(m_waterLevel),
+	m_cloudMaxY(1000.f),
+	m_cloudMinY(-1000.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
 
-	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
+	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(105.f, 105.f)),
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
 	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(159, 24, 24),
+	m_sunColor(255, 255, 200),
 
 	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_moonColor(255, 255, 255),
@@ -138,11 +138,7 @@ FinalBiome::FinalBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_gameObjects[25] = GameObjectType::PortalWater;
-	m_gameObjects[120] = GameObjectType::BrayouNpc;
-	m_instances[140] = MAP_WATER_A_TRAIL_OMP;
-	m_gameObjects[610] = GameObjectType::JellyfishNpc;
-	m_gameObjects[580] = GameObjectType::JellyfishNpc;
+	m_instances[800] = MAP_DESERT_A_PYRAMID_OMP;
 
 	m_interestPointPosX = 500;
 
@@ -230,68 +226,8 @@ std::map<std::size_t, std::string> const & FinalBiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> FinalBiome::getLayers()
 {
-	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 12.f, 5, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x / 2.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 12.f, 0, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x / 2.f + 100.f, y + 100.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	/*
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 10.f, -5, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x / 2.f + 200.f, y + 200.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.7f, 0.2f), mapSize, 10.f, -10, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x / 2.f + 300.f, y + 300.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.8f, 0.1f), mapSize, 10.f, -15, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x / 2.f + 400.f, y + 400.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	*/
-	/*
-	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 40, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	mapSize.y = mapSize.y / 2u;
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 12.f, 20, 0.2f, 0.4f, 6.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.7f, 0.2f), mapSize, 12.f, 10, 0.2f, 0.4f, 6.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	*/
 	return vector;
 }
 
@@ -301,8 +237,8 @@ Map::MapSurfaceGenerator FinalBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f, 140.f, 141.f, 639.f, 640.f, m_mapSize.x * 1.f};
-		std::vector<float> pointY = {n  , 0.f  , 3.8f , 3.8f , 0.f  , n};
+		std::vector<float> pointX = {0.f , 299.f, 300.f, 1300.f, 1301.f, 1600.f};
+		std::vector<float> pointY = {20.f, 20.f , n    , n     , 20.f  , n     };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -566,7 +502,17 @@ sf::Color		FinalBiome::getLeafColor()
 
 std::size_t		FinalBiome::getTreePositionX()
 {
-	return randomInt(1u, m_mapSize.x - 1u);
+	int x;
+
+	if (randomBool(0.75f))
+	{
+		x = static_cast<int>(m_generator.randomPiecewise(500.f)) + 300.f;
+	}
+	else
+	{
+		x = static_cast<int>(m_generator.randomPiecewise(350.f)) + 950.f;
+	}
+	return (static_cast<int>(x));
 }
 
 sf::Vector2f	FinalBiome::getCrystalSize()
@@ -581,7 +527,7 @@ std::size_t		FinalBiome::getCrystalPartCount()
 
 sf::Color		FinalBiome::getCrystalColor()
 {
-	return (randomColor(m_crystalColor));
+	return (randomColorLeaf(m_crystalColor));
 }
 
 int				FinalBiome::getCrystalPosX()
