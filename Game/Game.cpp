@@ -55,7 +55,6 @@
 #include "FranGlitchNpc.hpp"
 #include "JuGlitchNpc.hpp"
 #include "LuGlitchNpc.hpp"
-#include "LongChairNpc.hpp"
 #include "Rocket.hpp"
 #include "OctoDeathNpc.hpp"
 #include "CedricEndNpc.hpp"
@@ -430,9 +429,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::LuGlitchNpc:
 			gameObjectCast<LuGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::LongChairNpc:
-			gameObjectCast<LongChairNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::OctoDeathNpc:
 			gameObjectCast<OctoDeathNpc>(gameObject)->collideOctoEvent(octo);
