@@ -1,21 +1,15 @@
 #include "FranfranNpc.hpp"
-#include "RectangleShape.hpp"
-#include "SkyCycle.hpp"
-#include "CircleShape.hpp"
 #include "Progress.hpp"
 
 FranfranNpc::FranfranNpc(void) :
-	ANpc(FRANFRAN_OSS)
+	ASpecialNpc(FRANFRAN_OSS),
+	m_puffTimerMax(sf::seconds(0.8f))
 {
 	setSize(sf::Vector2f(30.f, 145.f));
 	setOrigin(sf::Vector2f(75.f, 100.f));
 	setScale(0.8f);
-	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -50.f));
 	setup();
-
-	m_puffTimerMax = sf::seconds(0.8f);
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void FranfranNpc::setup(void)
@@ -67,58 +61,37 @@ void FranfranNpc::setup(void)
 		setCurrentText(1u);
 }
 
-void FranfranNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idle;
-	StatePtr					special1;
-
-	idle = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-	special1 = std::make_shared<State>("3", getSpecial1Animation(), getSprite());
-
-	machine.setStart(idle);
-	machine.addTransition(Idle, idle, idle);
-	machine.addTransition(Idle, special1, idle);
-
-	machine.addTransition(Special1, special1, special1);
-	machine.addTransition(Special1, idle, special1);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
 void FranfranNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	m_timer += frametime;
 	m_puffTimer += frametime;
-	if (m_timer > sf::seconds(10.f))
-	{
-		m_canSmoke = true;
-		m_timer = sf::Time::Zero;
-	}
-	else
-		m_canSmoke = false;
 
-	updateState();
-	updatePhysics();
-
-	sprite.update(frametime);
-	sf::Vector2f const & center = getBox()->getRenderPosition();
-	sprite.setPosition(center);
 	if (sprite.getCurrentEvent() == Idle)
 	{
-		m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(-50.f, 40.f));
-		m_smoke.setVelocity(sf::Vector2f(0.f, -30.f));
+		if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
+		{
+			m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(80.f, 40.f));
+			m_smoke.setVelocity(sf::Vector2f(0.f, -30.f));
+		}
+		else
+		{
+			m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(-50.f, 40.f));
+			m_smoke.setVelocity(sf::Vector2f(0.f, -30.f));
+		}
 	}
 	else
 	{
-		m_smoke.setPosition(ANpc::getPosition() + sf::Vector2f(-20.f, 50.f));
-		m_smoke.setVelocity(sf::Vector2f(50.f, 0.f));
+		if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
+		{
+			m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(20.f, 50.f));
+			m_smoke.setVelocity(sf::Vector2f(50.f, 0.f));
+		}
+		else
+		{
+			m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(-20.f, 50.f));
+			m_smoke.setVelocity(sf::Vector2f(-50.f, 0.f));
+		}
 	}
 	if (sprite.isTerminated())
 		m_puffTimer = sf::Time::Zero;
@@ -128,38 +101,15 @@ void FranfranNpc::update(sf::Time frametime)
 		m_puff.setCanEmit(true);
 	else
 		m_puff.setCanEmit(false);
-	m_puff.setPosition(ANpc::getPosition() + sf::Vector2f(15.f, 40.f));
+	m_puff.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(15.f, 40.f));
 	m_puff.update(frametime);
 
-	updateText(frametime);
-	resetVariables();
-}
-
-bool FranfranNpc::canSpecial1(void) const
-{
-	if (m_canSmoke == true)
-		return true;
-	return false;
-}
-
-void FranfranNpc::updateState(void)
-{
-	octo::CharacterSprite & sprite = getSprite();
-
-	if (sprite.getCurrentEvent() == Idle && m_canSmoke)
-		sprite.setNextEvent(Special1);
-	else if (sprite.getCurrentEvent() == Special1 && sprite.isTerminated())
-		sprite.setNextEvent(Idle);
-}
-
-void FranfranNpc::updatePhysics(void)
-{
+	ASpecialNpc::update(frametime);
 }
 
 void FranfranNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	ANpc::draw(render, states);
+	ASpecialNpc::draw(render, states);
 	m_smoke.draw(render);
 	m_puff.draw(render);
 }
-

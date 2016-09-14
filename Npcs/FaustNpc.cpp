@@ -3,7 +3,7 @@
 #include <Application.hpp>
 #include <Console.hpp>
 FaustNpc::FaustNpc(void) :
-	ASpecialNpc(NPC_FAUST_OSS)
+	ASpecialNpc(NPC_FAUST_OSS, false)
 {
 	setSize(sf::Vector2f(100.f, 100.f));
 	setOrigin(sf::Vector2f(20.f, 110.f));
