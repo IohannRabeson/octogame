@@ -131,6 +131,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/WindowGlitchNpc.cpp				\
 				Npcs/ASpecialNpc.cpp					\
 				Npcs/AIdleNpc.cpp						\
+				Npcs/AUniqueNpc.cpp						\
 				Npcs/CavemanNpc.cpp						\
 				Npcs/CavemanClimbingNpc.cpp				\
 				Npcs/ElliotNpc.cpp						\

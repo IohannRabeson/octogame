@@ -204,6 +204,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::WellKeeperNpc)
 		| static_cast<std::size_t>(GameObjectType::TurbanNpc)
 		| static_cast<std::size_t>(GameObjectType::Snowman2Npc)
+		| static_cast<std::size_t>(GameObjectType::Npc)
 		| static_cast<std::size_t>(GameObjectType::IdleNpc)
 		| static_cast<std::size_t>(GameObjectType::SpecialNpc);
 	m_eventBox->setCollisionMask(maskEvent);

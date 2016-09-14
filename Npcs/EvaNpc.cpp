@@ -1,8 +1,9 @@
 #include "EvaNpc.hpp"
-#include "RectangleShape.hpp"
 
+#include <Application.hpp>
+#include <Console.hpp>
 EvaNpc::EvaNpc(sf::Color const & color) :
-	ANpc(EVA_OSS)
+	AUniqueNpc(EVA_OSS)
 {
 	setSize(sf::Vector2f(75.f, 325.f));
 	setOrigin(sf::Vector2f(60.f, -150.f));
@@ -12,7 +13,21 @@ EvaNpc::EvaNpc(sf::Color const & color) :
 	setup();
 
 	m_particles.setColor(color);
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	octo::Application::getConsole().addCommand(L"ori", [this](sf::Vector2f const & p)
+	{
+		setOrigin(p);
+		std::cout << "origin " << p.x << " " << p.y << std::endl;
+		});
+	octo::Application::getConsole().addCommand(L"size", [this](sf::Vector2f const & p)
+	{
+		setSize(p);
+		std::cout << "size " << p.x << " " << p.y << std::endl;
+		});
+	octo::Application::getConsole().addCommand(L"texOff", [this](sf::Vector2f const & p)
+	{
+		setTextOffset(p);
+		std::cout << "textOff " << p.x << " " << p.y << std::endl;
+		});
 }
 
 void EvaNpc::setup(void)
@@ -116,10 +131,6 @@ void EvaNpc::updateState(void)
 	}
 	else if (sprite.getCurrentEvent() == Idle)
 	{
-		//if (getCollideEventOcto())
-		//	setDisplayText(true);
-		//else
-		//sprite.setNextEvent(StartSpecial1);
 		if (!getCollideEventOcto())
 			sprite.setNextEvent(StartSpecial1);
 	}

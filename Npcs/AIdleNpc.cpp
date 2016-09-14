@@ -5,8 +5,6 @@ AIdleNpc::AIdleNpc(ResourceKey const & npcId, bool followOcto, bool isMeetable) 
 	ANpc(npcId, isMeetable),
 	m_followOcto(followOcto)
 {
-	setTextOffset(sf::Vector2f(10.f, 150.f));
-	setTimerMax(sf::seconds(8.0f));
 	setupBox(this, static_cast<std::size_t>(GameObjectType::IdleNpc), static_cast<std::size_t>(GameObjectType::Player));
 }
 

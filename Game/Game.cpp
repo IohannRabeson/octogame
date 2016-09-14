@@ -88,7 +88,6 @@
 #include "FaustNpc.hpp"
 #include "WolfNpc.hpp"
 #include "Snowman2Npc.hpp"
-#include "EvaNpc.hpp"
 #include "OldDesertStaticNpc.hpp"
 #include "JellyfishNpc.hpp"
 #include "BirdRedNpc.hpp"
@@ -97,6 +96,7 @@
 #include "IohannNpc.hpp"
 #include "ASpecialNpc.hpp"
 #include "AIdleNpc.hpp"
+#include "AUniqueNpc.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -398,8 +398,13 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 	switch (gameObject->getObjectType())
 	{
 		case GameObjectType::IdleNpc:
+			gameObjectCast<AIdleNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::SpecialNpc:
 			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Npc:
+			gameObjectCast<AUniqueNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::Elevator:
 			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
@@ -488,9 +493,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::FranfranNpc:
 			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::EvaNpc:
-			gameObjectCast<EvaNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::PierreNpc:
 			gameObjectCast<PierreNpc>(gameObject)->collideOctoEvent(octo);
