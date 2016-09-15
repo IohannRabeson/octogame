@@ -52,24 +52,40 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(key));
 
-	m_animationClosed.setFrames({
-		Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-	});
-	m_animationClosed.setLoop(octo::LoopMode::Loop);
-
-	m_animationOpening.setFrames({
-		Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-		Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-	});
-	m_animationOpening.setLoop(octo::LoopMode::NoLoop);
-
 	if (destination == Level::Rewards || destination == Level::Random)
 	{
+		m_animationClosed.setFrames({
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
+		});
+		m_animationClosed.setLoop(octo::LoopMode::Loop);
+	
+		m_animationOpening.setFrames({
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
+		});
+		m_animationOpening.setLoop(octo::LoopMode::NoLoop);
+
 		m_animationOpened.setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
@@ -84,17 +100,66 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
 		});
+		m_animationOpened.setLoop(octo::LoopMode::Loop);
+	}
+	else if (destination == Level::Final)
+	{
+		m_animationClosed.setFrames({
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+		});
+		m_animationClosed.setLoop(octo::LoopMode::Loop);
+	
+		m_animationOpening.setFrames({
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+		});
+		m_animationOpening.setLoop(octo::LoopMode::NoLoop);
+
+		m_animationOpened.setFrames({
+			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+		});
+		m_animationOpened.setLoop(octo::LoopMode::Loop);
 	}
 	else
 	{
+		m_animationClosed.setFrames({
+			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
+		});
+		m_animationClosed.setLoop(octo::LoopMode::Loop);
+	
+		m_animationOpening.setFrames({
+			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
+		});
+		m_animationOpening.setLoop(octo::LoopMode::NoLoop);
+
 		m_animationOpened.setFrames({
 			Frame(sf::seconds(0.8f), {0u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.8f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.8f), {2u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.8f), {3u, sf::FloatRect(), sf::Vector2f()}),
 		});
+		m_animationOpened.setLoop(octo::LoopMode::Loop);
 	}
-	m_animationOpened.setLoop(octo::LoopMode::Loop);
 
 	//Setup state machine
 
@@ -125,7 +190,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
 
-	if (!progress.isMetPortal(m_destination) && destination != Level::Rewards && destination != Level::Random)
+	if (!progress.isMetPortal(m_destination))
 		m_sprite.setNextEvent(Closed);
 	else
 		m_sprite.setNextEvent(Opened);
