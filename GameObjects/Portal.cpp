@@ -102,7 +102,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 		});
 		m_animationOpened.setLoop(octo::LoopMode::Loop);
 	}
-	else if (destination == Level::Final)
+	else if (destination == Level::Red || destination == Level::Blue)
 	{
 		m_animationClosed.setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),

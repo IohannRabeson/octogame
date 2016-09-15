@@ -529,9 +529,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				std::unique_ptr<Portal> portal;
 				if (!decor.name.compare("object_portal_red.oss"))
-					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_red", sf::Color::Red));
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_red", sf::Color(155, 0, 0)));
 				else if (!decor.name.compare("object_portal_blue.oss"))
-					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_blue", sf::Color::Blue));
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_blue", sf::Color(0, 0, 155)));
 				else
 					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), VORTEX_FRAG));
 				portal->setBiome(biome);
