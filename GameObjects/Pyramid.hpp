@@ -2,12 +2,15 @@
 # define PYRAMID_HPP
 
 # include "InstanceDecor.hpp"
-# include "ElevatorStream.hpp"
+# include "BeamSystem.hpp"
+# include "ABiome.hpp"
+
+class BeamSystem;
 
 class Pyramid : public InstanceDecor
 {
 public:
-	Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position);
+	Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome);
 	virtual ~Pyramid(void) = default;
 
 	virtual void addMapOffset(float x, float y);
@@ -17,6 +20,7 @@ public:
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
+	std::shared_ptr<BeamSystem>			m_particles;
 	octo::AnimatedSprite				m_spriteTop;
 	octo::SpriteAnimation				m_animationTop;
 	octo::AnimatedSprite				m_spriteWater;

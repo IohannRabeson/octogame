@@ -144,7 +144,7 @@ FinalBiome::FinalBiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::WaterC);
-	m_destinations.push_back(Level::JungleD);
+	m_destinations.push_back(Level::WaterC);
 }
 
 void			FinalBiome::setup(std::size_t seed)
