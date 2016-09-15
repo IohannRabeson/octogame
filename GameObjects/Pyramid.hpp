@@ -2,6 +2,7 @@
 # define PYRAMID_HPP
 
 # include "InstanceDecor.hpp"
+# include "ElevatorStream.hpp"
 
 class Pyramid : public InstanceDecor
 {

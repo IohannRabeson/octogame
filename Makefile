@@ -239,6 +239,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/WaterDropSystem.cpp				\
 				Decors/StarSystem.cpp					\
 				Decors/WaterCascadeSystem.cpp			\
+				Decors/BeamSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
