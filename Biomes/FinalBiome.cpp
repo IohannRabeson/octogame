@@ -14,7 +14,8 @@ FinalBiome::FinalBiome() :
 	m_seed("Final"),
 	m_mapSize(sf::Vector2u(1600u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(450.f * 16.f, -50.f),
+	//m_octoStartPosition(450.f * 16.f, -50.f),
+	m_octoStartPosition(800.f * 16.f, -50.f),
 	m_transitionDuration(3.0f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(58, 0, 92),
@@ -142,7 +143,6 @@ FinalBiome::FinalBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::WaterC);
 	m_destinations.push_back(Level::JungleD);
 }
