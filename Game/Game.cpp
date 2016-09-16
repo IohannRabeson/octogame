@@ -308,7 +308,6 @@ void	Game::update(sf::Time frameTime)
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
 	m_konami->update(realFrameTime, m_octo->getPosition());
-	//m_octo->startKonamiCode(m_konami->canStartEvent()); TODO: Useless?
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
 }
 
