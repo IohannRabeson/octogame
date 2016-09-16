@@ -284,6 +284,7 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	sf::Time const realFrameTime = frameTime;
 	m_octo->resetCollidingTileCount();
 	//std::cout << "GAME UPDATE" << std::endl;
 	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
@@ -300,13 +301,13 @@ void	Game::update(sf::Time frameTime)
 	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 100.f));
-	m_octo->update(frameTime);
+	m_octo->update(frameTime, realFrameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
 	moveMap(frameTime);
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
-	m_konami->update(frameTime, m_octo->getPosition());
+	m_konami->update(realFrameTime, m_octo->getPosition());
 	//m_octo->startKonamiCode(m_konami->canStartEvent()); TODO: Useless?
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
 }

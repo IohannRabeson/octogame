@@ -71,9 +71,10 @@ void SunLight::setup(ABiome& biome)
 	m_sunsetPos = sf::Vector2f(0.f, -m_cameraSize.y * 2.f);
 	m_colorNight = biome.getNightLightColor();
 	m_colorSunset = biome.getSunsetLightColor();
-	m_colorDay = sf::Color::Transparent;
-
-	m_colorDay = biome.getSunsetLightColor();
+	if (Progress::getInstance().getCurrentDestination() != Level::Final)
+		m_colorDay = sf::Color::Transparent;
+	else
+		m_colorDay = biome.getSunsetLightColor();
 
 	//TODO: Not clean, to add in biome
 	if (Progress::getInstance().getCurrentDestination() == Level::Final)

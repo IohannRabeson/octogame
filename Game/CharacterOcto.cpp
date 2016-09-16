@@ -885,7 +885,7 @@ void	CharacterOcto::setupMachine()
 	m_sprite.setMachine(machine);
 }
 
-void	CharacterOcto::update(sf::Time frameTime)
+void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 {
 	Progress & progress = Progress::getInstance();
 	if (progress.isMenu())
@@ -1004,7 +1004,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	progress.setOctoPos(getPosition());
 
 	replaceOcto();
-	updateCutscene(frameTime);
+	updateCutscene(realFrameTime);
 }
 
 void	CharacterOcto::replaceOcto(void)
@@ -1056,8 +1056,6 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
 	if (isFinalEvent())
 		enableCutscene(true, false);
-	else
-		enableCutscene(false, false);
 
 	if (m_enableCutscene)
 	{
