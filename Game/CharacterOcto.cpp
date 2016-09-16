@@ -1054,8 +1054,7 @@ void	CharacterOcto::replaceOcto(void)
 
 void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
-	Progress const & progress = Progress::getInstance();
-	if (progress.getCurrentDestination() == Level::Final && (getPosition().x > 805.f * 16.f && getPosition().x < 905.f * 16.f))
+	if (isFinalEvent())
 		enableCutscene(true, false);
 	else
 		enableCutscene(false, false);
@@ -1079,6 +1078,14 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 		if (m_cutsceneTimer <= sf::Time::Zero)
 			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
 	}
+}
+
+bool	CharacterOcto::isFinalEvent()
+{
+	Progress const & progress = Progress::getInstance();
+	if (progress.getCurrentDestination() == Level::Final && (getPosition().x > 805.f * 16.f && getPosition().x < 905.f * 16.f))
+		return true;
+	return false;
 }
 
 void	CharacterOcto::portalEvent()

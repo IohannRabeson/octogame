@@ -100,6 +100,7 @@ public:
 	bool					isMeetingNpc(void) const;
 	bool					isCollidingPortal(void) const;
 	bool					isStopFollowCamera(void) const;
+	bool					isFinalEvent(void);
 	void					stopFollowCamera(bool stop);
 	void					endInRocket(void);
 	void					meetNpc(bool meetNpc);
