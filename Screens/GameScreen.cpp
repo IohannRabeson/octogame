@@ -68,7 +68,21 @@ void	GameScreen::update(sf::Time frameTime)
 		if (progress.changeLevel())
 		{
 			progress.levelChanged();
-			states.change("transitionLevel");
+			if (progress.getNextDestination() == Level::Blue || progress.getLastDestination() == Level::Blue)
+			{
+				states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.f));
+				states.change("transitionLevel", "blue");
+			}
+			else if (progress.getNextDestination() == Level::Red || progress.getLastDestination() == Level::Red)
+			{
+				states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.f));
+				states.change("transitionLevel", "red");
+			}
+			else
+			{
+				states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
+				states.change("transitionLevel");
+			}
 		}
 	}
 }

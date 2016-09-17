@@ -6,6 +6,7 @@
 #include "ResourceDefinitions.hpp"
 
 SkyCycle::SkyCycle(void) :
+	m_isTimerStart(false),
 	m_isDay(true),
 	m_isMidDay(false),
 	m_isMidNight(false),
@@ -76,9 +77,15 @@ void SkyCycle::setup(ABiome & biome)
 {
 	m_timerMax = biome.getDayDuration();
 	if (biome.getStartDayDuration() == sf::Time::Zero)
+	{
+		m_isTimerStart = false;
 		m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
+	}
 	else
+	{
+		m_isTimerStart = true;
 		m_timerStart = biome.getStartDayDuration();
+	}
 	m_timerDayMax = m_timerMax / 4.f;
 	m_timerNightMax = m_timerMax / 4.f;
 	newDropCycle(biome);
@@ -100,6 +107,11 @@ void SkyCycle::setup(ABiome & biome)
 void SkyCycle::computeDayNight(sf::Time frameTime)
 {
 	float speedCoef = m_timerMax.asSeconds() / 100.f * m_timerStart.asSeconds();
+
+	//TODO: It just minimize the flash effect, it dont delete it
+	// And carefull it may not work related to a short dayTimer
+	if (m_isTimerStart)
+		speedCoef *= 20.f;
 	if (speedCoef >= 1.f)
 		frameTime *= speedCoef;
 	m_timerStart -= frameTime;

@@ -74,12 +74,29 @@ void	TransitionLevelScreen::stop()
 
 void	TransitionLevelScreen::update(sf::Time frameTime)
 {
+	Progress const & progress = Progress::getInstance();
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::StateManager &		states = octo::Application::getStateManager();
 
 	m_timeTransition += frameTime;
 	if (m_timeTransition > m_timeTransitionMax)
-		states.change("game");
+	{
+		if (progress.getNextDestination() == Level::Blue || progress.getLastDestination() == Level::Blue)
+		{
+			states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(0.5f));
+			states.change("game", "blue");
+		}
+		else if (progress.getNextDestination() == Level::Red || progress.getLastDestination() == Level::Red)
+		{
+			states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(0.5f));
+			states.change("game", "red");
+		}
+		else
+		{
+			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
+			states.change("game");
+		}
+	}
 	else
 	{
 		audio.setSoundVolume(octo::linearInterpolation(m_volumeDefault, 0.f, std::pow(m_timeTransition / m_timeTransitionMax, 2)));
@@ -90,7 +107,15 @@ void	TransitionLevelScreen::update(sf::Time frameTime)
 
 void	TransitionLevelScreen::draw(sf::RenderTarget& render)const
 {
-	render.clear();
+	Progress const & progress = Progress::getInstance();
+
+	if (progress.getNextDestination() == Level::Blue || progress.getLastDestination() == Level::Blue || progress.getCurrentDestination() == Level::Blue)
+		render.clear(sf::Color(0, 0, 155));
+	else if (progress.getNextDestination() == Level::Red || progress.getLastDestination() == Level::Red || progress.getCurrentDestination() == Level::Blue)
+		render.clear(sf::Color(155, 0, 0));
+	else
+		render.clear();
+
 	if (m_timeTransition <= m_timeTransitionMax)
 		render.draw(m_sprite);
 }

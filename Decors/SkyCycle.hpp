@@ -49,6 +49,7 @@ private:
 	sf::Time							m_timer;
 	sf::Time							m_timerMax;
 	sf::Time							m_timerStart;
+	bool								m_isTimerStart;
 	bool								m_isDay;
 	bool								m_isMidDay;
 	sf::Time							m_timerDay;
