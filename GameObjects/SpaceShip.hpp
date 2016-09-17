@@ -30,6 +30,7 @@ public:
 
 	void move(sf::Vector2f const & translation);
 	void update(sf::Time frameTime);
+	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
@@ -39,7 +40,7 @@ private:
 	MusicSystem					m_music;
 	SpaceShipEvents				m_event;
 	CircleShape *				m_box;
-
+	bool						m_isFinal;
 };
 
 #endif
