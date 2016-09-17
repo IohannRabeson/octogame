@@ -11,19 +11,19 @@ if len(sys.argv) != 2:
   exit();
 
 mypath = sys.argv[1]
-var_name = "m_cloudMaxY"
-type_name = "float"
-func_name = "getCloudMaxY()"
-return_name = "float"
-init_value = "-1000.f"
+var_name = "m_dayLightColor"
+type_name = "sf::Color"
+func_name = "getDayLightColor()"
+return_name = "sf::Color"
+init_value = "sf::Color::Transparent"
 
 def add_line_hpp(filename):
   for line in fileinput.input(mypath + filename, inplace=1):
-    if line.find('getCloudPartCount()') != -1:
+    if line.find('getNightLightColor()') != -1:
     #add prototype of the fonction
       print line,
       print "\tvirtual " + return_name + "\t\t\t\t\t\t\t\t\t" + func_name + ";"
-    elif line.find('m_cloudPartCount') != -1:
+    elif line.find('m_nightLightColor') != -1:
     #add variable definition
       print line,
       print "\t" + type_name + "\t\t\t\t\t\t\t\t\t\t\t" + var_name + ";"
@@ -33,11 +33,11 @@ def add_line_hpp(filename):
 def add_line_cpp(filename):
   skip_line = False
   for line in fileinput.input(mypath + filename, inplace=1):
-    if line.find('m_cloudPartCount(') != -1:
+    if line.find('m_nightLightColor(') != -1:
     #init variable in constructor
       print line,
       print "\t" + var_name + "(" + init_value + "),"
-    elif line.find('m_cloudPartCount));') != -1:
+    elif line.find('m_nightLightColor);') != -1:
       skip_line = True
       print line,
     elif skip_line == True:

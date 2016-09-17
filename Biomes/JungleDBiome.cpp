@@ -30,6 +30,7 @@ JungleDBiome::JungleDBiome() :
 	m_skyDayColor(251, 253, 26),
 	m_skyNightColor(195, 197, 18),
 	m_nightLightColor(0, 0, 0, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 182, 0, 100),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -374,6 +375,11 @@ sf::Color		JungleDBiome::getSkyNightColor()
 sf::Color		JungleDBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	JungleDBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		JungleDBiome::getSunsetLightColor()

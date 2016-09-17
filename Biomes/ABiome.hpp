@@ -92,6 +92,7 @@ public:
 	virtual sf::Color									getSkyDayColor() = 0;
 	virtual sf::Color									getSkyNightColor() = 0;
 	virtual sf::Color									getNightLightColor() = 0;
+	virtual sf::Color									getDayLightColor() = 0;
 	virtual sf::Color									getSunsetLightColor() = 0;
 
 	virtual float										getWind() = 0;

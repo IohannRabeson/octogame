@@ -34,6 +34,7 @@ RewardsBiome::RewardsBiome() :
 	m_skyDayColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_skyNightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_nightLightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -385,6 +386,11 @@ sf::Color		RewardsBiome::getSkyNightColor()
 sf::Color		RewardsBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	RewardsBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		RewardsBiome::getSunsetLightColor()

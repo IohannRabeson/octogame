@@ -30,6 +30,7 @@ DesertDBiome::DesertDBiome() :
 	m_skyDayColor(255, 150, 242),
 	m_skyNightColor(166, 10, 92),
 	m_nightLightColor(134, 63, 215, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 59, 59, 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -365,6 +366,11 @@ sf::Color		DesertDBiome::getSkyNightColor()
 sf::Color		DesertDBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	DesertDBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		DesertDBiome::getSunsetLightColor()

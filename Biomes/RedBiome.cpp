@@ -30,6 +30,7 @@ RedBiome::RedBiome() :
 	m_skyDayColor(108, 108, 108),
 	m_skyNightColor(78, 78, 78),
 	m_nightLightColor(50, 0, 0, 70),
+	m_dayLightColor(sf::Color::Transparent),
 	m_sunsetLightColor(200, 0, 0, 70),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -327,6 +328,11 @@ sf::Color		RedBiome::getSkyNightColor()
 sf::Color		RedBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	RedBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		RedBiome::getSunsetLightColor()

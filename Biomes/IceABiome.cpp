@@ -30,6 +30,7 @@ IceABiome::IceABiome() :
 	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(78, 47, 4, 130),
 	m_nightLightColor(8, 20, 26, 50),
+	m_dayLightColor(sf::Color::Transparent),
 	m_sunsetLightColor(61, 0, 13, 20),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -353,6 +354,11 @@ sf::Color		IceABiome::getSkyNightColor()
 sf::Color		IceABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	IceABiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		IceABiome::getSunsetLightColor()

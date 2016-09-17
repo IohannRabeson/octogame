@@ -14,8 +14,8 @@ FinalBiome::FinalBiome() :
 	m_seed("Final"),
 	m_mapSize(sf::Vector2u(1600u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(750.f * 16.f, -50.f),
-	//m_octoStartPosition(350.f * 16.f, -50.f),
+	//m_octoStartPosition(750.f * 16.f, -50.f),
+	m_octoStartPosition(350.f * 16.f, -50.f),
 	m_transitionDuration(3.0f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(58, 0, 92),
@@ -30,6 +30,7 @@ FinalBiome::FinalBiome() :
 	m_skyDayColor(52, 247, 61),
 	m_skyNightColor(52, 247, 61),
 	m_nightLightColor(103, 0, 154, 140),
+	m_dayLightColor(52, 247, 61, 100),
 	m_SunsetLightColor(52, 247, 61, 180),
 	m_wind(30.f),
 	m_rainDropPerSecond(20u, 35u),
@@ -345,6 +346,11 @@ sf::Color		FinalBiome::getSkyNightColor()
 sf::Color		FinalBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	FinalBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		FinalBiome::getSunsetLightColor()

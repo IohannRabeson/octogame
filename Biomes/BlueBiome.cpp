@@ -30,6 +30,7 @@ BlueBiome::BlueBiome() :
 	m_skyDayColor(108, 108, 108),
 	m_skyNightColor(78, 78, 78),
 	m_nightLightColor(0, 0, 50, 70),
+	m_dayLightColor(0, 0, 200, 255),
 	m_sunsetLightColor(0, 0, 200, 70),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -327,6 +328,11 @@ sf::Color		BlueBiome::getSkyNightColor()
 sf::Color		BlueBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	BlueBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		BlueBiome::getSunsetLightColor()
