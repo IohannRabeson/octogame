@@ -2,6 +2,7 @@
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
 #include "CircleShape.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
@@ -22,8 +23,16 @@ SpaceShip::SpaceShip(SpaceShipEvents event) :
 								Frame(sf::seconds(0.2f), 2u),
 								Frame(sf::seconds(0.2f), 3u)});
 		m_animation.setLoop(octo::LoopMode::Loop);
-		m_smoke.setup(sf::Vector2f(10.f, 10.f));
-		m_smoke.setVelocity(sf::Vector2f(0.f, -140.f));
+		if (!Progress::getInstance().canRepairShip())
+		{
+			m_smoke.setup(sf::Vector2f(10.f, 10.f));
+			m_smoke.setVelocity(sf::Vector2f(0.f, -140.f));
+		}
+		else
+		{
+			m_smoke.setup(sf::Vector2f(12.f, 12.f));
+			m_smoke.setVelocity(sf::Vector2f(0.f, -400.f));
+		}
 		m_box = PhysicsEngine::getShapeBuilder().createCircle(false);
 		m_box->setGameObject(this);
 		m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::SpaceShip));

@@ -149,7 +149,7 @@ DesertDBiome::DesertDBiome() :
 	m_gameObjects[30] = GameObjectType::PortalJungle;
 	m_gameObjects[110] = GameObjectType::PortalDesert;
 	m_instances[120] = MAP_DESERT_D_TRAIL_OMP;
-	m_instances[15] = MAP_DESERT_D_PORTAL_OMP;
+	m_instances[15] = MAP_DESERT_D_SECRET_PORTAL_OMP;
 
 	m_interestPointPosX = 500;
 

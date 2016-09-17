@@ -137,7 +137,7 @@ JungleDBiome::JungleDBiome() :
 
 	// Define game objects
 	m_instances[230] = MAP_JUNGLE_D_TRAIL_OMP;
-	m_instances[40] = MAP_JUNGLE_D_GUI_OMP;
+	m_instances[40] = MAP_JUNGLE_D_LU_OMP;
 	m_gameObjects[30] = GameObjectType::PortalJungle;
 	m_gameObjects[40] = GameObjectType::BirdRedNpc;
 	m_gameObjects[145] = GameObjectType::OverCoolNpc;
