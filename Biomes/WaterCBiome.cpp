@@ -26,7 +26,7 @@ WaterCBiome::WaterCBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(3, 57, 108),
 	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
@@ -373,7 +373,7 @@ sf::Time		WaterCBiome::getDayDuration()
 
 sf::Time		WaterCBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		WaterCBiome::getSkyDayColor()

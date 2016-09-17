@@ -26,7 +26,7 @@ DesertABiome::DesertABiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(255, 150, 242),
 	m_skyNightColor(166, 10, 92),
 	m_nightLightColor(134, 63, 215, 130),
@@ -348,7 +348,7 @@ sf::Time		DesertABiome::getDayDuration()
 
 sf::Time		DesertABiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		DesertABiome::getSkyDayColor()

@@ -26,7 +26,7 @@ IceCBiome::IceCBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(60.f)),
-	m_startDayDuration(sf::seconds(9.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(255, 154, 0),
 	m_skyNightColor(255, 154, 0),
 	m_nightLightColor(8, 20, 26, 50),

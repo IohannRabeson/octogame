@@ -26,7 +26,7 @@ JungleABiome::JungleABiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(252, 252, 190),
 	m_skyNightColor(175, 177, 18),
 	m_nightLightColor(0, 0, 0, 130),
@@ -345,7 +345,7 @@ sf::Time		JungleABiome::getDayDuration()
 
 sf::Time		JungleABiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		JungleABiome::getSkyDayColor()

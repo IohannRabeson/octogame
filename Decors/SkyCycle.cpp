@@ -75,7 +75,10 @@ bool SkyCycle::isNight(void) const
 void SkyCycle::setup(ABiome & biome)
 {
 	m_timerMax = biome.getDayDuration();
-	m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
+	if (biome.getStartDayDuration() == sf::Time::Zero)
+		m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
+	else
+		m_timerStart = biome.getStartDayDuration();
 	m_timerDayMax = m_timerMax / 4.f;
 	m_timerNightMax = m_timerMax / 4.f;
 	newDropCycle(biome);

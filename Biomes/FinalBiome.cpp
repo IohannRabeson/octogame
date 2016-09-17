@@ -26,7 +26,7 @@ FinalBiome::FinalBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(52, 247, 61),
 	m_skyNightColor(52, 247, 61),
 	m_nightLightColor(103, 0, 154, 140),
@@ -330,7 +330,7 @@ sf::Time		FinalBiome::getDayDuration()
 
 sf::Time		FinalBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		FinalBiome::getSkyDayColor()
