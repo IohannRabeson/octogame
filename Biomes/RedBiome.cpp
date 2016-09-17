@@ -25,8 +25,8 @@ RedBiome::RedBiome() :
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(35.f)),
-	m_startDayDuration(sf::seconds(20.f)),
+	m_dayDuration(sf::seconds(60.f)),
+	m_startDayDuration(sf::seconds(35.f)),
 	m_skyDayColor(108, 108, 108),
 	m_skyNightColor(78, 78, 78),
 	m_nightLightColor(50, 0, 0, 70),
