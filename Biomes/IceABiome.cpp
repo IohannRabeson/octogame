@@ -146,8 +146,10 @@ IceABiome::IceABiome() :
 		m_instances[120] = MAP_ICE_A_CRATER_FINAL_OMP;
 	m_instances[220] = MAP_ICE_A_TRAIL_RIGHT_OMP;
 
+	if (progress.getLastDestination() == Level::Blue)
+		m_octoStartPosition = sf::Vector2f(142.f * 16.f, -1180.f);
 	if (progress.getLastDestination() == Level::IceB)
-		m_octoStartPosition = sf::Vector2f(423 * 16.f, 0.f);
+		m_octoStartPosition = sf::Vector2f(423.f * 16.f, 0.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(404.f * 16.f, -1250.f);
 
