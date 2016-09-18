@@ -62,9 +62,6 @@ public:
 	void				setLastDestination(Level destination);
 	Level				getLastDestination(void) const;
 
-	bool				isBlue(void) const;
-	bool				isRed(void) const;
-
 	void				walk(void) { m_data.walk = true; };
 	void				moveMap(void) { m_data.moveMap = true; };
 

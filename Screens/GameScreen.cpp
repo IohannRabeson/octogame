@@ -10,7 +10,7 @@
 
 GameScreen::GameScreen(void) :
 	m_doSave(false),
-	m_timerRedBlueMax(sf::seconds(38.f))
+	m_timerRedBlueMax(sf::seconds(30.f))
 {}
 
 void	GameScreen::start()
@@ -75,15 +75,20 @@ void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
 {
 	if (progress.changeLevel())
 	{
+		Level current = progress.getCurrentDestination();
+		Level next = progress.getNextDestination();
+
 		progress.levelChanged();
-		if (progress.isBlue())
+		if (current == Level::Blue || next == Level::Blue)
 		{
-			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.f));
+			if (next == Level::Blue)
+				states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(0.0f));
 			states.change("transitionLevel", "blue");
 		}
-		else if (progress.isRed())
+		else if (current == Level::Red || next == Level::Red)
 		{
-			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.f));
+			if (next == Level::Red)
+				states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(0.f));
 			states.change("transitionLevel", "red");
 		}
 		else
@@ -96,13 +101,16 @@ void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
 
 void GameScreen::timeLevelBlueRed(sf::Time frameTime, Progress & progress)
 {
-	if (progress.isBlue())
+	Level current = progress.getCurrentDestination();
+	Level next = progress.getNextDestination();
+
+	if (current == Level::Blue || next == Level::Blue)
 	{
 		m_timerBlue += frameTime;
 		if (m_timerBlue >= m_timerRedBlueMax)
 			progress.setNextDestination(Level::IceA);
 	}
-	else if (progress.isRed())
+	else if (current == Level::Red || next == Level::Red)
 	{
 		m_timerRed += frameTime;
 		if (m_timerRed >= m_timerRedBlueMax)

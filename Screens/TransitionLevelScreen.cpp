@@ -43,6 +43,8 @@ void	TransitionLevelScreen::start()
 	sf::Vector2f const&			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 	sf::Vector2f				scale = sf::Vector2f(0.6f, 0.6f);
 	Progress const &			progress = Progress::getInstance();
+	Level						current = progress.getCurrentDestination();
+	Level						next = progress.getNextDestination();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(OCTO_DEATH_OSS));
 	m_sprite.setAnimation(m_animation);
@@ -54,7 +56,8 @@ void	TransitionLevelScreen::start()
 	}
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
-	if (!progress.isBlue() && !progress.isRed())
+
+	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
 		m_sound = audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_OGG), 0.5f);
 }
 
@@ -95,14 +98,23 @@ void	TransitionLevelScreen::changeState(void)
 	Progress const & progress = Progress::getInstance();
 	octo::StateManager &		states = octo::Application::getStateManager();
 
-	if (progress.isBlue())
+	Level current = progress.getCurrentDestination();
+	Level next = progress.getNextDestination();
+
+	if (current == Level::Blue || next == Level::Blue)
 	{
-		states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(0.5f));
+		if (next != Level::Blue)
+			states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(2.5f));
+		else
+			states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(0.0f));
 		states.change("game", "blue");
 	}
-	else if (progress.isRed())
+	else if (current == Level::Red || next == Level::Red)
 	{
-		states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(0.5f));
+		if (next != Level::Red)
+			states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(2.5f));
+		else
+			states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(0.0f));
 		states.change("game", "red");
 	}
 	else
@@ -115,10 +127,12 @@ void	TransitionLevelScreen::changeState(void)
 void	TransitionLevelScreen::draw(sf::RenderTarget& render)const
 {
 	Progress const & progress = Progress::getInstance();
+	Level current = progress.getCurrentDestination();
+	Level next = progress.getNextDestination();
 
-	if (progress.isBlue())
+	if (current == Level::Blue || next == Level::Blue)
 		render.clear(sf::Color(0, 0, 155));
-	else if (progress.isRed())
+	else if (current == Level::Red || next == Level::Red)
 		render.clear(sf::Color(155, 0, 0));
 	else
 	{

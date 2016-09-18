@@ -272,7 +272,10 @@ void	Game::loadLevel(void)
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
 
-	if (!progress.isBlue() && progress.isRed())
+
+	Level current = progress.getCurrentDestination();
+	Level next = progress.getNextDestination();
+	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
 		audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
 	m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
 	m_soundGeneration->setLoop(true);
