@@ -38,17 +38,23 @@ void GroundRock::setup(ABiome& biome)
 {
 	m_type = biome.randomInt(0u, 4u);
 	if (m_onInstance == false)
-		m_deep = biome.randomFloat(16.f, octo::Camera().getSize().y);
+	{
+		//TODO: Add to biome
+		if (biome.getId() != Level::Final)
+			m_deep = biome.randomFloat(16.f, octo::Camera().getSize().y);
+		else
+			m_deep = biome.randomFloat(16.f, 16 * 15.f);
+	}
 	else
 		m_deep = 0.f;
 	m_color = biome.getRockColor();
 }
 
-void GroundRock::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
+void GroundRock::update(sf::Time, octo::VertexBuilder& builder, ABiome& biome)
 {
 	sf::Vector2f position = getPosition();
 	position.y -= Tile::TileSize;
 	//TODO:: Add to biome
-	if (Progress::getInstance().getCurrentDestination() != Level::IceC)
+	if (biome.getId() != Level::IceC)
 		createGroundRock(m_type, position + sf::Vector2f(0.f, m_deep), m_color, builder);
 }

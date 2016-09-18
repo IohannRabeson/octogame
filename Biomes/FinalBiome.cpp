@@ -12,10 +12,10 @@ FinalBiome::FinalBiome() :
 	m_name("Final"),
 	m_id(Level::Final),
 	m_seed("Final"),
-	m_mapSize(sf::Vector2u(1600u, 16u)),
+	m_mapSize(sf::Vector2u(1400u, 16u)),
 	m_mapSeed(42u),
 	//m_octoStartPosition(750.f * 16.f, -50.f),
-	m_octoStartPosition(350.f * 16.f, -50.f),
+	m_octoStartPosition(1300.f * 16.f, -50.f),
 	m_transitionDuration(3.0f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(58, 0, 92),
@@ -142,6 +142,7 @@ FinalBiome::FinalBiome() :
 	m_instances[800] = MAP_FINAL_PYRAMID_OMP;
 	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
 	m_instances[50] = MAP_FINAL_LEFT_OMP;
+	m_instances[1300] = MAP_FINAL_RIGHT_OMP;
 
 	std::vector<GameObjectType> object = {GameObjectType::ForestSpirit1Npc, GameObjectType::ForestSpirit2Npc, GameObjectType::FranGlitchNpc, GameObjectType::JuGlitchNpc, GameObjectType::LuGlitchNpc, GameObjectType::WindowGlitchNpc};
 
@@ -247,7 +248,7 @@ Map::MapSurfaceGenerator FinalBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float m = n * 5.f;
-		std::vector<float> pointX = {0.f  , 299.f, 300.f, 350.f, 750.f, 805.f, 945.f, 1000.f, 1350.f, 1300.f, 1301.f, 1600.f};
+		std::vector<float> pointX = {0.f  , 299.f, 300.f, 350.f, 750.f, 805.f, 945.f, 1000.f, 1250.f, 1299.f, 1300.f, 1400.f};
 		std::vector<float> pointY = {900.f, 900.f, 1.1f , n    , m    , -3.4f, -3.5f, m     , n     , 1.1f  , 900.f , 900.f };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
@@ -266,46 +267,37 @@ Map::MapSurfaceGenerator FinalBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator FinalBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = getRockColor();
-	sf::Color secondColorEnd = getRockColor();
-	sf::Color thirdColorStart(53, 107, 208);
-	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -1900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -1200.f / static_cast<float>(m_mapSize.y);
-	float middle1 = 0.f / static_cast<float>(m_mapSize.y);
-	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
-	float end1 = 1000.f / static_cast<float>(m_mapSize.y);
-	float end2 = 1700.f / static_cast<float>(m_mapSize.y);
-	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
+	sf::Color secondColorStart = getLeafColor();
+	sf::Color secondColorEnd = getLeafColor();
+	float startTransition = 200.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 800.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 1700.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		if (y <= start1)
-			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
-		else if (y > start1 && y <= start2)
+		sf::Color color;
+
+		if (y > startTransition && y <= middleTransition)
 		{
-			float ratio = (y - (start1)) / (start2 - start1);
-			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
+			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
+			color = octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
 		}
-		else if (y > start2 && y <= middle1)
+		else if (y > middleTransition && y <= endTransition)
 		{
-			float ratio = (y - (start2)) / (middle1 - start2);
-			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
+			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
+			color = octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
 		}
-		else if (y > middle1 && y <= middle2)
+		else if (y > endTransition)
+			color = octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
+		else
+			color = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
+
+		if (x > 1200.f && x <= 1400.f)
 		{
-			return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
+			float ratio = (x - 1200.f) / (1400.f - 1200.f);
+			color = octo::linearInterpolation(octo::linearInterpolation(color, secondColorStart, ratio), color, transition);
 		}
-		else if (y >= middle2 && y < end1)
-		{
-			float ratio = (y - (middle2)) / (end1 - middle2);
-			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, thirdColorStart, ratio), m_tileEndColor, transition);
-		}
-		else if (y >= end1 && y < end2)
-		{
-			float ratio = (y - (end1)) / (end2 - end1);
-			return octo::linearInterpolation(thirdColorStart, octo::linearInterpolation(m_tileEndColor, thirdColorEnd, ratio), transition);
-		}
-		return octo::linearInterpolation(thirdColorStart, thirdColorEnd, transition);
+		return color;
 	};
 }
 
