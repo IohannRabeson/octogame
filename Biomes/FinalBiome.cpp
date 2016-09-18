@@ -21,7 +21,7 @@ FinalBiome::FinalBiome() :
 	m_tileStartColor(58, 0, 92),
 	m_tileEndColor(109, 0, 179),
 	m_waterLevel(-1.f),
-	m_waterColor(3, 57, 108, 130),
+	m_waterColor(255, 255, 255, 100),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 

@@ -1056,6 +1056,8 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
 	if (isFinalEvent())
 		enableCutscene(true, false);
+	else if (m_enableCutscene)
+		enableCutscene(false, false);
 
 	if (m_enableCutscene)
 	{
@@ -1584,9 +1586,9 @@ void	CharacterOcto::inWater()
 	{
 		emit = true;
 		m_inWater = false;
-		m_waterParticle.canEmit(true);
+			m_waterParticle.canEmit(true);
 	}
-	if (emit && !progress.isInCloud())
+	if (emit && !progress.isInCloud() && m_waterLevel != -1.f)
 		m_ploufParticle.canEmit(true);
 }
 
