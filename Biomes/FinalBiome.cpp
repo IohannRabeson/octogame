@@ -140,6 +140,8 @@ FinalBiome::FinalBiome() :
 
 	// Define game objects
 	m_instances[800] = MAP_FINAL_PYRAMID_OMP;
+	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
+	m_instances[50] = MAP_FINAL_LEFT_OMP;
 
 	std::vector<GameObjectType> object = {GameObjectType::ForestSpirit1Npc, GameObjectType::ForestSpirit2Npc, GameObjectType::FranGlitchNpc, GameObjectType::JuGlitchNpc, GameObjectType::LuGlitchNpc, GameObjectType::WindowGlitchNpc};
 
@@ -245,8 +247,8 @@ Map::MapSurfaceGenerator FinalBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float m = n * 5.f;
-		std::vector<float> pointX = {0.f  , 299.f, 300.f, 750.f, 805.f, 945.f, 1000.f, 1300.f, 1301.f, 1600.f};
-		std::vector<float> pointY = {900.f, 900.f , n    , m    , -3.4f, -3.5f, m     , n     , 900.f, 900.f };
+		std::vector<float> pointX = {0.f  , 299.f, 300.f, 350.f, 750.f, 805.f, 945.f, 1000.f, 1350.f, 1300.f, 1301.f, 1600.f};
+		std::vector<float> pointY = {900.f, 900.f, 1.1f , n    , m    , -3.4f, -3.5f, m     , n     , 1.1f  , 900.f , 900.f };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
