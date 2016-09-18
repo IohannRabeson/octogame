@@ -32,16 +32,16 @@ void SunLight::createSunLight(sf::Vector2f const & cameraSize, sf::Vector2f cons
 {
 	sf::Vector2f nightUpLeft(-cameraSize.x, -cameraSize.y * 5);
 	sf::Vector2f nightUpRight(cameraSize.x, -cameraSize.y * 5);
-	sf::Vector2f nightDownLeft(-cameraSize.x, -cameraSize.y * 3);
-	sf::Vector2f nightDownRight(cameraSize.x, -cameraSize.y * 3);
+	sf::Vector2f nightDownLeft(-cameraSize.x, -cameraSize.y * 1.5f);
+	sf::Vector2f nightDownRight(cameraSize.x, -cameraSize.y * 1.5f);
 
-	sf::Vector2f sunsetLeft(-cameraSize.x, -cameraSize.y * 2);
-	sf::Vector2f sunsetRight(cameraSize.x, -cameraSize.y * 2);
+	sf::Vector2f sunsetLeft(-cameraSize.x, 0.f);
+	sf::Vector2f sunsetRight(cameraSize.x, 0.f);
 
-	sf::Vector2f dayUpLeft(-cameraSize.x, -cameraSize.y);
-	sf::Vector2f dayUpRight(cameraSize.x, -cameraSize.y);
-	sf::Vector2f dayDownLeft(-cameraSize.x, cameraSize.y * 2);
-	sf::Vector2f dayDownRight(cameraSize.x, cameraSize.y * 2);
+	sf::Vector2f dayUpLeft(-cameraSize.x, cameraSize.y * 1.5f);
+	sf::Vector2f dayUpRight(cameraSize.x, cameraSize.y * 1.5f);
+	sf::Vector2f dayDownLeft(-cameraSize.x, cameraSize.y * 5.f);
+	sf::Vector2f dayDownRight(cameraSize.x, cameraSize.y * 5.f);
 
 	nightUpLeft += origin;
 	nightUpRight += origin;
@@ -66,22 +66,12 @@ void SunLight::setup(ABiome& biome)
 {
 	octo::Camera & camera = octo::Application::getCamera();
 	m_cameraSize = camera.getSize();
-	m_dayPos = sf::Vector2f(0.f, m_cameraSize.y);
+	m_dayPos = sf::Vector2f(0.f, m_cameraSize.y * 4.f);
 	m_nightPos = sf::Vector2f(0.f, -m_cameraSize.y * 4.f);
-	m_sunsetPos = sf::Vector2f(0.f, -m_cameraSize.y * 2.f);
+	m_sunsetPos = sf::Vector2f(0.f, 0.f);
 	m_colorNight = biome.getNightLightColor();
 	m_colorSunset = biome.getSunsetLightColor();
-	m_colorDay = sf::Color::Transparent;
-
-	m_colorDay = biome.getSunsetLightColor();
-
-	//TODO: Not clean, to add in biome
-	if (Progress::getInstance().getCurrentDestination() == Level::Final)
-	{
-		m_colorDay = biome.getSunsetLightColor();
-		m_colorDay.a = 80.f;
-	}
-
+	m_colorDay = biome.getDayLightColor();
 	m_colorDayRaining = sf::Color(100, 100, 100, 100);
 }
 

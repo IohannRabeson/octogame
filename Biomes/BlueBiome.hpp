@@ -1,5 +1,5 @@
-#ifndef WATERABIOME_HPP
-# define WATERABIOME_HPP
+#ifndef BLUEBIOME_HPP
+# define BLUEBIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -9,7 +9,8 @@
 
 # include <SFML/System/Vector2.hpp>
 
-class WaterABiome : public ABiome
+
+class BlueBiome : public ABiome
 {
 template<class T>
 struct Range
@@ -24,7 +25,7 @@ struct Range
 };
 
 public:
-	WaterABiome();
+	BlueBiome();
 
 	virtual void										setup(std::size_t seed);
 	virtual std::string									getName()const;
@@ -41,8 +42,6 @@ public:
 	virtual float										getWaterLevel();
 	virtual sf::Color									getWaterColor();
 	virtual sf::Color									getSecondWaterColor();
-	virtual float										getTransitionStep() { return 0.5f; };
-	virtual bool										isDeadlyGrass() { return true; };
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -187,7 +186,7 @@ private:
 	sf::Color											m_skyNightColor;
 	sf::Color											m_nightLightColor;
 	sf::Color											m_dayLightColor;
-	sf::Color											m_SunsetLightColor;
+	sf::Color											m_sunsetLightColor;
 	float												m_wind;
 	Range<std::size_t>									m_rainDropPerSecond;
 	static constexpr std::size_t						m_rainDropPerSecondMax = 127u;
@@ -286,7 +285,6 @@ private:
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
 	sf::Color											randomColor(sf::Color const & color);
-	sf::Color											randomColorLeaf(sf::Color const & color);
 };
 
 #endif

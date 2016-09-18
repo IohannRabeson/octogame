@@ -26,10 +26,11 @@ WaterBBiome::WaterBBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(255, 0, 0),
 	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 147, 46, 130),
 	m_wind(0.f),
 	m_rainDropPerSecond(10u, 15u),
@@ -361,7 +362,7 @@ sf::Time		WaterBBiome::getDayDuration()
 
 sf::Time		WaterBBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		WaterBBiome::getSkyDayColor()
@@ -377,6 +378,11 @@ sf::Color		WaterBBiome::getSkyNightColor()
 sf::Color		WaterBBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	WaterBBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		WaterBBiome::getSunsetLightColor()

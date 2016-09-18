@@ -25,6 +25,8 @@
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
 #include "WaterCBiome.hpp"
+#include "RedBiome.hpp"
+#include "BlueBiome.hpp"
 #include "FinalBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
@@ -122,11 +124,16 @@ Game::Game(void) :
 	m_konami(nullptr),
 	m_keyGroundRight(false),
 	m_keyGroundLeft(false),
+	m_keyInfos(false),
 	m_soundGeneration(nullptr),
 	m_groundVolume(0.7f),
 	m_groundSoundTime(sf::Time::Zero),
 	m_groundSoundTimeMax(sf::seconds(0.6f)),
-	m_slowTimeInfosCoef(1.f),
+	m_isSlowTime(false),
+	m_slowTimeMax(sf::seconds(2.f)),
+	m_slowSource(1.f),
+	m_slowTarget(10.f),
+	m_slowTimeCoef(1.f),
 	m_skipFrames(0u),
 	m_skipFramesMax(3u)
 {
@@ -150,6 +157,8 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 	m_biomeManager.registerBiome<WaterCBiome>(Level::WaterC);
+	m_biomeManager.registerBiome<RedBiome>(Level::Red);
+	m_biomeManager.registerBiome<BlueBiome>(Level::Blue);
 	m_biomeManager.registerBiome<FinalBiome>(Level::Final);
 
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
@@ -263,7 +272,11 @@ void	Game::loadLevel(void)
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
 
-	audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
+
+	Level current = progress.getCurrentDestination();
+	Level next = progress.getNextDestination();
+	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
+		audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
 	m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
 	m_soundGeneration->setLoop(true);
 }
@@ -275,6 +288,7 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	sf::Time const realFrameTime = frameTime;
 	m_octo->resetCollidingTileCount();
 	//std::cout << "GAME UPDATE" << std::endl;
 	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
@@ -283,22 +297,44 @@ void	Game::update(sf::Time frameTime)
 		m_skipFrames++;
 		frameTime = sf::seconds(0.016f);
 	}
-	frameTime = frameTime / m_slowTimeInfosCoef;
+	updateSlowTime(frameTime);
+	frameTime = frameTime / m_slowTimeCoef;
 	// update the PhysicsEngine as first
 	m_physicsEngine.update(frameTime.asSeconds());
 	m_cameraMovement->update(frameTime, *m_octo);
 	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 100.f));
-	m_octo->update(frameTime);
+	m_octo->update(frameTime, realFrameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
 	moveMap(frameTime);
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
-	m_konami->update(frameTime, m_octo->getPosition());
-	m_octo->startKonamiCode(m_konami->canStartEvent());
+	m_konami->update(realFrameTime, m_octo->getPosition());
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
+}
+
+void Game::updateSlowTime(sf::Time frameTime)
+{
+	if (m_isSlowTime)
+	{
+		if (m_slowTime < m_slowTimeMax)
+			m_slowTime += frameTime;
+		else
+		{
+			m_isSlowTime = false;
+			m_slowTime = m_slowTimeMax;
+		}
+	}
+	else
+	{
+		if (m_slowTime > sf::Time::Zero)
+			m_slowTime -= frameTime * 2.f;
+		else
+			m_slowTime = sf::Time::Zero;
+	}
+	m_slowTimeCoef = octo::cosinusInterpolation(m_slowSource, m_slowTarget, m_slowTime / m_slowTimeMax);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
@@ -343,6 +379,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<JumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::DoubleJumpNanoRobot:
@@ -351,6 +388,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::GroundTransformNanoRobot:
@@ -359,6 +397,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::SlowFallNanoRobot:
@@ -367,6 +406,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<SlowFallNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::WaterNanoRobot:
@@ -375,6 +415,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<WaterNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::RepairShipNanoRobot:
@@ -383,6 +424,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairShipNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
@@ -391,6 +433,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::Rocket:
@@ -587,6 +630,7 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 
 void Game::moveMap(sf::Time frameTime)
 {
+	Progress const &			progress = Progress::getInstance();
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float						volume = 0.f;
 
@@ -608,7 +652,9 @@ void Game::moveMap(sf::Time frameTime)
 
 	if (Progress::getInstance().isMenu() ||
 		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
-		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Displacement)))
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Displacement)) ||
+		(progress.getCurrentDestination() == Level::Blue || progress.getCurrentDestination() == Level::Red)
+		)
 		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 }
 
@@ -627,7 +673,8 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Infos:
 			std::cout << "OctoPos(" << m_octo->getPosition().x << ", " << m_octo->getPosition().y << ")" << std::endl;
 			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
-			m_slowTimeInfosCoef = 10.f;
+			m_keyInfos = true;
+			m_isSlowTime = true;
 			break;
 		default:
 			break;
@@ -646,7 +693,7 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 			m_keyGroundRight = false;
 			break;
 		case OctoKeys::Infos:
-			m_slowTimeInfosCoef = 1.f;
+			m_keyInfos = false;
 			break;
 		default:
 			break;

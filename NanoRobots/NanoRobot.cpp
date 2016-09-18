@@ -13,6 +13,7 @@
 sf::Vector2f NanoRobot::m_laserConvergence;
 
 NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, InputListener::OctoKeys key, float multiplier) :
+	m_id(id),
 	m_swarm(1),
 	m_uniformPopulation(1234u, &octo::Application::getResourceManager().getPalette(FROM_SEA1_OPA),
 						1.2f, 2.f, 6.f, 10.f, 32.f, 50.f,
@@ -129,9 +130,11 @@ void NanoRobot::setup(AGameObjectBase * gameObject)
 
 void NanoRobot::setLaserColor(sf::Color const & color)
 {
+	//TODO : Find a cleaner way to do that
+	(void)color;
 	for (std::size_t i = 0u; i < 12u; i++)
 	{
-		m_ray[i].color = color;
+		m_ray[i].color = sf::Color(247, 238, 80);
 		m_ray[i].color.a = 100;
 	}
 
@@ -452,7 +455,7 @@ void NanoRobot::update(sf::Time frametime)
 	}
 	else if (m_state == Repair)
 	{
-		makeLaser(m_ray.get(), getPosition() + m_offsetLaser, m_target, 4.f);
+		makeLaser(m_ray.get(), getPosition() + m_offsetLaser, m_target, 8.f);
 		m_particles.canEmit(true);
 		m_particles.setPosition(m_target);
 	}
@@ -482,7 +485,10 @@ void NanoRobot::update(sf::Time frametime)
 			std::size_t index2 = (m_repairIndex + 1u) % m_targets.size();
 			target = octo::linearInterpolation(m_target + m_targets[m_repairIndex % m_targets.size()], m_target + m_targets[index2], m_timerRepair / m_timerRepairMax);
 		}
-		makeLaser(m_ray.get(), getPosition() + m_offsetLaser, target, 4.f);
+		if (m_id == NANO_REPAIR_SHIP_OSS)
+			makeLaser(m_ray.get(), getPosition() + m_offsetLaser, target, 16.f);
+		else
+			makeLaser(m_ray.get(), getPosition() + m_offsetLaser, target, 8.f);
 		m_particles.canEmit(true);
 		m_particles.setPosition(target);
 	}

@@ -26,10 +26,11 @@ IceDBiome::IceDBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(65.f)),
-	m_startDayDuration(sf::seconds(9.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(8, 20, 26),
 	m_nightLightColor(8, 20, 26, 80),
+	m_dayLightColor(sf::Color::Transparent),
 	m_sunsetLightColor(sf::Color::Transparent),
 	m_wind(200.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -370,6 +371,11 @@ sf::Color		IceDBiome::getSkyNightColor()
 sf::Color		IceDBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	IceDBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		IceDBiome::getSunsetLightColor()

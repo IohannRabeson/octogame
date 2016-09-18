@@ -885,7 +885,7 @@ void	CharacterOcto::setupMachine()
 	m_sprite.setMachine(machine);
 }
 
-void	CharacterOcto::update(sf::Time frameTime)
+void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 {
 	Progress & progress = Progress::getInstance();
 	if (progress.isMenu())
@@ -1004,7 +1004,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	progress.setOctoPos(getPosition());
 
 	replaceOcto();
-	updateCutscene(frameTime);
+	updateCutscene(realFrameTime);
 }
 
 void	CharacterOcto::replaceOcto(void)
@@ -1054,6 +1054,11 @@ void	CharacterOcto::replaceOcto(void)
 
 void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
+	if (isFinalEvent())
+		enableCutscene(true, false);
+	else if (m_enableCutscene)
+		enableCutscene(false, false);
+
 	if (m_enableCutscene)
 	{
 		m_cutsceneTimer += frameTime;
@@ -1073,6 +1078,14 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 		if (m_cutsceneTimer <= sf::Time::Zero)
 			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
 	}
+}
+
+bool	CharacterOcto::isFinalEvent()
+{
+	Progress const & progress = Progress::getInstance();
+	if (progress.getCurrentDestination() == Level::Final && (getPosition().x > 805.f * 16.f && getPosition().x < 905.f * 16.f))
+		return true;
+	return false;
 }
 
 void	CharacterOcto::portalEvent()
@@ -1573,9 +1586,9 @@ void	CharacterOcto::inWater()
 	{
 		emit = true;
 		m_inWater = false;
-		m_waterParticle.canEmit(true);
+			m_waterParticle.canEmit(true);
 	}
-	if (emit && !progress.isInCloud())
+	if (emit && !progress.isInCloud() && m_waterLevel != -1.f)
 		m_ploufParticle.canEmit(true);
 }
 

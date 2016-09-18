@@ -26,10 +26,11 @@ JungleDBiome::JungleDBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(251, 253, 26),
 	m_skyNightColor(195, 197, 18),
 	m_nightLightColor(0, 0, 0, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 182, 0, 100),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -137,7 +138,7 @@ JungleDBiome::JungleDBiome() :
 
 	// Define game objects
 	m_instances[230] = MAP_JUNGLE_D_TRAIL_OMP;
-	m_instances[40] = MAP_JUNGLE_D_GUI_OMP;
+	m_instances[40] = MAP_JUNGLE_D_LU_OMP;
 	m_gameObjects[30] = GameObjectType::PortalJungle;
 	m_gameObjects[40] = GameObjectType::BirdRedNpc;
 	m_gameObjects[145] = GameObjectType::OverCoolNpc;
@@ -358,7 +359,7 @@ sf::Time		JungleDBiome::getDayDuration()
 
 sf::Time		JungleDBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		JungleDBiome::getSkyDayColor()
@@ -374,6 +375,11 @@ sf::Color		JungleDBiome::getSkyNightColor()
 sf::Color		JungleDBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	JungleDBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		JungleDBiome::getSunsetLightColor()

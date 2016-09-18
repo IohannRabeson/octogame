@@ -26,10 +26,11 @@ DesertCBiome::DesertCBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(255, 150, 242),
 	m_skyNightColor(166, 10, 92),
 	m_nightLightColor(134, 63, 215, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 59, 59, 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -329,7 +330,7 @@ sf::Time		DesertCBiome::getDayDuration()
 
 sf::Time		DesertCBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		DesertCBiome::getSkyDayColor()
@@ -345,6 +346,11 @@ sf::Color		DesertCBiome::getSkyNightColor()
 sf::Color		DesertCBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	DesertCBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		DesertCBiome::getSunsetLightColor()

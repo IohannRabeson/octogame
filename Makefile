@@ -206,6 +206,8 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/WaterABiome.cpp					\
 				Biomes/WaterBBiome.cpp					\
 				Biomes/WaterCBiome.cpp					\
+				Biomes/RedBiome.cpp						\
+				Biomes/BlueBiome.cpp					\
 				Biomes/FinalBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
@@ -239,6 +241,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/WaterDropSystem.cpp				\
 				Decors/StarSystem.cpp					\
 				Decors/WaterCascadeSystem.cpp			\
+				Decors/BeamSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\

@@ -16,13 +16,14 @@
 # include "AGameObject.hpp"
 # include "IPlaceable.hpp"
 # include "SmokeSystem.hpp"
+# include "BeamSystem.hpp"
 
 class ABiome;
 class RectangleShape;
+class BeamSystem;
 
 class ElevatorStream : public AGameObject<GameObjectType::Elevator>, public IPlaceable
 {
-	class BeamParticle;
 public:
 	enum State
 	{
@@ -55,7 +56,7 @@ public:
 	void					drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	std::shared_ptr<BeamParticle>	m_particles;
+	std::shared_ptr<BeamSystem>		m_particles;
 	sf::Shader						m_shader;
 	octo::VertexBuilder				m_builder;
 	sf::Time						m_waveCycle;

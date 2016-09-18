@@ -48,7 +48,10 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<LogoScreen>("logo");
 	manager.registerState<AnOctonautOdysseyScreen>("anoctonautodyssey");
 	manager.registerState<LaboratoryEndScreen>("laboratory_end");
+
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
+	manager.registerTransition<octo::BlueFadeTransition>("blue", false);
+	manager.registerTransition<octo::RedFadeTransition>("red", false);
 }
 
 static void	setupConsole(octo::Console& console)

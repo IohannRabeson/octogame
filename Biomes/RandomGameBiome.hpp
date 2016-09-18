@@ -61,6 +61,7 @@ public:
 	virtual sf::Color									getSkyDayColor();
 	virtual sf::Color									getSkyNightColor();
 	virtual sf::Color									getNightLightColor();
+	virtual sf::Color									getDayLightColor();
 	virtual sf::Color									getSunsetLightColor();
 
 	virtual float										getWind();
@@ -180,6 +181,7 @@ private:
 	sf::Color											m_skyDayColor;
 	sf::Color											m_skyNightColor;
 	sf::Color											m_nightLightColor;
+	sf::Color											m_dayLightColor;
 	sf::Color											m_SunsetLightColor;
 	float												m_wind;
 	Range<std::size_t>									m_rainDropPerSecond;
