@@ -272,7 +272,8 @@ void	Game::loadLevel(void)
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
 
-	audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
+	if (!progress.isBlue() && progress.isRed())
+		audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
 	m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
 	m_soundGeneration->setLoop(true);
 }

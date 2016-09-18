@@ -225,6 +225,20 @@ Level	Progress::getLastDestination(void) const
 	return m_data.lastDestination;
 }
 
+bool	Progress::isBlue(void) const
+{
+	if (getNextDestination() == Level::Blue || getCurrentDestination() == Level::Blue)
+		return true;
+	return false;
+}
+
+bool	Progress::isRed(void) const
+{
+	if (getNextDestination() == Level::Red || getCurrentDestination() == Level::Red)
+		return true;
+	return false;
+}
+
 void	Progress::validateChallenge(ChallengeManager::Effect effect)
 {
 	m_data.validateChallenge |= static_cast<int>(effect);
