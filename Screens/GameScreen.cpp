@@ -9,7 +9,8 @@
 #include <PostEffectManager.hpp>
 
 GameScreen::GameScreen(void) :
-	m_doSave(false)
+	m_doSave(false),
+	m_timerRedBlueMax(sf::seconds(35.f))
 {}
 
 void	GameScreen::start()
@@ -83,6 +84,23 @@ void	GameScreen::update(sf::Time frameTime)
 				states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 				states.change("transitionLevel");
 			}
+		}
+	}
+
+	if (progress.getNextDestination() == Level::Blue || progress.getLastDestination() == Level::Blue)
+	{
+		m_timerBlue += frameTime;
+		if (m_timerBlue >= m_timerRedBlueMax)
+		{
+			progress.setNextDestination(Level::IceA);
+		}
+	}
+	else if (progress.getNextDestination() == Level::Red || progress.getLastDestination() == Level::Red)
+	{
+		m_timerRed += frameTime;
+		if (m_timerRed >= m_timerRedBlueMax)
+		{
+			progress.setNextDestination(Level::IceA);
 		}
 	}
 }

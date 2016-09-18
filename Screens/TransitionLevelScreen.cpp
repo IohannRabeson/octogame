@@ -114,9 +114,10 @@ void	TransitionLevelScreen::draw(sf::RenderTarget& render)const
 	else if (progress.getNextDestination() == Level::Red || progress.getLastDestination() == Level::Red || progress.getCurrentDestination() == Level::Blue)
 		render.clear(sf::Color(155, 0, 0));
 	else
+	{
 		render.clear();
-
-	if (m_timeTransition <= m_timeTransitionMax)
-		render.draw(m_sprite);
+		if (m_timeTransition <= m_timeTransitionMax)
+			render.draw(m_sprite);
+	}
 }
 

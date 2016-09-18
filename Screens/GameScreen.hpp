@@ -22,6 +22,9 @@ private:
 	std::unique_ptr<Game>	m_game;
 	bool					m_doSave;
 	sf::Clock				m_timePlayed;
+	sf::Time				m_timerRed;
+	sf::Time				m_timerBlue;
+	sf::Time				m_timerRedBlueMax;
 
 	virtual bool onInputPressed(InputListener::OctoKeys const & key);
 };

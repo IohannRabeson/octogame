@@ -102,7 +102,7 @@ void Rainbow::createRainbow(sf::Vector2f const & origin, std::vector<sf::Vector2
 	m_start = m_end;
 	originRotate = m_start[0] + sf::Vector2f(0.f, -m_start[0].y);
 	rotateLine(m_start, m_end, stripeCount, originRotate, m_cos, m_sin);
-	createPart(m_start, m_end, stripeCount, origin, colors, transparent, m_interpolateValues[m_partCount - 1], builder);
+	createPart(m_start, m_end, stripeCount, origin, colors, colors, m_interpolateValues[m_partCount - 1], builder);
 
 	if (m_firstFrame == true)
 	{
@@ -133,8 +133,9 @@ void Rainbow::setupSizes(ABiome & biome, std::vector<sf::Vector2f> & sizes, std:
 	sizes[partCount - 1] = sizes[0];
 }
 
-void Rainbow::setupColors(std::vector<sf::Color> & colors, std::vector<sf::Color> & transparent)
+void Rainbow::setupColors(std::vector<sf::Color> & colors, std::vector<sf::Color> & transparent, ABiome & biome)
 {
+	/*
 	colors[0] = sf::Color(255, 0, 0, 70);
 	colors[1] = sf::Color(255, 127, 0, 70);
 	colors[2] = sf::Color(255, 255, 0, 70);
@@ -142,6 +143,14 @@ void Rainbow::setupColors(std::vector<sf::Color> & colors, std::vector<sf::Color
 	colors[4] = sf::Color(0, 0, 255, 70);
 	colors[5] = sf::Color(75, 0, 130, 70);
 	colors[6] = sf::Color(143, 0, 255, 70);
+	*/
+	colors[0] = biome.getRockColor();
+	colors[1] = biome.getTreeColor();
+	colors[2] = biome.getRockColor();
+	colors[3] = biome.getTreeColor();
+	colors[4] = biome.getRockColor();
+	colors[5] = biome.getTreeColor();
+	colors[6] = biome.getRockColor();
 
 	transparent[0] = sf::Color(255, 255, 255, 0);
 	transparent[1] = sf::Color(255, 255, 255, 0);
@@ -162,7 +171,7 @@ void Rainbow::newRainbow(ABiome & biome)
 	m_partCount = 2u + m_loopCount * 4u;
 	m_thickness = biome.getRainbowThickness();
 	setupSizes(biome, m_sizes, m_loopCount, m_partCount, m_thickness);
-	setupColors(m_colors, m_transparent);
+	setupColors(m_colors, m_transparent, biome);
 
 	float totalFlatSizeX = 0.f;
 	for (std::size_t i = 0; i < m_partCount; i++)
@@ -248,7 +257,8 @@ void Rainbow::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& b
 		// position - m_endPosition make the arrival be the origin
 		createRainbow(position - m_endPosition, m_sizes, m_stripeCount, m_thickness, m_colors, m_transparent, builder);
 	}
-	else if (m_cycle && m_cycle->getWeatherValue() != 0.f && m_cycle->isDay())
+	else if ((biome.getId() == Level::Blue || biome.getId() == Level::Red)
+			|| (m_cycle && m_cycle->getWeatherValue() != 0.f && m_cycle->isDay()))
 		newRainbow(biome);
 }
 

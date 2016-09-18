@@ -626,6 +626,7 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 
 void Game::moveMap(sf::Time frameTime)
 {
+	Progress const &			progress = Progress::getInstance();
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float						volume = 0.f;
 
@@ -647,7 +648,9 @@ void Game::moveMap(sf::Time frameTime)
 
 	if (Progress::getInstance().isMenu() ||
 		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
-		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Displacement)))
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Displacement)) ||
+		(progress.getCurrentDestination() == Level::Blue || progress.getCurrentDestination() == Level::Red)
+		)
 		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 }
 

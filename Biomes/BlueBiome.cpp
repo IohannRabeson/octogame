@@ -16,7 +16,7 @@ BlueBiome::BlueBiome() :
 	m_mapSize(sf::Vector2u(1000u, 26u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(136.f * 16.f, 60.f),
-	m_transitionDuration(0.5f),
+	m_transitionDuration(2.0f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(150, 150, 150),
 	m_tileEndColor(100, 100, 100),
@@ -25,13 +25,13 @@ BlueBiome::BlueBiome() :
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(60.f)),
-	m_startDayDuration(sf::seconds(35.f)),
+	m_dayDuration(sf::seconds(55.f)),
+	m_startDayDuration(sf::seconds(25.f)),
 	m_skyDayColor(108, 108, 108),
 	m_skyNightColor(78, 78, 78),
-	m_nightLightColor(0, 0, 50, 70),
+	m_nightLightColor(0, 0, 155, 100),
 	m_dayLightColor(0, 0, 155),
-	m_sunsetLightColor(0, 0, 155, 70),
+	m_sunsetLightColor(0, 0, 155, 150),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -45,12 +45,12 @@ BlueBiome::BlueBiome() :
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
-	m_rainbowCount(1u, 2u),
+	m_rainbowCount(100u, 100u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),
-	m_canCreateThunder(true),
+	m_canCreateThunder(false),
 	m_canCreateSnow(true),
 	m_canCreateRock(true),
 	m_canCreateTree(true),
@@ -63,7 +63,7 @@ BlueBiome::BlueBiome() :
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
-	m_canCreateRainbow(false),
+	m_canCreateRainbow(true),
 	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
@@ -100,7 +100,7 @@ BlueBiome::BlueBiome() :
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
-	m_cloudMaxY(-200.f),
+	m_cloudMaxY(-800.f),
 	m_cloudMinY(-2500.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
@@ -245,7 +245,7 @@ Map::MapSurfaceGenerator BlueBiome::getMapSurfaceGenerator()
 	return [this](Noise & noise, float x, float y)
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		float n = noise.fBm(x, y, 3, 3.f, 2.0f);
 		std::vector<float> pointX = {0.f, 1000.f};
 		std::vector<float> pointY = {n  , n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
