@@ -154,6 +154,10 @@ void Pyramid::update(sf::Time frameTime)
 void Pyramid::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	m_spriteTop.draw(render, states);
+}
+
+void Pyramid::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
+{
 	InstanceDecor::draw(render, states);
 	for (std::size_t i = 0u; i < m_spriteBlocs.size(); i++)
 		m_spriteBlocs[i].draw(render, states);

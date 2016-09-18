@@ -18,6 +18,7 @@ public:
 
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	virtual void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
 	std::shared_ptr<BeamSystem>			m_particles;
