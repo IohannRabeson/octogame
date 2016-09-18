@@ -6,7 +6,6 @@
 #include "ResourceDefinitions.hpp"
 
 SkyCycle::SkyCycle(void) :
-	m_isTimerStart(false),
 	m_isDay(true),
 	m_isMidDay(false),
 	m_isMidNight(false),
@@ -80,15 +79,11 @@ void SkyCycle::setup(ABiome & biome)
 	m_timerNightMax = m_timerMax / 4.f;
 
 	if (biome.getStartDayDuration() == sf::Time::Zero)
-	{
-		m_isTimerStart = false;
 		m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
-	}
 	else
 	{
 		sf::Time x = sf::Time::Zero;
 
-		m_isTimerStart = true;
 		m_timerStart = biome.getStartDayDuration();
 		while (x < m_timerStart)
 		{
@@ -160,7 +155,6 @@ void SkyCycle::computeDayNight(sf::Time frameTime)
 				m_timerNight = sf::Time::Zero;
 		}
 	}
-//	std::cout << "cycle: " << getCycleValue() << " || day: " << getDayValue() << " [" << m_isDay << "(" << m_isMidDay << ")] | night: " << getNightValue() << " [" << !m_isDay  << "(" << m_isMidNight << ")]" << std::endl;
 }
 
 void SkyCycle::newThunderCycle(ABiome & biome)

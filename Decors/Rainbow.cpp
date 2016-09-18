@@ -135,15 +135,6 @@ void Rainbow::setupSizes(ABiome & biome, std::vector<sf::Vector2f> & sizes, std:
 
 void Rainbow::setupColors(std::vector<sf::Color> & colors, std::vector<sf::Color> & transparent, ABiome & biome)
 {
-	/*
-	colors[0] = sf::Color(255, 0, 0, 70);
-	colors[1] = sf::Color(255, 127, 0, 70);
-	colors[2] = sf::Color(255, 255, 0, 70);
-	colors[3] = sf::Color(0, 255, 0, 70);
-	colors[4] = sf::Color(0, 0, 255, 70);
-	colors[5] = sf::Color(75, 0, 130, 70);
-	colors[6] = sf::Color(143, 0, 255, 70);
-	*/
 	colors[0] = biome.getRockColor();
 	colors[1] = biome.getTreeColor();
 	colors[2] = biome.getRockColor();
