@@ -69,7 +69,6 @@
 #include "CedricStartNpc.hpp"
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
-#include "FatNpc.hpp"
 #include "WolfNpc.hpp"
 #include "JellyfishNpc.hpp"
 #include "BirdRedNpc.hpp"
@@ -471,9 +470,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::IohannNpc:
 			gameObjectCast<IohannNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FatNpc:
-			gameObjectCast<FatNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::SpaceShip:
 			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));
