@@ -14,8 +14,7 @@ FinalBiome::FinalBiome() :
 	m_seed("Final"),
 	m_mapSize(sf::Vector2u(1400u, 16u)),
 	m_mapSeed(42u),
-	//m_octoStartPosition(750.f * 16.f, -50.f),
-	m_octoStartPosition(1300.f * 16.f, -50.f),
+	m_octoStartPosition(353.f * 16.f, -50.f),
 	m_transitionDuration(3.0f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(58, 0, 92),
@@ -139,6 +138,7 @@ FinalBiome::FinalBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
+	m_gameObjects[350] = GameObjectType::PortalWater;
 	m_instances[800] = MAP_FINAL_PYRAMID_OMP;
 	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
 	m_instances[50] = MAP_FINAL_LEFT_OMP;
@@ -156,6 +156,7 @@ FinalBiome::FinalBiome() :
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Red);
 	m_destinations.push_back(Level::Blue);
+	m_destinations.push_back(Level::WaterC);
 }
 
 void			FinalBiome::setup(std::size_t seed)
