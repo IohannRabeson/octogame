@@ -105,6 +105,7 @@ enum class GameObjectType : std::size_t
 	DeepoNpc					= (1 << 15) + 62,
 	IdleNpc						= (1 << 15) + 63,
 	DisappearNpc				= (1 << 15) + 64,
+	WalkNpc						= (1 << 15) + 65,
 //Script AddNpc
 
 

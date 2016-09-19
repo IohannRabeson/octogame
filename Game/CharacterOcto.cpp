@@ -172,8 +172,6 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::SpaceShip)
 		| static_cast<std::size_t>(GameObjectType::CedricStartNpc)
 		| static_cast<std::size_t>(GameObjectType::IohannNpc)
-		| static_cast<std::size_t>(GameObjectType::PunkNpc)
-		| static_cast<std::size_t>(GameObjectType::GuiNpc)
 		| static_cast<std::size_t>(GameObjectType::LucienNpc)
 		| static_cast<std::size_t>(GameObjectType::WolfNpc)
 		| static_cast<std::size_t>(GameObjectType::JellyfishNpc)
@@ -181,7 +179,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Npc)
 		| static_cast<std::size_t>(GameObjectType::IdleNpc)
 		| static_cast<std::size_t>(GameObjectType::SpecialNpc)
-		| static_cast<std::size_t>(GameObjectType::DisappearNpc);
+		| static_cast<std::size_t>(GameObjectType::DisappearNpc)
+		| static_cast<std::size_t>(GameObjectType::WalkNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
 	m_eventBox->setType(AShape::Type::e_trigger);
