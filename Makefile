@@ -136,7 +136,19 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/CavemanClimbingNpc.cpp				\
 				Npcs/ElliotNpc.cpp						\
 				Npcs/AWalkNpc.cpp						\
+				Npcs/ChamanMonsterNpc.cpp				\
+				Npcs/BeachGuyNpc.cpp				\
+				Npcs/LucieNpc.cpp				\
+				Npcs/SylvieNpc.cpp				\
+				Npcs/AymericNpc.cpp				\
+				Npcs/MysticanouilleNpc.cpp				\
 #Script AddNpc
+
+
+
+
+
+
 
 
 

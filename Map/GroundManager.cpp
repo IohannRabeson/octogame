@@ -34,6 +34,12 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "MysticanouilleNpc.hpp"
+#include "AymericNpc.hpp"
+#include "SylvieNpc.hpp"
+#include "LucieNpc.hpp"
+#include "BeachGuyNpc.hpp"
+#include "ChamanMonsterNpc.hpp"
 #include "ScientistCedric.hpp"
 #include "ScientistLu.hpp"
 #include "ScientistFran.hpp"
@@ -244,6 +250,12 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<MysticanouilleNpc>(MYSTICANOUILLE_OSS);
+	m_npcFactory.registerCreator<AymericNpc>(AYMERIC_OSS);
+	m_npcFactory.registerCreator<SylvieNpc>(SYLVIE_OSS);
+	m_npcFactory.registerCreator<LucieNpc>(LUCIE_OSS);
+	m_npcFactory.registerCreator<BeachGuyNpc>(BEACH_GUY_OSS);
+	m_npcFactory.registerCreator<ChamanMonsterNpc>(CHAMAN_MONSTER_OSS);
 	m_npcFactory.registerCreator<ScientistCedric>(SCIENTISTCEDRIC_OSS);
 	m_npcFactory.registerCreator<ScientistLu>(SCIENTISTLU_OSS);
 	m_npcFactory.registerCreator<ScientistFran>(SCIENTISTFRAN_OSS);
@@ -740,6 +752,48 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::MysticanouilleNpc:
+				{
+					MysticanouilleNpc * npc = new MysticanouilleNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::AymericNpc:
+				{
+					AymericNpc * npc = new AymericNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::SylvieNpc:
+				{
+					SylvieNpc * npc = new SylvieNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::LucieNpc:
+				{
+					LucieNpc * npc = new LucieNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::BeachGuyNpc:
+				{
+					BeachGuyNpc * npc = new BeachGuyNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::ChamanMonsterNpc:
+				{
+					ChamanMonsterNpc * npc = new ChamanMonsterNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::ElliotNpc:
 				{
 					ElliotNpc * npc = new ElliotNpc();
