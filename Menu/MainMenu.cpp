@@ -54,7 +54,8 @@ class YesNoReset : public YesNoMenu
 };
 
 //MainMenu
-MainMenu::MainMenu(void)
+MainMenu::MainMenu(void) :
+	m_soundPlayed(false)
 {
 }
 
@@ -113,7 +114,11 @@ void MainMenu::onSelection(void)
 		{
 			octo::AudioManager &		audio = octo::Application::getAudioManager();
 			octo::ResourceManager &		resources = octo::Application::getResourceManager();
-			audio.playSound(resources.getSound(OCTO_GREETING_OGG), 0.7f);
+			if (!m_soundPlayed)
+			{
+				m_soundPlayed = true;
+				audio.playSound(resources.getSound(OCTO_GREETING_OGG), 0.7f);
+			}
 			states.change("transitionLevel");
 		}
 	}

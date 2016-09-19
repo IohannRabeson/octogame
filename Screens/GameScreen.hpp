@@ -18,10 +18,16 @@ public:
 	virtual void		update(sf::Time frameTime);
 	virtual void		draw(sf::RenderTarget& render)const;
 private:
+	void changeLevel(octo::StateManager & states, Progress & progress);
+	void timeLevelBlueRed(sf::Time frameTime, Progress & progress);
+
 	MainMenu				m_menu;
 	std::unique_ptr<Game>	m_game;
 	bool					m_doSave;
 	sf::Clock				m_timePlayed;
+	sf::Time				m_timerRed;
+	sf::Time				m_timerBlue;
+	sf::Time				m_timerRedBlueMax;
 
 	virtual bool onInputPressed(InputListener::OctoKeys const & key);
 };

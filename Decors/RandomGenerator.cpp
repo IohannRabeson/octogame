@@ -3,7 +3,7 @@
 RandomGenerator::RandomGenerator(void)
 {
 	std::vector<double> i{0, 400, 450, 500, 550, 600, 1000};
-	std::vector<double> w{0, 1, 4, 10, 4, 1, 0};
+	std::vector<double> w{0, 1, 4, 7, 4, 1, 0};
 	m_distributionPiecewise.param(boost::random::piecewise_linear_distribution<>::param_type(i.begin(), i.end(), w.begin()));
 }
 
@@ -24,7 +24,7 @@ void RandomGenerator::setSeed(std::string const & string)
 RandomGenerator::RandomGenerator(std::string const & string)
 {
 	std::vector<double> i{0, 400, 450, 500, 550, 600, 1000};
-	std::vector<double> w{0, 1, 4, 10, 4, 1, 0};
+	std::vector<double> w{0, 1, 4, 7, 4, 1, 0};
 	m_distributionPiecewise.param(boost::random::piecewise_linear_distribution<>::param_type(i.begin(), i.end(), w.begin()));
 	setSeed(string);
 }

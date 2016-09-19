@@ -40,10 +40,11 @@ RandomGameBiome::RandomGameBiome() :
 	m_secondWaterColor(m_waterColor),
 
 	m_dayDuration(sf::seconds(m_generator.randomFloat(20.f, 150.f))),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_skyNightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_nightLightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -305,7 +306,7 @@ sf::Time		RandomGameBiome::getDayDuration()
 
 sf::Time		RandomGameBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		RandomGameBiome::getSkyDayColor()
@@ -321,6 +322,11 @@ sf::Color		RandomGameBiome::getSkyNightColor()
 sf::Color		RandomGameBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	RandomGameBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		RandomGameBiome::getSunsetLightColor()

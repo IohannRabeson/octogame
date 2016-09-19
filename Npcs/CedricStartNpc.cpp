@@ -153,6 +153,7 @@ void CedricStartNpc::setupMachine(void)
 
 	setMachine(machine);
 	setNextEvent(Idle);
+
 }
 
 bool CedricStartNpc::startBalle(void)
@@ -215,6 +216,7 @@ void CedricStartNpc::updatePotion(sf::Time frametime)
 
 void CedricStartNpc::update(sf::Time frametime)
 {
+	Progress const & progress = Progress::getInstance();
 	octo::CharacterSprite & sprite = getSprite();
 
 	updateState();
@@ -233,6 +235,9 @@ void CedricStartNpc::update(sf::Time frametime)
 		sprite.setNextEvent(Special2Night);
 
 	resetVariables();
+
+	if (progress.getCurrentDestination() == Level::WaterB && progress.getRespawnType() == Progress::RespawnType::Die)
+		startBalle();
 }
 
 void CedricStartNpc::updateState(void)

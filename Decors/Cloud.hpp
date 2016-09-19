@@ -94,6 +94,7 @@ private:
 	bool							m_hasCollided;
 	sf::Time						m_timerInCloud;
 	sf::Time						m_timerInCloudMax;
+	sf::Vector2f					m_deathPosition;
 
 	bool							m_canWeather;
 	std::vector<DropSystem *>		m_rain;

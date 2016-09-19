@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -12,7 +13,7 @@ WaterCBiome::WaterCBiome() :
 	m_name("Water B"),
 	m_id(Level::WaterC),
 	m_seed("Vince"),
-	m_mapSize(sf::Vector2u(750u, 128u)),
+	m_mapSize(sf::Vector2u(850u, 128u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(88.f * 16.f, 5250.f),
 	m_transitionDuration(2.f),
@@ -25,10 +26,11 @@ WaterCBiome::WaterCBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(3, 57, 108),
 	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 147, 46, 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 15u),
@@ -55,8 +57,8 @@ WaterCBiome::WaterCBiome() :
 	m_canCreateLeaf(true),
 	m_treeIsMoving(true),
 	m_canCreateMushroom(true),
-	m_canCreateCrystal(false),
-	m_canCreateShineEffect(true),
+	m_canCreateCrystal(true),
+	m_canCreateShineEffect(false),
 	m_canCreateCloud(true),
 	m_canCreateStar(true),
 	m_canCreateSun(true),
@@ -110,7 +112,7 @@ WaterCBiome::WaterCBiome() :
 
 	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(159, 24, 24),
+	m_sunColor(255, 255, 200),
 
 	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_moonColor(255, 255, 255),
@@ -139,18 +141,23 @@ WaterCBiome::WaterCBiome() :
 
 	// Define game objects
 	m_instances[20] = MAP_WATER_C_TRAIL_OMP;
-	//m_gameObjects[20] = GameObjectType::Portal;
+	m_instances[640] = MAP_WATER_C_SLOWFALL_TRAIL_OMP;
 
-	m_gameObjects[450] = GameObjectType::Pedestal;
-	m_gameObjects[454] = GameObjectType::SlowFallNanoRobot;
-	m_gameObjects[640] = GameObjectType::PeaNpc;
+	m_gameObjects[550] = GameObjectType::Pedestal;
+	m_gameObjects[554] = GameObjectType::SlowFallNanoRobot;
 
 	m_interestPointPosX = 500;
 
+	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() == Level::Final)
+		m_octoStartPosition = sf::Vector2f(756.f * 16.f, -4760.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(492.f * 16.f, -3130.f);
+
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
-	m_destinations.push_back(Level::WaterA);
-	m_destinations.push_back(Level::WaterC);
+	m_destinations.push_back(Level::WaterB);
+	m_destinations.push_back(Level::Final);
 }
 
 void			WaterCBiome::setup(std::size_t seed)
@@ -281,8 +288,8 @@ Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f     , 307.f   , 308.f, 442.f, 443.f   , 470.f   , 570.f   , 591.f  , 592.f, 612.f, 613.f  , 640.f   , 750.f};
-		std::vector<float> pointY = {n - 6.2f, n - 6.5f, 4.6f , 4.6f , n - 7.2f, n - 7.2f, n - 6.2f, -4.618f, 4.6f , 4.6f , -4.415f, n - 5.5f, n - 6.2f};
+		std::vector<float> pointX = {0.f      , 307.f   , 308.f, 442.f, 443.f   , 470.f   , 570.f   , 589.f  , 592.f, 612.f, 613.f  , 640.f, 710.f,  790.f, 850.f};
+		std::vector<float> pointY = {n - 5.25f, n - 5.25f, 4.6f , 4.6f , n - 6.2f, n - 6.2f, n - 6.5f, -4.618f, 4.6f , 4.6f , -4.415f, -5.1f, -5.2f, - 5.1f, n - 5.25f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -366,7 +373,7 @@ sf::Time		WaterCBiome::getDayDuration()
 
 sf::Time		WaterCBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		WaterCBiome::getSkyDayColor()
@@ -382,6 +389,11 @@ sf::Color		WaterCBiome::getSkyNightColor()
 sf::Color		WaterCBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	WaterCBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		WaterCBiome::getSunsetLightColor()

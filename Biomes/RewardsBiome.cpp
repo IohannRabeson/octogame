@@ -30,10 +30,11 @@ RewardsBiome::RewardsBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(m_generator.randomFloat(20.f, 150.f))),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_skyNightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_nightLightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -41,33 +42,33 @@ RewardsBiome::RewardsBiome() :
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(m_generator.randomFloat(10.f, 700.f), m_generator.randomFloat(700.f, 3000.f)),
 
-	m_rockCount(m_generator.randomInt(1, 40), m_generator.randomInt(40, 100)),
+	m_rockCount(m_generator.randomInt(1, 30), m_generator.randomInt(30, 100)),
 	m_treeCount(m_generator.randomInt(1, 20), m_generator.randomInt(20, 50)),
 	m_mushroomCount(m_generator.randomInt(1, 100), m_generator.randomInt(100, 250)),
-	m_crystalCount(m_generator.randomInt(1, 30), m_generator.randomInt(30, 100)),
+	m_crystalCount(m_generator.randomInt(1, 30), m_generator.randomInt(30, 80)),
 	m_starCount(300u, 800u),
-	m_sunCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 15)),
-	m_moonCount(m_generator.randomInt(1, 10), m_generator.randomInt(10, 20)),
+	m_sunCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 8)),
+	m_moonCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 8)),
 	m_rainbowCount(m_generator.randomInt(1, 3), m_generator.randomInt(3, 10)),
 	m_cloudCount(m_generator.randomInt(1, 50), m_generator.randomInt(50, 100)),
 	m_groundRockCount(m_generator.randomInt(100, 200), m_generator.randomInt(200, 700)),
 
-	m_canCreateRain(m_generator.randomBool(0.5f)),
-	m_canCreateThunder(m_generator.randomBool(0.6f)),
-	m_canCreateSnow(m_generator.randomBool(0.5f)),
-	m_canCreateRock(m_generator.randomBool(0.5f)),
-	m_canCreateTree(m_generator.randomBool(0.5f)),
+	m_canCreateRain(m_generator.randomBool(0.4f)),
+	m_canCreateThunder(m_generator.randomBool(0.4f)),
+	m_canCreateSnow(m_generator.randomBool(0.4f)),
+	m_canCreateRock(m_generator.randomBool(0.4f)),
+	m_canCreateTree(m_generator.randomBool(0.4f)),
 	m_canCreateLeaf(m_generator.randomBool(0.5f)),
 	m_treeIsMoving(m_generator.randomBool(0.8f)),
-	m_canCreateMushroom(m_generator.randomBool(0.5f)),
-	m_canCreateCrystal(m_generator.randomBool(0.5f)),
-	m_canCreateShineEffect(m_generator.randomBool(0.9f)),
-	m_canCreateCloud(m_generator.randomBool(0.5f)),
+	m_canCreateMushroom(m_generator.randomBool(0.4f)),
+	m_canCreateCrystal(m_generator.randomBool(0.4f)),
+	m_canCreateShineEffect(m_generator.randomBool(0.8f)),
+	m_canCreateCloud(m_generator.randomBool(0.6f)),
 	m_canCreateStar(m_generator.randomBool(0.9f)),
-	m_canCreateSun(m_generator.randomBool(0.7f)),
+	m_canCreateSun(m_generator.randomBool(0.8f)),
 	m_canCreateMoon(m_generator.randomBool(0.8f)),
 	m_canCreateRainbow(m_generator.randomBool(0.4f)),
-	m_canCreateGrass(m_generator.randomBool(0.5f)),
+	m_canCreateGrass(m_generator.randomBool(0.7f)),
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Random),
 
@@ -156,7 +157,7 @@ RewardsBiome::RewardsBiome() :
 	else
 	{
 		m_gameObjects[portalPos] = GameObjectType::Portal;
-		m_destinations.push_back(progress.getLastDestination());
+		m_destinations.push_back(Level::Rewards);
 	}
 
 	m_interestPointPosX = portalPos;
@@ -369,7 +370,7 @@ sf::Time		RewardsBiome::getDayDuration()
 
 sf::Time		RewardsBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		RewardsBiome::getSkyDayColor()
@@ -385,6 +386,11 @@ sf::Color		RewardsBiome::getSkyNightColor()
 sf::Color		RewardsBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	RewardsBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		RewardsBiome::getSunsetLightColor()

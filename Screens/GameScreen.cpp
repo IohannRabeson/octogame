@@ -9,7 +9,8 @@
 #include <PostEffectManager.hpp>
 
 GameScreen::GameScreen(void) :
-	m_doSave(false)
+	m_doSave(false),
+	m_timerRedBlueMax(sf::seconds(30.f))
 {}
 
 void	GameScreen::start()
@@ -65,11 +66,55 @@ void	GameScreen::update(sf::Time frameTime)
 	{
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
-		if (progress.changeLevel())
+		changeLevel(states, progress);
+	}
+	timeLevelBlueRed(frameTime, progress);
+}
+
+void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
+{
+	if (progress.changeLevel())
+	{
+		Level current = progress.getCurrentDestination();
+		Level next = progress.getNextDestination();
+
+		progress.levelChanged();
+		if (current == Level::Blue || next == Level::Blue)
 		{
-			progress.levelChanged();
+			if (next == Level::Blue)
+				states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(0.0f));
+			states.change("transitionLevel", "blue");
+		}
+		else if (current == Level::Red || next == Level::Red)
+		{
+			if (next == Level::Red)
+				states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(0.f));
+			states.change("transitionLevel", "red");
+		}
+		else
+		{
+			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 			states.change("transitionLevel");
 		}
+	}
+}
+
+void GameScreen::timeLevelBlueRed(sf::Time frameTime, Progress & progress)
+{
+	Level current = progress.getCurrentDestination();
+	Level next = progress.getNextDestination();
+
+	if (current == Level::Blue || next == Level::Blue)
+	{
+		m_timerBlue += frameTime;
+		if (m_timerBlue >= m_timerRedBlueMax)
+			progress.setNextDestination(Level::IceA);
+	}
+	else if (current == Level::Red || next == Level::Red)
+	{
+		m_timerRed += frameTime;
+		if (m_timerRed >= m_timerRedBlueMax)
+			progress.setNextDestination(Level::IceA);
 	}
 }
 

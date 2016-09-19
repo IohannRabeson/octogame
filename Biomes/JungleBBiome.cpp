@@ -26,10 +26,11 @@ JungleBBiome::JungleBBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(252, 252, 160),
 	m_skyNightColor(175, 177, 18),
 	m_nightLightColor(0, 0, 0, 80),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 182, 0, 100),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -75,7 +76,6 @@ JungleBBiome::JungleBBiome() :
 	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
-	m_grassIndex(0u),
 
 	m_treeDepth(5u, 6u),
 	m_treeSize(sf::Vector2f(30.f, 150.f), sf::Vector2f(120.f, 250.f)),
@@ -363,7 +363,7 @@ sf::Time		JungleBBiome::getDayDuration()
 
 sf::Time		JungleBBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		JungleBBiome::getSkyDayColor()
@@ -379,6 +379,11 @@ sf::Color		JungleBBiome::getSkyNightColor()
 sf::Color		JungleBBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	JungleBBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		JungleBBiome::getSunsetLightColor()
@@ -634,10 +639,7 @@ std::size_t	JungleBBiome::getGrassCount()
 
 std::size_t	JungleBBiome::getGrassPosX()
 {
-	m_grassIndex++;
-	if (m_grassIndex >= m_mapSize.x)
-		m_grassIndex = 0u;
-	return m_grassIndex;
+	return randomInt(0u, m_mapSize.x);
 }
 
 bool			JungleBBiome::canCreateRock()

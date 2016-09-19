@@ -75,9 +75,23 @@ bool SkyCycle::isNight(void) const
 void SkyCycle::setup(ABiome & biome)
 {
 	m_timerMax = biome.getDayDuration();
-	m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
 	m_timerDayMax = m_timerMax / 4.f;
 	m_timerNightMax = m_timerMax / 4.f;
+
+	if (biome.getStartDayDuration() == sf::Time::Zero)
+		m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
+	else
+	{
+		sf::Time x = sf::Time::Zero;
+
+		m_timerStart = biome.getStartDayDuration();
+		while (x < m_timerStart)
+		{
+			computeDayNight(sf::seconds(0.1f));
+			x += sf::seconds(0.1f);
+		}
+	}
+
 	newDropCycle(biome);
 	newThunderCycle(biome);
 
@@ -96,49 +110,49 @@ void SkyCycle::setup(ABiome & biome)
 
 void SkyCycle::computeDayNight(sf::Time frameTime)
 {
+	sf::Time const quarterTimerCycle = m_timerMax / 4.f;
 	float speedCoef = m_timerMax.asSeconds() / 100.f * m_timerStart.asSeconds();
+
 	if (speedCoef >= 1.f)
 		frameTime *= speedCoef;
 	m_timerStart -= frameTime;
 	m_timer += frameTime;
 	if (m_timer >= m_timerMax)
 		m_timer = sf::Time::Zero;
-	if (m_isDay)
+	if (m_timer < quarterTimerCycle * 2.f)
 	{
-		if (m_isMidDay == false)
+		m_isDay = true;
+		if (m_timer < quarterTimerCycle)
 		{
+			m_isMidDay = false;
 			m_timerDay += frameTime;
 			if (m_timerDay >= m_timerDayMax)
-				m_isMidDay = true;
+				m_timerDay = m_timerDayMax;
 		}
 		else
 		{
+			m_isMidDay = true;
 			m_timerDay -= frameTime;
 			if (m_timerDay <= sf::Time::Zero)
-			{
 				m_timerDay = sf::Time::Zero;
-				m_isMidDay = false;
-				m_isDay = false;
-			}
 		}
 	}
 	else
 	{
-		if (m_isMidNight == false)
+		m_isDay = false;
+		if (m_timer < quarterTimerCycle * 3.f)
 		{
+			m_isMidNight = false;
 			m_timerNight += frameTime;
 			if (m_timerNight >= m_timerNightMax)
-				m_isMidNight = true;
+				m_timerNight = m_timerNightMax;
 		}
 		else
 		{
+			m_isMidNight = true;
 			m_timerNight -= frameTime;
 			if (m_timerNight <= sf::Time::Zero)
-			{
 				m_timerNight = sf::Time::Zero;
-				m_isMidNight = false;
-				m_isDay = true;
-			}
 		}
 	}
 }

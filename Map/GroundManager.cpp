@@ -128,6 +128,7 @@ GroundManager::GroundManager(void) :
 	m_decorManagerGround(15000),
 	m_decorManagerInstanceBack(100000),
 	m_decorManagerInstanceFront(100000),
+	m_decorManagerInstanceGround(50000),
 	m_nextState(GenerationState::None),
 	m_water(nullptr)
 {}
@@ -224,7 +225,7 @@ void GroundManager::setupGroundRock(ABiome & biome)
 		ADecor * adecor = nullptr;
 		adecor = new GroundRock(true);
 		adecor->setPosition(sf::Vector2f(pos.x, pos.y + Tile::TileSize));
-		m_decorManagerInstanceFront.add(adecor);
+		m_decorManagerInstanceGround.add(adecor);
 	}
 }
 
@@ -239,6 +240,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<ConstanceNpc>(CONSTANCE_OSS);
 	m_npcFactory.registerCreator<FaustNpc>(NPC_FAUST_OSS);
 	m_npcFactory.registerCreator<AmandineNpc>(AMANDINE_OSS);
+	m_npcFactory.registerCreator<PeaNpc>(PEA_OSS);
 	m_npcFactory.registerCreator<Snowman2Npc>(SNOWMAN_2_OSS);
 	m_npcFactory.registerCreator<PunkNpc>(NPC_PUNK_OSS);
 	m_npcFactory.registerCreator<FatNpc>(NPC_FAT_OSS);
@@ -379,9 +381,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(TRAIL_SIGN_10_OSS, scale, position, 1u, 0.4f);
 			});
-	m_decorFactory.registerCreator(PYRAMID_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+	m_decorFactory.registerCreator(PYRAMID_OSS, [&biome](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new Pyramid(scale, position);
+				return new Pyramid(scale, position, biome);
 			});
 	m_decorFactory.registerCreator(SEB_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
@@ -541,9 +543,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				std::unique_ptr<Portal> portal;
 				if (!decor.name.compare("object_portal_red.oss"))
-					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_red", sf::Color::Red));
-				if (!decor.name.compare("object_portal_blue.oss"))
-					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_blue", sf::Color::Blue));
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_red", sf::Color(155, 0, 0)));
+				else if (!decor.name.compare("object_portal_blue.oss"))
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_blue", sf::Color(0, 0, 155)));
 				else
 					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), VORTEX_FRAG));
 				portal->setBiome(biome);
@@ -559,6 +561,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					adecor = new Tree(true);
 				else if (!decor.name.compare(DECOR_ROCK_OSS))
 					adecor = new Rock();
+				else if (!decor.name.compare(DECOR_GRASS_OSS))
+					adecor = new Grass(true, false);
+				else if (!decor.name.compare(DECOR_GRASS_REVERSE_OSS))
+					adecor = new Grass(true, true);
 				else if (!decor.name.compare(DECOR_CRYSTAL_OSS))
 					adecor = new Crystal();
 				else if (!decor.name.compare(DECOR_MUSHROOM_OSS))
@@ -567,14 +573,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					adecor = new GroundRock(true);
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
-				else if (!decor.name.compare(DECOR_GRASS_OSS))
-					adecor = new Grass(true, false);
-				else if (!decor.name.compare(DECOR_GRASS_REVERSE_OSS))
-					adecor = new Grass(true, true);
 				if (adecor)
 				{
 					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));
-					if (decor.isFront || !decor.name.compare(DECOR_GROUND_OSS))
+					if (decor.isFront)
 						m_decorManagerInstanceFront.add(adecor);
 					else
 						m_decorManagerInstanceBack.add(adecor);
@@ -1230,6 +1232,7 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 	m_decorManagerGround.setup(&biome);
 	m_decorManagerInstanceBack.setup(&biome);
 	m_decorManagerInstanceFront.setup(&biome);
+	m_decorManagerInstanceGround.setup(&biome);
 	std::size_t mapSizeX = biome.getMapSize().x;
 
 	std::size_t treeCount = biome.getTreeCount();
@@ -1309,27 +1312,6 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 		totalCount += mushroomCount;
 	}
 
-	if (biome.canCreateCrystal())
-	{
-		for (std::size_t i = 0; i < crystalCount; i++)
-		{
-			int x = biome.getCrystalPosX();
-			m_decorManagerBack.add(DecorManager::DecorTypes::Crystal);
-			m_tiles->registerDecor(x);
-			m_tilesPrev->registerDecor(x);
-		}
-		totalCount += crystalCount;
-		for (std::size_t i = 0; i < crystalCount; i++)
-		{
-			int x = biome.getCrystalPosX();
-			m_decorManagerFront.add(DecorManager::DecorTypes::Crystal);
-			m_tiles->registerDecor(x);
-			m_tilesPrev->registerDecor(x);
-		}
-		totalCount += crystalCount;
-	}
-
-	//TODO: Add in Biome
 	if (biome.canCreateGrass())
 	{
 		for (std::size_t i = 0; i < grassCount; i++)
@@ -1348,6 +1330,26 @@ void GroundManager::setupDecors(ABiome & biome, SkyCycle & cycle)
 			m_tilesPrev->registerDecor(x);
 		}
 		totalCount += grassCount;
+	}
+
+	if (biome.canCreateCrystal())
+	{
+		for (std::size_t i = 0; i < crystalCount; i++)
+		{
+			int x = biome.getCrystalPosX();
+			m_decorManagerBack.add(DecorManager::DecorTypes::Crystal);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += crystalCount;
+		for (std::size_t i = 0; i < crystalCount; i++)
+		{
+			int x = biome.getCrystalPosX();
+			m_decorManagerFront.add(DecorManager::DecorTypes::Crystal);
+			m_tiles->registerDecor(x);
+			m_tilesPrev->registerDecor(x);
+		}
+		totalCount += crystalCount;
 	}
 
 	for (std::size_t i = 0; i < groundRockCount; i++)
@@ -1679,6 +1681,14 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			(*it)->setPosition((*it)->getPosition() - sf::Vector2f(mapSizeX, 0.f));
 	}
 
+	for (auto it = m_decorManagerInstanceGround.begin(); it != m_decorManagerInstanceGround.end(); it++)
+	{
+		if ((*it)->getPosition().x < m_offset.x - mapSizeX / 2.f)
+			(*it)->setPosition((*it)->getPosition() + sf::Vector2f(mapSizeX, 0.f));
+		else if ((*it)->getPosition().x > m_offset.x + mapSizeX / 2.f)
+			(*it)->setPosition((*it)->getPosition() - sf::Vector2f(mapSizeX, 0.f));
+	}
+
 	for (auto const & robot : m_nanoRobotOnInstance)
 	{
 		if (robot->getTargetPosition().x < m_offset.x - mapSizeX / 2.f)
@@ -1889,6 +1899,7 @@ void GroundManager::updateDecors(sf::Time deltatime)
 	m_decorManagerGround.update(deltatime, camera);
 	m_decorManagerInstanceBack.update(deltatime, camera);
 	m_decorManagerInstanceFront.update(deltatime, camera);
+	m_decorManagerInstanceGround.update(deltatime, camera);
 }
 
 void GroundManager::updateGameObjects(sf::Time frametime)
@@ -2012,9 +2023,10 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	for (auto & npc : m_npcs)
 		npc->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
+	render.draw(m_decorManagerInstanceFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
-	render.draw(m_decorManagerInstanceFront, states);
+	render.draw(m_decorManagerInstanceGround, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->draw(render, states);
 	for (auto & decor : m_instanceDecors)

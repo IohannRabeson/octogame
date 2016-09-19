@@ -40,8 +40,8 @@ public:
 	void				setBubbleNpc(bool isBubbleNpc);
 	MenuType			getMenuType(void);
 	void				setMenuType(MenuType type);
-	//TODO: Set this value once the game is finished
 	bool				isGameFinished() const;
+	void				setGameFinished(bool finish);
 
 	void				setLanguage(Language language);
 	Progress::Language	getLanguage(void) const;

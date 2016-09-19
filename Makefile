@@ -178,6 +178,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/LevelMenu.cpp						\
 				Menu/NanoMenu.cpp						\
 				Menu/RandomDiscoverMenu.cpp				\
+				Menu/FakeMenu.cpp						\
 				Menu/EmptyMenu.cpp						\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
@@ -222,6 +223,9 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/WaterABiome.cpp					\
 				Biomes/WaterBBiome.cpp					\
 				Biomes/WaterCBiome.cpp					\
+				Biomes/RedBiome.cpp						\
+				Biomes/BlueBiome.cpp					\
+				Biomes/FinalBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
@@ -254,6 +258,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/WaterDropSystem.cpp				\
 				Decors/StarSystem.cpp					\
 				Decors/WaterCascadeSystem.cpp			\
+				Decors/BeamSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\

@@ -29,7 +29,7 @@ private:
 					float thickness);
 
 	void setupColors(std::vector<sf::Color> & colors,
-						std::vector<sf::Color> & transparent);
+						std::vector<sf::Color> & transparent, ABiome & biome);
 
 	void createFirstLine(Line & line,
 						std::size_t stripeCount,

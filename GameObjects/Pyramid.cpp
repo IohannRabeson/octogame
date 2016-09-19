@@ -2,10 +2,17 @@
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
-Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
-	InstanceDecor(PYRAMID_OSS, scale, position, 1u)
+Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome) :
+	InstanceDecor(PYRAMID_OSS, scale, position, 1u),
+	m_particles(new BeamSystem())
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
+
+	sf::Vector2f const & particlePosition = position + sf::Vector2f(getSprite().getLocalSize().x / 2.f, getSprite().getLocalSize().y);
+	m_particles->setWidth(100 * 16.f);
+	m_particles->setHeight(200 * 16.f);
+	m_particles->setBiome(biome);
+	m_particles->setPosition(particlePosition);
 
 	octo::SpriteAnimation::FrameList	frames;
 	frames.emplace_back(sf::seconds(0.1f), 0u);
@@ -19,8 +26,8 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_spriteTop.play();
 
 	octo::SpriteAnimation::FrameList	framesWater;
-	framesWater.emplace_back(sf::seconds(0.2f), 0u);
-	framesWater.emplace_back(sf::seconds(0.2f), 1u);
+	framesWater.emplace_back(sf::seconds(0.1f), 0u);
+	framesWater.emplace_back(sf::seconds(0.1f), 1u);
 	m_animationWater.setFrames(framesWater);
 	m_animationWater.setLoop(octo::LoopMode::Loop);
 
@@ -50,7 +57,7 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 		m_animationBlocs[i].setLoop(octo::LoopMode::Loop);
 
 		m_spriteBlocs[i].setSpriteSheet(resources.getSpriteSheet(PYRAMID_BLOC_1_OSS));
-		m_spriteBlocs[i].setScale(scale);
+		m_spriteBlocs[i].setScale(sf::Vector2f(0.98f, 0.98f));
 		m_spriteBlocs[i].setAnimation(m_animationBlocs[i]);
 		m_spriteBlocs[i].play();
 	}
@@ -71,6 +78,7 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 
 		m_spriteBlocs[i].setSpriteSheet(resources.getSpriteSheet(PYRAMID_BLOC_2_OSS));
 		m_spriteBlocs[i].setScale(scale);
+		m_spriteBlocs[i].setScale(sf::Vector2f(0.98f, 0.98f));
 		m_spriteBlocs[i].setAnimation(m_animationBlocs[i]);
 		m_spriteBlocs[i].play();
 	}
@@ -88,6 +96,7 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position) :
 
 		m_spriteBlocs[i].setSpriteSheet(resources.getSpriteSheet(PYRAMID_BLOC_3_OSS));
 		m_spriteBlocs[i].setScale(scale);
+		m_spriteBlocs[i].setScale(sf::Vector2f(0.98f, 0.98f));
 		m_spriteBlocs[i].setAnimation(m_animationBlocs[i]);
 		m_spriteBlocs[i].play();
 	}
@@ -134,6 +143,7 @@ void Pyramid::setPosition(sf::Vector2f const & position)
 
 void Pyramid::update(sf::Time frameTime)
 {
+	m_particles->update(frameTime);
 	InstanceDecor::update(frameTime);
 	m_spriteTop.update(frameTime);
 	m_spriteWater.update(frameTime);
@@ -144,8 +154,13 @@ void Pyramid::update(sf::Time frameTime)
 void Pyramid::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	m_spriteTop.draw(render, states);
+}
+
+void Pyramid::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
+{
 	InstanceDecor::draw(render, states);
 	for (std::size_t i = 0u; i < m_spriteBlocs.size(); i++)
 		m_spriteBlocs[i].draw(render, states);
 	m_spriteWater.draw(render, states);
+	m_particles->draw(render, states);
 }
