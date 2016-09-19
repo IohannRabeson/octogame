@@ -59,13 +59,13 @@
 #include "SnowGirl2Npc.hpp"
 #include "SnowGirl1Npc.hpp"
 #include "Snowman3Npc.hpp"
+#include "Snowman2Npc.hpp"
 #include "Snowman1Npc.hpp"
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "GuiNpc.hpp"
-#include "Snowman2Npc.hpp"
 #include "PunkNpc.hpp"
 #include "FatNpc.hpp"
 #include "LucienNpc.hpp"
@@ -928,6 +928,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
+			case GameObjectType::Snowman1Npc:
+				{
+					Snowman1Npc * snowman = new Snowman1Npc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
+				}
+				break;
 			case GameObjectType::Snowman2Npc:
 				{
 					Snowman2Npc * npc = new Snowman2Npc();
@@ -968,13 +975,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					FranfranNpc * franfran = new FranfranNpc();
 					franfran->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, franfran);
-				}
-				break;
-			case GameObjectType::Snowman1Npc:
-				{
-					Snowman1Npc * snowman = new Snowman1Npc();
-					snowman->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
 				}
 				break;
 			case GameObjectType::StrangerGirlSnowNpc:

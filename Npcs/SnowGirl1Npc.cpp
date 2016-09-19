@@ -1,7 +1,5 @@
 #include "SnowGirl1Npc.hpp"
 
-#include <Application.hpp>
-#include <Console.hpp>
 SnowGirl1Npc::SnowGirl1Npc(void) :
 	ASpecialNpc(SNOWGIRL_1_OSS, false)
 {
@@ -10,21 +8,6 @@ SnowGirl1Npc::SnowGirl1Npc(void) :
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(25.f, -40.f));
 	setup();
-	octo::Application::getConsole().addCommand(L"ori", [this](sf::Vector2f const & p)
-	{
-		setOrigin(p);
-		std::cout << "origin " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"size", [this](sf::Vector2f const & p)
-	{
-		setSize(p);
-		std::cout << "size " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"texOff", [this](sf::Vector2f const & p)
-	{
-		setTextOffset(p);
-		std::cout << "textOff " << p.x << " " << p.y << std::endl;
-		});
 }
 
 void SnowGirl1Npc::setup(void)
