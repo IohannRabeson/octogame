@@ -991,6 +991,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
 				}
 				break;
+			case GameObjectType::SnowGirl1Npc:
+				{
+					SnowGirl1Npc * snowman = new SnowGirl1Npc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
+				}
+				break;
 			case GameObjectType::SnowGirl2Npc:
 				{
 					SnowGirl2Npc * snowman = new SnowGirl2Npc();

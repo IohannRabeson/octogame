@@ -1,7 +1,5 @@
 #include "PierreNpc.hpp"
 
-#include <Application.hpp>
-#include <Console.hpp>
 PierreNpc::PierreNpc(void) :
 	ASpecialNpc(PIERRE_OSS)
 {
@@ -10,21 +8,6 @@ PierreNpc::PierreNpc(void) :
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();
-	octo::Application::getConsole().addCommand(L"ori", [this](sf::Vector2f const & p)
-	{
-		setOrigin(p);
-		std::cout << "origin " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"size", [this](sf::Vector2f const & p)
-	{
-		setSize(p);
-		std::cout << "size " << p.x << " " << p.y << std::endl;
-		});
-	octo::Application::getConsole().addCommand(L"texOff", [this](sf::Vector2f const & p)
-	{
-		setTextOffset(p);
-		std::cout << "textOff " << p.x << " " << p.y << std::endl;
-		});
 }
 
 void PierreNpc::setup(void)
