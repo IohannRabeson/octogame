@@ -78,6 +78,11 @@ bool	Progress::isGameFinished() const
 	return m_isGameFinished;
 }
 
+void	Progress::setGameFinished(bool finish)
+{
+	m_isGameFinished = finish;
+}
+
 void	Progress::setup()
 {
 	m_newSave = false;
