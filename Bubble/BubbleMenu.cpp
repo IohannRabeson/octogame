@@ -39,19 +39,17 @@ void BubbleMenu::setup(std::vector<std::wstring> const & subMenuTitle, sf::Color
 			m_contentSize.x = m_subMenus[i].size.x;
 		m_contentSize.y += m_font.getLineSpacing(characterSize);
 	}
-
-	// Center subMenus and set selection position
-	for (std::size_t i = 0; i < m_subMenus.size(); i++)
-	{
-		//TODO: Check the getSizeCorner * 2.f;
-		m_cursorPosition[i].x = m_contentSize.x + getSizeCorner() * 2.f;
-		m_cursorPosition[i].y = m_subMenus[i].position.y + m_font.getLineSpacing(characterSize) / 2.f;
-		m_subMenus[i].position.x = (m_contentSize.x - m_subMenus[i].size.x) / 2.f;
-	}
 }
 
 std::vector<sf::Vector2f> const & BubbleMenu::getCursorPosition(void)
 {
+	for (std::size_t i = 0; i < m_subMenus.size(); i++)
+	{
+		m_cursorPosition[i].x = m_contentSize.x + getSizeCorner() * 2.f;
+		m_cursorPosition[i].y = m_subMenus[i].position.y + m_font.getLineSpacing(m_characterSize) / 2.f;
+		m_subMenus[i].position.x = (m_contentSize.x - m_subMenus[i].size.x) / 2.f;
+	}
+
 	return m_cursorPosition;
 }
 

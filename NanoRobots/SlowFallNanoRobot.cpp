@@ -14,7 +14,7 @@ SlowFallNanoRobot::SlowFallNanoRobot(sf::Vector2f const & position) :
 	targets.push_back(sf::Vector2f(91.f, 275.f));
 	targets.push_back(sf::Vector2f(86.f, 274.f));
 	setTargets(targets, 0.6f);
-	setLaserColor(sf::Color(75, 0, 130));
+	setLaserColor(sf::Color(247, 238, 80));
 
 	setSwarmTarget(position);
 }

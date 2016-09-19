@@ -17,6 +17,6 @@ WaterNanoRobot::WaterNanoRobot(void) :
 	targets.push_back(sf::Vector2f(295.f, 145.f));
 	targets.push_back(sf::Vector2f(301.f, 145.f));
 	targets.push_back(sf::Vector2f(295.f, 139.f));
-	setLaserColor(sf::Color::Cyan);
+	setLaserColor(sf::Color(247, 238, 80));
 	setTargets(targets, 0.6f);
 }

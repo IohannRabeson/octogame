@@ -130,11 +130,9 @@ void NanoRobot::setup(AGameObjectBase * gameObject)
 
 void NanoRobot::setLaserColor(sf::Color const & color)
 {
-	//TODO : Find a cleaner way to do that
-	(void)color;
 	for (std::size_t i = 0u; i < 12u; i++)
 	{
-		m_ray[i].color = sf::Color(247, 238, 80);
+		m_ray[i].color = color;
 		m_ray[i].color.a = 100;
 	}
 
