@@ -54,19 +54,16 @@
 #include "Rocket.hpp"
 #include "OctoDeathNpc.hpp"
 #include "TVScreen.hpp"
-#include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
-#include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
-#include "BirdBlueNpc.hpp"
 #include "WolfNpc.hpp"
 #include "JellyfishNpc.hpp"
-#include "BirdRedNpc.hpp"
 #include "ASpecialNpc.hpp"
 #include "AIdleNpc.hpp"
 #include "AUniqueNpc.hpp"
 #include "ADisappearNpc.hpp"
 #include "AWalkNpc.hpp"
+#include "AFlyNpc.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -367,6 +364,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 	(void)collisionDirection;
 	switch (gameObject->getObjectType())
 	{
+		case GameObjectType::FlyNpc:
+			gameObjectCast<AFlyNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::WalkNpc:
 			gameObjectCast<AWalkNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -408,29 +408,17 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::TVScreen:
 			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::FabienNpc:
-			gameObjectCast<FabienNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::CheckPoint:
 			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::OverCoolNpc:
-			gameObjectCast<OverCoolNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::Pedestal:
 			gameObjectCast<Pedestal>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BirdBlueNpc:
-			gameObjectCast<BirdBlueNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::WolfNpc:
 			gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::JellyfishNpc:
 			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BirdRedNpc:
-			gameObjectCast<BirdRedNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::SpaceShip:
 			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));

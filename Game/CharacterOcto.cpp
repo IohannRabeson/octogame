@@ -162,21 +162,18 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Rocket)
 		| static_cast<std::size_t>(GameObjectType::OctoDeathNpc)
 		| static_cast<std::size_t>(GameObjectType::TVScreen)
-		| static_cast<std::size_t>(GameObjectType::FabienNpc)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint)
-		| static_cast<std::size_t>(GameObjectType::OverCoolNpc)
 		| static_cast<std::size_t>(GameObjectType::Pedestal)
-		| static_cast<std::size_t>(GameObjectType::BirdBlueNpc)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::SpaceShip)
 		| static_cast<std::size_t>(GameObjectType::WolfNpc)
 		| static_cast<std::size_t>(GameObjectType::JellyfishNpc)
-		| static_cast<std::size_t>(GameObjectType::BirdRedNpc)
 		| static_cast<std::size_t>(GameObjectType::Npc)
 		| static_cast<std::size_t>(GameObjectType::IdleNpc)
 		| static_cast<std::size_t>(GameObjectType::SpecialNpc)
 		| static_cast<std::size_t>(GameObjectType::DisappearNpc)
-		| static_cast<std::size_t>(GameObjectType::WalkNpc);
+		| static_cast<std::size_t>(GameObjectType::WalkNpc)
+		| static_cast<std::size_t>(GameObjectType::FlyNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
 	m_eventBox->setType(AShape::Type::e_trigger);

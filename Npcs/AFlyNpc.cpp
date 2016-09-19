@@ -1,6 +1,5 @@
-#include "BirdNpc.hpp"
+#include "AFlyNpc.hpp"
 #include "RectangleShape.hpp"
-#include "SkyCycle.hpp"
 #include "CircleShape.hpp"
 #include "RandomGenerator.hpp"
 #include "CharacterOcto.hpp"
@@ -9,9 +8,9 @@
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
 
-RandomGenerator BirdNpc::m_generator("random");
+RandomGenerator AFlyNpc::m_generator("random");
 
-BirdNpc::BirdNpc(ResourceKey const & npcId, bool isMeetable) :
+AFlyNpc::AFlyNpc(ResourceKey const & npcId, bool isMeetable) :
 	ANpc(npcId, isMeetable),
 	m_animationEnd(false),
 	m_speedLimit(m_generator.randomFloat(30.f, 150.f)),
@@ -29,9 +28,11 @@ BirdNpc::BirdNpc(ResourceKey const & npcId, bool isMeetable) :
 	m_shader.setParameter("texture", sf::Shader::CurrentTexture);
 	m_shader.setParameter("hue", 0.0);
 	setTimerMax(sf::seconds(m_generator.randomFloat(5.f, 10.f)));
+
+	setupBox(this, static_cast<std::size_t>(GameObjectType::FlyNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
-void BirdNpc::setup(void)
+void AFlyNpc::setup(void)
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
 
@@ -66,7 +67,7 @@ void BirdNpc::setup(void)
 	setupMachine();
 }
 
-void BirdNpc::setupMachine(void)
+void AFlyNpc::setupMachine(void)
 {
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
@@ -102,7 +103,7 @@ void BirdNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-void BirdNpc::setPosition(sf::Vector2f const & position)
+void AFlyNpc::setPosition(sf::Vector2f const & position)
 {
 	octo::CharacterSprite & sprite = getSprite();
 	if (sprite.getCurrentEvent() == Special2)
@@ -110,7 +111,7 @@ void BirdNpc::setPosition(sf::Vector2f const & position)
 	ANpc::setPosition(position);
 }
 
-void BirdNpc::updateState(void)
+void AFlyNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
@@ -136,7 +137,7 @@ void BirdNpc::updateState(void)
 		sprite.setNextEvent(Special2);
 }
 
-void BirdNpc::computeFlight(sf::Time frametime)
+void AFlyNpc::computeFlight(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 	octo::Camera const & camera = octo::Application::getCamera();
@@ -160,7 +161,7 @@ void BirdNpc::computeFlight(sf::Time frametime)
 	}
 }
 
-void BirdNpc::update(sf::Time frametime)
+void AFlyNpc::update(sf::Time frametime)
 {
 	addTimer(frametime);
 	computeFlight(frametime);
@@ -176,7 +177,7 @@ void BirdNpc::update(sf::Time frametime)
 	resetVariables();
 }
 
-void BirdNpc::updatePhysics(void)
+void AFlyNpc::updatePhysics(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 	RectangleShape * box = getBox();
@@ -188,7 +189,7 @@ void BirdNpc::updatePhysics(void)
 	box->update();
 }
 
-void BirdNpc::collideOctoEvent(CharacterOcto * octo)
+void AFlyNpc::collideOctoEvent(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
 	m_octoPosition = octo->getPosition();
@@ -211,7 +212,7 @@ void BirdNpc::collideOctoEvent(CharacterOcto * octo)
 	}
 }
 
-void BirdNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
+void AFlyNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	states.shader = &m_shader;
 	if (!m_animationEnd)
