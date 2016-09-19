@@ -22,6 +22,7 @@ public:
 
 private:
 	sf::RectangleShape			m_filter;
+	bool						m_soundPlayed;
 };
 
 #endif
