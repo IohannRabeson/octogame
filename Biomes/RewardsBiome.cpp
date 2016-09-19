@@ -157,7 +157,7 @@ RewardsBiome::RewardsBiome() :
 	else
 	{
 		m_gameObjects[portalPos] = GameObjectType::Portal;
-		m_destinations.push_back(progress.getLastDestination());
+		m_destinations.push_back(Level::Rewards);
 	}
 
 	m_interestPointPosX = portalPos;

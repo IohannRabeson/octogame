@@ -279,6 +279,7 @@ void	Game::loadLevel(void)
 		audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
 	m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
 	m_soundGeneration->setLoop(true);
+	m_fakeMenu.setup();
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -313,6 +314,20 @@ void	Game::update(sf::Time frameTime)
 	m_skyManager->update(frameTime);
 	m_konami->update(realFrameTime, m_octo->getPosition());
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
+	updateFakeMenu(frameTime);
+}
+
+void Game::updateFakeMenu(sf::Time frameTime)
+{
+	Progress const & progress = Progress::getInstance();
+	if (!progress.isMenu() && progress.getNextDestination() == Level::Rewards)
+	{
+		sf::Vector2f const &		center = octo::Application::getCamera().getCenter();
+		sf::Vector2f const &		bubble = getOctoBubblePosition();
+
+		m_fakeMenu.setState(AMenu::State::Active);
+		m_fakeMenu.update(frameTime, octo::linearInterpolation(center, bubble, 0.4f));
+	}
 }
 
 void Game::updateSlowTime(sf::Time frameTime)
@@ -721,4 +736,5 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_octo->drawText(render, states);
 	render.draw(*m_konami);
 	//m_cameraMovement->debugDraw(render);
+	render.draw(m_fakeMenu);
 }

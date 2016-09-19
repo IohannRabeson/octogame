@@ -52,7 +52,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(key));
 
-	if (destination == Level::Rewards || destination == Level::Random)
+	if ((destination == Level::Rewards && progress.isMenu()) || destination == Level::Random)
 	{
 		m_animationClosed.setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),

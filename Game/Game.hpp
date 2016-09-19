@@ -11,6 +11,7 @@
 # include "IContactListener.hpp"
 # include "MusicManager.hpp"
 # include "KonamiCode.hpp"
+# include "FakeMenu.hpp"
 
 #include "InputListener.hpp"
 
@@ -58,8 +59,10 @@ private:
 	float								m_slowTimeCoef;
 	std::size_t							m_skipFrames;
 	std::size_t							m_skipFramesMax;
+	FakeMenu							m_fakeMenu;
 
 	void			updateSlowTime(sf::Time frameTime);
+	void			updateFakeMenu(sf::Time frameTime);
 	void			moveMap(sf::Time frameTime);
 	bool			onInputPressed(InputListener::OctoKeys const & key);
 	bool			onInputReleased(InputListener::OctoKeys const & key);

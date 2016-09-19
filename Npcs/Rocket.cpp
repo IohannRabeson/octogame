@@ -4,6 +4,7 @@
 #include "CircleShape.hpp"
 #include "CharacterOcto.hpp"
 #include "PostEffectLayer.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
@@ -170,7 +171,7 @@ void Rocket::update(sf::Time frametime)
 					else
 					{
 						m_timerSecondBlast = m_timerSecondBlastMax;
-						octo::Application::getStateManager().change("menu");
+						Progress::getInstance().setNextDestination(Level::Rewards);
 					}
 				}
 			}

@@ -162,6 +162,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/LevelMenu.cpp						\
 				Menu/NanoMenu.cpp						\
 				Menu/RandomDiscoverMenu.cpp				\
+				Menu/FakeMenu.cpp						\
 				Menu/EmptyMenu.cpp						\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
