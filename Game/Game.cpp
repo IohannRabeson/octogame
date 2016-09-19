@@ -66,8 +66,6 @@
 #include "ForestSpirit2Npc.hpp"
 #include "ForestSpirit1Npc.hpp"
 #include "BirdBlueNpc.hpp"
-#include "StrangerSnowNpc.hpp"
-#include "StrangerGirlSnowNpc.hpp"
 #include "CedricStartNpc.hpp"
 #include "GuiNpc.hpp"
 #include "PunkNpc.hpp"
@@ -455,12 +453,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::BirdBlueNpc:
 			gameObjectCast<BirdBlueNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::StrangerSnowNpc:
-			gameObjectCast<StrangerSnowNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::StrangerGirlSnowNpc:
-			gameObjectCast<StrangerGirlSnowNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::WolfNpc:
 			gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);
