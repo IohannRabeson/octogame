@@ -1,17 +1,15 @@
-#ifndef BIRD_HPP
-# define BIRD_HPP
+#ifndef AFLYNPC_HPP
+# define AFLYNPC_HPP
 
 # include "ANpc.hpp"
 # include "RandomGenerator.hpp"
 # include <SFML/Graphics/Shader.hpp>
 
-class SkyCycle;
-
-class BirdNpc : public ANpc
+class AFlyNpc : public ANpc, public AGameObject<GameObjectType::FlyNpc>
 {
 public:
-	BirdNpc(ResourceKey const & npcId, bool isMeetable = false);
-	virtual ~BirdNpc(void) = default;
+	AFlyNpc(ResourceKey const & npcId, bool isMeetable = false);
+	virtual ~AFlyNpc(void) = default;
 
 	virtual void setup(void);
 	virtual void setPosition(sf::Vector2f const & position);

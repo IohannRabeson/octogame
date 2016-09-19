@@ -54,56 +54,19 @@
 #include "ScientistLu.hpp"
 #include "ScientistFran.hpp"
 #include "ScientistJu.hpp"
-#include "WindowGlitchNpc.hpp"
-#include "FranGlitchNpc.hpp"
-#include "JuGlitchNpc.hpp"
-#include "LuGlitchNpc.hpp"
-#include "LongChairNpc.hpp"
 #include "Rocket.hpp"
 #include "OctoDeathNpc.hpp"
-#include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
-#include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
-#include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
-#include "ForestSpirit2Npc.hpp"
-#include "ForestSpirit1Npc.hpp"
-#include "BirdBlueNpc.hpp"
-#include "StrangerSnowNpc.hpp"
-#include "StrangerGirlSnowNpc.hpp"
-#include "SnowGirl2Npc.hpp"
-#include "SnowGirl1Npc.hpp"
-#include "Snowman3Npc.hpp"
-#include "Snowman1Npc.hpp"
-#include "FranfranNpc.hpp"
-#include "CanouilleNpc.hpp"
-#include "JuNpc.hpp"
-#include "FannyNpc.hpp"
-#include "CedricStartNpc.hpp"
-#include "GuiNpc.hpp"
-#include "PunkNpc.hpp"
-#include "ClementineNpc.hpp"
-#include "FatNpc.hpp"
-#include "PeaNpc.hpp"
-#include "PierreNpc.hpp"
-#include "JeffMouffyNpc.hpp"
-#include "TurbanNpc.hpp"
-#include "VinceNpc.hpp"
-#include "AmandineNpc.hpp"
-#include "FaustNpc.hpp"
 #include "WolfNpc.hpp"
-#include "ConstanceNpc.hpp"
-#include "BrayouNpc.hpp"
-#include "Snowman2Npc.hpp"
-#include "EvaNpc.hpp"
-#include "OldDesertStaticNpc.hpp"
 #include "JellyfishNpc.hpp"
-#include "BirdRedNpc.hpp"
-#include "WellKeeperNpc.hpp"
-#include "LucienNpc.hpp"
-#include "IohannNpc.hpp"
 #include "ASpecialNpc.hpp"
+#include "AIdleNpc.hpp"
+#include "AUniqueNpc.hpp"
+#include "ADisappearNpc.hpp"
+#include "AWalkNpc.hpp"
+#include "AFlyNpc.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -371,9 +334,6 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 {
 	switch (gameObject->getObjectType())
 	{
-		case GameObjectType::SpecialNpc:
-			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::Elevator:
 			if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
 			{
@@ -464,6 +424,24 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 	(void)collisionDirection;
 	switch (gameObject->getObjectType())
 	{
+		case GameObjectType::FlyNpc:
+			gameObjectCast<AFlyNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::WalkNpc:
+			gameObjectCast<AWalkNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::DisappearNpc:
+			gameObjectCast<ADisappearNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::IdleNpc:
+			gameObjectCast<AIdleNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SpecialNpc:
+			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Npc:
+			gameObjectCast<AUniqueNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::Elevator:
 			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
 			break;
@@ -483,149 +461,24 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::ScientistJu:
 			gameObjectCast<ScientistJu>(gameObject)->collideOctoEvent(octo);
-		case GameObjectType::WindowGlitchNpc:
-			gameObjectCast<WindowGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FranGlitchNpc:
-			gameObjectCast<FranGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::JuGlitchNpc:
-			gameObjectCast<JuGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::LuGlitchNpc:
-			gameObjectCast<LuGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::LongChairNpc:
-			gameObjectCast<LongChairNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::OctoDeathNpc:
 			gameObjectCast<OctoDeathNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::CedricStartNpc:
-			gameObjectCast<CedricStartNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::CedricEndNpc:
-			gameObjectCast<CedricEndNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::TVScreen:
 			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FabienNpc:
-			gameObjectCast<FabienNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::CheckPoint:
 			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::OverCoolNpc:
-			gameObjectCast<OverCoolNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::Pedestal:
 			gameObjectCast<Pedestal>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::ForestSpirit2Npc:
-			gameObjectCast<ForestSpirit2Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::ForestSpirit1Npc:
-			gameObjectCast<ForestSpirit1Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BirdBlueNpc:
-			gameObjectCast<BirdBlueNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::StrangerSnowNpc:
-			gameObjectCast<StrangerSnowNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::StrangerGirlSnowNpc:
-			gameObjectCast<StrangerGirlSnowNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::SnowGirl2Npc:
-			gameObjectCast<SnowGirl2Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::SnowGirl1Npc:
-			gameObjectCast<SnowGirl1Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::Snowman3Npc:
-			gameObjectCast<Snowman3Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::Snowman1Npc:
-			gameObjectCast<Snowman1Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FranfranNpc:
-			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::EvaNpc:
-			gameObjectCast<EvaNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::PierreNpc:
-			gameObjectCast<PierreNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::PeaNpc:
-			gameObjectCast<PeaNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BrayouNpc:
-			gameObjectCast<BrayouNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::Snowman2Npc:
-			gameObjectCast<Snowman2Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::AmandineNpc:
-			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FaustNpc:
-			gameObjectCast<FaustNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::WolfNpc:
 			gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::ConstanceNpc:
-			gameObjectCast<ConstanceNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::JuNpc:
-			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FannyNpc:
-			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::GuiNpc:
-			gameObjectCast<GuiNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::TurbanNpc:
-			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::CanouilleNpc:
-			gameObjectCast<CanouilleNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::JeffMouffyNpc:
-			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::JellyfishNpc:
 			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BirdRedNpc:
-			gameObjectCast<BirdRedNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::WellKeeperNpc:
-			gameObjectCast<WellKeeperNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::OldDesertStaticNpc:
-			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::VinceNpc:
-			gameObjectCast<VinceNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::LucienNpc:
-			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::PunkNpc:
-			gameObjectCast<PunkNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::IohannNpc:
-			gameObjectCast<IohannNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::ClementineNpc:
-			gameObjectCast<ClementineNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FatNpc:
-			gameObjectCast<FatNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::SpaceShip:
 			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));

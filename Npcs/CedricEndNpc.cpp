@@ -8,7 +8,7 @@
 #include <AudioManager.hpp>
 
 CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_END_OSS, false)
+	AUniqueNpc(CEDRIC_END_OSS, false)
 {
 	setSize(sf::Vector2f(50.f, 100.f));
 	setOrigin(sf::Vector2f(60.f, 68.f));
@@ -136,7 +136,7 @@ void CedricEndNpc::setupMachine(void)
 
 void CedricEndNpc::collideOctoEvent(CharacterOcto * octo)
 {
-	ANpc::collideOctoEvent(octo);
+	AUniqueNpc::collideOctoEvent(octo);
 	stopBalle();
 
 	octo::CharacterSprite & sprite = getSprite();
@@ -193,6 +193,6 @@ void CedricEndNpc::updateState(void)
 
 void CedricEndNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	ANpc::draw(render, states);
+	AUniqueNpc::draw(render, states);
 }
 

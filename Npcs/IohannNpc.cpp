@@ -4,7 +4,7 @@
 #include "CircleShape.hpp"
 
 IohannNpc::IohannNpc(void) :
-	ANpc(IOHANN_OSS),
+	AUniqueNpc(IOHANN_OSS),
 	m_engine(std::time(0)),
 	m_specialDistribution(1, 10),
 	m_lastState(Left)

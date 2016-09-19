@@ -32,9 +32,14 @@
 #include "Cage.hpp"
 
 //Npc
-#include "ClassicNpc.hpp"
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "MysticanouilleNpc.hpp"
+#include "AymericNpc.hpp"
+#include "SylvieNpc.hpp"
+#include "LucieNpc.hpp"
+#include "BeachGuyNpc.hpp"
+#include "ChamanMonsterNpc.hpp"
 #include "ScientistCedric.hpp"
 #include "ScientistLu.hpp"
 #include "ScientistFran.hpp"
@@ -60,13 +65,13 @@
 #include "SnowGirl2Npc.hpp"
 #include "SnowGirl1Npc.hpp"
 #include "Snowman3Npc.hpp"
+#include "Snowman2Npc.hpp"
 #include "Snowman1Npc.hpp"
 #include "FranfranNpc.hpp"
 #include "JuNpc.hpp"
 #include "FannyNpc.hpp"
 #include "TurbanNpc.hpp"
 #include "GuiNpc.hpp"
-#include "Snowman2Npc.hpp"
 #include "PunkNpc.hpp"
 #include "FatNpc.hpp"
 #include "LucienNpc.hpp"
@@ -89,6 +94,8 @@
 #include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
 #include "CavemanNpc.hpp"
+#include "CavemanClimbingNpc.hpp"
+#include "ElliotNpc.hpp"
 
 //NanoRobots
 #include "GroundTransformNanoRobot.hpp"
@@ -227,7 +234,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	setupGroundRock(biome);
 
-	m_npcFactory.registerCreator<ClassicNpc>(OCTO_OSS);
 	m_npcFactory.registerCreator<FranfranNpc>(FRANFRAN_OSS);
 	m_npcFactory.registerCreator<JuNpc>(JU_OSS);
 	m_npcFactory.registerCreator<GuiNpc>(GUILLAUME_OSS);
@@ -246,6 +252,12 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<MysticanouilleNpc>(MYSTICANOUILLE_OSS);
+	m_npcFactory.registerCreator<AymericNpc>(AYMERIC_OSS);
+	m_npcFactory.registerCreator<SylvieNpc>(SYLVIE_OSS);
+	m_npcFactory.registerCreator<LucieNpc>(LUCIE_OSS);
+	m_npcFactory.registerCreator<BeachGuyNpc>(BEACH_GUY_OSS);
+	m_npcFactory.registerCreator<ChamanMonsterNpc>(CHAMAN_MONSTER_OSS);
 	m_npcFactory.registerCreator<ScientistCedric>(SCIENTISTCEDRIC_OSS);
 	m_npcFactory.registerCreator<ScientistLu>(SCIENTISTLU_OSS);
 	m_npcFactory.registerCreator<ScientistFran>(SCIENTISTFRAN_OSS);
@@ -277,6 +289,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator(TV_BLACK_OSS, [](){ return new TVScreen("render_black_kernel"); });
 	m_npcFactory.registerCreator(TV_WHITE_OSS, [](){ return new TVScreen("render_white_kernel"); });
 	m_npcFactory.registerCreator(CAVEMAN_OSS, [](){ return new CavemanNpc(); });
+	m_npcFactory.registerCreator(CAVEMAN_CLIMBING_OSS, [](){ return new CavemanClimbingNpc(); });
+	m_npcFactory.registerCreator(ELLIOT_OSS, [](){ return new ElliotNpc(); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
 	m_decorFactory.registerCreator(CHECKPOINT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
@@ -740,9 +754,65 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::MysticanouilleNpc:
+				{
+					MysticanouilleNpc * npc = new MysticanouilleNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::AymericNpc:
+				{
+					AymericNpc * npc = new AymericNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::SylvieNpc:
+				{
+					SylvieNpc * npc = new SylvieNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::LucieNpc:
+				{
+					LucieNpc * npc = new LucieNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::BeachGuyNpc:
+				{
+					BeachGuyNpc * npc = new BeachGuyNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::ChamanMonsterNpc:
+				{
+					ChamanMonsterNpc * npc = new ChamanMonsterNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::ElliotNpc:
+				{
+					ElliotNpc * npc = new ElliotNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::CavemanNpc:
 				{
 					CavemanNpc * npc = new CavemanNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::CavemanClimbingNpc:
+				{
+					CavemanClimbingNpc * npc = new CavemanClimbingNpc();
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
@@ -914,6 +984,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
+			case GameObjectType::Snowman1Npc:
+				{
+					Snowman1Npc * snowman = new Snowman1Npc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
+				}
+				break;
 			case GameObjectType::Snowman2Npc:
 				{
 					Snowman2Npc * npc = new Snowman2Npc();
@@ -956,13 +1033,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, franfran);
 				}
 				break;
-			case GameObjectType::Snowman1Npc:
-				{
-					Snowman1Npc * snowman = new Snowman1Npc();
-					snowman->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
-				}
-				break;
 			case GameObjectType::StrangerGirlSnowNpc:
 				{
 					StrangerGirlSnowNpc * snowman = new StrangerGirlSnowNpc();
@@ -973,6 +1043,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			case GameObjectType::StrangerSnowNpc:
 				{
 					StrangerSnowNpc * snowman = new StrangerSnowNpc();
+					snowman->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
+				}
+				break;
+			case GameObjectType::SnowGirl1Npc:
+				{
+					SnowGirl1Npc * snowman = new SnowGirl1Npc();
 					snowman->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, snowman);
 				}

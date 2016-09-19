@@ -73,7 +73,6 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/CheckPoint.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
-				Npcs/ClassicNpc.cpp						\
 				Npcs/CedricStartNpc.cpp					\
 				Npcs/FranfranNpc.cpp					\
 				Npcs/JuNpc.cpp							\
@@ -99,7 +98,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/WolfNpc.cpp						\
 				Npcs/WellKeeperNpc.cpp					\
 				Npcs/JellyfishNpc.cpp					\
-				Npcs/BirdNpc.cpp						\
+				Npcs/AFlyNpc.cpp						\
 				Npcs/BirdRedNpc.cpp						\
 				Npcs/Snowman2Npc.cpp					\
 				Npcs/Snowman1Npc.cpp					\
@@ -109,7 +108,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/StrangerGirlSnowNpc.cpp			\
 				Npcs/StrangerSnowNpc.cpp				\
 				Npcs/BirdBlueNpc.cpp					\
-				Npcs/DisappearNpc.cpp					\
+				Npcs/ADisappearNpc.cpp					\
 				Npcs/ForestSpirit1Npc.cpp				\
 				Npcs/ForestSpirit2Npc.cpp				\
 				Npcs/TVScreen.cpp						\
@@ -131,8 +130,25 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/FranGlitchNpc.cpp					\
 				Npcs/WindowGlitchNpc.cpp				\
 				Npcs/ASpecialNpc.cpp					\
+				Npcs/AIdleNpc.cpp						\
+				Npcs/AUniqueNpc.cpp						\
 				Npcs/CavemanNpc.cpp						\
+				Npcs/CavemanClimbingNpc.cpp				\
+				Npcs/ElliotNpc.cpp						\
+				Npcs/AWalkNpc.cpp						\
+				Npcs/ChamanMonsterNpc.cpp				\
+				Npcs/BeachGuyNpc.cpp				\
+				Npcs/LucieNpc.cpp				\
+				Npcs/SylvieNpc.cpp				\
+				Npcs/AymericNpc.cpp				\
+				Npcs/MysticanouilleNpc.cpp				\
 #Script AddNpc
+
+
+
+
+
+
 
 
 

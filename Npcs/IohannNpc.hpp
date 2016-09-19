@@ -1,9 +1,9 @@
 #ifndef IOHANNNPC_HPP
 # define IOHANNNPC_HPP
 
-# include "ANpc.hpp"
+# include "AUniqueNpc.hpp"
 
-class IohannNpc : public ANpc, public AGameObject<GameObjectType::IohannNpc>
+class IohannNpc : public AUniqueNpc
 {
 public:
 	IohannNpc(void);

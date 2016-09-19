@@ -1,9 +1,9 @@
 #ifndef BIRDREDNPC_HPP
 # define BIRDREDNPC_HPP
 
-# include "BirdNpc.hpp"
+# include "AFlyNpc.hpp"
 
-class BirdRedNpc : public BirdNpc, public AGameObject<GameObjectType::BirdRedNpc>
+class BirdRedNpc : public AFlyNpc
 {
 public:
 	BirdRedNpc(void);

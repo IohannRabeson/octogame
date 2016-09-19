@@ -1,9 +1,9 @@
-#include "DisappearNpc.hpp"
+#include "ADisappearNpc.hpp"
 #include "RectangleShape.hpp"
 
-RandomGenerator DisappearNpc::m_generator("random");
+RandomGenerator ADisappearNpc::m_generator("random");
 
-DisappearNpc::DisappearNpc(ResourceKey const & key, float alphaMin, float alphaMax, bool isFlying) :
+ADisappearNpc::ADisappearNpc(ResourceKey const & key, float alphaMin, float alphaMax, bool isFlying) :
 	ANpc(key, false),
 	m_isVisible(true),
 	m_isFlying(isFlying),
@@ -19,33 +19,11 @@ DisappearNpc::DisappearNpc(ResourceKey const & key, float alphaMin, float alphaM
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(-20.f, -10.f));
 	setTimerMax(sf::seconds(8.0f));
-	setup();
+
+	setupBox(this, static_cast<std::size_t>(GameObjectType::DisappearNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
-void DisappearNpc::setup(void)
-{
-	typedef octo::CharacterAnimation::Frame			Frame;
-
-	getIdleAnimation().setFrames({
-			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
-			});
-	getIdleAnimation().setLoop(octo::LoopMode::Loop);
-
-	setupMachine();
-}
-
-void DisappearNpc::setupMachine(void)
+void ADisappearNpc::setupMachine(void)
 {
 	typedef octo::CharacterSprite::ACharacterState	State;
 	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
@@ -62,7 +40,7 @@ void DisappearNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
-void DisappearNpc::makeDisappear(sf::Time frametime)
+void ADisappearNpc::makeDisappear(sf::Time frametime)
 {
 	m_randomAppearTimer -= frametime;
 	m_randomDisappearTimer -= frametime;
@@ -93,11 +71,10 @@ void DisappearNpc::makeDisappear(sf::Time frametime)
 		m_alphaCurrent += frametime.asSeconds() * m_alphaTarget;
 }
 
-void DisappearNpc::update(sf::Time frametime)
+void ADisappearNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	updateState();
 	updatePhysics();
 
 	makeDisappear(frametime);
@@ -110,6 +87,7 @@ void DisappearNpc::update(sf::Time frametime)
 	resetVariables();
 }
 
-void DisappearNpc::updateState(void)
+RandomGenerator & ADisappearNpc::getGenerator(void)
 {
+	return m_generator;
 }

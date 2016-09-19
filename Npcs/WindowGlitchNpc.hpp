@@ -1,9 +1,9 @@
 #ifndef WINDOWGLITCHNPC_HPP
 # define WINDOWGLITCHNPC_HPP
 
-# include "DisappearNpc.hpp"
+# include "ADisappearNpc.hpp"
 
-class WindowGlitchNpc : public DisappearNpc, public AGameObject<GameObjectType::WindowGlitchNpc>
+class WindowGlitchNpc : public ADisappearNpc
 {
 public:
 	WindowGlitchNpc(void);

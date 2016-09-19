@@ -1,19 +1,14 @@
 #include "TurbanNpc.hpp"
-#include "RectangleShape.hpp"
-#include "SkyCycle.hpp"
-#include "CircleShape.hpp"
 
 TurbanNpc::TurbanNpc(void) :
-	ANpc(NPC_TURBAN_OSS)
+	AIdleNpc(NPC_TURBAN_OSS)
 {
-	setSize(sf::Vector2f(1.f, 75.f));
-	setOrigin(sf::Vector2f(100.f, 162.f));
+	setSize(sf::Vector2f(75.f, 170.f));
+	setOrigin(sf::Vector2f(50.f, 84.f));
 	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void TurbanNpc::setup(void)
@@ -30,49 +25,3 @@ void TurbanNpc::setup(void)
 
 	setupMachine();
 }
-
-void TurbanNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idle;
-
-	idle = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-
-	machine.setStart(idle);
-	machine.addTransition(Idle, idle, idle);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
-void TurbanNpc::update(sf::Time frametime)
-{
-	octo::CharacterSprite & sprite = getSprite();
-
-	updateState();
-	updatePhysics();
-
-	sprite.update(frametime);
-	sf::Vector2f const & center = getBox()->getRenderPosition();
-	sprite.setPosition(center);
-
-	updateText(frametime);
-	resetVariables();
-}
-
-void TurbanNpc::updateState(void)
-{
-}
-
-void TurbanNpc::updatePhysics(void)
-{
-}
-
-void TurbanNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
-{
-	ANpc::draw(render, states);
-}
-

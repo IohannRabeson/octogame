@@ -1,13 +1,12 @@
 #include "ASpecialNpc.hpp"
 #include "Progress.hpp"
 
-ASpecialNpc::ASpecialNpc(ResourceKey const & npcId, bool isMeetable) :
+ASpecialNpc::ASpecialNpc(ResourceKey const & npcId, bool followOcto, bool isMeetable) :
 	ANpc(npcId, isMeetable),
-	m_canDoSpecial(true)
+	m_canDoSpecial(true),
+	m_followOcto(followOcto)
 {
-	setTextOffset(sf::Vector2f(10.f, 150.f));
-	setTimerMax(sf::seconds(8.0f));
-	setupBox(this, static_cast<std::size_t>(GameObjectType::SpecialNpc), static_cast<std::size_t>(GameObjectType::Player));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::SpecialNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void ASpecialNpc::setupMachine(void)
@@ -44,15 +43,18 @@ void ASpecialNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
+	if (m_followOcto)
 	{
-		getSprite().setOrigin(getSprite().getLocalSize().x - getOrigin().x, getOrigin().y);
-		getSprite().setScale(-getScale(), getScale());
-	}
-	else
-	{
-		getSprite().setOrigin(getOrigin());
-		getSprite().setScale(getScale(), getScale());
+		if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
+		{
+			getSprite().setOrigin(getSprite().getLocalSize().x - getOrigin().x, getOrigin().y);
+			getSprite().setScale(-getScale(), getScale());
+		}
+		else
+		{
+			getSprite().setOrigin(getOrigin());
+			getSprite().setScale(getScale(), getScale());
+		}
 	}
 	if (sprite.getCurrentEvent() == Idle && getCollideEventOcto() && m_canDoSpecial)
 	{

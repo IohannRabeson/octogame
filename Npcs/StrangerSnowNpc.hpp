@@ -1,19 +1,15 @@
 #ifndef STRANGERSNOWNPC_HPP
 # define STRANGERSNOWNPC_HPP
 
-# include "ANpc.hpp"
+# include "ASpecialNpc.hpp"
 
-class StrangerSnowNpc : public ANpc, public AGameObject<GameObjectType::StrangerSnowNpc>
+class StrangerSnowNpc : public ASpecialNpc
 {
 public:
 	StrangerSnowNpc(void);
 	virtual ~StrangerSnowNpc(void) = default;
 
 	virtual void setup(void);
-
-protected:
-	virtual void setupMachine(void);
-	virtual void updateState(void);
 
 };
 

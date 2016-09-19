@@ -9,7 +9,7 @@
 #include "ResourceDefinitions.hpp"
 
 LucienNpc::LucienNpc(void) :
-	ANpc(LUCIEN_OSS),
+	AUniqueNpc(LUCIEN_OSS),
 	m_side(true),
 	m_sound(true)
 {

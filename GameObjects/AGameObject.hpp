@@ -99,7 +99,27 @@ enum class GameObjectType : std::size_t
 	RocketDoor					= (1 << 15) + 56,
 	SpecialNpc					= (1 << 15) + 57,
 	CavemanNpc					= (1 << 15) + 58,
+	CavemanClimbingNpc			= (1 << 15) + 59,
+	CavemanSinkingNpc			= (1 << 15) + 60,
+	ElliotNpc					= (1 << 15) + 61,
+	DeepoNpc					= (1 << 15) + 62,
+	IdleNpc						= (1 << 15) + 63,
+	DisappearNpc				= (1 << 15) + 64,
+	WalkNpc						= (1 << 15) + 65,
+	FlyNpc						= (1 << 15) + 66,
+	ChamanMonsterNpc				= (1 << 15) + 67,
+	BeachGuyNpc				= (1 << 15) + 68,
+	LucieNpc				= (1 << 15) + 69,
+	SylvieNpc				= (1 << 15) + 70,
+	AymericNpc				= (1 << 15) + 71,
+	MysticanouilleNpc				= (1 << 15) + 72,
 //Script AddNpc
+
+
+
+
+
+
 
 
 

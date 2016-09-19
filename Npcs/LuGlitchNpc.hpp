@@ -1,9 +1,9 @@
 #ifndef LUGLITCHNPC_HPP
 # define LUGLITCHNPC_HPP
 
-# include "DisappearNpc.hpp"
+# include "ADisappearNpc.hpp"
 
-class LuGlitchNpc : public DisappearNpc, public AGameObject<GameObjectType::LuGlitchNpc>
+class LuGlitchNpc : public ADisappearNpc
 {
 public:
 	LuGlitchNpc(void);

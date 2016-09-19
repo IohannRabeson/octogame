@@ -6,7 +6,7 @@
 class ASpecialNpc : public ANpc, public AGameObject<GameObjectType::SpecialNpc>
 {
 public:
-	ASpecialNpc(ResourceKey const & npcId, bool isMeetable = true);
+	ASpecialNpc(ResourceKey const & npcId, bool followOcto = true, bool isMeetable = true);
 	virtual ~ASpecialNpc(void) = default;
 
 	virtual void setup(void) = 0;
@@ -18,6 +18,7 @@ protected:
 
 private:
 	bool		m_canDoSpecial;
+	bool		m_followOcto;
 
 };
 

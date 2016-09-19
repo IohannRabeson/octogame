@@ -1,23 +1,18 @@
 #include "JeffMouffyNpc.hpp"
 #include "RectangleShape.hpp"
-#include "SkyCycle.hpp"
-#include "CircleShape.hpp"
 #include <Interpolations.hpp>
 
 JeffMouffyNpc::JeffMouffyNpc(void) :
-	ANpc(JEFF_MOUFFY_OSS),
+	ASpecialNpc(JEFF_MOUFFY_OSS, false),
 	m_startTimer(false),
 	m_animationEnd(false)
 {
-	setSize(sf::Vector2f(1.f, 75.f));
-	setOrigin(sf::Vector2f(90.f, 193.f));
+	setSize(sf::Vector2f(150.f, 170.f));
+	setOrigin(sf::Vector2f(70.f, 115.f));
 	setScale(0.8f);
-	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(100.f, -80.f));
+	setTextOffset(sf::Vector2f(100.f, -10.f));
 	setTimerMax(sf::seconds(5.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void JeffMouffyNpc::setup(void)
@@ -55,35 +50,12 @@ void JeffMouffyNpc::setup(void)
 	setupMachine();
 }
 
-void JeffMouffyNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idle;
-	StatePtr					special1;
-
-	idle = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-	special1 = std::make_shared<State>("3", getSpecial1Animation(), getSprite());
-
-	machine.setStart(idle);
-	machine.addTransition(Idle, idle, idle);
-	machine.addTransition(Idle, special1, idle);
-
-	machine.addTransition(Special1, special1, special1);
-	machine.addTransition(Special1, idle, special1);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
 void JeffMouffyNpc::setPosition(sf::Vector2f const & position)
 {
 	octo::CharacterSprite & sprite = getSprite();
 	if (sprite.getCurrentEvent() == Special1)
 		return;
-	ANpc::setPosition(position);
+	ASpecialNpc::setPosition(position);
 }
 
 void JeffMouffyNpc::updateState(void)
@@ -134,15 +106,4 @@ void JeffMouffyNpc::updatePhysics(void)
 			}
 		}
 	}
-}
-
-void JeffMouffyNpc::collideOctoEvent(CharacterOcto * octo)
-{
-	ANpc::collideOctoEvent(octo);
-}
-
-void JeffMouffyNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
-{
-//	if (!m_animationEnd)
-		ANpc::draw(render, states);
 }

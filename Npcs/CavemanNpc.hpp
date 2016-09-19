@@ -11,8 +11,6 @@ public:
 
 	virtual void setup(void);
 
-private:
-
 };
 
 #endif

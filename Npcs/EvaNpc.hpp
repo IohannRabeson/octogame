@@ -2,9 +2,9 @@
 # define EVA_HPP
 
 # include "WaterCascadeSystem.hpp"
-# include "ANpc.hpp"
+# include "AUniqueNpc.hpp"
 
-class EvaNpc : public ANpc, public AGameObject<GameObjectType::EvaNpc>
+class EvaNpc : public AUniqueNpc
 {
 public:
 	EvaNpc(sf::Color const & color);

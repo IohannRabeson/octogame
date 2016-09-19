@@ -1,8 +1,7 @@
 #include "EvaNpc.hpp"
-#include "RectangleShape.hpp"
 
 EvaNpc::EvaNpc(sf::Color const & color) :
-	ANpc(EVA_OSS)
+	AUniqueNpc(EVA_OSS)
 {
 	setSize(sf::Vector2f(75.f, 325.f));
 	setOrigin(sf::Vector2f(60.f, -150.f));
@@ -12,7 +11,6 @@ EvaNpc::EvaNpc(sf::Color const & color) :
 	setup();
 
 	m_particles.setColor(color);
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void EvaNpc::setup(void)
@@ -116,10 +114,6 @@ void EvaNpc::updateState(void)
 	}
 	else if (sprite.getCurrentEvent() == Idle)
 	{
-		//if (getCollideEventOcto())
-		//	setDisplayText(true);
-		//else
-		//sprite.setNextEvent(StartSpecial1);
 		if (!getCollideEventOcto())
 			sprite.setNextEvent(StartSpecial1);
 	}

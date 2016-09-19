@@ -1,19 +1,15 @@
 #ifndef SNOWGIRL2NPC_HPP
 # define SNOWGIRL2NPC_HPP
 
-# include "ANpc.hpp"
+# include "ASpecialNpc.hpp"
 
-class SnowGirl2Npc : public ANpc, public AGameObject<GameObjectType::SnowGirl2Npc>
+class SnowGirl2Npc : public ASpecialNpc
 {
 public:
 	SnowGirl2Npc(void);
 	virtual ~SnowGirl2Npc(void) = default;
 
 	virtual void setup(void);
-
-protected:
-	virtual void setupMachine(void);
-	virtual void updateState(void);
 
 };
 

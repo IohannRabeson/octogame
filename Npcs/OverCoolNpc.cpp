@@ -1,11 +1,10 @@
 #include "OverCoolNpc.hpp"
 
 OverCoolNpc::OverCoolNpc(void) :
-	BirdNpc(OVER_COOL_NPC_OSS, true)
+	AFlyNpc(OVER_COOL_NPC_OSS, true)
 {
 	setSize(sf::Vector2f(30.f, 200.f));
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
-	OverCoolNpc::setup();
+	setup();
 }
 
 void OverCoolNpc::setup(void)
