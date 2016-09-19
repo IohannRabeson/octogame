@@ -255,6 +255,10 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_bubbleParticle.setDispersion(80.f);
 	m_bubbleParticle.setColor(sf::Color(255, 255, 255, 100));
 	m_bubbleParticle.setCanEmit(false);
+
+	Progress const & progress = Progress::getInstance();
+	if (!progress.isMenu() && progress.getNextDestination() == Level::Rewards)
+		caseRight();
 }
 
 void	CharacterOcto::setupAnimation()
