@@ -10,10 +10,6 @@ public:
 	virtual ~FannyNpc(void) = default;
 
 	virtual void setup(void);
-
-private:
-	sf::Time	m_timer;
-	bool		m_canSpecial;
 };
 
 #endif
