@@ -1,7 +1,7 @@
 #include "SnowGirl1Npc.hpp"
 
 SnowGirl1Npc::SnowGirl1Npc(void) :
-	ASpecialNpc(SNOWGIRL_1_OSS, false)
+	ASpecialNpc(SNOWGIRL_1_OSS)
 {
 	setSize(sf::Vector2f(50.f, 120.f));
 	setOrigin(sf::Vector2f(100.f, 112.f));
