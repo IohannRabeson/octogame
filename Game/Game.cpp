@@ -51,10 +51,6 @@
 #include "ScientistLu.hpp"
 #include "ScientistFran.hpp"
 #include "ScientistJu.hpp"
-#include "WindowGlitchNpc.hpp"
-#include "FranGlitchNpc.hpp"
-#include "JuGlitchNpc.hpp"
-#include "LuGlitchNpc.hpp"
 #include "Rocket.hpp"
 #include "OctoDeathNpc.hpp"
 #include "CedricEndNpc.hpp"
@@ -63,8 +59,6 @@
 #include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
-#include "ForestSpirit2Npc.hpp"
-#include "ForestSpirit1Npc.hpp"
 #include "BirdBlueNpc.hpp"
 #include "CedricStartNpc.hpp"
 #include "GuiNpc.hpp"
@@ -77,6 +71,7 @@
 #include "ASpecialNpc.hpp"
 #include "AIdleNpc.hpp"
 #include "AUniqueNpc.hpp"
+#include "ADisappearNpc.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -377,6 +372,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 	(void)collisionDirection;
 	switch (gameObject->getObjectType())
 	{
+		case GameObjectType::DisappearNpc:
+			gameObjectCast<ADisappearNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::IdleNpc:
 			gameObjectCast<AIdleNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -405,17 +403,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::ScientistJu:
 			gameObjectCast<ScientistJu>(gameObject)->collideOctoEvent(octo);
-		case GameObjectType::WindowGlitchNpc:
-			gameObjectCast<WindowGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FranGlitchNpc:
-			gameObjectCast<FranGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::JuGlitchNpc:
-			gameObjectCast<JuGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::LuGlitchNpc:
-			gameObjectCast<LuGlitchNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::OctoDeathNpc:
 			gameObjectCast<OctoDeathNpc>(gameObject)->collideOctoEvent(octo);
@@ -440,12 +427,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::Pedestal:
 			gameObjectCast<Pedestal>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::ForestSpirit2Npc:
-			gameObjectCast<ForestSpirit2Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::ForestSpirit1Npc:
-			gameObjectCast<ForestSpirit1Npc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::BirdBlueNpc:
 			gameObjectCast<BirdBlueNpc>(gameObject)->collideOctoEvent(octo);

@@ -1,15 +1,12 @@
 #include "WindowGlitchNpc.hpp"
-#include "RectangleShape.hpp"
 
 WindowGlitchNpc::WindowGlitchNpc(void) :
-	DisappearNpc(WINDOW_GLITCH_OSS, 10.f, 40.f)
+	ADisappearNpc(WINDOW_GLITCH_OSS, 10.f, 40.f)
 {
 	setSize(sf::Vector2f(25.f, 375.f));
 	setOrigin(sf::Vector2f(125.f, 165.f));
 	setScale(0.8f);
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void WindowGlitchNpc::setup(void)

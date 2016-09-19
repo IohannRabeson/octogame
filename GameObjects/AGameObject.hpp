@@ -104,6 +104,7 @@ enum class GameObjectType : std::size_t
 	ElliotNpc					= (1 << 15) + 61,
 	DeepoNpc					= (1 << 15) + 62,
 	IdleNpc						= (1 << 15) + 63,
+	DisappearNpc				= (1 << 15) + 64,
 //Script AddNpc
 
 

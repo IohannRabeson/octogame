@@ -1,9 +1,9 @@
 #ifndef JUGLITCHNPC_HPP
 # define JUGLITCHNPC_HPP
 
-# include "DisappearNpc.hpp"
+# include "ADisappearNpc.hpp"
 
-class JuGlitchNpc : public DisappearNpc, public AGameObject<GameObjectType::JuGlitchNpc>
+class JuGlitchNpc : public ADisappearNpc
 {
 public:
 	JuGlitchNpc(void);

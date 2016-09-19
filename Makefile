@@ -108,7 +108,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/StrangerGirlSnowNpc.cpp			\
 				Npcs/StrangerSnowNpc.cpp				\
 				Npcs/BirdBlueNpc.cpp					\
-				Npcs/DisappearNpc.cpp					\
+				Npcs/ADisappearNpc.cpp					\
 				Npcs/ForestSpirit1Npc.cpp				\
 				Npcs/ForestSpirit2Npc.cpp				\
 				Npcs/TVScreen.cpp						\

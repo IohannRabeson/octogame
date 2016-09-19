@@ -1,15 +1,11 @@
 #include "LuGlitchNpc.hpp"
-#include "RectangleShape.hpp"
 
 LuGlitchNpc::LuGlitchNpc(void) :
-	DisappearNpc(LU_GLITCH_OSS, 30.f, 120.f, false)
+	ADisappearNpc(LU_GLITCH_OSS, 30.f, 120.f, false)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(125.f, 158.f));
-	setScale(0.8f);
+	setSize(sf::Vector2f(50.f, 130.f));
+	setOrigin(sf::Vector2f(120.f, 87.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void LuGlitchNpc::setup(void)
