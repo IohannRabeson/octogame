@@ -1,11 +1,11 @@
 #ifndef CEDRICENDNPC_HPP
 # define CEDRICENDNPC_HPP
 
-# include "ANpc.hpp"
+# include "AUniqueNpc.hpp"
 # include "ABiome.hpp"
 # include "ChallengeManager.hpp"
 
-class CedricEndNpc : public ANpc, public AGameObject<GameObjectType::CedricEndNpc>
+class CedricEndNpc : public AUniqueNpc
 {
 public:
 	CedricEndNpc(ABiome::Type biomeType);

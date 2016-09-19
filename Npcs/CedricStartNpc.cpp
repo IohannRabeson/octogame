@@ -8,7 +8,7 @@
 #include <Application.hpp>
 
 CedricStartNpc::CedricStartNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_START_OSS),
+	AUniqueNpc(CEDRIC_START_OSS),
 	m_throwPotionTimerMax(sf::seconds(1.f))
 {
 	setSize(sf::Vector2f(50.f, 100.f));
@@ -168,7 +168,7 @@ bool CedricStartNpc::startBalle(void)
 
 void CedricStartNpc::collideOctoEvent(CharacterOcto * octo)
 {
-	ANpc::collideOctoEvent(octo);
+	AUniqueNpc::collideOctoEvent(octo);
 	float coef = m_throwPotionTimer / m_throwPotionTimerMax;
 
 	m_octoPosition = octo->getPosition();
@@ -253,7 +253,7 @@ void CedricStartNpc::updateState(void)
 void CedricStartNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	if (!Progress::getInstance().isValidateChallenge(m_effect))
-		ANpc::draw(render, states);
+		AUniqueNpc::draw(render, states);
 	if (m_throwPotionTimer != sf::Time::Zero)
 		m_potion.draw(render, states);
 }

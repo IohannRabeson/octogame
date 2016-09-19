@@ -53,19 +53,15 @@
 #include "ScientistJu.hpp"
 #include "Rocket.hpp"
 #include "OctoDeathNpc.hpp"
-#include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
 #include "BirdBlueNpc.hpp"
-#include "CedricStartNpc.hpp"
 #include "WolfNpc.hpp"
 #include "JellyfishNpc.hpp"
 #include "BirdRedNpc.hpp"
-#include "LucienNpc.hpp"
-#include "IohannNpc.hpp"
 #include "ASpecialNpc.hpp"
 #include "AIdleNpc.hpp"
 #include "AUniqueNpc.hpp"
@@ -409,12 +405,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::OctoDeathNpc:
 			gameObjectCast<OctoDeathNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::CedricStartNpc:
-			gameObjectCast<CedricStartNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::CedricEndNpc:
-			gameObjectCast<CedricEndNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::TVScreen:
 			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -441,12 +431,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::BirdRedNpc:
 			gameObjectCast<BirdRedNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::LucienNpc:
-			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::IohannNpc:
-			gameObjectCast<IohannNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::SpaceShip:
 			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));
