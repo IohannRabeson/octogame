@@ -1406,13 +1406,14 @@ void	CharacterOcto::collisionElevatorUpdate()
 		m_timeEventFall = sf::Time::Zero;
 		m_timeSlowFall = sf::Time::Zero;
 		m_onElevator = true;
+		m_numberOfJump = 1;
 		if (m_sprite.getCurrentEvent() == StartElevator)
 		{
 			if (!m_useElevator)
 			{
 				m_onTopElevator = false;
 				m_useElevator = true;
-				m_numberOfJump = 3;
+				//m_numberOfJump = 3;
 				m_box->setApplyGravity(false);
 			}
 			if (m_sprite.isTerminated())
