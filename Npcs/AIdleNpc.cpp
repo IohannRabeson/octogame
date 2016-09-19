@@ -5,7 +5,7 @@ AIdleNpc::AIdleNpc(ResourceKey const & npcId, bool followOcto, bool isMeetable) 
 	ANpc(npcId, isMeetable),
 	m_followOcto(followOcto)
 {
-	setupBox(this, static_cast<std::size_t>(GameObjectType::IdleNpc), static_cast<std::size_t>(GameObjectType::Player));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::IdleNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void AIdleNpc::setupMachine(void)
