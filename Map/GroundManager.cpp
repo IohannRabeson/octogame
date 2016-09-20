@@ -34,6 +34,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "AnthemJungle.hpp"
 #include "MysticanouilleNpc.hpp"
 #include "AymericNpc.hpp"
 #include "SylvieNpc.hpp"
@@ -252,6 +253,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<AnthemJungle>(ANTHEM_JUNGLE_OSS);
 	m_npcFactory.registerCreator<MysticanouilleNpc>(MYSTICANOUILLE_OSS);
 	m_npcFactory.registerCreator<AymericNpc>(AYMERIC_OSS);
 	m_npcFactory.registerCreator<SylvieNpc>(SYLVIE_OSS);
@@ -472,6 +474,14 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_decorFactory.registerCreator(WATER_CASTLE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(WATER_CASTLE_OSS, scale, position, 1u, 0.2f);
+			});
+	m_decorFactory.registerCreator(CAVEMAN_HOUSE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(CAVEMAN_HOUSE_OSS, scale, position, 4u, 0.2f);
+			});
+	m_decorFactory.registerCreator(CAVEMAN_CLIMBING_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(CAVEMAN_CLIMBING_OSS, scale, position, 6u, 0.2f);
 			});
 
 	// Get all the gameobjects from instances
@@ -758,6 +768,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::AnthemJungle:
+				{
+					AnthemJungle * npc = new AnthemJungle();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::MysticanouilleNpc:
 				{
 					MysticanouilleNpc * npc = new MysticanouilleNpc();

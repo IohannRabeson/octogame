@@ -80,7 +80,6 @@ void ASinkNpc::setupMachine(void)
 
 void ASinkNpc::update(sf::Time frametime)
 {
-	std::cout << "update" << std::endl;
 	octo::CharacterSprite & sprite = getSprite();
 
 	updatePhysics();
