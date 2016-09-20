@@ -27,6 +27,7 @@ public:
 	};
 	virtual ~ANpc(void);
 
+	RectangleShape * getBox(void);
 	void setArea(sf::FloatRect const & area);
 	void setPosition(sf::Vector2f const & position);
 	void setOrigin(sf::Vector2f const & origin);
@@ -73,7 +74,6 @@ protected:
 	sf::Time getTimerMax(void) const;
 	sf::Vector2f const & getOrigin(void) const;
 	sf::FloatRect const & getArea(void) const;
-	RectangleShape * getBox(void);
 	std::vector<std::unique_ptr<BubbleText>> & getTexts(void);
 	octo::CharacterSprite & getSprite(void);
 	octo::CharacterAnimation & getIdleAnimation(void);
