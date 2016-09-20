@@ -7,6 +7,7 @@
 
 class MonolithStep;
 class CircleShape;
+class CharacterOcto;
 
 class Monolith : public InstanceDecor, public AGameObject<GameObjectType::Monolith>
 {
@@ -17,7 +18,7 @@ public:
 	virtual void addMapOffset(float x, float y);
 	virtual void setPosition(sf::Vector2f const & position);
 
-	void collideOcto(void);
+	void collideOcto(CharacterOcto * octo);
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	virtual void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;

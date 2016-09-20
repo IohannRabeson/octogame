@@ -2,6 +2,8 @@
 #include "PhysicsEngine.hpp"
 #include "CircleShape.hpp"
 #include "MonolithStep.hpp"
+#include "Progress.hpp"
+#include "CharacterOcto.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
@@ -22,7 +24,16 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_spriteMonolith.setAnimation(m_animationMonolith);
 	m_spriteMonolith.play();
 
-	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_1_OSS, position + sf::Vector2f(-00.f, 0.f), scale));
+	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_1_OSS, position + sf::Vector2f(0.f, 0.f), scale));
+	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_2_OSS, position + sf::Vector2f(50.f, 20.f), scale));
+	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_3_OSS, position + sf::Vector2f(100.f, 50.f), scale));
+	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_4_OSS, position + sf::Vector2f(200.f, 50.f), scale));
+	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_5_OSS, position + sf::Vector2f(200.f, 150.f), scale));
+	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_6_OSS, position + sf::Vector2f(300.f, -50.f), scale));
+	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_7_OSS, position + sf::Vector2f(400.f, 50.f), scale));
+
+	for (std::size_t i = 0; i < Progress::getInstance().getActivatedMonolith(); i++)
+		m_steps[i]->activate();
 
 	m_box->setGameObject(this);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Monolith));
@@ -54,9 +65,16 @@ void Monolith::setPosition(sf::Vector2f const & position)
 	m_box->update();
 }
 
-void Monolith::collideOcto(void)
+void Monolith::collideOcto(CharacterOcto *)
 {
-	std::cout << "ok" << std::endl;
+	if (Progress::getInstance().getActivatedMonolith() < Progress::getInstance().getRandomDiscoverCount())
+	{
+		//octo->enableCutscene(true, true);
+		std::cout << "do cutscene" << std::endl;
+		for (std::size_t i = Progress::getInstance().getActivatedMonolith(); i < Progress::getInstance().getRandomDiscoverCount(); i++)
+			m_steps[i]->activate();
+		Progress::getInstance().setActivatedMonolith(Progress::getInstance().getRandomDiscoverCount());
+	}
 }
 
 void Monolith::update(sf::Time frameTime)
