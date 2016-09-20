@@ -137,23 +137,13 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ElliotNpc.cpp						\
 				Npcs/AWalkNpc.cpp						\
 				Npcs/ChamanMonsterNpc.cpp				\
-				Npcs/BeachGuyNpc.cpp				\
-				Npcs/LucieNpc.cpp				\
-				Npcs/SylvieNpc.cpp				\
-				Npcs/AymericNpc.cpp				\
+				Npcs/BeachGuyNpc.cpp					\
+				Npcs/LucieNpc.cpp						\
+				Npcs/SylvieNpc.cpp						\
+				Npcs/AymericNpc.cpp						\
 				Npcs/MysticanouilleNpc.cpp				\
+				Npcs/ASinkNpc.cpp						\
 #Script AddNpc
-
-
-
-
-
-
-
-
-
-
-
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

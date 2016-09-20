@@ -107,24 +107,14 @@ enum class GameObjectType : std::size_t
 	DisappearNpc				= (1 << 15) + 64,
 	WalkNpc						= (1 << 15) + 65,
 	FlyNpc						= (1 << 15) + 66,
-	ChamanMonsterNpc				= (1 << 15) + 67,
-	BeachGuyNpc				= (1 << 15) + 68,
-	LucieNpc				= (1 << 15) + 69,
-	SylvieNpc				= (1 << 15) + 70,
-	AymericNpc				= (1 << 15) + 71,
-	MysticanouilleNpc				= (1 << 15) + 72,
+	ChamanMonsterNpc			= (1 << 15) + 67,
+	BeachGuyNpc					= (1 << 15) + 68,
+	LucieNpc					= (1 << 15) + 69,
+	SylvieNpc					= (1 << 15) + 70,
+	AymericNpc					= (1 << 15) + 71,
+	MysticanouilleNpc			= (1 << 15) + 72,
+	SinkNpc						= (1 << 15) + 73,
 //Script AddNpc
-
-
-
-
-
-
-
-
-
-
-
 };
 
 /*!

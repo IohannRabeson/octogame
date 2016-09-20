@@ -439,6 +439,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::SpecialNpc:
 			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::SinkNpc:
+			gameObjectCast<ASinkNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::Npc:
 			gameObjectCast<AUniqueNpc>(gameObject)->collideOctoEvent(octo);
 			break;
