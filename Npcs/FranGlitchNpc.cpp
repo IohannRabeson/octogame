@@ -3,8 +3,8 @@
 FranGlitchNpc::FranGlitchNpc(void) :
 	ADisappearNpc(FRAN_GLITCH_OSS, 30.f, 120.f, false)
 {
-	setSize(sf::Vector2f(50.f, 130.f));
-	setOrigin(sf::Vector2f(120.f, 87.f));
+	setSize(sf::Vector2f(20.f, 194.f));
+	setOrigin(sf::Vector2f(140.f, 56.f));
 	setScale(0.8f);
 	setup();
 }

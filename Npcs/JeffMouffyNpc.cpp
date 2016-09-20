@@ -7,10 +7,10 @@ JeffMouffyNpc::JeffMouffyNpc(void) :
 	m_startTimer(false),
 	m_animationEnd(false)
 {
-	setSize(sf::Vector2f(150.f, 170.f));
-	setOrigin(sf::Vector2f(70.f, 115.f));
+	setSize(sf::Vector2f(174.f, 186.f));
+	setOrigin(sf::Vector2f(82.f, 100.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(100.f, -10.f));
+	setTextOffset(sf::Vector2f(120.f, 10.f));
 	setTimerMax(sf::seconds(5.f));
 	setup();
 }

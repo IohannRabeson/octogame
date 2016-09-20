@@ -9,11 +9,11 @@ WolfNpc::WolfNpc(void) :
 	m_specialDistribution(1, 2),
 	m_lastState(Left)
 {
-	setSize(sf::Vector2f(240.f, 155.f));
-	setOrigin(sf::Vector2f(0.f, 0.f));
+	setSize(sf::Vector2f(99.f, 113.f));
+	setOrigin(sf::Vector2f(95.f, 82.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(0.f, 0.f));
 	setTimerMax(sf::seconds(10.0f));
 	setup();
 

@@ -9,11 +9,11 @@ IohannNpc::IohannNpc(void) :
 	m_specialDistribution(1, 10),
 	m_lastState(Left)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setSize(sf::Vector2f(32.f, 174.f));
+	setOrigin(sf::Vector2f(82.f, 19.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(-10.f, -75.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setTimerMax(sf::seconds(15.0f));
 	setup();
 

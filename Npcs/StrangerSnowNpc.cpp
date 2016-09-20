@@ -3,10 +3,10 @@
 StrangerSnowNpc::StrangerSnowNpc(void) :
 	ASpecialNpc(STRANGER_SNOW_OSS)
 {
-	setSize(sf::Vector2f(50.f, 110.f));
-	setOrigin(sf::Vector2f(120.f, 125.f));
+	setSize(sf::Vector2f(25.f, 150.f));
+	setOrigin(sf::Vector2f(141.f, 112.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-10.f, -35.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

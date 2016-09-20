@@ -3,7 +3,10 @@
 OverCoolNpc::OverCoolNpc(void) :
 	AFlyNpc(OVER_COOL_NPC_OSS, true)
 {
-	setSize(sf::Vector2f(30.f, 200.f));
+	setSize(sf::Vector2f(45.f, 186.f));
+	setOrigin(sf::Vector2f(177.f, 95.f));
+	setScale(0.8f);
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

@@ -14,11 +14,11 @@ JellyfishNpc::JellyfishNpc(void) :
 	m_speed(m_generator.randomFloat(7.f, 13.f)),
 	m_shift(m_generator.randomFloat(-50.f, 50.f), m_generator.randomFloat(-50.f, 50.f))
 {
-	setSize(sf::Vector2f(10.f, 10.f));
-	setOrigin(sf::Vector2f(60.f, 75.f));
+	setSize(sf::Vector2f(5.f, 150.f));
+	setOrigin(sf::Vector2f(51.f, 81.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(100.f, -80.f));
+	setTextOffset(sf::Vector2f(0.f, -20.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));

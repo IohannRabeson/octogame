@@ -3,10 +3,10 @@
 JuNpc::JuNpc(void) :
 	ASpecialNpc(JU_OSS, false)
 {
-	setSize(sf::Vector2f(50.f, 150.f));
-	setOrigin(sf::Vector2f(60.f, 46.f));
+	setSize(sf::Vector2f(31.f, 162.f));
+	setOrigin(sf::Vector2f(82.f, 31.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

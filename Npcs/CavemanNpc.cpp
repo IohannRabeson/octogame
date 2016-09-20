@@ -3,8 +3,8 @@
 CavemanNpc::CavemanNpc(void) :
 	ASpecialNpc(CAVEMAN_OSS)
 {
-	setSize(sf::Vector2f(75.f, 265.f));
-	setOrigin(sf::Vector2f(60.f, -150.f));
+	setSize(sf::Vector2f(25.f, 93.f));
+	setOrigin(sf::Vector2f(83.f, 88.f));
 	setScale(0.8f);
 	setup();
 }

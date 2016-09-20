@@ -3,10 +3,10 @@
 ChamanMonsterNpc::ChamanMonsterNpc(void) :
 	ASpecialNpc(CHAMAN_MONSTER_OSS)
 {
-	setSize(sf::Vector2f(150.f, 500.f));
-	setOrigin(sf::Vector2f(60.f, 0.f));
+	setSize(sf::Vector2f(220.f, 600.f));
+	setOrigin(sf::Vector2f(37.f, 12.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-10.f, -50.f));
+	setTextOffset(sf::Vector2f(0.f, 0.f));
 	setup();
 }
 

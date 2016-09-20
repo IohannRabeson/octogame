@@ -3,8 +3,8 @@
 VinceNpc::VinceNpc(void) :
 	AIdleNpc(VINCE_OSS, false)
 {
-	setSize(sf::Vector2f(60.f, 150.f));
-	setOrigin(sf::Vector2f(75.f, 759.f));
+	setSize(sf::Vector2f(26.f, 169.f));
+	setOrigin(sf::Vector2f(98.f, 739.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -40.f));
 	setup();

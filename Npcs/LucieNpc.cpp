@@ -3,10 +3,10 @@
 LucieNpc::LucieNpc(void) :
 	ASpecialNpc(LUCIE_OSS)
 {
-	setSize(sf::Vector2f(75.f, 150.f));
-	setOrigin(sf::Vector2f(50.f, 73.f));
+	setSize(sf::Vector2f(27.f, 187.f));
+	setOrigin(sf::Vector2f(85.f, 81.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-10.f, -50.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

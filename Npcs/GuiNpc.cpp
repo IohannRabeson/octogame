@@ -3,10 +3,10 @@
 GuiNpc::GuiNpc(void) :
 	AWalkNpc(GUILLAUME_OSS)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setSize(sf::Vector2f(31.f, 174.f));
+	setOrigin(sf::Vector2f(83.f, 19.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

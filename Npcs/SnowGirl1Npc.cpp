@@ -3,10 +3,10 @@
 SnowGirl1Npc::SnowGirl1Npc(void) :
 	ASpecialNpc(SNOWGIRL_1_OSS)
 {
-	setSize(sf::Vector2f(50.f, 120.f));
-	setOrigin(sf::Vector2f(100.f, 112.f));
+	setSize(sf::Vector2f(27.f, 181.f));
+	setOrigin(sf::Vector2f(134.f, 81.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(25.f, -40.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

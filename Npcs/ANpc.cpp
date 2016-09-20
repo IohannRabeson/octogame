@@ -155,6 +155,7 @@ void ANpc::setScale(float scale)
 {
 	m_scale = scale;
 	m_sprite.setScale(scale, scale);
+	m_box->setSize(m_box->getSize() * scale);
 }
 
 void ANpc::setPosition(sf::Vector2f const & position)
@@ -428,7 +429,7 @@ void ANpc::updateText(sf::Time frametime)
 			m_texts[index]->setActive(true);
 		else
 			m_texts[index]->setActive(false);
-		m_texts[index]->setPosition(m_sprite.getPosition() + m_textOffset);
+		m_texts[index]->setPosition(m_box->getPosition() + m_textOffset);
 		m_texts[index]->update(frametime);
 	}
 }

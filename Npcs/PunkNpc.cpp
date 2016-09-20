@@ -3,10 +3,10 @@
 PunkNpc::PunkNpc(void) :
 	AWalkNpc(NPC_PUNK_OSS)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setSize(sf::Vector2f(34.f, 162.f));
+	setOrigin(sf::Vector2f(84.f, 31.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-15.f, -65.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

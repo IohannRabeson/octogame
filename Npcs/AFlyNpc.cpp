@@ -16,11 +16,11 @@ AFlyNpc::AFlyNpc(ResourceKey const & npcId, bool isMeetable) :
 	m_speedLimit(m_generator.randomFloat(30.f, 150.f)),
 	m_flySpeed(sf::Vector2f(m_generator.randomFloat(200.f, 400.f), m_generator.randomFloat(-100.f, -300.f)))
 {
-	setSize(sf::Vector2f(10.f, 45.f));
-	setOrigin(sf::Vector2f(90.f, 27.f));
+	setSize(sf::Vector2f(38.f, 58.f));
+	setOrigin(sf::Vector2f(75.f, 30.f));
 	setScale(0.8f);
 	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(100.f, -80.f));
+	setTextOffset(sf::Vector2f(28.f, 0.f));
 	setup();
 
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();

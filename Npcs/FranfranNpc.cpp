@@ -5,10 +5,10 @@ FranfranNpc::FranfranNpc(void) :
 	ASpecialNpc(FRANFRAN_OSS),
 	m_puffTimerMax(sf::seconds(0.8f))
 {
-	setSize(sf::Vector2f(30.f, 145.f));
-	setOrigin(sf::Vector2f(75.f, 100.f));
+	setSize(sf::Vector2f(69.f, 230.f));
+	setOrigin(sf::Vector2f(56.f, 88.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -50.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

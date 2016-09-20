@@ -3,10 +3,10 @@
 SylvieNpc::SylvieNpc(void) :
 	AIdleNpc(SYLVIE_OSS)
 {
-	setSize(sf::Vector2f(70.f, 200.f));
-	setOrigin(sf::Vector2f(60.f, 58.f));
+	setSize(sf::Vector2f(107.f, 205.f));
+	setOrigin(sf::Vector2f(37.f, 82.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-10.f, -50.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

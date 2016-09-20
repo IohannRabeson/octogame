@@ -3,8 +3,8 @@
 FaustNpc::FaustNpc(void) :
 	ASpecialNpc(NPC_FAUST_OSS, false)
 {
-	setSize(sf::Vector2f(100.f, 100.f));
-	setOrigin(sf::Vector2f(20.f, 110.f));
+	setSize(sf::Vector2f(56.f, 87.f));
+	setOrigin(sf::Vector2f(88.f, 107.f));
 	setScale(0.8f);
 	setup();
 }

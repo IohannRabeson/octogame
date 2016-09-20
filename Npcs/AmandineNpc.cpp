@@ -3,10 +3,10 @@
 AmandineNpc::AmandineNpc(void) :
 	ASpecialNpc(AMANDINE_OSS, false)
 {
-	setSize(sf::Vector2f(20.f, 75.f));
-	setOrigin(sf::Vector2f(80.f, 165.f));
+	setSize(sf::Vector2f(25.f, 200.f));
+	setOrigin(sf::Vector2f(91.f, 62.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -100.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 
