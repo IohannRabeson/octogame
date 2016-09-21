@@ -145,7 +145,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik)
 		| static_cast<std::size_t>(GameObjectType::RocketDoor)
-		| static_cast<std::size_t>(GameObjectType::CheckPoint);
+		| static_cast<std::size_t>(GameObjectType::CheckPoint)
+		| static_cast<std::size_t>(GameObjectType::Monolith);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
@@ -1022,10 +1023,10 @@ void	CharacterOcto::replaceOcto(void)
 
 void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
-	if (isFinalEvent())
-		enableCutscene(true, false);
-	else if (m_enableCutscene)
-		enableCutscene(false, false);
+	//if (isFinalEvent())
+	//	enableCutscene(true, false);
+	//else if (m_enableCutscene)
+	//	enableCutscene(false, false);
 
 	if (m_enableCutscene)
 	{
