@@ -3,9 +3,11 @@
 
 AWalkNpc::AWalkNpc(ResourceKey const & npcId, bool isMeetable) :
 	ANpc(npcId, isMeetable),
-	m_velocity(200.f)
+	m_generator("random"),
+	m_lastState(Left),
+	m_velocity(50.f)
 {
-	setTimerMax(sf::seconds(0.8f));
+	setTimerMax(sf::seconds(10.f));
 	setupBox(this, static_cast<std::size_t>(GameObjectType::WalkNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
@@ -18,10 +20,12 @@ void AWalkNpc::setupMachine(void)
 	StatePtr					idleState;
 	StatePtr					walkLeftState;
 	StatePtr					walkRightState;
+	StatePtr					special1State;
 
 	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
 	walkLeftState = std::make_shared<State>("1", getWalkAnimation(), getSprite());
 	walkRightState = std::make_shared<State>("2", getWalkAnimation(), getSprite());
+	special1State = std::make_shared<State>("3", getSpecial1Animation(), getSprite());
 
 	machine.setStart(idleState);
 	machine.addTransition(Idle, idleState, idleState);
@@ -31,44 +35,68 @@ void AWalkNpc::setupMachine(void)
 	machine.addTransition(Left, idleState, walkLeftState);
 	machine.addTransition(Left, walkLeftState, walkLeftState);
 	machine.addTransition(Left, walkRightState, walkLeftState);
+	machine.addTransition(Left, special1State, walkLeftState);
 
 	machine.addTransition(Right, idleState, walkRightState);
 	machine.addTransition(Right, walkLeftState, walkRightState);
 	machine.addTransition(Right, walkRightState, walkRightState);
+	machine.addTransition(Right, special1State, walkRightState);
+
+	machine.addTransition(Special1, idleState, special1State);
+	machine.addTransition(Special1, walkLeftState, special1State);
+	machine.addTransition(Special1, walkRightState, special1State);
 
 	setMachine(machine);
-	getSprite().setNextEvent(Idle);
+	setNextEvent(Idle);
 }
 
 void AWalkNpc::updateState(void)
 {
-	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
 	octo::CharacterSprite & sprite = getSprite();
+	sf::FloatRect const & area = getArea();
+	sf::FloatRect const & bounds = getBox()->getGlobalBounds();
 
-	if (bounds.left <= getArea().left && canWalk() && sprite.getCurrentEvent() == Left)
+	if (sprite.getCurrentEvent() == Left && bounds.left <= area.left)
 	{
-		sprite.setNextEvent(Right);
 		reverseSprite(false);
+		sprite.setNextEvent(Right);
 	}
-	else if ((bounds.left + bounds.width) >= (getArea().left + getArea().width) && canWalk() && sprite.getCurrentEvent() == Right)
+	else if (sprite.getCurrentEvent() == Right && (bounds.left + bounds.width) >= (area.left + area.width))
 	{
-		sprite.setNextEvent(Left);
 		reverseSprite(true);
+		sprite.setNextEvent(Left);
+	}
+	else if (sprite.getCurrentEvent() == Idle)
+	{
+		if (sprite.isTerminated())
+		{
+			sprite.setNextEvent(m_lastState);
+			if (m_lastState == Left)
+				reverseSprite(true);
+			else if (m_lastState == Right)
+				reverseSprite(false);
+		}
+	}
+	else if (sprite.getCurrentEvent() == Special1)
+	{
+		if (sprite.isTerminated())
+		{
+			sprite.setNextEvent(m_lastState);
+			if (m_lastState == Left)
+				reverseSprite(true);
+			else if (m_lastState == Right)
+				reverseSprite(false);
+		}
 	}
 	else if (sprite.getCurrentEvent() != Idle)
 	{
 		if (getTimer() >= getTimerMax())
 		{
-			sprite.setNextEvent(Idle);
-			addTimer(-getTimerMax());
-		}
-	}
-	else if (sprite.getCurrentEvent() == Idle)
-	{
-		if (getTimer() >= getTimerMax())
-		{
-			sprite.setNextEvent(Left);
-			reverseSprite(true);
+			m_lastState = sprite.getCurrentEvent();
+			if (m_generator.randomBool(0.5f))
+				sprite.setNextEvent(Special1);
+			else
+				sprite.setNextEvent(Idle);
 			addTimer(-getTimerMax());
 		}
 	}
@@ -79,16 +107,12 @@ void AWalkNpc::updatePhysics(void)
 	sf::Vector2f velocity;
 
 	if (getSprite().getCurrentEvent() == Left)
-	{
 		velocity.x = (-1.f * m_velocity);
-	}
 	else if (getSprite().getCurrentEvent() == Right)
-	{
 		velocity.x = m_velocity;
-	}
+
 	getBox()->setVelocity(velocity);
 }
-
 float AWalkNpc::getVelocity(void) const
 {
 	return m_velocity;

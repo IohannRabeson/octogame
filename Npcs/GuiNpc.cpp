@@ -21,7 +21,7 @@ void GuiNpc::setup(void)
 			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
 			});
-	getIdleAnimation().setLoop(octo::LoopMode::Loop);
+	getIdleAnimation().setLoop(octo::LoopMode::NoLoop);
 
 	getWalkAnimation().setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
@@ -33,6 +33,15 @@ void GuiNpc::setup(void)
 			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getWalkAnimation().setLoop(octo::LoopMode::Loop);
+
+	getSpecial1Animation().setFrames({
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
+			});
+	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
 }

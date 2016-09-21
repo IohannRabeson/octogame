@@ -19,7 +19,9 @@ protected:
 	float getVelocity(void) const;
 	void setVelocity(float velocity);
 
-	float	m_velocity;
+	RandomGenerator		m_generator;
+	std::size_t			m_lastState;
+	float				m_velocity;
 };
 
 #endif
