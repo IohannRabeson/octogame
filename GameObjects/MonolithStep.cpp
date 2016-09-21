@@ -66,7 +66,7 @@ void MonolithStep::update(sf::Time frametime)
 				m_timer += frametime;
 				m_builder.clear();
 				sf::Vector2f pos = m_sprite.getPosition() + sf::Vector2f(m_sprite.getGlobalSize().x / 2.f, m_sprite.getGlobalSize().y / 2.f);
-				createEffect(m_size, pos, std::pow(m_timer / m_timerMax, 0.867f), sf::Color(240, 25, 25, 200), m_builder);
+				createEffect(m_size, pos, std::pow(std::min(1.f, m_timer / m_timerMax), 0.867f), sf::Color(240, 25, 25, 200), m_builder);
 				m_used = m_builder.getUsed();
 				if (m_timer > m_timerMax)
 				{
@@ -82,7 +82,7 @@ void MonolithStep::update(sf::Time frametime)
 					m_timer = sf::Time::Zero;
 				m_builder.clear();
 				sf::Vector2f pos = m_sprite.getPosition() + sf::Vector2f(m_sprite.getGlobalSize().x / 2.f, m_sprite.getGlobalSize().y / 2.f);
-				createEffect(m_size, pos, std::pow(m_timer / m_timerMax, 0.867f), sf::Color(240, 25, 25, 200), m_builder);
+				createEffect(m_size, pos, std::pow(std::min(1.f, m_timer / m_timerMax), 0.867f), sf::Color(240, 25, 25, 200), m_builder);
 				m_used = m_builder.getUsed();
 				break;
 			}
@@ -95,8 +95,8 @@ void MonolithStep::update(sf::Time frametime)
 
 void MonolithStep::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	m_sprite.draw(render, states);
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
+	m_sprite.draw(render, states);
 }
 
 void MonolithStep::createLosange(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
