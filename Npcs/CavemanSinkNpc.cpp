@@ -6,10 +6,12 @@
 CavemanSinkNpc::CavemanSinkNpc(float waterLevel, sf::Color waterColor) :
 	ASinkNpc(CAVEMAN_SINKING_OSS, waterLevel, waterColor)
 {
-	setSize(sf::Vector2f(34.f, 56.f));
+	setSize(sf::Vector2f(34.f, 88.f));
 	setOrigin(sf::Vector2f(73.f, 56.f));
 	setScale(0.8f);
 	setTimerMax(sf::seconds(8.0f));
+	setVelocity(sf::Vector2f(-20.f, 0.f));
+	reverseSprite(true);
 	setup();
 }
 

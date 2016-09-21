@@ -21,7 +21,8 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_activeText(true),
 	m_collideOctoEvent(false),
 	m_isDoubleJump(false),
-	m_isMeetable(isMeetable)
+	m_isMeetable(isMeetable),
+	m_isReverse(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	TextManager & textManager = TextManager::getInstance();
@@ -288,6 +289,11 @@ octo::CharacterSprite & ANpc::getSprite(void)
 	return m_sprite;
 }
 
+void ANpc::reverseSprite(bool isReverse)
+{
+	m_isReverse = isReverse;
+}
+
 octo::CharacterAnimation & ANpc::getIdleAnimation(void)
 {
 	return m_idleAnimation;
@@ -348,10 +354,7 @@ void ANpc::update(sf::Time frametime)
 	updatePhysics();
 
 	m_timer += frametime;
-	m_sprite.update(frametime);
-	sf::FloatRect const & bounds = m_box->getGlobalBounds();
-	m_sprite.setPosition(bounds.left, bounds.top);
-
+	updateSprite(frametime);
 	updateText(frametime);
 	resetVariables();
 }
@@ -416,6 +419,25 @@ void ANpc::updatePhysics(void)
 		velocity.x = m_velocity;
 	}
 	m_box->setVelocity(velocity);
+}
+
+void ANpc::updateSprite(sf::Time frametime)
+{
+	sf::FloatRect const & bounds = m_box->getGlobalBounds();
+
+	m_sprite.update(frametime);
+	m_sprite.setPosition(bounds.left, bounds.top);
+
+	if (m_isReverse)
+	{
+		m_sprite.setOrigin(m_sprite.getLocalSize().x - getOrigin().x, getOrigin().y);
+		m_sprite.setScale(-getScale(), getScale());
+	}
+	else
+	{
+		m_sprite.setOrigin(getOrigin());
+		m_sprite.setScale(getScale(), getScale());
+	}
 }
 
 void ANpc::updateText(sf::Time frametime)

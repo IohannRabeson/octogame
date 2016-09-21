@@ -134,6 +134,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/AUniqueNpc.cpp						\
 				Npcs/CavemanNpc.cpp						\
 				Npcs/CavemanClimbingNpc.cpp				\
+				Npcs/CavemanSinkNpc.cpp					\
 				Npcs/ElliotNpc.cpp						\
 				Npcs/AWalkNpc.cpp						\
 				Npcs/ChamanMonsterNpc.cpp				\

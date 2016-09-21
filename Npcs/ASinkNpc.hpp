@@ -19,14 +19,20 @@ protected:
 	virtual void updatePhysics(void);
 	virtual void updateState(void);
 
+	void setVelocity(sf::Vector2f const & velocity);
+
 private:
 	void setupSmoke(void);
+	void updateTimer(sf::Time frametime);
 
 	bool			m_isCollide;
 	float			m_waterLevel;
 	sf::Color		m_waterColor;
 	bool			m_fallingWater;
+	sf::Vector2f	m_velocity;
 	SmokeSystem		m_smoke;
+	sf::Time		m_timerFloating;
+	sf::Time		m_timerFloatingMax;
 };
 
 #endif

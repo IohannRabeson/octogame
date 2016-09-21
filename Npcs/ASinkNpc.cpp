@@ -8,7 +8,8 @@ ASinkNpc::ASinkNpc(ResourceKey const & npcId, float waterLevel, sf::Color waterC
 	m_isCollide(false),
 	m_waterLevel(waterLevel),
 	m_waterColor(waterColor),
-	m_fallingWater(true)
+	m_fallingWater(true),
+	m_velocity(0.f, 0.f)
 {
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SinkNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	setupSmoke();
@@ -27,34 +28,10 @@ void ASinkNpc::setupSmoke(void)
 	m_smoke.setCanEmit(false);
 }
 
-/*
-void ASinkNpc::setup(void)
+void ASinkNpc::setVelocity(sf::Vector2f const & velocity)
 {
-	typedef octo::CharacterAnimation::Frame			Frame;
-
-	getIdleAnimation().setFrames({
-			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
-			});
-	getIdleAnimation().setLoop(octo::LoopMode::Loop);
-
-	getSpecial1Animation().setFrames({
-			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			});
-	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
-
-	setupMachine();
+	m_velocity = velocity;
 }
-*/
 
 void ASinkNpc::setupMachine(void)
 {
@@ -80,45 +57,42 @@ void ASinkNpc::setupMachine(void)
 
 void ASinkNpc::update(sf::Time frametime)
 {
-	octo::CharacterSprite & sprite = getSprite();
-
-	updatePhysics();
-	updateState();
-
 	if (getCollideEventOcto())
 		m_isCollide = true;
 
-	sprite.update(frametime);
-	sprite.setPosition(getBox()->getRenderPosition());
 	m_smoke.setPosition(getBox()->getRenderPosition());
 	m_smoke.update(frametime);
 
-	updateText(frametime);
-	resetVariables();
+	ANpc::update(frametime);
 }
 
 void ASinkNpc::updatePhysics(void)
 {
-	if (getPosition().y >= m_waterLevel - 20.f && m_waterLevel > 0 && m_waterColor.a > 0)
+	float			posY = getPosition().y + getBox()->getSize().y;
+	sf::Vector2f	velocity;
+
+	if (posY >= m_waterLevel && m_waterLevel > 0 && m_waterColor.a > 0)
 	{
 		if (m_isCollide)
 		{
-			getBox()->setVelocity(getBox()->getVelocity() - sf::Vector2f(0.f, 500.f));
+			velocity = sf::Vector2f(0.f, -500.f);
 			if (getPosition().y > m_waterLevel + 40.f)
 				m_smoke.setCanEmit(true);
-			return;
 		}
-
-		if (m_fallingWater == true && getPosition().y >= m_waterLevel - 10.f)
-			m_fallingWater = false;
-		else if (getPosition().y <= m_waterLevel - 15.f)
-			m_fallingWater = true;
-
-		if (m_fallingWater)
-			getBox()->setVelocity(getBox()->getVelocity() - sf::Vector2f(0.f, 520.f));
+		else if (m_fallingWater == true)
+		{
+			velocity = sf::Vector2f(0.f, -580.f);
+			if (posY >= m_waterLevel + 5.f)
+				m_fallingWater = false;
+		}
 		else
-			getBox()->setVelocity(getBox()->getVelocity() - sf::Vector2f(0.f, 610.f));
+		{
+			velocity = sf::Vector2f(0.f, -610.f);
+			if (posY <= m_waterLevel + 2.f)
+				m_fallingWater = true;
+		}
 	}
+	getBox()->setVelocity(velocity + m_velocity);
 }
 
 void ASinkNpc::updateState(void)

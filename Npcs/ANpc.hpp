@@ -76,6 +76,7 @@ protected:
 	sf::FloatRect const & getArea(void) const;
 	std::vector<std::unique_ptr<BubbleText>> & getTexts(void);
 	octo::CharacterSprite & getSprite(void);
+	void reverseSprite(bool isReverse);
 	octo::CharacterAnimation & getIdleAnimation(void);
 	octo::CharacterAnimation & getWalkAnimation(void);
 	octo::CharacterAnimation & getSpecial1Animation(void);
@@ -93,6 +94,7 @@ protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
 	virtual void updatePhysics(void);
+	virtual void updateSprite(sf::Time frametime);
 	virtual void updateText(sf::Time frametime);
 
 	static void setupAnimation(octo::CharacterAnimation & animation, std::initializer_list<FramePair> list, octo::LoopMode loopMode);
@@ -118,6 +120,7 @@ private:
 	bool										m_collideOctoEvent;
 	bool										m_isDoubleJump;
 	bool										m_isMeetable;
+	bool										m_isReverse;
 
 };
 

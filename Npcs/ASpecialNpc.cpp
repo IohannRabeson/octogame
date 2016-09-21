@@ -46,15 +46,9 @@ void ASpecialNpc::updateState(void)
 	if (m_followOcto)
 	{
 		if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
-		{
-			getSprite().setOrigin(getSprite().getLocalSize().x - getOrigin().x, getOrigin().y);
-			getSprite().setScale(-getScale(), getScale());
-		}
+			reverseSprite(true);
 		else
-		{
-			getSprite().setOrigin(getOrigin());
-			getSprite().setScale(getScale(), getScale());
-		}
+			reverseSprite(false);
 	}
 	if (sprite.getCurrentEvent() == Idle && getCollideEventOcto() && m_canDoSpecial)
 	{

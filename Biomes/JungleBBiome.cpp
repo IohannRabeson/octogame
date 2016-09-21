@@ -15,7 +15,7 @@ JungleBBiome::JungleBBiome() :
 	m_seed("Jungle B"),
 	m_mapSize(sf::Vector2u(550u, 200u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(93.f * 16.f, 400.f),
+	m_octoStartPosition(113.f * 16.f, 400.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
@@ -90,8 +90,8 @@ JungleBBiome::JungleBBiome() :
 	m_mushroomColor(255, 182, 0),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
-	m_crystalSize(sf::Vector2f(40.f, 100.f), sf::Vector2f(80.f, 200.f)),
-	m_crystalPartCount(2u, 8u),
+	m_crystalSize(sf::Vector2f(10.f, 110.f), sf::Vector2f(20.f, 130.f)),
+	m_crystalPartCount(6u, 10u),
 	m_crystalColor(134, 160, 191, 150),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(255, 255, 255, 100),
@@ -138,7 +138,8 @@ JungleBBiome::JungleBBiome() :
 
 	// Define game objects
 	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
-	m_gameObjects[90] = GameObjectType::PortalJungle;
+	m_gameObjects[90] = GameObjectType::AnthemJungle;
+	m_gameObjects[110] = GameObjectType::PortalJungle;
 	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
 	m_instances[387] = MAP_JUNGLE_B_FLUE_PART_OMP;
 	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;
