@@ -3,6 +3,7 @@
 BeachGuyNpc::BeachGuyNpc(void) :
 	ASpecialNpc(BEACH_GUY_OSS)
 {
+	setType(GameObjectType::BeachGuyNpc);
 	setSize(sf::Vector2f(32.f, 200.f));
 	setOrigin(sf::Vector2f(86.f, 68.f));
 	setScale(0.8f);

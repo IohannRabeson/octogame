@@ -3,6 +3,7 @@
 LongChairNpc::LongChairNpc(void) :
 	AIdleNpc(NPC_LONGCHAIR_OSS, false)
 {
+	setType(GameObjectType::LongChairNpc);
 	setSize(sf::Vector2f(56.f, 109.f));
 	setOrigin(sf::Vector2f(63.f, 53.f));
 	setScale(0.8f);

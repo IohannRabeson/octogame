@@ -3,6 +3,7 @@
 Snowman1Npc::Snowman1Npc(void) :
 	ASpecialNpc(SNOWMAN_1_OSS)
 {
+	setType(GameObjectType::Snowman1Npc);
 	setSize(sf::Vector2f(33.f, 181.f));
 	setOrigin(sf::Vector2f(138.f, 81.f));
 	setScale(0.8f);

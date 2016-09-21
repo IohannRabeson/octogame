@@ -6,6 +6,7 @@
 OctoDeathNpc::OctoDeathNpc(float waterLevel, sf::Color waterColor) :
 	ASinkNpc(OCTO_DEATH_HELMET_OSS, waterLevel, waterColor)
 {
+	setType(GameObjectType::OctoDeathNpc);
 	setSize(sf::Vector2f(38.f, 20.f));
 	setOrigin(sf::Vector2f(31.f, 18.f));
 	setScale(0.6f);

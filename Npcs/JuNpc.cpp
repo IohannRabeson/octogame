@@ -3,6 +3,7 @@
 JuNpc::JuNpc(void) :
 	ASpecialNpc(JU_OSS, false)
 {
+	setType(GameObjectType::JuNpc);
 	setSize(sf::Vector2f(31.f, 162.f));
 	setOrigin(sf::Vector2f(82.f, 31.f));
 	setScale(0.8f);

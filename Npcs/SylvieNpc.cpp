@@ -3,6 +3,7 @@
 SylvieNpc::SylvieNpc(void) :
 	ASwimNpc(SYLVIE_OSS, true, false)
 {
+	setType(GameObjectType::SylvieNpc);
 	setSize(sf::Vector2f(107.f, 205.f));
 	setOrigin(sf::Vector2f(37.f, 82.f));
 	setScale(0.8f);

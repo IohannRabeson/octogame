@@ -3,6 +3,7 @@
 LuGlitchNpc::LuGlitchNpc(void) :
 	ADisappearNpc(LU_GLITCH_OSS, 30.f, 120.f, false)
 {
+	setType(GameObjectType::LuGlitchNpc);
 	setSize(sf::Vector2f(30.f, 181.f));
 	setOrigin(sf::Vector2f(139.f, 69.f));
 	setScale(0.8f);

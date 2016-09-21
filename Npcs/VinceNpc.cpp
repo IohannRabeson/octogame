@@ -3,6 +3,7 @@
 VinceNpc::VinceNpc(void) :
 	AIdleNpc(VINCE_OSS, false)
 {
+	setType(GameObjectType::VinceNpc);
 	setSize(sf::Vector2f(26.f, 169.f));
 	setOrigin(sf::Vector2f(98.f, 739.f));
 	setScale(0.8f);

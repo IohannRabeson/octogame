@@ -3,6 +3,7 @@
 JellyfishNpc::JellyfishNpc(void) :
 	ASwimNpc(JELLYFISH_OSS, false, true)
 {
+	setType(GameObjectType::JellyfishNpc);
 	setSize(sf::Vector2f(5.f, 150.f));
 	setOrigin(sf::Vector2f(51.f, 81.f));
 	setScale(0.8f);

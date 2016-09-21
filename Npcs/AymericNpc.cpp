@@ -3,6 +3,7 @@
 AymericNpc::AymericNpc(void) :
 	ASpecialNpc(AYMERIC_OSS)
 {
+	setType(GameObjectType::AymericNpc);
 	setSize(sf::Vector2f(25.f, 180.f));
 	setOrigin(sf::Vector2f(129.f, 82.f));
 	setScale(0.8f);

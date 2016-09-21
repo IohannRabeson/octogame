@@ -6,6 +6,7 @@
 WolfNpc::WolfNpc(void) :
 	AWalkNpc(WOLF_OSS)
 {
+	setType(GameObjectType::WolfNpc);
 	setSize(sf::Vector2f(99.f, 110.f));
 	setOrigin(sf::Vector2f(95.f, 82.f));
 	setScale(0.8f);

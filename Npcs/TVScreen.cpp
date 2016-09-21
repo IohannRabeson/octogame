@@ -15,6 +15,7 @@ TVScreen::TVScreen(std::string const & kernelName) :
 	m_kernelName(kernelName),
 	m_reverse(false)
 {
+	setType(GameObjectType::TVScreen);
 	setSize(sf::Vector2f(25.f, 140.f));
 	setOrigin(sf::Vector2f(290.f, 700.f));
 	setTextOffset(sf::Vector2f(-20.f, -10.f));

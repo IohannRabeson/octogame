@@ -6,6 +6,7 @@
 CavemanSinkNpc::CavemanSinkNpc(float waterLevel, sf::Color waterColor) :
 	ASinkNpc(CAVEMAN_SINKING_OSS, waterLevel, waterColor)
 {
+	setType(GameObjectType::CavemanSinkingNpc);
 	setSize(sf::Vector2f(34.f, 88.f));
 	setOrigin(sf::Vector2f(73.f, 56.f));
 	setScale(0.8f);

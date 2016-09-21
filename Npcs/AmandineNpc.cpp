@@ -3,6 +3,7 @@
 AmandineNpc::AmandineNpc(void) :
 	ASpecialNpc(AMANDINE_OSS, false)
 {
+	setType(GameObjectType::AmandineNpc);
 	setSize(sf::Vector2f(25.f, 200.f));
 	setOrigin(sf::Vector2f(91.f, 62.f));
 	setScale(0.8f);

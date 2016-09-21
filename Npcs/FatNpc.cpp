@@ -3,6 +3,7 @@
 FatNpc::FatNpc(void) :
 	ASpecialNpc(NPC_FAT_OSS)
 {
+	setType(GameObjectType::FatNpc);
 	setSize(sf::Vector2f(32.f, 218.f));
 	setOrigin(sf::Vector2f(86.f, 50.f));
 	setScale(0.8f);

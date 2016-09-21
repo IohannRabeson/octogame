@@ -3,6 +3,7 @@
 MysticanouilleNpc::MysticanouilleNpc(void) :
 	ASpecialNpc(MYSTICANOUILLE_OSS)
 {
+	setType(GameObjectType::MysticanouilleNpc);
 	setSize(sf::Vector2f(62.f, 300.f));
 	setOrigin(sf::Vector2f(125.f, 64.f));
 	setScale(0.8f);

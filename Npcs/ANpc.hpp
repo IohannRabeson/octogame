@@ -54,6 +54,7 @@ protected:
 
 	ANpc(ResourceKey const & npcId, bool isMeetable = true);
 
+	void setType(GameObjectType const & type);
 	void setTimer(sf::Time time);
 	void setTimerMax(sf::Time timerMax);
 	void setMachine(octo::FiniteStateMachine const & machine);
@@ -93,6 +94,7 @@ protected:
 	static void setupAnimation(octo::CharacterAnimation & animation, std::initializer_list<FramePair> list, octo::LoopMode loopMode);
 
 private:
+	GameObjectType								m_type;
 	std::vector<std::unique_ptr<BubbleText>>	m_texts;
 	octo::CharacterSprite						m_sprite;
 	octo::CharacterAnimation					m_idleAnimation;

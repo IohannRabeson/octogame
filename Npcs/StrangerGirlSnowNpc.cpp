@@ -3,6 +3,7 @@
 StrangerGirlSnowNpc::StrangerGirlSnowNpc(void) :
 	ASpecialNpc(STRANGER_GIRL_SNOW_OSS)
 {
+	setType(GameObjectType::StrangerGirlSnowNpc);
 	setSize(sf::Vector2f(18.f, 176.f));
 	setOrigin(sf::Vector2f(143.f, 86.f));
 	setScale(0.8f);

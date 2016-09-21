@@ -26,6 +26,7 @@ Rocket::Rocket(void) :
 	m_sound(true),
 	m_stopCameraMovement(false)
 {
+	setType(GameObjectType::Rocket);
 	setSize(sf::Vector2f(267.f, 1426.f));
 	setOrigin(sf::Vector2f(0.f, 0.f));
 	setScale(1.f);

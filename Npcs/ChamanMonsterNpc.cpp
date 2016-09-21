@@ -3,6 +3,7 @@
 ChamanMonsterNpc::ChamanMonsterNpc(void) :
 	ASpecialNpc(CHAMAN_MONSTER_OSS)
 {
+	setType(GameObjectType::ChamanMonsterNpc);
 	setSize(sf::Vector2f(220.f, 600.f));
 	setOrigin(sf::Vector2f(37.f, 12.f));
 	setScale(0.8f);

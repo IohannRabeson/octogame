@@ -3,6 +3,7 @@
 PunkNpc::PunkNpc(void) :
 	AWalkNpc(NPC_PUNK_OSS)
 {
+	setType(GameObjectType::PunkNpc);
 	setSize(sf::Vector2f(34.f, 162.f));
 	setOrigin(sf::Vector2f(84.f, 31.f));
 	setScale(0.8f);

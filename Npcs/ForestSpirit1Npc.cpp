@@ -3,6 +3,7 @@
 ForestSpirit1Npc::ForestSpirit1Npc(void) :
 	ADisappearNpc(FOREST_SPIRIT_1_OSS)
 {
+	setType(GameObjectType::ForestSpirit1Npc);
 	setSize(sf::Vector2f(25.f, 60.f));
 	setOrigin(sf::Vector2f(90.f, getGenerator().randomFloat(50.f, 400.f)));
 	setScale(0.8f);

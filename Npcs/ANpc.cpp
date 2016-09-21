@@ -11,6 +11,7 @@
 #include <cwchar>
 
 ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
+	m_type(GameObjectType::None),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(5.f)),
@@ -36,6 +37,11 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 
 ANpc::~ANpc(void)
 {
+}
+
+void ANpc::setType(GameObjectType const & type)
+{
+	m_type = type;
 }
 
 void ANpc::setupIdleAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode)
@@ -155,7 +161,7 @@ void ANpc::setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t 
 	m_box->setCollisionMask(mask);
 
 	if (m_isMeetable)
-		progress.registerNpc(gameObject->getObjectType());
+		progress.registerNpc(m_type);
 }
 
 void ANpc::setTextOffset(sf::Vector2f const & offset)
@@ -331,7 +337,7 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 		m_isDoubleJump = true;
 	else
 		m_isDoubleJump = false;
-	if (m_isMeetable && Progress::getInstance().meetNpc(m_box->getGameObject()->getObjectType()))
+	if (m_isMeetable && Progress::getInstance().meetNpc(m_type))
 		octo->meetNpc(true);
 }
 

@@ -10,6 +10,7 @@
 CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
 	AUniqueNpc(CEDRIC_END_OSS, false)
 {
+	setType(GameObjectType::CedricEndNpc);
 	setSize(sf::Vector2f(31.f, 174.f));
 	setOrigin(sf::Vector2f(85.f, 19.f));
 	setScale(0.8f);

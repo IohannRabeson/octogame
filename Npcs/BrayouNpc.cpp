@@ -3,6 +3,7 @@
 BrayouNpc::BrayouNpc(void) :
 	ASpecialNpc(BRAYOU_OSS)
 {
+	setType(GameObjectType::BrayouNpc);
 	setSize(sf::Vector2f(55.f, 250.f));
 	setOrigin(sf::Vector2f(69.f, 38.f));
 	setScale(0.8f);

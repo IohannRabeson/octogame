@@ -7,6 +7,7 @@ JeffMouffyNpc::JeffMouffyNpc(void) :
 	m_startTimer(false),
 	m_animationEnd(false)
 {
+	setType(GameObjectType::JeffMouffyNpc);
 	setSize(sf::Vector2f(174.f, 186.f));
 	setOrigin(sf::Vector2f(82.f, 100.f));
 	setScale(0.8f);

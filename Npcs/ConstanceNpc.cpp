@@ -3,6 +3,7 @@
 ConstanceNpc::ConstanceNpc(void) :
 	ASpecialNpc(CONSTANCE_OSS, false)
 {
+	setType(GameObjectType::ConstanceNpc);
 	setSize(sf::Vector2f(26.f, 200.f));
 	setOrigin(sf::Vector2f(87.f, 51.f));
 	setScale(0.8f);

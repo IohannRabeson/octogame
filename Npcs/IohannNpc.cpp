@@ -3,6 +3,7 @@
 IohannNpc::IohannNpc(void) :
 	AWalkNpc(IOHANN_OSS)
 {
+	setType(GameObjectType::IohannNpc);
 	setSize(sf::Vector2f(32.f, 174.f));
 	setOrigin(sf::Vector2f(82.f, 19.f));
 	setScale(0.8f);

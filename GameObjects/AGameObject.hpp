@@ -117,7 +117,7 @@ enum class GameObjectType : std::size_t
 	AnthemJungle				= (1 << 15) + 74,
 	TurbanNpc					= (1 << 15) + 75,
 //Script AddNpc
-
+	None						= (1 << 16),
 };
 
 /*!

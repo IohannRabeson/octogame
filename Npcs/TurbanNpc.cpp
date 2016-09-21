@@ -3,6 +3,7 @@
 TurbanNpc::TurbanNpc(void) :
 	AIdleNpc(NPC_TURBAN_OSS)
 {
+	setType(GameObjectType::TurbanNpc);
 	setSize(sf::Vector2f(35.f, 162.f));
 	setOrigin(sf::Vector2f(87.f, 94.f));
 	setScale(0.8f);

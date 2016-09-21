@@ -3,6 +3,7 @@
 WellKeeperNpc::WellKeeperNpc(void) :
 	AIdleNpc(NPC_WELL_KEEPER_OSS)
 {
+	setType(GameObjectType::WellKeeperNpc);
 	setSize(sf::Vector2f(35.f, 156.f));
 	setOrigin(sf::Vector2f(87.f, 100.f));
 	setScale(0.8f);

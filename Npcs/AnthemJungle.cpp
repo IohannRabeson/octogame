@@ -3,6 +3,7 @@
 AnthemJungle::AnthemJungle(void) :
 	ASpecialNpc(ANTHEM_JUNGLE_OSS, false)
 {
+	setType(GameObjectType::AnthemJungle);
 	setSize(sf::Vector2f(158.f, 3150.f));
 	setOrigin(sf::Vector2f(170.f, 39.f));
 	setScale(0.8f);

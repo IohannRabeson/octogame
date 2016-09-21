@@ -3,6 +3,7 @@
 PeaNpc::PeaNpc(void) :
 	ASpecialNpc(PEA_OSS)
 {
+	setType(GameObjectType::PeaNpc);
 	setSize(sf::Vector2f(32.f, 175.f));
 	setOrigin(sf::Vector2f(87.f, 100.f));
 	setScale(0.8f);

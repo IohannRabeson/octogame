@@ -3,6 +3,7 @@
 Pedestal::Pedestal(void) :
 	ANpc(PEDESTAL_OSS, false)
 {
+	setType(GameObjectType::Pedestal);
 	setSize(sf::Vector2f(56.f, 100.f));
 	setOrigin(sf::Vector2f(132.f, 56.f));
 	setScale(0.8f);

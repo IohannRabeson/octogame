@@ -3,6 +3,7 @@
 EvaNpc::EvaNpc(sf::Color const & color) :
 	AUniqueNpc(EVA_OSS)
 {
+	setType(GameObjectType::EvaNpc);
 	setSize(sf::Vector2f(60.f, 300.f));
 	setOrigin(sf::Vector2f(62.f, 25.f));
 	setScale(0.8f);

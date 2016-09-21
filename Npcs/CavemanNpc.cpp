@@ -3,6 +3,7 @@
 CavemanNpc::CavemanNpc(void) :
 	ASpecialNpc(CAVEMAN_OSS)
 {
+	setType(GameObjectType::CavemanNpc);
 	setSize(sf::Vector2f(25.f, 93.f));
 	setOrigin(sf::Vector2f(83.f, 88.f));
 	setScale(0.8f);

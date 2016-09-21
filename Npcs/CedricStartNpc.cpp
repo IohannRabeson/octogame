@@ -11,6 +11,7 @@ CedricStartNpc::CedricStartNpc(ABiome::Type biomeType) :
 	AUniqueNpc(CEDRIC_START_OSS),
 	m_throwPotionTimerMax(sf::seconds(1.f))
 {
+	setType(GameObjectType::CedricStartNpc);
 	setSize(sf::Vector2f(32.f, 174.f));
 	setOrigin(sf::Vector2f(85.f, 19.f));
 	setScale(0.8f);

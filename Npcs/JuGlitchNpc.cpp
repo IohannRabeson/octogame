@@ -3,6 +3,7 @@
 JuGlitchNpc::JuGlitchNpc(void) :
 	ADisappearNpc(JU_GLITCH_OSS, 30.f, 120.f, false)
 {
+	setType(GameObjectType::JuGlitchNpc);
 	setSize(sf::Vector2f(30.f, 174.f));
 	setOrigin(sf::Vector2f(141.f, 76.f));
 	setScale(0.8f);

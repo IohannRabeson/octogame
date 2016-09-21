@@ -3,6 +3,7 @@
 LucieNpc::LucieNpc(void) :
 	ASpecialNpc(LUCIE_OSS)
 {
+	setType(GameObjectType::LucieNpc);
 	setSize(sf::Vector2f(27.f, 187.f));
 	setOrigin(sf::Vector2f(85.f, 81.f));
 	setScale(0.8f);

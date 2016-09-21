@@ -3,6 +3,7 @@
 CanouilleNpc::CanouilleNpc(void) :
 	ASpecialNpc(NPC_CANOUILLE_OSS)
 {
+	setType(GameObjectType::CanouilleNpc);
 	setSize(sf::Vector2f(62.f, 300.f));
 	setOrigin(sf::Vector2f(125.f, 64.f));
 	setScale(0.8f);

@@ -13,6 +13,7 @@ LucienNpc::LucienNpc(void) :
 	m_side(true),
 	m_sound(true)
 {
+	setType(GameObjectType::LucienNpc);
 	setSize(sf::Vector2f(160.f, 168.f));
 	setOrigin(sf::Vector2f(69.f, 25.f));
 	setScale(0.8f);

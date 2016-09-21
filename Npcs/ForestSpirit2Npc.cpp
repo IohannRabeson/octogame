@@ -3,6 +3,7 @@
 ForestSpirit2Npc::ForestSpirit2Npc(void) :
 	ADisappearNpc(FOREST_SPIRIT_2_OSS)
 {
+	setType(GameObjectType::ForestSpirit2Npc);
 	setSize(sf::Vector2f(25.f, 60.f));
 	setOrigin(sf::Vector2f(90.f, getGenerator().randomFloat(50.f, 400.f)));
 	setScale(0.8f);

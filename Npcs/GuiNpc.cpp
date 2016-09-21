@@ -3,6 +3,7 @@
 GuiNpc::GuiNpc(void) :
 	AWalkNpc(GUILLAUME_OSS)
 {
+	setType(GameObjectType::GuiNpc);
 	setSize(sf::Vector2f(31.f, 174.f));
 	setOrigin(sf::Vector2f(83.f, 19.f));
 	setScale(0.8f);

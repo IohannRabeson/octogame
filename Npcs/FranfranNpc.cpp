@@ -2,9 +2,10 @@
 #include "Progress.hpp"
 
 FranfranNpc::FranfranNpc(void) :
-	ASpecialNpc(FRANFRAN_OSS),
+	ASpecialNpc(FRANFRAN_OSS, true, false),
 	m_puffTimerMax(sf::seconds(0.8f))
 {
+	setType(GameObjectType::FranfranNpc);
 	setSize(sf::Vector2f(69.f, 230.f));
 	setOrigin(sf::Vector2f(56.f, 88.f));
 	setScale(0.8f);

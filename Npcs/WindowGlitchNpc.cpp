@@ -3,6 +3,7 @@
 WindowGlitchNpc::WindowGlitchNpc(void) :
 	ADisappearNpc(WINDOW_GLITCH_OSS, 10.f, 40.f)
 {
+	setType(GameObjectType::WindowGlitchNpc);
 	setSize(sf::Vector2f(25.f, 375.f));
 	setOrigin(sf::Vector2f(125.f, 165.f));
 	setScale(0.8f);

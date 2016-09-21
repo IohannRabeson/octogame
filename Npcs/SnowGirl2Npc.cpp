@@ -3,6 +3,7 @@
 SnowGirl2Npc::SnowGirl2Npc(void) :
 	ASpecialNpc(SNOWGIRL_2_OSS)
 {
+	setType(GameObjectType::SnowGirl2Npc);
 	setSize(sf::Vector2f(28.f, 175.f));
 	setOrigin(sf::Vector2f(141.f, 87.f));
 	setScale(0.8f);

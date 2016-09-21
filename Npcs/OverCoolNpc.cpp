@@ -3,6 +3,7 @@
 OverCoolNpc::OverCoolNpc(void) :
 	AFlyNpc(OVER_COOL_NPC_OSS, true)
 {
+	setType(GameObjectType::OverCoolNpc);
 	setSize(sf::Vector2f(45.f, 186.f));
 	setOrigin(sf::Vector2f(177.f, 95.f));
 	setScale(0.8f);
