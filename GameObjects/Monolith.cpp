@@ -9,9 +9,12 @@
 
 Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	InstanceDecor(MONOLITH_PEDESTAL_OSS, scale, position, 1u),
+	m_vertices(new sf::Vertex[100u]),
+	m_size(500.f, 500.f),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_position(position),
 	m_timerMax(sf::seconds(2.f)),
+	m_used(0u),
 	m_state(None),
 	m_offset(0.f)
 {
@@ -59,6 +62,8 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setPosition(m_spriteMonolith.getPosition() + m_spriteMonolith.getGlobalSize() / 2.f - sf::Vector2f(m_box->getRadius(), m_box->getRadius()));
 	m_box->update();
+
+	m_builder = octo::VertexBuilder(m_vertices.get(), 100u);
 }
 
 void Monolith::addMapOffset(float x, float y)
@@ -93,6 +98,7 @@ void Monolith::collideOcto(CharacterOcto * octo)
 		else if (Progress::getInstance().getActivatedMonolith() == 18)
 		{
 			m_state = StartFinalScene;
+			m_size = sf::Vector2f(1000.f, 1000.f);
 			std::cout << "end" << std::endl;
 		}
 	}
@@ -118,6 +124,17 @@ void Monolith::update(sf::Time frameTime)
 			Progress::getInstance().setActivatedMonolith(Progress::getInstance().getRandomDiscoverCount());
 			m_state = None;
 			break;
+		case StartFinalScene:
+			{
+				m_timer += frameTime;
+				if (m_timer > m_timerMax)
+					m_timer = sf::Time::Zero;
+				m_builder.clear();
+				sf::Vector2f pos = m_spriteMonolith.getPosition() + sf::Vector2f(m_spriteMonolith.getGlobalSize().x / 2.f, m_spriteMonolith.getGlobalSize().y / 2.f);
+				createEffect(m_size, pos, std::pow(m_timer / m_timerMax, 0.567f), sf::Color(240, 25, 25, 200), m_builder);
+				m_used = m_builder.getUsed();
+			}
+			break;
 		default:
 			break;
 	}
@@ -134,9 +151,32 @@ void Monolith::draw(sf::RenderTarget& render, sf::RenderStates states) const
 	m_spriteMonolith.draw(render, states);
 	for (auto & step : m_steps)
 		step->draw(render, states);
+	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 }
 
 void Monolith::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	InstanceDecor::drawFront(render, states);
+}
+
+void Monolith::createLosange(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
+{
+	sf::Vector2f up(0.f, -size.y);
+	sf::Vector2f down(0.f, size.y);
+	sf::Vector2f left(-size.x, 0.f);
+	sf::Vector2f right(size.x, 0.f);
+
+	up += origin;
+	down += origin;
+	left += origin;
+	right += origin;
+
+	builder.createTriangle(left, up, right, color);
+	builder.createTriangle(left, down, right, color);
+}
+
+void Monolith::createEffect(sf::Vector2f const & size, sf::Vector2f const & origin, float glowingCoef, sf::Color color, octo::VertexBuilder& builder)
+{
+	color.a = color.a * (1 - glowingCoef);
+	createLosange(size * glowingCoef, origin, color, builder);
 }
