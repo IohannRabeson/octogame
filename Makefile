@@ -144,7 +144,8 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/AymericNpc.cpp						\
 				Npcs/MysticanouilleNpc.cpp				\
 				Npcs/ASinkNpc.cpp						\
-				Npcs/AnthemJungle.cpp				\
+				Npcs/ASwimNpc.cpp						\
+				Npcs/AnthemJungle.cpp					\
 #Script AddNpc
 
 

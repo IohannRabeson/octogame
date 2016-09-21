@@ -81,12 +81,6 @@ protected:
 	octo::CharacterAnimation & getSpecial2Animation(void);
 
 	virtual bool isDoubleJump(void);
-	virtual bool canWalk(void) const;
-	virtual bool canJump(void) const;
-	virtual bool canDoubleJump(void) const;
-	virtual bool canDance(void) const;
-	virtual bool canSpecial1(void) const;
-	virtual bool canSpecial2(void) const;
 	virtual void resetVariables(void);
 
 	virtual void setupMachine(void);

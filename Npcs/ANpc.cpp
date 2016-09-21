@@ -100,36 +100,6 @@ void ANpc::setupMachine(void)
 
 }
 
-bool ANpc::canWalk(void) const
-{
-	return true;
-}
-
-bool ANpc::canJump(void) const
-{
-	return false;
-}
-
-bool ANpc::canDoubleJump(void) const
-{
-	return false;
-}
-
-bool ANpc::canDance(void) const
-{
-	return false;
-}
-
-bool ANpc::canSpecial1(void) const
-{
-	return false;
-}
-
-bool ANpc::canSpecial2(void) const
-{
-	return false;
-}
-
 void ANpc::setTimer(sf::Time time)
 {
 	m_timer = time;

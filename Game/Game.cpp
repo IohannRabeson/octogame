@@ -60,8 +60,6 @@
 #include "TVScreen.hpp"
 #include "CheckPoint.hpp"
 #include "Pedestal.hpp"
-#include "WolfNpc.hpp"
-#include "JellyfishNpc.hpp"
 #include "ASpecialNpc.hpp"
 #include "AIdleNpc.hpp"
 #include "AUniqueNpc.hpp"
@@ -443,6 +441,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::SinkNpc:
 			gameObjectCast<ASinkNpc>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::SwimNpc:
+			gameObjectCast<ASwimNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::Npc:
 			gameObjectCast<AUniqueNpc>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -480,12 +481,6 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::Pedestal:
 			gameObjectCast<Pedestal>(gameObject)->collideOctoEvent(octo);
-			break;
-			case GameObjectType::WolfNpc:
-				gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);
-				break;
-		case GameObjectType::JellyfishNpc:
-			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::SpaceShip:
 			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));
