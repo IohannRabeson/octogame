@@ -61,6 +61,8 @@
 #include "CheckPoint.hpp"
 #include "Pedestal.hpp"
 #include "ASpecialNpc.hpp"
+#include "ASinkNpc.hpp"
+#include "ASwimNpc.hpp"
 #include "AIdleNpc.hpp"
 #include "AUniqueNpc.hpp"
 #include "ADisappearNpc.hpp"

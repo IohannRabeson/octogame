@@ -1,22 +1,24 @@
 2;600x600x370x1
 #eva.oss(5072;3792) : [5104/3984][16/32]0
+#sylvie.oss(4560;7552) : [4576/7680][128/80]1
 #bird_blue.oss(4016;1488) : [4112/1536][16/32]0
 #bird_blue.oss(6800;992) : [6880/1040][32/32]0
 #bird_red.oss(5408;1472) : [5488/1504][32/48]0
 #bird_red.oss(6448;3888) : [6528/3936][32/32]0
 #bird_blue.oss(4688;3952) : [4784/3984][16/48]0
+#jellyfish.oss(912;7184) : [896/7248][80/96]0
+#jellyfish.oss(2288;8448) : [2272/8496][112/96]62
 #jellyfish.oss(672;8736) : [672/8592][80/48]0
 #jellyfish.oss(2848;5264) : [2864/5312][48/32]0
 #jellyfish.oss(5968;4384) : [5984/4448][64/48]0
 #jellyfish.oss(4672;4784) : [4688/4848][64/32]0
 #jellyfish.oss(7136;8592) : [7152/8640][80/64]0
-#jellyfish.oss(4640;8064) : [4640/8144][64/32]0
 !water_castle.oss(560;7232) : [1/1]0
 !object_portal_random.oss(7808;400) : [1/1]0
 !object_portal_beach.oss(352;7392) : [1/1]0
 !decor_rock.oss(2112;9120) : [1/1]0
 !decor_crystal.oss(960;9136) : [1/1]0
-!decor_crystal.oss(1472;9104) : [1/1]2
+!decor_crystal.oss(1472;9104) : [1/1]0
 !checkpoint.oss(4736;8800) : [1/1]0
 !checkpoint.oss(3408;5056) : [1/1]0
 !checkpoint.oss(2704;912) : [1/1]0

@@ -75,6 +75,7 @@ protected:
 	std::vector<std::unique_ptr<BubbleText>> & getTexts(void);
 	octo::CharacterSprite & getSprite(void);
 	void reverseSprite(bool isReverse);
+	void setFollowOcto(bool isFollow);
 	octo::CharacterAnimation & getIdleAnimation(void);
 	octo::CharacterAnimation & getWalkAnimation(void);
 	octo::CharacterAnimation & getSpecial1Animation(void);
@@ -112,6 +113,7 @@ private:
 	bool										m_isDoubleJump;
 	bool										m_isMeetable;
 	bool										m_isReverse;
+	bool										m_isFollowOcto;
 
 };
 

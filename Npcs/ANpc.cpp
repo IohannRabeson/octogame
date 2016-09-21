@@ -21,7 +21,8 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_collideOctoEvent(false),
 	m_isDoubleJump(false),
 	m_isMeetable(isMeetable),
-	m_isReverse(false)
+	m_isReverse(false),
+	m_isFollowOcto(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	TextManager & textManager = TextManager::getInstance();
@@ -253,6 +254,11 @@ void ANpc::reverseSprite(bool isReverse)
 	m_isReverse = isReverse;
 }
 
+void ANpc::setFollowOcto(bool isFollow)
+{
+	m_isFollowOcto = isFollow;
+}
+
 octo::CharacterAnimation & ANpc::getIdleAnimation(void)
 {
 	return m_idleAnimation;
@@ -335,6 +341,14 @@ void ANpc::updateSprite(sf::Time frametime)
 
 	m_sprite.update(frametime);
 	m_sprite.setPosition(bounds.left, bounds.top);
+
+	if (m_isFollowOcto)
+	{
+		if (Progress::getInstance().getOctoPos().x < getPosition().x)
+			reverseSprite(true);
+		else
+			reverseSprite(false);
+	}
 
 	if (m_isReverse)
 	{

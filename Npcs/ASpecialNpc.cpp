@@ -3,10 +3,10 @@
 
 ASpecialNpc::ASpecialNpc(ResourceKey const & npcId, bool followOcto, bool isMeetable) :
 	ANpc(npcId, isMeetable),
-	m_canDoSpecial(true),
-	m_followOcto(followOcto)
+	m_canDoSpecial(true)
 {
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SpecialNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setFollowOcto(followOcto);
 }
 
 void ASpecialNpc::setupMachine(void)
@@ -43,13 +43,6 @@ void ASpecialNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (m_followOcto)
-	{
-		if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
-			reverseSprite(true);
-		else
-			reverseSprite(false);
-	}
 	if (sprite.getCurrentEvent() == Idle && getCollideEventOcto() && m_canDoSpecial)
 	{
 		m_canDoSpecial = false;

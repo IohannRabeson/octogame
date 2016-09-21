@@ -18,8 +18,6 @@ protected:
 
 private:
 	bool		m_canDoSpecial;
-	bool		m_followOcto;
-
 };
 
 #endif

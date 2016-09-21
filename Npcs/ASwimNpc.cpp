@@ -12,11 +12,12 @@ ASwimNpc::ASwimNpc(ResourceKey const & npcId, bool isMeetable, bool isShift) :
 	m_waterLevel(0.f),
 	m_isMet(false),
 	m_isShift(isShift),
-	m_speed(m_generator.randomFloat(7.f, 13.f)),
+	m_velocity(m_generator.randomFloat(7.f, 13.f)),
 	m_shift(m_generator.randomFloat(-50.f, 50.f), m_generator.randomFloat(-50.f, 50.f))
 {
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SwimNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	getBox()->setApplyGravity(false);
+	setFollowOcto(true);
 }
 
 void ASwimNpc::setupMachine(void)
@@ -50,17 +51,8 @@ void ASwimNpc::setPosition(sf::Vector2f const & position)
 
 void ASwimNpc::update(sf::Time frametime)
 {
-	octo::CharacterSprite & sprite = getSprite();
-
 	computeBehavior(frametime);
-	updateState();
-	updatePhysics();
-
-	sprite.update(frametime);
-	sprite.setPosition(getBox()->getRenderPosition());
-
-	updateText(frametime);
-	resetVariables();
+	ANpc::update(frametime);
 }
 
 void ASwimNpc::computeBehavior(sf::Time frametime)
@@ -74,7 +66,7 @@ void ASwimNpc::computeBehavior(sf::Time frametime)
 		float dist = std::sqrt(std::pow(position.x - m_octoPosition.x, 2u) + std::pow(position.y - m_octoPosition.y, 2u));
 		if (position.y > m_waterLevel + 200.f && dist >= 100.f)
 		{
-			box->setVelocity((position - box->getPosition()) * (dist / m_speed));
+			box->setVelocity((position - box->getPosition()) * (dist / m_velocity));
 			if (m_isShift)
 			{
 				float angle = octo::rad2Deg(std::atan2(box->getPosition().y - m_octoPosition.y, box->getPosition().x - m_octoPosition.x)) - 90.f;
@@ -123,4 +115,9 @@ void ASwimNpc::collideOctoEvent(CharacterOcto * octo)
 void ASwimNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	ANpc::draw(render, states);
+}
+
+void ASwimNpc::setVelocity(float velocity)
+{
+	m_velocity = velocity;
 }
