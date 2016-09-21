@@ -2,6 +2,7 @@
 # define MONOLITHSTEP_HPP
 
 # include "ResourceDefinitions.hpp"
+# include "RandomGenerator.hpp"
 # include <AnimatedSprite.hpp>
 # include <VertexBuilder.hpp>
 # include <memory>
@@ -15,20 +16,30 @@ public:
 	void addMapOffset(float x, float y);
 	void setPosition(sf::Vector2f const & position);
 	void activate(void);
+	void firstActivate(void);
 
 	void update(sf::Time frametime);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
+	enum State
+	{
+		None,
+		FirstActivate,
+		Activate,
+	};
+	RandomGenerator					m_generator;
 	octo::AnimatedSprite			m_sprite;
 	octo::SpriteAnimation			m_animation;
 	std::unique_ptr<sf::Vertex[]>	m_vertices;
 	octo::VertexBuilder				m_builder;
 	sf::Vector2f					m_size;
+	sf::Vector2f					m_position;
 	sf::Time						m_timer;
 	sf::Time						m_timerMax;
+	State							m_state;
 	std::size_t						m_used;
-	bool							m_isActivated;
+	float							m_offset;
 
 	void createLosange(sf::Vector2f const & size,
 											sf::Vector2f const & origin,

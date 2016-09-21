@@ -24,10 +24,23 @@ public:
 	virtual void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
+	enum State
+	{
+		None,
+		StartEffect,
+		Activate,
+		StartFinalScene,
+	};
 	octo::AnimatedSprite						m_spriteMonolith;
 	octo::SpriteAnimation						m_animationMonolith;
 	std::vector<std::unique_ptr<MonolithStep>>	m_steps;
+	std::unique_ptr<MonolithStep>				m_monolith;
 	CircleShape *								m_box;
+	sf::Vector2f								m_position;
+	sf::Time									m_timer;
+	sf::Time									m_timerMax;
+	State										m_state;
+	float										m_offset;
 
 };
 

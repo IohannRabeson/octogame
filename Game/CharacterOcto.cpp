@@ -1023,10 +1023,10 @@ void	CharacterOcto::replaceOcto(void)
 
 void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
-	if (isFinalEvent())
-		enableCutscene(true, false);
-	else if (m_enableCutscene)
-		enableCutscene(false, false);
+	//if (isFinalEvent())
+	//	enableCutscene(true, false);
+	//else if (m_enableCutscene)
+	//	enableCutscene(false, false);
 
 	if (m_enableCutscene)
 	{

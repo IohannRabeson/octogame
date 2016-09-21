@@ -3,11 +3,14 @@
 #include <ResourceManager.hpp>
 
 MonolithStep::MonolithStep(ResourceKey const & key, sf::Vector2f const & position, sf::Vector2f const & scale) :
+	m_generator("random"),
 	m_vertices(new sf::Vertex[100u]),
-	m_size(100.f, 100.f),
-	m_timerMax(sf::seconds(1.65f)),
+	m_size(500.f, 500.f),
+	m_position(position),
+	m_timerMax(sf::seconds(m_generator.randomFloat(1.2f, 1.86f))),
+	m_state(None),
 	m_used(0u),
-	m_isActivated(false)
+	m_offset(m_generator.randomFloat(-0.f, 20.f))
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -36,11 +39,19 @@ void MonolithStep::addMapOffset(float x, float y)
 void MonolithStep::setPosition(sf::Vector2f const & position)
 {
 	m_sprite.setPosition(position);
+	m_sprite.play();
 }
 
 void MonolithStep::activate(void)
 {
-	m_isActivated = true;
+	m_state = Activate;
+	m_size = sf::Vector2f(m_generator.randomFloat(80.f, 100.f), m_generator.randomFloat(80.f, 100.f));
+	m_sprite.play();
+}
+
+void MonolithStep::firstActivate(void)
+{
+	m_state = FirstActivate;
 	m_sprite.play();
 }
 
@@ -48,16 +59,38 @@ void MonolithStep::update(sf::Time frametime)
 {
 	m_sprite.update(frametime);
 
-	if (m_isActivated)
+	switch (m_state)
 	{
-		m_timer += frametime;
-		if (m_timer > m_timerMax)
-			m_timer = sf::Time::Zero;
-		m_builder.clear();
-		sf::Vector2f pos = m_sprite.getPosition() + sf::Vector2f(m_sprite.getGlobalSize().x / 2.f, m_sprite.getGlobalSize().y / 2.f);
-		createEffect(m_size, pos, std::pow(m_timer / m_timerMax, 0.867f), sf::Color(240, 125, 125, 200), m_builder);
-		m_used = m_builder.getUsed();
+		case FirstActivate:
+			{
+				m_timer += frametime;
+				m_builder.clear();
+				sf::Vector2f pos = m_sprite.getPosition() + sf::Vector2f(m_sprite.getGlobalSize().x / 2.f, m_sprite.getGlobalSize().y / 2.f);
+				createEffect(m_size, pos, std::pow(m_timer / m_timerMax, 0.867f), sf::Color(240, 125, 125, 200), m_builder);
+				m_used = m_builder.getUsed();
+				if (m_timer > m_timerMax)
+				{
+					m_timer = sf::Time::Zero;
+					activate();
+				}
+				break;
+			}
+		case Activate:
+			{
+				m_timer += frametime;
+				if (m_timer > m_timerMax)
+					m_timer = sf::Time::Zero;
+				m_builder.clear();
+				sf::Vector2f pos = m_sprite.getPosition() + sf::Vector2f(m_sprite.getGlobalSize().x / 2.f, m_sprite.getGlobalSize().y / 2.f);
+				createEffect(m_size, pos, std::pow(m_timer / m_timerMax, 0.867f), sf::Color(240, 125, 125, 200), m_builder);
+				m_used = m_builder.getUsed();
+				break;
+			}
+		default:
+			break;
 	}
+	m_offset += frametime.asSeconds() * 2.f;
+	m_sprite.setPosition(m_position + sf::Vector2f(0.f, std::cos(m_offset) * 10.f));
 }
 
 void MonolithStep::draw(sf::RenderTarget& render, sf::RenderStates states) const
