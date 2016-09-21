@@ -15,7 +15,6 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(5.f)),
 	m_currentText(0),
-	m_velocity(200.f),
 	m_scale(1.f),
 	m_displayText(false),
 	m_activeText(true),
@@ -176,11 +175,6 @@ void ANpc::setMachine(octo::FiniteStateMachine const & machine)
 	m_sprite.restart();
 }
 
-void ANpc::setVelocity(float velocity)
-{
-	m_velocity = velocity;
-}
-
 void ANpc::setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask)
 {
 	Progress & progress = Progress::getInstance();
@@ -237,11 +231,6 @@ void ANpc::setActiveText(bool active)
 float ANpc::getScale(void) const
 {
 	return m_scale;
-}
-
-float ANpc::getVelocity(void) const
-{
-	return m_velocity;
 }
 
 bool ANpc::getCollideEventOcto(void) const
@@ -368,57 +357,6 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 		m_isDoubleJump = false;
 	if (m_isMeetable && Progress::getInstance().meetNpc(m_box->getGameObject()->getObjectType()))
 		octo->meetNpc(true);
-}
-
-void ANpc::updateState(void)
-{
-	sf::FloatRect const & bounds = m_box->getGlobalBounds();
-	if (bounds.left <= m_area.left && canWalk() && m_sprite.getCurrentEvent() == Left)
-	{
-		m_sprite.setNextEvent(Right);
-		m_sprite.setOrigin(m_origin.x, m_origin.y);
-		m_sprite.setScale(m_scale, m_scale);
-	}
-	else if ((bounds.left + bounds.width) >= (m_area.left + m_area.width) && canWalk() && m_sprite.getCurrentEvent() == Right)
-	{
-		m_sprite.setNextEvent(Left);
-		sf::Vector2f const & size = m_sprite.getLocalSize();
-		m_sprite.setOrigin(size.x - m_origin.x, m_origin.y);
-		m_sprite.setScale(-m_scale, m_scale);
-	}
-	else if (m_sprite.getCurrentEvent() != Idle)
-	{
-		if (m_timer >= m_timerMax)
-		{
-			m_sprite.setNextEvent(Idle);
-			m_timer -= m_timerMax;
-		}
-	}
-	else if (m_sprite.getCurrentEvent() == Idle)
-	{
-		if (m_timer >= m_timerMax)
-		{
-			m_sprite.setNextEvent(Left);
-			sf::Vector2f const & size = m_sprite.getLocalSize();
-			m_sprite.setOrigin(size.x - m_origin.x, m_origin.y);
-			m_sprite.setScale(-m_scale, m_scale);
-			m_timer -= m_timerMax;
-		}
-	}
-}
-
-void ANpc::updatePhysics(void)
-{
-	sf::Vector2f velocity;
-	if (m_sprite.getCurrentEvent() == Left)
-	{
-		velocity.x = (-1.f * m_velocity);
-	}
-	else if (m_sprite.getCurrentEvent() == Right)
-	{
-		velocity.x = m_velocity;
-	}
-	m_box->setVelocity(velocity);
 }
 
 void ANpc::updateSprite(sf::Time frametime)

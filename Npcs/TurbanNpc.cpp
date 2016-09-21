@@ -6,7 +6,6 @@ TurbanNpc::TurbanNpc(void) :
 	setSize(sf::Vector2f(35.f, 162.f));
 	setOrigin(sf::Vector2f(87.f, 94.f));
 	setScale(0.8f);
-	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }

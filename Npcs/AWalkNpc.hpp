@@ -14,7 +14,12 @@ public:
 protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
+	virtual void updatePhysics(void);
 
+	float getVelocity(void) const;
+	void setVelocity(float velocity);
+
+	float	m_velocity;
 };
 
 #endif

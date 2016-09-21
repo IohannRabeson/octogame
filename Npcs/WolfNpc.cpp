@@ -7,17 +7,17 @@ WolfNpc::WolfNpc(void) :
 	ANpc(WOLF_OSS),
 	m_engine(std::time(0)),
 	m_specialDistribution(1, 2),
-	m_lastState(Left)
+	m_lastState(Left),
+	m_velocity(50.f)
 {
-	setSize(sf::Vector2f(99.f, 113.f));
+	setSize(sf::Vector2f(99.f, 110.f));
 	setOrigin(sf::Vector2f(95.f, 82.f));
 	setScale(0.8f);
-	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(0.f, 0.f));
 	setTimerMax(sf::seconds(10.0f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::WalkNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void WolfNpc::setup(void)
@@ -153,18 +153,25 @@ void WolfNpc::updateState(void)
 	}
 }
 
+void WolfNpc::updatePhysics(void)
+{
+	sf::Vector2f velocity;
+
+	if (getSprite().getCurrentEvent() == Left)
+	{
+		velocity.x = (-1.f * m_velocity);
+	}
+	else if (getSprite().getCurrentEvent() == Right)
+	{
+		velocity.x = m_velocity;
+	}
+	getBox()->setVelocity(velocity);
+}
+
 void WolfNpc::setWalkEvent(std::size_t event)
 {
-	octo::CharacterSprite & sprite = getSprite();
 	if (event == Left)
-	{
-		sf::Vector2f const & size = sprite.getLocalSize();
-		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-		sprite.setScale(-getScale(), getScale());
-	}
+		reverseSprite(true);
 	else if (event == Right)
-	{
-		sprite.setOrigin(getOrigin().x, getOrigin().y);
-		sprite.setScale(getScale(), getScale());
-	}
+		reverseSprite(false);
 }

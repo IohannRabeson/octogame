@@ -2,7 +2,8 @@
 #include "RectangleShape.hpp"
 
 AWalkNpc::AWalkNpc(ResourceKey const & npcId, bool isMeetable) :
-	ANpc(npcId, isMeetable)
+	ANpc(npcId, isMeetable),
+	m_velocity(200.f)
 {
 	setTimerMax(sf::seconds(0.8f));
 	setupBox(this, static_cast<std::size_t>(GameObjectType::WalkNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
@@ -47,15 +48,12 @@ void AWalkNpc::updateState(void)
 	if (bounds.left <= getArea().left && canWalk() && sprite.getCurrentEvent() == Left)
 	{
 		sprite.setNextEvent(Right);
-		sprite.setOrigin(getOrigin().x, getOrigin().y);
-		sprite.setScale(getScale(), getScale());
+		reverseSprite(false);
 	}
 	else if ((bounds.left + bounds.width) >= (getArea().left + getArea().width) && canWalk() && sprite.getCurrentEvent() == Right)
 	{
 		sprite.setNextEvent(Left);
-		sf::Vector2f const & size = sprite.getLocalSize();
-		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-		sprite.setScale(-getScale(), getScale());
+		reverseSprite(true);
 	}
 	else if (sprite.getCurrentEvent() != Idle)
 	{
@@ -70,10 +68,34 @@ void AWalkNpc::updateState(void)
 		if (getTimer() >= getTimerMax())
 		{
 			sprite.setNextEvent(Left);
-			sf::Vector2f const & size = sprite.getLocalSize();
-			sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-			sprite.setScale(-getScale(), getScale());
+			reverseSprite(true);
 			addTimer(-getTimerMax());
 		}
 	}
 }
+
+void AWalkNpc::updatePhysics(void)
+{
+	sf::Vector2f velocity;
+
+	if (getSprite().getCurrentEvent() == Left)
+	{
+		velocity.x = (-1.f * m_velocity);
+	}
+	else if (getSprite().getCurrentEvent() == Right)
+	{
+		velocity.x = m_velocity;
+	}
+	getBox()->setVelocity(velocity);
+}
+
+float AWalkNpc::getVelocity(void) const
+{
+	return m_velocity;
+}
+
+void AWalkNpc::setVelocity(float velocity)
+{
+	m_velocity = velocity;
+}
+

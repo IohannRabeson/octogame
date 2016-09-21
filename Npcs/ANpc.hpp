@@ -57,7 +57,6 @@ protected:
 	void setTimer(sf::Time time);
 	void setTimerMax(sf::Time timerMax);
 	void setMachine(octo::FiniteStateMachine const & machine);
-	void setVelocity(float velocity);
 	void setActiveText(bool active);
 	void setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask);
 	void setTextOffset(sf::Vector2f const & offset);
@@ -67,7 +66,6 @@ protected:
 	void setupSpecial2Animation(std::initializer_list<FramePair> list, octo::LoopMode loopMode);
 
 	float getScale(void) const;
-	float getVelocity(void) const;
 	bool getCollideEventOcto(void) const;
 	void addTimer(sf::Time time);
 	sf::Time getTimer(void) const;
@@ -92,8 +90,8 @@ protected:
 	virtual void resetVariables(void);
 
 	virtual void setupMachine(void);
-	virtual void updateState(void);
-	virtual void updatePhysics(void);
+	virtual void updateState(void) = 0;
+	virtual void updatePhysics(void) {};
 	virtual void updateSprite(sf::Time frametime);
 	virtual void updateText(sf::Time frametime);
 
@@ -113,7 +111,6 @@ private:
 	sf::Time									m_timer;
 	sf::Time									m_timerMax;
 	int											m_currentText;
-	float										m_velocity;
 	float										m_scale;
 	bool										m_displayText;
 	bool										m_activeText;

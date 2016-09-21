@@ -481,9 +481,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::Pedestal:
 			gameObjectCast<Pedestal>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::WolfNpc:
-			gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);
-			break;
+			case GameObjectType::WolfNpc:
+				gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);
+				break;
 		case GameObjectType::JellyfishNpc:
 			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
 			break;

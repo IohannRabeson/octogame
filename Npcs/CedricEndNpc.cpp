@@ -13,7 +13,6 @@ CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
 	setSize(sf::Vector2f(31.f, 174.f));
 	setOrigin(sf::Vector2f(85.f, 19.f));
 	setScale(0.8f);
-	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 

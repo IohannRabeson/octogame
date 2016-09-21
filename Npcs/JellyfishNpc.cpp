@@ -17,7 +17,6 @@ JellyfishNpc::JellyfishNpc(void) :
 	setSize(sf::Vector2f(5.f, 150.f));
 	setOrigin(sf::Vector2f(51.f, 81.f));
 	setScale(0.8f);
-	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(0.f, -20.f));
 	setup();
 

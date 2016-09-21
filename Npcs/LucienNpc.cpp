@@ -16,7 +16,6 @@ LucienNpc::LucienNpc(void) :
 	setSize(sf::Vector2f(160.f, 168.f));
 	setOrigin(sf::Vector2f(69.f, 25.f));
 	setScale(0.8f);
-	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setTimerMax(sf::seconds(10.0f));
 	setup();

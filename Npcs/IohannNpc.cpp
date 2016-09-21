@@ -1,23 +1,14 @@
 #include "IohannNpc.hpp"
-#include "RectangleShape.hpp"
-#include "SkyCycle.hpp"
-#include "CircleShape.hpp"
 
 IohannNpc::IohannNpc(void) :
-	AUniqueNpc(IOHANN_OSS),
-	m_engine(std::time(0)),
-	m_specialDistribution(1, 10),
-	m_lastState(Left)
+	AWalkNpc(IOHANN_OSS)
 {
 	setSize(sf::Vector2f(32.f, 174.f));
 	setOrigin(sf::Vector2f(82.f, 19.f));
 	setScale(0.8f);
 	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
-	setTimerMax(sf::seconds(15.0f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void IohannNpc::setup(void)
@@ -35,7 +26,7 @@ void IohannNpc::setup(void)
 			});
 	getWalkAnimation().setLoop(octo::LoopMode::Loop);
 
-	getSpecial1Animation().setFrames({
+	getIdleAnimation().setFrames({
 			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {6u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {7u, sf::FloatRect(), sf::Vector2f()}),
@@ -50,11 +41,12 @@ void IohannNpc::setup(void)
 			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
 			});
-	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
+	getIdleAnimation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
 }
 
+/*
 void IohannNpc::setupMachine(void)
 {
 	typedef octo::CharacterSprite::ACharacterState	State;
@@ -67,7 +59,7 @@ void IohannNpc::setupMachine(void)
 
 	walkLeftState = std::make_shared<State>("0", getWalkAnimation(), getSprite());
 	walkRightState = std::make_shared<State>("1", getWalkAnimation(), getSprite());
-	special1State = std::make_shared<State>("2", getSpecial1Animation(), getSprite());
+	special1State = std::make_shared<State>("2", getIdleAnimation(), getSprite());
 
 	machine.setStart(walkLeftState);
 	machine.addTransition(Left, walkLeftState, walkLeftState);
@@ -78,8 +70,8 @@ void IohannNpc::setupMachine(void)
 	machine.addTransition(Right, walkRightState, walkRightState);
 	machine.addTransition(Right, special1State, walkRightState);
 
-	machine.addTransition(Special1, walkLeftState, special1State);
-	machine.addTransition(Special1, walkRightState, special1State);
+	machine.addTransition(Idle, walkLeftState, special1State);
+	machine.addTransition(Idle, walkRightState, special1State);
 
 	setMachine(machine);
 	setNextEvent(Left);
@@ -101,7 +93,7 @@ void IohannNpc::updateState(void)
 		sprite.setNextEvent(Left);
 		setWalkEvent(Left);
 	}
-	else if (sprite.getCurrentEvent() == Special1)
+	else if (sprite.getCurrentEvent() == Idle)
 	{
 		if (sprite.isTerminated())
 		{
@@ -114,7 +106,7 @@ void IohannNpc::updateState(void)
 		if (getTimer() >= getTimerMax())
 		{
 			m_lastState = sprite.getCurrentEvent();
-			sprite.setNextEvent(Special1);
+			sprite.setNextEvent(Idle);
 			addTimer(-getTimerMax());
 		}
 	}
@@ -135,3 +127,4 @@ void IohannNpc::setWalkEvent(std::size_t event)
 		sprite.setScale(getScale(), getScale());
 	}
 }
+*/

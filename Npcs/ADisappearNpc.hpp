@@ -15,6 +15,7 @@ public:
 
 protected:
 	virtual void setupMachine(void);
+	virtual void updateState(void) {};
 	static RandomGenerator & getGenerator(void);
 
 private:

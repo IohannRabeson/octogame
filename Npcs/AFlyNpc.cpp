@@ -19,7 +19,6 @@ AFlyNpc::AFlyNpc(ResourceKey const & npcId, bool isMeetable) :
 	setSize(sf::Vector2f(38.f, 58.f));
 	setOrigin(sf::Vector2f(75.f, 30.f));
 	setScale(0.8f);
-	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(28.f, 0.f));
 	setup();
 
