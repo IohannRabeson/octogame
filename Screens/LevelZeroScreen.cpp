@@ -14,6 +14,8 @@ LevelZeroScreen::LevelZeroScreen(void) :
 	m_background(sf::Quads, 4),
 	m_upColorBackground(sf::Color::Black),
 	m_downColorBackground(sf::Color(8, 20, 26)),
+	m_timerStartRedAlarm(sf::Time::Zero),
+	m_timerStartRedAlarmMax(sf::seconds(6.f)),
 	m_state(Flying),
 	m_offsetCamera(0.f),
 	m_keyUp(false),
@@ -57,9 +59,9 @@ void	LevelZeroScreen::start()
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
 	postEffect.removeEffects();
 	PostEffectLayer::getInstance().clear();
-	PostEffectLayer::getInstance().registerShader(COLOR_SATURATION_FRAG, COLOR_SATURATION_FRAG);
-	PostEffectLayer::getInstance().getShader(COLOR_SATURATION_FRAG).setParameter("value", 1.f);
-	PostEffectLayer::getInstance().enableShader(COLOR_SATURATION_FRAG, false);
+	PostEffectLayer::getInstance().registerShader(RED_ALARM_FRAG, RED_ALARM_FRAG);
+	PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setParameter("transition", 0.f);
+	PostEffectLayer::getInstance().enableShader(RED_ALARM_FRAG, true);
 }
 
 void	LevelZeroScreen::pause()
@@ -83,14 +85,29 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 
 	m_timer += frameTime;
 	m_timerEnd += frameTime;
+	m_timerStartRedAlarm += frameTime;
 
-	m_timerBlinkShader += frameTime;
-	if (m_timerBlinkShader >= sf::seconds(0.5f))
+	if (m_timerStartRedAlarm > m_timerStartRedAlarmMax)
 	{
-		m_timerBlinkShader = sf::Time::Zero;
-
-		m_blinkShaderState = !m_blinkShaderState;
-		PostEffectLayer::getInstance().enableShader(COLOR_SATURATION_FRAG, m_blinkShaderState);
+		if (m_blinkShaderState)
+		{
+			m_timerBlinkShader += frameTime;
+			if (m_timerBlinkShader >= sf::seconds(1.0f))
+			{
+				m_timerBlinkShader = sf::seconds(1.0f);
+				m_blinkShaderState = false;
+			}
+		}
+		else if (!m_blinkShaderState)
+		{
+			m_timerBlinkShader -= frameTime;
+			if (m_timerBlinkShader <= sf::Time::Zero)
+			{
+				m_timerBlinkShader = sf::Time::Zero;
+				m_blinkShaderState = true;
+			}
+		}
+		PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setParameter("transition", (m_timerBlinkShader.asSeconds() / 1.0f) * 0.45f);
 	}
 
 	if (m_timer >= m_timerMax)

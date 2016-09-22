@@ -42,6 +42,8 @@ private:
 	sf::Color						m_downColorBackground;
 	sf::Time						m_timer;
 	sf::Time						m_timerMax;
+	sf::Time						m_timerStartRedAlarm;
+	sf::Time						m_timerStartRedAlarmMax;
 	sf::Time						m_timerEnd;
 	sf::Time						m_timerEndMax;
 	sf::Time						m_timerBlinkShader;
