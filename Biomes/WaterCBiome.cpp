@@ -15,7 +15,7 @@ WaterCBiome::WaterCBiome() :
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(850u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(88.f * 16.f, 5250.f),
+	m_octoStartPosition(49.f * 16.f, 3970.f),
 	m_transitionDuration(2.f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
