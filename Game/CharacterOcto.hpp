@@ -90,6 +90,7 @@ public:
 	void					giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime = false);
 	void					repairElevator(ElevatorStream & elevator);
 	void					collideSpaceShip(SpaceShip * spaceShip);
+	void					collideDoor(void);
 	void					usePortal(Portal & portal);
 	void					startKonamiCode(bool canStart);
 	void					startDrinkPotion(void);
@@ -107,6 +108,7 @@ public:
 	void					collidePortalEvent(bool collidePortal);
 	void					resetCollidingTileCount(void);
 	void					enableCutscene(bool enable, bool autoDisable = false);
+	bool					isActionEnable(void) const;
 
 private:
 	void					dieFall();
@@ -189,6 +191,8 @@ private:
 	sf::Time					m_timeSlowFallMax;
 	sf::Time					m_timeStopVelocity;
 	sf::Time					m_timeStopVelocityMax;
+	sf::Time					m_timerStartUseDoor;
+	sf::Time					m_timerStartUseDoorMax;
 	float						m_factorDirectionVelocityX;
 	float						m_spriteScale;
 	float						m_maxJumpWaterVelocity;
@@ -237,6 +241,7 @@ private:
 	bool						m_enableCutscene;
 	bool						m_stopFollowCamera;
 	bool						m_autoDisableCutscene;
+	bool						m_doorAction;
 	Events						m_prevEvent;
 
 	RandomGenerator				m_generator;

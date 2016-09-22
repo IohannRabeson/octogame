@@ -35,6 +35,8 @@ CharacterOcto::CharacterOcto() :
 	m_timeSlowFallMax(sf::seconds(2.5f)),
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
+	m_timerStartUseDoor(sf::seconds(1.f)),
+	m_timerStartUseDoorMax(sf::seconds(1.f)),
 	m_factorDirectionVelocityX(1.f),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
@@ -75,6 +77,7 @@ CharacterOcto::CharacterOcto() :
 	m_enableCutscene(false),
 	m_stopFollowCamera(false),
 	m_autoDisableCutscene(false),
+	m_doorAction(false),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutscenePauseTimerMax(sf::seconds(4.f)),
@@ -146,6 +149,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik)
 		| static_cast<std::size_t>(GameObjectType::RocketDoor)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint)
+		| static_cast<std::size_t>(GameObjectType::Door)
 		| static_cast<std::size_t>(GameObjectType::Monolith);
 	m_box->setCollisionMask(mask);
 
@@ -926,12 +930,31 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 			states.change("zero");
 		}
 	}
+
+	if (m_doorAction)
+	{
+		m_timerStartUseDoor -= frameTime;
+		m_timerStartUseDoor = std::max(m_timerStartUseDoor, sf::Time::Zero);
+		sf::Color c = m_sprite.getColor();
+		c.a = m_timerStartUseDoor / m_timerStartUseDoorMax * 255.f;
+		m_sprite.setColor(c);
+	}
+	else
+	{
+		m_timerStartUseDoor += frameTime;
+		m_timerStartUseDoor = std::min(m_timerStartUseDoor, m_timerStartUseDoorMax);
+		sf::Color c = m_sprite.getColor();
+		c.a = m_timerStartUseDoor / m_timerStartUseDoorMax * 255.f;
+		m_sprite.setColor(c);
+	}
+
 	m_collisionTile = false;
 	m_collisionElevator = false;
 	m_collisionPortal = false;
 	m_collidePortalEvent = false;
 	m_collisionElevatorEvent = false;
 	m_collisionSpaceShip = false;
+	m_doorAction = false;
 	m_previousTop = m_box->getGlobalBounds().top;
 	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
 
@@ -1219,6 +1242,16 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 		m_repairShip = true;
 	}
 	m_collisionSpaceShip = true;
+}
+
+void	CharacterOcto::collideDoor(void)
+{
+	if (m_keyAction)
+	{
+		m_doorAction = true;
+	}
+	else
+		m_doorAction = false;
 }
 
 void	CharacterOcto::usePortal(Portal & portal)
@@ -1941,6 +1974,11 @@ void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
 		m_cutsceneTimer = std::min(m_cutsceneTimer, m_cutsceneTimerMax);
 	m_enableCutscene = enable;
 	m_autoDisableCutscene = autoDisable;
+}
+
+bool	CharacterOcto::isActionEnable(void) const
+{
+	return m_keyAction;
 }
 
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)

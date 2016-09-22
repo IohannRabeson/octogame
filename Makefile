@@ -73,6 +73,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/CheckPoint.cpp				\
 				GameObjects/Monolith.cpp				\
 				GameObjects/MonolithStep.cpp			\
+				GameObjects/Door.cpp					\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ASpecialNpc.cpp					\
