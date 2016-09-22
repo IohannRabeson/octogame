@@ -3,10 +3,11 @@
 ClementineNpc::ClementineNpc(void) :
 	ASpecialNpc(CLEMENTINE_OSS)
 {
-	setSize(sf::Vector2f(50.f, 75.f));
-	setOrigin(sf::Vector2f(75.f, 100.f));
+	setType(GameObjectType::ClementineNpc);
+	setSize(sf::Vector2f(22.f, 169.f));
+	setOrigin(sf::Vector2f(88.f, 25.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -70.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

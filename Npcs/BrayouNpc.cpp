@@ -3,10 +3,11 @@
 BrayouNpc::BrayouNpc(void) :
 	ASpecialNpc(BRAYOU_OSS)
 {
-	setSize(sf::Vector2f(25.f, 150.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setType(GameObjectType::BrayouNpc);
+	setSize(sf::Vector2f(55.f, 250.f));
+	setOrigin(sf::Vector2f(69.f, 38.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-10.f, -70.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

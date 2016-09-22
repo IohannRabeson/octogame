@@ -8,10 +8,11 @@
 FannyNpc::FannyNpc(void) :
 	ASpecialNpc(FANNY_OSS)
 {
-	setSize(sf::Vector2f(50.f, 120.f));
-	setOrigin(sf::Vector2f(75.f, 78.f));
+	setType(GameObjectType::FannyNpc);
+	setSize(sf::Vector2f(20.f, 168.f));
+	setOrigin(sf::Vector2f(88.f, 19.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

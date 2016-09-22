@@ -214,7 +214,7 @@ void PhysicsEngine::update(float deltatime)
 	accumulator += deltatime;
 	m_isUpdated = false;
 
-	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
+	sf::FloatRect camRect = octo::Application::getCamera().getRectangle();
 	while (accumulator > dt)
 	{
 		m_isUpdated = true;

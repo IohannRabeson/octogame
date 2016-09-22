@@ -3,10 +3,11 @@
 PeaNpc::PeaNpc(void) :
 	ASpecialNpc(PEA_OSS)
 {
-	setSize(sf::Vector2f(25.f, 140.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setType(GameObjectType::PeaNpc);
+	setSize(sf::Vector2f(32.f, 175.f));
+	setOrigin(sf::Vector2f(87.f, 100.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -10.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

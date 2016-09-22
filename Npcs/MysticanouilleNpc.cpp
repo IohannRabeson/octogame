@@ -3,10 +3,11 @@
 MysticanouilleNpc::MysticanouilleNpc(void) :
 	ASpecialNpc(MYSTICANOUILLE_OSS)
 {
-	setSize(sf::Vector2f(70.f, 200.f));
-	setOrigin(sf::Vector2f(100.f, 70.f));
+	setType(GameObjectType::MysticanouilleNpc);
+	setSize(sf::Vector2f(62.f, 300.f));
+	setOrigin(sf::Vector2f(125.f, 64.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-10.f, -50.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

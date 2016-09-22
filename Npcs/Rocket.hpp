@@ -26,6 +26,7 @@ public:
 
 protected:
 	virtual void setupMachine(void);
+	virtual void updateState(void) {};
 
 private:
 	void playSound(void);

@@ -3,10 +3,11 @@
 PierreNpc::PierreNpc(void) :
 	ASpecialNpc(PIERRE_OSS)
 {
-	setSize(sf::Vector2f(50.f, 120.f));
-	setOrigin(sf::Vector2f(75.f, 44.f));
+	setType(GameObjectType::PierreNpc);
+	setSize(sf::Vector2f(32.f, 174.f));
+	setOrigin(sf::Vector2f(82.f, 19.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

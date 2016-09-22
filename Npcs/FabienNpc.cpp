@@ -3,7 +3,11 @@
 FabienNpc::FabienNpc(void) :
 	AFlyNpc(FABIEN_OSS, true)
 {
-	setSize(sf::Vector2f(30.f, 200.f));
+	setType(GameObjectType::FabienNpc);
+	setSize(sf::Vector2f(257.f, 20.f));
+	setOrigin(sf::Vector2f(51.f, 205.f));
+	setScale(0.8f);
+	setTextOffset(sf::Vector2f(0.f, 0.f));
 	setup();
 }
 

@@ -1,16 +1,15 @@
 #ifndef SYLVIENPC_HPP
 # define SYLVIENPC_HPP
 
-# include "AIdleNpc.hpp"
+# include "ASwimNpc.hpp"
 
-class SylvieNpc : public AIdleNpc
+class SylvieNpc : public ASwimNpc
 {
 public:
 	SylvieNpc(void);
 	virtual ~SylvieNpc(void) = default;
 
 	virtual void setup(void);
-
 };
 
 #endif

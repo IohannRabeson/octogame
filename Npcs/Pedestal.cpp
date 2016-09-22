@@ -3,10 +3,11 @@
 Pedestal::Pedestal(void) :
 	ANpc(PEDESTAL_OSS, false)
 {
-	setSize(sf::Vector2f(25.f, 50.f));
-	setOrigin(sf::Vector2f(90.f, 92.f));
+	setType(GameObjectType::Pedestal);
+	setSize(sf::Vector2f(56.f, 100.f));
+	setOrigin(sf::Vector2f(132.f, 56.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -10.f));
+	setTextOffset(sf::Vector2f(0.f, 0.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 

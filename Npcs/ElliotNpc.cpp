@@ -3,8 +3,9 @@
 ElliotNpc::ElliotNpc(void) :
 	ASpecialNpc(ELLIOT_OSS, false)
 {
-	setSize(sf::Vector2f(75.f, 165.f));
-	setOrigin(sf::Vector2f(60.f, 88.f));
+	setType(GameObjectType::ElliotNpc);
+	setSize(sf::Vector2f(56.f, 196.f));
+	setOrigin(sf::Vector2f(75.f, 98.f));
 	setScale(0.8f);
 	setup();
 }

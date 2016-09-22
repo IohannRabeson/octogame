@@ -3,10 +3,11 @@
 ConstanceNpc::ConstanceNpc(void) :
 	ASpecialNpc(CONSTANCE_OSS, false)
 {
-	setSize(sf::Vector2f(20.f, 145.f));
-	setOrigin(sf::Vector2f(80.f, 110.f));
+	setType(GameObjectType::ConstanceNpc);
+	setSize(sf::Vector2f(26.f, 200.f));
+	setOrigin(sf::Vector2f(87.f, 51.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -30.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 
@@ -46,12 +47,12 @@ void ConstanceNpc::update(sf::Time frametime)
 	octo::CharacterSprite & sprite = getSprite();
 	if (sprite.getCurrentEvent() == Idle)
 	{
-		m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(40.f, 100.f));
+		m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(40.f, 140.f));
 		m_smoke.setVelocity(sf::Vector2f(0.f, -30.f));
 	}
 	else
 	{
-		m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(-10.f, 50.f));
+		m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(-10.f, 90.f));
 		m_smoke.setVelocity(sf::Vector2f(-50.f, 0.f));
 	}
 	m_smoke.update(frametime);

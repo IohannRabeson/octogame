@@ -75,6 +75,12 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/MonolithStep.cpp			\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
+				Npcs/ASpecialNpc.cpp					\
+				Npcs/AIdleNpc.cpp						\
+				Npcs/AWalkNpc.cpp						\
+				Npcs/ASinkNpc.cpp						\
+				Npcs/ASwimNpc.cpp						\
+				Npcs/AUniqueNpc.cpp						\
 				Npcs/CedricStartNpc.cpp					\
 				Npcs/FranfranNpc.cpp					\
 				Npcs/JuNpc.cpp							\
@@ -131,30 +137,18 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/JuGlitchNpc.cpp					\
 				Npcs/FranGlitchNpc.cpp					\
 				Npcs/WindowGlitchNpc.cpp				\
-				Npcs/ASpecialNpc.cpp					\
-				Npcs/AIdleNpc.cpp						\
-				Npcs/AUniqueNpc.cpp						\
 				Npcs/CavemanNpc.cpp						\
 				Npcs/CavemanClimbingNpc.cpp				\
+				Npcs/CavemanSinkNpc.cpp					\
 				Npcs/ElliotNpc.cpp						\
-				Npcs/AWalkNpc.cpp						\
 				Npcs/ChamanMonsterNpc.cpp				\
-				Npcs/BeachGuyNpc.cpp				\
-				Npcs/LucieNpc.cpp				\
-				Npcs/SylvieNpc.cpp				\
-				Npcs/AymericNpc.cpp				\
+				Npcs/BeachGuyNpc.cpp					\
+				Npcs/LucieNpc.cpp						\
+				Npcs/SylvieNpc.cpp						\
+				Npcs/AymericNpc.cpp						\
 				Npcs/MysticanouilleNpc.cpp				\
+				Npcs/AnthemJungle.cpp					\
 #Script AddNpc
-
-
-
-
-
-
-
-
-
-
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\

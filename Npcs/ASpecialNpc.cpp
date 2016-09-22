@@ -3,10 +3,12 @@
 
 ASpecialNpc::ASpecialNpc(ResourceKey const & npcId, bool followOcto, bool isMeetable) :
 	ANpc(npcId, isMeetable),
-	m_canDoSpecial(true),
-	m_followOcto(followOcto)
+	m_generator("random"),
+	m_canDoSpecial(true)
 {
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SpecialNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setFollowOcto(followOcto);
+	m_randomSpecial = sf::seconds(m_generator.randomFloat(5.f, 40.f));
 }
 
 void ASpecialNpc::setupMachine(void)
@@ -36,6 +38,7 @@ void ASpecialNpc::update(sf::Time frameTime)
 {
 	if (!getCollideEventOcto())
 		m_canDoSpecial = true;
+	m_randomSpecial -= frameTime;
 	ANpc::update(frameTime);
 }
 
@@ -43,22 +46,10 @@ void ASpecialNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (m_followOcto)
-	{
-		if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
-		{
-			getSprite().setOrigin(getSprite().getLocalSize().x - getOrigin().x, getOrigin().y);
-			getSprite().setScale(-getScale(), getScale());
-		}
-		else
-		{
-			getSprite().setOrigin(getOrigin());
-			getSprite().setScale(getScale(), getScale());
-		}
-	}
-	if (sprite.getCurrentEvent() == Idle && getCollideEventOcto() && m_canDoSpecial)
+	if (m_canDoSpecial && sprite.getCurrentEvent() == Idle && (getCollideEventOcto() || m_randomSpecial <= sf::Time::Zero))
 	{
 		m_canDoSpecial = false;
+		m_randomSpecial = sf::seconds(m_generator.randomFloat(5.f, 40.f));
 		sprite.setNextEvent(Special1);
 	}
 	else if (sprite.getCurrentEvent() == Special1 && sprite.isTerminated())

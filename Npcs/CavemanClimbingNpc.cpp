@@ -3,6 +3,7 @@
 CavemanClimbingNpc::CavemanClimbingNpc(void) :
 	AIdleNpc(CAVEMAN_CLIMBING_OSS)
 {
+	setType(GameObjectType::CavemanClimbingNpc);
 	setSize(sf::Vector2f(75.f, 265.f));
 	setOrigin(sf::Vector2f(60.f, 1050.f));
 	setScale(0.8f);

@@ -3,10 +3,11 @@
 CanouilleNpc::CanouilleNpc(void) :
 	ASpecialNpc(NPC_CANOUILLE_OSS)
 {
-	setSize(sf::Vector2f(50.f, 250.f));
-	setOrigin(sf::Vector2f(80.f, 150.f));
-	setScale(1.0f);
-	setTextOffset(sf::Vector2f(0.f, -100.f));
+	setType(GameObjectType::CanouilleNpc);
+	setSize(sf::Vector2f(62.f, 300.f));
+	setOrigin(sf::Vector2f(125.f, 64.f));
+	setScale(0.8f);
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 

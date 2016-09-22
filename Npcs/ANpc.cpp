@@ -11,17 +11,19 @@
 #include <cwchar>
 
 ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
+	m_type(GameObjectType::None),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(5.f)),
 	m_currentText(0),
-	m_velocity(200.f),
 	m_scale(1.f),
 	m_displayText(false),
 	m_activeText(true),
 	m_collideOctoEvent(false),
 	m_isDoubleJump(false),
-	m_isMeetable(isMeetable)
+	m_isMeetable(isMeetable),
+	m_isReverse(false),
+	m_isFollowOcto(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	TextManager & textManager = TextManager::getInstance();
@@ -35,6 +37,11 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 
 ANpc::~ANpc(void)
 {
+}
+
+void ANpc::setType(GameObjectType const & type)
+{
+	m_type = type;
 }
 
 void ANpc::setupIdleAnimation(std::initializer_list<FramePair> list, octo::LoopMode loopMode)
@@ -100,36 +107,6 @@ void ANpc::setupMachine(void)
 
 }
 
-bool ANpc::canWalk(void) const
-{
-	return true;
-}
-
-bool ANpc::canJump(void) const
-{
-	return false;
-}
-
-bool ANpc::canDoubleJump(void) const
-{
-	return false;
-}
-
-bool ANpc::canDance(void) const
-{
-	return false;
-}
-
-bool ANpc::canSpecial1(void) const
-{
-	return false;
-}
-
-bool ANpc::canSpecial2(void) const
-{
-	return false;
-}
-
 void ANpc::setTimer(sf::Time time)
 {
 	m_timer = time;
@@ -155,6 +132,7 @@ void ANpc::setScale(float scale)
 {
 	m_scale = scale;
 	m_sprite.setScale(scale, scale);
+	m_box->setSize(m_box->getSize() * scale);
 }
 
 void ANpc::setPosition(sf::Vector2f const & position)
@@ -174,11 +152,6 @@ void ANpc::setMachine(octo::FiniteStateMachine const & machine)
 	m_sprite.restart();
 }
 
-void ANpc::setVelocity(float velocity)
-{
-	m_velocity = velocity;
-}
-
 void ANpc::setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t mask)
 {
 	Progress & progress = Progress::getInstance();
@@ -188,7 +161,7 @@ void ANpc::setupBox(AGameObjectBase * gameObject, std::size_t type, std::size_t 
 	m_box->setCollisionMask(mask);
 
 	if (m_isMeetable)
-		progress.registerNpc(gameObject->getObjectType());
+		progress.registerNpc(m_type);
 }
 
 void ANpc::setTextOffset(sf::Vector2f const & offset)
@@ -237,11 +210,6 @@ float ANpc::getScale(void) const
 	return m_scale;
 }
 
-float ANpc::getVelocity(void) const
-{
-	return m_velocity;
-}
-
 bool ANpc::getCollideEventOcto(void) const
 {
 	return m_collideOctoEvent;
@@ -285,6 +253,16 @@ std::vector<std::unique_ptr<BubbleText>> & ANpc::getTexts(void)
 octo::CharacterSprite & ANpc::getSprite(void)
 {
 	return m_sprite;
+}
+
+void ANpc::reverseSprite(bool isReverse)
+{
+	m_isReverse = isReverse;
+}
+
+void ANpc::setFollowOcto(bool isFollow)
+{
+	m_isFollowOcto = isFollow;
 }
 
 octo::CharacterAnimation & ANpc::getIdleAnimation(void)
@@ -347,10 +325,7 @@ void ANpc::update(sf::Time frametime)
 	updatePhysics();
 
 	m_timer += frametime;
-	m_sprite.update(frametime);
-	sf::FloatRect const & bounds = m_box->getGlobalBounds();
-	m_sprite.setPosition(bounds.left, bounds.top);
-
+	updateSprite(frametime);
 	updateText(frametime);
 	resetVariables();
 }
@@ -362,59 +337,35 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 		m_isDoubleJump = true;
 	else
 		m_isDoubleJump = false;
-	if (m_isMeetable && Progress::getInstance().meetNpc(m_box->getGameObject()->getObjectType()))
+	if (m_isMeetable && Progress::getInstance().meetNpc(m_type))
 		octo->meetNpc(true);
 }
 
-void ANpc::updateState(void)
+void ANpc::updateSprite(sf::Time frametime)
 {
 	sf::FloatRect const & bounds = m_box->getGlobalBounds();
-	if (bounds.left <= m_area.left && canWalk() && m_sprite.getCurrentEvent() == Left)
-	{
-		m_sprite.setNextEvent(Right);
-		m_sprite.setOrigin(m_origin.x, m_origin.y);
-		m_sprite.setScale(m_scale, m_scale);
-	}
-	else if ((bounds.left + bounds.width) >= (m_area.left + m_area.width) && canWalk() && m_sprite.getCurrentEvent() == Right)
-	{
-		m_sprite.setNextEvent(Left);
-		sf::Vector2f const & size = m_sprite.getLocalSize();
-		m_sprite.setOrigin(size.x - m_origin.x, m_origin.y);
-		m_sprite.setScale(-m_scale, m_scale);
-	}
-	else if (m_sprite.getCurrentEvent() != Idle)
-	{
-		if (m_timer >= m_timerMax)
-		{
-			m_sprite.setNextEvent(Idle);
-			m_timer -= m_timerMax;
-		}
-	}
-	else if (m_sprite.getCurrentEvent() == Idle)
-	{
-		if (m_timer >= m_timerMax)
-		{
-			m_sprite.setNextEvent(Left);
-			sf::Vector2f const & size = m_sprite.getLocalSize();
-			m_sprite.setOrigin(size.x - m_origin.x, m_origin.y);
-			m_sprite.setScale(-m_scale, m_scale);
-			m_timer -= m_timerMax;
-		}
-	}
-}
 
-void ANpc::updatePhysics(void)
-{
-	sf::Vector2f velocity;
-	if (m_sprite.getCurrentEvent() == Left)
+	m_sprite.update(frametime);
+	m_sprite.setPosition(bounds.left, bounds.top);
+
+	if (m_isFollowOcto)
 	{
-		velocity.x = (-1.f * m_velocity);
+		if (Progress::getInstance().getOctoPos().x < getPosition().x)
+			reverseSprite(true);
+		else
+			reverseSprite(false);
 	}
-	else if (m_sprite.getCurrentEvent() == Right)
+
+	if (m_isReverse)
 	{
-		velocity.x = m_velocity;
+		m_sprite.setOrigin(m_sprite.getLocalSize().x - getOrigin().x, getOrigin().y);
+		m_sprite.setScale(-getScale(), getScale());
 	}
-	m_box->setVelocity(velocity);
+	else
+	{
+		m_sprite.setOrigin(getOrigin());
+		m_sprite.setScale(getScale(), getScale());
+	}
 }
 
 void ANpc::updateText(sf::Time frametime)
@@ -428,7 +379,7 @@ void ANpc::updateText(sf::Time frametime)
 			m_texts[index]->setActive(true);
 		else
 			m_texts[index]->setActive(false);
-		m_texts[index]->setPosition(m_sprite.getPosition() + m_textOffset);
+		m_texts[index]->setPosition(m_box->getPosition() + m_textOffset);
 		m_texts[index]->update(frametime);
 	}
 }

@@ -3,10 +3,11 @@
 LongChairNpc::LongChairNpc(void) :
 	AIdleNpc(NPC_LONGCHAIR_OSS, false)
 {
-	setSize(sf::Vector2f(200.f, 150.f));
-	setOrigin(sf::Vector2f(40.f, 63.f));
-	setScale(1.2f);
-	setTextOffset(sf::Vector2f(-20.f, -10.f));
+	setType(GameObjectType::LongChairNpc);
+	setSize(sf::Vector2f(56.f, 109.f));
+	setOrigin(sf::Vector2f(63.f, 53.f));
+	setScale(0.8f);
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 
