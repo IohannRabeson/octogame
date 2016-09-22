@@ -21,7 +21,6 @@
 //Object
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
-#include "HouseFlatSnow.hpp"
 #include "EngineSnow.hpp"
 #include "WeirdHouseSnow.hpp"
 #include "Well.hpp"
@@ -494,6 +493,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(WEIRD_HOUSE_SNOW_OSS, scale, position, 1u, 0.1f);
 			});
+	m_decorFactory.registerCreator(HOUSE_FLAT_SNOW_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_FLAT_SNOW_OSS, scale, position, 1u, 0.1f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -737,12 +740,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			case GameObjectType::Bouibouik:
 				{
 					Bouibouik * simple = new Bouibouik();
-					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
-			case GameObjectType::HouseFlatSnow:
-				{
-					HouseFlatSnow * simple = new HouseFlatSnow();
 					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
