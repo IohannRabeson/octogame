@@ -15,7 +15,7 @@ IceCBiome::IceCBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(540u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(120.f * 16.f, -3750.f),
+	m_octoStartPosition(56.f * 16.f, -6890.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(85, 150, 179),
@@ -101,7 +101,7 @@ IceCBiome::IceCBiome() :
 	m_cloudSize(sf::Vector2f(400.f, 400.f), sf::Vector2f(1000.f, 1000.f)),
 	m_cloudPartCount(1u, 1u),
 	m_cloudMaxY(-1000.f),
-	m_cloudMinY(-7000.f),
+	m_cloudMinY(-3500.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
@@ -259,7 +259,7 @@ Map::TileColorGenerator IceCBiome::getTileColorGenerator()
 	float endTransition = -8;
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
-		if (y > -3000 && y < -48)
+		if ((y > -3000 && y < -360) || (y > -310 && y < -48))
 			return m_cloudColor;
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
 		if (y > startTransition && y <= middleTransition)

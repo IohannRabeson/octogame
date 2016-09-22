@@ -60,7 +60,7 @@ MusicManager::MusicManager() :
 	m_music.resize(7);
 	//ice balle
 	m_music[0] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
-			sf::FloatRect(sf::Vector2f(50.f * 16.f, -240.f * 16.f), sf::Vector2f(120.f * 16.f, 185.f * 16.f)));
+			sf::FloatRect(sf::Vector2f(50.f * 16.f, -270.f * 16.f), sf::Vector2f(120.f * 16.f, 205.f * 16.f)));
 	//desert balle
 	m_music[1] = AreaMusic(Level::DesertB, MENU_OPUS_II_REVERSE_OGG,
 			sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(200.f * 16.f, 700.f * 16.f)));
