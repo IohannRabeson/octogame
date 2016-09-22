@@ -21,7 +21,6 @@
 //Object
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
-#include "EngineSnow.hpp"
 #include "WeirdHouseSnow.hpp"
 #include "Well.hpp"
 #include "Tent.hpp"
@@ -34,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "EngineSnow.hpp"
 #include "FlorentNpc.hpp"
 #include "CavemanSinkNpc.hpp"
 #include "AnthemJungle.hpp"
@@ -255,6 +255,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<EngineSnow>(ENGINE_SNOW_OSS);
 	m_npcFactory.registerCreator<FlorentNpc>(FLORENT_OSS);
 	m_npcFactory.registerCreator<AnthemJungle>(ANTHEM_JUNGLE_OSS);
 	m_npcFactory.registerCreator<MysticanouilleNpc>(MYSTICANOUILLE_OSS);
@@ -745,12 +746,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
-			case GameObjectType::EngineSnow:
-				{
-					EngineSnow * simple = new EngineSnow();
-					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
 			case GameObjectType::WeirdHouseSnow:
 				{
 					WeirdHouseSnow * simple = new WeirdHouseSnow();
@@ -778,6 +773,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::EngineSnow:
+				{
+					EngineSnow * npc = new EngineSnow();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::FlorentNpc:
 				{
 					FlorentNpc * npc = new FlorentNpc();
