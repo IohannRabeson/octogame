@@ -30,6 +30,7 @@
 #include "Concert.hpp"
 #include "Firecamp.hpp"
 #include "Cage.hpp"
+#include "Monolith.hpp"
 
 //Npc
 #include "CedricStartNpc.hpp"
@@ -484,6 +485,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_decorFactory.registerCreator(CAVEMAN_CLIMBING_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new InstanceDecor(CAVEMAN_CLIMBING_OSS, scale, position, 6u, 0.1f);
+			});
+	m_decorFactory.registerCreator(MONOLITH_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Monolith(scale, position);
 			});
 
 	// Get all the gameobjects from instances

@@ -38,6 +38,7 @@
 #include "Tent.hpp"
 #include "SpaceShip.hpp"
 #include "Concert.hpp"
+#include "Monolith.hpp"
 
 //Nano
 #include "GroundTransformNanoRobot.hpp"
@@ -414,6 +415,9 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			break;
 		case GameObjectType::Rocket:
 			gameObjectCast<Rocket>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Monolith:
+			gameObjectCast<Monolith>(gameObject)->collideOcto(octo);
 			break;
 		default:
 			break;

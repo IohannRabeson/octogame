@@ -71,6 +71,8 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/EngineSnow.cpp				\
 				GameObjects/WeirdHouseSnow.cpp			\
 				GameObjects/CheckPoint.cpp				\
+				GameObjects/Monolith.cpp				\
+				GameObjects/MonolithStep.cpp			\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ASpecialNpc.cpp					\
