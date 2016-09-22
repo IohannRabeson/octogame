@@ -8,13 +8,13 @@
 #include <AudioManager.hpp>
 
 CedricEndNpc::CedricEndNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_END_OSS, false)
+	AUniqueNpc(CEDRIC_END_OSS, false)
 {
-	setSize(sf::Vector2f(50.f, 100.f));
-	setOrigin(sf::Vector2f(60.f, 68.f));
+	setType(GameObjectType::CedricEndNpc);
+	setSize(sf::Vector2f(31.f, 174.f));
+	setOrigin(sf::Vector2f(85.f, 19.f));
 	setScale(0.8f);
-	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(0.f, -50.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
@@ -136,7 +136,7 @@ void CedricEndNpc::setupMachine(void)
 
 void CedricEndNpc::collideOctoEvent(CharacterOcto * octo)
 {
-	ANpc::collideOctoEvent(octo);
+	AUniqueNpc::collideOctoEvent(octo);
 	stopBalle();
 
 	octo::CharacterSprite & sprite = getSprite();
@@ -193,6 +193,6 @@ void CedricEndNpc::updateState(void)
 
 void CedricEndNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	ANpc::draw(render, states);
+	AUniqueNpc::draw(render, states);
 }
 

@@ -1,13 +1,14 @@
 #ifndef OVERCOOLNPC_HPP
 # define OVERCOOLNPC_HPP
 
-# include "BirdNpc.hpp"
+# include "AFlyNpc.hpp"
 
-class OverCoolNpc : public BirdNpc, public AGameObject<GameObjectType::OverCoolNpc>
+class OverCoolNpc : public AFlyNpc
 {
 public:
 	OverCoolNpc(void);
 	virtual ~OverCoolNpc(void) = default;
+
 	virtual void setup(void);
 };
 

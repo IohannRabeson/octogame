@@ -1,21 +1,14 @@
 #include "WellKeeperNpc.hpp"
-#include "RectangleShape.hpp"
-#include "SkyCycle.hpp"
-#include "CircleShape.hpp"
-#include "Progress.hpp"
-#include "ChallengeManager.hpp"
 
 WellKeeperNpc::WellKeeperNpc(void) :
-	ANpc(NPC_WELL_KEEPER_OSS)
+	AIdleNpc(NPC_WELL_KEEPER_OSS)
 {
-	setSize(sf::Vector2f(50.f, 150.f));
-	setOrigin(sf::Vector2f(70.f, 70.f));
+	setType(GameObjectType::WellKeeperNpc);
+	setSize(sf::Vector2f(35.f, 156.f));
+	setOrigin(sf::Vector2f(87.f, 100.f));
 	setScale(0.8f);
-	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(20.f, 0.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent) | static_cast<std::size_t>(GameObjectType::Player));
 }
 
 void WellKeeperNpc::setup(void)
@@ -30,33 +23,4 @@ void WellKeeperNpc::setup(void)
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
 	setupMachine();
-	setNextEvent(Idle);
-}
-
-void WellKeeperNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idle;
-
-	idle = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-
-	machine.setStart(idle);
-	machine.addTransition(Idle, idle, idle);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
-void WellKeeperNpc::updateState(void)
-{
-	if (Progress::getInstance().canUseWaterJump())
-	{
-		octo::CharacterSprite & sprite = getSprite();
-		sf::Vector2f const & size = sprite.getLocalSize();
-		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-		sprite.setScale(-getScale(), getScale());
-	}
 }

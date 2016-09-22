@@ -52,8 +52,11 @@ void	LevelZeroScreen::start()
 
 	if (Progress::getInstance().spaceShipIsRepair())
 	{
-		Progress::getInstance().setNextDestination(Level::Random, false);
+		Progress & progress = Progress::getInstance();
+		progress.setNextDestination(Level::IceA, false);
+		progress.setGameFinished(true);
 		m_state = Rising;
+
 	}
 
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();

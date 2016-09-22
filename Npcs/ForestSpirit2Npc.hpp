@@ -1,13 +1,15 @@
 #ifndef FORESTSPIRIT2NPC_HPP
 # define FORESTSPIRIT2NPC_HPP
 
-# include "DisappearNpc.hpp"
+# include "ADisappearNpc.hpp"
 
-class ForestSpirit2Npc : public DisappearNpc, public AGameObject<GameObjectType::ForestSpirit2Npc>
+class ForestSpirit2Npc : public ADisappearNpc
 {
 public:
 	ForestSpirit2Npc(void);
 	virtual ~ForestSpirit2Npc(void) = default;
+
+	virtual void setup(void);
 };
 
 #endif

@@ -271,44 +271,44 @@ void Map::registerDepth(void)
 
 bool Map::nextStep(void)
 {
+	Progress & progress = Progress::getInstance();
+
 	m_depth += m_transitionStep;
 	m_isOctoOnInstance = false;
+	progress.setIsOctoOnInstance(m_isOctoOnInstance);
 	for (std::size_t i = 0; i < m_instances.size(); i++)
 	{
 		if (isOctoOnInstance(m_instancesRect[i], m_octoPos))
 		{
-			Progress & progress = Progress::getInstance();
-
 			m_isOctoOnInstance = m_instances[i]->nextStep();
 			m_instanceIndex = i;
+			progress.setMapHighlight(m_instances[i]->isMapHighlight());
+			progress.setIsOctoOnInstance(m_isOctoOnInstance);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Map::previousStep(void)
+{
+	Progress & progress = Progress::getInstance();
+
+	m_depth -= m_transitionStep;
+	m_isOctoOnInstance = false;
+	progress.setIsOctoOnInstance(m_isOctoOnInstance);
+	for (std::size_t i = 0; i < m_instances.size(); i++)
+	{
+		if (isOctoOnInstance(m_instancesRect[i], m_octoPos))
+		{
+			m_isOctoOnInstance = m_instances[i]->previousStep();
+			m_instanceIndex = i;
+			progress.setIsOctoOnInstance(m_isOctoOnInstance);
 			progress.setMapHighlight(m_instances[i]->isMapHighlight());
 			return true;
 		}
 	}
 	return false;
-	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance); // ??????
-}
-
-bool Map::previousStep(void)
-{
-	m_depth -= m_transitionStep;
-	m_isOctoOnInstance = false;
-	for (std::size_t i = 0; i < m_instances.size(); i++)
-	{
-		if (isOctoOnInstance(m_instancesRect[i], m_octoPos))
-		{
-			Progress & progress = Progress::getInstance();
-
-			m_isOctoOnInstance = m_instances[i]->previousStep();
-			m_instanceIndex = i;
-			//TODO : To remove
-			//progress.setMapHighlight(m_instances[i]->isMapHighlight());
-			progress.setMapHighlight(true);
-			return true;
-		}
-	}
-	return false;
-	Progress::getInstance().setIsOctoOnInstance(m_isOctoOnInstance); // ??????
 }
 
 void Map::setMapSurfaceGenerator(MapSurfaceGenerator mapSurface)

@@ -1,9 +1,9 @@
 #ifndef PUNKNPC_HPP
 # define PUNKNPC_HPP
 
-# include "ANpc.hpp"
+# include "AWalkNpc.hpp"
 
-class PunkNpc : public ANpc, public AGameObject<GameObjectType::PunkNpc>
+class PunkNpc : public AWalkNpc
 {
 public:
 	PunkNpc(void);

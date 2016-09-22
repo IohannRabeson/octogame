@@ -26,10 +26,11 @@ DesertDBiome::DesertDBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(255, 150, 242),
 	m_skyNightColor(166, 10, 92),
 	m_nightLightColor(134, 63, 215, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 59, 59, 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -75,7 +76,6 @@ DesertDBiome::DesertDBiome() :
 	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
-	m_grassIndex(0u),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(4.f, 15.f), sf::Vector2f(8.f, 30.f)),
@@ -150,7 +150,7 @@ DesertDBiome::DesertDBiome() :
 	m_gameObjects[30] = GameObjectType::PortalJungle;
 	m_gameObjects[110] = GameObjectType::PortalDesert;
 	m_instances[120] = MAP_DESERT_D_TRAIL_OMP;
-	m_instances[15] = MAP_DESERT_D_PORTAL_OMP;
+	m_instances[15] = MAP_DESERT_D_SECRET_PORTAL_OMP;
 
 	m_interestPointPosX = 500;
 
@@ -350,7 +350,7 @@ sf::Time		DesertDBiome::getDayDuration()
 
 sf::Time		DesertDBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		DesertDBiome::getSkyDayColor()
@@ -366,6 +366,11 @@ sf::Color		DesertDBiome::getSkyNightColor()
 sf::Color		DesertDBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	DesertDBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		DesertDBiome::getSunsetLightColor()
@@ -615,10 +620,7 @@ std::size_t	DesertDBiome::getGrassCount()
 
 std::size_t	DesertDBiome::getGrassPosX()
 {
-	m_grassIndex++;
-	if (m_grassIndex >= m_mapSize.x)
-		m_grassIndex = 0u;
-	return m_grassIndex;
+	return randomInt(0u, m_mapSize.x);
 }
 
 bool			DesertDBiome::canCreateRock()

@@ -71,9 +71,16 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/EngineSnow.cpp				\
 				GameObjects/WeirdHouseSnow.cpp			\
 				GameObjects/CheckPoint.cpp				\
+				GameObjects/Monolith.cpp				\
+				GameObjects/MonolithStep.cpp			\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
-				Npcs/ClassicNpc.cpp						\
+				Npcs/ASpecialNpc.cpp					\
+				Npcs/AIdleNpc.cpp						\
+				Npcs/AWalkNpc.cpp						\
+				Npcs/ASinkNpc.cpp						\
+				Npcs/ASwimNpc.cpp						\
+				Npcs/AUniqueNpc.cpp						\
 				Npcs/CedricStartNpc.cpp					\
 				Npcs/FranfranNpc.cpp					\
 				Npcs/JuNpc.cpp							\
@@ -99,7 +106,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/WolfNpc.cpp						\
 				Npcs/WellKeeperNpc.cpp					\
 				Npcs/JellyfishNpc.cpp					\
-				Npcs/BirdNpc.cpp						\
+				Npcs/AFlyNpc.cpp						\
 				Npcs/BirdRedNpc.cpp						\
 				Npcs/Snowman2Npc.cpp					\
 				Npcs/Snowman1Npc.cpp					\
@@ -109,7 +116,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/StrangerGirlSnowNpc.cpp			\
 				Npcs/StrangerSnowNpc.cpp				\
 				Npcs/BirdBlueNpc.cpp					\
-				Npcs/DisappearNpc.cpp					\
+				Npcs/ADisappearNpc.cpp					\
 				Npcs/ForestSpirit1Npc.cpp				\
 				Npcs/ForestSpirit2Npc.cpp				\
 				Npcs/TVScreen.cpp						\
@@ -130,13 +137,18 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/JuGlitchNpc.cpp					\
 				Npcs/FranGlitchNpc.cpp					\
 				Npcs/WindowGlitchNpc.cpp				\
-				Npcs/ASpecialNpc.cpp					\
 				Npcs/CavemanNpc.cpp						\
+				Npcs/CavemanClimbingNpc.cpp				\
+				Npcs/CavemanSinkNpc.cpp					\
+				Npcs/ElliotNpc.cpp						\
+				Npcs/ChamanMonsterNpc.cpp				\
+				Npcs/BeachGuyNpc.cpp					\
+				Npcs/LucieNpc.cpp						\
+				Npcs/SylvieNpc.cpp						\
+				Npcs/AymericNpc.cpp						\
+				Npcs/MysticanouilleNpc.cpp				\
+				Npcs/AnthemJungle.cpp					\
 #Script AddNpc
-
-
-
-
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
@@ -162,6 +174,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/LevelMenu.cpp						\
 				Menu/NanoMenu.cpp						\
 				Menu/RandomDiscoverMenu.cpp				\
+				Menu/FakeMenu.cpp						\
 				Menu/EmptyMenu.cpp						\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
@@ -206,6 +219,9 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/WaterABiome.cpp					\
 				Biomes/WaterBBiome.cpp					\
 				Biomes/WaterCBiome.cpp					\
+				Biomes/RedBiome.cpp						\
+				Biomes/BlueBiome.cpp					\
+				Biomes/FinalBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
@@ -238,6 +254,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/WaterDropSystem.cpp				\
 				Decors/StarSystem.cpp					\
 				Decors/WaterCascadeSystem.cpp			\
+				Decors/BeamSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\

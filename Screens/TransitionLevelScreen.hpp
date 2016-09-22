@@ -21,6 +21,8 @@ public:
 	virtual void	draw(sf::RenderTarget& render)const;
 
 private:
+	void changeState(void);
+
 	float						m_volumeDefault;
 	std::shared_ptr<sf::Sound>	m_sound;
 	octo::AnimatedSprite		m_sprite;

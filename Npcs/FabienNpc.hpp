@@ -1,13 +1,14 @@
 #ifndef FABIENNPC_HPP
 # define FABIENNPC_HPP
 
-# include "BirdNpc.hpp"
+# include "AFlyNpc.hpp"
 
-class FabienNpc : public BirdNpc, public AGameObject<GameObjectType::FabienNpc>
+class FabienNpc : public AFlyNpc
 {
 public:
 	FabienNpc(void);
 	virtual ~FabienNpc(void) = default;
+
 	virtual void setup(void);
 };
 

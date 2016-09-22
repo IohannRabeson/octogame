@@ -78,6 +78,7 @@ protected:
 private:
 	sf::Vector2f computeInterestPosition(sf::Vector2f const & position);
 
+	std::string									m_id;
 	FireflySwarm								m_swarm;
 	FireflySwarm::UniformPopulation				m_uniformPopulation;
 	FireflySwarm::SpawnMode						m_spawnMode;

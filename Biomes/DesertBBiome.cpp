@@ -26,10 +26,11 @@ DesertBBiome::DesertBBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(30.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(255, 150, 242),
 	m_skyNightColor(166, 10, 92),
 	m_nightLightColor(134, 63, 215, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 59, 59, 130),
 	m_wind(50.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -75,7 +76,6 @@ DesertBBiome::DesertBBiome() :
 	m_grassSizeX(14.f, 16.f),
 	m_grassColor(46, 133, 84),
 	m_grassCount(m_mapSize.x),
-	m_grassIndex(0u),
 
 	m_treeDepth(11u, 11u),
 	m_treeSize(sf::Vector2f(70.f, 200.f), sf::Vector2f(70.f, 200.f)),
@@ -359,7 +359,7 @@ sf::Time		DesertBBiome::getDayDuration()
 
 sf::Time		DesertBBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		DesertBBiome::getSkyDayColor()
@@ -375,6 +375,11 @@ sf::Color		DesertBBiome::getSkyNightColor()
 sf::Color		DesertBBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	DesertBBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		DesertBBiome::getSunsetLightColor()
@@ -630,10 +635,7 @@ std::size_t	DesertBBiome::getGrassCount()
 
 std::size_t	DesertBBiome::getGrassPosX()
 {
-	m_grassIndex++;
-	if (m_grassIndex >= m_mapSize.x)
-		m_grassIndex = 0u;
-	return m_grassIndex;
+	return randomInt(0u, m_mapSize.x);
 }
 
 bool			DesertBBiome::canCreateRock()

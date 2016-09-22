@@ -69,7 +69,7 @@ public:
 	virtual ~CharacterOcto();
 
 	void					setup(ABiome & biome);
-	void					update(sf::Time frameTime);
+	void					update(sf::Time frameTime, sf::Time realFrameTime);
 	void					initAI(void);
 	void					updateAI(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
@@ -100,6 +100,7 @@ public:
 	bool					isMeetingNpc(void) const;
 	bool					isCollidingPortal(void) const;
 	bool					isStopFollowCamera(void) const;
+	bool					isFinalEvent(void);
 	void					stopFollowCamera(bool stop);
 	void					endInRocket(void);
 	void					meetNpc(bool meetNpc);

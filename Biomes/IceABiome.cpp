@@ -26,10 +26,11 @@ IceABiome::IceABiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(35.f)),
-	m_startDayDuration(sf::seconds(20.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(78, 47, 4, 130),
 	m_nightLightColor(8, 20, 26, 50),
+	m_dayLightColor(sf::Color::Transparent),
 	m_sunsetLightColor(61, 0, 13, 20),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -128,6 +129,7 @@ IceABiome::IceABiome() :
 	m_mapSeed = 42u;
 
 	// Create a set a 20 colors for particles
+	Progress & progress = Progress::getInstance();
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
 	m_particleColor.resize(colorCount);
@@ -138,19 +140,25 @@ IceABiome::IceABiome() :
 	m_gameObjects[150] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 420;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
-	m_instances[70] = MAP_ICE_A_TRAIL_LEFT_OMP;
-	m_instances[120] = MAP_ICE_A_CRATER_OMP;
-	m_instances[170] = MAP_ICE_A_TRAIL_RIGHT_OMP;
+	m_instances[20] = MAP_ICE_A_TRAIL_LEFT_OMP;
+	if (!progress.canRepairShip())
+		m_instances[120] = MAP_ICE_A_CRATER_OMP;
+	else
+		m_instances[120] = MAP_ICE_A_CRATER_FINAL_OMP;
+	m_instances[220] = MAP_ICE_A_TRAIL_RIGHT_OMP;
 
-	Progress & progress = Progress::getInstance();
+	if (progress.getLastDestination() == Level::Blue)
+		m_octoStartPosition = sf::Vector2f(142.f * 16.f, -1180.f);
 	if (progress.getLastDestination() == Level::IceB)
-		m_octoStartPosition = sf::Vector2f(423 * 16.f, 0.f);
+		m_octoStartPosition = sf::Vector2f(423.f * 16.f, 0.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(404.f * 16.f, -1250.f);
 
 	m_instances[370] = MAP_ICE_A_SECRET_OMP;
 	m_gameObjects[420] = GameObjectType::PortalSnow;
 	m_instances[470] = MAP_ICE_A_SECRET_OMP;
+	if (progress.canRepairShip())
+		m_destinations.push_back(Level::Blue);
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceB);
@@ -264,8 +272,8 @@ Map::MapSurfaceGenerator IceABiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {50.f, 70.f, 120.f, 125.f, 165.f, 170.f, 220.f, 240.f, 350.f, 369.f, 377.f, 396.f, 450.f, 469.f, 477.f, 496.f};
-		std::vector<float> pointY = {n   , 0.f , 0.f  , 2.4f , 2.4f , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n};
+		std::vector<float> pointX = {0.f    , 20.f, 70.f, 95.f, 120.f, 125.f, 165.f, 170.f, 195.f, 220.f, 270.f, 290.f, 350.f, 369.f, 377.f, 396.f, 450.f, 469.f, 477.f, 496.f, 590.f, 610.f  };
+		std::vector<float> pointY = {n / 5.f, 0.f , 0.f , n   , 0.f  , 2.4f , 2.4f , 0.f  , n    , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n    , n    , n / 5.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -346,6 +354,11 @@ sf::Color		IceABiome::getSkyNightColor()
 sf::Color		IceABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	IceABiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		IceABiome::getSunsetLightColor()

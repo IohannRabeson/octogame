@@ -4,6 +4,7 @@
 #include "CircleShape.hpp"
 #include "CharacterOcto.hpp"
 #include "PostEffectLayer.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
@@ -25,6 +26,7 @@ Rocket::Rocket(void) :
 	m_sound(true),
 	m_stopCameraMovement(false)
 {
+	setType(GameObjectType::Rocket);
 	setSize(sf::Vector2f(267.f, 1426.f));
 	setOrigin(sf::Vector2f(0.f, 0.f));
 	setScale(1.f);
@@ -170,7 +172,7 @@ void Rocket::update(sf::Time frametime)
 					else
 					{
 						m_timerSecondBlast = m_timerSecondBlastMax;
-						octo::Application::getStateManager().change("menu");
+						Progress::getInstance().setNextDestination(Level::Rewards);
 					}
 				}
 			}

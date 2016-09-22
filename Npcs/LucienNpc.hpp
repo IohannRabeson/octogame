@@ -1,9 +1,9 @@
 #ifndef LUCIENNPC_HPP
 # define LUCIENNPC_HPP
 
-# include "ANpc.hpp"
+# include "AUniqueNpc.hpp"
 
-class LucienNpc : public ANpc, public AGameObject<GameObjectType::LucienNpc>
+class LucienNpc : public AUniqueNpc
 {
 public:
 	LucienNpc(void);

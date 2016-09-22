@@ -8,14 +8,14 @@
 #include <Application.hpp>
 
 CedricStartNpc::CedricStartNpc(ABiome::Type biomeType) :
-	ANpc(CEDRIC_START_OSS),
+	AUniqueNpc(CEDRIC_START_OSS),
 	m_throwPotionTimerMax(sf::seconds(1.f))
 {
-	setSize(sf::Vector2f(50.f, 100.f));
-	setOrigin(sf::Vector2f(60.f, 68.f));
+	setType(GameObjectType::CedricStartNpc);
+	setSize(sf::Vector2f(32.f, 174.f));
+	setOrigin(sf::Vector2f(85.f, 19.f));
 	setScale(0.8f);
-	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(0.f, -50.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
@@ -153,6 +153,7 @@ void CedricStartNpc::setupMachine(void)
 
 	setMachine(machine);
 	setNextEvent(Idle);
+
 }
 
 bool CedricStartNpc::startBalle(void)
@@ -168,7 +169,7 @@ bool CedricStartNpc::startBalle(void)
 
 void CedricStartNpc::collideOctoEvent(CharacterOcto * octo)
 {
-	ANpc::collideOctoEvent(octo);
+	AUniqueNpc::collideOctoEvent(octo);
 	float coef = m_throwPotionTimer / m_throwPotionTimerMax;
 
 	m_octoPosition = octo->getPosition();
@@ -215,6 +216,7 @@ void CedricStartNpc::updatePotion(sf::Time frametime)
 
 void CedricStartNpc::update(sf::Time frametime)
 {
+	Progress const & progress = Progress::getInstance();
 	octo::CharacterSprite & sprite = getSprite();
 
 	updateState();
@@ -233,6 +235,9 @@ void CedricStartNpc::update(sf::Time frametime)
 		sprite.setNextEvent(Special2Night);
 
 	resetVariables();
+
+	if (progress.getCurrentDestination() == Level::WaterB && progress.getRespawnType() == Progress::RespawnType::Die)
+		startBalle();
 }
 
 void CedricStartNpc::updateState(void)
@@ -253,7 +258,7 @@ void CedricStartNpc::updateState(void)
 void CedricStartNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	if (!Progress::getInstance().isValidateChallenge(m_effect))
-		ANpc::draw(render, states);
+		AUniqueNpc::draw(render, states);
 	if (m_throwPotionTimer != sf::Time::Zero)
 		m_potion.draw(render, states);
 }

@@ -1,9 +1,9 @@
 #ifndef FRANGLITCHNPC_HPP
 # define FRANGLITCHNPC_HPP
 
-# include "DisappearNpc.hpp"
+# include "ADisappearNpc.hpp"
 
-class FranGlitchNpc : public DisappearNpc, public AGameObject<GameObjectType::FranGlitchNpc>
+class FranGlitchNpc : public ADisappearNpc
 {
 public:
 	FranGlitchNpc(void);

@@ -1,17 +1,14 @@
 #include "Snowman1Npc.hpp"
-#include "RectangleShape.hpp"
 
 Snowman1Npc::Snowman1Npc(void) :
-	ANpc(SNOWMAN_1_OSS)
+	ASpecialNpc(SNOWMAN_1_OSS)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(125.f, 165.f));
+	setType(GameObjectType::Snowman1Npc);
+	setSize(sf::Vector2f(33.f, 181.f));
+	setOrigin(sf::Vector2f(138.f, 81.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-10.f, -65.f));
-	setTimerMax(sf::seconds(8.0f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void Snowman1Npc::setup(void)
@@ -35,58 +32,4 @@ void Snowman1Npc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
-}
-
-void Snowman1Npc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idleState;
-	StatePtr					special1State;
-
-	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-	special1State = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
-
-	machine.setStart(idleState);
-	machine.addTransition(Idle, idleState, idleState);
-	machine.addTransition(Idle, special1State, idleState);
-
-	machine.addTransition(Special1, idleState, special1State);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
-void Snowman1Npc::updateState(void)
-{
-	octo::CharacterSprite & sprite = getSprite();
-
-//	if (getPosition().y > -95.f * 16.f)
-//		setCurrentText(0u);
-//	else
-//		setCurrentText(1u);
-
-	if (sprite.getCurrentEvent() == Special1)
-	{
-		if (sprite.isTerminated())
-		{
-			sprite.setNextEvent(Idle);
-			addTimer(-getTimer());
-		}
-	}
-	else if (sprite.getCurrentEvent() == Idle)
-	{
-		octo::CharacterSprite & sprite = getSprite();
-		sf::Vector2f const & size = sprite.getLocalSize();
-		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-		sprite.setScale(-getScale(), getScale());
-		if (getTimer() >= getTimerMax())
-		{
-			addTimer(-getTimerMax());
-			sprite.setNextEvent(Special1);
-		}
-	}
-
 }

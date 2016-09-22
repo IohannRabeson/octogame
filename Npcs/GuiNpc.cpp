@@ -1,19 +1,14 @@
 #include "GuiNpc.hpp"
-#include "RectangleShape.hpp"
-#include "SkyCycle.hpp"
-#include "CircleShape.hpp"
 
 GuiNpc::GuiNpc(void) :
-	ANpc(GUILLAUME_OSS)
+	AWalkNpc(GUILLAUME_OSS)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setType(GameObjectType::GuiNpc);
+	setSize(sf::Vector2f(31.f, 174.f));
+	setOrigin(sf::Vector2f(83.f, 19.f));
 	setScale(0.8f);
-	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void GuiNpc::setup(void)
@@ -27,7 +22,7 @@ void GuiNpc::setup(void)
 			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
 			});
-	getIdleAnimation().setLoop(octo::LoopMode::Loop);
+	getIdleAnimation().setLoop(octo::LoopMode::NoLoop);
 
 	getWalkAnimation().setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
@@ -39,6 +34,15 @@ void GuiNpc::setup(void)
 			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getWalkAnimation().setLoop(octo::LoopMode::Loop);
+
+	getSpecial1Animation().setFrames({
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
+			});
+	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
 }

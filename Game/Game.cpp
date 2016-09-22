@@ -25,6 +25,9 @@
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
 #include "WaterCBiome.hpp"
+#include "RedBiome.hpp"
+#include "BlueBiome.hpp"
+#include "FinalBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
 #include "RandomGameBiome.hpp"
@@ -35,6 +38,7 @@
 #include "Tent.hpp"
 #include "SpaceShip.hpp"
 #include "Concert.hpp"
+#include "Monolith.hpp"
 
 //Nano
 #include "GroundTransformNanoRobot.hpp"
@@ -47,60 +51,24 @@
 
 //Npc
 //Script AddNpc Include
+#include "AnthemJungle.hpp"
 #include "ScientistCedric.hpp"
 #include "ScientistLu.hpp"
 #include "ScientistFran.hpp"
 #include "ScientistJu.hpp"
-#include "WindowGlitchNpc.hpp"
-#include "FranGlitchNpc.hpp"
-#include "JuGlitchNpc.hpp"
-#include "LuGlitchNpc.hpp"
-#include "LongChairNpc.hpp"
 #include "Rocket.hpp"
 #include "OctoDeathNpc.hpp"
-#include "CedricEndNpc.hpp"
 #include "TVScreen.hpp"
-#include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
-#include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
-#include "ForestSpirit2Npc.hpp"
-#include "ForestSpirit1Npc.hpp"
-#include "BirdBlueNpc.hpp"
-#include "StrangerSnowNpc.hpp"
-#include "StrangerGirlSnowNpc.hpp"
-#include "SnowGirl2Npc.hpp"
-#include "SnowGirl1Npc.hpp"
-#include "Snowman3Npc.hpp"
-#include "Snowman1Npc.hpp"
-#include "FranfranNpc.hpp"
-#include "CanouilleNpc.hpp"
-#include "JuNpc.hpp"
-#include "FannyNpc.hpp"
-#include "CedricStartNpc.hpp"
-#include "GuiNpc.hpp"
-#include "PunkNpc.hpp"
-#include "ClementineNpc.hpp"
-#include "FatNpc.hpp"
-#include "PeaNpc.hpp"
-#include "PierreNpc.hpp"
-#include "JeffMouffyNpc.hpp"
-#include "TurbanNpc.hpp"
-#include "VinceNpc.hpp"
-#include "AmandineNpc.hpp"
-#include "FaustNpc.hpp"
-#include "WolfNpc.hpp"
-#include "ConstanceNpc.hpp"
-#include "BrayouNpc.hpp"
-#include "Snowman2Npc.hpp"
-#include "EvaNpc.hpp"
-#include "OldDesertStaticNpc.hpp"
-#include "JellyfishNpc.hpp"
-#include "BirdRedNpc.hpp"
-#include "WellKeeperNpc.hpp"
-#include "LucienNpc.hpp"
-#include "IohannNpc.hpp"
 #include "ASpecialNpc.hpp"
+#include "ASinkNpc.hpp"
+#include "ASwimNpc.hpp"
+#include "AIdleNpc.hpp"
+#include "AUniqueNpc.hpp"
+#include "ADisappearNpc.hpp"
+#include "AWalkNpc.hpp"
+#include "AFlyNpc.hpp"
 
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -121,11 +89,16 @@ Game::Game(void) :
 	m_konami(nullptr),
 	m_keyGroundRight(false),
 	m_keyGroundLeft(false),
+	m_keyInfos(false),
 	m_soundGeneration(nullptr),
 	m_groundVolume(0.7f),
 	m_groundSoundTime(sf::Time::Zero),
 	m_groundSoundTimeMax(sf::seconds(0.6f)),
-	m_slowTimeInfosCoef(1.f),
+	m_isSlowTime(false),
+	m_slowTimeMax(sf::seconds(2.f)),
+	m_slowSource(1.f),
+	m_slowTarget(10.f),
+	m_slowTimeCoef(1.f),
 	m_skipFrames(0u),
 	m_skipFramesMax(3u)
 {
@@ -149,6 +122,9 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 	m_biomeManager.registerBiome<WaterCBiome>(Level::WaterC);
+	m_biomeManager.registerBiome<RedBiome>(Level::Red);
+	m_biomeManager.registerBiome<BlueBiome>(Level::Blue);
+	m_biomeManager.registerBiome<FinalBiome>(Level::Final);
 
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
@@ -262,9 +238,14 @@ void	Game::loadLevel(void)
 	m_octo->setup(m_biomeManager.getCurrentBiome());
 	m_octo->setStartPosition(startPosition);
 
-	audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
+
+	Level current = progress.getCurrentDestination();
+	Level next = progress.getNextDestination();
+	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
+		audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
 	m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
 	m_soundGeneration->setLoop(true);
+	m_fakeMenu.setup();
 }
 
 sf::Vector2f	Game::getOctoBubblePosition(void) const
@@ -274,6 +255,7 @@ sf::Vector2f	Game::getOctoBubblePosition(void) const
 
 void	Game::update(sf::Time frameTime)
 {
+	sf::Time const realFrameTime = frameTime;
 	m_octo->resetCollidingTileCount();
 	//std::cout << "GAME UPDATE" << std::endl;
 	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
@@ -282,22 +264,58 @@ void	Game::update(sf::Time frameTime)
 		m_skipFrames++;
 		frameTime = sf::seconds(0.016f);
 	}
-	frameTime = frameTime / m_slowTimeInfosCoef;
+	updateSlowTime(frameTime);
+	frameTime = frameTime / m_slowTimeCoef;
 	// update the PhysicsEngine as first
 	m_physicsEngine.update(frameTime.asSeconds());
 	m_cameraMovement->update(frameTime, *m_octo);
 	m_musicPlayer.update(frameTime, m_octo->getPosition());
 	sf::Vector2f const & octoPos = m_octo->getPosition();
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 100.f));
-	m_octo->update(frameTime);
+	m_octo->update(frameTime, realFrameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
 	moveMap(frameTime);
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
-	m_konami->update(frameTime, m_octo->getPosition());
-	m_octo->startKonamiCode(m_konami->canStartEvent());
+	m_konami->update(realFrameTime, m_octo->getPosition());
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
+	updateFakeMenu(frameTime);
+}
+
+void Game::updateFakeMenu(sf::Time frameTime)
+{
+	Progress const & progress = Progress::getInstance();
+	if (!progress.isMenu() && progress.getNextDestination() == Level::Rewards)
+	{
+		sf::Vector2f const &		center = octo::Application::getCamera().getCenter();
+		sf::Vector2f const &		bubble = getOctoBubblePosition();
+
+		m_fakeMenu.setState(AMenu::State::Active);
+		m_fakeMenu.update(frameTime, octo::linearInterpolation(center, bubble, 0.4f));
+	}
+}
+
+void Game::updateSlowTime(sf::Time frameTime)
+{
+	if (m_isSlowTime)
+	{
+		if (m_slowTime < m_slowTimeMax)
+			m_slowTime += frameTime;
+		else
+		{
+			m_isSlowTime = false;
+			m_slowTime = m_slowTimeMax;
+		}
+	}
+	else
+	{
+		if (m_slowTime > sf::Time::Zero)
+			m_slowTime -= frameTime * 2.f;
+		else
+			m_slowTime = sf::Time::Zero;
+	}
+	m_slowTimeCoef = octo::cosinusInterpolation(m_slowSource, m_slowTarget, m_slowTime / m_slowTimeMax);
 }
 
 void Game::onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection)
@@ -319,9 +337,6 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 {
 	switch (gameObject->getObjectType())
 	{
-		case GameObjectType::SpecialNpc:
-			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::Elevator:
 			if (gameObjectCast<ElevatorStream>(gameObject)->isActivated())
 			{
@@ -342,6 +357,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<JumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::DoubleJumpNanoRobot:
@@ -350,6 +366,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::GroundTransformNanoRobot:
@@ -358,6 +375,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<GroundTransformNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::SlowFallNanoRobot:
@@ -366,6 +384,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<SlowFallNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::WaterNanoRobot:
@@ -374,6 +393,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<WaterNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::RepairShipNanoRobot:
@@ -382,6 +402,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairShipNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::RepairNanoRobot:
@@ -390,10 +411,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<RepairNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveRepairNanoRobot(static_cast<RepairNanoRobot *>(ptr), true);
+				m_isSlowTime = true;
 			}
 			break;
 		case GameObjectType::Rocket:
 			gameObjectCast<Rocket>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Monolith:
+			gameObjectCast<Monolith>(gameObject)->collideOcto(octo);
 			break;
 		default:
 			break;
@@ -405,6 +430,30 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 	(void)collisionDirection;
 	switch (gameObject->getObjectType())
 	{
+		case GameObjectType::FlyNpc:
+			gameObjectCast<AFlyNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::WalkNpc:
+			gameObjectCast<AWalkNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::DisappearNpc:
+			gameObjectCast<ADisappearNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::IdleNpc:
+			gameObjectCast<AIdleNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SpecialNpc:
+			gameObjectCast<ASpecialNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SinkNpc:
+			gameObjectCast<ASinkNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SwimNpc:
+			gameObjectCast<ASwimNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::Npc:
+			gameObjectCast<AUniqueNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::Elevator:
 			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
 			break;
@@ -413,6 +462,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::AnthemJungle:
+			gameObjectCast<AnthemJungle>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::ScientistCedric:
 			gameObjectCast<ScientistCedric>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -424,149 +476,18 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::ScientistJu:
 			gameObjectCast<ScientistJu>(gameObject)->collideOctoEvent(octo);
-		case GameObjectType::WindowGlitchNpc:
-			gameObjectCast<WindowGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FranGlitchNpc:
-			gameObjectCast<FranGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::JuGlitchNpc:
-			gameObjectCast<JuGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::LuGlitchNpc:
-			gameObjectCast<LuGlitchNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::LongChairNpc:
-			gameObjectCast<LongChairNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::OctoDeathNpc:
 			gameObjectCast<OctoDeathNpc>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::CedricStartNpc:
-			gameObjectCast<CedricStartNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::CedricEndNpc:
-			gameObjectCast<CedricEndNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::TVScreen:
 			gameObjectCast<TVScreen>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FabienNpc:
-			gameObjectCast<FabienNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::CheckPoint:
 			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
 			break;
-		case GameObjectType::OverCoolNpc:
-			gameObjectCast<OverCoolNpc>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::Pedestal:
 			gameObjectCast<Pedestal>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::ForestSpirit2Npc:
-			gameObjectCast<ForestSpirit2Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::ForestSpirit1Npc:
-			gameObjectCast<ForestSpirit1Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BirdBlueNpc:
-			gameObjectCast<BirdBlueNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::StrangerSnowNpc:
-			gameObjectCast<StrangerSnowNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::StrangerGirlSnowNpc:
-			gameObjectCast<StrangerGirlSnowNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::SnowGirl2Npc:
-			gameObjectCast<SnowGirl2Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::SnowGirl1Npc:
-			gameObjectCast<SnowGirl1Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::Snowman3Npc:
-			gameObjectCast<Snowman3Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::Snowman1Npc:
-			gameObjectCast<Snowman1Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FranfranNpc:
-			gameObjectCast<FranfranNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::EvaNpc:
-			gameObjectCast<EvaNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::PierreNpc:
-			gameObjectCast<PierreNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::PeaNpc:
-			gameObjectCast<PeaNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BrayouNpc:
-			gameObjectCast<BrayouNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::Snowman2Npc:
-			gameObjectCast<Snowman2Npc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::AmandineNpc:
-			gameObjectCast<AmandineNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FaustNpc:
-			gameObjectCast<FaustNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::WolfNpc:
-			gameObjectCast<WolfNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::ConstanceNpc:
-			gameObjectCast<ConstanceNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::JuNpc:
-			gameObjectCast<JuNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FannyNpc:
-			gameObjectCast<FannyNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::GuiNpc:
-			gameObjectCast<GuiNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::TurbanNpc:
-			gameObjectCast<TurbanNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::CanouilleNpc:
-			gameObjectCast<CanouilleNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::JeffMouffyNpc:
-			gameObjectCast<JeffMouffyNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::JellyfishNpc:
-			gameObjectCast<JellyfishNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::BirdRedNpc:
-			gameObjectCast<BirdRedNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::WellKeeperNpc:
-			gameObjectCast<WellKeeperNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::OldDesertStaticNpc:
-			gameObjectCast<OldDesertStaticNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::VinceNpc:
-			gameObjectCast<VinceNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::LucienNpc:
-			gameObjectCast<LucienNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::PunkNpc:
-			gameObjectCast<PunkNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::IohannNpc:
-			gameObjectCast<IohannNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::ClementineNpc:
-			gameObjectCast<ClementineNpc>(gameObject)->collideOctoEvent(octo);
-			break;
-		case GameObjectType::FatNpc:
-			gameObjectCast<FatNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::SpaceShip:
 			octo->collideSpaceShip(gameObjectCast<SpaceShip>(gameObject));
@@ -586,6 +507,7 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 
 void Game::moveMap(sf::Time frameTime)
 {
+	Progress const &			progress = Progress::getInstance();
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float						volume = 0.f;
 
@@ -605,7 +527,11 @@ void Game::moveMap(sf::Time frameTime)
 	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
 
-	if (Progress::getInstance().isMenu() || (ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)))
+	if (Progress::getInstance().isMenu() ||
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Displacement)) ||
+		(progress.getCurrentDestination() == Level::Blue || progress.getCurrentDestination() == Level::Red)
+		)
 		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 }
 
@@ -622,8 +548,10 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			Progress::getInstance().moveMap();
 			break;
 		case OctoKeys::Infos:
+			std::cout << "OctoPos(" << m_octo->getPosition().x << ", " << m_octo->getPosition().y << ")" << std::endl;
 			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
-			m_slowTimeInfosCoef = 10.f;
+			m_keyInfos = true;
+			m_isSlowTime = true;
 			break;
 		default:
 			break;
@@ -642,7 +570,7 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 			m_keyGroundRight = false;
 			break;
 		case OctoKeys::Infos:
-			m_slowTimeInfosCoef = 1.f;
+			m_keyInfos = false;
 			break;
 		default:
 			break;
@@ -670,4 +598,5 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	m_octo->drawText(render, states);
 	render.draw(*m_konami);
 	//m_cameraMovement->debugDraw(render);
+	render.draw(m_fakeMenu);
 }

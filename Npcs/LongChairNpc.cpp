@@ -1,16 +1,14 @@
 #include "LongChairNpc.hpp"
 
 LongChairNpc::LongChairNpc(void) :
-	ANpc(NPC_LONGCHAIR_OSS)
+	AIdleNpc(NPC_LONGCHAIR_OSS, false)
 {
-	setSize(sf::Vector2f(50.f, 40.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
-	setScale(1.2f);
-	setTextOffset(sf::Vector2f(-20.f, -10.f));
-	setTimerMax(sf::seconds(8.0f));
+	setType(GameObjectType::LongChairNpc);
+	setSize(sf::Vector2f(56.f, 109.f));
+	setOrigin(sf::Vector2f(63.f, 53.f));
+	setScale(0.8f);
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void LongChairNpc::setup(void)
@@ -32,26 +30,4 @@ void LongChairNpc::setup(void)
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
 	setupMachine();
-}
-
-void LongChairNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idleState;
-	StatePtr					special1State;
-
-	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-
-	machine.setStart(idleState);
-	machine.addTransition(Idle, idleState, idleState);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
-void LongChairNpc::updateState(void)
-{
 }

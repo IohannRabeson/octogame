@@ -26,10 +26,11 @@ DesertABiome::DesertABiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(255, 150, 242),
 	m_skyNightColor(166, 10, 92),
 	m_nightLightColor(134, 63, 215, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 59, 59, 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -75,7 +76,6 @@ DesertABiome::DesertABiome() :
 	m_grassSizeX(14.f, 16.f),
 	m_grassColor(46, 133, 84),
 	m_grassCount(120u),
-	m_grassIndex(350u),
 
 	m_treeDepth(6u, 8u),
 	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 150.f)),
@@ -121,9 +121,7 @@ DesertABiome::DesertABiome() :
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
-	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f)),
-
-	m_indexTreePos(0u)
+	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
@@ -159,8 +157,6 @@ DesertABiome::DesertABiome() :
 	m_instances[440] = MAP_DESERT_A_SECRET_OMP;
 	m_gameObjects[520] = GameObjectType::JuGlitchNpc;
 	m_interestPointPosX = 50;
-
-	m_treePos = {347, 352, 359, 367, 380, 381, 393, 430, 433, 455, 460, 464, 473};
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
@@ -352,7 +348,7 @@ sf::Time		DesertABiome::getDayDuration()
 
 sf::Time		DesertABiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		DesertABiome::getSkyDayColor()
@@ -368,6 +364,11 @@ sf::Color		DesertABiome::getSkyNightColor()
 sf::Color		DesertABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	DesertABiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		DesertABiome::getSunsetLightColor()
@@ -532,7 +533,7 @@ sf::Color		DesertABiome::getLeafColor()
 
 std::size_t		DesertABiome::getTreePositionX()
 {
-	return m_treePos[m_indexTreePos++];
+	return randomInt(350u, 470u);
 }
 
 sf::Vector2f	DesertABiome::getCrystalSize()
@@ -623,10 +624,7 @@ std::size_t	DesertABiome::getGrassCount()
 
 std::size_t	DesertABiome::getGrassPosX()
 {
-	m_grassIndex++;
-	if (m_grassIndex >= 470)
-		m_grassIndex = 350u;
-	return m_grassIndex;
+	return randomInt(350u, 470u);
 }
 
 bool			DesertABiome::canCreateRock()

@@ -26,10 +26,11 @@ JungleDBiome::JungleDBiome() :
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(251, 253, 26),
 	m_skyNightColor(195, 197, 18),
 	m_nightLightColor(0, 0, 0, 130),
+	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 182, 0, 100),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
@@ -75,7 +76,6 @@ JungleDBiome::JungleDBiome() :
 	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
-	m_grassIndex(0u),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(30.f, 300.f), sf::Vector2f(200.f, 300.f)),
@@ -138,10 +138,10 @@ JungleDBiome::JungleDBiome() :
 
 	// Define game objects
 	m_instances[230] = MAP_JUNGLE_D_TRAIL_OMP;
-	m_instances[40] = MAP_JUNGLE_D_GUI_OMP;
+	m_instances[40] = MAP_JUNGLE_D_LU_OMP;
 	m_gameObjects[30] = GameObjectType::PortalJungle;
 	m_gameObjects[40] = GameObjectType::BirdRedNpc;
-	m_gameObjects[175] = GameObjectType::OverCoolNpc;
+	m_gameObjects[145] = GameObjectType::OverCoolNpc;
 	m_gameObjects[110] = GameObjectType::BirdRedNpc;
 	m_instances[613] = MAP_JUNGLE_D_SMALL_VILLAGE_OMP;
 	m_gameObjects[740] = GameObjectType::Pedestal;
@@ -359,7 +359,7 @@ sf::Time		JungleDBiome::getDayDuration()
 
 sf::Time		JungleDBiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		JungleDBiome::getSkyDayColor()
@@ -375,6 +375,11 @@ sf::Color		JungleDBiome::getSkyNightColor()
 sf::Color		JungleDBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	JungleDBiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		JungleDBiome::getSunsetLightColor()
@@ -630,10 +635,7 @@ std::size_t	JungleDBiome::getGrassCount()
 
 std::size_t	JungleDBiome::getGrassPosX()
 {
-	m_grassIndex++;
-	if (m_grassIndex >= m_mapSize.x)
-		m_grassIndex = 0u;
-	return m_grassIndex;
+	return randomInt(0u, m_mapSize.x);
 }
 
 bool			JungleDBiome::canCreateRock()

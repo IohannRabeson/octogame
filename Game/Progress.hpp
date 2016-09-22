@@ -40,8 +40,8 @@ public:
 	void				setBubbleNpc(bool isBubbleNpc);
 	MenuType			getMenuType(void);
 	void				setMenuType(MenuType type);
-	//TODO: Set this value once the game is finished
 	bool				isGameFinished() const;
+	void				setGameFinished(bool finish);
 
 	void				setLanguage(Language language);
 	Progress::Language	getLanguage(void) const;
@@ -118,6 +118,8 @@ public:
 	void				setPortalPosition(Level destination, sf::Vector2f const & position);
 	void				removePortalPosition(Level destination);
 	sf::Vector2f		getInterestPoint();
+	void				setActivatedMonolith(std::size_t count);
+	std::size_t			getActivatedMonolith(void) const;
 
 	void				setMapHighlight(bool isHighlight);
 	bool				isMapHighlight(void) const;
@@ -173,7 +175,8 @@ private:
 			moveMap(false),
 			canOpenDoubleJump(false),
 			deathCount(0u),
-			respawnType(Progress::RespawnType::Portal)
+			respawnType(Progress::RespawnType::Portal),
+			activatedMonolith(0u)
 		{}
 
 		float					timePlayed;
@@ -198,6 +201,7 @@ private:
 		char					deaths[20000];
 		std::size_t				deathCount;
 		Progress::RespawnType	respawnType;
+		std::size_t				activatedMonolith;
 	};
 
 	Progress();

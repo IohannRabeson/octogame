@@ -2,11 +2,12 @@
 # define ANPCSPECIAL_HPP
 
 # include "ANpc.hpp"
+# include "RandomGenerator.hpp"
 
 class ASpecialNpc : public ANpc, public AGameObject<GameObjectType::SpecialNpc>
 {
 public:
-	ASpecialNpc(ResourceKey const & npcId, bool isMeetable = true);
+	ASpecialNpc(ResourceKey const & npcId, bool followOcto = true, bool isMeetable = true);
 	virtual ~ASpecialNpc(void) = default;
 
 	virtual void setup(void) = 0;
@@ -17,8 +18,9 @@ protected:
 	virtual void updateState(void);
 
 private:
-	bool		m_canDoSpecial;
-
+	RandomGenerator	m_generator;
+	sf::Time		m_randomSpecial;
+	bool			m_canDoSpecial;
 };
 
 #endif

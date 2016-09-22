@@ -1,17 +1,14 @@
 #include "BrayouNpc.hpp"
-#include "RectangleShape.hpp"
 
 BrayouNpc::BrayouNpc(void) :
-	ANpc(BRAYOU_OSS)
+	ASpecialNpc(BRAYOU_OSS)
 {
-	setSize(sf::Vector2f(25.f, 150.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setType(GameObjectType::BrayouNpc);
+	setSize(sf::Vector2f(55.f, 250.f));
+	setOrigin(sf::Vector2f(69.f, 38.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-10.f, -70.f));
-	setTimerMax(sf::seconds(8.0f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void BrayouNpc::setup(void)
@@ -39,52 +36,4 @@ void BrayouNpc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
-}
-
-void BrayouNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idleState;
-	StatePtr					special1State;
-
-	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-	special1State = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
-
-	machine.setStart(idleState);
-	machine.addTransition(Idle, idleState, idleState);
-	machine.addTransition(Idle, special1State, idleState);
-
-	machine.addTransition(Special1, idleState, special1State);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
-void BrayouNpc::updateState(void)
-{
-	octo::CharacterSprite & sprite = getSprite();
-
-	if (sprite.getCurrentEvent() == Special1)
-	{
-		if (sprite.isTerminated())
-		{
-			sprite.setNextEvent(Idle);
-			addTimer(-getTimer());
-		}
-	}
-	else if (sprite.getCurrentEvent() == Idle)
-	{
-		octo::CharacterSprite & sprite = getSprite();
-		sf::Vector2f const & size = sprite.getLocalSize();
-		sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-		sprite.setScale(-getScale(), getScale());
-		if (getTimer() >= getTimerMax())
-		{
-			addTimer(-getTimerMax());
-			sprite.setNextEvent(Special1);
-		}
-	}
 }

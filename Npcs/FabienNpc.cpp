@@ -1,11 +1,14 @@
 #include "FabienNpc.hpp"
 
 FabienNpc::FabienNpc(void) :
-	BirdNpc(FABIEN_OSS, true)
+	AFlyNpc(FABIEN_OSS, true)
 {
-	setSize(sf::Vector2f(30.f, 200.f));
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
-	FabienNpc::setup();
+	setType(GameObjectType::FabienNpc);
+	setSize(sf::Vector2f(257.f, 20.f));
+	setOrigin(sf::Vector2f(51.f, 205.f));
+	setScale(0.8f);
+	setTextOffset(sf::Vector2f(0.f, 0.f));
+	setup();
 }
 
 void FabienNpc::setup(void)

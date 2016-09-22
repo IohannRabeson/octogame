@@ -78,6 +78,11 @@ bool	Progress::isGameFinished() const
 	return m_isGameFinished;
 }
 
+void	Progress::setGameFinished(bool finish)
+{
+	m_isGameFinished = finish;
+}
+
 void	Progress::setup()
 {
 	m_newSave = false;
@@ -557,6 +562,16 @@ void		Progress::setRespawnType(Progress::RespawnType type)
 Progress::RespawnType	Progress::getRespawnType(void) const
 {
 	return m_data.respawnType;
+}
+
+std::size_t	Progress::getActivatedMonolith(void) const
+{
+	return m_data.activatedMonolith;
+}
+
+void		Progress::setActivatedMonolith(std::size_t count)
+{
+	m_data.activatedMonolith = count;
 }
 
 void				Progress::setCheckPointPosition(sf::Vector2f const & position)

@@ -111,12 +111,14 @@ bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & pos
 	{
 		return true;
 	}
+
 	return false;
 }
 
 void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f const & origin, std::size_t partCount, sf::Color const & color, octo::VertexBuilder& builder)
 {
 	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
+	sf::Vector2f const & headPosition = octoPosition + sf::Vector2f(0.f, -40.f);
 
 	m_isCollide = false;
 	for (std::size_t i = 0; i < partCount; i++)
@@ -132,11 +134,19 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 		else
 		{
 			float coefCollide = (1.0f - ((m_timerInCloud / m_timerInCloudMax) * 0.4f));
-			size = values[i].size * (2.f - m_animation) * coefCollide;
-			sizeCorner = values[i].sizeCorner * (2.f - m_animation) * coefCollide;
+			if (m_hasCollided && m_animator.getState() == DecorAnimator::State::Die)
+			{
+				size = values[i].size * coefCollide;
+				sizeCorner = values[i].sizeCorner * coefCollide;
+			}
+			else
+			{
+				size = values[i].size * (2.f - m_animation) * coefCollide;
+				sizeCorner = values[i].sizeCorner * (2.f - m_animation) * coefCollide;
+			}
 		}
 
-		if (isOctogonContain(size, values[i].origin + origin, octoPosition))
+		if (isOctogonContain(size, values[i].origin + origin, octoPosition) || isOctogonContain(size, values[i].origin + origin, headPosition))
 			m_isCollide = true;
 		createOctogon(size, sizeCorner, values[i].origin + origin, color, builder);
 	}
@@ -168,9 +178,11 @@ void Cloud::setup(ABiome& biome)
 	m_partCount = biome.getCloudPartCount();
 	m_isSpecialCloud = biome.isSpecialCloud();
 	if (m_isSpecialCloud)
-		m_animator = DecorAnimator(1.f, 2.f, 4.f, 0.2f);
+		m_animator = DecorAnimator(1.f, 5.f, 4.f, 0.2f);
 	m_cloudMinY = biome.getCloudMinY();
 	m_cloudMaxY = biome.getCloudMaxY();
+	if (biome.randomBool(0.2f))
+		m_cloudMinY -= biome.randomFloat(1000.f, 2000.f);
 	m_cloudMinX = camera.getCenter().x - camera.getSize().x * 2.f;
 	m_cloudMaxX = camera.getCenter().x + camera.getSize().x * 2.f;
 	m_position = sf::Vector2f(biome.randomFloat(m_cloudMinX, m_cloudMaxX), biome.randomFloat(m_cloudMinY, m_cloudMaxY));
@@ -210,15 +222,28 @@ void Cloud::newCloud(ABiome & biome)
 		m_sin = std::sin(angle * octo::Deg2Rad);
 	}
 
-	for (std::size_t i = 0; i < m_partCount; i++)
+	if (m_partCount == 1u)
 	{
-		m_values[i].size.x = biome.getCloudSize().x / 5.f;
-		m_values[i].size.y = m_values[i].size.x;
-		m_values[i].sizeCorner = m_values[i].size / 2.f;
-		m_values[i].origin.x = biome.randomFloat(-m_size.x / 2.f, m_size.x / 2.f);
-		m_values[i].origin.y = biome.randomFloat(-m_size.y / 2.f, m_size.y / 2.f);
+		m_values[0].size.x = biome.getCloudSize().x / 5.f;
+		m_values[0].size.y = m_values[0].size.x;
+		m_values[0].sizeCorner = m_values[0].size / 2.f;
+		m_values[0].origin.x = 0.f;
+		m_values[0].origin.y = 0.f;
 
-		m_dropUpLeft[i] = sf::Vector2f(m_values[i].origin.x - m_values[i].size.x, m_values[i].origin.y);
+		m_dropUpLeft[0] = sf::Vector2f(-m_values[0].size.x, 0.f);
+	}
+	else
+	{
+		for (std::size_t i = 0; i < m_partCount; i++)
+		{
+			m_values[i].size.x = biome.getCloudSize().x / 5.f;
+			m_values[i].size.y = m_values[i].size.x;
+			m_values[i].sizeCorner = m_values[i].size / 2.f;
+			m_values[i].origin.x = biome.randomFloat(-m_size.x / 2.f, m_size.x / 2.f);
+			m_values[i].origin.y = biome.randomFloat(-m_size.y / 2.f, m_size.y / 2.f);
+
+			m_dropUpLeft[i] = sf::Vector2f(m_values[i].origin.x - m_values[i].size.x, m_values[i].origin.y);
+		}
 	}
 
 	m_animator.setup(biome.getCloudLifeTime());
@@ -272,6 +297,7 @@ void Cloud::updateSnow(sf::Time frameTime, ABiome & biome, octo::VertexBuilder &
 
 void Cloud::updatePosition(sf::Time frameTime)
 {
+	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
 	octo::Camera const & camera = octo::Application::getCamera();
 	m_cloudMinX = camera.getCenter().x - camera.getSize().x * 2.f;
 	m_cloudMaxX = camera.getCenter().x + camera.getSize().x * 2.f;
@@ -294,8 +320,10 @@ void Cloud::updatePosition(sf::Time frameTime)
 			else if (m_animator.getState() != DecorAnimator::State::Die)
 				m_animator.die();
 		}
+
+		if (m_animator.getState() == DecorAnimator::State::Die && m_hasCollided)
+			m_position = octo::cosinusInterpolation(octoPosition, m_position, m_animation);
 	}
-	setPosition(m_position);
 }
 
 void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
@@ -340,7 +368,10 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	{
 		if (m_timerInCloud <= m_timerInCloudMax)
 			m_timerInCloud += frameTime;
-		else
+		else if (m_animator.getState() != DecorAnimator::State::Die)
+		{
 			m_animator.die();
+			m_deathPosition = m_position;
+		}
 	}
 }

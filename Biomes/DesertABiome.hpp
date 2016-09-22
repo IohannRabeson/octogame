@@ -56,6 +56,7 @@ public:
 	virtual sf::Color									getSkyDayColor();
 	virtual sf::Color									getSkyNightColor();
 	virtual sf::Color									getNightLightColor();
+	virtual sf::Color									getDayLightColor();
 	virtual sf::Color									getSunsetLightColor();
 
 	virtual float										getWind();
@@ -184,6 +185,7 @@ private:
 	sf::Color											m_skyDayColor;
 	sf::Color											m_skyNightColor;
 	sf::Color											m_nightLightColor;
+	sf::Color											m_dayLightColor;
 	sf::Color											m_SunsetLightColor;
 	float												m_wind;
 	Range<std::size_t>									m_rainDropPerSecond;
@@ -230,7 +232,6 @@ private:
 	Range<float>											m_grassSizeX;
 	sf::Color											m_grassColor;
 	std::size_t											m_grassCount;
-	std::size_t											m_grassIndex;
 
 	Range<std::size_t>									m_treeDepth;
 	Range<sf::Vector2f>									m_treeSize;
@@ -283,9 +284,6 @@ private:
 	sf::Vector2f										randomRangeVector2f(Range<sf::Vector2f> const & range);
 	sf::Time											randomRangeTime(Range<sf::Time> const & range);
 	sf::Color											randomColor(sf::Color const & color);
-
-	std::vector<int>									m_treePos;
-	std::size_t											m_indexTreePos;
 };
 
 #endif

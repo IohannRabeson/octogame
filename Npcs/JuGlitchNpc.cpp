@@ -1,15 +1,13 @@
 #include "JuGlitchNpc.hpp"
-#include "RectangleShape.hpp"
 
 JuGlitchNpc::JuGlitchNpc(void) :
-	DisappearNpc(JU_GLITCH_OSS, 30.f, 120.f, false)
+	ADisappearNpc(JU_GLITCH_OSS, 30.f, 120.f, false)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(125.f, 158.f));
+	setType(GameObjectType::JuGlitchNpc);
+	setSize(sf::Vector2f(30.f, 174.f));
+	setOrigin(sf::Vector2f(141.f, 76.f));
 	setScale(0.8f);
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void JuGlitchNpc::setup(void)

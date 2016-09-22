@@ -77,7 +77,7 @@ CharacterOcto::CharacterOcto() :
 	m_autoDisableCutscene(false),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
-	m_cutscenePauseTimerMax(sf::seconds(2.f)),
+	m_cutscenePauseTimerMax(sf::seconds(4.f)),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
@@ -140,15 +140,13 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::Tent)
 		| static_cast<std::size_t>(GameObjectType::Concert)
-		| static_cast<std::size_t>(GameObjectType::FannyNpc)
-		| static_cast<std::size_t>(GameObjectType::Snowman3Npc)
 		| static_cast<std::size_t>(GameObjectType::HouseFlatSnow)
 		| static_cast<std::size_t>(GameObjectType::EngineSnow)
 		| static_cast<std::size_t>(GameObjectType::WeirdHouseSnow)
 		| static_cast<std::size_t>(GameObjectType::Bouibouik)
 		| static_cast<std::size_t>(GameObjectType::RocketDoor)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint)
-		| static_cast<std::size_t>(GameObjectType::SpecialNpc);
+		| static_cast<std::size_t>(GameObjectType::Monolith);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
@@ -157,59 +155,27 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::AnthemJungle)
 		| static_cast<std::size_t>(GameObjectType::ScientistCedric)
 		| static_cast<std::size_t>(GameObjectType::ScientistLu)
 		| static_cast<std::size_t>(GameObjectType::ScientistFran)
 		| static_cast<std::size_t>(GameObjectType::ScientistJu)
 		| static_cast<std::size_t>(GameObjectType::ScientistJu)
-		| static_cast<std::size_t>(GameObjectType::WindowGlitchNpc)
-		| static_cast<std::size_t>(GameObjectType::FranGlitchNpc)
-		| static_cast<std::size_t>(GameObjectType::JuGlitchNpc)
-		| static_cast<std::size_t>(GameObjectType::LuGlitchNpc)
-		| static_cast<std::size_t>(GameObjectType::LongChairNpc)
 		| static_cast<std::size_t>(GameObjectType::Rocket)
 		| static_cast<std::size_t>(GameObjectType::OctoDeathNpc)
-		| static_cast<std::size_t>(GameObjectType::CedricEndNpc)
 		| static_cast<std::size_t>(GameObjectType::TVScreen)
-		| static_cast<std::size_t>(GameObjectType::FabienNpc)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint)
-		| static_cast<std::size_t>(GameObjectType::OverCoolNpc)
 		| static_cast<std::size_t>(GameObjectType::Pedestal)
-		| static_cast<std::size_t>(GameObjectType::ForestSpirit2Npc)
-		| static_cast<std::size_t>(GameObjectType::ForestSpirit1Npc)
-		| static_cast<std::size_t>(GameObjectType::BirdBlueNpc)
-		| static_cast<std::size_t>(GameObjectType::StrangerSnowNpc)
-		| static_cast<std::size_t>(GameObjectType::StrangerGirlSnowNpc)
-		| static_cast<std::size_t>(GameObjectType::SnowGirl2Npc)
-		| static_cast<std::size_t>(GameObjectType::SnowGirl1Npc)
-		| static_cast<std::size_t>(GameObjectType::Snowman3Npc)
-		| static_cast<std::size_t>(GameObjectType::Snowman1Npc)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
 		| static_cast<std::size_t>(GameObjectType::SpaceShip)
-		| static_cast<std::size_t>(GameObjectType::CedricStartNpc)
-		| static_cast<std::size_t>(GameObjectType::FannyNpc)
-		| static_cast<std::size_t>(GameObjectType::FranfranNpc)
-		| static_cast<std::size_t>(GameObjectType::IohannNpc)
-		| static_cast<std::size_t>(GameObjectType::PunkNpc)
-		| static_cast<std::size_t>(GameObjectType::FatNpc)
-		| static_cast<std::size_t>(GameObjectType::GuiNpc)
-		| static_cast<std::size_t>(GameObjectType::JuNpc)
-		| static_cast<std::size_t>(GameObjectType::LucienNpc)
-		| static_cast<std::size_t>(GameObjectType::OldDesertStaticNpc)
-		| static_cast<std::size_t>(GameObjectType::VinceNpc)
-		| static_cast<std::size_t>(GameObjectType::AmandineNpc)
-		| static_cast<std::size_t>(GameObjectType::FaustNpc)
 		| static_cast<std::size_t>(GameObjectType::WolfNpc)
-		| static_cast<std::size_t>(GameObjectType::ConstanceNpc)
-		| static_cast<std::size_t>(GameObjectType::JeffMouffyNpc)
 		| static_cast<std::size_t>(GameObjectType::JellyfishNpc)
-		| static_cast<std::size_t>(GameObjectType::BirdRedNpc)
-		| static_cast<std::size_t>(GameObjectType::BrayouNpc)
-		| static_cast<std::size_t>(GameObjectType::ClementineNpc)
-		| static_cast<std::size_t>(GameObjectType::CanouilleNpc)
-		| static_cast<std::size_t>(GameObjectType::WellKeeperNpc)
-		| static_cast<std::size_t>(GameObjectType::TurbanNpc)
-		| static_cast<std::size_t>(GameObjectType::Snowman2Npc);
+		| static_cast<std::size_t>(GameObjectType::Npc)
+		| static_cast<std::size_t>(GameObjectType::IdleNpc)
+		| static_cast<std::size_t>(GameObjectType::SpecialNpc)
+		| static_cast<std::size_t>(GameObjectType::DisappearNpc)
+		| static_cast<std::size_t>(GameObjectType::WalkNpc)
+		| static_cast<std::size_t>(GameObjectType::FlyNpc);
 	m_eventBox->setCollisionMask(maskEvent);
 	m_eventBox->setApplyGravity(false);
 	m_eventBox->setType(AShape::Type::e_trigger);
@@ -255,6 +221,10 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_bubbleParticle.setDispersion(80.f);
 	m_bubbleParticle.setColor(sf::Color(255, 255, 255, 100));
 	m_bubbleParticle.setCanEmit(false);
+
+	Progress const & progress = Progress::getInstance();
+	if (!progress.isMenu() && progress.getNextDestination() == Level::Rewards)
+		caseRight();
 }
 
 void	CharacterOcto::setupAnimation()
@@ -885,7 +855,7 @@ void	CharacterOcto::setupMachine()
 	m_sprite.setMachine(machine);
 }
 
-void	CharacterOcto::update(sf::Time frameTime)
+void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 {
 	Progress & progress = Progress::getInstance();
 	if (progress.isMenu())
@@ -1004,7 +974,7 @@ void	CharacterOcto::update(sf::Time frameTime)
 	progress.setOctoPos(getPosition());
 
 	replaceOcto();
-	updateCutscene(frameTime);
+	updateCutscene(realFrameTime);
 }
 
 void	CharacterOcto::replaceOcto(void)
@@ -1054,6 +1024,11 @@ void	CharacterOcto::replaceOcto(void)
 
 void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
+	//if (isFinalEvent())
+	//	enableCutscene(true, false);
+	//else if (m_enableCutscene)
+	//	enableCutscene(false, false);
+
 	if (m_enableCutscene)
 	{
 		m_cutsceneTimer += frameTime;
@@ -1073,6 +1048,14 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 		if (m_cutsceneTimer <= sf::Time::Zero)
 			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
 	}
+}
+
+bool	CharacterOcto::isFinalEvent()
+{
+	Progress const & progress = Progress::getInstance();
+	if (progress.getCurrentDestination() == Level::Final && (getPosition().x > 805.f * 16.f && getPosition().x < 905.f * 16.f))
+		return true;
+	return false;
 }
 
 void	CharacterOcto::portalEvent()
@@ -1389,13 +1372,14 @@ void	CharacterOcto::collisionElevatorUpdate()
 		m_timeEventFall = sf::Time::Zero;
 		m_timeSlowFall = sf::Time::Zero;
 		m_onElevator = true;
+		m_numberOfJump = 1;
 		if (m_sprite.getCurrentEvent() == StartElevator)
 		{
 			if (!m_useElevator)
 			{
 				m_onTopElevator = false;
 				m_useElevator = true;
-				m_numberOfJump = 3;
+				//m_numberOfJump = 3;
 				m_box->setApplyGravity(false);
 			}
 			if (m_sprite.isTerminated())
@@ -1573,9 +1557,9 @@ void	CharacterOcto::inWater()
 	{
 		emit = true;
 		m_inWater = false;
-		m_waterParticle.canEmit(true);
+			m_waterParticle.canEmit(true);
 	}
-	if (emit && !progress.isInCloud())
+	if (emit && !progress.isInCloud() && m_waterLevel != -1.f)
 		m_ploufParticle.canEmit(true);
 }
 

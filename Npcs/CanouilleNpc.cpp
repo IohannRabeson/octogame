@@ -1,18 +1,14 @@
 #include "CanouilleNpc.hpp"
-#include "RectangleShape.hpp"
-#include "Progress.hpp"
 
 CanouilleNpc::CanouilleNpc(void) :
-	ANpc(NPC_CANOUILLE_OSS)
+	ASpecialNpc(NPC_CANOUILLE_OSS)
 {
-	setSize(sf::Vector2f(300.f, 330.f));
-	setOrigin(sf::Vector2f(-40.f, 0.f));
-	setScale(1.0f);
-	setTextOffset(sf::Vector2f(137.f, 10.f));
-	setTimerMax(sf::seconds(8.0f));
+	setType(GameObjectType::CanouilleNpc);
+	setSize(sf::Vector2f(62.f, 300.f));
+	setOrigin(sf::Vector2f(125.f, 64.f));
+	setScale(0.8f);
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void CanouilleNpc::setup(void)
@@ -40,48 +36,4 @@ void CanouilleNpc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
-}
-
-void CanouilleNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idleState;
-	StatePtr					special1State;
-
-	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-	special1State = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
-
-	machine.setStart(idleState);
-	machine.addTransition(Idle, idleState, idleState);
-	machine.addTransition(Idle, special1State, idleState);
-
-	machine.addTransition(Special1, idleState, special1State);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
-void CanouilleNpc::updateState(void)
-{
-	octo::CharacterSprite & sprite = getSprite();
-
-	if (sprite.getCurrentEvent() == Special1)
-	{
-		if (sprite.isTerminated())
-		{
-			sprite.setNextEvent(Idle);
-			addTimer(-getTimer());
-		}
-	}
-	else if (sprite.getCurrentEvent() == Idle)
-	{
-		if (getTimer() >= getTimerMax())
-		{
-			addTimer(-getTimerMax());
-			sprite.setNextEvent(Special1);
-		}
-	}
 }

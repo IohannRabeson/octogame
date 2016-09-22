@@ -1,15 +1,13 @@
 #include "FranGlitchNpc.hpp"
-#include "RectangleShape.hpp"
 
 FranGlitchNpc::FranGlitchNpc(void) :
-	DisappearNpc(FRAN_GLITCH_OSS, 30.f, 120.f, false)
+	ADisappearNpc(FRAN_GLITCH_OSS, 30.f, 120.f, false)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(125.f, 158.f));
+	setType(GameObjectType::FranGlitchNpc);
+	setSize(sf::Vector2f(20.f, 194.f));
+	setOrigin(sf::Vector2f(140.f, 56.f));
 	setScale(0.8f);
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void FranGlitchNpc::setup(void)

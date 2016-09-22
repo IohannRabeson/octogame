@@ -1,17 +1,13 @@
 #include "FaustNpc.hpp"
-#include "RectangleShape.hpp"
 
 FaustNpc::FaustNpc(void) :
-	ANpc(NPC_FAUST_OSS)
+	ASpecialNpc(NPC_FAUST_OSS, false)
 {
-	setSize(sf::Vector2f(130.f, 155.f));
-	setOrigin(sf::Vector2f(20.f, 0.f));
+	setType(GameObjectType::FaustNpc);
+	setSize(sf::Vector2f(56.f, 87.f));
+	setOrigin(sf::Vector2f(88.f, 107.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-20.f, -80.f));
-	setTimerMax(sf::seconds(8.0f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void FaustNpc::setup(void)
@@ -58,48 +54,4 @@ void FaustNpc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
-}
-
-void FaustNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
-
-	octo::FiniteStateMachine	machine;
-	StatePtr					idleState;
-	StatePtr					special1State;
-
-	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-	special1State = std::make_shared<State>("1", getSpecial1Animation(), getSprite());
-
-	machine.setStart(idleState);
-	machine.addTransition(Idle, idleState, idleState);
-	machine.addTransition(Idle, special1State, idleState);
-
-	machine.addTransition(Special1, idleState, special1State);
-
-	setMachine(machine);
-	setNextEvent(Idle);
-}
-
-void FaustNpc::updateState(void)
-{
-	octo::CharacterSprite & sprite = getSprite();
-
-	if (sprite.getCurrentEvent() == Special1)
-	{
-		if (sprite.isTerminated())
-		{
-			sprite.setNextEvent(Idle);
-			addTimer(-getTimer());
-		}
-	}
-	else if (sprite.getCurrentEvent() == Idle)
-	{
-		if (getTimer() >= getTimerMax())
-		{
-			addTimer(-getTimerMax());
-			sprite.setNextEvent(Special1);
-		}
-	}
 }
