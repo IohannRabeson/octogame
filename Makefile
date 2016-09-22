@@ -147,7 +147,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/AymericNpc.cpp						\
 				Npcs/MysticanouilleNpc.cpp				\
 				Npcs/AnthemJungle.cpp					\
+				Npcs/FlorentNpc.cpp				\
 #Script AddNpc
+
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\

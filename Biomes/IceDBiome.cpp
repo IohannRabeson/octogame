@@ -13,14 +13,14 @@ IceDBiome::IceDBiome() :
 	m_name("Ice D"),
 	m_id(Level::IceD),
 	m_seed("Level_One"),
-	m_mapSize(sf::Vector2u(900u, 36u)),
+	m_mapSize(sf::Vector2u(850u, 36u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(16.f * 33.f, 80.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
 	m_tileEndColor(27, 79, 101),
-	m_waterLevel(1000.f),
+	m_waterLevel(400.f),
 	m_waterColor(255, 255, 255, 200),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
@@ -148,23 +148,23 @@ IceDBiome::IceDBiome() :
 		m_octoStartPosition = sf::Vector2f(124.f * 16.f, -113.f * 16.f);
 
 	m_gameObjects[30] = GameObjectType::PortalSnow;
-//	m_gameObjects[100] = GameObjectType::HouseFlatSnow;
+	m_gameObjects[120] = GameObjectType::Snowman1Npc;
 	m_instances[139] = MAP_ICE_D_SECRET_WAY_OMP;
 	m_instances[118] = MAP_ICE_D_PORTAL_RANDOM_OMP;
 	m_gameObjects[190] = GameObjectType::BirdBlueNpc;
 	m_instances[210] = MAP_ICE_D_ELEVATOR_OMP;
 	m_gameObjects[180] = GameObjectType::CheckPoint;
 	m_gameObjects[235] = GameObjectType::WindowGlitchNpc;
-	m_gameObjects[250] = GameObjectType::Pedestal;
-	m_gameObjects[254] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[230] = GameObjectType::Pedestal;
+	m_gameObjects[234] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[330] = GameObjectType::EngineSnow;
-	m_gameObjects[340] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[390] = GameObjectType::StrangerSnowNpc;
+	m_gameObjects[330] = GameObjectType::EngineSnow;
+	m_gameObjects[323] = GameObjectType::EngineSnow;
+	m_gameObjects[340] = GameObjectType::EngineSnow;
+	m_gameObjects[356] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[425] = GameObjectType::WindowGlitchNpc;
-	m_gameObjects[450] = GameObjectType::WeirdHouseSnow;
-	m_gameObjects[510] = GameObjectType::BirdBlueNpc;
-	m_instances[551] = MAP_ICE_D_TRAIL_OMP;
-	m_gameObjects[640] = GameObjectType::StrangerGirlSnowNpc;
+	m_instances[501] = MAP_ICE_D_TRAIL_OMP;
+	m_gameObjects[545] = GameObjectType::StrangerGirlSnowNpc;
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::DesertA);
 	m_destinations.push_back(Level::IceC);
@@ -289,8 +289,8 @@ Map::MapSurfaceGenerator IceDBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {/*house*/50.f, 100.f, 127.f, 132.f, 138.f, 160.f, 166.f, 171.f, 206.f, 240.f,/*lake*/500.f, 550.f, 551.f, 620.f, 831.f, 900.f};
-		std::vector<float> pointY = {/*house*/n   , -1.f , -1.f , 7.3f , -1.f , -1.f , 7.3f , -1.f , -1.f , n    ,/*lake*/n    , 0.8f  , 4.f , 4.f  , 2.f  , n    };
+		std::vector<float> pointX = {0.f  , /*house*/50.f    , 90.f , 96.f, 100.f, 127.f, 132.f, 138.f, 160.f, 166.f, 171.f, 206.f, 280.f  ,/*lake*/420.f  , 500.f, 501.f, 780.f, 781.f, 820.f   , 850.f};
+		std::vector<float> pointY = {-0.2f, /*house*/n - 0.3f, -0.8f, 7.3f, -1.f , -1.f , 7.3f , -1.f , -1.f , 7.3f , -1.f , -1.f , n - 1.f,/*lake*/n - 1.f, -1.2f, 1.8f , 1.8f , 0.f  , n - 0.2f, -0.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

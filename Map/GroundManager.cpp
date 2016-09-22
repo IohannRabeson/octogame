@@ -34,6 +34,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "FlorentNpc.hpp"
 #include "CavemanSinkNpc.hpp"
 #include "AnthemJungle.hpp"
 #include "MysticanouilleNpc.hpp"
@@ -254,6 +255,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<FlorentNpc>(FLORENT_OSS);
 	m_npcFactory.registerCreator<AnthemJungle>(ANTHEM_JUNGLE_OSS);
 	m_npcFactory.registerCreator<MysticanouilleNpc>(MYSTICANOUILLE_OSS);
 	m_npcFactory.registerCreator<AymericNpc>(AYMERIC_OSS);
@@ -776,6 +778,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::FlorentNpc:
+				{
+					FlorentNpc * npc = new FlorentNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::AnthemJungle:
 				{
 					AnthemJungle * npc = new AnthemJungle();

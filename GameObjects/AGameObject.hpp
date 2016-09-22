@@ -117,7 +117,9 @@ enum class GameObjectType : std::size_t
 	FannyNpc					= (1 << 15) + 73,
 	AnthemJungle				= (1 << 15) + 74,
 	TurbanNpc					= (1 << 15) + 75,
+	FlorentNpc				= (1 << 15) + 76,
 //Script AddNpc
+
 	None						= (1 << 16),
 };
 

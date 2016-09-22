@@ -51,6 +51,7 @@
 
 //Npc
 //Script AddNpc Include
+#include "FlorentNpc.hpp"
 #include "AnthemJungle.hpp"
 #include "ScientistCedric.hpp"
 #include "ScientistLu.hpp"
@@ -461,6 +462,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
+		case GameObjectType::FlorentNpc:
+			gameObjectCast<FlorentNpc>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::AnthemJungle:
 			gameObjectCast<AnthemJungle>(gameObject)->collideOctoEvent(octo);
 			break;
