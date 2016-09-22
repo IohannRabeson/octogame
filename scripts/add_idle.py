@@ -39,6 +39,7 @@ fcpp.write('#include "' + className + '.hpp"\n\
 ' + className + '::' + className + '(void) :\n\
 	AIdleNpc(' + spriteName + ')\n\
 {\n\
+    setType(GameObjectType::' + className + ');
 	setSize(sf::Vector2f(70.f, 200.f));\n\
 	setOrigin(sf::Vector2f(60.f, 58.f));\n\
 	setScale(0.8f);\n\

@@ -490,6 +490,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new Monolith(scale, position);
 			});
+	m_decorFactory.registerCreator(WEIRD_HOUSE_SNOW_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(WEIRD_HOUSE_SNOW_OSS, scale, position, 1u, 0.1f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
