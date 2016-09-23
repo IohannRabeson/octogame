@@ -152,7 +152,7 @@ RandomBiome::RandomBiome() :
 	// TODO define map position and number of map
 	std::size_t portalPos = 30.f;
 	m_gameObjects[portalPos] = GameObjectType::Portal;
-	//m_instances[100] = MAP_RANDOM_OMP;
+	m_instances[100] = MAP_RANDOM_OMP;
 	m_destinations.push_back(progress.getLastDestination());
 
 	m_interestPointPosX = portalPos;
@@ -404,10 +404,6 @@ Map::TileColorGenerator RandomBiome::getTileColorGenerator()
 	return [this](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		if (x >= 100.f && x < 100.f + 72.f && y < 0.f)
-			return octo::linearInterpolation(sf::Color(255, 255, 255, 100), m_tileStartColor - sf::Color(0, 0, 0, 100), transition);
-		if (x >= 300.f - 72.f && x < 300.f && y < 0.f)
-			return octo::linearInterpolation(sf::Color(255, 255, 255, 100), m_tileStartColor - sf::Color(0, 0, 0, 100), transition);
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
@@ -620,7 +616,12 @@ sf::Color		RandomBiome::getLeafColor()
 
 std::size_t		RandomBiome::getTreePositionX()
 {
-	return randomInt(1, m_mapSize.x);
+	std::size_t index1 = randomInt(1, 100);
+	std::size_t index2 = randomInt(300, m_mapSize.x);
+
+	if (randomBool(0.5f))
+		return index1;
+	return index2;
 }
 
 sf::Vector2f	RandomBiome::getCrystalSize()
