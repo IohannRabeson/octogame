@@ -1025,10 +1025,8 @@ void	CharacterOcto::replaceOcto(void)
 
 void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
-	//if (isFinalEvent())
-	//	enableCutscene(true, false);
-	//else if (m_enableCutscene)
-	//	enableCutscene(false, false);
+	if (Progress::getInstance().getCurrentDestination() == Level::Final)
+		enableCutscene(isFinalEvent(), false);
 
 	if (m_enableCutscene)
 	{
