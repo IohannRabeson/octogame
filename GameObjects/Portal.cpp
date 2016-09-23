@@ -35,7 +35,6 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Portal));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
-
 	setRadius(m_radius);
 	setPosition(m_position);
 
@@ -55,20 +54,13 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	if ((destination == Level::Rewards && progress.isMenu()) || destination == Level::Random)
 	{
 		m_animationClosed.setFrames({
-			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {2u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {12u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {13u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {14u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {16u, sf::FloatRect(), sf::Vector2f()}),
 		});
-		m_animationClosed.setLoop(octo::LoopMode::Loop);
+		m_animationClosed.setLoop(octo::LoopMode::NoLoop);
 	
 		m_animationOpening.setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
@@ -190,7 +182,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
 
-	if (!progress.isMetPortal(m_destination))
+	if (!progress.isMetPortal(m_destination) || (Progress::getInstance().isMetPortal(m_destination) && m_destination == Level::Random))
 		m_sprite.setNextEvent(Closed);
 	else
 		m_sprite.setNextEvent(Opened);
