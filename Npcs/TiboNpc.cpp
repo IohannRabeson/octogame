@@ -1,7 +1,7 @@
 #include "TiboNpc.hpp"
 
 TiboNpc::TiboNpc(void) :
-	ASpecialNpc(TIBO_OSS)
+	ASpecialNpc(TIBO_OSS, false)
 {
     setType(GameObjectType::TiboNpc);
 	setSize(sf::Vector2f(56.f, 143.f));

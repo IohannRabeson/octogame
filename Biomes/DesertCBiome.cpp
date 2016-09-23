@@ -72,9 +72,9 @@ DesertCBiome::DesertCBiome() :
 	m_rockPartCount(50.f, 80.f),
 	m_rockColor(255, 232, 170),
 
-	m_grassSizeY(30.f, 60.f),
-	m_grassSizeX(14.f, 16.f),
-	m_grassColor(m_tileStartColor),
+	m_grassSizeY(30.f, 45.f),
+	m_grassSizeX(8.f, 12.f),
+	m_grassColor(m_skyDayColor),
 	m_grassCount(m_mapSize.x),
 
 	m_treeDepth(6u, 8u),
@@ -136,14 +136,14 @@ DesertCBiome::DesertCBiome() :
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertD)
-		m_octoStartPosition = sf::Vector2f(602.f * 16.f, -3150.f);
+		m_octoStartPosition = sf::Vector2f(714.f * 16.f, -3050.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(790.f * 16.f, -2050.f);
 
 	m_gameObjects[40] = GameObjectType::PortalDesert;
 	m_gameObjects[80] = GameObjectType::WellKeeperNpc;
 	m_gameObjects[125] = GameObjectType::FabienNpc;
-	m_gameObjects[210] = GameObjectType::CheckPoint;
+	m_gameObjects[211] = GameObjectType::CheckPoint;
 	m_instances[230] = MAP_DESERT_C_TRAIL_A_OMP;
 	m_instances[280] = MAP_DESERT_C_TRAIL_B_OMP;
 	m_instances[312] = MAP_DESERT_C_TRAIL_C_OMP;
@@ -265,8 +265,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = { 0.f, 20.f, 25.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f   , 210.f   , 215.f, 400.f, 600.f  , 750.f};
-		std::vector<float> pointY = { n  , n   , n - 0.8f, n - 0.8f, n   , n    , n - 1.0f, n - 1.0f, n    , n    , n - 1.2f, n - 1.2f, n    , n    , n - 1.4f, n - 1.4f, n    , n    , n + 4.f, n};
+		std::vector<float> pointX = { 0.f, 20.f, 25.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f, 210.f, 215.f, 400.f, 600.f  , 750.f};
+		std::vector<float> pointY = { n  , n   , n - 0.8f, n - 0.8f, n   , n    , n - 1.0f, n - 1.0f, n    , n    , n - 1.2f, n - 1.2f, n    , n    , -1.3f, -1.3f, n    , n    , n + 4.f, n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
