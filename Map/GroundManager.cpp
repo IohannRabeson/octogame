@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "WaterHouseBroken.hpp"
 #include "ColumnNpc.hpp"
 #include "TiboNpc.hpp"
 #include "SebNpc.hpp"
@@ -262,6 +263,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<WaterHouseBroken>(WATER_HOUSE_BROKEN_OSS);
 	m_npcFactory.registerCreator<ColumnNpc>(COLUMN_1_OSS);
 	m_npcFactory.registerCreator<TiboNpc>(TIBO_OSS);
 	m_npcFactory.registerCreator<SebNpc>(SEB_OSS);
@@ -792,6 +794,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::WaterHouseBroken:
+				{
+					WaterHouseBroken * npc = new WaterHouseBroken();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::ColumnNpc:
 				{
 					ColumnNpc * npc = new ColumnNpc();

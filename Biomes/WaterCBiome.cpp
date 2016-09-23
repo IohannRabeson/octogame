@@ -143,7 +143,8 @@ WaterCBiome::WaterCBiome() :
 	m_instances[20] = MAP_WATER_C_TRAIL_OMP;
 
 	m_gameObjects[295] = GameObjectType::CheckPoint;
-	m_gameObjects[500] = GameObjectType::BeachGuyNpc;
+	m_gameObjects[480] = GameObjectType::WaterHouseBroken;
+	m_gameObjects[520] = GameObjectType::BeachGuyNpc;
 	m_gameObjects[550] = GameObjectType::Pedestal;
 	m_gameObjects[554] = GameObjectType::SlowFallNanoRobot;
 

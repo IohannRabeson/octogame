@@ -125,7 +125,9 @@ enum class GameObjectType : std::size_t
 	SebNpc				= (1 << 15) + 82,
 	TiboNpc				= (1 << 15) + 83,
 	ColumnNpc				= (1 << 15) + 84,
+	WaterHouseBroken				= (1 << 15) + 85,
 //Script AddNpc
+
 
 
 

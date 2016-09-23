@@ -155,7 +155,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/SebNpc.cpp				\
 				Npcs/TiboNpc.cpp				\
 				Npcs/ColumnNpc.cpp				\
+				Npcs/WaterHouseBroken.cpp				\
 #Script AddNpc
+
 
 
 
