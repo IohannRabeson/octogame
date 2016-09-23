@@ -142,8 +142,8 @@ WaterBBiome::WaterBBiome() :
 	// Define game objects
 	m_instances[100] = MAP_WATER_B_TRAIL_OMP;
 	m_gameObjects[680] = GameObjectType::CedricEndNpc;
-	m_gameObjects[30] = GameObjectType::Concert;
-	m_gameObjects[80] = GameObjectType::PortalWater;
+	m_gameObjects[665] = GameObjectType::Concert;
+	m_gameObjects[51] = GameObjectType::PortalWater;
 
 	m_interestPointPosX = 500;
 
@@ -155,16 +155,18 @@ WaterBBiome::WaterBBiome() :
 		std::size_t index;
 		
 		if (randomBool(0.5f))
-			index = randomInt(1u, 90u);
+			index = randomInt(1u, 50u);
 		else
-			index = randomInt(610u, 699u);
+			index = randomInt(650u, 699u);
 
-		if (*npc != GameObjectType::CedricStartNpc)
+		if (*npc != GameObjectType::CedricStartNpc
+			&& *npc != GameObjectType::EngineSnow
+			&& *npc != GameObjectType::AnthemJungle)
 			m_gameObjects[index] = *npc;
 	}
 
 	if (progress.getLastDestination() == Level::WaterC)
-		m_octoStartPosition = sf::Vector2f(784.f * 16.f, -13050.f);
+		m_octoStartPosition = sf::Vector2f(54.f * 16.f, -13050.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(363.f * 16.f, -15130.f);
 
@@ -276,9 +278,9 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 1.0f);
-		float m = n / 10.f;
-		std::vector<float> pointX = {0.f     , 80.f    , 100.f, 101.f, 150.f, 180.f, 520.f, 550.f, 599.f, 600.f, 620.f   , 700.f   };
-		std::vector<float> pointY = {m - 10.f, m - 10.f, -10.f, -1.0f, -1.0f, n    , n    , -1.0f, -1.0f, -10.f, m - 10.f, m - 10.f};
+		//float m = n / 10.f;
+		std::vector<float> pointX = {0.f  , 100.f, 101.f, 150.f, 180.f, 520.f, 550.f, 599.f, 600.f, 700.f};
+		std::vector<float> pointY = {-10.f, -10.f, -1.0f, -1.0f, n    , n    , -1.0f, -1.0f, -10.f, -10.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

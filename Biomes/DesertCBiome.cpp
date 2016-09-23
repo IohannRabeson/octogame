@@ -140,7 +140,8 @@ DesertCBiome::DesertCBiome() :
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(790.f * 16.f, -2050.f);
 
-	m_gameObjects[60] = GameObjectType::PortalDesert;
+	m_gameObjects[40] = GameObjectType::PortalDesert;
+	m_gameObjects[80] = GameObjectType::WellKeeperNpc;
 	m_gameObjects[125] = GameObjectType::FabienNpc;
 	m_gameObjects[210] = GameObjectType::CheckPoint;
 	m_instances[230] = MAP_DESERT_C_TRAIL_A_OMP;
@@ -264,7 +265,7 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = { 0.f, 50.f, 55.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f   , 210.f   , 215.f, 400.f, 600.f  , 750.f};
+		std::vector<float> pointX = { 0.f, 20.f, 25.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f   , 210.f   , 215.f, 400.f, 600.f  , 750.f};
 		std::vector<float> pointY = { n  , n   , n - 0.8f, n - 0.8f, n   , n    , n - 1.0f, n - 1.0f, n    , n    , n - 1.2f, n - 1.2f, n    , n    , n - 1.4f, n - 1.4f, n    , n    , n + 4.f, n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;

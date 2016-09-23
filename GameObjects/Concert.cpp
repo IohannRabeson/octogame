@@ -6,7 +6,8 @@
 
 Concert::Concert(void) :
 	SimpleObject(CONCERT_OSS),
-	m_particlesCount(13),
+	m_generator("random"),
+	m_particlesCount(20),
 	m_particles(new MusicSystem[m_particlesCount])
 {
 	typedef octo::SpriteAnimation::Frame	Frame;
@@ -30,12 +31,14 @@ void Concert::update(sf::Time frameTime)
 
 void Concert::setPosition(sf::Vector2f const & position)
 {
-	SimpleObject::setPosition(position - sf::Vector2f(0.f, getSprite().getGlobalSize().x));
-	m_particles[0].setEmitter(position + sf::Vector2f(100.f, -180.f));
-	m_particles[1].setEmitter(position + sf::Vector2f(300.f, -180.f));
-	m_particles[2].setEmitter(position + sf::Vector2f(200.f, -180.f));
+	sf::Vector2f const & size = getSprite().getGlobalSize();
+
+	SimpleObject::setPosition(position - sf::Vector2f(0.f, size.y - 100.f));
 	for (std::size_t i = 3; i < m_particlesCount; i++)
-		m_particles[i].setEmitter(position + sf::Vector2f(-20.f + i * 28.f, -325.f));
+	{
+		sf::Vector2f randomPos(m_generator.randomFloat(0.f, size.x), -m_generator.randomFloat(0.f, size.x));
+		m_particles[i].setEmitter(position + randomPos);
+	}
 }
 
 void Concert::drawFront(sf::RenderTarget & render, sf::RenderStates) const

@@ -33,6 +33,8 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "SebNpc.hpp"
+#include "BeachBoyFlyNpc.hpp"
 #include "BeachBoySubNpc.hpp"
 #include "AntoineNpc.hpp"
 #include "UlaNpc.hpp"
@@ -258,6 +260,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<SebNpc>(SEB_OSS);
+	m_npcFactory.registerCreator<BeachBoyFlyNpc>(BEACHBOY_FLY_OSS);
 	m_npcFactory.registerCreator<BeachBoySubNpc>(BEACHBOY_SUB_OSS);
 	m_npcFactory.registerCreator<AntoineNpc>(ANTOINE_OSS);
 	m_npcFactory.registerCreator<UlaNpc>(ULA_OSS);
@@ -294,6 +298,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
 	m_npcFactory.registerCreator<JellyfishNpc>(JELLYFISH_OSS);
+	m_npcFactory.registerCreator<BrayouNpc>(BRAYOU_OSS);
 	m_npcFactory.registerCreator(OCTO_DEATH_HELMET_OSS, [&biome](){ return new OctoDeathNpc(biome.getWaterLevel(), biome.getWaterColor()); });
 	m_npcFactory.registerCreator(EVA_OSS, [&biome](){ return new EvaNpc(biome.getWaterColor()); });
 	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
@@ -783,6 +788,20 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::SebNpc:
+				{
+					SebNpc * npc = new SebNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::BeachBoyFlyNpc:
+				{
+					BeachBoyFlyNpc * npc = new BeachBoyFlyNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::BeachBoySubNpc:
 				{
 					BeachBoySubNpc * npc = new BeachBoySubNpc();

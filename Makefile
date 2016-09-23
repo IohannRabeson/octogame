@@ -151,7 +151,11 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/UlaNpc.cpp				\
 				Npcs/AntoineNpc.cpp				\
 				Npcs/BeachBoySubNpc.cpp				\
+				Npcs/BeachBoyFlyNpc.cpp				\
+				Npcs/SebNpc.cpp				\
 #Script AddNpc
+
+
 
 
 

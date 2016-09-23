@@ -141,7 +141,7 @@ WaterABiome::WaterABiome() :
 
 	// Define game objects
 	m_gameObjects[25] = GameObjectType::PortalWater;
-	m_gameObjects[120] = GameObjectType::BrayouNpc;
+	m_gameObjects[120] = GameObjectType::BeachBoyFlyNpc;
 	m_instances[140] = MAP_WATER_A_TRAIL_OMP;
 	m_gameObjects[610] = GameObjectType::JellyfishNpc;
 	m_gameObjects[580] = GameObjectType::JellyfishNpc;

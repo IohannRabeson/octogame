@@ -75,7 +75,7 @@ MusicManager::MusicManager() :
 			sf::FloatRect(sf::Vector2f(586.f * 16.f, -1800.f), sf::Vector2f(220.f * 16.f, 2300.f)));
 	// water balle
 	m_music[5] = AreaMusic(Level::WaterB, MENU_OPUS_II_REVERSE_OGG,
-			sf::FloatRect(sf::Vector2f(0.f * 16.f, -4000.f * 16.f), sf::Vector2f(700.f * 16.f, 10000.f * 16.f)));
+			sf::FloatRect(sf::Vector2f(0.f * 16.f, -12850.f), sf::Vector2f(700.f * 16.f, 10000.f * 16.f)));
 	// water c
 	m_music[6] = AreaMusic(Level::WaterC, SOUTERRAIN_LUGUBRE_OGG,
 			sf::FloatRect(sf::Vector2f(0.f * 16.f, 400.f), sf::Vector2f(750.f * 16.f, 600.f * 16.f)));
