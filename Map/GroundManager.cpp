@@ -33,6 +33,8 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "AntoineNpc.hpp"
+#include "UlaNpc.hpp"
 #include "EngineSnow.hpp"
 #include "FlorentNpc.hpp"
 #include "CavemanSinkNpc.hpp"
@@ -255,6 +257,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<AntoineNpc>(ANTOINE_OSS);
+	m_npcFactory.registerCreator<UlaNpc>(ULA_OSS);
 	m_npcFactory.registerCreator<EngineSnow>(ENGINE_SNOW_OSS);
 	m_npcFactory.registerCreator<FlorentNpc>(FLORENT_OSS);
 	m_npcFactory.registerCreator<AnthemJungle>(ANTHEM_JUNGLE_OSS);
@@ -773,6 +777,20 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::AntoineNpc:
+				{
+					AntoineNpc * npc = new AntoineNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::UlaNpc:
+				{
+					UlaNpc * npc = new UlaNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::EngineSnow:
 				{
 					EngineSnow * npc = new EngineSnow();

@@ -139,7 +139,6 @@ IceBBiome::IceBBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-
 	m_gameObjects[40] = GameObjectType::JuGlitchNpc;
 	m_instances[50] = MAP_ICE_B_TRAIL_A_OMP;
 	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
@@ -148,7 +147,7 @@ IceBBiome::IceBBiome() :
 	m_instances[317] = MAP_ICE_B_PORTAL_OMP;
 	m_gameObjects[385] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[390] = GameObjectType::EngineSnow;
-	m_gameObjects[416] = GameObjectType::AymericNpc;
+	m_gameObjects[410] = GameObjectType::AymericNpc;
 	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_interestPointPosX = 530;
 

@@ -148,7 +148,11 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/AnthemJungle.cpp					\
 				Npcs/FlorentNpc.cpp				\
 				Npcs/EngineSnow.cpp				\
+				Npcs/UlaNpc.cpp				\
+				Npcs/AntoineNpc.cpp				\
 #Script AddNpc
+
+
 
 
 

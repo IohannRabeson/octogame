@@ -39,7 +39,7 @@ fcpp.write('#include "' + className + '.hpp"\n\
 ' + className + '::' + className + '(void) :\n\
 	ASpecialNpc(' + spriteName + ')\n\
 {\n\
-    setType(GameObjectType::' + className + ');
+    setType(GameObjectType::' + className + ');\n\
 	setSize(sf::Vector2f(70.f, 200.f));\n\
 	setOrigin(sf::Vector2f(60.f, 58.f));\n\
 	setScale(0.8f);\n\
