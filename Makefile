@@ -154,7 +154,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/BeachBoyFlyNpc.cpp				\
 				Npcs/SebNpc.cpp				\
 				Npcs/TiboNpc.cpp				\
+				Npcs/ColumnNpc.cpp				\
 #Script AddNpc
+
 
 
 
