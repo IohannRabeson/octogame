@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "TiboNpc.hpp"
 #include "SebNpc.hpp"
 #include "BeachBoyFlyNpc.hpp"
 #include "BeachBoySubNpc.hpp"
@@ -260,6 +261,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<TiboNpc>(TIBO_OSS);
 	m_npcFactory.registerCreator<SebNpc>(SEB_OSS);
 	m_npcFactory.registerCreator<BeachBoyFlyNpc>(BEACHBOY_FLY_OSS);
 	m_npcFactory.registerCreator<BeachBoySubNpc>(BEACHBOY_SUB_OSS);
@@ -788,6 +790,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::TiboNpc:
+				{
+					TiboNpc * npc = new TiboNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::SebNpc:
 				{
 					SebNpc * npc = new SebNpc();
