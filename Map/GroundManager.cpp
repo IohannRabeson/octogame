@@ -504,6 +504,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(HOUSE_FLAT_SNOW_OSS, scale, position, 1u, 0.1f);
 			});
+	m_decorFactory.registerCreator(WATER_HOUSE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(WATER_HOUSE_OSS, scale, position, 1u, 0.1f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
