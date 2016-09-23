@@ -1441,9 +1441,11 @@ void	CharacterOcto::dieFall()
 			stopFollowCamera(true);
 			m_box->setPosition(m_box->getPosition() + sf::Vector2f(0.f, speedOutOfScreen * 40.f));
 			m_sprite.setOrigin(m_sprite.getOrigin() - sf::Vector2f(0.f, speedOutOfScreen * 10.f));
+			if (m_timeEventFall > m_timeEventDieVoidMax + sf::seconds(0.6f))
+				kill();
 		}
-		if (m_timeEventFall > m_timeEventDieVoidMax + sf::seconds(0.6f))
-			kill();
+		else
+			stopFollowCamera(false);
 	}
 
 	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater)
