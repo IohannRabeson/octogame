@@ -6,7 +6,7 @@
 CavemanSinkNpc::CavemanSinkNpc(float waterLevel, sf::Color waterColor) :
 	ASinkNpc(CAVEMAN_SINKING_OSS, waterLevel, waterColor),
 	m_fallingWater(true),
-	m_startSinkTimerMax(sf::seconds(8.f * 0.4f)),
+	m_startSinkTimerMax(sf::seconds(1.5f)),
 	m_fadeTimerMax(sf::seconds(3.f))
 {
 	setType(GameObjectType::CavemanSinkingNpc);
@@ -31,17 +31,21 @@ void CavemanSinkNpc::setup(void)
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
 	getSpecial1Animation().setFrames({
-			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {3u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {4u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {8u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
@@ -73,10 +77,14 @@ void CavemanSinkNpc::updatePhysics(void)
 		if (isCollide() && m_startSinkTimer >= m_startSinkTimerMax)
 		{
 			velocity = sf::Vector2f(0.f, -500.f);
-			if (getPosition().y > getWaterLevel() + 40.f)
-				getSmoke().setCanEmit(true);
 			if (m_fadeTimer < m_fadeTimerMax)
+			{
+				if (getPosition().y > getWaterLevel() + 40.f)
+					getSmoke().setCanEmit(true);
 				getSprite().setColor(sf::Color(255, 255, 255, 255 * (1.f - (m_fadeTimer / m_fadeTimerMax))));
+			}
+			else
+				getSmoke().setCanEmit(false);
 		}
 		else if (m_fallingWater == true)
 		{
