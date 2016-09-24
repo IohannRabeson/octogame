@@ -2,8 +2,9 @@
 #include "Progress.hpp"
 
 FranfranNpc::FranfranNpc(void) :
-	ASpecialNpc(FRANFRAN_OSS, true, false),
-	m_puffTimerMax(sf::seconds(0.8f))
+	ASpecialNpc(FRANFRAN_OSS, false, true),
+	m_puffTimerMin(sf::seconds(0.4f)),
+	m_puffTimerMax(sf::seconds(1.f))
 {
 	setType(GameObjectType::FranfranNpc);
 	setSize(sf::Vector2f(69.f, 230.f));
@@ -11,6 +12,9 @@ FranfranNpc::FranfranNpc(void) :
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
+
+	m_smokePosition = sf::Vector2f(25.f, 170.f) * 0.8f; // Multiply by scale
+	m_puffPosition = sf::Vector2f(145.f, 160.f) * 0.8f;
 }
 
 void FranfranNpc::setup(void)
@@ -41,7 +45,7 @@ void FranfranNpc::setup(void)
 	setupMachine();
 
 	m_smoke.setup(sf::Vector2f(2.5f, 2.5f));
-	m_smoke.setVelocity(sf::Vector2f(0.f, -50.f));
+	m_smoke.setVelocity(sf::Vector2f(0.f, -30.f));
 	m_smoke.setEmitTimeRange(0.2f, 0.3f);
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
 	m_smoke.setLifeTimeRange(0.6f, 0.8f);
@@ -66,43 +70,25 @@ void FranfranNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	m_puffTimer += frametime;
 
 	if (sprite.getCurrentEvent() == Idle)
 	{
-		if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
-		{
-			m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(80.f, 40.f));
-			m_smoke.setVelocity(sf::Vector2f(0.f, -30.f));
-		}
-		else
-		{
-			m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(-50.f, 40.f));
-			m_smoke.setVelocity(sf::Vector2f(0.f, -30.f));
-		}
+		m_smoke.setPosition(m_smokePosition - getSprite().getOrigin() + sprite.getPosition());
+		m_smoke.setCanEmit(true);
+		m_puffTimer = sf::Time::Zero;
 	}
 	else
 	{
-		if (Progress::getInstance().getOctoPos().x < ANpc::getPosition().x)
-		{
-			m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(20.f, 50.f));
-			m_smoke.setVelocity(sf::Vector2f(50.f, 0.f));
-		}
+		m_puffTimer += frametime;
+		m_smoke.setCanEmit(false);
+		if (m_puffTimer >= m_puffTimerMin && m_puffTimer <= m_puffTimerMax)
+			m_puff.setCanEmit(true);
 		else
-		{
-			m_smoke.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(-20.f, 50.f));
-			m_smoke.setVelocity(sf::Vector2f(-50.f, 0.f));
-		}
+			m_puff.setCanEmit(false);
+		m_puff.setPosition(m_puffPosition - sprite.getOrigin() + sprite.getPosition());
 	}
-	if (sprite.isTerminated())
-		m_puffTimer = sf::Time::Zero;
-	m_smoke.update(frametime);
 
-	if (m_puffTimer <= m_puffTimerMax)
-		m_puff.setCanEmit(true);
-	else
-		m_puff.setCanEmit(false);
-	m_puff.setPosition(ASpecialNpc::getPosition() + sf::Vector2f(15.f, 40.f));
+	m_smoke.update(frametime);
 	m_puff.update(frametime);
 
 	ASpecialNpc::update(frametime);
