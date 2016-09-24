@@ -68,6 +68,7 @@
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
+#include "Door.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
 #include "ForestSpirit2Npc.hpp"
@@ -186,7 +187,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	setupDecors(biome, cycle);
 
 	// Init game objects
-	setupGameObjects(biome);
+	setupGameObjects(biome, cycle);
 
 	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
 	m_offset.x = rect.left;
@@ -242,7 +243,7 @@ void GroundManager::setupGroundRock(ABiome & biome)
 	}
 }
 
-void GroundManager::setupGameObjects(ABiome & biome)
+void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & cycle)
 {
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	setupGroundRock(biome);
@@ -321,6 +322,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator(ELLIOT_OSS, [](){ return new ElliotNpc(); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
+	m_decorFactory.registerCreator(DOOR_OSS, [&cycle](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new Door(cycle, scale, position);
+			});
 	m_decorFactory.registerCreator(CHECKPOINT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new CheckPoint(scale, position);
@@ -1056,6 +1061,12 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					FabienNpc * npc = new FabienNpc();
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
+				}
+				break;
+			case GameObjectType::Door:
+				{
+					Door * obj = new Door(cycle, sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f));
+					m_otherObjectsLow.emplace_back(gameObject.first, 1, obj);
 				}
 				break;
 			case GameObjectType::CheckPoint:
