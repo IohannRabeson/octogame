@@ -1,4 +1,6 @@
 #include "MysticanouilleNpc.hpp"
+#include "Progress.hpp"
+#include <RectangleShape.hpp>
 
 MysticanouilleNpc::MysticanouilleNpc(void) :
 	ASpecialNpc(MYSTICANOUILLE_OSS)
@@ -34,10 +36,33 @@ void MysticanouilleNpc::setup(void)
 			Frame(sf::seconds(0.3f), {11u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {12u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {13u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {14u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {15u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {12u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {11u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {10u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {9u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {8u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
+}
+
+void MysticanouilleNpc::update(sf::Time frameTime)
+{
+	ASpecialNpc::update(frameTime);
+
+	float const distMax = 800.f;
+	float const distMin = 450.f;
+	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
+	octo::CharacterSprite & sprite = getSprite();
+	float dist = std::sqrt(std::pow(getBox()->getBaryCenter().x - octoPosition.x, 2u) + std::pow(getBox()->getBaryCenter().y - octoPosition.y, 2u));
+	float coef = 0.f;
+
+	if (dist < distMin)
+		coef = 1.f;
+	else if (dist > distMax)
+		coef = 0.f;
+	else
+		coef = 1.f - (dist - distMin) / (distMax - distMin);
+	sprite.setColor(sf::Color(255, 255, 255, 255 * coef));
 }

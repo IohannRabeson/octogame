@@ -10,7 +10,7 @@ public:
 	virtual ~MysticanouilleNpc(void) = default;
 
 	virtual void setup(void);
-
+	virtual void update(sf::Time frameTime);
 };
 
 #endif
