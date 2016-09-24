@@ -8,8 +8,7 @@ ASinkNpc::ASinkNpc(ResourceKey const & npcId, float waterLevel, sf::Color waterC
 	m_isCollide(false),
 	m_waterLevel(waterLevel),
 	m_waterColor(waterColor),
-	m_fallingWater(true),
-	m_velocity(0.f, 0.f)
+	m_fallingWater(true)
 {
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SinkNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	setupSmoke();
@@ -28,9 +27,19 @@ void ASinkNpc::setupSmoke(void)
 	m_smoke.setCanEmit(false);
 }
 
-void ASinkNpc::setVelocity(sf::Vector2f const & velocity)
+bool ASinkNpc::isCollide(void)
 {
-	m_velocity = velocity;
+	return m_isCollide;
+}
+
+SmokeSystem & ASinkNpc::getSmoke(void)
+{
+	return m_smoke;
+}
+
+float ASinkNpc::getWaterLevel(void)
+{
+	return m_waterLevel;
 }
 
 void ASinkNpc::setupMachine(void)
@@ -92,7 +101,7 @@ void ASinkNpc::updatePhysics(void)
 				m_fallingWater = true;
 		}
 	}
-	getBox()->setVelocity(velocity + m_velocity);
+	getBox()->setVelocity(velocity);
 }
 
 void ASinkNpc::updateState(void)

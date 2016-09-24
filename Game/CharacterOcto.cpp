@@ -155,6 +155,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
 //Script AddNpc
+		| static_cast<std::size_t>(GameObjectType::FlorentNpc)
 		| static_cast<std::size_t>(GameObjectType::AnthemJungle)
 		| static_cast<std::size_t>(GameObjectType::ScientistCedric)
 		| static_cast<std::size_t>(GameObjectType::ScientistLu)
@@ -1024,10 +1025,8 @@ void	CharacterOcto::replaceOcto(void)
 
 void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
-	//if (isFinalEvent())
-	//	enableCutscene(true, false);
-	//else if (m_enableCutscene)
-	//	enableCutscene(false, false);
+	if (Progress::getInstance().getCurrentDestination() == Level::Final)
+		enableCutscene(isFinalEvent(), false);
 
 	if (m_enableCutscene)
 	{
@@ -1440,9 +1439,11 @@ void	CharacterOcto::dieFall()
 			stopFollowCamera(true);
 			m_box->setPosition(m_box->getPosition() + sf::Vector2f(0.f, speedOutOfScreen * 40.f));
 			m_sprite.setOrigin(m_sprite.getOrigin() - sf::Vector2f(0.f, speedOutOfScreen * 10.f));
+			if (m_timeEventFall > m_timeEventDieVoidMax + sf::seconds(0.6f))
+				kill();
 		}
-		if (m_timeEventFall > m_timeEventDieVoidMax + sf::seconds(0.6f))
-			kill();
+		else
+			stopFollowCamera(false);
 	}
 
 	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater)

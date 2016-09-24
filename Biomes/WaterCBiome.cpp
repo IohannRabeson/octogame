@@ -141,18 +141,35 @@ WaterCBiome::WaterCBiome() :
 
 	// Define game objects
 	m_instances[20] = MAP_WATER_C_TRAIL_OMP;
-	m_instances[640] = MAP_WATER_C_SLOWFALL_TRAIL_OMP;
 
+	m_gameObjects[295] = GameObjectType::CheckPoint;
+	m_gameObjects[520] = GameObjectType::BeachGuyNpc;
 	m_gameObjects[550] = GameObjectType::Pedestal;
 	m_gameObjects[554] = GameObjectType::SlowFallNanoRobot;
 
-	m_interestPointPosX = 500;
+	m_instances[640] = MAP_WATER_C_SLOWFALL_TRAIL_OMP;
+
+	m_interestPointPosX = 150;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::Final)
 		m_octoStartPosition = sf::Vector2f(756.f * 16.f, -4760.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(492.f * 16.f, -3130.f);
+
+	std::size_t columnCount = 20u;
+
+	for (std::size_t i = 0u; i < columnCount; i++)
+	{
+		std::size_t index;
+		
+		if (randomBool(0.7f))
+			index = randomInt(0u, 290u);
+		else
+			index = randomInt(450u, 530u);
+
+		m_gameObjects[index] = GameObjectType::ColumnNpc;;
+	}
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
@@ -288,8 +305,8 @@ Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f      , 307.f   , 308.f, 442.f, 443.f   , 470.f   , 570.f   , 589.f  , 592.f, 612.f, 613.f  , 640.f, 710.f,  790.f, 850.f};
-		std::vector<float> pointY = {n - 5.25f, n - 5.25f, 4.6f , 4.6f , n - 6.2f, n - 6.2f, n - 6.5f, -4.618f, 4.6f , 4.6f , -4.415f, -5.1f, -5.2f, - 5.1f, n - 5.25f};
+		std::vector<float> pointX = {0.f      , 303.f    , 307.f    , 308.f, 442.f, 443.f   , 470.f   , 570.f   , 589.f  , 592.f, 612.f, 613.f  , 640.f, 710.f,  790.f, 850.f};
+		std::vector<float> pointY = {n - 5.25f, n - 5.25f, n - 5.f, 4.6f , 4.6f , n - 6.2f, n - 6.2f, n - 6.5f, -4.618f, 4.6f , 4.6f , -4.415f, -5.1f, -5.2f, - 5.1f, n - 5.25f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

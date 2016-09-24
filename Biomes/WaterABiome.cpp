@@ -15,7 +15,7 @@ WaterABiome::WaterABiome() :
 	m_seed("Water A"),
 	m_mapSize(sf::Vector2u(700u, 32u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(25.f * 16.f, 50.f),
+	m_octoStartPosition(83.f * 16.f, 50.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -140,13 +140,20 @@ WaterABiome::WaterABiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_gameObjects[25] = GameObjectType::PortalWater;
-	m_gameObjects[120] = GameObjectType::BrayouNpc;
+	m_gameObjects[70] = GameObjectType::ColumnNpc;
+	m_gameObjects[80] = GameObjectType::PortalWater;
+	m_gameObjects[100] = GameObjectType::ColumnNpc;
+	m_gameObjects[110] = GameObjectType::ColumnNpc;
+	m_gameObjects[120] = GameObjectType::BeachBoyFlyNpc;
 	m_instances[140] = MAP_WATER_A_TRAIL_OMP;
 	m_gameObjects[610] = GameObjectType::JellyfishNpc;
 	m_gameObjects[580] = GameObjectType::JellyfishNpc;
+	m_gameObjects[640] = GameObjectType::ColumnNpc;
+	m_gameObjects[650] = GameObjectType::WaterHouseBroken;
+	m_gameObjects[685] = GameObjectType::JihemNpc;
+	m_gameObjects[691] = GameObjectType::MariaNpc;
 
-	m_interestPointPosX = 500;
+	m_interestPointPosX = 470;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::WaterB)

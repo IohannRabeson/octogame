@@ -25,7 +25,6 @@ enum class GameObjectType : std::size_t
 	SpaceShip					= (1 << 14) + 1,
 	Bouibouik					= (1 << 14) + 2,
 	HouseFlatSnow				= (1 << 14) + 3,
-	EngineSnow					= (1 << 14) + 4,
 	WeirdHouseSnow				= (1 << 14) + 5,
 	Tent						= (1 << 14) + 6,
 	Firecamp					= (1 << 14) + 7,
@@ -117,7 +116,31 @@ enum class GameObjectType : std::size_t
 	FannyNpc					= (1 << 15) + 73,
 	AnthemJungle				= (1 << 15) + 74,
 	TurbanNpc					= (1 << 15) + 75,
+	FlorentNpc				= (1 << 15) + 76,
+	EngineSnow				= (1 << 15) + 77,
+	UlaNpc				= (1 << 15) + 78,
+	AntoineNpc				= (1 << 15) + 79,
+	BeachBoySubNpc				= (1 << 15) + 80,
+	BeachBoyFlyNpc				= (1 << 15) + 81,
+	SebNpc				= (1 << 15) + 82,
+	TiboNpc				= (1 << 15) + 83,
+	ColumnNpc				= (1 << 15) + 84,
+	WaterHouseBroken				= (1 << 15) + 85,
+	JihemNpc				= (1 << 15) + 86,
+	MariaNpc				= (1 << 15) + 87,
 //Script AddNpc
+
+
+
+
+
+
+
+
+
+
+
+
 	None						= (1 << 16),
 };
 

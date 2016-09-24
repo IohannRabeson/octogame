@@ -3,6 +3,7 @@
 
 # include "SimpleObject.hpp"
 # include "MusicSystem.hpp"
+# include "RandomGenerator.hpp"
 
 class Concert : public SimpleObject, public AGameObject<GameObjectType::Concert>
 {
@@ -15,6 +16,7 @@ public:
 	virtual void drawFront(sf::RenderTarget &, sf::RenderStates) const;
 
 private:
+	RandomGenerator					m_generator;
 	std::size_t						m_particlesCount;
 	std::unique_ptr<MusicSystem[]>	m_particles;
 

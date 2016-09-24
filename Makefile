@@ -67,8 +67,6 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Well.cpp					\
 				GameObjects/Seb.cpp						\
 				GameObjects/Pyramid.cpp					\
-				GameObjects/HouseFlatSnow.cpp			\
-				GameObjects/EngineSnow.cpp				\
 				GameObjects/WeirdHouseSnow.cpp			\
 				GameObjects/CheckPoint.cpp				\
 				GameObjects/Monolith.cpp				\
@@ -148,7 +146,31 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/AymericNpc.cpp						\
 				Npcs/MysticanouilleNpc.cpp				\
 				Npcs/AnthemJungle.cpp					\
+				Npcs/FlorentNpc.cpp				\
+				Npcs/EngineSnow.cpp				\
+				Npcs/UlaNpc.cpp				\
+				Npcs/AntoineNpc.cpp				\
+				Npcs/BeachBoySubNpc.cpp				\
+				Npcs/BeachBoyFlyNpc.cpp				\
+				Npcs/SebNpc.cpp				\
+				Npcs/TiboNpc.cpp				\
+				Npcs/ColumnNpc.cpp				\
+				Npcs/WaterHouseBroken.cpp				\
+				Npcs/JihemNpc.cpp				\
+				Npcs/MariaNpc.cpp				\
 #Script AddNpc
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\

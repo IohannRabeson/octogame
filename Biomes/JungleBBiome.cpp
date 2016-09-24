@@ -39,7 +39,7 @@ JungleBBiome::JungleBBiome() :
 	m_lightningSize(700.f, 2500.f),
 
 	m_rockCount(10u, 15u),
-	m_treeCount(30u, 40u),
+	m_treeCount(15u, 15u),
 	m_mushroomCount(70u, 90u),
 	m_crystalCount(10u, 15u),
 	m_starCount(500u, 800u),
@@ -138,12 +138,13 @@ JungleBBiome::JungleBBiome() :
 
 	// Define game objects
 	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
+	m_instances[35] = MAP_JUNGLE_B_CLIFF_OMP;
 	m_gameObjects[90] = GameObjectType::AnthemJungle;
 	m_gameObjects[110] = GameObjectType::PortalJungle;
+	m_gameObjects[230] = GameObjectType::ChamanMonsterNpc;
 	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
 	m_instances[387] = MAP_JUNGLE_B_FLUE_PART_OMP;
 	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;
-	m_instances[35] = MAP_JUNGLE_B_CLIFF_OMP;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleC)
@@ -298,8 +299,8 @@ Map::MapSurfaceGenerator JungleBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f) - 0.3f;
 		//float m = n / 3.f;
-		std::vector<float> pointX = {0.f     , 35.f , 44.f    , 45.f, 55.f, 56.f , 60.f , 90.f          , 200.f    , 320.f, 359.f, 381.f, 382.f, 389.f, 415.f, 417.f , 465.f, 550.f};
-		std::vector<float> pointY = {n - 1.2f, -1.7f, n - 1.2f, 5.f , 5.f , -0.1f, -0.6f, n / 2.f - 0.7f, n - 0.7f, -0.1f, -0.1f, 0.f  , 5.f  , 3.38f, 3.38f, -1.05f, -1.1f, n - 1.1f};
+		std::vector<float> pointX = {0.f     , 35.f , 44.f , 45.f, 55.f, 56.f , 60.f , 90.f          , 200.f    , 320.f, 359.f, 381.f, 382.f, 389.f, 415.f, 417.f , 465.f, 550.f};
+		std::vector<float> pointY = {n - 1.2f, -1.4f, -1.2f, 5.f , 5.f , -0.1f, -0.6f, n / 2.f - 0.7f, n - 0.7f, -0.1f, -0.1f, 0.f  , 5.f  , 3.38f, 3.38f, -1.05f, -1.1f, n - 1.1f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

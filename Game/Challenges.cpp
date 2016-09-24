@@ -216,7 +216,7 @@ void ChallengePixelate::updateShader(sf::Time)
 
 // Displacement
 ChallengeDisplacement::ChallengeDisplacement(void) :
-	AChallenge(DISPLACEMENT_FRAG, 8.f, 3.f, sf::FloatRect(sf::Vector2f(0.f * 16.f, -4000.f * 16.f), sf::Vector2f(700.f * 16.f, 10000.f * 16.f)), ABiome::Type::Water, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
+	AChallenge(DISPLACEMENT_FRAG, 8.f, 3.f, sf::FloatRect(sf::Vector2f(0.f * 16.f, -12850.f * 16.f), sf::Vector2f(700.f * 16.f, 10000.f * 16.f)), ABiome::Type::Water, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
 {
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
 	m_shader.setParameter("resolution", rect.width, rect.height);
@@ -238,7 +238,7 @@ void ChallengeDisplacement::updateShader(sf::Time)
 
 // Blur
 ChallengeBlur::ChallengeBlur(void) :
-	AChallenge(KERNEL_POST_EFFECT_FRAG, 4.f, 1.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -240.f * 16.f), sf::Vector2f(120.f * 16.f, 185.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.5f, 0.75f), std::pair<float, float>(0.75f, 1.75f))
+	AChallenge(KERNEL_POST_EFFECT_FRAG, 4.f, 1.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -270.f * 16.f), sf::Vector2f(120.f * 16.f, 205.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.5f, 0.75f), std::pair<float, float>(0.75f, 1.75f))
 {
 	m_shader.setParameter("offset", 1.f / 150.f);
 	m_shader.setParameter("intensity", 0.f);

@@ -76,6 +76,7 @@ protected:
 	std::vector<std::unique_ptr<BubbleText>> & getTexts(void);
 	octo::CharacterSprite & getSprite(void);
 	void reverseSprite(bool isReverse);
+	bool isReverse(void) const;
 	void setFollowOcto(bool isFollow);
 	octo::CharacterAnimation & getIdleAnimation(void);
 	octo::CharacterAnimation & getWalkAnimation(void);

@@ -10,7 +10,10 @@ public:
 	virtual ~ChamanMonsterNpc(void) = default;
 
 	virtual void setup(void);
+	virtual void update(sf::Time frameTime);
 
+private:
+	sf::Vector2f m_lastPosition;
 };
 
 #endif

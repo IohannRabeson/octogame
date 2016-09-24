@@ -15,7 +15,7 @@ IceCBiome::IceCBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(540u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(120.f * 16.f, -3750.f),
+	m_octoStartPosition(56.f * 16.f, -6890.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(85, 150, 179),
@@ -68,18 +68,18 @@ IceCBiome::IceCBiome() :
 	m_waterPersistence(0.f),
 	m_type(ABiome::Type::Ice),
 
-	m_rockSize(sf::Vector2f(50.f, 100.f), sf::Vector2f(100.f, 200.f)),
-	m_rockPartCount(2.f, 10.f),
+	m_rockSize(sf::Vector2f(20.f, 70.f), sf::Vector2f(40.f, 130.f)),
+	m_rockPartCount(5, 10),
 	m_rockColor(0, 31, 63),
 
-	m_grassSizeY(30.f, 60.f),
-	m_grassSizeX(14.f, 16.f),
-	m_grassColor(m_tileStartColor),
+	m_grassSizeY(40.f, 50.f),
+	m_grassSizeX(14.f, 19.f),
+	m_grassColor(255, 154, 0),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
 	m_treeDepth(5u, 7u),
-	m_treeSize(sf::Vector2f(20.f, 150.f), sf::Vector2f(50.f, 250.f)),
+	m_treeSize(sf::Vector2f(50.f, 5.f), sf::Vector2f(50.f, 5.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(158, 176, 183),
 	m_treeAngle(15.f, 75.f),
@@ -87,13 +87,13 @@ IceCBiome::IceCBiome() :
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(143, 208, 202),
 
-	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
-	m_mushroomColor(77, 142, 126),
+	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(30.f, 100.f)),
+	m_mushroomColor(255, 154, 0),
 	m_mushroomLifeTime(sf::seconds(20), sf::seconds(60)),
 
-	m_crystalSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(30.f, 100.f)),
-	m_crystalPartCount(2u, 3u),
-	m_crystalColor(227, 227, 227, 150),
+	m_crystalSize(sf::Vector2f(5.f, 30.f), sf::Vector2f(10.f, 50.f)),
+	m_crystalPartCount(6u, 9u),
+	m_crystalColor(227, 227, 227, 190),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(255, 255, 255, 100),
 	m_shineEffectRotateAngle(100.f, 200.f),
@@ -101,7 +101,7 @@ IceCBiome::IceCBiome() :
 	m_cloudSize(sf::Vector2f(400.f, 400.f), sf::Vector2f(1000.f, 1000.f)),
 	m_cloudPartCount(1u, 1u),
 	m_cloudMaxY(-1000.f),
-	m_cloudMinY(-7000.f),
+	m_cloudMinY(-3500.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
@@ -259,7 +259,7 @@ Map::TileColorGenerator IceCBiome::getTileColorGenerator()
 	float endTransition = -8;
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
-		if (y > -3000 && y < -48)
+		if ((y > -3000 && y < -360) || (y > -310 && y < -48))
 			return m_cloudColor;
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
 		if (y > startTransition && y <= middleTransition)

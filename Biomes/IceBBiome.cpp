@@ -139,7 +139,6 @@ IceBBiome::IceBBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-
 	m_gameObjects[40] = GameObjectType::JuGlitchNpc;
 	m_instances[50] = MAP_ICE_B_TRAIL_A_OMP;
 	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
@@ -148,6 +147,7 @@ IceBBiome::IceBBiome() :
 	m_instances[317] = MAP_ICE_B_PORTAL_OMP;
 	m_gameObjects[385] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[390] = GameObjectType::EngineSnow;
+	m_gameObjects[406] = GameObjectType::AymericNpc;
 	m_gameObjects[450] = GameObjectType::PortalSnow;
 	m_interestPointPosX = 530;
 
@@ -267,8 +267,8 @@ Map::MapSurfaceGenerator IceBBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float m = noise.fBm(x, y, 3, 3.f, 0.3f) / 4.f;
-		std::vector<float> pointX = {25.f, 50.f, 51.f, 317.f, 318.f, 356.f, 357.f, 380.f    , 410.f    , 500.f};
+		float m = noise.fBm(x, y, 3, 3.f, 0.3f) / 7.f;
+		std::vector<float> pointX = {25.f, 50.f, 51.f, 317.f, 318.f, 356.f, 357.f, 380.f    , 420.f    , 500.f};
 		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.2f , 0.4f , 0.4f , 0.15f, m + 0.04f, m + 0.04f, n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;

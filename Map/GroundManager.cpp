@@ -21,8 +21,6 @@
 //Object
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
-#include "HouseFlatSnow.hpp"
-#include "EngineSnow.hpp"
 #include "WeirdHouseSnow.hpp"
 #include "Well.hpp"
 #include "Tent.hpp"
@@ -35,6 +33,18 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "MariaNpc.hpp"
+#include "JihemNpc.hpp"
+#include "WaterHouseBroken.hpp"
+#include "ColumnNpc.hpp"
+#include "TiboNpc.hpp"
+#include "SebNpc.hpp"
+#include "BeachBoyFlyNpc.hpp"
+#include "BeachBoySubNpc.hpp"
+#include "AntoineNpc.hpp"
+#include "UlaNpc.hpp"
+#include "EngineSnow.hpp"
+#include "FlorentNpc.hpp"
 #include "CavemanSinkNpc.hpp"
 #include "AnthemJungle.hpp"
 #include "MysticanouilleNpc.hpp"
@@ -255,6 +265,18 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<MariaNpc>(MARIA_OSS);
+	m_npcFactory.registerCreator<JihemNpc>(JIHEM_OSS);
+	m_npcFactory.registerCreator<WaterHouseBroken>(WATER_HOUSE_BROKEN_OSS);
+	m_npcFactory.registerCreator<ColumnNpc>(COLUMN_1_OSS);
+	m_npcFactory.registerCreator<TiboNpc>(TIBO_OSS);
+	m_npcFactory.registerCreator<SebNpc>(SEB_OSS);
+	m_npcFactory.registerCreator<BeachBoyFlyNpc>(BEACHBOY_FLY_OSS);
+	m_npcFactory.registerCreator<BeachBoySubNpc>(BEACHBOY_SUB_OSS);
+	m_npcFactory.registerCreator<AntoineNpc>(ANTOINE_OSS);
+	m_npcFactory.registerCreator<UlaNpc>(ULA_OSS);
+	m_npcFactory.registerCreator<EngineSnow>(ENGINE_SNOW_OSS);
+	m_npcFactory.registerCreator<FlorentNpc>(FLORENT_OSS);
 	m_npcFactory.registerCreator<AnthemJungle>(ANTHEM_JUNGLE_OSS);
 	m_npcFactory.registerCreator<MysticanouilleNpc>(MYSTICANOUILLE_OSS);
 	m_npcFactory.registerCreator<AymericNpc>(AYMERIC_OSS);
@@ -286,6 +308,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
 	m_npcFactory.registerCreator<JellyfishNpc>(JELLYFISH_OSS);
+	m_npcFactory.registerCreator<BrayouNpc>(BRAYOU_OSS);
 	m_npcFactory.registerCreator(OCTO_DEATH_HELMET_OSS, [&biome](){ return new OctoDeathNpc(biome.getWaterLevel(), biome.getWaterColor()); });
 	m_npcFactory.registerCreator(EVA_OSS, [&biome](){ return new EvaNpc(biome.getWaterColor()); });
 	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
@@ -489,6 +512,18 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_decorFactory.registerCreator(MONOLITH_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new Monolith(scale, position);
+			});
+	m_decorFactory.registerCreator(WEIRD_HOUSE_SNOW_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(WEIRD_HOUSE_SNOW_OSS, scale, position, 1u, 0.1f);
+			});
+	m_decorFactory.registerCreator(HOUSE_FLAT_SNOW_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(HOUSE_FLAT_SNOW_OSS, scale, position, 1u, 0.1f);
+			});
+	m_decorFactory.registerCreator(WATER_HOUSE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(WATER_HOUSE_OSS, scale, position, 1u, 0.1f);
 			});
 
 	// Get all the gameobjects from instances
@@ -736,18 +771,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
-			case GameObjectType::HouseFlatSnow:
-				{
-					HouseFlatSnow * simple = new HouseFlatSnow();
-					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
-			case GameObjectType::EngineSnow:
-				{
-					EngineSnow * simple = new EngineSnow();
-					m_otherObjectsLow.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
 			case GameObjectType::WeirdHouseSnow:
 				{
 					WeirdHouseSnow * simple = new WeirdHouseSnow();
@@ -775,6 +798,90 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::MariaNpc:
+				{
+					MariaNpc * npc = new MariaNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::JihemNpc:
+				{
+					JihemNpc * npc = new JihemNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::WaterHouseBroken:
+				{
+					WaterHouseBroken * npc = new WaterHouseBroken();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::ColumnNpc:
+				{
+					ColumnNpc * npc = new ColumnNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::TiboNpc:
+				{
+					TiboNpc * npc = new TiboNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::SebNpc:
+				{
+					SebNpc * npc = new SebNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::BeachBoyFlyNpc:
+				{
+					BeachBoyFlyNpc * npc = new BeachBoyFlyNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::BeachBoySubNpc:
+				{
+					BeachBoySubNpc * npc = new BeachBoySubNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::AntoineNpc:
+				{
+					AntoineNpc * npc = new AntoineNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::UlaNpc:
+				{
+					UlaNpc * npc = new UlaNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::EngineSnow:
+				{
+					EngineSnow * npc = new EngineSnow();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::FlorentNpc:
+				{
+					FlorentNpc * npc = new FlorentNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::AnthemJungle:
 				{
 					AnthemJungle * npc = new AnthemJungle();

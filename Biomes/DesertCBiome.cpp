@@ -13,9 +13,9 @@ DesertCBiome::DesertCBiome() :
 	m_name("Desert B"),
 	m_id(Level::DesertC),
 	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(850u, 64u)),
+	m_mapSize(sf::Vector2u(915u, 64u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(63.f * 16.f, -200.f),
+	m_octoStartPosition(113.f * 16.f, -100.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(245, 222, 130),
@@ -39,9 +39,9 @@ DesertCBiome::DesertCBiome() :
 	m_lightningSize(700.f, 1300.f),
 
 	m_rockCount(10u, 20u),
-	m_treeCount(13u, 13u),
+	m_treeCount(30u, 30u),
 	m_mushroomCount(3u, 40u),
-	m_crystalCount(130u, 170u),
+	m_crystalCount(100u, 120u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
@@ -54,8 +54,8 @@ DesertCBiome::DesertCBiome() :
 	m_canCreateSnow(false),
 	m_canCreateRock(false),
 	m_canCreateTree(true),
-	m_canCreateLeaf(false),
-	m_treeIsMoving(false),
+	m_canCreateLeaf(true),
+	m_treeIsMoving(true),
 	m_canCreateMushroom(false),
 	m_canCreateCrystal(true),
 	m_canCreateShineEffect(true),
@@ -66,9 +66,9 @@ DesertCBiome::DesertCBiome() :
 	m_canCreateRainbow(false),
 	m_canCreateGrass(false),
 	m_waterPersistence(1.f),
-	m_type(ABiome::Type::Desert),
+	m_type(ABiome::Type::None),
 
-	m_rockSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 400.f)),
+	m_rockSize(sf::Vector2f(5.f, 70.f), sf::Vector2f(20.f, 100.f)),
 	m_rockPartCount(50.f, 80.f),
 	m_rockColor(255, 232, 170),
 
@@ -77,14 +77,14 @@ DesertCBiome::DesertCBiome() :
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
 
-	m_treeDepth(6u, 8u),
-	m_treeSize(sf::Vector2f(15.f, 30.f), sf::Vector2f(30.f, 60.f)),
-	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
-	m_treeColor(18, 14, 66),
-	m_treeAngle(15.f, 75.f),
+	m_treeDepth(4u, 5u),
+	m_treeSize(sf::Vector2f(4.f, 15.f), sf::Vector2f(8.f, 30.f)),
+	m_treeLifeTime(sf::seconds(4), sf::seconds(10)),
+	m_treeColor(245, 222, 130),
+	m_treeAngle(5.f, 10.f),
 	m_treeBeatMouvement(0.1f),
-	m_leafSize(sf::Vector2f(80.f, 80.f), sf::Vector2f(150.f, 150.f)),
-	m_leafColor(240, 110, 110),
+	m_leafSize(sf::Vector2f(10.f, 10.f), sf::Vector2f(30.f, 30.f)),
+	m_leafColor(46, 133, 84),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
 	m_mushroomColor(77, 142, 126),
@@ -124,8 +124,14 @@ DesertCBiome::DesertCBiome() :
 	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_seed);
+#ifndef NDEBUG
 	m_mapSeed = 42u;
+#else
+	m_mapSeed = 42;//m_generator.randomInt(0, std::numeric_limits<int>::max());
+#endif
 
+	m_tileStartColor = getLeafColor();
+	m_tileEndColor = getLeafColor();
 	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
@@ -136,18 +142,15 @@ DesertCBiome::DesertCBiome() :
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertD)
-		m_octoStartPosition = sf::Vector2f(602.f * 16.f, -3150.f);
-	if (progress.getLastDestination() == Level::Random)
-		m_octoStartPosition = sf::Vector2f(790.f * 16.f, -2050.f);
+		m_octoStartPosition = sf::Vector2f(33.f * 16.f, -550.f);
+	else if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(10.f * 16.f, -1900.f);
 
-	m_gameObjects[60] = GameObjectType::PortalDesert;
-	m_gameObjects[125] = GameObjectType::FabienNpc;
-	m_gameObjects[210] = GameObjectType::CheckPoint;
-	m_instances[230] = MAP_DESERT_C_TRAIL_A_OMP;
-	m_instances[280] = MAP_DESERT_C_TRAIL_B_OMP;
-	m_instances[312] = MAP_DESERT_C_TRAIL_C_OMP;
-	m_instances[415] = MAP_DESERT_C_TRAIL_D_OMP;
-	m_instances[525] = MAP_DESERT_C_TRAIL_E_OMP;
+	m_gameObjects[5] = GameObjectType::WindowGlitchNpc;
+	m_gameObjects[30] = GameObjectType::PortalJungle;
+	m_gameObjects[110] = GameObjectType::PortalDesert;
+	m_instances[120] = MAP_DESERT_C_TRAIL_OMP;
+	m_instances[15] = MAP_DESERT_C_SECRET_PORTAL_OMP;
 
 	m_interestPointPosX = 500;
 
@@ -264,8 +267,8 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = { 0.f, 50.f, 55.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f   , 210.f   , 215.f, 400.f, 600.f  , 750.f};
-		std::vector<float> pointY = { n  , n   , n - 0.8f, n - 0.8f, n   , n    , n - 1.0f, n - 1.0f, n    , n    , n - 1.2f, n - 1.2f, n    , n    , n - 1.4f, n - 1.4f, n    , n    , n + 4.f, n};
+		std::vector<float> pointX = { 0.f , 20.f    , 25.f , 49.f , 50.f , 51.f , 52.f , 53.f  , 140.f, 145.f, 915.f};
+		std::vector<float> pointY = { 0.0f, n - 0.2f, -1.8f, -1.8f, -0.75f, -0.6f, -0.5f, -0.45f, -0.5f, 0.2f, 0.2f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -283,26 +286,43 @@ Map::MapSurfaceGenerator DesertCBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator DesertCBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = m_skyDayColor;
-	sf::Color secondColorEnd = m_skyNightColor;
-	float startTransition = 800.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = 1600.f / static_cast<float>(m_mapSize.y);
-	float endTransition = 3000.f / static_cast<float>(m_mapSize.y);
-	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
+	sf::Color secondColorStart(245, 222, 130);
+	sf::Color secondColorEnd(245, 243, 249);
+	sf::Color thirdColorStart = m_skyDayColor;
+	sf::Color thirdColorEnd = m_skyNightColor;
+	float start1 = -10000.f / static_cast<float>(m_mapSize.y);
+	float start2 = -1500.f / static_cast<float>(m_mapSize.y);
+	float middle1 = 300.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 1450.f / static_cast<float>(m_mapSize.y);
+	float end1 = 1700.f / static_cast<float>(m_mapSize.y);
+	float end2 = 10000.f / static_cast<float>(m_mapSize.y);
+	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
-		if (y > startTransition && y <= middleTransition)
+		if (y > start1 && y <= start2)
 		{
-			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
+			float ratio = (y - (start1)) / (start2 - start1);
 			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, secondColorStart, ratio), m_tileEndColor, transition);
 		}
-		else if (y > middleTransition && y <= endTransition)
+		else if (y > start2 && y <= middle1)
 		{
-			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
+			float ratio = (y - (start2)) / (middle1 - start2);
 			return octo::linearInterpolation(secondColorStart, octo::linearInterpolation(m_tileEndColor, secondColorEnd, ratio), transition);
 		}
-		if (y > endTransition)
+		else if (y > middle1 && y <= middle2)
+		{
 			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
+		}
+		else if (y >= middle2 && y < end1)
+		{
+			float ratio = (y - (middle2)) / (end1 - middle2);
+			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, thirdColorStart, ratio), secondColorEnd, transition);
+		}
+		else if (y >= end1 && y < end2)
+		{
+			float ratio = (y - (end1)) / (end2 - end1);
+			return octo::linearInterpolation(thirdColorStart, octo::linearInterpolation(secondColorEnd, thirdColorEnd, ratio), transition);
+		}
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
@@ -515,7 +535,7 @@ sf::Color		DesertCBiome::getLeafColor()
 
 std::size_t		DesertCBiome::getTreePositionX()
 {
-	return randomInt(10u, m_mapSize.x - 1u);
+	return randomInt(24.f, 50.f);
 }
 
 sf::Vector2f	DesertCBiome::getCrystalSize()
@@ -535,10 +555,7 @@ sf::Color		DesertCBiome::getCrystalColor()
 
 int				DesertCBiome::getCrystalPosX()
 {
-	int pos = randomInt(10u, m_mapSize.x - 1u);
-	if ((pos >= 55 && pos <= 90) || (pos >= 120 && pos <= 135) || (pos >= 165 && pos <= 175) || (pos >= 200 && pos <= 205))
-		return randomInt(10u, m_mapSize.x - 1u);
-	return pos;
+	return (randomInt(1u, m_mapSize.x));
 }
 
 bool			DesertCBiome::canCreateCrystal()

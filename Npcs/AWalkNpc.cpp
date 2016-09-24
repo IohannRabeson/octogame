@@ -113,6 +113,7 @@ void AWalkNpc::updatePhysics(void)
 
 	getBox()->setVelocity(velocity);
 }
+
 float AWalkNpc::getVelocity(void) const
 {
 	return m_velocity;

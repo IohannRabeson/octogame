@@ -146,11 +146,12 @@ DesertABiome::DesertABiome() :
 
 	// Define game objects
 	m_instances[23] = MAP_DESERT_A_WAVE_OMP;
-	m_gameObjects[70] = GameObjectType::TurbanNpc;
+	m_gameObjects[48] = GameObjectType::TurbanNpc;
 	m_gameObjects[220] = GameObjectType::JuNpc;
 	m_instances[250] = MAP_DESERT_A_JUMP_OMP;
 	m_gameObjects[250] = GameObjectType::PortalSnow;
 	m_gameObjects[320] = GameObjectType::WindowGlitchNpc;
+	m_gameObjects[315] = GameObjectType::Bouibouik;
 	m_gameObjects[370] = GameObjectType::PortalDesert;
 	m_gameObjects[410] = GameObjectType::OldDesertStaticNpc;
 	m_gameObjects[420] = GameObjectType::Tent;
