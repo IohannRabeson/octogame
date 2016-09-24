@@ -148,11 +148,12 @@ WaterABiome::WaterABiome() :
 	m_instances[140] = MAP_WATER_A_TRAIL_OMP;
 	m_gameObjects[610] = GameObjectType::JellyfishNpc;
 	m_gameObjects[580] = GameObjectType::JellyfishNpc;
-	m_gameObjects[680] = GameObjectType::WaterHouseBroken;
-	m_gameObjects[665] = GameObjectType::JihemNpc;
-	m_gameObjects[671] = GameObjectType::MariaNpc;
+	m_gameObjects[640] = GameObjectType::ColumnNpc;
+	m_gameObjects[650] = GameObjectType::WaterHouseBroken;
+	m_gameObjects[685] = GameObjectType::JihemNpc;
+	m_gameObjects[691] = GameObjectType::MariaNpc;
 
-	m_interestPointPosX = 500;
+	m_interestPointPosX = 470;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::WaterB)
