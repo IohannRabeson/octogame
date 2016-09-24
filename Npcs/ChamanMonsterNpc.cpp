@@ -1,10 +1,12 @@
 #include "ChamanMonsterNpc.hpp"
+#include "RectangleShape.hpp"
+#include "Progress.hpp"
 
 ChamanMonsterNpc::ChamanMonsterNpc(void) :
-	ASpecialNpc(CHAMAN_MONSTER_OSS)
+	ASpecialNpc(CHAMAN_MONSTER_OSS, false)
 {
 	setType(GameObjectType::ChamanMonsterNpc);
-	setSize(sf::Vector2f(220.f, 600.f));
+	setSize(sf::Vector2f(220.f, 700.f));
 	setOrigin(sf::Vector2f(37.f, 12.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, 0.f));
@@ -20,6 +22,8 @@ void ChamanMonsterNpc::setup(void)
 			Frame(sf::seconds(0.3f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {2u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {2u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
@@ -32,4 +36,14 @@ void ChamanMonsterNpc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
+}
+
+void ChamanMonsterNpc::update(sf::Time frameTime)
+{
+	Progress const & progress = Progress::getInstance();
+	octo::CharacterSprite & sprite = getSprite();
+
+	ASpecialNpc::update(frameTime);
+	sf::Vector2f position = octo::cosinusInterpolation(sprite.getPosition(), progress.getOctoPos() + sf::Vector2f(0.f, -600.f), 0.3f);
+	sprite.setPosition(position);
 }

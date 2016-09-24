@@ -138,12 +138,13 @@ JungleBBiome::JungleBBiome() :
 
 	// Define game objects
 	m_instances[30] = MAP_JUNGLE_B_TRAIL_OMP;
+	m_instances[35] = MAP_JUNGLE_B_CLIFF_OMP;
 	m_gameObjects[90] = GameObjectType::AnthemJungle;
 	m_gameObjects[110] = GameObjectType::PortalJungle;
+	m_gameObjects[230] = GameObjectType::ChamanMonsterNpc;
 	m_instances[339] = MAP_JUNGLE_B_FLUE_OMP;
 	m_instances[387] = MAP_JUNGLE_B_FLUE_PART_OMP;
 	m_instances[405] = MAP_JUNGLE_B_ELEVATOR_OMP;
-	m_instances[35] = MAP_JUNGLE_B_CLIFF_OMP;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleC)

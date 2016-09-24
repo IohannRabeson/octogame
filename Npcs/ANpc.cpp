@@ -260,6 +260,11 @@ void ANpc::reverseSprite(bool isReverse)
 	m_isReverse = isReverse;
 }
 
+bool ANpc::isReverse(void) const
+{
+	return m_isReverse;
+}
+
 void ANpc::setFollowOcto(bool isFollow)
 {
 	m_isFollowOcto = isFollow;
