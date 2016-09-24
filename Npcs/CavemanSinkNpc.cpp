@@ -4,14 +4,16 @@
 #include <iostream>
 
 CavemanSinkNpc::CavemanSinkNpc(float waterLevel, sf::Color waterColor) :
-	ASinkNpc(CAVEMAN_SINKING_OSS, waterLevel, waterColor)
+	ASinkNpc(CAVEMAN_SINKING_OSS, waterLevel, waterColor),
+	m_fallingWater(true),
+	m_startSinkTimerMax(sf::seconds(8.f * 0.4f)),
+	m_fadeTimerMax(sf::seconds(3.f))
 {
 	setType(GameObjectType::CavemanSinkingNpc);
 	setSize(sf::Vector2f(34.f, 88.f));
 	setOrigin(sf::Vector2f(73.f, 56.f));
 	setScale(0.8f);
 	setTimerMax(sf::seconds(8.0f));
-	setVelocity(sf::Vector2f(-20.f, 0.f));
 	reverseSprite(true);
 	setup();
 }
@@ -47,4 +49,47 @@ void CavemanSinkNpc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
+}
+
+void CavemanSinkNpc::update(sf::Time frametime)
+{
+	ASinkNpc::update(frametime);
+	if (isCollide())
+	{
+		if (m_startSinkTimer < m_startSinkTimerMax)
+			m_startSinkTimer += frametime;
+		else
+			m_fadeTimer += frametime;
+	}
+}
+
+void CavemanSinkNpc::updatePhysics(void)
+{
+	float			posY = getPosition().y + getBox()->getSize().y;
+	sf::Vector2f	velocity;
+
+	if (posY >= getWaterLevel())
+	{
+		if (isCollide() && m_startSinkTimer >= m_startSinkTimerMax)
+		{
+			velocity = sf::Vector2f(0.f, -500.f);
+			if (getPosition().y > getWaterLevel() + 40.f)
+				getSmoke().setCanEmit(true);
+			if (m_fadeTimer < m_fadeTimerMax)
+				getSprite().setColor(sf::Color(255, 255, 255, 255 * (1.f - (m_fadeTimer / m_fadeTimerMax))));
+		}
+		else if (m_fallingWater == true)
+		{
+			velocity = sf::Vector2f(0.f, -580.f);
+			if (posY >= getWaterLevel() + 5.f)
+				m_fallingWater = false;
+		}
+		else
+		{
+			velocity = sf::Vector2f(0.f, -610.f);
+			if (posY <= getWaterLevel() + 2.f)
+				m_fallingWater = true;
+		}
+	}
+	getBox()->setVelocity(velocity + sf::Vector2f(-20.f, 0.f));
 }

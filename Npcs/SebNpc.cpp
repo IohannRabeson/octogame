@@ -8,6 +8,7 @@ SebNpc::SebNpc(void) :
 	setOrigin(sf::Vector2f(60.f, 58.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
+	setVelocity(15.f);
 	setup();
 }
 

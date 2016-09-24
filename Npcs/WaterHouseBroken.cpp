@@ -1,7 +1,7 @@
 #include "WaterHouseBroken.hpp"
 
 WaterHouseBroken::WaterHouseBroken(void) :
-	AIdleNpc(WATER_HOUSE_BROKEN_OSS, false)
+	AIdleNpc(WATER_HOUSE_BROKEN_OSS, false, false)
 {
     setType(GameObjectType::WaterHouseBroken);
 	setSize(sf::Vector2f(512.f, 670.f));
