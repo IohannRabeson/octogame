@@ -90,7 +90,7 @@ void Monolith::collideOcto(CharacterOcto * octo)
 {
 	if (m_state == None)
 	{
-		if (Progress::getInstance().getActivatedMonolith() < Progress::getInstance().getRandomDiscoverCount())
+		if (Progress::getInstance().getActivatedMonolith() < Progress::getInstance().countRandomDiscover())
 		{
 			octo->enableCutscene(true, true);
 			m_state = StartEffect;
@@ -111,6 +111,7 @@ void Monolith::update(sf::Time frameTime)
 	switch (m_state)
 	{
 		case StartEffect:
+		{
 			m_timer += frameTime;
 			if (m_timer >= m_timerMax)
 			{
@@ -118,23 +119,28 @@ void Monolith::update(sf::Time frameTime)
 				m_state = Activate;
 			}
 			break;
+		}
 		case Activate:
-			for (std::size_t i = Progress::getInstance().getActivatedMonolith(); i < Progress::getInstance().getRandomDiscoverCount(); i++)
+		{
+			Progress & progress = Progress::getInstance();
+
+			for (std::size_t i = progress.getActivatedMonolith(); i < progress.countRandomDiscover(); i++)
 				m_steps[i]->firstActivate();
-			Progress::getInstance().setActivatedMonolith(Progress::getInstance().getRandomDiscoverCount());
+			progress.setActivatedMonolith(progress.countRandomDiscover());
 			m_state = None;
 			break;
+		}
 		case StartFinalScene:
-			{
-				m_timer += frameTime;
-				if (m_timer > m_timerMax)
-					m_timer = sf::Time::Zero;
-				m_builder.clear();
-				sf::Vector2f pos = m_spriteMonolith.getPosition() + sf::Vector2f(m_spriteMonolith.getGlobalSize().x / 2.f, m_spriteMonolith.getGlobalSize().y / 2.f);
-				createEffect(m_size, pos, std::pow(m_timer / m_timerMax, 0.567f), sf::Color(240, 25, 25, 200), m_builder);
-				m_used = m_builder.getUsed();
-			}
+		{
+			m_timer += frameTime;
+			if (m_timer > m_timerMax)
+				m_timer = sf::Time::Zero;
+			m_builder.clear();
+			sf::Vector2f pos = m_spriteMonolith.getPosition() + sf::Vector2f(m_spriteMonolith.getGlobalSize().x / 2.f, m_spriteMonolith.getGlobalSize().y / 2.f);
+			createEffect(m_size, pos, std::pow(m_timer / m_timerMax, 0.567f), sf::Color(240, 25, 25, 200), m_builder);
+			m_used = m_builder.getUsed();
 			break;
+		}
 		default:
 			break;
 	}
