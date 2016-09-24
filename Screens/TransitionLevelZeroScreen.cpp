@@ -21,37 +21,49 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	m_soundPlayed1(false),
 	m_soundPlayed2(false)
 {
-	octo::Camera&			camera = octo::Application::getCamera();
-	octo::ResourceManager &	resources = octo::Application::getResourceManager();
-	TextManager & textManager = TextManager::getInstance();
-	camera.setCenter(0.f, 0.f);
-	m_timerMax.resize(m_bubbleCount);
-	m_timerMax[0] = sf::seconds(5.5f);
-	m_timerMax[1] = sf::seconds(6.f);
-	m_timerMax[2] = sf::seconds(7.f);
-	m_timerMax[3] = sf::seconds(8.f);
-	m_timerMax[4] = sf::seconds(9.f);
+	octo::Application::getCamera().setCenter(0.f, 0.f);
+	setupText();
+	setupSprite();
+}
 
-	std::string keyName;
+void	TransitionLevelZeroScreen::setupText()
+{
+	std::string							keyName;
+	octo::Camera const &				camera = octo::Application::getCamera();
+	TextManager &						textManager = TextManager::getInstance();
+
 	if (Progress::getInstance().getNextDestination() != Level::Random)
 		keyName = "transitionLevelZero";
 	else
 		keyName = "transitionLevelZeroToRandom";
 
-	std::vector<std::wstring> const & texts = textManager.getTexts(keyName);
+	std::vector<std::wstring> const &	texts = textManager.getTexts(keyName);
+
 	for (std::size_t i = 0u; i < texts.size(); i++)
 	{
 		m_bubble[i].setup(texts[i], sf::Color::White, 28u, 700.f);
 		m_bubble[i].setPosition(camera.getCenter());
 		m_bubble[i].setType(ABubble::Type::None);
 		m_bubble[i].setActive(true);
-		i++;
 	}
+
+	m_timerMax.resize(m_bubbleCount);
+	m_timerMax[0] = sf::seconds(5.5f);
+	m_timerMax[1] = sf::seconds(6.f);
+	m_timerMax[2] = sf::seconds(7.f);
+	m_timerMax[3] = sf::seconds(8.f);
+	m_timerMax[4] = sf::seconds(9.f);
+}
+
+void	TransitionLevelZeroScreen::setupSprite()
+{
+	typedef octo::SpriteAnimation::Frame	Frame;
+	octo::Camera const &					camera = octo::Application::getCamera();
+	octo::ResourceManager &					resources = octo::Application::getResourceManager();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(NANO_GROUND_TRANSFORM_OSS));
 	m_sprite.setScale(1.f, 1.f);
 
-	typedef octo::SpriteAnimation::Frame	Frame;
 	m_animation.setFrames({	Frame(sf::seconds(0.2f), 0u),
 							Frame(sf::seconds(0.2f), 1u),
 							Frame(sf::seconds(0.2f), 2u),
@@ -59,6 +71,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 							Frame(sf::seconds(0.2f), 2u),
 							Frame(sf::seconds(0.2f), 1u)});
 	m_animation.setLoop(octo::LoopMode::Loop);
+
 	m_sprite.setAnimation(m_animation);
 	m_sprite.play();
 	m_sprite.setPosition(camera.getCenter() + sf::Vector2f(-40.f, -4.f));

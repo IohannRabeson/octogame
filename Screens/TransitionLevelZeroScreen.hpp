@@ -22,6 +22,9 @@ public:
 	virtual void		draw(sf::RenderTarget& render)const;
 
 private:
+	void				setupText(void);
+	void				setupSprite(void);
+
 	std::size_t						m_bubbleCount;
 	std::unique_ptr<BubbleText[]>	m_bubble;
 	sf::Time						m_time;
