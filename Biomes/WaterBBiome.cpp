@@ -141,6 +141,12 @@ WaterBBiome::WaterBBiome() :
 
 	// Define game objects
 	m_instances[100] = MAP_WATER_B_TRAIL_OMP;
+	m_gameObjects[340] = GameObjectType::JellyfishNpc;
+	m_gameObjects[373] = GameObjectType::JellyfishNpc;
+	m_gameObjects[387] = GameObjectType::JellyfishNpc;
+	m_gameObjects[420] = GameObjectType::JellyfishNpc;
+	m_gameObjects[470] = GameObjectType::SebNpc;
+	m_gameObjects[680] = GameObjectType::CedricEndNpc;
 	m_gameObjects[680] = GameObjectType::CedricEndNpc;
 	m_gameObjects[665] = GameObjectType::Concert;
 	m_gameObjects[51] = GameObjectType::PortalWater;
@@ -161,6 +167,8 @@ WaterBBiome::WaterBBiome() :
 
 		if (*npc != GameObjectType::CedricStartNpc
 			&& *npc != GameObjectType::EngineSnow
+			&& *npc != GameObjectType::WaterHouseBroken
+			&& *npc != GameObjectType::ColumnNpc
 			&& *npc != GameObjectType::AnthemJungle)
 			m_gameObjects[index] = *npc;
 	}

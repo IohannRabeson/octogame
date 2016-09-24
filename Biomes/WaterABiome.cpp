@@ -140,11 +140,15 @@ WaterABiome::WaterABiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_gameObjects[25] = GameObjectType::PortalWater;
+	m_gameObjects[70] = GameObjectType::ColumnNpc;
+	m_gameObjects[80] = GameObjectType::PortalWater;
+	m_gameObjects[100] = GameObjectType::ColumnNpc;
+	m_gameObjects[110] = GameObjectType::ColumnNpc;
 	m_gameObjects[120] = GameObjectType::BeachBoyFlyNpc;
 	m_instances[140] = MAP_WATER_A_TRAIL_OMP;
 	m_gameObjects[610] = GameObjectType::JellyfishNpc;
 	m_gameObjects[580] = GameObjectType::JellyfishNpc;
+	m_gameObjects[680] = GameObjectType::WaterHouseBroken;
 
 	m_interestPointPosX = 500;
 

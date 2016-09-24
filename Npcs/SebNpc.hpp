@@ -1,9 +1,9 @@
 #ifndef SEBNPC_HPP
 # define SEBNPC_HPP
 
-# include "ASpecialNpc.hpp"
+# include "ASwimNpc.hpp"
 
-class SebNpc : public ASpecialNpc
+class SebNpc : public ASwimNpc
 {
 public:
 	SebNpc(void);

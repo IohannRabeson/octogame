@@ -1,13 +1,13 @@
 #include "SebNpc.hpp"
 
 SebNpc::SebNpc(void) :
-	ASpecialNpc(SEB_OSS)
+	ASwimNpc(SEB_OSS, true, false)
 {
     setType(GameObjectType::SebNpc);
 	setSize(sf::Vector2f(70.f, 200.f));
 	setOrigin(sf::Vector2f(60.f, 58.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-10.f, -50.f));
+	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 }
 
@@ -20,16 +20,18 @@ void SebNpc::setup(void)
 			Frame(sf::seconds(0.3f), {1u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {2u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {3u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {4u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getIdleAnimation().setLoop(octo::LoopMode::Loop);
 
 	getSpecial1Animation().setFrames({
-			Frame(sf::seconds(0.3f), {4u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {9u, sf::FloatRect(), sf::Vector2f()}),
 			});
-	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
+	getSpecial1Animation().setLoop(octo::LoopMode::Loop);
 
 	setupMachine();
 }
