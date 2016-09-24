@@ -15,7 +15,7 @@ WaterABiome::WaterABiome() :
 	m_seed("Water A"),
 	m_mapSize(sf::Vector2u(700u, 32u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(25.f * 16.f, 50.f),
+	m_octoStartPosition(83.f * 16.f, 50.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -149,6 +149,8 @@ WaterABiome::WaterABiome() :
 	m_gameObjects[610] = GameObjectType::JellyfishNpc;
 	m_gameObjects[580] = GameObjectType::JellyfishNpc;
 	m_gameObjects[680] = GameObjectType::WaterHouseBroken;
+	m_gameObjects[665] = GameObjectType::JihemNpc;
+	m_gameObjects[671] = GameObjectType::MariaNpc;
 
 	m_interestPointPosX = 500;
 
