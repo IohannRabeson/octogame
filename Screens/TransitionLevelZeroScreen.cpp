@@ -24,6 +24,7 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	octo::Application::getCamera().setCenter(0.f, 0.f);
 	setupText();
 	setupSprite();
+	PostEffectLayer::getInstance().enableShader(RED_ALARM_FRAG, false);
 }
 
 void	TransitionLevelZeroScreen::setupText()
