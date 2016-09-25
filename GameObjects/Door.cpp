@@ -22,6 +22,8 @@ Door::Door(SkyCycle & skyCycle, sf::Vector2f const & scale, sf::Vector2f const &
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Door));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
+
+	getSprite().setColor(sf::Color::Transparent);
 }
 
 void Door::update(sf::Time frametime)
