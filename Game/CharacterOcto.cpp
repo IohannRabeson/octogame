@@ -1074,8 +1074,11 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 
 bool	CharacterOcto::isFinalEvent()
 {
+	//TODO : To put in pyramid
 	Progress const & progress = Progress::getInstance();
-	if (progress.getCurrentDestination() == Level::Final && (getPosition().x > 805.f * 16.f && getPosition().x < 905.f * 16.f))
+	sf::Vector2f const & position = getPosition();
+
+	if (progress.getCurrentDestination() == Level::Final && (position.x > 805.f * 16.f && position.x < 905.f * 16.f))
 		return true;
 	return false;
 }

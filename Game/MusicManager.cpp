@@ -36,7 +36,7 @@ MusicManager::MusicManager() :
 	musicKey[7] = SOUTERRAIN_LUGUBRE_OGG;
 	musicKey[8] = MENU_OPUS_I_OGG;
 
-	m_musicLevel.resize(17);
+	m_musicLevel.resize(18);
 	m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::IceC, MENU_OPUS_III_OGG, sf::FloatRect());
@@ -53,11 +53,12 @@ MusicManager::MusicManager() :
 	m_musicLevel[13] = AreaMusic(Level::WaterB, BALLADE_MENTALE_OGG, sf::FloatRect());
 	m_musicLevel[14] = AreaMusic(Level::WaterC, BALLADE_MENTALE_OGG, sf::FloatRect());
 
-	m_musicLevel[15] = AreaMusic(Level::Random, musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
-	m_musicLevel[16] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
+	m_musicLevel[15] = AreaMusic(Level::Final, WHISTLE_OGG, sf::FloatRect());
+	m_musicLevel[16] = AreaMusic(Level::Random, musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
+	m_musicLevel[17] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
 
 
-	m_music.resize(7);
+	m_music.resize(8);
 	//ice balle
 	m_music[0] = AreaMusic(Level::IceC, MENU_OPUS_II_REVERSE_OGG,
 			sf::FloatRect(sf::Vector2f(50.f * 16.f, -270.f * 16.f), sf::Vector2f(120.f * 16.f, 205.f * 16.f)));
@@ -79,6 +80,9 @@ MusicManager::MusicManager() :
 	// water c
 	m_music[6] = AreaMusic(Level::WaterC, SOUTERRAIN_LUGUBRE_OGG,
 			sf::FloatRect(sf::Vector2f(0.f * 16.f, 400.f), sf::Vector2f(750.f * 16.f, 600.f * 16.f)));
+
+	m_music[7] = AreaMusic(Level::Final, BLISSFUL_OGG,
+			sf::FloatRect(sf::Vector2f(650.f * 16.f, -400.f * 16.f), sf::Vector2f(400.f * 16.f, 2000.f * 16.f)));
 }
 
 MusicManager::~MusicManager()
