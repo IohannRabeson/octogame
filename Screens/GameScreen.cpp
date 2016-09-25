@@ -101,6 +101,7 @@ void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
 
 void GameScreen::timeLevelBlueRed(sf::Time frameTime, Progress & progress)
 {
+	octo::StateManager & states = octo::Application::getStateManager();
 	Level current = progress.getCurrentDestination();
 	Level next = progress.getNextDestination();
 
