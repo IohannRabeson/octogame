@@ -220,11 +220,6 @@ void	CharacterOcto::OctoSound::walkSound()
 		m_soundTransition = audio.playSound(resources.getSound(TRANSITION_IN_WATER_OGG), m_volumeEffect * 0.05f);
 	if (m_transitionOutWater && m_soundTransition == nullptr)
 		m_soundTransition = audio.playSound(resources.getSound(TRANSITION_OUT_WATER_OGG), m_volumeEffect * 0.05f);
-	if (m_inWater && (m_sound == nullptr || m_sound->getStatus() == sf::Sound::Stopped))
-	{
-		m_sound = audio.playSound(resources.getSound(OCTO_WALK_WATER_OGG), m_volumeEffect);
-		return;
-	}
 
 	switch (level)
 	{

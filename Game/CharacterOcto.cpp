@@ -1591,7 +1591,7 @@ void	CharacterOcto::inWater()
 	{
 		emit = true;
 		m_inWater = false;
-			m_waterParticle.canEmit(true);
+		m_waterParticle.canEmit(true);
 	}
 	if (emit && !progress.isInCloud() && m_waterLevel != -1.f)
 		m_ploufParticle.canEmit(true);
