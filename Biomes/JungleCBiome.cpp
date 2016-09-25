@@ -148,6 +148,7 @@ JungleCBiome::JungleCBiome() :
 
 	m_gameObjects[5] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[40] = GameObjectType::BirdRedNpc;
+	m_gameObjects[100] = GameObjectType::FishRedNpc;
 	m_gameObjects[115] = GameObjectType::BirdRedNpc;
 	m_instances[120] = MAP_JUNGLE_C_TRAIL_OMP;
 
