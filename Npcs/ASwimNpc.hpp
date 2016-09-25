@@ -25,6 +25,9 @@ protected:
 	virtual void			update(sf::Time frametime);
 	virtual void			setVelocity(float velocity);
 
+	void					setBaseAngle(float angle);
+	float					randomFloat(float min, float max);
+
 private:
 	static RandomGenerator	m_generator;
 
@@ -36,6 +39,7 @@ private:
 	bool					m_isShift;
 	float					m_velocity;
 	sf::Vector2f			m_shift;
+	float					m_baseAngle;
 };
 
 #endif

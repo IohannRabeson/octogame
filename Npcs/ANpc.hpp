@@ -77,6 +77,8 @@ protected:
 	octo::CharacterSprite & getSprite(void);
 	void reverseSprite(bool isReverse);
 	bool isReverse(void) const;
+	void upSideDownSprite(bool isUpSideDown);
+	bool isUpSideDown(void) const;
 	void setFollowOcto(bool isFollow);
 	octo::CharacterAnimation & getIdleAnimation(void);
 	octo::CharacterAnimation & getWalkAnimation(void);
@@ -116,6 +118,7 @@ private:
 	bool										m_isDoubleJump;
 	bool										m_isMeetable;
 	bool										m_isReverse;
+	bool										m_isUpSideDown;
 	bool										m_isFollowOcto;
 
 };

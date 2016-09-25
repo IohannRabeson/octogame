@@ -23,6 +23,7 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_isDoubleJump(false),
 	m_isMeetable(isMeetable),
 	m_isReverse(false),
+	m_isUpSideDown(false),
 	m_isFollowOcto(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
@@ -265,6 +266,16 @@ bool ANpc::isReverse(void) const
 	return m_isReverse;
 }
 
+void ANpc::upSideDownSprite(bool isUpSideDown)
+{
+	m_isUpSideDown = isUpSideDown;
+}
+
+bool ANpc::isUpSideDown(void) const
+{
+	return m_isUpSideDown;
+}
+
 void ANpc::setFollowOcto(bool isFollow)
 {
 	m_isFollowOcto = isFollow;
@@ -349,6 +360,8 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 void ANpc::updateSprite(sf::Time frametime)
 {
 	sf::FloatRect const & bounds = m_box->getGlobalBounds();
+	sf::Vector2f origin = getOrigin();
+	sf::Vector2f scale = sf::Vector2f(getScale(), getScale());
 
 	m_sprite.update(frametime);
 	m_sprite.setPosition(bounds.left, bounds.top);
@@ -363,14 +376,18 @@ void ANpc::updateSprite(sf::Time frametime)
 
 	if (m_isReverse)
 	{
-		m_sprite.setOrigin(m_sprite.getLocalSize().x - getOrigin().x, getOrigin().y);
-		m_sprite.setScale(-getScale(), getScale());
+		origin.x = m_sprite.getLocalSize().x - getOrigin().x;
+		scale.x = -scale.x;
 	}
-	else
+
+	if (m_isUpSideDown)
 	{
-		m_sprite.setOrigin(getOrigin());
-		m_sprite.setScale(getScale(), getScale());
+		origin.y = m_sprite.getLocalSize().y - getOrigin().y;
+		scale.y = -scale.y;
 	}
+
+	m_sprite.setOrigin(origin);
+	m_sprite.setScale(scale);
 }
 
 void ANpc::updateText(sf::Time frametime)
