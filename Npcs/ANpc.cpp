@@ -396,7 +396,10 @@ void ANpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 
 void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
 {
-	if (m_displayText && Progress::getInstance().isBubbleNpc())
+	Progress const & progress = Progress::getInstance();
+
+	if (m_displayText && progress.isBubbleNpc()
+		&& (progress.getCurrentDestination() != Level::WaterC || m_type == GameObjectType::CedricStartNpc || m_type == GameObjectType::CedricEndNpc))
 	{
 		if (!m_isDoubleJump)
 		{
