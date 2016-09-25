@@ -61,9 +61,6 @@ void FranfranNpc::setup(void)
 	m_puff.setScaleFactor(15.f);
 	m_puff.setDispersion(120.f);
 	m_puff.setColor(sf::Color(255, 255, 255, 150));
-
-	if (Progress::getInstance().canRepairShip())
-		setCurrentText(1u);
 }
 
 void FranfranNpc::update(sf::Time frametime)
