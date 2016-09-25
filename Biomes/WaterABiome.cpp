@@ -27,7 +27,7 @@ WaterABiome::WaterABiome() :
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::Time::Zero),
-	m_skyDayColor(3, 57, 108),
+	m_skyDayColor(255, 0, 0),
 	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
 	m_dayLightColor(sf::Color::Transparent),
@@ -112,7 +112,7 @@ WaterABiome::WaterABiome() :
 
 	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(159, 24, 24),
+	m_sunColor(255, 255, 255),
 
 	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_moonColor(255, 255, 255),
@@ -339,8 +339,8 @@ Map::TileColorGenerator WaterABiome::getTileColorGenerator()
 	sf::Color secondColorEnd = getRockColor();
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -1900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -1200.f / static_cast<float>(m_mapSize.y);
+	float start1 = -3900.f / static_cast<float>(m_mapSize.y);
+	float start2 = -2200.f / static_cast<float>(m_mapSize.y);
 	float middle1 = 0.f / static_cast<float>(m_mapSize.y);
 	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
 	float end1 = 1000.f / static_cast<float>(m_mapSize.y);
