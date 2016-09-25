@@ -27,7 +27,7 @@ WaterCBiome::WaterCBiome() :
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::Time::Zero),
-	m_skyDayColor(3, 57, 108),
+	m_skyDayColor(255, 0, 0),
 	m_skyNightColor(255, 0, 0),
 	m_nightLightColor(255, 90, 61, 130),
 	m_dayLightColor(sf::Color::Transparent),
@@ -112,7 +112,7 @@ WaterCBiome::WaterCBiome() :
 
 	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 255, 200),
+	m_sunColor(255, 255, 255),
 
 	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_moonColor(255, 255, 255),

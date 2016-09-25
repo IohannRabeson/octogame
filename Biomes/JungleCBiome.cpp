@@ -99,8 +99,8 @@ JungleCBiome::JungleCBiome() :
 
 	m_cloudSize(sf::Vector2f(300.f, 200.f), sf::Vector2f(600.f, 400.f)),
 	m_cloudPartCount(6u, 10u),
-	m_cloudMaxY(500.f),
-	m_cloudMinY(-3000.f),
+	m_cloudMaxY(350.f),
+	m_cloudMinY(-2000.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
@@ -297,7 +297,7 @@ Map::TileColorGenerator JungleCBiome::getTileColorGenerator()
 	sf::Color secondColorEnd(56, 50, 72);
 	sf::Color thirdColorStart = m_skyDayColor;
 	sf::Color thirdColorEnd = m_skyNightColor;
-	float start1 = -10000.f / static_cast<float>(m_mapSize.y);
+	float start1 = -12000.f / static_cast<float>(m_mapSize.y);
 	float start2 = -1500.f / static_cast<float>(m_mapSize.y);
 	float middle1 = 300.f / static_cast<float>(m_mapSize.y);
 	float middle2 = 1450.f / static_cast<float>(m_mapSize.y);

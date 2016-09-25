@@ -36,7 +36,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
 	m_timerStartUseDoor(sf::seconds(1.f)),
-	m_timerStartUseDoorMax(sf::seconds(1.f)),
+	m_timerStartUseDoorMax(sf::seconds(0.2f)),
 	m_factorDirectionVelocityX(1.f),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
@@ -1074,8 +1074,11 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 
 bool	CharacterOcto::isFinalEvent()
 {
+	//TODO : To put in pyramid
 	Progress const & progress = Progress::getInstance();
-	if (progress.getCurrentDestination() == Level::Final && (getPosition().x > 805.f * 16.f && getPosition().x < 905.f * 16.f))
+	sf::Vector2f const & position = getPosition();
+
+	if (progress.getCurrentDestination() == Level::Final && (position.x > 805.f * 16.f && position.x < 905.f * 16.f))
 		return true;
 	return false;
 }
@@ -1591,7 +1594,7 @@ void	CharacterOcto::inWater()
 	{
 		emit = true;
 		m_inWater = false;
-			m_waterParticle.canEmit(true);
+		m_waterParticle.canEmit(true);
 	}
 	if (emit && !progress.isInCloud() && m_waterLevel != -1.f)
 		m_ploufParticle.canEmit(true);

@@ -95,9 +95,9 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		if (m_blinkShaderState)
 		{
 			m_timerBlinkShader += frameTime;
-			if (m_timerBlinkShader >= sf::seconds(1.0f))
+			if (m_timerBlinkShader >= sf::seconds(0.55f))
 			{
-				m_timerBlinkShader = sf::seconds(1.0f);
+				m_timerBlinkShader = sf::seconds(0.55f);
 				m_blinkShaderState = false;
 			}
 		}
@@ -106,6 +106,10 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			m_timerBlinkShader -= frameTime;
 			if (m_timerBlinkShader <= sf::Time::Zero)
 			{
+				octo::AudioManager &		audio = octo::Application::getAudioManager();
+				octo::ResourceManager &		resource = octo::Application::getResourceManager();
+
+				audio.playSound(resource.getSound(SPACESHIP_ALARM_OGG), 0.5f);
 				m_timerBlinkShader = sf::Time::Zero;
 				m_blinkShaderState = true;
 			}
@@ -151,7 +155,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			octo::ResourceManager &		resource = octo::Application::getResourceManager();
 
 			audio.stopMusic(sf::seconds(0.1f));
-			audio.playSound(resource.getSound(EXPLODE_HELMET_OGG), 0.5f, 0.5f);
+			audio.playSound(resource.getSound(CRASH_OGG), 0.5f, 0.5f);
 			audio.playSound(resource.getSound(TREE_OGG), 0.5f, 0.5f);
 			m_ground->setVolume(0.f);
 			m_isSoundExplodePlayed = true;

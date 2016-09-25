@@ -30,9 +30,7 @@ void RandomDiscoverMenu::createMenus(void)
 	addMenu(L"17", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	addMenu(L"18", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
-	std::size_t nbRandomDiscover = static_cast<std::size_t>(Progress::getInstance().getRandomDiscoverCount());
-	if (nbRandomDiscover >= 7u)
-		nbRandomDiscover = 7u;
+	std::size_t nbRandomDiscover = static_cast<std::size_t>(Progress::getInstance().countRandomDiscover());
 	setIndexCursor(static_cast<std::size_t>(nbRandomDiscover));
 }
 

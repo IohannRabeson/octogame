@@ -114,7 +114,6 @@ public:
 	std::size_t			countRandomDiscover(void);
 	bool				isMetPortal(Level destination);
 	void				setRandomDiscoverCount(std::size_t count) { m_countRandomDiscover = count; };
-	std::size_t			getRandomDiscoverCount() const { return m_countRandomDiscover; }
 	void				setPortalPosition(Level destination, sf::Vector2f const & position);
 	void				removePortalPosition(Level destination);
 	sf::Vector2f		getInterestPoint();

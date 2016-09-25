@@ -6,10 +6,11 @@
 
 Door::Door(SkyCycle & skyCycle, sf::Vector2f const & scale, sf::Vector2f const & position) :
 	InstanceDecor(DOOR_OSS, scale, position, 1, 1.f),
+	m_lock(false),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_skyCycle(skyCycle),
-	m_timer(sf::Time::Zero),
-	m_timerMax(sf::seconds(1.f)),
+	m_timerSpeed(sf::Time::Zero),
+	m_timerSpeedMax(sf::seconds(1.f)),
 	m_actionEnable(false)
 {
 	m_box->setSize(sf::Vector2f(75.f, 180.f));
@@ -21,6 +22,8 @@ Door::Door(SkyCycle & skyCycle, sf::Vector2f const & scale, sf::Vector2f const &
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Door));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
+
+	getSprite().setColor(sf::Color::Transparent);
 }
 
 void Door::update(sf::Time frametime)
@@ -28,15 +31,19 @@ void Door::update(sf::Time frametime)
 	InstanceDecor::update(frametime);
 	if (m_actionEnable)
 	{
-		m_timer += frametime;
-		m_timer = std::min(m_timer, m_timerMax);
+		m_timerSpeed += frametime;
+		m_timerSpeed = std::min(m_timerSpeed, m_timerSpeedMax);
+		m_lock = true;
 	}
 	else
 	{
-		m_timer -= frametime;
-		m_timer = std::max(m_timer, sf::Time::Zero);
+		m_timerSpeed -= frametime;
+		m_timerSpeed = std::max(m_timerSpeed, sf::Time::Zero);
+		if (m_timerSpeed == sf::Time::Zero)
+			m_lock = false;
 	}
-	m_skyCycle.setSpeedCoeff(1.f + m_timer / m_timerMax * 20.f);
+	if (m_lock)
+		m_skyCycle.setSpeedCoeff(1.f + m_timerSpeed / m_timerSpeedMax * 20.f);
 	m_actionEnable = false;
 }
 

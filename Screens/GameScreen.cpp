@@ -101,6 +101,7 @@ void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
 
 void GameScreen::timeLevelBlueRed(sf::Time frameTime, Progress & progress)
 {
+	octo::StateManager & states = octo::Application::getStateManager();
 	Level current = progress.getCurrentDestination();
 	Level next = progress.getNextDestination();
 
@@ -108,13 +109,14 @@ void GameScreen::timeLevelBlueRed(sf::Time frameTime, Progress & progress)
 	{
 		m_timerBlue += frameTime;
 		if (m_timerBlue >= m_timerRedBlueMax)
-			progress.setNextDestination(Level::IceA);
+			states.change("menu");
+			//progress.setNextDestination(Level::IceA);
 	}
 	else if (current == Level::Red || next == Level::Red)
 	{
 		m_timerRed += frameTime;
 		if (m_timerRed >= m_timerRedBlueMax)
-			progress.setNextDestination(Level::IceA);
+			states.change("menu");
 	}
 }
 

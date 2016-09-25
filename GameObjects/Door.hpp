@@ -22,10 +22,11 @@ public:
 	virtual void setPosition(sf::Vector2f const & position);
 
 private:
+	bool							m_lock;
 	RectangleShape *				m_box;
 	SkyCycle &						m_skyCycle;
-	sf::Time						m_timer;
-	sf::Time						m_timerMax;
+	sf::Time						m_timerSpeed;
+	sf::Time						m_timerSpeedMax;
 	bool							m_actionEnable;
 
 };

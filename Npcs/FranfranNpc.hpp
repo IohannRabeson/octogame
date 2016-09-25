@@ -15,10 +15,13 @@ public:
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 private:
-	SmokeSystem	m_smoke;
-	SmokeSystem m_puff;
-	sf::Time	m_puffTimer;
-	sf::Time	m_puffTimerMax;
+	sf::Vector2f	m_smokePosition;
+	sf::Vector2f	m_puffPosition;
+	SmokeSystem		m_smoke;
+	SmokeSystem		m_puff;
+	sf::Time		m_puffTimer;
+	sf::Time		m_puffTimerMin;
+	sf::Time		m_puffTimerMax;
 };
 
 #endif
