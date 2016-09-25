@@ -6,6 +6,7 @@
 
 Door::Door(SkyCycle & skyCycle, sf::Vector2f const & scale, sf::Vector2f const & position) :
 	InstanceDecor(DOOR_OSS, scale, position, 1, 1.f),
+	m_lock(false),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_skyCycle(skyCycle),
 	m_timer(sf::Time::Zero),
@@ -30,13 +31,17 @@ void Door::update(sf::Time frametime)
 	{
 		m_timer += frametime;
 		m_timer = std::min(m_timer, m_timerMax);
+		m_lock = true;
 	}
 	else
 	{
 		m_timer -= frametime;
 		m_timer = std::max(m_timer, sf::Time::Zero);
+		if (m_timer == sf::Time::Zero)
+			m_lock = false;
 	}
-	m_skyCycle.setSpeedCoeff(1.f + m_timer / m_timerMax * 20.f);
+	if (m_lock)
+		m_skyCycle.setSpeedCoeff(1.f + m_timer / m_timerMax * 20.f);
 	m_actionEnable = false;
 }
 
