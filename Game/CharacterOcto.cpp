@@ -36,7 +36,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
 	m_timerStartUseDoor(sf::seconds(1.f)),
-	m_timerStartUseDoorMax(sf::seconds(1.f)),
+	m_timerStartUseDoorMax(sf::seconds(0.2f)),
 	m_factorDirectionVelocityX(1.f),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
