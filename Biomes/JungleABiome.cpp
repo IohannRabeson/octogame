@@ -153,6 +153,9 @@ JungleABiome::JungleABiome() :
 	m_instances[600] = MAP_JUNGLE_A_VILLAGE_OMP;
 	m_gameObjects[955] = GameObjectType::VinceNpc;
 
+	for (std::size_t i = 0u; i < 10u; i++)
+		m_gameObjects[randomInt(10, 550)] = GameObjectType::FishBlackNpc;
+
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination

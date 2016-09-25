@@ -1,12 +1,12 @@
 #include "FishRedNpc.hpp"
 
 FishRedNpc::FishRedNpc(void) :
-	ASwimNpc(FISH_RED_OSS, false, false)
+	ASwimNpc(FISH_RED_OSS, false, true)
 {
     setType(GameObjectType::FishRedNpc);
 	setSize(sf::Vector2f(70.f, 200.f));
 	setOrigin(sf::Vector2f(60.f, 58.f));
-	setScale(0.8f);
+	setScale(randomFloat(0.5f, 0.9f));
 	setTextOffset(sf::Vector2f(-10.f, -50.f));
 	setFollowOcto(false);
 	reverseSprite(true);

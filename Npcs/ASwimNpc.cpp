@@ -19,6 +19,8 @@ ASwimNpc::ASwimNpc(ResourceKey const & npcId, bool isMeetable, bool isShift) :
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SwimNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	getBox()->setApplyGravity(false);
 	setFollowOcto(true);
+	if (m_generator.randomBool(0.5f))
+		reverseSprite(true);
 }
 
 void ASwimNpc::setupMachine(void)
@@ -65,7 +67,7 @@ void ASwimNpc::computeBehavior(sf::Time frametime)
 	if (sprite.getCurrentEvent() == Special1)
 	{
 		float dist = std::sqrt(std::pow(position.x - m_octoPosition.x, 2u) + std::pow(position.y - m_octoPosition.y, 2u));
-		if (position.y > m_waterLevel + 200.f && dist >= 100.f)
+		if (position.y > box->getPosition().y && dist >= 100.f)
 			box->setVelocity((position - box->getPosition()) * (dist / m_velocity));
 
 		if (m_isShift)
@@ -89,9 +91,15 @@ void ASwimNpc::computeBehavior(sf::Time frametime)
 		if (position.y > m_waterLevel + 200.f)
 			box->setVelocity((position - box->getPosition()) * 20.f);
 		if (sprite.getRotation() > 180.f)
+		{
+			upSideDownSprite(true);
 			sprite.setRotation(octo::linearInterpolation(360.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
+		}
 		else
+		{
+			upSideDownSprite(false);
 			sprite.setRotation(octo::linearInterpolation(0.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
+		}
 	}
 }
 

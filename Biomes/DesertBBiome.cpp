@@ -142,15 +142,13 @@ DesertBBiome::DesertBBiome() :
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertC)
-		m_octoStartPosition = sf::Vector2f(370.f * 16.f, -2700.f);
+		m_octoStartPosition = sf::Vector2f(508.f * 16.f, 9321.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(335.f * 16.f, 1880.f);
 
 	m_gameObjects[140] = GameObjectType::PortalDesert;
 	m_gameObjects[257] = GameObjectType::CedricStartNpc;
 	m_gameObjects[335] = GameObjectType::FranGlitchNpc;
-//	m_gameObjects[365] = GameObjectType::Bouibouik;
-//	m_instances[390] = MAP_DESERT_B_SECRET_NPC_OMP;
 	m_instances[150] = MAP_DESERT_B_TRAIL_OMP;
 	m_instances[350] = MAP_DESERT_B_TREE_OMP;
 
