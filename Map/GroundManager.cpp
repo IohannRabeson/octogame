@@ -193,7 +193,7 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	setupDecors(biome, cycle);
 
 	// Init game objects
-	setupGameObjects(biome, cycle);
+	setupGameObjects(biome);
 
 	sf::Rect<float> const & rect = octo::Application::getCamera().getRectangle();
 	m_offset.x = rect.left;
@@ -249,7 +249,7 @@ void GroundManager::setupGroundRock(ABiome & biome)
 	}
 }
 
-void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & cycle)
+void GroundManager::setupGameObjects(ABiome & biome)
 {
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	setupGroundRock(biome);
@@ -334,9 +334,9 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & cycle)
 	m_npcFactory.registerCreator(ELLIOT_OSS, [](){ return new ElliotNpc(); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
-	m_decorFactory.registerCreator(DOOR_OSS, [&cycle](sf::Vector2f const & scale, sf::Vector2f const & position)
+	m_decorFactory.registerCreator(DOOR_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new Door(cycle, scale, position);
+				return new Door(scale, position);
 			});
 	m_decorFactory.registerCreator(CHECKPOINT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
@@ -1119,7 +1119,7 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & cycle)
 				break;
 			case GameObjectType::Door:
 				{
-					Door * obj = new Door(cycle, sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f));
+					Door * obj = new Door(sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f));
 					m_otherObjectsLow.emplace_back(gameObject.first, 1, obj);
 				}
 				break;
