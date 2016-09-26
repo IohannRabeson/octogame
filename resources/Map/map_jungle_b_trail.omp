@@ -1,6 +1,6 @@
 2;400x400x540x1
 #caveman.oss(1472;4320) : [1536/4480][48/32]0
-#caveman_sinking.oss(3744;4768) : [3808/4864][48/48]0
+#caveman_sinking.oss(3744;4768) : [3688/4864][48/48]0
 !object_portal_random.oss(1040;2048) : [1/1]0
 !decor_crystal.oss(896;3440) : [1/1]0
 !decor_crystal.oss(2800;2880) : [1/1]0
