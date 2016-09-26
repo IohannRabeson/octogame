@@ -90,5 +90,5 @@ scientistfran.oss=5#Jeff
 scientistfran.oss=6#Fabien
 scientistfran.oss=8#Lu
 scientistcedric.oss=9#Bois la potion, sale fleur
-beachboy_fly.oss=#Dont get close to this grass or you're going to die.
+beachboy_fly.oss=!Dont get close to this grass or you're going to die.
 guillaume.oss=!You can avoid death's fall with your double jump.

@@ -33,6 +33,8 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "ClaireNpc.hpp"
+#include "MaryvonneNpc.hpp"
 #include "FishPinkNpc.hpp"
 #include "FishBlackNpc.hpp"
 #include "FishBlueNpc.hpp"
@@ -270,6 +272,8 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & cycle)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<ClaireNpc>(CLAIRE_OSS);
+	m_npcFactory.registerCreator<MaryvonneNpc>(MARYVONNE_OSS);
 	m_npcFactory.registerCreator<FishPinkNpc>(FISH_PINK_OSS);
 	m_npcFactory.registerCreator<FishBlackNpc>(FISH_BLACK_OSS);
 	m_npcFactory.registerCreator<FishBlueNpc>(FISH_BLUE_OSS);
@@ -811,6 +815,20 @@ void GroundManager::setupGameObjects(ABiome & biome, SkyCycle & cycle)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::ClaireNpc:
+				{
+					ClaireNpc * npc = new ClaireNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::MaryvonneNpc:
+				{
+					MaryvonneNpc * npc = new MaryvonneNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::FishPinkNpc:
 				{
 					FishPinkNpc * npc = new FishPinkNpc();

@@ -163,7 +163,11 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/FishBlueNpc.cpp				\
 				Npcs/FishBlackNpc.cpp				\
 				Npcs/FishPinkNpc.cpp				\
+				Npcs/MaryvonneNpc.cpp				\
+				Npcs/ClaireNpc.cpp				\
 #Script AddNpc
+
+
 
 
 
