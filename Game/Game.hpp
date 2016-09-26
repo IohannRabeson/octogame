@@ -34,6 +34,15 @@ public:
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
 
 private:
+	enum SpeedState
+	{
+		None,
+		Slow,
+		SlowEnd,
+		Fast,
+		FastEnd
+	};
+
 	PhysicsEngine &						m_physicsEngine;
 	MusicManager &						m_musicPlayer;
 	BiomeManager						m_biomeManager;
@@ -51,15 +60,17 @@ private:
 	float								m_groundVolume;
 	sf::Time							m_groundSoundTime;
 	sf::Time							m_groundSoundTimeMax;
-	bool								m_isSlowTime;
 	sf::Time							m_slowTime;
 	sf::Time							m_slowTimeMax;
-	float								m_slowSource;
-	float								m_slowTarget;
+	float								m_slowCoefMin;
+	float								m_slowCoefMax;
 	float								m_slowTimeCoef;
 	std::size_t							m_skipFrames;
 	std::size_t							m_skipFramesMax;
 	FakeMenu							m_fakeMenu;
+	SpeedState							m_speedState;
+	bool								m_keyUse;
+	bool								m_collideDoor;
 
 	void			updateSlowTime(sf::Time frameTime);
 	void			updateFakeMenu(sf::Time frameTime);
@@ -71,6 +82,8 @@ private:
 	void			followPlayer(sf::Time frameTime);
 	void			onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection);
 	void			onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection);
+	void			setSlowMotion(void);
+	void			setFastMotion(void);
 };
 
 #endif
