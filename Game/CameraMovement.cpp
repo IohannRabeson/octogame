@@ -59,9 +59,9 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	}
 
 	float goalTop = octo.getPosition().y - camera.getRectangle().height / 4.f;
-	float goalBot = octo.getPosition().y + camera.getRectangle().height / 4.f;
-	float goalLeft = octo.getPosition().x - camera.getRectangle().width / 4.f;
-	float goalRight = octo.getPosition().x + camera.getRectangle().width / 4.f;
+	float goalBot = octo.getPosition().y + camera.getRectangle().height / 3.f;
+	float goalLeft = octo.getPosition().x - camera.getRectangle().width / 3.f;
+	float goalRight = octo.getPosition().x + camera.getRectangle().width / 3.f;
 
 	switch (m_behavior)
 	{
