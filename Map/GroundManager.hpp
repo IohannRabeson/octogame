@@ -122,7 +122,7 @@ private:
 	template<class T>
 	void setupGameObjectPosition(std::vector<GameObjectPosition<T>> const & gameObjectPosition);
 	void setupDecors(ABiome & biome, SkyCycle & cycle);
-	void setupGameObjects(ABiome & biome, SkyCycle & cycle);
+	void setupGameObjects(ABiome & biome);
 	void updateOffset(float deltatime);
 	void updateTransition(sf::FloatRect const & cameraRect);
 	void updateDecors(sf::Time deltatime);

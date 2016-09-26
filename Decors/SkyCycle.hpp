@@ -30,7 +30,6 @@ public:
 	bool		isDay(void) const;
 	bool		isNight(void) const;
 
-	void		setSpeedCoeff(float coeff);
 	void		setDayDuration(sf::Time);
 	void		setNightDuration(sf::Time);
 
@@ -82,8 +81,6 @@ private:
 
 	bool								m_boolThunder;
 	octo::AudioManager::SoundPtr		m_rainSound;
-
-	float								m_speedCoeff;
 
 };
 

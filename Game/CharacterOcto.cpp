@@ -1980,11 +1980,6 @@ void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
 	m_autoDisableCutscene = autoDisable;
 }
 
-bool	CharacterOcto::isActionEnable(void) const
-{
-	return m_keyAction;
-}
-
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());

@@ -108,7 +108,6 @@ public:
 	void					collidePortalEvent(bool collidePortal);
 	void					resetCollidingTileCount(void);
 	void					enableCutscene(bool enable, bool autoDisable = false);
-	bool					isActionEnable(void) const;
 
 private:
 	void					dieFall();

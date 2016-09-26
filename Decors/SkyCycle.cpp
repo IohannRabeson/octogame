@@ -15,8 +15,7 @@ SkyCycle::SkyCycle(void) :
 	m_generator("random"),
 	m_thunder(0.f),
 	m_thunderState(0u),
-	m_boolThunder(false),
-	m_speedCoeff(1.f)
+	m_boolThunder(false)
 {
 }
 
@@ -73,11 +72,6 @@ bool SkyCycle::isNight(void) const
 		return true;
 }
 
-void SkyCycle::setSpeedCoeff(float coeff)
-{
-	m_speedCoeff = coeff;
-}
-
 void SkyCycle::setup(ABiome & biome)
 {
 	m_timerMax = biome.getDayDuration();
@@ -121,7 +115,6 @@ void SkyCycle::computeDayNight(sf::Time frameTime)
 
 	if (speedCoef >= 1.f)
 		frameTime *= speedCoef;
-	frameTime *= m_speedCoeff;
 	m_timerStart -= frameTime;
 	m_timer += frameTime;
 	if (m_timer >= m_timerMax)
