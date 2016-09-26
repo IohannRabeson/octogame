@@ -1,7 +1,7 @@
 #include "TurbanNpc.hpp"
 
 TurbanNpc::TurbanNpc(void) :
-	AIdleNpc(NPC_TURBAN_OSS)
+	AIdleNpc(NPC_TURBAN_OSS, true, true)
 {
 	setType(GameObjectType::TurbanNpc);
 	setSize(sf::Vector2f(35.f, 162.f));

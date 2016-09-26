@@ -1,7 +1,7 @@
 #include "JuNpc.hpp"
 
 JuNpc::JuNpc(void) :
-	ASpecialNpc(JU_OSS, false)
+	ASpecialNpc(JU_OSS, true, true)
 {
 	setType(GameObjectType::JuNpc);
 	setSize(sf::Vector2f(31.f, 162.f));
