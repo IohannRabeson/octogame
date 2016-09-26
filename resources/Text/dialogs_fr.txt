@@ -93,3 +93,4 @@ scientistfran.oss=8#Lu
 scientistcedric.oss=9#Bois la potion, sale fleur
 beachboy_fly.oss=!Ne frotte pas tes tentacules aux herbes, elles sont coupantes !
 guillaume.oss=!Si tu tombe de trop haut utilise le double saut.
+maryvonne.oss=!Si seulement je pouvais utiliser ces nuages pour sauter plus haut…
