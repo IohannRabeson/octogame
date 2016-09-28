@@ -274,8 +274,8 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float m = n / 10.f;
-		std::vector<float> pointX = {0.f      , 100.f    , 102.f   , 100.f    , 105.f    , 109.f    , 114.f    , 118.f     , 155.f    , 230.f   , 240.f, 244.f, 245.f, 255.f, 256.f, 270.f    , 275.f    , 280.f    , 295.f   , 299.f   , 302.f   , 304.f    , 600.f   };
-		std::vector<float> pointY = {-10.f + n, -10.f + n, -8.f - m, -4.4f - m, -2.9f - m, -2.7f - m, -2.6f - m, -2.54f - m, -2.5f - m, -2.f - n, -2.f , -2.f , 6.73f, 6.73f, -2.f , -2.1f - m, -2.2f - m, -2.5f - m, -4.f - m, -5.f - m, -6.f - m, -10.f + n, -10.f + n};
+		std::vector<float> pointX = {0.f     , 100.f    , 102.f   , 105.f    , 109.f    , 114.f    , 118.f     , 155.f    , 210.f   , 240.f, 244.f, 245.f, 255.f, 256.f, 270.f     , 274.f    , 279.f    , 283.f    , 286.f    , 289.f   , 600.f   };
+		std::vector<float> pointY = {-6.f + n, -6.f + n, -4.1f - m, -2.6f - m, -2.4f - m, -2.3f - m, -2.24f - m, -2.2f - m, -2.f - n, -2.f , -2.f , 6.73f, 6.73f, -2.f , -2.04f - m, -2.1f - m, -2.2f - m, -2.4f - m, -3.9f - m, -6.f + n, -6.f + n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
