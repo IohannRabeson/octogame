@@ -328,16 +328,17 @@ void	CharacterOcto::setupAnimation()
 	m_deathAnimation.setLoop(octo::LoopMode::NoLoop);
 
 	m_drinkAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {99, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {100, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {101, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {102, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {103, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {104, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {105, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {106, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {107, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {108, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {98, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {99, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {100, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {101, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {102, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {103, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {104, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {105, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {106, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.3f), {107, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.2f), {108, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_drinkAnimation.setLoop(octo::LoopMode::NoLoop);
 
