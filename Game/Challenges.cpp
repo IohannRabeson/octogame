@@ -201,7 +201,10 @@ ChallengePersistence::ChallengePersistence(void) :
 
 void ChallengePersistence::updateShader(sf::Time)
 {
-	m_shader.setParameter("intensity", octo::linearInterpolation(1.f, 1.02f - m_intensity, std::min(m_timer, m_duration) / m_duration));
+	float octoY = Progress::getInstance().getOctoPos().y;
+	float coef = std::min((octoY + 2000.f) / 5000.f, 1.f);
+
+	m_shader.setParameter("intensity", octo::linearInterpolation(1.f, 1.02f - m_intensity * coef, std::min(m_timer, m_duration) / m_duration));
 }
 
 // Pixelate
