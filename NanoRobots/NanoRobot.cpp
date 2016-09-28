@@ -329,6 +329,7 @@ bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 		m_stopSpeakinKeyPress = true;
 	switch (key)
 	{
+		/*
 		case OctoKeys::Infos:
 		{
 			if (m_infoSetup == false && m_infoText.size())
@@ -340,6 +341,7 @@ bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 			}
 			break;
 		}
+		*/
 		default:
 			break;
 	}
@@ -350,6 +352,7 @@ bool NanoRobot::onInputReleased(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
+		/*
 		case OctoKeys::Infos:
 		{
 			if (m_infoSetup == true)
@@ -360,6 +363,7 @@ bool NanoRobot::onInputReleased(InputListener::OctoKeys const & key)
 			}
 			break;
 		}
+		*/
 		default:
 			break;
 	}
