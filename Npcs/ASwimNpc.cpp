@@ -19,8 +19,8 @@ ASwimNpc::ASwimNpc(ResourceKey const & npcId, bool isMeetable, bool isShift) :
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SwimNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	getBox()->setApplyGravity(false);
 	setFollowOcto(true);
-	if (m_generator.randomBool(0.5f))
-		reverseSprite(true);
+//	if (m_generator.randomBool(0.5f))
+//		reverseSprite(true);
 }
 
 void ASwimNpc::setupMachine(void)
