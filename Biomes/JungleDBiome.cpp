@@ -162,6 +162,7 @@ JungleDBiome::JungleDBiome() :
 		else
 			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
 	}
+	m_gameObjects[580] = GameObjectType::CheckPoint;
 	for (std::size_t i = 585; i < 598; i += 2)
 		m_gameObjects[i] = GameObjectType::BirdRedNpc;
 	for (std::size_t i = 0; i < 7; i++)
