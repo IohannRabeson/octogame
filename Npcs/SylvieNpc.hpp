@@ -6,7 +6,7 @@
 class SylvieNpc : public ASwimNpc
 {
 public:
-	SylvieNpc(void);
+	SylvieNpc(ABiome & biome);
 	virtual ~SylvieNpc(void) = default;
 
 	virtual void setup(void);

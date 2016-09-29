@@ -1,12 +1,12 @@
 #ifndef FISHPINKNPC_HPP
 # define FISHPINKNPC_HPP
 
-# include "ASwimNpc.hpp"
+# include "AFishNpc.hpp"
 
-class FishPinkNpc : public ASwimNpc
+class FishPinkNpc : public AFishNpc
 {
 public:
-	FishPinkNpc(void);
+	FishPinkNpc(ABiome & biome);
 	virtual ~FishPinkNpc(void) = default;
 
 	virtual void setup(void);

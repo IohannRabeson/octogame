@@ -1,7 +1,7 @@
 #include "BeachBoySubNpc.hpp"
 
-BeachBoySubNpc::BeachBoySubNpc(void) :
-	ASwimNpc(BEACHBOY_SUB_OSS, true, false)
+BeachBoySubNpc::BeachBoySubNpc(ABiome & biome) :
+	ASwimNpc(BEACHBOY_SUB_OSS, biome, true)
 {
 	setSize(sf::Vector2f(107.f, 205.f));
 	setOrigin(sf::Vector2f(37.f, 82.f));

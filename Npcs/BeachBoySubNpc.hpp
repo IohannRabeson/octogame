@@ -6,7 +6,7 @@
 class BeachBoySubNpc : public ASwimNpc
 {
 public:
-	BeachBoySubNpc(void);
+	BeachBoySubNpc(ABiome & biome);
 	virtual ~BeachBoySubNpc(void) = default;
 
 	virtual void setup(void);

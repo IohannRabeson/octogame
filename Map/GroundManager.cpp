@@ -110,7 +110,6 @@
 #include "WellKeeperNpc.hpp"
 #include "VinceNpc.hpp"
 #include "WolfNpc.hpp"
-#include "Seb.hpp"
 #include "PeaNpc.hpp"
 #include "PierreNpc.hpp"
 #include "CavemanNpc.hpp"
@@ -274,18 +273,12 @@ void GroundManager::setupGameObjects(ABiome & biome)
 //Script AddNpc Factory
 	m_npcFactory.registerCreator<ClaireNpc>(CLAIRE_OSS);
 	m_npcFactory.registerCreator<MaryvonneNpc>(MARYVONNE_OSS);
-	m_npcFactory.registerCreator<FishPinkNpc>(FISH_PINK_OSS);
-	m_npcFactory.registerCreator<FishBlackNpc>(FISH_BLACK_OSS);
-	m_npcFactory.registerCreator<FishBlueNpc>(FISH_BLUE_OSS);
-	m_npcFactory.registerCreator<FishRedNpc>(FISH_RED_OSS);
 	m_npcFactory.registerCreator<MariaNpc>(MARIA_OSS);
 	m_npcFactory.registerCreator<JihemNpc>(JIHEM_OSS);
 	m_npcFactory.registerCreator<WaterHouseBroken>(WATER_HOUSE_BROKEN_OSS);
 	m_npcFactory.registerCreator<ColumnNpc>(COLUMN_1_OSS);
 	m_npcFactory.registerCreator<TiboNpc>(TIBO_OSS);
-	m_npcFactory.registerCreator<SebNpc>(SEB_OSS);
 	m_npcFactory.registerCreator<BeachBoyFlyNpc>(BEACHBOY_FLY_OSS);
-	m_npcFactory.registerCreator<BeachBoySubNpc>(BEACHBOY_SUB_OSS);
 	m_npcFactory.registerCreator<AntoineNpc>(ANTOINE_OSS);
 	m_npcFactory.registerCreator<UlaNpc>(ULA_OSS);
 	m_npcFactory.registerCreator<EngineSnow>(ENGINE_SNOW_OSS);
@@ -293,7 +286,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<AnthemJungle>(ANTHEM_JUNGLE_OSS);
 	m_npcFactory.registerCreator<MysticanouilleNpc>(MYSTICANOUILLE_OSS);
 	m_npcFactory.registerCreator<AymericNpc>(AYMERIC_OSS);
-	m_npcFactory.registerCreator<SylvieNpc>(SYLVIE_OSS);
 	m_npcFactory.registerCreator<LucieNpc>(LUCIE_OSS);
 	m_npcFactory.registerCreator<BeachGuyNpc>(BEACH_GUY_OSS);
 	m_npcFactory.registerCreator<ChamanMonsterNpc>(CHAMAN_MONSTER_OSS);
@@ -320,8 +312,19 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman3Npc>(SNOWMAN_3_OSS);
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
-	m_npcFactory.registerCreator<JellyfishNpc>(JELLYFISH_OSS);
 	m_npcFactory.registerCreator<BrayouNpc>(BRAYOU_OSS);
+
+	//ASwimNpc
+	m_npcFactory.registerCreator(FISH_PINK_OSS, [&biome](){ return new FishPinkNpc(biome); });
+	m_npcFactory.registerCreator(FISH_RED_OSS, [&biome](){ return new FishRedNpc(biome); });
+	m_npcFactory.registerCreator(FISH_BLACK_OSS, [&biome](){ return new FishBlackNpc(biome); });
+	m_npcFactory.registerCreator(FISH_BLUE_OSS, [&biome](){ return new FishBlueNpc(biome); });
+	m_npcFactory.registerCreator(BEACHBOY_SUB_OSS, [&biome](){ return new BeachBoySubNpc(biome); });
+	m_npcFactory.registerCreator(SYLVIE_OSS, [&biome](){ return new SylvieNpc(biome); });
+	m_npcFactory.registerCreator(SEB_OSS, [&biome](){ return new SebNpc(biome); });
+	m_npcFactory.registerCreator(JELLYFISH_OSS, [&biome](){ return new JellyfishNpc(biome); });
+
+	//AUniqueNpc
 	m_npcFactory.registerCreator(OCTO_DEATH_HELMET_OSS, [&biome](){ return new OctoDeathNpc(biome.getWaterLevel(), biome.getWaterColor()); });
 	m_npcFactory.registerCreator(EVA_OSS, [&biome](){ return new EvaNpc(biome.getWaterColor()); });
 	m_npcFactory.registerCreator(CEDRIC_START_OSS, [&biome](){ return new CedricStartNpc(biome.getType()); });
@@ -429,10 +432,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_decorFactory.registerCreator(PYRAMID_OSS, [&biome](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new Pyramid(scale, position, biome);
-			});
-	m_decorFactory.registerCreator(SEB_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
-			{
-				return new Seb(scale, position);
 			});
 	m_decorFactory.registerCreator(PARA_SIGN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
@@ -831,28 +830,28 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				break;
 			case GameObjectType::FishPinkNpc:
 				{
-					FishPinkNpc * npc = new FishPinkNpc();
+					FishPinkNpc * npc = new FishPinkNpc(biome);
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::FishBlackNpc:
 				{
-					FishBlackNpc * npc = new FishBlackNpc();
+					FishBlackNpc * npc = new FishBlackNpc(biome);
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::FishBlueNpc:
 				{
-					FishBlueNpc * npc = new FishBlueNpc();
+					FishBlueNpc * npc = new FishBlueNpc(biome);
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
 			case GameObjectType::FishRedNpc:
 				{
-					FishRedNpc * npc = new FishRedNpc();
+					FishRedNpc * npc = new FishRedNpc(biome);
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
@@ -894,7 +893,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				break;
 			case GameObjectType::SebNpc:
 				{
-					SebNpc * npc = new SebNpc();
+					SebNpc * npc = new SebNpc(biome);
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
@@ -908,7 +907,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				break;
 			case GameObjectType::BeachBoySubNpc:
 				{
-					BeachBoySubNpc * npc = new BeachBoySubNpc();
+					BeachBoySubNpc * npc = new BeachBoySubNpc(biome);
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
 				}
@@ -964,7 +963,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				break;
 			case GameObjectType::SylvieNpc:
 				{
-					SylvieNpc * npc = new SylvieNpc();
+					SylvieNpc * npc = new SylvieNpc(biome);
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
@@ -1320,7 +1319,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				break;
 			case GameObjectType::JellyfishNpc:
 				{
-					JellyfishNpc * npc = new JellyfishNpc();
+					JellyfishNpc * npc = new JellyfishNpc(biome);
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}

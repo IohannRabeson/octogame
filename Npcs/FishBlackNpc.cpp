@@ -1,15 +1,12 @@
 #include "FishBlackNpc.hpp"
 
-FishBlackNpc::FishBlackNpc(void) :
-	ASwimNpc(FISH_BLACK_OSS, false, true)
+FishBlackNpc::FishBlackNpc(ABiome & biome) :
+	AFishNpc(FISH_BLACK_OSS, biome, false)
 {
     setType(GameObjectType::FishBlackNpc);
 	setSize(sf::Vector2f(93.f, 24.f));
 	setOrigin(sf::Vector2f(57.f, 45.f));
 	setScale(randomFloat(0.5f, 0.9f));
-	setTextOffset(sf::Vector2f(0.f, 0.f));
-	setFollowOcto(false);
-	reverseSprite(true);
 	setup();
 }
 

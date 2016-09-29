@@ -8,10 +8,13 @@ class SkyCycle;
 class JellyfishNpc : public ASwimNpc
 {
 public:
-	JellyfishNpc(void);
+	JellyfishNpc(ABiome & biome);
 	virtual ~JellyfishNpc(void) = default;
 
 	virtual void setup(void);
+
+protected:
+	virtual void			update(sf::Time frametime);
 };
 
 #endif

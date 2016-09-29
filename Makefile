@@ -79,6 +79,7 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/AWalkNpc.cpp						\
 				Npcs/ASinkNpc.cpp						\
 				Npcs/ASwimNpc.cpp						\
+				Npcs/AFishNpc.cpp						\
 				Npcs/AUniqueNpc.cpp						\
 				Npcs/CedricStartNpc.cpp					\
 				Npcs/FranfranNpc.cpp					\

@@ -1,7 +1,7 @@
 #include "SylvieNpc.hpp"
 
-SylvieNpc::SylvieNpc(void) :
-	ASwimNpc(SYLVIE_OSS, true, false)
+SylvieNpc::SylvieNpc(ABiome & biome) :
+	ASwimNpc(SYLVIE_OSS, biome, true)
 {
 	setType(GameObjectType::SylvieNpc);
 	setSize(sf::Vector2f(107.f, 205.f));
