@@ -100,7 +100,8 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 	builder.createTriangle(origin, downMidLeft, upMidLeft, color);
 	builder.createTriangle(origin, upMidLeft, upLeft, color);
 
-	if (Progress::getInstance().getNextDestination() != Level::IceC && Progress::getInstance().getNextDestination() != Level::WaterB)
+	Level level = Progress::getInstance().getCurrentDestination();
+	if (level != Level::IceC && level != Level::WaterB && level != Level::DesertC)
 		builder.createQuad(upLeft, upRight, recDownRight, upMidLeft, color);
 }
 
@@ -181,7 +182,7 @@ void Cloud::setup(ABiome& biome)
 		m_animator = DecorAnimator(1.f, 5.f, 4.f, 0.2f);
 	m_cloudMinY = biome.getCloudMinY();
 	m_cloudMaxY = biome.getCloudMaxY();
-	if (biome.randomBool(0.2f))
+	if (biome.randomBool(0.2f) && biome.getId() != Level::DesertC)
 		m_cloudMinY -= biome.randomFloat(1000.f, 2000.f);
 	m_cloudMinX = camera.getCenter().x - camera.getSize().x * 2.f;
 	m_cloudMaxX = camera.getCenter().x + camera.getSize().x * 2.f;

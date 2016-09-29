@@ -129,7 +129,19 @@ enum class GameObjectType : std::size_t
 	WaterHouseBroken				= (1 << 15) + 85,
 	JihemNpc				= (1 << 15) + 86,
 	MariaNpc				= (1 << 15) + 87,
+	FishRedNpc				= (1 << 15) + 88,
+	FishBlueNpc				= (1 << 15) + 89,
+	FishBlackNpc				= (1 << 15) + 90,
+	FishPinkNpc				= (1 << 15) + 91,
+	MaryvonneNpc				= (1 << 15) + 92,
+	ClaireNpc				= (1 << 15) + 93,
 //Script AddNpc
+
+
+
+
+
+
 
 
 

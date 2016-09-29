@@ -159,7 +159,19 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/WaterHouseBroken.cpp				\
 				Npcs/JihemNpc.cpp				\
 				Npcs/MariaNpc.cpp				\
+				Npcs/FishRedNpc.cpp				\
+				Npcs/FishBlueNpc.cpp				\
+				Npcs/FishBlackNpc.cpp				\
+				Npcs/FishPinkNpc.cpp				\
+				Npcs/MaryvonneNpc.cpp				\
+				Npcs/ClaireNpc.cpp				\
 #Script AddNpc
+
+
+
+
+
+
 
 
 

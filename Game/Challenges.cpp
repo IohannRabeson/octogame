@@ -201,7 +201,10 @@ ChallengePersistence::ChallengePersistence(void) :
 
 void ChallengePersistence::updateShader(sf::Time)
 {
-	m_shader.setParameter("intensity", octo::linearInterpolation(1.f, 1.02f - m_intensity, std::min(m_timer, m_duration) / m_duration));
+	float octoY = Progress::getInstance().getOctoPos().y;
+	float coef = std::min((octoY + 2000.f) / 5000.f, 1.f);
+
+	m_shader.setParameter("intensity", octo::linearInterpolation(1.f, 1.02f - m_intensity * coef, std::min(m_timer, m_duration) / m_duration));
 }
 
 // Pixelate
@@ -238,7 +241,7 @@ void ChallengeDisplacement::updateShader(sf::Time)
 
 // Blur
 ChallengeBlur::ChallengeBlur(void) :
-	AChallenge(KERNEL_POST_EFFECT_FRAG, 4.f, 1.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -270.f * 16.f), sf::Vector2f(120.f * 16.f, 205.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.5f, 0.75f), std::pair<float, float>(0.75f, 1.75f))
+	AChallenge(KERNEL_POST_EFFECT_FRAG, 4.f, 1.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -340.f * 16.f), sf::Vector2f(120.f * 16.f, 275.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.5f, 0.75f), std::pair<float, float>(0.75f, 1.75f))
 {
 	m_shader.setParameter("offset", 1.f / 150.f);
 	m_shader.setParameter("intensity", 0.f);

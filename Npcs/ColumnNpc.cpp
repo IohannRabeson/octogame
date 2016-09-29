@@ -3,7 +3,7 @@
 #include <Application.hpp>
 
 ColumnNpc::ColumnNpc(void) :
-	AIdleNpc(COLUMN_1_OSS),
+	AIdleNpc(COLUMN_1_OSS, false, true),
 	m_generator("random")
 {
     setType(GameObjectType::ColumnNpc);

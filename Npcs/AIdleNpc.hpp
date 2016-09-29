@@ -14,10 +14,6 @@ public:
 protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
-
-private:
-	bool		m_followOcto;
-
 };
 
 #endif

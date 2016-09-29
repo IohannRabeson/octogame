@@ -78,8 +78,8 @@ void MainMenu::createMenus(void)
 	addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
 	if (progress.isMenu())
 	{
-		addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
 		addMenu(AMenu::getText("menu_restart"), std::unique_ptr<YesNoReset>(new YesNoReset()));
+		addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
 		addMenu(AMenu::getText("menu_quit"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 	}
 	else

@@ -13,11 +13,14 @@ ASwimNpc::ASwimNpc(ResourceKey const & npcId, bool isMeetable, bool isShift) :
 	m_isMet(false),
 	m_isShift(isShift),
 	m_velocity(m_generator.randomFloat(7.f, 13.f)),
-	m_shift(m_generator.randomFloat(-50.f, 50.f), m_generator.randomFloat(-50.f, 50.f))
+	m_shift(m_generator.randomFloat(-50.f, 50.f), m_generator.randomFloat(-50.f, 50.f)),
+	m_baseAngle(0.f)
 {
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SwimNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	getBox()->setApplyGravity(false);
 	setFollowOcto(true);
+//	if (m_generator.randomBool(0.5f))
+//		reverseSprite(true);
 }
 
 void ASwimNpc::setupMachine(void)
@@ -64,15 +67,22 @@ void ASwimNpc::computeBehavior(sf::Time frametime)
 	if (sprite.getCurrentEvent() == Special1)
 	{
 		float dist = std::sqrt(std::pow(position.x - m_octoPosition.x, 2u) + std::pow(position.y - m_octoPosition.y, 2u));
-		if (position.y > m_waterLevel + 200.f && dist >= 100.f)
-		{
+		if (position.y > box->getPosition().y && dist >= 100.f)
 			box->setVelocity((position - box->getPosition()) * (dist / m_velocity));
-			if (m_isShift)
+
+		if (m_isShift)
+		{
+			float angle = octo::rad2Deg(std::atan2(box->getPosition().y - m_octoPosition.y, box->getPosition().x - m_octoPosition.x)) + m_baseAngle;
+			if (angle < 0.f)
+				angle += 360.f;
+			sprite.setRotation(angle);
+			//TODO : Clean this
+			if (m_baseAngle == 0.f)
 			{
-				float angle = octo::rad2Deg(std::atan2(box->getPosition().y - m_octoPosition.y, box->getPosition().x - m_octoPosition.x)) - 90.f;
-				if (angle < 0.f)
-					angle += 360.f;
-				sprite.setRotation(angle);
+				if (angle > 90.f && angle < 270.f)
+					upSideDownSprite(true);
+				else
+					upSideDownSprite(false);
 			}
 		}
 	}
@@ -81,9 +91,15 @@ void ASwimNpc::computeBehavior(sf::Time frametime)
 		if (position.y > m_waterLevel + 200.f)
 			box->setVelocity((position - box->getPosition()) * 20.f);
 		if (sprite.getRotation() > 180.f)
+		{
+			upSideDownSprite(true);
 			sprite.setRotation(octo::linearInterpolation(360.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
+		}
 		else
+		{
+			upSideDownSprite(false);
 			sprite.setRotation(octo::linearInterpolation(0.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
+		}
 	}
 }
 
@@ -120,4 +136,14 @@ void ASwimNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 void ASwimNpc::setVelocity(float velocity)
 {
 	m_velocity = velocity;
+}
+
+void ASwimNpc::setBaseAngle(float angle)
+{
+	m_baseAngle = angle;
+}
+
+float ASwimNpc::randomFloat(float min, float max)
+{
+	return m_generator.randomFloat(min, max);
 }

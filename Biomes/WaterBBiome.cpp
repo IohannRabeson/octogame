@@ -163,9 +163,10 @@ WaterBBiome::WaterBBiome() :
 		if (randomBool(0.5f))
 			index = randomInt(1u, 50u);
 		else
-			index = randomInt(650u, 699u);
+			index = randomInt(650u, 698u);
 
 		if (*npc != GameObjectType::CedricStartNpc
+			&& *npc != GameObjectType::MaryvonneNpc
 			&& *npc != GameObjectType::EngineSnow
 			&& *npc != GameObjectType::WaterHouseBroken
 			&& *npc != GameObjectType::ColumnNpc

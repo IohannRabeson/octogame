@@ -95,17 +95,8 @@ void SkyManager::setupClouds(ABiome & biome)
 	if (biome.canCreateCloud())
 	{
 		m_cloudCount = biome.getCloudCount();
-		if (biome.getCloudSpeed().y == 0.f)
-		{
-			for (size_t i = 0; i < m_cloudCount; i++)
-				m_decorManagerFront.add(new Cloud(m_cycle));
-		}
-		else
-		{
-			for (size_t i = 0; i < m_cloudCount; i++)
-				m_decorManagerBack.add(new Cloud(m_cycle));
-		}
-
+		for (size_t i = 0; i < m_cloudCount; i++)
+			m_decorManagerFront.add(new Cloud(m_cycle));
 	}
 }
 
@@ -118,7 +109,6 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 
 	octo::Camera const & camera = octo::Application::getCamera();
 	sf::Vector2f const & cameraSize = camera.getSize();
-	//sf::Vector2f const & cameraCenter = cameraSize / 2.f;
 	sf::Vector2f const & cameraCenter = camera.getCenter();
 
 	m_decorManagerBack.add(new Sky(m_cycle));

@@ -15,7 +15,7 @@ IceCBiome::IceCBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(540u, 256u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(56.f * 16.f, -6890.f),
+	m_octoStartPosition(56.f * 16.f, -5620.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(85, 150, 179),
@@ -46,7 +46,7 @@ IceCBiome::IceCBiome() :
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
 	m_rainbowCount(1u, 2u),
-	m_cloudCount(200u, 250u),
+	m_cloudCount(150u, 160u),
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),

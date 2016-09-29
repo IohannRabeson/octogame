@@ -2,7 +2,7 @@
 #include "Progress.hpp"
 
 EngineSnow::EngineSnow(void) :
-	AIdleNpc(ENGINE_SNOW_OSS),
+	AIdleNpc(ENGINE_SNOW_OSS, false, true),
 	m_generator("random")
 {
     setType(GameObjectType::EngineSnow);

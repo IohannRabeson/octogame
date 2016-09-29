@@ -8,6 +8,7 @@ JellyfishNpc::JellyfishNpc(void) :
 	setOrigin(sf::Vector2f(51.f, 81.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -20.f));
+	setBaseAngle(-90.f);
 	setup();
 }
 
