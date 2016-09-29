@@ -3,13 +3,14 @@
 
 # include "ANpc.hpp"
 # include "RandomGenerator.hpp"
+# include "ABiome.hpp"
 
 class SkyCycle;
 
 class ASwimNpc : public ANpc, public AGameObject<GameObjectType::SwimNpc>
 {
 public:
-	ASwimNpc(ResourceKey const & npcId, bool isMeetable, bool isShift);
+	ASwimNpc(ResourceKey const & npcId, ABiome & biome, bool isMeetable);
 	virtual ~ASwimNpc(void) = default;
 
 	virtual void			setup(void) = 0;
@@ -25,21 +26,17 @@ protected:
 	virtual void			update(sf::Time frametime);
 	virtual void			setVelocity(float velocity);
 
-	void					setBaseAngle(float angle);
+	sf::Vector2f const &	getOctoPosition(void);
 	float					randomFloat(float min, float max);
 
 private:
 	static RandomGenerator	m_generator;
 
-	void					computeBehavior(sf::Time frametime);
-
 	sf::Vector2f			m_octoPosition;
 	float					m_waterLevel;
 	bool					m_isMet;
-	bool					m_isShift;
 	float					m_velocity;
 	sf::Vector2f			m_shift;
-	float					m_baseAngle;
 };
 
 #endif

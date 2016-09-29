@@ -1,7 +1,7 @@
 #include "SebNpc.hpp"
 
-SebNpc::SebNpc(void) :
-	ASwimNpc(SEB_OSS, true, false)
+SebNpc::SebNpc(ABiome & biome) :
+	ASwimNpc(SEB_OSS, biome, true)
 {
     setType(GameObjectType::SebNpc);
 	setSize(sf::Vector2f(70.f, 200.f));

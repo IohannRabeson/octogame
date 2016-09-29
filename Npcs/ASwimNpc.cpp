@@ -7,20 +7,16 @@
 
 RandomGenerator ASwimNpc::m_generator("random");
 
-ASwimNpc::ASwimNpc(ResourceKey const & npcId, bool isMeetable, bool isShift) :
+ASwimNpc::ASwimNpc(ResourceKey const & npcId, ABiome & biome, bool isMeetable) :
 	ANpc(npcId, isMeetable),
-	m_waterLevel(0.f),
+	m_waterLevel(biome.getWaterLevel()),
 	m_isMet(false),
-	m_isShift(isShift),
 	m_velocity(m_generator.randomFloat(7.f, 13.f)),
-	m_shift(m_generator.randomFloat(-50.f, 50.f), m_generator.randomFloat(-50.f, 50.f)),
-	m_baseAngle(0.f)
+	m_shift(m_generator.randomFloat(-50.f, 50.f), m_generator.randomFloat(-50.f, 50.f))
 {
 	setupBox(this, static_cast<std::size_t>(GameObjectType::SwimNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	getBox()->setApplyGravity(false);
 	setFollowOcto(true);
-//	if (m_generator.randomBool(0.5f))
-//		reverseSprite(true);
 }
 
 void ASwimNpc::setupMachine(void)
@@ -54,12 +50,6 @@ void ASwimNpc::setPosition(sf::Vector2f const & position)
 
 void ASwimNpc::update(sf::Time frametime)
 {
-	computeBehavior(frametime);
-	ANpc::update(frametime);
-}
-
-void ASwimNpc::computeBehavior(sf::Time frametime)
-{
 	octo::CharacterSprite & sprite = getSprite();
 	RectangleShape * box = getBox();
 	sf::Vector2f position = octo::linearInterpolation(m_octoPosition, box->getPosition(), 1.f - frametime.asSeconds());
@@ -69,38 +59,14 @@ void ASwimNpc::computeBehavior(sf::Time frametime)
 		float dist = std::sqrt(std::pow(position.x - m_octoPosition.x, 2u) + std::pow(position.y - m_octoPosition.y, 2u));
 		if (position.y > box->getPosition().y && dist >= 100.f)
 			box->setVelocity((position - box->getPosition()) * (dist / m_velocity));
-
-		if (m_isShift)
-		{
-			float angle = octo::rad2Deg(std::atan2(box->getPosition().y - m_octoPosition.y, box->getPosition().x - m_octoPosition.x)) + m_baseAngle;
-			if (angle < 0.f)
-				angle += 360.f;
-			sprite.setRotation(angle);
-			//TODO : Clean this
-			if (m_baseAngle == 0.f)
-			{
-				if (angle > 90.f && angle < 270.f)
-					upSideDownSprite(true);
-				else
-					upSideDownSprite(false);
-			}
-		}
 	}
 	else if (m_isMet)
 	{
-		if (position.y > m_waterLevel + 200.f)
+		if (position.y > m_waterLevel + 100.f)
 			box->setVelocity((position - box->getPosition()) * 20.f);
-		if (sprite.getRotation() > 180.f)
-		{
-			upSideDownSprite(true);
-			sprite.setRotation(octo::linearInterpolation(360.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
-		}
-		else
-		{
-			upSideDownSprite(false);
-			sprite.setRotation(octo::linearInterpolation(0.f, sprite.getRotation(), 1.f - frametime.asSeconds()));
-		}
 	}
+
+	ANpc::update(frametime);
 }
 
 void ASwimNpc::updateState(void)
@@ -124,8 +90,6 @@ void ASwimNpc::collideOctoEvent(CharacterOcto * octo)
 	m_octoPosition = octo->getPosition() + m_shift;
 	if (!m_isMet)
 		m_isMet = true;
-	if (m_waterLevel == 0.f)
-		m_waterLevel = octo->getWaterLevel();
 }
 
 void ASwimNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
@@ -138,9 +102,9 @@ void ASwimNpc::setVelocity(float velocity)
 	m_velocity = velocity;
 }
 
-void ASwimNpc::setBaseAngle(float angle)
+sf::Vector2f const & ASwimNpc::getOctoPosition(void)
 {
-	m_baseAngle = angle;
+	return m_octoPosition;
 }
 
 float ASwimNpc::randomFloat(float min, float max)

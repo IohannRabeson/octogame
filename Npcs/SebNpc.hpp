@@ -6,7 +6,7 @@
 class SebNpc : public ASwimNpc
 {
 public:
-	SebNpc(void);
+	SebNpc(ABiome & biome);
 	virtual ~SebNpc(void) = default;
 
 	virtual void setup(void);

@@ -1,15 +1,12 @@
 #include "FishBlueNpc.hpp"
 
-FishBlueNpc::FishBlueNpc(void) :
-	ASwimNpc(FISH_BLUE_OSS, false, true)
+FishBlueNpc::FishBlueNpc(ABiome & biome) :
+	AFishNpc(FISH_BLUE_OSS, biome, false)
 {
     setType(GameObjectType::FishBlueNpc);
 	setSize(sf::Vector2f(93.f, 24.f));
 	setOrigin(sf::Vector2f(57.f, 45.f));
 	setScale(randomFloat(0.5f, 0.9f));
-	setTextOffset(sf::Vector2f(0.f, 0.f));
-	setFollowOcto(false);
-	reverseSprite(true);
 	setup();
 }
 
