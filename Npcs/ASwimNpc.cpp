@@ -44,7 +44,7 @@ void ASwimNpc::setupMachine(void)
 
 void ASwimNpc::setPosition(sf::Vector2f const & position)
 {
-	if (!m_isMet)
+	if (getPosition().x == 0.f && getPosition().y == 0.f)
 		ANpc::setPosition(position);
 }
 
@@ -105,6 +105,11 @@ void ASwimNpc::setVelocity(float velocity)
 sf::Vector2f const & ASwimNpc::getOctoPosition(void)
 {
 	return m_octoPosition;
+}
+
+float ASwimNpc::getWaterLevel(void)
+{
+	return m_waterLevel;
 }
 
 float ASwimNpc::randomFloat(float min, float max)

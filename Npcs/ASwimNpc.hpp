@@ -27,6 +27,7 @@ protected:
 	virtual void			setVelocity(float velocity);
 
 	sf::Vector2f const &	getOctoPosition(void);
+	float					getWaterLevel(void);
 	float					randomFloat(float min, float max);
 
 private:

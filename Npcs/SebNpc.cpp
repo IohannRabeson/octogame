@@ -1,4 +1,5 @@
 #include "SebNpc.hpp"
+#include "RectangleShape.hpp"
 
 SebNpc::SebNpc(ABiome & biome) :
 	ASwimNpc(SEB_OSS, biome, true)
@@ -35,4 +36,15 @@ void SebNpc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::Loop);
 
 	setupMachine();
+}
+
+void SebNpc::update(sf::Time frameTime)
+{
+	ASwimNpc::update(frameTime);
+
+	octo::CharacterSprite & sprite = getSprite();
+	RectangleShape * box = getBox();
+
+	if (sprite.getCurrentEvent() != Special1 && box->getPosition().y > getWaterLevel() + 100.f)
+		box->setVelocity(sf::Vector2f(0.f, -100.f));
 }
