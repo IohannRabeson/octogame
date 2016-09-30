@@ -163,7 +163,7 @@ WaterBBiome::WaterBBiome() :
 		if (randomBool(0.5f))
 			index = randomInt(1u, 50u);
 		else
-			index = randomInt(650u, 698u);
+			index = randomInt(650u, 690u);
 
 		if (*npc != GameObjectType::CedricStartNpc
 			&& *npc != GameObjectType::MaryvonneNpc
@@ -286,7 +286,7 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 	return [this](Noise & noise, float x, float y)
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
-		float n = noise.fBm(x, y, 3, 3.f, 1.0f);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		//float m = n / 10.f;
 		std::vector<float> pointX = {0.f  , 100.f, 101.f, 150.f, 180.f, 520.f, 550.f, 599.f, 600.f, 700.f};
 		std::vector<float> pointY = {-10.f, -10.f, -1.0f, -1.0f, n    , n    , -1.0f, -1.0f, -10.f, -10.f};
