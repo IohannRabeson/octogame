@@ -72,7 +72,6 @@ void AFishNpc::update(sf::Time frametime)
 	{
 		if (m_isMet)
 			box->setVelocity((position - box->getPosition()) * 20.f);
-		box->setVelocity(box->getVelocity() + sf::Vector2f(0.f, -40.f));
 	}
 
 	if (sprite.getCurrentEvent() == Special1)
