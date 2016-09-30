@@ -37,14 +37,3 @@ void SebNpc::setup(void)
 
 	setupMachine();
 }
-
-void SebNpc::update(sf::Time frameTime)
-{
-	ASwimNpc::update(frameTime);
-
-	octo::CharacterSprite & sprite = getSprite();
-	RectangleShape * box = getBox();
-
-	if (sprite.getCurrentEvent() != Special1 && box->getPosition().y > getWaterLevel() + 100.f)
-		box->setVelocity(sf::Vector2f(0.f, -100.f));
-}

@@ -48,6 +48,11 @@ void ASwimNpc::setPosition(sf::Vector2f const & position)
 		ANpc::setPosition(position);
 }
 
+void ASwimNpc::onTheFloor(void)
+{
+	m_additionalVelocity = sf::Vector2f(0.f, -50.f);
+}
+
 void ASwimNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
@@ -60,10 +65,11 @@ void ASwimNpc::update(sf::Time frametime)
 		if (position.y > box->getPosition().y && dist >= 100.f)
 			box->setVelocity((position - box->getPosition()) * (dist / m_velocity));
 	}
-	else if (m_isMet)
+	else if (position.y > m_waterLevel + 100.f)
 	{
-		if (position.y > m_waterLevel + 100.f)
+		if (m_isMet)
 			box->setVelocity((position - box->getPosition()) * 20.f);
+		box->setVelocity(box->getVelocity() + m_additionalVelocity);
 	}
 
 	ANpc::update(frametime);

@@ -66,6 +66,7 @@
 #include "ASpecialNpc.hpp"
 #include "ASinkNpc.hpp"
 #include "ASwimNpc.hpp"
+#include "AFishNpc.hpp"
 #include "AIdleNpc.hpp"
 #include "AUniqueNpc.hpp"
 #include "ADisappearNpc.hpp"
@@ -486,6 +487,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::SwimNpc:
 			gameObjectCast<ASwimNpc>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::FishNpc:
+			gameObjectCast<AFishNpc>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::Npc:
 			gameObjectCast<AUniqueNpc>(gameObject)->collideOctoEvent(octo);
