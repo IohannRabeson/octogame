@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "DesertEngine.hpp"
 #include "ClaireNpc.hpp"
 #include "MaryvonneNpc.hpp"
 #include "FishPinkNpc.hpp"
@@ -271,6 +272,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<DesertEngine>(DESERT_ENGINE_1_OSS);
 	m_npcFactory.registerCreator<ClaireNpc>(CLAIRE_OSS);
 	m_npcFactory.registerCreator<MaryvonneNpc>(MARYVONNE_OSS);
 	m_npcFactory.registerCreator<MariaNpc>(MARIA_OSS);
@@ -814,6 +816,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::DesertEngine:
+				{
+					DesertEngine * npc = new DesertEngine();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::ClaireNpc:
 				{
 					ClaireNpc * npc = new ClaireNpc();
