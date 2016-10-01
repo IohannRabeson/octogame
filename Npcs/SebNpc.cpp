@@ -1,4 +1,5 @@
 #include "SebNpc.hpp"
+#include "RectangleShape.hpp"
 
 SebNpc::SebNpc(ABiome & biome) :
 	ASwimNpc(SEB_OSS, biome, true)

@@ -10,7 +10,6 @@ public:
 	virtual ~SebNpc(void) = default;
 
 	virtual void setup(void);
-
 };
 
 #endif

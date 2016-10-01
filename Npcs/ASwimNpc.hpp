@@ -15,6 +15,7 @@ public:
 
 	virtual void			setup(void) = 0;
 	virtual void			setPosition(sf::Vector2f const & position);
+	virtual void			onTheFloor(void);
 	virtual float			getHeight(void) const { return 0.f; }
 	virtual void			collideOctoEvent(CharacterOcto * octo);
 	virtual void			draw(sf::RenderTarget & render, sf::RenderStates states) const;
@@ -27,6 +28,7 @@ protected:
 	virtual void			setVelocity(float velocity);
 
 	sf::Vector2f const &	getOctoPosition(void);
+	float					getWaterLevel(void);
 	float					randomFloat(float min, float max);
 
 private:
@@ -36,6 +38,7 @@ private:
 	float					m_waterLevel;
 	bool					m_isMet;
 	float					m_velocity;
+	sf::Vector2f			m_additionalVelocity;
 	sf::Vector2f			m_shift;
 };
 

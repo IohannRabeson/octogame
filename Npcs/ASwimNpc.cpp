@@ -44,8 +44,13 @@ void ASwimNpc::setupMachine(void)
 
 void ASwimNpc::setPosition(sf::Vector2f const & position)
 {
-	if (!m_isMet)
+	if (getPosition().x == 0.f && getPosition().y == 0.f)
 		ANpc::setPosition(position);
+}
+
+void ASwimNpc::onTheFloor(void)
+{
+	m_additionalVelocity = sf::Vector2f(0.f, -50.f);
 }
 
 void ASwimNpc::update(sf::Time frametime)
@@ -60,10 +65,11 @@ void ASwimNpc::update(sf::Time frametime)
 		if (position.y > box->getPosition().y && dist >= 100.f)
 			box->setVelocity((position - box->getPosition()) * (dist / m_velocity));
 	}
-	else if (m_isMet)
+	else if (position.y > m_waterLevel + 100.f)
 	{
-		if (position.y > m_waterLevel + 100.f)
+		if (m_isMet)
 			box->setVelocity((position - box->getPosition()) * 20.f);
+		box->setVelocity(box->getVelocity() + m_additionalVelocity);
 	}
 
 	ANpc::update(frametime);
@@ -105,6 +111,11 @@ void ASwimNpc::setVelocity(float velocity)
 sf::Vector2f const & ASwimNpc::getOctoPosition(void)
 {
 	return m_octoPosition;
+}
+
+float ASwimNpc::getWaterLevel(void)
+{
+	return m_waterLevel;
 }
 
 float ASwimNpc::randomFloat(float min, float max)

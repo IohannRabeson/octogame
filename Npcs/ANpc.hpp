@@ -38,10 +38,10 @@ public:
 	void setDisplayText(bool displayText);
 	void setNextEvent(Events event);
 	void addMapOffset(float x, float y);
-	void onTheFloor(void);
 	sf::Vector2f const & getPosition(void) const;
 
 	virtual void setup(void) = 0;
+	virtual void onTheFloor(void);
 	virtual void collideOctoEvent(CharacterOcto * octo);
 	virtual void update(sf::Time frametime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
