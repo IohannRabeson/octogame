@@ -65,7 +65,6 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Cage.cpp					\
 				GameObjects/Concert.cpp					\
 				GameObjects/Well.cpp					\
-				GameObjects/Seb.cpp						\
 				GameObjects/Pyramid.cpp					\
 				GameObjects/WeirdHouseSnow.cpp			\
 				GameObjects/CheckPoint.cpp				\
@@ -166,7 +165,11 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/FishPinkNpc.cpp				\
 				Npcs/MaryvonneNpc.cpp				\
 				Npcs/ClaireNpc.cpp				\
+				Npcs/DesertEngine.cpp				\
+				Npcs/Deepo.cpp				\
 #Script AddNpc
+
+
 
 
 

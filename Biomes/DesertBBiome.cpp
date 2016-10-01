@@ -146,7 +146,9 @@ DesertBBiome::DesertBBiome() :
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(335.f * 16.f, 1880.f);
 
+	m_gameObjects[130] = GameObjectType::DesertEngine;
 	m_gameObjects[140] = GameObjectType::PortalDesert;
+	m_gameObjects[200] = GameObjectType::DesertEngine;
 	m_gameObjects[257] = GameObjectType::CedricStartNpc;
 	m_gameObjects[335] = GameObjectType::FranGlitchNpc;
 	m_instances[150] = MAP_DESERT_B_TRAIL_OMP;

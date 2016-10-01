@@ -145,8 +145,10 @@ DesertABiome::DesertABiome() :
 		m_octoStartPosition = sf::Vector2f(510 * 16.f, -2700.f);
 
 	// Define game objects
+	m_gameObjects[6] = GameObjectType::DesertEngine;
 	m_instances[23] = MAP_DESERT_A_WAVE_OMP;
 	m_gameObjects[48] = GameObjectType::TurbanNpc;
+	m_gameObjects[36] = GameObjectType::DesertEngine;
 	m_gameObjects[220] = GameObjectType::JuNpc;
 	m_instances[250] = MAP_DESERT_A_JUMP_OMP;
 	m_gameObjects[250] = GameObjectType::PortalSnow;
