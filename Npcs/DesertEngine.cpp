@@ -23,13 +23,13 @@ void DesertEngine::setSprite()
 	switch (index)
 	{
 		case 0u:
-			sprite.setSpriteSheet(resources.getSpriteSheet(COLUMN_1_OSS));
+			sprite.setSpriteSheet(resources.getSpriteSheet(DESERT_ENGINE_1_OSS));
 			break;
 		case 1u:
-			sprite.setSpriteSheet(resources.getSpriteSheet(COLUMN_2_OSS));
+			sprite.setSpriteSheet(resources.getSpriteSheet(DESERT_ENGINE_2_OSS));
 			break;
 		case 2u:
-			sprite.setSpriteSheet(resources.getSpriteSheet(COLUMN_3_OSS));
+			sprite.setSpriteSheet(resources.getSpriteSheet(DESERT_ENGINE_3_OSS));
 			break;
 		default:
 			break;
