@@ -166,7 +166,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/MaryvonneNpc.cpp				\
 				Npcs/ClaireNpc.cpp				\
 				Npcs/DesertEngine.cpp				\
+				Npcs/Deepo.cpp				\
 #Script AddNpc
+
 
 
 
