@@ -1021,14 +1021,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
-/*			case GameObjectType::CavemanClimbingNpc:
-				{
-					CavemanClimbingNpc * npc = new CavemanClimbingNpc();
-					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
-				}
-				break;
-*/
 			case GameObjectType::ScientistCedric:
 				{
 					ScientistCedric * npc = new ScientistCedric();
