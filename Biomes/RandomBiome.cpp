@@ -153,7 +153,6 @@ RandomBiome::RandomBiome() :
 	std::size_t portalPos = 30.f;
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_instances[100] = MAP_RANDOM_OMP;
-	m_gameObjects[50] = GameObjectType::Rocket;
 	m_destinations.push_back(progress.getLastDestination());
 
 	m_interestPointPosX = portalPos;

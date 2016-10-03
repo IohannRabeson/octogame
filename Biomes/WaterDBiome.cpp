@@ -13,9 +13,10 @@ WaterDBiome::WaterDBiome() :
 	m_name("Water D"),
 	m_id(Level::WaterA),
 	m_seed("Water D"),
-	m_mapSize(sf::Vector2u(700u, 32u)),
+	m_mapSize(sf::Vector2u(1200u, 32u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(83.f * 16.f, 50.f),
+	m_octoStartPosition(63.f * 16.f, -200.f * 16.f),
+	//m_octoStartPosition(63.f * 16.f, -500.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(250, 229, 205),
@@ -72,7 +73,7 @@ WaterDBiome::WaterDBiome() :
 	m_rockPartCount(4.f, 8.f),
 	m_rockColor(159, 24, 24),
 
-	m_grassSizeY(60.f, 70.f),
+	m_grassSizeY(80.f, 90.f),
 	m_grassSizeX(14.f, 16.f),
 	m_grassColor(159, 24, 24, 150),
 	m_grassCount(m_mapSize.x),
@@ -129,9 +130,6 @@ WaterDBiome::WaterDBiome() :
 #else
 	m_mapSeed = 42;//m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
-
-	m_tileStartColor = getLeafColor();
-	m_tileEndColor = getLeafColor();
 	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
@@ -146,11 +144,7 @@ WaterDBiome::WaterDBiome() :
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(167.f * 16.f, -2600.f);
 
-	m_gameObjects[5] = GameObjectType::WindowGlitchNpc;
-	m_gameObjects[40] = GameObjectType::BirdRedNpc;
-	m_gameObjects[100] = GameObjectType::FishRedNpc;
-	m_gameObjects[115] = GameObjectType::BirdRedNpc;
-	m_instances[120] = MAP_JUNGLE_C_TRAIL_OMP;
+	m_instances[50] = MAP_WATER_D_TRAIL_OMP;
 
 	for (std::size_t i = 0; i < 900; i += m_generator.randomInt(10u, 60u))
 	{
@@ -241,6 +235,11 @@ sf::Color	WaterDBiome::getSecondWaterColor()
 
 bool		WaterDBiome::isDeadlyWater()
 {
+	return false;
+}
+
+bool		WaterDBiome::isDeadlyGrass()
+{
 	return true;
 }
 
@@ -294,8 +293,8 @@ Map::MapSurfaceGenerator WaterDBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator WaterDBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = getRockColor();
-	sf::Color secondColorEnd = getRockColor();
+	sf::Color secondColorStart = m_tileStartColor;//getRockColor();
+	sf::Color secondColorEnd = m_tileEndColor;//getRockColor();
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(103, 157, 208);
 	float start1 = -3900.f / static_cast<float>(m_mapSize.y);
