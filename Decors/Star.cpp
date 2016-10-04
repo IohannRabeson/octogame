@@ -25,7 +25,7 @@ void Star::setup(ABiome& biome)
 	m_glowSizeCorner = m_glowSize / 2.f;
 
 	m_animator.setup(biome.getStarLifeTime());
-	m_animator.pause();
+	//m_animator.pause();
 }
 
 void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
@@ -33,10 +33,11 @@ void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	if (m_cycle && m_cycle->isDay())
 		m_animator.die();
 
-	if (m_animator.update(frameTime))
-		m_animator.pause();
-	else if ((m_cycle && m_cycle->isNight()) || m_cycle == nullptr)
-		m_animator.play();
+	(void)frameTime;
+	m_animator.update(frameTime);
+//		m_animator.pause();
+//	else if ((m_cycle && m_cycle->isNight()) || m_cycle == nullptr)
+//		m_animator.play();
 	m_animation = m_animator.getAnimation();
 
 	sf::Vector2f const & position = getPosition();
