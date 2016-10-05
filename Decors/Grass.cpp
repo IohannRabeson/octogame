@@ -88,6 +88,7 @@ void Grass::setup(ABiome& biome)
 		m_isShining = true;
 		m_shine.setSize(biome.getShineEffectSize() / 4.f);
 		m_shine.setup(biome);
+		m_shine.setCanPlaySound(false);
 	}
 }
 

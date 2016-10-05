@@ -144,11 +144,13 @@ GroundManager::GroundManager(void) :
 	m_verticesCount(0u),
 	m_oldOffset(0, 0),
 	//TODO:Estimate what we need
-	m_decorManagerBack(200000),
-	m_decorManagerFront(50000),
+	//m_decorManagerBack(200000),
+	//m_decorManagerFront(50000),
+	m_decorManagerBack(300000),
+	m_decorManagerFront(300000),
 	m_decorManagerGround(15000),
-	m_decorManagerInstanceBack(100000),
-	m_decorManagerInstanceFront(100000),
+	m_decorManagerInstanceBack(300000),
+	m_decorManagerInstanceFront(300000),
 	m_decorManagerInstanceGround(50000),
 	m_nextState(GenerationState::None),
 	m_water(nullptr)

@@ -11,6 +11,7 @@ public:
 	virtual ~ShineEffect(void) = default;
 
 	void		 setSize(sf::Vector2f const & size);
+	void		 setCanPlaySound(bool playSound);
 	virtual void setup(ABiome& biome);
 	virtual void update(sf::Time frameTime,
 						octo::VertexBuilder& builder,
@@ -27,6 +28,7 @@ private:
 	float			m_animation;
 	bool			m_isShineEffect;
 	bool			m_isSound;
+	bool			m_canPlaySound;
 
 	sf::Vector2f	m_glowSize;
 	sf::Vector2f	m_glowSizeCorner;
