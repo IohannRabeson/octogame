@@ -177,6 +177,7 @@ private:
 	PloufSystem					m_ploufParticle;
 	WaterDropSystem				m_waterParticle;
 	SmokeSystem					m_bubbleParticle;
+	sf::Time					m_timeInAir;
 	sf::Time					m_timeEventFall;
 	sf::Time					m_timeEventDieFallMax;
 	sf::Time					m_timeEventDieVoidMax;
