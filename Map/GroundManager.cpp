@@ -645,10 +645,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					adecor = new Tree(true);
 				else if (!decor.name.compare(DECOR_ROCK_OSS))
 					adecor = new Rock();
-				else if (!decor.name.compare(DECOR_GRASS_OSS))
-					adecor = new Grass(true, false);
-				else if (!decor.name.compare(DECOR_GRASS_REVERSE_OSS))
-					adecor = new Grass(true, true);
 				else if (!decor.name.compare(DECOR_CRYSTAL_OSS))
 					adecor = new Crystal();
 				else if (!decor.name.compare(DECOR_MUSHROOM_OSS))
@@ -657,6 +653,18 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					adecor = new GroundRock(true);
 				else if (!decor.name.compare(DECOR_RAINBOW_OSS))
 					adecor = new Rainbow();
+				else if (!decor.name.compare(DECOR_GRASS_OSS))
+				{
+					adecor = new Grass(true, false);
+					if (biome.isDeadlyGrass())
+						decor.isFront = true;
+				}
+				else if (!decor.name.compare(DECOR_GRASS_REVERSE_OSS))
+				{
+					adecor = new Grass(true, true);
+					if (biome.isDeadlyGrass())
+						decor.isFront = true;
+				}
 				if (adecor)
 				{
 					adecor->setPosition(sf::Vector2f(position.x, position.y + Tile::TileSize));

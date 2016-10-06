@@ -33,9 +33,9 @@ WaterDBiome::WaterDBiome() :
 	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 147, 46, 130),
 	m_wind(30.f),
-	m_rainDropPerSecond(10u, 15u),
+	m_rainDropPerSecond(1u, 1u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
-	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
+	m_rainingTime(sf::seconds(1500.f), sf::seconds(2000.f)),
 	m_lightningSize(700.f, 2500.f),
 
 	m_rockCount(10u, 15u),
@@ -52,14 +52,14 @@ WaterDBiome::WaterDBiome() :
 	m_canCreateRain(true),
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
-	m_canCreateRock(true),
+	m_canCreateRock(false),
 	m_canCreateTree(false),
-	m_canCreateLeaf(true),
-	m_treeIsMoving(true),
-	m_canCreateMushroom(true),
-	m_canCreateCrystal(true),
+	m_canCreateLeaf(false),
+	m_treeIsMoving(false),
+	m_canCreateMushroom(false),
+	m_canCreateCrystal(false),
 	m_canCreateShineEffect(true),
-	m_canCreateCloud(true),
+	m_canCreateCloud(false),
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
@@ -138,10 +138,10 @@ WaterDBiome::WaterDBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::JungleD)
-		m_octoStartPosition = sf::Vector2f(868.f * 16.f, 100.f);
+	if (progress.getLastDestination() == Level::WaterC)
+		m_octoStartPosition = sf::Vector2f(773.f * 16.f, -110.f * 16.f);
 	if (progress.getLastDestination() == Level::Random)
-		m_octoStartPosition = sf::Vector2f(167.f * 16.f, -2600.f);
+		m_octoStartPosition = sf::Vector2f(741.f * 16.f, -320.f * 16.f);
 
 	m_instances[50] = MAP_WATER_D_TRAIL_OMP;
 
@@ -156,8 +156,8 @@ WaterDBiome::WaterDBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::JungleB);
-	m_destinations.push_back(Level::JungleD);
+	m_destinations.push_back(Level::WaterC);
+	m_destinations.push_back(Level::WaterE);
 	m_destinations.push_back(Level::Random);
 }
 
@@ -273,8 +273,8 @@ Map::MapSurfaceGenerator WaterDBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = { 0.f , 20.f, 40.f   , 70.f   , 110.f, 120.f, 155.f, 915.f};
-		std::vector<float> pointY = { -0.1f, n   , n + 6.f, n + 6.f, n    , -0.2f, 0.2f , 0.2f};
+		std::vector<float> pointX = {0.f , 50.f , 51.f, 1049.f, 1050.f, 1200.f};
+		std::vector<float> pointY = {1.1f, -1.0f, 9.f , 9.f   , 5.2f  , 1.1f };
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
