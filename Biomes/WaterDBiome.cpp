@@ -145,14 +145,6 @@ WaterDBiome::WaterDBiome() :
 
 	m_instances[50] = MAP_WATER_D_TRAIL_OMP;
 
-	for (std::size_t i = 0; i < 900; i += m_generator.randomInt(10u, 60u))
-	{
-		if (m_generator.randomBool(0.5))
-			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
-		else
-			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
-	}
-
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
