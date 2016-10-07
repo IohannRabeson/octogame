@@ -212,6 +212,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/ResolutionMenu.cpp					\
 				Menu/CheatCodeMenu.cpp					\
 				Menu/LevelMenu.cpp						\
+				Menu/PlayEndMenu.cpp					\
 				Menu/NanoMenu.cpp						\
 				Menu/RandomDiscoverMenu.cpp				\
 				Menu/FakeMenu.cpp						\

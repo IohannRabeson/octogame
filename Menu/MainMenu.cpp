@@ -1,4 +1,5 @@
 #include "MainMenu.hpp"
+#include "PlayEndMenu.hpp"
 #include "CheatCodeMenu.hpp"
 #include "ControlMenu.hpp"
 #include "CreditMenu.hpp"
@@ -54,7 +55,10 @@ void MainMenu::createMenus(void)
 
 	if (progress.isMenu())
 	{
-		addMenu(AMenu::getText("menu_play"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+		if (!progress.isGameFinished())
+			addMenu(AMenu::getText("menu_play"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+		else
+			addMenu(AMenu::getText("menu_play"), std::unique_ptr<PlayEndMenu>(new PlayEndMenu()));
 		addMenu(AMenu::getText("menu_new"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	}
 	else
@@ -62,8 +66,6 @@ void MainMenu::createMenus(void)
 #ifndef NDEBUG
 	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
 #endif
-	if (progress.isGameFinished())
-		addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
 	addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
 	if (progress.isMenu())
 	{
@@ -89,7 +91,7 @@ void MainMenu::onSelection(void)
 {
 	Progress const & progress = Progress::getInstance();
 
-	if (progress.isMenu() && getIndexCursor() == 0u)
+	if (progress.isMenu() && getIndexCursor() == 0u && !progress.isGameFinished())
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
 

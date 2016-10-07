@@ -1,6 +1,12 @@
 menu_no=No
 menu_yes=Yes
 menu_play=PLAY!
+menu_play_current=Current
+menu_play_ice=Ice
+menu_play_desert=Desert
+menu_play_jungle=Jungle
+menu_play_water=Beach
+menu_play_final=Final
 menu_new=New Menu
 menu_controls=Controls
 menu_options=Options

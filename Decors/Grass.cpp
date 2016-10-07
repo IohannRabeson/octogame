@@ -61,7 +61,8 @@ void Grass::setup(ABiome& biome)
 	m_colorNormal = biome.getGrassColor();
 	m_colorDeadly = biome.getGrassColor();
 	m_colorDeadly.a = 255;
-	m_isDeadlyGrass = biome.isDeadlyGrass();
+	if (m_onInstance)
+		m_isDeadlyGrass = biome.isDeadlyGrass();
 	if (!m_isDeadlyGrass)
 		m_animator.setup(biome.getMushroomLifeTime());
 	else

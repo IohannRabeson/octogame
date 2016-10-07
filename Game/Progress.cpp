@@ -195,7 +195,7 @@ void	Progress::setNanoRobotCount(std::size_t count)
 
 void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 {
-	if (!m_isMenu)
+	if (!m_isMenu || destination != Level::Rewards)
 	{
 		if (destination != m_data.currentDestination)
 			m_data.lastDestination = m_data.currentDestination;

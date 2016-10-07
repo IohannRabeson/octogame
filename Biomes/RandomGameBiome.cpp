@@ -162,7 +162,7 @@ RandomGameBiome::RandomGameBiome() :
 
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
-	m_biomeManager.registerBiome<RandomGameBiome>(Level::Rewards);
+	m_biomeManager.registerBiome<RandomGameBiome>(Level::RandomGame);
 
 	setBiome(Progress::getInstance().getNextDestination());
 	m_name = m_biomeManager.getCurrentBiome().getName();
