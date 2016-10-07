@@ -147,7 +147,11 @@ JungleDBiome::JungleDBiome() :
 	m_gameObjects[740] = GameObjectType::Pedestal;
 	m_gameObjects[744] = GameObjectType::WaterNanoRobot;
 	m_instances[815] = MAP_JUNGLE_D_PORTAL_OMP;
+	m_gameObjects[800] = GameObjectType::FishBlackNpc;
+	m_gameObjects[809] = GameObjectType::FishBlackNpc;
 	m_gameObjects[830] = GameObjectType::CanouilleNpc;
+	m_gameObjects[840] = GameObjectType::FishBlackNpc;
+	m_gameObjects[857] = GameObjectType::FishBlackNpc;
 	for (std::size_t i = 0; i < 200; i += m_generator.randomInt(20u, 40u))
 	{
 		if (m_generator.randomBool(0.5))
