@@ -59,7 +59,8 @@ void Grass::setup(ABiome& biome)
 	m_size = sf::Vector2f(biome.getGrassSizeX(), biome.getGrassSizeY());
 	m_color = biome.getGrassColor();
 	m_colorNormal = biome.getGrassColor();
-	m_colorDeadly = biome.getSkyDayColor();
+	m_colorDeadly = biome.getGrassColor();
+	m_colorDeadly.a = 255;
 	m_isDeadlyGrass = biome.isDeadlyGrass();
 	if (!m_isDeadlyGrass)
 		m_animator.setup(biome.getMushroomLifeTime());

@@ -18,20 +18,20 @@ WaterCBiome::WaterCBiome() :
 	m_octoStartPosition(49.f * 16.f, 3970.f),
 	m_transitionDuration(2.f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(250, 229, 205),
-	m_tileEndColor(244, 201, 154),
+	m_tileStartColor(255, 208, 71),
+	m_tileEndColor(243, 146, 0),
 	m_waterLevel(400.f),
-	m_waterColor(3, 57, 108, 60),
+	m_waterColor(37, 47, 203, 100),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::Time::Zero),
-	m_skyDayColor(255, 0, 0),
-	m_skyNightColor(255, 0, 0),
-	m_nightLightColor(255, 90, 61, 130),
+	m_skyDayColor(140,135,234),
+	m_skyNightColor(26,15,213),
+	m_nightLightColor(0,204,0, 100),
 	m_dayLightColor(sf::Color::Transparent),
-	m_SunsetLightColor(255, 147, 46, 130),
+	m_SunsetLightColor(0,204,0, 120),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 15u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -70,11 +70,11 @@ WaterCBiome::WaterCBiome() :
 
 	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(20.f, 200.f)),
 	m_rockPartCount(4.f, 8.f),
-	m_rockColor(159, 24, 24),
+	m_rockColor(230, 230, 230),
 
 	m_grassSizeY(90.f, 91.f),
 	m_grassSizeX(50.f, 70.f),
-	m_grassColor(159, 24, 24, 150),
+	m_grassColor(159, 24, 24, 130),
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
 
@@ -258,23 +258,11 @@ std::vector<ParallaxScrolling::ALayer *> WaterCBiome::getLayers()
 	sf::Vector2u mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.2f, 0.6f), sf::Vector2u(mapSize.x, mapSize.y / 3.f), 12.f, 250, 0.1f, 1.f, -1.f);
+	GenerativeLayer * layer;
+	layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 2.5f), 12.f, 350, 0.5f, 0.3f, 2.f, 400.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 1.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.4f, 0.4f), sf::Vector2u(mapSize.x, mapSize.y / 3.f), 12.f, 270, 0.1f, 0.3f, 1.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.noise(x * 1.1f, y);
-		});
-	vector.push_back(layer);
-	/*
-	layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 2.5f), 12.f, 350, 0.1f, 0.3f, 2.f, 1000.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.noise(x * 25.f, y);
+			return noise.noise(x * 5.f, y);
 		});
 	vector.push_back(layer);
 	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 300, 0.1f, 0.3f, 2.f, 1000.f);
@@ -289,13 +277,6 @@ std::vector<ParallaxScrolling::ALayer *> WaterCBiome::getLayers()
 			return noise.noise(x * 35.f, y + 100);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.7f, 0.1f), sf::Vector2u(mapSize.x, mapSize.y * 5.5f), 12.f, -50, 0.3f, 0.3f, 1.f, 3000.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.noise(x * 40.f, y + 200.f);
-		});
-	vector.push_back(layer);
-	*/
 	return vector;
 }
 
@@ -324,16 +305,16 @@ Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator WaterCBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = getRockColor();
-	sf::Color secondColorEnd = getRockColor();
+	sf::Color secondColorStart(205, 158, 21);
+	sf::Color secondColorEnd(193, 96, 0);
 	sf::Color thirdColorStart(53, 107, 208);
-	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -40000.f / static_cast<float>(m_mapSize.y);
+	sf::Color thirdColorEnd(26, 15, 213);
+	float start1 = -23000.f / static_cast<float>(m_mapSize.y);
 	float start2 = -18000.f / static_cast<float>(m_mapSize.y);
-	float middle1 = -8000.f / static_cast<float>(m_mapSize.y);
-	float middle2 = 4000.f / static_cast<float>(m_mapSize.y);
-	float end1 = 18000.f / static_cast<float>(m_mapSize.y);
-	float end2 = 35000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -14000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 3000.f / static_cast<float>(m_mapSize.y);
+	float end1 = 4000.f / static_cast<float>(m_mapSize.y);
+	float end2 = 5000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;

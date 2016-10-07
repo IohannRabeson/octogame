@@ -18,20 +18,20 @@ WaterBBiome::WaterBBiome() :
 	m_octoStartPosition(604.f * 16.f, -180.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(250, 229, 205),
-	m_tileEndColor(244, 201, 154),
+	m_tileStartColor(255, 208, 71),
+	m_tileEndColor(243, 146, 0),
 	m_waterLevel(1000.f),
-	m_waterColor(3, 57, 108, 60),
+	m_waterColor(37, 47, 203, 100),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::Time::Zero),
-	m_skyDayColor(255, 0, 0),
-	m_skyNightColor(255, 0, 0),
-	m_nightLightColor(255, 90, 61, 130),
+	m_skyDayColor(140,135,234),
+	m_skyNightColor(26,15,213),
+	m_nightLightColor(0,204,0, 100),
 	m_dayLightColor(sf::Color::Transparent),
-	m_SunsetLightColor(255, 147, 46, 130),
+	m_SunsetLightColor(0,204,0, 120),
 	m_wind(0.f),
 	m_rainDropPerSecond(10u, 15u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -70,11 +70,11 @@ WaterBBiome::WaterBBiome() :
 
 	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(20.f, 200.f)),
 	m_rockPartCount(4.f, 8.f),
-	m_rockColor(159, 24, 24),
+	m_rockColor(230, 230, 230),
 
 	m_grassSizeY(60.f, 70.f),
 	m_grassSizeX(25.f, 40.f),
-	m_grassColor(244, 201, 154, 150),
+	m_grassColor(159, 24, 24, 130),
 	m_grassCount(m_mapSize.x / 2),
 	m_grassIndex(0u),
 
@@ -112,7 +112,7 @@ WaterBBiome::WaterBBiome() :
 
 	m_sunSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(159, 24, 24),
+	m_sunColor(255, 255, 255),
 
 	m_moonSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_moonColor(255, 255, 255),
@@ -268,16 +268,16 @@ std::vector<ParallaxScrolling::ALayer *> WaterBBiome::getLayers()
 	sf::Vector2u mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
+	GenerativeLayer * layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
+			return noise.perlin(x, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 40, 0.1f, 0.4f, 11.f, 40.f);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 40, 0.1f, 0.4f, 11.f, 40.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
+			return noise.perlin(x + 100.f, y + 100.f, 2, 2.f);
 		});
 	vector.push_back(layer);
 	return vector;
@@ -312,12 +312,12 @@ Map::TileColorGenerator WaterBBiome::getTileColorGenerator()
 	sf::Color secondColorEnd = getRockColor();
 	sf::Color secondColorStart = getRockColor();
 	sf::Color thirdColorStart(53, 107, 208);
-	sf::Color thirdColorEnd(103, 157, 208);
+	sf::Color thirdColorEnd(26, 15, 213);
 	float start1 = -200000.f / static_cast<float>(m_mapSize.y);
 	float start2 = -130000.f / static_cast<float>(m_mapSize.y);
 	float middle1 = -105000.f / static_cast<float>(m_mapSize.y);
-	float middle2 = -100000.f / static_cast<float>(m_mapSize.y);
-	float end1 = -10000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 6000.f / static_cast<float>(m_mapSize.y);
+	float end1 = 10000.f / static_cast<float>(m_mapSize.y);
 	float end2 = 17000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{

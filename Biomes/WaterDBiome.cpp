@@ -18,20 +18,20 @@ WaterDBiome::WaterDBiome() :
 	m_octoStartPosition(79.f * 16.f, -200.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(250, 229, 205),
-	m_tileEndColor(244, 201, 154),
+	m_tileStartColor(255, 208, 71),
+	m_tileEndColor(243, 146, 0),
 	m_waterLevel(340.f),
-	m_waterColor(3, 57, 108, 130),
+	m_waterColor(37, 47, 203, 100),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::Time::Zero),
-	m_skyDayColor(255, 0, 0),
-	m_skyNightColor(255, 0, 0),
-	m_nightLightColor(255, 90, 61, 130),
+	m_skyDayColor(140,135,234),
+	m_skyNightColor(26,15,213),
+	m_nightLightColor(0,204,0, 100),
 	m_dayLightColor(sf::Color::Transparent),
-	m_SunsetLightColor(255, 147, 46, 130),
+	m_SunsetLightColor(0,204,0, 120),
 	m_wind(30.f),
 	m_rainDropPerSecond(1u, 1u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -70,11 +70,11 @@ WaterDBiome::WaterDBiome() :
 
 	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(20.f, 200.f)),
 	m_rockPartCount(4.f, 8.f),
-	m_rockColor(159, 24, 24),
+	m_rockColor(230, 230, 230),
 
 	m_grassSizeY(50.f, 60.f),
 	m_grassSizeX(10.f, 26.f),
-	m_grassColor(159, 24, 24, 150),
+	m_grassColor(159, 24, 24, 130),
 	m_grassCount(m_mapSize.x),
 
 	m_treeDepth(6u, 7u),
@@ -284,16 +284,16 @@ Map::MapSurfaceGenerator WaterDBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator WaterDBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = m_tileStartColor;//getRockColor();
-	sf::Color secondColorEnd = m_tileEndColor;//getRockColor();
+	sf::Color secondColorStart = getRockColor();//(205, 158, 21);
+	sf::Color secondColorEnd = getRockColor();//(193, 96, 0);
 	sf::Color thirdColorStart(53, 107, 208);
-	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -3900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -2200.f / static_cast<float>(m_mapSize.y);
-	float middle1 = 0.f / static_cast<float>(m_mapSize.y);
+	sf::Color thirdColorEnd(26, 15, 213);
+	float start1 = -5900.f / static_cast<float>(m_mapSize.y);
+	float start2 = -4200.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -2800.f / static_cast<float>(m_mapSize.y);
 	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
-	float end1 = 1000.f / static_cast<float>(m_mapSize.y);
-	float end2 = 1700.f / static_cast<float>(m_mapSize.y);
+	float end1 = 800.f / static_cast<float>(m_mapSize.y);
+	float end2 = 1500.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
