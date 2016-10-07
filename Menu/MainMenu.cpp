@@ -27,17 +27,6 @@ class YesNoQuit : public YesNoMenu
 	inline void actionNo(void) { }
 };
 
-class YesNoNewMenu : public YesNoMenu
-{
-	inline void setIndex(void) { setIndexCursor(0); }
-	inline void actionYes(void)
-	{
-		octo::StateManager &	states = octo::Application::getStateManager();
-		states.change("menu");
-	}
-	inline void actionNo(void) { }
-};
-
 class YesNoReset : public YesNoMenu
 {
 	inline void setIndex(void) { setIndexCursor(0); }
@@ -66,7 +55,7 @@ void MainMenu::createMenus(void)
 	if (progress.isMenu())
 	{
 		addMenu(AMenu::getText("menu_play"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-		addMenu(AMenu::getText("menu_new"), std::unique_ptr<YesNoNewMenu>(new YesNoNewMenu()));
+		addMenu(AMenu::getText("menu_new"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 	}
 	else
 		addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
@@ -121,6 +110,11 @@ void MainMenu::onSelection(void)
 			}
 			states.change("transitionLevel");
 		}
+	}
+	else if (progress.isMenu() && getIndexCursor() == 1u && progress.isMenu())
+	{
+		octo::StateManager &	states = octo::Application::getStateManager();
+		states.change("menu");
 	}
 	else
 		AMenuSelection::onSelection();
