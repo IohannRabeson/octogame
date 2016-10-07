@@ -1,6 +1,8 @@
 #include "LevelMenu.hpp"
 #include "EmptyMenu.hpp"
 #include "Progress.hpp"
+#include <StateManager.hpp>
+#include <Application.hpp>
 
 LevelMenu::LevelMenu(void) :
 	m_index(0u)
@@ -52,9 +54,12 @@ void LevelMenu::createMenus(void)
 
 void LevelMenu::onSelection(void)
 {
-	std::vector<Level> const & levels = Progress::getInstance().getRegisteredLevels();
+	octo::StateManager &		states = octo::Application::getStateManager();
+	std::vector<Level> const &	levels = Progress::getInstance().getRegisteredLevels();
+
 	Progress::getInstance().setNextDestination(levels[getIndexCursor()]);
 	Progress::getInstance().setRespawnType(Progress::RespawnType::Portal);
+	states.change("game");
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();
