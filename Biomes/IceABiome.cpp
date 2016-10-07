@@ -140,7 +140,6 @@ IceABiome::IceABiome() :
 	m_gameObjects[150] = GameObjectType::GroundTransformNanoRobot;
 	m_interestPointPosX = 420;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
-	m_instances[20] = MAP_ICE_A_TRAIL_LEFT_OMP;
 	if (!progress.canRepairShip())
 		m_instances[120] = MAP_ICE_A_CRATER_OMP;
 	else
