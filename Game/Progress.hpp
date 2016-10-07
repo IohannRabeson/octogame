@@ -159,6 +159,7 @@ private:
 				std::size_t musicVol, std::size_t soundVol, std::size_t globalVol,
 				bool fullscreen, bool vsync, Language language) :
 			timePlayed(0.f),
+			isGameFinished(false),
 			validateChallenge(0u),
 			nanoRobotCount(nanoRobot),
 			nextDestination(biome),
@@ -181,6 +182,7 @@ private:
 		{}
 
 		float					timePlayed;
+		bool					isGameFinished;
 		sf::Vector2f			checkPointPosition;
 		std::size_t				validateChallenge;
 		std::size_t				nanoRobotCount;
@@ -221,7 +223,6 @@ private:
 	static std::unique_ptr<Progress>				m_instance;
 	bool											m_isMenu;
 	bool											m_isBubbleNpc;
-	bool											m_isGameFinished;
 	std::string										m_filename;
 	data											m_data;
 	bool											m_newSave;

@@ -16,7 +16,6 @@ std::unique_ptr<Progress> Progress::m_instance = nullptr;
 Progress::Progress() :
 	m_isMenu(true),
 	m_isBubbleNpc(true),
-	m_isGameFinished(false),
 	m_filename(octo::Application::getOptions().getPath() + "save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
@@ -76,12 +75,12 @@ void	Progress::setMenuType(MenuType type)
 
 bool	Progress::isGameFinished() const
 {
-	return m_isGameFinished;
+	return m_data.isGameFinished;
 }
 
 void	Progress::setGameFinished(bool finish)
 {
-	m_isGameFinished = finish;
+	m_data.isGameFinished = finish;
 }
 
 void	Progress::setup()

@@ -1441,7 +1441,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 void	CharacterOcto::kill()
 {
-	if (m_sprite.getCurrentEvent() != Death)
+	if (m_sprite.getCurrentEvent() != Death && !Progress::getInstance().isMenu())
 	{
 		Progress & progress = Progress::getInstance();
 
@@ -1451,6 +1451,8 @@ void	CharacterOcto::kill()
 		progress.registerDeath(getPosition());
 		progress.setKillOcto(false);
 	}
+	else
+		m_sprite.setNextEvent(Idle);
 }
 
 void	CharacterOcto::dieFall()
@@ -1474,19 +1476,14 @@ void	CharacterOcto::dieFall()
 	}
 
 	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater)
-	{
-		if (!Progress::getInstance().isMenu())
-			kill();
-		else
-			m_sprite.setNextEvent(Idle);
-	}
+		kill();
 }
 
 bool	CharacterOcto::dieGrass()
 {
 	Progress & progress = Progress::getInstance();
 
-	if (progress.getKillOcto() && !progress.isMenu())
+	if (progress.getKillOcto())
 	{
 		kill();
 		return true;
