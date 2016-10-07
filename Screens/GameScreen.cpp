@@ -101,16 +101,15 @@ void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
 
 void GameScreen::timeLevelBlueRed(sf::Time frameTime, Progress & progress)
 {
-	Level current = progress.getCurrentDestination();
 	Level next = progress.getNextDestination();
 
-	if (current == Level::Blue || next == Level::Blue)
+	if (next == Level::Blue)
 	{
 		m_timerBlue += frameTime;
 		if (m_timerBlue >= m_timerRedBlueMax)
 			progress.setNextDestination(Level::Rewards);
 	}
-	else if (current == Level::Red || next == Level::Red)
+	else if (next == Level::Red)
 	{
 		m_timerRed += frameTime;
 		if (m_timerRed >= m_timerRedBlueMax)
