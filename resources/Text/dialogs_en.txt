@@ -10,6 +10,7 @@ menu_quit=Quit
 menu_restart=Restart
 menu_friends=Friends
 options_audio=Audio
+options_audio_global=Global
 options_audio_music=Musics
 options_audio_sound=Sounds
 options_video=Video

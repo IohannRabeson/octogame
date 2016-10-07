@@ -10,6 +10,7 @@ menu_quit=Quitter
 menu_restart=Recommencer
 menu_friends=Potes
 options_audio=Audio
+options_audio_global=Volume
 options_audio_music=Musiques
 options_audio_sound=Sons
 options_video=Vidéo

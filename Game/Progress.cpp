@@ -2,6 +2,7 @@
 #include "CharacterOcto.hpp"
 #include "Tile.hpp"
 #include "ABiome.hpp"
+#include <SFML/Audio/Listener.hpp>
 #include <Application.hpp>
 #include <Options.hpp>
 #include <AudioManager.hpp>
@@ -111,6 +112,7 @@ void	Progress::init()
 
 	audio.setMusicVolume(m_data.musicVol);
 	audio.setSoundVolume(m_data.soundVol);
+	sf::Listener::setGlobalVolume(m_data.globalVol);
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
 	m_isOctoOnInstance = false;

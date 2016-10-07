@@ -80,6 +80,7 @@ public:
 	float				getMusicVolume() const { return m_data.musicVol; }
 	void				setMusicVolume(float volume) { m_data.musicVol = volume; }
 	void				setSoundVolume(float volume) { m_data.soundVol = volume; }
+	void				setGlobalVolume(float volume) { m_data.globalVol = volume; }
 
 	void				validateChallenge(ChallengeManager::Effect effect);
 	bool				isValidateChallenge(ChallengeManager::Effect effect);
@@ -151,11 +152,11 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::IceA, 6u, 100u, true, true, Language::fr)
+			data(0u, Level::IceA, 6u, 100u, 100u, true, true, Language::fr)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
-				std::size_t musicVol, std::size_t soundVol,
+				std::size_t musicVol, std::size_t soundVol, std::size_t globalVol,
 				bool fullscreen, bool vsync, Language language) :
 			timePlayed(0.f),
 			validateChallenge(0u),
@@ -165,6 +166,7 @@ private:
 			lastDestination(biome),
 			musicVol(musicVol),
 			soundVol(soundVol),
+			globalVol(globalVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
 			language(language),
@@ -187,6 +189,7 @@ private:
 		Level					lastDestination;
 		std::size_t				musicVol;
 		std::size_t				soundVol;
+		std::size_t				globalVol;
 		bool					fullscreen;
 		bool					vsync;
 		Language				language;
