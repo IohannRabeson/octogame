@@ -20,6 +20,8 @@ LevelMenu::LevelMenu(void) :
 	m_names.push_back(L"Water A");
 	m_names.push_back(L"Water B");
 	m_names.push_back(L"Water C");
+	m_names.push_back(L"Water D");
+	m_names.push_back(L"Water E");
 	m_names.push_back(L"Red");
 	m_names.push_back(L"Blue");
 	m_names.push_back(L"Final");

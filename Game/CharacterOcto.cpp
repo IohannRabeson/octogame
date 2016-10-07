@@ -32,7 +32,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeEventDieFallMax(sf::seconds(2.3f)),
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
-	m_timeSlowFallMax(sf::seconds(2.5f)),
+	m_timeSlowFallMax(sf::seconds(1.5f)),
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
 	m_timerStartUseDoor(sf::seconds(1.f)),
@@ -41,7 +41,7 @@ CharacterOcto::CharacterOcto() :
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
-	m_pixelSecondSlowFall(-300.f),
+	m_pixelSecondSlowFall(-400.f),
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-400.f),
 	m_pixelSecondAfterFullJump(-500.f),
@@ -873,7 +873,10 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	{
 		m_lastPositionOnGround = getPosition();
 		m_onGroundDelay = m_onGroundDelayMax;
+		m_timeInAir = sf::Time::Zero;
 	}
+	else
+		m_timeInAir += frameTime;
 	m_onGroundDelay -= frameTime;
 	portalEvent();
 	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode && m_sprite.getCurrentEvent() != Drink)
@@ -1906,7 +1909,13 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 bool	CharacterOcto::isFalling(void)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
-	if ((state == Fall && (m_lastPositionOnGround.y < getPosition().y || m_inWater)) || state == DieFall || state == SlowFall1 || state == SlowFall2 || state == SlowFall3)
+	sf::Time limit;
+	if (m_numberOfJump == 2u)
+		limit = sf::seconds(1.9f);
+	else
+		limit = sf::seconds(1.1f);
+
+	if ((state == Fall && (m_lastPositionOnGround.y < getPosition().y || m_timeInAir > limit)) || state == DieFall || state == SlowFall1 || state == SlowFall2 || state == SlowFall3)
 		return true;
 	return false;
 }

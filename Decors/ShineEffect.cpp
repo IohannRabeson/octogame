@@ -12,13 +12,19 @@ ShineEffect::ShineEffect() :
 	m_animator(3.f, 3.f, 0.f, 0.0f, 10.f),
 	m_animation(1.f),
 	m_isShineEffect(true),
-	m_isSound(true)
+	m_isSound(true),
+	m_canPlaySound(true)
 {
 }
 
 void ShineEffect::setSize(sf::Vector2f const & size)
 {
 	m_size = size;
+}
+
+void ShineEffect::setCanPlaySound(bool playSound)
+{
+	m_canPlaySound = playSound;
 }
 
 void ShineEffect::setup(ABiome& biome)
@@ -35,6 +41,8 @@ void ShineEffect::setup(ABiome& biome)
 
 void ShineEffect::playSound(ABiome & biome, sf::Vector2f const & position)
 {
+	if (m_canPlaySound)
+	{
 		if (m_animator.getState() == DecorAnimator::State::Grow && m_isSound == false)
 			m_isSound = true;
 		else if (m_animator.getState() == DecorAnimator::State::Die && m_isSound == true)
@@ -44,6 +52,7 @@ void ShineEffect::playSound(ABiome & biome, sf::Vector2f const & position)
 			audio.playSound(resources.getSound(CRYSTAL_OGG), 1.f, biome.randomFloat(0.2f, 1.f), sf::Vector3f(position.x, position.y, -150.f), 500.f, 50.f);
 			m_isSound = false;
 		}
+	}
 }
 
 void ShineEffect::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)

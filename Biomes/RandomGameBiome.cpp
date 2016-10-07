@@ -22,6 +22,9 @@
 #include "WaterABiome.hpp"
 #include "WaterBBiome.hpp"
 #include "WaterCBiome.hpp"
+#include "WaterDBiome.hpp"
+#include "WaterEBiome.hpp"
+#include "FinalBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
 
@@ -153,7 +156,11 @@ RandomGameBiome::RandomGameBiome() :
 	m_biomeManager.registerBiome<WaterABiome>(Level::WaterA);
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 	m_biomeManager.registerBiome<WaterCBiome>(Level::WaterC);
+	m_biomeManager.registerBiome<WaterDBiome>(Level::WaterD);
+	m_biomeManager.registerBiome<WaterEBiome>(Level::WaterE);
+	m_biomeManager.registerBiome<FinalBiome>(Level::Final);
 
+	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
 	m_biomeManager.registerBiome<RandomGameBiome>(Level::Rewards);
 

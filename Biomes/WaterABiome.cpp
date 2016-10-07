@@ -18,20 +18,20 @@ WaterABiome::WaterABiome() :
 	m_octoStartPosition(83.f * 16.f, 50.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(250, 229, 205),
-	m_tileEndColor(244, 201, 154),
+	m_tileStartColor(255, 208, 71),
+	m_tileEndColor(243, 146, 0),
 	m_waterLevel(340.f),
-	m_waterColor(3, 57, 108, 130),
+	m_waterColor(37, 47, 203, 100),
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::Time::Zero),
-	m_skyDayColor(255, 0, 0),
-	m_skyNightColor(255, 0, 0),
-	m_nightLightColor(255, 90, 61, 130),
+	m_skyDayColor(140,135,234),
+	m_skyNightColor(26,15,213),
+	m_nightLightColor(0,204,0, 100),
 	m_dayLightColor(sf::Color::Transparent),
-	m_SunsetLightColor(255, 147, 46, 130),
+	m_SunsetLightColor(0,204,0, 120),
 	m_wind(30.f),
 	m_rainDropPerSecond(10u, 15u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -70,11 +70,11 @@ WaterABiome::WaterABiome() :
 
 	m_rockSize(sf::Vector2f(10.f, 100.f), sf::Vector2f(20.f, 200.f)),
 	m_rockPartCount(4.f, 8.f),
-	m_rockColor(159, 24, 24),
+	m_rockColor(230, 230, 230),
 
 	m_grassSizeY(60.f, 70.f),
 	m_grassSizeX(14.f, 16.f),
-	m_grassColor(159, 24, 24, 150),
+	m_grassColor(159, 24, 24, 130),
 	m_grassCount(m_mapSize.x),
 	m_grassIndex(0u),
 
@@ -245,68 +245,29 @@ std::map<std::size_t, std::string> const & WaterABiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> WaterABiome::getLayers()
 {
-	sf::Vector2u const & mapSize = getMapSize();
+	sf::Vector2u mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 12.f, 5, 0.1f, 0.4f, 11.f, 40.f);
+	GenerativeLayer * layer;
+	
+	layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.0f, 0.7f, 11.f, 80.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x / 2.f, y, 2, 2.f);
+			return noise.perlin(x * 10.f, y * 40.f, 2, 4.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 12.f, 0, 0.1f, 0.4f, 11.f, 40.f);
+	layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.5f, 0.3f), mapSize, 10.f, -15, 0.0f, 0.9f, 11.f, 200.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x / 2.f + 100.f, y + 100.f, 2, 2.f);
+			return noise.perlin(x * 10.f + 100.f, y * 40.f + 100.f, 2, 4.f);
 		});
 	vector.push_back(layer);
-	/*
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 10.f, -5, 0.1f, 0.4f, 11.f, 40.f);
+	layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -20, 0.0f, 0.8f, 8.f, 120.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x / 2.f + 200.f, y + 200.f, 2, 2.f);
+			return noise.perlin(x * 10.f + 300.f, y * 40.f, 2, 4.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.7f, 0.2f), mapSize, 10.f, -10, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x / 2.f + 300.f, y + 300.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.8f, 0.1f), mapSize, 10.f, -15, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x / 2.f + 400.f, y + 400.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	*/
-	/*
-	GenerativeLayer * layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.4f, 0.5f), mapSize, 10.f, 50, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.5f, 0.4f), mapSize, 10.f, 40, 0.1f, 0.4f, 11.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	mapSize.y = mapSize.y / 2u;
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.6f, 0.3f), mapSize, 12.f, 20, 0.2f, 0.4f, 6.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 20.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getCrystalColor(), sf::Vector2f(0.7f, 0.2f), mapSize, 12.f, 10, 0.2f, 0.4f, 6.f, 40.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 10.f + 100.f, y + 100.f, 2, 2.f);
-		});
-	vector.push_back(layer);
-	*/
 	return vector;
 }
 
@@ -335,16 +296,16 @@ Map::MapSurfaceGenerator WaterABiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator WaterABiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = getRockColor();
-	sf::Color secondColorEnd = getRockColor();
+	sf::Color secondColorStart(34, 33, 47);
+	sf::Color secondColorEnd(10, 6, 85);
 	sf::Color thirdColorStart(53, 107, 208);
-	sf::Color thirdColorEnd(103, 157, 208);
-	float start1 = -3900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -2200.f / static_cast<float>(m_mapSize.y);
-	float middle1 = 0.f / static_cast<float>(m_mapSize.y);
-	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
-	float end1 = 1000.f / static_cast<float>(m_mapSize.y);
-	float end2 = 1700.f / static_cast<float>(m_mapSize.y);
+	sf::Color thirdColorEnd(26, 15, 213);
+	float start1 = -4300.f / static_cast<float>(m_mapSize.y);
+	float start2 = -3700.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -2000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = 500.f / static_cast<float>(m_mapSize.y);
+	float end1 = 800.f / static_cast<float>(m_mapSize.y);
+	float end2 = 1100.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
