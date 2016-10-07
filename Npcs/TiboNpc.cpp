@@ -42,9 +42,8 @@ void TiboNpc::setup(void)
 			Frame(sf::seconds(0.3f), {19u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {20u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {21u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {22u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {22u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.3f), {23u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.7f), {7u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
