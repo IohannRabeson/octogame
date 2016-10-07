@@ -263,7 +263,9 @@ void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biom
 {
 	if (biome.getTreeIsMoving() == false)
 		m_animator.sleep();
-	if (m_animator.update(frameTime))
+
+	m_animator.update(frameTime);
+	if (m_animator.getState() == DecorAnimator::State::Dead)
 		newTree(biome);
 	m_animation = m_animator.getAnimation();
 	sf::Vector2f const & position = getPosition();

@@ -106,13 +106,16 @@ void Crystal::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& b
 
 	if (m_animation > 0.f)
 	{
-		m_shineTimer += frameTime;
-		if (m_shineTimer >= m_shineTimerMax)
+		float interpolateValue = 0.5f;
+		if (m_shine.getAnimator().getState() == DecorAnimator::State::Grow)
+			interpolateValue = 0.5f * m_shine.getAnimator().getAnimation();
+		else if (m_shine.getAnimator().getState() == DecorAnimator::State::Die)
+			interpolateValue = 0.5f + (0.5f * (1.f - m_shine.getAnimator().getAnimation()));
+		else if (m_shine.getAnimator().getState() == DecorAnimator::State::Dead)
 		{
 			m_shineTimer -= m_shineTimerMax;
 			m_shineCrystalNumber = biome.randomInt(0, m_partCount - 1);
 		}
-		float interpolateValue = m_shineTimer / m_shineTimerMax;
 
 		sf::Vector2f shinePosition = octo::linearInterpolation(m_up[m_shineCrystalNumber], m_upLeft[m_shineCrystalNumber], interpolateValue);
 		m_shine.setPosition(shinePosition + position);

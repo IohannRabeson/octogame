@@ -348,7 +348,8 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 			updateSnow(frameTime, biome, builder, m_position, weather);
 	}
 
-	if (m_animator.update(frameTime))
+	m_animator.update(frameTime);
+	if (m_animator.getState() == DecorAnimator::State::Dead)
 		newCloud(biome);
 	m_animation = m_animator.getAnimation();
 

@@ -23,7 +23,10 @@ DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, floa
 	m_beatDelta(delta),
 	m_beatDeltaValue(0.f)
 {
-	m_finalAnimation = 1.0f - m_beatDelta + m_generator.randomFloat(0.f, 0.1f);
+	if (m_beatDelta)
+		m_finalAnimation = 1.0f - m_beatDelta + m_generator.randomFloat(0.f, 0.1f);
+	else
+		m_finalAnimation = 1.f;
 	m_saveFinalAnimation = m_finalAnimation;
 	m_startTimerMax = m_generator.randomFloat(0.f, start);
 }
@@ -53,7 +56,7 @@ void DecorAnimator::computeBeat(float frameTime)
 	}
 }
 
-bool DecorAnimator::computeState(float frameTime)
+void DecorAnimator::computeState(float frameTime)
 {
 	computeBeat(frameTime);
 	switch (m_currentState)
@@ -94,14 +97,17 @@ bool DecorAnimator::computeState(float frameTime)
 			if (m_dieTimer >= m_dieTimerMax)
 			{
 				m_dieTimer = 0.f;
-				m_currentState = State::Grow;
+				m_currentState = State::Dead;
 				m_finalAnimation = m_saveFinalAnimation;
 				m_dieSpeed = 1.f;
 				m_startTimer = 0.f;
 				m_beatTimer = 0.f;
-				return true;
 			}
 			break;
+		}
+		case State::Dead:
+		{
+			m_currentState = State::Grow;
 		}
 		case State::Sleep:
 		{
@@ -114,7 +120,6 @@ bool DecorAnimator::computeState(float frameTime)
 		default:
 			break;
 	}
-	return false;
 }
 
 void DecorAnimator::pause(void)
@@ -166,16 +171,12 @@ void DecorAnimator::setBeatMouvement(float delta)
 	m_beatDelta = delta;
 }
 
-bool DecorAnimator::update(sf::Time frameTime)
+void DecorAnimator::update(sf::Time frameTime)
 {
 	if (m_startTimer < m_startTimerMax)
 		m_startTimer += frameTime.asSeconds();
 	else
-	{
-		if (computeState(frameTime.asSeconds()))
-			return true;
-	}
-	return false;
+		computeState(frameTime.asSeconds());
 }
 
 float DecorAnimator::getAnimation(void) const

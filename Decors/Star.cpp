@@ -33,7 +33,8 @@ void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	if (m_cycle && m_cycle->isDay())
 		m_animator.die();
 
-	if (m_animator.update(frameTime))
+	m_animator.update(frameTime);
+	if (m_animator.getState() == DecorAnimator::State::Dead)
 		m_animator.pause();
 	else if ((m_cycle && m_cycle->isNight()) || m_cycle == nullptr)
 		m_animator.play();
