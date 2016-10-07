@@ -238,12 +238,13 @@ void	CharacterOcto::setupAnimation()
 
 	randomJumpAnimation();
 	m_idleAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {12, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {13, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {14, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {0, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -255,20 +256,6 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.3f), {4, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {5, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {6, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {7, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.1f), {8, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {9, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {10, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {11, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {12, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {13, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.1f), {14, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {15, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {16, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {17, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.1f), {18, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {19, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {20, sf::FloatRect(), sf::Vector2f()}),
 	});
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -1535,7 +1522,7 @@ void	CharacterOcto::wait()
 	{
 		m_timeEventIdleMax = sf::seconds(m_generator.randomFloat(3.f, 10.f));
 
-		switch (m_generator.randomInt(0, 1))
+		switch (m_generator.randomInt(0, 2))
 		{
 			case 0:
 			{
@@ -1563,6 +1550,27 @@ void	CharacterOcto::wait()
 						Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
+						});
+				m_waitAnimation.setLoop(octo::LoopMode::NoLoop);
+				break;
+			}
+			case 2:
+			{
+				m_waitAnimation.setFrames({
+						Frame(sf::seconds(0.4f), {7, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {8, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {9, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {12, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {13, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {14, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {16, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {17, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {18, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {19, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {20, sf::FloatRect(), sf::Vector2f()}),
 						});
 				m_waitAnimation.setLoop(octo::LoopMode::NoLoop);
 				break;
