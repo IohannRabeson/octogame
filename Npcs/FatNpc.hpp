@@ -1,9 +1,9 @@
 #ifndef FATNPC_HPP
 # define FATNPC_HPP
 
-# include "ASpecialNpc.hpp"
+# include "AWalkNpc.hpp"
 
-class FatNpc : public ASpecialNpc
+class FatNpc : public AWalkNpc
 {
 public:
 	FatNpc(void);
