@@ -27,7 +27,7 @@ WaterDBiome::WaterDBiome() :
 
 	m_dayDuration(sf::seconds(90.f)),
 	m_startDayDuration(sf::Time::Zero),
-	m_skyDayColor(140,135,234),
+	m_skyDayColor(26,15,213),
 	m_skyNightColor(26,15,213),
 	m_nightLightColor(0,204,0, 100),
 	m_dayLightColor(sf::Color::Transparent),
