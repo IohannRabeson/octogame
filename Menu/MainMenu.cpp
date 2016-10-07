@@ -21,7 +21,10 @@ class YesNoQuit : public YesNoMenu
 		octo::StateManager &	states = octo::Application::getStateManager();
 
 		if (!progress.isMenu())
+		{
+			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 			states.change("menu");
+		}
 		else
 			octo::Application::stop();
 	}
@@ -110,6 +113,7 @@ void MainMenu::onSelection(void)
 				m_soundPlayed = true;
 				audio.playSound(resources.getSound(OCTO_GREETING_OGG), 0.7f);
 			}
+			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 			states.change("transitionLevel");
 		}
 	}
@@ -117,6 +121,7 @@ void MainMenu::onSelection(void)
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
 		states.change("menu");
+		states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 	}
 	else
 		AMenuSelection::onSelection();
