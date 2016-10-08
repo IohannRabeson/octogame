@@ -14,7 +14,7 @@ AMenuSelection::AMenuSelection(void) :
 	m_indexCursor(0u),
 	m_indexSave(0u),
 	m_isKeyboard(false),
-	m_timerMoveCursorMax(sf::seconds(0.2f))
+	m_timerMoveCursorMax(sf::seconds(0.1f))
 {
 }
 
@@ -95,7 +95,10 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_bubble.setType(m_type);
 		m_cursor.setPosition(cursorPosition + contentPosition);
 		if (m_bubble.getType() == ABubble::MainMenu)
+		{
 			m_deltaMenu = cursorPosition;
+			m_timerMoveCursorMax = sf::seconds(0.2f);
+		}
 	}
 	else
 	{
