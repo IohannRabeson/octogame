@@ -28,6 +28,7 @@ private:
 	float						m_scale;
 	bool						m_collideEvent;
 	sf::Vector2f				m_positionOcto;
+	sf::Vector2f				m_lastPositionOcto;
 };
 
 #endif
