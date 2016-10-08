@@ -137,8 +137,8 @@ IceABiome::IceABiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	m_instances[20] = MAP_ICE_A_TRAIL_LEFT_OMP;
 	m_gameObjects[150] = GameObjectType::GroundTransformNanoRobot;
-	m_interestPointPosX = 420;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	if (!progress.canRepairShip())
 		m_instances[120] = MAP_ICE_A_CRATER_OMP;
@@ -153,14 +153,14 @@ IceABiome::IceABiome() :
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(404.f * 16.f, -1250.f);
 
-	m_instances[370] = MAP_ICE_A_SECRET_OMP;
 	m_gameObjects[420] = GameObjectType::PortalSnow;
 	m_instances[470] = MAP_ICE_A_SECRET_OMP;
 	if (progress.canRepairShip())
 		m_destinations.push_back(Level::Blue);
 	m_destinations.push_back(Level::Random);
-	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceB);
+
+	m_interestPointPosX = 420;
 
 	m_gameObjects[344] = GameObjectType::BirdBlueNpc;
 	m_gameObjects[400] = GameObjectType::FranfranNpc;

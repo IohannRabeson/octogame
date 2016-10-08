@@ -562,11 +562,6 @@ void Game::moveMap(sf::Time frameTime)
 
 	if ((m_keyGroundRight || m_keyGroundLeft) && Progress::getInstance().canMoveMap())
 	{
-		if (m_keyGroundRight)
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-		else
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-
 		if (m_groundSoundTime < m_groundSoundTimeMax)
 			m_groundSoundTime += frameTime;
 	}
@@ -583,16 +578,30 @@ void Game::moveMap(sf::Time frameTime)
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 {
+	Progress & progress = Progress::getInstance();
+
 	switch (key)
 	{
 		case OctoKeys::GroundLeft:
-			m_keyGroundLeft = true;
-			Progress::getInstance().moveMap();
+		{
+			if (m_keyGroundLeft == false && progress.canMoveMap())
+			{
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
+				m_keyGroundLeft = true;
+				progress.moveMap();
+			}
 			break;
+		}
 		case OctoKeys::GroundRight:
-			m_keyGroundRight = true;
-			Progress::getInstance().moveMap();
+		{
+			if (m_keyGroundRight == false)
+			{
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
+				progress.moveMap();
+				m_keyGroundRight = true;
+			}
 			break;
+		}
 		case OctoKeys::Infos:
 			std::cout << "OctoPos(" << m_octo->getPosition().x << ", " << m_octo->getPosition().y << ")" << std::endl;
 			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
