@@ -33,6 +33,7 @@ public:
 
 	std::size_t			getIndexCursor(void) const;
 	void				setIsFontSelect(bool isFontSelect);
+	void				setCursorAtEnd(void);
 
 private:
 	sf::Vector2f								m_deltaMenu;

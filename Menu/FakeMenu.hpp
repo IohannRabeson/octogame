@@ -16,6 +16,9 @@ public:
 
 	void	createMenus(void);
 	void	onSelection(void);
+
+private:
+	bool	m_quit;
 };
 
 #endif

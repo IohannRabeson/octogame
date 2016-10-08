@@ -10,6 +10,7 @@ AMenuSelection::AMenuSelection(void) :
 	m_generator("random"),
 	m_type(ABubble::Type::Right),
 	m_characterSize(20u),
+	m_indexLastCursor(0u),
 	m_indexCursor(0u),
 	m_indexSave(0u),
 	m_isKeyboard(false),
@@ -137,6 +138,7 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 				if (backMenu)
 					backMenu->setState(AMenu::State::Active);
 				m_indexCursor = m_indexSave;
+				m_indexLastCursor = m_indexSave;
 				break;
 			}
 			default:
@@ -224,4 +226,9 @@ std::size_t AMenuSelection::getIndexCursor(void) const
 void AMenuSelection::setIsFontSelect(bool isFontSelect)
 {
 	m_bubble.setIsFontSelect(isFontSelect);
+}
+
+void AMenuSelection::setCursorAtEnd(void)
+{
+	m_indexCursor = m_menus.size() - 1u;
 }

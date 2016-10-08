@@ -58,43 +58,37 @@ void MainMenu::createMenus(void)
 
 	if (progress.isMenu())
 	{
+		addMenu(AMenu::getText("menu_quit"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+		addMenu(AMenu::getText("menu_restart"), std::unique_ptr<YesNoReset>(new YesNoReset()));
+		addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
+		addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
+		addMenu(AMenu::getText("menu_new"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 		if (!progress.isGameFinished())
 			addMenu(AMenu::getText("menu_play"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 		else
 			addMenu(AMenu::getText("menu_play"), std::unique_ptr<PlayEndMenu>(new PlayEndMenu()));
-		addMenu(AMenu::getText("menu_new"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	}
-	else
-		addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
-#ifndef NDEBUG
-	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
-#endif
-	addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
-	if (progress.isMenu())
-	{
-		addMenu(AMenu::getText("menu_restart"), std::unique_ptr<YesNoReset>(new YesNoReset()));
-		addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
-		addMenu(AMenu::getText("menu_quit"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
-	}
-	else
-		addMenu(AMenu::getText("menu_return"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
-
-	if (progress.isMenu())
 		setCharacterSize(50);
-	else
-		setCharacterSize(30);
-
-	if (progress.isMenu())
 		setBubbleType(ABubble::Type::MainMenu);
+		setCursorAtEnd();
+	}
 	else
+	{
+		addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
+		#ifndef NDEBUG
+		addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
+		#endif
+		addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
+		addMenu(AMenu::getText("menu_return"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+		setCharacterSize(30);
 		setBubbleType(ABubble::Type::Think);
+	}
 }
 
 void MainMenu::onSelection(void)
 {
 	Progress const & progress = Progress::getInstance();
 
-	if (progress.isMenu() && getIndexCursor() == 0u && !progress.isGameFinished())
+	if (progress.isMenu() && getIndexCursor() == 5u && !progress.isGameFinished())
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
 
@@ -117,7 +111,7 @@ void MainMenu::onSelection(void)
 			states.change("transitionLevel");
 		}
 	}
-	else if (progress.isMenu() && getIndexCursor() == 1u && progress.isMenu())
+	else if (progress.isMenu() && getIndexCursor() == 4u && progress.isMenu())
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
 		states.change("menu");
