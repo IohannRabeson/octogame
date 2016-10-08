@@ -76,6 +76,7 @@
 #include "TVScreen.hpp"
 #include "FabienNpc.hpp"
 #include "CheckPoint.hpp"
+#include "SmokeInstance.hpp"
 #include "Door.hpp"
 #include "OverCoolNpc.hpp"
 #include "Pedestal.hpp"
@@ -337,7 +338,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator(TV_WHITE_OSS, [](){ return new TVScreen("render_white_kernel"); });
 	m_npcFactory.registerCreator(CAVEMAN_OSS, [](){ return new CavemanNpc(); });
 	m_npcFactory.registerCreator(CAVEMAN_SINKING_OSS, [&biome](){ return new CavemanSinkNpc(biome.getWaterLevel(), biome.getWaterColor()); });
-	//m_npcFactory.registerCreator(CAVEMAN_CLIMBING_OSS, [](){ return new CavemanClimbingNpc(); });
 	m_npcFactory.registerCreator(ELLIOT_OSS, [](){ return new ElliotNpc(); });
 
 	octo::GenericFactory<std::string, InstanceDecor, sf::Vector2f const &, sf::Vector2f const &>	m_decorFactory;
@@ -348,6 +348,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_decorFactory.registerCreator(CHECKPOINT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new CheckPoint(scale, position);
+			});
+	m_decorFactory.registerCreator(SMOKE_INSTANCE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new SmokeInstance(scale, position);
 			});
 	m_decorFactory.registerCreator(HOUSE_ORANGE_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
@@ -1151,6 +1155,12 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			case GameObjectType::CheckPoint:
 				{
 					CheckPoint * npc = new CheckPoint(sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f));
+					m_otherObjectsLow.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::SmokeInstance:
+				{
+					SmokeInstance * npc = new SmokeInstance(sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f));
 					m_otherObjectsLow.emplace_back(gameObject.first, 1, npc);
 				}
 				break;

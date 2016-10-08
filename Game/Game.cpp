@@ -63,6 +63,7 @@
 #include "OctoDeathNpc.hpp"
 #include "TVScreen.hpp"
 #include "CheckPoint.hpp"
+#include "SmokeInstance.hpp"
 #include "Door.hpp"
 #include "Pedestal.hpp"
 #include "ASpecialNpc.hpp"
@@ -531,6 +532,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			break;
 		case GameObjectType::CheckPoint:
 			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
+			break;
+		case GameObjectType::SmokeInstance:
+			gameObjectCast<SmokeInstance>(gameObject)->collideOctoEvent(octo);
 			break;
 		case GameObjectType::Pedestal:
 			gameObjectCast<Pedestal>(gameObject)->collideOctoEvent(octo);

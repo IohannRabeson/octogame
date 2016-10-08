@@ -71,6 +71,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Monolith.cpp				\
 				GameObjects/MonolithStep.cpp			\
 				GameObjects/Door.cpp					\
+				GameObjects/SmokeInstance.cpp			\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ASpecialNpc.cpp					\
@@ -168,26 +169,6 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/DesertEngine.cpp					\
 				Npcs/DeepoNpc.cpp						\
 #Script AddNpc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
