@@ -25,6 +25,9 @@ private:
 	RectangleShape *			m_box;
 	SmokeSystem					m_smoke;
 	sf::Vector2f				m_velocity;
+	float						m_scale;
+	bool						m_collideEvent;
+	sf::Vector2f				m_positionOcto;
 };
 
 #endif
