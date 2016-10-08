@@ -1,5 +1,6 @@
 #include "Tree.hpp"
 #include "ABiome.hpp"
+#include "Progress.hpp"
 #include <Math.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -211,7 +212,8 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 
 void Tree::setup(ABiome& biome)
 {
-	m_depth = biome.getTreeDepth();
+	m_levelOfDetails = Progress::getInstance().getLevelOfDetails();
+	m_depth = biome.getTreeDepth() + m_levelOfDetails;
 
 	m_angleMaxCount = std::pow(2, m_depth) + 1;
 	m_refAngle.resize(m_angleMaxCount);
@@ -263,6 +265,12 @@ void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biom
 {
 	if (biome.getTreeIsMoving() == false)
 		m_animator.sleep();
+	
+	if (m_levelOfDetails != Progress::getInstance().getLevelOfDetails())
+	{
+		m_animator = DecorAnimator(4.f, 4.f, 3.f, 0.01f);
+		setup(biome);
+	}
 
 	m_animator.update(frameTime);
 	if (m_animator.getState() == DecorAnimator::State::Dead)

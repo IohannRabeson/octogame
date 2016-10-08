@@ -129,6 +129,8 @@ public:
 	RespawnType			getRespawnType(void) const;
 	void				setCheckPointPosition(sf::Vector2f const & position);
 	sf::Vector2f const &getCheckPointPosition(void) const;
+	void				setLevelOfDetails(int levelOfDetails);
+	int					getLevelOfDetails(void) const;
 
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
@@ -178,7 +180,8 @@ private:
 			canOpenDoubleJump(false),
 			deathCount(0u),
 			respawnType(Progress::RespawnType::Portal),
-			activatedMonolith(0u)
+			activatedMonolith(0u),
+			levelOfDetails(0)
 		{}
 
 		float					timePlayed;
@@ -206,6 +209,7 @@ private:
 		std::size_t				deathCount;
 		Progress::RespawnType	respawnType;
 		std::size_t				activatedMonolith;
+		int						levelOfDetails;
 	};
 
 	Progress();

@@ -575,7 +575,17 @@ void		Progress::setActivatedMonolith(std::size_t count)
 	m_data.activatedMonolith = count;
 }
 
-void				Progress::setCheckPointPosition(sf::Vector2f const & position)
+void		Progress::setLevelOfDetails(int levelOfDetails)
+{
+	m_data.levelOfDetails = levelOfDetails;
+}
+
+int			Progress::getLevelOfDetails(void) const
+{
+	return m_data.levelOfDetails;
+}
+
+void		Progress::setCheckPointPosition(sf::Vector2f const & position)
 {
 	m_data.checkPointPosition = position;
 }

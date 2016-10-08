@@ -332,6 +332,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	updatePosition(frameTime);
 
 	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue() / 4.f;
+	weather = weather / (7 - ((Progress::getInstance().getLevelOfDetails() + 2) * 2));
 	if (m_animator.getState() == DecorAnimator::State::Life && weather == 0.f)
 		m_canWeather = true;
 	else if (m_animator.getState() != DecorAnimator::State::Life)

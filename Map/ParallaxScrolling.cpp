@@ -1,6 +1,7 @@
 #include "ParallaxScrolling.hpp"
 #include "ABiome.hpp"
 #include "SkyCycle.hpp"
+#include "Progress.hpp"
 
 ParallaxScrolling::ParallaxScrolling(void) :
 	m_biome(nullptr),
@@ -52,12 +53,18 @@ void ParallaxScrolling::removeAllLayers(void)
 
 void ParallaxScrolling::update(float deltatime)
 {
-	for (auto & layer : m_layers)
-		layer->update(deltatime, *m_biome);
+	if (Progress::getInstance().getLevelOfDetails() >= -1)
+	{
+		for (auto & layer : m_layers)
+			layer->update(deltatime, *m_biome);
+	}
 }
 
 void ParallaxScrolling::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	for (auto const & layer : m_layers)
-		layer->draw(render, states);
+	if (Progress::getInstance().getLevelOfDetails() >= -1)
+	{
+		for (auto const & layer : m_layers)
+			layer->draw(render, states);
+	}
 }

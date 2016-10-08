@@ -21,6 +21,7 @@ options_audio_music=Musics
 options_audio_sound=Sounds
 options_video=Video
 options_video_fullscreen=Fullscreen
+options_video_details=Details
 options_video_vsync=V-Sync
 options_language=Languages
 options_language_french=Français
