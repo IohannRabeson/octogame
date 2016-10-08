@@ -396,7 +396,7 @@ bool	Progress::isMetPortal(Level destination)
 
 void	Progress::setPortalPosition(Level destination, sf::Vector2f const & position)
 {
-	if (!isMetPortal(destination))
+	if (!isMetPortal(destination) && destination != m_data.lastDestination)
 		m_portalsToDiscover[destination] = position;
 	else
 		m_portalsToDiscover.erase(destination);
