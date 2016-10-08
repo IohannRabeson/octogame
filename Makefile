@@ -147,26 +147,26 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/AymericNpc.cpp						\
 				Npcs/MysticanouilleNpc.cpp				\
 				Npcs/AnthemJungle.cpp					\
-				Npcs/FlorentNpc.cpp				\
-				Npcs/EngineSnow.cpp				\
-				Npcs/UlaNpc.cpp				\
-				Npcs/AntoineNpc.cpp				\
-				Npcs/BeachBoySubNpc.cpp				\
-				Npcs/BeachBoyFlyNpc.cpp				\
-				Npcs/SebNpc.cpp				\
-				Npcs/TiboNpc.cpp				\
-				Npcs/ColumnNpc.cpp				\
+				Npcs/FlorentNpc.cpp						\
+				Npcs/EngineSnow.cpp						\
+				Npcs/UlaNpc.cpp							\
+				Npcs/AntoineNpc.cpp						\
+				Npcs/BeachBoySubNpc.cpp					\
+				Npcs/BeachBoyFlyNpc.cpp					\
+				Npcs/SebNpc.cpp							\
+				Npcs/TiboNpc.cpp						\
+				Npcs/ColumnNpc.cpp						\
 				Npcs/WaterHouseBroken.cpp				\
-				Npcs/JihemNpc.cpp				\
-				Npcs/MariaNpc.cpp				\
-				Npcs/FishRedNpc.cpp				\
-				Npcs/FishBlueNpc.cpp				\
-				Npcs/FishBlackNpc.cpp				\
-				Npcs/FishPinkNpc.cpp				\
-				Npcs/MaryvonneNpc.cpp				\
-				Npcs/ClaireNpc.cpp				\
-				Npcs/DesertEngine.cpp				\
-				Npcs/Deepo.cpp				\
+				Npcs/JihemNpc.cpp						\
+				Npcs/MariaNpc.cpp						\
+				Npcs/FishRedNpc.cpp						\
+				Npcs/FishBlueNpc.cpp					\
+				Npcs/FishBlackNpc.cpp					\
+				Npcs/FishPinkNpc.cpp					\
+				Npcs/MaryvonneNpc.cpp					\
+				Npcs/ClaireNpc.cpp						\
+				Npcs/DesertEngine.cpp					\
+				Npcs/DeepoNpc.cpp						\
 #Script AddNpc
 
 
