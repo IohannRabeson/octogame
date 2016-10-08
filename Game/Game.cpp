@@ -297,11 +297,10 @@ void Game::updateFakeMenu(sf::Time frameTime)
 	Progress const & progress = Progress::getInstance();
 	if (!progress.isMenu() && progress.getNextDestination() == Level::Rewards)
 	{
-		sf::Vector2f const &		center = octo::Application::getCamera().getCenter();
 		sf::Vector2f const &		bubble = getOctoBubblePosition();
 
 		m_fakeMenu.setState(AMenu::State::Active);
-		m_fakeMenu.update(frameTime, octo::linearInterpolation(center, bubble, 0.4f));
+		m_fakeMenu.update(frameTime, bubble);
 	}
 }
 

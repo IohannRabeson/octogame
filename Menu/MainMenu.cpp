@@ -85,7 +85,7 @@ void MainMenu::createMenus(void)
 		setCharacterSize(30);
 
 	if (progress.isMenu())
-		setBubbleType(ABubble::Type::Menu);
+		setBubbleType(ABubble::Type::MainMenu);
 	else
 		setBubbleType(ABubble::Type::Think);
 }

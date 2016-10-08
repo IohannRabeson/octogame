@@ -19,7 +19,7 @@ void FakeMenu::createMenus(void)
 	addMenu(AMenu::getText("menu_quit"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
 	setCharacterSize(50);
-	setBubbleType(ABubble::Type::Menu);
+	setBubbleType(ABubble::Type::MainMenu);
 }
 
 void FakeMenu::onSelection(void)

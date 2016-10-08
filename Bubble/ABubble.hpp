@@ -22,7 +22,8 @@ enum Type
 	Right,
 	Left,
 	Up,
-	Menu
+	Menu,
+	MainMenu,
 };
 
 enum Priority

@@ -1,5 +1,6 @@
 #include "AMenuSelection.hpp"
 #include "ResourceDefinitions.hpp"
+#include <Interpolations.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
 #include <Application.hpp>
@@ -11,7 +12,8 @@ AMenuSelection::AMenuSelection(void) :
 	m_characterSize(20u),
 	m_indexCursor(0u),
 	m_indexSave(0u),
-	m_isKeyboard(false)
+	m_isKeyboard(false),
+	m_timerMoveCursorMax(sf::seconds(0.2f))
 {
 }
 
@@ -66,9 +68,18 @@ void AMenuSelection::setKeyboard(bool isKeyboard)
 
 void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 {
-	m_bubble.setPosition(position);
+	if (m_indexLastCursor != m_indexCursor)
+	{
+		m_timerMoveCursor += frameTime;
+		if (m_timerMoveCursor >= m_timerMoveCursorMax)
+		{
+			m_timerMoveCursor = sf::Time::Zero;
+			m_indexLastCursor = m_indexCursor;
+		}
+	}
 	//TODO: Find better way to do that
 	m_bubble.setIndexCursor(m_indexCursor);
+	m_bubble.setPosition(position - m_deltaMenu);
 	m_bubble.update(frameTime);
 	sf::Vector2f const & contentPosition = m_bubble.getContentUpLeft();
 	for (std::size_t i = 0; i < m_menus.size(); i++)
@@ -76,10 +87,14 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 
 	if (getState() == AMenu::State::Active)
 	{
+		sf::Vector2f cursorPosition = octo::linearInterpolation(m_cursorPosition[m_indexLastCursor], m_cursorPosition[m_indexCursor], m_timerMoveCursor / m_timerMoveCursorMax);
+
 		setKeyboard(true);
 		m_bubble.setActive(true);
 		m_bubble.setType(m_type);
-		m_cursor.setPosition(m_cursorPosition[m_indexCursor] + contentPosition);
+		m_cursor.setPosition(cursorPosition + contentPosition);
+		if (m_bubble.getType() == ABubble::MainMenu)
+			m_deltaMenu = cursorPosition;
 	}
 	else
 	{
@@ -134,18 +149,24 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 			{
 				case OctoKeys::Up:
 				{
-					if (m_indexCursor == 0u)
-						m_indexCursor = m_menus.size() - 1;
-					else
-						m_indexCursor -= 1;
+					if (m_timerMoveCursor == sf::Time::Zero)
+					{
+						if (m_indexCursor == 0u)
+							m_indexCursor = m_menus.size() - 1;
+						else
+							m_indexCursor -= 1;
+					}
 					break;
 				}
 				case OctoKeys::Down:
 				{
-					if (m_indexCursor >= m_menus.size() - 1)
-						m_indexCursor = 0u;
-					else
-						m_indexCursor += 1;
+					if (m_timerMoveCursor == sf::Time::Zero)
+					{
+						if (m_indexCursor >= m_menus.size() - 1)
+							m_indexCursor = 0u;
+						else
+							m_indexCursor += 1;
+					}
 					break;
 				}
 				case OctoKeys::Jump:
