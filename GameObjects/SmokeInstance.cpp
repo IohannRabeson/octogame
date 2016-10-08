@@ -47,8 +47,7 @@ void SmokeInstance::update(sf::Time frametime)
 			m_smoke.setVelocity(sf::Vector2f(-(positionSmoke.x - m_positionOcto.x), m_velocity.y));
 
 			m_smoke.setEmitTimeRange(0.3f * m_scale, 0.4f * m_scale);
-			m_smoke.setLifeTimeRange(1.4f * m_scale, 1.8f * m_scale);
-			m_smoke.setScaleFactor(25.f * m_scale);
+			m_smoke.setScaleFactor(15.f * m_scale);
 			m_smoke.setDispersion(200.f * m_scale);
 		}
 		else if (positionSmoke.x < m_positionOcto.x && m_positionOcto.x - positionSmoke.x < 100.f)
@@ -56,8 +55,7 @@ void SmokeInstance::update(sf::Time frametime)
 			m_smoke.setVelocity(sf::Vector2f((m_positionOcto.x - positionSmoke.x), m_velocity.y));
 
 			m_smoke.setEmitTimeRange(0.3f * m_scale, 0.4f * m_scale);
-			m_smoke.setLifeTimeRange(1.4f * m_scale, 1.8f * m_scale);
-			m_smoke.setScaleFactor(25.f * m_scale);
+			m_smoke.setScaleFactor(15.f * m_scale);
 			m_smoke.setDispersion(200.f * m_scale);
 		}
 	}
@@ -65,7 +63,6 @@ void SmokeInstance::update(sf::Time frametime)
 	{
 		m_smoke.setVelocity(m_velocity);
 		m_smoke.setEmitTimeRange(0.15f * m_scale, 0.25f * m_scale);
-		m_smoke.setLifeTimeRange(0.8f * m_scale, 1.f * m_scale);
 		m_smoke.setScaleFactor(10.f * m_scale);
 		m_smoke.setDispersion(80.f * m_scale);
 	}
