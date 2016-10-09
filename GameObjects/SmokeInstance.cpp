@@ -40,12 +40,12 @@ void SmokeInstance::update(sf::Time frametime)
 	InstanceDecor::update(frametime);
 
 	sf::Vector2f positionSmoke = m_smoke.getPositionEmitter();
-	positionSmoke.y += 250.f;
+	positionSmoke.y += 100.f;
 	//Avoid negative values
 	positionSmoke.x += 10000000.f * 16.f;
 	m_positionOcto.x += 10000000.f * 16.f;
 
-	if (m_collideEvent && m_positionOcto.y < positionSmoke.y && positionSmoke.y - m_positionOcto.x < 200.f)
+	if (m_collideEvent && m_positionOcto.y < positionSmoke.y && positionSmoke.y - m_positionOcto.y < 200.f)
 	{
 		if (m_positionOcto.x < positionSmoke.x && m_lastPositionOcto.x > m_positionOcto.x && positionSmoke.x - m_positionOcto.x < 200.f)
 		{
