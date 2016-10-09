@@ -14,6 +14,7 @@ class DecorAnimator
 public:
 enum class State
 {
+	Wait,
 	Life,
 	Grow,
 	Die,

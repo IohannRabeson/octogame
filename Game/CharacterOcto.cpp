@@ -1596,6 +1596,7 @@ void	CharacterOcto::inWater()
 			m_numberOfJump = 0;
 			emit = true;
 			m_inWater = true;
+			m_timeSlowFall = sf::Time::Zero;
 		}
 
 		if (m_isDeadlyWater && !progress.canUseWaterJump())

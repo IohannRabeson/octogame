@@ -557,7 +557,7 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 
 void Game::moveMap(sf::Time frameTime)
 {
-	Progress const &			progress = Progress::getInstance();
+	Progress &					progress = Progress::getInstance();
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float						volume = 0.f;
 
@@ -566,15 +566,19 @@ void Game::moveMap(sf::Time frameTime)
 
 	if ((m_keyGroundRight || m_keyGroundLeft) && Progress::getInstance().canMoveMap())
 	{
+		if (m_keyGroundLeft == true && progress.canMoveMap())
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
+		else if (m_keyGroundRight == true)
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 		if (m_groundSoundTime < m_groundSoundTimeMax)
 			m_groundSoundTime += frameTime;
 	}
 	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
 
-	if (Progress::getInstance().isMenu() ||
-		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
-		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !Progress::getInstance().isValidateChallenge(ChallengeManager::Effect::Displacement)) ||
+	if (progress.isMenu() ||
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !progress.isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !progress.isValidateChallenge(ChallengeManager::Effect::Displacement)) ||
 		(progress.getCurrentDestination() == Level::Blue || progress.getCurrentDestination() == Level::Red)
 		)
 		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
@@ -590,7 +594,6 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 		{
 			if (m_keyGroundLeft == false && progress.canMoveMap())
 			{
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
 				m_keyGroundLeft = true;
 				progress.moveMap();
 			}

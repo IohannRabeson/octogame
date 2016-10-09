@@ -9,6 +9,7 @@
 #include "ResourceDefinitions.hpp"
 
 Tree::Tree(bool onInstance) :
+	m_levelOfDetails(0),
 	m_depth(0u),
 	m_count(0u),
 	m_angleMaxCount(0u),

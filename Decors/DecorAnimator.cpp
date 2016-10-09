@@ -5,8 +5,8 @@
 RandomGenerator DecorAnimator::m_generator("random");
 
 DecorAnimator::DecorAnimator(float growTime, float dieTime, float beatTime, float delta, float start) :
-	m_currentState(State::Grow),
-	m_lastState(State::Grow),
+	m_currentState(State::Wait),
+	m_lastState(State::Wait),
 	m_animation(0.f),
 	m_startTimer(0.f),
 	m_startTimerMax(0.f),
@@ -61,6 +61,14 @@ void DecorAnimator::computeState(float frameTime)
 	computeBeat(frameTime);
 	switch (m_currentState)
 	{
+		case State::Wait:
+		{
+			if (m_startTimer < m_startTimerMax)
+				m_startTimer += frameTime;
+			else
+				m_currentState = State::Grow;
+			break;
+		}
 		case State::Life:
 		{
 			if (!m_lifeTimerMax && m_dieTimerMax)
@@ -173,10 +181,7 @@ void DecorAnimator::setBeatMouvement(float delta)
 
 void DecorAnimator::update(sf::Time frameTime)
 {
-	if (m_startTimer < m_startTimerMax)
-		m_startTimer += frameTime.asSeconds();
-	else
-		computeState(frameTime.asSeconds());
+	computeState(frameTime.asSeconds());
 }
 
 float DecorAnimator::getAnimation(void) const

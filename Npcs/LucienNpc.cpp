@@ -149,10 +149,7 @@ void LucienNpc::updateState(void)
 		if (sprite.isTerminated())
 		{
 			sprite.setNextEvent(Idle);
-			octo::CharacterSprite & sprite = getSprite();
-			sf::Vector2f const & size = sprite.getLocalSize();
-			sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-			sprite.setScale(-getScale(), getScale());
+			reverseSprite(true);
 			addTimer(-getTimer());
 			m_side = false;
 			m_sound = true;
@@ -164,9 +161,7 @@ void LucienNpc::updateState(void)
 		if (sprite.isTerminated())
 		{
 			sprite.setNextEvent(Idle);
-			octo::CharacterSprite & sprite = getSprite();
-			sprite.setOrigin(getOrigin().x, getOrigin().y);
-			sprite.setScale(getScale(), getScale());
+			reverseSprite(false);
 			addTimer(-getTimer());
 			m_side = true;
 			m_sound = true;

@@ -138,7 +138,7 @@ WaterDBiome::WaterDBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::WaterE)
+	if (progress.getLastDestination() == Level::Final)
 		m_octoStartPosition = sf::Vector2f(773.f * 16.f, -110.f * 16.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(741.f * 16.f, -320.f * 16.f);
@@ -149,7 +149,7 @@ WaterDBiome::WaterDBiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::WaterC);
-	m_destinations.push_back(Level::WaterE);
+	m_destinations.push_back(Level::Final);
 	m_destinations.push_back(Level::Random);
 }
 
@@ -243,14 +243,22 @@ std::vector<ParallaxScrolling::ALayer *> WaterDBiome::getLayers()
 {
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
+	sf::Color color = m_skyDayColor;
+	color.a = 150;
 
-	GenerativeLayer * layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -40, 0.1f, 0.8f, -1.f, 2000.f);
+	GenerativeLayer * layer = new GenerativeLayer(color, sf::Vector2f(0.3f, 0.5f), mapSize, 8.f, -20, 0.7f, 0.2f, 11.f, 500.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 10.f, y * 10.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -20, 0.3f, 0.6f, 11.f, 1000.f);
+	layer = new GenerativeLayer(color, sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -30, 0.7f, 0.1f, 11.f, 500.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.fBm(x / 5.f, y, 3, 3.f, 2.f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(color, sf::Vector2f(0.5f, 0.3f), mapSize, 10.f, -50, 0.9f, 0.2f, 11.f, 600.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 30.f, y);
@@ -288,8 +296,8 @@ Map::TileColorGenerator WaterDBiome::getTileColorGenerator()
 	sf::Color secondColorEnd = getRockColor();//(193, 96, 0);
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(26, 15, 213);
-	float start1 = -5900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -4200.f / static_cast<float>(m_mapSize.y);
+	float start1 = -8900.f / static_cast<float>(m_mapSize.y);
+	float start2 = -5200.f / static_cast<float>(m_mapSize.y);
 	float middle1 = -2800.f / static_cast<float>(m_mapSize.y);
 	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
 	float end1 = 800.f / static_cast<float>(m_mapSize.y);
