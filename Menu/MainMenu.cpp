@@ -1,4 +1,5 @@
 #include "MainMenu.hpp"
+#include "PlayEndMenu.hpp"
 #include "CheatCodeMenu.hpp"
 #include "ControlMenu.hpp"
 #include "CreditMenu.hpp"
@@ -20,20 +21,12 @@ class YesNoQuit : public YesNoMenu
 		octo::StateManager &	states = octo::Application::getStateManager();
 
 		if (!progress.isMenu())
+		{
+			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 			states.change("menu");
+		}
 		else
 			octo::Application::stop();
-	}
-	inline void actionNo(void) { }
-};
-
-class YesNoNewMenu : public YesNoMenu
-{
-	inline void setIndex(void) { setIndexCursor(0); }
-	inline void actionYes(void)
-	{
-		octo::StateManager &	states = octo::Application::getStateManager();
-		states.change("menu");
 	}
 	inline void actionNo(void) { }
 };
@@ -65,42 +58,37 @@ void MainMenu::createMenus(void)
 
 	if (progress.isMenu())
 	{
-		addMenu(AMenu::getText("menu_play"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-		addMenu(AMenu::getText("menu_new"), std::unique_ptr<YesNoNewMenu>(new YesNoNewMenu()));
-	}
-	else
-		addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
-#ifndef NDEBUG
-	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
-#endif
-	if (progress.isGameFinished())
-		addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
-	addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
-	if (progress.isMenu())
-	{
+		addMenu(AMenu::getText("menu_quit"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 		addMenu(AMenu::getText("menu_restart"), std::unique_ptr<YesNoReset>(new YesNoReset()));
 		addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
-		addMenu(AMenu::getText("menu_quit"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+		addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
+		addMenu(AMenu::getText("menu_new"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+		if (!progress.isGameFinished())
+			addMenu(AMenu::getText("menu_play"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+		else
+			addMenu(AMenu::getText("menu_play"), std::unique_ptr<PlayEndMenu>(new PlayEndMenu()));
+		setCharacterSize(50);
+		setBubbleType(ABubble::Type::MainMenu);
+		setCursorAtEnd();
 	}
 	else
+	{
+		addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
+		#ifndef NDEBUG
+		addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
+		#endif
+		addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
 		addMenu(AMenu::getText("menu_return"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
-
-	if (progress.isMenu())
-		setCharacterSize(50);
-	else
 		setCharacterSize(30);
-
-	if (progress.isMenu())
-		setBubbleType(ABubble::Type::Menu);
-	else
 		setBubbleType(ABubble::Type::Think);
+	}
 }
 
 void MainMenu::onSelection(void)
 {
 	Progress const & progress = Progress::getInstance();
 
-	if (progress.isMenu() && getIndexCursor() == 0u)
+	if (progress.isMenu() && getIndexCursor() == 5u && !progress.isGameFinished())
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
 
@@ -119,8 +107,15 @@ void MainMenu::onSelection(void)
 				m_soundPlayed = true;
 				audio.playSound(resources.getSound(OCTO_GREETING_OGG), 0.7f);
 			}
+			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 			states.change("transitionLevel");
 		}
+	}
+	else if (progress.isMenu() && getIndexCursor() == 4u && progress.isMenu())
+	{
+		octo::StateManager &	states = octo::Application::getStateManager();
+		states.change("menu");
+		states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 	}
 	else
 		AMenuSelection::onSelection();

@@ -32,7 +32,7 @@ JungleBBiome::JungleBBiome() :
 	m_nightLightColor(0, 0, 0, 80),
 	m_dayLightColor(sf::Color::Transparent),
 	m_SunsetLightColor(255, 182, 0, 100),
-	m_wind(100.f),
+	m_wind(0.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),

@@ -13,8 +13,11 @@ class YesNoRestartLevel : public YesNoMenu
 	inline void setIndex(void) { setIndexCursor(0); }
 	inline void actionYes(void)
 	{
-		Progress & progress = Progress::getInstance();
+		Progress &				progress = Progress::getInstance();
+		octo::StateManager &	states = octo::Application::getStateManager();
+
 		progress.setNextDestination(progress.getCurrentDestination());
+		states.change("game");
 	}
 	inline void actionNo(void) { }
 };

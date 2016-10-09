@@ -2,6 +2,7 @@
 #include "CharacterOcto.hpp"
 #include "Tile.hpp"
 #include "ABiome.hpp"
+#include <SFML/Audio/Listener.hpp>
 #include <Application.hpp>
 #include <Options.hpp>
 #include <AudioManager.hpp>
@@ -15,7 +16,6 @@ std::unique_ptr<Progress> Progress::m_instance = nullptr;
 Progress::Progress() :
 	m_isMenu(true),
 	m_isBubbleNpc(true),
-	m_isGameFinished(false),
 	m_filename(octo::Application::getOptions().getPath() + "save.osv"),
 	m_newSave(false),
 	m_changeLevel(false),
@@ -75,12 +75,12 @@ void	Progress::setMenuType(MenuType type)
 
 bool	Progress::isGameFinished() const
 {
-	return m_isGameFinished;
+	return m_data.isGameFinished;
 }
 
 void	Progress::setGameFinished(bool finish)
 {
-	m_isGameFinished = finish;
+	m_data.isGameFinished = finish;
 }
 
 void	Progress::setup()
@@ -111,6 +111,7 @@ void	Progress::init()
 
 	audio.setMusicVolume(m_data.musicVol);
 	audio.setSoundVolume(m_data.soundVol);
+	sf::Listener::setGlobalVolume(m_data.globalVol);
 	graphics.setFullscreen(m_data.fullscreen);
 	graphics.setVerticalSyncEnabled(m_data.vsync);
 	m_isOctoOnInstance = false;
@@ -194,7 +195,7 @@ void	Progress::setNanoRobotCount(std::size_t count)
 
 void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 {
-	if (!m_isMenu)
+	if (!m_isMenu || destination != Level::Rewards)
 	{
 		if (destination != m_data.currentDestination)
 			m_data.lastDestination = m_data.currentDestination;
@@ -395,7 +396,7 @@ bool	Progress::isMetPortal(Level destination)
 
 void	Progress::setPortalPosition(Level destination, sf::Vector2f const & position)
 {
-	if (!isMetPortal(destination))
+	if (!isMetPortal(destination) && destination != m_data.lastDestination)
 		m_portalsToDiscover[destination] = position;
 	else
 		m_portalsToDiscover.erase(destination);
@@ -574,7 +575,17 @@ void		Progress::setActivatedMonolith(std::size_t count)
 	m_data.activatedMonolith = count;
 }
 
-void				Progress::setCheckPointPosition(sf::Vector2f const & position)
+void		Progress::setLevelOfDetails(int levelOfDetails)
+{
+	m_data.levelOfDetails = levelOfDetails;
+}
+
+int			Progress::getLevelOfDetails(void) const
+{
+	return m_data.levelOfDetails;
+}
+
+void		Progress::setCheckPointPosition(sf::Vector2f const & position)
 {
 	m_data.checkPointPosition = position;
 }

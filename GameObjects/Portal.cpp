@@ -175,7 +175,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
 
-	if (!progress.isMetPortal(m_destination) || (Progress::getInstance().isMetPortal(m_destination) && m_destination == Level::Random))
+	if (!progress.isMetPortal(m_destination) || (progress.isMetPortal(m_destination) && m_destination == Level::Random))
 		m_sprite.setNextEvent(Closed);
 	else
 		m_sprite.setNextEvent(Opened);
@@ -224,6 +224,8 @@ void Portal::update(sf::Time frametime)
 			if (m_sprite.getCurrentEvent() == Events::Opening && m_sprite.isTerminated())
 			{
 				m_sprite.setNextEvent(Opened);
+				if (m_destination != Level::Random)
+					Progress::getInstance().meetPortal(m_destination);
 			}
 			else if (m_sprite.getCurrentEvent() == Events::Opened)
 			{
@@ -232,8 +234,6 @@ void Portal::update(sf::Time frametime)
 				m_isActive = true;
 				if (m_timerActivate >= m_timerActivateMax)
 				{
-					if (m_destination != Level::Random)
-						Progress::getInstance().meetPortal(m_destination);
 					m_state = Activated;
 					m_timerActivate = m_timerActivateMax;
 				}

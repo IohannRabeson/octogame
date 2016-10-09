@@ -17,6 +17,7 @@ enum class State
 	Life,
 	Grow,
 	Die,
+	Dead,
 	Sleep,
 	Stop,
 
@@ -32,7 +33,7 @@ enum class State
 	void					die(void);
 	void					setup(sf::Time lifeTime = sf::seconds(1.f));
 	void					setBeatMouvement(float delta);
-	bool					update(sf::Time frameTime);
+	void					update(sf::Time frameTime);
 	float					getAnimation(void) const;
 	float					getAnimationTime(void) const;
 	DecorAnimator::State	getState(void) const;
@@ -61,7 +62,7 @@ private:
 	float					m_beatDelta;
 	float					m_beatDeltaValue;
 
-	bool					computeState(float frameTime);
+	void					computeState(float frameTime);
 	void					computeBeat(float frameTime);
 };
 

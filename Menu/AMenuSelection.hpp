@@ -33,8 +33,11 @@ public:
 
 	std::size_t			getIndexCursor(void) const;
 	void				setIsFontSelect(bool isFontSelect);
+	void				setCursorAtEnd(void);
 
 private:
+	sf::Vector2f								m_deltaMenu;
+
 	RandomGenerator								m_generator;
 	BubbleMenu									m_bubble;
 	ABubble::Type								m_type;
@@ -43,9 +46,12 @@ private:
 	std::vector<std::unique_ptr<AMenu>>			m_menus;
 
 	std::vector<sf::Vector2f>					m_cursorPosition;
+	std::size_t									m_indexLastCursor;
 	std::size_t									m_indexCursor;
 	std::size_t									m_indexSave;
 	bool										m_isKeyboard;
+	sf::Time									m_timerMoveCursor;
+	sf::Time									m_timerMoveCursorMax;
 
 	sf::CircleShape								m_cursor;
 	bool										m_input;

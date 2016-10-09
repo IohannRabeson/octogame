@@ -36,6 +36,7 @@ private:
 		float					sin;
 	};
 
+	int							m_levelOfDetails;
 	std::size_t					m_depth;
 	sf::Vector2f				m_size;
 	sf::Color					m_color;

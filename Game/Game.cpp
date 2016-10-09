@@ -63,6 +63,7 @@
 #include "OctoDeathNpc.hpp"
 #include "TVScreen.hpp"
 #include "CheckPoint.hpp"
+#include "SmokeInstance.hpp"
 #include "Door.hpp"
 #include "Pedestal.hpp"
 #include "ASpecialNpc.hpp"
@@ -297,11 +298,10 @@ void Game::updateFakeMenu(sf::Time frameTime)
 	Progress const & progress = Progress::getInstance();
 	if (!progress.isMenu() && progress.getNextDestination() == Level::Rewards)
 	{
-		sf::Vector2f const &		center = octo::Application::getCamera().getCenter();
 		sf::Vector2f const &		bubble = getOctoBubblePosition();
 
 		m_fakeMenu.setState(AMenu::State::Active);
-		m_fakeMenu.update(frameTime, octo::linearInterpolation(center, bubble, 0.4f));
+		m_fakeMenu.update(frameTime, bubble);
 	}
 }
 
@@ -533,6 +533,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 		case GameObjectType::CheckPoint:
 			gameObjectCast<CheckPoint>(gameObject)->collideOctoEvent(octo);
 			break;
+		case GameObjectType::SmokeInstance:
+			gameObjectCast<SmokeInstance>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::Pedestal:
 			gameObjectCast<Pedestal>(gameObject)->collideOctoEvent(octo);
 			break;
@@ -563,11 +566,6 @@ void Game::moveMap(sf::Time frameTime)
 
 	if ((m_keyGroundRight || m_keyGroundLeft) && Progress::getInstance().canMoveMap())
 	{
-		if (m_keyGroundRight)
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-		else
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-
 		if (m_groundSoundTime < m_groundSoundTimeMax)
 			m_groundSoundTime += frameTime;
 	}
@@ -584,16 +582,30 @@ void Game::moveMap(sf::Time frameTime)
 
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 {
+	Progress & progress = Progress::getInstance();
+
 	switch (key)
 	{
 		case OctoKeys::GroundLeft:
-			m_keyGroundLeft = true;
-			Progress::getInstance().moveMap();
+		{
+			if (m_keyGroundLeft == false && progress.canMoveMap())
+			{
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
+				m_keyGroundLeft = true;
+				progress.moveMap();
+			}
 			break;
+		}
 		case OctoKeys::GroundRight:
-			m_keyGroundRight = true;
-			Progress::getInstance().moveMap();
+		{
+			if (m_keyGroundRight == false)
+			{
+				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
+				progress.moveMap();
+				m_keyGroundRight = true;
+			}
 			break;
+		}
 		case OctoKeys::Infos:
 			std::cout << "OctoPos(" << m_octo->getPosition().x << ", " << m_octo->getPosition().y << ")" << std::endl;
 			//m_cameraMovement->shake(5.f, 1.f, 0.01f);

@@ -61,9 +61,8 @@ void	MenuScreen::update(sf::Time frameTime)
 		m_menu.setState(AMenu::State::Active);
 	m_game->update(frameTime);
 
-	sf::Vector2f const &		center = octo::Application::getCamera().getCenter();
 	sf::Vector2f const &		bubble = m_game->getOctoBubblePosition();
-	m_menu.update(frameTime, octo::linearInterpolation(center, bubble, 0.4f));
+	m_menu.update(frameTime, bubble);
 
 	if (progress.changeLevel())
 	{

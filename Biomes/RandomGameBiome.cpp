@@ -162,7 +162,7 @@ RandomGameBiome::RandomGameBiome() :
 
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
-	m_biomeManager.registerBiome<RandomGameBiome>(Level::Rewards);
+	m_biomeManager.registerBiome<RandomGameBiome>(Level::RandomGame);
 
 	setBiome(Progress::getInstance().getNextDestination());
 	m_name = m_biomeManager.getCurrentBiome().getName();
@@ -244,6 +244,26 @@ sf::Color	RandomGameBiome::getWaterColor()
 sf::Color	RandomGameBiome::getSecondWaterColor()
 {
 	return m_secondWaterColor;
+}
+
+bool		RandomGameBiome::isDeadlyWater()
+{
+	return m_biomeManager.getCurrentBiome().isDeadlyWater();
+}
+
+bool		RandomGameBiome::isDeadlyGrass()
+{
+	return m_biomeManager.getCurrentBiome().isDeadlyGrass();
+}
+
+bool		RandomGameBiome::isSpecialCloud()
+{
+	return m_biomeManager.getCurrentBiome().isSpecialCloud();
+}
+
+sf::Time	RandomGameBiome::getTimeDieVoid()
+{
+	return m_biomeManager.getCurrentBiome().getTimeDieVoid();
 }
 
 std::map<std::size_t, std::string> const & RandomGameBiome::getInstances()

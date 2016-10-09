@@ -80,6 +80,7 @@ public:
 	float				getMusicVolume() const { return m_data.musicVol; }
 	void				setMusicVolume(float volume) { m_data.musicVol = volume; }
 	void				setSoundVolume(float volume) { m_data.soundVol = volume; }
+	void				setGlobalVolume(float volume) { m_data.globalVol = volume; }
 
 	void				validateChallenge(ChallengeManager::Effect effect);
 	bool				isValidateChallenge(ChallengeManager::Effect effect);
@@ -128,6 +129,8 @@ public:
 	RespawnType			getRespawnType(void) const;
 	void				setCheckPointPosition(sf::Vector2f const & position);
 	sf::Vector2f const &getCheckPointPosition(void) const;
+	void				setLevelOfDetails(int levelOfDetails);
+	int					getLevelOfDetails(void) const;
 
 	void				setOctoPos(sf::Vector2f const & position) { m_octoPos = position; }
 	sf::Vector2f const&	getOctoPos() const { return m_octoPos; }
@@ -151,13 +154,14 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::IceA, 6u, 100u, true, true, Language::fr)
+			data(0u, Level::IceA, 6u, 100u, 100u, true, true, Language::fr)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
-				std::size_t musicVol, std::size_t soundVol,
+				std::size_t musicVol, std::size_t soundVol, std::size_t globalVol,
 				bool fullscreen, bool vsync, Language language) :
 			timePlayed(0.f),
+			isGameFinished(false),
 			validateChallenge(0u),
 			nanoRobotCount(nanoRobot),
 			nextDestination(biome),
@@ -165,6 +169,7 @@ private:
 			lastDestination(biome),
 			musicVol(musicVol),
 			soundVol(soundVol),
+			globalVol(globalVol),
 			fullscreen(fullscreen),
 			vsync(vsync),
 			language(language),
@@ -175,10 +180,12 @@ private:
 			canOpenDoubleJump(false),
 			deathCount(0u),
 			respawnType(Progress::RespawnType::Portal),
-			activatedMonolith(0u)
+			activatedMonolith(0u),
+			levelOfDetails(0)
 		{}
 
 		float					timePlayed;
+		bool					isGameFinished;
 		sf::Vector2f			checkPointPosition;
 		std::size_t				validateChallenge;
 		std::size_t				nanoRobotCount;
@@ -187,6 +194,7 @@ private:
 		Level					lastDestination;
 		std::size_t				musicVol;
 		std::size_t				soundVol;
+		std::size_t				globalVol;
 		bool					fullscreen;
 		bool					vsync;
 		Language				language;
@@ -201,6 +209,7 @@ private:
 		std::size_t				deathCount;
 		Progress::RespawnType	respawnType;
 		std::size_t				activatedMonolith;
+		int						levelOfDetails;
 	};
 
 	Progress();
@@ -218,7 +227,6 @@ private:
 	static std::unique_ptr<Progress>				m_instance;
 	bool											m_isMenu;
 	bool											m_isBubbleNpc;
-	bool											m_isGameFinished;
 	std::string										m_filename;
 	data											m_data;
 	bool											m_newSave;

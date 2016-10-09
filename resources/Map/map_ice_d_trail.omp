@@ -7,6 +7,9 @@
 #fish_blue.oss(1948;1216) : [2012/1204][32/16]0
 #fish_blue.oss(2816;1008) : [2880/1172][48/32]1
 #fish_blue.oss(3840;1264) : [3904/1328][32/16]0
+!smoke_instance.oss(738;300) : [1.6/1.6]0
+!smoke_instance.oss(700;363) : [1.6/1.6]0
+!smoke_instance.oss(763;326) : [1.6/1.6]0
 !house_snow.oss(544;288) : [1/1]0
 !door.oss(907;652) : [1/1]0
 !decor_grass_reverse.oss(1472;1120) : [1/1]0

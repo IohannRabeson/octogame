@@ -158,6 +158,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_eventBox->setRadius(400.f);
 	m_eventBox->setCollisionType(static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	std::size_t maskEvent = static_cast<std::size_t>(GameObjectType::Portal)
+		| static_cast<std::size_t>(GameObjectType::SmokeInstance)
 //Script AddNpc
 		| static_cast<std::size_t>(GameObjectType::FlorentNpc)
 		| static_cast<std::size_t>(GameObjectType::AnthemJungle)
@@ -238,12 +239,13 @@ void	CharacterOcto::setupAnimation()
 
 	randomJumpAnimation();
 	m_idleAnimation.setFrames({
-			Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {12, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {13, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {14, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {0, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {1, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {2, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {3, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {4, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_idleAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -255,20 +257,6 @@ void	CharacterOcto::setupAnimation()
 			Frame(sf::seconds(0.3f), {4, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {5, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.2f), {6, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {7, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.1f), {8, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {9, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {10, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {11, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {12, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {13, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.1f), {14, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {15, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {16, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.3f), {17, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.1f), {18, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {19, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {20, sf::FloatRect(), sf::Vector2f()}),
 	});
 	m_walkAnimation.setLoop(octo::LoopMode::Loop);
 
@@ -1454,16 +1442,21 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 void	CharacterOcto::kill()
 {
-	if (m_sprite.getCurrentEvent() != Death)
+	if (!Progress::getInstance().isMenu())
 	{
-		Progress & progress = Progress::getInstance();
+		if (m_sprite.getCurrentEvent() != Death)
+		{
+			Progress & progress = Progress::getInstance();
 
-		m_sprite.setNextEvent(Death);
-		m_helmetParticle.canEmit(true);
-		m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
-		progress.registerDeath(getPosition());
-		progress.setKillOcto(false);
+			m_sprite.setNextEvent(Death);
+			m_helmetParticle.canEmit(true);
+			m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
+			progress.registerDeath(getPosition());
+			progress.setKillOcto(false);
+		}
 	}
+	else
+		m_sprite.setNextEvent(Idle);
 }
 
 void	CharacterOcto::dieFall()
@@ -1487,19 +1480,14 @@ void	CharacterOcto::dieFall()
 	}
 
 	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater)
-	{
-		if (!Progress::getInstance().isMenu())
-			kill();
-		else
-			m_sprite.setNextEvent(Idle);
-	}
+		kill();
 }
 
 bool	CharacterOcto::dieGrass()
 {
 	Progress & progress = Progress::getInstance();
 
-	if (progress.getKillOcto() && !progress.isMenu())
+	if (progress.getKillOcto())
 	{
 		kill();
 		return true;
@@ -1535,7 +1523,7 @@ void	CharacterOcto::wait()
 	{
 		m_timeEventIdleMax = sf::seconds(m_generator.randomFloat(3.f, 10.f));
 
-		switch (m_generator.randomInt(0, 1))
+		switch (m_generator.randomInt(0, 2))
 		{
 			case 0:
 			{
@@ -1563,6 +1551,27 @@ void	CharacterOcto::wait()
 						Frame(sf::seconds(0.2f), {81, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.2f), {82, sf::FloatRect(), sf::Vector2f()}),
 						Frame(sf::seconds(0.2f), {84, sf::FloatRect(), sf::Vector2f()}),
+						});
+				m_waitAnimation.setLoop(octo::LoopMode::NoLoop);
+				break;
+			}
+			case 2:
+			{
+				m_waitAnimation.setFrames({
+						Frame(sf::seconds(0.4f), {7, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {8, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {9, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {10, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {11, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {12, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {13, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {14, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {15, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {16, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {17, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {18, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {19, sf::FloatRect(), sf::Vector2f()}),
+						Frame(sf::seconds(0.4f), {20, sf::FloatRect(), sf::Vector2f()}),
 						});
 				m_waitAnimation.setLoop(octo::LoopMode::NoLoop);
 				break;
@@ -2067,7 +2076,7 @@ sf::Vector2f const &	CharacterOcto::getPosition() const
 
 sf::Vector2f	CharacterOcto::getBubblePosition() const
 {
-	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -80.f));
+	return (m_box->getRenderCenter() + sf::Vector2f(-40.f, -80.f));
 }
 
 bool	CharacterOcto::getDoubleJump()

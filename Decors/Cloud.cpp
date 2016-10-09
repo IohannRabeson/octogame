@@ -332,6 +332,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	updatePosition(frameTime);
 
 	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue() / 4.f;
+	weather = weather / (7 - ((Progress::getInstance().getLevelOfDetails() + 2) * 2));
 	if (m_animator.getState() == DecorAnimator::State::Life && weather == 0.f)
 		m_canWeather = true;
 	else if (m_animator.getState() != DecorAnimator::State::Life)
@@ -348,7 +349,8 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 			updateSnow(frameTime, biome, builder, m_position, weather);
 	}
 
-	if (m_animator.update(frameTime))
+	m_animator.update(frameTime);
+	if (m_animator.getState() == DecorAnimator::State::Dead)
 		newCloud(biome);
 	m_animation = m_animator.getAnimation();
 
@@ -357,7 +359,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	if (m_isCollide && m_animator.getState() != DecorAnimator::State::Die)
 	{
 		m_hasCollided = true;
-		if ((Progress::getInstance().canRepairShip() || m_isSpecialCloud) && m_animator.getState() != DecorAnimator::State::Grow)
+		if (m_isSpecialCloud && m_animator.getState() != DecorAnimator::State::Grow)
 			Progress::getInstance().setInCloud(true, m_id);
 		else
 			m_animator.die();

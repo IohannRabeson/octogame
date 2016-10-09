@@ -40,12 +40,12 @@ BlueBiome::BlueBiome() :
 
 	m_rockCount(27u, 28u),
 	m_treeCount(40u, 40u),
-	m_mushroomCount(40u, 40u),
+	m_mushroomCount(50u, 50u),
 	m_crystalCount(30u, 30u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
-	m_rainbowCount(100u, 100u),
+	m_rainbowCount(80u, 80u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
@@ -53,7 +53,7 @@ BlueBiome::BlueBiome() :
 	m_canCreateThunder(false),
 	m_canCreateSnow(true),
 	m_canCreateRock(true),
-	m_canCreateTree(true),
+	m_canCreateTree(false),
 	m_canCreateLeaf(false),
 	m_treeIsMoving(false),
 	m_canCreateMushroom(true),
@@ -106,7 +106,7 @@ BlueBiome::BlueBiome() :
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
 
-	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(15.f, 15.f)),
+	m_starSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(25.f, 25.f)),
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
@@ -134,6 +134,8 @@ BlueBiome::BlueBiome() :
 	m_particleColor[0] = m_rockColor;
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
+
+	m_gameObjects[20] = GameObjectType::DeepoNpc;
 
 	m_interestPointPosX = 420;
 
@@ -225,16 +227,22 @@ std::vector<ParallaxScrolling::ALayer *> BlueBiome::getLayers()
 	sf::Vector2u const & mapSize = sf::Vector2u(getMapSize().x, getMapSize().y * 4u);
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, 10, 0.1f, 0.9f, 11.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 150), sf::Vector2f(1.4f, 1.4f), mapSize, 10.f, 10, 0.1f, 0.4f, 1.5f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x, y, 3, 2.f);
+			return noise.fBm(x / 5.f, y, 3, 3.f, 1.5f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.5f, 0.3f), mapSize, 15.f, 15, 0.2f, 0.8f, 6.f);
+	layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 170), sf::Vector2f(1.5f, 1.3f), mapSize, 15.f, 15, 0.2f, 0.4f, 1.5f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x, y, 3, 2.f);
+			return noise.fBm(x / 5.f, y, 3, 3.f, 1.5f);
+		});
+	vector.push_back(layer);
+	layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 190), sf::Vector2f(1.5f, 1.3f), mapSize, 20.f, 15, 0.2f, 0.4f, 1.5f, 1000.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.fBm(x / 5.f, y, 3, 3.f, 1.5f);
 		});
 	vector.push_back(layer);
 	return vector;
