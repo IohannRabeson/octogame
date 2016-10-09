@@ -138,7 +138,7 @@ WaterDBiome::WaterDBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::WaterC)
+	if (progress.getLastDestination() == Level::WaterE)
 		m_octoStartPosition = sf::Vector2f(773.f * 16.f, -110.f * 16.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(741.f * 16.f, -320.f * 16.f);
@@ -250,7 +250,7 @@ std::vector<ParallaxScrolling::ALayer *> WaterDBiome::getLayers()
 			return noise.noise(x * 10.f, y * 10.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -20, 0.3f, 0.6f, 11.f);
+	layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -20, 0.3f, 0.6f, 11.f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 30.f, y);
