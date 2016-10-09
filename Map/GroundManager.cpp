@@ -842,147 +842,147 @@ void GroundManager::setupGameObjects(ABiome & biome)
 				{
 					DeepoNpc * npc = new DeepoNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::DesertEngine:
 				{
 					DesertEngine * npc = new DesertEngine();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::ClaireNpc:
 				{
 					ClaireNpc * npc = new ClaireNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::MaryvonneNpc:
 				{
 					MaryvonneNpc * npc = new MaryvonneNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::FishPinkNpc:
 				{
 					FishPinkNpc * npc = new FishPinkNpc(biome);
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::FishBlackNpc:
 				{
 					FishBlackNpc * npc = new FishBlackNpc(biome);
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::FishBlueNpc:
 				{
 					FishBlueNpc * npc = new FishBlueNpc(biome);
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::FishRedNpc:
 				{
 					FishRedNpc * npc = new FishRedNpc(biome);
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::MariaNpc:
 				{
 					MariaNpc * npc = new MariaNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::JihemNpc:
 				{
 					JihemNpc * npc = new JihemNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::WaterHouseBroken:
 				{
 					WaterHouseBroken * npc = new WaterHouseBroken();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::ColumnNpc:
 				{
 					ColumnNpc * npc = new ColumnNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::TiboNpc:
 				{
 					TiboNpc * npc = new TiboNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::SebNpc:
 				{
 					SebNpc * npc = new SebNpc(biome);
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::BeachBoyFlyNpc:
 				{
 					BeachBoyFlyNpc * npc = new BeachBoyFlyNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::BeachBoySubNpc:
 				{
 					BeachBoySubNpc * npc = new BeachBoySubNpc(biome);
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::AntoineNpc:
 				{
 					AntoineNpc * npc = new AntoineNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::UlaNpc:
 				{
 					UlaNpc * npc = new UlaNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::EngineSnow:
 				{
 					EngineSnow * npc = new EngineSnow();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::FlorentNpc:
 				{
 					FlorentNpc * npc = new FlorentNpc();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::AnthemJungle:
 				{
 					AnthemJungle * npc = new AnthemJungle();
 					npc->onTheFloor();
-					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}
 				break;
 			case GameObjectType::MysticanouilleNpc:
@@ -2205,7 +2205,6 @@ void GroundManager::update(float deltatime)
 		}
 		updateOffset(deltatime);
 		updateTransition(rect);
-		std::cout << deltatime << std::endl;
 	}
 	updateDecors(sf::seconds(deltatime));
 	updateGameObjects(sf::seconds(deltatime));

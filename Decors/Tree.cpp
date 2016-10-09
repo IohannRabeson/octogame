@@ -9,6 +9,7 @@
 #include "ResourceDefinitions.hpp"
 
 Tree::Tree(bool onInstance) :
+	m_levelOfDetails(0),
 	m_depth(0u),
 	m_count(0u),
 	m_angleMaxCount(0u),
@@ -266,11 +267,12 @@ void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biom
 	if (biome.getTreeIsMoving() == false)
 		m_animator.sleep();
 	
-	if (m_levelOfDetails != Progress::getInstance().getLevelOfDetails())
-	{
-		m_animator = DecorAnimator(4.f, 4.f, 3.f, 0.01f);
-		setup(biome);
-	}
+	//TODO : test, remove comment
+//	if (m_levelOfDetails != Progress::getInstance().getLevelOfDetails())
+//	{
+//		m_animator = DecorAnimator(4.f, 4.f, 3.f, 0.01f);
+//		setup(biome);
+//	}
 
 	m_animator.update(frameTime);
 	if (m_animator.getState() == DecorAnimator::State::Dead)
