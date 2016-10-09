@@ -11,7 +11,8 @@ SmokeInstance::SmokeInstance(sf::Vector2f const & scale, sf::Vector2f const & po
 	InstanceDecor(SMOKE_INSTANCE_OSS, scale, position, 1, 1.f),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_velocity(0, -100.f * scale.x),
-	m_scale(scale.x)
+	m_scale(scale.x),
+	m_collideEvent(false)
 {
 	m_box->setSize(16.f * m_scale, 16.f * m_scale);
 	m_box->setPosition(position);
@@ -39,8 +40,10 @@ void SmokeInstance::update(sf::Time frametime)
 	InstanceDecor::update(frametime);
 
 	sf::Vector2f positionSmoke = m_smoke.getPositionEmitter();
-	std::cout << m_positionOcto.x << " " << m_positionOcto.y << " | " << positionSmoke.x << " " << positionSmoke.y << std::endl;
 	positionSmoke.y += 250.f;
+	//Avoid negative values
+	positionSmoke.x += 10000000.f * 16.f;
+	m_positionOcto.x += 10000000.f * 16.f;
 
 	if (m_collideEvent && m_positionOcto.y < positionSmoke.y && positionSmoke.y - m_positionOcto.x < 200.f)
 	{
@@ -75,7 +78,7 @@ void SmokeInstance::addMapOffset(float x, float y)
 	InstanceDecor::addMapOffset(x, y);
 	m_box->setPosition(m_box->getPosition() + sf::Vector2f(x, y));
 	m_box->update();
-	m_smoke.setPosition(m_smoke.getPositionEmitter() + sf::Vector2f(x, y));
+	m_smoke.setPosition(m_box->getPosition() + sf::Vector2f(m_box->getSize().x / 2.f, 0.f));
 }
 
 void SmokeInstance::setPosition(sf::Vector2f const & position)
