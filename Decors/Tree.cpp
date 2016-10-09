@@ -267,7 +267,6 @@ void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biom
 	if (biome.getTreeIsMoving() == false)
 		m_animator.sleep();
 	
-	//TODO : test, remove comment
 	if (m_levelOfDetails != Progress::getInstance().getLevelOfDetails())
 	{
 		m_animator = DecorAnimator(4.f, 4.f, 3.f, 0.01f);
