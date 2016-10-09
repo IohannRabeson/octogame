@@ -2076,7 +2076,7 @@ sf::Vector2f const &	CharacterOcto::getPosition() const
 
 sf::Vector2f	CharacterOcto::getBubblePosition() const
 {
-	return (m_box->getBaryCenter() + sf::Vector2f(-40.f, -80.f));
+	return (m_box->getRenderCenter() + sf::Vector2f(-40.f, -80.f));
 }
 
 bool	CharacterOcto::getDoubleJump()
