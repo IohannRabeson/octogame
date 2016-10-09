@@ -296,8 +296,8 @@ Map::TileColorGenerator WaterDBiome::getTileColorGenerator()
 	sf::Color secondColorEnd = getRockColor();//(193, 96, 0);
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(26, 15, 213);
-	float start1 = -5900.f / static_cast<float>(m_mapSize.y);
-	float start2 = -4200.f / static_cast<float>(m_mapSize.y);
+	float start1 = -8900.f / static_cast<float>(m_mapSize.y);
+	float start2 = -5200.f / static_cast<float>(m_mapSize.y);
 	float middle1 = -2800.f / static_cast<float>(m_mapSize.y);
 	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
 	float end1 = 800.f / static_cast<float>(m_mapSize.y);
