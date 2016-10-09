@@ -67,6 +67,7 @@ void DecorAnimator::computeState(float frameTime)
 				m_startTimer += frameTime;
 			else
 				m_currentState = State::Grow;
+			break;
 		}
 		case State::Life:
 		{
