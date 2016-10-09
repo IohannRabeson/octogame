@@ -437,6 +437,14 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(TRAIL_SIGN_10_OSS, scale, position, 1u, 0.4f);
 			});
+	m_decorFactory.registerCreator(SIGN_DESERT_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(SIGN_DESERT_OSS, scale, position, 1u, 0.4f);
+			});
+	m_decorFactory.registerCreator(TV_FAN_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(TV_FAN_OSS, scale, position, 8u, 0.4f);
+			});
 	m_decorFactory.registerCreator(PYRAMID_OSS, [&biome](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
 				return new Pyramid(scale, position, biome);
