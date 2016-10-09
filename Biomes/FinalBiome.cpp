@@ -154,9 +154,9 @@ FinalBiome::FinalBiome() :
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::Red);
 	m_destinations.push_back(Level::Blue);
-	m_destinations.push_back(Level::WaterC);
+	m_destinations.push_back(Level::Red);
+	m_destinations.push_back(Level::WaterD);
 }
 
 void			FinalBiome::setup(std::size_t seed)

@@ -138,7 +138,7 @@ WaterDBiome::WaterDBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::WaterE)
+	if (progress.getLastDestination() == Level::Final)
 		m_octoStartPosition = sf::Vector2f(773.f * 16.f, -110.f * 16.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(741.f * 16.f, -320.f * 16.f);
@@ -149,7 +149,7 @@ WaterDBiome::WaterDBiome() :
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::WaterC);
-	m_destinations.push_back(Level::WaterE);
+	m_destinations.push_back(Level::Final);
 	m_destinations.push_back(Level::Random);
 }
 
