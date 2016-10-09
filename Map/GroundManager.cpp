@@ -1744,7 +1744,6 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	sf::Vertex * last;
 	bool updateLast;
 	std::size_t physicsLineCount = 0u;
-	std::size_t countFilledTiles = 0u;
 
 	// Update tiles
 	m_verticesCount = 0u;
@@ -1757,8 +1756,6 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
 		{
 			tile = &m_tiles->get(x, y);
-			if (!tile->isEmpty())
-				countFilledTiles++;
 			if (tile->isTransitionType(Tile::e_transition_none))
 			{
 				if (first && tile->isEmpty())
@@ -1823,13 +1820,6 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		if (physicsLineCount == 0u)
 			m_tileShapes(x, 1u)->setSleep(true);
 	}
-	/*
-	if (countFilledTiles >= 9500)
-	{
-		Progress::getInstance().setNextDestination(Progress::getInstance().getNextDestination());
-		return;
-	}
-	*/
 
 	// Update decors
 	Map::Decors const & current = m_tiles->getDecorsPosition();
@@ -2215,6 +2205,7 @@ void GroundManager::update(float deltatime)
 		}
 		updateOffset(deltatime);
 		updateTransition(rect);
+		std::cout << deltatime << std::endl;
 	}
 	updateDecors(sf::seconds(deltatime));
 	updateGameObjects(sf::seconds(deltatime));
