@@ -63,6 +63,7 @@ CharacterOcto::CharacterOcto() :
 	m_keyPortal(false),
 	m_keyElevator(false),
 	m_keyE(false),
+	m_keyZoomIn(false),
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionPortal(false),
@@ -1077,6 +1078,11 @@ bool	CharacterOcto::isFinalEvent(void)
 	return false;
 }
 
+bool	CharacterOcto::isZooming()
+{
+	return (m_keyZoomIn || isCollidingPortal());
+}
+
 bool	CharacterOcto::isInRocketEnd(void)
 {
 	return m_isRocketEnd;
@@ -1904,6 +1910,9 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Down:
 			m_keyDown = true;
 			break;
+		case OctoKeys::Zoom:
+			m_keyZoomIn = true;
+			break;
 		case OctoKeys::Use:
 			m_keyE = true;
 			if (m_onElevator && m_progress.canUseElevator() && !m_keyElevator)
@@ -2052,6 +2061,9 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			m_keyPortal = false;
 			if (!m_keyUp)
 				m_keyElevator = false;
+			break;
+		case OctoKeys::Zoom:
+			m_keyZoomIn = false;
 			break;
 		default:
 			otherKeyReleased = true;

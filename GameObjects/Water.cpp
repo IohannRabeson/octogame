@@ -4,6 +4,7 @@
 #include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
+#include <GraphicsManager.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
 
@@ -88,13 +89,14 @@ void Water::changeColor(sf::Time frameTime)
 void Water::update(sf::Time frameTime)
 {
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
+	float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / rect.height;
 	m_shader.setParameter("camera_offset", rect.left, rect.top);
 	m_waveCycle += frameTime;
 	m_shader.setParameter("time", m_waveCycle.asSeconds());
 	m_shader.setParameter("distortionFactor", 0.15f);
 	m_shader.setParameter("riseFactor", -0.1f);
 	float limit = rect.height - (m_limit - rect.top);
-	m_shader.setParameter("limit", limit);
+	m_shader.setParameter("limit", limit * zoomFactor);
 	float ratio = limit / rect.height;
 	if (ratio > 1.f)
 		ratio = 1.f;
