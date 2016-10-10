@@ -150,7 +150,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::RocketDoor)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint)
 		| static_cast<std::size_t>(GameObjectType::Door)
-		| static_cast<std::size_t>(GameObjectType::Monolith);
+		| static_cast<std::size_t>(GameObjectType::Monolith)
+		| static_cast<std::size_t>(GameObjectType::Pyramid);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
