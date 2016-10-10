@@ -17,6 +17,7 @@ public:
 		FollowOcto,
 		OctoFalling,
 		OctoRaising,
+		OctoCentered,
 		ControlledByPlayer,
 		StopFollowOcto
 	};

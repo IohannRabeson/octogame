@@ -103,8 +103,10 @@ public:
 	bool					isCollidingPortal(void) const;
 	bool					isStopFollowCamera(void) const;
 	bool					isFinalEvent(void);
-	bool					isZooming(void);
-	bool					isInRocketEnd(void);
+	bool					isZooming(void) const;
+	bool					isInRocketEnd(void) const;
+	bool					isInWater(void) const;
+	bool					isCenteredCamera(void) const;
 	void					stopFollowCamera(bool stop);
 	void					setOctoInRocketEnd(void);
 	void					endInRocket(void);

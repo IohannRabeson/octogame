@@ -1078,14 +1078,24 @@ bool	CharacterOcto::isFinalEvent(void)
 	return false;
 }
 
-bool	CharacterOcto::isZooming()
+bool	CharacterOcto::isZooming(void) const
 {
 	return (m_keyZoomIn || isCollidingPortal());
 }
 
-bool	CharacterOcto::isInRocketEnd(void)
+bool	CharacterOcto::isInRocketEnd(void) const
 {
 	return m_isRocketEnd;
+}
+
+bool	CharacterOcto::isInWater(void) const
+{
+	return (getPosition().y > m_waterLevel);
+}
+
+bool	CharacterOcto::isCenteredCamera(void) const
+{
+	return (isInWater());
 }
 
 void	CharacterOcto::portalEvent()
