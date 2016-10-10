@@ -114,6 +114,7 @@ void Rocket::collideOctoEvent(CharacterOcto * octo)
 	switch (m_state)
 	{
 		case Waiting:
+			octo->setOctoInRocketEnd();
 			m_octoPosition = octo->getPhysicsPosition();
 			m_state = OctoEntering;
 			break;
@@ -121,6 +122,8 @@ void Rocket::collideOctoEvent(CharacterOcto * octo)
 			octo->setStartPosition(octo::linearInterpolation(m_octoPosition, m_enterRocketShape->getPosition(), m_timerOctoEntering / m_timerOctoEnteringMax));
 			break;
 		case StartSmoke:
+			if (m_stopCameraMovement)
+				octo->endInRocket();
 			playSound();
 			octo->enableCutscene(true);
 			octo->setStartPosition(m_enterRocketShape->getPosition());
@@ -128,9 +131,6 @@ void Rocket::collideOctoEvent(CharacterOcto * octo)
 		default:
 			break;
 	}
-
-	if (m_stopCameraMovement)
-		octo->endInRocket();
 }
 
 void Rocket::update(sf::Time frametime)
