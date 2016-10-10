@@ -145,7 +145,6 @@ IceBBiome::IceBBiome() :
 	m_instances[178] = MAP_ICE_B_TRAIL_C_OMP;
 	m_instances[219] = MAP_ICE_B_TRAIL_D_OMP;
 	m_instances[317] = MAP_ICE_B_PORTAL_OMP;
-	m_gameObjects[350] = GameObjectType::Rocket;
 	m_gameObjects[385] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[390] = GameObjectType::EngineSnow;
 	m_gameObjects[406] = GameObjectType::AymericNpc;
