@@ -1,9 +1,13 @@
 #include "Pyramid.hpp"
+#include "PhysicsEngine.hpp"
+#include "CircleShape.hpp"
+#include "CharacterOcto.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
 Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome) :
 	InstanceDecor(PYRAMID_OSS, scale, position, 1u),
+	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_particles(new BeamSystem())
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
@@ -13,6 +17,15 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position, ABio
 	m_particles->setHeight(200 * 16.f);
 	m_particles->setBiome(biome);
 	m_particles->setPosition(particlePosition);
+
+	m_box->setGameObject(this);
+	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Pyramid));
+	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
+	m_box->setRadius(500.f);
+	m_box->setApplyGravity(false);
+	m_box->setType(AShape::Type::e_trigger);
+	m_box->setPosition(getSprite().getPosition() + getSprite().getGlobalSize() / 2.f - sf::Vector2f(m_box->getRadius(), m_box->getRadius()));
+	m_box->update();
 
 	octo::SpriteAnimation::FrameList	frames;
 	frames.emplace_back(sf::seconds(0.1f), 0u);
@@ -130,6 +143,8 @@ void Pyramid::addMapOffset(float x, float y)
 	m_spriteWater.setPosition(m_spriteWater.getPosition().x + x, m_spriteWater.getPosition().y + y);
 	for (std::size_t i = 0u; i < m_spriteBlocs.size(); i++)
 		m_spriteBlocs[i].setPosition(m_spriteBlocs[i].getPosition().x + x, m_spriteBlocs[i].getPosition().y + y);
+	m_box->setPosition(m_box->getPosition() + sf::Vector2f(x, y));
+	m_box->update();
 }
 
 void Pyramid::setPosition(sf::Vector2f const & position)
@@ -139,6 +154,12 @@ void Pyramid::setPosition(sf::Vector2f const & position)
 	m_spriteWater.setPosition(position);
 	for (std::size_t i = 0u; i < m_spriteBlocs.size(); i++)
 		m_spriteBlocs[i].setPosition(position);
+	m_box->setPosition(getSprite().getPosition() + getSprite().getGlobalSize() / 2.f - sf::Vector2f(m_box->getRadius(), m_box->getRadius()));
+	m_box->update();
+}
+
+void Pyramid::collideOcto(CharacterOcto *)
+{
 }
 
 void Pyramid::update(sf::Time frameTime)
