@@ -44,7 +44,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		else
 			m_behavior = Behavior::FollowOcto;
 	}
-	if (octo.isCollidingPortal())
+	if (octo.isZooming())
 	{
 		m_zoomState = ZoomState::ZoomIn;
 	}

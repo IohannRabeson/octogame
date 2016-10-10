@@ -21,7 +21,7 @@ InputListener::InputListener(void) :
 	// XBox 360
 #ifdef __linux__
 	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::SlowFall, OctoKeys::Infos, OctoKeys::GroundRight,
-		OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+		OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::Zoom };
 	m_triggerLimit = 0.f;
 #elif _WIN32
 	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::SlowFall, OctoKeys::Infos, OctoKeys::GroundRight,
@@ -119,6 +119,9 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::S:
 			onInputPressed(OctoKeys::Infos);
 			break;
+		case sf::Keyboard::R:
+			onInputPressed(OctoKeys::Zoom);
+			break;
 		case sf::Keyboard::LShift:
 			m_isShiftPressed = true;
 			break;
@@ -165,6 +168,9 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::S:
 			onInputReleased(OctoKeys::Infos);
+			break;
+		case sf::Keyboard::R:
+			onInputReleased(OctoKeys::Zoom);
 			break;
 		case sf::Keyboard::LShift:
 			onInputReleased(OctoKeys::ViewLeft);

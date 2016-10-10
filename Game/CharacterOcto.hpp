@@ -1,5 +1,6 @@
 #ifndef CHARACTEROCTO_HPP
 # define CHARACTEROCTO_HPP
+
 # include <CharacterSprite.hpp>
 # include <CharacterAnimation.hpp>
 # include <DefaultGraphicsListeners.hpp>
@@ -102,6 +103,7 @@ public:
 	bool					isCollidingPortal(void) const;
 	bool					isStopFollowCamera(void) const;
 	bool					isFinalEvent(void);
+	bool					isZooming(void);
 	void					stopFollowCamera(bool stop);
 	void					endInRocket(void);
 	void					meetNpc(bool meetNpc);
@@ -227,6 +229,7 @@ private:
 	bool						m_keyPortal;
 	bool						m_keyElevator;
 	bool						m_keyE;
+	bool						m_keyZoomIn;
 	bool						m_collisionTile;
 	bool						m_collisionElevator;
 	bool						m_collisionPortal;

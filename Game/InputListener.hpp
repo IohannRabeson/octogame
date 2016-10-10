@@ -27,7 +27,8 @@ public:
 		ViewRight = 13,
 		ViewUp = 14,
 		ViewDown = 15,
-		None = 16
+		None = 16,
+		Zoom = 17
 	};
 
 	InputListener(void);
