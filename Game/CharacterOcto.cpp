@@ -1,4 +1,4 @@
-#include <Application.hpp>
+	#include <Application.hpp>
 #include <AudioManager.hpp>
 #include <PostEffectManager.hpp>
 #include <ResourceManager.hpp>
@@ -78,6 +78,7 @@ CharacterOcto::CharacterOcto() :
 	m_stopFollowCamera(false),
 	m_autoDisableCutscene(false),
 	m_doorAction(false),
+	m_isRocketEnd(false),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutscenePauseTimerMax(sf::seconds(4.f)),
@@ -1065,7 +1066,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 	}
 }
 
-bool	CharacterOcto::isFinalEvent()
+bool	CharacterOcto::isFinalEvent(void)
 {
 	//TODO : To put in pyramid
 	Progress const & progress = Progress::getInstance();
@@ -1074,6 +1075,11 @@ bool	CharacterOcto::isFinalEvent()
 	if (progress.getCurrentDestination() == Level::Final && (position.x > 805.f * 16.f && position.x < 905.f * 16.f))
 		return true;
 	return false;
+}
+
+bool	CharacterOcto::isInRocketEnd(void)
+{
+	return m_isRocketEnd;
 }
 
 void	CharacterOcto::portalEvent()
@@ -1960,6 +1966,11 @@ bool	CharacterOcto::isStopFollowCamera(void) const
 void	CharacterOcto::stopFollowCamera(bool stop)
 {
 	m_stopFollowCamera = stop;
+}
+
+void	CharacterOcto::setOctoInRocketEnd(void)
+{
+	m_isRocketEnd = true;
 }
 
 void	CharacterOcto::endInRocket(void)
