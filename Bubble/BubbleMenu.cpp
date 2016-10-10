@@ -7,6 +7,7 @@
 #include "ResourceDefinitions.hpp"
 
 BubbleMenu::BubbleMenu(void) :
+	m_characterSize(20u),
 	m_isFontSelect(true),
 	m_indexCursor(0u)
 {
@@ -16,8 +17,8 @@ void BubbleMenu::setup(std::vector<std::wstring> const & subMenuTitle, sf::Color
 {
 	m_contentSize.x = 0.f;
 	m_contentSize.y = 0.f;
-	if (characterSize == 0u)
-		characterSize = m_characterSize;
+	if (characterSize != 0u)
+		m_characterSize = characterSize;
 	ABubble::setColor(color);
 
 	m_subMenus.resize(subMenuTitle.size());
@@ -31,13 +32,13 @@ void BubbleMenu::setup(std::vector<std::wstring> const & subMenuTitle, sf::Color
 	{
 		m_subMenus[i].text.setFont(m_fontSelect);
 		m_subMenus[i].text.setColor(sf::Color(0, 0, 0));
-		m_subMenus[i].text.setCharacterSize(characterSize);
+		m_subMenus[i].text.setCharacterSize(m_characterSize);
 		m_subMenus[i].text.setString(subMenuTitle[i]);
-		m_subMenus[i].size.x = m_subMenus[i].text.findCharacterPos(subMenuTitle[i].size() - 1).x - m_subMenus[i].text.findCharacterPos(0).x + m_font.getGlyph(subMenuTitle[i][subMenuTitle[i].size() - 1], characterSize, 0).advance;
+		m_subMenus[i].size.x = m_subMenus[i].text.findCharacterPos(subMenuTitle[i].size() - 1).x - m_subMenus[i].text.findCharacterPos(0).x + m_font.getGlyph(subMenuTitle[i][subMenuTitle[i].size() - 1], m_characterSize, 0).advance;
 		m_subMenus[i].position.y = m_contentSize.y;
 		if (m_subMenus[i].size.x > m_contentSize.x)
 			m_contentSize.x = m_subMenus[i].size.x;
-		m_contentSize.y += m_font.getLineSpacing(characterSize);
+		m_contentSize.y += m_font.getLineSpacing(m_characterSize);
 	}
 }
 

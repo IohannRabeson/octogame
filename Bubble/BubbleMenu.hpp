@@ -33,8 +33,7 @@ public:
 	void								setIsFontSelect(bool isFontSelect);
 
 private:
-	static constexpr std::size_t	m_characterSize = 20u;
-
+	std::size_t						m_characterSize;
 	sf::Vector2f					m_contentSize;
 	sf::Font						m_font;
 	sf::Font						m_fontSelect;
