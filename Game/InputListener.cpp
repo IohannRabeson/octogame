@@ -28,7 +28,7 @@ InputListener::InputListener(void) :
 		OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::Zoom };
 	m_triggerLimit = 50.f;
 #else // __APPLE__
-	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::SlowFall, OctoKeys::Infos, OctoKeys::GroundRight, OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::None, OctoKeys::Menu, OctoKeys::None,
+	m_inputs = { OctoKeys::Jump, OctoKeys::Use, OctoKeys::SlowFall, OctoKeys::Infos, OctoKeys::GroundRight, OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Zoom, OctoKeys::Menu, OctoKeys::None,
 		OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Left, OctoKeys::Right, OctoKeys::None,
 		OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None };
 	m_triggerLimit = 0.f;
@@ -369,6 +369,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 	}
 }
 
+#include <iostream>
 void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 {
 	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
