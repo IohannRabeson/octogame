@@ -149,7 +149,7 @@ void DecorAnimator::play(void)
 
 void DecorAnimator::sleep(void)
 {
-	if (m_currentState != State::Grow)
+	if (m_currentState != State::Grow && m_currentState != State::Wait)
 		m_currentState = State::Sleep;
 }
 
