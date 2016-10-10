@@ -1,4 +1,4 @@
-#include <Application.hpp>
+	#include <Application.hpp>
 #include <AudioManager.hpp>
 #include <PostEffectManager.hpp>
 #include <ResourceManager.hpp>
@@ -79,6 +79,7 @@ CharacterOcto::CharacterOcto() :
 	m_stopFollowCamera(false),
 	m_autoDisableCutscene(false),
 	m_doorAction(false),
+	m_isRocketEnd(false),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutscenePauseTimerMax(sf::seconds(4.f)),
@@ -151,7 +152,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::RocketDoor)
 		| static_cast<std::size_t>(GameObjectType::CheckPoint)
 		| static_cast<std::size_t>(GameObjectType::Door)
-		| static_cast<std::size_t>(GameObjectType::Monolith);
+		| static_cast<std::size_t>(GameObjectType::Monolith)
+		| static_cast<std::size_t>(GameObjectType::Pyramid);
 	m_box->setCollisionMask(mask);
 
 	m_octoEvent.m_octo = this;
@@ -1065,7 +1067,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 	}
 }
 
-bool	CharacterOcto::isFinalEvent()
+bool	CharacterOcto::isFinalEvent(void)
 {
 	//TODO : To put in pyramid
 	Progress const & progress = Progress::getInstance();
@@ -1079,6 +1081,11 @@ bool	CharacterOcto::isFinalEvent()
 bool	CharacterOcto::isZooming()
 {
 	return (m_keyZoomIn || isCollidingPortal());
+}
+
+bool	CharacterOcto::isInRocketEnd(void)
+{
+	return m_isRocketEnd;
 }
 
 void	CharacterOcto::portalEvent()
@@ -1968,6 +1975,11 @@ bool	CharacterOcto::isStopFollowCamera(void) const
 void	CharacterOcto::stopFollowCamera(bool stop)
 {
 	m_stopFollowCamera = stop;
+}
+
+void	CharacterOcto::setOctoInRocketEnd(void)
+{
+	m_isRocketEnd = true;
 }
 
 void	CharacterOcto::endInRocket(void)

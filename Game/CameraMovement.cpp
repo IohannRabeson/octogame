@@ -37,6 +37,8 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 
 	if (octo.isRaising())
 		m_behavior = Behavior::OctoRaising;
+	else if (octo.isInRocketEnd())
+		m_behavior = Behavior::FollowOcto;
 	else if (m_behavior != ControlledByPlayer)
 	{
 		if (octo.isFalling())

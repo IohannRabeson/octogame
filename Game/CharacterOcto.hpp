@@ -104,7 +104,9 @@ public:
 	bool					isStopFollowCamera(void) const;
 	bool					isFinalEvent(void);
 	bool					isZooming(void);
+	bool					isInRocketEnd(void);
 	void					stopFollowCamera(bool stop);
+	void					setOctoInRocketEnd(void);
 	void					endInRocket(void);
 	void					meetNpc(bool meetNpc);
 	void					collidePortalEvent(bool collidePortal);
@@ -245,6 +247,7 @@ private:
 	bool						m_stopFollowCamera;
 	bool						m_autoDisableCutscene;
 	bool						m_doorAction;
+	bool						m_isRocketEnd;
 	Events						m_prevEvent;
 
 	RandomGenerator				m_generator;
