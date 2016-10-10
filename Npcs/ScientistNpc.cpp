@@ -13,6 +13,7 @@ ScientistNpc::ScientistNpc(ResourceKey key) :
 	setOrigin(sf::Vector2f(90.f, 100.f));
 	setScale(1.0f);
 	setTimerMax(sf::seconds(8.0f));
+	setTextOffset(sf::Vector2f(50.f, -40.f));
 
 	getBox()->setApplyGravity(false);
 
@@ -86,7 +87,7 @@ void ScientistNpc::updateText(sf::Time frametime)
 	setCurrentText(index);
 	auto & texts = ANpc::getTexts();
 	texts[index]->setActive(true);
-	texts[index]->setPosition(getPosition() + sf::Vector2f(50.f, -40.f));
+	texts[index]->setPosition(getPosition() + ANpc::getTextOffset());
 	texts[index]->update(frametime);
 }
 

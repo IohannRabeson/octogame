@@ -170,6 +170,11 @@ void ANpc::setTextOffset(sf::Vector2f const & offset)
 	m_textOffset = offset;
 }
 
+sf::Vector2f const & ANpc::getTextOffset(void) const
+{
+	return m_textOffset;
+}
+
 void ANpc::setSize(sf::Vector2f const & size)
 {
 	m_box->setSize(size);

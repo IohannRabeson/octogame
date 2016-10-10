@@ -129,7 +129,7 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			{
 				m_timer = sf::Time::Zero;
 				m_textIndex++;
-				if (m_textIndex > m_lastTextIndex || m_stopDialog)
+				if (m_textIndex >= m_lastTextIndex || m_stopDialog)
 				{
 					for (auto & it : m_npcs)
 					{
@@ -153,6 +153,9 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 				m_timer = sf::Time::Zero;
 				m_state = CedricPutPotion;
 				m_npcs[3]->setNextEvent(ANpc::Events::Special1);
+				m_npcs[3]->setDisplayText(true);
+				m_npcs[3]->updateText(true);
+				m_npcs[3]->setTextIndex(m_textIndex);
 			}
 			break;
 		case CedricPutPotion:
@@ -160,6 +163,8 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			if (m_timer >= m_cedricPutPotionTimer)
 			{
 				m_timer = sf::Time::Zero;
+				m_npcs[3]->setDisplayText(false);
+				m_npcs[3]->updateText(false);
 				m_state = ChangeAquaColor;
 			}
 			break;
