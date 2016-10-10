@@ -29,7 +29,8 @@ Progress::Progress() :
 	m_npcMax(0u),
 	m_countRandomDiscover(0u),
 	m_isOctoOnInstance(false),
-	m_isHighLight(false)
+	m_isHighLight(false),
+	m_isMapMoving(false)
 {
 }
 

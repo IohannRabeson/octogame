@@ -27,6 +27,7 @@ public:
 	void setBackgroundSurfaceGenerator(BackgroundSurfaceGenerator mapSurface);
 	inline void setMapSize(sf::Vector2u const & mapSize) { m_mapSize = mapSize; }
 	inline sf::Vector2u const & getMapSize(void) const { return m_mapSize; }
+	inline void setAccelerateFactor(float factor) { m_accelerateFactor = factor; }
 
 	void update(float frametime, ABiome & biome);
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
@@ -50,6 +51,7 @@ private:
 	float								m_highestY;
 	int									m_heightOffset;
 	float								m_deltaOffset;
+	float								m_accelerateFactor;
 	std::size_t							m_widthScreen;
 	std::size_t							m_verticesCount;
 	BackgroundSurfaceGeneratorBind		m_backgroundSurface;
