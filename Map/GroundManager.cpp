@@ -565,6 +565,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(WATER_HOUSE_BROKEN_OSS, scale, position, 1u, 0.1f);
 			});
+	m_decorFactory.registerCreator(OBJECT_ELEVATOR_BOTTOM_FRONT_OSS, [&biome](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new ElevatorStream(scale, position, biome, true);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -708,11 +712,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 		if (spawnInstance && spawnElevator)
 		{
 			std::unique_ptr<ElevatorStream> elevator;
-			elevator.reset(new ElevatorStream());
+			elevator.reset(new ElevatorStream(sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f), biome));
 			elevator->setPosition(sf::Vector2f(instance.first * Tile::TileSize - elevator->getWidth(), 0.f));
 			elevator->setTopY((static_cast<int>(y) - levelMap.getMapSize().y + levelMap.getMapPosY() - 9) * Tile::TileSize);
 			elevator->setHeight(400.f);
-			elevator->setBiome(biome);
 			std::size_t width = elevator->getWidth() / Tile::TileSize + 2u;
 			m_elevators.emplace_back(instance.first - width, width, elevator);
 		}

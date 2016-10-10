@@ -13,7 +13,9 @@
 #include <random>
 #include <ctime>
 
-ElevatorStream::ElevatorStream() :
+ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome, bool isBotOnInstance) :
+	InstanceDecor(OBJECT_ELEVATOR_BOTTOM_FRONT_OSS, scale, position, 1, 1.f),
+	m_isBotOnInstance(isBotOnInstance),
 	m_particles(new BeamSystem()),
 	m_waveCycleDuration(sf::seconds(0.5)),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
@@ -28,6 +30,8 @@ ElevatorStream::ElevatorStream() :
 	m_timerMax(sf::seconds(2.5f))
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
+
+	m_particles->setBiome(biome);
 
 	m_box->setGameObject(this);
 	m_box->setType(AShape::Type::e_trigger);
@@ -67,6 +71,26 @@ ElevatorStream::ElevatorStream() :
 	m_smoke.setScaleFactor(35.f);
 	m_smoke.setDispersion(200.f);
 	m_smoke.setColor(sf::Color(180, 180, 180, 220));
+
+	if (m_isBotOnInstance)
+	{
+		m_position = position + sf::Vector2f(36.f, 100.f);
+		setTopY(m_position.y - 2000.f);
+		m_position.x += getWidth() / 2.f + Tile::TileSize;
+		m_position.y -= Tile::TileSize - Map::OffsetY;
+	
+		sf::Vector2f const &	posBox = m_box->getPosition();
+	
+		m_box->setPosition(m_position.x - (getWidth() / 3.f), posBox.y);
+		m_spriteBottomFront.setPosition(m_position + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
+		m_spriteBottomBack.setPosition(m_position + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
+		m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+		m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+	
+		m_smoke.setPosition(m_position + sf::Vector2f(0.f, -50.f));
+		m_particles->setPosition(m_position + sf::Vector2f(0.f, -100.f));
+		setHeight(m_position.y - getTopY() - 100.f);
+	}
 }
 
 void	ElevatorStream::setupSprite(void)
@@ -277,7 +301,8 @@ void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 	sf::RenderStates	states;
 
 	render.draw(m_spriteBottomBack);
-	render.draw(m_spriteTopBack);
+	if (!m_isBotOnInstance)
+		render.draw(m_spriteTopBack);
 	states.shader = &m_shader;
 	if (m_state == Activated)
 		m_particles->draw(render, states);
@@ -287,6 +312,7 @@ void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_spriteBottomFront);
-	render.draw(m_spriteTopFront);
+	if (!m_isBotOnInstance)
+		render.draw(m_spriteTopFront);
 	m_smoke.draw(render);
 }

@@ -14,7 +14,7 @@
 # include <iostream>
 
 # include "AGameObject.hpp"
-# include "IPlaceable.hpp"
+# include "InstanceDecor.hpp"
 # include "SmokeSystem.hpp"
 # include "BeamSystem.hpp"
 
@@ -22,7 +22,7 @@ class ABiome;
 class RectangleShape;
 class BeamSystem;
 
-class ElevatorStream : public AGameObject<GameObjectType::Elevator>, public IPlaceable
+class ElevatorStream : public AGameObject<GameObjectType::Elevator>, public InstanceDecor
 {
 public:
 	enum State
@@ -31,7 +31,7 @@ public:
 		Activated,
 		Disappear
 	};
-	ElevatorStream();
+	ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome, bool isBotOnInstance = false);
 
 	void					setupSprite(void);
 	void					setHeight(float height);
@@ -56,6 +56,7 @@ public:
 	void					drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
+	bool							m_isBotOnInstance;
 	std::shared_ptr<BeamSystem>		m_particles;
 	sf::Shader						m_shader;
 	octo::VertexBuilder				m_builder;
