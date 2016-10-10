@@ -1633,6 +1633,7 @@ NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 
 void	GroundManager::setNextGenerationState(GenerationState state, sf::Vector2f const & octoPos)
 {
+	Progress::getInstance().setMapMoving(true);
 	m_octoPosState = octoPos;
 	if (m_transitionTimer >= m_transitionTimerMax)
 		m_nextState = state;
@@ -1742,7 +1743,10 @@ void GroundManager::computeDecor(void)
 void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 {
 	if (m_transitionTimer > m_transitionTimerMax)
+	{
+		Progress::getInstance().setMapMoving(false);
 		m_transitionTimer = m_transitionTimerMax;
+	}
 	float transition = m_transitionTimer / m_transitionTimerMax;
 	float bottomBorder = cameraRect.top + cameraRect.height + Map::OffsetY + Tile::TileSize;
 	float rightBorder = cameraRect.left + cameraRect.width + Map::OffsetX + Tile::TileSize;

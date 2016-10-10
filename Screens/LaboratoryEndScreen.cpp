@@ -34,7 +34,8 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 {
 	octo::Application::getConsole().addCommand(L"test", [this](sf::Vector2f const & p)
 	{
-		m_octo.setPosition(p);
+	std::cout << p.x << " " << p.y << std::endl;
+	m_water.setPosition(p);
 		});
 }
 
@@ -49,14 +50,11 @@ void	LaboratoryEndScreen::start()
 
 	camera.setCenter(camera.getRectangle().width / 2.f, camera.getRectangle().height / 2.f);
 	m_background.setTexture(resources.getTexture(LABO_BG_PNG));
-	m_background.setOrigin(m_background.getLocalBounds().width / 2.f, m_background.getLocalBounds().height / 2.f);
-	m_background.setPosition(octo::Application::getCamera().getCenter());
+	m_background.setPosition(sf::Vector2f(0.f, 0.f));
 	m_foreground.setTexture(resources.getTexture(LABO_FG_PNG));
-	m_foreground.setOrigin(m_background.getLocalBounds().width / 2.f, m_background.getLocalBounds().height / 2.f);
-	m_foreground.setPosition(octo::Application::getCamera().getCenter());
+	m_foreground.setPosition(sf::Vector2f(0.f, 0.f));
 	m_water.setTexture(resources.getTexture(LABO_WATER_PNG));
-	m_water.setOrigin(m_background.getLocalBounds().width / 2.f, m_background.getLocalBounds().height / 2.f);
-	m_water.setPosition(octo::Application::getCamera().getCenter());
+	m_water.setPosition(sf::Vector2f(0.f, 0.f));
 
 	m_npcs.emplace_back(new ScientistJu());
 	m_npcs.emplace_back(new ScientistLu());

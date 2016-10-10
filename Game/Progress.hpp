@@ -85,6 +85,9 @@ public:
 	void				validateChallenge(ChallengeManager::Effect effect);
 	bool				isValidateChallenge(ChallengeManager::Effect effect);
 
+	void				setMapMoving(bool isMoving) { m_isMapMoving = isMoving; }
+	bool				isMapMoving(void) const { return m_isMapMoving; }
+
 	bool				canMoveMap();
 	bool				canRepair();
 	bool				canRepairShip();
@@ -251,6 +254,7 @@ private:
 
 	bool											m_isOctoOnInstance;
 	bool											m_isHighLight;
+	bool											m_isMapMoving;
 };
 
 #endif
