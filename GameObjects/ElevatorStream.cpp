@@ -39,7 +39,7 @@ ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & 
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Elevator));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
 	m_box->setSize(100.f, 0.f);
-	m_particles->setWidth(150.f);
+	m_particles->setWidth(192.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
 
@@ -74,7 +74,7 @@ ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & 
 
 	if (m_isBotOnInstance)
 	{
-		m_position = position + sf::Vector2f(36.f, 100.f);
+		m_position = position + sf::Vector2f(32.f, 100.f);
 		setTopY(m_position.y - 2000.f);
 		m_position.x += getWidth() / 2.f + Tile::TileSize;
 		m_position.y -= Tile::TileSize - Map::OffsetY;
@@ -303,6 +303,8 @@ void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 	render.draw(m_spriteBottomBack);
 	if (!m_isBotOnInstance)
 		render.draw(m_spriteTopBack);
+	else
+		render.draw(m_spriteBottomFront);
 	states.shader = &m_shader;
 	if (m_state == Activated)
 		m_particles->draw(render, states);
@@ -311,8 +313,10 @@ void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 
 void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
-	render.draw(m_spriteBottomFront);
 	if (!m_isBotOnInstance)
+	{
+		render.draw(m_spriteBottomFront);
 		render.draw(m_spriteTopFront);
+	}
 	m_smoke.draw(render);
 }

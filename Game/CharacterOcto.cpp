@@ -1932,6 +1932,11 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 	return (true);
 }
 
+bool	CharacterOcto::isMovingLeft(void)
+{
+	return m_originMove;
+}
+
 bool	CharacterOcto::isFalling(void)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());

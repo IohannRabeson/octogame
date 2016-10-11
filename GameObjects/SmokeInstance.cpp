@@ -12,7 +12,11 @@ SmokeInstance::SmokeInstance(sf::Vector2f const & scale, sf::Vector2f const & po
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_velocity(0, -100.f * scale.x),
 	m_scale(scale.x),
-	m_collideEvent(false)
+	m_collideEvent(false),
+	m_dispersion(130.f),
+	m_isOctoLeft(false),
+	m_isOctoDoubleJump(false),
+	m_isMovementSmoke(false)
 {
 	m_box->setSize(16.f * m_scale, 16.f * m_scale);
 	m_box->setPosition(position);
@@ -30,7 +34,7 @@ SmokeInstance::SmokeInstance(sf::Vector2f const & scale, sf::Vector2f const & po
 	m_smoke.setGrowTimeRange(0.4f, 0.7f);
 	m_smoke.setLifeTimeRange(0.6f, 0.8f);
 	m_smoke.setScaleFactor(15.f);
-	m_smoke.setDispersion(130.f);
+	m_smoke.setDispersion(m_dispersion);
 	m_smoke.setColor(sf::Color(240, 240, 240, 150));
 	m_smoke.setPosition(position + sf::Vector2f(m_box->getSize().x / 2.f, 0.f));
 }
@@ -38,39 +42,49 @@ SmokeInstance::SmokeInstance(sf::Vector2f const & scale, sf::Vector2f const & po
 void SmokeInstance::update(sf::Time frametime)
 {
 	InstanceDecor::update(frametime);
+	
+	sf::Vector2f	positionSmoke = m_smoke.getPositionEmitter();
+	float const		maxDistCollideY = 200.f * m_scale;
+	float const		maxDistCollideX = 15.f * m_scale;
+	float const		maxDistVelocityX = 100.f * m_scale;
+	float			distY = m_positionOcto.y - positionSmoke.y;
+	float			distX = m_positionOcto.x - positionSmoke.x;
 
-	sf::Vector2f positionSmoke = m_smoke.getPositionEmitter();
-	positionSmoke.y += 100.f;
-	//Avoid negative values
-	positionSmoke.x += 10000000.f * 16.f;
-	m_positionOcto.x += 10000000.f * 16.f;
+	if (m_collideEvent && distY < maxDistCollideY && std::fabs(distX) < maxDistCollideX)
+		m_isMovementSmoke = true;
 
-	if (m_collideEvent && m_positionOcto.y < positionSmoke.y && positionSmoke.y - m_positionOcto.y < 200.f)
+	if (m_isMovementSmoke && std::fabs(distX) < maxDistVelocityX && static_cast<int>(m_lastPositionOcto.x) != static_cast<int>(m_positionOcto.x))
 	{
-		if (m_positionOcto.x < positionSmoke.x && m_lastPositionOcto.x > m_positionOcto.x && positionSmoke.x - m_positionOcto.x < 200.f)
+		if (distX < 0.f && m_isOctoLeft)
 		{
-			m_velocity.x = -1.f * (positionSmoke.x - m_positionOcto.x);
+			m_velocity.x = distX;
 			m_smoke.setScaleFactor(20.f);
 		}
-		else if (positionSmoke.x < m_positionOcto.x && m_lastPositionOcto.x < m_positionOcto.x && m_positionOcto.x - positionSmoke.x < 200.f)
+		if (distX > 0.f && !m_isOctoLeft)
 		{
-			m_velocity.x = m_positionOcto.x - positionSmoke.x;
-			m_smoke.setScaleFactor(20.f);
+			m_velocity.x = distX;
+			m_smoke.setScaleFactor(25.f);
 		}
 	}
 	else
 	{
+		m_isMovementSmoke = false;
 		if (m_velocity.x > 0.f)
-			m_velocity.x = std::min(m_velocity.x - frametime.asSeconds() * 10.f, 0.f);
+			m_velocity.x = std::max(m_velocity.x - frametime.asSeconds() * maxDistVelocityX, 0.f);
 		if (m_velocity.x < 0.f)
-			m_velocity.x = std::max(m_velocity.x + frametime.asSeconds() * 10.f, 0.f);
+			m_velocity.x = std::min(m_velocity.x + frametime.asSeconds() * maxDistVelocityX, 0.f);
 		m_smoke.setScaleFactor(15.f);
+		m_smoke.setDispersion(m_dispersion);
 	}
+	if (m_isOctoDoubleJump)
+		m_smoke.setDispersion(m_dispersion + (maxDistCollideY - distY));
+
 	m_smoke.setVelocity(m_velocity);
 	m_smoke.update(frametime);
 
 	m_lastPositionOcto = m_positionOcto;
 	m_collideEvent = false;
+	m_isOctoDoubleJump = false;
 }
 
 void SmokeInstance::addMapOffset(float x, float y)
@@ -93,6 +107,8 @@ void SmokeInstance::collideOctoEvent(CharacterOcto * octo)
 {
 	m_collideEvent = true;
 	m_positionOcto = octo->getPosition();
+	m_isOctoLeft = octo->isMovingLeft();
+	m_isOctoDoubleJump = octo->getDoubleJump();
 }
 
 void SmokeInstance::draw(sf::RenderTarget & render, sf::RenderStates) const

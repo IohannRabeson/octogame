@@ -95,6 +95,7 @@ public:
 	void					usePortal(Portal & portal);
 	void					startKonamiCode(bool canStart);
 	void					startDrinkPotion(void);
+	bool					isMovingLeft(void);
 	bool					isFalling(void);
 	bool					isRaising(void);
 	bool					isInAir(void) const;
