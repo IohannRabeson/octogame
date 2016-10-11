@@ -234,6 +234,7 @@ private:
 	bool						m_keyE;
 	bool						m_keyZoomIn;
 	bool						m_collisionTile;
+	bool						m_collisionTileHead;
 	bool						m_collisionElevator;
 	bool						m_collisionPortal;
 	bool						m_collisionElevatorEvent;

@@ -74,7 +74,7 @@ void SmokeInstance::update(sf::Time frametime)
 		if (m_velocity.x < 0.f)
 			m_velocity.x = std::min(m_velocity.x + frametime.asSeconds() * maxDistVelocityX, 0.f);
 		m_smoke.setScaleFactor(15.f);
-		m_smoke.setDispersion(m_dispersion);
+		m_smoke.setDispersion(std::max(m_dispersion, m_smoke.getDispersion() - frametime.asSeconds() * maxDistCollideY));
 	}
 	if (m_isOctoDoubleJump)
 	{

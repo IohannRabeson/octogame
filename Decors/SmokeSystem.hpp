@@ -27,6 +27,7 @@ public:
 	void			setVelocity(sf::Vector2f const & direction);
 	void			setScaleFactor(float scaleFactor);
 	void			setDispersion(float dispersion);
+	float			getDispersion(void) const;
 	void			setEmitTimeRange(float min, float max);
 	void			setGrowTimeRange(float min, float max);
 	void			setLifeTimeRange(float min, float max);

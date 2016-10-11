@@ -192,6 +192,11 @@ void	SmokeSystem::setDispersion(float dispersion)
 	m_dispersion = dispersion;
 }
 
+float	SmokeSystem::getDispersion(void) const
+{
+	return m_dispersion;
+}
+
 void	SmokeSystem::setScaleFactor(float scaleFactor)
 {
 	m_lifeScaleFactor = scaleFactor;

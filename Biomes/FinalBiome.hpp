@@ -42,6 +42,7 @@ public:
 	virtual sf::Color									getWaterColor();
 	virtual sf::Color									getSecondWaterColor();
 	virtual float										getTransitionStep() { return 0.5f; };
+	virtual bool										isDeadlyGrass() { return true; };
 	virtual sf::Time									getTimeDieVoid() { return sf::seconds(2.4f); };
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();

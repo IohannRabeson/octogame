@@ -1171,8 +1171,14 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 				m_collidingTile.push_back(tileshape->getVertex(1u));
 				m_highestPosition.x += collisionDirection.x;
 			}
-			if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
+			//if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
+			//TODO  : Keep an eye on octo behavior when touching the ground
+			if (collisionDirection.y < 0.f)
 				m_collisionTile = true;
+			if (collisionDirection.y > 0.f)
+				m_collisionTileHead = true;
+			else
+				m_collisionTileHead = false;
 			break;
 		case GameObjectType::Elevator:
 			m_collisionElevator = true;
@@ -1742,7 +1748,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 				m_jumpVelocity -= m_pixelSecondMultiplier * frametime * 2.3f;
 		}
 	}
-	if (!m_onTopElevator && m_keyElevator)
+	if (!m_onTopElevator && m_keyElevator && !m_collisionTileHead)
 	{
 		if (event == StartElevator)
 			velocity.y = (1.2f * m_pixelSecondSlowFall);
