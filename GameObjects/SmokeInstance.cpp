@@ -58,7 +58,7 @@ void SmokeInstance::update(sf::Time frametime)
 		if (distX < 0.f && m_isOctoLeft)
 		{
 			m_velocity.x = distX;
-			m_smoke.setScaleFactor(20.f);
+			m_smoke.setScaleFactor(25.f);
 		}
 		if (distX > 0.f && !m_isOctoLeft)
 		{
@@ -77,7 +77,10 @@ void SmokeInstance::update(sf::Time frametime)
 		m_smoke.setDispersion(m_dispersion);
 	}
 	if (m_isOctoDoubleJump)
+	{
 		m_smoke.setDispersion(m_dispersion + (maxDistCollideY - distY));
+		m_smoke.setScaleFactor(25.f);
+	}
 
 	m_smoke.setVelocity(m_velocity);
 	m_smoke.update(frametime);
