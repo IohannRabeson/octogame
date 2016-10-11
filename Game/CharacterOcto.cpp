@@ -1392,8 +1392,6 @@ void	CharacterOcto::onSky(Events event)
 			break;
 		case StartElevator:
 		case Elevator:
-			if (!m_collisionElevator)
-				m_sprite.setNextEvent(Fall);
 			break;
 		default:
 			if (m_sprite.getCurrentEvent() != DieFall)
@@ -1412,7 +1410,8 @@ void	CharacterOcto::collisionElevatorUpdate()
 		m_timeEventFall = sf::Time::Zero;
 		m_timeSlowFall = sf::Time::Zero;
 		m_onElevator = true;
-		m_numberOfJump = 1;
+		if (m_sprite.getCurrentEvent() != DoubleJump && m_sprite.getCurrentEvent() != StartJump)
+			m_numberOfJump = 1;
 		if (m_sprite.getCurrentEvent() == StartElevator)
 		{
 			if (!m_useElevator)
@@ -1444,11 +1443,10 @@ void	CharacterOcto::collisionElevatorUpdate()
 		m_onTopElevator = false;
 		if (m_useElevator)
 		{
-			m_useElevator = false;
-			m_numberOfJump = 0;
-			m_box->setApplyGravity(true);
-			if (m_keyElevator)
+			if (m_sprite.getCurrentEvent() != DoubleJump && m_sprite.getCurrentEvent() != StartJump)
 				m_sprite.setNextEvent(Fall);
+			m_useElevator = false;
+			m_box->setApplyGravity(true);
 		}
 	}
 }
