@@ -32,16 +32,19 @@ private:
 		Activate,
 		StartFinalScene,
 	};
-	octo::AnimatedSprite						m_spriteMonolith;
-	octo::SpriteAnimation						m_animationMonolith;
+	std::vector<octo::AnimatedSprite>			m_spriteMonolith;
+	std::vector<octo::SpriteAnimation>			m_animationMonolith;
+	std::vector<sf::Vector2f>					m_position;
 	std::vector<std::unique_ptr<MonolithStep>>	m_steps;
 	std::unique_ptr<sf::Vertex[]>				m_vertices;
 	octo::VertexBuilder							m_builder;
 	sf::Vector2f								m_size;
 	CircleShape *								m_box;
-	sf::Vector2f								m_position;
 	sf::Time									m_timer;
 	sf::Time									m_timerMax;
+	sf::Time									m_explosionShaderTimer;
+	sf::Time									m_explosionShaderTimerMax;
+	sf::Vector2f								m_center;
 	std::size_t									m_used;
 	State										m_state;
 	float										m_offset;
