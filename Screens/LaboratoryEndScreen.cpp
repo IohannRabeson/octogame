@@ -17,7 +17,7 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_state(Appear),
 	m_timer(sf::Time::Zero),
 	m_globalTimer(sf::Time::Zero),
-	m_timeBeforeNextText(sf::seconds(1.f)),
+	m_timeBeforeNextText(sf::seconds(2.f)),
 	m_appearDuration(sf::seconds(2.f)),
 	m_cedricWalkTimer(sf::seconds(3.f)),
 	m_cedricPutPotionTimer(sf::seconds(3.f)),
@@ -60,8 +60,8 @@ void	LaboratoryEndScreen::start()
 	m_npcs.emplace_back(new ScientistLu());
 	m_npcs.emplace_back(new ScientistFran());
 	m_npcs.emplace_back(new ScientistCedric());
-	m_npcs[0]->setPosition(sf::Vector2f(200.f, 827.f));
-	m_npcs[1]->setPosition(sf::Vector2f(950.f, 827.f));
+	m_npcs[0]->setPosition(sf::Vector2f(950.f, 827.f));
+	m_npcs[1]->setPosition(sf::Vector2f(510.f, 827.f));
 	m_npcs[2]->setPosition(sf::Vector2f(1600.f, 790.f));
 	m_npcs[3]->setPosition(sf::Vector2f(-70.f, 577.f));
 
