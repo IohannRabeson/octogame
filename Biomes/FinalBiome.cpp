@@ -71,7 +71,8 @@ FinalBiome::FinalBiome() :
 	m_rockPartCount(10.f, 16.f),
 	m_rockColor(sf::Color::Black),
 
-	m_grassSizeY(40.f, 150.f),
+	//m_grassSizeY(40.f, 150.f),
+	m_grassSizeY(60.f, 80.f),
 	m_grassSizeX(10.f, 30.f),
 	m_grassColor(250, 240, 250),
 	m_grassCount(m_mapSize.x),
