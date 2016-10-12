@@ -18,7 +18,8 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_explosionShaderTimerMax(sf::seconds(1.f)),
 	m_used(0u),
 	m_state(None),
-	m_offset(0.f)
+	m_offset(0.f),
+	m_transitionStartEndPosition(0.f)
 {
 	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("center", 0.5f, 0.5f);
 	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("radius", 0.f);
@@ -32,6 +33,7 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_animationMonolith.resize(6);
 	m_spriteMonolith.resize(6);
 	m_position.resize(6);
+	m_endPosition.resize(6);
 
 	octo::SpriteAnimation::FrameList	frames;
 	frames.emplace_back(sf::seconds(0.1f), 0u);
@@ -39,21 +41,27 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_center = position + sf::Vector2f(300, 337);
 	// Down left 2
 	m_position[0] = position + sf::Vector2f(143.f, 237.f);
+	m_endPosition[0] = m_position[0] + sf::Vector2f(-150.f, 150.f);
 	m_spriteMonolith[0].setSpriteSheet(resources.getSpriteSheet(MONOLITH_DOWN_LEFT_2_OSS));
 	// Up
 	m_position[1] = position + sf::Vector2f(168.f, 112.f);
+	m_endPosition[1] = m_position[1] + sf::Vector2f(0.f, -150.f);
 	m_spriteMonolith[1].setSpriteSheet(resources.getSpriteSheet(MONOLITH_UP_OSS));
 	// Down left 1
 	m_position[2] = position + sf::Vector2f(131.f, 193.f);
+	m_endPosition[2] = m_position[2] + sf::Vector2f(-150.f, 150.f);
 	m_spriteMonolith[2].setSpriteSheet(resources.getSpriteSheet(MONOLITH_DOWN_LEFT_1_OSS));
 	// Down right
 	m_position[3] = position + sf::Vector2f(250.f, 218.f);
+	m_endPosition[3] = m_position[3] + sf::Vector2f(150.f, 150.f);
 	m_spriteMonolith[3].setSpriteSheet(resources.getSpriteSheet(MONOLITH_DOWN_RIGHT_OSS));
 	// Gemme
 	m_position[4] = position + sf::Vector2f(200.f, 237.f);
+	m_endPosition[4] = m_position[4] + sf::Vector2f(0.f, 0.f);
 	m_spriteMonolith[4].setSpriteSheet(resources.getSpriteSheet(MONOLITH_CENTER_OSS));
 	// Fissure white
 	m_position[5] = position + sf::Vector2f(168.f, 193.f);
+	m_endPosition[5] = m_position[5] + sf::Vector2f(0.f, 0.f);
 	m_spriteMonolith[5].setSpriteSheet(resources.getSpriteSheet(MONOLITH_FISSURE_WHITE_OSS));
 
 	for (std::size_t i = 0u; i < m_animationMonolith.size(); i++)
@@ -145,15 +153,16 @@ void Monolith::update(sf::Time frameTime)
 {
 	InstanceDecor::update(frameTime);
 
-	m_explosionShaderTimer += frameTime;
-	if (m_explosionShaderTimer >= m_explosionShaderTimerMax)
-		m_explosionShaderTimer = sf::Time::Zero;
+	//m_explosionShaderTimer += frameTime;
+	//if (m_explosionShaderTimer >= m_explosionShaderTimerMax)
+	//	m_explosionShaderTimer = sf::Time::Zero;
 
-	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-	float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("center", (m_center.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_center.y + screen.top) * zoomFactor);
-	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("radius", m_explosionShaderTimer / m_explosionShaderTimerMax * 2000.0f);
+	//sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+	//float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
+	//PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("center", (m_center.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_center.y + screen.top) * zoomFactor);
+	//PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("radius", m_explosionShaderTimer / m_explosionShaderTimerMax * 2000.0f);
 
+	m_offset += frameTime.asSeconds();
 	switch (m_state)
 	{
 		case StartEffect:
@@ -179,12 +188,42 @@ void Monolith::update(sf::Time frameTime)
 		case StartFinalScene:
 		{
 			m_timer += frameTime;
+			for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
+			{
+				m_position[i] += sf::Vector2f(0.f, -100.f) * frameTime.asSeconds();
+				m_endPosition[i] += sf::Vector2f(0.f, -100.f) * frameTime.asSeconds();
+			}
 			if (m_timer > m_timerMax)
+			{
 				m_timer = sf::Time::Zero;
+				m_state = FinalLosange;
+			}
+			break;
+		}
+		case FinalLosange:
+		{
+			m_timer += frameTime;
 			m_builder.clear();
-			sf::Vector2f pos = getSprite().getPosition() + sf::Vector2f(getSprite().getGlobalSize().x / 2.f, getSprite().getGlobalSize().y / 2.f);
-			createEffect(m_size, pos, std::pow(m_timer / m_timerMax, 0.567f), sf::Color(240, 25, 25, 200), m_builder);
+			sf::Vector2f pos = m_center;
+			createEffect(m_size, pos, std::pow(std::min(1.f, m_timer / m_timerMax), 0.567f), sf::Color(240, 25, 25, 200), m_builder);
 			m_used = m_builder.getUsed();
+			if (m_timer > m_timerMax)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = FinalExplosion;
+			}
+			break;
+		}
+		case FinalExplosion:
+		{
+			m_timer += frameTime;
+			m_transitionStartEndPosition = std::min(std::pow(m_timer / m_timerMax, 0.22f), 1.f);
+
+			if (m_timer > m_timerMax)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = PortalAppear;
+			}
 			break;
 		}
 		default:
@@ -192,10 +231,10 @@ void Monolith::update(sf::Time frameTime)
 	}
 	for (auto & step : m_steps)
 		step->update(frameTime);
-	m_offset += frameTime.asSeconds();
 	for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
 	{
-		m_spriteMonolith[i].setPosition(m_position[i] + sf::Vector2f(0.f, std::cos(m_offset) * 5.f));
+		sf::Vector2f pos = octo::linearInterpolation(m_position[i], m_endPosition[i], m_transitionStartEndPosition) + sf::Vector2f(0.f, std::cos(m_offset) * 5.f);
+		m_spriteMonolith[i].setPosition(pos);
 		m_spriteMonolith[i].update(frameTime);
 	}
 }

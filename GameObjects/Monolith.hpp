@@ -31,10 +31,14 @@ private:
 		StartEffect,
 		Activate,
 		StartFinalScene,
+		FinalLosange,
+		FinalExplosion,
+		PortalAppear
 	};
 	std::vector<octo::AnimatedSprite>			m_spriteMonolith;
 	std::vector<octo::SpriteAnimation>			m_animationMonolith;
 	std::vector<sf::Vector2f>					m_position;
+	std::vector<sf::Vector2f>					m_endPosition;
 	std::vector<std::unique_ptr<MonolithStep>>	m_steps;
 	std::unique_ptr<sf::Vertex[]>				m_vertices;
 	octo::VertexBuilder							m_builder;
@@ -48,6 +52,7 @@ private:
 	std::size_t									m_used;
 	State										m_state;
 	float										m_offset;
+	float										m_transitionStartEndPosition;
 
 	void createLosange(sf::Vector2f const & size,
 											sf::Vector2f const & origin,
