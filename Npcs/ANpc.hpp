@@ -72,6 +72,7 @@ protected:
 	sf::Time getTimer(void) const;
 	sf::Time getTimerMax(void) const;
 	sf::Vector2f const & getOrigin(void) const;
+	sf::Vector2f const & getTextOffset(void) const;
 	sf::FloatRect const & getArea(void) const;
 	std::vector<std::unique_ptr<BubbleText>> & getTexts(void);
 	octo::CharacterSprite & getSprite(void);

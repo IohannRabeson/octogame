@@ -1,10 +1,28 @@
 #include "ScientistCedric.hpp"
 
+#include <Application.hpp>
+#include <Console.hpp>
 ScientistCedric::ScientistCedric(void) :
 	ScientistNpc(SCIENTISTCEDRIC_OSS)
 {
+	setTextOffset(sf::Vector2f(0.f, -90.f));
 	setup();
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	octo::Application::getConsole().addCommand(L"ori.ScientistCedric", [this](sf::Vector2f const & p)
+	{
+		setOrigin(p);
+		std::cout << "ScientistCedric : origin " << p.x << " " << p.y << std::endl;
+		});
+	octo::Application::getConsole().addCommand(L"size.ScientistCedric", [this](sf::Vector2f const & p)
+	{
+		setSize(p);
+		std::cout << "ScientistCedric : size " << p.x << " " << p.y << std::endl;
+		});
+	octo::Application::getConsole().addCommand(L"texOff.ScientistCedric", [this](sf::Vector2f const & p)
+	{
+		setTextOffset(p);
+		std::cout << "ScientistCedric : textOff " << p.x << " " << p.y << std::endl;
+		});
 }
 
 void ScientistCedric::setup(void)
