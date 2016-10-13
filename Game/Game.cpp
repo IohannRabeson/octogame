@@ -220,6 +220,7 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader(ROCKET_TAKEOFF_FRAG, ROCKET_TAKEOFF_FRAG);
 	PostEffectLayer::getInstance().registerShader(CUTSCENE_FRAG, CUTSCENE_FRAG);
 	PostEffectLayer::getInstance().registerShader(CIRCLE_WAVE_FRAG, CIRCLE_WAVE_FRAG);
+	PostEffectLayer::getInstance().registerShader(COLOR_SATURATION_FRAG, COLOR_SATURATION_FRAG);
 
 	ChallengeManager::getInstance().reset();
 	audio.reset();
@@ -507,7 +508,8 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
 			break;
 		case GameObjectType::Portal:
-			octo->collidePortalEvent(true);
+			if (gameObjectCast<Portal>(gameObject)->zoom())
+				octo->collidePortalEvent(true);
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject

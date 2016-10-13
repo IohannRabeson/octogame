@@ -99,11 +99,12 @@ public:
 	inline bool isOpening(void) { return m_sprite.getCurrentEvent() == Opening; }
 	inline bool isFirstAppear(void) { return m_sprite.getCurrentEvent() == FirstAppear; }
 	inline Level getDestination(void) const { return m_destination; }
+	virtual bool zoom(void) const;
 
-	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	virtual void update(sf::Time frameTime);
+	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
-private:
+protected:
 	void updateSound(void);
 
 	RandomGenerator				m_generator;

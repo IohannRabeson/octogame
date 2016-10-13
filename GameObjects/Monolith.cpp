@@ -4,18 +4,24 @@
 #include "MonolithStep.hpp"
 #include "Progress.hpp"
 #include "CharacterOcto.hpp"
+#include "FinalPortal.hpp"
+#include "ABiome.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
 
-Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
+Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome) :
 	InstanceDecor(MONOLITH_PEDESTAL_OSS, scale, position, 1u),
+	m_portal(nullptr),
 	m_vertices(new sf::Vertex[100u]),
 	m_size(500.f, 500.f),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_timerMax(sf::seconds(2.f)),
-	m_explosionShaderTimerMax(sf::seconds(1.f)),
+	m_explosionShaderDuration(sf::seconds(1.5f)),
+	m_redFissureAppearDuration(sf::seconds(2.0f)),
+	m_whiteFlashDuration(sf::seconds(1.5f)),
+	m_moveAtFinalPositionDuration(sf::seconds(4.0f)),
 	m_used(0u),
 	m_state(None),
 	m_offset(0.f),
@@ -26,17 +32,30 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("fade_out_size", 400.f);
 	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("fade_in_size", 100.f);
 	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("deformation_factor", 0.03f);
-	PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, true);
+	PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, false);
+
+	m_portal.reset(new FinalPortal(Level::Final, "object_portal.oss", VORTEX_FRAG));
+	m_portal->setBiome(biome);
+	m_portal->setRadius(200.f);
 
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
-	m_animationMonolith.resize(6);
-	m_spriteMonolith.resize(6);
-	m_position.resize(6);
-	m_endPosition.resize(6);
+	m_animationMonolith.resize(8);
+	m_spriteMonolith.resize(8);
+	m_position.resize(8);
+	m_endPosition.resize(8);
 
 	octo::SpriteAnimation::FrameList	frames;
 	frames.emplace_back(sf::seconds(0.1f), 0u);
+
+	octo::SpriteAnimation::FrameList	framesRedFissure;
+	framesRedFissure.emplace_back(sf::seconds(0.1f), 0u);
+	framesRedFissure.emplace_back(sf::seconds(0.1f), 1u);
+	framesRedFissure.emplace_back(sf::seconds(0.1f), 2u);
+	framesRedFissure.emplace_back(sf::seconds(0.1f), 3u);
+	framesRedFissure.emplace_back(sf::seconds(0.1f), 4u);
+	framesRedFissure.emplace_back(sf::seconds(0.1f), 5u);
+	framesRedFissure.emplace_back(sf::seconds(0.1f), 6u);
 
 	m_center = position + sf::Vector2f(300, 337);
 	// Down left 2
@@ -63,8 +82,16 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_position[5] = position + sf::Vector2f(168.f, 193.f);
 	m_endPosition[5] = m_position[5] + sf::Vector2f(0.f, 0.f);
 	m_spriteMonolith[5].setSpriteSheet(resources.getSpriteSheet(MONOLITH_FISSURE_WHITE_OSS));
+	// Fissure red
+	m_position[6] = position + sf::Vector2f(168.f, 193.f);
+	m_endPosition[6] = m_position[6] + sf::Vector2f(0.f, 0.f);
+	m_spriteMonolith[6].setSpriteSheet(resources.getSpriteSheet(MONOLITH_FISSURE_RED_OSS));
+	// Socle light
+	m_position[7] = position;
+	m_endPosition[7] = position;
+	m_spriteMonolith[7].setSpriteSheet(resources.getSpriteSheet(MONOLITH_LIGHT_OSS));
 
-	for (std::size_t i = 0u; i < m_animationMonolith.size(); i++)
+	for (std::size_t i = 0u; i < m_animationMonolith.size() - 1; i++)
 	{
 		m_animationMonolith[i].setFrames(frames);
 		m_animationMonolith[i].setLoop(octo::LoopMode::NoLoop);
@@ -74,6 +101,13 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 		m_spriteMonolith[i].setAnimation(m_animationMonolith[i]);
 		m_spriteMonolith[i].play();
 	}
+
+	m_animationMonolith[FissureRed].setFrames(framesRedFissure);
+	m_animationMonolith[FissureRed].setLoop(octo::LoopMode::NoLoop);
+	m_spriteMonolith[FissureRed].setScale(scale);
+	m_spriteMonolith[FissureRed].setPosition(m_position[FissureRed]);
+	m_spriteMonolith[FissureRed].setAnimation(m_animationMonolith[FissureRed]);
+	m_spriteMonolith[FissureRed].stop();
 
 	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_1_OSS, position + sf::Vector2f(6.f, 262.f), scale));
 	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_2_OSS, position + sf::Vector2f(56.f, 194.f), scale));
@@ -94,8 +128,12 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_17_OSS, position + sf::Vector2f(119.f, 437.f), scale));
 	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_18_OSS, position + sf::Vector2f(31.f, 369.f), scale));
 
-	for (std::size_t i = 0; i < Progress::getInstance().getActivatedMonolith(); i++)
-		m_steps[i]->activate();
+	for (std::size_t i = 0; i < m_steps.size(); i++)
+	{
+		if (i < Progress::getInstance().getActivatedMonolith())
+			m_steps[i]->activate();
+		m_steps[i]->setEndPosition(m_center);
+	}
 
 	m_box->setGameObject(this);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Monolith));
@@ -107,6 +145,12 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	m_box->update();
 
 	m_builder = octo::VertexBuilder(m_vertices.get(), 100u);
+
+	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+
+	m_whiteForeground.setFillColor(sf::Color::White);
+	m_whiteForeground.setSize(sf::Vector2f(screen.width, screen.height));
+	m_whiteForeground.setOrigin(sf::Vector2f(screen.width, screen.height) / 2.f);
 }
 
 void Monolith::addMapOffset(float x, float y)
@@ -142,9 +186,9 @@ void Monolith::collideOcto(CharacterOcto * octo)
 		}
 		else if (Progress::getInstance().getActivatedMonolith() == 18)
 		{
-			m_state = StartFinalScene;
+			m_state = FinalLosange;
+			m_timer = sf::Time::Zero;
 			m_size = sf::Vector2f(1000.f, 1000.f);
-			std::cout << "end" << std::endl;
 		}
 	}
 }
@@ -152,15 +196,6 @@ void Monolith::collideOcto(CharacterOcto * octo)
 void Monolith::update(sf::Time frameTime)
 {
 	InstanceDecor::update(frameTime);
-
-	//m_explosionShaderTimer += frameTime;
-	//if (m_explosionShaderTimer >= m_explosionShaderTimerMax)
-	//	m_explosionShaderTimer = sf::Time::Zero;
-
-	//sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-	//float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-	//PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("center", (m_center.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_center.y + screen.top) * zoomFactor);
-	//PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("radius", m_explosionShaderTimer / m_explosionShaderTimerMax * 2000.0f);
 
 	m_offset += frameTime.asSeconds();
 	switch (m_state)
@@ -185,29 +220,66 @@ void Monolith::update(sf::Time frameTime)
 			m_state = None;
 			break;
 		}
-		case StartFinalScene:
-		{
-			m_timer += frameTime;
-			for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
-			{
-				m_position[i] += sf::Vector2f(0.f, -100.f) * frameTime.asSeconds();
-				m_endPosition[i] += sf::Vector2f(0.f, -100.f) * frameTime.asSeconds();
-			}
-			if (m_timer > m_timerMax)
-			{
-				m_timer = sf::Time::Zero;
-				m_state = FinalLosange;
-			}
-			break;
-		}
 		case FinalLosange:
 		{
 			m_timer += frameTime;
 			m_builder.clear();
 			sf::Vector2f pos = m_center;
 			createEffect(m_size, pos, std::pow(std::min(1.f, m_timer / m_timerMax), 0.567f), sf::Color(240, 25, 25, 200), m_builder);
+			m_spriteMonolith[Light].setColor(sf::Color(255, 255, 255, 255 - (m_timer / m_timerMax * 255)));
 			m_used = m_builder.getUsed();
 			if (m_timer > m_timerMax)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = MoveAtFinalPosition;
+				PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, true);
+			}
+			break;
+		}
+		case MoveAtFinalPosition:
+		{
+			m_timer += frameTime;
+			sf::Vector2f const offset = sf::Vector2f(0.f, -30.f) * frameTime.asSeconds();
+			for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
+			{
+				m_position[i] += offset;
+				m_endPosition[i] += offset;
+			}
+			for (auto & step : m_steps)
+				step->addPosition(offset);
+			m_center += offset;
+			if (m_timer > m_moveAtFinalPositionDuration)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = CircleExplosionAndRedEffect;
+			}
+			break;
+		}
+		case CircleExplosionAndRedEffect:
+		{
+			m_timer += frameTime;
+			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
+			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("center", (m_center.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_center.y + screen.top) * zoomFactor);
+			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("radius", std::min(m_timer / m_explosionShaderDuration, 1.f) * 2000.0f);
+			if (m_timer.asSeconds() > 0.5f && m_spriteMonolith[FissureRed].getStatus() != octo::PlayStatus::Play)
+				m_spriteMonolith[FissureRed].play();
+			if (m_timer > m_explosionShaderDuration)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = WhiteFlash;
+				PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, false);
+				PostEffectLayer::getInstance().enableShader(COLOR_SATURATION_FRAG, true);
+				PostEffectLayer::getInstance().getShader(COLOR_SATURATION_FRAG).setParameter("value", 1.f);
+			}
+			break;
+		}
+		case WhiteFlash:
+		{
+			m_timer += frameTime;
+			m_whiteForeground.setPosition(octo::Application::getCamera().getCenter());
+			m_whiteForeground.setFillColor(sf::Color(255, 255, 255, 255 - (m_timer / m_whiteFlashDuration * 255)));
+			if (m_timer >= m_whiteFlashDuration)
 			{
 				m_timer = sf::Time::Zero;
 				m_state = FinalExplosion;
@@ -218,7 +290,6 @@ void Monolith::update(sf::Time frameTime)
 		{
 			m_timer += frameTime;
 			m_transitionStartEndPosition = std::min(std::pow(m_timer / m_timerMax, 0.22f), 1.f);
-
 			if (m_timer > m_timerMax)
 			{
 				m_timer = sf::Time::Zero;
@@ -226,24 +297,37 @@ void Monolith::update(sf::Time frameTime)
 			}
 			break;
 		}
+		case PortalAppear:
+		{
+			m_portal->forceActivate();
+			break;
+		}
 		default:
 			break;
 	}
 	for (auto & step : m_steps)
+	{
 		step->update(frameTime);
+		step->setStartEndTransition(m_transitionStartEndPosition);
+	}
 	for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
 	{
 		sf::Vector2f pos = octo::linearInterpolation(m_position[i], m_endPosition[i], m_transitionStartEndPosition) + sf::Vector2f(0.f, std::cos(m_offset) * 5.f);
 		m_spriteMonolith[i].setPosition(pos);
 		m_spriteMonolith[i].update(frameTime);
 	}
+	m_portal->update(frameTime);
+	m_portal->setPosition(m_center + sf::Vector2f(-200.f, 245.f) + sf::Vector2f(std::sin(m_offset + 0.5f) * std::cos(m_offset) * 15.f, std::cos(m_offset) * 15.f));
 }
 
 void Monolith::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	InstanceDecor::draw(render, states);
-	for (auto & sprite : m_spriteMonolith)
-		sprite.draw(render, states);
+	for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
+	{
+		if ((i != static_cast<std::size_t>(FissureRed) && i != static_cast<std::size_t>(FissureWhite)) || (i == static_cast<std::size_t>(FissureRed) && m_state == CircleExplosionAndRedEffect) || (i == static_cast<std::size_t>(FissureWhite) && m_state == WhiteFlash))
+			m_spriteMonolith[i].draw(render, states);
+	}
 	for (auto & step : m_steps)
 		step->draw(render, states);
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
@@ -251,7 +335,9 @@ void Monolith::draw(sf::RenderTarget& render, sf::RenderStates states) const
 
 void Monolith::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	InstanceDecor::drawFront(render, states);
+	if (m_state == WhiteFlash)
+		render.draw(m_whiteForeground, states);
+	m_portal->draw(render, states);
 }
 
 void Monolith::createLosange(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
