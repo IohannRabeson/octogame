@@ -1043,8 +1043,9 @@ void	CharacterOcto::replaceOcto(void)
 
 void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
-	if (Progress::getInstance().getCurrentDestination() == Level::Final)
-		enableCutscene(isFinalEvent(), false);
+	//TODO : Move that in pyramid
+//	if (Progress::getInstance().getCurrentDestination() == Level::Final)
+//		enableCutscene(isFinalEvent(), false);
 
 	if (m_enableCutscene)
 	{
@@ -1416,7 +1417,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 		m_timeEventFall = sf::Time::Zero;
 		m_timeSlowFall = sf::Time::Zero;
 		m_onElevator = true;
-		if (m_sprite.getCurrentEvent() != DoubleJump && m_sprite.getCurrentEvent() != StartJump)
+		if (!m_onGround && m_sprite.getCurrentEvent() != DoubleJump && m_sprite.getCurrentEvent() != StartJump)
 			m_numberOfJump = 1;
 		if (m_sprite.getCurrentEvent() == StartElevator)
 		{

@@ -1,6 +1,8 @@
 #include "JeffMouffyNpc.hpp"
 #include "RectangleShape.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
+#include <list>
 
 JeffMouffyNpc::JeffMouffyNpc(void) :
 	ASpecialNpc(JEFF_MOUFFY_OSS, false),
@@ -49,6 +51,13 @@ void JeffMouffyNpc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
+	getBox()->setApplyGravity(false);
+
+	std::list<GameObjectType> const & npcMet = Progress::getInstance().getNpcMet();
+	auto it = std::find(npcMet.begin(), npcMet.end(), GameObjectType::JeffMouffyNpc);
+
+	if (it != npcMet.end())
+		m_isMet = true;
 }
 
 void JeffMouffyNpc::setPosition(sf::Vector2f const & position)
@@ -70,7 +79,7 @@ void JeffMouffyNpc::updateState(void)
 			m_startTimer = true;
 			setTimer(sf::Time::Zero);
 		}
-		if (m_startTimer)
+		if (m_startTimer || m_isMet)
 		{
 			if (getTimer() > getTimerMax())
 			{

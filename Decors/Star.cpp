@@ -25,7 +25,7 @@ void Star::setup(ABiome& biome)
 	m_glowSize = m_size / 2.5f;
 	m_glowSizeCorner = m_glowSize / 2.f;
 
-	m_animator.setup(biome.getStarLifeTime());
+	m_animator.setup();
 	m_animator.pause();
 	m_detailPriority = biome.randomInt(-2, 0);
 }

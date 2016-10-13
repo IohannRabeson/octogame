@@ -93,9 +93,9 @@ FinalBiome::FinalBiome() :
 	m_crystalSize(sf::Vector2f(2.f, 100.f), sf::Vector2f(70.f, 250.f)),
 	m_crystalPartCount(6u, 10u),
 	m_crystalColor(253, 255, 0, 140),
-	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
+	m_shineEffectSize(sf::Vector2f(200.f, 200.f), sf::Vector2f(300.f, 300.f)),
 	m_shineEffectColor(255, 255, 255, 130),
-	m_shineEffectRotateAngle(100.f, 200.f),
+	m_shineEffectRotateAngle(200.f, 300.f),
 
 	m_cloudSize(sf::Vector2f(100.f, 150.f), sf::Vector2f(400.f, 800.f)),
 	m_cloudPartCount(3u, 5u),

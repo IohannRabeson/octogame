@@ -318,6 +318,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<Snowman1Npc>(SNOWMAN_1_OSS);
 	m_npcFactory.registerCreator<WellKeeperNpc>(NPC_WELL_KEEPER_OSS);
 	m_npcFactory.registerCreator<BrayouNpc>(BRAYOU_OSS);
+	m_npcFactory.registerCreator<JeffMouffyNpc>(JEFF_MOUFFY_OSS);
 
 	//ASwimNpc
 	m_npcFactory.registerCreator(FISH_PINK_OSS, [&biome](){ return new FishPinkNpc(biome); });

@@ -50,8 +50,8 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 			}
 		}
 	}
-	computeRadianceMask(2u, 0.1f);
-	smoothBorder();
+//	computeRadianceMask(2u, 0.1f);
+//	smoothBorder();
 }
 
 //TODO: Can be factorized if performance gain is necessary
