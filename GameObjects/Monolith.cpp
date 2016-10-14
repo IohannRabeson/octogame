@@ -198,6 +198,7 @@ void Monolith::collideOcto(CharacterOcto * octo)
 		}
 		else if (Progress::getInstance().getActivatedMonolith() == 18)
 		{
+			octo->enableCutscene(true, false);
 			m_state = FinalLosange;
 			m_timer = sf::Time::Zero;
 			m_size = sf::Vector2f(1000.f, 1000.f);
