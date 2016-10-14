@@ -621,7 +621,8 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Use:
 			m_keyUse = true;
-			setFastMotion();
+			if (m_collideDoor)
+				setFastMotion();
 			break;
 		default:
 			break;
