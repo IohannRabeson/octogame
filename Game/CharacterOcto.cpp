@@ -1081,7 +1081,7 @@ bool	CharacterOcto::isFinalEvent(void)
 
 bool	CharacterOcto::isZooming()
 {
-	return (m_keyZoomIn || isCollidingPortal());
+	return (m_keyZoomIn);// || isCollidingPortal());
 }
 
 bool	CharacterOcto::isInRocketEnd(void)
@@ -1283,11 +1283,27 @@ void	CharacterOcto::usePortal(Portal & portal)
 	m_collisionPortal = true;
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
-		m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
-		m_progress.setReverseSprite(m_originMove);
-		m_progress.setNextDestination(portal.getDestination());
-		if (!m_progress.isMenu())
-			m_progress.setRespawnType(Progress::RespawnType::Portal);
+		if (portal.getDestination() == m_progress.getCurrentDestination())
+		{
+			if (portal.getKey() == OBJECT_PORTAL_SNOW_OSS)
+				m_box->setPosition(sf::Vector2f(20430.f, 3255.f));
+			else if (portal.getKey() == OBJECT_PORTAL_DESERT_OSS)
+				m_box->setPosition(sf::Vector2f(20480.f, 2570.f));
+			else if (portal.getKey() == OBJECT_PORTAL_JUNGLE_OSS)
+				m_box->setPosition(sf::Vector2f(20245.f, 1190.f));
+			else if (portal.getKey() == OBJECT_PORTAL_BEACH_OSS)
+				m_box->setPosition(sf::Vector2f(20045.f, 90.f));
+			m_numberOfJump = 0u;
+			m_timeSlowFall = sf::Time::Zero;
+		}
+		else
+		{
+			m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+			m_progress.setReverseSprite(m_originMove);
+			m_progress.setNextDestination(portal.getDestination());
+			if (!m_progress.isMenu())
+				m_progress.setRespawnType(Progress::RespawnType::Portal);
+		}
 	}
 }
 
@@ -1966,7 +1982,10 @@ bool	CharacterOcto::isFalling(void)
 bool	CharacterOcto::isRaising(void)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
-	return state == WaterJump;
+
+	if (state == WaterJump || state == Elevator || state == PortalEvent)
+		return true;
+	return false;
 }
 
 bool	CharacterOcto::isInAir(void) const
