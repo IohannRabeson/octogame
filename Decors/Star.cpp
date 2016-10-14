@@ -4,7 +4,7 @@
 #include "Progress.hpp"
 
 Star::Star() :
-	m_animator(5.f, 3.f, 3.f, 0.3f),
+	m_animator(5.f, 0.f, 3.f, 0.3f),
 	m_animation(1.f),
 	m_cycle(nullptr)
 {

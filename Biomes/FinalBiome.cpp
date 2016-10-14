@@ -15,7 +15,7 @@ FinalBiome::FinalBiome() :
 	m_mapSize(sf::Vector2u(1400u, 16u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(353.f * 16.f, 950.f * 16.f),
-	m_transitionDuration(3.0f),
+	m_transitionDuration(0.7f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(58, 0, 92),
 	m_tileEndColor(109, 0, 179),
