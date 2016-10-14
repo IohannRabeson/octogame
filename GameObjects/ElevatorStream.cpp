@@ -70,7 +70,7 @@ ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & 
 	m_smoke.setLifeTimeRange(0.6f, 1.5f);
 	m_smoke.setScaleFactor(35.f);
 	m_smoke.setDispersion(200.f);
-	m_smoke.setColor(sf::Color(180, 180, 180, 220));
+	m_smoke.setColor(sf::Color(230, 230, 230, 200));
 
 	if (m_isBotOnInstance)
 	{
@@ -183,6 +183,11 @@ void	ElevatorStream::setPosition(sf::Vector2f const & position)
 	setHeight(m_position.y - getTopY() - 100.f);
 }
 
+void	ElevatorStream::setSmokeVelocity(sf::Vector2f velocity)
+{
+	m_smoke.setVelocity(velocity);
+}
+
 float	ElevatorStream::getHeight(void) const
 {
 	return m_particles->getHeight();
@@ -290,6 +295,7 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_spriteTopFront.update(frameTime);
 	m_spriteTopBack.update(frameTime);
 
+	m_smoke.setVelocity(octo::linearInterpolation(m_smoke.getVelocity(), sf::Vector2f(0.f, -120.f), frameTime.asSeconds() * 10.f));
 	m_smoke.update(frameTime);
 
 	if (m_state != Activated)

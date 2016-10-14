@@ -40,6 +40,7 @@ public:
 	void					setRotationFactor(float factor);
 	void					setBiome(ABiome & biome);
 	void					setPosition(sf::Vector2f const & position);
+	void					setSmokeVelocity(sf::Vector2f velocity);
 
 	float					getHeight(void) const;
 	float					getWidth(void) const;

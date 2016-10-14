@@ -177,6 +177,11 @@ sf::Vector2f	SmokeSystem::getPositionEmitter(void) const
 	return m_emitter;
 }
 
+sf::Vector2f	SmokeSystem::getVelocity(void) const
+{
+	return m_velocity;
+}
+
 void	SmokeSystem::setColor(sf::Color const & color)
 {
 	m_color = color;

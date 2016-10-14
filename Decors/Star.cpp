@@ -4,7 +4,7 @@
 #include "Progress.hpp"
 
 Star::Star() :
-	m_animator(5.f, 0.f, 3.f, 0.3f),
+	m_animator(5.f, 3.f, 3.f, 0.3f),
 	m_animation(1.f),
 	m_cycle(nullptr)
 {
@@ -48,9 +48,8 @@ void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	if (m_detailPriority <= lod)
 	{
 		sf::Color animationColor(m_color.r, m_color.g, m_color.b, m_color.a * (m_animation > 1.f ? 1.f : m_animation));
-		AShineBuilder::createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, builder);
-		if (lod >= 0)
-			AShineBuilder::createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, builder);
+		//AShineBuilder::createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, builder);
+		AShineBuilder::createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, builder);
 	}
 }
 

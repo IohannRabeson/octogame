@@ -1223,19 +1223,26 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
-	if (m_progress.canRepair() && m_keyAction)
+	if (m_progress.canRepair())
 	{
-		if (!elevator.isActivated())
+		if (m_keyAction)
 		{
-			elevator.activate();
-			m_repairNanoRobot->setState(NanoRobot::State::Repair);
-			sf::Vector2f target = elevator.getPosition();
-			target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
-			target.y -= 50.f;
-			m_repairNanoRobot->setTarget(target);
+			if (!elevator.isActivated())
+			{
+				elevator.activate();
+				m_repairNanoRobot->setState(NanoRobot::State::Repair);
+				sf::Vector2f target = elevator.getPosition();
+				target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
+				target.y -= 50.f;
+				m_repairNanoRobot->setTarget(target);
+			}
+			else
+				m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 		}
 		else
-			m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
+		{
+			elevator.setSmokeVelocity((m_repairNanoRobot->getPosition() - elevator.getPosition()) * 0.8f);
+		}
 	}
 	else if (m_progress.canRepair())
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
