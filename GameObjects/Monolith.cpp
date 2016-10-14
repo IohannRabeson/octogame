@@ -15,13 +15,16 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 	InstanceDecor(MONOLITH_PEDESTAL_OSS, scale, position, 1u),
 	m_portal(nullptr),
 	m_vertices(new sf::Vertex[100u]),
-	m_size(500.f, 500.f),
+	m_size(1000.f, 1000.f),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
+	m_octo(nullptr),
 	m_timerMax(sf::seconds(2.f)),
+	m_waitBeforeStartFinalDuration(sf::seconds(2.f)),
 	m_explosionShaderDuration(sf::seconds(1.5f)),
 	m_redFissureAppearDuration(sf::seconds(2.0f)),
 	m_whiteFlashDuration(sf::seconds(1.5f)),
 	m_moveAtFinalPositionDuration(sf::seconds(4.0f)),
+	m_forceMapMoveDuration(sf::seconds(1.8f)),
 	m_used(0u),
 	m_state(None),
 	m_offset(0.f),
@@ -147,10 +150,11 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 	m_builder = octo::VertexBuilder(m_vertices.get(), 100u);
 
 	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-
 	m_whiteForeground.setFillColor(sf::Color::White);
 	m_whiteForeground.setSize(sf::Vector2f(screen.width, screen.height));
 	m_whiteForeground.setOrigin(sf::Vector2f(screen.width, screen.height) / 2.f);
+
+	Progress::getInstance().setCanOctoMoveMap(false);
 }
 
 void Monolith::addMapOffset(float x, float y)
@@ -189,19 +193,14 @@ void Monolith::setPosition(sf::Vector2f const & position)
 
 void Monolith::collideOcto(CharacterOcto * octo)
 {
+	m_octo = octo;
 	if (m_state == None)
 	{
 		if (Progress::getInstance().getActivatedMonolith() < Progress::getInstance().countRandomDiscover())
 		{
 			octo->enableCutscene(true, true);
 			m_state = StartEffect;
-		}
-		else if (Progress::getInstance().getActivatedMonolith() == 18)
-		{
-			octo->enableCutscene(true, false);
-			m_state = FinalLosange;
 			m_timer = sf::Time::Zero;
-			m_size = sf::Vector2f(1000.f, 1000.f);
 		}
 	}
 }
@@ -230,7 +229,23 @@ void Monolith::update(sf::Time frameTime)
 			for (std::size_t i = progress.getActivatedMonolith(); i < progress.countRandomDiscover(); i++)
 				m_steps[i]->firstActivate();
 			progress.setActivatedMonolith(progress.countRandomDiscover());
-			m_state = None;
+			if (progress.getActivatedMonolith() == 18)
+			{
+				m_state = StartFinalScene;
+				m_octo->enableCutscene(true, false);
+			}
+			else
+				m_state = None;
+			break;
+		}
+		case StartFinalScene:
+		{
+			m_timer += frameTime;
+			if (m_timer >= m_waitBeforeStartFinalDuration)
+			{
+				m_timer = sf::Time::Zero;
+				m_state = FinalLosange;
+			}
 			break;
 		}
 		case FinalLosange:
@@ -296,17 +311,19 @@ void Monolith::update(sf::Time frameTime)
 			{
 				m_timer = sf::Time::Zero;
 				m_state = FinalExplosion;
+				Progress::getInstance().setForceMapToMove(true);
 			}
 			break;
 		}
 		case FinalExplosion:
 		{
 			m_timer += frameTime;
-			m_transitionStartEndPosition = std::min(std::pow(m_timer / m_timerMax, 0.22f), 1.f);
-			if (m_timer > m_timerMax)
+			m_transitionStartEndPosition = std::min(std::pow(m_timer / m_forceMapMoveDuration, 0.22f), 1.f);
+			if (m_timer > m_forceMapMoveDuration)
 			{
 				m_timer = sf::Time::Zero;
 				m_state = PortalAppear;
+				Progress::getInstance().setForceMapToMove(false);
 			}
 			break;
 		}

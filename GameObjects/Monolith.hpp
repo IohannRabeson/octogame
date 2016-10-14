@@ -33,8 +33,9 @@ private:
 		None,
 		StartEffect,
 		Activate,
-		MoveAtFinalPosition,
+		StartFinalScene,
 		FinalLosange,
+		MoveAtFinalPosition,
 		CircleExplosionAndRedEffect,
 		WhiteFlash,
 		FinalExplosion,
@@ -63,13 +64,16 @@ private:
 	octo::VertexBuilder							m_builder;
 	sf::Vector2f								m_size;
 	CircleShape *								m_box;
+	CharacterOcto *								m_octo;
 	sf::RectangleShape							m_whiteForeground;
 	sf::Time									m_timer;
 	sf::Time									m_timerMax;
+	sf::Time									m_waitBeforeStartFinalDuration;
 	sf::Time									m_explosionShaderDuration;
 	sf::Time									m_redFissureAppearDuration;
 	sf::Time									m_whiteFlashDuration;
 	sf::Time									m_moveAtFinalPositionDuration;
+	sf::Time									m_forceMapMoveDuration;
 	sf::Vector2f								m_center;
 	std::size_t									m_used;
 	State										m_state;

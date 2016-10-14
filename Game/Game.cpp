@@ -571,11 +571,13 @@ void Game::moveMap(sf::Time frameTime)
 	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && m_groundSoundTime > sf::Time::Zero)
 		m_groundSoundTime -= frameTime;
 
-	if ((m_keyGroundRight || m_keyGroundLeft) && Progress::getInstance().canMoveMap())
+	if ((m_keyGroundRight || m_keyGroundLeft || progress.forceMapToMove()) && progress.canMoveMap())
 	{
-		if (m_keyGroundLeft == true && progress.canMoveMap())
+		if (progress.forceMapToMove())
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-		else if (m_keyGroundRight == true)
+		if (m_keyGroundLeft == true && progress.canOctoMoveMap())
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
+		else if (m_keyGroundRight == true && progress.canOctoMoveMap())
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 		if (m_groundSoundTime < m_groundSoundTimeMax)
 			m_groundSoundTime += frameTime;
@@ -599,10 +601,10 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 	{
 		case OctoKeys::GroundLeft:
 		{
-			if (m_keyGroundLeft == false && progress.canMoveMap())
+			if (m_keyGroundLeft == false)
 			{
-				m_keyGroundLeft = true;
 				progress.moveMap();
+				m_keyGroundLeft = true;
 			}
 			break;
 		}
@@ -610,7 +612,6 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 		{
 			if (m_keyGroundRight == false)
 			{
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 				progress.moveMap();
 				m_keyGroundRight = true;
 			}

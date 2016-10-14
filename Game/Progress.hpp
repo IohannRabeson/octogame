@@ -88,6 +88,12 @@ public:
 	void				setMapMoving(bool isMoving) { m_isMapMoving = isMoving; }
 	bool				isMapMoving(void) const { return m_isMapMoving; }
 
+	void				setForceMapToMove(bool value) { m_forceMapToMove = value; }
+	bool				forceMapToMove(void) const { return m_forceMapToMove; }
+
+	void				setCanOctoMoveMap(bool value) { m_canOctoMoveMap = value; }
+	bool				canOctoMoveMap(void) const { return m_canOctoMoveMap; }
+
 	bool				canMoveMap();
 	bool				canRepair();
 	bool				canRepairShip();
@@ -255,6 +261,9 @@ private:
 	bool											m_isOctoOnInstance;
 	bool											m_isHighLight;
 	bool											m_isMapMoving;
+	bool											m_canOctoMoveMap;
+	bool											m_forceMapToMove;
+
 };
 
 #endif
