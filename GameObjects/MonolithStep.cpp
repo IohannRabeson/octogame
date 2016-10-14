@@ -37,6 +37,8 @@ MonolithStep::MonolithStep(ResourceKey const & key, sf::Vector2f const & positio
 void MonolithStep::addMapOffset(float x, float y)
 {
 	m_sprite.setPosition(m_sprite.getPosition().x + x, m_sprite.getPosition().y + y);
+	m_position += sf::Vector2f(x, y);
+	m_endPosition += sf::Vector2f(x, y);
 }
 
 void MonolithStep::setPosition(sf::Vector2f const & position)
