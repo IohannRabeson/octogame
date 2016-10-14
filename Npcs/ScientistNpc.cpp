@@ -1,6 +1,7 @@
 #include "ScientistNpc.hpp"
 #include "RectangleShape.hpp"
 #include "TextManager.hpp"
+#include "Progress.hpp"
 #include <sstream>
 #include <vector>
 
@@ -13,9 +14,13 @@ ScientistNpc::ScientistNpc(ResourceKey key) :
 	setOrigin(sf::Vector2f(90.f, 100.f));
 	setScale(1.0f);
 	setTimerMax(sf::seconds(8.0f));
+	setTextOffset(sf::Vector2f(50.f, -40.f));
 
 	getBox()->setApplyGravity(false);
 
+	float timePlayed = Progress::getInstance().getTimePlayed();
+	std::size_t minutes = static_cast<std::size_t>(timePlayed);
+	std::size_t seconds = static_cast<std::size_t>((timePlayed - minutes) * 60.f);
 	TextManager & textManager = TextManager::getInstance();
 	std::vector<std::wstring> const & texts = textManager.getTextsNpc(key);
 	std::vector<std::wstring> newTexts;
@@ -29,6 +34,8 @@ ScientistNpc::ScientistNpc(ResourceKey key) :
 			tokens.push_back(item);
 		if (tokens.size() == 2)
 		{
+			if (!tokens[1].compare(L"time_played"))
+				tokens[1] = std::to_wstring(minutes) + L"\'" + std::to_wstring(seconds) + L" !";
 			newTexts.push_back(tokens[1] + L"\n");
 			m_indexText[std::stoi(tokens[0])] = i;
 		}
@@ -86,7 +93,7 @@ void ScientistNpc::updateText(sf::Time frametime)
 	setCurrentText(index);
 	auto & texts = ANpc::getTexts();
 	texts[index]->setActive(true);
-	texts[index]->setPosition(getPosition() + sf::Vector2f(50.f, -40.f));
+	texts[index]->setPosition(getPosition() + ANpc::getTextOffset());
 	texts[index]->update(frametime);
 }
 

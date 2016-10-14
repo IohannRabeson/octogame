@@ -128,10 +128,7 @@ void SpaceShip::draw(sf::RenderTarget& render, sf::RenderStates) const
 
 void SpaceShip::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
-	if (!m_isFinal)
-	{
-		render.draw(m_sprite);
-		m_smoke.draw(render);
-		m_music.draw(render);
-	}
+	render.draw(m_sprite);
+	m_smoke.draw(render);
+	m_music.draw(render);
 }

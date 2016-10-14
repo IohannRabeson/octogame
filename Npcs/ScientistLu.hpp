@@ -9,6 +9,8 @@ public:
 	ScientistLu(void);
 	virtual ~ScientistLu(void) = default;
 
+	virtual void updateText(sf::Time frametime);
+
 };
 
 #endif
