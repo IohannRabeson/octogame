@@ -30,7 +30,9 @@ Progress::Progress() :
 	m_countRandomDiscover(0u),
 	m_isOctoOnInstance(false),
 	m_isHighLight(false),
-	m_isMapMoving(false)
+	m_isMapMoving(false),
+	m_canOctoMoveMap(true),
+	m_forceMapToMove(false)
 {
 }
 

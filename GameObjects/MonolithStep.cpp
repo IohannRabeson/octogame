@@ -1,6 +1,8 @@
 #include "MonolithStep.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <Math.hpp>
+#include <Interpolations.hpp>
 
 MonolithStep::MonolithStep(ResourceKey const & key, sf::Vector2f const & position, sf::Vector2f const & scale) :
 	m_generator("random"),
@@ -10,7 +12,8 @@ MonolithStep::MonolithStep(ResourceKey const & key, sf::Vector2f const & positio
 	m_timerMax(sf::seconds(m_generator.randomFloat(1.2f, 1.86f))),
 	m_state(None),
 	m_used(0u),
-	m_offset(m_generator.randomFloat(-0.f, 20.f))
+	m_offset(m_generator.randomFloat(-0.f, 20.f)),
+	m_startEndTransition(0.f)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -34,12 +37,32 @@ MonolithStep::MonolithStep(ResourceKey const & key, sf::Vector2f const & positio
 void MonolithStep::addMapOffset(float x, float y)
 {
 	m_sprite.setPosition(m_sprite.getPosition().x + x, m_sprite.getPosition().y + y);
+	m_position += sf::Vector2f(x, y);
+	m_endPosition += sf::Vector2f(x, y);
 }
 
 void MonolithStep::setPosition(sf::Vector2f const & position)
 {
 	m_sprite.setPosition(position);
 	m_sprite.play();
+}
+
+void MonolithStep::setEndPosition(sf::Vector2f const & position)
+{
+	sf::Vector2f dir = m_sprite.getPosition() + sf::Vector2f(m_sprite.getGlobalBounds().width / 2.f, m_sprite.getGlobalBounds().height / 2.f) - position;
+	octo::normalize(dir);
+	m_endPosition = m_position + dir * 170.f;
+}
+
+void MonolithStep::setStartEndTransition(float transition)
+{
+	m_startEndTransition = transition;
+}
+
+void MonolithStep::addPosition(sf::Vector2f const & position)
+{
+	m_position += position;
+	m_endPosition += position;
 }
 
 void MonolithStep::activate(void)
@@ -90,7 +113,8 @@ void MonolithStep::update(sf::Time frametime)
 			break;
 	}
 	m_offset += frametime.asSeconds() * 2.f;
-	m_sprite.setPosition(m_position + sf::Vector2f(0.f, std::cos(m_offset) * 10.f));
+	sf::Vector2f pos = octo::linearInterpolation(m_position, m_endPosition, m_startEndTransition) + sf::Vector2f(0.f, std::cos(m_offset) * 5.f);
+	m_sprite.setPosition(pos);
 }
 
 void MonolithStep::draw(sf::RenderTarget& render, sf::RenderStates states) const

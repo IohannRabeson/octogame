@@ -541,9 +541,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(CAVEMAN_CLIMBING_OSS, scale, position, 6u, 0.1f);
 			});
-	m_decorFactory.registerCreator(MONOLITH_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+	m_decorFactory.registerCreator(MONOLITH_OSS, [&biome](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new Monolith(scale, position);
+				return new Monolith(scale, position, biome);
 			});
 	m_decorFactory.registerCreator(WEIRD_HOUSE_SNOW_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{

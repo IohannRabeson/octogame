@@ -12,7 +12,6 @@
 #include <PostEffectManager.hpp>
 #include <Camera.hpp>
 
-#include <Console.hpp>
 LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_state(Appear),
 	m_timer(sf::Time::Zero),
@@ -32,11 +31,6 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_biome(nullptr),
 	m_decorManager(10000)
 {
-	octo::Application::getConsole().addCommand(L"test", [this](sf::Vector2f const & p)
-	{
-	std::cout << p.x << " " << p.y << std::endl;
-	m_water.setPosition(p);
-		});
 }
 
 void	LaboratoryEndScreen::start()

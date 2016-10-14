@@ -297,6 +297,11 @@ void Portal::setRadius(float radius)
 	m_box->setRadius(m_radius);
 }
 
+bool Portal::zoom(void) const
+{
+	return true;
+}
+
 void Portal::appear(void)
 {
 	if (m_state == Activated || isLock() || (Progress::getInstance().isMetPortal(m_destination) && m_destination == Level::Random))
