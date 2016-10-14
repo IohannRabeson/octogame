@@ -1095,7 +1095,7 @@ bool	CharacterOcto::isInWater(void) const
 
 bool	CharacterOcto::isCenteredCamera(void) const
 {
-	return (isInWater());
+	return (isInWater() && m_waterLevel != -1.f);
 }
 
 void	CharacterOcto::portalEvent()
