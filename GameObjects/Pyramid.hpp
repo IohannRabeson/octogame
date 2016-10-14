@@ -33,6 +33,8 @@ private:
 	octo::SpriteAnimation				m_animationWater;
 	std::vector<octo::AnimatedSprite>	m_spriteBlocs;
 	std::vector<octo::SpriteAnimation>	m_animationBlocs;
+	CharacterOcto *						m_octo;
+	bool								m_octoCollide;
 
 };
 
