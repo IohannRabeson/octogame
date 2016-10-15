@@ -36,7 +36,7 @@ MusicManager::MusicManager() :
 	musicKey[7] = SOUTERRAIN_LUGUBRE_OGG;
 	musicKey[8] = MENU_OPUS_I_OGG;
 
-	m_musicLevel.resize(20);
+	m_musicLevel.resize(21);
 	m_musicLevel[0] = AreaMusic(Level::IceA, SPACE_SHIP_OGG, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::IceB, ICE_MUSIC_OGG, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::IceC, MENU_OPUS_III_OGG, sf::FloatRect());
