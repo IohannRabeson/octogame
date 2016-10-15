@@ -74,7 +74,8 @@ FinalBiome::FinalBiome() :
 	//m_grassSizeY(40.f, 150.f),
 	m_grassSizeY(60.f, 70.f),
 	m_grassSizeX(10.f, 30.f),
-	m_grassColor(250, 240, 250),
+	//m_grassColor(250, 240, 250),
+	m_grassColor(109, 0, 179),
 	m_grassCount(m_mapSize.x),
 
 	m_treeDepth(8u, 8u),
@@ -86,7 +87,7 @@ FinalBiome::FinalBiome() :
 	m_leafSize(sf::Vector2f(70.f, 10.f), sf::Vector2f(150.f, 150.f)),
 	m_leafColor(212, 5, 238),
 
-	m_mushroomSize(sf::Vector2f(40.f, 50.f), sf::Vector2f(100.f, 500.f)),
+	m_mushroomSize(sf::Vector2f(40.f, 150.f), sf::Vector2f(100.f, 500.f)),
 	m_mushroomColor(58, 0, 92),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
