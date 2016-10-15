@@ -20,7 +20,7 @@ RandomBiome::RandomBiome() :
 	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(500))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
-	m_transitionDuration(0.5f),
+	m_transitionDuration(0.3f),
 	m_interestPointPosX(45u),
 	m_tileStartColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_tileEndColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
@@ -137,7 +137,6 @@ RandomBiome::RandomBiome() :
 	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 	Progress & progress = Progress::getInstance();
-	std::cout << progress.countRandomDiscover() << std::endl;
 	progress.meetPortal(progress.getLastDestination(), Level::Random);
 	m_mapSize = sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(progress.getNanoRobotCount() * 60u + 30u)),
 	m_randomSurfaceNumber = m_generator.randomInt(1u, 4u);

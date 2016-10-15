@@ -1043,10 +1043,6 @@ void	CharacterOcto::replaceOcto(void)
 
 void	CharacterOcto::updateCutscene(sf::Time frameTime)
 {
-	//TODO : Move that in pyramid
-//	if (Progress::getInstance().getCurrentDestination() == Level::Final)
-//		enableCutscene(isFinalEvent(), false);
-
 	if (m_enableCutscene)
 	{
 		m_cutsceneTimer += frameTime;
@@ -1062,31 +1058,32 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 	else
 	{
 		m_cutsceneTimer -= frameTime;
+		if (m_cutsceneTimer <= sf::Time::Zero)
+			m_cutsceneTimer = sf::Time::Zero;
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
 		if (m_cutsceneTimer <= sf::Time::Zero)
 			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
 	}
 }
 
-bool	CharacterOcto::isFinalEvent(void)
-{
-	//TODO : To put in pyramid
-	Progress const & progress = Progress::getInstance();
-	sf::Vector2f const & position = getPosition();
-
-	if (progress.getCurrentDestination() == Level::Final && (position.x > 805.f * 16.f && position.x < 905.f * 16.f))
-		return true;
-	return false;
-}
-
-bool	CharacterOcto::isZooming()
+bool	CharacterOcto::isZooming(void) const
 {
 	return (m_keyZoomIn);// || isCollidingPortal());
 }
 
-bool	CharacterOcto::isInRocketEnd(void)
+bool	CharacterOcto::isInRocketEnd(void) const
 {
 	return m_isRocketEnd;
+}
+
+bool	CharacterOcto::isInWater(void) const
+{
+	return (getPosition().y > m_waterLevel);
+}
+
+bool	CharacterOcto::isCenteredCamera(void) const
+{
+	return (isInWater() && m_waterLevel != -1.f);
 }
 
 void	CharacterOcto::portalEvent()
@@ -2047,10 +2044,7 @@ void	CharacterOcto::collidePortalEvent(bool collidePortal)
 void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
 {
 	if (enable && !m_enableCutscene)
-	{
 		PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, true);
-		m_cutsceneTimer = sf::Time::Zero;
-	}
 	else
 		m_cutsceneTimer = std::min(m_cutsceneTimer, m_cutsceneTimerMax);
 	m_enableCutscene = enable;

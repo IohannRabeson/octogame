@@ -542,9 +542,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new InstanceDecor(CAVEMAN_CLIMBING_OSS, scale, position, 6u, 0.1f);
 			});
-	m_decorFactory.registerCreator(MONOLITH_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+	m_decorFactory.registerCreator(MONOLITH_OSS, [&biome](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
-				return new Monolith(scale, position);
+				return new Monolith(scale, position, biome);
 			});
 	m_decorFactory.registerCreator(WEIRD_HOUSE_SNOW_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
 			{
@@ -1637,6 +1637,7 @@ NanoRobot * GroundManager::getNanoRobot(NanoRobot * robot)
 
 void	GroundManager::setNextGenerationState(GenerationState state, sf::Vector2f const & octoPos)
 {
+	Progress::getInstance().setMapMoving(true);
 	m_octoPosState = octoPos;
 	if (m_transitionTimer >= m_transitionTimerMax)
 		m_nextState = state;
@@ -1746,7 +1747,10 @@ void GroundManager::computeDecor(void)
 void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 {
 	if (m_transitionTimer > m_transitionTimerMax)
+	{
+		Progress::getInstance().setMapMoving(false);
 		m_transitionTimer = m_transitionTimerMax;
+	}
 	float transition = m_transitionTimer / m_transitionTimerMax;
 	float bottomBorder = cameraRect.top + cameraRect.height + Map::OffsetY + Tile::TileSize;
 	float rightBorder = cameraRect.left + cameraRect.width + Map::OffsetX + Tile::TileSize;

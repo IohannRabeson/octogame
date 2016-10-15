@@ -19,7 +19,6 @@ protected:
 	virtual void setupMachine(void);
 	virtual void updateState(void);
 
-private:
 	std::map<std::size_t, std::size_t>	m_indexText;
 	std::size_t							m_currentIndex;
 	bool								m_updateText;

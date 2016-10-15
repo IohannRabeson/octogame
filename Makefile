@@ -72,6 +72,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/MonolithStep.cpp			\
 				GameObjects/Door.cpp					\
 				GameObjects/SmokeInstance.cpp			\
+				GameObjects/FinalPortal.cpp				\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ASpecialNpc.cpp					\

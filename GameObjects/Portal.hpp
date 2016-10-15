@@ -100,11 +100,12 @@ public:
 	inline bool isFirstAppear(void) { return m_sprite.getCurrentEvent() == FirstAppear; }
 	inline Level getDestination(void) const { return m_destination; }
 	inline std::string getKey(void) { return m_key; }
+	virtual bool zoom(void) const;
 
-	void update(sf::Time frameTime);
-	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
+	virtual void update(sf::Time frameTime);
+	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
-private:
+protected:
 	void updateSound(void);
 
 	RandomGenerator				m_generator;

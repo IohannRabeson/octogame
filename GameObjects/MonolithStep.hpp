@@ -15,6 +15,9 @@ public:
 
 	void addMapOffset(float x, float y);
 	void setPosition(sf::Vector2f const & position);
+	void setEndPosition(sf::Vector2f const & position);
+	void addPosition(sf::Vector2f const & position);
+	void setStartEndTransition(float transition);
 	void activate(void);
 	void firstActivate(void);
 
@@ -35,11 +38,13 @@ private:
 	octo::VertexBuilder				m_builder;
 	sf::Vector2f					m_size;
 	sf::Vector2f					m_position;
+	sf::Vector2f					m_endPosition;
 	sf::Time						m_timer;
 	sf::Time						m_timerMax;
 	State							m_state;
 	std::size_t						m_used;
 	float							m_offset;
+	float							m_startEndTransition;
 
 	void createLosange(sf::Vector2f const & size,
 											sf::Vector2f const & origin,
@@ -51,7 +56,6 @@ private:
 											float glowingCoef,
 											sf::Color color,
 											octo::VertexBuilder& builder);
-
 
 };
 

@@ -35,10 +35,12 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 {
 	octo::Camera & camera = octo::Application::getCamera();
 
-	if (octo.isRaising())
-		m_behavior = Behavior::OctoRaising;
+	if (octo.isCenteredCamera())
+		m_behavior = Behavior::OctoCentered;
 	else if (octo.isInRocketEnd())
 		m_behavior = Behavior::FollowOcto;
+	else if (octo.isRaising())
+		m_behavior = Behavior::OctoRaising;
 	else if (m_behavior != ControlledByPlayer)
 	{
 		if (octo.isFalling())
@@ -97,6 +99,27 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 			m_verticalTransition -= frametime.asSeconds();
 			if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
+			if (m_horizontalTransition + frametime.asSeconds() < 0.f)
+				m_horizontalTransition += frametime.asSeconds();
+			else if (m_horizontalTransition - frametime.asSeconds() > 0.f)
+				m_horizontalTransition -= frametime.asSeconds();
+			break;
+		}
+		case Behavior::OctoCentered:
+		{
+			m_speed = 4.f;
+			if (m_verticalTransition < 0.5f)
+			{
+				m_verticalTransition += frametime.asSeconds();
+				if (m_verticalTransition > 0.5f)
+					m_verticalTransition = 0.5f;
+			}
+			else if (m_verticalTransition > 0.5f)
+			{
+				m_verticalTransition -= frametime.asSeconds();
+				if (m_verticalTransition < 0.5f)
+					m_verticalTransition = 0.5f;
+			}
 			if (m_horizontalTransition + frametime.asSeconds() < 0.f)
 				m_horizontalTransition += frametime.asSeconds();
 			else if (m_horizontalTransition - frametime.asSeconds() > 0.f)
@@ -181,7 +204,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 			m_waveTimer += frametime;
 	}
 
-	sf::Vector2f offset = octo::linearInterpolation(m_prevShakeOffset, m_shakeOffset, std::min(1.f, m_waveTimer/ m_waveDuration));
+	sf::Vector2f offset = octo::linearInterpolation(m_prevShakeOffset, m_shakeOffset, std::min(1.f, m_waveTimer / m_waveDuration));
 	camera.setSize(octo::cosinusInterpolation(m_baseSize, m_baseSize * 0.85f, m_zoomTimer.asSeconds() / m_zoomTimerMax.asSeconds()));
 	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()) + offset);
 

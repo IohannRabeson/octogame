@@ -1,5 +1,6 @@
 #include "GenerativeLayer.hpp"
 #include "SkyCycle.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Camera.hpp>
@@ -26,6 +27,7 @@ GenerativeLayer::GenerativeLayer(sf::Color const & color, sf::Vector2f const & s
 	m_highestY(0.f),
 	m_heightOffset(heightOffset),
 	m_deltaOffset(deltaOffset),
+	m_accelerateFactor(50.f),
 	m_widthScreen(octo::Application::getGraphicsManager().getVideoMode().width / m_tileSize + 4u),
 	m_verticesCount(0u)
 {
@@ -123,6 +125,8 @@ void GenerativeLayer::setBackgroundSurfaceGenerator(BackgroundSurfaceGenerator m
 
 void GenerativeLayer::update(float deltatime, ABiome &)
 {
+	if (Progress::getInstance().isMapMoving() && Progress::getInstance().isOctoOnInstance())
+		deltatime *= m_accelerateFactor;
 	m_transitionTimer += deltatime;
 	if (m_transitionTimerDuration > 0.f && m_transitionTimer > m_transitionTimerDuration)
 	{

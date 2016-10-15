@@ -108,7 +108,6 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			{
 				octo::AudioManager &		audio = octo::Application::getAudioManager();
 				octo::ResourceManager &		resource = octo::Application::getResourceManager();
-
 				audio.playSound(resource.getSound(SPACESHIP_ALARM_OGG), 0.5f);
 				m_timerBlinkShader = sf::Time::Zero;
 				m_blinkShaderState = true;
@@ -126,65 +125,71 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 	else if (m_keyDown)
 		translation.y = 300.f * frameTime.asSeconds();
 
-	if (m_state == Flying)
+	switch (m_state)
 	{
-		if (m_timerEnd >= m_timerEndMax * 2.f)
+		case Flying:
 		{
-			m_timerEnd = sf::Time::Zero;
-			m_state = Falling;
+			if (m_timerEnd >= m_timerEndMax * 2.f)
+			{
+				m_timerEnd = sf::Time::Zero;
+				m_state = Falling;
+			}
+			float interpolateValue = m_timerEnd / m_timerEndMax / 2.f;
+			sf::Color const & color = octo::linearInterpolation(sf::Color::Black, m_downColorBackground, interpolateValue);
+			m_spaceShip.setSmokeVelocity(sf::Vector2f(octo::linearInterpolation(-1400.f, -200.f, interpolateValue), 0.f));
+			createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
+			break;
 		}
-		float interpolateValue = m_timerEnd / m_timerEndMax / 2.f;
-		sf::Color const & color = octo::linearInterpolation(sf::Color::Black, m_downColorBackground, interpolateValue);
-		m_spaceShip.setSmokeVelocity(sf::Vector2f(octo::linearInterpolation(-1400.f, -200.f, interpolateValue), 0.f));
-		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
-	}
-	else if (m_state == Falling)
-	{
-		if (m_isSoundPlayed == false)
+		case Falling:
 		{
-			octo::AudioManager &		audio = octo::Application::getAudioManager();
-			octo::ResourceManager &		resource = octo::Application::getResourceManager();
+			if (m_isSoundPlayed == false)
+			{
+				octo::AudioManager &		audio = octo::Application::getAudioManager();
+				octo::ResourceManager &		resource = octo::Application::getResourceManager();
 
-			audio.playSound(resource.getSound(OCTO_FEAR_OGG), 0.5f);
-			m_ground = audio.playSound(resource.getSound(GROUND_OGG), 0.6f, 1.8f);
-			m_isSoundPlayed = true;
-		}
-		if (m_timerEnd >= m_timerEndMax - sf::seconds(2.f) && !m_isSoundExplodePlayed)
-		{
-			octo::AudioManager &		audio = octo::Application::getAudioManager();
-			octo::ResourceManager &		resource = octo::Application::getResourceManager();
+				audio.playSound(resource.getSound(OCTO_FEAR_OGG), 0.5f);
+				m_ground = audio.playSound(resource.getSound(GROUND_OGG), 0.6f, 1.8f);
+				m_isSoundPlayed = true;
+			}
+			if (m_timerEnd >= m_timerEndMax - sf::seconds(2.f) && !m_isSoundExplodePlayed)
+			{
+				octo::AudioManager &		audio = octo::Application::getAudioManager();
+				octo::ResourceManager &		resource = octo::Application::getResourceManager();
 
-			audio.stopMusic(sf::seconds(0.1f));
-			audio.playSound(resource.getSound(CRASH_OGG), 0.5f, 0.5f);
-			audio.playSound(resource.getSound(TREE_OGG), 0.5f, 0.5f);
-			m_ground->setVolume(0.f);
-			m_isSoundExplodePlayed = true;
+				audio.stopMusic(sf::seconds(0.1f));
+				audio.playSound(resource.getSound(CRASH_OGG), 0.5f, 0.5f);
+				audio.playSound(resource.getSound(TREE_OGG), 0.5f, 0.5f);
+				m_ground->setVolume(0.f);
+				m_isSoundExplodePlayed = true;
+			}
+			if (m_timerEnd >= m_timerEndMax)
+			{
+				octo::StateManager & states = octo::Application::getStateManager();
+				states.change("transitionLevelZero");
+			}
+			float interpolateValue = std::min(m_timerEnd / m_timerEndMax, 1.f);
+			sf::Color const & color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
+			m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-100.f, -1700.f, interpolateValue)));
+			createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
+			m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
+			break;
 		}
-		if (m_timerEnd >= m_timerEndMax)
+		case Rising:
 		{
-			octo::StateManager & states = octo::Application::getStateManager();
-			states.change("transitionLevelZero");
+			float interpolateValue = std::min(m_timerEnd / m_timerEndMax, 1.f);
+			sf::Color const & color = octo::linearInterpolation(sf::Color::White, m_downColorBackground, interpolateValue);
+			m_spaceShip.setSmokeVelocity(sf::Vector2f(-1400.f, 0.f));
+			createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
+			m_offsetCamera = -camera.getSize().x * 1.5f * (1.f - interpolateValue);
+			if (m_timerEnd >= m_timerEndMax)
+			{
+				m_timerEnd = sf::Time::Zero;
+				m_state = Flying;
+			}
+			break;
 		}
-		float interpolateValue = m_timerEnd / m_timerEndMax;
-		if (interpolateValue > 1.f)
-			interpolateValue = 1.f;
-		sf::Color const & color = octo::linearInterpolation(m_downColorBackground, sf::Color::White, interpolateValue);
-		m_spaceShip.setSmokeVelocity(sf::Vector2f(-200.f, octo::linearInterpolation(-100.f, -1700.f, interpolateValue)));
-		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
-		m_offsetCamera = -camera.getSize().x * 1.5 * interpolateValue;
-	}
-	else if (m_state == Rising)
-	{
-		float interpolateValue = m_timerEnd / m_timerEndMax;
-		sf::Color const & color = octo::linearInterpolation(sf::Color::White, m_downColorBackground, interpolateValue);
-		m_spaceShip.setSmokeVelocity(sf::Vector2f(-1400.f, 0.f));
-		createBackground(sf::Vector2f(cameraRect.left, cameraRect.top), color);
-		m_offsetCamera = -camera.getSize().x * 1.5f + camera.getSize().x * 1.5 * interpolateValue;
-		if (m_timerEnd >= m_timerEndMax)
-		{
-			m_timerEnd = sf::Time::Zero;
-			m_state = Flying;
-		}
+		default:
+		break;
 	}
 
 	m_spaceShip.move(translation);

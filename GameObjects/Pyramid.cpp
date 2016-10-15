@@ -8,7 +8,9 @@
 Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome) :
 	InstanceDecor(PYRAMID_OSS, scale, position, 1u),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
-	m_particles(new BeamSystem())
+	m_particles(new BeamSystem()),
+	m_octo(nullptr),
+	m_octoCollide(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 
@@ -158,8 +160,10 @@ void Pyramid::setPosition(sf::Vector2f const & position)
 	m_box->update();
 }
 
-void Pyramid::collideOcto(CharacterOcto *)
+void Pyramid::collideOcto(CharacterOcto * octo)
 {
+	m_octo = octo;
+	m_octoCollide = true;
 }
 
 void Pyramid::update(sf::Time frameTime)
@@ -170,6 +174,10 @@ void Pyramid::update(sf::Time frameTime)
 	m_spriteWater.update(frameTime);
 	for (std::size_t i = 0u; i < m_spriteBlocs.size(); i++)
 		m_spriteBlocs[i].update(frameTime);
+
+	if (m_octo)
+		m_octo->enableCutscene(m_octoCollide, false);
+	m_octoCollide = false;
 }
 
 void Pyramid::draw(sf::RenderTarget& render, sf::RenderStates states) const

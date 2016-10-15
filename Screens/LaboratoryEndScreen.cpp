@@ -12,12 +12,11 @@
 #include <PostEffectManager.hpp>
 #include <Camera.hpp>
 
-#include <Console.hpp>
 LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_state(Appear),
 	m_timer(sf::Time::Zero),
 	m_globalTimer(sf::Time::Zero),
-	m_timeBeforeNextText(sf::seconds(1.f)),
+	m_timeBeforeNextText(sf::seconds(2.f)),
 	m_appearDuration(sf::seconds(2.f)),
 	m_cedricWalkTimer(sf::seconds(3.f)),
 	m_cedricPutPotionTimer(sf::seconds(3.f)),
@@ -32,10 +31,6 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_biome(nullptr),
 	m_decorManager(10000)
 {
-	octo::Application::getConsole().addCommand(L"test", [this](sf::Vector2f const & p)
-	{
-		m_octo.setPosition(p);
-		});
 }
 
 void	LaboratoryEndScreen::start()
@@ -49,21 +44,18 @@ void	LaboratoryEndScreen::start()
 
 	camera.setCenter(camera.getRectangle().width / 2.f, camera.getRectangle().height / 2.f);
 	m_background.setTexture(resources.getTexture(LABO_BG_PNG));
-	m_background.setOrigin(m_background.getLocalBounds().width / 2.f, m_background.getLocalBounds().height / 2.f);
-	m_background.setPosition(octo::Application::getCamera().getCenter());
+	m_background.setPosition(sf::Vector2f(0.f, 0.f));
 	m_foreground.setTexture(resources.getTexture(LABO_FG_PNG));
-	m_foreground.setOrigin(m_background.getLocalBounds().width / 2.f, m_background.getLocalBounds().height / 2.f);
-	m_foreground.setPosition(octo::Application::getCamera().getCenter());
+	m_foreground.setPosition(sf::Vector2f(0.f, 0.f));
 	m_water.setTexture(resources.getTexture(LABO_WATER_PNG));
-	m_water.setOrigin(m_background.getLocalBounds().width / 2.f, m_background.getLocalBounds().height / 2.f);
-	m_water.setPosition(octo::Application::getCamera().getCenter());
+	m_water.setPosition(sf::Vector2f(0.f, 0.f));
 
 	m_npcs.emplace_back(new ScientistJu());
 	m_npcs.emplace_back(new ScientistLu());
 	m_npcs.emplace_back(new ScientistFran());
 	m_npcs.emplace_back(new ScientistCedric());
-	m_npcs[0]->setPosition(sf::Vector2f(200.f, 827.f));
-	m_npcs[1]->setPosition(sf::Vector2f(950.f, 827.f));
+	m_npcs[0]->setPosition(sf::Vector2f(950.f, 827.f));
+	m_npcs[1]->setPosition(sf::Vector2f(510.f, 827.f));
 	m_npcs[2]->setPosition(sf::Vector2f(1600.f, 790.f));
 	m_npcs[3]->setPosition(sf::Vector2f(-70.f, 577.f));
 
@@ -131,7 +123,7 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			{
 				m_timer = sf::Time::Zero;
 				m_textIndex++;
-				if (m_textIndex > m_lastTextIndex || m_stopDialog)
+				if (m_textIndex >= m_lastTextIndex || m_stopDialog)
 				{
 					for (auto & it : m_npcs)
 					{
@@ -155,6 +147,9 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 				m_timer = sf::Time::Zero;
 				m_state = CedricPutPotion;
 				m_npcs[3]->setNextEvent(ANpc::Events::Special1);
+				m_npcs[3]->setDisplayText(true);
+				m_npcs[3]->updateText(true);
+				m_npcs[3]->setTextIndex(m_textIndex);
 			}
 			break;
 		case CedricPutPotion:
@@ -162,6 +157,8 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			if (m_timer >= m_cedricPutPotionTimer)
 			{
 				m_timer = sf::Time::Zero;
+				m_npcs[3]->setDisplayText(false);
+				m_npcs[3]->updateText(false);
 				m_state = ChangeAquaColor;
 			}
 			break;

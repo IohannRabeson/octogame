@@ -219,6 +219,8 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader(DUPLICATE_SCREEN_FRAG, DUPLICATE_SCREEN_FRAG);
 	PostEffectLayer::getInstance().registerShader(ROCKET_TAKEOFF_FRAG, ROCKET_TAKEOFF_FRAG);
 	PostEffectLayer::getInstance().registerShader(CUTSCENE_FRAG, CUTSCENE_FRAG);
+	PostEffectLayer::getInstance().registerShader(CIRCLE_WAVE_FRAG, CIRCLE_WAVE_FRAG);
+	PostEffectLayer::getInstance().registerShader(COLOR_SATURATION_FRAG, COLOR_SATURATION_FRAG);
 
 	ChallengeManager::getInstance().reset();
 	audio.reset();
@@ -506,7 +508,8 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 			octo->repairElevator(*gameObjectCast<ElevatorStream>(gameObject));
 			break;
 		case GameObjectType::Portal:
-			octo->collidePortalEvent(true);
+			if (gameObjectCast<Portal>(gameObject)->zoom())
+				octo->collidePortalEvent(true);
 			gameObjectCast<Portal>(gameObject)->appear();
 			break;
 //Script AddNpc GameObject
@@ -568,11 +571,13 @@ void Game::moveMap(sf::Time frameTime)
 	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && m_groundSoundTime > sf::Time::Zero)
 		m_groundSoundTime -= frameTime;
 
-	if ((m_keyGroundRight || m_keyGroundLeft) && Progress::getInstance().canMoveMap())
+	if ((m_keyGroundRight || m_keyGroundLeft || progress.forceMapToMove()) && progress.canMoveMap())
 	{
-		if (m_keyGroundLeft == true && progress.canMoveMap())
+		if (progress.forceMapToMove())
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-		else if (m_keyGroundRight == true)
+		if (m_keyGroundLeft == true && progress.canOctoMoveMap())
+			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
+		else if (m_keyGroundRight == true && progress.canOctoMoveMap())
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 		if (m_groundSoundTime < m_groundSoundTimeMax)
 			m_groundSoundTime += frameTime;
@@ -596,10 +601,10 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 	{
 		case OctoKeys::GroundLeft:
 		{
-			if (m_keyGroundLeft == false && progress.canMoveMap())
+			if (m_keyGroundLeft == false)
 			{
-				m_keyGroundLeft = true;
 				progress.moveMap();
+				m_keyGroundLeft = true;
 			}
 			break;
 		}
@@ -607,7 +612,6 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 		{
 			if (m_keyGroundRight == false)
 			{
-				m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
 				progress.moveMap();
 				m_keyGroundRight = true;
 			}
@@ -621,7 +625,8 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Use:
 			m_keyUse = true;
-			//setFastMotion();
+			if (m_collideDoor)
+				setFastMotion();
 			break;
 		default:
 			break;
