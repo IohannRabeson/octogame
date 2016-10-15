@@ -75,6 +75,7 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/SmokeInstance.cpp			\
 				GameObjects/FinalPortal.cpp				\
 				GameObjects/RocketEnd.cpp				\
+				GameObjects/Credit.cpp					\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ASpecialNpc.cpp					\

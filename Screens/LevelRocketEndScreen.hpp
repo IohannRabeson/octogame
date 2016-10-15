@@ -1,12 +1,13 @@
 #ifndef LEVELROCKETENDSCREEN_HPP
 # define LEVELROCKETENDSCREEN_HPP
 
-# include <AbstractState.hpp>
-# include <AudioManager.hpp>
-# include <memory>
 # include "StarSystem.hpp"
 # include "RandomGenerator.hpp"
 # include "InputListener.hpp"
+# include "Credit.hpp"
+# include <AbstractState.hpp>
+# include <AudioManager.hpp>
+# include <memory>
 
 class RocketEnd;
 
@@ -29,6 +30,7 @@ private:
 	std::size_t						m_starsCount;
 	std::unique_ptr<StarSystem[]>	m_stars;
 	std::unique_ptr<RocketEnd>		m_rocket;
+	std::unique_ptr<Credit>			m_credit;
 
 };
 

@@ -9,7 +9,8 @@
 LevelRocketEndScreen::LevelRocketEndScreen(void) :
 	m_starsCount(15u),
 	m_stars(new StarSystem[m_starsCount]),
-	m_rocket(new RocketEnd(sf::Vector2f(400.f, 0.f)))
+	m_rocket(new RocketEnd(sf::Vector2f(600.f, 0.f))),
+	m_credit(new Credit(sf::Vector2f(1100.f, octo::Application::getCamera().getRectangle().height)))
 {
 	m_generator.setSeed("random");
 }
@@ -51,6 +52,7 @@ void	LevelRocketEndScreen::update(sf::Time frameTime)
 	for (std::size_t i = 0; i < m_starsCount; i++)
 		m_stars[i].update(frameTime);
 	m_rocket->update(frameTime);
+	m_credit->update(frameTime);
 }
 
 void	LevelRocketEndScreen::draw(sf::RenderTarget & render) const
@@ -60,6 +62,7 @@ void	LevelRocketEndScreen::draw(sf::RenderTarget & render) const
 	for (std::size_t i = 0; i < m_starsCount; i++)
 		m_stars[i].draw(render);
 	m_rocket->drawFront(render, states);
+	m_credit->draw(render, states);
 }
 
 bool	LevelRocketEndScreen::onInputPressed(InputListener::OctoKeys const & key)
