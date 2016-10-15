@@ -39,6 +39,7 @@ SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/LogoScreen.cpp					\
 				Screens/AnOctonautOdysseyScreen.cpp		\
 				Screens/LaboratoryEndScreen.cpp			\
+				Screens/LevelRocketEndScreen.cpp		\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
@@ -73,6 +74,8 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Door.cpp					\
 				GameObjects/SmokeInstance.cpp			\
 				GameObjects/FinalPortal.cpp				\
+				GameObjects/RocketEnd.cpp				\
+				GameObjects/Credit.cpp					\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ASpecialNpc.cpp					\
