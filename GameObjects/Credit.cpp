@@ -91,6 +91,11 @@ void Credit::appendCategories(ResourceKey key)
 	}
 }
 
+bool Credit::isFinished(void) const
+{
+	return (m_texts.rbegin()->second.getPosition().y < -100.f);
+}
+
 void Credit::update(sf::Time frameTime)
 {
 	for (auto & text : m_texts)

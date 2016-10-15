@@ -10,7 +10,7 @@ LevelRocketEndScreen::LevelRocketEndScreen(void) :
 	m_starsCount(15u),
 	m_stars(new StarSystem[m_starsCount]),
 	m_rocket(new RocketEnd(sf::Vector2f(600.f, 0.f))),
-	m_credit(new Credit(sf::Vector2f(1100.f, octo::Application::getCamera().getRectangle().height)))
+	m_credit(new Credit(sf::Vector2f(1100.f, octo::Application::getCamera().getRectangle().height + 100.f)))
 {
 	m_generator.setSeed("random");
 }
@@ -53,6 +53,8 @@ void	LevelRocketEndScreen::update(sf::Time frameTime)
 		m_stars[i].update(frameTime);
 	m_rocket->update(frameTime);
 	m_credit->update(frameTime);
+	if (m_credit->isFinished())
+		octo::Application::getStateManager().change("menu");
 }
 
 void	LevelRocketEndScreen::draw(sf::RenderTarget & render) const

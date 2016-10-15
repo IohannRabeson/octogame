@@ -16,6 +16,8 @@ public:
 	void update(sf::Time frameTime);
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
+	bool isFinished(void) const;
+
 private:
 	sf::Font					m_font;
 	std::map<int, sf::Text>		m_texts;

@@ -29,7 +29,7 @@ RocketEnd::RocketEnd(sf::Vector2f const & position) :
 
 	for (std::size_t i = 0u; i < m_smokesCount; i++)
 	{
-		m_smokes[i].setVelocity(sf::Vector2f(0.f, 100.f));
+		m_smokes[i].setVelocity(sf::Vector2f(0.f, 300.f));
 		m_smokes[i].setup(sf::Vector2f(10.f, 10.f));
 		m_smokes[i].setLifeTimeRange(0.2f, 0.4f);
 		m_smokes[i].setEmitTimeRange(0.01f, 0.05f);
@@ -72,9 +72,9 @@ void RocketEnd::setPosition(sf::Vector2f const & position)
 {
 	m_spriteRocket.setPosition(position);
 	m_spriteOcto.setPosition(position + sf::Vector2f(125.f, 375.f));
-	m_smokes[0].setPosition(position + sf::Vector2f(40.f, 1350.f));
-	m_smokes[1].setPosition(position + sf::Vector2f(152.f, 1350.f));
-	m_smokes[2].setPosition(position + sf::Vector2f(264.f, 1350.f));
+	m_smokes[0].setPosition(position + sf::Vector2f(35.f, 970.f));
+	m_smokes[1].setPosition(position + sf::Vector2f(110.f, 970.f));
+	m_smokes[2].setPosition(position + sf::Vector2f(185.f, 970.f));
 }
 
 void RocketEnd::update(sf::Time frameTime)
