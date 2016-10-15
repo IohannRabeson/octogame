@@ -16,9 +16,11 @@ public:
 
 	void			canEmit(bool canEmit);
 	void			setColor(sf::Color const & color);
-	void			setSpeed(sf::Vector2f speed);
+	void			setSpeed(sf::Vector2f const & speed);
+	void			setOrigin(sf::Vector2f const & origin);
 	void			setEmitTimeRange(float min, float max);
 	void			setup(sf::Vector2f const & sizeParticle);
+	void			isFromTop(bool value);
 	void			update(sf::Time frameTime);
 
 private:
@@ -27,13 +29,16 @@ private:
 	std::mt19937	m_engine;
 	Dist			m_creationTimeDistri;
 	Dist			m_heightDistri;
+	Dist			m_widthDistri;
 	Dist			m_sizePlanetDistri;
 	sf::Vector2f	m_sizeParticle;
 	sf::Vector2f	m_speed;
+	sf::Vector2f	m_origin;
 	sf::Time		m_timer;
 	sf::Time		m_nextCreation;
 	sf::Color		m_color;
 	bool			m_canEmit;
+	bool			m_isFromTop;
 
 	virtual void	updateParticle(sf::Time frameTime, Particle & particle);
 	virtual bool	isDeadParticle(Particle const & particle);

@@ -8,11 +8,14 @@
 StarSystem::StarSystem() :
 	m_creationTimeDistri(0.01f, 0.02f),
 	m_heightDistri(-1000.f, octo::Application::getCamera().getRectangle().height + 1000.f),
+	m_widthDistri(0.f, octo::Application::getCamera().getRectangle().width + 2000.f),
 	m_speed(-2000.f, 0.f),
+	m_origin(sf::Vector2f(20.f + octo::Application::getCamera().getRectangle().left + octo::Application::getCamera().getRectangle().width, octo::Application::getCamera().getRectangle().top)),
 	m_timer(sf::Time::Zero),
 	m_nextCreation(sf::Time::Zero),
 	m_color(sf::Color::White),
-	m_canEmit(false)
+	m_canEmit(false),
+	m_isFromTop(false)
 {
 	std::random_device rd;
 	m_engine.seed(rd());
@@ -69,14 +72,24 @@ void	StarSystem::setEmitTimeRange(float min, float max)
 	m_creationTimeDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
 }
 
+void	StarSystem::isFromTop(bool value)
+{
+	m_isFromTop = value;
+}
+
 void	StarSystem::setColor(sf::Color const & color)
 {
 	m_color = color;
 }
 
-void	StarSystem::setSpeed(sf::Vector2f speed)
+void	StarSystem::setSpeed(sf::Vector2f const & speed)
 {
 	m_speed = speed;
+}
+
+void	StarSystem::setOrigin(sf::Vector2f const & origin)
+{
+	m_origin = origin;
 }
 
 void	StarSystem::update(sf::Time frameTime)
@@ -88,8 +101,11 @@ void	StarSystem::update(sf::Time frameTime)
 	{
 		if (m_canEmit)
 		{
-			sf::Vector2f position = sf::Vector2f(20.f + octo::Application::getCamera().getRectangle().left + octo::Application::getCamera().getRectangle().width, octo::Application::getCamera().getRectangle().top);
-			position += sf::Vector2f(0.f, m_heightDistri(m_engine));
+			sf::Vector2f position = m_origin;
+			if (m_isFromTop)
+				position += sf::Vector2f(m_widthDistri(m_engine), 0.f);
+			else
+				position += sf::Vector2f(1000.f, m_heightDistri(m_engine));
 			emplace(m_color, position, sf::Vector2f(1.f, 1.f), 0, sf::Time::Zero);
 		}
 		m_timer -= m_nextCreation;
@@ -104,5 +120,7 @@ void	StarSystem::updateParticle(sf::Time frameTime, Particle& particle)
 
 bool	StarSystem::isDeadParticle(Particle const& particle)
 {
+	if (m_isFromTop)
+		return (std::get<Component::Position>(particle).y > octo::Application::getCamera().getRectangle().top + octo::Application::getCamera().getRectangle().height);
 	return (std::get<Component::Position>(particle).x < octo::Application::getCamera().getRectangle().left - 20.f);
 }

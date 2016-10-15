@@ -6,7 +6,7 @@
 /*   By: irabeson <irabeson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/04/15 19:14:06 by irabeson          #+#    #+#             */
-/*   Updated: 2016/06/22 15:29:42 by jbalestr         ###   ########.fr       */
+/*   Updated: 2016/10/14 18:37:37 by jbalestr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 #include "AGameObject.hpp"
 #include "MusicManager.hpp"
 #include "LaboratoryEndScreen.hpp"
+#include "LevelRocketEndScreen.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
@@ -48,6 +49,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<LogoScreen>("logo");
 	manager.registerState<AnOctonautOdysseyScreen>("anoctonautodyssey");
 	manager.registerState<LaboratoryEndScreen>("laboratory_end");
+	manager.registerState<LevelRocketEndScreen>("rocket_end");
 
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
 	manager.registerTransition<octo::BlueFadeTransition>("blue", false);
