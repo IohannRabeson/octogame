@@ -189,7 +189,12 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 
 	//TODO : not clean, only for last level
 	if (destination == progress.getCurrentDestination())
-		m_sprite.setNextEvent(Opened);
+	{
+		if (m_key == OBJECT_PORTAL_OSS)
+			m_sprite.setNextEvent(Closed);
+		else
+			m_sprite.setNextEvent(Opened);
+	}
 }
 
 Portal::~Portal(void)
@@ -304,7 +309,7 @@ void Portal::setRadius(float radius)
 
 void Portal::appear(void)
 {
-	if (m_state == Activated || isLock() || (Progress::getInstance().isMetPortal(m_destination) && m_destination == Level::Random))
+	if (m_state == Activated || isLock())
 		return;
 	if (m_sprite.getCurrentEvent() == Events::Closed)
 		m_state = State::FirstAppear;
@@ -326,6 +331,11 @@ void Portal::updateSound(void)
 
 bool Portal::isLock(void)
 {
+	Progress & progress = Progress::getInstance();
+	if (progress.isMetPortal(m_destination) && m_destination == Level::Random)
+		return true;
+	if (progress.getCurrentDestination() == m_destination && m_key == OBJECT_PORTAL_OSS)
+		return true;
 //	if (m_destination == Level::WaterA && Progress::getInstance().getNanoRobotCount() < 4)
 //		return true;
 	return false;

@@ -1292,7 +1292,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 			else if (portal.getKey() == OBJECT_PORTAL_JUNGLE_OSS)
 				m_box->setPosition(sf::Vector2f(20245.f, 1190.f));
 			else if (portal.getKey() == OBJECT_PORTAL_BEACH_OSS)
-				m_box->setPosition(sf::Vector2f(20045.f, 90.f));
+				m_box->setPosition(sf::Vector2f(19800.f, 925.f));
 			m_numberOfJump = 0u;
 			m_timeSlowFall = sf::Time::Zero;
 		}
