@@ -18,7 +18,8 @@ Grass::Grass(bool onInstance, bool reverse) :
 	m_indexLeftTarget(0u),
 	m_indexRightTarget(0u),
 	m_onInstance(onInstance),
-	m_isShining(false)
+	m_isShining(false),
+	m_firstFrame(true)
 {
 }
 
@@ -60,9 +61,9 @@ void Grass::setup(ABiome& biome)
 	m_color = biome.getGrassColor();
 	m_colorNormal = biome.getGrassColor();
 	m_colorDeadly = biome.getGrassColor();
-	m_colorDeadly.a = 255;
 	if (m_onInstance)
 		m_isDeadlyGrass = biome.isDeadlyGrass();
+
 	if (!m_isDeadlyGrass)
 		m_animator.setup(biome.getMushroomLifeTime());
 	else
@@ -71,6 +72,19 @@ void Grass::setup(ABiome& biome)
 
 	m_leftTargets.resize(m_numberOfTargets);
 	m_rightTargets.resize(m_numberOfTargets);
+	setupTargets();
+
+	if (m_isDeadlyGrass && (biome.randomBool(0.1f) || m_onInstance))
+	{
+		m_isShining = true;
+		m_shine.setSize(biome.getShineEffectSize() / 4.f);
+		m_shine.setup(biome);
+		m_shine.setCanPlaySound(false);
+	}
+}
+
+void Grass::setupTargets(void)
+{
 	for (std::size_t i = 0u; i < m_numberOfTargets; i++)
 	{
 		if (!m_reverse)
@@ -83,14 +97,6 @@ void Grass::setup(ABiome& biome)
 			m_leftTargets[i] = sf::Vector2f((-m_size.x / 2.f) - (m_size.x / 2.f + Tile::TileSize / 2.f) * ((i + 1) / m_numberOfTargets), m_size.y);
 			m_rightTargets[i] = sf::Vector2f((m_size.x / 2.f) + (m_size.x / 2.f + Tile::TileSize / 2.f) * ((i + 1) / m_numberOfTargets), m_size.y);
 		}
-	}
-
-	if (m_isDeadlyGrass && (biome.randomBool(0.1f) || m_onInstance))
-	{
-		m_isShining = true;
-		m_shine.setSize(biome.getShineEffectSize() / 4.f);
-		m_shine.setup(biome);
-		m_shine.setCanPlaySound(false);
 	}
 }
 
@@ -150,6 +156,16 @@ void Grass::computeMovement(sf::Time frameTime)
 void Grass::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome & biome)
 {
 	sf::Vector2f const & position = getPosition() + sf::Vector2f(Tile::TileSize / 2.f, 0.f);
+
+	//TODO : Not clean, only for final level
+	if (m_firstFrame && Progress::getInstance().getCurrentDestination() == Level::Final && position.y < 300.f)
+	{
+		m_isDeadlyGrass = false;
+		m_color = sf::Color(250, 240, 250);
+		m_size = sf::Vector2f(biome.getGrassSizeX(), biome.randomFloat(40.f, 150.f));
+		setupTargets();
+		m_firstFrame = false;
+	}
 
 	computeMovement(frameTime);
 	m_animator.update(frameTime * m_animationSpeed);
