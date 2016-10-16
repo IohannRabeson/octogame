@@ -172,7 +172,7 @@ void Rocket::update(sf::Time frametime)
 					else
 					{
 						m_timerSecondBlast = m_timerSecondBlastMax;
-						Progress::getInstance().setNextDestination(Level::Rewards);
+						octo::Application::getStateManager().change("rocket_end");
 					}
 				}
 			}
