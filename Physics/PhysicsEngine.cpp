@@ -207,12 +207,12 @@ bool PhysicsEngine::isUpdated(void) const
 void PhysicsEngine::update(float deltatime)
 {
 	static float accumulator = 0.f;
-	static const float dt = 1.f / 60.f;
+	static const float dt = 1.f / 200.f;
 
 	if (deltatime > 0.2f)
 		deltatime = 0.2f;
 	accumulator += deltatime;
-	m_isUpdated = false;
+//	m_isUpdated = false;
 
 	sf::FloatRect camRect = octo::Application::getCamera().getRectangle();
 	while (accumulator > dt)
