@@ -68,7 +68,7 @@ void	GameScreen::update(sf::Time frameTime)
 		m_game->update(frameTime);
 		changeLevel(states, progress);
 	}
-	timeLevelBlueRed(frameTime, progress);
+	timeLevelBlueRed(frameTime, states, progress);
 }
 
 void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
@@ -99,7 +99,7 @@ void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
 	}
 }
 
-void GameScreen::timeLevelBlueRed(sf::Time frameTime, Progress & progress)
+void GameScreen::timeLevelBlueRed(sf::Time frameTime, octo::StateManager & states, Progress & progress)
 {
 	Level next = progress.getNextDestination();
 
@@ -113,7 +113,7 @@ void GameScreen::timeLevelBlueRed(sf::Time frameTime, Progress & progress)
 	{
 		m_timerRed += frameTime;
 		if (m_timerRed >= m_timerRedBlueMax)
-			progress.setNextDestination(Level::Rewards);
+			states.change("laboratory_end");
 	}
 }
 
