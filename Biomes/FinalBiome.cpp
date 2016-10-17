@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -14,8 +15,8 @@ FinalBiome::FinalBiome() :
 	m_seed("Final"),
 	m_mapSize(sf::Vector2u(1400u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(353.f * 16.f, -50.f),
-	m_transitionDuration(3.0f),
+	m_octoStartPosition(344.f * 16.f, 980.f * 16.f),
+	m_transitionDuration(0.7f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(58, 0, 92),
 	m_tileEndColor(109, 0, 179),
@@ -71,9 +72,9 @@ FinalBiome::FinalBiome() :
 	m_rockPartCount(10.f, 16.f),
 	m_rockColor(sf::Color::Black),
 
-	m_grassSizeY(40.f, 150.f),
+	m_grassSizeY(60.f, 70.f),
 	m_grassSizeX(10.f, 30.f),
-	m_grassColor(250, 240, 250),
+	m_grassColor(109, 0, 179),
 	m_grassCount(m_mapSize.x),
 
 	m_treeDepth(8u, 8u),
@@ -85,16 +86,16 @@ FinalBiome::FinalBiome() :
 	m_leafSize(sf::Vector2f(70.f, 10.f), sf::Vector2f(150.f, 150.f)),
 	m_leafColor(212, 5, 238),
 
-	m_mushroomSize(sf::Vector2f(40.f, 50.f), sf::Vector2f(100.f, 500.f)),
+	m_mushroomSize(sf::Vector2f(40.f, 150.f), sf::Vector2f(100.f, 500.f)),
 	m_mushroomColor(58, 0, 92),
 	m_mushroomLifeTime(sf::seconds(5), sf::seconds(20)),
 
 	m_crystalSize(sf::Vector2f(2.f, 100.f), sf::Vector2f(70.f, 250.f)),
 	m_crystalPartCount(6u, 10u),
 	m_crystalColor(253, 255, 0, 140),
-	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
+	m_shineEffectSize(sf::Vector2f(200.f, 200.f), sf::Vector2f(300.f, 300.f)),
 	m_shineEffectColor(255, 255, 255, 130),
-	m_shineEffectRotateAngle(100.f, 200.f),
+	m_shineEffectRotateAngle(200.f, 300.f),
 
 	m_cloudSize(sf::Vector2f(100.f, 150.f), sf::Vector2f(400.f, 800.f)),
 	m_cloudPartCount(3u, 5u),
@@ -138,7 +139,8 @@ FinalBiome::FinalBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_gameObjects[350] = GameObjectType::PortalWater;
+	m_gameObjects[1250] = GameObjectType::Portal;
+	m_gameObjects[1230] = GameObjectType::CheckPoint;
 	m_instances[800] = MAP_FINAL_PYRAMID_OMP;
 	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
 	m_instances[50] = MAP_FINAL_LEFT_OMP;
@@ -147,16 +149,23 @@ FinalBiome::FinalBiome() :
 	std::vector<GameObjectType> object = {GameObjectType::ForestSpirit1Npc, GameObjectType::ForestSpirit2Npc, GameObjectType::FranGlitchNpc, GameObjectType::JuGlitchNpc, GameObjectType::LuGlitchNpc, GameObjectType::WindowGlitchNpc};
 
 	for (std::size_t i = 0; i < 40; i++)
-	{
 		m_gameObjects[randomInt(300u, 1300u)] = object[randomInt(0u, object.size())];
-	}
 
 	m_interestPointPosX = 500;
 
+	Progress & progress = Progress::getInstance();
+	if (progress.canRepairShip())
+		m_octoStartPosition = sf::Vector2f(866.f * 16.f, -130.f * 16.f);
+
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
+	m_destinations.push_back(Level::Final);
+	m_destinations.push_back(Level::Final);
+	m_destinations.push_back(Level::Final);
+	m_destinations.push_back(Level::Final);
+	m_destinations.push_back(Level::WaterD);
 	m_destinations.push_back(Level::Blue);
 	m_destinations.push_back(Level::Red);
-	m_destinations.push_back(Level::WaterD);
+	m_destinations.push_back(Level::Final);
 }
 
 void			FinalBiome::setup(std::size_t seed)

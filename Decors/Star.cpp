@@ -25,7 +25,7 @@ void Star::setup(ABiome& biome)
 	m_glowSize = m_size / 2.5f;
 	m_glowSizeCorner = m_glowSize / 2.f;
 
-	m_animator.setup(biome.getStarLifeTime());
+	m_animator.setup();
 	m_animator.pause();
 	m_detailPriority = biome.randomInt(-2, 0);
 }
@@ -48,9 +48,8 @@ void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 	if (m_detailPriority <= lod)
 	{
 		sf::Color animationColor(m_color.r, m_color.g, m_color.b, m_color.a * (m_animation > 1.f ? 1.f : m_animation));
-		AShineBuilder::createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, builder);
-		if (lod >= 0)
-			AShineBuilder::createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, builder);
+		//AShineBuilder::createStar(m_size * m_animation, m_sizeHeart * m_animation, position, animationColor, builder);
+		AShineBuilder::createGlow(m_glowSize * m_animation, m_glowSizeCorner * m_animation, position, animationColor, builder);
 	}
 }
 

@@ -99,6 +99,7 @@ public:
 	inline bool isOpening(void) { return m_sprite.getCurrentEvent() == Opening; }
 	inline bool isFirstAppear(void) { return m_sprite.getCurrentEvent() == FirstAppear; }
 	inline Level getDestination(void) const { return m_destination; }
+	inline std::string getKey(void) { return m_key; }
 	virtual bool zoom(void) const;
 
 	virtual void update(sf::Time frameTime);
@@ -114,6 +115,7 @@ protected:
 	sf::Vector2f				m_position;
 	sf::Shader &				m_shader;
 	std::size_t					m_maxParticle;
+	std::string					m_key;
 	State						m_state;
 	float						m_radius;
 	float						m_timerActivate;

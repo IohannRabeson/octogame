@@ -32,6 +32,10 @@ void	LevelRocketEndScreen::start()
 
 	octo::Camera & camera = octo::Application::getCamera();
 	camera.setCenter(camera.getRectangle().width / 2.f, camera.getRectangle().height / 2.f);
+
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resource = octo::Application::getResourceManager();
+	audio.startMusic(resource.getSound(MENU_OPUS_II_REVERSE_OGG), sf::seconds(1.f));
 }
 
 void	LevelRocketEndScreen::pause()

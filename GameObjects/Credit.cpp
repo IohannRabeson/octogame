@@ -2,6 +2,7 @@
 #include "TextManager.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
+#include <sstream>
 
 Credit::Credit(sf::Vector2f const & position) :
 	m_speed(0.f, -150.f),

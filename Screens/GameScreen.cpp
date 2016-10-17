@@ -68,7 +68,7 @@ void	GameScreen::update(sf::Time frameTime)
 		m_game->update(frameTime);
 		changeLevel(states, progress);
 	}
-	timeLevelBlueRed(frameTime, progress);
+	timeLevelBlueRed(frameTime, states, progress);
 }
 
 void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
@@ -99,21 +99,33 @@ void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
 	}
 }
 
-void GameScreen::timeLevelBlueRed(sf::Time frameTime, Progress & progress)
+void GameScreen::timeLevelBlueRed(sf::Time frameTime, octo::StateManager & states, Progress & progress)
 {
 	Level next = progress.getNextDestination();
 
 	if (next == Level::Blue)
 	{
+		//TODO:Not clean, to remove when sounds will be at same volume
+		if (m_timerBlue == sf::Time::Zero)
+		{
+			octo::AudioManager & audio = octo::Application::getAudioManager();
+			audio.setMusicVolume(60.f);
+			audio.setSoundVolume(30.f);
+			progress.setMusicVolume(70.f);
+			progress.setSoundVolume(10.f);
+		}
 		m_timerBlue += frameTime;
 		if (m_timerBlue >= m_timerRedBlueMax)
-			progress.setNextDestination(Level::Rewards);
+			progress.setNextDestination(Level::IceA);
 	}
 	else if (next == Level::Red)
 	{
 		m_timerRed += frameTime;
 		if (m_timerRed >= m_timerRedBlueMax)
-			progress.setNextDestination(Level::Rewards);
+		{
+			states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(2.0f));
+			states.change("laboratory_end", "red");
+		}
 	}
 }
 

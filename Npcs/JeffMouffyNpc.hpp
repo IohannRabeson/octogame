@@ -20,6 +20,7 @@ private:
 	bool			m_startTimer;
 	bool			m_animationEnd;
 	sf::Vector2f	m_startPosition;
+	bool			m_isMet;
 };
 
 #endif

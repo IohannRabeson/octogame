@@ -63,7 +63,7 @@ void MainMenu::createMenus(void)
 		addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
 		addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
 		addMenu(AMenu::getText("menu_new"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-		if (!progress.isGameFinished())
+		if (!progress.canRepairShip())
 			addMenu(AMenu::getText("menu_play"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 		else
 			addMenu(AMenu::getText("menu_play"), std::unique_ptr<PlayEndMenu>(new PlayEndMenu()));

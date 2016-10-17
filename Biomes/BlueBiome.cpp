@@ -135,7 +135,7 @@ BlueBiome::BlueBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[20] = GameObjectType::DeepoNpc;
+	m_gameObjects[100] = GameObjectType::DeepoNpc;
 
 	m_interestPointPosX = 420;
 

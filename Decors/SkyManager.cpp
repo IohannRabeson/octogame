@@ -20,7 +20,7 @@ SkyManager::SkyManager(void) :
 	m_moonCount(0u),
 	m_starCount(0u),
 	m_cloudCount(0u),
-	m_parallaxSpeedY(0.7f)
+	m_parallaxSpeedY(0.9f)
 {
 }
 

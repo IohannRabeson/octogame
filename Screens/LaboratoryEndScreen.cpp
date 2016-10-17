@@ -23,8 +23,8 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_changeColorAqua(sf::seconds(2.f)),
 	m_appearTimerPostEffect(sf::seconds(1.f)),
 	m_startPostEffectDuration(sf::seconds(5.f)),
-	m_disappearTimerPostEffect(sf::seconds(1.f)),
-	m_endPostEffectDuration(sf::seconds(5.f)),
+	m_disappearTimerPostEffect(sf::seconds(5.f)),
+	m_endPostEffectDuration(sf::seconds(20.f)),
 	m_textIndex(0u),
 	m_lastTextIndex(0u),
 	m_stopDialog(false),
@@ -83,6 +83,10 @@ void	LaboratoryEndScreen::start()
 	Tree * tree = new Tree(true);
 	tree->setPosition(sf::Vector2f(1275.f, 662.f));
 	m_decorManager.add(tree);
+
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resource = octo::Application::getResourceManager();
+	audio.startMusic(resource.getSound(MENU_OPUS_II_REVERSE_OGG), sf::seconds(1.f));
 }
 
 void	LaboratoryEndScreen::pause()
@@ -237,6 +241,14 @@ bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Menu:
 			m_stopDialog = true;
 			break;
+		case OctoKeys::Left:
+		case OctoKeys::Right:
+		case OctoKeys::SlowFall:
+		case OctoKeys::Down:
+		case OctoKeys::Zoom:
+		case OctoKeys::Use:
+			m_timeBeforeNextText = sf::seconds(0.1f);
+			break;
 		default:
 			break;
 	}
@@ -247,6 +259,13 @@ bool	LaboratoryEndScreen::onInputReleased(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
+		case OctoKeys::Left:
+		case OctoKeys::Right:
+		case OctoKeys::SlowFall:
+		case OctoKeys::Down:
+		case OctoKeys::Zoom:
+		case OctoKeys::Use:
+			m_timeBeforeNextText = sf::seconds(2.f);
 		default:
 			break;
 	}

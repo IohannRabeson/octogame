@@ -15,7 +15,7 @@ IceABiome::IceABiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(136.f * 16.f, 60.f),
+	m_octoStartPosition(128.f * 16.f, -40.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -143,7 +143,10 @@ IceABiome::IceABiome() :
 	if (!progress.canRepairShip())
 		m_instances[120] = MAP_ICE_A_CRATER_OMP;
 	else
+	{
+		m_gameObjects[166] = GameObjectType::Rocket;
 		m_instances[120] = MAP_ICE_A_CRATER_FINAL_OMP;
+	}
 	m_instances[220] = MAP_ICE_A_TRAIL_RIGHT_OMP;
 
 	if (progress.getLastDestination() == Level::Blue)
@@ -271,7 +274,7 @@ Map::MapSurfaceGenerator IceABiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f    , 20.f, 70.f, 95.f, 120.f, 125.f, 165.f, 170.f, 195.f, 220.f, 270.f, 290.f, 350.f, 369.f, 377.f, 396.f, 450.f, 469.f, 477.f, 496.f, 590.f, 610.f  };
+		std::vector<float> pointX = {0.f    , 20.f, 70.f, 95.f, 120.f, 125.f, 165.f, 166.f, 195.f, 220.f, 270.f, 290.f, 350.f, 369.f, 377.f, 396.f, 450.f, 469.f, 477.f, 496.f, 590.f, 610.f  };
 		std::vector<float> pointY = {n / 5.f, 0.f , 0.f , n   , 0.f  , 2.4f , 2.4f , 0.f  , n    , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n    , n    , n / 5.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;

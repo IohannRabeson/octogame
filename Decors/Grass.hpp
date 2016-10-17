@@ -40,9 +40,10 @@ private:
 	sf::Vector2f				m_lastOctoPosition;
 	bool						m_onInstance;
 	bool						m_isShining;
+	bool						m_firstFrame;
 
+	void setupTargets(void);
 	void computeMovement(sf::Time frameTime);
-
 	void createGrass(sf::Vector2f const & size,
 					sf::Vector2f const & origin,
 					sf::Color const & color,

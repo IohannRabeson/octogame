@@ -29,6 +29,10 @@ private:
 	bool						m_collideEvent;
 	sf::Vector2f				m_positionOcto;
 	sf::Vector2f				m_lastPositionOcto;
+	float						m_dispersion;
+	bool						m_isOctoLeft;
+	bool						m_isOctoDoubleJump;
+	bool						m_isMovementSmoke;
 };
 
 #endif

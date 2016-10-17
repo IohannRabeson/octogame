@@ -1068,7 +1068,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 
 bool	CharacterOcto::isZooming(void) const
 {
-	return (m_keyZoomIn || isCollidingPortal());
+	return (m_keyZoomIn);// || isCollidingPortal());
 }
 
 bool	CharacterOcto::isInRocketEnd(void) const
@@ -1169,8 +1169,14 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 				m_collidingTile.push_back(tileshape->getVertex(1u));
 				m_highestPosition.x += collisionDirection.x;
 			}
-			if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
+			//if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
+			//TODO  : Keep an eye on octo behavior when touching the ground
+			if (collisionDirection.y < 0.f)
 				m_collisionTile = true;
+			if (collisionDirection.y > 0.f)
+				m_collisionTileHead = true;
+			else
+				m_collisionTileHead = false;
 			break;
 		case GameObjectType::Elevator:
 			m_collisionElevator = true;
@@ -1216,17 +1222,20 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
 	if (m_progress.canRepair() && m_keyAction)
 	{
-		if (!elevator.isActivated())
-		{
-			elevator.activate();
-			m_repairNanoRobot->setState(NanoRobot::State::Repair);
-			sf::Vector2f target = elevator.getPosition();
-			target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
-			target.y -= 50.f;
-			m_repairNanoRobot->setTarget(target);
-		}
-		else
-			m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
+			if (!elevator.isActivated())
+			{
+				elevator.activate();
+				m_repairNanoRobot->setState(NanoRobot::State::Repair);
+				sf::Vector2f target = elevator.getPosition();
+				target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
+				target.y -= 50.f;
+				m_repairNanoRobot->setTarget(target);
+			}
+			else
+			{
+				elevator.setSmokeVelocity((m_repairNanoRobot->getPosition() - elevator.getPosition()) * 0.8f);
+				m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
+			}
 	}
 	else if (m_progress.canRepair())
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
@@ -1267,11 +1276,27 @@ void	CharacterOcto::usePortal(Portal & portal)
 	m_collisionPortal = true;
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
-		m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
-		m_progress.setReverseSprite(m_originMove);
-		m_progress.setNextDestination(portal.getDestination());
-		if (!m_progress.isMenu())
-			m_progress.setRespawnType(Progress::RespawnType::Portal);
+		if (portal.getDestination() == m_progress.getCurrentDestination())
+		{
+			if (portal.getKey() == OBJECT_PORTAL_SNOW_OSS)
+				m_box->setPosition(sf::Vector2f(20430.f, 3255.f));
+			else if (portal.getKey() == OBJECT_PORTAL_DESERT_OSS)
+				m_box->setPosition(sf::Vector2f(20480.f, 2570.f));
+			else if (portal.getKey() == OBJECT_PORTAL_JUNGLE_OSS)
+				m_box->setPosition(sf::Vector2f(20245.f, 1190.f));
+			else if (portal.getKey() == OBJECT_PORTAL_BEACH_OSS)
+				m_box->setPosition(sf::Vector2f(19936.f, 35.f));
+			m_numberOfJump = 0u;
+			m_timeSlowFall = sf::Time::Zero;
+		}
+		else
+		{
+			m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
+			m_progress.setReverseSprite(m_originMove);
+			m_progress.setNextDestination(portal.getDestination());
+			if (!m_progress.isMenu())
+				m_progress.setRespawnType(Progress::RespawnType::Portal);
+		}
 	}
 }
 
@@ -1390,8 +1415,6 @@ void	CharacterOcto::onSky(Events event)
 			break;
 		case StartElevator:
 		case Elevator:
-			if (!m_collisionElevator)
-				m_sprite.setNextEvent(Fall);
 			break;
 		default:
 			if (m_sprite.getCurrentEvent() != DieFall)
@@ -1410,7 +1433,8 @@ void	CharacterOcto::collisionElevatorUpdate()
 		m_timeEventFall = sf::Time::Zero;
 		m_timeSlowFall = sf::Time::Zero;
 		m_onElevator = true;
-		m_numberOfJump = 1;
+		if (!m_onGround && m_sprite.getCurrentEvent() != DoubleJump && m_sprite.getCurrentEvent() != StartJump)
+			m_numberOfJump = 1;
 		if (m_sprite.getCurrentEvent() == StartElevator)
 		{
 			if (!m_useElevator)
@@ -1442,11 +1466,10 @@ void	CharacterOcto::collisionElevatorUpdate()
 		m_onTopElevator = false;
 		if (m_useElevator)
 		{
-			m_useElevator = false;
-			m_numberOfJump = 0;
-			m_box->setApplyGravity(true);
-			if (m_keyElevator)
+			if (m_sprite.getCurrentEvent() != DoubleJump && m_sprite.getCurrentEvent() != StartJump)
 				m_sprite.setNextEvent(Fall);
+			m_useElevator = false;
+			m_box->setApplyGravity(true);
 		}
 	}
 }
@@ -1742,7 +1765,7 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 				m_jumpVelocity -= m_pixelSecondMultiplier * frametime * 2.3f;
 		}
 	}
-	if (!m_onTopElevator && m_keyElevator)
+	if (!m_onTopElevator && m_keyElevator && !m_collisionTileHead)
 	{
 		if (event == StartElevator)
 			velocity.y = (1.2f * m_pixelSecondSlowFall);
@@ -1930,6 +1953,11 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 	return (true);
 }
 
+bool	CharacterOcto::isMovingLeft(void)
+{
+	return m_originMove;
+}
+
 bool	CharacterOcto::isFalling(void)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
@@ -1947,7 +1975,10 @@ bool	CharacterOcto::isFalling(void)
 bool	CharacterOcto::isRaising(void)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
-	return state == WaterJump;
+
+	if (state == WaterJump || state == Elevator || state == PortalEvent)
+		return true;
+	return false;
 }
 
 bool	CharacterOcto::isInAir(void) const

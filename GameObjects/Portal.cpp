@@ -15,6 +15,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	m_position(40.f, 0.f),
 	m_shader(PostEffectLayer::getInstance().getShader(m_shaderName)),
 	m_maxParticle(40u),
+	m_key(key),
 	m_state(State::Disappear),
 	m_radius(100.f),
 	m_timerActivate(0.f),
@@ -185,6 +186,15 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	//TODO : To change to the good sound
 	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.f, m_generator.randomFloat(0.9f, 1.1f), sf::Vector3f(m_box->getBaryCenter().x, m_box->getBaryCenter().y, 0.f) , 500.f, 40.f);
 	m_sound->setLoop(true);
+
+	//TODO : not clean, only for last level
+	if (destination == progress.getCurrentDestination())
+	{
+		if (m_key == OBJECT_PORTAL_OSS)
+			m_sprite.setNextEvent(Closed);
+		else
+			m_sprite.setNextEvent(Opened);
+	}
 }
 
 Portal::~Portal(void)
@@ -304,7 +314,7 @@ bool Portal::zoom(void) const
 
 void Portal::appear(void)
 {
-	if (m_state == Activated || isLock() || (Progress::getInstance().isMetPortal(m_destination) && m_destination == Level::Random))
+	if (m_state == Activated || isLock())
 		return;
 	if (m_sprite.getCurrentEvent() == Events::Closed)
 		m_state = State::FirstAppear;
@@ -326,6 +336,11 @@ void Portal::updateSound(void)
 
 bool Portal::isLock(void)
 {
+	Progress & progress = Progress::getInstance();
+	if (progress.isMetPortal(m_destination) && m_destination == Level::Random)
+		return true;
+	if (progress.getCurrentDestination() == m_destination && m_key == OBJECT_PORTAL_OSS)
+		return true;
 //	if (m_destination == Level::WaterA && Progress::getInstance().getNanoRobotCount() < 4)
 //		return true;
 	return false;
