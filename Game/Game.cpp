@@ -571,10 +571,10 @@ void Game::moveMap(sf::Time frameTime)
 	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && m_groundSoundTime > sf::Time::Zero)
 		m_groundSoundTime -= frameTime;
 
-	if ((m_keyGroundRight || m_keyGroundLeft || progress.forceMapToMove()) && progress.canMoveMap())
+	if ((m_keyGroundRight || m_keyGroundLeft/* || progress.forceMapToMove()*/) && progress.canMoveMap())
 	{
-		if (progress.forceMapToMove())
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
+		//if (progress.forceMapToMove())
+		//	m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
 		if (m_keyGroundLeft == true && progress.canOctoMoveMap())
 			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
 		else if (m_keyGroundRight == true && progress.canOctoMoveMap())

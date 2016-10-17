@@ -85,7 +85,7 @@ MusicManager::MusicManager() :
 			sf::FloatRect(sf::Vector2f(0.f * 16.f, 400.f), sf::Vector2f(750.f * 16.f, 600.f * 16.f)));
 
 	m_music[7] = AreaMusic(Level::Final, BLISSFUL_OGG,
-			sf::FloatRect(sf::Vector2f(650.f * 16.f, -400.f * 16.f), sf::Vector2f(400.f * 16.f, 2000.f * 16.f)));
+			sf::FloatRect(sf::Vector2f(650.f * 16.f, -400.f * 16.f), sf::Vector2f(400.f * 16.f, 420.f * 16.f)));
 }
 
 MusicManager::~MusicManager()

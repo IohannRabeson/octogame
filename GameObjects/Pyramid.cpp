@@ -23,7 +23,7 @@ Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position, ABio
 	m_box->setGameObject(this);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Pyramid));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
-	m_box->setRadius(500.f);
+	m_box->setRadius(2100.f);
 	m_box->setApplyGravity(false);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setPosition(getSprite().getPosition() + getSprite().getGlobalSize() / 2.f - sf::Vector2f(m_box->getRadius(), m_box->getRadius()));

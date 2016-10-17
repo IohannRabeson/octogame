@@ -3,6 +3,7 @@
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
 #include "AGameObject.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 
 #include <limits>
@@ -148,11 +149,13 @@ FinalBiome::FinalBiome() :
 	std::vector<GameObjectType> object = {GameObjectType::ForestSpirit1Npc, GameObjectType::ForestSpirit2Npc, GameObjectType::FranGlitchNpc, GameObjectType::JuGlitchNpc, GameObjectType::LuGlitchNpc, GameObjectType::WindowGlitchNpc};
 
 	for (std::size_t i = 0; i < 40; i++)
-	{
 		m_gameObjects[randomInt(300u, 1300u)] = object[randomInt(0u, object.size())];
-	}
 
 	m_interestPointPosX = 500;
+
+	Progress & progress = Progress::getInstance();
+	if (progress.canRepairShip())
+		m_octoStartPosition = sf::Vector2f(866.f * 16.f, -130.f * 16.f);
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Final);

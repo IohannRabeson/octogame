@@ -1220,10 +1220,8 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
-	if (m_progress.canRepair())
+	if (m_progress.canRepair() && m_keyAction)
 	{
-		if (m_keyAction)
-		{
 			if (!elevator.isActivated())
 			{
 				elevator.activate();
@@ -1234,12 +1232,10 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 				m_repairNanoRobot->setTarget(target);
 			}
 			else
+			{
+				elevator.setSmokeVelocity((m_repairNanoRobot->getPosition() - elevator.getPosition()) * 0.8f);
 				m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
-		}
-		else
-		{
-			elevator.setSmokeVelocity((m_repairNanoRobot->getPosition() - elevator.getPosition()) * 0.8f);
-		}
+			}
 	}
 	else if (m_progress.canRepair())
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
