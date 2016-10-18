@@ -57,7 +57,6 @@ void	LevelZeroScreen::start()
 		progress.setNextDestination(Level::IceA, false);
 		progress.setGameFinished(true);
 		m_state = Rising;
-
 	}
 
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
@@ -91,7 +90,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 	m_timerEnd += frameTime;
 	m_timerStartRedAlarm += frameTime;
 
-	if (m_timerStartRedAlarm > m_timerStartRedAlarmMax && m_state == Falling)
+	if (m_timerStartRedAlarm > m_timerStartRedAlarmMax && m_state == Flying)
 	{
 		if (m_blinkShaderState)
 		{
@@ -121,10 +120,13 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		m_timer -= m_timerMax;
 
 	sf::Vector2f translation(0.f, 0.f);
-	if (m_keyUp)
-		translation.y = -300.f * frameTime.asSeconds();
-	else if (m_keyDown)
-		translation.y = 300.f * frameTime.asSeconds();
+	if (m_state == Flying)
+	{
+		if (m_keyUp)
+			translation.y = -300.f * frameTime.asSeconds();
+		else if (m_keyDown)
+			translation.y = 300.f * frameTime.asSeconds();
+	}
 
 	switch (m_state)
 	{
@@ -226,7 +228,8 @@ void	LevelZeroScreen::draw(sf::RenderTarget & render) const
 	for (std::size_t i = 0; i < m_starsCount; i++)
 		m_stars[i].draw(render);
 	m_spaceShip.drawFront(render, states);
-	m_credit->draw(render, states);
+	if (m_state == CreditEnd)
+		m_credit->draw(render, states);
 }
 
 bool	LevelZeroScreen::onInputPressed(InputListener::OctoKeys const & key)
