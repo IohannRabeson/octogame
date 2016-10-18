@@ -35,15 +35,15 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 {
 	octo::Camera & camera = octo::Application::getCamera();
 
-	if (octo.isCenteredCamera())
-		m_behavior = Behavior::OctoCentered;
-	else if (octo.isInRocketEnd())
+	if (octo.isInRocketEnd())
 		m_behavior = Behavior::FollowOcto;
 	else if (octo.isRaising())
 		m_behavior = Behavior::OctoRaising;
 	else if (m_behavior != ControlledByPlayer)
 	{
-		if (octo.isFalling())
+		if (octo.isCenteredCamera())
+			m_behavior = Behavior::OctoCentered;
+		else if (octo.isFalling())
 			m_behavior = Behavior::OctoFalling;
 		else
 			m_behavior = Behavior::FollowOcto;
@@ -95,7 +95,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		}
 		case Behavior::OctoRaising:
 		{
-			m_speed = 4.f;
+			m_speed = 5.f;
 			m_verticalTransition -= frametime.asSeconds();
 			if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
