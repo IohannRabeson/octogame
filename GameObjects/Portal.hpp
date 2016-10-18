@@ -35,7 +35,8 @@ public:
 		FirstAppear,
 		Appear,
 		Activated,
-		Disappear
+		Disappear,
+		AlwaysOpen
 	};
 	enum Events
 	{

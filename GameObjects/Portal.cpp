@@ -54,6 +54,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 
 	if ((destination == Level::Rewards && progress.isMenu()) || destination == Level::Random)
 	{
+		m_state = Disappear;
 		m_animationClosed.setFrames({
 			Frame(sf::seconds(0.4f), {12u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {13u, sf::FloatRect(), sf::Vector2f()}),
@@ -90,6 +91,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	}
 	else if (destination == Level::Red || destination == Level::Blue)
 	{
+		m_state = AlwaysOpen;
 		m_animationClosed.setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
@@ -122,6 +124,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	}
 	else
 	{
+		m_state = Disappear;
 		m_animationClosed.setFrames({
 			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
@@ -180,8 +183,6 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 		m_sprite.setNextEvent(Closed);
 	else
 		m_sprite.setNextEvent(Opened);
-
-	m_state = Disappear;
 
 	//TODO : To change to the good sound
 	m_sound = audio.playSound(resources.getSound(PORTAL_START_OGG), 0.f, m_generator.randomFloat(0.9f, 1.1f), sf::Vector3f(m_box->getBaryCenter().x, m_box->getBaryCenter().y, 0.f) , 500.f, 40.f);
@@ -264,6 +265,10 @@ void Portal::update(sf::Time frametime)
 				m_particles.clear();
 			}
 			break;
+		case AlwaysOpen:
+			m_particles.setMaxParticle(m_maxParticle);
+			m_timerActivate = m_timerActivateMax;
+			break;
 		default:
 			break;
 	}
@@ -284,7 +289,8 @@ void Portal::update(sf::Time frametime)
 
 	updateSound();
 	m_sprite.update(frametime);
-	m_state = Disappear;
+	if (m_state != AlwaysOpen)
+		m_state = Disappear;
 }
 
 void Portal::setPosition(sf::Vector2f const & position)
@@ -314,7 +320,7 @@ bool Portal::zoom(void) const
 
 void Portal::appear(void)
 {
-	if (m_state == Activated || isLock())
+	if (m_state == Activated || isLock() || m_state == AlwaysOpen)
 		return;
 	if (m_sprite.getCurrentEvent() == Events::Closed)
 		m_state = State::FirstAppear;
