@@ -77,6 +77,16 @@ void RocketEnd::setPosition(sf::Vector2f const & position)
 	m_smokes[2].setPosition(position + sf::Vector2f(185.f, 970.f));
 }
 
+void RocketEnd::setOriginPosition(sf::Vector2f const & position)
+{
+	m_position = position;
+}
+
+sf::Vector2f const & RocketEnd::getPosition(void) const
+{
+	return m_position;
+}
+
 void RocketEnd::update(sf::Time frameTime)
 {
 	m_offset += sf::Vector2f(frameTime.asSeconds() * 2.f, frameTime.asSeconds() * 3.f);
