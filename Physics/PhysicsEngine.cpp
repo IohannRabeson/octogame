@@ -478,25 +478,42 @@ void PhysicsEngine::narrowPhase(void)
 	}
 }
 
+#include <iostream>
 template<class T, class U>
 void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 {
-	for (std::size_t i = 0u; i < pairs.size(); i++)
+	for (auto & pair : pairs)
 	{
-		if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
+		// The shape A is the tile, the shapeB is the other one
+		sf::Vector2f vel = pair.m_shapeB->getEngineVelocity() / static_cast<float>(m_iterationCount);
+		pair.m_shapeB->setEngineVelocity(0.f, 0.f);
+		for (std::size_t j = 0u; j < m_iterationCount; j++)
 		{
-			if ((pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_static)
-				&& (pairs[i].m_shapeB->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeB->getType() == AShape::Type::e_static))
+			pair.m_shapeB->addEngineVelocity(vel);
+			if (computeCollision(pair.m_shapeA, pair.m_shapeB))
 			{
-				if (pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_kinematic)
+				if (!pair.m_shapeB->isType(AShape::Type::e_trigger))
 				{
-					m_mtv /= 2.f;
-					pairs[i].m_collisionDirection = m_mtv;
-					pairs[i].m_shapeA->addEngineVelocity(m_mtv.x, m_mtv.y);
-					pairs[i].m_shapeB->addEngineVelocity(-m_mtv.x, -m_mtv.y);
+					if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
+					{
+						pair.m_collisionDirection.x -= m_mtv.x;
+						pair.m_shapeB->addEngineVelocity(-m_mtv.x, 0.f);
+					}
+					else if (std::fabs(m_mtv.x) > std::numeric_limits<float>::epsilon())
+					{
+						float y = -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
+						pair.m_collisionDirection.y += y;
+						pair.m_shapeB->addEngineVelocity(0.f, y);
+					}
+					else
+					{
+						pair.m_collisionDirection.y -= m_mtv.y;
+						pair.m_shapeB->addEngineVelocity(0.f, -m_mtv.y);
+					}
+					pair.m_shapeB->update();
 				}
+				pair.m_isColliding = true;
 			}
-			pairs[i].m_isColliding = true;
 		}
 	}
 }
