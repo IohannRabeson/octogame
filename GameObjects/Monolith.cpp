@@ -157,6 +157,11 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 	Progress::getInstance().setCanOctoMoveMap(false);
 }
 
+Monolith::~Monolith(void)
+{
+	Progress::getInstance().setCanOctoMoveMap(true);
+}
+
 void Monolith::addMapOffset(float x, float y)
 {
 	InstanceDecor::addMapOffset(x, y);

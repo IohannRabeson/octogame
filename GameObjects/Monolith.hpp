@@ -17,7 +17,7 @@ class Monolith : public InstanceDecor, public AGameObject<GameObjectType::Monoli
 {
 public:
 	Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome);
-	virtual ~Monolith(void) = default;
+	virtual ~Monolith(void);
 
 	virtual void addMapOffset(float x, float y);
 	virtual void setPosition(sf::Vector2f const & position);
