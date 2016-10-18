@@ -95,6 +95,7 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			setTextIndex(3u);
 			if (m_textTimer > m_textTimerMax)
 			{
+				Progress::getInstance().setFirstTimeInIceA(false);
 				m_talkaboutshit = false;
 				m_state = None;
 			}
