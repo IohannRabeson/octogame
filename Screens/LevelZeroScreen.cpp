@@ -22,7 +22,8 @@ LevelZeroScreen::LevelZeroScreen(void) :
 	m_keyDown(false),
 	m_isSoundPlayed(false),
 	m_isSoundExplodePlayed(false),
-	m_blinkShaderState(false)
+	m_blinkShaderState(false),
+	m_credit(new Credit(sf::Vector2f(1500.f, octo::Application::getCamera().getRectangle().height - 500.f)))
 {
 	m_generator.setSeed("random");
 }
@@ -90,7 +91,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 	m_timerEnd += frameTime;
 	m_timerStartRedAlarm += frameTime;
 
-	if (m_timerStartRedAlarm > m_timerStartRedAlarmMax)
+	if (m_timerStartRedAlarm > m_timerStartRedAlarmMax && m_state == Falling)
 	{
 		if (m_blinkShaderState)
 		{
@@ -184,8 +185,15 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			if (m_timerEnd >= m_timerEndMax)
 			{
 				m_timerEnd = sf::Time::Zero;
-				m_state = Flying;
+				m_state = CreditEnd;
 			}
+			break;
+		}
+		case CreditEnd:
+		{
+			m_credit->update(frameTime);
+			if (m_credit->isFinished())
+				octo::Application::getStateManager().change("menu");
 			break;
 		}
 		default:
@@ -218,6 +226,7 @@ void	LevelZeroScreen::draw(sf::RenderTarget & render) const
 	for (std::size_t i = 0; i < m_starsCount; i++)
 		m_stars[i].draw(render);
 	m_spaceShip.drawFront(render, states);
+	m_credit->draw(render, states);
 }
 
 bool	LevelZeroScreen::onInputPressed(InputListener::OctoKeys const & key)
