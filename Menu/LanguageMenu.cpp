@@ -25,7 +25,15 @@ void LanguageMenu::onSelection(void)
 	progress.setLanguage(static_cast<Progress::Language>(getIndexCursor()));
 	TextManager::getInstance().loadTexts();
 	if (progress.changeLevel() == false)
-		progress.setNextDestination(progress.getCurrentDestination());
+	{
+		if (progress.isFirstTimeInIceA() && progress.getCurrentDestination() == Level::IceA)
+		{
+			progress.setNanoRobotCount(0u);
+			octo::Application::getStateManager().change("transitionLevelZero");
+		}
+		else
+			octo::Application::getStateManager().change("game");
+	}
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();

@@ -48,6 +48,7 @@ public:
 	float					getTopY(void) const;
 	sf::Vector2f const &	getPosition(void) const;
 	float					getRepairAdvancement(void) const;
+	sf::Vector2f			getRepairPosition(void) const;
 	bool					isActivated(void) const;
 
 	void					activate(void);

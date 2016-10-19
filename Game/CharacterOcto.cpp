@@ -1226,10 +1226,7 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 			{
 				elevator.activate();
 				m_repairNanoRobot->setState(NanoRobot::State::Repair);
-				sf::Vector2f target = elevator.getPosition();
-				target.x -= elevator.getWidth() / 2.f - octo::linearInterpolation(0.f, elevator.getWidth(), elevator.getRepairAdvancement());
-				target.y -= 50.f;
-				m_repairNanoRobot->setTarget(target);
+				m_repairNanoRobot->setTarget(elevator.getRepairPosition());
 			}
 			else
 			{

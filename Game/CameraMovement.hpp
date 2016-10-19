@@ -59,6 +59,7 @@ private:
 	float			m_horizontalTransition;
 	float			m_horizontalAxis;
 	float			m_verticalAxis;
+	bool			m_blockAxisY;
 	sf::CircleShape	m_circle;
 
 };

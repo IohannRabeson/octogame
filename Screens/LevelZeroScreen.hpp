@@ -10,6 +10,7 @@
 # include "HSL.hpp"
 # include "RandomGenerator.hpp"
 # include "InputListener.hpp"
+# include "Credit.hpp"
 
 class LevelZeroScreen : public octo::AbstractState,
 						public InputListener
@@ -31,7 +32,8 @@ private:
 	{
 		Rising,
 		Flying,
-		Falling
+		Falling,
+		CreditEnd
 	};
 	SpaceShip						m_spaceShip;
 	RandomGenerator					m_generator;
@@ -55,6 +57,7 @@ private:
 	bool							m_isSoundExplodePlayed;
 	bool							m_blinkShaderState;
 	std::shared_ptr<sf::Sound>		m_ground;
+	std::unique_ptr<Credit>			m_credit;
 
 	void createBackground(sf::Vector2f const & position, sf::Color const & downColor);
 };

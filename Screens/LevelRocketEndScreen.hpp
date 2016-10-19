@@ -31,6 +31,8 @@ private:
 	std::unique_ptr<StarSystem[]>	m_stars;
 	std::unique_ptr<RocketEnd>		m_rocket;
 	std::unique_ptr<Credit>			m_credit;
+	sf::Time						m_timer;
+	sf::Time						m_timerMax;
 
 };
 

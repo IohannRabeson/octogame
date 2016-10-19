@@ -46,7 +46,7 @@ void ASpecialNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
-	if (m_canDoSpecial && sprite.getCurrentEvent() == Idle && (getCollideEventOcto() || m_randomSpecial <= sf::Time::Zero))
+	if (sprite.getCurrentEvent() == Idle && ((m_canDoSpecial && getCollideEventOcto()) || m_randomSpecial <= sf::Time::Zero))
 	{
 		m_canDoSpecial = false;
 		m_randomSpecial = sf::seconds(m_generator.randomFloat(5.f, 40.f));

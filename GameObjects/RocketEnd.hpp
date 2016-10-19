@@ -12,6 +12,8 @@ public:
 	virtual ~RocketEnd(void) = default;
 
 	virtual void setPosition(sf::Vector2f const & position);
+	virtual void setOriginPosition(sf::Vector2f const & position);
+	virtual sf::Vector2f const & getPosition(void) const;
 	virtual void update(sf::Time frametime);
 	virtual void drawFront(sf::RenderTarget & render, sf::RenderStates states) const;
 

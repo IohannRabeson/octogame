@@ -71,6 +71,9 @@ public:
 	bool				isFirstTime(void) const { return m_data.firstTime; }
 	void				setFirstTime(bool firstTime) { m_data.firstTime = firstTime; }
 
+	bool				isFirstTimeInIceA(void) const { return m_data.firstTimeInIceA; }
+	void				setFirstTimeInIceA(bool firstTime) { m_data.firstTimeInIceA = firstTime; }
+
 	void				setCanOpenDoubleJump(bool canOpen) { m_data.canOpenDoubleJump = canOpen; }
 	bool				canOpenDoubleJump(void) const { return m_data.canOpenDoubleJump; }
 
@@ -184,6 +187,7 @@ private:
 			language(language),
 			menuType(MenuType::Classic),
 			firstTime(true),
+			firstTimeInIceA(true),
 			walk(false),
 			moveMap(false),
 			canOpenDoubleJump(false),
@@ -209,6 +213,7 @@ private:
 		Language				language;
 		MenuType				menuType;
 		bool					firstTime;
+		bool					firstTimeInIceA;
 		bool					walk;
 		bool					moveMap;
 		bool					canOpenDoubleJump;

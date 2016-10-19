@@ -12,6 +12,8 @@ OctoDeathNpc::OctoDeathNpc(float waterLevel, sf::Color waterColor) :
 	setScale(0.6f);
 	setTimerMax(sf::seconds(8.0f));
 	setup();
+	setupBox(this, static_cast<std::size_t>(GameObjectType::OctoDeathNpc), static_cast<std::size_t>(GameObjectType::OctoDeathNpc));
+	getBox()->setType(AShape::Type::e_kinematic);
 }
 
 void OctoDeathNpc::setup(void)
