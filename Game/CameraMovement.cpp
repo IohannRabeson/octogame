@@ -19,7 +19,8 @@ CameraMovement::CameraMovement(void) :
 	m_verticalTransition(0.f),
 	m_horizontalTransition(0.f),
 	m_horizontalAxis(0.f),
-	m_verticalAxis(0.f)
+	m_verticalAxis(0.f),
+	m_blockAxisY(false)
 {
 	m_circle.setRadius(10.f);
 	InputListener::addInputListener();
@@ -38,7 +39,12 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	if (octo.isInRocketEnd())
 		m_behavior = Behavior::FollowOcto;
 	else if (octo.isRaising())
-		m_behavior = Behavior::OctoRaising;
+	{
+		if (m_behavior == ControlledByPlayer)
+			m_blockAxisY = true;
+		else
+			m_behavior = Behavior::OctoRaising;
+	}
 	else if (m_behavior != ControlledByPlayer)
 	{
 		if (octo.isCenteredCamera())
@@ -129,12 +135,22 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		case Behavior::ControlledByPlayer:
 		{
 			m_speed = 3.f;
-			m_verticalTransition += m_verticalAxis * frametime.asSeconds();
+			if (m_blockAxisY) // If octo is raising, we don't move the Y axis
+			{
+				m_verticalTransition -= frametime.asSeconds();
+				if (m_verticalTransition < 0.f)
+					m_verticalTransition = 0.f;
+			}
+			else
+			{
+				m_verticalTransition += m_verticalAxis * frametime.asSeconds();
+				if (m_verticalTransition > 1.f)
+					m_verticalTransition = 1.f;
+				else if (m_verticalTransition < 0.f)
+					m_verticalTransition = 0.f;
+			}
+
 			m_horizontalTransition += m_horizontalAxis * frametime.asSeconds();
-			if (m_verticalTransition > 1.f)
-				m_verticalTransition = 1.f;
-			else if (m_verticalTransition < 0.f)
-				m_verticalTransition = 0.f;
 			if (m_horizontalTransition > 1.f)
 				m_horizontalTransition = 1.f;
 			else if (m_horizontalTransition < -1.f)
@@ -209,6 +225,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	camera.setCenter(octo::linearInterpolation(camera.getCenter(), goal, m_speed * frametime.asSeconds()) + offset);
 
 	m_circle.setPosition(goal);
+	m_blockAxisY = false;
 }
 
 void CameraMovement::shake(float duration, float intensity, float waveDuration)
