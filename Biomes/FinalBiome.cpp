@@ -142,6 +142,7 @@ FinalBiome::FinalBiome() :
 	m_gameObjects[1250] = GameObjectType::Portal;
 	m_gameObjects[1230] = GameObjectType::CheckPoint;
 	m_instances[800] = MAP_FINAL_PYRAMID_OMP;
+	m_instances[295] = MAP_FINAL_EMPTY_OMP;
 	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
 	m_instances[50] = MAP_FINAL_LEFT_OMP;
 	m_instances[1300] = MAP_FINAL_RIGHT_OMP;

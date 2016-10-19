@@ -618,7 +618,7 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			break;
 		}
 		case OctoKeys::Infos:
-			std::cout << "OctoPos(" << m_octo->getPosition().x << ", " << m_octo->getPosition().y << ")" << std::endl;
+			std::cout << "OctoPos(" << m_octo->getPosition().x / 16.f << "u, " << m_octo->getPosition().y / 16.f << "u)" << std::endl;
 			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
 			m_keyInfos = true;
 			//setSlowMotion();
