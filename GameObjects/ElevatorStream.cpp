@@ -218,6 +218,14 @@ float ElevatorStream::getRepairAdvancement(void) const
 	return m_timer.asSeconds() / m_timerMax.asSeconds();
 }
 
+sf::Vector2f ElevatorStream::getRepairPosition(void) const
+{
+	sf::Vector2f target = getPosition();
+	target.x -= (0.8f * getWidth() / 2.f) - octo::linearInterpolation(0.f, getWidth() * 0.8f, getRepairAdvancement());
+	target.y -= 50.f;
+	return target;
+}
+
 bool ElevatorStream::isActivated(void) const
 {
 	return (m_state == Activated);
