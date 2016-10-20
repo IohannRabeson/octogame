@@ -153,6 +153,7 @@ RandomBiome::RandomBiome() :
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_instances[100] = MAP_RANDOM_OMP;
 	m_destinations.push_back(progress.getLastDestination());
+	m_destinations.push_back(Level::Rewards);
 
 	m_interestPointPosX = portalPos;
 

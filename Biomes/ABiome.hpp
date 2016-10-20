@@ -34,7 +34,6 @@ enum class Level : std::size_t
 	WaterB,
 	WaterC,
 	WaterD,
-	WaterE,
 	Red,
 	Blue,
 	Final,

@@ -246,7 +246,6 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/WaterBBiome.cpp					\
 				Biomes/WaterCBiome.cpp					\
 				Biomes/WaterDBiome.cpp					\
-				Biomes/WaterEBiome.cpp					\
 				Biomes/RedBiome.cpp						\
 				Biomes/BlueBiome.cpp					\
 				Biomes/FinalBiome.cpp					\
