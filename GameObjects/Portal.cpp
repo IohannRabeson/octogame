@@ -345,10 +345,6 @@ bool Portal::isLock(void)
 	Progress & progress = Progress::getInstance();
 	if (progress.isMetPortal(m_destination) && m_destination == Level::Random)
 		return true;
-	if (progress.getCurrentDestination() == m_destination && m_key == OBJECT_PORTAL_OSS)
-		return true;
-//	if (m_destination == Level::WaterA && Progress::getInstance().getNanoRobotCount() < 4)
-//		return true;
 	return false;
 }
 

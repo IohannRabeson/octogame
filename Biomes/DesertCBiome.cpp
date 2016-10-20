@@ -46,7 +46,7 @@ DesertCBiome::DesertCBiome() :
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
 	m_rainbowCount(1u, 2u),
-	m_cloudCount(70u, 80u),
+	m_cloudCount(200u, 201u),
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),

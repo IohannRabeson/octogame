@@ -139,7 +139,6 @@ FinalBiome::FinalBiome() :
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
 	// Define game objects
-	m_gameObjects[1250] = GameObjectType::Portal;
 	m_gameObjects[1230] = GameObjectType::CheckPoint;
 	m_instances[800] = MAP_FINAL_PYRAMID_OMP;
 	m_instances[295] = MAP_FINAL_EMPTY_OMP;
@@ -166,7 +165,6 @@ FinalBiome::FinalBiome() :
 	m_destinations.push_back(Level::WaterD);
 	m_destinations.push_back(Level::Blue);
 	m_destinations.push_back(Level::Red);
-	m_destinations.push_back(Level::Final);
 }
 
 void			FinalBiome::setup(std::size_t seed)
