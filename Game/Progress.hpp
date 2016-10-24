@@ -135,6 +135,8 @@ public:
 
 	void				setMapHighlight(bool isHighlight);
 	bool				isMapHighlight(void) const;
+	//void				addMapHighlight(std::string const & resourceId, octo::Array3D<float> & map);
+	//bool				isRegisterMapHighlight(std::string const & resourceId);
 	void				setIsOctoOnInstance(bool isInstance);
 	bool				isOctoOnInstance(void);
 	void				setRespawnType(RespawnType type);
@@ -262,6 +264,7 @@ private:
 	std::map<Level, sf::Vector2f>					m_portalsToDiscover;
 	std::vector<Level>								m_levels;
 	std::size_t										m_countRandomDiscover;
+	//std::map<std::string, octo::Array3D<float>>		m_mapsHighlight;
 
 	bool											m_isOctoOnInstance;
 	bool											m_isHighLight;

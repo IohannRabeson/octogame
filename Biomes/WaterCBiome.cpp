@@ -15,7 +15,7 @@ WaterCBiome::WaterCBiome() :
 	m_seed("Vince"),
 	m_mapSize(sf::Vector2u(850u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(49.f * 16.f, 3970.f),
+	m_octoStartPosition(49.f * 16.f, 240.f * 16.f),
 	m_transitionDuration(2.f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(255, 208, 71),
@@ -152,7 +152,7 @@ WaterCBiome::WaterCBiome() :
 	m_interestPointPosX = 150;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::Final)
+	if (progress.getLastDestination() == Level::WaterD)
 		m_octoStartPosition = sf::Vector2f(756.f * 16.f, -4760.f);
 	if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(492.f * 16.f, -3130.f);
@@ -174,7 +174,7 @@ WaterCBiome::WaterCBiome() :
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::WaterB);
-	m_destinations.push_back(Level::Final);
+	m_destinations.push_back(Level::WaterD);
 }
 
 void			WaterCBiome::setup(std::size_t seed)

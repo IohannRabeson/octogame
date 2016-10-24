@@ -143,7 +143,7 @@ IceDBiome::IceDBiome() :
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::DesertA)
-		m_octoStartPosition = sf::Vector2f(257.f * 16.f, -93.f * 16.f);
+		m_octoStartPosition = sf::Vector2f(248.f * 16.f, -93.f * 16.f);
 	else if (progress.getLastDestination() == Level::Random)
 		m_octoStartPosition = sf::Vector2f(124.f * 16.f, -113.f * 16.f);
 

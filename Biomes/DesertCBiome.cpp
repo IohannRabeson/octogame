@@ -46,7 +46,7 @@ DesertCBiome::DesertCBiome() :
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
 	m_rainbowCount(1u, 2u),
-	m_cloudCount(70u, 80u),
+	m_cloudCount(200u, 201u),
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),
@@ -59,7 +59,7 @@ DesertCBiome::DesertCBiome() :
 	m_canCreateMushroom(false),
 	m_canCreateCrystal(true),
 	m_canCreateShineEffect(true),
-	m_canCreateCloud(true),
+	m_canCreateCloud(false),
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),

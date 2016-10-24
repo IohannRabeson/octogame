@@ -86,9 +86,9 @@ void MainMenu::createMenus(void)
 
 void MainMenu::onSelection(void)
 {
-	Progress const & progress = Progress::getInstance();
+	Progress & progress = Progress::getInstance();
 
-	if (progress.isMenu() && getIndexCursor() == 5u && !progress.isGameFinished())
+	if (progress.isMenu() && getIndexCursor() == 5u && !progress.canRepairShip())
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
 

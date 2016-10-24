@@ -1083,7 +1083,13 @@ bool	CharacterOcto::isInWater(void) const
 
 bool	CharacterOcto::isCenteredCamera(void) const
 {
-	return (isInWater() && m_waterLevel != -1.f);
+	Progress const & progress = Progress::getInstance();
+
+	if (progress.getCurrentDestination() == Level::DesertC || progress.getCurrentDestination() == Level::JungleC)
+		return true;
+	if (isInWater() && m_waterLevel != -1.f)
+		return true;
+	return false;
 }
 
 void	CharacterOcto::portalEvent()

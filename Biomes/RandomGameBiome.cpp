@@ -23,7 +23,8 @@
 #include "WaterBBiome.hpp"
 #include "WaterCBiome.hpp"
 #include "WaterDBiome.hpp"
-#include "WaterEBiome.hpp"
+#include "RedBiome.hpp"
+#include "BlueBiome.hpp"
 #include "FinalBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
@@ -89,7 +90,7 @@ RandomGameBiome::RandomGameBiome() :
 	m_rockPartCount(m_generator.randomInt(2.f, 4.f), m_generator.randomFloat(4.f, 20.f)),
 	m_rockColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
-	m_grassSizeY(m_generator.randomFloat(10.f, 60.f), m_generator.randomFloat(60.f, 200.f)),
+	m_grassSizeY(m_generator.randomFloat(10.f, 0.f), m_generator.randomFloat(60.f, 200.f)),
 	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassIndex(0u),
@@ -157,7 +158,8 @@ RandomGameBiome::RandomGameBiome() :
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 	m_biomeManager.registerBiome<WaterCBiome>(Level::WaterC);
 	m_biomeManager.registerBiome<WaterDBiome>(Level::WaterD);
-	m_biomeManager.registerBiome<WaterEBiome>(Level::WaterE);
+	m_biomeManager.registerBiome<BlueBiome>(Level::Blue);
+	m_biomeManager.registerBiome<RedBiome>(Level::Red);
 	m_biomeManager.registerBiome<FinalBiome>(Level::Final);
 
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
@@ -258,7 +260,11 @@ bool		RandomGameBiome::isDeadlyGrass()
 
 bool		RandomGameBiome::isSpecialCloud()
 {
-	return m_biomeManager.getCurrentBiome().isSpecialCloud();
+	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
+		return true;
+	else if (randomBool(0.1f))
+		return true;
+	return false;
 }
 
 sf::Time	RandomGameBiome::getTimeDieVoid()

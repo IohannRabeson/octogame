@@ -11,7 +11,7 @@
 
 WaterDBiome::WaterDBiome() :
 	m_name("Water D"),
-	m_id(Level::WaterA),
+	m_id(Level::WaterD),
 	m_seed("Water D"),
 	m_mapSize(sf::Vector2u(1200u, 32u)),
 	m_mapSeed(42u),

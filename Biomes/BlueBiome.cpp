@@ -100,7 +100,7 @@ BlueBiome::BlueBiome() :
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
-	m_cloudMaxY(-1300.f),
+	m_cloudMaxY(-700.f),
 	m_cloudMinY(-2500.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),

@@ -37,7 +37,7 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("deformation_factor", 0.03f);
 	PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, false);
 
-	m_portal.reset(new FinalPortal(Level::Final, "object_portal.oss", VORTEX_FRAG));
+	m_portal.reset(new FinalPortal(Level::Rewards, "object_portal.oss", VORTEX_FRAG));
 	m_portal->setBiome(biome);
 	m_portal->setRadius(200.f);
 
