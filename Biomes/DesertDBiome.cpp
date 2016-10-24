@@ -59,7 +59,7 @@ DesertDBiome::DesertDBiome() :
 	m_canCreateMushroom(false),
 	m_canCreateCrystal(true),
 	m_canCreateShineEffect(true),
-	m_canCreateCloud(true),
+	m_canCreateCloud(false),
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
