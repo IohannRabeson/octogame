@@ -266,6 +266,7 @@ void Portal::update(sf::Time frametime)
 			}
 			break;
 		case AlwaysOpen:
+			m_isActive = true;
 			m_particles.setMaxParticle(m_maxParticle);
 			m_timerActivate = m_timerActivateMax;
 			break;
