@@ -237,27 +237,33 @@ void Monolith::update(sf::Time frameTime)
 		case StartEffect:
 		{
 			m_timer += frameTime;
-			if (m_timer >= m_timerMax)
+			if (m_timer > m_timerMax)
 			{
 				m_timer = sf::Time::Zero;
 				m_state = Activate;
+				Progress & progress = Progress::getInstance();
+				progress.setForceMapToMove(true);
+				for (std::size_t i = progress.getActivatedMonolith(); i < progress.countRandomDiscover(); i++)
+					m_steps[i]->firstActivate();
+				progress.setActivatedMonolith(progress.countRandomDiscover());
 			}
 			break;
 		}
 		case Activate:
 		{
-			Progress & progress = Progress::getInstance();
-
-			for (std::size_t i = progress.getActivatedMonolith(); i < progress.countRandomDiscover(); i++)
-				m_steps[i]->firstActivate();
-			progress.setActivatedMonolith(progress.countRandomDiscover());
-			if (progress.getActivatedMonolith() == m_steps.size())
+			m_timer += frameTime;
+			if (m_timer >= m_forceMapMoveDuration)
 			{
-				m_state = StartFinalScene;
-				m_octo->enableCutscene(true, false);
+				m_timer = sf::Time::Zero;
+				Progress::getInstance().setForceMapToMove(false);
+				if (Progress::getInstance().getActivatedMonolith() == m_steps.size())
+				{
+					m_state = StartFinalScene;
+					m_octo->enableCutscene(true, false);
+				}
+				else
+					m_state = None;
 			}
-			else
-				m_state = None;
 			break;
 		}
 		case StartFinalScene:
