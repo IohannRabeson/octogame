@@ -8,9 +8,6 @@ uniform float limit;
 uniform float offset_limit;
 uniform float height;
 uniform float max_factor;
-uniform float activate_persistence;
-uniform float offset;
-uniform mat4 kernel;
 uniform vec2 camera_offset;
 uniform vec2 resolution;
 
@@ -56,18 +53,7 @@ void main()
 
 		vec2 distortedTextureCoordinate = gl_TexCoord[0].st + distortionPositionOffset;
 
-		vec3 col = texture2D(texture, distortedTextureCoordinate + vec2(-offset, offset)).rgb * kernel[0][0];
-		col += texture2D(texture, distortedTextureCoordinate + vec2(0.0, offset)).rgb * kernel[1][0];
-		col += texture2D(texture, distortedTextureCoordinate + vec2(offset, offset)).rgb * kernel[3][0];
-		col += texture2D(texture, distortedTextureCoordinate + vec2(-offset, 0.0)).rgb * kernel[0][1];
-		col += texture2D(texture, distortedTextureCoordinate + vec2(0.0, 0.0)).rgb * kernel[1][1];
-		col += texture2D(texture, distortedTextureCoordinate + vec2(offset, 0.0)).rgb * kernel[3][1];
-		col += texture2D(texture, distortedTextureCoordinate + vec2(-offset, -offset)).rgb * kernel[0][3];
-		col += texture2D(texture, distortedTextureCoordinate + vec2(0.0, -offset)).rgb * kernel[1][3];
-		col += texture2D(texture, distortedTextureCoordinate + vec2(offset, -offset)).rgb * kernel[3][3];
-
-		gl_FragColor = mix(texture2D(texture, distortedTextureCoordinate), vec4(col, 1.0), activate_persistence * factor / max_factor);
-		//gl_FragColor = mix(texture2D(distortionMapTexture, distortionMapCoordinate), vec4(col, 1.0), activate_persistence * factor / max_factor);
+		gl_FragColor = texture2D(texture, distortedTextureCoordinate);
 	}
 	else
 		gl_FragColor = texture2D(texture, gl_TexCoord[0].xy);
