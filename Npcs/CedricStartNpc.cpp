@@ -18,7 +18,7 @@ CedricStartNpc::CedricStartNpc(ABiome::Type biomeType) :
 	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 
 	switch (biomeType)
 	{

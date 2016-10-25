@@ -23,6 +23,7 @@ public:
 	virtual void setPosition(sf::Vector2f const & position);
 
 	void collideOcto(CharacterOcto * octo);
+	void collideOctoEvent(CharacterOcto * octo);
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	virtual void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
@@ -64,6 +65,7 @@ private:
 	octo::VertexBuilder							m_builder;
 	sf::Vector2f								m_size;
 	CircleShape *								m_box;
+	CircleShape *								m_stopMovingMapBox;
 	CharacterOcto *								m_octo;
 	sf::RectangleShape							m_whiteForeground;
 	sf::Time									m_timer;
