@@ -17,6 +17,7 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 	m_vertices(new sf::Vertex[100u]),
 	m_size(1000.f, 1000.f),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
+	m_stopMovingMapBox(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_octo(nullptr),
 	m_timerMax(sf::seconds(2.f)),
 	m_waitBeforeStartFinalDuration(sf::seconds(2.f)),
@@ -147,14 +148,21 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 	m_box->setPosition(getSprite().getPosition() + getSprite().getGlobalSize() / 2.f - sf::Vector2f(m_box->getRadius(), m_box->getRadius()));
 	m_box->update();
 
+	m_stopMovingMapBox->setGameObject(this);
+	m_stopMovingMapBox->setCollisionType(static_cast<std::size_t>(GameObjectType::Monolith));
+	m_stopMovingMapBox->setCollisionMask(static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	m_stopMovingMapBox->setRadius(1500.f);
+	m_stopMovingMapBox->setApplyGravity(false);
+	m_stopMovingMapBox->setType(AShape::Type::e_trigger);
+	m_stopMovingMapBox->setPosition(getSprite().getPosition() + getSprite().getGlobalSize() / 2.f - sf::Vector2f(m_stopMovingMapBox->getRadius(), m_stopMovingMapBox->getRadius()));
+	m_stopMovingMapBox->update();
+
 	m_builder = octo::VertexBuilder(m_vertices.get(), 100u);
 
 	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 	m_whiteForeground.setFillColor(sf::Color::White);
 	m_whiteForeground.setSize(sf::Vector2f(screen.width, screen.height));
 	m_whiteForeground.setOrigin(sf::Vector2f(screen.width, screen.height) / 2.f);
-
-	Progress::getInstance().setCanOctoMoveMap(false);
 }
 
 Monolith::~Monolith(void)
@@ -175,6 +183,8 @@ void Monolith::addMapOffset(float x, float y)
 		step->addMapOffset(x, y);
 	m_box->setPosition(m_box->getPosition() + sf::Vector2f(x, y));
 	m_box->update();
+	m_stopMovingMapBox->setPosition(m_stopMovingMapBox->getPosition() + sf::Vector2f(x, y));
+	m_stopMovingMapBox->update();
 	m_portal->addMapOffset(x, y);
 	m_center += sf::Vector2f(x, y);
 }
@@ -193,6 +203,8 @@ void Monolith::setPosition(sf::Vector2f const & position)
 		step->setPosition(position);
 	m_box->setPosition(m_spriteMonolith[0].getPosition() + m_spriteMonolith[0].getGlobalSize() / 2.f - sf::Vector2f(m_box->getRadius(), m_box->getRadius()));
 	m_box->update();
+	m_stopMovingMapBox->setPosition(m_spriteMonolith[0].getPosition() + m_spriteMonolith[0].getGlobalSize() / 2.f - sf::Vector2f(m_stopMovingMapBox->getRadius(), m_stopMovingMapBox->getRadius()));
+	m_stopMovingMapBox->update();
 	Monolith::setPosition(position);
 }
 
@@ -208,6 +220,11 @@ void Monolith::collideOcto(CharacterOcto * octo)
 			m_timer = sf::Time::Zero;
 		}
 	}
+}
+
+void Monolith::collideOctoEvent(CharacterOcto *)
+{
+	Progress::getInstance().setCanOctoMoveMap(false);
 }
 
 void Monolith::update(sf::Time frameTime)
@@ -353,6 +370,7 @@ void Monolith::update(sf::Time frameTime)
 	}
 	m_portal->update(frameTime);
 	m_portal->setPosition(m_center + sf::Vector2f(-200.f, 245.f) + sf::Vector2f(std::sin(m_offset + 0.5f) * std::cos(m_offset) * 15.f, std::cos(m_offset) * 15.f));
+	Progress::getInstance().setCanOctoMoveMap(true);
 }
 
 void Monolith::draw(sf::RenderTarget& render, sf::RenderStates states) const

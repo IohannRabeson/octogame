@@ -475,6 +475,9 @@ void Game::onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, 
 	(void)collisionDirection;
 	switch (gameObject->getObjectType())
 	{
+		case GameObjectType::Monolith:
+			gameObjectCast<Monolith>(gameObject)->collideOctoEvent(octo);
+			break;
 		case GameObjectType::FlyNpc:
 			gameObjectCast<AFlyNpc>(gameObject)->collideOctoEvent(octo);
 			break;
