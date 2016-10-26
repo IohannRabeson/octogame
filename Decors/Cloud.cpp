@@ -39,6 +39,7 @@ Cloud::Cloud(SkyCycle * cycle) :
 
 Cloud::~Cloud(void)
 {
+	Progress::getInstance().setInCloud(false, m_id);
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		delete m_rain[i];
