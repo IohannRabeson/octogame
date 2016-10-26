@@ -316,7 +316,9 @@ void Portal::setRadius(float radius)
 
 bool Portal::zoom(void) const
 {
-	return true;
+	if (m_destination != Progress::getInstance().getLastDestination())
+		return true;
+	return false;
 }
 
 void Portal::appear(void)
