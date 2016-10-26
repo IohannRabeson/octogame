@@ -145,7 +145,6 @@ WaterBBiome::WaterBBiome() :
 	m_gameObjects[373] = GameObjectType::JellyfishNpc;
 	m_gameObjects[387] = GameObjectType::JellyfishNpc;
 	m_gameObjects[420] = GameObjectType::JellyfishNpc;
-	m_gameObjects[470] = GameObjectType::SebNpc;
 	m_gameObjects[680] = GameObjectType::CedricEndNpc;
 	m_gameObjects[680] = GameObjectType::CedricEndNpc;
 	m_gameObjects[51] = GameObjectType::PortalWater;

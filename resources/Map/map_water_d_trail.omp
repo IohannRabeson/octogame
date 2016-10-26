@@ -1,7 +1,6 @@
-2;1000x700x220
-!object_portal_beach.oss(352;4432) : [1/1]0
-!object_portal_beach.oss(11440;5744) : [1/1]0
-!object_portal_random.oss(10512;2368) : [1/1]0
+2;1000x700x220x1
+#seb.oss(8528;8496) : [8560/8608][112/64]0
+#clementine.oss(11920;6528) : [12016/6688][48/48]1
 #fish_red.oss(8480;10272) : [8576/10384][112/64]0
 #fish_blue.oss(8176;8624) : [8256/8672][64/32]0
 #fish_blue.oss(8944;8416) : [9008/8464][48/48]0
@@ -21,6 +20,9 @@
 #bird_blue.oss(14064;4272) : [14144/4336][16/32]0
 #bird_blue.oss(9424;3584) : [9504/3664][16/16]0
 #fish_blue.oss(15808;8880) : [15856/8928][32/32]0
+!object_portal_beach.oss(352;4432) : [1/1]0
+!object_portal_beach.oss(11440;5744) : [1/1]0
+!object_portal_random.oss(10512;2368) : [1/1]0
 !water_house_broken.oss(14704;8672) : [1/1]0
 !well.oss(8384;8848) : [0.8/0.8]0
 !smoke_instance.oss(15174;8647) : [3/3]0
