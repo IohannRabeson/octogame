@@ -163,6 +163,7 @@ FinalBiome::FinalBiome() :
 	m_destinations.push_back(Level::Final);
 	m_destinations.push_back(Level::Final);
 	m_destinations.push_back(Level::WaterD);
+	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::Blue);
 	m_destinations.push_back(Level::Red);
 }
