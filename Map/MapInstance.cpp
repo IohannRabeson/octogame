@@ -5,7 +5,9 @@
 #include <ResourceManager.hpp>
 
 MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
+	m_tiles(Progress::getInstance().getMapsTile()[resourceId]),
 	m_levelMap(octo::Application::getResourceManager().getLevelMap(resourceId)),
+	m_movementMask(Progress::getInstance().getMapsHighlight()[resourceId]),
 	m_reverse(false),
 	m_isMapHighlight(true), // TODO: Useless, to remove
 	m_depth(0),
@@ -20,38 +22,61 @@ MapInstance::MapInstance(std::size_t position, std::string const & resourceId) :
 
 	// Init 3D TileMap
 	octo::Array3D<octo::LevelMap::TileType> const & map = m_levelMap.getMap();
-	m_tiles.resize(map.columns(), map.rows(), map.depth());
-	m_movementMask.resize(map.columns(), map.rows(), 2u);
+	bool computeMapTile = false;
+	bool computeMapHighlight = false;
 
-	for (std::size_t x = 0; x < m_tiles.columns(); x++)
+	if (m_tiles.columns() == 0u)
 	{
-		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-		{
-			octo::LevelMap::TileType type = map(x, y, 0);
-			for (std::size_t z = 0; z < m_tiles.depth(); z++)
-			{
-				//TODO use TileType in Tile
-				m_tiles(x, y, z).setTileType(map(x, y, z));
-				if (map(x, y, z) == octo::LevelMap::TileType::Empty)
-					m_tiles(x, y, z).setIsEmpty(true);
-				else
-					m_tiles(x, y, z).setIsEmpty(false);
+		m_tiles.resize(map.columns(), map.rows(), map.depth());
+		computeMapTile = true;
+	}
 
-				// Pre compute radiance mask
-				if (map(x, y, z) != type || m_movementMask(x, y, 1) == 1.f)
+	if (m_movementMask.columns() == 0u && m_isMapHighlight && map.depth() > 1u)
+	{
+		m_movementMask.resize(map.columns(), map.rows(), 2u);
+		computeMapHighlight = true;
+	}
+
+
+	if (computeMapTile)
+	{
+		for (std::size_t x = 0; x < m_tiles.columns(); x++)
+		{
+			for (std::size_t y = 0; y < m_tiles.rows(); y++)
+			{
+				octo::LevelMap::TileType type = map(x, y, 0);
+				for (std::size_t z = 0; z < m_tiles.depth(); z++)
 				{
-					m_movementMask(x, y, 0) = 1.f; // Tile changing
-					m_movementMask(x, y, 1) = 1.f; // Tile has changed
+					//TODO use TileType in Tile
+					m_tiles(x, y, z).setTileType(map(x, y, z));
+					if (map(x, y, z) == octo::LevelMap::TileType::Empty)
+						m_tiles(x, y, z).setIsEmpty(true);
+					else
+						m_tiles(x, y, z).setIsEmpty(false);
+	
+					// Pre compute radiance mask
+					if (computeMapHighlight)
+					{
+						if (map(x, y, z) != type || m_movementMask(x, y, 1) == 1.f)
+						{
+							m_movementMask(x, y, 0) = 1.f; // Tile changing
+							m_movementMask(x, y, 1) = 1.f; // Tile has changed
+						}
+						else if (map(x, y, z) == octo::LevelMap::TileType::Empty)
+							m_movementMask(x, y, 0) = -1.f; // Tile empty and not changing
+						else
+							m_movementMask(x, y, 0) = 0.f; // Tile full not changing
+					}
 				}
-				else if (map(x, y, z) == octo::LevelMap::TileType::Empty)
-					m_movementMask(x, y, 0) = -1.f; // Tile empty and not changing
-				else
-					m_movementMask(x, y, 0) = 0.f; // Tile full not changing
 			}
 		}
 	}
-	computeRadianceMask(2u, 0.1f);
-	smoothBorder();
+
+	if (computeMapHighlight)
+	{
+		computeRadianceMask(2u, 0.1f);
+		smoothBorder();
+	}
 }
 
 //TODO: Can be factorized if performance gain is necessary
@@ -76,6 +101,7 @@ void MapInstance::smoothBorder(void)
 
 void MapInstance::computeRadianceMask(std::size_t depth, float attenuate)
 {
+
 	bool invert = false;
 	for (std::size_t i = 0u; i < depth; i++)
 	{

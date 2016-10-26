@@ -622,19 +622,15 @@ bool		Progress::isMapHighlight(void) const
 	return m_isHighLight;
 }
 
-/*
-void		Progress::addMapHighlight(std::string const & resourceId, octo::Array3D<float> & map)
+std::map<std::string, octo::Array3D<Tile>> & Progress::getMapsTile(void)
 {
-	m_mapsHighlight.insert(std::make_pair(resourceId, map));
+	return m_mapsTile;
 }
 
-bool		Progress::isRegisterMapHighlight(std::string const & resourceId)
+std::map<std::string, octo::Array3D<float>> & Progress::getMapsHighlight(void)
 {
-	if (m_mapsHighlight.find(resourceId) != m_mapsHighlight.end())
-		return true;
-	return false;
+	return m_mapsHighlight;
 }
-*/
 
 void	Progress::split(std::string const & s, char delim, std::vector<std::string> &elems)
 {
