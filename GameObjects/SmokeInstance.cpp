@@ -42,52 +42,63 @@ SmokeInstance::SmokeInstance(sf::Vector2f const & scale, sf::Vector2f const & po
 void SmokeInstance::update(sf::Time frametime)
 {
 	InstanceDecor::update(frametime);
+
+	octo::Camera const&	camera = octo::Application::getCamera();
+	float const			leftLimitX = camera.getCenter().x - camera.getSize().x;
+	float const			rightLimitX = camera.getCenter().x + camera.getSize().x;
+	float const			upLimitY = camera.getCenter().y - camera.getSize().x;
+	float const			downLimitY = camera.getCenter().y + camera.getSize().x * 2.f;
+	sf::Vector2f		position = m_box->getPosition();
+
+	if ((position.x >= leftLimitX && position.x <= rightLimitX) &&
+			(position.y >= upLimitY && position.y <= downLimitY))
+	{
+		sf::Vector2f	positionSmoke = m_smoke.getPositionEmitter();
+		float const		maxDistCollideY = 200.f * m_scale;
+		float const		maxDistCollideX = 15.f * m_scale;
+		float const		maxDistVelocityX = 100.f * m_scale;
+		float			distY = m_positionOcto.y - positionSmoke.y;
+		float			distX = m_positionOcto.x - positionSmoke.x;
 	
-	sf::Vector2f	positionSmoke = m_smoke.getPositionEmitter();
-	float const		maxDistCollideY = 200.f * m_scale;
-	float const		maxDistCollideX = 15.f * m_scale;
-	float const		maxDistVelocityX = 100.f * m_scale;
-	float			distY = m_positionOcto.y - positionSmoke.y;
-	float			distX = m_positionOcto.x - positionSmoke.x;
-
-	if (m_collideEvent && distY < maxDistCollideY && std::fabs(distX) < maxDistCollideX)
-		m_isMovementSmoke = true;
-
-	if (m_isMovementSmoke && std::fabs(distX) < maxDistVelocityX && static_cast<int>(m_lastPositionOcto.x) != static_cast<int>(m_positionOcto.x))
-	{
-		if (distX < 0.f && m_isOctoLeft)
+		if (m_collideEvent && distY < maxDistCollideY && std::fabs(distX) < maxDistCollideX)
+			m_isMovementSmoke = true;
+	
+		if (m_isMovementSmoke && std::fabs(distX) < maxDistVelocityX && static_cast<int>(m_lastPositionOcto.x) != static_cast<int>(m_positionOcto.x))
 		{
-			m_velocity.x = distX;
+			if (distX < 0.f && m_isOctoLeft)
+			{
+				m_velocity.x = distX;
+				m_smoke.setScaleFactor(25.f);
+			}
+			if (distX > 0.f && !m_isOctoLeft)
+			{
+				m_velocity.x = distX;
+				m_smoke.setScaleFactor(25.f);
+			}
+		}
+		else
+		{
+			m_isMovementSmoke = false;
+			if (m_velocity.x > 0.f)
+				m_velocity.x = std::max(m_velocity.x - frametime.asSeconds() * maxDistVelocityX, 0.f);
+			if (m_velocity.x < 0.f)
+				m_velocity.x = std::min(m_velocity.x + frametime.asSeconds() * maxDistVelocityX, 0.f);
+			m_smoke.setScaleFactor(15.f);
+			m_smoke.setDispersion(std::max(m_dispersion, m_smoke.getDispersion() - frametime.asSeconds() * maxDistCollideY));
+		}
+		if (m_isOctoDoubleJump)
+		{
+			m_smoke.setDispersion(m_dispersion + (maxDistCollideY - distY));
 			m_smoke.setScaleFactor(25.f);
 		}
-		if (distX > 0.f && !m_isOctoLeft)
-		{
-			m_velocity.x = distX;
-			m_smoke.setScaleFactor(25.f);
-		}
+	
+		m_smoke.setVelocity(m_velocity);
+		m_smoke.update(frametime);
+	
+		m_lastPositionOcto = m_positionOcto;
+		m_collideEvent = false;
+		m_isOctoDoubleJump = false;
 	}
-	else
-	{
-		m_isMovementSmoke = false;
-		if (m_velocity.x > 0.f)
-			m_velocity.x = std::max(m_velocity.x - frametime.asSeconds() * maxDistVelocityX, 0.f);
-		if (m_velocity.x < 0.f)
-			m_velocity.x = std::min(m_velocity.x + frametime.asSeconds() * maxDistVelocityX, 0.f);
-		m_smoke.setScaleFactor(15.f);
-		m_smoke.setDispersion(std::max(m_dispersion, m_smoke.getDispersion() - frametime.asSeconds() * maxDistCollideY));
-	}
-	if (m_isOctoDoubleJump)
-	{
-		m_smoke.setDispersion(m_dispersion + (maxDistCollideY - distY));
-		m_smoke.setScaleFactor(25.f);
-	}
-
-	m_smoke.setVelocity(m_velocity);
-	m_smoke.update(frametime);
-
-	m_lastPositionOcto = m_positionOcto;
-	m_collideEvent = false;
-	m_isOctoDoubleJump = false;
 }
 
 void SmokeInstance::addMapOffset(float x, float y)

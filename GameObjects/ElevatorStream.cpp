@@ -168,6 +168,8 @@ void	ElevatorStream::setPosition(sf::Vector2f const & position)
 {
 	m_position = position;
 	m_position.x += getWidth() / 2.f + Tile::TileSize;
+	if (!m_isBotOnInstance)
+		m_position.x += 32.f;
 	m_position.y -= Tile::TileSize - Map::OffsetY;
 
 	sf::Vector2f const &	posBox = m_box->getPosition();

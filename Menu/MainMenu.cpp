@@ -92,10 +92,6 @@ void MainMenu::onSelection(void)
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
 
-		setState(AMenu::State::Hide);
-		AMenu * backMenu = getBackMenu();
-		if (backMenu)
-			backMenu->setState(AMenu::State::Active);
 		if (progress.isFirstTime())
 			states.change("zero");
 		else

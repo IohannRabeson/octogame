@@ -57,7 +57,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[16] = AreaMusic(Level::Final, JAPANESE_THEME_OGG, sf::FloatRect());
 	m_musicLevel[17] = AreaMusic(Level::Blue, BREAKTHOUG_OGG, sf::FloatRect());
 	m_musicLevel[18] = AreaMusic(Level::Red, BREAKTHOUG_OGG, sf::FloatRect());
-	m_musicLevel[19] = AreaMusic(Level::Random, musicKey[m_generator.randomInt(0, 8)], sf::FloatRect());
+	m_musicLevel[19] = AreaMusic(Level::Random, SPACE_SHIP_OGG, sf::FloatRect());
 	m_musicLevel[20] = AreaMusic(Level::Rewards, MENU_OPUS_III_OGG, sf::FloatRect());
 
 

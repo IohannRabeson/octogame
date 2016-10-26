@@ -147,7 +147,7 @@ IceCBiome::IceCBiome() :
 	if (progress.getLastDestination() == Level::IceD)
 		m_octoStartPosition = sf::Vector2f(185.f * 16.f, -850.f);
 	if (progress.getLastDestination() == Level::Random)
-		m_octoStartPosition = sf::Vector2f(239.f * 16.f, -1350.f);
+		m_octoStartPosition = sf::Vector2f(212.f * 16.f, -30.f * 16.f);
 
 	m_destinations.push_back(Level::IceB);
 	m_destinations.push_back(Level::Random);
@@ -259,7 +259,7 @@ Map::TileColorGenerator IceCBiome::getTileColorGenerator()
 	float endTransition = -8;
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
-		if ((y > -3000 && y < -360) || (y > -310 && y < -48))
+		if ((y > -3000 && y < -360) || (y > -310 && y < -48) || x > 213)
 			return m_cloudColor;
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
 		if (y > startTransition && y <= middleTransition)

@@ -39,6 +39,7 @@ Cloud::Cloud(SkyCycle * cycle) :
 
 Cloud::~Cloud(void)
 {
+	Progress::getInstance().setInCloud(false, m_id);
 	for (std::size_t i = 0; i < m_partCount; i++)
 	{
 		delete m_rain[i];
@@ -101,7 +102,7 @@ void Cloud::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCo
 	builder.createTriangle(origin, upMidLeft, upLeft, color);
 
 	Level level = Progress::getInstance().getCurrentDestination();
-	if (level != Level::IceC && level != Level::WaterB && level != Level::DesertC)
+	if (level != Level::IceC && level != Level::WaterB && level != Level::DesertC && level != Level::DesertD)
 		builder.createQuad(upLeft, upRight, recDownRight, upMidLeft, color);
 }
 
@@ -182,7 +183,7 @@ void Cloud::setup(ABiome& biome)
 		m_animator = DecorAnimator(1.f, 5.f, 4.f, 0.2f);
 	m_cloudMinY = biome.getCloudMinY();
 	m_cloudMaxY = biome.getCloudMaxY();
-	if (biome.randomBool(0.2f) && biome.getId() != Level::DesertC)
+	if (biome.randomBool(0.2f) && biome.getId() != Level::DesertC && biome.getId() != Level::DesertD)
 		m_cloudMinY -= biome.randomFloat(1000.f, 2000.f);
 	m_cloudMinX = camera.getCenter().x - camera.getSize().x * 2.f;
 	m_cloudMaxX = camera.getCenter().x + camera.getSize().x * 2.f;
