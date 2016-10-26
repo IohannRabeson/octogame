@@ -42,7 +42,7 @@ private:
 	void averageVarianceFour(std::size_t x, std::size_t y, float attenuate);
 	void averageVarianceOne(std::size_t srcX, std::size_t srcY, std::size_t destX, std::size_t destY, float attenuate);
 
-	octo::Array3D<Tile>				m_tiles;
+	octo::Array3D<Tile> &			m_tiles;
 	octo::LevelMap const &			m_levelMap;
 	octo::Array3D<float> &			m_movementMask;
 	sf::IntRect						m_cornerPositions;

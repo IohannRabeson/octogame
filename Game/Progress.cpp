@@ -622,7 +622,12 @@ bool		Progress::isMapHighlight(void) const
 	return m_isHighLight;
 }
 
-std::map<std::string, octo::Array3D<float>> & Progress::getMapHighlight(void)
+std::map<std::string, octo::Array3D<Tile>> & Progress::getMapsTile(void)
+{
+	return m_mapsTile;
+}
+
+std::map<std::string, octo::Array3D<float>> & Progress::getMapsHighlight(void)
 {
 	return m_mapsHighlight;
 }

@@ -133,10 +133,10 @@ public:
 	void											setActivatedMonolith(std::size_t count);
 	std::size_t										getActivatedMonolith(void) const;
 
-	std::map<std::string, octo::Array3D<Tile>> &	getMapTile(void);
 	void											setMapHighlight(bool isHighlight);
 	bool											isMapHighlight(void) const;
-	std::map<std::string, octo::Array3D<float>> &	getMapHighlight(void);
+	std::map<std::string, octo::Array3D<Tile>> &	getMapsTile(void);
+	std::map<std::string, octo::Array3D<float>> &	getMapsHighlight(void);
 	void											setIsOctoOnInstance(bool isInstance);
 	bool											isOctoOnInstance(void);
 	void											setRespawnType(RespawnType type);
@@ -264,6 +264,7 @@ private:
 	std::map<Level, sf::Vector2f>					m_portalsToDiscover;
 	std::vector<Level>								m_levels;
 	std::size_t										m_countRandomDiscover;
+	std::map<std::string, octo::Array3D<Tile>>		m_mapsTile;
 	std::map<std::string, octo::Array3D<float>>		m_mapsHighlight;
 
 	bool											m_isOctoOnInstance;
