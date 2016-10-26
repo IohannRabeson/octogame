@@ -106,9 +106,6 @@ void Grass::computeMovement(sf::Time frameTime)
 	sf::Vector2f const & octoPosition = progress.getOctoPos();
 	float dist = std::sqrt(std::pow(m_up.x - octoPosition.x, 2u) + std::pow(m_up.y - octoPosition.y, 2u));
 
-	if (m_isDeadlyGrass && dist < 600.f)
-		m_color = octo::cosinusInterpolation(m_colorDeadly, m_colorNormal, dist / 600.f);
-
 	if ((dist <= 60.f && m_lastOctoPosition.x != octoPosition.x) || (progress.getOctoDoubleJump() && dist <= 200.f && octoPosition.x > m_up.x))
 	{
 		if (dist <= 40.f && m_isDeadlyGrass && (m_up.x - octoPosition.x > -16.f && m_up.x - octoPosition.x < 16.f))
