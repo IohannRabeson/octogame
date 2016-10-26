@@ -299,6 +299,24 @@ void	Progress::levelChanged()
 	m_changeLevel = false;
 }
 
+void	Progress::resetCheckpoint(std::size_t id)
+{
+	if (m_data.respawnType == Progress::RespawnType::Portal && id == 0u)
+		m_data.checkpoints = 0u;
+}
+
+bool	Progress::isCheckpointValidated(std::size_t id)
+{
+	std::size_t mask = 1 << id;
+	std::size_t value = m_data.checkpoints & mask;
+	return value > 0;
+}
+
+void	Progress::validateCheckpoint(std::size_t id)
+{
+	m_data.checkpoints = m_data.checkpoints | (1 << id);
+}
+
 void	Progress::registerDeath(sf::Vector2f const & position)
 {
 	sf::Vector2i const & pos = sf::Vector2i(static_cast<int>(position.x), static_cast<int>(position.y + 1u));

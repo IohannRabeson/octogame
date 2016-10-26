@@ -112,6 +112,9 @@ public:
 	void											registerLevel(Level const & biome);
 	std::vector<Level> const &						getRegisteredLevels(void) const;
 
+	void											resetCheckpoint(std::size_t id);
+	bool											isCheckpointValidated(std::size_t id);
+	void											validateCheckpoint(std::size_t id);
 	void											registerDeath(sf::Vector2f const & position);
 	std::vector<sf::Vector2i> &						getDeathPos(void);
 
@@ -195,6 +198,7 @@ private:
 			canOpenDoubleJump(false),
 			deathCount(0u),
 			respawnType(Progress::RespawnType::Portal),
+			checkpoints(0u),
 			activatedMonolith(0u),
 			levelOfDetails(0)
 		{}
@@ -224,6 +228,7 @@ private:
 		char					deaths[20000];
 		std::size_t				deathCount;
 		Progress::RespawnType	respawnType;
+		std::size_t				checkpoints;
 		std::size_t				activatedMonolith;
 		int						levelOfDetails;
 	};

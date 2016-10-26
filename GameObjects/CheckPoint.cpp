@@ -7,8 +7,11 @@
 #include <ResourceManager.hpp>
 #include <AudioManager.hpp>
 
+std::size_t CheckPoint::m_countId = 0;
+
 CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position) :
 	InstanceDecor(CHECKPOINT_OSS),
+	m_id(m_countId++),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle()),
 	m_count(100),
 	m_used(0u),
@@ -19,6 +22,11 @@ CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position
 	m_color(255, 255, 255, 200),
 	m_isValidated(false)
 {
+	Progress & progress = Progress::getInstance();
+
+	progress.resetCheckpoint(m_id);
+	m_isValidated = progress.isCheckpointValidated(m_id);
+
 	m_box->setSize(sf::Vector2f(50.f, 390.f));
 	m_sprite.setOrigin(sf::Vector2f(0.f, -5.f));
 	m_sprite.setScale(scale);
@@ -53,6 +61,11 @@ CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position
 
 	m_sprite.setAnimation(m_animation);
 	m_sprite.play();
+}
+
+CheckPoint::~CheckPoint(void)
+{
+	m_countId--;
 }
 
 void CheckPoint::createLosange(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
@@ -119,6 +132,7 @@ void CheckPoint::collideOctoEvent(CharacterOcto *)
 		m_sprite.setAnimation(m_animationValidated);
 		progress.setCheckPointPosition(m_startPosition);
 		progress.setRespawnType(Progress::RespawnType::Die);
+		progress.validateCheckpoint(m_id);
 	}
 	m_isValidated = true;
 }

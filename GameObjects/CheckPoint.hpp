@@ -13,7 +13,7 @@ class CheckPoint : public InstanceDecor, public AGameObject<GameObjectType::Chec
 {
 public:
 	CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position);
-	virtual ~CheckPoint(void) = default;
+	virtual ~CheckPoint(void);
 
 	void collideOctoEvent(CharacterOcto * octo);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
@@ -23,6 +23,9 @@ public:
 	virtual void setPosition(sf::Vector2f const & position);
 
 private:
+	static std::size_t				m_countId;
+	std::size_t						m_id;
+
 	RectangleShape *				m_box;
 	std::size_t						m_count;
 	std::size_t						m_used;
