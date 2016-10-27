@@ -23,6 +23,7 @@ options_video=Video
 options_video_fullscreen=Fullscreen
 options_video_details=Details
 options_video_vsync=V-Sync
+options_video_framerate=Framerate
 options_language=Languages
 options_language_french=Français
 options_language_english=English
