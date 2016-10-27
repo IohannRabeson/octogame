@@ -316,7 +316,8 @@ void PhysicsEngine::broadPhase(void)
 	if (m_tileCollision)
 	{
 		broadPhase(m_polygonShapes, m_tilePolyPairs);
-		broadPhase(m_circleShapes, m_tileCirclePairs);
+		//No need for circle to colide with tile in Octo
+		//broadPhase(m_circleShapes, m_tileCirclePairs);
 	}
 }
 
@@ -474,7 +475,8 @@ void PhysicsEngine::narrowPhase(void)
 	if (m_tileCollision)
 	{
 		narrowPhaseTile(m_tilePolyPairs);
-		narrowPhaseTile(m_tileCirclePairs);
+		//No need for circle to colide with tile in Octo
+		//narrowPhaseTile(m_tileCirclePairs);
 	}
 }
 
