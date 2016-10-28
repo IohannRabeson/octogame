@@ -58,7 +58,7 @@ void	TransitionLevelScreen::start()
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
 
 	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
-		m_sound = audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_OGG), 0.5f);
+		m_sound = audio.playSound(resources.getSound(OCTO_SOUND_DOUBLE_JUMP_OGG), 1.f);
 }
 
 void	TransitionLevelScreen::pause()

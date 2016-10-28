@@ -101,7 +101,7 @@ void MainMenu::onSelection(void)
 			if (!m_soundPlayed)
 			{
 				m_soundPlayed = true;
-				audio.playSound(resources.getSound(OCTO_GREETING_OGG), 0.7f);
+				audio.playSound(resources.getSound(OCTO_VOICE_PLAY_OGG), 1.f);
 			}
 			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 			states.change("transitionLevel");

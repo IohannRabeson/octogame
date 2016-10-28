@@ -49,7 +49,7 @@ void	LevelZeroScreen::start()
 		m_stars[i].setSpeed(sf::Vector2f(-speed, 0.f));
 	}
 
-	audio.startMusic(resource.getSound(ACTION_FAST_OGG), sf::seconds(1.f));
+	audio.startMusic(resource.getSound(MUSIC_ACTION_FAST_OGG), sf::seconds(1.f));
 
 	if (Progress::getInstance().spaceShipIsRepair())
 	{
@@ -108,7 +108,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 			{
 				octo::AudioManager &		audio = octo::Application::getAudioManager();
 				octo::ResourceManager &		resource = octo::Application::getResourceManager();
-				audio.playSound(resource.getSound(SPACESHIP_ALARM_OGG), 0.5f);
+				audio.playSound(resource.getSound(EVENT_SPACESHIP_ALARM_OGG), 1.f);
 				m_timerBlinkShader = sf::Time::Zero;
 				m_blinkShaderState = true;
 			}
@@ -150,8 +150,8 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 				octo::AudioManager &		audio = octo::Application::getAudioManager();
 				octo::ResourceManager &		resource = octo::Application::getResourceManager();
 
-				audio.playSound(resource.getSound(OCTO_FEAR_OGG), 0.5f);
-				m_ground = audio.playSound(resource.getSound(GROUND_OGG), 0.6f, 1.8f);
+				audio.playSound(resource.getSound(OCTO_VOICE_FALL_OGG), 1.0f);
+				m_ground = audio.playSound(resource.getSound(OCTO_SOUND_GROUND_OGG), 1.f, 1.8f);
 				m_isSoundPlayed = true;
 			}
 			if (m_timerEnd >= m_timerEndMax - sf::seconds(2.f) && !m_isSoundExplodePlayed)
@@ -160,8 +160,8 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 				octo::ResourceManager &		resource = octo::Application::getResourceManager();
 
 				audio.stopMusic(sf::seconds(0.1f));
-				audio.playSound(resource.getSound(CRASH_OGG), 0.5f, 0.5f);
-				audio.playSound(resource.getSound(TREE_OGG), 0.5f, 0.5f);
+				audio.playSound(resource.getSound(EVENT_CRASH_OGG), 1.0f, 0.5f);
+				audio.playSound(resource.getSound(DECOR_TREE_OGG), 1.0f, 0.5f);
 				m_ground->setVolume(0.f);
 				m_isSoundExplodePlayed = true;
 			}

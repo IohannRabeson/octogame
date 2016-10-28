@@ -134,7 +134,7 @@ void LucienNpc::playSound(void)
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
 
-		audio.playSound(resources.getSound(LU_OGG), 0.2f, 1.f, sf::Vector3f(getBox()->getBaryCenter().x, getBox()->getBaryCenter().y, 0.f), 500.f, 40.f);
+		audio.playSound(resources.getSound(OBJECT_LU_OGG), 1.f, 1.f, sf::Vector3f(getBox()->getBaryCenter().x, getBox()->getBaryCenter().y, 0.f), 500.f, 40.f);
 		m_sound = false;
 	}
 }

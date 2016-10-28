@@ -54,8 +54,6 @@ private:
 	bool											m_landing;
 	bool											m_transitionInWater;
 	bool											m_transitionOutWater;
-	float											m_volumeEffect;
-	float											m_volumeVoice;
 	std::mt19937									m_engine;
 	std::uniform_real_distribution<float>			m_pitchDistribution;
 };

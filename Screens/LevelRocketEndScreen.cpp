@@ -35,7 +35,7 @@ void	LevelRocketEndScreen::start()
 
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resource = octo::Application::getResourceManager();
-	audio.startMusic(resource.getSound(MENU_OPUS_II_REVERSE_OGG), sf::seconds(1.f));
+	audio.startMusic(resource.getSound(MUSIC_MENU_OPUS_II_REVERSE_OGG), sf::seconds(1.f));
 }
 
 void	LevelRocketEndScreen::pause()

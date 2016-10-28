@@ -161,7 +161,7 @@ void CedricEndNpc::stopBalle(void)
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
 
-		audio.playSound(resources.getSound(OCTO_STOP_BALLE_OGG), 0.7f);
+		audio.playSound(resources.getSound(OCTO_SOUND_STOP_BALLE_OGG), 1.f);
 		getSprite().setNextEvent(Special1);
 		Progress::getInstance().validateChallenge(m_effect);
 	}

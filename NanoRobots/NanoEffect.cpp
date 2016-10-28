@@ -45,17 +45,17 @@ void NanoEffect::playSound(void)
 		octo::ResourceManager& resource = octo::Application::getResourceManager();
 	
 		if (m_lastNanoCount != Progress::getInstance().getNanoRobotCount())
-			audio.playSound(resource.getSound(OCTO_QUESTION_OGG), 0.7f, 1.f);
+			audio.playSound(resource.getSound(OCTO_VOICE_NANO_OGG), 1.f, 1.f);
 		switch (soundChoose)
 		{
 			case 0u:
-				audio.playSound(resource.getSound(NANO_1_OGG), 0.3f, 1.f, sf::Vector3f(m_position.x, m_position.y, 100.f), 100.f, 5.f);
+				audio.playSound(resource.getSound(OBJECT_NANO_1_OGG), 1.f, 1.f, sf::Vector3f(m_position.x, m_position.y, 100.f), 100.f, 5.f);
 				break;
 			case 1u:
-				audio.playSound(resource.getSound(NANO_2_OGG), 0.3f, 1.f, sf::Vector3f(m_position.x, m_position.y, 100.f), 100.f, 5.f);
+				audio.playSound(resource.getSound(OBJECT_NANO_2_OGG), 1.f, 1.f, sf::Vector3f(m_position.x, m_position.y, 100.f), 100.f, 5.f);
 				break;
 			case 2u:
-				audio.playSound(resource.getSound(NANO_3_OGG), 0.3f, 1.f, sf::Vector3f(m_position.x, m_position.y, 100.f), 100.f, 5.f);
+				audio.playSound(resource.getSound(OBJECT_NANO_3_OGG), 1.f, 1.f, sf::Vector3f(m_position.x, m_position.y, 100.f), 100.f, 5.f);
 				break;
 			default:
 				break;
