@@ -1,4 +1,4 @@
-	#include <Application.hpp>
+#include <Application.hpp>
 #include <AudioManager.hpp>
 #include <PostEffectManager.hpp>
 #include <ResourceManager.hpp>
@@ -6,6 +6,7 @@
 
 #include "CharacterOcto.hpp"
 #include "OctoSound.hpp"
+#include "MusicManager.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
 #include "ElevatorStream.hpp"
@@ -115,6 +116,10 @@ CharacterOcto::CharacterOcto() :
 		robot->transfertToOcto(true);
 		robot->setState(NanoRobot::State::FollowOcto);
 	}
+
+	Level level = Progress::getInstance().getCurrentDestination();
+	if (level == Level::Red || level == Level::Blue)
+		enableCutscene(true, true);
 }
 
 CharacterOcto::~CharacterOcto(void)
@@ -1055,6 +1060,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 				m_enableCutscene = false;
 		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
+		MusicManager::getInstance().startEvent();
 	}
 	else
 	{
@@ -1064,6 +1070,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
 		if (m_cutsceneTimer <= sf::Time::Zero)
 			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
+		MusicManager::getInstance().endEvent();
 	}
 }
 

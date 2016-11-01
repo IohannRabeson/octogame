@@ -82,6 +82,7 @@ public:
 
 	float											getMusicVolume() const { return m_data.musicVol; }
 	void											setMusicVolume(float volume) { m_data.musicVol = volume; }
+	float											getSoundVolume() const { return m_data.soundVol; }
 	void											setSoundVolume(float volume) { m_data.soundVol = volume; }
 	void											setGlobalVolume(float volume) { m_data.globalVol = volume; }
 

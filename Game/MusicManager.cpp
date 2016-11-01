@@ -22,7 +22,10 @@ MusicManager::MusicManager() :
 	m_audio(octo::Application::getAudioManager()),
 	m_played(false),
 	m_timer(sf::Time::Zero),
-	m_generator("random")
+	m_generator("random"),
+	m_startEvent(false),
+	m_endEvent(false),
+	m_eventTimerMax(sf::seconds(2.f))
 {
 	ResourceKey			musicKey[9];
 
@@ -55,8 +58,8 @@ MusicManager::MusicManager() :
 	m_musicLevel[15] = AreaMusic(Level::WaterD, MUSIC_BALLADE_MENTALE_OGG, sf::FloatRect());
 
 	m_musicLevel[16] = AreaMusic(Level::Final, MUSIC_FINAL_OGG, sf::FloatRect());
-	m_musicLevel[17] = AreaMusic(Level::Blue, MUSIC_BREAKTHOUG_OGG, sf::FloatRect());
-	m_musicLevel[18] = AreaMusic(Level::Red, MUSIC_BREAKTHOUG_OGG, sf::FloatRect());
+	m_musicLevel[17] = AreaMusic(Level::Blue, MUSIC_PYRAMID_OGG, sf::FloatRect());
+	m_musicLevel[18] = AreaMusic(Level::Red, MUSIC_PYRAMID_OGG, sf::FloatRect());
 	m_musicLevel[19] = AreaMusic(Level::Random, MUSIC_SPACE_SHIP_OGG, sf::FloatRect());
 	m_musicLevel[20] = AreaMusic(Level::Rewards, MUSIC_MENU_OPUS_III_OGG, sf::FloatRect());
 
@@ -84,7 +87,7 @@ MusicManager::MusicManager() :
 	m_music[6] = AreaMusic(Level::WaterC, MUSIC_SOUTERRAIN_LUGUBRE_OGG,
 			sf::FloatRect(sf::Vector2f(0.f * 16.f, 400.f), sf::Vector2f(750.f * 16.f, 600.f * 16.f)));
 
-	m_music[7] = AreaMusic(Level::Final, MUSIC_BLISSFUL_OGG,
+	m_music[7] = AreaMusic(Level::Final, MUSIC_PYRAMID_OGG,
 			sf::FloatRect(sf::Vector2f(650.f * 16.f, -400.f * 16.f), sf::Vector2f(400.f * 16.f, 420.f * 16.f)));
 }
 
@@ -110,6 +113,7 @@ void	MusicManager::update(sf::Time frameTime, sf::Vector2f const & octoPos)
 	m_maxVolume = Progress::getInstance().getMusicVolume();
 	basePosition(octoPos);
 	transition(frameTime);
+	updateEvent(frameTime);
 }
 
 void	MusicManager::debugDraw(sf::RenderTarget & render)
@@ -238,7 +242,11 @@ void	MusicManager::transition(sf::Time frameTime)
 				m_current = main.name;
 				if (main.music.getDuration() <= main.offset)
 					main.offset = sf::Time::Zero;
-				m_audio.startMusic(main.music, sf::Time::Zero, main.offset, true);
+				//TODO: Find a better way to do that
+				if (m_currentLevel == Level::Blue || m_currentLevel == Level::Red)
+					m_audio.startMusic(main.music, sf::Time::Zero, m_music[7].offset, false);
+				else
+					m_audio.startMusic(main.music, sf::Time::Zero, main.offset, true);
 				m_audio.setMusicVolume(0.f);
 				m_timer = sf::Time::Zero;
 				m_played = true;
@@ -282,4 +290,39 @@ void	MusicManager::fade(AreaMusic & music, sf::Time frameTime)
 		m_timer = sf::Time::Zero;
 	volume = m_maxVolume * (m_timer / music.transitionTime);
 	m_audio.setMusicVolume(volume);
+}
+
+void	MusicManager::updateEvent(sf::Time frameTime)
+{
+	if (m_startEvent)
+	{
+		octo::AudioManager &	audio = octo::Application::getAudioManager();
+		Progress const &		progress = Progress::getInstance();
+		float					refSoundVolume = progress.getSoundVolume();
+		float					refMusicVolume = progress.getMusicVolume();
+
+		if (!m_endEvent)
+			m_eventTimer = std::min(m_eventTimer + frameTime, m_eventTimerMax);
+		else
+			m_eventTimer = std::max(m_eventTimer - frameTime, sf::Time::Zero);
+
+		audio.setMusicVolume(octo::linearInterpolation(refMusicVolume, refMusicVolume * 2.f, m_eventTimer / m_eventTimerMax));
+		audio.setSoundVolume(octo::linearInterpolation(refSoundVolume, refSoundVolume * 0.2f, m_eventTimer / m_eventTimerMax));
+
+		if (m_eventTimer == sf::Time::Zero)
+		{
+			m_startEvent = false;
+			m_endEvent = false;
+		}
+	}
+}
+
+void	MusicManager::startEvent()
+{
+	m_startEvent = true;
+}
+
+void	MusicManager::endEvent()
+{
+	m_endEvent = true;
 }
