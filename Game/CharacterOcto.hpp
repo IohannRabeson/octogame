@@ -4,6 +4,7 @@
 # include <CharacterSprite.hpp>
 # include <CharacterAnimation.hpp>
 # include <DefaultGraphicsListeners.hpp>
+# include <AudioManager.hpp>
 
 # include "AGameObject.hpp"
 # include "SmokeSystem.hpp"
@@ -200,6 +201,7 @@ private:
 	sf::Time					m_timeStopVelocityMax;
 	sf::Time					m_timerStartUseDoor;
 	sf::Time					m_timerStartUseDoorMax;
+	std::shared_ptr<sf::Sound>	m_soundUseDoor;
 	float						m_factorDirectionVelocityX;
 	float						m_spriteScale;
 	float						m_maxJumpWaterVelocity;

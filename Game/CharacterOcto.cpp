@@ -38,6 +38,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
 	m_timerStartUseDoor(sf::seconds(1.f)),
 	m_timerStartUseDoorMax(sf::seconds(0.2f)),
+	m_soundUseDoor(nullptr),
 	m_factorDirectionVelocityX(1.f),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
@@ -120,10 +121,18 @@ CharacterOcto::CharacterOcto() :
 	Level level = Progress::getInstance().getCurrentDestination();
 	if (level == Level::Red || level == Level::Blue)
 		enableCutscene(true, true);
+
+	octo::AudioManager&			audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+	m_soundUseDoor = audio.playSound(resources.getSound(OBJECT_TIMELAPSE_OGG), 0.f);
+	m_soundUseDoor->setLoop(true);
 }
 
 CharacterOcto::~CharacterOcto(void)
 {
+	if (m_soundUseDoor != nullptr)
+		m_soundUseDoor->stop();
 	if (!m_progress.isMenu())
 		InputListener::removeInputListener();
 }
@@ -933,6 +942,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 		}
 	}
 
+
 	if (m_doorAction)
 	{
 		m_timerStartUseDoor -= frameTime;
@@ -949,6 +959,8 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 		c.a = m_timerStartUseDoor / m_timerStartUseDoorMax * 255.f;
 		m_sprite.setColor(c);
 	}
+	octo::AudioManager& audio = octo::Application::getAudioManager();
+	m_soundUseDoor->setVolume((1.f - m_timerStartUseDoor / m_timerStartUseDoorMax) * audio.getSoundVolume());
 
 	m_collisionTile = false;
 	m_collisionElevator = false;
