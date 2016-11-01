@@ -171,7 +171,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::IceA, 6u, 100u, 100u, true, true, Language::fr)
+			data(0u, Level::IceA, 30u, 100u, 100u, true, true, Language::fr)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,
