@@ -25,7 +25,7 @@ void Star::setup(ABiome& biome)
 	m_glowSize = m_size / 2.5f;
 	m_glowSizeCorner = m_glowSize / 2.f;
 
-	m_animator.setup();
+	m_animator.setup(sf::seconds(1000.f));
 	m_animator.pause();
 	m_detailPriority = biome.randomInt(-2, 0);
 }
@@ -37,7 +37,10 @@ void Star::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome&)
 
 	m_animator.update(frameTime);
 	if (m_animator.getState() == DecorAnimator::State::Dead)
+	{
+		m_animator.setup(sf::seconds(1000.f));
 		m_animator.pause();
+	}
 	else if ((m_cycle && m_cycle->isNight()) || m_cycle == nullptr)
 		m_animator.play();
 	m_animation = m_animator.getAnimation();
