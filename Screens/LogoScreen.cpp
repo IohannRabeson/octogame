@@ -81,7 +81,7 @@ void	LogoScreen::start()
 	octo::AudioManager&		audio = octo::Application::getAudioManager();
 
 	InputListener::addInputListener();
-	m_sound = audio.playSound(octo::Application::getResourceManager().getSound(REPAIR_WITH_LAZER_OGG), 0.05f);
+	m_sound = audio.playSound(octo::Application::getResourceManager().getSound(REPAIR_WITH_LAZER_OGG), 1.f);
 	m_sound->setLoop(true);
 }
 
@@ -114,9 +114,9 @@ void	LogoScreen::update(sf::Time frameTime)
 		{
 			octo::AudioManager& audio = octo::Application::getAudioManager();
 			octo::ResourceManager& resources = octo::Application::getResourceManager();
-			audio.playSound(resources.getSound(LOGO_SOUND_OGG), 0.15f, m_generator.randomFloat(0.95f, 1.05f));
+			audio.playSound(resources.getSound(LOGO_SOUND_OGG), 1.f, m_generator.randomFloat(0.95f, 1.05f));
 			if (m_index == 8u)
-				audio.playSound(resources.getSound(OCTO_GREETING_OGG), 0.7f);
+				audio.playSound(resources.getSound(OCTO_VOICE_PLAY_OGG), 1.f);
 		}
 		if (m_index >= m_count)
 		{

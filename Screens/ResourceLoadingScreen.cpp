@@ -108,7 +108,7 @@ void	ResourceLoadingScreen::start()
 	pushLoading(octo::Application::getOptions().getPath() + "default.pck");
 	progress.load("save.osv");
 	AbstractResourceLoadingState::start();
-	m_sound = audio.playSound(octo::Application::getResourceManager().getSound(REPAIR_WITH_LAZER_OGG), 0.05f);
+	m_sound = audio.playSound(octo::Application::getResourceManager().getSound(REPAIR_WITH_LAZER_OGG), 1.f);
 	m_sound->setLoop(true);
 }
 
@@ -151,7 +151,7 @@ void	ResourceLoadingScreen::updateScreen(sf::Time frameTime)
 		{
 			octo::AudioManager& audio = octo::Application::getAudioManager();
 			octo::ResourceManager& resources = octo::Application::getResourceManager();
-			audio.playSound(resources.getSound(LOGO_SOUND_OGG), 0.15f, m_generator.randomFloat(0.95f, 1.05f));
+			audio.playSound(resources.getSound(LOGO_SOUND_OGG), 1.f, m_generator.randomFloat(0.95f, 1.05f));
 		}
 		m_timer = sf::Time::Zero;
 		m_index++;

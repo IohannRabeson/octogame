@@ -1,4 +1,4 @@
-	#include <Application.hpp>
+#include <Application.hpp>
 #include <AudioManager.hpp>
 #include <PostEffectManager.hpp>
 #include <ResourceManager.hpp>
@@ -6,6 +6,7 @@
 
 #include "CharacterOcto.hpp"
 #include "OctoSound.hpp"
+#include "MusicManager.hpp"
 #include "ResourceDefinitions.hpp"
 #include "PhysicsEngine.hpp"
 #include "ElevatorStream.hpp"
@@ -37,6 +38,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
 	m_timerStartUseDoor(sf::seconds(1.f)),
 	m_timerStartUseDoorMax(sf::seconds(0.2f)),
+	m_soundUseDoor(nullptr),
 	m_factorDirectionVelocityX(1.f),
 	m_spriteScale(0.6f),
 	m_maxJumpWaterVelocity(-3000.f),
@@ -115,10 +117,22 @@ CharacterOcto::CharacterOcto() :
 		robot->transfertToOcto(true);
 		robot->setState(NanoRobot::State::FollowOcto);
 	}
+
+	Level level = Progress::getInstance().getCurrentDestination();
+	if (level == Level::Red || level == Level::Blue)
+		enableCutscene(true, true);
+
+	octo::AudioManager&			audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+	m_soundUseDoor = audio.playSound(resources.getSound(OBJECT_TIMELAPSE_OGG), 0.f);
+	m_soundUseDoor->setLoop(true);
 }
 
 CharacterOcto::~CharacterOcto(void)
 {
+	if (m_soundUseDoor != nullptr)
+		m_soundUseDoor->stop();
 	if (!m_progress.isMenu())
 		InputListener::removeInputListener();
 }
@@ -928,6 +942,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 		}
 	}
 
+
 	if (m_doorAction)
 	{
 		m_timerStartUseDoor -= frameTime;
@@ -944,6 +959,8 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 		c.a = m_timerStartUseDoor / m_timerStartUseDoorMax * 255.f;
 		m_sprite.setColor(c);
 	}
+	octo::AudioManager& audio = octo::Application::getAudioManager();
+	m_soundUseDoor->setVolume((1.f - m_timerStartUseDoor / m_timerStartUseDoorMax) * audio.getSoundVolume());
 
 	m_collisionTile = false;
 	m_collisionElevator = false;
@@ -1055,6 +1072,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 				m_enableCutscene = false;
 		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
+		MusicManager::getInstance().startEvent();
 	}
 	else
 	{
@@ -1064,6 +1082,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
 		if (m_cutsceneTimer <= sf::Time::Zero)
 			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
+		MusicManager::getInstance().endEvent();
 	}
 }
 

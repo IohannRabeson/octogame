@@ -47,6 +47,6 @@ void AudioMenu::createMenus(void)
 	addMenu(AMenu::getText("options_audio_global"), std::unique_ptr<GlobalVolumeMenu>(new GlobalVolumeMenu()));
 	addMenu(AMenu::getText("options_audio_music"), std::unique_ptr<MusicVolumeMenu>(new MusicVolumeMenu()));
 	addMenu(AMenu::getText("options_audio_sound"), std::unique_ptr<SoundVolumeMenu>(new SoundVolumeMenu()));
-	addMenu(L"I <3", std::unique_ptr<MusicYesNo>(new MusicYesNo()));
+	//addMenu(L"I <3", std::unique_ptr<MusicYesNo>(new MusicYesNo()));
 }
 

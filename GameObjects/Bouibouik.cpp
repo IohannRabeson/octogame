@@ -6,8 +6,7 @@
 #include "ResourceDefinitions.hpp"
 
 Bouibouik::Bouibouik(void) :
-	SimpleObject(BOUIBOUIK_BACK_OSS),
-	m_sound(true)
+	SimpleObject(BOUIBOUIK_BACK_OSS)
 {
 	typedef octo::SpriteAnimation::Frame	Frame;
 	setupAnimation({Frame(sf::seconds(0.2f), 0u)}, octo::LoopMode::Loop);
@@ -75,17 +74,6 @@ void Bouibouik::update(sf::Time frameTime)
 	}
 	SimpleObject::update(frameTime);
 	m_spriteFront.update(frameTime);
-}
-
-void Bouibouik::playSound(void)
-{
-	if (m_sound)
-	{
-		octo::AudioManager& audio = octo::Application::getAudioManager();
-		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		audio.playSound(resources.getSound(OCTO_COUGH_OGG), 0.7f);
-		m_sound = false;
-	}
 }
 
 void Bouibouik::draw(sf::RenderTarget& render, sf::RenderStates states) const

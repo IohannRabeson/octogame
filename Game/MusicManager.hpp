@@ -17,13 +17,15 @@ public:
 	void setup(ABiome & biome);
 	void update(sf::Time frameTime, sf::Vector2f const & octoPos);
 	void debugDraw(sf::RenderTarget & render);
+	void startEvent(void);
+	void endEvent(void);
 
 private:
 	static std::unique_ptr<MusicManager> m_instance;
 	struct AreaMusic
 	{
 		AreaMusic() = default;
-		explicit AreaMusic(Level level, ResourceKey key, sf::FloatRect rect, sf::Time transitionTime = sf::seconds(1.f)) :
+		explicit AreaMusic(Level level, ResourceKey key, sf::FloatRect rect, sf::Time transitionTime = sf::seconds(2.f)) :
 			level(level),
 			name(key),
 			area(rect),
@@ -52,11 +54,17 @@ private:
 	float								m_maxVolume;
 	RandomGenerator						m_generator;
 
+	bool								m_startEvent;
+	bool								m_endEvent;
+	sf::Time							m_eventTimer;
+	sf::Time							m_eventTimerMax;
+
 private:
 	void	basePosition(sf::Vector2f const & octoPos);
 	void	transition(sf::Time frameTime);
 	void	grow(AreaMusic & music, sf::Time frameTime);
 	void	fade(AreaMusic & music, sf::Time frameTime);
+	void	updateEvent(sf::Time frameTime);
 };
 
 #endif

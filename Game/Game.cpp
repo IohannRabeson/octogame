@@ -250,8 +250,8 @@ void	Game::loadLevel(void)
 	Level current = progress.getCurrentDestination();
 	Level next = progress.getNextDestination();
 	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
-		audio.playSound(resources.getSound(PORTAL_END_OGG), 1.f);
-	m_soundGeneration = audio.playSound(resources.getSound(GROUND_OGG), 0.f);
+		audio.playSound(resources.getSound(OBJECT_PORTAL_END_OGG), 1.f);
+	m_soundGeneration = audio.playSound(resources.getSound(OCTO_SOUND_GROUND_OGG), 0.f);
 	m_soundGeneration->setLoop(true);
 	m_fakeMenu.setup();
 }

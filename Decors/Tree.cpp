@@ -254,10 +254,10 @@ void Tree::playSound(ABiome & biome, sf::Vector2f const & position)
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
 
-		float volume = 0.7f;
+		float volume = 1.f;
 		if (m_size.y < 100.f)
 			volume *= m_size.y / 100.f;
-		audio.playSound(resources.getSound(TREE_OGG), volume, biome.randomFloat(0.8f, 1.f), sf::Vector3f(position.x, position.y, 0.f), 500.f, 40.f);
+		audio.playSound(resources.getSound(DECOR_TREE_OGG), volume, biome.randomFloat(0.8f, 1.f), sf::Vector3f(position.x, position.y, 0.f), 500.f, 40.f);
 		m_sound = false;
 	}
 }

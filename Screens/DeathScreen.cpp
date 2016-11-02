@@ -88,7 +88,7 @@ void	DeathScreen::update(sf::Time frameTime)
 
 	m_timeTransition += frameTime;
 	if (!m_sound && m_timeTransition > sf::seconds(0.75f))
-		m_sound = audio.playSound(resources.getSound(DOUBLE_JUMP_TEST_OGG), 0.5f);
+		m_sound = audio.playSound(resources.getSound(OCTO_SOUND_DOUBLE_JUMP_OGG), 1.f);
 
 	if (m_timeTransition >= m_timeTransitionMax)
 		states.change("game");

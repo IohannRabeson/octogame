@@ -82,6 +82,7 @@ public:
 
 	float											getMusicVolume() const { return m_data.musicVol; }
 	void											setMusicVolume(float volume) { m_data.musicVol = volume; }
+	float											getSoundVolume() const { return m_data.soundVol; }
 	void											setSoundVolume(float volume) { m_data.soundVol = volume; }
 	void											setGlobalVolume(float volume) { m_data.globalVol = volume; }
 
@@ -171,7 +172,7 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::IceA, 6u, 100u, 100u, true, true, Language::fr)
+			data(0u, Level::IceA, 30u, 100u, 100u, true, true, Language::fr)
 		{}
 
 		data(std::size_t nanoRobot, Level biome,

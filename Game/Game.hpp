@@ -13,7 +13,7 @@
 # include "KonamiCode.hpp"
 # include "FakeMenu.hpp"
 
-#include "InputListener.hpp"
+# include "InputListener.hpp"
 
 # include <memory>
 

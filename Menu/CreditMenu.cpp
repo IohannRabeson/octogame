@@ -9,7 +9,7 @@ CreditMenu::CreditMenu(void) :
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
-	m_sound = audio.playSound(resources.getSound(OCTO_MONOLOGUE_OGG), 0.3f);
+	m_sound = audio.playSound(resources.getSound(OCTO_VOICE_MONOLOGUE_OGG), 1.f);
 }
 
 void CreditMenu::createMenus(void)

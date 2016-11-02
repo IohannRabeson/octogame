@@ -103,7 +103,7 @@ void Rocket::playSound(void)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		audio.playSound(resources.getSound(ROCKET_AIR_BLAST_OGG), 0.7f);
+		audio.playSound(resources.getSound(EVENT_ROCKET_AIR_BLAST_OGG), 1.f);
 		m_sound = false;
 	}
 }
