@@ -41,7 +41,7 @@ DesertDBiome::DesertDBiome() :
 	m_rockCount(10u, 20u),
 	m_treeCount(13u, 13u),
 	m_mushroomCount(3u, 40u),
-	m_crystalCount(130u, 170u),
+	m_crystalCount(50u, 70u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),

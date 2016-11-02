@@ -24,13 +24,15 @@ void MusicVolumeMenu::createMenus(void)
 	addMenu(L"9", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
 	m_volume = static_cast<std::size_t>(octo::Application::getAudioManager().getMusicVolume());
-	setIndexCursor(m_volume);
+	if (m_volume >= 100.f)
+		m_volume = 99.f;
+	setIndexCursor(static_cast<std::size_t>(m_volume / 10.f));
 }
 
 void MusicVolumeMenu::onSelection(void)
 {
-	octo::Application::getAudioManager().setMusicVolume(getIndexCursor());
-	Progress::getInstance().setMusicVolume(getIndexCursor());
+	octo::Application::getAudioManager().setMusicVolume(getIndexCursor() * 10);
+	Progress::getInstance().setMusicVolume(getIndexCursor() * 10);
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();

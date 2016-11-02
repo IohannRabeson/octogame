@@ -146,7 +146,7 @@ void Rock::playSound(ABiome & biome, sf::Vector2f const & position)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		audio.playSound(resources.getSound(ROCK_OGG), 0.7f, biome.randomFloat(0.8, 1.f), sf::Vector3f(position.x, position.y, 0.f), 600.f, 40.f);
+		audio.playSound(resources.getSound(DECOR_ROCK_OGG), 1.f, biome.randomFloat(0.8, 1.f), sf::Vector3f(position.x, position.y, 0.f), 600.f, 40.f);
 		m_sound = false;
 	}
 }

@@ -1,5 +1,6 @@
 #include "TVScreen.hpp"
 #include "PostEffectLayer.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Interpolations.hpp>
@@ -97,8 +98,11 @@ void TVScreen::update(sf::Time frametime)
 	sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 	if ((m_tvScreen.left > screen.left && m_tvScreen.left < screen.left + screen.width) || (m_tvScreen.left + m_tvScreen.width > screen.left && m_tvScreen.left + m_tvScreen.width < screen.left + screen.width))
 	{
-		PostEffectLayer::getInstance().enableShader(m_kernelName, false);
-		PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, true);
+		if (Progress::getInstance().getLevelOfDetails() >= -1)
+		{
+			PostEffectLayer::getInstance().enableShader(m_kernelName, false);
+			PostEffectLayer::getInstance().enableShader(DUPLICATE_SCREEN_FRAG, true);
+		}
 		float width = octo::Application::getGraphicsManager().getVideoMode().width;
 		float height = octo::Application::getGraphicsManager().getVideoMode().height;
 		float zoomFactor = height / screen.height;
@@ -148,6 +152,13 @@ void TVScreen::collideOctoEvent(CharacterOcto * octo)
 	ANpc::collideOctoEvent(octo);
 	if (m_state == None)
 		m_state = Zoom;
+
+	if (Progress::getInstance().getLevelOfDetails() == -2)
+	{
+		PostEffectLayer::getInstance().enableShader(m_kernelName, true);
+		m_reverse = !m_reverse;
+		m_state = Reversed;
+	}
 }
 
 void TVScreen::draw(sf::RenderTarget &, sf::RenderStates) const

@@ -21,10 +21,8 @@ private:
 	octo::SpriteAnimation		m_animationFront;
 	SmokeSystem					m_smoke;
 	SmokeSystem					m_smoke2;
-	bool						m_sound;
 
 	void setupSmoke(void);
-	void playSound(void);
 };
 
 #endif
