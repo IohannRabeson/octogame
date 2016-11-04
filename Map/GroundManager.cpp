@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "PepetteNpc.hpp"
 #include "DeepoNpc.hpp"
 #include "DesertEngine.hpp"
 #include "ClaireNpc.hpp"
@@ -327,6 +328,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator(FISH_BLUE_OSS, [&biome](){ return new FishBlueNpc(biome); });
 	m_npcFactory.registerCreator(BEACHBOY_SUB_OSS, [&biome](){ return new BeachBoySubNpc(biome); });
 	m_npcFactory.registerCreator(SYLVIE_OSS, [&biome](){ return new SylvieNpc(biome); });
+	m_npcFactory.registerCreator(PEPETTE_OSS, [&biome](){ return new PepetteNpc(biome); });
 	m_npcFactory.registerCreator(SEB_OSS, [&biome](){ return new SebNpc(biome); });
 	m_npcFactory.registerCreator(JELLYFISH_OSS, [&biome](){ return new JellyfishNpc(biome); });
 
@@ -1007,6 +1009,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			case GameObjectType::AymericNpc:
 				{
 					AymericNpc * npc = new AymericNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
+				}
+				break;
+			case GameObjectType::PepetteNpc:
+				{
+					PepetteNpc * npc = new PepetteNpc(biome);
 					npc->onTheFloor();
 					m_npcsOnFloor.emplace_back(gameObject.first, npc->getBox()->getSize().x / Tile::TileSize, npc);
 				}

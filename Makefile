@@ -172,7 +172,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClaireNpc.cpp						\
 				Npcs/DesertEngine.cpp					\
 				Npcs/DeepoNpc.cpp						\
+				Npcs/PepetteNpc.cpp				\
 #Script AddNpc
+
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\

@@ -394,6 +394,8 @@ bool	Progress::meetPortal(Level source, Level destination)
 
 std::size_t Progress::countRandomDiscover(void)
 {
+	if (m_countRandomDiscover > 15u)
+		m_countRandomDiscover = 15u;
 	if (m_countRandomDiscover != 0u)
 		return m_countRandomDiscover;
 	std::size_t count = 0u;
@@ -405,6 +407,8 @@ std::size_t Progress::countRandomDiscover(void)
 				count++;
 		}
 	}
+	if (count > 15u)
+		count = 15u;
 	return count;
 }
 
