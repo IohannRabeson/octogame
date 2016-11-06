@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 SlowFallNanoRobot::SlowFallNanoRobot(sf::Vector2f const & position) :
-	NanoRobot(position, NANO_SLOW_FALL_OSS, 2, 5544, sf::Vector2f(0.f, -19.f), InputListener::OctoKeys::SlowFall, 4.f)
+	NanoRobot(position, NANO_SLOW_FALL_OSS, 2, 5544, sf::Vector2f(0.f, -19.f), InputListener::OctoKeys::Action, 4.f)
 {
 	setup(this);
 

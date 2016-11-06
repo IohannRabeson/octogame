@@ -19,7 +19,7 @@ public:
 		Menu = 5,
 		SelectMenu = 6,
 		Use = 7,
-		SlowFall = 8,
+		Action = 8,
 		GroundLeft = 9,
 		GroundRight = 10,
 		Infos = 11,

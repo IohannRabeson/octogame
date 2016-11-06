@@ -1948,7 +1948,7 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Jump:
 			caseSpace();
 			break;
-		case OctoKeys::SlowFall:
+		case OctoKeys::Action:
 			caseUp();
 			break;
 		case OctoKeys::Down:
@@ -2091,7 +2091,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 				m_afterJumpVelocity = m_pixelSecondAfterJump;
 			}
 			break;
-		case OctoKeys::SlowFall:
+		case OctoKeys::Action:
 			m_keyUp = false;
 			if (state == WaterJump || state == SlowFall1 || state == SlowFall2 || state == SlowFall3)
 			{
