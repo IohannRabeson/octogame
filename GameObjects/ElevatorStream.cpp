@@ -1,6 +1,7 @@
 #include "ElevatorStream.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -33,6 +34,13 @@ ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & 
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 
 	m_particles->setBiome(biome);
+
+	if (Progress::getInstance().getCurrentDestination() == Level::Final)
+	{
+		m_borderColor = sf::Color(0, 0, 0, 150);
+		m_centerColor = sf::Color(0, 0, 0, 50);
+		m_upColor = sf::Color(0, 0, 0, 0);
+	}
 
 	m_box->setGameObject(this);
 	m_box->setType(AShape::Type::e_trigger);
