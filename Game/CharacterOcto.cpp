@@ -904,23 +904,14 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 
 	updateNanoRobots(frameTime);
 	updateDoorAction(frameTime);
-
-	m_collisionTile = false;
-	m_collisionElevator = false;
-	m_collisionPortal = false;
-	m_collidePortalEvent = false;
-	m_collisionElevatorEvent = false;
-	m_collisionSpaceShip = false;
-	m_doorAction = false;
-	m_previousTop = m_box->getGlobalBounds().top;
-	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
-
 	updateParticules(frameTime);
-
-	progress.setOctoPos(getPosition());
-
+	resetColisionBolean();
 	replaceOcto();
 	updateCutscene(realFrameTime);
+
+	m_previousTop = m_box->getGlobalBounds().top;
+	m_prevEvent = static_cast<Events>(m_sprite.getCurrentEvent());
+	progress.setOctoPos(getPosition());
 }
 
 void	CharacterOcto::replaceOcto(void)
@@ -1377,7 +1368,9 @@ void	CharacterOcto::collisionElevatorUpdate()
 		}
 		else
 		{
-			if (m_sprite.getCurrentEvent() == DieFall)
+			Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
+
+			if (event == DieFall || event == Elevator || event == StartElevator)
 				m_sprite.setNextEvent(Fall);
 			m_useElevator = false;
 			m_box->setApplyGravity(true);
@@ -1501,6 +1494,17 @@ void	CharacterOcto::updateParticules(sf::Time frameTime)
 		m_bubbleParticle.setCanEmit(true);
 	else
 		m_bubbleParticle.setCanEmit(false);
+}
+
+void	CharacterOcto::resetColisionBolean()
+{
+	m_collisionTile = false;
+	m_collisionElevator = false;
+	m_collisionPortal = false;
+	m_collidePortalEvent = false;
+	m_collisionElevatorEvent = false;
+	m_collisionSpaceShip = false;
+	m_doorAction = false;
 }
 
 void	CharacterOcto::kill()
@@ -1884,6 +1888,7 @@ void	CharacterOcto::caseJump()
 	{
 		randomJumpAnimation();
 		m_keyJump = true;
+		m_box->setApplyGravity(true);
 		if ((m_onGround || m_onGroundDelay >= sf::Time::Zero || m_inWater) && m_progress.canJump() && !m_numberOfJump)
 		{
 			m_sprite.setNextEvent(StartJump);
@@ -2108,19 +2113,13 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 		return true;
 	if (!m_onGround && !m_keyCapacity && !m_keyElevator)
 	{
-		if (state != Fall && state != DieFall)
-		{
-			if (state != StartJump && state != DoubleJump)
-				m_sprite.setNextEvent(Fall);
-		}
+		if (state != Fall && state != DieFall && state != StartJump && state != DoubleJump)
+			m_sprite.setNextEvent(Fall);
 	}
-	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyCapacity)
-	{
-		if (state != Wait)
-		{
-			m_sprite.setNextEvent(Idle);
-		}
-	}
+
+	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyCapacity && state != Wait)
+		m_sprite.setNextEvent(Idle);
+
 	return true;
 }
 

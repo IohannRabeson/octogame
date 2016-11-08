@@ -122,6 +122,7 @@ private:
 	void					updateDoorAction(sf::Time frameTime);
 	void					updateNanoRobots(sf::Time frameTime);
 	void					updateParticules(sf::Time frameTime);
+	void					resetColisionBolean();
 	void					dieFall();
 	bool					dieGrass();
 	void					kill();
