@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 RepairShipNanoRobot::RepairShipNanoRobot(sf::Vector2f const & position) :
-	NanoRobot(position, NANO_REPAIR_SHIP_OSS, 4, 11185654, sf::Vector2f(0.f, -24.f), InputListener::OctoKeys::Use),
+	NanoRobot(position, NANO_REPAIR_SHIP_OSS, 4, 11185654, sf::Vector2f(0.f, -24.f), InputListener::OctoKeys::Elevator),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(2.f))
 {

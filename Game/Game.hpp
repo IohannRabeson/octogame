@@ -55,7 +55,7 @@ private:
 	std::unique_ptr<CameraMovement>		m_cameraMovement;
 	bool								m_keyGroundRight;
 	bool								m_keyGroundLeft;
-	bool								m_keyInfos;
+	bool								m_keyEntrance;
 	std::shared_ptr<sf::Sound>			m_soundGeneration;
 	float								m_groundVolume;
 	sf::Time							m_groundSoundTime;
@@ -69,7 +69,6 @@ private:
 	std::size_t							m_skipFramesMax;
 	FakeMenu							m_fakeMenu;
 	SpeedState							m_speedState;
-	bool								m_keyUse;
 	bool								m_collideDoor;
 
 	void			updateSlowTime(sf::Time frameTime);

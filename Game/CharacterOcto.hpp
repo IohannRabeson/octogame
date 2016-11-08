@@ -118,6 +118,10 @@ public:
 	void					enableCutscene(bool enable, bool autoDisable = false);
 
 private:
+	void					updateGroundDelay(sf::Time frameTime);
+	void					updateDoorAction(sf::Time frameTime);
+	void					updateNanoRobots(sf::Time frameTime);
+	void					updateParticules(sf::Time frameTime);
 	void					dieFall();
 	bool					dieGrass();
 	void					kill();
@@ -139,10 +143,8 @@ private:
 	void					commitEventToGraphics();
 	void					caseLeft();
 	void					caseRight();
-	void					caseSpace();
-	void					caseUp();
-	void					caseAction();
-	void					casePortal();
+	void					caseJump();
+	void					caseCapacity();
 
 private:
 	class OctoSound;
@@ -229,13 +231,12 @@ private:
 	bool						m_afterJump;
 	bool						m_keyLeft;
 	bool						m_keyRight;
-	bool						m_keySpace;
-	bool						m_keyUp;
+	bool						m_keyJump;
+	bool						m_keyCapacity;
 	bool						m_keyDown;
-	bool						m_keyAction;
+	bool						m_keyEntrance;
 	bool						m_keyPortal;
 	bool						m_keyElevator;
-	bool						m_keyE;
 	bool						m_keyZoomIn;
 	bool						m_collisionTile;
 	bool						m_collisionTileHead;

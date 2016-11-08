@@ -95,7 +95,7 @@ Game::Game(void) :
 	m_konami(nullptr),
 	m_keyGroundRight(false),
 	m_keyGroundLeft(false),
-	m_keyInfos(false),
+	m_keyEntrance(false),
 	m_soundGeneration(nullptr),
 	m_groundVolume(0.7f),
 	m_groundSoundTime(sf::Time::Zero),
@@ -105,7 +105,6 @@ Game::Game(void) :
 	m_skipFrames(0u),
 	m_skipFramesMax(3u),
 	m_speedState(None),
-	m_keyUse(false),
 	m_collideDoor(false)
 {
     octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
@@ -324,7 +323,7 @@ void Game::updateSlowTime(sf::Time frameTime)
 			m_slowTime += frameTime;
 			m_slowTime = std::min(m_slowTime, m_slowTimeMax);
 			m_slowTimeCoef = 1.f - m_slowTime / m_slowTimeMax * 0.9f;
-			if (m_slowTime >= m_slowTimeMax && !m_keyInfos)
+			if (m_slowTime >= m_slowTimeMax && !m_keyEntrance)
 				m_speedState = SlowEnd;
 			break;
 		case SlowEnd:
@@ -340,7 +339,7 @@ void Game::updateSlowTime(sf::Time frameTime)
 			m_slowTime += frameTime;
 			m_slowTime = std::min(m_slowTime, m_slowTimeMax);
 			m_slowTimeCoef = 1.f + m_slowTime / m_slowTimeMax * 6.f;
-			if (m_slowTime >= m_slowTimeMax && !m_keyUse)
+			if (m_slowTime >= m_slowTimeMax && !m_keyEntrance)
 				m_speedState = FastEnd;
 			break;
 		case FastEnd:
@@ -618,16 +617,13 @@ bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 			}
 			break;
 		}
-		case OctoKeys::Infos:
-			std::cout << "OctoPos(" << m_octo->getPosition().x / 16.f << "u, " << m_octo->getPosition().y / 16.f << "u)" << std::endl;
-			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
-			m_keyInfos = true;
-			//setSlowMotion();
-			break;
-		case OctoKeys::Use:
-			m_keyUse = true;
+		case OctoKeys::Entrance:
+			m_keyEntrance = true;
 			if (m_collideDoor)
 				setFastMotion();
+			//std::cout << "OctoPos(" << m_octo->getPosition().x / 16.f << "u, " << m_octo->getPosition().y / 16.f << "u)" << std::endl;
+			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
+			//setSlowMotion();
 			break;
 		default:
 			break;
@@ -645,11 +641,8 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 		case OctoKeys::GroundRight:
 			m_keyGroundRight = false;
 			break;
-		case OctoKeys::Infos:
-			m_keyInfos = false;
-			break;
-		case OctoKeys::Use:
-			m_keyUse = false;
+		case OctoKeys::Entrance:
+			m_keyEntrance = false;
 			break;
 		default:
 			break;

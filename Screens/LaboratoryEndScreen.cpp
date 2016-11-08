@@ -241,8 +241,8 @@ bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Menu:
 			m_stopDialog = true;
 			break;
-		case OctoKeys::Action:
-		case OctoKeys::Use:
+		case OctoKeys::Capacity:
+		case OctoKeys::Elevator:
 			m_timeBeforeNextText = sf::seconds(0.1f);
 			break;
 		default:
@@ -255,8 +255,8 @@ bool	LaboratoryEndScreen::onInputReleased(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
-		case OctoKeys::Action:
-		case OctoKeys::Use:
+		case OctoKeys::Capacity:
+		case OctoKeys::Elevator:
 			m_timeBeforeNextText = sf::seconds(2.f);
 		default:
 			break;
