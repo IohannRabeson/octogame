@@ -1748,7 +1748,6 @@ void	CharacterOcto::commitEventToGraphics()
 	}
 }
 
-
 void	CharacterOcto::commitControlsToPhysics(float frametime)
 {
 	sf::Vector2f	velocity = m_box->getVelocity();

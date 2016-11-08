@@ -47,7 +47,7 @@ ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & 
 	m_box->setApplyGravity(false);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Elevator));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
-	m_box->setSize(100.f, 0.f);
+	m_box->setSize(128.f, 0.f);
 	m_particles->setWidth(192.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
