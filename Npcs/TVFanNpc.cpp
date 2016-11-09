@@ -1,7 +1,7 @@
 #include "TVFanNpc.hpp"
 
 TVFanNpc::TVFanNpc(void) :
-	ASpecialNpc(TV_FAN_OSS)
+	ASpecialNpc(TV_FAN_OSS, false, false)
 {
     setType(GameObjectType::TVFanNpc);
 	setSize(sf::Vector2f(300.f, 200.f));
