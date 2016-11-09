@@ -326,25 +326,22 @@ void	ElevatorStream::update(sf::Time frameTime)
 
 void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
-	sf::RenderStates	states;
-
 	render.draw(m_spriteBottomBack);
 	if (!m_isBotOnInstance)
 		render.draw(m_spriteTopBack);
 	else
 		render.draw(m_spriteBottomFront);
-	states.shader = &m_shader;
-	if (m_state == Activated)
-		m_particles->draw(render, states);
-	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
 }
 
 void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
+	sf::RenderStates	states;
+	if (m_state == Activated)
+		m_particles->draw(render, states);
+	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
 	if (!m_isBotOnInstance)
-	{
-		render.draw(m_spriteBottomFront);
 		render.draw(m_spriteTopFront);
-	}
+	render.draw(m_spriteBottomFront);
 	m_smoke.draw(render);
+	states.shader = &m_shader;
 }

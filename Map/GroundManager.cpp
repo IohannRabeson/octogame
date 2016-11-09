@@ -2273,6 +2273,8 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 		objectLow.m_gameObject->drawFront(render, states);
 	for (auto & npc : m_npcs)
 		npc->drawFront(render, states);
+	for (auto & decor : m_instanceDecors)
+		decor->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_decorManagerInstanceFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
@@ -2280,8 +2282,6 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerInstanceGround, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->draw(render, states);
-	for (auto & decor : m_instanceDecors)
-		decor->drawFront(render, states);
 }
 
 void GroundManager::drawWater(sf::RenderTarget& render, sf::RenderStates states) const
