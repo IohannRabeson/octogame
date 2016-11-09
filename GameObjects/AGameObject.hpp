@@ -140,7 +140,9 @@ enum class GameObjectType : std::size_t
 	FatNpc						= (1 << 15) + 94,
 	DesertEngine				= (1 << 15) + 95,
 	PepetteNpc				= (1 << 15) + 96,
+	TVFanNpc				= (1 << 15) + 97,
 //Script AddNpc
+
 
 
 

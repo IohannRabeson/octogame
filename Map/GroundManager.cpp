@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "TVFanNpc.hpp"
 #include "PepetteNpc.hpp"
 #include "DeepoNpc.hpp"
 #include "DesertEngine.hpp"
@@ -275,6 +276,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<TVFanNpc>(TV_FAN_OSS);
 	m_npcFactory.registerCreator<DeepoNpc>(DEEPO_OSS);
 	m_npcFactory.registerCreator<DesertEngine>(DESERT_ENGINE_1_OSS);
 	m_npcFactory.registerCreator<ClaireNpc>(CLAIRE_OSS);
@@ -852,6 +854,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::TVFanNpc:
+				{
+					TVFanNpc * npc = new TVFanNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::DeepoNpc:
 				{
 					DeepoNpc * npc = new DeepoNpc();
