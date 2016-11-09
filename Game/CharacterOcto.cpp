@@ -250,6 +250,12 @@ void	CharacterOcto::setup(ABiome & biome)
 	Progress const & progress = Progress::getInstance();
 	if (!progress.isMenu() && progress.getNextDestination() == Level::Rewards)
 		caseRight();
+
+	//Force check joystick
+	if (sf::Joystick::getAxisPosition(0, sf::Joystick::X) > 50 || sf::Joystick::getAxisPosition(0, sf::Joystick::PovX) > 50)
+		caseRight();
+	if (sf::Joystick::getAxisPosition(0, sf::Joystick::X) < -50 || sf::Joystick::getAxisPosition(0, sf::Joystick::PovX) < -50)
+		caseLeft();
 }
 
 void	CharacterOcto::setupAnimation()
