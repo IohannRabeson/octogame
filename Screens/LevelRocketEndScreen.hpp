@@ -24,6 +24,7 @@ public:
 	virtual void		draw(sf::RenderTarget& render)const;
 
 	virtual bool	onInputPressed(InputListener::OctoKeys const & key);
+	virtual bool	onInputReleased(InputListener::OctoKeys const & key);
 
 private:
 	RandomGenerator					m_generator;
@@ -31,6 +32,7 @@ private:
 	std::unique_ptr<StarSystem[]>	m_stars;
 	std::unique_ptr<RocketEnd>		m_rocket;
 	std::unique_ptr<Credit>			m_credit;
+	float							m_speedCredit;
 	sf::Time						m_timer;
 	sf::Time						m_timerMax;
 
