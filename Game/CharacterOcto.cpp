@@ -27,6 +27,7 @@
 
 CharacterOcto::CharacterOcto() :
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
+	m_boxSize(sf::Vector2f(30.f, 85.f)),
 	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_repairNanoRobot(nullptr),
 	m_progress(Progress::getInstance()),
@@ -84,6 +85,7 @@ CharacterOcto::CharacterOcto() :
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutscenePauseTimerMax(sf::seconds(4.f)),
+	m_adaptBoxTimerMax(sf::seconds(0.5f)),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
@@ -145,7 +147,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_isDeadlyWater = biome.isDeadlyWater();
 	m_timeEventDieVoidMax = biome.getTimeDieVoid();
 	m_box->setGameObject(this);
-	m_box->setSize(sf::Vector2f(30.f, 85.f));
+	m_box->setSize(m_boxSize);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Player));
 	std::size_t mask = static_cast<std::size_t>(GameObjectType::Portal)
 		| static_cast<std::size_t>(GameObjectType::GroundTransformNanoRobot)
@@ -872,6 +874,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	if (progress.isMenu())
 		updateAI(frameTime);
 
+	updateBox(frameTime);
 	dieGrass();
 	updateGroundDelay(frameTime);
 	portalEvent();
@@ -904,7 +907,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 
 	updateNanoRobots(frameTime);
 	updateDoorAction(frameTime);
-	updateParticules(frameTime);
+	updateParticles(frameTime);
 	resetColisionBolean();
 	replaceOcto();
 	updateCutscene(realFrameTime);
@@ -1393,6 +1396,20 @@ void	CharacterOcto::collisionElevatorUpdate()
 	}
 }
 
+void	CharacterOcto::updateBox(sf::Time frameTime)
+{
+	//TODO: Check on use if it's a good improvement
+	Events event = static_cast<Events>(m_sprite.getCurrentEvent());
+
+	if (event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3)
+		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
+	else
+		m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 10.f, sf::Time::Zero);
+
+	m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
+	m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
+}
+
 void	CharacterOcto::updateGroundDelay(sf::Time frameTime)
 {
 	if (m_onGround)
@@ -1463,7 +1480,7 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 	}
 }
 
-void	CharacterOcto::updateParticules(sf::Time frameTime)
+void	CharacterOcto::updateParticles(sf::Time frameTime)
 {
 	m_ploufParticle.setEmitter(sf::Vector2f(m_box->getBaryCenter().x, m_waterLevel));
 	m_ploufParticle.update(frameTime);
@@ -1719,7 +1736,7 @@ void	CharacterOcto::commitPhysicsToGraphics()
 		float				xPos = pos.x - ((m_sprite.getLocalSize().x  * m_spriteScale) / 2.f);
 		float				yPos =  pos.y - ((m_sprite.getLocalSize().y * m_spriteScale) - (m_box->getSize().y / 2.f));
 	
-		m_sprite.setPosition(sf::Vector2f(xPos, yPos + m_deltaPositionY));
+		m_sprite.setPosition(sf::Vector2f(xPos, yPos + m_deltaPositionY + m_adaptBoxDelta));
 		m_eventBox->setPosition(pos.x - m_eventBox->getRadius(), pos.y - m_eventBox->getRadius());
 	}
 }
