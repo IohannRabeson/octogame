@@ -1404,7 +1404,12 @@ void	CharacterOcto::updateBox(sf::Time frameTime)
 	if (event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3)
 		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
 	else
-		m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 10.f, sf::Time::Zero);
+	{
+		if (!m_onGround)
+			m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 2.f, sf::Time::Zero);
+		else
+			m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 10.f, sf::Time::Zero);
+	}
 
 	m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
 	m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
