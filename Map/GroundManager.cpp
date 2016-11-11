@@ -2250,6 +2250,8 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 	render.draw(m_decorManagerInstanceBack, states);
 	for (auto & decor : m_instanceDecors)
 		decor->draw(render, states);
+	for (auto & decor : m_instanceDecorsFront)
+		decor->draw(render, states);
 	for (auto & objectHigh : m_otherObjectsHigh)
 		objectHigh.m_gameObject->draw(render, states);
 	for (auto & objectLow : m_otherObjectsLow)
@@ -2290,7 +2292,7 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerGround, states);
 	render.draw(m_decorManagerInstanceGround, states);
 	for (auto & decor : m_instanceDecorsFront)
-		decor->draw(render, states);
+		decor->drawFront(render, states);
 }
 
 void GroundManager::drawWater(sf::RenderTarget& render, sf::RenderStates states) const
