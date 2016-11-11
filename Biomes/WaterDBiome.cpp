@@ -137,6 +137,9 @@ WaterDBiome::WaterDBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	m_secondStartColor = getRockColor();
+	m_secondEndColor = getRockColor();
+
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::Final)
 		m_octoStartPosition = sf::Vector2f(773.f * 16.f, -110.f * 16.f);
@@ -292,8 +295,6 @@ Map::MapSurfaceGenerator WaterDBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator WaterDBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart = getRockColor();//(205, 158, 21);
-	sf::Color secondColorEnd = getRockColor();//(193, 96, 0);
 	sf::Color thirdColorStart(53, 107, 208);
 	sf::Color thirdColorEnd(26, 15, 213);
 	float start1 = -8900.f / static_cast<float>(m_mapSize.y);
@@ -302,20 +303,20 @@ Map::TileColorGenerator WaterDBiome::getTileColorGenerator()
 	float middle2 = 200.f / static_cast<float>(m_mapSize.y);
 	float end1 = 800.f / static_cast<float>(m_mapSize.y);
 	float end2 = 1500.f / static_cast<float>(m_mapSize.y);
-	return [this, secondColorStart, secondColorEnd, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
+	return [this, thirdColorStart, thirdColorEnd, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
 		if (y <= start1)
-			return octo::linearInterpolation(secondColorStart, secondColorEnd, transition);
+			return octo::linearInterpolation(m_secondStartColor, m_secondEndColor, transition);
 		else if (y > start1 && y <= start2)
 		{
 			float ratio = (y - (start1)) / (start2 - start1);
-			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
+			return octo::linearInterpolation(octo::linearInterpolation(m_secondStartColor, m_tileStartColor, ratio), m_secondEndColor, transition);
 		}
 		else if (y > start2 && y <= middle1)
 		{
 			float ratio = (y - (start2)) / (middle1 - start2);
-			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
+			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(m_secondEndColor, m_tileEndColor, ratio), transition);
 		}
 		else if (y > middle1 && y <= middle2)
 		{
