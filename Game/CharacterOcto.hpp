@@ -27,6 +27,7 @@ class Progress;
 class NanoRobot;
 class ABiome;
 class Portal;
+class GroundManager;
 namespace sf
 {
 	class Shader;
@@ -36,6 +37,15 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 	public InputListener,
 	public sf::Drawable
 {
+public:
+	friend class OctoEvent;
+
+	class OctoEvent : public AGameObject<GameObjectType::PlayerEvent>
+	{
+	public:
+		CharacterOcto *	m_octo;
+	};
+
 	enum Events
 	{
 		Idle,
@@ -59,14 +69,7 @@ class CharacterOcto : public AGameObject<GameObjectType::Player>,
 		PortalEvent,
 		KonamiCode
 	};
-public:
-	friend class OctoEvent;
 
-	class OctoEvent : public AGameObject<GameObjectType::PlayerEvent>
-	{
-	public:
-		CharacterOcto *	m_octo;
-	};
 	CharacterOcto();
 	virtual ~CharacterOcto();
 
@@ -116,12 +119,14 @@ public:
 	void					collidePortalEvent(bool collidePortal);
 	void					resetCollidingTileCount(void);
 	void					enableCutscene(bool enable, bool autoDisable = false);
+	void					moveGround(sf::Time frameTime, std::unique_ptr<GroundManager> & groundManager);
 
 private:
 	void					updateBox(sf::Time frameTime);
 	void					updateGroundDelay(sf::Time frameTime);
 	void					updateDoorAction(sf::Time frameTime);
 	void					updateNanoRobots(sf::Time frameTime);
+	void					updateOctoEvent(void);
 	void					updateParticles(sf::Time frameTime);
 	void					resetColisionBolean();
 	void					dieFall();
@@ -228,12 +233,18 @@ private:
 	sf::Time									m_onGroundDelay;
 	sf::Time									m_onGroundDelayMax;
 	sf::Vector2f								m_lastPositionOnGround;
+	std::shared_ptr<sf::Sound>					m_soundGeneration;
+	float										m_groundVolume;
+	sf::Time									m_groundSoundTime;
+	sf::Time									m_groundSoundTimeMax;
 	bool										m_onElevator;
 	bool										m_useElevator;
 	bool										m_onTopElevator;
 	bool										m_afterJump;
 	bool										m_keyLeft;
 	bool										m_keyRight;
+	bool										m_keyGroundRight;
+	bool										m_keyGroundLeft;
 	bool										m_keyJump;
 	bool										m_keyCapacity;
 	bool										m_keyDown;

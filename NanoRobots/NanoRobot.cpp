@@ -15,9 +15,6 @@ sf::Vector2f NanoRobot::m_laserConvergence;
 NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, InputListener::OctoKeys key, float multiplier) :
 	m_id(id),
 	m_swarm(1),
-	m_uniformPopulation(1234u, &octo::Application::getResourceManager().getPalette(FROM_SEA1_OPA),
-						1.2f, 2.f, 6.f, 10.f, 32.f, 50.f,
-						sf::Time::Zero, sf::Time::Zero),
 	m_spawnMode(FireflySwarm::SpawnMode::Normal),
 	m_positionBehavior(new FireflySwarm::CirclePositionBehavior(seed, 50.f)),
 	m_ray(new sf::Vertex[16]),
@@ -26,6 +23,8 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_timerRepairShip(sf::Time::Zero),
 	m_timerRepair(sf::Time::Zero),
 	m_timerRepairMax(sf::seconds(4.f)),
+	m_timerUseMax(sf::seconds(2.f)),
+	m_isUsing(false),
 	m_repairIndex(0u),
 	m_startLastAnimation(false),
 	m_usePathLaser(false),
@@ -42,7 +41,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_soundDistri(0u, 2u),
 	m_popUp(false),
 	m_popUpTimerMax(sf::seconds(5.f)),
-	m_stopSpeakingKey(key),
+	m_inputKey(key),
 	m_stopSpeakinKeyPress(false)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
@@ -255,6 +254,9 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 	sf::Vector2f pos = position;
 	sf::Vector2f direction = interestPoint - position;
 
+	if (m_isUsing && m_id == NANO_REPAIR_OSS)
+		return position - sf::Vector2f(0.f, 100.f);
+
 	if (interestPoint.x != 0.f && interestPoint.y != 0.f
 		&& effectState != NanoEffect::State::Active
 		&& effectState != NanoEffect::State::Transfer
@@ -270,10 +272,6 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 		}
 		else if (dist > 600.f)
 		{
-			direction = interestPoint - position;
-			octo::normalize(direction);
-			pos += direction * 300.f;
-
 			if (m_lastPos.x != position.x || m_lastPos.y != position.y)
 			{
 				pos.y -= 300.f;
@@ -282,7 +280,12 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 					m_glowingEffect.setState(NanoEffect::State::None);
 			}
 			else
+			{
+				direction = interestPoint - position;
+				octo::normalize(direction);
+				pos += direction * 300.f;
 				m_positionBehavior->setRadius(100.f);
+			}
 		}
 	}
 	else
@@ -291,6 +294,31 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 	m_lastPos = position;
 	return pos;
 }
+
+void NanoRobot::usingCapacity(sf::Time frametime)
+{
+	if (m_isUsing)
+	{
+		m_timerUse = std::min(m_timerUse + frametime, m_timerUseMax);
+		m_positionBehavior->setRadius(0.f);
+		m_glowingEffect.setState(NanoEffect::State::Random);
+	}
+	else
+	{
+		m_timerUse = std::max(m_timerUse - frametime * 5.f, sf::Time::Zero);
+		m_positionBehavior->setRadius(octo::cosinusInterpolation(m_positionBehavior->getRadius(), 0.f, m_timerUse / m_timerUseMax));
+	}
+
+	float interpolateValue = m_timerUse / m_timerUseMax;
+	m_sprite.setScale(0.6f + interpolateValue * 0.3f, 0.6f + interpolateValue * 0.3f);
+	if (m_id == NANO_REPAIR_OSS)
+	{
+		m_swarm.getFirefly(0u).speed = octo::cosinusInterpolation(1.f, 5.f, interpolateValue);
+		m_swarm.setTarget(octo::linearInterpolation(m_sprite.getPosition(), m_swarm.getTarget(), interpolateValue));
+	}
+	(void)m_inputKey;
+}
+
 bool NanoRobot::isTravelling(void) const
 {
 	return m_isTravelling;
@@ -325,8 +353,6 @@ void NanoRobot::updatePopUpInfo(sf::Time frametime)
 
 bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 {
-	if (m_stopSpeakingKey == key)
-		m_stopSpeakinKeyPress = true;
 	switch (key)
 	{
 		/*
@@ -435,6 +461,18 @@ sf::Vector2f const & NanoRobot::getLaserConvergence(void)
 	return m_laserConvergence;
 }
 
+void NanoRobot::updateOctoEvent(std::string const & event, float valueEvent)
+{
+	if (event == m_id)
+	{
+		m_stopSpeakinKeyPress = true;
+		m_isUsing = true;
+	}
+	else
+		m_isUsing = false;
+	(void)valueEvent;
+}
+
 void NanoRobot::update(sf::Time frametime)
 {
 	m_swarm.update(frametime);
@@ -517,6 +555,9 @@ void NanoRobot::update(sf::Time frametime)
 	m_glowingEffect.update(frametime);
 
 	updateRepairShip(frametime);
+
+	usingCapacity(frametime);
+
 }
 
 void NanoRobot::updateRepairShip(sf::Time frameTime)

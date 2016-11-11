@@ -54,11 +54,17 @@ CharacterOcto::CharacterOcto() :
 	m_originMove(false),
 	m_onGround(false),
 	m_onGroundDelayMax(sf::seconds(0.05f)),
+	m_soundGeneration(nullptr),
+	m_groundVolume(0.7f),
+	m_groundSoundTime(sf::Time::Zero),
+	m_groundSoundTimeMax(sf::seconds(0.6f)),
 	m_onElevator(false),
 	m_useElevator(false),
 	m_afterJump(false),
 	m_keyLeft(false),
 	m_keyRight(false),
+	m_keyGroundRight(false),
+	m_keyGroundLeft(false),
 	m_keyJump(false),
 	m_keyCapacity(false),
 	m_keyDown(false),
@@ -128,12 +134,16 @@ CharacterOcto::CharacterOcto() :
 
 	m_soundUseDoor = audio.playSound(resources.getSound(OBJECT_TIMELAPSE_OGG), 0.f);
 	m_soundUseDoor->setLoop(true);
+	m_soundGeneration = audio.playSound(resources.getSound(OCTO_SOUND_GROUND_OGG), 0.f);
+	m_soundGeneration->setLoop(true);
 }
 
 CharacterOcto::~CharacterOcto(void)
 {
 	if (m_soundUseDoor != nullptr)
 		m_soundUseDoor->stop();
+	if (m_soundGeneration != nullptr)
+		m_soundGeneration->stop();
 	if (!m_progress.isMenu())
 		InputListener::removeInputListener();
 }
@@ -1171,7 +1181,8 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 	}
 	else if (m_progress.canRepair())
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
-	m_collisionElevatorEvent = true;
+	if (!elevator.isActivated())
+		m_collisionElevatorEvent = true;
 }
 
 void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
@@ -1489,6 +1500,48 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 		robot->update(frameTime);
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
+
+	updateOctoEvent();
+}
+
+void	CharacterOcto::updateOctoEvent(void)
+{
+	std::string	nanoRobot = "";
+	float		value = 0.f;
+
+	Events const & currentEvent = static_cast<Events>(m_sprite.getCurrentEvent());
+
+	if (m_keyGroundRight || m_keyGroundLeft)
+		nanoRobot = NANO_GROUND_TRANSFORM_OSS;
+
+	switch (currentEvent)
+	{
+		case StartJump:
+			nanoRobot = NANO_JUMP_OSS;
+			break;
+		case DoubleJump:
+			nanoRobot = NANO_DOUBLE_JUMP_OSS;
+			break;
+		case StartSlowFall:
+		case SlowFall1:
+		case SlowFall2:
+		case SlowFall3:
+			nanoRobot = NANO_SLOW_FALL_OSS;
+			value = m_timeSlowFall / m_timeSlowFallMax;
+			break;
+		case StartWaterJump:
+		case WaterJump:
+			nanoRobot = NANO_JUMP_WATER_OSS;
+			break;
+		default:
+			break;
+	}
+
+	if (m_collisionElevatorEvent)
+		nanoRobot = NANO_REPAIR_OSS;
+
+	for (auto & robot : m_nanoRobots)
+		robot->updateOctoEvent(nanoRobot, value);
 }
 
 void	CharacterOcto::updateParticles(sf::Time frameTime)
@@ -1909,6 +1962,36 @@ void	CharacterOcto::caseRight()
 	}
 }
 
+void CharacterOcto::moveGround(sf::Time frameTime, std::unique_ptr<GroundManager> & groundManager)
+{
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	float						volume = 0.f;
+
+	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && m_groundSoundTime > sf::Time::Zero)
+		m_groundSoundTime -= frameTime;
+
+	if ((m_keyGroundRight || m_keyGroundLeft || m_progress.forceMapToMove()) && m_progress.canMoveMap())
+	{
+		if (m_progress.forceMapToMove())
+			groundManager->setNextGenerationState(GroundManager::GenerationState::Next, getPosition());
+		if (m_keyGroundLeft == true && m_progress.canOctoMoveMap())
+			groundManager->setNextGenerationState(GroundManager::GenerationState::Next, getPosition());
+		else if (m_keyGroundRight == true && m_progress.canOctoMoveMap())
+			groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, getPosition());
+		if (m_groundSoundTime < m_groundSoundTimeMax)
+			m_groundSoundTime += frameTime;
+	}
+	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
+	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
+
+	if (m_progress.isMenu() ||
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !m_progress.isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
+		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !m_progress.isValidateChallenge(ChallengeManager::Effect::Displacement)) ||
+		(m_progress.getCurrentDestination() == Level::Blue || m_progress.getCurrentDestination() == Level::Red)
+		)
+		groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, getPosition());
+}
+
 void	CharacterOcto::caseJump()
 {
 	if (!m_keyJump)
@@ -1971,6 +2054,24 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 			caseRight();
 			m_progress.walk();
 			break;
+		case OctoKeys::GroundLeft:
+		{
+			if (m_keyGroundLeft == false)
+			{
+				m_progress.moveMap();
+				m_keyGroundLeft = true;
+			}
+			break;
+		}
+		case OctoKeys::GroundRight:
+		{
+			if (m_keyGroundRight == false)
+			{
+				m_progress.moveMap();
+				m_keyGroundRight = true;
+			}
+			break;
+		}
 		case OctoKeys::Jump:
 			caseJump();
 			break;
@@ -2102,6 +2203,12 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Right:
 			m_keyRight = false;
+			break;
+		case OctoKeys::GroundLeft:
+			m_keyGroundLeft = false;
+			break;
+		case OctoKeys::GroundRight:
+			m_keyGroundRight = false;
 			break;
 		case OctoKeys::Jump:
 			m_keyJump = false;

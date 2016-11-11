@@ -53,13 +53,7 @@ private:
 	std::unique_ptr<CharacterOcto>		m_octo;
 	std::unique_ptr<KonamiCode>			m_konami;
 	std::unique_ptr<CameraMovement>		m_cameraMovement;
-	bool								m_keyGroundRight;
-	bool								m_keyGroundLeft;
 	bool								m_keyEntrance;
-	std::shared_ptr<sf::Sound>			m_soundGeneration;
-	float								m_groundVolume;
-	sf::Time							m_groundSoundTime;
-	sf::Time							m_groundSoundTimeMax;
 	sf::Time							m_slowTime;
 	sf::Time							m_slowTimeMax;
 	float								m_slowCoefMin;
@@ -73,7 +67,6 @@ private:
 
 	void			updateSlowTime(sf::Time frameTime);
 	void			updateFakeMenu(sf::Time frameTime);
-	void			moveMap(sf::Time frameTime);
 	bool			onInputPressed(InputListener::OctoKeys const & key);
 	bool			onInputReleased(InputListener::OctoKeys const & key);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);

@@ -93,13 +93,7 @@ Game::Game(void) :
 	m_parallaxScrolling(nullptr),
 	m_octo(nullptr),
 	m_konami(nullptr),
-	m_keyGroundRight(false),
-	m_keyGroundLeft(false),
 	m_keyEntrance(false),
-	m_soundGeneration(nullptr),
-	m_groundVolume(0.7f),
-	m_groundSoundTime(sf::Time::Zero),
-	m_groundSoundTimeMax(sf::seconds(0.6f)),
 	m_slowTimeMax(sf::seconds(0.2f)),
 	m_slowTimeCoef(1.f),
 	m_skipFrames(0u),
@@ -139,8 +133,6 @@ Game::Game(void) :
 
 Game::~Game(void)
 {
-	if (m_soundGeneration != nullptr)
-		m_soundGeneration->stop();
 	InputListener::removeInputListener();
 }
 
@@ -250,8 +242,6 @@ void	Game::loadLevel(void)
 	Level next = progress.getNextDestination();
 	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
 		audio.playSound(resources.getSound(OBJECT_PORTAL_END_OGG), 1.f);
-	m_soundGeneration = audio.playSound(resources.getSound(OCTO_SOUND_GROUND_OGG), 0.f);
-	m_soundGeneration->setLoop(true);
 	m_fakeMenu.setup();
 }
 
@@ -284,7 +274,7 @@ void	Game::update(sf::Time frameTime)
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 100.f));
 	m_octo->update(frameTime, realFrameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
-	moveMap(frameTime);
+	m_octo->moveGround(frameTime, m_groundManager);
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
@@ -562,61 +552,10 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 	}
 }
 
-void Game::moveMap(sf::Time frameTime)
-{
-	Progress &					progress = Progress::getInstance();
-	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	float						volume = 0.f;
-
-	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && m_groundSoundTime > sf::Time::Zero)
-		m_groundSoundTime -= frameTime;
-
-	if ((m_keyGroundRight || m_keyGroundLeft || progress.forceMapToMove()) && progress.canMoveMap())
-	{
-		if (progress.forceMapToMove())
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-		if (m_keyGroundLeft == true && progress.canOctoMoveMap())
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-		else if (m_keyGroundRight == true && progress.canOctoMoveMap())
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-		if (m_groundSoundTime < m_groundSoundTimeMax)
-			m_groundSoundTime += frameTime;
-	}
-	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
-	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
-
-	if (progress.isMenu() ||
-		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !progress.isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
-		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !progress.isValidateChallenge(ChallengeManager::Effect::Displacement)) ||
-		(progress.getCurrentDestination() == Level::Blue || progress.getCurrentDestination() == Level::Red)
-		)
-		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-}
-
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 {
-	Progress & progress = Progress::getInstance();
-
 	switch (key)
 	{
-		case OctoKeys::GroundLeft:
-		{
-			if (m_keyGroundLeft == false)
-			{
-				progress.moveMap();
-				m_keyGroundLeft = true;
-			}
-			break;
-		}
-		case OctoKeys::GroundRight:
-		{
-			if (m_keyGroundRight == false)
-			{
-				progress.moveMap();
-				m_keyGroundRight = true;
-			}
-			break;
-		}
 		case OctoKeys::Entrance:
 			m_keyEntrance = true;
 			if (m_collideDoor)
@@ -635,12 +574,6 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
-		case OctoKeys::GroundLeft:
-			m_keyGroundLeft = false;
-			break;
-		case OctoKeys::GroundRight:
-			m_keyGroundRight = false;
-			break;
 		case OctoKeys::Entrance:
 			m_keyEntrance = false;
 			break;
