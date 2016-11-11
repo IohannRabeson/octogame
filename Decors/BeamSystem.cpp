@@ -57,12 +57,18 @@ void	BeamSystem::updateParticle(sf::Time frameTime, Particle& particle)
 	sf::Time		currentTime = std::get<MyComponent::ElapsedTime>(particle) + frameTime;
 	sf::Color&		color = std::get<Component::Color>(particle);
 	float			cycle = currentTime / m_cycleTime;
-	float			heightPos = 0.f;
 
-	position.y -= frameTime.asSeconds() * std::get<MyComponent::UpSpeed>(particle);
-	heightPos = (position.y / m_height);
+	if (position.y > -m_height - 80.f)
+		position.y -= frameTime.asSeconds() * std::get<MyComponent::UpSpeed>(particle);
+	if (position.y < -m_height + 300.f)
+	{
+		float nextAlpha = static_cast<float>(color.a) - frameTime.asSeconds() * 100.f;
+		if (nextAlpha > 0.f)
+			color.a = nextAlpha;
+		else
+			color.a = 0.f;
+	}
 	position.x = std::cos(cycle * octo::Pi2) * m_width * 0.5f;
-	color.a = heightPos * 255;
 	if (currentTime >= m_cycleTime)
 	{
 		currentTime -= m_cycleTime;
@@ -107,6 +113,7 @@ void	BeamSystem::createParticle()
 
 bool	BeamSystem::isDeadParticle(Particle const& particle)
 {
-	return (std::get<Component::Position>(particle).y < -m_height);
+	return (std::get<Component::Color>(particle).a == 0.f);
+	//return (std::get<Component::Position>(particle).y < -m_height);
 }
 
