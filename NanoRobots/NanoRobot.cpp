@@ -301,7 +301,8 @@ void NanoRobot::usingCapacity(sf::Time frametime)
 	{
 		m_timerUse = std::min(m_timerUse + frametime, m_timerUseMax);
 		m_positionBehavior->setRadius(0.f);
-		m_glowingEffect.setState(NanoEffect::State::Random);
+		if (m_glowingEffect.getState() != NanoEffect::State::Transfer && m_glowingEffect.getState() != NanoEffect::State::FadeOut)
+			m_glowingEffect.setState(NanoEffect::State::Random);
 	}
 	else
 	{
@@ -316,6 +317,7 @@ void NanoRobot::usingCapacity(sf::Time frametime)
 		m_swarm.getFirefly(0u).speed = octo::cosinusInterpolation(1.f, 5.f, interpolateValue);
 		m_swarm.setTarget(octo::linearInterpolation(m_sprite.getPosition(), m_swarm.getTarget(), interpolateValue));
 	}
+	//TODO: To remove
 	(void)m_inputKey;
 }
 

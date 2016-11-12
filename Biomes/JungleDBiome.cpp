@@ -145,7 +145,7 @@ JungleDBiome::JungleDBiome() :
 	m_gameObjects[110] = GameObjectType::BirdRedNpc;
 	m_instances[613] = MAP_JUNGLE_D_SMALL_VILLAGE_OMP;
 	m_gameObjects[740] = GameObjectType::Pedestal;
-	m_gameObjects[744] = GameObjectType::WaterNanoRobot;
+	m_gameObjects[742] = GameObjectType::WaterNanoRobot;
 	m_instances[815] = MAP_JUNGLE_D_PORTAL_OMP;
 	m_gameObjects[800] = GameObjectType::FishBlackNpc;
 	m_gameObjects[809] = GameObjectType::FishBlackNpc;

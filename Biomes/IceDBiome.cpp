@@ -159,7 +159,7 @@ IceDBiome::IceDBiome() :
 	m_gameObjects[180] = GameObjectType::CheckPoint;
 	m_gameObjects[235] = GameObjectType::WindowGlitchNpc;
 	m_gameObjects[230] = GameObjectType::Pedestal;
-	m_gameObjects[234] = GameObjectType::RepairNanoRobot;
+	m_gameObjects[232] = GameObjectType::RepairNanoRobot;
 	m_gameObjects[393] = GameObjectType::EngineSnow;
 	m_gameObjects[310] = GameObjectType::EngineSnow;
 	m_gameObjects[334] = GameObjectType::EngineSnow;

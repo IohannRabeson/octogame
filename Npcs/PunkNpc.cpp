@@ -9,6 +9,7 @@ PunkNpc::PunkNpc(void) :
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
+	setIsZoomable(false);
 }
 
 void PunkNpc::setup(void)

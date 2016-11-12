@@ -76,6 +76,7 @@ protected:
 	sf::FloatRect const & getArea(void) const;
 	std::vector<std::unique_ptr<BubbleText>> & getTexts(void);
 	octo::CharacterSprite & getSprite(void);
+	void setIsZoomable(bool isZoomable);
 	void reverseSprite(bool isReverse);
 	bool isReverse(void) const;
 	void upSideDownSprite(bool isUpSideDown);
@@ -118,6 +119,7 @@ private:
 	bool										m_collideOctoEvent;
 	bool										m_isDoubleJump;
 	bool										m_isMeetable;
+	bool										m_isZoomable;
 	bool										m_isReverse;
 	bool										m_isUpSideDown;
 	bool										m_isFollowOcto;
