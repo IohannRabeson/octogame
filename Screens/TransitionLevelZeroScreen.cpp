@@ -144,10 +144,20 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 	m_sprite.update(frameTime);
 }
 
-bool TransitionLevelZeroScreen::onInputPressed(InputListener::OctoKeys const &)
+bool TransitionLevelZeroScreen::onInputPressed(InputListener::OctoKeys const & event)
 {
-	m_index++;
-	m_time = sf::Time::Zero;
+	switch (event)
+	{
+		case OctoKeys::Entrance:
+		case OctoKeys::Capacity:
+		case OctoKeys::Jump:
+		case OctoKeys::Elevator:
+			m_index++;
+			m_time = sf::Time::Zero;
+			break;
+		default:
+			break;
+	}
 	return (true);
 }
 
