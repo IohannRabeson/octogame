@@ -64,7 +64,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[20] = AreaMusic(Level::Rewards, MUSIC_MENU_OPUS_III_OGG, sf::FloatRect());
 
 
-	m_music.resize(8);
+	m_music.resize(9);
 	//ice balle
 	m_music[0] = AreaMusic(Level::IceC, MUSIC_MENU_OPUS_II_REVERSE_OGG,
 			sf::FloatRect(sf::Vector2f(50.f * 16.f, -340.f * 16.f), sf::Vector2f(120.f * 16.f, 275.f * 16.f)));
@@ -89,6 +89,9 @@ MusicManager::MusicManager() :
 	// final pyramid
 	m_music[7] = AreaMusic(Level::Final, MUSIC_PYRAMID_OGG,
 			sf::FloatRect(sf::Vector2f(650.f * 16.f, -400.f * 16.f), sf::Vector2f(400.f * 16.f, 420.f * 16.f)));
+	// final before pyramid
+	m_music[8] = AreaMusic(Level::Final, MUSIC_WHISTLE_OGG,
+			sf::FloatRect(sf::Vector2f(1050.f * 16.f, -400.f * 16.f), sf::Vector2f(700.f * 16.f, 420.f * 16.f)));
 	// desert d factory
 	//m_music[8] = AreaMusic(Level::DesertD, OBJECT_FACTORY_OGG,
 	//		sf::FloatRect(sf::Vector2f(300.f * 16.f, -250.f * 16.f), sf::Vector2f(70.f * 16.f, 130.f * 16.f)));
