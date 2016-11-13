@@ -52,6 +52,8 @@ private:
 	sf::Text						m_message;
 	sf::RectangleShape				m_borders;
 	sf::RectangleShape				m_bar;
+	float							m_volume;
+	float							m_volumeAddValue;
 };
 
 #endif
