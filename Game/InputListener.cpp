@@ -5,8 +5,8 @@
 
 InputListener::InputListener(void) :
 	m_isListeners(false),
-	m_joystickLT(false),
-	m_joystickRT(false),
+	//m_joystickLT(false),
+	//m_joystickRT(false),
 	m_joystickAxisX(false),
 	m_joystickAxisY(false),
 	m_joystickAxisU(false),
@@ -289,6 +289,8 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 			}
 		}
 
+		// TODO: Uncomment if we wat to use trigger
+		/*
 		if (event.axis == sf::Joystick::Z)
 		{
 			if (event.position > 0.f) // LT
@@ -318,6 +320,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 				}
 			}
 		}
+		*/
 #else
 		if (event.axis == sf::Joystick::Y || event.axis == sf::Joystick::PovY)
 		{
@@ -339,6 +342,8 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 			}
 		}
 
+		// TODO: Uncomment if we wat to use trigger
+		/*
 		if (event.axis == sf::Joystick::R) //LT
 		{
 			if (event.position > m_triggerLimit && !m_joystickLT)
@@ -365,6 +370,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 				onInputReleased(OctoKeys::GroundRight);
 			}
 		}
+		*/
 #endif
 	}
 }
