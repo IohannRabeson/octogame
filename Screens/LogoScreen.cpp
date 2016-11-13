@@ -78,11 +78,7 @@ LogoScreen::LogoScreen() :
 
 void	LogoScreen::start()
 {
-	octo::AudioManager&		audio = octo::Application::getAudioManager();
-
 	InputListener::addInputListener();
-	m_sound = audio.playSound(octo::Application::getResourceManager().getSound(REPAIR_WITH_LAZER_OGG), 1.f);
-	m_sound->setLoop(true);
 }
 
 void	LogoScreen::pause()
@@ -96,16 +92,12 @@ void	LogoScreen::resume()
 void	LogoScreen::stop()
 {
 	InputListener::removeInputListener();
-	if (m_sound)
-		m_sound->stop();
 }
 
 
 void	LogoScreen::update(sf::Time frameTime)
 {
 	m_timer += frameTime;
-	if (m_sound)
-		m_sound->setVolume(m_sound->getVolume() - frameTime.asSeconds());
 	if (m_timer > m_timerMax[m_index])
 	{
 		m_timer = sf::Time::Zero;
@@ -121,7 +113,6 @@ void	LogoScreen::update(sf::Time frameTime)
 		if (m_index >= m_count)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			m_sound->stop();
 			states.change("menu");
 		}
 	}
@@ -139,7 +130,6 @@ bool	LogoScreen::onInputPressed(InputListener::OctoKeys const &)
 	if (!Progress::getInstance().isFirstTime())
 	{
 		octo::StateManager & states = octo::Application::getStateManager();
-		m_sound->stop();
 		states.change("menu");
 	}
 	return true;

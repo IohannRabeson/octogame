@@ -93,19 +93,12 @@ Game::Game(void) :
 	m_parallaxScrolling(nullptr),
 	m_octo(nullptr),
 	m_konami(nullptr),
-	m_keyGroundRight(false),
-	m_keyGroundLeft(false),
-	m_keyInfos(false),
-	m_soundGeneration(nullptr),
-	m_groundVolume(0.7f),
-	m_groundSoundTime(sf::Time::Zero),
-	m_groundSoundTimeMax(sf::seconds(0.6f)),
+	m_keyEntrance(false),
 	m_slowTimeMax(sf::seconds(0.2f)),
 	m_slowTimeCoef(1.f),
 	m_skipFrames(0u),
 	m_skipFramesMax(3u),
 	m_speedState(None),
-	m_keyUse(false),
 	m_collideDoor(false)
 {
     octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
@@ -140,8 +133,6 @@ Game::Game(void) :
 
 Game::~Game(void)
 {
-	if (m_soundGeneration != nullptr)
-		m_soundGeneration->stop();
 	InputListener::removeInputListener();
 }
 
@@ -251,8 +242,6 @@ void	Game::loadLevel(void)
 	Level next = progress.getNextDestination();
 	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
 		audio.playSound(resources.getSound(OBJECT_PORTAL_END_OGG), 1.f);
-	m_soundGeneration = audio.playSound(resources.getSound(OCTO_SOUND_GROUND_OGG), 0.f);
-	m_soundGeneration->setLoop(true);
 	m_fakeMenu.setup();
 }
 
@@ -285,7 +274,7 @@ void	Game::update(sf::Time frameTime)
 	sf::Listener::setPosition(sf::Vector3f(octoPos.x, octoPos.y, 100.f));
 	m_octo->update(frameTime, realFrameTime);
 	m_skyCycle->update(frameTime, m_biomeManager.getCurrentBiome());
-	moveMap(frameTime);
+	m_octo->moveGround(frameTime, m_groundManager);
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
@@ -324,7 +313,7 @@ void Game::updateSlowTime(sf::Time frameTime)
 			m_slowTime += frameTime;
 			m_slowTime = std::min(m_slowTime, m_slowTimeMax);
 			m_slowTimeCoef = 1.f - m_slowTime / m_slowTimeMax * 0.9f;
-			if (m_slowTime >= m_slowTimeMax && !m_keyInfos)
+			if (m_slowTime >= m_slowTimeMax && !m_keyEntrance)
 				m_speedState = SlowEnd;
 			break;
 		case SlowEnd:
@@ -340,7 +329,7 @@ void Game::updateSlowTime(sf::Time frameTime)
 			m_slowTime += frameTime;
 			m_slowTime = std::min(m_slowTime, m_slowTimeMax);
 			m_slowTimeCoef = 1.f + m_slowTime / m_slowTimeMax * 6.f;
-			if (m_slowTime >= m_slowTimeMax && !m_keyUse)
+			if (m_slowTime >= m_slowTimeMax && !m_keyEntrance)
 				m_speedState = FastEnd;
 			break;
 		case FastEnd:
@@ -563,71 +552,17 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 	}
 }
 
-void Game::moveMap(sf::Time frameTime)
-{
-	Progress &					progress = Progress::getInstance();
-	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	float						volume = 0.f;
-
-	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && m_groundSoundTime > sf::Time::Zero)
-		m_groundSoundTime -= frameTime;
-
-	if ((m_keyGroundRight || m_keyGroundLeft || progress.forceMapToMove()) && progress.canMoveMap())
-	{
-		if (progress.forceMapToMove())
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-		if (m_keyGroundLeft == true && progress.canOctoMoveMap())
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Next, m_octo->getPosition());
-		else if (m_keyGroundRight == true && progress.canOctoMoveMap())
-			m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-		if (m_groundSoundTime < m_groundSoundTimeMax)
-			m_groundSoundTime += frameTime;
-	}
-	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
-	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
-
-	if (progress.isMenu() ||
-		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !progress.isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
-		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !progress.isValidateChallenge(ChallengeManager::Effect::Displacement)) ||
-		(progress.getCurrentDestination() == Level::Blue || progress.getCurrentDestination() == Level::Red)
-		)
-		m_groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, m_octo->getPosition());
-}
-
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 {
-	Progress & progress = Progress::getInstance();
-
 	switch (key)
 	{
-		case OctoKeys::GroundLeft:
-		{
-			if (m_keyGroundLeft == false)
-			{
-				progress.moveMap();
-				m_keyGroundLeft = true;
-			}
-			break;
-		}
-		case OctoKeys::GroundRight:
-		{
-			if (m_keyGroundRight == false)
-			{
-				progress.moveMap();
-				m_keyGroundRight = true;
-			}
-			break;
-		}
-		case OctoKeys::Infos:
-			std::cout << "OctoPos(" << m_octo->getPosition().x / 16.f << "u, " << m_octo->getPosition().y / 16.f << "u)" << std::endl;
-			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
-			m_keyInfos = true;
-			//setSlowMotion();
-			break;
-		case OctoKeys::Use:
-			m_keyUse = true;
+		case OctoKeys::Entrance:
+			m_keyEntrance = true;
 			if (m_collideDoor)
 				setFastMotion();
+			//std::cout << "OctoPos(" << m_octo->getPosition().x / 16.f << "u, " << m_octo->getPosition().y / 16.f << "u)" << std::endl;
+			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
+			//setSlowMotion();
 			break;
 		default:
 			break;
@@ -639,17 +574,8 @@ bool	Game::onInputReleased(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
-		case OctoKeys::GroundLeft:
-			m_keyGroundLeft = false;
-			break;
-		case OctoKeys::GroundRight:
-			m_keyGroundRight = false;
-			break;
-		case OctoKeys::Infos:
-			m_keyInfos = false;
-			break;
-		case OctoKeys::Use:
-			m_keyUse = false;
+		case OctoKeys::Entrance:
+			m_keyEntrance = false;
 			break;
 		default:
 			break;

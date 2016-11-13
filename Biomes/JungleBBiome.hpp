@@ -86,7 +86,7 @@ public:
 	virtual sf::Color									getRockColor();
 
 	virtual float										getGrassSizeY();
-	virtual float									getGrassSizeX();
+	virtual float										getGrassSizeX();
 	virtual sf::Color									getGrassColor();
 	virtual std::size_t									getGrassCount();
 	virtual std::size_t									getGrassPosX();
@@ -122,9 +122,9 @@ public:
 
 	virtual sf::Vector2f								getCloudSize();
 	virtual std::size_t									getCloudPartCount();
-	virtual float									getCloudMaxY();
-	virtual float									getCloudMinY();
-	virtual sf::Vector2f									getCloudSpeed();
+	virtual float										getCloudMaxY();
+	virtual float										getCloudMinY();
+	virtual sf::Vector2f								getCloudSpeed();
 	virtual sf::Time									getCloudLifeTime();
 	virtual sf::Color									getCloudColor();
 	virtual bool										canCreateCloud();
@@ -150,9 +150,9 @@ public:
 	virtual sf::Time									getRainbowLifeTime();
 	virtual sf::Time									getRainbowIntervalTime();
 	virtual bool										canCreateRainbow();
-	virtual bool									canCreateGrass();
-	virtual float									getWaterPersistence() const;
-	virtual ABiome::Type									getType() const;
+	virtual bool										canCreateGrass();
+	virtual float										getWaterPersistence() const;
+	virtual ABiome::Type								getType() const;
 
 	virtual float										randomFloat(float min, float max);
 	virtual int											randomInt(int min, int max);
@@ -230,7 +230,7 @@ private:
 	sf::Color											m_rockColor;
 
 	Range<float>										m_grassSizeY;
-	Range<float>											m_grassSizeX;
+	Range<float>										m_grassSizeX;
 	sf::Color											m_grassColor;
 	std::size_t											m_grassCount;
 
@@ -256,9 +256,9 @@ private:
 
 	Range<sf::Vector2f>									m_cloudSize;
 	Range<std::size_t>									m_cloudPartCount;
-	float											m_cloudMaxY;
-	float											m_cloudMinY;
-	Range<sf::Vector2f>											m_cloudSpeed;
+	float												m_cloudMaxY;
+	float												m_cloudMinY;
+	Range<sf::Vector2f>									m_cloudSpeed;
 	Range<sf::Time>										m_cloudLifeTime;
 	sf::Color											m_cloudColor;
 

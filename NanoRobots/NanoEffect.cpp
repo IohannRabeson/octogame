@@ -159,7 +159,6 @@ void NanoEffect::update(sf::Time frameTime)
 		}
 		case State::Random:
 		{
-			playSound();
 			m_glowingTimer += frameTime;
 			if (m_glowingTimer >= m_glowingTimerMax)
 			{

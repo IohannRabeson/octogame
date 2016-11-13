@@ -257,7 +257,7 @@ void Tree::playSound(ABiome & biome, sf::Vector2f const & position)
 		float volume = 1.f;
 		if (m_size.y < 100.f)
 			volume *= m_size.y / 100.f;
-		audio.playSound(resources.getSound(DECOR_TREE_OGG), volume, biome.randomFloat(0.8f, 1.f), sf::Vector3f(position.x, position.y, 0.f), 500.f, 40.f);
+		audio.playSound(resources.getSound(DECOR_TREE_OGG), volume, biome.randomFloat(0.8f, 1.f), sf::Vector3f(position.x, position.y, -150.f), 700.f, 30.f);
 		m_sound = false;
 	}
 }

@@ -9,7 +9,7 @@
 
 ShineEffect::ShineEffect() :
 	m_angle(0.f),
-	m_animator(3.f, 3.f, 0.f, 0.0f, 10.f),
+	m_animator(1.f, 1.f, 0.f, 0.0f, 10.f),
 	m_animation(1.f),
 	m_isShineEffect(true),
 	m_isSound(true),
@@ -49,7 +49,7 @@ void ShineEffect::playSound(ABiome & biome, sf::Vector2f const & position)
 		{
 			octo::AudioManager& audio = octo::Application::getAudioManager();
 			octo::ResourceManager& resources = octo::Application::getResourceManager();
-			audio.playSound(resources.getSound(DECOR_CRYSTAL_OGG), 1.f, biome.randomFloat(0.2f, 1.f), sf::Vector3f(position.x, position.y, -150.f), 500.f, 50.f);
+			audio.playSound(resources.getSound(DECOR_CRYSTAL_OGG), 1.f, biome.randomFloat(0.2f, 1.f), sf::Vector3f(position.x, position.y, -150.f), 400.f, 20.f);
 			m_isSound = false;
 		}
 	}

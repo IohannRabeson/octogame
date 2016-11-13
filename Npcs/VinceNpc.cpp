@@ -9,6 +9,7 @@ VinceNpc::VinceNpc(void) :
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -40.f));
 	setup();
+	setIsZoomable(false);
 }
 
 void VinceNpc::setup(void)

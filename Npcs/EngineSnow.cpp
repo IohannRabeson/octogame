@@ -14,6 +14,7 @@ EngineSnow::EngineSnow(void) :
 		setScale(m_generator.randomFloat(0.4f, 0.9f));
 	setTextOffset(sf::Vector2f(0.f, 0.f));
 	setup();
+	setIsZoomable(false);
 }
 
 void EngineSnow::setup(void)

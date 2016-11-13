@@ -173,7 +173,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/DesertEngine.cpp					\
 				Npcs/DeepoNpc.cpp						\
 				Npcs/PepetteNpc.cpp				\
+				Npcs/TVFanNpc.cpp				\
 #Script AddNpc
+
 
 
 

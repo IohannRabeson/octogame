@@ -9,6 +9,7 @@ MaryvonneNpc::MaryvonneNpc(void) :
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(-0.f, -50.f));
 	setup();
+	setIsZoomable(false);
 }
 
 void MaryvonneNpc::setup(void)

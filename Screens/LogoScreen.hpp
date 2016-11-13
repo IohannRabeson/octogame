@@ -35,7 +35,6 @@ private:
 	std::size_t						m_index;
 	sf::Time						m_timer;
 	std::vector<sf::Time>			m_timerMax;
-	octo::AudioManager::SoundPtr	m_sound;
 };
 
 #endif

@@ -8,6 +8,7 @@ StrangerSnowNpc::StrangerSnowNpc(void) :
 	setOrigin(sf::Vector2f(141.f, 112.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
+	setIsZoomable(false);
 	setup();
 }
 

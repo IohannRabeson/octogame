@@ -133,7 +133,7 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 		switch (key)
 		{
 			case OctoKeys::Left:
-			case OctoKeys::Use:
+			case OctoKeys::Entrance:
 			case OctoKeys::Menu:
 			{
 				setState(AMenu::State::Hide);

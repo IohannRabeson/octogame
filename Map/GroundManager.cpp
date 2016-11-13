@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "TVFanNpc.hpp"
 #include "PepetteNpc.hpp"
 #include "DeepoNpc.hpp"
 #include "DesertEngine.hpp"
@@ -275,6 +276,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<TVFanNpc>(TV_FAN_OSS);
 	m_npcFactory.registerCreator<DeepoNpc>(DEEPO_OSS);
 	m_npcFactory.registerCreator<DesertEngine>(DESERT_ENGINE_1_OSS);
 	m_npcFactory.registerCreator<ClaireNpc>(CLAIRE_OSS);
@@ -852,6 +854,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::TVFanNpc:
+				{
+					TVFanNpc * npc = new TVFanNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::DeepoNpc:
 				{
 					DeepoNpc * npc = new DeepoNpc();
@@ -2241,6 +2250,8 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 	render.draw(m_decorManagerInstanceBack, states);
 	for (auto & decor : m_instanceDecors)
 		decor->draw(render, states);
+	for (auto & decor : m_instanceDecorsFront)
+		decor->draw(render, states);
 	for (auto & objectHigh : m_otherObjectsHigh)
 		objectHigh.m_gameObject->draw(render, states);
 	for (auto & objectLow : m_otherObjectsLow)
@@ -2273,14 +2284,14 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 		objectLow.m_gameObject->drawFront(render, states);
 	for (auto & npc : m_npcs)
 		npc->drawFront(render, states);
+	for (auto & decor : m_instanceDecors)
+		decor->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
 	render.draw(m_decorManagerInstanceFront, states);
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
 	render.draw(m_decorManagerInstanceGround, states);
 	for (auto & decor : m_instanceDecorsFront)
-		decor->draw(render, states);
-	for (auto & decor : m_instanceDecors)
 		decor->drawFront(render, states);
 }
 

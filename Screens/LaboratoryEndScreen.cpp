@@ -20,11 +20,11 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_appearDuration(sf::seconds(2.f)),
 	m_cedricWalkTimer(sf::seconds(3.f)),
 	m_cedricPutPotionTimer(sf::seconds(3.f)),
-	m_changeColorAqua(sf::seconds(2.f)),
-	m_appearTimerPostEffect(sf::seconds(1.f)),
-	m_startPostEffectDuration(sf::seconds(5.f)),
-	m_disappearTimerPostEffect(sf::seconds(5.f)),
-	m_endPostEffectDuration(sf::seconds(20.f)),
+	m_changeColorAquaMax(sf::seconds(4.f)),
+	m_appearTimerPostEffectMax(sf::seconds(8.f)),
+	m_startPostEffectDurationMax(sf::seconds(10.f)),
+	m_disappearTimerPostEffectMax(sf::seconds(5.f)),
+	m_endPostEffectDurationMax(sf::seconds(20.f)),
 	m_textIndex(0u),
 	m_lastTextIndex(0u),
 	m_stopDialog(false),
@@ -167,47 +167,39 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			}
 			break;
 		case ChangeAquaColor:
-			m_timer += frameTime;
-			m_shader.setParameter("hue", octo::linearInterpolation(0.f, 0.4f, std::min(1.f, m_timer / m_changeColorAqua)));
-			if (m_timer >= m_changeColorAqua)
+			m_changeColorAqua += frameTime;
+			m_shader.setParameter("hue", octo::linearInterpolation(0.f, 0.4f, std::min(1.f, m_changeColorAqua / m_changeColorAquaMax)));
+			if (m_changeColorAqua >= m_changeColorAquaMax)
 			{
-				m_timer = sf::Time::Zero;
 				m_state = StartShaderEffect;
 				PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, true);
 			}
 			break;
 		case StartShaderEffect:
-			m_timer += frameTime;
-			m_globalTimer += frameTime;
-			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("appear", std::min(1.f, m_timer / m_appearTimerPostEffect));
-			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
-			if (m_timer >= m_startPostEffectDuration)
-			{
-				m_timer = sf::Time::Zero;
+			m_appearTimerPostEffect += frameTime;
+			m_startPostEffectDuration += frameTime;
+			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("appear", std::min(1.f, m_appearTimerPostEffect / m_appearTimerPostEffectMax));
+			if (m_startPostEffectDuration >= m_startPostEffectDurationMax)
 				m_state = DisappearShaderEffect;
-			}
 			break;
 		case DisappearShaderEffect:
-			m_timer += frameTime;
-			m_globalTimer += frameTime;
-			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("disappear", std::min(1.f, m_timer / m_disappearTimerPostEffect));
-			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
-			if (m_timer >= m_disappearTimerPostEffect)
-			{
-				m_timer = sf::Time::Zero;
+			m_disappearTimerPostEffect += frameTime;
+			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("disappear", std::min(1.f, m_disappearTimerPostEffect / m_disappearTimerPostEffectMax));
+			if (m_disappearTimerPostEffect >= m_disappearTimerPostEffectMax)
 				m_state = StopShaderEffect;
-			}
 		case StopShaderEffect:
-			m_timer += frameTime;
-			m_globalTimer += frameTime;
-			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
-			if (m_timer >= m_endPostEffectDuration)
-			{
+			m_endPostEffectDuration += frameTime;
+			if (m_endPostEffectDuration >= m_endPostEffectDurationMax)
 				octo::Application::getStateManager().change("menu");
-			}
 			break;
 		default:
 			break;
+	}
+
+	if (m_state == StartShaderEffect || m_state == DisappearShaderEffect || m_state == StopShaderEffect)
+	{
+		m_globalTimer += frameTime;
+		PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
 	}
 
 	for (auto & it : m_npcs)
@@ -241,8 +233,8 @@ bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Menu:
 			m_stopDialog = true;
 			break;
-		case OctoKeys::SlowFall:
-		case OctoKeys::Use:
+		case OctoKeys::Capacity:
+		case OctoKeys::Elevator:
 			m_timeBeforeNextText = sf::seconds(0.1f);
 			break;
 		default:
@@ -255,8 +247,8 @@ bool	LaboratoryEndScreen::onInputReleased(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
-		case OctoKeys::SlowFall:
-		case OctoKeys::Use:
+		case OctoKeys::Capacity:
+		case OctoKeys::Elevator:
 			m_timeBeforeNextText = sf::seconds(2.f);
 		default:
 			break;

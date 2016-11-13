@@ -18,11 +18,11 @@ public:
 		Down = 4,
 		Menu = 5,
 		SelectMenu = 6,
-		Use = 7,
-		SlowFall = 8,
+		Elevator = 7,
+		Capacity = 8,
 		GroundLeft = 9,
 		GroundRight = 10,
-		Infos = 11,
+		Entrance = 11,
 		ViewLeft = 12,
 		ViewRight = 13,
 		ViewUp = 14,
@@ -42,8 +42,8 @@ public:
 private:
 	bool					m_isListeners;
 	std::vector<OctoKeys>	m_inputs;
-	bool					m_joystickLT;
-	bool					m_joystickRT;
+	//bool					m_joystickLT;
+	//bool					m_joystickRT;
 	bool					m_joystickAxisX;
 	bool					m_joystickAxisY;
 	bool					m_joystickAxisU;

@@ -139,6 +139,9 @@ IceCBiome::IceCBiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	m_secondStartColor = m_tileStartColor + sf::Color(100, 100, 100);
+	m_secondEndColor = m_tileEndColor + sf::Color(100, 100, 100);
+
 	m_instances[10] = MAP_ICE_C_TRAIL_A_OMP;
 	m_instances[180] = MAP_ICE_C_TRAIL_B_OMP;
 	m_interestPointPosX = 530;
@@ -252,12 +255,10 @@ Map::MapSurfaceGenerator IceCBiome::getMapSurfaceGenerator()
 
 Map::TileColorGenerator IceCBiome::getTileColorGenerator()
 {
-	sf::Color secondColorStart(m_tileStartColor + sf::Color(100, 100, 100));
-	sf::Color secondColorEnd(m_tileEndColor + sf::Color(100, 100, 100));
 	float startTransition = -48;
 	float middleTransition = -28;
 	float endTransition = -8;
-	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
+	return [this, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		if ((y > -3000 && y < -360) || (y > -310 && y < -48) || x > 213)
 			return m_cloudColor;
@@ -265,12 +266,12 @@ Map::TileColorGenerator IceCBiome::getTileColorGenerator()
 		if (y > startTransition && y <= middleTransition)
 		{
 			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
-			return octo::linearInterpolation(octo::linearInterpolation(secondColorStart, m_tileStartColor, ratio), secondColorEnd, transition);
+			return octo::linearInterpolation(octo::linearInterpolation(m_secondStartColor, m_tileStartColor, ratio), m_secondEndColor, transition);
 		}
 		else if (y > middleTransition && y <= endTransition)
 		{
 			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
-			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(secondColorEnd, m_tileEndColor, ratio), transition);
+			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(m_secondEndColor, m_tileEndColor, ratio), transition);
 		}
 		if (y > endTransition)
 			return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);

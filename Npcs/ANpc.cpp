@@ -22,6 +22,7 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 	m_collideOctoEvent(false),
 	m_isDoubleJump(false),
 	m_isMeetable(isMeetable),
+	m_isZoomable(true),
 	m_isReverse(false),
 	m_isUpSideDown(false),
 	m_isFollowOcto(false)
@@ -261,6 +262,11 @@ octo::CharacterSprite & ANpc::getSprite(void)
 	return m_sprite;
 }
 
+void ANpc::setIsZoomable(bool isZoomable)
+{
+	m_isZoomable = isZoomable;
+}
+
 void ANpc::reverseSprite(bool isReverse)
 {
 	m_isReverse = isReverse;
@@ -358,7 +364,7 @@ void ANpc::collideOctoEvent(CharacterOcto * octo)
 		m_isDoubleJump = true;
 	else
 		m_isDoubleJump = false;
-	if (m_isMeetable && Progress::getInstance().meetNpc(m_type))
+	if (m_isMeetable && Progress::getInstance().meetNpc(m_type) && m_isZoomable)
 		octo->meetNpc(true);
 }
 

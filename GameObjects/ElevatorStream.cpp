@@ -1,10 +1,10 @@
 #include "ElevatorStream.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
-#include <AudioManager.hpp>
 #include "RectangleShape.hpp"
 #include "PhysicsEngine.hpp"
 
@@ -34,12 +34,19 @@ ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & 
 
 	m_particles->setBiome(biome);
 
+	if (Progress::getInstance().getCurrentDestination() == Level::Final)
+	{
+		m_borderColor = sf::Color(0, 0, 0, 150);
+		m_centerColor = sf::Color(0, 0, 0, 50);
+		m_upColor = sf::Color(0, 0, 0, 0);
+	}
+
 	m_box->setGameObject(this);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setApplyGravity(false);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Elevator));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
-	m_box->setSize(100.f, 0.f);
+	m_box->setSize(128.f, 0.f);
 	m_particles->setWidth(192.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
@@ -275,9 +282,6 @@ void	ElevatorStream::update(sf::Time frameTime)
 			m_timer += frameTime;
 			if (m_timer >= m_timerMax)
 			{
-				octo::AudioManager& audio = octo::Application::getAudioManager();
-				octo::ResourceManager& resources = octo::Application::getResourceManager();
-				audio.playSound(resources.getSound(OBJECT_ELEVATOR_OGG), 1.f);
 				m_timer = m_timerMax;
 				m_state = Activated;
 				m_spriteTopBack.setAnimation(m_animation);
@@ -318,25 +322,22 @@ void	ElevatorStream::update(sf::Time frameTime)
 
 void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
-	sf::RenderStates	states;
-
 	render.draw(m_spriteBottomBack);
 	if (!m_isBotOnInstance)
 		render.draw(m_spriteTopBack);
 	else
 		render.draw(m_spriteBottomFront);
-	states.shader = &m_shader;
-	if (m_state == Activated)
-		m_particles->draw(render, states);
-	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
 }
 
 void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
+	sf::RenderStates	states;
+	if (m_state == Activated)
+		m_particles->draw(render, states);
+	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
 	if (!m_isBotOnInstance)
-	{
-		render.draw(m_spriteBottomFront);
 		render.draw(m_spriteTopFront);
-	}
+	render.draw(m_spriteBottomFront);
 	m_smoke.draw(render);
+	states.shader = &m_shader;
 }

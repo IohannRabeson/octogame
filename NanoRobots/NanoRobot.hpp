@@ -48,6 +48,7 @@ public:
 
 	void addMapOffset(float x, float y);
 	void transfertToOcto(bool inInit = false);
+	void updateOctoEvent(std::string const & event, float valueEvent);
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
@@ -68,7 +69,7 @@ protected:
 	void setEffectEnable(bool enable);
 	void setSwarmTarget(sf::Vector2f const & position);
 	void makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
-	void playSoundRepair(void);
+	void playSoundRepair(sf::Time frametime);
 	virtual void updateRepairShip(sf::Time frameTime);
 
 	bool isReparingShip(void) const;
@@ -77,10 +78,10 @@ protected:
 
 private:
 	sf::Vector2f computeInterestPosition(sf::Vector2f const & position);
+	void usingCapacity(sf::Time frameTime);
 
 	std::string									m_id;
 	FireflySwarm								m_swarm;
-	FireflySwarm::UniformPopulation				m_uniformPopulation;
 	FireflySwarm::SpawnMode						m_spawnMode;
 	FireflySwarm::CirclePositionBehavior *		m_positionBehavior;
 
@@ -93,6 +94,9 @@ private:
 	sf::Time									m_timerRepairShip;
 	sf::Time									m_timerRepair;
 	sf::Time									m_timerRepairMax;
+	sf::Time									m_timerUse;
+	sf::Time									m_timerUseMax;
+	bool										m_isUsing;
 	std::size_t									m_repairIndex;
 	sf::Vector2f								m_repairShipPosition;
 	bool										m_startLastAnimation;
@@ -121,10 +125,12 @@ private:
 	std::mt19937								m_engine;
 	std::uniform_int_distribution<int>			m_soundDistri;
 	std::shared_ptr<sf::Sound>					m_sound;
+	sf::Time									m_soundTimer;
+	sf::Time									m_soundTimerMax;
 	bool										m_popUp;
 	sf::Time									m_popUpTimer;
 	sf::Time									m_popUpTimerMax;
-	InputListener::OctoKeys const				m_stopSpeakingKey;
+	InputListener::OctoKeys const				m_inputKey;
 	bool										m_stopSpeakinKeyPress;
 	sf::Vector2f								m_lastPos;
 };

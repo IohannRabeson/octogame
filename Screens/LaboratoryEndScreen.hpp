@@ -52,10 +52,15 @@ private:
 	sf::Time									m_cedricWalkTimer;
 	sf::Time									m_cedricPutPotionTimer;
 	sf::Time									m_changeColorAqua;
+	sf::Time									m_changeColorAquaMax;
 	sf::Time									m_appearTimerPostEffect;
+	sf::Time									m_appearTimerPostEffectMax;
 	sf::Time									m_startPostEffectDuration;
+	sf::Time									m_startPostEffectDurationMax;
 	sf::Time									m_disappearTimerPostEffect;
+	sf::Time									m_disappearTimerPostEffectMax;
 	sf::Time									m_endPostEffectDuration;
+	sf::Time									m_endPostEffectDurationMax;
 	sf::Sprite									m_background;
 	sf::Sprite									m_water;
 	sf::Sprite									m_foreground;

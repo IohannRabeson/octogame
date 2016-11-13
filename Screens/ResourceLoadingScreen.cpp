@@ -25,7 +25,9 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 	AbstractResourceLoadingState(),
 	m_generator("random"),
 	m_count(23u),
-	m_index(0u)
+	m_index(0u),
+	m_volume(0.05f),
+	m_volumeAddValue(0.02f)
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	octo::Application::getGraphicsManager().setIcon(resources.getTexture(ICON_PNG).copyToImage());
@@ -102,20 +104,15 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 
 void	ResourceLoadingScreen::start()
 {
-	octo::AudioManager&		audio = octo::Application::getAudioManager();
 	Progress &				progress = Progress::getInstance();
 
 	pushLoading(octo::Application::getOptions().getPath() + "default.pck");
 	progress.load("save.osv");
 	AbstractResourceLoadingState::start();
-	m_sound = audio.playSound(octo::Application::getResourceManager().getSound(REPAIR_WITH_LAZER_OGG), 1.f);
-	m_sound->setLoop(true);
 }
 
 void	ResourceLoadingScreen::stop()
 {
-	if (m_sound)
-		m_sound->stop();
 }
 
 void	ResourceLoadingScreen::updateLoading()
@@ -151,7 +148,10 @@ void	ResourceLoadingScreen::updateScreen(sf::Time frameTime)
 		{
 			octo::AudioManager& audio = octo::Application::getAudioManager();
 			octo::ResourceManager& resources = octo::Application::getResourceManager();
-			audio.playSound(resources.getSound(LOGO_SOUND_OGG), 1.f, m_generator.randomFloat(0.95f, 1.05f));
+
+			audio.playSound(resources.getSound(LOGO_SOUND_OGG), m_volume, m_generator.randomFloat(0.95f, 1.05f));
+			m_volume = std::min(m_volume + m_volumeAddValue, 0.8f);
+			m_volumeAddValue += 0.007f;
 		}
 		m_timer = sf::Time::Zero;
 		m_index++;

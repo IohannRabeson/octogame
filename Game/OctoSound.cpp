@@ -24,7 +24,12 @@ CharacterOcto::OctoSound::OctoSound() :
 	m_engine(std::time(0)),
 	m_pitchDistribution(0.5f, 1.5f)
 {
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
 	m_soundFadeOut.reserve(100);
+	m_soundElevator = audio.playSound(resources.getSound(OBJECT_ELEVATOR_OGG), 0.f);
+	m_soundElevator->setLoop(true);
 }
 
 CharacterOcto::OctoSound::~OctoSound()
@@ -77,7 +82,6 @@ void	CharacterOcto::OctoSound::resetTimeEvent()
 {
 	m_timeEventFall = sf::Time::Zero;
 	m_timeEventIdle = sf::Time::Zero;
-	m_timeEventElevator = sf::Time::Zero;
 }
 
 void	CharacterOcto::OctoSound::environmentEvent(bool inWater, bool onGround)
@@ -121,8 +125,6 @@ void	CharacterOcto::OctoSound::startEvent(Events event)
 	switch(event)
 	{
 		case StartElevator:
-			if (m_onGround)
-				audio.playSound(resources.getSound(OCTO_SOUND_DOUBLE_JUMP_OGG), 1.f);
 			break;
 		case DoubleJump:
 			audio.playSound(resources.getSound(OCTO_SOUND_DOUBLE_JUMP_OGG), 1.f, m_pitchDistribution(m_engine));
@@ -131,8 +133,7 @@ void	CharacterOcto::OctoSound::startEvent(Events event)
 			audio.playSound(resources.getSound(OCTO_SOUND_JUMP_OGG), 1.f, m_pitchDistribution(m_engine));
 			break;
 		case Death:
-			if (m_onGround)
-				audio.playSound(resources.getSound(OCTO_SOUND_HELMET_OGG), 1.f);
+			audio.playSound(resources.getSound(OCTO_SOUND_HELMET_OGG), 1.f);
 			audio.playSound(resources.getSound(OCTO_VOICE_DEATH_OGG), 1.f);
 			break;
 		default:
@@ -153,7 +154,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			break;
 		case Fall:
 			m_timeEventFall += frameTime;
-			if (m_timeEventFall > sf::seconds(1.8f) && m_sound == nullptr)
+			if (m_timeEventFall > sf::seconds(1.8f) && !m_inWater && m_sound == nullptr)
 				m_sound = audio.playSound(resources.getSound(OCTO_VOICE_FALL_OGG), 1.f);
 			break;
 		case Idle:
@@ -161,9 +162,11 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			if (m_timeEventIdle > sf::seconds(20.f) && m_sound == nullptr)
 				m_sound = audio.playSound(resources.getSound(OCTO_VOICE_MONOLOGUE_OGG), 1.f);
 			break;
+		case StartElevator:
+			m_soundElevator->setPlayingOffset(sf::Time::Zero);
 		case Elevator:
-			m_timeEventElevator += frameTime;
-			if (m_timeEventElevator > sf::seconds(1.f) && m_sound == nullptr)
+			m_timeEventElevator = std::min(m_timeEventElevator + frameTime, sf::seconds(1.f));
+			if (m_timeEventElevator >= sf::seconds(1.f) && m_sound == nullptr)
 				m_sound = audio.playSound(resources.getSound(OCTO_VOICE_ELEVATOR_OGG), 1.f);
 			break;
 		case SlowFall1:
@@ -193,6 +196,9 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 		default:
 			break;
 	}
+	if (event != Elevator)
+		m_timeEventElevator = std::max(m_timeEventElevator - frameTime, sf::Time::Zero);
+	m_soundElevator->setVolume(m_timeEventElevator.asSeconds() * audio.getSoundVolume());
 	if (m_transitionInWater)
 		audio.playSound(resources.getSound(OCTO_SOUND_WATER_IN_OGG), 1.f, m_pitchDistribution(m_engine));
 	else if (m_transitionOutWater)

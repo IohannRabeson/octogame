@@ -10,7 +10,8 @@ LevelRocketEndScreen::LevelRocketEndScreen(void) :
 	m_starsCount(15u),
 	m_stars(new StarSystem[m_starsCount]),
 	m_rocket(new RocketEnd(sf::Vector2f(600.f, octo::Application::getCamera().getRectangle().height + 100.f))),
-	m_credit(new Credit(sf::Vector2f(1100.f, octo::Application::getCamera().getRectangle().height + 100.f)))
+	m_credit(new Credit(sf::Vector2f(1100.f, octo::Application::getCamera().getRectangle().height + 100.f))),
+	m_speedCredit(1.f)
 {
 	m_generator.setSeed("random");
 }
@@ -57,8 +58,8 @@ void	LevelRocketEndScreen::update(sf::Time frameTime)
 		m_stars[i].update(frameTime);
 	m_rocket->update(frameTime);
 	if (m_rocket->getPosition().y >= 0.f)
-		m_rocket->setOriginPosition(m_rocket->getPosition() + sf::Vector2f(0.f, -150.f) * frameTime.asSeconds());
-	m_credit->update(frameTime);
+		m_rocket->setOriginPosition(m_rocket->getPosition() + sf::Vector2f(0.f, -150.f) * frameTime.asSeconds() * m_speedCredit);
+	m_credit->update(frameTime * m_speedCredit);
 	if (m_credit->isFinished())
 		octo::Application::getStateManager().change("menu");
 }
@@ -77,9 +78,23 @@ bool	LevelRocketEndScreen::onInputPressed(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
-		case OctoKeys::SelectMenu:
-		case OctoKeys::Jump:
-		case OctoKeys::Menu:
+		case OctoKeys::Capacity:
+		case OctoKeys::Elevator:
+			m_speedCredit = 2.f;
+			break;
+		default:
+			break;
+	}
+	return true;
+}
+
+bool	LevelRocketEndScreen::onInputReleased(InputListener::OctoKeys const & key)
+{
+	switch (key)
+	{
+		case OctoKeys::Capacity:
+		case OctoKeys::Elevator:
+			m_speedCredit = 1.f;
 			break;
 		default:
 			break;

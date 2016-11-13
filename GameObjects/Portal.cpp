@@ -21,7 +21,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	m_timerActivate(0.f),
 	m_timerActivateMax(1.0f),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle()),
-	m_soundVolume(0.6f)
+	m_soundVolume(1.f)
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
@@ -185,17 +185,12 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 		m_sprite.setNextEvent(Opened);
 
 	//TODO : To change to the good sound
-	m_sound = audio.playSound(resources.getSound(OBJECT_PORTAL_START_OGG), 0.f, m_generator.randomFloat(0.9f, 1.1f), sf::Vector3f(m_box->getBaryCenter().x, m_box->getBaryCenter().y, 0.f) , 500.f, 40.f);
+	m_sound = audio.playSound(resources.getSound(OBJECT_PORTAL_START_OGG), 0.f, m_generator.randomFloat(0.9f, 1.1f), sf::Vector3f(m_box->getBaryCenter().x, m_box->getBaryCenter().y, -150.f) , 800.f, 200.f);
 	m_sound->setLoop(true);
 
 	//TODO : not clean, only for last level
 	if (destination == progress.getCurrentDestination())
-	{
-		if (m_key == OBJECT_PORTAL_OSS)
-			m_sprite.setNextEvent(Closed);
-		else
-			m_sprite.setNextEvent(Opened);
-	}
+		m_sprite.setNextEvent(Opened);
 }
 
 Portal::~Portal(void)
@@ -341,6 +336,7 @@ void Portal::updateSound(void)
 
 	volume = m_soundVolume * (m_timerActivate / m_timerActivateMax);
 	m_sound->setVolume(volume * audio.getSoundVolume());
+	m_sound->setPosition(sf::Vector3f(m_box->getBaryCenter().x, m_box->getBaryCenter().y, -150.f));
 }
 
 bool Portal::isLock(void)
