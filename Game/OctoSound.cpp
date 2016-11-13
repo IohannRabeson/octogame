@@ -153,7 +153,7 @@ void	CharacterOcto::OctoSound::duringEvent(sf::Time frameTime, Events event)
 			break;
 		case Fall:
 			m_timeEventFall += frameTime;
-			if (m_timeEventFall > sf::seconds(1.8f) && m_sound == nullptr)
+			if (m_timeEventFall > sf::seconds(1.8f) && !m_inWater && m_sound == nullptr)
 				m_sound = audio.playSound(resources.getSound(OCTO_VOICE_FALL_OGG), 1.f);
 			break;
 		case Idle:
