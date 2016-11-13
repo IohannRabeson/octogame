@@ -38,6 +38,7 @@ private:
 	std::shared_ptr<sf::Sound>				m_sound;
 	std::shared_ptr<sf::Sound>				m_soundEnvironment;
 	std::shared_ptr<sf::Sound>				m_soundTransition;
+	std::shared_ptr<sf::Sound>				m_soundElevator;
 	std::vector<soundFade>					m_soundFadeOut;
 	Events									m_prevEvent;
 

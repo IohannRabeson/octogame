@@ -283,9 +283,6 @@ void	ElevatorStream::update(sf::Time frameTime)
 			m_timer += frameTime;
 			if (m_timer >= m_timerMax)
 			{
-				octo::AudioManager& audio = octo::Application::getAudioManager();
-				octo::ResourceManager& resources = octo::Application::getResourceManager();
-				audio.playSound(resources.getSound(OBJECT_ELEVATOR_OGG), 1.f);
 				m_timer = m_timerMax;
 				m_state = Activated;
 				m_spriteTopBack.setAnimation(m_animation);
