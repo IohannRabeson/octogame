@@ -152,7 +152,7 @@ void	ResourceLoadingScreen::updateScreen(sf::Time frameTime)
 			std::cout << m_volume << std::endl;
 			audio.playSound(resources.getSound(LOGO_SOUND_OGG), m_volume, m_generator.randomFloat(0.95f, 1.05f));
 			m_volume = std::min(m_volume + m_volumeAddValue, 0.8f);
-			m_volumeAddValue += 0.01f;
+			m_volumeAddValue += 0.007f;
 		}
 		m_timer = sf::Time::Zero;
 		m_index++;
