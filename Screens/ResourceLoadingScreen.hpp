@@ -52,7 +52,6 @@ private:
 	sf::Text						m_message;
 	sf::RectangleShape				m_borders;
 	sf::RectangleShape				m_bar;
-	octo::AudioManager::SoundPtr	m_sound;
 };
 
 #endif

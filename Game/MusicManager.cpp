@@ -247,7 +247,7 @@ void	MusicManager::transition(sf::Time frameTime)
 					main.offset = sf::Time::Zero;
 				//TODO: Find a better way to do that
 				if (m_currentLevel == Level::Blue || m_currentLevel == Level::Red)
-					m_audio.startMusic(main.music, sf::Time::Zero, m_music[7].offset, false);
+					m_audio.startMusic(main.music, sf::Time::Zero, m_music[7].offset, true);
 				else
 					m_audio.startMusic(main.music, sf::Time::Zero, main.offset, true);
 				m_audio.setMusicVolume(0.f);
