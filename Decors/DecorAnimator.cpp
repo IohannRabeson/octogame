@@ -115,7 +115,8 @@ void DecorAnimator::computeState(float frameTime)
 		}
 		case State::Dead:
 		{
-			m_currentState = State::Grow;
+			m_currentState = State::Wait;
+			m_startTimer = 0.f;
 		}
 		case State::Sleep:
 		{

@@ -39,12 +39,14 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_isTravelling(false),
 	m_engine(std::time(0)),
 	m_soundDistri(0u, 2u),
+	m_soundTimerMax(sf::seconds(0.2f)),
 	m_popUp(false),
 	m_popUpTimerMax(sf::seconds(5.f)),
 	m_inputKey(key),
 	m_stopSpeakinKeyPress(false)
 {
-	octo::ResourceManager & resources = octo::Application::getResourceManager();
+	octo::ResourceManager &	resources = octo::Application::getResourceManager();
+	octo::AudioManager &	audio = octo::Application::getAudioManager();
 	InputListener::addInputListener();
 
 	m_texture = &resources.getTexture(GRADIENT_PNG);
@@ -112,6 +114,9 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_ray[15].texCoords = sf::Vector2f(0.f, texSize.y);
 
 	m_particles.setColor(color);
+
+	m_sound = audio.playSound(resources.getSound(REPAIR_WITH_LAZER_OGG), 0.f);
+	m_sound->setLoop(true);
 }
 
 NanoRobot::~NanoRobot(void)
@@ -176,18 +181,19 @@ void NanoRobot::makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vect
 	vertices[15].position = p1 + sf::Vector2f(-size, size);
 }
 
-void NanoRobot::playSoundRepair(void)
+void NanoRobot::playSoundRepair(sf::Time frametime)
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 
-	if ((m_state == Repair || m_state == RepairShip) && m_sound == nullptr)
-		m_sound = audio.playSound(resources.getSound(REPAIR_WITH_LAZER_OGG), 1.f);
-	if (m_state != Repair && m_state != RepairShip && m_sound != nullptr)
+	if (m_sound)
 	{
-		m_sound->stop();
-		m_sound = nullptr;
+		if (m_state == Repair || m_state == RepairShip)
+			m_soundTimer = std::min(m_soundTimer + frametime, m_soundTimerMax);
+		else
+			m_soundTimer = std::max(m_soundTimer - frametime, sf::Time::Zero);
 	}
+
+	m_sound->setVolume(audio.getSoundVolume() * (m_soundTimer / m_soundTimerMax));
 }
 
 void NanoRobot::addMapOffset(float x, float y)
@@ -544,7 +550,7 @@ void NanoRobot::update(sf::Time frametime)
 			m_state = FollowOcto;
 		}
 	}
-	playSoundRepair();
+	playSoundRepair(frametime);
 	m_particles.update(frametime);
 
 	m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));

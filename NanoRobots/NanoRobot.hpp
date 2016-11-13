@@ -69,7 +69,7 @@ protected:
 	void setEffectEnable(bool enable);
 	void setSwarmTarget(sf::Vector2f const & position);
 	void makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
-	void playSoundRepair(void);
+	void playSoundRepair(sf::Time frametime);
 	virtual void updateRepairShip(sf::Time frameTime);
 
 	bool isReparingShip(void) const;
@@ -125,6 +125,8 @@ private:
 	std::mt19937								m_engine;
 	std::uniform_int_distribution<int>			m_soundDistri;
 	std::shared_ptr<sf::Sound>					m_sound;
+	sf::Time									m_soundTimer;
+	sf::Time									m_soundTimerMax;
 	bool										m_popUp;
 	sf::Time									m_popUpTimer;
 	sf::Time									m_popUpTimerMax;

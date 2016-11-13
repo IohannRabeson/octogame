@@ -88,7 +88,7 @@ void Mushroom::playSound(ABiome & biome, sf::Vector2f const & position)
 		{
 			octo::AudioManager& audio = octo::Application::getAudioManager();
 			octo::ResourceManager& resources = octo::Application::getResourceManager();
-			audio.playSound(resources.getSound(DECOR_MUSHROOM_OGG), 1.f, biome.randomFloat(3.f, 4.f), sf::Vector3f(position.x, position.y, 0.f), 500.f, 40.f);
+			audio.playSound(resources.getSound(DECOR_MUSHROOM_OGG), 1.f, biome.randomFloat(3.f, 4.f), sf::Vector3f(position.x, position.y, -150.f), 500.f, 30.f);
 			m_sound = false;
 		}
 }
