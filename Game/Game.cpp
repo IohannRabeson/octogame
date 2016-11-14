@@ -199,6 +199,7 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader("vortex_red", VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader("vortex_blue", VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader("vortex_white", VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader(RED_ALARM_FRAG, RED_ALARM_FRAG);
 	for (int i = 0u; i < portalCount; i++)
 	{

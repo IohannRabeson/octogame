@@ -653,6 +653,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_red", sf::Color(155, 0, 0)));
 				else if (!decor.name.compare("object_portal_blue.oss"))
 					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_blue", sf::Color(0, 0, 155)));
+				else if (!decor.name.compare("object_portal_random.oss"))
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_white", sf::Color(255, 255, 255)));
 				else
 					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), VORTEX_FRAG));
 				portal->setBiome(biome);
