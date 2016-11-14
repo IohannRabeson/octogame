@@ -158,9 +158,10 @@ void CedricStartNpc::setupMachine(void)
 
 bool CedricStartNpc::startBalle(void)
 {
-	if (!ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect) && getSprite().getCurrentEvent() == Idle)
-	{
+	if (!ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect))
 		ChallengeManager::getInstance().getEffect(m_effect).start();
+	if (getSprite().getCurrentEvent() == Idle)
+	{
 		getSprite().setNextEvent(Special1);
 		return (true);
 	}
@@ -234,10 +235,10 @@ void CedricStartNpc::update(sf::Time frametime)
 	if (!ChallengeManager::getInstance().getEffect(m_effect).enable() && !Progress::getInstance().isValidateChallenge(m_effect) && sprite.getCurrentEvent() == IdleNight)
 		sprite.setNextEvent(Special2Night);
 
-	resetVariables();
-
 	if (progress.getCurrentDestination() == Level::WaterB && progress.getRespawnType() == Progress::RespawnType::Die)
-		startBalle();
+		ChallengeManager::getInstance().getEffect(m_effect).start();
+
+	resetVariables();
 }
 
 void CedricStartNpc::updateState(void)
