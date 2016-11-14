@@ -69,7 +69,7 @@ MusicManager::MusicManager() :
 			sf::FloatRect(sf::Vector2f(50.f * 16.f, -340.f * 16.f), sf::Vector2f(120.f * 16.f, 275.f * 16.f)));
 	//desert balle
 	m_music[1] = AreaMusic(Level::DesertB, MUSIC_MENU_OPUS_II_REVERSE_OGG,
-			sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(200.f * 16.f, 700.f * 16.f)));
+			sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(200.f * 16.f, 750.f * 16.f)));
 	// jungle balle
 	m_music[2] = AreaMusic(Level::JungleA, MUSIC_MENU_OPUS_II_REVERSE_OGG,
 			sf::FloatRect(sf::Vector2f(45.f * 16.f, -2400.f), sf::Vector2f(420.f * 16.f, 2200.f)));
