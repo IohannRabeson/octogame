@@ -4,6 +4,7 @@
 # include "SimpleObject.hpp"
 # include "MusicSystem.hpp"
 # include "RandomGenerator.hpp"
+# include <AudioManager.hpp>
 
 class Concert : public SimpleObject, public AGameObject<GameObjectType::Concert>
 {
@@ -20,6 +21,7 @@ private:
 	std::size_t						m_particlesCount;
 	std::unique_ptr<MusicSystem[]>	m_particles;
 
+	std::shared_ptr<sf::Sound>		m_sound;
 };
 
 #endif

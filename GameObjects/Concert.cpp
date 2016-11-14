@@ -1,7 +1,9 @@
 #include "Concert.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <SFML/Graphics.hpp>
 #include <Application.hpp>
+#include <ResourceManager.hpp>
 #include <Camera.hpp>
 
 Concert::Concert(void) :
@@ -20,11 +22,29 @@ Concert::Concert(void) :
 	getSprite().setScale(sf::Vector2f(0.8f, 0.8f));
 	for (std::size_t i = 0; i < m_particlesCount; i++)
 		m_particles[i].canEmit(true);
+		
+	octo::AudioManager &		audio = octo::Application::getAudioManager();
+	octo::ResourceManager &		resource = octo::Application::getResourceManager();
+
+	m_sound = audio.playSound(resource.getSound(MUSIC_ACTION_FAST_OGG), 0.f);
+	if (m_sound)
+		m_sound->setLoop(true);
 }
 
 void Concert::update(sf::Time frameTime)
 {
 	SimpleObject::update(frameTime);
+
+	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
+	sf::Vector2f const & position = getSprite().getPosition() + getSprite().getGlobalSize() / 2.f;
+	float dist = std::sqrt(std::pow(position.x - octoPosition.x, 2u) + std::pow(position.y - octoPosition.y, 2u));
+
+	if (m_sound)
+	{
+		float volume = std::min(1.f - dist / 2000.f, 1.f);
+		m_sound->setVolume(volume * Progress::getInstance().getMusicVolume());
+	}
+
 	for (std::size_t i = 0; i < m_particlesCount; i++)
 		m_particles[i].update(frameTime);
 }
