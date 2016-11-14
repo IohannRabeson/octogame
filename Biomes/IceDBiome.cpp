@@ -260,7 +260,7 @@ std::vector<ParallaxScrolling::ALayer *> IceDBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getSkyNightColor(), sf::Vector2f(0.2f, 0.6f), mapSize, 12.f, -10, 0.3f, 0.8f, 6.f, 300.f);
+	GenerativeLayer * layer = new GenerativeLayer(getSkyNightColor(), sf::Vector2f(0.2f, 0.6f), mapSize, 12.f, -10, 0.3f, 0.8f, 10.f, 300.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3.f, 4.f);

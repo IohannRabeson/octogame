@@ -251,7 +251,7 @@ std::vector<ParallaxScrolling::ALayer *> DesertBBiome::getLayers()
 	sf::Color color = getCrystalColor();
 	color.a = 255;
 
-	GenerativeLayer * layer = new GenerativeLayer(color, sf::Vector2f(0.2f, 0.1f), mapSize, 8.f, 280, 0.2f, 0.7f, -1.f, 30000.f);
+	GenerativeLayer * layer = new GenerativeLayer(color, sf::Vector2f(0.2f, 0.1f), mapSize, 8.f, 280, 0.2f, 0.7f, 10.f, 30000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 2.f, y * 10.f, 2, 12.f);

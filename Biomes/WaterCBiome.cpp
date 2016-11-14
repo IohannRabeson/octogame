@@ -259,19 +259,19 @@ std::vector<ParallaxScrolling::ALayer *> WaterCBiome::getLayers()
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
 	GenerativeLayer * layer;
-	layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 2.5f), 12.f, 350, 0.5f, 0.3f, 2.f, 400.f);
+	layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 2.5f), 12.f, 350, 0.5f, 0.3f, 10.f, 400.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 5.f, y);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 300, 0.1f, 0.3f, 2.f, 1000.f);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 300, 0.1f, 0.3f, 10.f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 30.f, y);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 100, 0.2f, 0.3f, 1.5f, 2000.f);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 100, 0.2f, 0.3f, 7.f, 2000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 35.f, y + 100);
