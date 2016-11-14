@@ -160,6 +160,10 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			m_timer += frameTime;
 			if (m_timer >= m_cedricPutPotionTimer)
 			{
+				octo::AudioManager &		audio = octo::Application::getAudioManager();
+				octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+				audio.playSound(resources.getSound(OCTO_SOUND_USE_POTION_OGG), 1.f);
 				m_timer = sf::Time::Zero;
 				m_npcs[3]->setDisplayText(false);
 				m_npcs[3]->updateText(false);
