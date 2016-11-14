@@ -174,7 +174,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/DeepoNpc.cpp						\
 				Npcs/PepetteNpc.cpp				\
 				Npcs/TVFanNpc.cpp				\
+				Npcs/MecanouilleNpc.cpp				\
 #Script AddNpc
+
 
 
 
