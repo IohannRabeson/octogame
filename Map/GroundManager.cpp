@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "TheoNpc.hpp"
 #include "MecanouilleNpc.hpp"
 #include "TVFanNpc.hpp"
 #include "PepetteNpc.hpp"
@@ -277,6 +278,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<TheoNpc>(THEO_OSS);
 	m_npcFactory.registerCreator<MecanouilleNpc>(NPC_MECANOUILLE_OSS);
 	m_npcFactory.registerCreator<TVFanNpc>(TV_FAN_OSS);
 	m_npcFactory.registerCreator<DeepoNpc>(DEEPO_OSS);
@@ -858,6 +860,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::TheoNpc:
+				{
+					TheoNpc * npc = new TheoNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::MecanouilleNpc:
 				{
 					MecanouilleNpc * npc = new MecanouilleNpc();
