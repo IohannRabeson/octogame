@@ -81,11 +81,11 @@ WaterCBiome::WaterCBiome() :
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(103, 157, 208, 50),
+	m_treeColor(23, 36, 40),
 	m_treeAngle(-180.f, 180.f),
 	m_treeBeatMouvement(0.01f),
 	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(150.f, 150.f)),
-	m_leafColor(103, 157, 208, 50),
+	m_leafColor(220, 42, 40),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(255, 0, 0, 150.f),
