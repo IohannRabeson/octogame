@@ -1967,8 +1967,10 @@ void CharacterOcto::moveGround(sf::Time frameTime, std::unique_ptr<GroundManager
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && !m_keyGroundRight && !m_keyGroundLeft && m_groundSoundTime > sf::Time::Zero)
+	if (m_soundGeneration != nullptr && m_groundSoundTime > sf::Time::Zero && !Progress::getInstance().isMapMoving())
 		m_groundSoundTime -= frameTime;
+	else if (m_groundSoundTime < m_groundSoundTimeMax && !Progress::getInstance().isMenu())
+		m_groundSoundTime += frameTime;
 
 	if ((m_keyGroundRight || m_keyGroundLeft || m_progress.forceMapToMove()) && m_progress.canMoveMap())
 	{
@@ -1978,9 +1980,8 @@ void CharacterOcto::moveGround(sf::Time frameTime, std::unique_ptr<GroundManager
 			groundManager->setNextGenerationState(GroundManager::GenerationState::Next, getPosition());
 		else if (m_keyGroundRight == true && m_progress.canOctoMoveMap())
 			groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, getPosition());
-		if (m_groundSoundTime < m_groundSoundTimeMax)
-			m_groundSoundTime += frameTime;
 	}
+
 	volume = m_groundVolume * (m_groundSoundTime / m_groundSoundTimeMax);
 	m_soundGeneration->setVolume(volume * audio.getSoundVolume());
 
