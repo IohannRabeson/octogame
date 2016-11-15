@@ -66,7 +66,7 @@ PortalBiome::PortalBiome() :
 	m_canCreateRainbow(true),
 	m_canCreateGrass(true),
 	m_waterPersistence(0.f),
-	m_type(ABiome::Type::Ice),
+	m_type(ABiome::Type::Random),
 
 	m_rockSize(sf::Vector2f(5.f, 50.f), sf::Vector2f(20.f, 70.f)),
 	m_rockPartCount(2.f, 10.f),
@@ -128,6 +128,7 @@ PortalBiome::PortalBiome() :
 	m_mapSeed = 42u;
 
 	Progress & progress = Progress::getInstance();
+	progress.setGameFinished(true);
 
 	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;

@@ -29,10 +29,18 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	progress.registerPortal(destination);
 
 	m_shader.setParameter("time_max", m_timerActivateMax);
-	if (Progress::getInstance().getCurrentDestination() == Level::Portal)
+	if (progress.getCurrentDestination() == Level::Portal)
 		m_shader.setParameter("center_color", sf::Color::White);
 	else
-		m_shader.setParameter("center_color", centerColor);
+	{
+		if (progress.isGameFinished() && (destination != Level::Red && destination != Level::Blue && destination != Level::Random))
+		{
+			m_destination = Level::Portal;
+			m_shader.setParameter("center_color", centerColor);
+		}
+		else
+			m_shader.setParameter("center_color", centerColor);
+	}
 
 	m_box->setGameObject(this);
 	m_box->setApplyGravity(false);
@@ -182,7 +190,8 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	m_sprite.setMachine(machine);
 	m_sprite.restart();
 
-	if (!progress.isMetPortal(m_destination) || (progress.isMetPortal(m_destination) && m_destination == Level::Random))
+	if (!progress.isMetPortal(m_destination) || (progress.isMetPortal(m_destination) && m_destination == Level::Random)
+		|| (progress.getCurrentDestination() == Level::Portal && progress.isMetRandom(destination)))
 		m_sprite.setNextEvent(Closed);
 	else
 		m_sprite.setNextEvent(Opened);
@@ -348,6 +357,8 @@ bool Portal::isLock(void)
 {
 	Progress & progress = Progress::getInstance();
 	if (progress.isMetPortal(m_destination) && m_destination == Level::Random)
+		return true;
+	if (progress.getCurrentDestination() == Level::Portal && progress.isMetRandom(m_destination))
 		return true;
 	return false;
 }

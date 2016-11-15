@@ -153,7 +153,7 @@ void	Game::loadLevel(void)
 	}
 	else
 	{
-		if (progress.isGameFinished())
+		if (progress.isGameFinished() && progress.getNextDestination() != Level::Blue && progress.getNextDestination() != Level::Red && progress.getNextDestination() != Level::Portal && progress.getNextDestination() != Level::Final)
 			m_biomeManager.changeBiome(Level::RandomGame, 0x12345);
 		else
 			m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);

@@ -55,7 +55,6 @@ void	LevelZeroScreen::start()
 	{
 		Progress & progress = Progress::getInstance();
 		progress.setNextDestination(Level::IceA, false);
-		progress.setGameFinished(true);
 		m_state = Rising;
 	}
 

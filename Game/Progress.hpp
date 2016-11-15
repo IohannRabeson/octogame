@@ -130,6 +130,7 @@ public:
 	bool											meetPortal(Level source, Level destination);
 	std::size_t										countRandomDiscover(void);
 	bool											isMetPortal(Level destination);
+	bool											isMetRandom(Level destination);
 	void											setRandomDiscoverCount(std::size_t count) { m_countRandomDiscover = count; };
 	void											setPortalPosition(Level destination, sf::Vector2f const & position);
 	void											removePortalPosition(Level destination);
