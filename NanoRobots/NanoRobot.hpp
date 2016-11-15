@@ -112,7 +112,6 @@ private:
 	std::size_t									m_textIndex;
 	BubbleText									m_infoBubble;
 	std::wstring								m_infoText;
-	bool										m_infoSetup;
 
 	State										m_state;
 	bool										m_isSpeaking;

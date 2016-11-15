@@ -41,10 +41,5 @@ void RepairNanoRobot::update(sf::Time frameTime)
 
 void RepairNanoRobot::updateInfo(void)
 {
-	Progress & progress = Progress::getInstance();
-
-	//TODO: Create text system to avoid multiple initialisation
-	//std::wstring infoText = std::to_wstring(progress.getNanoRobotCount()) + L"/" + std::to_wstring(8u) + L" Octobots";// + AMenu::getText("menu_friends");
-	setInfoText(std::to_wstring(progress.getNanoRobotCount()) + L"/" + std::to_wstring(8u) + L" Octobots");
 }
 
