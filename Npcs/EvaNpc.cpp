@@ -90,7 +90,7 @@ void EvaNpc::update(sf::Time frameTime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 	m_particles.update(frameTime);
-	m_particles.setEmitter(sprite.getPosition() + sf::Vector2f(45.f, 228.f));
+	m_particles.setEmitter(sprite.getPosition() + sf::Vector2f(45.f, 73.f));
 	m_particles.canEmit(false);
 	ANpc::update(frameTime);
 }

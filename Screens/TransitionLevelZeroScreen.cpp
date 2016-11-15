@@ -152,6 +152,7 @@ bool TransitionLevelZeroScreen::onInputPressed(InputListener::OctoKeys const & e
 		case OctoKeys::Capacity:
 		case OctoKeys::Jump:
 		case OctoKeys::Elevator:
+		case OctoKeys::SelectMenu:
 			m_index++;
 			m_time = sf::Time::Zero;
 			break;

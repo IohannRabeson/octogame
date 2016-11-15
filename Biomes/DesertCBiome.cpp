@@ -59,7 +59,7 @@ DesertCBiome::DesertCBiome() :
 	m_canCreateMushroom(false),
 	m_canCreateCrystal(true),
 	m_canCreateShineEffect(true),
-	m_canCreateCloud(false),
+	m_canCreateCloud(true),
 	m_canCreateStar(true),
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
@@ -100,7 +100,7 @@ DesertCBiome::DesertCBiome() :
 	m_cloudSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(60.f, 60.f)),
 	m_cloudPartCount(1u, 1u),
 	m_cloudMaxY(3000.f),
-	m_cloudMinY(340.f),
+	m_cloudMinY(360.f),
 	m_cloudSpeed(sf::Vector2f(0.f, -50.f), sf::Vector2f(0.f, -80.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(18, 14, 66, 100),
@@ -246,7 +246,7 @@ std::vector<ParallaxScrolling::ALayer *> DesertCBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -40, 0.1f, 0.8f, -1.f, 2000.f);
+	GenerativeLayer * layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -40, 0.1f, 0.8f, 10.f, 2000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 10.f, y * 10.f);

@@ -81,11 +81,11 @@ WaterCBiome::WaterCBiome() :
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(5.f, 160.f), sf::Vector2f(20.f, 161.f)),
 	m_treeLifeTime(sf::seconds(20.f), sf::seconds(50.f)),
-	m_treeColor(103, 157, 208, 50),
+	m_treeColor(23, 36, 40),
 	m_treeAngle(-180.f, 180.f),
 	m_treeBeatMouvement(0.01f),
 	m_leafSize(sf::Vector2f(20.f, 20.f), sf::Vector2f(150.f, 150.f)),
-	m_leafColor(103, 157, 208, 50),
+	m_leafColor(220, 42, 40),
 
 	m_mushroomSize(sf::Vector2f(10.f, 20.f), sf::Vector2f(20.f, 50.f)),
 	m_mushroomColor(255, 0, 0, 150.f),
@@ -259,19 +259,19 @@ std::vector<ParallaxScrolling::ALayer *> WaterCBiome::getLayers()
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
 	GenerativeLayer * layer;
-	layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 2.5f), 12.f, 350, 0.5f, 0.3f, 2.f, 400.f);
+	layer = new GenerativeLayer(randomColor(m_tileEndColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 2.5f), 12.f, 350, 0.5f, 0.3f, 10.f, 400.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 5.f, y);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 300, 0.1f, 0.3f, 2.f, 1000.f);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.5f, 0.3f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 300, 0.1f, 0.3f, 10.f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 30.f, y);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 100, 0.2f, 0.3f, 1.5f, 2000.f);
+	layer = new GenerativeLayer(randomColor(m_tileStartColor), sf::Vector2f(0.6f, 0.2f), sf::Vector2u(mapSize.x, mapSize.y * 4.5f), 12.f, 100, 0.2f, 0.3f, 7.f, 2000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 35.f, y + 100);

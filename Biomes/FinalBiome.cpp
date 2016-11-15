@@ -49,7 +49,7 @@ FinalBiome::FinalBiome() :
 	m_cloudCount(150u, 150u),
 	m_groundRockCount(200u, 400u),
 
-	m_canCreateRain(true),
+	m_canCreateRain(false),
 	m_canCreateThunder(false),
 	m_canCreateSnow(false),
 	m_canCreateRock(true),

@@ -33,6 +33,8 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "TheoNpc.hpp"
+#include "MecanouilleNpc.hpp"
 #include "TVFanNpc.hpp"
 #include "PepetteNpc.hpp"
 #include "DeepoNpc.hpp"
@@ -276,6 +278,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<TheoNpc>(THEO_OSS);
+	m_npcFactory.registerCreator<MecanouilleNpc>(NPC_MECANOUILLE_OSS);
 	m_npcFactory.registerCreator<TVFanNpc>(TV_FAN_OSS);
 	m_npcFactory.registerCreator<DeepoNpc>(DEEPO_OSS);
 	m_npcFactory.registerCreator<DesertEngine>(DESERT_ENGINE_1_OSS);
@@ -651,6 +655,8 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_red", sf::Color(155, 0, 0)));
 				else if (!decor.name.compare("object_portal_blue.oss"))
 					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_blue", sf::Color(0, 0, 155)));
+				else if (!decor.name.compare("object_portal_random.oss"))
+					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), "vortex_white", sf::Color(255, 255, 255)));
 				else
 					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), VORTEX_FRAG));
 				portal->setBiome(biome);
@@ -854,6 +860,20 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::TheoNpc:
+				{
+					TheoNpc * npc = new TheoNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
+			case GameObjectType::MecanouilleNpc:
+				{
+					MecanouilleNpc * npc = new MecanouilleNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::TVFanNpc:
 				{
 					TVFanNpc * npc = new TVFanNpc();

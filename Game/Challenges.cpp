@@ -194,7 +194,7 @@ void ChallengeDuplicate::updateShader(sf::Time frametime)
 
 // Persistence
 ChallengePersistence::ChallengePersistence(void) :
-	AChallenge(PERSISTENCE_FRAG, 3.f, 1.5f, sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(250.f * 16.f, 720.f * 16.f)), ABiome::Type::Desert, std::pair<float, float>(0.7f, 0.9f), std::pair<float, float>(1.f, 2.f))
+	AChallenge(PERSISTENCE_FRAG, 3.f, 1.5f, sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(250.f * 16.f, 760.f * 16.f)), ABiome::Type::Desert, std::pair<float, float>(0.7f, 0.9f), std::pair<float, float>(1.f, 2.f))
 {
 	m_shader.setParameter("intensity", 1.f);
 }

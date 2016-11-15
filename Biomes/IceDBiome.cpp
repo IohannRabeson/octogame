@@ -260,25 +260,25 @@ std::vector<ParallaxScrolling::ALayer *> IceDBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 12.f, -10, 0.3f, 0.8f, 6.f);
+	GenerativeLayer * layer = new GenerativeLayer(getSkyNightColor(), sf::Vector2f(0.2f, 0.6f), mapSize, 12.f, -10, 0.3f, 0.8f, 10.f, 300.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3.f, 4.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	layer = new GenerativeLayer(getSkyNightColor(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f, 300.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.5f, 0.3f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
+	layer = new GenerativeLayer(getSkyNightColor(), sf::Vector2f(0.5f, 0.3f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f, 300.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 1.1f, y);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -20, 0.2f, 0.8f, 6.f, 100.f);
+	layer = new GenerativeLayer(getSkyNightColor(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -20, 0.2f, 0.8f, 6.f, 300.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 1.f, y, 4.f, 4.f);

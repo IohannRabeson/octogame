@@ -199,6 +199,7 @@ void	Game::loadLevel(void)
 	PostEffectLayer::getInstance().registerShader(VORTEX_FRAG, VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader("vortex_red", VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader("vortex_blue", VORTEX_FRAG);
+	PostEffectLayer::getInstance().registerShader("vortex_white", VORTEX_FRAG);
 	PostEffectLayer::getInstance().registerShader(RED_ALARM_FRAG, RED_ALARM_FRAG);
 	for (int i = 0u; i < portalCount; i++)
 	{
@@ -240,7 +241,7 @@ void	Game::loadLevel(void)
 
 	Level current = progress.getCurrentDestination();
 	Level next = progress.getNextDestination();
-	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
+	if (!progress.isMenu() && !(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
 		audio.playSound(resources.getSound(OBJECT_PORTAL_END_OGG), 1.f);
 	m_fakeMenu.setup();
 }

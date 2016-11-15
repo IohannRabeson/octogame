@@ -458,6 +458,8 @@ std::size_t		RandomGameBiome::getRainbowCount()
 
 std::size_t		RandomGameBiome::getCloudCount()
 {
+	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
+		return (m_biomeManager.getCurrentBiome().getCloudCount());
 	return (randomRangeSizeT(m_cloudCount));
 }
 
@@ -642,31 +644,43 @@ bool			RandomGameBiome::canCreateMushroom()
 
 sf::Vector2f	RandomGameBiome::getCloudSize()
 {
+	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
+		return (m_biomeManager.getCurrentBiome().getCloudSize());
 	return (randomRangeVector2f(m_cloudSize));
 }
 
 std::size_t		RandomGameBiome::getCloudPartCount()
 {
+	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
+		return (m_biomeManager.getCurrentBiome().getCloudPartCount());
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
 float	RandomGameBiome::getCloudMaxY()
 {
+	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
+		return (m_biomeManager.getCurrentBiome().getCloudMaxY());
 	return (m_cloudMaxY);
 }
 
 float	RandomGameBiome::getCloudMinY()
 {
+	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
+		return (m_biomeManager.getCurrentBiome().getCloudMinY());
 	return (m_cloudMinY);
 }
 
 sf::Vector2f	RandomGameBiome::getCloudSpeed()
 {
+	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
+		return (m_biomeManager.getCurrentBiome().getCloudSpeed());
 	return m_biomeManager.getCurrentBiome().getCloudSpeed();
 }
 
 sf::Time		RandomGameBiome::getCloudLifeTime()
 {
+	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
+		return (m_biomeManager.getCurrentBiome().getCloudLifeTime());
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
@@ -677,6 +691,8 @@ sf::Color		RandomGameBiome::getCloudColor()
 
 bool			RandomGameBiome::canCreateCloud()
 {
+	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
+		return (m_biomeManager.getCurrentBiome().canCreateCloud());
 	return (m_canCreateCloud);
 }
 

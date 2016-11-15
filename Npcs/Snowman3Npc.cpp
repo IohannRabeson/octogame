@@ -1,7 +1,7 @@
 #include "Snowman3Npc.hpp"
 
 Snowman3Npc::Snowman3Npc(void) :
-	ASpecialNpc(SNOWMAN_3_OSS)
+	ASpecialNpc(SNOWMAN_3_OSS, false)
 {
 	setType(GameObjectType::Snowman3Npc);
 	setSize(sf::Vector2f(30.f, 193.f));

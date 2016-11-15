@@ -11,6 +11,7 @@ ColumnNpc::ColumnNpc(void) :
 	setOrigin(sf::Vector2f(44.f, 295.f));
 	setSprite();
 	setup();
+	setIsZoomable(false);
 }
 
 void ColumnNpc::setSprite()
