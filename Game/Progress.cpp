@@ -200,7 +200,12 @@ void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 {
 	if (!m_isMenu || destination != Level::Rewards)
 	{
-		if (destination != m_data.currentDestination)
+		if (isGameFinished())
+		{
+			if (m_data.currentDestination != Level::Random)
+				m_data.lastDestination = m_data.currentDestination;
+		}
+		else if (destination != m_data.currentDestination)
 			m_data.lastDestination = m_data.currentDestination;
 		m_data.nextDestination = destination;
 	}
@@ -415,6 +420,13 @@ std::size_t Progress::countRandomDiscover(void)
 bool	Progress::isMetPortal(Level destination)
 {
 	if (m_changeLevel == false && m_portals[m_data.currentDestination][destination])
+		return true;
+	return false;
+}
+
+bool	Progress::isMetRandom(Level destination)
+{
+	if (m_changeLevel == false && m_portals[destination][Level::Random])
 		return true;
 	return false;
 }

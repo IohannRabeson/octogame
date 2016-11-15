@@ -194,7 +194,16 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 		case StopShaderEffect:
 			m_endPostEffectDuration += frameTime;
 			if (m_endPostEffectDuration >= m_endPostEffectDurationMax)
-				octo::Application::getStateManager().change("menu");
+			{
+				Progress & progress = Progress::getInstance();
+
+				if (progress.getNextDestination() != Level::Portal)
+				{
+					progress.setNextDestination(Level::Portal);
+					progress.save();
+					octo::Application::getStateManager().change("game");
+				}
+			}
 			break;
 		default:
 			break;

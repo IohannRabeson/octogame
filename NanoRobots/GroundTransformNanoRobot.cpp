@@ -1,6 +1,7 @@
 #include "GroundTransformNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
+#include "TextManager.hpp"
 
 GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 	NanoRobot(sf::Vector2f(30 * 16.f, 700.f), NANO_GROUND_TRANSFORM_OSS, 4, 9854, sf::Vector2f(0.f, -26.f), InputListener::OctoKeys::GroundRight, 3.f),
@@ -123,11 +124,21 @@ void GroundTransformNanoRobot::updateInfo(void)
 {
 	Progress & progress = Progress::getInstance();
 
-	m_npcCount = progress.getNpcCount();
-	m_npcMax = progress.getNpcMax();
-	//TODO: Create text system to avoid multiple initialisation
-	std::wstring infoText = std::to_wstring(m_npcCount) + L"/" + std::to_wstring(m_npcMax) + L" Friends";// + AMenu::getText("menu_friends");
-	setInfoText(infoText);
+	if (!progress.isMenu())
+	{
+		if (progress.getCurrentDestination() == Level::Portal)
+		{
+			TextManager & textManager = TextManager::getInstance();
+			std::wstring infoText = textManager.getTexts("nano_end_game")[0];
+			setInfoText(infoText);
+			popUpInfo();
+		}
+		else if (progress.isGameFinished())
+		{
+			TextManager & textManager = TextManager::getInstance();
+			setInfoText(textManager.getTexts("nano_show_portal")[0]);
+		}
+	}
 }
 
 void GroundTransformNanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates states) const

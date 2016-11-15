@@ -28,8 +28,6 @@ private:
 	bool		m_canSpeak;
 	bool		m_talkaboutshit;
 	State		m_state;
-	std::size_t	m_npcCount;
-	std::size_t m_npcMax;
 };
 
 #endif

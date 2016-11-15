@@ -1007,7 +1007,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 
 bool	CharacterOcto::isZooming(void) const
 {
-	return (m_keyZoomIn || isCollidingPortal());
+	return (m_keyZoomIn || (isCollidingPortal() && Progress::getInstance().getCurrentDestination() != Level::Portal));
 }
 
 bool	CharacterOcto::isInRocketEnd(void) const

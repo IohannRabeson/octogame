@@ -31,7 +31,6 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_multiplier(multiplier),
 	m_box(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_textIndex(0u),
-	m_infoSetup(false),
 	m_state(Idle),
 	m_isSpeaking(false),
 	m_timer(sf::Time::Zero),
@@ -41,7 +40,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_soundDistri(0u, 2u),
 	m_soundTimerMax(sf::seconds(0.2f)),
 	m_popUp(false),
-	m_popUpTimerMax(sf::seconds(5.f)),
+	m_popUpTimerMax(sf::seconds(15.f)),
 	m_inputKey(key),
 	m_stopSpeakinKeyPress(false)
 {
@@ -275,6 +274,7 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 			m_positionBehavior->setRadius(dist / 2.f);
 			if (m_glowingEffect.getState() != NanoEffect::State::Random)
 				m_glowingEffect.setState(NanoEffect::State::Wait);
+			m_popUp = true;
 		}
 		else if (dist > 600.f)
 		{
@@ -284,6 +284,7 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 				m_positionBehavior->setRadius(300.f);
 				if (m_glowingEffect.getState() != NanoEffect::State::Random)
 					m_glowingEffect.setState(NanoEffect::State::None);
+				m_popUp = false;
 			}
 			else
 			{
@@ -291,6 +292,7 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 				octo::normalize(direction);
 				pos += direction * 300.f;
 				m_positionBehavior->setRadius(100.f);
+				m_popUp = true;
 			}
 		}
 	}
@@ -338,21 +340,19 @@ void NanoRobot::popUpInfo(void)
 		m_popUp = true;
 }
 
-void NanoRobot::updatePopUpInfo(sf::Time frametime)
+void NanoRobot::updatePopUpInfo(sf::Time)
 {
-	if (m_popUp && m_popUpTimer <= m_popUpTimerMax)
+	if (m_popUp && m_infoText != L"")
 	{
-		if (m_popUpTimer == sf::Time::Zero)
+		if (!m_infoBubble.isActive())
 		{
-			m_infoBubble.setup(m_infoText, sf::Color::White, 30u, 600u);
+			m_infoBubble.setup(m_infoText, sf::Color::White, 20u, 300u);
 			m_infoBubble.setType(ABubble::Type::Speak);
 			m_infoBubble.setActive(true);
 		}
-		m_popUpTimer += frametime;
 	}
-	else if (m_infoSetup == false)
+	else
 	{
-		m_popUp = false;
 		m_popUpTimer = sf::Time::Zero;
 		m_infoBubble.setType(ABubble::Type::None);
 		m_infoBubble.setActive(false);
@@ -363,19 +363,6 @@ bool NanoRobot::onInputPressed(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
-		/*
-		case OctoKeys::Infos:
-		{
-			if (m_infoSetup == false && m_infoText.size())
-			{
-				m_infoBubble.setup(m_infoText, sf::Color::White, 20u, 600u);
-				m_infoBubble.setType(ABubble::Type::Speak);
-				m_infoBubble.setActive(true);
-				m_infoSetup = true;
-			}
-			break;
-		}
-		*/
 		default:
 			break;
 	}
@@ -386,18 +373,6 @@ bool NanoRobot::onInputReleased(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
-		/*
-		case OctoKeys::Infos:
-		{
-			if (m_infoSetup == true)
-			{
-				m_infoBubble.setType(ABubble::Type::None);
-				m_infoBubble.setActive(false);
-				m_infoSetup = false;
-			}
-			break;
-		}
-		*/
 		default:
 			break;
 	}
