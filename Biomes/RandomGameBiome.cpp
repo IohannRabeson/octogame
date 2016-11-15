@@ -171,6 +171,7 @@ RandomGameBiome::RandomGameBiome() :
 	setBiome(Progress::getInstance().getNextDestination());
 	m_name = m_biomeManager.getCurrentBiome().getName();
 	m_id = m_biomeManager.getCurrentBiome().getId();
+	m_type = m_biomeManager.getCurrentBiome().getType();
 	m_grassCount = m_biomeManager.getCurrentBiome().getMapSize().x;
 }
 

@@ -5,6 +5,7 @@
 #include "CircleShape.hpp"
 #include "Progress.hpp"
 #include "TextManager.hpp"
+#include <Camera.hpp>
 #include <Application.hpp>
 #include <AudioManager.hpp>
 #include <ResourceManager.hpp>
@@ -200,10 +201,14 @@ void NanoRobot::addMapOffset(float x, float y)
 	sf::Vector2f position = getPosition() + sf::Vector2f(x, y);
 	if (m_startLastAnimation)
 		return;
+	m_swarm.killAll();
+	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
+	/*
 	if (std::abs(position.x - m_swarm.getFirefly(0u).position.x) > 400.f)
 		m_isTravelling = true;
 	else
 		m_isTravelling = false;
+	*/
 	m_swarm.setTarget(position);
 }
 
@@ -212,7 +217,6 @@ void NanoRobot::transfertToOcto(bool inInit)
 	PhysicsEngine::getInstance().unregisterShape(m_box);
 	m_box = nullptr;
 	m_positionBehavior->setRadius(250.f);
-	m_swarm.getFirefly(0u).speed = 1.f;
 	m_state = Speak;
 	if (!inInit)
 	{
@@ -220,7 +224,12 @@ void NanoRobot::transfertToOcto(bool inInit)
 		m_glowingEffect.onTransfer();
 	}
 	else
+	{
+		m_swarm.killAll();
+		m_swarm.create(m_spawnMode, octo::Application::getCamera().getCenter(), sf::Color::Magenta, 8.f, 32.f, 2.f);
 		m_glowingEffect.setState(NanoEffect::State::Wait);
+	}
+	m_swarm.getFirefly(0u).speed = 1.f;
 }
 
 void NanoRobot::setTarget(sf::Vector2f const & target)
@@ -297,7 +306,10 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 		}
 	}
 	else
+	{
 		pos.y -= 200.f;
+		m_positionBehavior->setRadius(100.f);
+	}
 
 	m_lastPos = position;
 	return pos;
