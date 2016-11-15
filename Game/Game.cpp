@@ -26,9 +26,10 @@
 #include "WaterBBiome.hpp"
 #include "WaterCBiome.hpp"
 #include "WaterDBiome.hpp"
+#include "FinalBiome.hpp"
 #include "RedBiome.hpp"
 #include "BlueBiome.hpp"
-#include "FinalBiome.hpp"
+#include "PortalBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
 #include "RandomGameBiome.hpp"
@@ -122,9 +123,10 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<WaterBBiome>(Level::WaterB);
 	m_biomeManager.registerBiome<WaterCBiome>(Level::WaterC);
 	m_biomeManager.registerBiome<WaterDBiome>(Level::WaterD);
+	m_biomeManager.registerBiome<FinalBiome>(Level::Final);
 	m_biomeManager.registerBiome<RedBiome>(Level::Red);
 	m_biomeManager.registerBiome<BlueBiome>(Level::Blue);
-	m_biomeManager.registerBiome<FinalBiome>(Level::Final);
+	m_biomeManager.registerBiome<PortalBiome>(Level::Portal);
 
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
@@ -177,6 +179,8 @@ void	Game::loadLevel(void)
 			case GameObjectType::PortalDesert:
 			case GameObjectType::PortalWater:
 			case GameObjectType::Portal:
+			case GameObjectType::PortalRed:
+			case GameObjectType::PortalBlue:
 				portalCount++;
 				break;
 			default:

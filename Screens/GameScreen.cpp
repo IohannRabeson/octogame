@@ -105,18 +105,12 @@ void GameScreen::timeLevelBlueRed(sf::Time frameTime, octo::StateManager & state
 
 	if (next == Level::Blue)
 	{
-		//TODO:Not clean, to remove when sounds will be at same volume
-		if (m_timerBlue == sf::Time::Zero)
-		{
-			octo::AudioManager & audio = octo::Application::getAudioManager();
-			audio.setMusicVolume(60.f);
-			audio.setSoundVolume(30.f);
-			progress.setMusicVolume(70.f);
-			progress.setSoundVolume(10.f);
-		}
 		m_timerBlue += frameTime;
 		if (m_timerBlue >= m_timerRedBlueMax)
+		{
 			progress.setNextDestination(Level::IceA);
+			states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(2.0f));
+		}
 	}
 	else if (next == Level::Red)
 	{

@@ -23,13 +23,13 @@ LevelMenu::LevelMenu(void) :
 	m_names.push_back(L"Water B");
 	m_names.push_back(L"Water C");
 	m_names.push_back(L"Water D");
+	m_names.push_back(L"Final");
 	m_names.push_back(L"Red");
 	m_names.push_back(L"Blue");
-	m_names.push_back(L"Final");
+	m_names.push_back(L"Portal");
 	m_names.push_back(L"Random");
 	m_names.push_back(L"Rewards");
 	m_names.push_back(L"Segfault");
-	m_names.push_back(L"Uknown");
 	m_names.push_back(L"Uknown");
 	m_names.push_back(L"Uknown");
 	m_names.push_back(L"Uknown");
