@@ -38,6 +38,7 @@ enum class Level : std::size_t
 	Red,
 	Blue,
 	Portal,
+	EndRocket,
 	Random,
 	Rewards,
 	RandomGame,

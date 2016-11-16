@@ -259,6 +259,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/RedBiome.cpp						\
 				Biomes/BlueBiome.cpp					\
 				Biomes/PortalBiome.cpp					\
+				Biomes/EndRocketBiome.cpp				\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
