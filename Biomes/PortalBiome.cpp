@@ -18,8 +18,8 @@ PortalBiome::PortalBiome() :
 	m_octoStartPosition(53.f * 16.f, 60.f),
 	m_transitionDuration(2.0f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(150, 150, 150),
-	m_tileEndColor(100, 100, 100),
+	m_tileStartColor(255, 255, 255),
+	m_tileEndColor(225, 225, 225),
 	m_waterLevel(-1.f),
 	m_waterColor(255, 255, 255, 200),
 	m_secondWaterColor(m_waterColor),
@@ -27,11 +27,11 @@ PortalBiome::PortalBiome() :
 
 	m_dayDuration(sf::seconds(40.f)),
 	m_startDayDuration(sf::seconds(19.f)),
-	m_skyDayColor(108, 108, 108),
-	m_skyNightColor(78, 78, 78),
-	m_nightLightColor(255, 255, 255, 150),
-	m_dayLightColor(150, 150, 150, 150),
-	m_sunsetLightColor(255, 255, 255, 200),
+	m_skyDayColor(255, 255, 255),
+	m_skyNightColor(255, 255, 255),
+	m_nightLightColor(255, 255, 255, 200),
+	m_dayLightColor(255, 255, 255, 150),
+	m_sunsetLightColor(255, 255, 255, 250),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -41,7 +41,7 @@ PortalBiome::PortalBiome() :
 	m_rockCount(27u, 28u),
 	m_treeCount(40u, 40u),
 	m_mushroomCount(50u, 50u),
-	m_crystalCount(30u, 30u),
+	m_crystalCount(70u, 80u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
@@ -53,7 +53,7 @@ PortalBiome::PortalBiome() :
 	m_canCreateThunder(false),
 	m_canCreateSnow(true),
 	m_canCreateRock(true),
-	m_canCreateTree(false),
+	m_canCreateTree(true),
 	m_canCreateLeaf(false),
 	m_treeIsMoving(false),
 	m_canCreateMushroom(true),
@@ -70,9 +70,9 @@ PortalBiome::PortalBiome() :
 
 	m_rockSize(sf::Vector2f(5.f, 50.f), sf::Vector2f(20.f, 70.f)),
 	m_rockPartCount(2.f, 10.f),
-	m_rockColor(0, 0, 0),
+	m_rockColor(255, 255, 255),
 
-	m_grassSizeY(30.f, 60.f),
+	m_grassSizeY(50.f, 90.f),
 	m_grassSizeX(14.f, 16.f),
 	m_grassColor(m_tileStartColor),
 	m_grassCount(m_mapSize.x),
@@ -81,22 +81,22 @@ PortalBiome::PortalBiome() :
 	m_treeDepth(6u, 7u),
 	m_treeSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
-	m_treeColor(188, 188, 188),
+	m_treeColor(210, 210, 210),
 	m_treeAngle(10.f, 80.f),
 	m_treeBeatMouvement(0.f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
-	m_leafColor(143, 143, 143),
+	m_leafColor(255, 255, 255),
 
 	m_mushroomSize(sf::Vector2f(20.f, 50.f), sf::Vector2f(40.f, 100.f)),
-	m_mushroomColor(77, 77, 77),
+	m_mushroomColor(255, 255, 255),
 	m_mushroomLifeTime(sf::seconds(20), sf::seconds(60)),
 
-	m_crystalSize(sf::Vector2f(5.f, 25.f), sf::Vector2f(10.f, 50.f)),
-	m_crystalPartCount(2u, 3u),
-	m_crystalColor(227, 227, 227, 150),
+	m_crystalSize(sf::Vector2f(50.f, 155.f), sf::Vector2f(70.f, 500.f)),
+	m_crystalPartCount(2u, 5u),
+	m_crystalColor(255, 255, 255, 40),
 	m_shineEffectSize(sf::Vector2f(100.f, 100.f), sf::Vector2f(200.f, 200.f)),
 	m_shineEffectColor(255, 255, 255, 100),
-	m_shineEffectRotateAngle(100.f, 200.f),
+	m_shineEffectRotateAngle(50.f, 250.f),
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
@@ -112,10 +112,10 @@ PortalBiome::PortalBiome() :
 
 	m_sunSize(sf::Vector2f(140.f, 140.f), sf::Vector2f(150.f, 150.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(50, 50, 50),
+	m_sunColor(255, 255, 255),
 
 	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 100.f)),
-	m_moonColor(200, 200, 200),
+	m_moonColor(255, 255, 255),
 	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
 
 	m_rainbowThickness(70.f, 120.f),
@@ -321,19 +321,19 @@ std::vector<ParallaxScrolling::ALayer *> PortalBiome::getLayers()
 	sf::Vector2u const & mapSize = sf::Vector2u(getMapSize().x, getMapSize().y * 4u);
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 150), sf::Vector2f(1.4f, 1.4f), mapSize, 10.f, 10, 0.1f, 0.4f, 1.5f, 1000.f);
+	GenerativeLayer * layer = new GenerativeLayer(sf::Color(255, 255, 255, 20), sf::Vector2f(1.4f, 1.4f), mapSize, 10.f, 10, 0.1f, 0.4f, 1.5f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.fBm(x / 5.f, y, 3, 3.f, 1.5f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 170), sf::Vector2f(1.5f, 1.3f), mapSize, 15.f, 15, 0.2f, 0.4f, 1.5f, 1000.f);
+	layer = new GenerativeLayer(sf::Color(255, 255, 255, 20), sf::Vector2f(1.5f, 1.3f), mapSize, 15.f, 15, 0.2f, 0.4f, 1.5f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.fBm(x / 5.f, y, 3, 3.f, 1.5f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 190), sf::Vector2f(1.5f, 1.3f), mapSize, 20.f, 15, 0.2f, 0.4f, 1.5f, 1000.f);
+	layer = new GenerativeLayer(sf::Color(255, 255, 255, 20), sf::Vector2f(1.5f, 1.3f), mapSize, 20.f, 15, 0.2f, 0.4f, 1.5f, 1000.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.fBm(x / 5.f, y, 3, 3.f, 1.5f);
@@ -617,13 +617,7 @@ sf::Color		PortalBiome::getCrystalColor()
 
 int				PortalBiome::getCrystalPosX()
 {
-	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
-	x += m_interestPointPosX - m_mapSize.x / 2.f;
-	if (x > static_cast<int>(m_mapSize.x))
-		x -= m_mapSize.x;
-	else if (x < 0)
-		x += m_mapSize.x;
-	return (static_cast<int>(x));
+	return randomFloat(1u, m_mapSize.x);
 }
 
 bool			PortalBiome::canCreateCrystal()
@@ -909,8 +903,8 @@ sf::Time		PortalBiome::randomRangeTime(Range<sf::Time> const & range)
 sf::Color		PortalBiome::randomColor(sf::Color const & color)
 {
 	HSL tmp = TurnToHSL(color);
-	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);
-	tmp.Luminance += m_generator.randomFloat(-10.f, 10.f);
+	tmp.Hue += m_generator.randomFloat(0.f, 0.f);
+	tmp.Luminance += m_generator.randomFloat(-30.f, 0.f);
 	sf::Color newColor = tmp.TurnToRGB();
 	newColor.a = color.a;
 	return (newColor);

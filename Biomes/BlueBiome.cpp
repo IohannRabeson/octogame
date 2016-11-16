@@ -138,8 +138,6 @@ BlueBiome::BlueBiome() :
 	m_secondStartColor = getRockColor();
 	m_secondEndColor = getRockColor();
 
-	m_gameObjects[100] = GameObjectType::DeepoNpc;
-
 	m_interestPointPosX = 420;
 
 	Progress & progress = Progress::getInstance();

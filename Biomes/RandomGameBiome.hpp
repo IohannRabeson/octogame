@@ -28,6 +28,7 @@ public:
 	void setBiome(Level level);
 private:
 	BiomeManager	m_biomeManager;
+	bool			m_specialClouds;
 
 public:
 	RandomGameBiome();

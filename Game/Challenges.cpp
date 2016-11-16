@@ -143,9 +143,12 @@ void ChallengeManager::AChallenge::startGlitch(ABiome & biome)
 {
 	if (m_glitchTimer <= sf::Time::Zero)
 	{
+		Progress & progress = Progress::getInstance();
+		float x = progress.getBalleMultiplier();
+
 		setGlitch(true);
-		setIntensity(biome.randomFloat(m_glitchIntensityRange.first, m_glitchIntensityRange.second));
-		setDuration(biome.randomFloat(m_glitchDurationRange.first, m_glitchDurationRange.second));
+		setIntensity(biome.randomFloat(m_glitchIntensityRange.first * x, m_glitchIntensityRange.second * x));
+		setDuration(biome.randomFloat(m_glitchDurationRange.first * x, m_glitchDurationRange.second * x));
 		start();
 	}
 }

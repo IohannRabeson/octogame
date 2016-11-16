@@ -2,6 +2,7 @@
 #include "EmptyMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "ResolutionMenu.hpp"
+#include "BalleMultiplierMenu.hpp"
 #include "Progress.hpp"
 
 #include <Application.hpp>
@@ -117,10 +118,14 @@ VideoMenu::VideoMenu(void)
 
 void VideoMenu::createMenus(void)
 {
+	Progress & progress = Progress::getInstance();
+
 	addMenu(AMenu::getText("options_video_fullscreen"), std::unique_ptr<YesNoFullscreen>(new YesNoFullscreen()));
 	addMenu(AMenu::getText("options_video_vsync"), std::unique_ptr<YesNoVsync>(new YesNoVsync()));
 	addMenu(AMenu::getText("options_video_details"), std::unique_ptr<DetailsMenu>(new DetailsMenu()));
 	addMenu(AMenu::getText("options_video_framerate"), std::unique_ptr<FramerateMenu>(new FramerateMenu()));
+	if (progress.isGameFinished())
+		addMenu(L"???", std::unique_ptr<BalleMultiplierMenu>(new BalleMultiplierMenu()));
 	//TODO: Make resolution work
 	//addMenu("Resolution", std::unique_ptr<ResolutionMenu>(new ResolutionMenu()));
 }

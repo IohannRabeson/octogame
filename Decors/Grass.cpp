@@ -19,7 +19,8 @@ Grass::Grass(bool onInstance, bool reverse) :
 	m_indexRightTarget(0u),
 	m_onInstance(onInstance),
 	m_isShining(false),
-	m_firstFrame(true)
+	m_firstFrame(true),
+	m_octDeathCoef(1.f)
 {
 }
 
@@ -41,6 +42,7 @@ void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, 
 	downRight += origin;
 	downMid += origin;
 	m_up.y *= m_animation;
+	m_up.y *= m_octDeathCoef;
 	m_up += origin;
 
 	if (!m_isDeadlyGrass)
@@ -147,6 +149,13 @@ void Grass::computeMovement(sf::Time frameTime)
 		m_sideTarget = !m_sideTarget;
 		m_movementTimer = sf::Time::Zero;
 	}
+
+	std::size_t deathCount = Progress::getInstance().getDeathLevelCount();
+	if (deathCount == 0u)
+		m_octDeathCoef = octo::cosinusInterpolation(m_octDeathCoef, 1.f, frameTime.asSeconds() * 4.f);
+	else
+		m_octDeathCoef = std::min(1.25f - (deathCount / Progress::DeathMax), 1.f);
+
 	m_lastOctoPosition = octoPosition;
 }
 

@@ -31,6 +31,8 @@ public:
 		Simple
 	};
 
+	static constexpr std::size_t					DeathMax = 15.f;
+
 	static Progress &								getInstance(void);
 
 	float											getTimePlayed() const { return m_data.timePlayed; }
@@ -118,6 +120,9 @@ public:
 	void											validateCheckpoint(std::size_t id);
 	void											registerDeath(sf::Vector2f const & position);
 	std::vector<sf::Vector2i> &						getDeathPos(void);
+	std::size_t										getDeathCount(void);
+	std::size_t										getDeathLevelCount(void);
+	void											resetDeathLevel(void);
 
 	void											registerNpc(GameObjectType key);
 	bool											meetNpc(GameObjectType key);
@@ -161,6 +166,9 @@ public:
 	bool											getOctoDoubleJump(void) { return m_isDoubleJump; }
 	void											setInCloud(bool inCloud, std::size_t cloudId);
 	bool											isInCloud(void) const { return m_isInCloud; }
+
+	void											setBalleMultiplier(float multiplier);
+	float											getBalleMultiplier(void);
 
 	void											setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool											getReverseSprite() const { return m_reverseSprite; }
@@ -279,6 +287,8 @@ private:
 	bool											m_isMapMoving;
 	bool											m_canOctoMoveMap;
 	bool											m_forceMapToMove;
+
+	float											m_balleMultiplier;
 
 };
 
