@@ -31,6 +31,8 @@ public:
 		Simple
 	};
 
+	static constexpr std::size_t					DeathMax = 15.f;
+
 	static Progress &								getInstance(void);
 
 	float											getTimePlayed() const { return m_data.timePlayed; }
@@ -118,6 +120,9 @@ public:
 	void											validateCheckpoint(std::size_t id);
 	void											registerDeath(sf::Vector2f const & position);
 	std::vector<sf::Vector2i> &						getDeathPos(void);
+	std::size_t										getDeathCount(void);
+	std::size_t										getDeathLevelCount(void);
+	void											resetDeathLevel(void);
 
 	void											registerNpc(GameObjectType key);
 	bool											meetNpc(GameObjectType key);

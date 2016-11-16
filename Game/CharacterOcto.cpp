@@ -1590,7 +1590,7 @@ void	CharacterOcto::resetColisionBolean()
 
 void	CharacterOcto::kill()
 {
-	if (!Progress::getInstance().isMenu())
+	if (Progress::getInstance().getNextDestination() != Level::Rewards)
 	{
 		if (m_sprite.getCurrentEvent() != Death)
 		{

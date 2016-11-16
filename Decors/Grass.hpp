@@ -41,6 +41,8 @@ private:
 	bool						m_onInstance;
 	bool						m_isShining;
 	bool						m_firstFrame;
+	float						m_octDeathCoef;
+	sf::Time					m_deathGrowTimer;
 
 	void setupTargets(void);
 	void computeMovement(sf::Time frameTime);

@@ -327,14 +327,30 @@ void	Progress::registerDeath(sf::Vector2f const & position)
 {
 	sf::Vector2i const & pos = sf::Vector2i(static_cast<int>(position.x), static_cast<int>(position.y + 1u));
 	m_deaths[m_data.currentDestination].insert(m_deaths[m_data.currentDestination].begin(), pos);
-	if (m_deaths[m_data.currentDestination].size() > 15)
+	if (m_deaths[m_data.currentDestination].size() > Progress::DeathMax)
 		m_deaths[m_data.currentDestination].pop_back();
 	m_data.deathCount += 1u;
+	save();
 }
 
 std::vector<sf::Vector2i> & Progress::getDeathPos()
 {
 	return m_deaths[m_data.currentDestination];
+}
+
+std::size_t	Progress::getDeathCount()
+{
+	return m_data.deathCount;
+}
+
+std::size_t Progress::getDeathLevelCount()
+{
+	return m_deaths[m_data.currentDestination].size();
+}
+
+void Progress::resetDeathLevel(void)
+{
+	return m_deaths[m_data.currentDestination].clear();
 }
 
 void	Progress::saveDeaths()
