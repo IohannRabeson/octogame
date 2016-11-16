@@ -37,6 +37,7 @@
 std::size_t RandomGameBiome::m_seedId = 110u;
 
 RandomGameBiome::RandomGameBiome() :
+	m_specialClouds(false),
 	m_generator(std::to_string(std::time(0))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_tileStartColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
@@ -172,6 +173,7 @@ RandomGameBiome::RandomGameBiome() :
 	m_name = m_biomeManager.getCurrentBiome().getName();
 	m_id = m_biomeManager.getCurrentBiome().getId();
 	m_grassCount = m_biomeManager.getCurrentBiome().getMapSize().x;
+	m_specialClouds = randomBool(0.07f);
 }
 
 void			RandomGameBiome::setBiome(Level level)
@@ -264,7 +266,7 @@ bool		RandomGameBiome::isSpecialCloud()
 {
 	if (m_biomeManager.getCurrentBiome().isSpecialCloud())
 		return true;
-	else if (randomBool(0.1f))
+	else if (m_specialClouds)
 		return true;
 	return false;
 }
