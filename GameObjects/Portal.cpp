@@ -33,7 +33,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 		m_shader.setParameter("center_color", sf::Color::White);
 	else
 	{
-		if (progress.isGameFinished() && (destination != Level::Red && destination != Level::Blue && destination != Level::Random))
+		if (progress.isGameFinished() && (destination != Level::Red && destination != Level::Blue && destination != Level::Random && destination != Level::Rewards))
 		{
 			m_destination = Level::Portal;
 			m_shader.setParameter("center_color", centerColor);
