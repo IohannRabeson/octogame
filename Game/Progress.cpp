@@ -32,7 +32,8 @@ Progress::Progress() :
 	m_isHighLight(false),
 	m_isMapMoving(false),
 	m_canOctoMoveMap(true),
-	m_forceMapToMove(false)
+	m_forceMapToMove(false),
+	m_balleMultiplier(2.f)
 {
 }
 
@@ -687,4 +688,16 @@ void	Progress::registerLevel(Level const & level)
 std::vector<Level> const & Progress::getRegisteredLevels(void) const
 {
 	return (m_levels);
+}
+
+void Progress::setBalleMultiplier(float multiplier)
+{
+	m_balleMultiplier = multiplier;
+}
+
+float Progress::getBalleMultiplier(void)
+{
+	if (isGameFinished())
+		return m_balleMultiplier;
+	return 1.f;
 }
