@@ -268,7 +268,7 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 	sf::Vector2f pos = position;
 	sf::Vector2f direction = interestPoint - position;
 
-	if (m_isUsing && m_id == NANO_REPAIR_OSS)
+	if (m_isUsing && (m_id == NANO_REPAIR_OSS && !isReparingShip()))
 		return position - sf::Vector2f(0.f, 100.f);
 
 	if (interestPoint.x != 0.f && interestPoint.y != 0.f
@@ -332,7 +332,7 @@ void NanoRobot::usingCapacity(sf::Time frametime)
 
 	float interpolateValue = m_timerUse / m_timerUseMax;
 	m_sprite.setScale(0.6f + interpolateValue * 0.3f, 0.6f + interpolateValue * 0.3f);
-	if (m_id == NANO_REPAIR_OSS)
+	if (m_id == NANO_REPAIR_OSS || !isReparingShip())
 	{
 		m_swarm.getFirefly(0u).speed = octo::cosinusInterpolation(1.f, 5.f, interpolateValue);
 		m_swarm.setTarget(octo::linearInterpolation(m_sprite.getPosition(), m_swarm.getTarget(), interpolateValue));

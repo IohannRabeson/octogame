@@ -15,30 +15,32 @@
 Rocket::Rocket(void) :
 	ANpc(ROCKET_OSS),
 	m_shader(PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG)),
-	m_enterRocketShape(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_state(Waiting),
 	m_smokesCount(3),
 	m_smokes(new SmokeSystem[m_smokesCount]),
 	m_timerBeforeMax(sf::seconds(3.f)),
 	m_timerFirstBlastMax(sf::seconds(5.f)),
 	m_timerSecondBlastMax(sf::seconds(5.f)),
-	m_timerOctoEnteringMax(sf::seconds(1.f)),
+	m_timerOctoEnteringMax(sf::seconds(2.f)),
 	m_sound(true),
 	m_stopCameraMovement(false)
 {
 	setType(GameObjectType::Rocket);
-	setSize(sf::Vector2f(267.f, 1426.f));
-	setOrigin(sf::Vector2f(0.f, 0.f));
+	setSize(sf::Vector2f(160.f, 850.f));
+	setOrigin(sf::Vector2f(74.f, 605.f));
 	setScale(1.f);
 	setup();
 
-	m_enterRocketShape->setGameObject(this);
-	m_enterRocketShape->setRadius(40.f);
-	m_enterRocketShape->setCollisionType(static_cast<std::size_t>(GameObjectType::RocketDoor));
-	m_enterRocketShape->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
-	m_enterRocketShape->setApplyGravity(false);
-	m_enterRocketShape->setType(AShape::Type::e_trigger);
-	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::Player));
+
+	m_smokesPosition1.resize(m_smokesCount);
+	m_smokesPosition1[0] = sf::Vector2f(-27.f, 775.f);
+	m_smokesPosition1[1] = sf::Vector2f(80.f, 775.f);
+	m_smokesPosition1[2] = sf::Vector2f(186.f, 775.f);
+	m_smokesPosition2.resize(m_smokesCount);
+	m_smokesPosition2[0] = sf::Vector2f(2.f, 865.f);
+	m_smokesPosition2[1] = sf::Vector2f(80.f, 865.f);
+	m_smokesPosition2[2] = sf::Vector2f(153.f, 865.f);
 }
 
 void Rocket::setup(void)
@@ -80,21 +82,15 @@ void Rocket::setupMachine(void)
 void Rocket::setPosition(sf::Vector2f const & position)
 {
 	ANpc::setPosition(position);
-	m_enterRocketShape->setPosition(position.x + 80.f, position.y - 830.f);
-	m_enterRocketShape->update();
-	m_smokes[0].setPosition(position + sf::Vector2f(40.f, 1350.f));
-	m_smokes[1].setPosition(position + sf::Vector2f(152.f, 1350.f));
-	m_smokes[2].setPosition(position + sf::Vector2f(264.f, 1350.f));
+	for (std::size_t i = 0u; i < m_smokesCount; i++)
+		m_smokes[i].setPosition(position + m_smokesPosition1[i]);
 }
 
 void Rocket::addMapOffset(float x, float y)
 {
 	ANpc::addMapOffset(x, y);
-	m_enterRocketShape->setPosition(m_enterRocketShape->getPosition().x + x, m_enterRocketShape->getPosition().y + y);
-	m_enterRocketShape->update();
-	m_smokes[0].setPosition(m_smokes[0].getPosition() + sf::Vector2f(40.f, 1350.f));
-	m_smokes[1].setPosition(m_smokes[1].getPosition() + sf::Vector2f(152.f, 1350.f));
-	m_smokes[2].setPosition(m_smokes[2].getPosition() + sf::Vector2f(264.f, 1350.f));
+	for (std::size_t i = 0u; i < m_smokesCount; i++)
+		m_smokes[i].setPosition(ANpc::getPosition() + m_smokesPosition1[i]);
 }
 
 void Rocket::playSound(void)
@@ -110,24 +106,51 @@ void Rocket::playSound(void)
 
 void Rocket::collideOctoEvent(CharacterOcto * octo)
 {
+	(void)octo;
+}
+
+void Rocket::collideOcto(CharacterOcto * octo)
+{
 	ANpc::collideOctoEvent(octo);
 	switch (m_state)
 	{
 		case Waiting:
-			octo->setOctoInRocketEnd();
+		{
+			m_state = OctoEnteringX;
+			break;
+		}
+		case OctoEnteringX:
+		{
+			float x = getBox()->getBaryCenter().x - 10.f;
 			m_octoPosition = octo->getPhysicsPosition();
-			m_state = OctoEntering;
+			octo->setStartPosition(octo::linearInterpolation(m_octoPosition, sf::Vector2f(x, m_octoPosition.y), m_timerOctoEntering / m_timerOctoEnteringMax));
 			break;
-		case OctoEntering:
-			octo->setStartPosition(octo::linearInterpolation(m_octoPosition, m_enterRocketShape->getPosition(), m_timerOctoEntering / m_timerOctoEnteringMax));
+		}
+		case OctoEnteringY:
+		{
+			float x = getBox()->getBaryCenter().x - 10.f;
+			float y = getBox()->getPosition().y;
+			octo->setStartPosition(octo::linearInterpolation(sf::Vector2f(x, m_octoPosition.y), sf::Vector2f(x, y), m_timerOctoEntering / m_timerOctoEnteringMax));
 			break;
+		}
+		case OctoEnteringCockpit:
+		{
+			octo->setOctoInRocketEnd();
+			sf::Vector2f const & target = getBox()->getPosition();
+			float x = getBox()->getBaryCenter().x - 10.f;
+			float y = getBox()->getPosition().y;
+			octo->setStartPosition(octo::linearInterpolation(sf::Vector2f(x, y), target, m_timerOctoEntering / m_timerOctoEnteringMax));
+			break;
+		}
 		case StartSmoke:
+		{
 			if (m_stopCameraMovement)
 				octo->endInRocket();
 			playSound();
 			octo->enableCutscene(true);
-			octo->setStartPosition(m_enterRocketShape->getPosition());
+			octo->setStartPosition(getBox()->getPosition());
 			break;
+		}
 		default:
 			break;
 	}
@@ -141,17 +164,33 @@ void Rocket::update(sf::Time frametime)
 	{
 		case Waiting:
 			break;
-		case OctoEntering:
+		case OctoEnteringX:
+			m_timerOctoEntering += frametime;
+			if (m_timerOctoEntering >= m_timerOctoEnteringMax)
+			{
+				m_timerOctoEntering = sf::Time::Zero;
+				m_state = OctoEnteringY;
+			}
+			break;
+		case OctoEnteringY:
+			m_timerOctoEntering += frametime;
+			if (m_timerOctoEntering >= m_timerOctoEnteringMax)
+			{
+				m_timerOctoEntering = sf::Time::Zero;
+				m_state = OctoEnteringCockpit;
+			}
+			break;
+		case OctoEnteringCockpit:
 			m_timerOctoEntering += frametime;
 			if (m_timerOctoEntering >= m_timerOctoEnteringMax)
 			{
 				m_timerOctoEntering = sf::Time::Zero;
 				m_timerOctoEnteringMax = sf::seconds(15.f);
 				PostEffectLayer::getInstance().enableShader(ROCKET_TAKEOFF_FRAG, true);
+				m_lastPosition = getPosition();
+				m_lastPositionDoor = getBox()->getPosition();
 				m_state = StartSmoke;
 			}
-			m_lastPosition = getPosition();
-			m_lastPositionDoor = m_enterRocketShape->getPosition();
 			break;
 		case StartSmoke:
 			m_timerOctoEntering += frametime;
@@ -202,22 +241,18 @@ void Rocket::update(sf::Time frametime)
 				if (m_timerFirstBlast < m_timerFirstBlastMax)
 				{
 					box->setPosition(octo::cosinusInterpolation(m_lastPosition, m_lastPosition + sf::Vector2f(0.f, -400.f), m_timerFirstBlast / m_timerFirstBlastMax));
-					m_enterRocketShape->setPosition(octo::cosinusInterpolation(m_lastPositionDoor, m_lastPositionDoor + sf::Vector2f(0.f, -400.f), m_timerFirstBlast / m_timerFirstBlastMax));
 				}
 				else if (m_timerSecondBlast < m_timerSecondBlastMax)
 				{
 					if (m_timerSecondBlast > m_timerSecondBlastMax / 2.f)
 						m_stopCameraMovement = true;
 					box->setPosition(octo::cosinusInterpolation(m_lastPosition + sf::Vector2f(0.f, -400.f), m_lastPosition + sf::Vector2f(0.f, -3500.f), m_timerSecondBlast / m_timerSecondBlastMax));
-					m_enterRocketShape->setPosition(octo::cosinusInterpolation(m_lastPositionDoor + sf::Vector2f(0.f, -400.f), m_lastPositionDoor + sf::Vector2f(0.f, -3500.f), m_timerSecondBlast / m_timerSecondBlastMax));
 				}
 				else
 				{
 					box->setPosition(m_lastPosition + sf::Vector2f(0.f, -3500.f));
-					m_enterRocketShape->setPosition(m_lastPositionDoor + sf::Vector2f(0.f, -3500.f));
 				}
 				box->update();
-				m_enterRocketShape->update();
 			}
 			break;
 		default:
@@ -230,15 +265,13 @@ void Rocket::update(sf::Time frametime)
 
 	if (m_timerFirstBlast < m_timerFirstBlastMax * 0.8f)
 	{
-		m_smokes[0].setPosition(ANpc::getPosition() + sf::Vector2f(40.f, 1350.f));
-		m_smokes[1].setPosition(ANpc::getPosition() + sf::Vector2f(152.f, 1350.f));
-		m_smokes[2].setPosition(ANpc::getPosition() + sf::Vector2f(264.f, 1350.f));
+		for (std::size_t i = 0u; i < m_smokesCount; i++)
+			m_smokes[i].setPosition(ANpc::getPosition() + m_smokesPosition1[i]);
 	}
 	else
 	{
-		m_smokes[0].setPosition(ANpc::getPosition() + sf::Vector2f(80.f, 1450.f));
-		m_smokes[1].setPosition(ANpc::getPosition() + sf::Vector2f(152.f, 1450.f));
-		m_smokes[2].setPosition(ANpc::getPosition() + sf::Vector2f(224.f, 1450.f));
+		for (std::size_t i = 0u; i < m_smokesCount; i++)
+			m_smokes[i].setPosition(ANpc::getPosition() + m_smokesPosition2[i]);
 	}
 	for (std::size_t i = 0u; i < m_smokesCount; i++)
 		m_smokes[i].update(frametime);

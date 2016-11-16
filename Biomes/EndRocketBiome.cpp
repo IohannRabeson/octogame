@@ -129,7 +129,7 @@ EndRocketBiome::EndRocketBiome() :
 	m_mapSeed = 42u;
 
 	// Create a set a 20 colors for particles
-	Progress & progress = Progress::getInstance();
+	//Progress & progress = Progress::getInstance();
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
 	m_particleColor.resize(colorCount);
@@ -140,31 +140,9 @@ EndRocketBiome::EndRocketBiome() :
 	m_secondStartColor = getRockColor();
 	m_secondEndColor = getRockColor();
 
-	m_instances[20] = MAP_ICE_A_TRAIL_LEFT_OMP;
-	m_gameObjects[150] = GameObjectType::GroundTransformNanoRobot;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
-	if (!progress.canRepairShip())
-		m_instances[120] = MAP_ICE_A_CRATER_OMP;
-	else
-	{
-		m_gameObjects[166] = GameObjectType::Rocket;
-		m_instances[120] = MAP_ICE_A_CRATER_FINAL_OMP;
-	}
-	m_instances[220] = MAP_ICE_A_TRAIL_RIGHT_OMP;
-
-	if (progress.getLastDestination() == Level::Blue)
-		m_octoStartPosition = sf::Vector2f(142.f * 16.f, -1180.f);
-	if (progress.getLastDestination() == Level::IceB)
-		m_octoStartPosition = sf::Vector2f(423.f * 16.f, 0.f);
-	if (progress.getLastDestination() == Level::Random)
-		m_octoStartPosition = sf::Vector2f(404.f * 16.f, -1250.f);
-
-	m_gameObjects[420] = GameObjectType::PortalSnow;
-	m_instances[470] = MAP_ICE_A_SECRET_OMP;
-	if (progress.canRepairShip())
-		m_destinations.push_back(Level::Blue);
-	m_destinations.push_back(Level::Random);
-	m_destinations.push_back(Level::IceB);
+	m_instances[120] = MAP_ICE_A_CRATER_OMP;
+	m_gameObjects[6] = GameObjectType::Rocket;
 
 	m_interestPointPosX = 420;
 

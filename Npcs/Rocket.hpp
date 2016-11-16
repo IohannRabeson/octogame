@@ -22,6 +22,7 @@ public:
 	virtual void setPosition(sf::Vector2f const & position);
 	virtual void addMapOffset(float x, float y);
 	virtual void collideOctoEvent(CharacterOcto * octo);
+	virtual void collideOcto(CharacterOcto * octo);
 	virtual void drawFront(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
@@ -34,15 +35,18 @@ private:
 	enum State
 	{
 		Waiting,
-		OctoEntering,
+		OctoEnteringX,
+		OctoEnteringY,
+		OctoEnteringCockpit,
 		StartSmoke
 	};
 
 	sf::Shader &					m_shader;
-	CircleShape *					m_enterRocketShape;
 	State							m_state;
 	std::size_t						m_smokesCount;
 	std::unique_ptr<SmokeSystem[]>	m_smokes;
+	std::vector<sf::Vector2f>		m_smokesPosition1;
+	std::vector<sf::Vector2f>		m_smokesPosition2;
 	sf::Time						m_timerBefore;
 	sf::Time						m_timerBeforeMax;
 	sf::Time						m_timerFirstBlast;

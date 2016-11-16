@@ -155,7 +155,8 @@ void	Game::loadLevel(void)
 	}
 	else
 	{
-		if (progress.isGameFinished() && progress.getNextDestination() != Level::Blue && progress.getNextDestination() != Level::Red && progress.getNextDestination() != Level::Portal && progress.getNextDestination() != Level::Final)
+		Level next = progress.getNextDestination();
+		if (progress.isGameFinished() && next != Level::Blue && next != Level::Red && next != Level::Portal && next != Level::Final && next != Level::EndRocket)
 			m_biomeManager.changeBiome(Level::RandomGame, 0x12345);
 		else
 			m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
@@ -452,14 +453,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				setSlowMotion();
 			}
 			break;
-		case GameObjectType::Rocket:
-			gameObjectCast<Rocket>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::Monolith:
 			gameObjectCast<Monolith>(gameObject)->collideOcto(octo);
 			break;
 		case GameObjectType::Pyramid:
 			gameObjectCast<Pyramid>(gameObject)->collideOcto(octo);
+			break;
+		case GameObjectType::Rocket:
+			gameObjectCast<Rocket>(gameObject)->collideOcto(octo);
 			break;
 		default:
 			break;
