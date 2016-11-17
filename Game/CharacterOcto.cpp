@@ -33,7 +33,7 @@ CharacterOcto::CharacterOcto() :
 	m_progress(Progress::getInstance()),
 	m_timeEventDieFallMax(sf::seconds(2.3f)),
 	m_timeEventIdleMax(sf::seconds(4.f)),
-	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
+	m_timeRepairSpaceShipMax(sf::seconds(10.f)),
 	m_timeSlowFallMax(sf::seconds(1.5f)),
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
@@ -891,7 +891,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	Progress & progress = Progress::getInstance();
 
 	if (progress.getCurrentDestination() == Level::EndRocket)
-		updateAIEnd();
+		updateAIEnd(frameTime);
 	else if (progress.isMenu())
 		updateAI(frameTime);
 
@@ -1205,6 +1205,7 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 			robot->setTarget(spaceShip->getPosition());
 		}
 		m_repairShip = true;
+		spaceShip->setRepairProgression(m_timeRepairSpaceShip / m_timeRepairSpaceShipMax);
 	}
 	m_collisionSpaceShip = true;
 }
@@ -2309,9 +2310,10 @@ void	CharacterOcto::initAIEnd(void)
 {
 	m_repairShip = true;
 	enableCutscene(true, false);
+	m_goLeftTimer = sf::seconds(6.f);
 }
 
-void	CharacterOcto::updateAIEnd(void)
+void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 {
 	if (m_repairShip)
 	{
@@ -2327,11 +2329,16 @@ void	CharacterOcto::updateAIEnd(void)
 				robot->setState(NanoRobot::State::FollowOcto);
 			m_repairShip = false;
 			m_keyElevator = false;
+			m_keyLeft = true;
 		}
 	}
 	else
 	{
-		m_keyLeft = true;
+		m_goLeftTimer -= frameTime;
+		if (m_goLeftTimer <= sf::Time::Zero)
+			m_keyLeft = true;
+		else
+			m_keyLeft = false;
 	}
 }
 

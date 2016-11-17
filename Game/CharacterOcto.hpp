@@ -78,7 +78,7 @@ public:
 	void					initAI(void);
 	void					initAIEnd(void);
 	void					updateAI(sf::Time frameTime);
-	void					updateAIEnd();
+	void					updateAIEnd(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 	void					drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states)const;
 	void					drawText(sf::RenderTarget& render, sf::RenderStates states)const;
@@ -280,6 +280,7 @@ private:
 	sf::Time									m_doubleJumpTimer;
 	sf::Time									m_slowFallTimer;
 	sf::Time									m_portalTimer;
+	sf::Time									m_goLeftTimer;
 	sf::Time									m_cutsceneTimer;
 	sf::Time									m_cutsceneTimerMax;
 	sf::Time									m_cutscenePauseTimer;

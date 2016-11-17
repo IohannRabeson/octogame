@@ -195,7 +195,8 @@ void Rocket::update(sf::Time frametime)
 			}
 			break;
 		case StartSmoke:
-			m_sound->setPosition(sf::Vector3f(getBox()->getBaryCenter().x, getBox()->getBaryCenter().y, -150.f));
+			if (m_sound)
+				m_sound->setPosition(sf::Vector3f(getBox()->getBaryCenter().x, getBox()->getBaryCenter().y, -150.f));
 			m_octo->setStartPosition(getBox()->getPosition() + sf::Vector2f(10.f, 0.f));
 
 			m_timerOctoEntering += frametime;

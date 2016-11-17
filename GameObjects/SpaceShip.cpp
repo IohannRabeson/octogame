@@ -26,16 +26,8 @@ SpaceShip::SpaceShip(SpaceShipEvents event) :
 								Frame(sf::seconds(0.2f), 2u),
 								Frame(sf::seconds(0.2f), 3u)});
 		m_animation.setLoop(octo::LoopMode::Loop);
-		if (!m_isFinal)
-		{
-			m_smoke.setup(sf::Vector2f(10.f, 10.f));
-			m_smoke.setVelocity(sf::Vector2f(0.f, -140.f));
-		}
-		else
-		{
-			m_smoke.setup(sf::Vector2f(12.f, 12.f));
-			m_smoke.setVelocity(sf::Vector2f(0.f, -550.f));
-		}
+		m_smoke.setup(sf::Vector2f(10.f, 10.f));
+		m_smoke.setVelocity(sf::Vector2f(0.f, -140.f));
 		m_box = PhysicsEngine::getShapeBuilder().createCircle(false);
 		m_box->setGameObject(this);
 		m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::SpaceShip));
@@ -100,6 +92,36 @@ sf::Vector2f SpaceShip::getSize(void) const
 void SpaceShip::setSmokeVelocity(sf::Vector2f const & velocity)
 {
 	m_smoke.setVelocity(velocity);
+}
+
+void SpaceShip::setRepairProgression(float progression)
+{
+	m_smoke.setVelocity(sf::Vector2f(0.f, -200.f));
+	if ((progression > 0.7f && progression < 0.75f) ||
+		(progression > 0.8f && progression < 0.85f) ||
+		(progression > 0.9f && progression < 0.95f))
+	{
+		m_smoke.setEmitTimeRange(0.004f, 0.04f);
+		m_smoke.setGrowTimeRange(0.8f, 1.9f);
+		m_smoke.setLifeTimeRange(3.f, 5.f);
+		m_smoke.setScaleFactor(2.f);
+	}
+	else if (progression < 1.f)
+	{
+		float x = 1.f - progression;
+
+		m_smoke.setEmitTimeRange(0.01f * (1.f + progression), 0.2f * (1.f + progression));
+		m_smoke.setGrowTimeRange(0.5f * x, 1.5f * x);
+		m_smoke.setLifeTimeRange(2.5f * x, 4.f * x);
+		m_smoke.setScaleFactor(1.f * x);
+	}
+	else
+	{
+		m_smoke.setEmitTimeRange(0.01f, 0.2f);
+		m_smoke.setGrowTimeRange(0.5f, 1.5f);
+		m_smoke.setLifeTimeRange(2.5f, 4.f);
+		m_smoke.setScaleFactor(1.f);
+	}
 }
 
 void SpaceShip::move(sf::Vector2f const & translation)

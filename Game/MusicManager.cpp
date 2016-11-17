@@ -62,7 +62,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[18] = AreaMusic(Level::Rewards, MUSIC_MENU_OPUS_III_OGG, sf::FloatRect());
 	m_musicLevel[19] = AreaMusic(Level::Random, OBJECT_FACTORY_OGG, sf::FloatRect());
 	m_musicLevel[20] = AreaMusic(Level::Portal, MUSIC_WHISTLE_OGG, sf::FloatRect());
-	m_musicLevel[21] = AreaMusic(Level::EndRocket, MUSIC_WHISTLE_OGG, sf::FloatRect());
+	m_musicLevel[21] = AreaMusic(Level::EndRocket, MUSIC_SPACE_SHIP_OGG, sf::FloatRect());
 
 
 	m_music.resize(9);
