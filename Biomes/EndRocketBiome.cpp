@@ -140,9 +140,10 @@ EndRocketBiome::EndRocketBiome() :
 	m_secondStartColor = getRockColor();
 	m_secondEndColor = getRockColor();
 
+	m_instances[20] = MAP_ROCKET_END_OMP;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
-	m_gameObjects[6] = GameObjectType::Rocket;
+	m_gameObjects[10] = GameObjectType::Rocket;
 	m_gameObjects[70] = GameObjectType::PunkNpc;
 
 	m_interestPointPosX = 420;
@@ -257,7 +258,7 @@ Map::MapSurfaceGenerator EndRocketBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f    , 20.f, 70.f, 95.f, 120.f, 125.f, 165.f, 166.f, 195.f, 220.f, 270.f, 290.f, 350.f, 369.f, 377.f, 396.f, 450.f, 469.f, 477.f, 496.f, 590.f, 610.f  };
-		std::vector<float> pointY = {n / 5.f, 0.f , 0.f , n   , 0.f  , 2.4f , 2.4f , 0.f  , n    , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n    , n    , n / 5.f};
+		std::vector<float> pointY = {n / 5.f, -0.1f , 0.f , n   , 0.f  , 2.4f , 2.4f , 0.f  , n    , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n    , n    , n / 5.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -281,6 +282,10 @@ Map::TileColorGenerator EndRocketBiome::getTileColorGenerator()
 	return [this, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+
+		if (y < 5.f)
+			return sf::Color(0, 0, 0, 0);
+
 		if (y > startTransition && y <= middleTransition)
 		{
 			float ratio = (y - (startTransition)) / (middleTransition - startTransition);

@@ -95,15 +95,12 @@ CharacterOcto::CharacterOcto() :
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
-
 	m_cutsceneShader.setParameter("height", 0.15);
 
-	if (m_progress.isMenu())
-		initAI();
-	else if (m_progress.getCurrentDestination() == Level::EndRocket)
-		initAIEnd();
-	else
-		InputListener::addInputListener();
+	InputListener::addInputListener();
+
+	initAI();
+	initAIEnd();
 
 	if (m_progress.canMoveMap())
 		giveNanoRobot(new GroundTransformNanoRobot());
@@ -2297,20 +2294,30 @@ float	CharacterOcto::getWaterLevel() const
 
 void	CharacterOcto::initAI(void)
 {
-	m_randomJumpTimer = sf::seconds(m_generator.randomFloat(1.f, 30.f));
-	m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
-	m_directionTimer = sf::seconds(m_generator.randomFloat(30.f, 300.f));
-	m_slowFallTimer = sf::seconds(m_generator.randomFloat(4.f, 10.f));
-	m_portalTimer = sf::seconds(m_generator.randomFloat(45.f, 90.f));
-	m_keyRight = true;
-	m_keyLeft = false;
+	if (Progress::getInstance().isMenu())
+	{
+		InputListener::removeInputListener();
+	
+		m_randomJumpTimer = sf::seconds(m_generator.randomFloat(1.f, 30.f));
+		m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
+		m_directionTimer = sf::seconds(m_generator.randomFloat(30.f, 300.f));
+		m_slowFallTimer = sf::seconds(m_generator.randomFloat(4.f, 10.f));
+		m_portalTimer = sf::seconds(m_generator.randomFloat(45.f, 90.f));
+		m_keyRight = true;
+		m_keyLeft = false;
+	}
 }
 
 void	CharacterOcto::initAIEnd(void)
 {
-	m_repairShip = true;
-	enableCutscene(true, false);
-	m_goLeftTimer = sf::seconds(6.f);
+	if (Progress::getInstance().getCurrentDestination() == Level::EndRocket)
+	{
+//		InputListener::removeInputListener();
+	
+		m_repairShip = true;
+		enableCutscene(true, false);
+		m_goLeftTimer = sf::seconds(6.f);
+	}
 }
 
 void	CharacterOcto::updateAIEnd(sf::Time frameTime)

@@ -19,7 +19,7 @@ Rocket::Rocket(void) :
 	m_timerBeforeMax(sf::seconds(3.f)),
 	m_timerFirstBlastMax(sf::seconds(5.f)),
 	m_timerSecondBlastMax(sf::seconds(10.f)),
-	m_timerOctoEnteringMax(sf::seconds(2.f)),
+	m_timerOctoEnteringMax(sf::seconds(1.f)),
 	m_sound(nullptr),
 	m_stopCameraMovement(false)
 {
