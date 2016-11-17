@@ -15,7 +15,7 @@ EndRocketBiome::EndRocketBiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(100.f * 16.f, 0.f * 16.f),
+	m_octoStartPosition(109.f * 16.f, -10.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -144,7 +144,6 @@ EndRocketBiome::EndRocketBiome() :
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
 	m_gameObjects[10] = GameObjectType::Rocket;
-	m_gameObjects[70] = GameObjectType::PunkNpc;
 
 	m_interestPointPosX = 420;
 

@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "CedricWalkNpc.hpp"
 #include "TheoNpc.hpp"
 #include "MecanouilleNpc.hpp"
 #include "TVFanNpc.hpp"
@@ -278,6 +279,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<CedricWalkNpc>(CEDRIC_WALK_OSS);
 	m_npcFactory.registerCreator<TheoNpc>(THEO_OSS);
 	m_npcFactory.registerCreator<MecanouilleNpc>(NPC_MECANOUILLE_OSS);
 	m_npcFactory.registerCreator<TVFanNpc>(TV_FAN_OSS);
@@ -578,6 +580,10 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			{
 				return new ElevatorStream(scale, position, biome, true);
 			});
+	m_decorFactory.registerCreator(ROCKET_RAMP_OSS, [](sf::Vector2f const & scale, sf::Vector2f const & position)
+			{
+				return new InstanceDecor(ROCKET_RAMP_OSS, scale, position, 1u, 0.1f);
+			});
 
 	// Get all the gameobjects from instances
 	auto const & instances = biome.getInstances();
@@ -869,6 +875,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::CedricWalkNpc:
+				{
+					CedricWalkNpc * npc = new CedricWalkNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::TheoNpc:
 				{
 					TheoNpc * npc = new TheoNpc();

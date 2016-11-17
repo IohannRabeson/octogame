@@ -97,8 +97,8 @@ void SpaceShip::setSmokeVelocity(sf::Vector2f const & velocity)
 void SpaceShip::setRepairProgression(float progression)
 {
 	m_smoke.setVelocity(sf::Vector2f(0.f, -200.f));
-	if ((progression > 0.7f && progression < 0.75f) ||
-		(progression > 0.8f && progression < 0.85f) ||
+	if ((progression > 0.5f && progression < 0.55f) ||
+		(progression > 0.7f && progression < 0.75f) ||
 		(progression > 0.9f && progression < 0.95f))
 	{
 		m_smoke.setEmitTimeRange(0.004f, 0.04f);
@@ -108,7 +108,7 @@ void SpaceShip::setRepairProgression(float progression)
 	}
 	else if (progression < 1.f)
 	{
-		float x = 1.f - progression;
+		float x = 1.f - std::min(progression * 2.f, 1.f);
 
 		m_smoke.setEmitTimeRange(0.01f * (1.f + progression), 0.2f * (1.f + progression));
 		m_smoke.setGrowTimeRange(0.5f * x, 1.5f * x);

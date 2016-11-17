@@ -85,6 +85,7 @@ CharacterOcto::CharacterOcto() :
 	m_replaceOcto(false),
 	m_enableCutscene(false),
 	m_stopFollowCamera(false),
+	m_lookCamera(0.f, 0.f),
 	m_autoDisableCutscene(false),
 	m_doorAction(false),
 	m_isRocketEnd(false),
@@ -1028,8 +1029,6 @@ bool	CharacterOcto::isCenteredCamera(void) const
 	Progress const & progress = Progress::getInstance();
 
 	if (progress.getCurrentDestination() == Level::DesertC || progress.getCurrentDestination() == Level::JungleC)
-		return true;
-	if (m_repairShip && progress.getCurrentDestination() == Level::EndRocket)
 		return true;
 	if (isInWater() && m_waterLevel != -1.f)
 		return true;
@@ -2308,44 +2307,104 @@ void	CharacterOcto::initAI(void)
 	}
 }
 
+std::pair<float, float>	CharacterOcto::look(void) const
+{
+	return m_lookCamera;
+}
+
+float	CharacterOcto::getSpeedCamera(void) const
+{
+	return m_speedCamera;
+}
+
 void	CharacterOcto::initAIEnd(void)
 {
 	if (Progress::getInstance().getCurrentDestination() == Level::EndRocket)
 	{
 //		InputListener::removeInputListener();
-	
+
+		m_endRocketState = RepairShip;
+		m_pixelSecondWalk = 200.f;
 		m_repairShip = true;
 		enableCutscene(true, false);
-		m_goLeftTimer = sf::seconds(6.f);
+		m_speakCedricTimer = sf::seconds(6.f);
+		m_speakNanoTimer = sf::seconds(4.f);
+		m_cameraRocketTimer = sf::seconds(12.f);
+		m_speedCamera = 0.5f;
+		m_lookCamera.first = -0.6f;
+		m_lookCamera.second = 0.5f;
 	}
 }
 
 void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 {
-	if (m_repairShip)
+	switch (m_endRocketState)
 	{
-		if (m_timeRepairSpaceShip <= m_timeRepairSpaceShipMax)
+		case RepairShip:
 		{
-			m_timeEventIdleMax = sf::Time::Zero;
-			wait();
-			m_keyElevator = true;
+			if (m_timeRepairSpaceShip <= m_timeRepairSpaceShipMax)
+			{
+				m_timeEventIdleMax = sf::Time::Zero;
+				wait();
+				m_keyElevator = true;
+			}
+			else
+			{
+				m_lookCamera.second = 0.f;
+				for (auto & robot : m_nanoRobots)
+					robot->setState(NanoRobot::State::FollowOcto);
+				m_repairShip = false;
+				m_keyElevator = false;
+				m_endRocketState = SpeakNano;
+			}
+			break;
 		}
-		else
+		case SpeakNano:
 		{
-			for (auto & robot : m_nanoRobots)
-				robot->setState(NanoRobot::State::FollowOcto);
-			m_repairShip = false;
-			m_keyElevator = false;
-			m_keyLeft = true;
+			m_speakNanoTimer -= frameTime;
+			if (m_speakNanoTimer <= sf::Time::Zero)
+			{
+				m_keyLeft = true;
+				m_endRocketState = LookLeft;
+			}
+			break;
 		}
-	}
-	else
-	{
-		m_goLeftTimer -= frameTime;
-		if (m_goLeftTimer <= sf::Time::Zero)
-			m_keyLeft = true;
-		else
+		case LookLeft:
+		{
 			m_keyLeft = false;
+			m_lookCamera.first = 0.4f;
+			m_endRocketState = WaitCedricSpeak;
+			break;
+		}
+		case WaitCedricSpeak:
+		{
+			m_speakCedricTimer -= frameTime;
+			if (m_speakCedricTimer <= sf::Time::Zero)
+				m_endRocketState = GoLeft;
+			break;
+		}
+		case GoLeft:
+		{
+			m_speedCamera = 2.5f;
+			m_lookCamera.first = 0.0f;
+			m_lookCamera.second = 0.0f;
+			m_keyLeft = true;
+
+			m_cameraRocketTimer -= frameTime;
+			if (m_cameraRocketTimer <= sf::Time::Zero)
+			{
+				m_speedCamera = 0.5f;
+				m_lookCamera.first = 0.0f;
+				m_lookCamera.second = 1.1f;
+			}
+			if (m_cameraRocketTimer <= sf::seconds(-6.f))
+			{
+				m_speedCamera = 2.5f;
+				m_lookCamera.second = 1.1f;
+			}
+		}
+		default:
+			break;
 	}
 }
 

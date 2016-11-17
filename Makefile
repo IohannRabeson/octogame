@@ -176,7 +176,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/TVFanNpc.cpp				\
 				Npcs/MecanouilleNpc.cpp				\
 				Npcs/TheoNpc.cpp				\
+				Npcs/CedricWalkNpc.cpp				\
 #Script AddNpc
+
 
 
 

@@ -235,7 +235,16 @@ void Rocket::update(sf::Time frametime)
 				}
 				else
 				{
-					m_smokes[i].setVelocity(sf::Vector2f(0.f, 30.f * (1.f + m_timerFirstBlast.asSeconds() + m_timerSecondBlast.asSeconds())));
+					if (m_timerFirstBlast <= m_timerFirstBlastMax)
+					{
+						m_smokes[i].setVelocity(sf::Vector2f(0.f, 30.f * (1.f + m_timerFirstBlast.asSeconds())));
+						m_smokes[i].setScaleRange(1.f, 3.f);
+					}
+					else if (m_timerSecondBlast <= m_timerSecondBlastMax)
+					{
+						m_smokes[i].setVelocity(sf::Vector2f(0.f, -300.f * (1.f + m_timerSecondBlast.asSeconds())));
+						m_smokes[i].setScaleRange(2.f, 5.f);
+					}
 					if (m_timerFirstBlast == m_timerFirstBlastMax)
 						m_smokes[i].setEmitTimeRange(0.01f, 0.05f);
 					else if (m_timerSecondBlast > m_timerSecondBlastMax)
@@ -249,7 +258,7 @@ void Rocket::update(sf::Time frametime)
 
 				if (m_timerFirstBlast < m_timerFirstBlastMax)
 				{
-					speed = octo::cosinusInterpolation(0.f, -400.f, m_timerFirstBlast / m_timerFirstBlastMax);
+					speed = octo::cosinusInterpolation(0.f, -100.f, m_timerFirstBlast / m_timerFirstBlastMax);
 				}
 				else if (m_timerSecondBlast < m_timerSecondBlastMax)
 				{
@@ -257,7 +266,7 @@ void Rocket::update(sf::Time frametime)
 						m_stopCameraMovement = true;
 
 					if (m_timerSecondBlast < m_timerSecondBlastMax / 10.f)
-						speed = octo::cosinusInterpolation(-400.f, -1500.f, m_timerSecondBlast / (m_timerSecondBlastMax / 10.f));
+						speed = octo::cosinusInterpolation(-100.f, -1500.f, m_timerSecondBlast / (m_timerSecondBlastMax / 10.f));
 					else
 						speed = octo::cosinusInterpolation(-1500.f, -3500.f, (m_timerSecondBlast - m_timerSecondBlastMax / 10.f) / m_timerSecondBlastMax);
 				}

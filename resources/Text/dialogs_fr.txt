@@ -85,6 +85,7 @@ npc_old_man_desert_static.oss=Ce qui se passe dans la tente reste dans la tente�
 cedric_start.oss=!Eh, toi là-bas ! Tu veux une potion ?
 cedric_start.oss=!Yes !
 cedric_end.oss=!Pas facile hein !
+cedric_walk.oss=!Besoin d'un taxi?
 jeff_mouffy.oss=Si tu me portes et que je te porte, on s'envole ?
 jeff_mouffy.oss=Mince… Je ne sais pas comment redescendre… À l'aide!
 npc_fat.oss=Mais… Qu'est-ce que je fais là ? On est en quelle année ?

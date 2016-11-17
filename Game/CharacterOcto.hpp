@@ -109,6 +109,8 @@ public:
 	bool					isMeetingNpc(void) const;
 	bool					isCollidingPortal(void) const;
 	bool					isStopFollowCamera(void) const;
+	std::pair<float, float>	look(void) const;
+	float					getSpeedCamera(void) const;
 	bool					isFinalEvent(void);
 	bool					isZooming(void) const;
 	bool					isInRocketEnd(void) const;
@@ -268,11 +270,14 @@ private:
 	bool										m_replaceOcto;
 	bool										m_enableCutscene;
 	bool										m_stopFollowCamera;
+	std::pair<float, float>						m_lookCamera;
+	float										m_speedCamera;
 	bool										m_autoDisableCutscene;
 	bool										m_doorAction;
 	bool										m_isRocketEnd;
 	Events										m_prevEvent;
 
+	// AI Menu
 	RandomGenerator								m_generator;
 	sf::Time									m_directionTimer;
 	sf::Time									m_jumpTimer;
@@ -280,7 +285,22 @@ private:
 	sf::Time									m_doubleJumpTimer;
 	sf::Time									m_slowFallTimer;
 	sf::Time									m_portalTimer;
-	sf::Time									m_goLeftTimer;
+
+	// AI End Rocket
+	enum EndRocketState
+	{
+		RepairShip,
+		SpeakNano,
+		LookLeft,
+		WaitCedricSpeak,
+		GoLeft
+	};
+
+	EndRocketState								m_endRocketState;
+	sf::Time									m_speakNanoTimer;
+	sf::Time									m_speakCedricTimer;
+	sf::Time									m_cameraRocketTimer;
+
 	sf::Time									m_cutsceneTimer;
 	sf::Time									m_cutsceneTimerMax;
 	sf::Time									m_cutscenePauseTimer;

@@ -114,6 +114,22 @@ void AWalkNpc::updatePhysics(void)
 	getBox()->setVelocity(velocity);
 }
 
+void AWalkNpc::reverseWalking(bool reverse)
+{
+	octo::CharacterSprite & sprite = getSprite();
+
+	if (sprite.getCurrentEvent() == Left && reverse)
+	{
+		reverseSprite(false);
+		sprite.setNextEvent(Right);
+	}
+	else if (sprite.getCurrentEvent() == Right && !reverse)
+	{
+		reverseSprite(true);
+		sprite.setNextEvent(Left);
+	}
+}
+
 float AWalkNpc::getVelocity(void) const
 {
 	return m_velocity;
@@ -123,4 +139,3 @@ void AWalkNpc::setVelocity(float velocity)
 {
 	m_velocity = velocity;
 }
-
