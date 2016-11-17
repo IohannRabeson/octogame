@@ -7,6 +7,7 @@
 # include <AudioManager.hpp>
 
 # include "AGameObject.hpp"
+# include "ABiome.hpp"
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
 # include "PloufSystem.hpp"
@@ -163,6 +164,7 @@ private:
 	void replaceOcto(void);
 	void updateCutscene(sf::Time frameTime);
 
+	Level										m_level;
 	octo::CharacterSprite						m_sprite;
 	octo::CharacterAnimation					m_idleAnimation;
 	octo::CharacterAnimation					m_walkAnimation;
@@ -276,6 +278,8 @@ private:
 	bool										m_doorAction;
 	bool										m_isRocketEnd;
 	Events										m_prevEvent;
+	bool										m_isAI;
+	bool										m_isAIEnd;
 
 	// AI Menu
 	RandomGenerator								m_generator;
@@ -293,7 +297,9 @@ private:
 		SpeakNano,
 		LookLeft,
 		WaitCedricSpeak,
-		GoLeft
+		GoLeft,
+		InRocket,
+		None
 	};
 
 	EndRocketState								m_endRocketState;

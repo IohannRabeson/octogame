@@ -1,5 +1,6 @@
 #include "LevelRocketEndScreen.hpp"
 #include "RocketEnd.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
@@ -65,7 +66,15 @@ void	LevelRocketEndScreen::update(sf::Time frameTime)
 	{
 		m_timerBeforeEnd -= frameTime;
 		if (m_timerBeforeEnd <= sf::Time::Zero)
-			octo::Application::getStateManager().change("menu");
+		{
+			Progress & progress = Progress::getInstance();
+
+			progress.setCurrentDestination(Level::Portal);
+			progress.setNextDestination(Level::Portal);
+			progress.setLastDestination(Level::Portal);
+			progress.save();
+			octo::Application::getStateManager().change("game");
+		}
 	}
 }
 

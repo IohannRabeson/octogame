@@ -258,7 +258,7 @@ void Rocket::update(sf::Time frametime)
 
 				if (m_timerFirstBlast < m_timerFirstBlastMax)
 				{
-					speed = octo::cosinusInterpolation(0.f, -100.f, m_timerFirstBlast / m_timerFirstBlastMax);
+					speed = octo::cosinusInterpolation(0.f, -200.f, m_timerFirstBlast / m_timerFirstBlastMax);
 				}
 				else if (m_timerSecondBlast < m_timerSecondBlastMax)
 				{
@@ -266,9 +266,9 @@ void Rocket::update(sf::Time frametime)
 						m_stopCameraMovement = true;
 
 					if (m_timerSecondBlast < m_timerSecondBlastMax / 10.f)
-						speed = octo::cosinusInterpolation(-100.f, -1500.f, m_timerSecondBlast / (m_timerSecondBlastMax / 10.f));
+						speed = octo::cosinusInterpolation(-200.f, -700.f, m_timerSecondBlast / (m_timerSecondBlastMax / 10.f));
 					else
-						speed = octo::cosinusInterpolation(-1500.f, -3500.f, (m_timerSecondBlast - m_timerSecondBlastMax / 10.f) / m_timerSecondBlastMax);
+						speed = octo::cosinusInterpolation(-700.f, -2500.f, (m_timerSecondBlast - m_timerSecondBlastMax / 10.f) / m_timerSecondBlastMax);
 				}
 				box->setVelocity(sf::Vector2f(0.f, speed));
 				box->update();
