@@ -159,7 +159,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		}
 		case Behavior::StopFollowOcto:
 		{
-			m_speed = 0.f;
+			m_speed = std::max(m_speed - frametime.asSeconds() * 20.f, 0.f);
 			break;
 		}
 		default:

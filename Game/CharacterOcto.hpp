@@ -76,7 +76,9 @@ public:
 	void					setup(ABiome & biome);
 	void					update(sf::Time frameTime, sf::Time realFrameTime);
 	void					initAI(void);
+	void					initAIEnd(void);
 	void					updateAI(sf::Time frameTime);
+	void					updateAIEnd();
 	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 	void					drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states)const;
 	void					drawText(sf::RenderTarget& render, sf::RenderStates states)const;

@@ -2,11 +2,9 @@
 #include "PhysicsEngine.hpp"
 #include "RectangleShape.hpp"
 #include "CircleShape.hpp"
-#include "CharacterOcto.hpp"
 #include "PostEffectLayer.hpp"
 #include "Progress.hpp"
 #include <Application.hpp>
-#include <AudioManager.hpp>
 #include <ResourceManager.hpp>
 #include <Interpolations.hpp>
 #include <GraphicsManager.hpp>
@@ -20,9 +18,9 @@ Rocket::Rocket(void) :
 	m_smokes(new SmokeSystem[m_smokesCount]),
 	m_timerBeforeMax(sf::seconds(3.f)),
 	m_timerFirstBlastMax(sf::seconds(5.f)),
-	m_timerSecondBlastMax(sf::seconds(5.f)),
+	m_timerSecondBlastMax(sf::seconds(10.f)),
 	m_timerOctoEnteringMax(sf::seconds(2.f)),
-	m_sound(true),
+	m_sound(nullptr),
 	m_stopCameraMovement(false)
 {
 	setType(GameObjectType::Rocket);
@@ -81,26 +79,31 @@ void Rocket::setupMachine(void)
 
 void Rocket::setPosition(sf::Vector2f const & position)
 {
-	ANpc::setPosition(position);
-	for (std::size_t i = 0u; i < m_smokesCount; i++)
-		m_smokes[i].setPosition(position + m_smokesPosition1[i]);
+	if (m_state != StartSmoke)
+	{
+		ANpc::setPosition(position);
+		for (std::size_t i = 0u; i < m_smokesCount; i++)
+			m_smokes[i].setPosition(position + m_smokesPosition1[i]);
+	}
 }
 
 void Rocket::addMapOffset(float x, float y)
 {
-	ANpc::addMapOffset(x, y);
-	for (std::size_t i = 0u; i < m_smokesCount; i++)
-		m_smokes[i].setPosition(ANpc::getPosition() + m_smokesPosition1[i]);
+	if (m_state != StartSmoke)
+	{
+		ANpc::addMapOffset(x, y);
+		for (std::size_t i = 0u; i < m_smokesCount; i++)
+			m_smokes[i].setPosition(ANpc::getPosition() + m_smokesPosition1[i]);
+	}
 }
 
 void Rocket::playSound(void)
 {
-	if (m_sound)
+	if (!m_sound)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		audio.playSound(resources.getSound(EVENT_ROCKET_AIR_BLAST_OGG), 1.f);
-		m_sound = false;
+		m_sound = audio.playSound(resources.getSound(EVENT_ROCKET_AIR_BLAST_OGG), 1.f, 1.f, sf::Vector3f(getBox()->getBaryCenter().x, getBox()->getBaryCenter().y, -150.f) , 1000.f, 200.f);
 	}
 }
 
@@ -112,6 +115,7 @@ void Rocket::collideOctoEvent(CharacterOcto * octo)
 void Rocket::collideOcto(CharacterOcto * octo)
 {
 	ANpc::collideOctoEvent(octo);
+	m_octo = octo;
 	switch (m_state)
 	{
 		case Waiting:
@@ -124,6 +128,7 @@ void Rocket::collideOcto(CharacterOcto * octo)
 			float x = getBox()->getBaryCenter().x - 10.f;
 			m_octoPosition = octo->getPhysicsPosition();
 			octo->setStartPosition(octo::linearInterpolation(m_octoPosition, sf::Vector2f(x, m_octoPosition.y), m_timerOctoEntering / m_timerOctoEnteringMax));
+			octo->setOctoInRocketEnd();
 			break;
 		}
 		case OctoEnteringY:
@@ -135,8 +140,7 @@ void Rocket::collideOcto(CharacterOcto * octo)
 		}
 		case OctoEnteringCockpit:
 		{
-			octo->setOctoInRocketEnd();
-			sf::Vector2f const & target = getBox()->getPosition();
+			sf::Vector2f const & target = getBox()->getPosition() + sf::Vector2f(10.f, 0.f);
 			float x = getBox()->getBaryCenter().x - 10.f;
 			float y = getBox()->getPosition().y;
 			octo->setStartPosition(octo::linearInterpolation(sf::Vector2f(x, y), target, m_timerOctoEntering / m_timerOctoEnteringMax));
@@ -147,8 +151,6 @@ void Rocket::collideOcto(CharacterOcto * octo)
 			if (m_stopCameraMovement)
 				octo->endInRocket();
 			playSound();
-			octo->enableCutscene(true);
-			octo->setStartPosition(getBox()->getPosition());
 			break;
 		}
 		default:
@@ -193,6 +195,9 @@ void Rocket::update(sf::Time frametime)
 			}
 			break;
 		case StartSmoke:
+			m_sound->setPosition(sf::Vector3f(getBox()->getBaryCenter().x, getBox()->getBaryCenter().y, -150.f));
+			m_octo->setStartPosition(getBox()->getPosition() + sf::Vector2f(10.f, 0.f));
+
 			m_timerOctoEntering += frametime;
 			m_shader.setParameter("time", m_timerOctoEntering.asSeconds());
 			m_shader.setParameter("intensity", octo::linearInterpolation(0.f, 0.3f, std::min(1.f, m_timerOctoEntering / m_timerOctoEnteringMax)));
@@ -207,12 +212,13 @@ void Rocket::update(sf::Time frametime)
 				{
 					m_timerFirstBlast = m_timerFirstBlastMax;
 					if (m_timerSecondBlast < m_timerSecondBlastMax)
-						m_timerSecondBlast += frametime;
-					else
 					{
-						m_timerSecondBlast = m_timerSecondBlastMax;
-						octo::Application::getStateManager().change("rocket_end");
+						m_timerSecondBlast += frametime;
+						if (m_timerSecondBlast > m_timerSecondBlastMax - m_timerSecondBlastMax / 10.f)
+							octo::Application::getStateManager().change("rocket_end");
 					}
+					else
+						m_timerSecondBlast = m_timerSecondBlastMax;
 				}
 			}
 
@@ -238,20 +244,23 @@ void Rocket::update(sf::Time frametime)
 			if (m_timerBefore >= m_timerBeforeMax)
 			{
 				RectangleShape * box = getBox();
+				float speed = 0.f;
+
 				if (m_timerFirstBlast < m_timerFirstBlastMax)
 				{
-					box->setPosition(octo::cosinusInterpolation(m_lastPosition, m_lastPosition + sf::Vector2f(0.f, -400.f), m_timerFirstBlast / m_timerFirstBlastMax));
+					speed = octo::cosinusInterpolation(0.f, -400.f, m_timerFirstBlast / m_timerFirstBlastMax);
 				}
 				else if (m_timerSecondBlast < m_timerSecondBlastMax)
 				{
 					if (m_timerSecondBlast > m_timerSecondBlastMax / 2.f)
 						m_stopCameraMovement = true;
-					box->setPosition(octo::cosinusInterpolation(m_lastPosition + sf::Vector2f(0.f, -400.f), m_lastPosition + sf::Vector2f(0.f, -3500.f), m_timerSecondBlast / m_timerSecondBlastMax));
+
+					if (m_timerSecondBlast < m_timerSecondBlastMax / 10.f)
+						speed = octo::cosinusInterpolation(-400.f, -1500.f, m_timerSecondBlast / (m_timerSecondBlastMax / 10.f));
+					else
+						speed = octo::cosinusInterpolation(-1500.f, -3500.f, (m_timerSecondBlast - m_timerSecondBlastMax / 10.f) / m_timerSecondBlastMax);
 				}
-				else
-				{
-					box->setPosition(m_lastPosition + sf::Vector2f(0.f, -3500.f));
-				}
+				box->setVelocity(sf::Vector2f(0.f, speed));
 				box->update();
 			}
 			break;
@@ -277,6 +286,11 @@ void Rocket::update(sf::Time frametime)
 		m_smokes[i].update(frametime);
 
 	resetVariables();
+}
+
+void Rocket::onTheFloor(void)
+{
+	ANpc::onTheFloor();
 }
 
 void Rocket::drawFront(sf::RenderTarget & render, sf::RenderStates states) const

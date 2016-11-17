@@ -98,10 +98,12 @@ CharacterOcto::CharacterOcto() :
 
 	m_cutsceneShader.setParameter("height", 0.15);
 
-	if (!m_progress.isMenu())
-		InputListener::addInputListener();
-	else
+	if (m_progress.isMenu())
 		initAI();
+	else if (m_progress.getCurrentDestination() == Level::EndRocket)
+		initAIEnd();
+	else
+		InputListener::addInputListener();
 
 	if (m_progress.canMoveMap())
 		giveNanoRobot(new GroundTransformNanoRobot());
@@ -127,7 +129,7 @@ CharacterOcto::CharacterOcto() :
 
 	Level level = Progress::getInstance().getCurrentDestination();
 	if (level == Level::Red || level == Level::Blue)
-		enableCutscene(true, true);
+		enableCutscene(true, false);
 
 	octo::AudioManager&			audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
@@ -887,7 +889,10 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 {
 	Progress & progress = Progress::getInstance();
-	if (progress.isMenu())
+
+	if (progress.getCurrentDestination() == Level::EndRocket)
+		updateAIEnd();
+	else if (progress.isMenu())
 		updateAI(frameTime);
 
 	updateBox(frameTime);
@@ -991,7 +996,8 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 				m_enableCutscene = false;
 		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
-		MusicManager::getInstance().startEvent();
+		if (m_progress.getCurrentDestination() != Level::EndRocket)
+			MusicManager::getInstance().startEvent();
 	}
 	else
 	{
@@ -1025,6 +1031,8 @@ bool	CharacterOcto::isCenteredCamera(void) const
 	Progress const & progress = Progress::getInstance();
 
 	if (progress.getCurrentDestination() == Level::DesertC || progress.getCurrentDestination() == Level::JungleC)
+		return true;
+	if (m_repairShip && progress.getCurrentDestination() == Level::EndRocket)
 		return true;
 	if (isInWater() && m_waterLevel != -1.f)
 		return true;
@@ -1187,7 +1195,7 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 
 void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 {
-	if (m_progress.canRepairShip() && m_keyEntrance)
+	if (m_progress.canRepairShip() && m_keyElevator)
 	{
 		for (auto & robot : m_nanoRobots)
 		{
@@ -1491,7 +1499,8 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
 			m_progress.spaceShipRepair(true);
-			states.change("zero");
+			if (m_progress.getCurrentDestination() != Level::EndRocket)
+				states.change("zero");
 		}
 	}
 
@@ -2154,12 +2163,12 @@ void	CharacterOcto::stopFollowCamera(bool stop)
 void	CharacterOcto::setOctoInRocketEnd(void)
 {
 	m_isRocketEnd = true;
+	m_box->setApplyGravity(false);
 }
 
 void	CharacterOcto::endInRocket(void)
 {
 	stopFollowCamera(true);
-	m_box->setApplyGravity(false);
 }
 
 void	CharacterOcto::resetCollidingTileCount(void)
@@ -2294,6 +2303,36 @@ void	CharacterOcto::initAI(void)
 	m_portalTimer = sf::seconds(m_generator.randomFloat(45.f, 90.f));
 	m_keyRight = true;
 	m_keyLeft = false;
+}
+
+void	CharacterOcto::initAIEnd(void)
+{
+	m_repairShip = true;
+	enableCutscene(true, false);
+}
+
+void	CharacterOcto::updateAIEnd(void)
+{
+	if (m_repairShip)
+	{
+		if (m_timeRepairSpaceShip <= m_timeRepairSpaceShipMax)
+		{
+			m_timeEventIdleMax = sf::Time::Zero;
+			wait();
+			m_keyElevator = true;
+		}
+		else
+		{
+			for (auto & robot : m_nanoRobots)
+				robot->setState(NanoRobot::State::FollowOcto);
+			m_repairShip = false;
+			m_keyElevator = false;
+		}
+	}
+	else
+	{
+		m_keyLeft = true;
+	}
 }
 
 void	CharacterOcto::updateAI(sf::Time frameTime)
