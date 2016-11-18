@@ -2403,12 +2403,8 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 			m_lookCamera.first = 0.0f;
 			m_lookCamera.second = 0.0f;
 			m_keyLeft = true;
-			if (isInRocketEnd())
-				m_endRocketState = InRocket;
-			break;
-		}
-		case InRocket:
-		{
+
+			//TODO : Correct - Timer is dependant of time walking
 			m_cameraRocketTimer -= frameTime;
 			if (m_cameraRocketTimer <= sf::Time::Zero)
 			{
@@ -2421,7 +2417,6 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 				m_speedCamera = 2.5f;
 				m_lookCamera.second = 1.1f;
 			}
-			break;
 		}
 		default:
 			break;
