@@ -356,6 +356,8 @@ void Portal::updateSound(void)
 bool Portal::isLock(void)
 {
 	Progress & progress = Progress::getInstance();
+	if (progress.getCurrentDestination() == Level::EndTimeLapse)
+		return true;
 	if (progress.isMetPortal(m_destination) && m_destination == Level::Random)
 		return true;
 	if (progress.getCurrentDestination() == Level::Portal && progress.isMetRandom(m_destination))

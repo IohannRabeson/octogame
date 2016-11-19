@@ -1,4 +1,4 @@
-#include "EndRocketBiome.hpp"
+#include "EndTimeLapseBiome.hpp"
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
@@ -9,17 +9,17 @@
 #include <limits>
 #include <iostream>
 
-EndRocketBiome::EndRocketBiome() :
+EndTimeLapseBiome::EndTimeLapseBiome() :
 	m_name("Ice A"),
-	m_id(Level::EndRocket),
+	m_id(Level::EndTimeLapse),
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(109.f * 16.f, -10.f * 16.f),
+	m_octoStartPosition(sf::Vector2f(423.f * 16.f, 0.f)),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(227, 227, 227),
-	m_tileEndColor(137, 189, 211),
+	m_tileStartColor(127, 127, 127),
+	m_tileEndColor(37, 89, 111),
 	m_waterLevel(-1.f),
 	m_waterColor(255, 255, 255, 200),
 	m_secondWaterColor(m_waterColor),
@@ -30,8 +30,8 @@ EndRocketBiome::EndRocketBiome() :
 	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(78, 47, 4, 130),
 	m_nightLightColor(8, 20, 26, 50),
-	m_dayLightColor(sf::Color::Transparent),
-	m_sunsetLightColor(61, 0, 13, 20),
+	m_dayLightColor(8, 20, 26, 120),
+	m_sunsetLightColor(8, 20, 26, 120),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -129,7 +129,6 @@ EndRocketBiome::EndRocketBiome() :
 	m_mapSeed = 42u;
 
 	// Create a set a 20 colors for particles
-	//Progress & progress = Progress::getInstance();
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
 	m_particleColor.resize(colorCount);
@@ -143,10 +142,15 @@ EndRocketBiome::EndRocketBiome() :
 	m_instances[20] = MAP_ROCKET_END_OMP;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
-	m_gameObjects[420] = GameObjectType::PortalSnow;
-	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_gameObjects[10] = GameObjectType::Rocket;
-	m_destinations.push_back(Level::EndTimeLapse);
+	m_gameObjects[420] = GameObjectType::PortalSnow;
+	m_destinations.push_back(Level::EndRocket);
+	m_gameObjects[400] = GameObjectType::ChristianNpc;
+	for (std::size_t i = 0u; i < 30; i++)
+	{
+		m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::SkeletonNpc;
+		m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::OctoDeathNpc;
+	}
 
 	m_interestPointPosX = 420;
 
@@ -156,83 +160,83 @@ EndRocketBiome::EndRocketBiome() :
 	m_treePos = {156, 300, 306, 309, 320, 329, 340, 354, 359, 375, 450, 459, 463, 469, 485, 501, 510, 523, 550};
 }
 
-void			EndRocketBiome::setup(std::size_t seed)
+void			EndTimeLapseBiome::setup(std::size_t seed)
 {
 	(void)seed;
 }
 
-Level			EndRocketBiome::getId()const
+Level			EndTimeLapseBiome::getId()const
 {
 	return m_id;
 }
 
-std::string		EndRocketBiome::getName()const
+std::string		EndTimeLapseBiome::getName()const
 {
 	return (m_name);
 }
 
 //TODO:: We'll probably need a setter for mapSize
-sf::Vector2u	EndRocketBiome::getMapSize()
+sf::Vector2u	EndTimeLapseBiome::getMapSize()
 {
 	return (m_mapSize);
 }
 
-std::size_t		EndRocketBiome::getMapSeed()
+std::size_t		EndTimeLapseBiome::getMapSeed()
 {
 	return m_mapSeed;
 }
 
-sf::Vector2f	EndRocketBiome::getMapSizeFloat()
+sf::Vector2f	EndTimeLapseBiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
 }
 
-sf::Vector2f	EndRocketBiome::getOctoStartPosition()
+sf::Vector2f	EndTimeLapseBiome::getOctoStartPosition()
 {
 	return m_octoStartPosition;
 }
 
-float			EndRocketBiome::getTransitionDuration()
+float			EndTimeLapseBiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				EndRocketBiome::getInterestPointPosX()
+int				EndTimeLapseBiome::getInterestPointPosX()
 {
 	return (m_interestPointPosX);
 }
 
-std::map<std::size_t, GameObjectType> const &	EndRocketBiome::getGameObjects()
+std::map<std::size_t, GameObjectType> const &	EndTimeLapseBiome::getGameObjects()
 {
 	return m_gameObjects;
 }
 
-Level	EndRocketBiome::getDestination()
+Level	EndTimeLapseBiome::getDestination()
 {
 	return m_destinations[m_destinationIndex++];
 }
 
-float	EndRocketBiome::getWaterLevel()
+float	EndTimeLapseBiome::getWaterLevel()
 {
 	return m_waterLevel;
 }
 
-sf::Color	EndRocketBiome::getWaterColor()
+sf::Color	EndTimeLapseBiome::getWaterColor()
 {
 	return m_waterColor;
 }
 
-sf::Color	EndRocketBiome::getSecondWaterColor()
+sf::Color	EndTimeLapseBiome::getSecondWaterColor()
 {
 	return m_secondWaterColor;
 }
 
-std::map<std::size_t, std::string> const & EndRocketBiome::getInstances()
+std::map<std::size_t, std::string> const & EndTimeLapseBiome::getInstances()
 {
 	return m_instances;
 }
 
-std::vector<ParallaxScrolling::ALayer *> EndRocketBiome::getLayers()
+std::vector<ParallaxScrolling::ALayer *> EndTimeLapseBiome::getLayers()
 {
 	sf::Vector2u const & mapSize = sf::Vector2u(getMapSize().x, getMapSize().y * 4u);
 	std::vector<ParallaxScrolling::ALayer *> vector;
@@ -252,7 +256,7 @@ std::vector<ParallaxScrolling::ALayer *> EndRocketBiome::getLayers()
 	return vector;
 }
 
-Map::MapSurfaceGenerator EndRocketBiome::getMapSurfaceGenerator()
+Map::MapSurfaceGenerator EndTimeLapseBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
@@ -275,7 +279,7 @@ Map::MapSurfaceGenerator EndRocketBiome::getMapSurfaceGenerator()
 	};
 }
 
-Map::TileColorGenerator EndRocketBiome::getTileColorGenerator()
+Map::TileColorGenerator EndTimeLapseBiome::getTileColorGenerator()
 {
 	float startTransition = 300.f / static_cast<float>(m_mapSize.y);
 	float middleTransition = 600.f / static_cast<float>(m_mapSize.y);
@@ -303,73 +307,73 @@ Map::TileColorGenerator EndRocketBiome::getTileColorGenerator()
 	};
 }
 
-sf::Color		EndRocketBiome::getParticleColorGround()
+sf::Color		EndTimeLapseBiome::getParticleColorGround()
 {
 	std::size_t colorIndex = randomInt(0u, 19u);
 	return (m_particleColor[colorIndex]);
 }
 
-sf::Color		EndRocketBiome::getTileStartColor()
+sf::Color		EndTimeLapseBiome::getTileStartColor()
 {
 	return (m_tileStartColor);
 }
 
-sf::Color		EndRocketBiome::getTileEndColor()
+sf::Color		EndTimeLapseBiome::getTileEndColor()
 {
 	return (m_tileEndColor);
 }
 
-sf::Time		EndRocketBiome::getDayDuration()
+sf::Time		EndTimeLapseBiome::getDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Time		EndRocketBiome::getStartDayDuration()
+sf::Time		EndTimeLapseBiome::getStartDayDuration()
 {
 	return (m_startDayDuration);
 }
 
-sf::Color		EndRocketBiome::getSkyDayColor()
+sf::Color		EndTimeLapseBiome::getSkyDayColor()
 {
 	return (m_skyDayColor);
 }
 
-sf::Color		EndRocketBiome::getSkyNightColor()
+sf::Color		EndTimeLapseBiome::getSkyNightColor()
 {
 	return (m_skyNightColor);
 }
 
-sf::Color		EndRocketBiome::getNightLightColor()
+sf::Color		EndTimeLapseBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
 }
 
-sf::Color	EndRocketBiome::getDayLightColor()
+sf::Color	EndTimeLapseBiome::getDayLightColor()
 {
 	return (m_dayLightColor);
 }
 
-sf::Color		EndRocketBiome::getSunsetLightColor()
+sf::Color		EndTimeLapseBiome::getSunsetLightColor()
 {
 	return (m_sunsetLightColor);
 }
 
-float			EndRocketBiome::getWind()
+float			EndTimeLapseBiome::getWind()
 {
 	return (m_wind);
 }
 
-void			EndRocketBiome::setWind(float wind)
+void			EndTimeLapseBiome::setWind(float wind)
 {
 	m_wind = wind;
 }
 
-bool			EndRocketBiome::canCreateRain()
+bool			EndTimeLapseBiome::canCreateRain()
 {
 	return (m_canCreateRain);
 }
 
-std::size_t		EndRocketBiome::getRainDropPerSecond()
+std::size_t		EndTimeLapseBiome::getRainDropPerSecond()
 {
 	std::size_t value = randomRangeSizeT(m_rainDropPerSecond);
 	if (value <= m_rainDropPerSecondMax)
@@ -378,158 +382,158 @@ std::size_t		EndRocketBiome::getRainDropPerSecond()
 		return (m_rainDropPerSecondMax);
 }
 
-sf::Time		EndRocketBiome::getSunnyTime()
+sf::Time		EndTimeLapseBiome::getSunnyTime()
 {
 	return (randomRangeTime(m_sunnyTime));
 }
 
-sf::Time		EndRocketBiome::getRainingTime()
+sf::Time		EndTimeLapseBiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
 }
 
-bool			EndRocketBiome::canCreateThunder()
+bool			EndTimeLapseBiome::canCreateThunder()
 {
 	return (m_canCreateThunder);
 }
 
-float			EndRocketBiome::getLightningSize()
+float			EndTimeLapseBiome::getLightningSize()
 {
 	return (randomRangeFloat(m_lightningSize));
 }
 
-bool			EndRocketBiome::canCreateSnow()
+bool			EndTimeLapseBiome::canCreateSnow()
 {
 	return (m_canCreateSnow);
 }
 
-std::size_t		EndRocketBiome::getRockCount()
+std::size_t		EndTimeLapseBiome::getRockCount()
 {
 	return (randomRangeSizeT(m_rockCount));
 }
 
-std::size_t		EndRocketBiome::getTreeCount()
+std::size_t		EndTimeLapseBiome::getTreeCount()
 {
 	return (randomRangeSizeT(m_treeCount));
 }
 
-std::size_t		EndRocketBiome::getMushroomCount()
+std::size_t		EndTimeLapseBiome::getMushroomCount()
 {
 	return (randomRangeSizeT(m_mushroomCount));
 }
 
-std::size_t		EndRocketBiome::getCrystalCount()
+std::size_t		EndTimeLapseBiome::getCrystalCount()
 {
 	return (randomRangeSizeT(m_crystalCount));
 }
 
-std::size_t		EndRocketBiome::getStarCount()
+std::size_t		EndTimeLapseBiome::getStarCount()
 {
 	return (randomRangeSizeT(m_starCount));
 }
 
-std::size_t		EndRocketBiome::getSunCount()
+std::size_t		EndTimeLapseBiome::getSunCount()
 {
 	return (randomRangeSizeT(m_sunCount));
 }
 
-std::size_t		EndRocketBiome::getMoonCount()
+std::size_t		EndTimeLapseBiome::getMoonCount()
 {
 	return (randomRangeSizeT(m_moonCount));
 }
 
-std::size_t		EndRocketBiome::getRainbowCount()
+std::size_t		EndTimeLapseBiome::getRainbowCount()
 {
 	return (randomRangeSizeT(m_rainbowCount));
 }
 
-std::size_t		EndRocketBiome::getCloudCount()
+std::size_t		EndTimeLapseBiome::getCloudCount()
 {
 	return (randomRangeSizeT(m_cloudCount));
 }
 
-std::size_t		EndRocketBiome::getGroundRockCount()
+std::size_t		EndTimeLapseBiome::getGroundRockCount()
 {
 	return (randomRangeSizeT(m_groundRockCount));
 }
 
-std::size_t	EndRocketBiome::getTreeDepth()
+std::size_t	EndTimeLapseBiome::getTreeDepth()
 {
 	return (randomRangeSizeT(m_treeDepth));
 }
 
-sf::Vector2f	EndRocketBiome::getTreeSize()
+sf::Vector2f	EndTimeLapseBiome::getTreeSize()
 {
 	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Time		EndRocketBiome::getTreeLifeTime()
+sf::Time		EndTimeLapseBiome::getTreeLifeTime()
 {
 	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Color		EndRocketBiome::getTreeColor()
+sf::Color		EndTimeLapseBiome::getTreeColor()
 {
 	return (randomColor(m_treeColor));
 }
 
-float			EndRocketBiome::getTreeAngle()
+float			EndTimeLapseBiome::getTreeAngle()
 {
 	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			EndRocketBiome::getTreeIsMoving()
+bool			EndTimeLapseBiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-float			EndRocketBiome::getTreeBeatMouvement()
+float			EndTimeLapseBiome::getTreeBeatMouvement()
 {
 	return (m_treeBeatMouvement);
 }
 
-bool			EndRocketBiome::canCreateTree()
+bool			EndTimeLapseBiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			EndRocketBiome::canCreateLeaf()
+bool			EndTimeLapseBiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	EndRocketBiome::getLeafSize()
+sf::Vector2f	EndTimeLapseBiome::getLeafSize()
 {
 	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		EndRocketBiome::getLeafColor()
+sf::Color		EndTimeLapseBiome::getLeafColor()
 {
 	return (randomColor(m_leafColor));
 }
 
-std::size_t		EndRocketBiome::getTreePositionX()
+std::size_t		EndTimeLapseBiome::getTreePositionX()
 {
 	return (m_treePos[m_indexTreePos++]);
 }
 
-sf::Vector2f	EndRocketBiome::getCrystalSize()
+sf::Vector2f	EndTimeLapseBiome::getCrystalSize()
 {
 	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		EndRocketBiome::getCrystalPartCount()
+std::size_t		EndTimeLapseBiome::getCrystalPartCount()
 {
 	return (randomRangeSizeT(m_crystalPartCount));
 }
 
-sf::Color		EndRocketBiome::getCrystalColor()
+sf::Color		EndTimeLapseBiome::getCrystalColor()
 {
 	return (randomColor(m_crystalColor));
 }
 
-int				EndRocketBiome::getCrystalPosX()
+int				EndTimeLapseBiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_interestPointPosX - m_mapSize.x / 2.f;
@@ -540,67 +544,67 @@ int				EndRocketBiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			EndRocketBiome::canCreateCrystal()
+bool			EndTimeLapseBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	EndRocketBiome::getShineEffectSize()
+sf::Vector2f	EndTimeLapseBiome::getShineEffectSize()
 {
 	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		EndRocketBiome::getShineEffectColor()
+sf::Color		EndTimeLapseBiome::getShineEffectColor()
 {
 	return (randomColor(m_shineEffectColor));
 }
 
-float			EndRocketBiome::getShineEffectRotateAngle()
+float			EndTimeLapseBiome::getShineEffectRotateAngle()
 {
 	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			EndRocketBiome::canCreateShineEffect()
+bool			EndTimeLapseBiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	EndRocketBiome::getRockSize()
+sf::Vector2f	EndTimeLapseBiome::getRockSize()
 {
 	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		EndRocketBiome::getRockPartCount()
+std::size_t		EndTimeLapseBiome::getRockPartCount()
 {
 	return (randomRangeSizeT(m_rockPartCount));
 }
 
-sf::Color		EndRocketBiome::getRockColor()
+sf::Color		EndTimeLapseBiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
 }
 
-float	EndRocketBiome::getGrassSizeY()
+float	EndTimeLapseBiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
 }
 
-float	EndRocketBiome::getGrassSizeX()
+float	EndTimeLapseBiome::getGrassSizeX()
 {
 	return randomRangeFloat(m_grassSizeX);
 }
 
-sf::Color	EndRocketBiome::getGrassColor()
+sf::Color	EndTimeLapseBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
 }
 
-std::size_t	EndRocketBiome::getGrassCount()
+std::size_t	EndTimeLapseBiome::getGrassCount()
 {
 	return m_grassCount;
 }
 
-std::size_t	EndRocketBiome::getGrassPosX()
+std::size_t	EndTimeLapseBiome::getGrassPosX()
 {
 	m_grassIndex++;
 	if (m_grassIndex >= m_mapSize.x)
@@ -608,205 +612,205 @@ std::size_t	EndRocketBiome::getGrassPosX()
 	return m_grassIndex;
 }
 
-bool			EndRocketBiome::canCreateRock()
+bool			EndTimeLapseBiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	EndRocketBiome::getMushroomSize()
+sf::Vector2f	EndTimeLapseBiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
 }
 
-sf::Color		EndRocketBiome::getMushroomColor()
+sf::Color		EndTimeLapseBiome::getMushroomColor()
 {
 	return (randomColor(m_mushroomColor));
 }
 
-sf::Time		EndRocketBiome::getMushroomLifeTime()
+sf::Time		EndTimeLapseBiome::getMushroomLifeTime()
 {
 	return (randomRangeTime(m_mushroomLifeTime));
 }
 
-bool			EndRocketBiome::canCreateMushroom()
+bool			EndTimeLapseBiome::canCreateMushroom()
 {
 	return (m_canCreateMushroom);
 }
 
-sf::Vector2f	EndRocketBiome::getCloudSize()
+sf::Vector2f	EndTimeLapseBiome::getCloudSize()
 {
 	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		EndRocketBiome::getCloudPartCount()
+std::size_t		EndTimeLapseBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
-float	EndRocketBiome::getCloudMaxY()
+float	EndTimeLapseBiome::getCloudMaxY()
 {
 	return (m_cloudMaxY);
 }
 
-float	EndRocketBiome::getCloudMinY()
+float	EndTimeLapseBiome::getCloudMinY()
 {
 	return (m_cloudMinY);
 }
 
-sf::Vector2f	EndRocketBiome::getCloudSpeed()
+sf::Vector2f	EndTimeLapseBiome::getCloudSpeed()
 {
 	return randomRangeVector2f(m_cloudSpeed);
 }
 
-sf::Time		EndRocketBiome::getCloudLifeTime()
+sf::Time		EndTimeLapseBiome::getCloudLifeTime()
 {
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		EndRocketBiome::getCloudColor()
+sf::Color		EndTimeLapseBiome::getCloudColor()
 {
 	return (randomColor(m_cloudColor));
 }
 
-bool			EndRocketBiome::canCreateCloud()
+bool			EndTimeLapseBiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	EndRocketBiome::getStarSize()
+sf::Vector2f	EndTimeLapseBiome::getStarSize()
 {
 	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		EndRocketBiome::getStarColor()
+sf::Color		EndTimeLapseBiome::getStarColor()
 {
 	return (randomColor(m_starColor));
 }
 
-sf::Time		EndRocketBiome::getStarLifeTime()
+sf::Time		EndTimeLapseBiome::getStarLifeTime()
 {
 	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			EndRocketBiome::canCreateStar()
+bool			EndTimeLapseBiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	EndRocketBiome::getSunSize()
+sf::Vector2f 	EndTimeLapseBiome::getSunSize()
 {
 	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-std::size_t		EndRocketBiome::getSunPartCount()
+std::size_t		EndTimeLapseBiome::getSunPartCount()
 {
 	return (randomRangeSizeT(m_sunPartCount));
 }
 
-sf::Color		EndRocketBiome::getSunColor()
+sf::Color		EndTimeLapseBiome::getSunColor()
 {
 	return (randomColor(m_sunColor));
 }
 
-bool			EndRocketBiome::canCreateSun()
+bool			EndTimeLapseBiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	EndRocketBiome::getMoonSize()
+sf::Vector2f 	EndTimeLapseBiome::getMoonSize()
 {
 	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		EndRocketBiome::getMoonColor()
+sf::Color		EndTimeLapseBiome::getMoonColor()
 {
 	return (randomColor(m_moonColor));
 }
 
-sf::Time		EndRocketBiome::getMoonLifeTime()
+sf::Time		EndTimeLapseBiome::getMoonLifeTime()
 {
 	return (randomRangeTime(m_moonLifeTime));
 }
 
-bool			EndRocketBiome::canCreateMoon()
+bool			EndTimeLapseBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-float			EndRocketBiome::getRainbowThickness()
+float			EndTimeLapseBiome::getRainbowThickness()
 {
 	return (randomRangeFloat(m_rainbowThickness));
 }
 
-float			EndRocketBiome::getRainbowPartSize()
+float			EndTimeLapseBiome::getRainbowPartSize()
 {
 	return (randomRangeFloat(m_rainbowPartSize));
 }
 
-std::size_t		EndRocketBiome::getRainbowLoopCount()
+std::size_t		EndTimeLapseBiome::getRainbowLoopCount()
 {
 	return (randomRangeSizeT(m_rainbowLoopCount));
 }
 
-sf::Time		EndRocketBiome::getRainbowLifeTime()
+sf::Time		EndTimeLapseBiome::getRainbowLifeTime()
 {
 	return (randomRangeTime(m_rainbowLifeTime));
 }
 
-sf::Time		EndRocketBiome::getRainbowIntervalTime()
+sf::Time		EndTimeLapseBiome::getRainbowIntervalTime()
 {
 	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
-bool			EndRocketBiome::canCreateRainbow()
+bool			EndTimeLapseBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
 }
 
-bool	EndRocketBiome::canCreateGrass()
+bool	EndTimeLapseBiome::canCreateGrass()
 {
 	return m_canCreateGrass;
 }
 
-float	EndRocketBiome::getWaterPersistence() const
+float	EndTimeLapseBiome::getWaterPersistence() const
 {
 	return m_waterPersistence;
 }
 
-ABiome::Type	EndRocketBiome::getType() const
+ABiome::Type	EndTimeLapseBiome::getType() const
 {
 	return m_type;
 }
 
 
-float			EndRocketBiome::randomFloat(float min, float max)
+float			EndTimeLapseBiome::randomFloat(float min, float max)
 {
 	return (m_generator.randomFloat(min, max));
 }
 
-int				EndRocketBiome::randomInt(int min, int max)
+int				EndTimeLapseBiome::randomInt(int min, int max)
 {
 	return (m_generator.randomInt(min, max));
 }
 
-bool			EndRocketBiome::randomBool(float percent)
+bool			EndTimeLapseBiome::randomBool(float percent)
 {
 	return (m_generator.randomBool(percent));
 }
 
-float			EndRocketBiome::randomRangeFloat(Range<float> const & range)
+float			EndTimeLapseBiome::randomRangeFloat(Range<float> const & range)
 {
 	return (randomFloat(range.min, range.max));
 }
 
-int				EndRocketBiome::randomRangeSizeT(Range<std::size_t> const & range)
+int				EndTimeLapseBiome::randomRangeSizeT(Range<std::size_t> const & range)
 {
 	return (randomInt(range.min, range.max));
 }
 
-sf::Vector2f	EndRocketBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+sf::Vector2f	EndTimeLapseBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 {
 	sf::Vector2f tmp;
 	tmp.x = randomFloat(range.min.x, range.max.x);
@@ -814,13 +818,13 @@ sf::Vector2f	EndRocketBiome::randomRangeVector2f(Range<sf::Vector2f> const & ran
 	return tmp;
 }
 
-sf::Time		EndRocketBiome::randomRangeTime(Range<sf::Time> const & range)
+sf::Time		EndTimeLapseBiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }
 
-sf::Color		EndRocketBiome::randomColor(sf::Color const & color)
+sf::Color		EndTimeLapseBiome::randomColor(sf::Color const & color)
 {
 	HSL tmp = TurnToHSL(color);
 	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);

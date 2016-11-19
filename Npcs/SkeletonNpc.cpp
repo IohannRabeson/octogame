@@ -7,8 +7,8 @@ SkeletonNpc::SkeletonNpc(void) :
 	m_generator("random")
 {
     setType(GameObjectType::SkeletonNpc);
-	setSize(sf::Vector2f(112.f, 200.f));
-	setOrigin(sf::Vector2f(44.f, 295.f));
+	setSize(sf::Vector2f(100.f, 70.f));
+	setOrigin(sf::Vector2f(68.f, 68.f));
 	setSprite();
 	setup();
 	setIsZoomable(false);
@@ -18,25 +18,22 @@ void SkeletonNpc::setSprite()
 {
 	octo::ResourceManager &		resources = octo::Application::getResourceManager();
 	octo::CharacterSprite &		sprite = getSprite();
-	std::size_t const			index = m_generator.randomInt(0, 4);
+	std::size_t const			index = m_generator.randomInt(0, 3);
 	float const					scale = m_generator.randomFloat(0.5f, 1.f);
 
 	switch (index)
 	{
 		case 0u:
-			sprite.setSpriteSheet(resources.getSpriteSheet(COLUMN_1_OSS));
+			sprite.setSpriteSheet(resources.getSpriteSheet(SKELETON_1_OSS));
 			break;
 		case 1u:
-			sprite.setSpriteSheet(resources.getSpriteSheet(COLUMN_2_OSS));
+			sprite.setSpriteSheet(resources.getSpriteSheet(SKELETON_2_OSS));
 			break;
 		case 2u:
-			sprite.setSpriteSheet(resources.getSpriteSheet(COLUMN_3_OSS));
+			sprite.setSpriteSheet(resources.getSpriteSheet(SKELETON_3_OSS));
 			break;
 		case 3u:
-			sprite.setSpriteSheet(resources.getSpriteSheet(COLUMN_4_OSS));
-			break;
-		case 4u:
-			sprite.setSpriteSheet(resources.getSpriteSheet(COLUMN_5_OSS));
+			sprite.setSpriteSheet(resources.getSpriteSheet(SKELETON_4_OSS));
 			break;
 		default:
 			break;

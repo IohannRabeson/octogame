@@ -39,6 +39,7 @@ enum class Level : std::size_t
 	Blue,
 	Portal,
 	EndRocket,
+	EndTimeLapse,
 	Random,
 	Rewards,
 	RandomGame,

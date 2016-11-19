@@ -2407,7 +2407,10 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 		case GoLeft:
 		{
 			if (m_keyJump || m_keyRight)
+			{
 				m_endRocketState = None;
+				m_pixelSecondWalk = 320.f;
+			}
 			m_speedCamera = 0.f;
 			m_lookCamera.first = 0.0f;
 			m_lookCamera.second = 0.0f;
@@ -2418,6 +2421,7 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 		}
 		case InRocket:
 		{
+			InputListener::removeInputListener();
 			m_inRocketTimer -= frameTime;
 			if (m_inRocketTimer <= sf::Time::Zero)
 			{
