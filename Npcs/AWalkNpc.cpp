@@ -21,30 +21,44 @@ void AWalkNpc::setupMachine(void)
 	StatePtr					walkLeftState;
 	StatePtr					walkRightState;
 	StatePtr					special1State;
+	StatePtr					special2State;
 
 	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
 	walkLeftState = std::make_shared<State>("1", getWalkAnimation(), getSprite());
 	walkRightState = std::make_shared<State>("2", getWalkAnimation(), getSprite());
 	special1State = std::make_shared<State>("3", getSpecial1Animation(), getSprite());
+	special2State = std::make_shared<State>("4", getSpecial2Animation(), getSprite());
 
 	machine.setStart(idleState);
 	machine.addTransition(Idle, idleState, idleState);
 	machine.addTransition(Idle, walkLeftState, idleState);
 	machine.addTransition(Idle, walkRightState, idleState);
+	machine.addTransition(Idle, special1State, idleState);
+	machine.addTransition(Idle, special2State, idleState);
 
 	machine.addTransition(Left, idleState, walkLeftState);
 	machine.addTransition(Left, walkLeftState, walkLeftState);
 	machine.addTransition(Left, walkRightState, walkLeftState);
 	machine.addTransition(Left, special1State, walkLeftState);
+	machine.addTransition(Left, special2State, idleState);
 
 	machine.addTransition(Right, idleState, walkRightState);
 	machine.addTransition(Right, walkLeftState, walkRightState);
 	machine.addTransition(Right, walkRightState, walkRightState);
 	machine.addTransition(Right, special1State, walkRightState);
+	machine.addTransition(Right, special2State, idleState);
 
 	machine.addTransition(Special1, idleState, special1State);
 	machine.addTransition(Special1, walkLeftState, special1State);
 	machine.addTransition(Special1, walkRightState, special1State);
+	machine.addTransition(Special1, special1State, walkRightState);
+	machine.addTransition(Special1, special2State, idleState);
+
+	machine.addTransition(Special2, idleState, special1State);
+	machine.addTransition(Special2, walkLeftState, special1State);
+	machine.addTransition(Special2, walkRightState, special1State);
+	machine.addTransition(Special2, special1State, walkRightState);
+	machine.addTransition(Special2, special2State, idleState);
 
 	setMachine(machine);
 	setNextEvent(Idle);

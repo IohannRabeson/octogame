@@ -297,6 +297,8 @@ private:
 		LookLeft,
 		WaitCedricSpeak,
 		GoLeft,
+		StopRight,
+		GoRocket,
 		InRocket,
 		RocketTakeOff,
 		None
@@ -304,8 +306,11 @@ private:
 
 	EndRocketState								m_endRocketState;
 	sf::Time									m_speakNanoTimer;
+	sf::Time									m_lookLeftTimer;
 	sf::Time									m_speakCedricTimer;
+	sf::Time									m_goLeftTimer;
 	sf::Time									m_inRocketTimer;
+	sf::Time									m_stopRightTimer;
 	sf::Time									m_rocketTakeOffTimer;
 
 	sf::Time									m_cutsceneTimer;

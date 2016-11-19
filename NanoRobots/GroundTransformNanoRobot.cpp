@@ -131,7 +131,7 @@ void GroundTransformNanoRobot::updateInfo(void)
 			TextManager & textManager = TextManager::getInstance();
 			std::wstring infoText = textManager.getTexts("nano_end_game")[0];
 			setInfoText(infoText);
-			popUpInfo();
+			popUpInfo(true);
 		}
 		else if (progress.isGameFinished())
 		{

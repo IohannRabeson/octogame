@@ -1,5 +1,7 @@
 #include "RepairShipNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
+#include "TextManager.hpp"
 
 RepairShipNanoRobot::RepairShipNanoRobot(sf::Vector2f const & position) :
 	NanoRobot(position, NANO_REPAIR_SHIP_OSS, 4, 11185654, sf::Vector2f(0.f, -24.f), InputListener::OctoKeys::Elevator),
@@ -41,6 +43,15 @@ RepairShipNanoRobot::RepairShipNanoRobot(sf::Vector2f const & position) :
 	setUsePathLaser(true);
 
 	setSwarmTarget(position);
+
+	Progress & progress = Progress::getInstance();
+
+	if (progress.getCurrentDestination() == Level::EndRocket)
+	{
+		TextManager & textManager = TextManager::getInstance();
+		std::wstring infoText = textManager.getTexts("nano_repair_failed")[0];
+		setInfoText(infoText);
+	}
 }
 
 static sf::Color makeRainbow(float step)

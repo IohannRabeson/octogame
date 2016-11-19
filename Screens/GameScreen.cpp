@@ -108,7 +108,7 @@ void GameScreen::timeLevelBlueRed(sf::Time frameTime, octo::StateManager & state
 		m_timerBlue += frameTime;
 		if (m_timerBlue >= m_timerRedBlueMax)
 		{
-			progress.setNextDestination(Level::IceA);
+			progress.setNextDestination(Level::EndRocket);
 			states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(2.0f));
 		}
 	}

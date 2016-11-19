@@ -276,7 +276,8 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 	if (interestPoint.x != 0.f && interestPoint.y != 0.f
 		&& effectState != NanoEffect::State::Active
 		&& effectState != NanoEffect::State::Transfer
-		&& effectState != NanoEffect::State::FadeOut)
+		&& effectState != NanoEffect::State::FadeOut
+		&& progress.getCurrentDestination() == Level::EndRocket)
 	{
 		float dist = std::sqrt(std::pow(interestPoint.x - position.x, 2) + std::pow(interestPoint.y - position.y, 2));
 		if (dist < 800.f)
@@ -348,10 +349,9 @@ bool NanoRobot::isTravelling(void) const
 	return m_isTravelling;
 }
 
-void NanoRobot::popUpInfo(void)
+void NanoRobot::popUpInfo(bool popUp)
 {
-	if (m_popUp == false)
-		m_popUp = true;
+	m_popUp = popUp;
 }
 
 void NanoRobot::updatePopUpInfo(sf::Time)

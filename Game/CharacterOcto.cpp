@@ -2334,8 +2334,11 @@ void	CharacterOcto::initAIEnd(void)
 		m_pixelSecondWalk = 200.f;
 		m_repairShip = true;
 		enableCutscene(true, false);
-		m_speakCedricTimer = sf::seconds(6.f);
 		m_speakNanoTimer = sf::seconds(4.f);
+		m_lookLeftTimer = sf::seconds(2.f);
+		m_speakCedricTimer = sf::seconds(7.f);
+		m_goLeftTimer = sf::seconds(7.5f);
+		m_stopRightTimer = sf::seconds(1.f);
 		m_inRocketTimer = sf::seconds(4.f);
 		m_rocketTakeOffTimer = sf::seconds(6.f);
 		m_speedCamera = 0.5f;
@@ -2351,6 +2354,9 @@ void	CharacterOcto::initAIEnd(void)
 
 void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 {
+	octo::AudioManager& audio = octo::Application::getAudioManager();
+	octo::ResourceManager& resources = octo::Application::getResourceManager();
+
 	switch (m_endRocketState)
 	{
 		case RepairShip:
@@ -2367,12 +2373,12 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 				{
 					if (robot->getId() == NANO_REPAIR_SHIP_OSS)
 						robot->setEffectState(NanoEffect::State::FadeOut);
+					robot->setState(NanoRobot::State::FollowOcto);
 				}
 				m_lookCamera.second = 0.f;
-				for (auto & robot : m_nanoRobots)
-					robot->setState(NanoRobot::State::FollowOcto);
 				m_repairShip = false;
 				m_keyElevator = false;
+				audio.playSound(resources.getSound(EVENT_CRASH_OGG), 0.5f, 1.5f);
 				m_endRocketState = SpeakNano;
 			}
 			break;
@@ -2380,6 +2386,11 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 		case SpeakNano:
 		{
 			m_speakNanoTimer -= frameTime;
+			for (auto & robot : m_nanoRobots)
+			{
+				if (robot->getId() == NANO_REPAIR_SHIP_OSS)
+					robot->popUpInfo(true);
+			}
 			if (m_speakNanoTimer <= sf::Time::Zero)
 			{
 				m_keyLeft = true;
@@ -2389,9 +2400,18 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 		}
 		case LookLeft:
 		{
+			m_lookLeftTimer -= frameTime;
 			m_keyLeft = false;
 			m_lookCamera.first = 0.4f;
-			m_endRocketState = WaitCedricSpeak;
+			if (m_lookLeftTimer <= sf::Time::Zero)
+			{
+				m_endRocketState = WaitCedricSpeak;
+				for (auto & robot : m_nanoRobots)
+				{
+					if (robot->getId() == NANO_REPAIR_SHIP_OSS)
+						robot->popUpInfo(false);
+				}
+			}
 			break;
 		}
 		case WaitCedricSpeak:
@@ -2401,6 +2421,7 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 			{
 				InputListener::addInputListener();
 				m_endRocketState = GoLeft;
+				audio.playSound(resources.getSound(OCTO_YES_OGG), 1.f, 1.f);
 			}
 			break;
 		}
@@ -2411,9 +2432,31 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 				m_endRocketState = None;
 				m_pixelSecondWalk = 320.f;
 			}
+			m_goLeftTimer -= frameTime;
 			m_speedCamera = 0.f;
 			m_lookCamera.first = 0.0f;
 			m_lookCamera.second = 0.0f;
+			m_keyLeft = true;
+			if (m_goLeftTimer <= sf::Time::Zero)
+			{
+				m_keyLeft = false;
+				m_keyRight = true;
+				m_endRocketState = StopRight;
+				audio.playSound(resources.getSound(OCTO_SOUND_JUMP_LANDING_OGG), 1.f, 1.f);
+				audio.playSound(resources.getSound(OCTO_VOICE_ELEVATOR_OGG), 1.f, 1.f);
+			}
+			break;
+		}
+		case StopRight:
+		{
+			m_stopRightTimer -= frameTime;
+			m_keyRight = false;
+			if (m_stopRightTimer <= sf::Time::Zero)
+				m_endRocketState = GoRocket;
+			break;
+		}
+		case GoRocket:
+		{
 			m_keyLeft = true;
 			if (m_isRocketEnd)
 				m_endRocketState = InRocket;
@@ -2422,6 +2465,7 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 		case InRocket:
 		{
 			InputListener::removeInputListener();
+			m_keyLeft = false;
 			m_inRocketTimer -= frameTime;
 			if (m_inRocketTimer <= sf::Time::Zero)
 			{

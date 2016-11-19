@@ -1,8 +1,14 @@
 #include "CedricWalkNpc.hpp"
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <AudioManager.hpp>
 
 CedricWalkNpc::CedricWalkNpc(void) :
 	AWalkNpc(CEDRIC_WALK_OSS),
-	m_state(WalkToOcto)
+	m_state(WalkToOcto),
+	m_timerSpeak(sf::seconds(4.f)),
+	m_timerWalkToRocket(sf::seconds(5.6f)),
+	m_drinkSoundTimer(sf::seconds(1.8f))
 {
 	setType(GameObjectType::CedricWalkNpc);
 	setSize(sf::Vector2f(34.f, 164.f));
@@ -40,13 +46,35 @@ void CedricWalkNpc::setup(void)
 	getWalkAnimation().setLoop(octo::LoopMode::Loop);
 
 	getSpecial1Animation().setFrames({
-			Frame(sf::seconds(0.2f), {19u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {45u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {46u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {47u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {16u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {12u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {13u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {14u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {15u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {16u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {17u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {18u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {19u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {20u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {21u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {22u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
+
+	getSpecial2Animation().setFrames({
+			Frame(sf::seconds(0.4f), {30u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {31u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {32u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {33u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {32u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {31u, sf::FloatRect(), sf::Vector2f()}),
+			});
+	getSpecial2Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
 }
@@ -61,10 +89,6 @@ void CedricWalkNpc::collideOctoEvent(CharacterOcto * octo)
 void CedricWalkNpc::update(sf::Time frametime)
 {
 	ANpc::update(frametime);
-}
-
-void CedricWalkNpc::updateState(void)
-{
 	octo::CharacterSprite & sprite = getSprite();
 
 	switch (m_state)
@@ -80,26 +104,62 @@ void CedricWalkNpc::updateState(void)
 		}
 		case Speak:
 		{
+			m_timerSpeak -= frametime;
 			if (sprite.getCurrentEvent() != Idle || sprite.isTerminated())
 				sprite.setNextEvent(Idle);
+
+			if (m_timerSpeak <= sf::seconds(1.f))
+				reverseSprite(true);
+			if (m_timerSpeak <= sf::Time::Zero)
+			{
+				setDisplayText(false);
+				m_state = WalkToRocket;
+			}
 			break;
 		}
 		case WalkToRocket:
 		{
+			m_timerWalkToRocket -= frametime;
 			if (sprite.getCurrentEvent() != Left && sprite.isTerminated())
 			{
 				reverseSprite(true);
 				sprite.setNextEvent(Left);
 			}
+			if (m_timerWalkToRocket <= sf::Time::Zero)
+			{
+				setCurrentText(1u);
+				setDisplayText(true);
+				m_state = Stop;
+			}
 			break;
 		}
 		case Stop:
 		{
-			if (sprite.getCurrentEvent() != Idle)
-				sprite.setNextEvent(Idle);
+			m_drinkSoundTimer -= frametime;
+			if (sprite.getCurrentEvent() != Special1)
+				sprite.setNextEvent(Special1);
+			if (m_drinkSoundTimer <= sf::Time::Zero)
+			{
+				octo::AudioManager& audio = octo::Application::getAudioManager();
+				octo::ResourceManager& resources = octo::Application::getResourceManager();
+				audio.playSound(resources.getSound(OCTO_SOUND_USE_POTION_OGG), 1.f, 1.f);
+				m_drinkSoundTimer = sf::seconds(1000.f);
+				setDisplayText(false);
+			}
+			if (sprite.isTerminated())
+			{
+				sprite.setNextEvent(Special2);
+				m_state = Wait;
+			}
 			break;
 		}
+		case Wait:
 		default:
 			break;
 	}
+
+}
+
+void CedricWalkNpc::updateState(void)
+{
 }

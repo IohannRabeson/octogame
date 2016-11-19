@@ -17,15 +17,18 @@ public:
 private:
 	enum State
 	{
-		Wait,
 		Appear,
 		WalkToOcto,
 		Speak,
 		WalkToRocket,
-		Stop
+		Stop,
+		Wait
 	};
 
 	State		m_state;
+	sf::Time	m_timerSpeak;
+	sf::Time	m_timerWalkToRocket;
+	sf::Time	m_drinkSoundTimer;
 };
 
 #endif
