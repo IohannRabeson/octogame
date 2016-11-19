@@ -393,6 +393,11 @@ bool NanoRobot::onInputReleased(InputListener::OctoKeys const & key)
 	return true;
 }
 
+std::string const & NanoRobot::getId(void)
+{
+	return m_id;
+}
+
 void NanoRobot::setState(NanoRobot::State state)
 {
 	if (state == FollowOcto)
@@ -402,6 +407,11 @@ void NanoRobot::setState(NanoRobot::State state)
 	if (state == GoingToRepairShip)
 		m_startLastAnimation = true;
 	m_state = state;
+}
+
+void NanoRobot::setEffectState(NanoEffect::State state)
+{
+	m_glowingEffect.setState(state);
 }
 
 void NanoRobot::setTextIndex(std::size_t index)

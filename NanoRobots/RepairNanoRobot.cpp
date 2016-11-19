@@ -24,12 +24,7 @@ RepairNanoRobot::RepairNanoRobot(void) :
 	targets.push_back(sf::Vector2f(189.f, 208.f));
 	setTargets(targets, 0.6f);
 
-	Progress & progress = Progress::getInstance();
-
-	if (progress.getCurrentDestination() == Level::IceA)
-		setLaserColor(sf::Color(247, 238, 80));
-	else
-		setLaserColor(sf::Color::Red);
+	setLaserColor(sf::Color::Red);
 	setRepairShipPosition(sf::Vector2f(1000.f, 1000.f));
 }
 

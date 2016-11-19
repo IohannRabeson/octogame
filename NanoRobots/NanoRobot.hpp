@@ -33,9 +33,11 @@ public:
 
 	virtual ~NanoRobot(void);
 
+	std::string const & getId(void);
 	void setTarget(sf::Vector2f const & target);
 	void setPosition(sf::Vector2f const & position);
 	void setState(NanoRobot::State state);
+	void setEffectState(NanoEffect::State state);
 	void setTextIndex(std::size_t index);
 	sf::Vector2f const & getPosition(void) const;
 	sf::Vector2f const & getTargetPosition(void);

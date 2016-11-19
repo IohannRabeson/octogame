@@ -2341,6 +2341,11 @@ void	CharacterOcto::initAIEnd(void)
 		m_speedCamera = 0.5f;
 		m_lookCamera.first = -0.6f;
 		m_lookCamera.second = 0.5f;
+		for (auto & robot : m_nanoRobots)
+		{
+			if (robot->getId() == NANO_REPAIR_SHIP_OSS)
+				robot->setEffectState(NanoEffect::State::Active);
+		}
 	}
 }
 
@@ -2358,6 +2363,11 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 			}
 			else
 			{
+				for (auto & robot : m_nanoRobots)
+				{
+					if (robot->getId() == NANO_REPAIR_SHIP_OSS)
+						robot->setEffectState(NanoEffect::State::FadeOut);
+				}
 				m_lookCamera.second = 0.f;
 				for (auto & robot : m_nanoRobots)
 					robot->setState(NanoRobot::State::FollowOcto);
