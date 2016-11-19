@@ -129,7 +129,7 @@ EndRocketBiome::EndRocketBiome() :
 	m_mapSeed = 42u;
 
 	// Create a set a 20 colors for particles
-	//Progress & progress = Progress::getInstance();
+	Progress & progress = Progress::getInstance();
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
 	m_particleColor.resize(colorCount);
@@ -144,15 +144,19 @@ EndRocketBiome::EndRocketBiome() :
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
 	m_gameObjects[420] = GameObjectType::PortalSnow;
+	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_gameObjects[10] = GameObjectType::Rocket;
 	m_destinations.push_back(Level::EndRocket);
-	if (progress.getLastDestination() == Level::EndRocket)
-	{
+	/*
 		m_octoStartPosition = sf::Vector2f(423.f * 16.f, 0.f);
 		m_gameObjects[400] = GameObjectType::ChristianNpc;
+		for (std::size_t i = 0u; i < 20; i++)
+		{
+			m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::SkeletonNpc;
+			m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::OctoDeathNpc;
+		}
 	}
-	else
-		m_gameObjects[400] = GameObjectType::FranfranNpc;
+	*/
 
 	m_interestPointPosX = 420;
 

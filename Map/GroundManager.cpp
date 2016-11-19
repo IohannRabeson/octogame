@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "SkeletonNpc.hpp"
 #include "ChristianNpc.hpp"
 #include "CedricWalkNpc.hpp"
 #include "TheoNpc.hpp"
@@ -280,6 +281,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<SkeletonNpc>(SKELETON_1_OSS);
 	m_npcFactory.registerCreator<ChristianNpc>(CHRISTIAN_OSS);
 	m_npcFactory.registerCreator<CedricWalkNpc>(CEDRIC_WALK_OSS);
 	m_npcFactory.registerCreator<TheoNpc>(THEO_OSS);
@@ -877,6 +879,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::SkeletonNpc:
+				{
+					SkeletonNpc * npc = new SkeletonNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::ChristianNpc:
 				{
 					ChristianNpc * npc = new ChristianNpc();
