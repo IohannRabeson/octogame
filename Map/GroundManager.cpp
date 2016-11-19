@@ -33,6 +33,7 @@
 //Npc
 #include "CedricStartNpc.hpp"
 //Script AddNpc Include
+#include "ChristianNpc.hpp"
 #include "CedricWalkNpc.hpp"
 #include "TheoNpc.hpp"
 #include "MecanouilleNpc.hpp"
@@ -279,6 +280,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 	m_npcFactory.registerCreator<WolfNpc>(WOLF_OSS);
 	m_npcFactory.registerCreator<FannyNpc>(FANNY_OSS);
 //Script AddNpc Factory
+	m_npcFactory.registerCreator<ChristianNpc>(CHRISTIAN_OSS);
 	m_npcFactory.registerCreator<CedricWalkNpc>(CEDRIC_WALK_OSS);
 	m_npcFactory.registerCreator<TheoNpc>(THEO_OSS);
 	m_npcFactory.registerCreator<MecanouilleNpc>(NPC_MECANOUILLE_OSS);
@@ -875,6 +877,13 @@ void GroundManager::setupGameObjects(ABiome & biome)
 
 			//Npc
 //Script AddNpc Ground
+			case GameObjectType::ChristianNpc:
+				{
+					ChristianNpc * npc = new ChristianNpc();
+					npc->onTheFloor();
+					m_npcsOnFloor.emplace_back(gameObject.first, 1, npc);
+				}
+				break;
 			case GameObjectType::CedricWalkNpc:
 				{
 					CedricWalkNpc * npc = new CedricWalkNpc();

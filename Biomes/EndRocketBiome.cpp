@@ -143,12 +143,20 @@ EndRocketBiome::EndRocketBiome() :
 	m_instances[20] = MAP_ROCKET_END_OMP;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
+	m_gameObjects[420] = GameObjectType::PortalSnow;
 	m_gameObjects[10] = GameObjectType::Rocket;
+	m_destinations.push_back(Level::EndRocket);
+	if (progress.getLastDestination() == Level::EndRocket)
+	{
+		m_octoStartPosition = sf::Vector2f(423.f * 16.f, 0.f);
+		m_gameObjects[400] = GameObjectType::ChristianNpc;
+	}
+	else
+		m_gameObjects[400] = GameObjectType::FranfranNpc;
 
 	m_interestPointPosX = 420;
 
 	m_gameObjects[344] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_gameObjects[490] = GameObjectType::BirdBlueNpc;
 
 	m_treePos = {156, 300, 306, 309, 320, 329, 340, 354, 359, 375, 450, 459, 463, 469, 485, 501, 510, 523, 550};
