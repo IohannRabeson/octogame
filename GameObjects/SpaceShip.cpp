@@ -108,7 +108,11 @@ void SpaceShip::setRepairProgression(float progression)
 	}
 	else if (progression < 1.f)
 	{
-		float x = 1.f - std::min(progression * 2.f, 1.f);
+		float x = 0.f;
+		if (progression < 0.5f)
+			x = 1.f - std::min(progression * 1.5f, 1.f);
+		else
+			x = 1.f - std::min(0.5f * 1.5f + (progression - 0.5f), 1.f);
 
 		m_smoke.setEmitTimeRange(0.01f * (1.f + progression), 0.2f * (1.f + progression));
 		m_smoke.setGrowTimeRange(0.5f * x, 1.5f * x);

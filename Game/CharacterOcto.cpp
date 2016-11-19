@@ -91,7 +91,6 @@ CharacterOcto::CharacterOcto() :
 	m_doorAction(false),
 	m_isRocketEnd(false),
 	m_isAI(false),
-	m_isAIEnd(true),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutscenePauseTimerMax(sf::seconds(4.f)),
@@ -894,7 +893,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 {
 	Progress & progress = Progress::getInstance();
 
-	if (m_level == Level::EndRocket && m_isAIEnd)
+	if (m_level == Level::EndRocket)
 		updateAIEnd(frameTime);
 	else if (progress.isMenu() || m_isAI)
 		updateAI(frameTime);
@@ -2061,13 +2060,11 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 			caseLeft();
 			m_progress.walk();
 			m_isAI = false;
-			m_isAIEnd = false;
 			break;
 		case OctoKeys::Right:
 			caseRight();
 			m_progress.walk();
 			m_isAI = false;
-			m_isAIEnd = false;
 			break;
 		case OctoKeys::GroundLeft:
 		{
@@ -2169,6 +2166,7 @@ void	CharacterOcto::setOctoInRocketEnd(void)
 {
 	m_isRocketEnd = true;
 	m_box->setApplyGravity(false);
+	m_endRocketState = InRocket;
 }
 
 void	CharacterOcto::endInRocket(void)
@@ -2338,7 +2336,8 @@ void	CharacterOcto::initAIEnd(void)
 		enableCutscene(true, false);
 		m_speakCedricTimer = sf::seconds(6.f);
 		m_speakNanoTimer = sf::seconds(4.f);
-		m_cameraRocketTimer = sf::seconds(12.f);
+		m_inRocketTimer = sf::seconds(4.f);
+		m_rocketTakeOffTimer = sf::seconds(6.f);
 		m_speedCamera = 0.5f;
 		m_lookCamera.first = -0.6f;
 		m_lookCamera.second = 0.5f;
@@ -2398,25 +2397,36 @@ void	CharacterOcto::updateAIEnd(sf::Time frameTime)
 		case GoLeft:
 		{
 			if (m_keyJump || m_keyRight)
-				m_isAIEnd = false;
+				m_endRocketState = None;
 			m_speedCamera = 0.f;
 			m_lookCamera.first = 0.0f;
 			m_lookCamera.second = 0.0f;
 			m_keyLeft = true;
-
-			//TODO : Correct - Timer is dependant of time walking
-			m_cameraRocketTimer -= frameTime;
-			if (m_cameraRocketTimer <= sf::Time::Zero)
+			if (m_isRocketEnd)
+				m_endRocketState = InRocket;
+			break;
+		}
+		case InRocket:
+		{
+			m_inRocketTimer -= frameTime;
+			if (m_inRocketTimer <= sf::Time::Zero)
 			{
 				m_speedCamera = 0.5f;
 				m_lookCamera.first = 0.0f;
 				m_lookCamera.second = 1.1f;
+				m_endRocketState = RocketTakeOff;
 			}
-			if (m_cameraRocketTimer <= sf::seconds(-6.f))
+			break;
+		}
+		case RocketTakeOff:
+		{
+			m_rocketTakeOffTimer -= frameTime;
+			if (m_inRocketTimer <= sf::Time::Zero)
 			{
 				m_speedCamera = 2.5f;
 				m_lookCamera.second = 1.1f;
 			}
+			break;
 		}
 		default:
 			break;

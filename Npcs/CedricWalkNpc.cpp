@@ -8,7 +8,7 @@ CedricWalkNpc::CedricWalkNpc(void) :
 	setSize(sf::Vector2f(34.f, 164.f));
 	setOrigin(sf::Vector2f(84.f, 31.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(0.f, -10.f));
+	setTextOffset(sf::Vector2f(0.f, -20.f));
 	setVelocity(200.f);
 	setup();
 }

@@ -279,7 +279,6 @@ private:
 	bool										m_isRocketEnd;
 	Events										m_prevEvent;
 	bool										m_isAI;
-	bool										m_isAIEnd;
 
 	// AI Menu
 	RandomGenerator								m_generator;
@@ -299,13 +298,15 @@ private:
 		WaitCedricSpeak,
 		GoLeft,
 		InRocket,
+		RocketTakeOff,
 		None
 	};
 
 	EndRocketState								m_endRocketState;
 	sf::Time									m_speakNanoTimer;
 	sf::Time									m_speakCedricTimer;
-	sf::Time									m_cameraRocketTimer;
+	sf::Time									m_inRocketTimer;
+	sf::Time									m_rocketTakeOffTimer;
 
 	sf::Time									m_cutsceneTimer;
 	sf::Time									m_cutsceneTimerMax;
