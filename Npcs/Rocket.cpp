@@ -23,6 +23,12 @@ Rocket::Rocket(void) :
 	m_sound(nullptr),
 	m_stopCameraMovement(false)
 {
+	if (Progress::getInstance().getNextDestination() == Level::EndTimeLapse)
+	{
+		octo::ResourceManager & resources = octo::Application::getResourceManager();
+		getSprite().setSpriteSheet(resources.getSpriteSheet(ROCKET_DARK_OSS));
+	}
+
 	setType(GameObjectType::Rocket);
 	setSize(sf::Vector2f(160.f, 850.f));
 	setOrigin(sf::Vector2f(74.f, 605.f));
