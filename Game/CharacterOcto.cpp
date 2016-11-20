@@ -1977,9 +1977,9 @@ void CharacterOcto::moveGround(sf::Time frameTime, std::unique_ptr<GroundManager
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && m_groundSoundTime > sf::Time::Zero && !Progress::getInstance().isMapMoving())
+	if (m_soundGeneration != nullptr && m_groundSoundTime > sf::Time::Zero && !m_progress.isMapMoving())
 		m_groundSoundTime -= frameTime;
-	else if (m_groundSoundTime < m_groundSoundTimeMax && !Progress::getInstance().isMenu())
+	else if (m_groundSoundTime < m_groundSoundTimeMax && !m_progress.isMenu() && m_progress.getCurrentDestination() != Level::WaterB)
 		m_groundSoundTime += frameTime;
 
 	if ((m_keyGroundRight || m_keyGroundLeft || m_progress.forceMapToMove()) && m_progress.canMoveMap())
