@@ -158,7 +158,7 @@ void CedricWalkNpc::update(sf::Time frametime)
 			if (progress.getOctoPos().x - getBox()->getRenderPosition().x < 0.f)
 				isRight = false;
 
-			if (dist > 200.f)
+			if (dist > 400.f)
 			{
 				if (isRight)
 				{

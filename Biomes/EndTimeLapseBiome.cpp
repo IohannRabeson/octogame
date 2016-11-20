@@ -10,7 +10,7 @@
 #include <iostream>
 
 EndTimeLapseBiome::EndTimeLapseBiome() :
-	m_name("Ice A"),
+	m_name("End Time Lapse"),
 	m_id(Level::EndTimeLapse),
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),

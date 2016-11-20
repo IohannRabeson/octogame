@@ -270,6 +270,8 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 
 	if (isReparingShip())
 		return position;
+	else if (progress.getCurrentDestination() == Level::EndRocket || progress.getCurrentDestination() == Level::EndTimeLapse)
+		return position - sf::Vector2f(0.f, 200.f);
 	if (m_isUsing && m_id == NANO_REPAIR_OSS)
 		return position - sf::Vector2f(0.f, 100.f);
 

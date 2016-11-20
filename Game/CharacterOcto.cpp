@@ -1001,7 +1001,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 				m_enableCutscene = false;
 		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
-		if (m_level != Level::EndRocket || m_level == Level::EndTimeLapse)
+		if (m_level != Level::EndRocket && m_level != Level::EndTimeLapse)
 			MusicManager::getInstance().startEvent();
 	}
 	else

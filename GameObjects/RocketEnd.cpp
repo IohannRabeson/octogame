@@ -1,5 +1,6 @@
 #include "RocketEnd.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
@@ -8,7 +9,10 @@ RocketEnd::RocketEnd(sf::Vector2f const & position) :
 	m_smokes(new SmokeSystem[m_smokesCount])
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
-	m_spriteRocket.setSpriteSheet(resources.getSpriteSheet(ROCKET_OSS));
+	if (Progress::getInstance().getNextDestination() == Level::EndTimeLapse)
+		m_spriteRocket.setSpriteSheet(resources.getSpriteSheet(ROCKET_DARK_OSS));
+	else
+		m_spriteRocket.setSpriteSheet(resources.getSpriteSheet(ROCKET_OSS));
 	m_spriteRocket.setScale(sf::Vector2f(0.7f, 0.7f));
 	m_spriteOcto.setSpriteSheet(resources.getSpriteSheet(OCTO_OSS));
 	m_spriteOcto.setScale(sf::Vector2f(-0.4f, 0.4f));
