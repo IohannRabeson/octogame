@@ -1129,8 +1129,6 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 				m_collisionTile = true;
 			if (collisionDirection.y > 0.f)
 				m_collisionTileHead = true;
-			else
-				m_collisionTileHead = false;
 			break;
 		case GameObjectType::Elevator:
 			m_collisionElevator = true;
@@ -1592,6 +1590,7 @@ void	CharacterOcto::resetColisionBolean()
 {
 	m_collisionTile = false;
 	m_collisionElevator = false;
+	m_collisionTileHead = false;
 	m_collisionPortal = false;
 	m_collidePortalEvent = false;
 	m_collisionElevatorEvent = false;
