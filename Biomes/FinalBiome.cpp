@@ -528,7 +528,7 @@ std::size_t		FinalBiome::getTreePositionX()
 	}
 	else
 	{
-		x = static_cast<int>(m_generator.randomPiecewise(450.f)) + 925.f;
+		x = static_cast<int>(m_generator.randomPiecewise(550.f)) + 875.f;
 	}
 	return (static_cast<int>(x));
 }
