@@ -105,6 +105,7 @@ maryvonne.oss=!I wish I could use those clouds to jump higher…
 npc_mecanouille.oss=!It is said that there is one of those strange portals in each worlds… But I only found one !
 snowman_3.oss=!See that, that's a checkpoint Bro !
 theo.oss=!I saw your last robot up there.
+brayou.oss=Watch your head.
 scientistju.oss=0#Ah ! Le poulpe a fini par se réveiller.
 scientistlu.oss=1#Combien de temps a-t-il dormi ?
 scientistfran.oss=2# (temps de jeu) !
