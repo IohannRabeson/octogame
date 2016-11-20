@@ -268,6 +268,10 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 	sf::Vector2f pos = position;
 	sf::Vector2f direction = interestPoint - position;
 
+	if (isReparingShip())
+		return position;
+	else if (progress.getCurrentDestination() == Level::EndRocket || progress.getCurrentDestination() == Level::EndTimeLapse)
+		return position - sf::Vector2f(0.f, 200.f);
 	if (m_isUsing && m_id == NANO_REPAIR_OSS)
 		return position - sf::Vector2f(0.f, 100.f);
 
@@ -332,7 +336,7 @@ void NanoRobot::usingCapacity(sf::Time frametime)
 
 	float interpolateValue = m_timerUse / m_timerUseMax;
 	m_sprite.setScale(0.6f + interpolateValue * 0.3f, 0.6f + interpolateValue * 0.3f);
-	if (m_id == NANO_REPAIR_OSS)
+	if (m_id == NANO_REPAIR_OSS && !isReparingShip())
 	{
 		m_swarm.getFirefly(0u).speed = octo::cosinusInterpolation(1.f, 5.f, interpolateValue);
 		m_swarm.setTarget(octo::linearInterpolation(m_sprite.getPosition(), m_swarm.getTarget(), interpolateValue));
@@ -346,10 +350,9 @@ bool NanoRobot::isTravelling(void) const
 	return m_isTravelling;
 }
 
-void NanoRobot::popUpInfo(void)
+void NanoRobot::popUpInfo(bool popUp)
 {
-	if (m_popUp == false)
-		m_popUp = true;
+	m_popUp = popUp;
 }
 
 void NanoRobot::updatePopUpInfo(sf::Time)
@@ -391,13 +394,25 @@ bool NanoRobot::onInputReleased(InputListener::OctoKeys const & key)
 	return true;
 }
 
+std::string const & NanoRobot::getId(void)
+{
+	return m_id;
+}
+
 void NanoRobot::setState(NanoRobot::State state)
 {
+	if (state == FollowOcto)
+		m_startLastAnimation = false;
 	if (m_startLastAnimation)
 		return;
 	if (state == GoingToRepairShip)
 		m_startLastAnimation = true;
 	m_state = state;
+}
+
+void NanoRobot::setEffectState(NanoEffect::State state)
+{
+	m_glowingEffect.setState(state);
 }
 
 void NanoRobot::setTextIndex(std::size_t index)

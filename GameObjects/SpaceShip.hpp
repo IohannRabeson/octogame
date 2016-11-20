@@ -27,6 +27,7 @@ public:
 	sf::Vector2f const & getPosition(void) const;
 	sf::Vector2f getSize(void) const;
 	void setSmokeVelocity(sf::Vector2f const & velocity);
+	void setRepairProgression(float progression);
 
 	void move(sf::Vector2f const & translation);
 	void update(sf::Time frameTime);

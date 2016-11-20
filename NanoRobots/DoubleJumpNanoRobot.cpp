@@ -36,7 +36,7 @@ DoubleJumpNanoRobot::DoubleJumpNanoRobot(sf::Vector2f const & position) :
 	targets.push_back(sf::Vector2f(239.f, 104.f));
 	targets.push_back(sf::Vector2f(269.f, 64.f));
 	setTargets(targets, 0.4f);
-	setLaserColor(sf::Color(247, 238, 80));
+	setLaserColor(sf::Color::Red);
 
 	setSwarmTarget(position);
 }

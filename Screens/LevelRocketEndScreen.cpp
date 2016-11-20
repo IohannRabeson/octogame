@@ -1,5 +1,6 @@
 #include "LevelRocketEndScreen.hpp"
 #include "RocketEnd.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <Camera.hpp>
@@ -11,7 +12,8 @@ LevelRocketEndScreen::LevelRocketEndScreen(void) :
 	m_stars(new StarSystem[m_starsCount]),
 	m_rocket(new RocketEnd(sf::Vector2f(600.f, octo::Application::getCamera().getRectangle().height + 100.f))),
 	m_credit(new Credit(sf::Vector2f(1100.f, octo::Application::getCamera().getRectangle().height + 100.f))),
-	m_speedCredit(1.f)
+	m_speedCredit(1.f),
+	m_timerBeforeEnd(sf::seconds(3.f))
 {
 	m_generator.setSeed("random");
 }
@@ -61,7 +63,19 @@ void	LevelRocketEndScreen::update(sf::Time frameTime)
 		m_rocket->setOriginPosition(m_rocket->getPosition() + sf::Vector2f(0.f, -150.f) * frameTime.asSeconds() * m_speedCredit);
 	m_credit->update(frameTime * m_speedCredit);
 	if (m_credit->isFinished())
-		octo::Application::getStateManager().change("menu");
+	{
+		m_timerBeforeEnd -= frameTime;
+		if (m_timerBeforeEnd <= sf::Time::Zero)
+		{
+			Progress & progress = Progress::getInstance();
+
+			progress.setCurrentDestination(Level::Portal);
+			progress.setNextDestination(Level::Portal);
+			progress.setLastDestination(Level::Portal);
+			progress.save();
+			octo::Application::getStateManager().change("game");
+		}
+	}
 }
 
 void	LevelRocketEndScreen::draw(sf::RenderTarget & render) const

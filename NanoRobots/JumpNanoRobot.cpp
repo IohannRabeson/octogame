@@ -16,7 +16,7 @@ JumpNanoRobot::JumpNanoRobot(sf::Vector2f const & position) :
 	targets.push_back(sf::Vector2f(263.f, 362.f));
 	targets.push_back(sf::Vector2f(278.f, 340.f));
 	setTargets(targets, 0.6f);
-	setLaserColor(sf::Color(247, 238, 80));
+	setLaserColor(sf::Color::Red);
 
 	setSwarmTarget(position);
 }

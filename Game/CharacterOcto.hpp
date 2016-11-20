@@ -7,6 +7,7 @@
 # include <AudioManager.hpp>
 
 # include "AGameObject.hpp"
+# include "ABiome.hpp"
 # include "SmokeSystem.hpp"
 # include "HelmetSystem.hpp"
 # include "PloufSystem.hpp"
@@ -76,7 +77,9 @@ public:
 	void					setup(ABiome & biome);
 	void					update(sf::Time frameTime, sf::Time realFrameTime);
 	void					initAI(void);
+	void					initAIEnd(void);
 	void					updateAI(sf::Time frameTime);
+	void					updateAIEnd(sf::Time frameTime);
 	void					draw(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const;
 	void					drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states)const;
 	void					drawText(sf::RenderTarget& render, sf::RenderStates states)const;
@@ -107,6 +110,8 @@ public:
 	bool					isMeetingNpc(void) const;
 	bool					isCollidingPortal(void) const;
 	bool					isStopFollowCamera(void) const;
+	std::pair<float, float>	look(void) const;
+	float					getSpeedCamera(void) const;
 	bool					isFinalEvent(void);
 	bool					isZooming(void) const;
 	bool					isInRocketEnd(void) const;
@@ -159,6 +164,7 @@ private:
 	void replaceOcto(void);
 	void updateCutscene(sf::Time frameTime);
 
+	Level										m_level;
 	octo::CharacterSprite						m_sprite;
 	octo::CharacterAnimation					m_idleAnimation;
 	octo::CharacterAnimation					m_walkAnimation;
@@ -266,11 +272,15 @@ private:
 	bool										m_replaceOcto;
 	bool										m_enableCutscene;
 	bool										m_stopFollowCamera;
+	std::pair<float, float>						m_lookCamera;
+	float										m_speedCamera;
 	bool										m_autoDisableCutscene;
 	bool										m_doorAction;
 	bool										m_isRocketEnd;
 	Events										m_prevEvent;
+	bool										m_isAI;
 
+	// AI Menu
 	RandomGenerator								m_generator;
 	sf::Time									m_directionTimer;
 	sf::Time									m_jumpTimer;
@@ -278,6 +288,31 @@ private:
 	sf::Time									m_doubleJumpTimer;
 	sf::Time									m_slowFallTimer;
 	sf::Time									m_portalTimer;
+
+	// AI End Rocket
+	enum EndRocketState
+	{
+		RepairShip,
+		SpeakNano,
+		LookLeft,
+		WaitCedricSpeak,
+		GoLeft,
+		StopRight,
+		GoRocket,
+		InRocket,
+		RocketTakeOff,
+		None
+	};
+
+	EndRocketState								m_endRocketState;
+	sf::Time									m_speakNanoTimer;
+	sf::Time									m_lookLeftTimer;
+	sf::Time									m_speakCedricTimer;
+	sf::Time									m_goLeftTimer;
+	sf::Time									m_inRocketTimer;
+	sf::Time									m_stopRightTimer;
+	sf::Time									m_rocketTakeOffTimer;
+
 	sf::Time									m_cutsceneTimer;
 	sf::Time									m_cutsceneTimerMax;
 	sf::Time									m_cutscenePauseTimer;

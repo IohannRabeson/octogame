@@ -33,7 +33,7 @@ CharacterOcto::CharacterOcto() :
 	m_progress(Progress::getInstance()),
 	m_timeEventDieFallMax(sf::seconds(2.3f)),
 	m_timeEventIdleMax(sf::seconds(4.f)),
-	m_timeRepairSpaceShipMax(sf::seconds(12.f)),
+	m_timeRepairSpaceShipMax(sf::seconds(10.f)),
 	m_timeSlowFallMax(sf::seconds(1.5f)),
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
@@ -85,9 +85,12 @@ CharacterOcto::CharacterOcto() :
 	m_replaceOcto(false),
 	m_enableCutscene(false),
 	m_stopFollowCamera(false),
+	m_lookCamera(0.f, 0.f),
+	m_speedCamera(0.f),
 	m_autoDisableCutscene(false),
 	m_doorAction(false),
 	m_isRocketEnd(false),
+	m_isAI(false),
 	m_generator("random"),
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutscenePauseTimerMax(sf::seconds(4.f)),
@@ -95,13 +98,9 @@ CharacterOcto::CharacterOcto() :
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
-
 	m_cutsceneShader.setParameter("height", 0.15);
 
-	if (!m_progress.isMenu())
-		InputListener::addInputListener();
-	else
-		initAI();
+	InputListener::addInputListener();
 
 	if (m_progress.canMoveMap())
 		giveNanoRobot(new GroundTransformNanoRobot());
@@ -125,17 +124,6 @@ CharacterOcto::CharacterOcto() :
 		robot->setState(NanoRobot::State::FollowOcto);
 	}
 
-	Level level = Progress::getInstance().getCurrentDestination();
-	if (level == Level::Red || level == Level::Blue)
-		enableCutscene(true, true);
-
-	octo::AudioManager&			audio = octo::Application::getAudioManager();
-	octo::ResourceManager &		resources = octo::Application::getResourceManager();
-
-	m_soundUseDoor = audio.playSound(resources.getSound(OBJECT_TIMELAPSE_OGG), 0.f);
-	m_soundUseDoor->setLoop(true);
-	m_soundGeneration = audio.playSound(resources.getSound(OCTO_SOUND_GROUND_OGG), 0.f);
-	m_soundGeneration->setLoop(true);
 }
 
 CharacterOcto::~CharacterOcto(void)
@@ -151,6 +139,20 @@ CharacterOcto::~CharacterOcto(void)
 void	CharacterOcto::setup(ABiome & biome)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
+	octo::AudioManager&			audio = octo::Application::getAudioManager();
+
+	m_level = biome.getId();
+
+	if (m_level == Level::Red || m_level == Level::Blue)
+	{
+		enableCutscene(true, false);
+		m_isAI = true;
+	}
+	else if (m_level == Level::EndTimeLapse)
+		enableCutscene(true, false);
+
+	initAI();
+	initAIEnd();
 
 	m_waterLevel = biome.getWaterLevel();
 	m_sound->setWaterLevel(m_waterLevel);
@@ -258,8 +260,13 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_bubbleParticle.setCanEmit(false);
 
 	Progress const & progress = Progress::getInstance();
-	if (!progress.isMenu() && progress.getNextDestination() == Level::Rewards)
+	if (!progress.isMenu() && m_level == Level::Rewards)
 		caseRight();
+
+	m_soundUseDoor = audio.playSound(resources.getSound(OBJECT_TIMELAPSE_OGG), 0.f);
+	m_soundUseDoor->setLoop(true);
+	m_soundGeneration = audio.playSound(resources.getSound(OCTO_SOUND_GROUND_OGG), 0.f);
+	m_soundGeneration->setLoop(true);
 
 	//Force check joystick
 	if (sf::Joystick::getAxisPosition(0, sf::Joystick::X) > 50 || sf::Joystick::getAxisPosition(0, sf::Joystick::PovX) > 50)
@@ -887,7 +894,10 @@ void	CharacterOcto::setupMachine()
 void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 {
 	Progress & progress = Progress::getInstance();
-	if (progress.isMenu())
+
+	if (m_level == Level::EndRocket)
+		updateAIEnd(frameTime);
+	else if (progress.isMenu() || m_isAI)
 		updateAI(frameTime);
 
 	updateBox(frameTime);
@@ -991,7 +1001,8 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 				m_enableCutscene = false;
 		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
-		MusicManager::getInstance().startEvent();
+		if (m_level != Level::EndRocket && m_level != Level::EndTimeLapse)
+			MusicManager::getInstance().startEvent();
 	}
 	else
 	{
@@ -1007,7 +1018,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 
 bool	CharacterOcto::isZooming(void) const
 {
-	return (m_keyZoomIn || (isCollidingPortal() && Progress::getInstance().getCurrentDestination() != Level::Portal));
+	return (m_keyZoomIn || (isCollidingPortal() && m_level != Level::Portal));
 }
 
 bool	CharacterOcto::isInRocketEnd(void) const
@@ -1022,9 +1033,7 @@ bool	CharacterOcto::isInWater(void) const
 
 bool	CharacterOcto::isCenteredCamera(void) const
 {
-	Progress const & progress = Progress::getInstance();
-
-	if (progress.getCurrentDestination() == Level::DesertC || progress.getCurrentDestination() == Level::JungleC)
+	if (m_level == Level::DesertC || m_level == Level::JungleC)
 		return true;
 	if (isInWater() && m_waterLevel != -1.f)
 		return true;
@@ -1187,7 +1196,7 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 
 void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 {
-	if (m_progress.canRepairShip() && m_keyEntrance)
+	if (m_progress.canRepairShip() && m_keyElevator)
 	{
 		for (auto & robot : m_nanoRobots)
 		{
@@ -1197,6 +1206,7 @@ void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
 			robot->setTarget(spaceShip->getPosition());
 		}
 		m_repairShip = true;
+		spaceShip->setRepairProgression(m_timeRepairSpaceShip / m_timeRepairSpaceShipMax);
 	}
 	m_collisionSpaceShip = true;
 }
@@ -1219,7 +1229,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 	m_collisionPortal = true;
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
-		if (portal.getDestination() == m_progress.getCurrentDestination())
+		if (portal.getDestination() == m_level)
 		{
 			if (portal.getKey() == OBJECT_PORTAL_SNOW_OSS)
 				m_box->setPosition(sf::Vector2f(20430.f, 3255.f));
@@ -1491,7 +1501,8 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
 			m_progress.spaceShipRepair(true);
-			states.change("zero");
+			if (m_level != Level::EndRocket)
+				states.change("zero");
 		}
 	}
 
@@ -1590,7 +1601,7 @@ void	CharacterOcto::resetColisionBolean()
 
 void	CharacterOcto::kill()
 {
-	if (Progress::getInstance().getNextDestination() != Level::Rewards)
+	if (m_level != Level::Rewards)
 	{
 		if (m_sprite.getCurrentEvent() != Death)
 		{
@@ -1988,7 +1999,7 @@ void CharacterOcto::moveGround(sf::Time frameTime, std::unique_ptr<GroundManager
 	if (m_progress.isMenu() ||
 		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Duplicate).enable() && !m_progress.isValidateChallenge(ChallengeManager::Effect::Duplicate)) ||
 		(ChallengeManager::getInstance().getEffect(ChallengeManager::Effect::Displacement).enable() && !m_progress.isValidateChallenge(ChallengeManager::Effect::Displacement)) ||
-		(m_progress.getCurrentDestination() == Level::Blue || m_progress.getCurrentDestination() == Level::Red)
+		(m_level == Level::Blue || m_level == Level::Red)
 		)
 		groundManager->setNextGenerationState(GroundManager::GenerationState::Previous, getPosition());
 }
@@ -2050,10 +2061,12 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Left:
 			caseLeft();
 			m_progress.walk();
+			m_isAI = false;
 			break;
 		case OctoKeys::Right:
 			caseRight();
 			m_progress.walk();
+			m_isAI = false;
 			break;
 		case OctoKeys::GroundLeft:
 		{
@@ -2154,12 +2167,13 @@ void	CharacterOcto::stopFollowCamera(bool stop)
 void	CharacterOcto::setOctoInRocketEnd(void)
 {
 	m_isRocketEnd = true;
+	m_box->setApplyGravity(false);
+	m_endRocketState = InRocket;
 }
 
 void	CharacterOcto::endInRocket(void)
 {
 	stopFollowCamera(true);
-	m_box->setApplyGravity(false);
 }
 
 void	CharacterOcto::resetCollidingTileCount(void)
@@ -2287,13 +2301,197 @@ float	CharacterOcto::getWaterLevel() const
 
 void	CharacterOcto::initAI(void)
 {
-	m_randomJumpTimer = sf::seconds(m_generator.randomFloat(1.f, 30.f));
-	m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
-	m_directionTimer = sf::seconds(m_generator.randomFloat(30.f, 300.f));
-	m_slowFallTimer = sf::seconds(m_generator.randomFloat(4.f, 10.f));
-	m_portalTimer = sf::seconds(m_generator.randomFloat(45.f, 90.f));
-	m_keyRight = true;
-	m_keyLeft = false;
+	if (Progress::getInstance().isMenu() || m_isAI)
+	{
+		if (Progress::getInstance().isMenu())
+			InputListener::removeInputListener();
+	
+		m_randomJumpTimer = sf::seconds(m_generator.randomFloat(1.f, 30.f));
+		m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
+		m_directionTimer = sf::seconds(m_generator.randomFloat(30.f, 300.f));
+		m_slowFallTimer = sf::seconds(m_generator.randomFloat(4.f, 10.f));
+		m_portalTimer = sf::seconds(m_generator.randomFloat(45.f, 90.f));
+		m_keyRight = true;
+		m_keyLeft = false;
+	}
+}
+
+std::pair<float, float>	CharacterOcto::look(void) const
+{
+	return m_lookCamera;
+}
+
+float	CharacterOcto::getSpeedCamera(void) const
+{
+	return m_speedCamera;
+}
+
+void	CharacterOcto::initAIEnd(void)
+{
+	if (m_level == Level::EndRocket)
+	{
+		InputListener::removeInputListener();
+
+		m_endRocketState = RepairShip;
+		m_pixelSecondWalk = 200.f;
+		m_repairShip = true;
+		enableCutscene(true, false);
+		m_cutsceneTimerMax = sf::seconds(0.1f);
+		m_speakNanoTimer = sf::seconds(4.f);
+		m_lookLeftTimer = sf::seconds(2.f);
+		m_speakCedricTimer = sf::seconds(7.f);
+		m_goLeftTimer = sf::seconds(7.5f);
+		m_stopRightTimer = sf::seconds(2.f);
+		m_inRocketTimer = sf::seconds(4.f);
+		m_rocketTakeOffTimer = sf::seconds(6.f);
+		m_speedCamera = 0.5f;
+		m_lookCamera.first = -0.6f;
+		m_lookCamera.second = 0.5f;
+		for (auto & robot : m_nanoRobots)
+		{
+			if (robot->getId() == NANO_REPAIR_SHIP_OSS)
+				robot->setEffectState(NanoEffect::State::Active);
+		}
+	}
+}
+
+void	CharacterOcto::updateAIEnd(sf::Time frameTime)
+{
+	octo::AudioManager& audio = octo::Application::getAudioManager();
+	octo::ResourceManager& resources = octo::Application::getResourceManager();
+
+	switch (m_endRocketState)
+	{
+		case RepairShip:
+		{
+			if (m_timeRepairSpaceShip <= m_timeRepairSpaceShipMax)
+			{
+				m_timeEventIdleMax = sf::Time::Zero;
+				wait();
+				m_keyElevator = true;
+			}
+			else
+			{
+				for (auto & robot : m_nanoRobots)
+				{
+					if (robot->getId() == NANO_REPAIR_SHIP_OSS)
+						robot->setEffectState(NanoEffect::State::FadeOut);
+					robot->setState(NanoRobot::State::FollowOcto);
+				}
+				m_lookCamera.second = 0.f;
+				m_repairShip = false;
+				m_keyElevator = false;
+				audio.playSound(resources.getSound(EVENT_CRASH_OGG), 0.5f, 1.5f);
+				m_endRocketState = SpeakNano;
+			}
+			break;
+		}
+		case SpeakNano:
+		{
+			m_speakNanoTimer -= frameTime;
+			for (auto & robot : m_nanoRobots)
+			{
+				if (robot->getId() == NANO_REPAIR_SHIP_OSS)
+					robot->popUpInfo(true);
+			}
+			if (m_speakNanoTimer <= sf::Time::Zero)
+			{
+				m_keyLeft = true;
+				m_endRocketState = LookLeft;
+			}
+			break;
+		}
+		case LookLeft:
+		{
+			m_lookLeftTimer -= frameTime;
+			m_keyLeft = false;
+			m_lookCamera.first = 0.4f;
+			if (m_lookLeftTimer <= sf::Time::Zero)
+			{
+				m_endRocketState = WaitCedricSpeak;
+				for (auto & robot : m_nanoRobots)
+				{
+					if (robot->getId() == NANO_REPAIR_SHIP_OSS)
+						robot->popUpInfo(false);
+				}
+			}
+			break;
+		}
+		case WaitCedricSpeak:
+		{
+			m_speakCedricTimer -= frameTime;
+			if (m_speakCedricTimer <= sf::Time::Zero)
+			{
+				InputListener::addInputListener();
+				m_endRocketState = GoLeft;
+				audio.playSound(resources.getSound(OCTO_YES_OGG), 1.f, 1.f);
+			}
+			break;
+		}
+		case GoLeft:
+		{
+			if (m_keyJump || m_keyRight)
+			{
+				m_endRocketState = None;
+				m_pixelSecondWalk = 320.f;
+			}
+			m_goLeftTimer -= frameTime;
+			m_speedCamera = 0.f;
+			m_lookCamera.first = 0.0f;
+			m_lookCamera.second = 0.0f;
+			m_keyLeft = true;
+			if (m_goLeftTimer <= sf::Time::Zero)
+			{
+				m_keyLeft = false;
+				m_keyRight = true;
+				m_endRocketState = StopRight;
+				audio.playSound(resources.getSound(OCTO_SOUND_JUMP_LANDING_OGG), 1.f, 1.f);
+				audio.playSound(resources.getSound(OCTO_VOICE_ELEVATOR_OGG), 1.f, 1.f);
+			}
+			break;
+		}
+		case StopRight:
+		{
+			m_stopRightTimer -= frameTime;
+			m_keyRight = false;
+			if (m_stopRightTimer <= sf::Time::Zero)
+				m_endRocketState = GoRocket;
+			break;
+		}
+		case GoRocket:
+		{
+			m_keyLeft = true;
+			if (m_isRocketEnd)
+				m_endRocketState = InRocket;
+			break;
+		}
+		case InRocket:
+		{
+			InputListener::removeInputListener();
+			m_keyLeft = false;
+			m_inRocketTimer -= frameTime;
+			if (m_inRocketTimer <= sf::Time::Zero)
+			{
+				m_speedCamera = 0.5f;
+				m_lookCamera.first = 0.0f;
+				m_lookCamera.second = 1.1f;
+				m_endRocketState = RocketTakeOff;
+			}
+			break;
+		}
+		case RocketTakeOff:
+		{
+			m_rocketTakeOffTimer -= frameTime;
+			if (m_inRocketTimer <= sf::Time::Zero)
+			{
+				m_speedCamera = 2.5f;
+				m_lookCamera.second = 1.1f;
+			}
+			break;
+		}
+		default:
+			break;
+	}
 }
 
 void	CharacterOcto::updateAI(sf::Time frameTime)

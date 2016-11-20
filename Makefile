@@ -176,7 +176,13 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/TVFanNpc.cpp				\
 				Npcs/MecanouilleNpc.cpp				\
 				Npcs/TheoNpc.cpp				\
+				Npcs/CedricWalkNpc.cpp				\
+				Npcs/ChristianNpc.cpp				\
+				Npcs/SkeletonNpc.cpp				\
 #Script AddNpc
+
+
+
 
 
 
@@ -259,6 +265,8 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/RedBiome.cpp						\
 				Biomes/BlueBiome.cpp					\
 				Biomes/PortalBiome.cpp					\
+				Biomes/EndRocketBiome.cpp				\
+				Biomes/EndTimeLapseBiome.cpp			\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\

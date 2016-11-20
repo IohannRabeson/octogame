@@ -16,6 +16,7 @@ protected:
 	virtual void updateState(void);
 	virtual void updatePhysics(void);
 
+	void reverseWalking(bool reverse);
 	float getVelocity(void) const;
 	void setVelocity(float velocity);
 

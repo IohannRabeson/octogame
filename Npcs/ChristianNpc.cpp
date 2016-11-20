@@ -1,23 +1,25 @@
-#include "FranfranNpc.hpp"
+#include "ChristianNpc.hpp"
 #include "Progress.hpp"
 
-FranfranNpc::FranfranNpc(void) :
-	ASpecialNpc(FRANFRAN_OSS, false, true),
+ChristianNpc::ChristianNpc(void) :
+	ASpecialNpc(CHRISTIAN_OSS, false, true),
 	m_puffTimerMin(sf::seconds(0.4f)),
 	m_puffTimerMax(sf::seconds(1.f))
 {
-	setType(GameObjectType::FranfranNpc);
+	setType(GameObjectType::ChristianNpc);
 	setSize(sf::Vector2f(69.f, 230.f));
 	setOrigin(sf::Vector2f(56.f, 88.f));
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
 
+	getSprite().setColor(sf::Color(255, 255, 255, 150));
+
 	m_smokePosition = sf::Vector2f(25.f, 170.f) * 0.8f; // Multiply by scale
 	m_puffPosition = sf::Vector2f(145.f, 160.f) * 0.8f;
 }
 
-void FranfranNpc::setup(void)
+void ChristianNpc::setup(void)
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
 
@@ -61,12 +63,9 @@ void FranfranNpc::setup(void)
 	m_puff.setScaleFactor(15.f);
 	m_puff.setDispersion(120.f);
 	m_puff.setColor(sf::Color(255, 255, 255, 150));
-
-	if (Progress::getInstance().getCurrentDestination() == Level::EndRocket)
-		setCurrentText(1u);
 }
 
-void FranfranNpc::update(sf::Time frametime)
+void ChristianNpc::update(sf::Time frametime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
@@ -94,7 +93,7 @@ void FranfranNpc::update(sf::Time frametime)
 	ASpecialNpc::update(frametime);
 }
 
-void FranfranNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
+void ChristianNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	ASpecialNpc::draw(render, states);
 	m_smoke.draw(render);

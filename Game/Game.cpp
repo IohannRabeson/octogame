@@ -30,6 +30,8 @@
 #include "RedBiome.hpp"
 #include "BlueBiome.hpp"
 #include "PortalBiome.hpp"
+#include "EndRocketBiome.hpp"
+#include "EndTimeLapseBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
 #include "RandomGameBiome.hpp"
@@ -128,6 +130,8 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<BlueBiome>(Level::Blue);
 	m_biomeManager.registerBiome<PortalBiome>(Level::Portal);
 
+	m_biomeManager.registerBiome<EndRocketBiome>(Level::EndRocket);
+	m_biomeManager.registerBiome<EndTimeLapseBiome>(Level::EndTimeLapse);
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 	m_biomeManager.registerBiome<RandomGameBiome>(Level::RandomGame);
@@ -153,7 +157,8 @@ void	Game::loadLevel(void)
 	}
 	else
 	{
-		if (progress.isGameFinished() && progress.getNextDestination() != Level::Blue && progress.getNextDestination() != Level::Red && progress.getNextDestination() != Level::Portal && progress.getNextDestination() != Level::Final)
+		Level next = progress.getNextDestination();
+		if (progress.isGameFinished() && next != Level::Blue && next != Level::Red && next != Level::Portal && next != Level::Final && next != Level::EndRocket && next != Level::EndTimeLapse)
 			m_biomeManager.changeBiome(Level::RandomGame, 0x12345);
 		else
 			m_biomeManager.changeBiome(progress.getNextDestination(), 0x12345);
@@ -450,14 +455,14 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				setSlowMotion();
 			}
 			break;
-		case GameObjectType::Rocket:
-			gameObjectCast<Rocket>(gameObject)->collideOctoEvent(octo);
-			break;
 		case GameObjectType::Monolith:
 			gameObjectCast<Monolith>(gameObject)->collideOcto(octo);
 			break;
 		case GameObjectType::Pyramid:
 			gameObjectCast<Pyramid>(gameObject)->collideOcto(octo);
+			break;
+		case GameObjectType::Rocket:
+			gameObjectCast<Rocket>(gameObject)->collideOcto(octo);
 			break;
 		default:
 			break;

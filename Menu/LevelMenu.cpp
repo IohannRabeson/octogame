@@ -27,6 +27,8 @@ LevelMenu::LevelMenu(void) :
 	m_names.push_back(L"Red");
 	m_names.push_back(L"Blue");
 	m_names.push_back(L"Portal");
+	m_names.push_back(L"Rocket End");
+	m_names.push_back(L"Time Lapse End");
 	m_names.push_back(L"Random");
 	m_names.push_back(L"Rewards");
 	m_names.push_back(L"Segfault");

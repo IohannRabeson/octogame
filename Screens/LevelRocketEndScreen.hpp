@@ -35,6 +35,7 @@ private:
 	float							m_speedCredit;
 	sf::Time						m_timer;
 	sf::Time						m_timerMax;
+	sf::Time						m_timerBeforeEnd;
 
 };
 

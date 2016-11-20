@@ -1,4 +1,4 @@
-#include "IceABiome.hpp"
+#include "EndTimeLapseBiome.hpp"
 #include "Tile.hpp"
 #include "GenerativeLayer.hpp"
 #include "ResourceDefinitions.hpp"
@@ -9,17 +9,17 @@
 #include <limits>
 #include <iostream>
 
-IceABiome::IceABiome() :
-	m_name("Ice A"),
-	m_id(Level::IceA),
+EndTimeLapseBiome::EndTimeLapseBiome() :
+	m_name("End Time Lapse"),
+	m_id(Level::EndTimeLapse),
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(136.f * 16.f, 0.f * 16.f),
+	m_octoStartPosition(sf::Vector2f(423.f * 16.f, 0.f)),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(227, 227, 227),
-	m_tileEndColor(137, 189, 211),
+	m_tileStartColor(127, 127, 127),
+	m_tileEndColor(37, 89, 111),
 	m_waterLevel(-1.f),
 	m_waterColor(255, 255, 255, 200),
 	m_secondWaterColor(m_waterColor),
@@ -29,9 +29,9 @@ IceABiome::IceABiome() :
 	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(78, 47, 4, 130),
-	m_nightLightColor(8, 20, 26, 50),
-	m_dayLightColor(sf::Color::Transparent),
-	m_sunsetLightColor(61, 0, 13, 20),
+	m_nightLightColor(8, 20, 26, 160),
+	m_dayLightColor(8, 20, 26, 120),
+	m_sunsetLightColor(8, 20, 26, 80),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -46,7 +46,7 @@ IceABiome::IceABiome() :
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
 	m_rainbowCount(1u, 2u),
-	m_cloudCount(20u, 40u),
+	m_cloudCount(70u, 80u),
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),
@@ -101,7 +101,7 @@ IceABiome::IceABiome() :
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
 	m_cloudMaxY(-500.f),
-	m_cloudMinY(-2500.f),
+	m_cloudMinY(-7500.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
@@ -129,7 +129,6 @@ IceABiome::IceABiome() :
 	m_mapSeed = 42u;
 
 	// Create a set a 20 colors for particles
-	Progress & progress = Progress::getInstance();
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
 	m_particleColor.resize(colorCount);
@@ -140,110 +139,104 @@ IceABiome::IceABiome() :
 	m_secondStartColor = getRockColor();
 	m_secondEndColor = getRockColor();
 
-	m_instances[20] = MAP_ICE_A_TRAIL_LEFT_OMP;
-	m_gameObjects[150] = GameObjectType::GroundTransformNanoRobot;
+	m_instances[20] = MAP_ROCKET_END_OMP;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
-	m_instances[220] = MAP_ICE_A_TRAIL_RIGHT_OMP;
-
-	if (progress.getLastDestination() == Level::IceB)
-		m_octoStartPosition = sf::Vector2f(423.f * 16.f, 0.f);
-	if (progress.getLastDestination() == Level::Random)
-		m_octoStartPosition = sf::Vector2f(404.f * 16.f, -1250.f);
-
+	m_gameObjects[10] = GameObjectType::Rocket;
 	m_gameObjects[420] = GameObjectType::PortalSnow;
-	m_instances[470] = MAP_ICE_A_SECRET_OMP;
-	if (progress.canRepairShip())
-		m_destinations.push_back(Level::Blue);
-	m_destinations.push_back(Level::Random);
-	m_destinations.push_back(Level::IceB);
+	m_destinations.push_back(Level::EndRocket);
+	m_gameObjects[400] = GameObjectType::ChristianNpc;
+	for (std::size_t i = 0u; i < 30; i++)
+	{
+		m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::SkeletonNpc;
+		m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::OctoDeathNpc;
+	}
 
 	m_interestPointPosX = 420;
 
 	m_gameObjects[344] = GameObjectType::BirdBlueNpc;
-	m_gameObjects[400] = GameObjectType::FranfranNpc;
 	m_gameObjects[490] = GameObjectType::BirdBlueNpc;
 
 	m_treePos = {156, 300, 306, 309, 320, 329, 340, 354, 359, 375, 450, 459, 463, 469, 485, 501, 510, 523, 550};
 }
 
-void			IceABiome::setup(std::size_t seed)
+void			EndTimeLapseBiome::setup(std::size_t seed)
 {
 	(void)seed;
 }
 
-Level			IceABiome::getId()const
+Level			EndTimeLapseBiome::getId()const
 {
 	return m_id;
 }
 
-std::string		IceABiome::getName()const
+std::string		EndTimeLapseBiome::getName()const
 {
 	return (m_name);
 }
 
 //TODO:: We'll probably need a setter for mapSize
-sf::Vector2u	IceABiome::getMapSize()
+sf::Vector2u	EndTimeLapseBiome::getMapSize()
 {
 	return (m_mapSize);
 }
 
-std::size_t		IceABiome::getMapSeed()
+std::size_t		EndTimeLapseBiome::getMapSeed()
 {
 	return m_mapSeed;
 }
 
-sf::Vector2f	IceABiome::getMapSizeFloat()
+sf::Vector2f	EndTimeLapseBiome::getMapSizeFloat()
 {
 	return (sf::Vector2f(m_mapSize.x * Tile::TileSize, m_mapSize.y * Tile::TileSize));
 }
 
-sf::Vector2f	IceABiome::getOctoStartPosition()
+sf::Vector2f	EndTimeLapseBiome::getOctoStartPosition()
 {
 	return m_octoStartPosition;
 }
 
-float			IceABiome::getTransitionDuration()
+float			EndTimeLapseBiome::getTransitionDuration()
 {
 	return (m_transitionDuration);
 }
 
-int				IceABiome::getInterestPointPosX()
+int				EndTimeLapseBiome::getInterestPointPosX()
 {
 	return (m_interestPointPosX);
 }
 
-std::map<std::size_t, GameObjectType> const &	IceABiome::getGameObjects()
+std::map<std::size_t, GameObjectType> const &	EndTimeLapseBiome::getGameObjects()
 {
 	return m_gameObjects;
 }
 
-Level	IceABiome::getDestination()
+Level	EndTimeLapseBiome::getDestination()
 {
 	return m_destinations[m_destinationIndex++];
 }
 
-float	IceABiome::getWaterLevel()
+float	EndTimeLapseBiome::getWaterLevel()
 {
 	return m_waterLevel;
 }
 
-sf::Color	IceABiome::getWaterColor()
+sf::Color	EndTimeLapseBiome::getWaterColor()
 {
 	return m_waterColor;
 }
 
-sf::Color	IceABiome::getSecondWaterColor()
+sf::Color	EndTimeLapseBiome::getSecondWaterColor()
 {
 	return m_secondWaterColor;
 }
 
-std::map<std::size_t, std::string> const & IceABiome::getInstances()
+std::map<std::size_t, std::string> const & EndTimeLapseBiome::getInstances()
 {
 	return m_instances;
 }
 
-std::vector<ParallaxScrolling::ALayer *> IceABiome::getLayers()
+std::vector<ParallaxScrolling::ALayer *> EndTimeLapseBiome::getLayers()
 {
 	sf::Vector2u const & mapSize = sf::Vector2u(getMapSize().x, getMapSize().y * 4u);
 	std::vector<ParallaxScrolling::ALayer *> vector;
@@ -263,14 +256,14 @@ std::vector<ParallaxScrolling::ALayer *> IceABiome::getLayers()
 	return vector;
 }
 
-Map::MapSurfaceGenerator IceABiome::getMapSurfaceGenerator()
+Map::MapSurfaceGenerator EndTimeLapseBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f    , 20.f, 70.f, 95.f, 120.f, 125.f, 165.f, 166.f, 195.f, 220.f, 270.f, 290.f, 350.f, 369.f, 377.f, 396.f, 450.f, 469.f, 477.f, 496.f, 590.f, 610.f  };
-		std::vector<float> pointY = {n / 5.f, 0.f , 0.f , n   , 0.f  , 2.4f , 2.4f , 0.f  , n    , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n    , n    , n / 5.f};
+		std::vector<float> pointY = {n / 5.f, -0.1f , 0.f , n   , 0.f  , 2.4f , 2.4f , 0.f  , n    , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n    , n    , n / 5.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 
@@ -286,7 +279,7 @@ Map::MapSurfaceGenerator IceABiome::getMapSurfaceGenerator()
 	};
 }
 
-Map::TileColorGenerator IceABiome::getTileColorGenerator()
+Map::TileColorGenerator EndTimeLapseBiome::getTileColorGenerator()
 {
 	float startTransition = 300.f / static_cast<float>(m_mapSize.y);
 	float middleTransition = 600.f / static_cast<float>(m_mapSize.y);
@@ -294,6 +287,10 @@ Map::TileColorGenerator IceABiome::getTileColorGenerator()
 	return [this, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+
+		if (y < 5.f)
+			return sf::Color(0, 0, 0, 0);
+
 		if (y > startTransition && y <= middleTransition)
 		{
 			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
@@ -310,73 +307,73 @@ Map::TileColorGenerator IceABiome::getTileColorGenerator()
 	};
 }
 
-sf::Color		IceABiome::getParticleColorGround()
+sf::Color		EndTimeLapseBiome::getParticleColorGround()
 {
 	std::size_t colorIndex = randomInt(0u, 19u);
 	return (m_particleColor[colorIndex]);
 }
 
-sf::Color		IceABiome::getTileStartColor()
+sf::Color		EndTimeLapseBiome::getTileStartColor()
 {
 	return (m_tileStartColor);
 }
 
-sf::Color		IceABiome::getTileEndColor()
+sf::Color		EndTimeLapseBiome::getTileEndColor()
 {
 	return (m_tileEndColor);
 }
 
-sf::Time		IceABiome::getDayDuration()
+sf::Time		EndTimeLapseBiome::getDayDuration()
 {
 	return (m_dayDuration);
 }
 
-sf::Time		IceABiome::getStartDayDuration()
+sf::Time		EndTimeLapseBiome::getStartDayDuration()
 {
 	return (m_startDayDuration);
 }
 
-sf::Color		IceABiome::getSkyDayColor()
+sf::Color		EndTimeLapseBiome::getSkyDayColor()
 {
 	return (m_skyDayColor);
 }
 
-sf::Color		IceABiome::getSkyNightColor()
+sf::Color		EndTimeLapseBiome::getSkyNightColor()
 {
 	return (m_skyNightColor);
 }
 
-sf::Color		IceABiome::getNightLightColor()
+sf::Color		EndTimeLapseBiome::getNightLightColor()
 {
 	return (m_nightLightColor);
 }
 
-sf::Color	IceABiome::getDayLightColor()
+sf::Color	EndTimeLapseBiome::getDayLightColor()
 {
 	return (m_dayLightColor);
 }
 
-sf::Color		IceABiome::getSunsetLightColor()
+sf::Color		EndTimeLapseBiome::getSunsetLightColor()
 {
 	return (m_sunsetLightColor);
 }
 
-float			IceABiome::getWind()
+float			EndTimeLapseBiome::getWind()
 {
 	return (m_wind);
 }
 
-void			IceABiome::setWind(float wind)
+void			EndTimeLapseBiome::setWind(float wind)
 {
 	m_wind = wind;
 }
 
-bool			IceABiome::canCreateRain()
+bool			EndTimeLapseBiome::canCreateRain()
 {
 	return (m_canCreateRain);
 }
 
-std::size_t		IceABiome::getRainDropPerSecond()
+std::size_t		EndTimeLapseBiome::getRainDropPerSecond()
 {
 	std::size_t value = randomRangeSizeT(m_rainDropPerSecond);
 	if (value <= m_rainDropPerSecondMax)
@@ -385,158 +382,158 @@ std::size_t		IceABiome::getRainDropPerSecond()
 		return (m_rainDropPerSecondMax);
 }
 
-sf::Time		IceABiome::getSunnyTime()
+sf::Time		EndTimeLapseBiome::getSunnyTime()
 {
 	return (randomRangeTime(m_sunnyTime));
 }
 
-sf::Time		IceABiome::getRainingTime()
+sf::Time		EndTimeLapseBiome::getRainingTime()
 {
 	return (randomRangeTime(m_rainingTime));
 }
 
-bool			IceABiome::canCreateThunder()
+bool			EndTimeLapseBiome::canCreateThunder()
 {
 	return (m_canCreateThunder);
 }
 
-float			IceABiome::getLightningSize()
+float			EndTimeLapseBiome::getLightningSize()
 {
 	return (randomRangeFloat(m_lightningSize));
 }
 
-bool			IceABiome::canCreateSnow()
+bool			EndTimeLapseBiome::canCreateSnow()
 {
 	return (m_canCreateSnow);
 }
 
-std::size_t		IceABiome::getRockCount()
+std::size_t		EndTimeLapseBiome::getRockCount()
 {
 	return (randomRangeSizeT(m_rockCount));
 }
 
-std::size_t		IceABiome::getTreeCount()
+std::size_t		EndTimeLapseBiome::getTreeCount()
 {
 	return (randomRangeSizeT(m_treeCount));
 }
 
-std::size_t		IceABiome::getMushroomCount()
+std::size_t		EndTimeLapseBiome::getMushroomCount()
 {
 	return (randomRangeSizeT(m_mushroomCount));
 }
 
-std::size_t		IceABiome::getCrystalCount()
+std::size_t		EndTimeLapseBiome::getCrystalCount()
 {
 	return (randomRangeSizeT(m_crystalCount));
 }
 
-std::size_t		IceABiome::getStarCount()
+std::size_t		EndTimeLapseBiome::getStarCount()
 {
 	return (randomRangeSizeT(m_starCount));
 }
 
-std::size_t		IceABiome::getSunCount()
+std::size_t		EndTimeLapseBiome::getSunCount()
 {
 	return (randomRangeSizeT(m_sunCount));
 }
 
-std::size_t		IceABiome::getMoonCount()
+std::size_t		EndTimeLapseBiome::getMoonCount()
 {
 	return (randomRangeSizeT(m_moonCount));
 }
 
-std::size_t		IceABiome::getRainbowCount()
+std::size_t		EndTimeLapseBiome::getRainbowCount()
 {
 	return (randomRangeSizeT(m_rainbowCount));
 }
 
-std::size_t		IceABiome::getCloudCount()
+std::size_t		EndTimeLapseBiome::getCloudCount()
 {
 	return (randomRangeSizeT(m_cloudCount));
 }
 
-std::size_t		IceABiome::getGroundRockCount()
+std::size_t		EndTimeLapseBiome::getGroundRockCount()
 {
 	return (randomRangeSizeT(m_groundRockCount));
 }
 
-std::size_t	IceABiome::getTreeDepth()
+std::size_t	EndTimeLapseBiome::getTreeDepth()
 {
 	return (randomRangeSizeT(m_treeDepth));
 }
 
-sf::Vector2f	IceABiome::getTreeSize()
+sf::Vector2f	EndTimeLapseBiome::getTreeSize()
 {
 	return (randomRangeVector2f(m_treeSize));
 }
 
-sf::Time		IceABiome::getTreeLifeTime()
+sf::Time		EndTimeLapseBiome::getTreeLifeTime()
 {
 	return (randomRangeTime(m_treeLifeTime));
 }
 
-sf::Color		IceABiome::getTreeColor()
+sf::Color		EndTimeLapseBiome::getTreeColor()
 {
 	return (randomColor(m_treeColor));
 }
 
-float			IceABiome::getTreeAngle()
+float			EndTimeLapseBiome::getTreeAngle()
 {
 	return (randomRangeFloat(m_treeAngle));
 }
 
-bool			IceABiome::getTreeIsMoving()
+bool			EndTimeLapseBiome::getTreeIsMoving()
 {
 	return (m_treeIsMoving);
 }
 
-float			IceABiome::getTreeBeatMouvement()
+float			EndTimeLapseBiome::getTreeBeatMouvement()
 {
 	return (m_treeBeatMouvement);
 }
 
-bool			IceABiome::canCreateTree()
+bool			EndTimeLapseBiome::canCreateTree()
 {
 	return (m_canCreateTree);
 }
 
-bool			IceABiome::canCreateLeaf()
+bool			EndTimeLapseBiome::canCreateLeaf()
 {
 	return (m_canCreateLeaf);
 }
 
-sf::Vector2f	IceABiome::getLeafSize()
+sf::Vector2f	EndTimeLapseBiome::getLeafSize()
 {
 	float tmp = randomFloat(m_leafSize.min.x, m_leafSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		IceABiome::getLeafColor()
+sf::Color		EndTimeLapseBiome::getLeafColor()
 {
 	return (randomColor(m_leafColor));
 }
 
-std::size_t		IceABiome::getTreePositionX()
+std::size_t		EndTimeLapseBiome::getTreePositionX()
 {
 	return (m_treePos[m_indexTreePos++]);
 }
 
-sf::Vector2f	IceABiome::getCrystalSize()
+sf::Vector2f	EndTimeLapseBiome::getCrystalSize()
 {
 	return (randomRangeVector2f(m_crystalSize));
 }
 
-std::size_t		IceABiome::getCrystalPartCount()
+std::size_t		EndTimeLapseBiome::getCrystalPartCount()
 {
 	return (randomRangeSizeT(m_crystalPartCount));
 }
 
-sf::Color		IceABiome::getCrystalColor()
+sf::Color		EndTimeLapseBiome::getCrystalColor()
 {
 	return (randomColor(m_crystalColor));
 }
 
-int				IceABiome::getCrystalPosX()
+int				EndTimeLapseBiome::getCrystalPosX()
 {
 	int x = static_cast<int>(m_generator.randomPiecewise(m_mapSize.x));
 	x += m_interestPointPosX - m_mapSize.x / 2.f;
@@ -547,67 +544,67 @@ int				IceABiome::getCrystalPosX()
 	return (static_cast<int>(x));
 }
 
-bool			IceABiome::canCreateCrystal()
+bool			EndTimeLapseBiome::canCreateCrystal()
 {
 	return (m_canCreateCrystal);
 }
 
-sf::Vector2f	IceABiome::getShineEffectSize()
+sf::Vector2f	EndTimeLapseBiome::getShineEffectSize()
 {
 	return (randomRangeVector2f(m_shineEffectSize));
 }
 
-sf::Color		IceABiome::getShineEffectColor()
+sf::Color		EndTimeLapseBiome::getShineEffectColor()
 {
 	return (randomColor(m_shineEffectColor));
 }
 
-float			IceABiome::getShineEffectRotateAngle()
+float			EndTimeLapseBiome::getShineEffectRotateAngle()
 {
 	return (randomRangeFloat(m_shineEffectRotateAngle));
 }
 
-bool			IceABiome::canCreateShineEffect()
+bool			EndTimeLapseBiome::canCreateShineEffect()
 {
 	return (m_canCreateShineEffect);
 }
 
-sf::Vector2f	IceABiome::getRockSize()
+sf::Vector2f	EndTimeLapseBiome::getRockSize()
 {
 	return (randomRangeVector2f(m_rockSize));
 }
 
-std::size_t		IceABiome::getRockPartCount()
+std::size_t		EndTimeLapseBiome::getRockPartCount()
 {
 	return (randomRangeSizeT(m_rockPartCount));
 }
 
-sf::Color		IceABiome::getRockColor()
+sf::Color		EndTimeLapseBiome::getRockColor()
 {
 	return (randomColor(m_rockColor));
 }
 
-float	IceABiome::getGrassSizeY()
+float	EndTimeLapseBiome::getGrassSizeY()
 {
 	return randomRangeFloat(m_grassSizeY);
 }
 
-float	IceABiome::getGrassSizeX()
+float	EndTimeLapseBiome::getGrassSizeX()
 {
 	return randomRangeFloat(m_grassSizeX);
 }
 
-sf::Color	IceABiome::getGrassColor()
+sf::Color	EndTimeLapseBiome::getGrassColor()
 {
 	return randomColor(m_grassColor);
 }
 
-std::size_t	IceABiome::getGrassCount()
+std::size_t	EndTimeLapseBiome::getGrassCount()
 {
 	return m_grassCount;
 }
 
-std::size_t	IceABiome::getGrassPosX()
+std::size_t	EndTimeLapseBiome::getGrassPosX()
 {
 	m_grassIndex++;
 	if (m_grassIndex >= m_mapSize.x)
@@ -615,205 +612,205 @@ std::size_t	IceABiome::getGrassPosX()
 	return m_grassIndex;
 }
 
-bool			IceABiome::canCreateRock()
+bool			EndTimeLapseBiome::canCreateRock()
 {
 	return (m_canCreateRock);
 }
 
-sf::Vector2f	IceABiome::getMushroomSize()
+sf::Vector2f	EndTimeLapseBiome::getMushroomSize()
 {
 	return (randomRangeVector2f(m_mushroomSize));
 }
 
-sf::Color		IceABiome::getMushroomColor()
+sf::Color		EndTimeLapseBiome::getMushroomColor()
 {
 	return (randomColor(m_mushroomColor));
 }
 
-sf::Time		IceABiome::getMushroomLifeTime()
+sf::Time		EndTimeLapseBiome::getMushroomLifeTime()
 {
 	return (randomRangeTime(m_mushroomLifeTime));
 }
 
-bool			IceABiome::canCreateMushroom()
+bool			EndTimeLapseBiome::canCreateMushroom()
 {
 	return (m_canCreateMushroom);
 }
 
-sf::Vector2f	IceABiome::getCloudSize()
+sf::Vector2f	EndTimeLapseBiome::getCloudSize()
 {
 	return (randomRangeVector2f(m_cloudSize));
 }
 
-std::size_t		IceABiome::getCloudPartCount()
+std::size_t		EndTimeLapseBiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
 }
 
-float	IceABiome::getCloudMaxY()
+float	EndTimeLapseBiome::getCloudMaxY()
 {
 	return (m_cloudMaxY);
 }
 
-float	IceABiome::getCloudMinY()
+float	EndTimeLapseBiome::getCloudMinY()
 {
 	return (m_cloudMinY);
 }
 
-sf::Vector2f	IceABiome::getCloudSpeed()
+sf::Vector2f	EndTimeLapseBiome::getCloudSpeed()
 {
 	return randomRangeVector2f(m_cloudSpeed);
 }
 
-sf::Time		IceABiome::getCloudLifeTime()
+sf::Time		EndTimeLapseBiome::getCloudLifeTime()
 {
 	return (randomRangeTime(m_cloudLifeTime));
 }
 
-sf::Color		IceABiome::getCloudColor()
+sf::Color		EndTimeLapseBiome::getCloudColor()
 {
 	return (randomColor(m_cloudColor));
 }
 
-bool			IceABiome::canCreateCloud()
+bool			EndTimeLapseBiome::canCreateCloud()
 {
 	return (m_canCreateCloud);
 }
 
-sf::Vector2f	IceABiome::getStarSize()
+sf::Vector2f	EndTimeLapseBiome::getStarSize()
 {
 	return (randomRangeVector2f(m_starSize));
 }
 
-sf::Color		IceABiome::getStarColor()
+sf::Color		EndTimeLapseBiome::getStarColor()
 {
 	return (randomColor(m_starColor));
 }
 
-sf::Time		IceABiome::getStarLifeTime()
+sf::Time		EndTimeLapseBiome::getStarLifeTime()
 {
 	return (randomRangeTime(m_starLifeTime));
 }
 
-bool			IceABiome::canCreateStar()
+bool			EndTimeLapseBiome::canCreateStar()
 {
 	return (m_canCreateStar);
 }
 
-sf::Vector2f 	IceABiome::getSunSize()
+sf::Vector2f 	EndTimeLapseBiome::getSunSize()
 {
 	float tmp = randomFloat(m_sunSize.min.x, m_sunSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-std::size_t		IceABiome::getSunPartCount()
+std::size_t		EndTimeLapseBiome::getSunPartCount()
 {
 	return (randomRangeSizeT(m_sunPartCount));
 }
 
-sf::Color		IceABiome::getSunColor()
+sf::Color		EndTimeLapseBiome::getSunColor()
 {
 	return (randomColor(m_sunColor));
 }
 
-bool			IceABiome::canCreateSun()
+bool			EndTimeLapseBiome::canCreateSun()
 {
 	return (m_canCreateSun);
 }
 
-sf::Vector2f 	IceABiome::getMoonSize()
+sf::Vector2f 	EndTimeLapseBiome::getMoonSize()
 {
 	float tmp = randomFloat(m_moonSize.min.x, m_moonSize.max.x);
 	return (sf::Vector2f(tmp, tmp));
 }
 
-sf::Color		IceABiome::getMoonColor()
+sf::Color		EndTimeLapseBiome::getMoonColor()
 {
 	return (randomColor(m_moonColor));
 }
 
-sf::Time		IceABiome::getMoonLifeTime()
+sf::Time		EndTimeLapseBiome::getMoonLifeTime()
 {
 	return (randomRangeTime(m_moonLifeTime));
 }
 
-bool			IceABiome::canCreateMoon()
+bool			EndTimeLapseBiome::canCreateMoon()
 {
 	return (m_canCreateMoon);
 }
 
-float			IceABiome::getRainbowThickness()
+float			EndTimeLapseBiome::getRainbowThickness()
 {
 	return (randomRangeFloat(m_rainbowThickness));
 }
 
-float			IceABiome::getRainbowPartSize()
+float			EndTimeLapseBiome::getRainbowPartSize()
 {
 	return (randomRangeFloat(m_rainbowPartSize));
 }
 
-std::size_t		IceABiome::getRainbowLoopCount()
+std::size_t		EndTimeLapseBiome::getRainbowLoopCount()
 {
 	return (randomRangeSizeT(m_rainbowLoopCount));
 }
 
-sf::Time		IceABiome::getRainbowLifeTime()
+sf::Time		EndTimeLapseBiome::getRainbowLifeTime()
 {
 	return (randomRangeTime(m_rainbowLifeTime));
 }
 
-sf::Time		IceABiome::getRainbowIntervalTime()
+sf::Time		EndTimeLapseBiome::getRainbowIntervalTime()
 {
 	return (randomRangeTime(m_rainbowIntervalTime));
 }
 
-bool			IceABiome::canCreateRainbow()
+bool			EndTimeLapseBiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
 }
 
-bool	IceABiome::canCreateGrass()
+bool	EndTimeLapseBiome::canCreateGrass()
 {
 	return m_canCreateGrass;
 }
 
-float	IceABiome::getWaterPersistence() const
+float	EndTimeLapseBiome::getWaterPersistence() const
 {
 	return m_waterPersistence;
 }
 
-ABiome::Type	IceABiome::getType() const
+ABiome::Type	EndTimeLapseBiome::getType() const
 {
 	return m_type;
 }
 
 
-float			IceABiome::randomFloat(float min, float max)
+float			EndTimeLapseBiome::randomFloat(float min, float max)
 {
 	return (m_generator.randomFloat(min, max));
 }
 
-int				IceABiome::randomInt(int min, int max)
+int				EndTimeLapseBiome::randomInt(int min, int max)
 {
 	return (m_generator.randomInt(min, max));
 }
 
-bool			IceABiome::randomBool(float percent)
+bool			EndTimeLapseBiome::randomBool(float percent)
 {
 	return (m_generator.randomBool(percent));
 }
 
-float			IceABiome::randomRangeFloat(Range<float> const & range)
+float			EndTimeLapseBiome::randomRangeFloat(Range<float> const & range)
 {
 	return (randomFloat(range.min, range.max));
 }
 
-int				IceABiome::randomRangeSizeT(Range<std::size_t> const & range)
+int				EndTimeLapseBiome::randomRangeSizeT(Range<std::size_t> const & range)
 {
 	return (randomInt(range.min, range.max));
 }
 
-sf::Vector2f	IceABiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
+sf::Vector2f	EndTimeLapseBiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 {
 	sf::Vector2f tmp;
 	tmp.x = randomFloat(range.min.x, range.max.x);
@@ -821,13 +818,13 @@ sf::Vector2f	IceABiome::randomRangeVector2f(Range<sf::Vector2f> const & range)
 	return tmp;
 }
 
-sf::Time		IceABiome::randomRangeTime(Range<sf::Time> const & range)
+sf::Time		EndTimeLapseBiome::randomRangeTime(Range<sf::Time> const & range)
 {
 
 	return (sf::microseconds(randomInt(range.min.asMicroseconds(), range.max.asMicroseconds())));
 }
 
-sf::Color		IceABiome::randomColor(sf::Color const & color)
+sf::Color		EndTimeLapseBiome::randomColor(sf::Color const & color)
 {
 	HSL tmp = TurnToHSL(color);
 	tmp.Hue += m_generator.randomFloat(-10.f, 10.f);

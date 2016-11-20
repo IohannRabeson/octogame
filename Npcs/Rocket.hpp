@@ -3,6 +3,8 @@
 
 # include "ANpc.hpp"
 # include "SmokeSystem.hpp"
+# include "CharacterOcto.hpp"
+# include <AudioManager.hpp>
 
 class CircleShape;
 class CharacterOcto;
@@ -21,7 +23,9 @@ public:
 	virtual void update(sf::Time frametime);
 	virtual void setPosition(sf::Vector2f const & position);
 	virtual void addMapOffset(float x, float y);
+	virtual void onTheFloor(void);
 	virtual void collideOctoEvent(CharacterOcto * octo);
+	virtual void collideOcto(CharacterOcto * octo);
 	virtual void drawFront(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
@@ -34,15 +38,18 @@ private:
 	enum State
 	{
 		Waiting,
-		OctoEntering,
+		OctoEnteringX,
+		OctoEnteringY,
+		OctoEnteringCockpit,
 		StartSmoke
 	};
 
 	sf::Shader &					m_shader;
-	CircleShape *					m_enterRocketShape;
 	State							m_state;
 	std::size_t						m_smokesCount;
 	std::unique_ptr<SmokeSystem[]>	m_smokes;
+	std::vector<sf::Vector2f>		m_smokesPosition1;
+	std::vector<sf::Vector2f>		m_smokesPosition2;
 	sf::Time						m_timerBefore;
 	sf::Time						m_timerBeforeMax;
 	sf::Time						m_timerFirstBlast;
@@ -54,8 +61,9 @@ private:
 	sf::Vector2f					m_octoPosition;
 	sf::Vector2f					m_lastPosition;
 	sf::Vector2f					m_lastPositionDoor;
-	bool							m_sound;
+	std::shared_ptr<sf::Sound>		m_sound;
 	bool							m_stopCameraMovement;
+	CharacterOcto *					m_octo;
 };
 
 #endif

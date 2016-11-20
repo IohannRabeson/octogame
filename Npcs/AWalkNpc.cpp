@@ -21,30 +21,44 @@ void AWalkNpc::setupMachine(void)
 	StatePtr					walkLeftState;
 	StatePtr					walkRightState;
 	StatePtr					special1State;
+	StatePtr					special2State;
 
 	idleState = std::make_shared<State>("0", getIdleAnimation(), getSprite());
 	walkLeftState = std::make_shared<State>("1", getWalkAnimation(), getSprite());
 	walkRightState = std::make_shared<State>("2", getWalkAnimation(), getSprite());
 	special1State = std::make_shared<State>("3", getSpecial1Animation(), getSprite());
+	special2State = std::make_shared<State>("4", getSpecial2Animation(), getSprite());
 
 	machine.setStart(idleState);
 	machine.addTransition(Idle, idleState, idleState);
 	machine.addTransition(Idle, walkLeftState, idleState);
 	machine.addTransition(Idle, walkRightState, idleState);
+	machine.addTransition(Idle, special1State, idleState);
+	machine.addTransition(Idle, special2State, idleState);
 
 	machine.addTransition(Left, idleState, walkLeftState);
 	machine.addTransition(Left, walkLeftState, walkLeftState);
 	machine.addTransition(Left, walkRightState, walkLeftState);
 	machine.addTransition(Left, special1State, walkLeftState);
+	machine.addTransition(Left, special2State, walkLeftState);
 
 	machine.addTransition(Right, idleState, walkRightState);
 	machine.addTransition(Right, walkLeftState, walkRightState);
 	machine.addTransition(Right, walkRightState, walkRightState);
 	machine.addTransition(Right, special1State, walkRightState);
+	machine.addTransition(Right, special2State, walkRightState);
 
 	machine.addTransition(Special1, idleState, special1State);
 	machine.addTransition(Special1, walkLeftState, special1State);
 	machine.addTransition(Special1, walkRightState, special1State);
+	machine.addTransition(Special1, special1State, special1State);
+	machine.addTransition(Special1, special2State, special1State);
+
+	machine.addTransition(Special2, idleState, special2State);
+	machine.addTransition(Special2, walkLeftState, special2State);
+	machine.addTransition(Special2, walkRightState, special2State);
+	machine.addTransition(Special2, special1State, special2State);
+	machine.addTransition(Special2, special2State, special2State);
 
 	setMachine(machine);
 	setNextEvent(Idle);
@@ -114,6 +128,22 @@ void AWalkNpc::updatePhysics(void)
 	getBox()->setVelocity(velocity);
 }
 
+void AWalkNpc::reverseWalking(bool reverse)
+{
+	octo::CharacterSprite & sprite = getSprite();
+
+	if (sprite.getCurrentEvent() == Left && reverse)
+	{
+		reverseSprite(false);
+		sprite.setNextEvent(Right);
+	}
+	else if (sprite.getCurrentEvent() == Right && !reverse)
+	{
+		reverseSprite(true);
+		sprite.setNextEvent(Left);
+	}
+}
+
 float AWalkNpc::getVelocity(void) const
 {
 	return m_velocity;
@@ -123,4 +153,3 @@ void AWalkNpc::setVelocity(float velocity)
 {
 	m_velocity = velocity;
 }
-

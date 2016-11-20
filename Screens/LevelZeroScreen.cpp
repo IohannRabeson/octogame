@@ -194,7 +194,15 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 		{
 			m_credit->update(frameTime);
 			if (m_credit->isFinished())
-				octo::Application::getStateManager().change("menu");
+			{
+				Progress & progress = Progress::getInstance();
+
+				progress.setCurrentDestination(Level::Portal);
+				progress.setNextDestination(Level::Portal);
+				progress.setLastDestination(Level::Portal);
+				progress.save();
+				octo::Application::getStateManager().change("game");
+			}
 			break;
 		}
 		default:

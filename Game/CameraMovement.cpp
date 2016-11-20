@@ -36,7 +36,14 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 {
 	octo::Camera & camera = octo::Application::getCamera();
 
-	if (octo.isInRocketEnd())
+	std::pair<float, float> const & look = octo.look();
+	if (look.first != 0.f || look.second != 0.f)
+	{
+		m_behavior = Behavior::FollowOcto;
+		m_horizontalTransition = look.first;
+		m_verticalTransition = look.second;
+	}
+	else if (octo.isInRocketEnd())
 		m_behavior = Behavior::FollowOcto;
 	else if (octo.isRaising())
 	{
@@ -55,18 +62,14 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 			m_behavior = Behavior::FollowOcto;
 	}
 	if (octo.isZooming())
-	{
 		m_zoomState = ZoomState::ZoomIn;
-	}
 	if (octo.isMeetingNpc())
 	{
 		octo.meetNpc(false);
 		m_zoomState = ZoomState::ZoomIn;
 	}
 	if (octo.isStopFollowCamera())
-	{
 		m_behavior = StopFollowOcto;
-	}
 
 	float goalTop = octo.getPosition().y - camera.getRectangle().height / 4.f;
 	float goalBot = octo.getPosition().y + camera.getRectangle().height / 3.f;
@@ -77,7 +80,10 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	{
 		case Behavior::FollowOcto:
 		{
-			m_speed = 2.5f;
+			if (octo.getSpeedCamera() != 0.f)
+				m_speed = octo.getSpeedCamera();
+			else
+				m_speed = 2.5f;
 			m_verticalTransition -= 0.3f * frametime.asSeconds();
 			if (m_verticalTransition < 0.f)
 				m_verticalTransition = 0.f;
@@ -159,7 +165,7 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		}
 		case Behavior::StopFollowOcto:
 		{
-			m_speed = 0.f;
+			m_speed = std::max(m_speed - frametime.asSeconds() * 20.f, 0.f);
 			break;
 		}
 		default:

@@ -28,8 +28,8 @@ GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 	targets.push_back(sf::Vector2f(167.f, 330.f));
 	targets.push_back(sf::Vector2f(172.f, 355.f));
 	targets.push_back(sf::Vector2f(147.f, 358.f));
-	setTargets(targets, 1.f);
-	setLaserColor(sf::Color(247, 238, 80));
+	setTargets(targets, 0.6f);
+	setLaserColor(sf::Color::Red);
 	NanoRobot::setEffectEnable(false);
 }
 
@@ -131,7 +131,7 @@ void GroundTransformNanoRobot::updateInfo(void)
 			TextManager & textManager = TextManager::getInstance();
 			std::wstring infoText = textManager.getTexts("nano_end_game")[0];
 			setInfoText(infoText);
-			popUpInfo();
+			popUpInfo(true);
 		}
 		else if (progress.isGameFinished())
 		{

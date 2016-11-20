@@ -33,7 +33,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 		m_shader.setParameter("center_color", sf::Color::White);
 	else
 	{
-		if (progress.isGameFinished() && (destination != Level::Red && destination != Level::Blue && destination != Level::Random && destination != Level::Rewards))
+		if (progress.isGameFinished() && (destination != Level::Red && destination != Level::Blue && destination != Level::Random && destination != Level::Rewards && destination != Level::EndTimeLapse))
 		{
 			m_destination = Level::Portal;
 			m_shader.setParameter("center_color", centerColor);
@@ -356,6 +356,8 @@ void Portal::updateSound(void)
 bool Portal::isLock(void)
 {
 	Progress & progress = Progress::getInstance();
+	if (progress.getCurrentDestination() == Level::EndTimeLapse)
+		return true;
 	if (progress.isMetPortal(m_destination) && m_destination == Level::Random)
 		return true;
 	if (progress.getCurrentDestination() == Level::Portal && progress.isMetRandom(m_destination))

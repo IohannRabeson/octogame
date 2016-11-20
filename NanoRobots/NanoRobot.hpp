@@ -33,9 +33,11 @@ public:
 
 	virtual ~NanoRobot(void);
 
+	std::string const & getId(void);
 	void setTarget(sf::Vector2f const & target);
 	void setPosition(sf::Vector2f const & position);
 	void setState(NanoRobot::State state);
+	void setEffectState(NanoEffect::State state);
 	void setTextIndex(std::size_t index);
 	sf::Vector2f const & getPosition(void) const;
 	sf::Vector2f const & getTargetPosition(void);
@@ -52,13 +54,13 @@ public:
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
+	void popUpInfo(bool popUp);
 
 protected:
 	NanoRobot(sf::Vector2f const & position, std::string const & id, std::size_t nbFrames, int seed, sf::Vector2f const & offsetLaser, InputListener::OctoKeys key, float multiplier = 0.f);
 
 	std::unique_ptr<BubbleText> const & getCurrentText(void) const { return m_texts[m_textIndex]; }
 	void setInfoText(std::wstring const & infoText) { m_infoText = infoText; }
-	void popUpInfo(void);
 	void updatePopUpInfo(sf::Time frameTime);
 
 	void setup(AGameObjectBase * gameObject);

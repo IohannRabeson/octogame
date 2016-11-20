@@ -27,6 +27,8 @@
 #include "RedBiome.hpp"
 #include "BlueBiome.hpp"
 #include "PortalBiome.hpp"
+#include "EndRocketBiome.hpp"
+#include "EndTimeLapseBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
 
@@ -161,12 +163,14 @@ RandomGameBiome::RandomGameBiome() :
 	m_biomeManager.registerBiome<WaterCBiome>(Level::WaterC);
 	m_biomeManager.registerBiome<WaterDBiome>(Level::WaterD);
 	m_biomeManager.registerBiome<FinalBiome>(Level::Final);
-	m_biomeManager.registerBiome<BlueBiome>(Level::Blue);
 	m_biomeManager.registerBiome<RedBiome>(Level::Red);
+	m_biomeManager.registerBiome<BlueBiome>(Level::Blue);
 	m_biomeManager.registerBiome<PortalBiome>(Level::Portal);
 
-	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
+	m_biomeManager.registerBiome<EndRocketBiome>(Level::EndRocket);
+	m_biomeManager.registerBiome<EndTimeLapseBiome>(Level::EndTimeLapse);
 	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
+	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 	m_biomeManager.registerBiome<RandomGameBiome>(Level::RandomGame);
 
 	setBiome(Progress::getInstance().getNextDestination());
