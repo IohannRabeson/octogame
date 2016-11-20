@@ -40,25 +40,25 @@ void AWalkNpc::setupMachine(void)
 	machine.addTransition(Left, walkLeftState, walkLeftState);
 	machine.addTransition(Left, walkRightState, walkLeftState);
 	machine.addTransition(Left, special1State, walkLeftState);
-	machine.addTransition(Left, special2State, idleState);
+	machine.addTransition(Left, special2State, walkLeftState);
 
 	machine.addTransition(Right, idleState, walkRightState);
 	machine.addTransition(Right, walkLeftState, walkRightState);
 	machine.addTransition(Right, walkRightState, walkRightState);
 	machine.addTransition(Right, special1State, walkRightState);
-	machine.addTransition(Right, special2State, idleState);
+	machine.addTransition(Right, special2State, walkRightState);
 
 	machine.addTransition(Special1, idleState, special1State);
 	machine.addTransition(Special1, walkLeftState, special1State);
 	machine.addTransition(Special1, walkRightState, special1State);
-	machine.addTransition(Special1, special1State, walkRightState);
-	machine.addTransition(Special1, special2State, idleState);
+	machine.addTransition(Special1, special1State, special1State);
+	machine.addTransition(Special1, special2State, special1State);
 
-	machine.addTransition(Special2, idleState, special1State);
-	machine.addTransition(Special2, walkLeftState, special1State);
-	machine.addTransition(Special2, walkRightState, special1State);
-	machine.addTransition(Special2, special1State, walkRightState);
-	machine.addTransition(Special2, special2State, idleState);
+	machine.addTransition(Special2, idleState, special2State);
+	machine.addTransition(Special2, walkLeftState, special2State);
+	machine.addTransition(Special2, walkRightState, special2State);
+	machine.addTransition(Special2, special1State, special2State);
+	machine.addTransition(Special2, special2State, special2State);
 
 	setMachine(machine);
 	setNextEvent(Idle);

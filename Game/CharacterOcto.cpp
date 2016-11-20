@@ -148,6 +148,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		enableCutscene(true, false);
 		m_isAI = true;
 	}
+	else if (m_level == Level::EndTimeLapse)
+		enableCutscene(true, false);
 
 	initAI();
 	initAIEnd();
@@ -999,7 +1001,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 				m_enableCutscene = false;
 		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
-		if (m_level != Level::EndRocket)
+		if (m_level != Level::EndRocket || m_level == Level::EndTimeLapse)
 			MusicManager::getInstance().startEvent();
 	}
 	else
@@ -2302,7 +2304,7 @@ void	CharacterOcto::initAI(void)
 	if (Progress::getInstance().isMenu() || m_isAI)
 	{
 		if (Progress::getInstance().isMenu())
-		InputListener::removeInputListener();
+			InputListener::removeInputListener();
 	
 		m_randomJumpTimer = sf::seconds(m_generator.randomFloat(1.f, 30.f));
 		m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
@@ -2334,11 +2336,12 @@ void	CharacterOcto::initAIEnd(void)
 		m_pixelSecondWalk = 200.f;
 		m_repairShip = true;
 		enableCutscene(true, false);
+		m_cutsceneTimerMax = sf::seconds(0.1f);
 		m_speakNanoTimer = sf::seconds(4.f);
 		m_lookLeftTimer = sf::seconds(2.f);
 		m_speakCedricTimer = sf::seconds(7.f);
 		m_goLeftTimer = sf::seconds(7.5f);
-		m_stopRightTimer = sf::seconds(1.f);
+		m_stopRightTimer = sf::seconds(2.f);
 		m_inRocketTimer = sf::seconds(4.f);
 		m_rocketTakeOffTimer = sf::seconds(6.f);
 		m_speedCamera = 0.5f;

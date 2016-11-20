@@ -221,8 +221,12 @@ void Rocket::update(sf::Time frametime)
 					if (m_timerSecondBlast < m_timerSecondBlastMax)
 					{
 						m_timerSecondBlast += frametime;
-						if (m_timerSecondBlast > m_timerSecondBlastMax - m_timerSecondBlastMax / 10.f)
-							octo::Application::getStateManager().change("rocket_end");
+						if (m_timerSecondBlast > m_timerSecondBlastMax - m_timerSecondBlastMax / 2.f)
+						{
+							octo::StateManager & states = octo::Application::getStateManager();
+							states.change("rocket_end");
+							states.setTransitionDuration(sf::seconds(4.f), sf::seconds(3.0f));
+						}
 					}
 					else
 						m_timerSecondBlast = m_timerSecondBlastMax;

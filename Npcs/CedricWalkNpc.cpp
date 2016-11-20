@@ -1,4 +1,6 @@
 #include "CedricWalkNpc.hpp"
+#include "Progress.hpp"
+#include "RectangleShape.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <AudioManager.hpp>
@@ -7,8 +9,8 @@ CedricWalkNpc::CedricWalkNpc(void) :
 	AWalkNpc(CEDRIC_WALK_OSS),
 	m_state(WalkToOcto),
 	m_timerSpeak(sf::seconds(4.f)),
-	m_timerWalkToRocket(sf::seconds(5.6f)),
-	m_drinkSoundTimer(sf::seconds(1.8f))
+	m_timerWalkToRocket(sf::seconds(5.2f)),
+	m_drinkSoundTimer(sf::seconds(1.0f))
 {
 	setType(GameObjectType::CedricWalkNpc);
 	setSize(sf::Vector2f(34.f, 164.f));
@@ -46,10 +48,6 @@ void CedricWalkNpc::setup(void)
 	getWalkAnimation().setLoop(octo::LoopMode::Loop);
 
 	getSpecial1Animation().setFrames({
-			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {6u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {10u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {11u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {12u, sf::FloatRect(), sf::Vector2f()}),
@@ -60,9 +58,9 @@ void CedricWalkNpc::setup(void)
 			Frame(sf::seconds(0.4f), {17u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {18u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {19u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {20u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {21u, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.4f), {22u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {45u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {46u, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.4f), {47u, sf::FloatRect(), sf::Vector2f()}),
 			});
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
@@ -90,6 +88,7 @@ void CedricWalkNpc::update(sf::Time frametime)
 {
 	ANpc::update(frametime);
 	octo::CharacterSprite & sprite = getSprite();
+	Progress const & progress = Progress::getInstance();
 
 	switch (m_state)
 	{
@@ -128,7 +127,6 @@ void CedricWalkNpc::update(sf::Time frametime)
 			if (m_timerWalkToRocket <= sf::Time::Zero)
 			{
 				setCurrentText(1u);
-				setDisplayText(true);
 				m_state = Stop;
 			}
 			break;
@@ -144,16 +142,48 @@ void CedricWalkNpc::update(sf::Time frametime)
 				octo::ResourceManager& resources = octo::Application::getResourceManager();
 				audio.playSound(resources.getSound(OCTO_SOUND_USE_POTION_OGG), 1.f, 1.f);
 				m_drinkSoundTimer = sf::seconds(1000.f);
-				setDisplayText(false);
 			}
 			if (sprite.isTerminated())
 			{
-				sprite.setNextEvent(Special2);
+				sprite.setNextEvent(Idle);
+				setDisplayText(true);
 				m_state = Wait;
 			}
 			break;
 		}
 		case Wait:
+		{
+			float dist = std::abs(progress.getOctoPos().x - getBox()->getRenderPosition().x);
+			bool isRight = true;
+			if (progress.getOctoPos().x - getBox()->getRenderPosition().x < 0.f)
+				isRight = false;
+
+			if (dist > 200.f)
+			{
+				if (isRight)
+				{
+					setCurrentText(2u);
+					setDisplayText(true);
+					reverseSprite(false);
+					if (sprite.getCurrentEvent() != Right)
+						sprite.setNextEvent(Right);
+				}
+				else
+				{
+					setDisplayText(false);
+					reverseSprite(true);
+					if (sprite.getCurrentEvent() != Left)
+						sprite.setNextEvent(Left);
+				}
+			}
+			else
+			{
+				if (sprite.getCurrentEvent() != Idle || sprite.isTerminated())
+					sprite.setNextEvent(Idle);
+			}
+
+			break;
+		}
 		default:
 			break;
 	}

@@ -22,7 +22,8 @@ private:
 		Speak,
 		WalkToRocket,
 		Stop,
-		Wait
+		Wait,
+		FollowOcto
 	};
 
 	State		m_state;

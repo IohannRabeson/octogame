@@ -39,7 +39,7 @@ MusicManager::MusicManager() :
 	musicKey[7] = MUSIC_SOUTERRAIN_LUGUBRE_OGG;
 	musicKey[8] = MUSIC_MENU_OPUS_I_OGG;
 
-	m_musicLevel.resize(22);
+	m_musicLevel.resize(23);
 	m_musicLevel[0] = AreaMusic(Level::IceA, MUSIC_SPACE_SHIP_OGG, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::IceB, MUSIC_ICE_A_B_OGG, sf::FloatRect());
 	m_musicLevel[2] = AreaMusic(Level::IceC, MUSIC_MENU_OPUS_III_OGG, sf::FloatRect());
@@ -63,6 +63,7 @@ MusicManager::MusicManager() :
 	m_musicLevel[19] = AreaMusic(Level::Random, OBJECT_FACTORY_OGG, sf::FloatRect());
 	m_musicLevel[20] = AreaMusic(Level::Portal, MUSIC_WHISTLE_OGG, sf::FloatRect());
 	m_musicLevel[21] = AreaMusic(Level::EndRocket, MUSIC_SPACE_SHIP_OGG, sf::FloatRect());
+	m_musicLevel[22] = AreaMusic(Level::EndTimeLapse, MUSIC_SPACE_SHIP_OGG, sf::FloatRect());
 
 
 	m_music.resize(9);

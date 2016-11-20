@@ -276,8 +276,7 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 	if (interestPoint.x != 0.f && interestPoint.y != 0.f
 		&& effectState != NanoEffect::State::Active
 		&& effectState != NanoEffect::State::Transfer
-		&& effectState != NanoEffect::State::FadeOut
-		&& progress.getCurrentDestination() == Level::EndRocket)
+		&& effectState != NanoEffect::State::FadeOut)
 	{
 		float dist = std::sqrt(std::pow(interestPoint.x - position.x, 2) + std::pow(interestPoint.y - position.y, 2));
 		if (dist < 800.f)
