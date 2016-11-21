@@ -55,6 +55,11 @@ public:
 	void											setNanoRobotCount(std::size_t count);
 	std::size_t										getNanoRobotCount() const { return m_data.nanoRobotCount; }
 
+	void											addSpirit();
+	void											removeSpirit() { m_data.spiritCount--; }
+	void											setSpiritCount(std::size_t count);
+	std::size_t										getSpiritCount() const { return m_data.spiritCount; }
+
 	void											setNextDestination(Level const & destination, bool hasTransition = true);
 	Level											getNextDestination(void) const;
 
@@ -181,16 +186,17 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, Level::IceA, 30u, 100u, 100u, true, true, Language::fr)
+			data(0u, 0u, Level::IceA, 30u, 100u, 100u, true, true, Language::fr)
 		{}
 
-		data(std::size_t nanoRobot, Level biome,
+		data(std::size_t nanoRobot, std::size_t spirit, Level biome,
 				std::size_t musicVol, std::size_t soundVol, std::size_t globalVol,
 				bool fullscreen, bool vsync, Language language) :
 			timePlayed(0.f),
 			isGameFinished(false),
 			validateChallenge(0u),
 			nanoRobotCount(nanoRobot),
+			spiritCount(spirit),
 			nextDestination(biome),
 			currentDestination(biome),
 			lastDestination(biome),
@@ -218,6 +224,7 @@ private:
 		sf::Vector2f			checkPointPosition;
 		std::size_t				validateChallenge;
 		std::size_t				nanoRobotCount;
+		std::size_t				spiritCount;
 		Level					nextDestination;
 		Level					currentDestination;
 		Level					lastDestination;

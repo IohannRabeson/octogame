@@ -95,6 +95,7 @@ public:
 	float					getWaterLevel(void) const;
 	void					setStartPosition(sf::Vector2f const & position);
 	void					giveNanoRobot(NanoRobot * robot, bool firstTime = false);
+	void					giveSpirit(NanoRobot * robot, bool firstTime = false);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime = false);
 	void					repairElevator(ElevatorStream & elevator);
 	void					collideSpaceShip(SpaceShip * spaceShip);
@@ -191,6 +192,7 @@ private:
 	CircleShape *								m_eventBox;
 	OctoEvent									m_octoEvent;
 	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
+	std::vector<std::unique_ptr<NanoRobot>>		m_spirits;
 	RepairNanoRobot *							m_repairNanoRobot;
 	Progress &									m_progress;
 

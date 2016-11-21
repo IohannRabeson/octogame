@@ -25,6 +25,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_timerRepair(sf::Time::Zero),
 	m_timerRepairMax(sf::seconds(4.f)),
 	m_timerUseMax(sf::seconds(2.f)),
+	m_timerStartSpiritMax(sf::seconds(2.f)),
 	m_isUsing(false),
 	m_repairIndex(0u),
 	m_startLastAnimation(false),
@@ -201,14 +202,14 @@ void NanoRobot::addMapOffset(float x, float y)
 	sf::Vector2f position = getPosition() + sf::Vector2f(x, y);
 	if (m_startLastAnimation)
 		return;
-	m_swarm.killAll();
-	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
-	/*
-	if (std::abs(position.x - m_swarm.getFirefly(0u).position.x) > 400.f)
+	if (std::abs(position.x - m_swarm.getFirefly(0u).position.x) > 3000.f)
+	{
+		m_swarm.killAll();
+		m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
 		m_isTravelling = true;
+	}
 	else
 		m_isTravelling = false;
-	*/
 	m_swarm.setTarget(position);
 }
 
@@ -220,7 +221,10 @@ void NanoRobot::transfertToOcto(bool inInit)
 	m_state = Speak;
 	if (!inInit)
 	{
-		Progress::getInstance().addNanoRobot();
+		if (m_id != FOREST_SPIRIT_1_OSS)
+			Progress::getInstance().addNanoRobot();
+		else
+			Progress::getInstance().addSpirit();
 		m_glowingEffect.onTransfer();
 	}
 	else
@@ -253,8 +257,12 @@ void NanoRobot::setPosition(sf::Vector2f const & position)
 
 	if (m_startLastAnimation)
 		return;
-	if (std::abs(pos.x - m_swarm.getFirefly(0u).position.x) > 400.f)
+	if (std::abs(position.x - m_swarm.getFirefly(0u).position.x) > 3000.f)
+	{
+		m_swarm.killAll();
+		m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
 		m_isTravelling = true;
+	}
 	else
 		m_isTravelling = false;
 	m_swarm.setTarget(pos);
@@ -313,6 +321,12 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 	{
 		pos.y -= 200.f;
 		m_positionBehavior->setRadius(100.f);
+	}
+
+	if (m_id == FOREST_SPIRIT_1_OSS)
+	{
+		m_swarm.getFirefly(0u).speed = octo::cosinusInterpolation(2.0f, 0.2f, m_timerStartSpirit / m_timerStartSpiritMax);
+		m_positionBehavior->setRadius(1000.f);
 	}
 
 	m_lastPos = position;
@@ -485,6 +499,7 @@ void NanoRobot::updateOctoEvent(std::string const & event, float valueEvent)
 
 void NanoRobot::update(sf::Time frametime)
 {
+	m_timerStartSpirit = std::min(m_timerStartSpirit + frametime, m_timerStartSpiritMax);
 	m_swarm.update(frametime);
 	m_sprite.update(frametime);
 
@@ -555,8 +570,11 @@ void NanoRobot::update(sf::Time frametime)
 	playSoundRepair(frametime);
 	m_particles.update(frametime);
 
-	m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
-	m_texts[m_textIndex]->update(frametime);
+	if (m_texts.size())
+	{
+		m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
+		m_texts[m_textIndex]->update(frametime);
+	}
 	m_infoBubble.setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
 	m_infoBubble.update(frametime);
 	updatePopUpInfo(frametime);
@@ -579,6 +597,11 @@ void NanoRobot::updateRepairShip(sf::Time frameTime)
 		setRepairShipPosition(sf::Vector2f(std::cos(speed), std::sin(speed)) * 150.f);
 		setTarget(m_laserConvergence);
 	}
+}
+
+octo::AnimatedSprite & NanoRobot::getSprite(void)
+{
+	return m_sprite;
 }
 
 void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const

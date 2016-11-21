@@ -134,6 +134,7 @@
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+#include "SpiritNanoRobot.hpp"
 
 #include <Interpolations.hpp>
 #include <Application.hpp>
@@ -837,6 +838,9 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			case GameObjectType::WaterNanoRobot:
 					if (!Progress::getInstance().canUseWaterJump())
 						m_nanoRobots.emplace_back(gameObject.first, 3, new WaterNanoRobot());
+				break;
+			case GameObjectType::SpiritNanoRobot:
+					m_nanoRobots.emplace_back(gameObject.first, 3, new SpiritNanoRobot(sf::Vector2f(0.f, 0.f)));
 				break;
 
 			//Object

@@ -53,6 +53,7 @@
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
+#include "SpiritNanoRobot.hpp"
 
 //Npc
 //Script AddNpc Include
@@ -434,6 +435,15 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<WaterNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
+				setSlowMotion();
+			}
+			break;
+		case GameObjectType::SpiritNanoRobot:
+			if (!gameObjectCast<SpiritNanoRobot>(gameObject)->isTravelling())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<SpiritNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveSpirit(ptr, true);
 				setSlowMotion();
 			}
 			break;

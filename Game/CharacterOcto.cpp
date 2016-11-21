@@ -19,6 +19,7 @@
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "RepairShipNanoRobot.hpp"
+#include "SpiritNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
@@ -124,6 +125,14 @@ CharacterOcto::CharacterOcto() :
 		robot->setState(NanoRobot::State::FollowOcto);
 	}
 
+	for (std::size_t i = 0u; i < m_progress.getSpiritCount(); i++)
+		giveSpirit(new SpiritNanoRobot(sf::Vector2f(0.f, 0.f)));
+	for (auto & spirit : m_spirits)
+	{
+		spirit->setPosition(getPosition());
+		spirit->transfertToOcto(true);
+		spirit->setState(NanoRobot::State::FollowOcto);
+	}
 }
 
 CharacterOcto::~CharacterOcto(void)
@@ -167,6 +176,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::JumpNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::DoubleJumpNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::RepairShipNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::SpiritNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::SlowFallNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::WaterNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
@@ -1101,6 +1111,8 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
 {
+	for (auto & spirit : m_spirits)
+		spirit->draw(render, states);
 	for (auto & robot : m_nanoRobots)
 		robot->draw(render, states);
 }
@@ -1154,6 +1166,15 @@ void	CharacterOcto::setStartPosition(sf::Vector2f const & position)
 void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 {
 	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
+	if (firstTime)
+		enableCutscene(true, true);
+}
+
+void	CharacterOcto::giveSpirit(NanoRobot * robot, bool firstTime)
+{
+	m_spirits.push_back(std::unique_ptr<NanoRobot>(robot));
 	if (robot->getEffectEnable())
 		startKonamiCode(firstTime);
 	if (firstTime)
@@ -1508,6 +1529,12 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 	{
 		robot->update(frameTime);
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
+	}
+
+	for (auto & spirit : m_spirits)
+	{
+		spirit->update(frameTime);
+		spirit->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
 
 	updateOctoEvent();
