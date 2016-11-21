@@ -106,6 +106,7 @@ npc_punk.oss=!Qu'est ce que tu fou là toi. Si tu vole ma fusée, je te mange to
 npc_mecanouille.oss=!On raconte qu'il y a un de ces portails étranges dans chaque monde… Mais je n'ai trouvé que celui-ci !
 snowman_3.oss=!Tu vois ce truc, c'est un checkpoint Bro !
 theo.oss=!J'ai vu ton dernier robot la haut.
+brayou.oss=Attention à la tête.
 scientistju.oss=0#Ah ! Le poulpe a fini par se réveiller.
 scientistlu.oss=1#Combien de temps a-t-il dormi ?
 scientistfran.oss=2#time_played

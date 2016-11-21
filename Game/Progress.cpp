@@ -197,6 +197,18 @@ void	Progress::setNanoRobotCount(std::size_t count)
 	save();
 }
 
+void	Progress::setSpiritCount(std::size_t count)
+{
+	m_data.spiritCount = count;
+	save();
+}
+
+void	Progress::addSpirit()
+{
+	m_data.spiritCount++;
+	save();
+}
+
 void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 {
 	if (!m_isMenu || destination != Level::Rewards)

@@ -25,6 +25,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_timerRepair(sf::Time::Zero),
 	m_timerRepairMax(sf::seconds(4.f)),
 	m_timerUseMax(sf::seconds(2.f)),
+	m_timerStartSpiritMax(sf::seconds(2.f)),
 	m_isUsing(false),
 	m_repairIndex(0u),
 	m_startLastAnimation(false),
@@ -62,7 +63,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(id));
 	m_sprite.setScale(0.6f, 0.6f);
-	m_glowingEffect.setNanoScale(sf::Vector2f(0.6f, 0.6f));
+	m_nanoEffect.setNanoScale(sf::Vector2f(0.6f, 0.6f));
 
 	octo::SpriteAnimation::FrameList	frames;
 	for (std::size_t i = 0u; i < nbFrames; i++)
@@ -201,14 +202,14 @@ void NanoRobot::addMapOffset(float x, float y)
 	sf::Vector2f position = getPosition() + sf::Vector2f(x, y);
 	if (m_startLastAnimation)
 		return;
-	m_swarm.killAll();
-	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
-	/*
-	if (std::abs(position.x - m_swarm.getFirefly(0u).position.x) > 400.f)
+	if (std::abs(position.x - m_swarm.getFirefly(0u).position.x) > 3000.f)
+	{
+		m_swarm.killAll();
+		m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
 		m_isTravelling = true;
+	}
 	else
 		m_isTravelling = false;
-	*/
 	m_swarm.setTarget(position);
 }
 
@@ -220,14 +221,22 @@ void NanoRobot::transfertToOcto(bool inInit)
 	m_state = Speak;
 	if (!inInit)
 	{
-		Progress::getInstance().addNanoRobot();
-		m_glowingEffect.onTransfer();
+		if (m_id != FOREST_SPIRIT_1_OSS)
+		{
+			Progress::getInstance().addNanoRobot();
+			m_nanoEffect.onTransfer();
+		}
+		else
+		{
+			Progress::getInstance().addSpirit();
+			m_nanoEffect.setState(NanoEffect::State::FadeOut);
+		}
 	}
 	else
 	{
 		m_swarm.killAll();
 		m_swarm.create(m_spawnMode, octo::Application::getCamera().getCenter(), sf::Color::Magenta, 8.f, 32.f, 2.f);
-		m_glowingEffect.setState(NanoEffect::State::Wait);
+		m_nanoEffect.setState(NanoEffect::State::Wait);
 	}
 	m_swarm.getFirefly(0u).speed = 1.f;
 }
@@ -239,7 +248,7 @@ void NanoRobot::setTarget(sf::Vector2f const & target)
 
 void NanoRobot::setEffectEnable(bool enable)
 {
-	m_glowingEffect.setEffectEnable(enable);
+	m_nanoEffect.setEffectEnable(enable);
 }
 
 void NanoRobot::setSwarmTarget(sf::Vector2f const & position)
@@ -253,8 +262,12 @@ void NanoRobot::setPosition(sf::Vector2f const & position)
 
 	if (m_startLastAnimation)
 		return;
-	if (std::abs(pos.x - m_swarm.getFirefly(0u).position.x) > 400.f)
+	if (std::abs(position.x - m_swarm.getFirefly(0u).position.x) > 3000.f)
+	{
+		m_swarm.killAll();
+		m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
 		m_isTravelling = true;
+	}
 	else
 		m_isTravelling = false;
 	m_swarm.setTarget(pos);
@@ -264,7 +277,7 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 {
 	Progress & progress = Progress::getInstance();
 	sf::Vector2f const & interestPoint = progress.getInterestPoint();
-	NanoEffect::State const & effectState = m_glowingEffect.getState();
+	NanoEffect::State const & effectState = m_nanoEffect.getState();
 	sf::Vector2f pos = position;
 	sf::Vector2f direction = interestPoint - position;
 
@@ -285,8 +298,8 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 		{
 			pos += direction;
 			m_positionBehavior->setRadius(dist / 2.f);
-			if (m_glowingEffect.getState() != NanoEffect::State::Random)
-				m_glowingEffect.setState(NanoEffect::State::Wait);
+			if (m_nanoEffect.getState() != NanoEffect::State::Random)
+				m_nanoEffect.setState(NanoEffect::State::Wait);
 			m_popUp = true;
 		}
 		else if (dist > 600.f)
@@ -295,8 +308,8 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 			{
 				pos.y -= 300.f;
 				m_positionBehavior->setRadius(300.f);
-				if (m_glowingEffect.getState() != NanoEffect::State::Random)
-					m_glowingEffect.setState(NanoEffect::State::None);
+				if (m_nanoEffect.getState() != NanoEffect::State::Random)
+					m_nanoEffect.setState(NanoEffect::State::None);
 				m_popUp = false;
 			}
 			else
@@ -315,6 +328,12 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 		m_positionBehavior->setRadius(100.f);
 	}
 
+	if (m_id == FOREST_SPIRIT_1_OSS)
+	{
+		m_swarm.getFirefly(0u).speed = octo::cosinusInterpolation(2.0f, 0.2f, m_timerStartSpirit / m_timerStartSpiritMax);
+		m_positionBehavior->setRadius(1000.f);
+	}
+
 	m_lastPos = position;
 	return pos;
 }
@@ -325,8 +344,8 @@ void NanoRobot::usingCapacity(sf::Time frametime)
 	{
 		m_timerUse = std::min(m_timerUse + frametime, m_timerUseMax);
 		m_positionBehavior->setRadius(0.f);
-		if (m_glowingEffect.getState() != NanoEffect::State::Transfer && m_glowingEffect.getState() != NanoEffect::State::FadeOut)
-			m_glowingEffect.setState(NanoEffect::State::Random);
+		if (m_nanoEffect.getState() != NanoEffect::State::Transfer && m_nanoEffect.getState() != NanoEffect::State::FadeOut)
+			m_nanoEffect.setState(NanoEffect::State::Random);
 	}
 	else
 	{
@@ -412,7 +431,7 @@ void NanoRobot::setState(NanoRobot::State state)
 
 void NanoRobot::setEffectState(NanoEffect::State state)
 {
-	m_glowingEffect.setState(state);
+	m_nanoEffect.setState(state);
 }
 
 void NanoRobot::setTextIndex(std::size_t index)
@@ -443,7 +462,7 @@ sf::Vector2f const & NanoRobot::getTargetPosition(void)
 
 bool NanoRobot::getEffectEnable(void) const
 {
-	return m_glowingEffect.getEffectEnable();
+	return m_nanoEffect.getEffectEnable();
 }
 
 NanoRobot::State NanoRobot::getState(void) const
@@ -485,13 +504,14 @@ void NanoRobot::updateOctoEvent(std::string const & event, float valueEvent)
 
 void NanoRobot::update(sf::Time frametime)
 {
+	m_timerStartSpirit = std::min(m_timerStartSpirit + frametime, m_timerStartSpiritMax);
 	m_swarm.update(frametime);
 	m_sprite.update(frametime);
 
 	sf::Vector2f const & pos = m_swarm.getFirefly(0u).position;
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() / 2.f);
 
-	m_glowingEffect.setTravelling(m_isTravelling);
+	m_nanoEffect.setTravelling(m_isTravelling);
 	if (m_box)
 	{
 		m_box->setPosition(pos.x - m_box->getRadius(), pos.y - m_box->getRadius());
@@ -555,14 +575,17 @@ void NanoRobot::update(sf::Time frametime)
 	playSoundRepair(frametime);
 	m_particles.update(frametime);
 
-	m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
-	m_texts[m_textIndex]->update(frametime);
+	if (m_texts.size())
+	{
+		m_texts[m_textIndex]->setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
+		m_texts[m_textIndex]->update(frametime);
+	}
 	m_infoBubble.setPosition(m_sprite.getPosition() - sf::Vector2f(0.f, 0.f));
 	m_infoBubble.update(frametime);
 	updatePopUpInfo(frametime);
-	m_glowingEffect.setPosition(pos);
-	m_sprite.setScale(m_glowingEffect.getNanoScale());
-	m_glowingEffect.update(frametime);
+	m_nanoEffect.setPosition(pos);
+	m_sprite.setScale(m_nanoEffect.getNanoScale());
+	m_nanoEffect.update(frametime);
 
 	updateRepairShip(frametime);
 
@@ -581,11 +604,21 @@ void NanoRobot::updateRepairShip(sf::Time frameTime)
 	}
 }
 
+octo::AnimatedSprite & NanoRobot::getSprite(void)
+{
+	return m_sprite;
+}
+
+NanoEffect & NanoRobot::getNanoEffect(void)
+{
+	return m_nanoEffect;
+}
+
 void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak || m_state == Repair || m_state == RepairShip || m_state == GoingToRepairShip)
 	{
-		render.draw(m_glowingEffect);
+		render.draw(m_nanoEffect);
 		render.draw(m_sprite);
 	}
 	if (m_state == Repair || m_state == RepairShip)

@@ -360,7 +360,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 	if (m_isCollide && m_animator.getState() != DecorAnimator::State::Die)
 	{
 		m_hasCollided = true;
-		if (m_isSpecialCloud && m_animator.getState() != DecorAnimator::State::Grow)
+		if (m_isSpecialCloud && m_animator.getState() == DecorAnimator::State::Life)
 			Progress::getInstance().setInCloud(true, m_id);
 		else
 			m_animator.die();

@@ -142,7 +142,7 @@ FinalBiome::FinalBiome() :
 	m_secondEndColor = getLeafColor();
 
 	// Define game objects
-	m_gameObjects[1246] = GameObjectType::CheckPoint;
+	m_gameObjects[1265] = GameObjectType::CheckPoint;
 	m_instances[800] = MAP_FINAL_PYRAMID_OMP;
 	m_instances[295] = MAP_FINAL_EMPTY_OMP;
 	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
@@ -522,13 +522,13 @@ std::size_t		FinalBiome::getTreePositionX()
 {
 	int x;
 
-	if (randomBool(0.75f))
+	if (randomBool(0.6f))
 	{
 		x = static_cast<int>(m_generator.randomPiecewise(500.f)) + 325.f;
 	}
 	else
 	{
-		x = static_cast<int>(m_generator.randomPiecewise(350.f)) + 925.f;
+		x = static_cast<int>(m_generator.randomPiecewise(550.f)) + 875.f;
 	}
 	return (static_cast<int>(x));
 }

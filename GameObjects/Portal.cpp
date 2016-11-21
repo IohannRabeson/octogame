@@ -325,7 +325,7 @@ void Portal::setRadius(float radius)
 
 bool Portal::zoom(void) const
 {
-	if (m_destination != Progress::getInstance().getLastDestination())
+	if (m_destination != Progress::getInstance().getLastDestination() && m_destination != Progress::getInstance().getCurrentDestination())
 		return true;
 	return false;
 }

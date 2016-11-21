@@ -31,7 +31,7 @@ public:
 private:
 	enum State
 	{
-		None,
+		Wait,
 		StartEffect,
 		Activate,
 		StartFinalScene,
@@ -40,7 +40,8 @@ private:
 		CircleExplosionAndRedEffect,
 		WhiteFlash,
 		FinalExplosion,
-		PortalAppear
+		PortalAppear,
+		None
 	};
 
 	enum SpriteIndex

@@ -7,7 +7,8 @@
 JeffMouffyNpc::JeffMouffyNpc(void) :
 	ASpecialNpc(JEFF_MOUFFY_OSS, false),
 	m_startTimer(false),
-	m_animationEnd(false)
+	m_animationEnd(false),
+	m_isMet(false)
 {
 	setType(GameObjectType::JeffMouffyNpc);
 	setSize(sf::Vector2f(174.f, 186.f));

@@ -18,6 +18,7 @@ enum class GameObjectType : std::size_t
 	SlowFallNanoRobot			= 1 << 10,
 	RepairShipNanoRobot			= 1 << 11,
 	WaterNanoRobot				= 1 << 12,
+	SpiritNanoRobot				= (1 << 12) + 1,
 	Water						= 1 << 13,
 
 	//Object

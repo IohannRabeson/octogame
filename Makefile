@@ -229,6 +229,7 @@ SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/DoubleJumpNanoRobot.cpp		\
 				NanoRobots/SlowFallNanoRobot.cpp		\
 				NanoRobots/WaterNanoRobot.cpp			\
+				NanoRobots/SpiritNanoRobot.cpp			\
 				NanoRobots/NanoEffect.cpp				\
 
 SRC_MAP =		Map/Map.cpp								\

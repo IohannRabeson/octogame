@@ -234,6 +234,11 @@ bool NanoEffect::getEffectEnable(void) const
 	return (m_effectEnable);
 }
 
+float NanoEffect::getTransferProgress(void)
+{
+	return (m_transferTimer / m_transferTimerMax);
+}
+
 void NanoEffect::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	m_particle->draw(render);

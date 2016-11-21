@@ -73,6 +73,8 @@ protected:
 	void makeLaser(sf::Vertex* vertices, sf::Vector2f const& p0, sf::Vector2f const& p1, float thickness);
 	void playSoundRepair(sf::Time frametime);
 	virtual void updateRepairShip(sf::Time frameTime);
+	octo::AnimatedSprite & getSprite(void);
+	NanoEffect & getNanoEffect(void);
 
 	bool isReparingShip(void) const;
 	static void setLaserConvergence(sf::Vector2f const & position);
@@ -98,6 +100,8 @@ private:
 	sf::Time									m_timerRepairMax;
 	sf::Time									m_timerUse;
 	sf::Time									m_timerUseMax;
+	sf::Time									m_timerStartSpirit;
+	sf::Time									m_timerStartSpiritMax;
 	bool										m_isUsing;
 	std::size_t									m_repairIndex;
 	sf::Vector2f								m_repairShipPosition;
@@ -122,7 +126,7 @@ private:
 
 	bool										m_isTravelling;
 
-	NanoEffect									m_glowingEffect;
+	NanoEffect									m_nanoEffect;
 	std::mt19937								m_engine;
 	std::uniform_int_distribution<int>			m_soundDistri;
 	std::shared_ptr<sf::Sound>					m_sound;

@@ -19,6 +19,7 @@
 #include "GroundTransformNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "RepairShipNanoRobot.hpp"
+#include "SpiritNanoRobot.hpp"
 #include "JumpNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
@@ -124,6 +125,14 @@ CharacterOcto::CharacterOcto() :
 		robot->setState(NanoRobot::State::FollowOcto);
 	}
 
+	for (std::size_t i = 0u; i < m_progress.getSpiritCount(); i++)
+		giveSpirit(new SpiritNanoRobot(sf::Vector2f(0.f, 0.f)));
+	for (auto & spirit : m_spirits)
+	{
+		spirit->setPosition(getPosition());
+		spirit->transfertToOcto(true);
+		spirit->setState(NanoRobot::State::FollowOcto);
+	}
 }
 
 CharacterOcto::~CharacterOcto(void)
@@ -167,6 +176,7 @@ void	CharacterOcto::setup(ABiome & biome)
 		| static_cast<std::size_t>(GameObjectType::JumpNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::DoubleJumpNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::RepairShipNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::SpiritNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::SlowFallNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::WaterNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::Elevator)
@@ -400,9 +410,9 @@ void	CharacterOcto::setupAnimation()
 	m_elevatorAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_portalAnimation.setFrames({
-			Frame(sf::seconds(0.3f), {91, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {92, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {93, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {91, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {92, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {93, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.05f), {94, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_portalAnimation.setLoop(octo::LoopMode::NoLoop);
@@ -1101,6 +1111,8 @@ void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
 {
+	for (auto & spirit : m_spirits)
+		spirit->draw(render, states);
 	for (auto & robot : m_nanoRobots)
 		robot->draw(render, states);
 }
@@ -1129,8 +1141,6 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 				m_collisionTile = true;
 			if (collisionDirection.y > 0.f)
 				m_collisionTileHead = true;
-			else
-				m_collisionTileHead = false;
 			break;
 		case GameObjectType::Elevator:
 			m_collisionElevator = true;
@@ -1160,6 +1170,13 @@ void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 		startKonamiCode(firstTime);
 	if (firstTime)
 		enableCutscene(true, true);
+}
+
+void	CharacterOcto::giveSpirit(NanoRobot * robot, bool firstTime)
+{
+	m_spirits.push_back(std::unique_ptr<NanoRobot>(robot));
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
 }
 
 void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
@@ -1238,7 +1255,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 			else if (portal.getKey() == OBJECT_PORTAL_JUNGLE_OSS)
 				m_box->setPosition(sf::Vector2f(20245.f, 1190.f));
 			else if (portal.getKey() == OBJECT_PORTAL_BEACH_OSS)
-				m_box->setPosition(sf::Vector2f(19936.f, 35.f));
+				m_box->setPosition(sf::Vector2f(19930.f, 35.f));
 			m_numberOfJump = 0u;
 			m_timeSlowFall = sf::Time::Zero;
 		}
@@ -1512,6 +1529,12 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 		robot->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
 	}
 
+	for (auto & spirit : m_spirits)
+	{
+		spirit->update(frameTime);
+		spirit->setPosition(m_box->getPosition() + sf::Vector2f(20.f, 0.f));
+	}
+
 	updateOctoEvent();
 }
 
@@ -1592,6 +1615,7 @@ void	CharacterOcto::resetColisionBolean()
 {
 	m_collisionTile = false;
 	m_collisionElevator = false;
+	m_collisionTileHead = false;
 	m_collisionPortal = false;
 	m_collidePortalEvent = false;
 	m_collisionElevatorEvent = false;
@@ -1978,9 +2002,9 @@ void CharacterOcto::moveGround(sf::Time frameTime, std::unique_ptr<GroundManager
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	float						volume = 0.f;
 
-	if (m_soundGeneration != nullptr && m_groundSoundTime > sf::Time::Zero && !Progress::getInstance().isMapMoving())
+	if (m_soundGeneration != nullptr && m_groundSoundTime > sf::Time::Zero && !m_progress.isMapMoving())
 		m_groundSoundTime -= frameTime;
-	else if (m_groundSoundTime < m_groundSoundTimeMax && !Progress::getInstance().isMenu())
+	else if (m_groundSoundTime < m_groundSoundTimeMax && !m_progress.isMenu() && m_progress.getCurrentDestination() != Level::WaterB)
 		m_groundSoundTime += frameTime;
 
 	if ((m_keyGroundRight || m_keyGroundLeft || m_progress.forceMapToMove()) && m_progress.canMoveMap())

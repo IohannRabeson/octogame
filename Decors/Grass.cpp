@@ -154,7 +154,8 @@ void Grass::computeMovement(sf::Time frameTime)
 	if (deathCount == 0u)
 		m_octDeathCoef = octo::cosinusInterpolation(m_octDeathCoef, 1.f, frameTime.asSeconds() * 4.f);
 	else
-		m_octDeathCoef = std::min(1.25f - (deathCount / Progress::DeathMax), 1.f);
+		m_octDeathCoef = octo::linearInterpolation(1.f, 0.3f, static_cast<float>(deathCount) / static_cast<float>(Progress::DeathMax));
+
 
 	m_lastOctoPosition = octoPosition;
 }
@@ -164,7 +165,7 @@ void Grass::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome & bi
 	sf::Vector2f const & position = getPosition() + sf::Vector2f(Tile::TileSize / 2.f, 0.f);
 
 	//TODO : Not clean, only for final level
-	if (m_firstFrame && Progress::getInstance().getCurrentDestination() == Level::Final && position.y < 300.f)
+	if (m_firstFrame && biome.getId() == Level::Final && position.y < 300.f)
 	{
 		m_isDeadlyGrass = false;
 		m_color = sf::Color(250, 240, 250);
