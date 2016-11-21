@@ -1177,8 +1177,6 @@ void	CharacterOcto::giveSpirit(NanoRobot * robot, bool firstTime)
 	m_spirits.push_back(std::unique_ptr<NanoRobot>(robot));
 	if (robot->getEffectEnable())
 		startKonamiCode(firstTime);
-	if (firstTime)
-		enableCutscene(true, true);
 }
 
 void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)

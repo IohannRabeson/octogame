@@ -156,8 +156,6 @@ RandomBiome::RandomBiome() :
 
 	m_interestPointPosX = portalPos;
 
-	m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::SpiritNanoRobot;
-
 	for (std::size_t i = 2u; i < m_mapSize.x - 1u; i += m_generator.randomInt(15u, 200u))
 	{
 		if (m_generator.randomBool(0.5))
@@ -173,6 +171,9 @@ RandomBiome::RandomBiome() :
 		else
 			m_gameObjects[i] = GameObjectType::BirdRedNpc;
 	}
+
+	m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::SpiritNanoRobot;
+
 }
 
 void			RandomBiome::setup(std::size_t seed)

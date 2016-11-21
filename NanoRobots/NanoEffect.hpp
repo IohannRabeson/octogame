@@ -52,6 +52,7 @@ public:
 	void							setTravelling(bool travelling);
 	void							setEffectEnable(bool enable);
 	bool							getEffectEnable(void) const;
+	float							getTransferProgress(void);
 
 private:
 	void							createLosange(sf::Vector2f const & size,

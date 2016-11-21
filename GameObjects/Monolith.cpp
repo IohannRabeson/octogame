@@ -213,12 +213,9 @@ void Monolith::collideOcto(CharacterOcto * octo)
 	m_octo = octo;
 	if (m_state == None)
 	{
-		if (Progress::getInstance().getActivatedMonolith() < Progress::getInstance().countRandomDiscover())
-		{
-			octo->enableCutscene(true, true);
-			m_state = StartEffect;
-			m_timer = sf::Time::Zero;
-		}
+		octo->enableCutscene(true, true);
+		m_state = StartEffect;
+		m_timer = sf::Time::Zero;
 	}
 }
 
@@ -256,7 +253,7 @@ void Monolith::update(sf::Time frameTime)
 			{
 				m_timer = sf::Time::Zero;
 				Progress::getInstance().setForceMapToMove(false);
-				if (Progress::getInstance().getActivatedMonolith() == m_steps.size())
+				if (Progress::getInstance().getActivatedMonolith() >= m_steps.size())
 				{
 					m_state = StartFinalScene;
 					m_octo->enableCutscene(true, false);

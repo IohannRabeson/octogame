@@ -2,6 +2,7 @@
 # define SPIRITNANOROBOT_HPP
 
 # include "NanoRobot.hpp"
+# include "RandomGenerator.hpp"
 
 class SpiritNanoRobot : public NanoRobot, public AGameObject<GameObjectType::SpiritNanoRobot>
 {
@@ -12,6 +13,9 @@ public:
 
 private:
 	static std::size_t	s_seed;
+	RandomGenerator		m_generator;
+	float				m_scale;
+	float				m_alphaMax;
 };
 
 #endif

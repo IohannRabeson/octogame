@@ -1,12 +1,17 @@
 #include "SpiritNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
+#include <ResourceManager.hpp>
+#include <Application.hpp>
 
 std::size_t SpiritNanoRobot::s_seed = 0u;
 
 SpiritNanoRobot::SpiritNanoRobot(sf::Vector2f const & position) :
-	NanoRobot(position, FOREST_SPIRIT_1_OSS, 12, s_seed++, sf::Vector2f(0.f, -28.f), InputListener::OctoKeys::Jump, 1.f)
+	NanoRobot(position, FOREST_SPIRIT_1_OSS, 12, s_seed++, sf::Vector2f(0.f, -28.f), InputListener::OctoKeys::Jump, 1.f),
+	m_generator("random")
 {
+	octo::ResourceManager &	resources = octo::Application::getResourceManager();
+
 	setup(this);
 
 	std::vector<sf::Vector2f> targets;
@@ -22,20 +27,48 @@ SpiritNanoRobot::SpiritNanoRobot(sf::Vector2f const & position) :
 	setLaserColor(sf::Color::Transparent);
 
 	setSwarmTarget(position);
-	getSprite().setColor(sf::Color(255, 255, 255, 130));
+
+	if (m_generator.randomBool(0.5f))
+		getSprite().setSpriteSheet(resources.getSpriteSheet(FOREST_SPIRIT_2_OSS));
+
+	m_scale = m_generator.randomFloat(0.4f, 0.7f);
+	m_alphaMax = m_generator.randomFloat(80.f, 150.f);
+	getSprite().setScale(m_scale, m_scale);
+	getSprite().setColor(sf::Color(255, 255, 255, m_alphaMax));
 }
 
 void SpiritNanoRobot::update(sf::Time frametime)
 {
 	NanoRobot::update(frametime);
 
-	float const				maxDist = 300.f;
+	float const				maxDist = 500.f;
 	sf::Vector2f const &	octoPos = Progress::getInstance().getOctoPos();
 	float					dist = std::sqrt(std::pow(getPosition().x - octoPos.x, 2u) + std::pow(getPosition().y - octoPos.y, 2u));
+	float					transferProgress = getNanoEffect().getTransferProgress();
+	float					alpha = m_alphaMax;
+	float					scale = m_scale;
 
-	if (dist < maxDist)
+	if (transferProgress)
 	{
-		float alpha = octo::linearInterpolation(0.f, 130.f, std::max(dist / maxDist - 0.5f, 0.f));
-		getSprite().setColor(sf::Color(255, 255, 255, alpha));
+		if (transferProgress < 0.5f)
+		{
+			alpha = octo::linearInterpolation(m_alphaMax, 255.f, std::min(1.f, transferProgress * 2.f));
+			scale = octo::linearInterpolation(m_scale, m_scale * 2.f, std::min(1.f, transferProgress * 2.f));
+		}
+		else
+		{
+			alpha = octo::linearInterpolation(255.f, m_alphaMax, std::min(1.f, (transferProgress - 0.5f) * 2.f));
+			scale = octo::linearInterpolation(m_scale * 2.f, m_scale, std::min(1.f, (transferProgress - 0.5f) * 2.f));
+		}
 	}
+	else
+	{
+		if (dist < maxDist && getState() == State::FollowOcto)
+			alpha = octo::linearInterpolation(0.f, m_alphaMax, dist / maxDist);
+		if (getNanoEffect().getState() == NanoEffect::State::Random)
+			getNanoEffect().setState(NanoEffect::State::Wait);
+	}
+
+	getSprite().setColor(sf::Color(255, 255, 255, alpha));
+	getSprite().setScale(scale, scale);
 }

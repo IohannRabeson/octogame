@@ -2334,10 +2334,6 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	for (auto & nano : m_nanoRobots)
-		nano.m_gameObject->draw(render, states);
-	for (auto & nano : m_nanoRobotOnInstance)
-		nano->draw(render, states);
 	for (auto & npc : m_npcsOnFloor)
 		npc.m_gameObject->drawFront(render, states);
 	for (auto & elevator : m_elevators)
@@ -2355,8 +2351,12 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_vertices.get(), m_verticesCount, sf::Quads, states);
 	render.draw(m_decorManagerGround, states);
 	render.draw(m_decorManagerInstanceGround, states);
+	for (auto & nano : m_nanoRobotOnInstance)
+		nano->draw(render, states);
 	for (auto & decor : m_instanceDecorsFront)
 		decor->drawFront(render, states);
+	for (auto & nano : m_nanoRobots)
+		nano.m_gameObject->draw(render, states);
 }
 
 void GroundManager::drawWater(sf::RenderTarget& render, sf::RenderStates states) const

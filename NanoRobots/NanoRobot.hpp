@@ -74,6 +74,7 @@ protected:
 	void playSoundRepair(sf::Time frametime);
 	virtual void updateRepairShip(sf::Time frameTime);
 	octo::AnimatedSprite & getSprite(void);
+	NanoEffect & getNanoEffect(void);
 
 	bool isReparingShip(void) const;
 	static void setLaserConvergence(sf::Vector2f const & position);
@@ -125,7 +126,7 @@ private:
 
 	bool										m_isTravelling;
 
-	NanoEffect									m_glowingEffect;
+	NanoEffect									m_nanoEffect;
 	std::mt19937								m_engine;
 	std::uniform_int_distribution<int>			m_soundDistri;
 	std::shared_ptr<sf::Sound>					m_sound;
