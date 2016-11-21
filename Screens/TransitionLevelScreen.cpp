@@ -18,7 +18,6 @@ TransitionLevelScreen::TransitionLevelScreen() :
 
 	m_volumeDefault = audio.getSoundVolume();
 
-	frames.emplace_back(sf::seconds(0.1f), 6);
 	frames.emplace_back(sf::seconds(0.1f), 7);
 	frames.emplace_back(sf::seconds(0.1f), 8);
 	frames.emplace_back(sf::seconds(0.1f), 9);

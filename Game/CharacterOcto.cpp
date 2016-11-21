@@ -410,9 +410,9 @@ void	CharacterOcto::setupAnimation()
 	m_elevatorAnimation.setLoop(octo::LoopMode::Loop);
 
 	m_portalAnimation.setFrames({
-			Frame(sf::seconds(0.3f), {91, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {92, sf::FloatRect(), sf::Vector2f()}),
-			Frame(sf::seconds(0.2f), {93, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {91, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {92, sf::FloatRect(), sf::Vector2f()}),
+			Frame(sf::seconds(0.1f), {93, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.05f), {94, sf::FloatRect(), sf::Vector2f()}),
 			});
 	m_portalAnimation.setLoop(octo::LoopMode::NoLoop);

@@ -137,7 +137,6 @@ RandomBiome::RandomBiome() :
 	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 	Progress & progress = Progress::getInstance();
-	progress.meetPortal(progress.getLastDestination(), Level::Random);
 	m_mapSize = sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(progress.getNanoRobotCount() * 60u + 30u)),
 	m_randomSurfaceNumber = m_generator.randomInt(1u, 4u);
 	// Create a set a 20 colors for particles
@@ -172,8 +171,9 @@ RandomBiome::RandomBiome() :
 			m_gameObjects[i] = GameObjectType::BirdRedNpc;
 	}
 
-	m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::SpiritNanoRobot;
-
+	if (!progress.isMetRandom(progress.getLastDestination()))
+		m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::SpiritNanoRobot;
+	progress.meetPortal(progress.getLastDestination(), Level::Random);
 }
 
 void			RandomBiome::setup(std::size_t seed)
