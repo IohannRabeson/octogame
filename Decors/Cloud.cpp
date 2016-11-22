@@ -119,8 +119,11 @@ bool Cloud::isOctogonContain(sf::Vector2f const & size, sf::Vector2f const & pos
 
 void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f const & origin, std::size_t partCount, sf::Color const & color, octo::VertexBuilder& builder)
 {
-	sf::Vector2f const & octoPosition = Progress::getInstance().getOctoPos();
-	sf::Vector2f const & headPosition = octoPosition + sf::Vector2f(0.f, -40.f);
+	Progress & progress = Progress::getInstance();
+	sf::Vector2f const & octoPosition = progress.getOctoPos();
+	sf::Vector2f headPosition = octoPosition + sf::Vector2f(0.f, -40.f);
+	if (progress.isIntro())
+		headPosition = octoPosition + sf::Vector2f(0.f, 220.f);
 
 	m_isCollide = false;
 	for (std::size_t i = 0; i < partCount; i++)
@@ -151,6 +154,8 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 		if (isOctogonContain(size, values[i].origin + origin, octoPosition) || isOctogonContain(size, values[i].origin + origin, headPosition))
 			m_isCollide = true;
 		createOctogon(size, sizeCorner, values[i].origin + origin, color, builder);
+		if (progress.isIntro())
+			createOctogon(size * 1.3f, sizeCorner * 1.3f, values[i].origin + origin, sf::Color(187, 245, 255, 100), builder);
 	}
 }
 
@@ -362,6 +367,11 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 		m_hasCollided = true;
 		if (m_isSpecialCloud && m_animator.getState() == DecorAnimator::State::Life)
 			Progress::getInstance().setInCloud(true, m_id);
+		if (Progress::getInstance().isIntro())
+		{
+			Progress::getInstance().setInCloud(true, m_id);
+			m_animator.die();
+		}
 		else
 			m_animator.die();
 	}

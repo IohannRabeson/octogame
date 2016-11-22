@@ -81,16 +81,7 @@ void SkyCycle::setup(ABiome & biome)
 	if (biome.getStartDayDuration() == sf::Time::Zero)
 		m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
 	else
-	{
-		sf::Time x = sf::Time::Zero;
-
 		m_timerStart = biome.getStartDayDuration();
-		while (x < m_timerStart)
-		{
-			computeDayNight(sf::seconds(0.1f));
-			x += sf::seconds(0.1f);
-		}
-	}
 
 	newDropCycle(biome);
 	newThunderCycle(biome);

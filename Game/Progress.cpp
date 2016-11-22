@@ -57,6 +57,16 @@ void	Progress::setMenu(bool isMenu)
 	m_isMenu = isMenu;
 }
 
+bool	Progress::isIntro() const
+{
+	return m_isIntro;
+}
+
+void	Progress::setIntro(bool isIntro)
+{
+	m_isIntro = isIntro;
+}
+
 bool	Progress::isBubbleNpc() const
 {
 	return m_isBubbleNpc;

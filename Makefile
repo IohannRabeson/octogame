@@ -27,6 +27,7 @@ SRC = $(SRC_PHYSICS)									\
 	  Main/main.cpp										\
 
 SRC_STATES =	Screens/StateTest.cpp					\
+				Screens/IntroScreen.cpp					\
 				Screens/GameScreen.cpp					\
 				Screens/MenuScreen.cpp					\
 				Screens/ResourceLoadingScreen.cpp		\
@@ -172,22 +173,14 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ClaireNpc.cpp						\
 				Npcs/DesertEngine.cpp					\
 				Npcs/DeepoNpc.cpp						\
-				Npcs/PepetteNpc.cpp				\
-				Npcs/TVFanNpc.cpp				\
-				Npcs/MecanouilleNpc.cpp				\
-				Npcs/TheoNpc.cpp				\
-				Npcs/CedricWalkNpc.cpp				\
-				Npcs/ChristianNpc.cpp				\
-				Npcs/SkeletonNpc.cpp				\
+				Npcs/PepetteNpc.cpp						\
+				Npcs/TVFanNpc.cpp						\
+				Npcs/MecanouilleNpc.cpp					\
+				Npcs/TheoNpc.cpp						\
+				Npcs/CedricWalkNpc.cpp					\
+				Npcs/ChristianNpc.cpp					\
+				Npcs/SkeletonNpc.cpp					\
 #Script AddNpc
-
-
-
-
-
-
-
-
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\

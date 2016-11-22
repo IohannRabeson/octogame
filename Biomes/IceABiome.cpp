@@ -101,7 +101,7 @@ IceABiome::IceABiome() :
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
 	m_cloudMaxY(-500.f),
-	m_cloudMinY(-2500.f),
+	m_cloudMinY(-6000.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
@@ -136,6 +136,12 @@ IceABiome::IceABiome() :
 	m_particleColor[0] = m_rockColor;
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
+
+	if (progress.isIntro())
+	{
+		m_startDayDuration = sf::seconds(90.f);
+		m_dayDuration = sf::seconds(120.f);
+	}
 
 	m_secondStartColor = getRockColor();
 	m_secondEndColor = getRockColor();

@@ -38,7 +38,7 @@ void ConstanceNpc::setup(void)
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
 	m_smoke.setLifeTimeRange(0.6f, 0.8f);
 	m_smoke.setScaleFactor(10.f);
-	m_smoke.setDispersion(80.f);
+	m_smoke.setDispersion(sf::Vector2f(80.f, 0.f));
 	m_smoke.setColor(sf::Color(255, 255, 255, 150));
 }
 

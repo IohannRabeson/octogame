@@ -34,7 +34,7 @@ SmokeInstance::SmokeInstance(sf::Vector2f const & scale, sf::Vector2f const & po
 	m_smoke.setGrowTimeRange(0.4f, 0.7f);
 	m_smoke.setLifeTimeRange(0.6f, 0.8f);
 	m_smoke.setScaleFactor(15.f);
-	m_smoke.setDispersion(m_dispersion);
+	m_smoke.setDispersion(sf::Vector2f(m_dispersion, 0.f));
 	m_smoke.setColor(sf::Color(240, 240, 240, 150));
 	m_smoke.setPosition(position + sf::Vector2f(m_box->getSize().x / 2.f, 0.f));
 }
@@ -84,11 +84,11 @@ void SmokeInstance::update(sf::Time frametime)
 			if (m_velocity.x < 0.f)
 				m_velocity.x = std::min(m_velocity.x + frametime.asSeconds() * maxDistVelocityX, 0.f);
 			m_smoke.setScaleFactor(15.f);
-			m_smoke.setDispersion(std::max(m_dispersion, m_smoke.getDispersion() - frametime.asSeconds() * maxDistCollideY));
+			m_smoke.setDispersion(sf::Vector2f(std::max(m_dispersion, m_smoke.getDispersion().x - frametime.asSeconds() * maxDistCollideY), 0.f));
 		}
 		if (m_isOctoDoubleJump)
 		{
-			m_smoke.setDispersion(m_dispersion + (maxDistCollideY - distY));
+			m_smoke.setDispersion(sf::Vector2f(m_dispersion + (maxDistCollideY - distY), 0.f));
 			m_smoke.setScaleFactor(25.f);
 		}
 	

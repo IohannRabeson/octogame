@@ -265,7 +265,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_bubbleParticle.setGrowTimeRange(0.4f, 0.6f);
 	m_bubbleParticle.setLifeTimeRange(1.f, 1.8f);
 	m_bubbleParticle.setScaleFactor(10.f);
-	m_bubbleParticle.setDispersion(80.f);
+	m_bubbleParticle.setDispersion(sf::Vector2f(80.f, 0.f));
 	m_bubbleParticle.setColor(sf::Color(255, 255, 255, 100));
 	m_bubbleParticle.setCanEmit(false);
 
