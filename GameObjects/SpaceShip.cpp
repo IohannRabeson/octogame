@@ -54,11 +54,9 @@ SpaceShip::SpaceShip(SpaceShipEvents event) :
 								Frame(sf::seconds(0.05f), 6u),
 								Frame(sf::seconds(0.05f), 7u)});
 		m_animation.setLoop(octo::LoopMode::Loop);
+
 		m_smoke.setup(sf::Vector2f(10.f, 10.f));
-		m_smoke.setVelocity(sf::Vector2f(800.f, 0.f));
-		m_smoke.setEmitTimeRange(0.05f, 0.1f);
-		m_smoke.setDispersion(sf::Vector2f(300.f, 300.f));
-		m_smoke.setLifeTimeRange(0.5f, 1.f);
+		m_smoke.setVelocity(sf::Vector2f(0.f, -140.f));
 
 		for (std::size_t i = 0u; i < m_musicCount; i++)
 			m_music[i].canEmit(true);

@@ -25,8 +25,8 @@ IceABiome::IceABiome() :
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(35.f)),
-	m_startDayDuration(sf::Time::Zero),
+	m_dayDuration(sf::seconds(120.f)),
+	m_startDayDuration(sf::seconds(90.f)),
 	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(78, 47, 4, 130),
 	m_nightLightColor(8, 20, 26, 50),
@@ -50,7 +50,7 @@ IceABiome::IceABiome() :
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),
-	m_canCreateThunder(false),
+	m_canCreateThunder(true),
 	m_canCreateSnow(true),
 	m_canCreateRock(true),
 	m_canCreateTree(true),

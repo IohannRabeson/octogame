@@ -3,6 +3,7 @@
 # include <AbstractState.hpp>
 
 # include "InputListener.hpp"
+# include "StarSystem.hpp"
 # include "MainMenu.hpp"
 # include "SkyCycle.hpp"
 # include "BiomeManager.hpp"
@@ -30,18 +31,22 @@ private:
 	{
 		Fly,
 		Crash,
-		End
+		End,
+		None
 	};
 
-	void setupScene(void);
-	void updateSpaceShip(sf::Time frameTime);
-	void updateCamera(sf::Time frameTime);
-	void updateAlarm(sf::Time frameTime);
-	void updateScene(sf::Time fametime);
-	void drawScene(sf::RenderTarget& render) const;
+	void			setupScene(void);
+	void			updateSpaceShip(sf::Time frameTime);
+	void			updateShaders(sf::Time frameTime);
+	void			updateAlarm(sf::Time frameTime);
+	sf::Vector2f	computeShake(sf::Time frameTime);
+	void			shake(float duration, float intensity, float waveDuration);
+	void			updateCamera(sf::Time frameTime);
+	void			updateScene(sf::Time frametime);
+	void			drawScene(sf::RenderTarget& render) const;
 
-	virtual bool onInputPressed(InputListener::OctoKeys const & key);
-	virtual bool onInputReleased(InputListener::OctoKeys const & key);
+	virtual bool	onInputPressed(InputListener::OctoKeys const & key);
+	virtual bool	onInputReleased(InputListener::OctoKeys const & key);
 
 	State								m_state;
 	bool								m_keyJump;
@@ -50,13 +55,18 @@ private:
 	bool								m_keyRight;
 	bool								m_keyLeft;
 	bool								m_ticJump;
-	bool								m_firstCloudCollided;
+	std::size_t							m_cloudCollidedCount;
+	std::size_t							m_cloudCollidedCountMax;
 	sf::Time							m_timerBeforeCrash;
 	sf::Time							m_timerBeforeCrashMax;
 	sf::Time							m_timerJump;
 	sf::Time							m_timerJumpMax;
 	sf::Time							m_timerFall;
 	sf::Time							m_timerFallMax;
+	float								m_cloudMinY;
+	float								m_cloudMaxY;
+	float								m_speedFall;
+	float								m_speedYUp;
 
 	MainMenu							m_menu;
 	bool								m_doSave;
@@ -66,8 +76,10 @@ private:
 	std::unique_ptr<SkyManager>			m_skyManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
 
+	std::size_t							m_starsCount;
+	std::unique_ptr<StarSystem[]>		m_stars;
 	SpaceShip							m_spaceShip;
-	sf::Vector2f						m_speed;
+	float								m_speedX;
 	sf::Time							m_timerCamera;
 	sf::Time							m_timerCameraMax;
 
@@ -79,6 +91,19 @@ private:
 	sf::Time							m_timerEndMax;
 	sf::Time							m_timerBlinkShader;
 	bool								m_blinkShaderState;
+	sf::Time							m_timerShaderRocket;
+	sf::Time							m_timerShaderRocketAppear;
+	sf::Time							m_timerShaderRocketAppearMax;
+	bool								m_shaderRocketState;
+
+	Noise								m_noise;
+	sf::Vector2f						m_prevShakeOffset;
+	sf::Vector2f						m_shakeOffset;
+	sf::Time							m_waveTimer;
+	sf::Time							m_shakeTimer;
+	sf::Time							m_shakeDuration;
+	sf::Time							m_waveDuration;
+	float								m_shakeIntensity;
 };
 
 #endif

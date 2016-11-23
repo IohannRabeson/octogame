@@ -28,10 +28,13 @@ private:
 	std::size_t						m_bubbleCount;
 	std::unique_ptr<BubbleText[]>	m_bubble;
 	sf::Time						m_time;
+	sf::Time						m_timeCircleRainbow;
 	std::vector<sf::Time>			m_timerMax;
 	std::size_t						m_index;
 	sf::Time						m_startTimer;
 	sf::Time						m_startTimerMax;
+	sf::Time						m_timerShaderRocket;
+	sf::Time						m_timerShaderRocketMax;
 	bool							m_soundPlayed1;
 	bool							m_soundPlayed2;
 

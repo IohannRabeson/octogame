@@ -155,7 +155,14 @@ void Cloud::createCloud(std::vector<OctogonValue> const & values, sf::Vector2f c
 			m_isCollide = true;
 		createOctogon(size, sizeCorner, values[i].origin + origin, color, builder);
 		if (progress.isIntro())
+		{
+			if (m_animator.getState() == DecorAnimator::State::Die)
+			{
+				size = values[i].size * (2.f - m_animation);
+				sizeCorner = values[i].sizeCorner * (2.f - m_animation);
+			}
 			createOctogon(size * 1.3f, sizeCorner * 1.3f, values[i].origin + origin, sf::Color(187, 245, 255, 100), builder);
+		}
 	}
 }
 
@@ -339,7 +346,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 
 	float weather = m_cycle == nullptr ? 0.f : m_cycle->getWeatherValue() / 4.f;
 	weather = weather / (7 - ((Progress::getInstance().getLevelOfDetails() + 2) * 2));
-	if (m_animator.getState() == DecorAnimator::State::Life && weather == 0.f)
+	if ((m_animator.getState() == DecorAnimator::State::Life && weather == 0.f) || Progress::getInstance().isIntro())
 		m_canWeather = true;
 	else if (m_animator.getState() != DecorAnimator::State::Life)
 		m_canWeather = false;
@@ -367,7 +374,7 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 		m_hasCollided = true;
 		if (m_isSpecialCloud && m_animator.getState() == DecorAnimator::State::Life)
 			Progress::getInstance().setInCloud(true, m_id);
-		if (Progress::getInstance().isIntro())
+		else if (Progress::getInstance().isIntro())
 		{
 			Progress::getInstance().setInCloud(true, m_id);
 			m_animator.die();
