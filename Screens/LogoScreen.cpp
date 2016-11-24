@@ -8,7 +8,7 @@
 
 LogoScreen::LogoScreen() :
 	m_generator("random"),
-	m_count(24u),
+	m_count(38u),
 	m_index(0u)
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
@@ -39,6 +39,20 @@ LogoScreen::LogoScreen() :
 	m_key[21] = LOGO_22_PNG;
 	m_key[22] = LOGO_23_PNG;
 	m_key[23] = LOGO_24_PNG;
+	m_key[24] = LOGO_25_JPG;
+	m_key[25] = LOGO_26_JPG;
+	m_key[26] = LOGO_27_JPG;
+	m_key[27] = LOGO_28_JPG;
+	m_key[28] = LOGO_29_JPG;
+	m_key[29] = LOGO_30_JPG;
+	m_key[30] = LOGO_31_JPG;
+	m_key[31] = LOGO_32_JPG;
+	m_key[32] = LOGO_33_JPG;
+	m_key[33] = LOGO_34_JPG;
+	m_key[34] = LOGO_35_JPG;
+	m_key[35] = LOGO_36_JPG;
+	m_key[36] = LOGO_37_JPG;
+	m_key[37] = LOGO_38_JPG;
 
 	m_timerMax.resize(m_count);
 	m_timerMax[0] = sf::seconds(0.07f);
@@ -65,6 +79,22 @@ LogoScreen::LogoScreen() :
 	m_timerMax[21] = sf::seconds(0.07f);
 	m_timerMax[22] = sf::seconds(0.04f);
 	m_timerMax[23] = sf::seconds(0.06f);
+
+	m_timerMax[23] = sf::seconds(0.04f);
+	m_timerMax[24] = sf::seconds(0.07f);
+	m_timerMax[25] = sf::seconds(0.06f);
+	m_timerMax[26] = sf::seconds(0.04f);
+	m_timerMax[27] = sf::seconds(0.41f);
+	m_timerMax[28] = sf::seconds(0.4f);
+	m_timerMax[29] = sf::seconds(0.44f);
+	m_timerMax[30] = sf::seconds(0.38f);
+	m_timerMax[31] = sf::seconds(0.35f);
+	m_timerMax[32] = sf::seconds(0.4f);
+	m_timerMax[33] = sf::seconds(0.06f);
+	m_timerMax[34] = sf::seconds(0.04f);
+	m_timerMax[35] = sf::seconds(0.06f);
+	m_timerMax[36] = sf::seconds(0.05f);
+	m_timerMax[37] = sf::seconds(0.06f);
 
 	m_startSprites.resize(m_count);
 
@@ -102,7 +132,7 @@ void	LogoScreen::update(sf::Time frameTime)
 	{
 		m_timer = sf::Time::Zero;
 		m_index++;
-		if (m_index == 1u || m_index == 8u || m_index == 15u)
+		if (m_index == 1u || m_index == 8u || m_index == 15u || m_index == 24u || m_index == 33u)
 		{
 			octo::AudioManager& audio = octo::Application::getAudioManager();
 			octo::ResourceManager& resources = octo::Application::getResourceManager();
