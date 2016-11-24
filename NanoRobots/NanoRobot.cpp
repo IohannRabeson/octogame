@@ -223,6 +223,11 @@ void NanoRobot::transfertToOcto(bool inInit)
 	{
 		if (m_id != FOREST_SPIRIT_1_OSS)
 		{
+			if (m_id == NANO_GROUND_TRANSFORM_OSS)
+			{
+				m_swarm.killAll();
+				m_swarm.create(m_spawnMode, octo::Application::getCamera().getCenter(), sf::Color::Magenta, 8.f, 32.f, 2.f);
+			}
 			Progress::getInstance().addNanoRobot();
 			m_nanoEffect.onTransfer();
 		}

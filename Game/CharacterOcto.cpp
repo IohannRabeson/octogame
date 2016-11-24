@@ -285,6 +285,30 @@ void	CharacterOcto::setup(ABiome & biome)
 		caseLeft();
 }
 
+void	CharacterOcto::startGameIceA(void)
+{
+	if (m_level == Level::IceA)
+	{
+		if (Progress::getInstance().getNanoRobotCount() == 0u)
+		{
+			NanoRobot * robot = new GroundTransformNanoRobot();
+			robot->update(sf::Time::Zero);
+			robot->transfertToOcto(false);
+			m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+			enableCutscene(true, true);
+			m_cutsceneTimerMax = sf::seconds(0.01f);
+			if (robot->getEffectEnable())
+				startKonamiCode(true);
+		}
+		if (m_cutsceneTimer >= m_cutsceneTimerMax)
+		{
+			m_cutsceneTimerMax = sf::seconds(4.f);
+			m_cutsceneTimer = sf::seconds(4.f);
+			enableCutscene(false, false);
+		}
+	}
+}
+
 void	CharacterOcto::setupAnimation()
 {
 	typedef octo::CharacterAnimation::Frame			Frame;
@@ -909,6 +933,8 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 		updateAIEnd(frameTime);
 	else if (progress.isMenu() || m_isAI)
 		updateAI(frameTime);
+
+	startGameIceA();
 
 	updateBox(frameTime);
 	dieGrass();
