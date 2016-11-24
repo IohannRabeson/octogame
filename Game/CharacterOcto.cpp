@@ -2028,7 +2028,7 @@ void CharacterOcto::moveGround(sf::Time frameTime, std::unique_ptr<GroundManager
 
 	if (m_soundGeneration != nullptr && m_groundSoundTime > sf::Time::Zero && !m_progress.isMapMoving())
 		m_groundSoundTime -= frameTime;
-	else if (m_groundSoundTime < m_groundSoundTimeMax && !m_progress.isMenu() && m_progress.getCurrentDestination() != Level::WaterB)
+	else if (m_groundSoundTime < m_groundSoundTimeMax && !m_progress.isMenu() && m_level != Level::WaterB && m_level != Level::Blue && m_level != Level::Red)
 		m_groundSoundTime += frameTime;
 
 	if ((m_keyGroundRight || m_keyGroundLeft || m_progress.forceMapToMove()) && m_progress.canMoveMap())
