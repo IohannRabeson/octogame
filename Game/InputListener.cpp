@@ -187,212 +187,203 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 
 void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 {
-	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
+	if (event.axis == sf::Joystick::U)
 	{
-		if (event.axis == sf::Joystick::U)
+		if (event.position > 50)
 		{
-			if (event.position > 50)
-			{
-				m_joystickAxisU = true;
-				onInputPressed(OctoKeys::ViewRight);
-			}
-			else if (event.position < -50)
-			{
-				m_joystickAxisU = true;
-				onInputPressed(OctoKeys::ViewLeft);
-			}
-			else if (m_joystickAxisU == true)
-			{
-				m_joystickAxisU = false;
-				onInputReleased(OctoKeys::ViewLeft);
-				onInputReleased(OctoKeys::ViewRight);
-			}
+			m_joystickAxisU = true;
+			onInputPressed(OctoKeys::ViewRight);
 		}
+		else if (event.position < -50)
+		{
+			m_joystickAxisU = true;
+			onInputPressed(OctoKeys::ViewLeft);
+		}
+		else if (m_joystickAxisU == true)
+		{
+			m_joystickAxisU = false;
+			onInputReleased(OctoKeys::ViewLeft);
+			onInputReleased(OctoKeys::ViewRight);
+		}
+	}
 
-		if (event.axis == sf::Joystick::V)
+	if (event.axis == sf::Joystick::V)
+	{
+		if (event.position > 50)
 		{
-			if (event.position > 50)
-			{
-				m_joystickAxisV = true;
-				onInputPressed(OctoKeys::ViewDown);
-			}
-			else if (event.position < -50)
-			{
-				m_joystickAxisV = true;
-				onInputPressed(OctoKeys::ViewUp);
-			}
-			else if (m_joystickAxisV == true)
-			{
-				m_joystickAxisV = false;
-				onInputReleased(OctoKeys::ViewUp);
-				onInputReleased(OctoKeys::ViewDown);
-			}
+			m_joystickAxisV = true;
+			onInputPressed(OctoKeys::ViewDown);
 		}
+		else if (event.position < -50)
+		{
+			m_joystickAxisV = true;
+			onInputPressed(OctoKeys::ViewUp);
+		}
+		else if (m_joystickAxisV == true)
+		{
+			m_joystickAxisV = false;
+			onInputReleased(OctoKeys::ViewUp);
+			onInputReleased(OctoKeys::ViewDown);
+		}
+	}
 
-		if (event.axis == sf::Joystick::X || event.axis == sf::Joystick::PovX)
+	if (event.axis == sf::Joystick::X || event.axis == sf::Joystick::PovX)
+	{
+		if (event.position > 50)
 		{
-			if (event.position > 50)
-			{
-				m_joystickAxisX = true;
-				onInputPressed(OctoKeys::Right);
-			}
-			else if (event.position < -50)
-			{
-				m_joystickAxisX = true;
-				onInputPressed(OctoKeys::Left);
-			}
-			else if (m_joystickAxisX == true)
-			{
-				m_joystickAxisX = false;
-				onInputReleased(OctoKeys::Left);
-				onInputReleased(OctoKeys::Right);
-			}
+			m_joystickAxisX = true;
+			onInputPressed(OctoKeys::Right);
 		}
+		else if (event.position < -50)
+		{
+			m_joystickAxisX = true;
+			onInputPressed(OctoKeys::Left);
+		}
+		else if (m_joystickAxisX == true)
+		{
+			m_joystickAxisX = false;
+			onInputReleased(OctoKeys::Left);
+			onInputReleased(OctoKeys::Right);
+		}
+	}
 #ifdef _WIN32
-		// If Xbox controller
-		if (event.axis == sf::Joystick::Y)
+	// If Xbox controller
+	if (event.axis == sf::Joystick::Y)
+	{
+		if (event.position < -50)
 		{
-			if (event.position < -50)
-			{
-				m_joystickAxisY = true;
-				onInputPressed(OctoKeys::Up);
-			}
-			else if (event.position > 50)
-			{
-				m_joystickAxisY = true;
-				onInputPressed(OctoKeys::Down);
-			}
-			else if (m_joystickAxisY == true)
-			{
-				m_joystickAxisY = false;
-				onInputReleased(OctoKeys::Up);
-				onInputReleased(OctoKeys::Down);
-			}
+			m_joystickAxisY = true;
+			onInputPressed(OctoKeys::Up);
 		}
-		else if (event.axis == sf::Joystick::PovY)
+		else if (event.position > 50)
 		{
-			if (event.position < -50)
-			{
-				m_joystickAxisY = true;
-				onInputPressed(OctoKeys::Down);
-			}
-			else if (event.position > 50)
-			{
-				m_joystickAxisY = true;
-				onInputPressed(OctoKeys::Up);
-			}
-			else if (m_joystickAxisY == true)
-			{
-				m_joystickAxisY = false;
-				onInputReleased(OctoKeys::Up);
-				onInputReleased(OctoKeys::Down);
-			}
+			m_joystickAxisY = true;
+			onInputPressed(OctoKeys::Down);
 		}
+		else if (m_joystickAxisY == true)
+		{
+			m_joystickAxisY = false;
+			onInputReleased(OctoKeys::Up);
+			onInputReleased(OctoKeys::Down);
+		}
+	}
+	else if (event.axis == sf::Joystick::PovY)
+	{
+		if (event.position < -50)
+		{
+			m_joystickAxisY = true;
+			onInputPressed(OctoKeys::Down);
+		}
+		else if (event.position > 50)
+		{
+			m_joystickAxisY = true;
+			onInputPressed(OctoKeys::Up);
+		}
+		else if (m_joystickAxisY == true)
+		{
+			m_joystickAxisY = false;
+			onInputReleased(OctoKeys::Up);
+			onInputReleased(OctoKeys::Down);
+		}
+	}
 
-		// TODO: Uncomment if we wat to use trigger
-		/*
-		if (event.axis == sf::Joystick::Z)
-		{
-			if (event.position > 0.f) // LT
-			{
-				if (event.position > m_triggerLimit && !m_joystickLT)
-				{
-					m_joystickLT = true;
-					onInputPressed(OctoKeys::GroundRight);
-				}
-				else if (event.position <= m_triggerLimit && m_joystickLT)
-				{
-					m_joystickLT = false;
-					onInputReleased(OctoKeys::GroundRight);
-				}
-			}
-			else //RT
-			{
-				if (event.position < -m_triggerLimit && !m_joystickRT)
-				{
-					m_joystickRT = true;
-					onInputPressed(OctoKeys::GroundLeft);
-				}
-				else if (event.position >= -m_triggerLimit && m_joystickRT)
-				{
-					m_joystickRT = false;
-					onInputReleased(OctoKeys::GroundLeft);
-				}
-			}
-		}
-		*/
-#else
-		if (event.axis == sf::Joystick::Y || event.axis == sf::Joystick::PovY)
-		{
-			if (event.position < -50)
-			{
-				m_joystickAxisY = true;
-				onInputPressed(OctoKeys::Up);
-			}
-			else if (event.position > 50)
-			{
-				m_joystickAxisY = true;
-				onInputPressed(OctoKeys::Down);
-			}
-			else if (m_joystickAxisY == true)
-			{
-				m_joystickAxisY = false;
-				onInputReleased(OctoKeys::Up);
-				onInputReleased(OctoKeys::Down);
-			}
-		}
-
-		// TODO: Uncomment if we wat to use trigger
-		/*
-		if (event.axis == sf::Joystick::R) //LT
+	// TODO: Uncomment if we wat to use trigger
+	/*
+	if (event.axis == sf::Joystick::Z)
+	{
+		if (event.position > 0.f) // LT
 		{
 			if (event.position > m_triggerLimit && !m_joystickLT)
 			{
 				m_joystickLT = true;
-				onInputPressed(OctoKeys::GroundLeft);
+				onInputPressed(OctoKeys::GroundRight);
 			}
 			else if (event.position <= m_triggerLimit && m_joystickLT)
 			{
 				m_joystickLT = false;
-				onInputReleased(OctoKeys::GroundLeft);
-			}
-		}
-		if (event.axis == sf::Joystick::Z) //RT
-		{
-			if (event.position > m_triggerLimit && !m_joystickRT)
-			{
-				m_joystickRT = true;
-				onInputPressed(OctoKeys::GroundRight);
-			}
-			else if (event.position <= m_triggerLimit && m_joystickRT)
-			{
-				m_joystickRT = false;
 				onInputReleased(OctoKeys::GroundRight);
 			}
 		}
-		*/
-#endif
+		else //RT
+		{
+			if (event.position < -m_triggerLimit && !m_joystickRT)
+			{
+				m_joystickRT = true;
+				onInputPressed(OctoKeys::GroundLeft);
+			}
+			else if (event.position >= -m_triggerLimit && m_joystickRT)
+			{
+				m_joystickRT = false;
+				onInputReleased(OctoKeys::GroundLeft);
+			}
+		}
 	}
+	*/
+#else
+	if (event.axis == sf::Joystick::Y || event.axis == sf::Joystick::PovY)
+	{
+		if (event.position < -50)
+		{
+			m_joystickAxisY = true;
+			onInputPressed(OctoKeys::Up);
+		}
+		else if (event.position > 50)
+		{
+			m_joystickAxisY = true;
+			onInputPressed(OctoKeys::Down);
+		}
+		else if (m_joystickAxisY == true)
+		{
+			m_joystickAxisY = false;
+			onInputReleased(OctoKeys::Up);
+			onInputReleased(OctoKeys::Down);
+		}
+	}
+
+	// TODO: Uncomment if we wat to use trigger
+	/*
+	if (event.axis == sf::Joystick::R) //LT
+	{
+		if (event.position > m_triggerLimit && !m_joystickLT)
+		{
+			m_joystickLT = true;
+			onInputPressed(OctoKeys::GroundLeft);
+		}
+		else if (event.position <= m_triggerLimit && m_joystickLT)
+		{
+			m_joystickLT = false;
+			onInputReleased(OctoKeys::GroundLeft);
+		}
+	}
+	if (event.axis == sf::Joystick::Z) //RT
+	{
+		if (event.position > m_triggerLimit && !m_joystickRT)
+		{
+			m_joystickRT = true;
+			onInputPressed(OctoKeys::GroundRight);
+		}
+		else if (event.position <= m_triggerLimit && m_joystickRT)
+		{
+			m_joystickRT = false;
+			onInputReleased(OctoKeys::GroundRight);
+		}
+	}
+	*/
+#endif
 }
 
 #include <iostream>
 void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 {
-	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
-	{
-		//TODO: Search for another solution
-		// Hack to avoid screensaver with controller
-		sf::Mouse::setPosition(sf::Vector2i(5, 5));
-		assert(event.button < m_inputs.size());
-		onInputPressed(m_inputs[event.button]);
-	}
+	//TODO: Search for another solution
+	// Hack to avoid screensaver with controller
+	sf::Mouse::setPosition(sf::Vector2i(5, 5));
+	assert(event.button < m_inputs.size());
+	onInputPressed(m_inputs[event.button]);
 }
 
 void	InputListener::onReleased(sf::Event::JoystickButtonEvent const& event)
 {
-	if (sf::Joystick::isConnected(0) && event.joystickId == 0)
-	{
-		assert(event.button < m_inputs.size());
-		onInputReleased(m_inputs[event.button]);
-	}
+	assert(event.button < m_inputs.size());
+	onInputReleased(m_inputs[event.button]);
 }

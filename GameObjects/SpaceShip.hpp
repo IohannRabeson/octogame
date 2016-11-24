@@ -7,6 +7,7 @@
 # include "SmokeSystem.hpp"
 # include "MusicSystem.hpp"
 # include "IPlaceable.hpp"
+# include "RandomGenerator.hpp"
 
 class CircleShape;
 
@@ -35,13 +36,15 @@ public:
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	octo::AnimatedSprite		m_sprite;
-	octo::SpriteAnimation		m_animation;
-	SmokeSystem					m_smoke;
-	MusicSystem					m_music;
-	SpaceShipEvents				m_event;
-	CircleShape *				m_box;
-	bool						m_isFinal;
+	RandomGenerator					m_generator;
+	octo::AnimatedSprite			m_sprite;
+	octo::SpriteAnimation			m_animation;
+	SmokeSystem						m_smoke;
+	std::size_t						m_musicCount;
+	std::unique_ptr<MusicSystem[]>	m_music;
+	SpaceShipEvents					m_event;
+	CircleShape *					m_box;
+	bool							m_isFinal;
 };
 
 #endif

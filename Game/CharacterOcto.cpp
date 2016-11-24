@@ -265,7 +265,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_bubbleParticle.setGrowTimeRange(0.4f, 0.6f);
 	m_bubbleParticle.setLifeTimeRange(1.f, 1.8f);
 	m_bubbleParticle.setScaleFactor(10.f);
-	m_bubbleParticle.setDispersion(80.f);
+	m_bubbleParticle.setDispersion(sf::Vector2f(80.f, 0.f));
 	m_bubbleParticle.setColor(sf::Color(255, 255, 255, 100));
 	m_bubbleParticle.setCanEmit(false);
 
@@ -283,6 +283,30 @@ void	CharacterOcto::setup(ABiome & biome)
 		caseRight();
 	if (sf::Joystick::getAxisPosition(0, sf::Joystick::X) < -50 || sf::Joystick::getAxisPosition(0, sf::Joystick::PovX) < -50)
 		caseLeft();
+}
+
+void	CharacterOcto::startGameIceA(void)
+{
+	if (m_level == Level::IceA)
+	{
+		if (Progress::getInstance().getNanoRobotCount() == 0u)
+		{
+			NanoRobot * robot = new GroundTransformNanoRobot();
+			robot->update(sf::Time::Zero);
+			robot->transfertToOcto(false);
+			m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+			enableCutscene(true, true);
+			m_cutsceneTimerMax = sf::seconds(0.01f);
+			if (robot->getEffectEnable())
+				startKonamiCode(true);
+		}
+		if (m_cutsceneTimer >= m_cutsceneTimerMax)
+		{
+			m_cutsceneTimerMax = sf::seconds(4.f);
+			m_cutsceneTimer = sf::seconds(4.f);
+			enableCutscene(false, false);
+		}
+	}
 }
 
 void	CharacterOcto::setupAnimation()
@@ -910,6 +934,8 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	else if (progress.isMenu() || m_isAI)
 		updateAI(frameTime);
 
+	startGameIceA();
+
 	updateBox(frameTime);
 	dieGrass();
 	updateGroundDelay(frameTime);
@@ -1011,8 +1037,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 				m_enableCutscene = false;
 		}
 		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
-		if (m_level != Level::EndRocket && m_level != Level::EndTimeLapse)
-			MusicManager::getInstance().startEvent();
+		MusicManager::getInstance().startEvent();
 	}
 	else
 	{
@@ -1174,9 +1199,8 @@ void	CharacterOcto::giveNanoRobot(NanoRobot * robot, bool firstTime)
 
 void	CharacterOcto::giveSpirit(NanoRobot * robot, bool firstTime)
 {
+	(void)firstTime;
 	m_spirits.push_back(std::unique_ptr<NanoRobot>(robot));
-	if (robot->getEffectEnable())
-		startKonamiCode(firstTime);
 }
 
 void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
@@ -2335,8 +2359,16 @@ void	CharacterOcto::initAI(void)
 		m_directionTimer = sf::seconds(m_generator.randomFloat(30.f, 300.f));
 		m_slowFallTimer = sf::seconds(m_generator.randomFloat(4.f, 10.f));
 		m_portalTimer = sf::seconds(m_generator.randomFloat(45.f, 90.f));
-		m_keyRight = true;
-		m_keyLeft = false;
+		if (m_level != Level::Blue)
+		{
+			m_keyRight = true;
+			m_keyLeft = false;
+		}
+		else
+		{
+			m_keyRight = false;
+			m_keyLeft = true;
+		}
 	}
 }
 

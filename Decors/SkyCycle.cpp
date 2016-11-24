@@ -1,5 +1,6 @@
 #include "SkyCycle.hpp"
 #include "ABiome.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -80,10 +81,10 @@ void SkyCycle::setup(ABiome & biome)
 
 	if (biome.getStartDayDuration() == sf::Time::Zero)
 		m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
-	else
+	else if (biome.getId() == Level::Red || biome.getId() == Level::Blue)
 	{
+		//TODO : Strange way to achieve transition blue
 		sf::Time x = sf::Time::Zero;
-
 		m_timerStart = biome.getStartDayDuration();
 		while (x < m_timerStart)
 		{
@@ -91,6 +92,8 @@ void SkyCycle::setup(ABiome & biome)
 			x += sf::seconds(0.1f);
 		}
 	}
+	else
+		m_timerStart = biome.getStartDayDuration();
 
 	newDropCycle(biome);
 	newThunderCycle(biome);
@@ -163,7 +166,15 @@ void SkyCycle::newThunderCycle(ABiome & biome)
 	m_thunderState = 0u;
 	m_thunderTimer = sf::Time::Zero;
 	m_thunderTimerMax = sf::seconds(0.5f);
-	m_thunderTimerStart = sf::seconds(biome.randomFloat(0.f, m_dropTimerMax.asSeconds()));
+	if (Progress::getInstance().isIntro())
+	{
+		if (Progress::getInstance().isInCloud())
+			m_thunderTimerStart = sf::Time::Zero;
+		else
+			m_thunderTimerStart = sf::seconds(100000.f);
+	}
+	else
+		m_thunderTimerStart = sf::seconds(biome.randomFloat(0.f, m_dropTimerMax.asSeconds()));
 	m_boolThunder = true;
 }
 
@@ -288,7 +299,7 @@ void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 			volume = 1.f;
 		m_rainSound->setVolume(volume * audio.getSoundVolume() * 0.1f);
 	}
-	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
+	if ((m_weather || Progress::getInstance().isInCloud() || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
 	{
 		computeThunder(frameTime, biome);
 		playSound(biome);

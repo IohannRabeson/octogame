@@ -302,13 +302,13 @@ void	MusicManager::fade(AreaMusic & music, sf::Time frameTime)
 
 void	MusicManager::updateEvent(sf::Time frameTime)
 {
-	if (m_startEvent)
-	{
-		octo::AudioManager &	audio = octo::Application::getAudioManager();
-		Progress const &		progress = Progress::getInstance();
-		float					refSoundVolume = progress.getSoundVolume();
-		float					refMusicVolume = progress.getMusicVolume();
+	octo::AudioManager &	audio = octo::Application::getAudioManager();
+	Progress const &		progress = Progress::getInstance();
+	float					refSoundVolume = progress.getSoundVolume();
+	float					refMusicVolume = progress.getMusicVolume();
 
+	if (m_startEvent && (m_currentLevel != Level::EndRocket && m_currentLevel != Level::EndTimeLapse))
+	{
 		if (!m_endEvent)
 			m_eventTimer = std::min(m_eventTimer + frameTime, m_eventTimerMax);
 		else
@@ -322,6 +322,11 @@ void	MusicManager::updateEvent(sf::Time frameTime)
 			m_startEvent = false;
 			m_endEvent = false;
 		}
+	}
+	else
+	{
+		audio.setMusicVolume(refMusicVolume);
+		audio.setSoundVolume(refSoundVolume);
 	}
 }
 

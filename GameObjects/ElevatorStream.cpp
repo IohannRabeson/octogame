@@ -77,7 +77,7 @@ ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & 
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
 	m_smoke.setLifeTimeRange(0.6f, 1.5f);
 	m_smoke.setScaleFactor(35.f);
-	m_smoke.setDispersion(200.f);
+	m_smoke.setDispersion(sf::Vector2f(200.f, 0.f));
 	m_smoke.setColor(sf::Color(230, 230, 230, 200));
 
 	if (m_isBotOnInstance)

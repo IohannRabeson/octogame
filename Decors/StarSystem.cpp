@@ -101,7 +101,8 @@ void	StarSystem::update(sf::Time frameTime)
 	{
 		if (m_canEmit)
 		{
-			sf::Vector2f position = m_origin;
+			sf::Vector2f positionCamera = octo::Application::getCamera().getCenter() - octo::Application::getCamera().getSize() / 2.f;
+			sf::Vector2f position = m_origin + positionCamera;
 			if (m_isFromTop)
 				position += sf::Vector2f(m_widthDistri(m_engine), 0.f);
 			else

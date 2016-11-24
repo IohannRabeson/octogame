@@ -24,8 +24,8 @@ public:
 	virtual void		update(sf::Time frameTime);
 	virtual void		draw(sf::RenderTarget& render)const;
 
-	virtual bool	onInputPressed(InputListener::OctoKeys const & key);
-	virtual bool	onInputReleased(InputListener::OctoKeys const & key);
+	virtual bool		onInputPressed(InputListener::OctoKeys const & key);
+	virtual bool		onInputReleased(InputListener::OctoKeys const & key);
 
 private:
 	enum State

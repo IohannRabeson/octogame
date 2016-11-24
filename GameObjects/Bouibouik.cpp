@@ -36,7 +36,7 @@ void Bouibouik::setupSmoke(void)
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
 	m_smoke.setLifeTimeRange(0.6f, 0.8f);
 	m_smoke.setScaleFactor(10.f);
-	m_smoke.setDispersion(80.f);
+	m_smoke.setDispersion(sf::Vector2f(80.f, 0.f));
 	m_smoke.setColor(sf::Color(18, 14, 66, 150));
 
 	m_smoke2.setup(sf::Vector2f(5.f, 5.f));
@@ -45,7 +45,7 @@ void Bouibouik::setupSmoke(void)
 	m_smoke2.setGrowTimeRange(0.4f, 0.6f);
 	m_smoke2.setLifeTimeRange(0.6f, 0.8f);
 	m_smoke2.setScaleFactor(10.f);
-	m_smoke2.setDispersion(80.f);
+	m_smoke2.setDispersion(sf::Vector2f(80.f, 0.f));
 	m_smoke2.setColor(sf::Color(18, 14, 66, 150));
 }
 
@@ -66,11 +66,11 @@ void Bouibouik::update(sf::Time frameTime)
 		m_smoke.setVelocity(sf::Vector2f(0.f, -100.f));
 		m_smoke.setEmitTimeRange(0.2f, 0.3f);
 		m_smoke.setScaleFactor(10.f);
-		m_smoke.setDispersion(80.f);
+		m_smoke.setDispersion(sf::Vector2f(80.f, 0.f));
 		m_smoke2.setVelocity(sf::Vector2f(0.f, -100.f));
 		m_smoke2.setEmitTimeRange(0.2f, 0.3f);
 		m_smoke2.setScaleFactor(10.f);
-		m_smoke2.setDispersion(80.f);
+		m_smoke2.setDispersion(sf::Vector2f(80.f, 0.f));
 	}
 	SimpleObject::update(frameTime);
 	m_spriteFront.update(frameTime);

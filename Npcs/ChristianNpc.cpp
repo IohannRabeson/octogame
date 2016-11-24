@@ -52,7 +52,7 @@ void ChristianNpc::setup(void)
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
 	m_smoke.setLifeTimeRange(0.6f, 0.8f);
 	m_smoke.setScaleFactor(10.f);
-	m_smoke.setDispersion(80.f);
+	m_smoke.setDispersion(sf::Vector2f(80.f, 0.f));
 	m_smoke.setColor(sf::Color(255, 255, 255, 150));
 
 	m_puff.setup(sf::Vector2f(2.5f, 2.5f));
@@ -61,7 +61,7 @@ void ChristianNpc::setup(void)
 	m_puff.setGrowTimeRange(0.4f, 0.6f);
 	m_puff.setLifeTimeRange(0.6f, 0.8f);
 	m_puff.setScaleFactor(15.f);
-	m_puff.setDispersion(120.f);
+	m_puff.setDispersion(sf::Vector2f(120.f, 0.f));
 	m_puff.setColor(sf::Color(255, 255, 255, 150));
 }
 

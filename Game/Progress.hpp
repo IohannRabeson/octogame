@@ -37,6 +37,8 @@ public:
 
 	float											getTimePlayed() const { return m_data.timePlayed; }
 	bool											isMenu(void) const;
+	void											setIntro(bool isIntro);
+	bool											isIntro(void) const;
 	void											setMenu(bool isMenu);
 	bool											isBubbleNpc(void) const;
 	void											setBubbleNpc(bool isBubbleNpc);
@@ -264,6 +266,7 @@ private:
 
 	static std::unique_ptr<Progress>				m_instance;
 	bool											m_isMenu;
+	bool											m_isIntro;
 	bool											m_isBubbleNpc;
 	std::string										m_filename;
 	data											m_data;

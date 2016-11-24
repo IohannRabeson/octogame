@@ -12,7 +12,7 @@ SmokeSystem::SmokeSystem() :
 	m_velocity(0.f, -256.f),
 	m_canEmit(true),
 	m_lifeScaleFactor(15.f),
-	m_dispersion(300.f),
+	m_dispersion(300.f, 0.f),
 	m_engine(0),
 	m_emitTimeDistri(0.01f, 0.2f),
 	m_growTimeDistri(0.5f, 1.5f),
@@ -128,16 +128,20 @@ void	SmokeSystem::updateParticle(sf::Time frameTime, Particle& particle)
 		switch (behaviour)
 		{
 			case 0:
-				position.x += std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion);
+				position.x += std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion.x);
+				position.y += std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion.y);
 				break;
 			case 1:
-				position.x -= std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion);
+				position.x -= std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion.x);
+				position.y -= std::sin(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion.y);
 				break;
 			case 2:
-				position.x += std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion);
+				position.x += std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion.x);
+				position.y += std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion.y);
 				break;
 			case 3:
-				position.x -= std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion);
+				position.x -= std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion.x);
+				position.y -= std::cos(lifeCycle * octo::Pi) * frameTimeSeconds * (lifeCycle * m_dispersion.y);
 				break;
 			default:
 				break;
@@ -192,12 +196,12 @@ void	SmokeSystem::setVelocity(sf::Vector2f const & velocity)
 	m_velocity = velocity;
 }
 
-void	SmokeSystem::setDispersion(float dispersion)
+void	SmokeSystem::setDispersion(sf::Vector2f const & dispersion)
 {
 	m_dispersion = dispersion;
 }
 
-float	SmokeSystem::getDispersion(void) const
+sf::Vector2f	SmokeSystem::getDispersion(void) const
 {
 	return m_dispersion;
 }

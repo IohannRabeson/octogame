@@ -128,6 +128,7 @@ public:
 	void					moveGround(sf::Time frameTime, std::unique_ptr<GroundManager> & groundManager);
 
 private:
+	void					startGameIceA(void);
 	void					updateBox(sf::Time frameTime);
 	void					updateGroundDelay(sf::Time frameTime);
 	void					updateDoorAction(sf::Time frameTime);

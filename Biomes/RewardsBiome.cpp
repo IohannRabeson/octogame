@@ -17,7 +17,7 @@ RewardsBiome::RewardsBiome() :
 	m_name("Rewards"),
 	m_id(Level::Rewards),
 	m_seed("Rewards"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(450u, 850u), m_generator.randomPiecewise(500))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(1450u, 2850u), m_generator.randomPiecewise(1500))),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.7f),

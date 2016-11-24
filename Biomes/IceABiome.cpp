@@ -15,7 +15,7 @@ IceABiome::IceABiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(136.f * 16.f, 0.f * 16.f),
+	m_octoStartPosition(136.f * 16.f, 14.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -25,8 +25,8 @@ IceABiome::IceABiome() :
 	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(35.f)),
-	m_startDayDuration(sf::Time::Zero),
+	m_dayDuration(sf::seconds(120.f)),
+	m_startDayDuration(sf::seconds(90.f)),
 	m_skyDayColor(8, 20, 26),
 	m_skyNightColor(78, 47, 4, 130),
 	m_nightLightColor(8, 20, 26, 50),
@@ -50,7 +50,7 @@ IceABiome::IceABiome() :
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),
-	m_canCreateThunder(false),
+	m_canCreateThunder(true),
 	m_canCreateSnow(true),
 	m_canCreateRock(true),
 	m_canCreateTree(true),
@@ -101,7 +101,7 @@ IceABiome::IceABiome() :
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
 	m_cloudMaxY(-500.f),
-	m_cloudMinY(-2500.f),
+	m_cloudMinY(-6000.f),
 	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
@@ -137,11 +137,17 @@ IceABiome::IceABiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	if (progress.isIntro())
+	{
+		m_startDayDuration = sf::seconds(90.f);
+		m_dayDuration = sf::seconds(120.f);
+	}
+
 	m_secondStartColor = getRockColor();
 	m_secondEndColor = getRockColor();
 
 	m_instances[20] = MAP_ICE_A_TRAIL_LEFT_OMP;
-	m_gameObjects[150] = GameObjectType::GroundTransformNanoRobot;
+	m_gameObjects[110] = GameObjectType::CedricIceANpc;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
 	m_instances[220] = MAP_ICE_A_TRAIL_RIGHT_OMP;
@@ -248,13 +254,13 @@ std::vector<ParallaxScrolling::ALayer *> IceABiome::getLayers()
 	sf::Vector2u const & mapSize = sf::Vector2u(getMapSize().x, getMapSize().y * 4u);
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, 10, 0.1f, 0.9f, 11.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, 10, 0.1f, 0.9f, 11.f, 400.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.5f, 0.3f), mapSize, 15.f, 15, 0.2f, 0.8f, 6.f);
+	layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.5f, 0.3f), mapSize, 15.f, 15, 0.2f, 0.8f, 6.f, 400.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
@@ -270,7 +276,7 @@ Map::MapSurfaceGenerator IceABiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		std::vector<float> pointX = {0.f    , 20.f, 70.f, 95.f, 120.f, 125.f, 165.f, 166.f, 195.f, 220.f, 270.f, 290.f, 350.f, 369.f, 377.f, 396.f, 450.f, 469.f, 477.f, 496.f, 590.f, 610.f  };
-		std::vector<float> pointY = {n / 5.f, 0.f , 0.f , n   , 0.f  , 2.4f , 2.4f , 0.f  , n    , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n    , n    , n / 5.f};
+		std::vector<float> pointY = {n / 5.f, 0.f , 0.f , 0.f , 0.f  , 2.4f , 2.4f , 0.f  , n    , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n    , n    , n / 5.f};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

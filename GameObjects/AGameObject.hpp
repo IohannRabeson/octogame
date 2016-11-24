@@ -147,7 +147,9 @@ enum class GameObjectType : std::size_t
 	CedricWalkNpc				= (1 << 15) + 100,
 	ChristianNpc				= (1 << 15) + 101,
 	SkeletonNpc				= (1 << 15) + 102,
+	CedricIceANpc				= (1 << 15) + 103,
 //Script AddNpc
+
 
 
 

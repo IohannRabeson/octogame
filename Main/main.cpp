@@ -18,6 +18,7 @@
 #include "DefaultApplicationListener.hpp"
 // Ecran de jeu
 #include "StateTest.hpp"
+#include "IntroScreen.hpp"
 #include "LogoScreen.hpp"
 #include "AnOctonautOdysseyScreen.hpp"
 #include "GameScreen.hpp"
@@ -37,6 +38,7 @@
 static void	setupStateManager(octo::StateManager& manager)
 {
 	manager.registerState<StateTest>("test");
+	manager.registerState<IntroScreen>("intro");
 	manager.registerState<GameScreen>("game");
 	manager.registerState<MenuScreen>("menu");
 	manager.registerState<ResourceLoadingScreen>("loading");
@@ -52,6 +54,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<LevelRocketEndScreen>("rocket_end");
 
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
+	manager.registerTransition<octo::WhiteFadeTransition>("white", false);
 	manager.registerTransition<octo::BlueFadeTransition>("blue", false);
 	manager.registerTransition<octo::RedFadeTransition>("red", false);
 }
