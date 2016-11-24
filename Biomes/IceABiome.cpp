@@ -159,8 +159,6 @@ IceABiome::IceABiome() :
 
 	m_gameObjects[420] = GameObjectType::PortalSnow;
 	m_instances[470] = MAP_ICE_A_SECRET_OMP;
-	if (progress.canRepairShip())
-		m_destinations.push_back(Level::Blue);
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceB);
 

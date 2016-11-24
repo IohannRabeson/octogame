@@ -79,7 +79,13 @@ void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
 		Level next = progress.getNextDestination();
 
 		progress.levelChanged();
-		if (current == Level::Blue || next == Level::Blue)
+		if (current == Level::EndRocket || next == Level::EndRocket)
+		{
+			if (next == Level::EndRocket)
+				states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(0.0f));
+			states.change("transitionLevel", "blue");
+		}
+		else if (current == Level::Blue || next == Level::Blue)
 		{
 			if (next == Level::Blue)
 				states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(0.0f));
