@@ -2077,8 +2077,11 @@ void	CharacterOcto::caseJump()
 			if (m_inWater)
 				m_numberOfJump = 0;
 		}
-		else
+		else if (m_sprite.getCurrentEvent() != DieFall && m_sprite.getCurrentEvent() != Fall)
+		{
 			m_numberOfJump = 3;
+			m_sprite.setNextEvent(Fall);
+		}
 	}
 }
 
@@ -2308,13 +2311,15 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 	}
 	if (state == Death || state == PortalEvent || state == KonamiCode || state == Drink || otherKeyReleased)
 		return true;
-	if (!m_onGround && !m_keyCapacity && !m_keyElevator)
+
+	//TODO : really dirty...
+	if (!m_onGround && !m_keyJump && !m_keyCapacity && !m_keyElevator && !m_keyEntrance && !m_keyPortal)
 	{
-		if (state != Fall && state != DieFall && state != StartJump && state != DoubleJump)
+		if (state != Death && state != Fall && state != DieFall && state != StartJump && state != DoubleJump)
 			m_sprite.setNextEvent(Fall);
 	}
 
-	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyCapacity && state != Wait)
+	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyCapacity && state != Death && state != Wait)
 		m_sprite.setNextEvent(Idle);
 
 	return true;
