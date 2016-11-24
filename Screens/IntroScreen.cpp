@@ -218,7 +218,7 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 				shake(2.f + m_cloudCollidedCount, m_cloudCollidedCount, 0.1f);
 				for (std::size_t i = 0; i < m_starsCount; i++)
 					m_stars[i].canEmit(false);
-				if (m_cloudCollidedCount >= 4u)
+				if (m_cloudCollidedCount >= 3u)
 					audio.stopMusic(sf::seconds(0.4f));
 				else
 					audio.setMusicVolume((3u - m_cloudCollidedCount) * 0.2f);

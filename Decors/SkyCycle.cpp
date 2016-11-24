@@ -81,6 +81,17 @@ void SkyCycle::setup(ABiome & biome)
 
 	if (biome.getStartDayDuration() == sf::Time::Zero)
 		m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
+	else if (biome.getId() == Level::Red || biome.getId() == Level::Blue)
+	{
+		//TODO : Strange way to achieve transition blue
+		sf::Time x = sf::Time::Zero;
+		m_timerStart = biome.getStartDayDuration();
+		while (x < m_timerStart)
+		{
+			computeDayNight(sf::seconds(0.1f));
+			x += sf::seconds(0.1f);
+		}
+	}
 	else
 		m_timerStart = biome.getStartDayDuration();
 

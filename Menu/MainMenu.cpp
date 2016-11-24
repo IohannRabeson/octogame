@@ -40,7 +40,7 @@ class YesNoReset : public YesNoMenu
 		octo::StateManager &	states = octo::Application::getStateManager();
 		progress.reset();
 		progress.setFirstTime(true);
-		states.change("zero");
+		states.change("intro");
 	}
 
 	inline void actionNo(void) { }
@@ -93,7 +93,7 @@ void MainMenu::onSelection(void)
 		octo::StateManager &	states = octo::Application::getStateManager();
 
 		if (progress.isFirstTime())
-			states.change("zero");
+			states.change("intro");
 		else
 		{
 			octo::AudioManager &		audio = octo::Application::getAudioManager();
