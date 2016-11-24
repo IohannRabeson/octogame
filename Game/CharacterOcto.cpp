@@ -73,6 +73,8 @@ CharacterOcto::CharacterOcto() :
 	m_keyPortal(false),
 	m_keyElevator(false),
 	m_keyZoomIn(false),
+	m_jumpTic(false),
+	m_capacityTic(false),
 	m_collisionTile(false),
 	m_collisionElevator(false),
 	m_collisionPortal(false),
@@ -948,9 +950,11 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode && m_sprite.getCurrentEvent() != Drink && endDeath())
 	{
 		wait();
-		dieFall();
 		collisionElevatorUpdate();
 		collisionTileUpdate();
+		caseCapacity();
+		caseJump();
+		dieFall();
 		commitControlsToPhysics(frameTime.asSeconds());
 		commitEnvironmentToPhysics();
 		commitEventToGraphics();
@@ -2054,49 +2058,71 @@ void CharacterOcto::moveGround(sf::Time frameTime, std::unique_ptr<GroundManager
 
 void	CharacterOcto::caseJump()
 {
-	if (!m_keyJump)
+	if (m_keyJump)
 	{
-		randomJumpAnimation();
-		m_keyJump = true;
-		m_box->setApplyGravity(true);
-		if ((m_onGround || m_onGroundDelay >= sf::Time::Zero || m_inWater) && m_progress.canJump() && !m_numberOfJump)
+		if (!m_jumpTic)
 		{
-			m_sprite.setNextEvent(StartJump);
-			m_jumpVelocity = m_pixelSecondJump;
-			m_numberOfJump = 1;
-			if (!m_progress.canDoubleJump() && m_inWater)
-				m_numberOfJump = 0;
-		}
-		else if (m_numberOfJump == 1 && m_progress.canDoubleJump())
-		{
-			m_timeSlowFall = sf::Time::Zero;
-			m_sprite.setNextEvent(DoubleJump);
-			m_afterJump = false;
-			m_jumpVelocity = m_pixelSecondJump;
-			m_numberOfJump = 2;
-			if (m_inWater)
-				m_numberOfJump = 0;
-		}
-		else if (m_sprite.getCurrentEvent() != DieFall && m_sprite.getCurrentEvent() != Fall)
-		{
-			m_numberOfJump = 3;
-			m_sprite.setNextEvent(Fall);
+			m_jumpTic = true;
+			randomJumpAnimation();
+			m_box->setApplyGravity(true);
+			if ((m_onGround || m_onGroundDelay >= sf::Time::Zero || m_inWater) && m_progress.canJump() && !m_numberOfJump)
+			{
+				m_sprite.setNextEvent(StartJump);
+				m_jumpVelocity = m_pixelSecondJump;
+				m_numberOfJump = 1;
+				if (!m_progress.canDoubleJump() && m_inWater)
+					m_numberOfJump = 0;
+			}
+			else if (m_numberOfJump == 1 && m_progress.canDoubleJump())
+			{
+				m_timeSlowFall = sf::Time::Zero;
+				m_sprite.setNextEvent(DoubleJump);
+				m_afterJump = false;
+				m_jumpVelocity = m_pixelSecondJump;
+				m_numberOfJump = 2;
+				if (m_inWater)
+					m_numberOfJump = 0;
+			}
+			else
+				m_numberOfJump = 3;
 		}
 	}
+	else
+		m_jumpTic = false;
 }
 
 void CharacterOcto::caseCapacity()
 {
-	if (!m_keyCapacity)
+	if (m_keyCapacity)
 	{
-		m_keyCapacity = true;
-		if (m_inWater && m_progress.canUseWaterJump() && !Progress::getInstance().isInCloud())
+		if (!m_capacityTic)
 		{
-			m_jumpVelocity = m_pixelSecondJump * 0.9f;
-			m_sprite.setNextEvent(StartWaterJump);
+			m_capacityTic = true;
+			if (m_inWater && m_progress.canUseWaterJump() && !Progress::getInstance().isInCloud())
+			{
+				m_jumpVelocity = m_pixelSecondJump * 0.9f;
+				m_sprite.setNextEvent(StartWaterJump);
+			}
+			else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
+				m_sprite.setNextEvent(StartSlowFall);
 		}
-		else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
-			m_sprite.setNextEvent(StartSlowFall);
+	}
+	else
+	{
+		if (m_capacityTic)
+		{
+			if (!m_jumpTic && !m_onGround)
+			{
+				if (m_timeSlowFall < m_timeSlowFallMax)
+				{
+					m_afterJump = true;
+					m_afterJumpVelocity = m_pixelSecondAfterJump / 2.f;
+				}
+				if (m_sprite.getCurrentEvent() != Fall && m_sprite.getCurrentEvent() != DieFall)
+					m_sprite.setNextEvent(Fall);
+			}
+			m_capacityTic = false;
+		}
 	}
 }
 
@@ -2138,10 +2164,10 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 			break;
 		}
 		case OctoKeys::Jump:
-			caseJump();
+			m_keyJump = true;
 			break;
 		case OctoKeys::Capacity:
-			caseCapacity();
+			m_keyCapacity = true;
 			break;
 		case OctoKeys::Down:
 			m_keyDown = true;
@@ -2288,8 +2314,6 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			m_keyCapacity = false;
 			if (state == WaterJump || state == SlowFall1 || state == SlowFall2 || state == SlowFall3)
 			{
-				m_afterJump = true;
-				m_afterJumpVelocity = m_pixelSecondAfterJump;
 			}
 			break;
 		case OctoKeys::Down:
@@ -2309,19 +2333,6 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			otherKeyReleased = true;
 			break;
 	}
-	if (state == Death || state == PortalEvent || state == KonamiCode || state == Drink || otherKeyReleased)
-		return true;
-
-	//TODO : really dirty...
-	if (!m_onGround && !m_keyJump && !m_keyCapacity && !m_keyElevator && !m_keyEntrance && !m_keyPortal)
-	{
-		if (state != Death && state != Fall && state != DieFall && state != StartJump && state != DoubleJump)
-			m_sprite.setNextEvent(Fall);
-	}
-
-	if (m_onGround && !m_keyLeft && !m_keyRight && !m_keyCapacity && state != Death && state != Wait)
-		m_sprite.setNextEvent(Idle);
-
 	return true;
 }
 
@@ -2561,11 +2572,12 @@ void	CharacterOcto::updateAI(sf::Time frameTime)
 	m_jumpTimer -= frameTime;
 	if (m_jumpTimer <= sf::Time::Zero && m_numberOfJump == 0)
 	{
-		m_keyJump = false;
 		if (std::round(m_saveOctoPos.x) == std::round(getPosition().x))
 		{
 			m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
+			m_keyJump = false;
 			caseJump();
+			m_keyJump = true;
 		}
 		m_saveOctoPos = getPosition();
 	}
@@ -2576,7 +2588,9 @@ void	CharacterOcto::updateAI(sf::Time frameTime)
 	{
 		m_randomJumpTimer = sf::seconds(m_generator.randomFloat(1.f, 30.f));
 		m_doubleJumpTimer = sf::seconds(m_generator.randomFloat(1.5f, 3.5f));
+		m_keyJump = false;
 		caseJump();
+		m_keyJump = true;
 	}
 
 	//Double jump
@@ -2587,6 +2601,7 @@ void	CharacterOcto::updateAI(sf::Time frameTime)
 		{
 			m_keyJump = false;
 			caseJump();
+			m_keyJump = true;
 		}
 	}
 
@@ -2596,7 +2611,11 @@ void	CharacterOcto::updateAI(sf::Time frameTime)
 	{
 		m_slowFallTimer = sf::seconds(m_generator.randomFloat(4.f, 10.f));
 		if (m_generator.randomBool(0.5f))
+		{
+			m_keyCapacity = false;
 			caseCapacity();
+			m_keyCapacity = true;
+		}
 		else
 			m_keyCapacity = false;
 	}

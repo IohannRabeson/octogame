@@ -261,6 +261,8 @@ private:
 	bool										m_keyPortal;
 	bool										m_keyElevator;
 	bool										m_keyZoomIn;
+	bool										m_jumpTic;
+	bool										m_capacityTic;
 	bool										m_collisionTile;
 	bool										m_collisionTileHead;
 	bool										m_collisionElevator;
