@@ -15,7 +15,7 @@ DesertBBiome::DesertBBiome() :
 	m_seed("Desert C"),
 	m_mapSize(sf::Vector2u(600u, 180u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(143.f * 16.f, -1850.f),
+	m_octoStartPosition(143.f * 16.f, -118.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(245, 222, 130),
