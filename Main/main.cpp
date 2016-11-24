@@ -54,6 +54,7 @@ static void	setupStateManager(octo::StateManager& manager)
 	manager.registerState<LevelRocketEndScreen>("rocket_end");
 
 	manager.registerTransition<octo::BlackFadeTransition>("default", true);
+	manager.registerTransition<octo::WhiteFadeTransition>("white", false);
 	manager.registerTransition<octo::BlueFadeTransition>("blue", false);
 	manager.registerTransition<octo::RedFadeTransition>("red", false);
 }

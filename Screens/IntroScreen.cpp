@@ -256,7 +256,7 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 				octo::StateManager &		states = octo::Application::getStateManager();
 
 				states.setTransitionDuration(sf::seconds(0.2f), sf::seconds(2.f));
-				states.change("transitionLevelZero", "red");
+				states.change("transitionLevelZero", "white");
 				audio.playSound(resource.getSound(EVENT_CRASH_OGG), 1.f);
 				m_state = None;
 			}
