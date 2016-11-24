@@ -3,7 +3,7 @@
 #include <Interpolations.hpp>
 
 CedricIceANpc::CedricIceANpc(void) :
-	ASpecialNpc(CEDRIC_ICE_A_OSS, false),
+	ASpecialNpc(CEDRIC_ICE_A_OSS, false, false),
 	m_timerMoveMax(sf::seconds(8.f)),
 	m_timerDisapearMax(sf::seconds(1.f))
 {
