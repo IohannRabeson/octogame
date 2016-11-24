@@ -1270,7 +1270,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 	m_collisionPortal = true;
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
-		if (portal.getDestination() == m_level)
+		if (portal.getDestination() == m_level && m_level != Level::Rewards)
 		{
 			if (portal.getKey() == OBJECT_PORTAL_SNOW_OSS)
 				m_box->setPosition(sf::Vector2f(20430.f, 3255.f));
