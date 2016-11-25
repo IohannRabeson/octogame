@@ -132,6 +132,7 @@ private:
 	void					updateBox(sf::Time frameTime);
 	void					updateGroundDelay(sf::Time frameTime);
 	void					updateDoorAction(sf::Time frameTime);
+	void					updatePortalVacuum(sf::Time frameTime);
 	void					updateNanoRobots(sf::Time frameTime);
 	void					updateOctoEvent(void);
 	void					updateParticles(sf::Time frameTime);
@@ -218,6 +219,9 @@ private:
 	sf::Time									m_timeSlowFallMax;
 	sf::Time									m_timeStopVelocity;
 	sf::Time									m_timeStopVelocityMax;
+	sf::Time									m_timerPortalVacuum;
+	sf::Time									m_timerPortalVacuumMax;
+	sf::Vector2f								m_portalCenterPos;
 	sf::Time									m_timerStartUseDoor;
 	sf::Time									m_timerStartUseDoorMax;
 	std::shared_ptr<sf::Sound>					m_soundUseDoor;

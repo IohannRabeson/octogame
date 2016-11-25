@@ -38,6 +38,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeSlowFallMax(sf::seconds(1.5f)),
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
+	m_timerPortalVacuumMax(sf::seconds(0.5f)),
 	m_timerStartUseDoor(sf::seconds(1.f)),
 	m_timerStartUseDoorMax(sf::seconds(0.2f)),
 	m_soundUseDoor(nullptr),
@@ -973,6 +974,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 
 	updateNanoRobots(frameTime);
 	updateDoorAction(frameTime);
+	updatePortalVacuum(frameTime);
 	updateParticles(frameTime);
 	resetColisionBolean();
 	replaceOcto();
@@ -1295,6 +1297,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 			if (!m_progress.isMenu())
 				m_progress.setRespawnType(Progress::RespawnType::Portal);
 		}
+		m_portalCenterPos = portal.getPosition();
 	}
 }
 
@@ -1522,6 +1525,16 @@ void	CharacterOcto::updateDoorAction(sf::Time frameTime)
 	}
 
 	m_soundUseDoor->setVolume((1.f - m_timerStartUseDoor / m_timerStartUseDoorMax) * audio.getSoundVolume());
+}
+
+void	CharacterOcto::updatePortalVacuum(sf::Time frameTime)
+{
+	if (m_sprite.getCurrentEvent() == PortalEvent)
+	{
+		m_timerPortalVacuum = std::min(m_timerPortalVacuum + frameTime, m_timerPortalVacuumMax);
+		float alpha = octo::linearInterpolation(255, 0, m_timerPortalVacuum / m_timerPortalVacuumMax);
+		m_sprite.setColor(sf::Color(255, 255, 255, alpha));
+	}
 }
 
 void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
