@@ -147,7 +147,7 @@ IceABiome::IceABiome() :
 	m_secondEndColor = getRockColor();
 
 	m_instances[20] = MAP_ICE_A_TRAIL_LEFT_OMP;
-	m_gameObjects[110] = GameObjectType::CedricIceANpc;
+	m_gameObjects[120] = GameObjectType::CedricIceANpc;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
 	m_instances[220] = MAP_ICE_A_TRAIL_RIGHT_OMP;

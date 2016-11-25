@@ -764,7 +764,7 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			case GameObjectType::PortalRandom:
 				{
 					std::string name = "vortex_" + std::to_string(portalCount);
-					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_RANDOM_OSS, name.c_str()));
+					std::unique_ptr<Portal> portal(new Portal(biome.getDestination(), OBJECT_PORTAL_RANDOM_OSS, "vortex_white"));
 					portal->setBiome(biome);
 					m_portals.emplace_back(gameObject.first, portal->getRadius() * 2.f / Tile::TileSize, portal);
 					portalCount++;

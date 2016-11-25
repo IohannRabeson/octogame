@@ -38,7 +38,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeSlowFallMax(sf::seconds(1.5f)),
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
-	m_timerPortalVacuumMax(sf::seconds(0.5f)),
+	m_timerPortalVacuumMax(sf::seconds(0.4f)),
 	m_timerStartUseDoor(sf::seconds(1.f)),
 	m_timerStartUseDoorMax(sf::seconds(0.2f)),
 	m_soundUseDoor(nullptr),
