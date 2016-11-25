@@ -3,6 +3,8 @@
 #include <cassert>
 #include "InputListener.hpp"
 
+#include <iostream>
+
 InputListener::InputListener(void) :
 	m_isListeners(false),
 	//m_joystickLT(false),
@@ -14,11 +16,6 @@ InputListener::InputListener(void) :
 	m_isShiftPressed(false),
 	m_triggerLimit(0.f)
 {
-	// Unix
-	// Playstation
-	//m_inputs = { OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Right, OctoKeys::Elevator,
-	//OctoKeys::Left, OctoKeys::GroundRight, OctoKeys::GroundLeft, OctoKeys::Capacity, OctoKeys::Capacity, OctoKeys::Jump};
-	// XBox 360
 #ifdef __linux__
 	m_inputs = { OctoKeys::Jump, OctoKeys::Entrance, OctoKeys::Capacity, OctoKeys::Elevator, OctoKeys::GroundRight,
 		OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::Zoom };
@@ -28,9 +25,32 @@ InputListener::InputListener(void) :
 		OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::Zoom };
 	m_triggerLimit = 50.f;
 #else // __APPLE__
-	m_inputs = { OctoKeys::Jump, OctoKeys::Entrance, OctoKeys::Capacity, OctoKeys::Elevator, OctoKeys::GroundRight, OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Zoom, OctoKeys::Menu, OctoKeys::None,
-		OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Left, OctoKeys::Right, OctoKeys::None,
-		OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	if (sf::Joystick::getIdentification(0).name.toAnsiString() == "PLAYSTATION(R)3 Controller")
+	{
+		m_inputs = {OctoKeys::None,
+					OctoKeys::None,
+					OctoKeys::Zoom,
+					OctoKeys::Menu,
+					OctoKeys::Up,
+					OctoKeys::Right,
+					OctoKeys::Down,
+					OctoKeys::Left,
+					OctoKeys::None,
+					OctoKeys::None,
+					OctoKeys::GroundLeft,
+					OctoKeys::GroundRight,
+					OctoKeys::Elevator,
+					OctoKeys::Entrance,
+					OctoKeys::Jump,
+					OctoKeys::Capacity};
+	}
+	else
+	{
+		m_inputs = { OctoKeys::Jump, OctoKeys::Entrance, OctoKeys::Capacity, OctoKeys::Elevator, OctoKeys::GroundRight,
+			OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Zoom, OctoKeys::Menu, OctoKeys::None,
+			OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Left, OctoKeys::Right, OctoKeys::None,
+			OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None };
+	}
 	m_triggerLimit = 0.f;
 #endif
 }
@@ -187,7 +207,7 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 
 void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 {
-	if (event.axis == sf::Joystick::U)
+	if (event.axis == sf::Joystick::U || event.axis == sf::Joystick::Z)
 	{
 		if (event.position > 50)
 		{
@@ -207,7 +227,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 		}
 	}
 
-	if (event.axis == sf::Joystick::V)
+	if (event.axis == sf::Joystick::V || event.axis == sf::Joystick::R)
 	{
 		if (event.position > 50)
 		{
@@ -372,9 +392,9 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 #endif
 }
 
-#include <iostream>
 void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 {
+	std::cout << event.button << std::endl;
 	//TODO: Search for another solution
 	// Hack to avoid screensaver with controller
 	sf::Mouse::setPosition(sf::Vector2i(5, 5));
