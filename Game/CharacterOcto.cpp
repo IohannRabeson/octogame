@@ -2124,9 +2124,9 @@ void CharacterOcto::caseCapacity()
 	{
 		if (m_capacityTic)
 		{
-			if (!m_jumpTic && !m_onGround)
+			if (!m_onGround)
 			{
-				if (m_timeSlowFall < m_timeSlowFallMax)
+				if (!m_jumpTic && m_timeSlowFall < m_timeSlowFallMax)
 				{
 					m_afterJump = true;
 					m_afterJumpVelocity = m_pixelSecondAfterJump / 2.f;

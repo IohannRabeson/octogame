@@ -3,8 +3,6 @@
 #include <cassert>
 #include "InputListener.hpp"
 
-#include <iostream>
-
 InputListener::InputListener(void) :
 	m_isListeners(false),
 	//m_joystickLT(false),
@@ -394,7 +392,6 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 
 void	InputListener::onPressed(sf::Event::JoystickButtonEvent const& event)
 {
-	std::cout << event.button << std::endl;
 	//TODO: Search for another solution
 	// Hack to avoid screensaver with controller
 	sf::Mouse::setPosition(sf::Vector2i(5, 5));
