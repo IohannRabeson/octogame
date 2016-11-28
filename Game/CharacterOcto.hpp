@@ -57,6 +57,7 @@ public:
 		Fall,
 		DieFall,
 		Wait,
+		Down,
 		StartSlowFall,
 		Death,
 		Drink,
@@ -143,6 +144,7 @@ private:
 	bool					endDeath();
 	void					portalEvent();
 	void					wait();
+	void					down();
 	void					inWater();
 	void					randomJumpAnimation();
 	void					timeEvent(sf::Time frameTime);
@@ -158,6 +160,7 @@ private:
 	void					commitEventToGraphics();
 	void					caseLeft();
 	void					caseRight();
+	void					caseNone();
 	void					caseJump();
 	void					caseCapacity();
 
@@ -176,6 +179,7 @@ private:
 	octo::CharacterAnimation					m_fallAnimation;
 	octo::CharacterAnimation					m_dieFallAnimation;
 	octo::CharacterAnimation					m_waitAnimation;
+	octo::CharacterAnimation					m_downAnimation;
 	octo::CharacterAnimation					m_answerWolfAnimation;
 	octo::CharacterAnimation					m_startSlowFallAnimation;
 	octo::CharacterAnimation					m_slowFallAnimation1;
@@ -265,6 +269,9 @@ private:
 	bool										m_keyPortal;
 	bool										m_keyElevator;
 	bool										m_keyZoomIn;
+	bool										m_isRightFirst;
+	bool										m_leftTic;
+	bool										m_rightTic;
 	bool										m_jumpTic;
 	bool										m_capacityTic;
 	bool										m_collisionTile;
