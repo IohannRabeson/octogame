@@ -293,11 +293,7 @@ void Portal::update(sf::Time frametime)
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
 			m_shader.setParameter("center", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
 		}
-		else
-			PostEffectLayer::getInstance().enableShader(m_shaderName, false);
 	}
-	else
-		PostEffectLayer::getInstance().enableShader(m_shaderName, false);
 
 	updateSound();
 	m_sprite.update(frametime);
