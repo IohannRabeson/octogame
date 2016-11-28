@@ -45,7 +45,7 @@ RandomBiome::RandomBiome() :
 	m_rockCount(m_generator.randomInt(1, 30), m_generator.randomInt(30, 100)),
 	m_treeCount(m_generator.randomInt(1, 20), m_generator.randomInt(20, 50)),
 	m_mushroomCount(m_generator.randomInt(1, 100), m_generator.randomInt(100, 250)),
-	m_crystalCount(m_generator.randomInt(1, 30), m_generator.randomInt(30, 80)),
+	m_crystalCount(m_generator.randomInt(1, 30), m_generator.randomInt(30, 50)),
 	m_starCount(300u, 800u),
 	m_sunCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 8)),
 	m_moonCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 8)),
@@ -149,9 +149,7 @@ RandomBiome::RandomBiome() :
 
 	// TODO define map position and number of map
 	std::size_t portalPos = 30.f;
-	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_instances[100] = MAP_RANDOM_OMP;
-	m_destinations.push_back(progress.getLastDestination());
 
 	m_interestPointPosX = portalPos;
 
@@ -171,8 +169,14 @@ RandomBiome::RandomBiome() :
 			m_gameObjects[i] = GameObjectType::BirdRedNpc;
 	}
 
+	m_gameObjects[portalPos] = GameObjectType::Portal;
+	m_destinations.push_back(progress.getLastDestination());
 	if (!progress.isMetRandom(progress.getLastDestination()))
-		m_gameObjects[randomInt(5u, m_mapSize.x)] = GameObjectType::SpiritNanoRobot;
+	{
+		std::size_t index = randomInt(5u, m_mapSize.x);
+		m_gameObjects[index] = GameObjectType::SpiritNanoRobot;
+		m_interestPointPosX = index;
+	}
 	progress.meetPortal(progress.getLastDestination(), Level::Random);
 }
 

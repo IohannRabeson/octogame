@@ -132,11 +132,6 @@ void GroundTransformNanoRobot::updateInfo(void)
 			setInfoText(infoText);
 			popUpInfo(true);
 		}
-		else if (progress.isGameFinished())
-		{
-			TextManager & textManager = TextManager::getInstance();
-			setInfoText(textManager.getTexts("nano_show_portal")[0]);
-		}
 	}
 }
 

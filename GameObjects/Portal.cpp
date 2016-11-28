@@ -33,7 +33,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 		m_shader.setParameter("center_color", sf::Color::White);
 	else
 	{
-		if (progress.isGameFinished() && (destination != Level::Red && destination != Level::Blue && destination != Level::Random && destination != Level::Rewards && destination != Level::EndTimeLapse))
+		if (progress.isGameFinished() && (destination != Level::Red && destination != Level::Blue && destination != Level::Random && destination != Level::Rewards && destination != Level::EndTimeLapse && destination != Level::EndRocket))
 		{
 			m_destination = Level::Portal;
 			m_shader.setParameter("center_color", centerColor);
@@ -294,8 +294,6 @@ void Portal::update(sf::Time frametime)
 			m_shader.setParameter("center", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
 		}
 	}
-	else
-		PostEffectLayer::getInstance().enableShader(m_shaderName, false);
 
 	updateSound();
 	m_sprite.update(frametime);

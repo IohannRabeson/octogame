@@ -15,7 +15,7 @@ IceABiome::IceABiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(136.f * 16.f, 14.f * 16.f),
+	m_octoStartPosition(136.f * 16.f, 20.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
@@ -147,7 +147,7 @@ IceABiome::IceABiome() :
 	m_secondEndColor = getRockColor();
 
 	m_instances[20] = MAP_ICE_A_TRAIL_LEFT_OMP;
-	m_gameObjects[110] = GameObjectType::CedricIceANpc;
+	m_gameObjects[120] = GameObjectType::CedricIceANpc;
 	m_gameObjects[128] = GameObjectType::SpaceShip;
 	m_instances[120] = MAP_ICE_A_CRATER_OMP;
 	m_instances[220] = MAP_ICE_A_TRAIL_RIGHT_OMP;
@@ -159,8 +159,6 @@ IceABiome::IceABiome() :
 
 	m_gameObjects[420] = GameObjectType::PortalSnow;
 	m_instances[470] = MAP_ICE_A_SECRET_OMP;
-	if (progress.canRepairShip())
-		m_destinations.push_back(Level::Blue);
 	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::IceB);
 

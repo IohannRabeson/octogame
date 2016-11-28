@@ -56,7 +56,7 @@ void	TransitionLevelScreen::start()
 	m_sprite.setScale(scale);
 	m_sprite.setPosition(pos - m_sprite.getGlobalSize() + cameraPos);
 
-	if (!(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
+	if (!(current == Level::EndRocket || next == Level::EndRocket) && !(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
 		m_sound = audio.playSound(resources.getSound(OCTO_SOUND_DOUBLE_JUMP_OGG), 1.f);
 }
 
@@ -100,7 +100,12 @@ void	TransitionLevelScreen::changeState(void)
 	Level current = progress.getCurrentDestination();
 	Level next = progress.getNextDestination();
 
-	if (current == Level::Blue || next == Level::Blue)
+	if (current == Level::EndRocket || next == Level::EndRocket)
+	{
+		states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(2.5f));
+		states.change("game", "blue");
+	}
+	else if (current == Level::Blue || next == Level::Blue)
 	{
 		if (next != Level::Blue)
 			states.setTransitionDuration(sf::seconds(0.0f), sf::seconds(2.5f));
@@ -129,7 +134,9 @@ void	TransitionLevelScreen::draw(sf::RenderTarget& render)const
 	Level current = progress.getCurrentDestination();
 	Level next = progress.getNextDestination();
 
-	if (current == Level::Blue || next == Level::Blue)
+	if (current == Level::EndRocket || next == Level::EndRocket)
+		render.clear(sf::Color(0, 0, 155));
+	else if (current == Level::Blue || next == Level::Blue)
 		render.clear(sf::Color(0, 0, 155));
 	else if (current == Level::Red || next == Level::Red)
 		render.clear(sf::Color(155, 0, 0));

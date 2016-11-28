@@ -485,6 +485,8 @@ void	Progress::removePortalPosition(Level destination)
 
 sf::Vector2f Progress::getInterestPoint(void)
 {
+	if (m_data.currentDestination == Level::Final)
+		return m_portalsToDiscover[Level::Blue];
 	for (auto portal : m_portalsToDiscover)
 		return (portal.second);
 	return sf::Vector2f(0.f, 0.f);

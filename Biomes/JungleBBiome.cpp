@@ -12,7 +12,7 @@
 JungleBBiome::JungleBBiome() :
 	m_name("Jungle B"),
 	m_id(Level::JungleB),
-	m_seed("Jungle B"),
+	m_seed("yo"),
 	m_mapSize(sf::Vector2u(550u, 200u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(113.f * 16.f, 400.f),

@@ -57,6 +57,7 @@ public:
 		Fall,
 		DieFall,
 		Wait,
+		Down,
 		StartSlowFall,
 		Death,
 		Drink,
@@ -132,6 +133,7 @@ private:
 	void					updateBox(sf::Time frameTime);
 	void					updateGroundDelay(sf::Time frameTime);
 	void					updateDoorAction(sf::Time frameTime);
+	void					updatePortalVacuum(sf::Time frameTime);
 	void					updateNanoRobots(sf::Time frameTime);
 	void					updateOctoEvent(void);
 	void					updateParticles(sf::Time frameTime);
@@ -142,6 +144,7 @@ private:
 	bool					endDeath();
 	void					portalEvent();
 	void					wait();
+	void					down();
 	void					inWater();
 	void					randomJumpAnimation();
 	void					timeEvent(sf::Time frameTime);
@@ -157,6 +160,7 @@ private:
 	void					commitEventToGraphics();
 	void					caseLeft();
 	void					caseRight();
+	void					caseNone();
 	void					caseJump();
 	void					caseCapacity();
 
@@ -175,6 +179,7 @@ private:
 	octo::CharacterAnimation					m_fallAnimation;
 	octo::CharacterAnimation					m_dieFallAnimation;
 	octo::CharacterAnimation					m_waitAnimation;
+	octo::CharacterAnimation					m_downAnimation;
 	octo::CharacterAnimation					m_answerWolfAnimation;
 	octo::CharacterAnimation					m_startSlowFallAnimation;
 	octo::CharacterAnimation					m_slowFallAnimation1;
@@ -218,6 +223,9 @@ private:
 	sf::Time									m_timeSlowFallMax;
 	sf::Time									m_timeStopVelocity;
 	sf::Time									m_timeStopVelocityMax;
+	sf::Time									m_timerPortalVacuum;
+	sf::Time									m_timerPortalVacuumMax;
+	sf::Vector2f								m_portalCenterPos;
 	sf::Time									m_timerStartUseDoor;
 	sf::Time									m_timerStartUseDoorMax;
 	std::shared_ptr<sf::Sound>					m_soundUseDoor;
@@ -261,6 +269,11 @@ private:
 	bool										m_keyPortal;
 	bool										m_keyElevator;
 	bool										m_keyZoomIn;
+	bool										m_isRightFirst;
+	bool										m_leftTic;
+	bool										m_rightTic;
+	bool										m_jumpTic;
+	bool										m_capacityTic;
 	bool										m_collisionTile;
 	bool										m_collisionTileHead;
 	bool										m_collisionElevator;
