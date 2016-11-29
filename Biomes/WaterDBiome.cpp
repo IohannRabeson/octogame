@@ -74,7 +74,7 @@ WaterDBiome::WaterDBiome() :
 
 	m_grassSizeY(50.f, 60.f),
 	m_grassSizeX(10.f, 26.f),
-	m_grassColor(159, 24, 24, 130),
+	m_grassColor(159, 24, 24, 180),
 	m_grassCount(m_mapSize.x),
 
 	m_treeDepth(6u, 7u),
