@@ -255,9 +255,12 @@ bool	LevelZeroScreen::onInputPressed(InputListener::OctoKeys const & key)
 		{
 			octo::StateManager &	states = octo::Application::getStateManager();
 			octo::AudioManager &	audio = octo::Application::getAudioManager();
+			Progress &				progress = Progress::getInstance();
 
 			audio.stopMusic(sf::seconds(0.1f));
-			states.change("transitionLevelZero");
+			progress.setNextDestination(Level::Portal);
+			progress.save();
+			states.change("game");
 			break;
 		}
 		default:
