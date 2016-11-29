@@ -1166,6 +1166,7 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 		case DoubleJump:
 			m_timeEventInk += frameTime;
 			break;
+		case StartSlowFall:
 		case SlowFall1:
 		case SlowFall2:
 		case SlowFall3:
@@ -2189,10 +2190,13 @@ void CharacterOcto::caseCapacity()
 		{
 			if (!m_onGround)
 			{
-				if (!m_jumpTic && m_timeSlowFall < m_timeSlowFallMax)
+				if (!m_jumpTic)
 				{
 					m_afterJump = true;
-					m_afterJumpVelocity = m_pixelSecondAfterJump / 2.f;
+					if (m_timeSlowFall == sf::Time::Zero)
+						m_afterJumpVelocity = m_pixelSecondAfterJump;
+					else if (m_timeSlowFall < m_timeSlowFallMax)
+						m_afterJumpVelocity = m_pixelSecondAfterJump / 2.f;
 				}
 				if (m_sprite.getCurrentEvent() != Fall && m_sprite.getCurrentEvent() != DieFall)
 					m_sprite.setNextEvent(Fall);
