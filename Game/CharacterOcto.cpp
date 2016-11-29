@@ -2174,14 +2174,17 @@ void CharacterOcto::caseCapacity()
 	{
 		if (!m_capacityTic)
 		{
-			m_capacityTic = true;
 			if (m_inWater && m_progress.canUseWaterJump() && !Progress::getInstance().isInCloud())
 			{
+				m_capacityTic = true;
 				m_jumpVelocity = m_pixelSecondJump * 0.9f;
 				m_sprite.setNextEvent(StartWaterJump);
 			}
 			else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
+			{
+				m_capacityTic = true;
 				m_sprite.setNextEvent(StartSlowFall);
+			}
 		}
 	}
 	else
@@ -2190,7 +2193,8 @@ void CharacterOcto::caseCapacity()
 		{
 			if (!m_onGround)
 			{
-				if (!m_jumpTic)
+				Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
+				if (!m_jumpTic || event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3 || event == WaterJump)
 				{
 					m_afterJump = true;
 					if (m_timeSlowFall == sf::Time::Zero)
