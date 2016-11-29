@@ -81,7 +81,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 		bubble.reset(new BubbleText());
 		bubble->setup(nanoTexts[i], sf::Color::White, 30u, 500.f);
 		bubble->setType(ABubble::Type::Speak);
-		bubble->setActive(true);
+		bubble->setActive(false);
 		m_texts.push_back(std::move(bubble));
 	}
 
@@ -242,6 +242,8 @@ void NanoRobot::transfertToOcto(bool inInit)
 		m_swarm.killAll();
 		m_swarm.create(m_spawnMode, octo::Application::getCamera().getCenter(), sf::Color::Magenta, 8.f, 32.f, 2.f);
 		m_nanoEffect.setState(NanoEffect::State::Wait);
+		for (std::size_t i = 0u; i < m_texts.size(); i++)
+			m_texts[i]->setType(ABubble::Type::None);
 	}
 	m_swarm.getFirefly(0u).speed = 1.f;
 }
@@ -570,9 +572,13 @@ void NanoRobot::update(sf::Time frametime)
 
 	if (m_isSpeaking)
 	{
+		for (std::size_t i = 0u; i < m_texts.size(); i++)
+			m_texts[i]->setActive(true);
 		m_timer += frametime;
 		if (m_timer > m_timerMax && m_stopSpeakinKeyPress)
 		{
+			for (std::size_t i = 0u; i < m_texts.size(); i++)
+				m_texts[i]->setType(ABubble::Type::None);
 			m_isSpeaking = false;
 			m_state = FollowOcto;
 		}
@@ -632,14 +638,11 @@ void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 		render.draw(m_ray.get() + 8, 8u, sf::Quads, m_texture);
 	}
 	m_particles.draw(render);
-	if (m_infoBubble.isActive())
-		m_infoBubble.draw(render);
 }
 
 void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const
 {
-	if (m_state == Idle)
-		return;
-	if (m_isSpeaking)
-		m_texts[m_textIndex]->draw(render);
+	m_texts[m_textIndex]->draw(render);
+	if (m_infoBubble.isActive())
+		m_infoBubble.draw(render);
 }
