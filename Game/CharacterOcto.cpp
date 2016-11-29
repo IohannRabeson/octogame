@@ -35,7 +35,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeEventDieFallMax(sf::seconds(2.3f)),
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(10.f)),
-	m_timeSlowFallMax(sf::seconds(1.5f)),
+	m_timeSlowFallMax(sf::seconds(1.7f)),
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
 	m_timerPortalVacuumMax(sf::seconds(0.4f)),
@@ -2197,9 +2197,9 @@ void CharacterOcto::caseCapacity()
 						m_afterJumpVelocity = m_pixelSecondAfterJump;
 					else if (m_timeSlowFall < m_timeSlowFallMax)
 						m_afterJumpVelocity = m_pixelSecondAfterJump / 2.f;
+					if (m_sprite.getCurrentEvent() != Fall && m_sprite.getCurrentEvent() != DieFall)
+						m_sprite.setNextEvent(Fall);
 				}
-				if (m_sprite.getCurrentEvent() != Fall && m_sprite.getCurrentEvent() != DieFall)
-					m_sprite.setNextEvent(Fall);
 			}
 			m_capacityTic = false;
 		}
