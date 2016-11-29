@@ -4,6 +4,7 @@
 #include "VideoMenu.hpp"
 #include "AudioMenu.hpp"
 #include "DifficultyMenu.hpp"
+#include "BalleMultiplierMenu.hpp"
 #include "LanguageMenu.hpp"
 #include "MenuTypeMenu.hpp"
 #include <StateManager.hpp>
@@ -31,6 +32,8 @@ void OptionMenu::createMenus(void)
 {
 	Progress &				progress = Progress::getInstance();
 
+	if (progress.isGameFinished())
+		addMenu(L"???", std::unique_ptr<BalleMultiplierMenu>(new BalleMultiplierMenu()));
 	addMenu(AMenu::getText("options_audio"), std::unique_ptr<AudioMenu>(new AudioMenu()));
 	addMenu(AMenu::getText("options_video"), std::unique_ptr<VideoMenu>(new VideoMenu()));
 	addMenu(AMenu::getText("options_difficulty"), std::unique_ptr<DifficultyMenu>(new DifficultyMenu()));

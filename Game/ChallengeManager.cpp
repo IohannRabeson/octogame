@@ -29,9 +29,15 @@ void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf:
 {
 	for (auto & it : m_challenges)
 	{
-		if (biome.getType() == it.second->getBiomeType() || biome.getType() == ABiome::Type::Random)
+		if (biome.getType() == it.second->getBiomeType())
 		{
 			if (!it.second->enable() && Progress::getInstance().isValidateChallenge(it.first))
+				it.second->startGlitch(biome);
+			it.second->update(frametime, biome, position);
+		}
+		else if (biome.getType() == ABiome::Type::Random && Progress::getInstance().isGameFinished())
+		{
+			if (!it.second->enable())
 				it.second->startGlitch(biome);
 			it.second->update(frametime, biome, position);
 		}
