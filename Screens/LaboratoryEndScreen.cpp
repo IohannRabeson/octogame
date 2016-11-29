@@ -59,6 +59,17 @@ void	LaboratoryEndScreen::start()
 	m_npcs[2]->setPosition(sf::Vector2f(1600.f, 790.f));
 	m_npcs[3]->setPosition(sf::Vector2f(-70.f, 577.f));
 
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_GUI_OSS));
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_IOHANN_OSS));
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_FAB_OSS));
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_JEF_OSS));
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_PIERRE_OSS));
+	m_tvNpcs[0]->setPosition(sf::Vector2f(44.f, 393.f));
+	m_tvNpcs[1]->setPosition(sf::Vector2f(32.f, 700.f));
+	m_tvNpcs[2]->setPosition(sf::Vector2f(101.f, 957.f));
+	m_tvNpcs[3]->setPosition(sf::Vector2f(682.f, 957.f));
+	m_tvNpcs[4]->setPosition(sf::Vector2f(857.f, 957.f));
+
 	m_octo.setPosition(sf::Vector2f(700.f, 770.f));
 
 	for (auto & it : m_npcs)
@@ -217,6 +228,8 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 
 	for (auto & it : m_npcs)
 		it->update(frameTime);
+	for (auto & it : m_tvNpcs)
+		it->update(frameTime);
 
 	m_decorManager.update(frameTime, octo::Application::getCamera());
 	m_octo.update(frameTime);
@@ -232,6 +245,8 @@ void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
 	render.draw(m_water, states);
 	states.shader = nullptr;
 	for (auto & it : m_npcs)
+		render.draw(*it);
+	for (auto & it : m_tvNpcs)
 		render.draw(*it);
 	render.draw(m_foreground);
 	for (auto & it : m_npcs)

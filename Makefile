@@ -181,7 +181,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ChristianNpc.cpp					\
 				Npcs/SkeletonNpc.cpp					\
 				Npcs/CedricIceANpc.cpp				\
+				Npcs/TvLaboNpc.cpp				\
 #Script AddNpc
+
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
