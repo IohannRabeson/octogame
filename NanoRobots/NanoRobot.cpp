@@ -642,7 +642,8 @@ void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 
 void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const
 {
-	m_texts[m_textIndex]->draw(render);
+	if (m_texts.size())
+		m_texts[m_textIndex]->draw(render);
 	if (m_infoBubble.isActive())
 		m_infoBubble.draw(render);
 }
