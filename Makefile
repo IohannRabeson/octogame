@@ -211,6 +211,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/RandomDiscoverMenu.cpp				\
 				Menu/FakeMenu.cpp						\
 				Menu/BalleMultiplierMenu.cpp			\
+				Menu/DifficultyMenu.cpp					\
 				Menu/EmptyMenu.cpp						\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\

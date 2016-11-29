@@ -180,6 +180,16 @@ Progress::Language Progress::getLanguage(void) const
 	return m_data.language;
 }
 
+void	Progress::setDifficulty(Difficulty difficulty)
+{
+	m_data.difficulty = difficulty;
+}
+
+Progress::Difficulty Progress::getDifficulty(void) const
+{
+	return m_data.difficulty;
+}
+
 ResourceKey Progress::getTextFile(void) const
 {
 	if (m_data.language == Language::en)
