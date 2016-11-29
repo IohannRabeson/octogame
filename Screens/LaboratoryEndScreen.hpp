@@ -44,7 +44,7 @@ public:
 
 private:
 	std::vector<std::unique_ptr<ScientistNpc>>	m_npcs;
-	std::vector<std::unique_ptr<TvLaboNpc>>		m_tvNpc;
+	std::vector<std::unique_ptr<TvLaboNpc>>		m_tvNpcs;
 	State										m_state;
 	ScientistOcto								m_octo;
 	sf::Time									m_timer;
