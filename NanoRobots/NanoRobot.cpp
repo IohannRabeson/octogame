@@ -637,6 +637,8 @@ void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 		render.draw(m_ray.get(), 8, sf::Quads);
 		render.draw(m_ray.get() + 8, 8u, sf::Quads, m_texture);
 	}
+	if (m_infoBubble.isActive())
+		m_infoBubble.draw(render);
 	m_particles.draw(render);
 }
 
@@ -644,6 +646,4 @@ void NanoRobot::drawText(sf::RenderTarget& render, sf::RenderStates) const
 {
 	if (m_texts.size())
 		m_texts[m_textIndex]->draw(render);
-	if (m_infoBubble.isActive())
-		m_infoBubble.draw(render);
 }
