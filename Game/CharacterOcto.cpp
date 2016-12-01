@@ -2320,6 +2320,13 @@ bool	CharacterOcto::isStopFollowCamera(void) const
 	return m_stopFollowCamera;
 }
 
+bool	CharacterOcto::canStopBalle(void)
+{
+	if (m_onGround && m_sprite.getCurrentEvent() != Events::Death)
+		return true;
+	return false;
+}
+
 void	CharacterOcto::stopFollowCamera(bool stop)
 {
 	m_stopFollowCamera = stop;
