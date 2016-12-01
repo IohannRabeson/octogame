@@ -1,4 +1,5 @@
 #include "Snowman3Npc.hpp"
+#include "Progress.hpp"
 
 Snowman3Npc::Snowman3Npc(void) :
 	ASpecialNpc(SNOWMAN_3_OSS, false)
@@ -9,6 +10,9 @@ Snowman3Npc::Snowman3Npc(void) :
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
+
+	if (Progress::getInstance().getDifficulty() == Progress::Difficulty::Hard)
+		setCurrentText(1u);
 }
 
 void Snowman3Npc::setup(void)

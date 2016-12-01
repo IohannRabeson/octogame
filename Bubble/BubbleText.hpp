@@ -23,6 +23,7 @@ public:
 
 	//Use only when the phrase has the same size as the last one
 	void							setPhrase(std::wstring const & text);
+	std::wstring const &			getPhrase(void);
 
 private:
 	void setupBlocString(void);

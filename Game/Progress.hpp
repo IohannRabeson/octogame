@@ -25,6 +25,13 @@ public:
 		Die = 1
 	};
 
+	enum Difficulty
+	{
+		Easy,
+		Normal,
+		Hard
+	};
+
 	enum class MenuType : std::size_t
 	{
 		Classic,
@@ -51,6 +58,9 @@ public:
 	Progress::Language								getLanguage(void) const;
 	ResourceKey										getTextFile(void) const;
 	bool											isJoystick(void) const;
+
+	void											setDifficulty(Difficulty difficulty);
+	Progress::Difficulty							getDifficulty(void) const;
 
 	void											addNanoRobot();
 	void											removeNanoRobot() { m_data.nanoRobotCount--; }
@@ -188,12 +198,12 @@ private:
 	struct data
 	{
 		data() :
-			data(0u, 0u, Level::IceA, 30u, 100u, 100u, true, true, Language::fr)
+			data(0u, 0u, Level::IceA, 30u, 100u, 100u, true, true, Language::fr, Difficulty::Normal)
 		{}
 
 		data(std::size_t nanoRobot, std::size_t spirit, Level biome,
 				std::size_t musicVol, std::size_t soundVol, std::size_t globalVol,
-				bool fullscreen, bool vsync, Language language) :
+				bool fullscreen, bool vsync, Language language, Difficulty difficulty) :
 			timePlayed(0.f),
 			isGameFinished(false),
 			validateChallenge(0u),
@@ -208,6 +218,7 @@ private:
 			fullscreen(fullscreen),
 			vsync(vsync),
 			language(language),
+			difficulty(difficulty),
 			menuType(MenuType::Classic),
 			firstTime(true),
 			firstTimeInIceA(true),
@@ -236,6 +247,7 @@ private:
 		bool					fullscreen;
 		bool					vsync;
 		Language				language;
+		Difficulty				difficulty;
 		MenuType				menuType;
 		bool					firstTime;
 		bool					firstTimeInIceA;

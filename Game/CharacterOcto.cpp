@@ -35,7 +35,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeEventDieFallMax(sf::seconds(2.3f)),
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(10.f)),
-	m_timeSlowFallMax(sf::seconds(1.5f)),
+	m_timeSlowFallMax(sf::seconds(1.7f)),
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
 	m_timerPortalVacuumMax(sf::seconds(0.4f)),
@@ -1166,6 +1166,7 @@ void	CharacterOcto::timeEvent(sf::Time frameTime)
 		case DoubleJump:
 			m_timeEventInk += frameTime;
 			break;
+		case StartSlowFall:
 		case SlowFall1:
 		case SlowFall2:
 		case SlowFall3:
@@ -2173,14 +2174,17 @@ void CharacterOcto::caseCapacity()
 	{
 		if (!m_capacityTic)
 		{
-			m_capacityTic = true;
 			if (m_inWater && m_progress.canUseWaterJump() && !Progress::getInstance().isInCloud())
 			{
+				m_capacityTic = true;
 				m_jumpVelocity = m_pixelSecondJump * 0.9f;
 				m_sprite.setNextEvent(StartWaterJump);
 			}
 			else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
+			{
+				m_capacityTic = true;
 				m_sprite.setNextEvent(StartSlowFall);
+			}
 		}
 	}
 	else
@@ -2189,13 +2193,17 @@ void CharacterOcto::caseCapacity()
 		{
 			if (!m_onGround)
 			{
-				if (!m_jumpTic && m_timeSlowFall < m_timeSlowFallMax)
+				Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
+				if (!m_jumpTic || event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3 || event == WaterJump)
 				{
 					m_afterJump = true;
-					m_afterJumpVelocity = m_pixelSecondAfterJump / 2.f;
+					if (m_timeSlowFall == sf::Time::Zero)
+						m_afterJumpVelocity = m_pixelSecondAfterJump;
+					else if (m_timeSlowFall < m_timeSlowFallMax)
+						m_afterJumpVelocity = m_pixelSecondAfterJump / 2.f;
+					if (m_sprite.getCurrentEvent() != Fall && m_sprite.getCurrentEvent() != DieFall)
+						m_sprite.setNextEvent(Fall);
 				}
-				if (m_sprite.getCurrentEvent() != Fall && m_sprite.getCurrentEvent() != DieFall)
-					m_sprite.setNextEvent(Fall);
 			}
 			m_capacityTic = false;
 		}

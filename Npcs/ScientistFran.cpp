@@ -5,4 +5,5 @@ ScientistFran::ScientistFran(void) :
 {
 	setup();
 	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setTextOffset(sf::Vector2f(50.f, -50.f));
 }

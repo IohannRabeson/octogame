@@ -181,7 +181,9 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/ChristianNpc.cpp					\
 				Npcs/SkeletonNpc.cpp					\
 				Npcs/CedricIceANpc.cpp				\
+				Npcs/TvLaboNpc.cpp				\
 #Script AddNpc
+
 
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
@@ -211,6 +213,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/RandomDiscoverMenu.cpp				\
 				Menu/FakeMenu.cpp						\
 				Menu/BalleMultiplierMenu.cpp			\
+				Menu/DifficultyMenu.cpp					\
 				Menu/EmptyMenu.cpp						\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
@@ -263,6 +266,7 @@ SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/PortalBiome.cpp					\
 				Biomes/EndRocketBiome.cpp				\
 				Biomes/EndTimeLapseBiome.cpp			\
+				Biomes/LaboBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\

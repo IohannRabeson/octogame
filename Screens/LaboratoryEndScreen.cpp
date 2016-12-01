@@ -5,7 +5,7 @@
 #include "ScientistLu.hpp"
 #include "ScientistFran.hpp"
 #include "ScientistCedric.hpp"
-#include "IceABiome.hpp"
+#include "LaboBiome.hpp"
 #include "Tree.hpp"
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -16,7 +16,7 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_state(Appear),
 	m_timer(sf::Time::Zero),
 	m_globalTimer(sf::Time::Zero),
-	m_timeBeforeNextText(sf::seconds(2.f)),
+	m_timeBeforeNextText(sf::seconds(3.f)),
 	m_appearDuration(sf::seconds(2.f)),
 	m_cedricWalkTimer(sf::seconds(3.f)),
 	m_cedricPutPotionTimer(sf::seconds(3.f)),
@@ -59,6 +59,17 @@ void	LaboratoryEndScreen::start()
 	m_npcs[2]->setPosition(sf::Vector2f(1600.f, 790.f));
 	m_npcs[3]->setPosition(sf::Vector2f(-70.f, 577.f));
 
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_GUI_OSS));
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_IOHANN_OSS));
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_FAB_OSS));
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_JEF_OSS));
+	m_tvNpcs.emplace_back(new TvLaboNpc(TV_LABO_PIERRE_OSS));
+	m_tvNpcs[0]->setPosition(sf::Vector2f(44.f, 393.f));
+	m_tvNpcs[1]->setPosition(sf::Vector2f(32.f, 700.f));
+	m_tvNpcs[2]->setPosition(sf::Vector2f(101.f, 957.f));
+	m_tvNpcs[3]->setPosition(sf::Vector2f(682.f, 957.f));
+	m_tvNpcs[4]->setPosition(sf::Vector2f(857.f, 957.f));
+
 	m_octo.setPosition(sf::Vector2f(700.f, 770.f));
 
 	for (auto & it : m_npcs)
@@ -78,11 +89,22 @@ void	LaboratoryEndScreen::start()
 	PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("resolution", camera.getRectangle().width, camera.getRectangle().height);
 	PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, false);
 
-	m_biome.reset(new IceABiome());
+	m_biome.reset(new LaboBiome());
 	m_decorManager.setup(m_biome.get());
 	Tree * tree = new Tree(true);
 	tree->setPosition(sf::Vector2f(1275.f, 662.f));
 	m_decorManager.add(tree);
+
+	m_bubbleParticle.setCanEmit(true);
+	m_bubbleParticle.setup(sf::Vector2f(1.8f, 1.8f));
+	m_bubbleParticle.setVelocity(sf::Vector2f(0.f, -70.f));
+	m_bubbleParticle.setEmitTimeRange(0.2f, 0.3f);
+	m_bubbleParticle.setGrowTimeRange(0.4f, 0.6f);
+	m_bubbleParticle.setLifeTimeRange(1.f, 1.8f);
+	m_bubbleParticle.setScaleFactor(10.f);
+	m_bubbleParticle.setDispersion(sf::Vector2f(80.f, 0.f));
+	m_bubbleParticle.setColor(sf::Color(255, 255, 255, 150));
+	m_bubbleParticle.setCanEmit(true);
 
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resource = octo::Application::getResourceManager();
@@ -123,6 +145,7 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			break;
 		case Dialogs:
 			m_timer += frameTime;
+			updateTv(frameTime);
 			if (m_timer >= m_timeBeforeNextText || m_stopDialog)
 			{
 				m_timer = sf::Time::Zero;
@@ -215,11 +238,45 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 		PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
 	}
 
+	if (m_state == CedricPutPotion || m_state == VisualEffect || m_state == ChangeAquaColor || m_state == StartShaderEffect)
+	{
+		for (auto & it : m_tvNpcs)
+			it->update(frameTime);
+	}
+
 	for (auto & it : m_npcs)
 		it->update(frameTime);
 
+	sf::Vector2f const & octoPosition = m_octo.getPosition();
+	if (m_keyLeft && !m_keyRight && octoPosition.x > 510.f)
+	{
+		m_octo.setPosition(sf::Vector2f(octoPosition.x - frameTime.asSeconds() * 40.f, 770.f));
+		m_octo.reverseSprite(true);
+	}
+	else if (m_keyRight && !m_keyLeft && octoPosition.x < 890.f)
+	{
+		m_octo.setPosition(sf::Vector2f(octoPosition.x + frameTime.asSeconds() * 40.f, 770.f));
+		m_octo.reverseSprite(false);
+	}
+
 	m_decorManager.update(frameTime, octo::Application::getCamera());
 	m_octo.update(frameTime);
+	m_bubbleParticle.setPosition(m_octo.getPosition() + sf::Vector2f(60.f, -70.f));
+	m_bubbleParticle.update(frameTime);
+}
+
+void	LaboratoryEndScreen::updateTv(sf::Time frameTime)
+{
+	if (m_npcs[2]->findCurrentText(L"Guillaume LASSET"))
+		m_tvNpcs[0]->update(frameTime);
+	if (m_npcs[2]->findCurrentText(L"Iohann RABESON"))
+		m_tvNpcs[1]->update(frameTime);
+	if (m_npcs[2]->findCurrentText(L"Fabien YOU"))
+		m_tvNpcs[2]->update(frameTime);
+	if (m_npcs[2]->findCurrentText(L"Jeff GUERIN"))
+		m_tvNpcs[3]->update(frameTime);
+	if (m_npcs[2]->findCurrentText(L"Pierre GLORY"))
+		m_tvNpcs[4]->update(frameTime);
 }
 
 void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
@@ -227,28 +284,47 @@ void	LaboratoryEndScreen::draw(sf::RenderTarget & render) const
 	sf::RenderStates states;
 	render.clear(sf::Color::Black);
 	render.draw(m_background);
+	m_bubbleParticle.draw(render);
 	render.draw(m_octo);
 	states.shader = &m_shader;
 	render.draw(m_water, states);
 	states.shader = nullptr;
+	for (auto & it : m_tvNpcs)
+		render.draw(*it);
+	render.draw(m_decorManager, states);
 	for (auto & it : m_npcs)
 		render.draw(*it);
 	render.draw(m_foreground);
 	for (auto & it : m_npcs)
 		it->drawText(render, states);
-	render.draw(m_decorManager, states);
 }
 
 bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
+		case OctoKeys::Left:
+			m_keyLeft = true;
+			break;
+		case OctoKeys::Right:
+			m_keyRight = true;
+			break;
 		case OctoKeys::Menu:
-			m_stopDialog = true;
+			if (m_textIndex > 4u)
+				m_textIndex = 78u;
 			break;
 		case OctoKeys::Capacity:
 		case OctoKeys::Elevator:
-			m_timeBeforeNextText = sf::seconds(0.1f);
+		case OctoKeys::Jump:
+		case OctoKeys::Entrance:
+			if (m_textIndex <= 4u)
+				m_timeBeforeNextText = sf::seconds(2.f);
+			else if (m_textIndex <= 25u)
+				m_timeBeforeNextText = sf::seconds(1.f);
+			else if (m_textIndex >= 78)
+				m_timeBeforeNextText = sf::seconds(2.f);
+			else
+				m_timeBeforeNextText = sf::seconds(0.1f);
 			break;
 		default:
 			break;
@@ -260,9 +336,18 @@ bool	LaboratoryEndScreen::onInputReleased(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
+		case OctoKeys::Left:
+			m_keyLeft = false;
+			break;
+		case OctoKeys::Right:
+			m_keyRight = false;
+			break;
 		case OctoKeys::Capacity:
 		case OctoKeys::Elevator:
-			m_timeBeforeNextText = sf::seconds(2.f);
+			if (m_textIndex <= 4u)
+				m_timeBeforeNextText = sf::seconds(3.f);
+			else
+				m_timeBeforeNextText = sf::seconds(2.f);
 		default:
 			break;
 	}

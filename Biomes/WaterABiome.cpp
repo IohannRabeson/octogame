@@ -159,7 +159,7 @@ WaterABiome::WaterABiome() :
 	if (progress.getLastDestination() == Level::WaterB)
 		m_octoStartPosition = sf::Vector2f(594.f * 16.f, 1030.f);
 	if (progress.getLastDestination() == Level::Random)
-		m_octoStartPosition = sf::Vector2f(620.f * 16.f, -2240.f);
+		m_octoStartPosition = sf::Vector2f(615.f * 16.f, -2240.f);
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Random);

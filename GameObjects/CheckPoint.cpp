@@ -121,11 +121,12 @@ void CheckPoint::setPosition(sf::Vector2f const & position)
 
 void CheckPoint::collideOctoEvent(CharacterOcto *)
 {
-	if (!m_isValidated)
+	Progress & progress = Progress::getInstance();
+
+	if (!m_isValidated && progress.getDifficulty() != Progress::Difficulty::Hard)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		Progress & progress = Progress::getInstance();
 
 		progress.resetDeathLevel();
 		m_startPosition = getPosition() + sf::Vector2f(28.f, 250.f);

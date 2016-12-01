@@ -39,6 +39,7 @@ public:
 	void setNextEvent(Events event);
 	void addMapOffset(float x, float y);
 	sf::Vector2f const & getPosition(void) const;
+	void reverseSprite(bool isReverse);
 
 	virtual void setup(void) = 0;
 	virtual void onTheFloor(void);
@@ -77,7 +78,6 @@ protected:
 	std::vector<std::unique_ptr<BubbleText>> & getTexts(void);
 	octo::CharacterSprite & getSprite(void);
 	void setIsZoomable(bool isZoomable);
-	void reverseSprite(bool isReverse);
 	bool isReverse(void) const;
 	void upSideDownSprite(bool isUpSideDown);
 	bool isUpSideDown(void) const;
