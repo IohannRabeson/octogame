@@ -11,6 +11,7 @@ public:
 	virtual ~TvLaboNpc(void) = default;
 
 	virtual void setup(void);
+	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 protected:
 	virtual void setupMachine(void);
@@ -18,6 +19,7 @@ protected:
 
 private:
 	RandomGenerator		m_generator;
+	bool				m_firstUpdate;
 };
 
 #endif

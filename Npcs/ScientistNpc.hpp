@@ -14,6 +14,7 @@ public:
 	void setTextIndex(std::size_t index);
 	std::size_t getLastIndex(void) const;
 	void updateText(bool update);
+	bool findCurrentText(std::wstring text);
 
 protected:
 	virtual void setupMachine(void);
@@ -22,7 +23,6 @@ protected:
 	std::map<std::size_t, std::size_t>	m_indexText;
 	std::size_t							m_currentIndex;
 	bool								m_updateText;
-
 };
 
 #endif

@@ -97,6 +97,19 @@ void ScientistNpc::updateText(sf::Time frametime)
 	texts[index]->update(frametime);
 }
 
+bool ScientistNpc::findCurrentText(std::wstring text)
+{
+	auto it = m_indexText.find(m_currentIndex);
+	if (it == m_indexText.end())
+		return false;
+
+	std::size_t index = it->second;
+	auto & texts = ANpc::getTexts();
+	if (texts[index]->getPhrase().find(text) != std::wstring::npos)
+		return true;
+	return false;
+}
+
 void ScientistNpc::updateState(void)
 {}
 

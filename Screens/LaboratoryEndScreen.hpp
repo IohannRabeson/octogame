@@ -5,6 +5,7 @@
 # include "DecorManager.hpp"
 # include "ScientistOcto.hpp"
 # include "TvLaboNpc.hpp"
+# include "SmokeSystem.hpp"
 # include <AbstractState.hpp>
 # include <SFML/Graphics/Sprite.hpp>
 # include <SFML/Graphics/Shader.hpp>
@@ -43,6 +44,8 @@ public:
 	virtual bool	onInputReleased(InputListener::OctoKeys const & key);
 
 private:
+	void			updateTv(sf::Time frameTime);
+
 	std::vector<std::unique_ptr<ScientistNpc>>	m_npcs;
 	std::vector<std::unique_ptr<TvLaboNpc>>		m_tvNpcs;
 	State										m_state;
@@ -72,7 +75,9 @@ private:
 	bool										m_stopDialog;
 	std::unique_ptr<ABiome>						m_biome;
 	DecorManager								m_decorManager;
-
+	bool										m_keyLeft;
+	bool										m_keyRight;
+	SmokeSystem									m_bubbleParticle;
 };
 
 #endif

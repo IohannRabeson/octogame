@@ -112,3 +112,8 @@ void BubbleText::setPhrase(std::wstring const & text)
 {
 	m_text.setString(text);
 }
+
+std::wstring const & BubbleText::getPhrase(void)
+{
+	return m_phrase;
+}
