@@ -4,10 +4,10 @@ MecanouilleNpc::MecanouilleNpc(void) :
 	ASpecialNpc(NPC_MECANOUILLE_OSS)
 {
     setType(GameObjectType::MecanouilleNpc);
-	setSize(sf::Vector2f(70.f, 350.f));
-	setOrigin(sf::Vector2f(200.f, 100.f));
+	setSize(sf::Vector2f(70.f, 270.f));
+	setOrigin(sf::Vector2f(50.f, 100.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(-110.f, -40.f));
+	setTextOffset(sf::Vector2f(40.f, -70.f));
 	setup();
 }
 

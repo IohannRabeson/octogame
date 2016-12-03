@@ -1130,6 +1130,8 @@ bool	CharacterOcto::isInWater(void) const
 
 bool	CharacterOcto::isCenteredCamera(void) const
 {
+	if (m_level == Level::IceB && m_box->getRenderCenter().x > 440.f * 16 && m_box->getRenderCenter().x < 500.f * 16.f)
+		return true;
 	if (m_level == Level::DesertC || m_level == Level::JungleC)
 		return true;
 	if (isInWater() && m_waterLevel != -1.f)

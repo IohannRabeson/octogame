@@ -1,5 +1,6 @@
 #include "CameraMovement.hpp"
 #include "CharacterOcto.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
@@ -119,7 +120,10 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 		}
 		case Behavior::OctoCentered:
 		{
-			m_speed = 4.f;
+			if (Progress::getInstance().getCurrentDestination() == Level::IceB)
+				m_speed = 2.0f;
+			else
+				m_speed = 4.f;
 			if (m_verticalTransition < 0.5f)
 			{
 				m_verticalTransition += frametime.asSeconds();
