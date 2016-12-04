@@ -137,7 +137,8 @@ void CedricEndNpc::setupMachine(void)
 void CedricEndNpc::collideOctoEvent(CharacterOcto * octo)
 {
 	AUniqueNpc::collideOctoEvent(octo);
-	stopBalle();
+	if (octo->canStopBalle())
+		stopBalle();
 
 	octo::CharacterSprite & sprite = getSprite();
 	sf::Vector2f const & size = sprite.getLocalSize();

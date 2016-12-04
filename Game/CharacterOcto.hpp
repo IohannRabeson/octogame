@@ -112,6 +112,7 @@ public:
 	bool					isMeetingNpc(void) const;
 	bool					isCollidingPortal(void) const;
 	bool					isStopFollowCamera(void) const;
+	bool					canStopBalle(void);
 	std::pair<float, float>	look(void) const;
 	float					getSpeedCamera(void) const;
 	bool					isFinalEvent(void);

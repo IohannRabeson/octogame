@@ -160,6 +160,10 @@ void	Progress::saveToFile()
 
 void	Progress::reset()
 {
+	float globalVolume = m_data.globalVol;
+	float musicVolume = m_data.musicVol;
+	float soundVolume = m_data.soundVol;
+
 	m_changeLevel = false;
 	m_reverseSprite = false;
 	m_spaceShipRepair = false;
@@ -167,6 +171,9 @@ void	Progress::reset()
 	m_portals.clear();
 	m_deaths.clear();
 	setup();
+	m_data.globalVol = globalVolume;
+	m_data.musicVol = musicVolume;
+	m_data.soundVol = soundVolume;
 	save();
 }
 
@@ -498,7 +505,10 @@ sf::Vector2f Progress::getInterestPoint(void)
 	if (m_data.currentDestination == Level::Final)
 		return m_portalsToDiscover[Level::Blue];
 	for (auto portal : m_portalsToDiscover)
-		return (portal.second);
+	{
+		if (portal.first == Level::Random)
+			return (portal.second);
+	}
 	return sf::Vector2f(0.f, 0.f);
 }
 
