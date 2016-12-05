@@ -1,14 +1,18 @@
-TARGET = octodyssey.app
+TARGET = octodyssey
 DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs
 CORE_DIR = ./octolib
-INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
+INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS) ./Lib/
 BUILD_DIR = ./builds/game
 OUTPUT_DIR = .
 # libraries directories (ex: ../libft)
 LIB_DIRS = $(CORE_DIR)
 
 # libraries (ex: ft, mlx, ...)
-LIBS = octo sfml-system sfml-window sfml-graphics sfml-audio
+LIBS = octo
+
+# framework
+FRAMEWORKS_DIR = ./Lib/Frameworks
+FRAMEWORK = SFML sfml-system sfml-window sfml-graphics sfml-audio
 
 # sources
 SRC = $(SRC_PHYSICS)									\
@@ -330,6 +334,8 @@ DEFAULT_SRC = $(RESOURCES_DIR)/Sound/*			\
 			  $(RESOURCES_DIR)/Shader/*			\
 			  $(RESOURCES_DIR)/Text/*			\
 
+ICON_FILE_NAME = icon.icns
+
 # compiler
 COMPILER = $(CXX)
 # packager
@@ -347,6 +353,7 @@ OBJS = $(addprefix $(BUILD_DIR)/, $(SRC:.cpp=.o))
 SRCS = $(SRC)
 CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
+FRAMEWORKS_FLAGS = $(addprefix -F , $(FRAMEWORKS_DIR)) $(addprefix -framework , $(FRAMEWORK))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
 MODE = debug
 RUN_DEPEND = "1"
@@ -366,7 +373,7 @@ all: print_summary $(COMPLETE_TARGET)
 
 $(COMPLETE_TARGET): $(BUILD_DIR) package core_library depend $(OBJS)
 	@echo " - $(COLOR_ACTION)building$(COLOR_OFF): $(COLOR_OBJECT)$@$(COLOR_OFF)"
-	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) 
+	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) $(FRAMEWORKS_FLAGS) -rpath @executable_path/../Frameworks
 
 $(addprefix $(BUILD_DIR)/, %.o) : $(subst $(BUILD_DIR),, %.cpp)
 	@echo " - $(COLOR_ACTION)compiling$(COLOR_OFF): $(COLOR_OBJECT)$<$(COLOR_OFF)"
@@ -376,7 +383,7 @@ $(addprefix $(BUILD_DIR)/, %.o) : $(subst $(BUILD_DIR),, %.cpp)
 re: print_summary fclean $(COMPLETE_TARGET)
 
 depend:
-ifeq ($(RUN_DEPEND), "1")
+ifeq ($(RUN_DEPEND), "0")
 	@echo " - $(COLOR_ACTION)Running hatedepend...$(COLOR_OFF)"
 	@hatedepend -r -I $(DIRS) -S $(DIRS) -O $(BUILD_DIR) --signal-all
 endif
@@ -413,6 +420,19 @@ clean_core_library:
 fclean_core_library:
 	@make -s -C $(CORE_DIR) fclean MODE=$(MODE) RUN_DEPEND=$(RUN_DEPEND)
 
+package_app:
+	rm -rf "./builds/$(TARGET).app"
+	mkdir -p "./builds/$(TARGET).app"/Contents/{MacOS,Resources,Frameworks}
+	cp -R "$(FRAMEWORKS_DIR)"/* "./builds/$(TARGET).app/Contents/Frameworks/"
+	cp Info.plist "./builds/$(TARGET).app/Contents/"
+	sed -e "s/APP_NAME/$(TARGET)/g" -i "" "./builds/$(TARGET).app/Contents/Info.plist"
+	cp ./$(TARGET) "./builds/$(TARGET).app/Contents/MacOS/$(TARGET)"
+	cp ./$(LOADING_PCK_FILE) "./builds/$(TARGET).app/Contents/MacOS/$(LOADING_PCK_FILE)"
+	cp ./$(DEFAULT_PCK_FILE) "./builds/$(TARGET).app/Contents/MacOS/$(DEFAULT_PCK_FILE)"
+	cp ./default.conf "./builds/$(TARGET).app/Contents/MacOS/default.conf"
+
+	sed -e "s/ICON_FILE_NAME/$(ICON_FILE_NAME)/g" -i "" "./builds/$(TARGET).app/Contents/Info.plist"
+	cp $(RESOURCES_DIR)/$(ICON_FILE_NAME) "./builds/$(TARGET).app/Contents/Resources/$(ICON_FILE_NAME)"
 
 package: $(LOADING_PCK_FILE) $(DEFAULT_PCK_FILE) $(TARGET_HPP_FILE)
 
