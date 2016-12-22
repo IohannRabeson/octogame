@@ -1,5 +1,5 @@
 TARGET = octodyssey.app
-DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs
+DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs Steam
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -23,6 +23,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_DECORS)										\
 	  $(SRC_BUBBLE)										\
 	  $(SRC_MENU)										\
+	  $(SRC_STEAM)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp										\
 
@@ -310,6 +311,9 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/ShapeBuilder.cpp				\
 				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp						\
+
+SRC_STEAM =		Steam/SteamAPI.cpp						\
+				Steam/StatsAndAchievements.cpp			\
 
 
 # package files
