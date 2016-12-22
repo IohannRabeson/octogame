@@ -1,7 +1,7 @@
 TARGET = octodyssey
 DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs
 CORE_DIR = ./octolib
-INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS) ./Lib/
+INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS) ./Lib/ ./Lib/Steam/public/steam/
 BUILD_DIR = ./builds/game
 OUTPUT_DIR = .
 # libraries directories (ex: ../libft)
@@ -13,6 +13,8 @@ LIBS = octo
 # framework
 FRAMEWORKS_DIR = ./Lib/Frameworks
 FRAMEWORK = SFML sfml-system sfml-window sfml-graphics sfml-audio
+STEAM_DIR = ./Lib/Steam/redistributable_bin/osx32
+STEAM_API = steam_api
 
 # sources
 SRC = $(SRC_PHYSICS)									\
@@ -29,6 +31,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_MENU)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp										\
+	  Main/Steamworks.cpp								\
 
 SRC_STATES =	Screens/StateTest.cpp					\
 				Screens/IntroScreen.cpp					\
@@ -373,7 +376,7 @@ all: print_summary $(COMPLETE_TARGET)
 
 $(COMPLETE_TARGET): $(BUILD_DIR) package core_library depend $(OBJS)
 	@echo " - $(COLOR_ACTION)building$(COLOR_OFF): $(COLOR_OBJECT)$@$(COLOR_OFF)"
-	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) $(FRAMEWORKS_FLAGS) -rpath @executable_path/../Frameworks
+	$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) $(FRAMEWORKS_FLAGS) -rpath @executable_path/../Frameworks -L$(STEAM_DIR) -l$(STEAM_API) -rpath @executable_path/../Frameworks
 
 $(addprefix $(BUILD_DIR)/, %.o) : $(subst $(BUILD_DIR),, %.cpp)
 	@echo " - $(COLOR_ACTION)compiling$(COLOR_OFF): $(COLOR_OBJECT)$<$(COLOR_OFF)"
@@ -424,6 +427,7 @@ package_app:
 	rm -rf "./builds/$(TARGET).app"
 	mkdir -p "./builds/$(TARGET).app"/Contents/{MacOS,Resources,Frameworks}
 	cp -R "$(FRAMEWORKS_DIR)"/* "./builds/$(TARGET).app/Contents/Frameworks/"
+	cp -R "$(STEAM_DIR)"/ "./builds/$(TARGET).app/Contents/Frameworks/"
 	cp Info.plist "./builds/$(TARGET).app/Contents/"
 	sed -e "s/APP_NAME/$(TARGET)/g" -i "" "./builds/$(TARGET).app/Contents/Info.plist"
 	cp ./$(TARGET) "./builds/$(TARGET).app/Contents/MacOS/$(TARGET)"

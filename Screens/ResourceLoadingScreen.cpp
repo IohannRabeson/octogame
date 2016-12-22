@@ -13,6 +13,7 @@
 #include "ResourceLoadingScreen.hpp"
 #include "Progress.hpp"
 #include "MusicManager.hpp"
+#include "Steamworks.hpp"
 #include <ResourceLoading.hpp>
 #include <StateManager.hpp>
 #include <Application.hpp>
@@ -181,5 +182,6 @@ void	ResourceLoadingScreen::onNoMoreLoading()
 
 	// Load musics in memory
 	MusicManager::getInstance();
+	Steamworks::getInstance();
 	states.change("logo");
 }
