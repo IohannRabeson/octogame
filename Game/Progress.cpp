@@ -2,6 +2,7 @@
 #include "CharacterOcto.hpp"
 #include "Tile.hpp"
 #include "ABiome.hpp"
+#include "SteamAPI.hpp"
 #include <SFML/Audio/Listener.hpp>
 #include <Application.hpp>
 #include <Options.hpp>
@@ -12,6 +13,7 @@
 #include <fstream>
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
+std::unique_ptr<SteamAPI> Progress::m_steam = nullptr;
 
 Progress::Progress() :
 	m_isMenu(true),
@@ -42,6 +44,7 @@ Progress & Progress::getInstance()
 	if (m_instance == nullptr)
 	{
 		m_instance.reset(new Progress());
+		m_steam.reset(new SteamAPI());
 	}
 	return *m_instance;
 }
@@ -116,6 +119,7 @@ void	Progress::load(std::string const &filename)
 	filestream.read(reinterpret_cast<char*>(&m_data), sizeof(struct data));
 	filestream.close();
 	init();
+	m_steam->update(m_data);
 }
 
 void	Progress::init()
@@ -147,6 +151,7 @@ void	Progress::save(float timePlayed)
 	savePortals();
 	saveToFile();
 	saveDeaths();
+	m_steam->update(m_data);
 }
 
 void	Progress::saveToFile()

@@ -313,7 +313,6 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/AShape.cpp						\
 
 SRC_STEAM =		Steam/SteamAPI.cpp						\
-				Steam/StatsAndAchievements.cpp			\
 
 
 # package files
@@ -370,7 +369,7 @@ all: print_summary $(COMPLETE_TARGET)
 
 $(COMPLETE_TARGET): $(BUILD_DIR) package core_library depend $(OBJS)
 	@echo " - $(COLOR_ACTION)building$(COLOR_OFF): $(COLOR_OBJECT)$@$(COLOR_OFF)"
-	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) 
+	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) -lsteam_api
 
 $(addprefix $(BUILD_DIR)/, %.o) : $(subst $(BUILD_DIR),, %.cpp)
 	@echo " - $(COLOR_ACTION)compiling$(COLOR_OFF): $(COLOR_OBJECT)$<$(COLOR_OFF)"

@@ -2,37 +2,63 @@
 # define STEAM_API_HPP
 
 #include "steam_api.h"
-#include "StatsAndAchievements.h"
+#include "Progress.hpp"
 
-// Defining our achievements
-enum EAchievements
+# define _ACH_ID( id, name ) { id, #id, name, "", 0, 0 }
+struct Achievement_t
 {
-	ACH_WIN_ONE_GAME = 0,
-	ACH_WIN_100_GAMES = 1,
-	ACH_TRAVEL_FAR_ACCUM = 2,
-	ACH_TRAVEL_FAR_SINGLE = 3,
+	int			m_eAchievementID;
+	const char	*m_pchAchievementID;
+	char		m_rgchName[128];
+	char		m_rgchDescription[256];
+	bool		m_bAchieved;
+	int			m_iIconImage;
 };
-
-// Achievement array which will hold data about the achievements and their state
-Achievement_t g_Achievements[] = 
-{
-	_ACH_ID( ACH_WIN_ONE_GAME, "Winner" ),
-	_ACH_ID( ACH_WIN_100_GAMES, "Champion" ),
-	_ACH_ID( ACH_TRAVEL_FAR_ACCUM, "Interstellar" ),
-	_ACH_ID( ACH_TRAVEL_FAR_SINGLE, "Orbiter" ),
-};
-
-// Global access to Achievements object
-CSteamAchievements*	g_SteamAchievements = NULL;
 
 class SteamAPI
 {
+	// Defining our achievements
+	enum EAchievements
+	{
+		ACH_RUN_THE_GAME = 0,
+		ACH_TEST = 1,
+		ACH_DEATH_1 = 2,
+		ACH_TRAVEL_FAR_SINGLE = 3,
+	};
+	
+	// Achievement array which will hold data about the achievements and their state
+	Achievement_t g_Achievements[4] =
+	{
+		_ACH_ID( ACH_RUN_THE_GAME, "ACH_RUN_THE_GAME" ),
+		_ACH_ID( ACH_TEST, "ACH_TEST" ),
+		_ACH_ID( ACH_DEATH_1, "ACH_DEATH_1" ),
+		_ACH_ID( ACH_TRAVEL_FAR_SINGLE, "Orbiter" ),
+	};
+	
 public:
 	SteamAPI(void);
-	~SteamAPI(void);
+	virtual ~SteamAPI(void);
 
-	void update(void);
-	void triggerAchievement(EAchievements achievementDone);
+	void update(Progress::data & data);
+	void clearAllAchievements(void);
+	void unlockAchievements(Progress::data & data);
+	void updateStats(Progress::data & data);
+	bool setAchievement(EAchievements achievement);
+
+	bool requestStats();
+
+private:
+	int64 m_iAppID; // Our current AppID
+	int m_iNumAchievements; // The number of Achievements
+	bool m_bInitialized; // Have we called Request stats and received the callback?
+
+public:
+	STEAM_CALLBACK( SteamAPI, OnUserStatsReceived, UserStatsReceived_t, 
+		m_CallbackUserStatsReceived );
+	STEAM_CALLBACK( SteamAPI, OnUserStatsStored, UserStatsStored_t, 
+		m_CallbackUserStatsStored );
+	STEAM_CALLBACK( SteamAPI, OnAchievementStored, 
+		UserAchievementStored_t, m_CallbackAchievementStored );
 };
 
 #endif

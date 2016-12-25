@@ -10,6 +10,7 @@
 # include <memory>
 
 class ABiome;
+class SteamAPI;
 class Progress
 {
 public:
@@ -41,6 +42,7 @@ public:
 	static constexpr std::size_t					DeathMax = 15.f;
 
 	static Progress &								getInstance(void);
+	~Progress() = default;
 
 	float											getTimePlayed() const { return m_data.timePlayed; }
 	bool											isMenu(void) const;
@@ -194,7 +196,6 @@ public:
 	void											save(float timePlayed = 0.f);
 	void											reset();
 
-private:
 	struct data
 	{
 		data() :
@@ -264,6 +265,7 @@ private:
 		int						levelOfDetails;
 	};
 
+private:
 	Progress();
 	void											init();
 	void											saveToFile();
@@ -277,6 +279,8 @@ private:
 	void											split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 	static std::unique_ptr<Progress>				m_instance;
+	static std::unique_ptr<SteamAPI>				m_steam;
+
 	bool											m_isMenu;
 	bool											m_isIntro;
 	bool											m_isBubbleNpc;
