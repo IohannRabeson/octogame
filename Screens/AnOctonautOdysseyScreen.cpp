@@ -100,7 +100,7 @@ void	AnOctonautOdysseyScreen::update(sf::Time frameTime)
 		if (m_index == m_count)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			states.change("logo");
+			states.change("game");
 		}
 	}
 }

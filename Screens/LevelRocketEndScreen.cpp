@@ -72,8 +72,9 @@ void	LevelRocketEndScreen::update(sf::Time frameTime)
 			progress.setCurrentDestination(Level::Portal);
 			progress.setNextDestination(Level::Portal);
 			progress.setLastDestination(Level::Portal);
+			progress.setBlueEnd(true);
 			progress.save();
-			octo::Application::getStateManager().change("game");
+			octo::Application::getStateManager().change("anoctonautodyssey");
 		}
 	}
 }

@@ -20,27 +20,38 @@ class SteamAPI
 	// Defining our achievements
 	enum EAchievements
 	{
-		ACH_RUN_THE_GAME = 0,
-		ACH_TEST = 1,
-		ACH_DEATH_1 = 2,
-		ACH_TRAVEL_FAR_SINGLE = 3,
+		ACH_RANDOM_PORTAL,
+		ACH_NPC,
+		ACH_JUMP,
+		ACH_DEATH,
+		ACH_NANOROBOT,
+		ACH_SPIRIT,
+		ACH_BLUE_END,
+		ACH_RED_END,
+		ACH_SPACESHIP,
+		COUNT_ACH
 	};
-	
+
 	// Achievement array which will hold data about the achievements and their state
-	Achievement_t g_Achievements[4] =
+	Achievement_t g_Achievements[9] =
 	{
-		_ACH_ID( ACH_RUN_THE_GAME, "ACH_RUN_THE_GAME" ),
-		_ACH_ID( ACH_TEST, "ACH_TEST" ),
-		_ACH_ID( ACH_DEATH_1, "ACH_DEATH_1" ),
-		_ACH_ID( ACH_TRAVEL_FAR_SINGLE, "Orbiter" ),
+		_ACH_ID( ACH_RANDOM_PORTAL, "ACH_RANDOM_PORTAL" ),
+		_ACH_ID( ACH_NPC, "ACH_NPC" ),
+		_ACH_ID( ACH_JUMP, "ACH_JUMP" ),
+		_ACH_ID( ACH_DEATH, "ACH_DEATH" ),
+		_ACH_ID( ACH_NANOROBOT, "ACH_NANOROBOT" ),
+		_ACH_ID( ACH_SPIRIT, "ACH_SPIRIT" ),
+		_ACH_ID( ACH_BLUE_END, "ACH_BLUE_END" ),
+		_ACH_ID( ACH_RED_END, "ACH_RED_END" )
+		_ACH_ID( ACH_SPACESHIP, "ACH_SPACESHIP" )
 	};
-	
+
 public:
 	SteamAPI(void);
 	virtual ~SteamAPI(void);
 
 	void update(Progress::data & data);
-	void clearAllAchievements(void);
+	void reset(void);
 	void unlockAchievements(Progress::data & data);
 	void updateStats(Progress::data & data);
 	bool setAchievement(EAchievements achievement);
@@ -48,9 +59,10 @@ public:
 	bool requestStats();
 
 private:
-	int64 m_iAppID; // Our current AppID
-	int m_iNumAchievements; // The number of Achievements
-	bool m_bInitialized; // Have we called Request stats and received the callback?
+	bool	m_initRet;
+	int64	m_iAppID; // Our current AppID
+	int		m_iNumAchievements; // The number of Achievements
+	bool	m_bInitialized; // Have we called Request stats and received the callback?
 
 public:
 	STEAM_CALLBACK( SteamAPI, OnUserStatsReceived, UserStatsReceived_t, 

@@ -22,7 +22,6 @@ Progress::Progress() :
 	m_newSave(false),
 	m_changeLevel(false),
 	m_reverseSprite(false),
-	m_spaceShipRepair(false),
 	m_killOcto(false),
 	m_isDoubleJump(false),
 	m_isInCloud(false),
@@ -100,6 +99,26 @@ void	Progress::setGameFinished(bool finish)
 	m_data.isGameFinished = finish;
 }
 
+void	Progress::increaseLaunchCount(void)
+{
+	m_data.launchCount++;
+}
+
+void	Progress::setBlueEnd(bool finish)
+{
+	m_data.isBlueEnd = finish;
+}
+
+void	Progress::setRedEnd(bool finish)
+{
+	m_data.isRedEnd = finish;
+}
+
+void	Progress::increaseJumpCount(void)
+{
+	m_data.jumpCount++;
+}
+
 void	Progress::setup()
 {
 	m_newSave = false;
@@ -119,7 +138,6 @@ void	Progress::load(std::string const &filename)
 	filestream.read(reinterpret_cast<char*>(&m_data), sizeof(struct data));
 	filestream.close();
 	init();
-	m_steam->update(m_data);
 }
 
 void	Progress::init()
@@ -171,7 +189,7 @@ void	Progress::reset()
 
 	m_changeLevel = false;
 	m_reverseSprite = false;
-	m_spaceShipRepair = false;
+	m_data.spaceShipRepair = false;
 	m_npc.clear();
 	m_portals.clear();
 	m_deaths.clear();
@@ -589,6 +607,7 @@ void	Progress::saveNpc()
 	}
 	assert(saveNpc.size() < 10000);
 	std::strcpy(m_data.npc, saveNpc.c_str());
+	m_data.npcCount = getNpcMet().size();
 }
 
 void	Progress::loadNpc()

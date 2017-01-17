@@ -2151,6 +2151,7 @@ void	CharacterOcto::caseJump()
 				m_numberOfJump = 1;
 				if (!m_progress.canDoubleJump() && m_inWater)
 					m_numberOfJump = 0;
+				m_progress.increaseJumpCount();
 			}
 			else if (m_numberOfJump == 1 && m_progress.canDoubleJump())
 			{
@@ -2161,6 +2162,7 @@ void	CharacterOcto::caseJump()
 				m_numberOfJump = 2;
 				if (m_inWater)
 					m_numberOfJump = 0;
+				m_progress.increaseJumpCount();
 			}
 			else
 				m_numberOfJump = 3;

@@ -223,8 +223,9 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 				if (progress.getNextDestination() != Level::Portal)
 				{
 					progress.setNextDestination(Level::Portal);
+					progress.setRedEnd(true);
 					progress.save();
-					octo::Application::getStateManager().change("game");
+					octo::Application::getStateManager().change("anoctonautodyssey");
 				}
 			}
 			break;
