@@ -60,7 +60,7 @@ void MainMenu::createMenus(void)
 	{
 		addMenu(AMenu::getText("menu_quit"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 		addMenu(AMenu::getText("menu_restart"), std::unique_ptr<YesNoReset>(new YesNoReset()));
-		addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
+		//addMenu(AMenu::getText("menu_credits"), std::unique_ptr<CreditMenu>(new CreditMenu()));
 		addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
 		addMenu(AMenu::getText("menu_new"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 //		if (!progress.canRepairShip())
@@ -88,7 +88,7 @@ void MainMenu::onSelection(void)
 {
 	Progress & progress = Progress::getInstance();
 
-	if (progress.isMenu() && getIndexCursor() == 5u)
+	if (progress.isMenu() && getIndexCursor() == 4u)
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
 
@@ -107,7 +107,7 @@ void MainMenu::onSelection(void)
 			states.change("transitionLevel");
 		}
 	}
-	else if (progress.isMenu() && getIndexCursor() == 4u && progress.isMenu())
+	else if (progress.isMenu() && getIndexCursor() == 3u && progress.isMenu())
 	{
 		octo::StateManager &	states = octo::Application::getStateManager();
 		states.change("menu");
