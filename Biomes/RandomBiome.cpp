@@ -17,7 +17,7 @@ RandomBiome::RandomBiome() :
 	m_name("Random"),
 	m_id(Level::Random),
 	m_seed("Random"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(500))),
+	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 1050u), m_generator.randomPiecewise(500))), //reset in constructor body
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.3f),
@@ -137,7 +137,7 @@ RandomBiome::RandomBiome() :
 	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 	Progress & progress = Progress::getInstance();
-	m_mapSize = sf::Vector2u(m_generator.randomInt(350u, 450u), m_generator.randomPiecewise(progress.getNanoRobotCount() * 60u + 30u)),
+	m_mapSize = sf::Vector2u(m_generator.randomInt(350u, 1050u), m_generator.randomPiecewise(progress.getNanoRobotCount() * 60u + 30u)),
 	m_randomSurfaceNumber = m_generator.randomInt(1u, 4u);
 	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;
@@ -149,7 +149,14 @@ RandomBiome::RandomBiome() :
 
 	// TODO define map position and number of map
 	std::size_t portalPos = 30.f;
-	m_instances[100] = MAP_RANDOM_OMP;
+
+	if (progress.getActivatedMonolith() >= 15u)
+	{
+		m_mapSize.x = 400u;
+		m_instances[100] = MAP_RANDOM_OMP;
+	}
+	else
+		m_gameObjects[m_generator.randomInt(35u, m_mapSize.x)] = GameObjectType::Monolith;
 
 	m_interestPointPosX = portalPos;
 
@@ -169,7 +176,6 @@ RandomBiome::RandomBiome() :
 			m_gameObjects[i] = GameObjectType::BirdRedNpc;
 	}
 
-	m_gameObjects[portalPos] = GameObjectType::Portal;
 	m_destinations.push_back(progress.getLastDestination());
 	if (!progress.isMetRandom(progress.getLastDestination()))
 	{
@@ -177,6 +183,7 @@ RandomBiome::RandomBiome() :
 		m_gameObjects[index] = GameObjectType::SpiritNanoRobot;
 		m_interestPointPosX = index;
 	}
+	m_gameObjects[portalPos] = GameObjectType::Portal;
 	progress.meetPortal(progress.getLastDestination(), Level::Random);
 }
 
@@ -284,119 +291,74 @@ std::vector<ParallaxScrolling::ALayer *> RandomBiome::getLayers()
 
 Map::MapSurfaceGenerator RandomBiome::getMapSurfaceGenerator()
 {
-	switch (m_randomSurfaceNumber)
+	if (Progress::getInstance().getActivatedMonolith() >= 15u)
 	{
-		case 1u:
-			return [this](Noise & noise, float x, float y)
+		return [this](Noise & noise, float x, float y)
+		{
+			float floatMapSize = static_cast<float>(m_mapSize.x);
+			float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+			std::vector<float> pointX = {0.f, 50.f, 100.f, 300.f, 350.f};
+			std::vector<float> pointY = {n  , n   , -1.f  , -1.f  , n};
+			for (std::size_t i = 0u; i < pointX.size(); i++)
+				pointX[i] /= floatMapSize;
+	
+			for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
 			{
-				float floatMapSize = static_cast<float>(m_mapSize.x);
-				float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-				std::vector<float> pointX = {0.f, 50.f, 100.f, 300.f, 350.f};
-				std::vector<float> pointY = {n  , n   , -1.f  , -1.f  , n};
-				for (std::size_t i = 0u; i < pointX.size(); i++)
-					pointX[i] /= floatMapSize;
-		
-				for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+				if (x >= pointX[i] && x < pointX[i + 1])
 				{
-					if (x >= pointX[i] && x < pointX[i + 1])
-					{
-						float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-						return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
-					}
+					float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
+					return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
 				}
-				return n;
-			};
-			break;
-		case 2u:
-			return [this](Noise & noise, float x, float y)
-			{
-				float floatMapSize = static_cast<float>(m_mapSize.x);
-				float n =  noise.noise(x * 1.1f, y);
-				std::vector<float> pointX = {0.f, 50.f, 100.f, 300.f, 350.f};
-				std::vector<float> pointY = {n  , n   , -1.f  , -1.f  , n};
-				for (std::size_t i = 0u; i < pointX.size(); i++)
-					pointX[i] /= floatMapSize;
-		
-				for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
-				{
-					if (x >= pointX[i] && x < pointX[i + 1])
-					{
-						float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-						return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
-					}
-				}
-				return n;
-			};
-			break;
-		case 3u:
-			return [this](Noise & noise, float x, float y)
-			{
-				float floatMapSize = static_cast<float>(m_mapSize.x);
-				float n =  noise.perlin(x, y, 3, 2.f);
-				std::vector<float> pointX = {0.f, 50.f, 100.f, 300.f, 350.f};
-				std::vector<float> pointY = {n  , n   , -1.f  , -1.f  , n};
-				for (std::size_t i = 0u; i < pointX.size(); i++)
-					pointX[i] /= floatMapSize;
-		
-				for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
-				{
-					if (x >= pointX[i] && x < pointX[i + 1])
-					{
-						float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-						return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
-					}
-				}
-				return n;
-			};
-			break;
-		case 4u:
-			if (Progress::getInstance().getNanoRobotCount() >= 3)
-			{
+			}
+			return n;
+		};
+	}
+	else
+	{
+		switch (m_randomSurfaceNumber)
+		{
+			case 1u:
 				return [this](Noise & noise, float x, float y)
 				{
-					float floatMapSize = static_cast<float>(m_mapSize.x);
-					float n =  noise.perlin(x * 10.f, y, 2, 2.f);
-					std::vector<float> pointX = {0.f, 50.f, 100.f, 300.f, 350.f};
-					std::vector<float> pointY = {n  , n   , -1.f  , -1.f  , n};
-					for (std::size_t i = 0u; i < pointX.size(); i++)
-						pointX[i] /= floatMapSize;
-			
-					for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
-					{
-						if (x >= pointX[i] && x < pointX[i + 1])
-						{
-							float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-							return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
-						}
-					}
+					float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 					return n;
 				};
-			}
-			else
-			{
+				break;
+			case 2u:
 				return [this](Noise & noise, float x, float y)
 				{
-					float floatMapSize = static_cast<float>(m_mapSize.x);
-					float n = noise.perlin(x, y, 3, 2.f);
-					std::vector<float> pointX = {0.f, 50.f, 100.f, 300.f, 350.f};
-					std::vector<float> pointY = {n  , n   , -1.f  , -1.f  , n};
-					for (std::size_t i = 0u; i < pointX.size(); i++)
-						pointX[i] /= floatMapSize;
-			
-					for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
-					{
-						if (x >= pointX[i] && x < pointX[i + 1])
-						{
-							float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-							return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
-						}
-					}
+					float n =  noise.noise(x * 1.1f, y);
 					return n;
 				};
-			}
-			break;
-		default:
-			break;
+				break;
+			case 3u:
+				return [this](Noise & noise, float x, float y)
+				{
+					float n =  noise.perlin(x, y, 3, 2.f);
+					return n;
+				};
+				break;
+			case 4u:
+				if (Progress::getInstance().getNanoRobotCount() >= 3)
+				{
+					return [this](Noise & noise, float x, float y)
+					{
+						float n =  noise.perlin(x * 10.f, y, 2, 2.f);
+						return n;
+					};
+				}
+				else
+				{
+					return [this](Noise & noise, float x, float y)
+					{
+						float n = noise.perlin(x, y, 3, 2.f);
+						return n;
+					};
+				}
+				break;
+			default:
+				break;
+		}
 	}
 
 	return [](Noise & noise, float x, float y)

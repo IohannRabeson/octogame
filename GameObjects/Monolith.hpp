@@ -82,6 +82,7 @@ private:
 	State										m_state;
 	float										m_offset;
 	float										m_transitionStartEndPosition;
+	sf::Vector2f								m_lastPosition;
 
 	void createLosange(sf::Vector2f const & size,
 											sf::Vector2f const & origin,

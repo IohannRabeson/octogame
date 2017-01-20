@@ -1261,6 +1261,12 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_otherObjectsLow.emplace_back(gameObject.first, 1, npc);
 				}
 				break;
+			case GameObjectType::Monolith:
+				{
+					Monolith * npc = new Monolith(sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f), biome);
+					m_otherObjectsLow.emplace_back(gameObject.first, 30, npc);
+				}
+				break;
 			case GameObjectType::SmokeInstance:
 				{
 					SmokeInstance * npc = new SmokeInstance(sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 0.f));

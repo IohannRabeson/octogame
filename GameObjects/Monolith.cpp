@@ -191,21 +191,10 @@ void Monolith::addMapOffset(float x, float y)
 
 void Monolith::setPosition(sf::Vector2f const & position)
 {
-	// Unused
-	for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
-	{
-		m_spriteMonolith[i].setPosition(position);
-		m_position[i] += position - Monolith::getPosition();
-		m_endPosition[i] += position - Monolith::getPosition();
-	}
-	m_portal->setPosition(m_portal->getPosition() + position - Monolith::getPosition());
-	for (auto & step : m_steps)
-		step->setPosition(position);
-	m_box->setPosition(m_spriteMonolith[0].getPosition() + m_spriteMonolith[0].getGlobalSize() / 2.f - sf::Vector2f(m_box->getRadius(), m_box->getRadius()));
-	m_box->update();
-	m_stopMovingMapBox->setPosition(m_spriteMonolith[0].getPosition() + m_spriteMonolith[0].getGlobalSize() / 2.f - sf::Vector2f(m_stopMovingMapBox->getRadius(), m_stopMovingMapBox->getRadius()));
-	m_stopMovingMapBox->update();
-	Monolith::setPosition(position);
+	sf::Vector2f position2 = position - sf::Vector2f(0.f, 800.f);
+	m_lastPosition = position2 - m_lastPosition;
+	addMapOffset(m_lastPosition.x, m_lastPosition.y);
+	m_lastPosition = position2;
 }
 
 void Monolith::collideOcto(CharacterOcto * octo)
