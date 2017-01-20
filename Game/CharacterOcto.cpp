@@ -2506,7 +2506,7 @@ void	CharacterOcto::initAIEnd(void)
 		m_lookLeftTimer = sf::seconds(2.f);
 		m_speakCedricTimer = sf::seconds(7.f);
 		m_goLeftTimer = sf::seconds(7.5f);
-		m_stopRightTimer = sf::seconds(2.f);
+		m_stopRightTimer = sf::seconds(5.f);
 		m_inRocketTimer = sf::seconds(4.f);
 		m_rocketTakeOffTimer = sf::seconds(6.f);
 		m_speedCamera = 0.5f;

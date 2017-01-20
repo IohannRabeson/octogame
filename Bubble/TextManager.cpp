@@ -75,6 +75,26 @@ std::vector<std::wstring> const & TextManager::getTextsNpc(ResourceKey const & k
 		if (!(m_texts.find("joystick_" + static_cast<std::string>(key)) == m_texts.end()))
 			return (m_texts["joystick_" + static_cast<std::string>(key)]);
 	}
+	if (Progress::getInstance().isGameFinished() && m_texts[key].size())
+	{
+		std::size_t random = 0u;
+		std::wstring text;
+
+		switch (random)
+		{
+			case 0:
+				return m_texts["finished_game_0"];
+				break;
+			case 1:
+				return m_texts["finished_game_1"];
+				break;
+			case 2:
+				return m_texts["finished_game_2"];
+				break;
+			default:
+				break;
+		}
+	}
 	return m_texts[key];
 }
 
