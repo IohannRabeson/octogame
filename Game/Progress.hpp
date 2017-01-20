@@ -56,6 +56,8 @@ public:
 	bool											isGameFinished() const;
 	void											setGameFinished(bool finish);
 	void											increaseLaunchCount(void);
+	void											setLongIntro(bool longIntro);
+	void											setTryToEscape(bool tryToEscape);
 	void											setBlueEnd(bool finish);
 	void											setRedEnd(bool finish);
 	void											increaseJumpCount(void);
@@ -240,7 +242,9 @@ public:
 			checkpoints(0u),
 			activatedMonolith(0u),
 			levelOfDetails(0),
-			spaceShipRepair(false)
+			spaceShipRepair(false),
+			longIntro(false),
+			tryToEscape(false)
 		{}
 
 		float					timePlayed;
@@ -279,6 +283,8 @@ public:
 		std::size_t				activatedMonolith;
 		int						levelOfDetails;
 		bool					spaceShipRepair;
+		bool					longIntro;
+		bool					tryToEscape;
 	};
 
 private:

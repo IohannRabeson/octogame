@@ -119,6 +119,16 @@ void	Progress::increaseJumpCount(void)
 	m_data.jumpCount++;
 }
 
+void	Progress::setLongIntro(bool longIntro)
+{
+	m_data.longIntro = longIntro;
+}
+
+void	Progress::setTryToEscape(bool tryToEscape)
+{
+	m_data.tryToEscape = tryToEscape;
+}
+
 void	Progress::setup()
 {
 	m_newSave = false;

@@ -38,6 +38,8 @@ void SteamAPI::reset(void)
 	SteamUserStats()->SetStat("STAT_END_RED", static_cast<int32>(0u));
 	//SteamUserStats()->SetStat("STAT_FAT_NPC", static_cast<int32>(data.isFatNpc));
 	SteamUserStats()->SetStat("STAT_SPACESHIP_REPAIR", static_cast<int32>(0u));
+	SteamUserStats()->SetStat("STAT_LONG_INTRO", static_cast<int32>(0u));
+	SteamUserStats()->SetStat("STAT_TRY_TO_ESCAPE", static_cast<int32>(0u));
 	SteamUserStats()->StoreStats();
 
 	for (std::size_t i = 0; i < EAchievements::COUNT_ACH; i++)
@@ -78,6 +80,8 @@ void SteamAPI::updateStats(Progress::data & data)
 	SteamUserStats()->SetStat("STAT_END_RED", static_cast<int32>(data.isRedEnd));
 	//SteamUserStats()->SetStat("STAT_FAT_NPC", static_cast<int32>(data.isFatNpc));
 	SteamUserStats()->SetStat("STAT_SPACESHIP_REPAIR", static_cast<int32>(data.spaceShipRepair));
+	SteamUserStats()->SetStat("STAT_LONG_INTRO", static_cast<int32>(data.longIntro));
+	SteamUserStats()->SetStat("STAT_TRY_TO_ESCAPE", static_cast<int32>(data.tryToEscape));
 
 	SteamUserStats()->StoreStats();
 }

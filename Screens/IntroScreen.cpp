@@ -95,6 +95,7 @@ void	IntroScreen::update(sf::Time frameTime)
 	AMenu::State				state = m_menu.getState();
 	Progress &					progress = Progress::getInstance();
 
+	m_globalTime += frameTime;
 	m_menu.update(frameTime, m_spaceShip.getPosition() + sf::Vector2f(1000.f, 100.f));
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 	{
@@ -175,7 +176,6 @@ void	IntroScreen::setupScene(void)
 		m_stars[i].canEmit(true);
 		m_stars[i].setSpeed(sf::Vector2f(-speed, 0.f));
 	}
-
 }
 
 void	IntroScreen::updateSpaceShip(sf::Time frameTime)
@@ -227,6 +227,8 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 				m_speedX -= 300.f;
 				if (m_cloudCollidedCount >= m_cloudCollidedCountMax)
 					m_state = Crash;
+				if (m_globalTime >= sf::seconds(25.f))
+					Progress::getInstance().setLongIntro(true);
 			}
 			if (m_cloudCollidedCount >= 1u)
 				m_speedYUp -= frameTime.asSeconds() * 10.f;
@@ -244,7 +246,9 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 				translation.y += m_speedFall * frameTime.asSeconds();
 
 			if (positionSpaceShip.y > m_cloudMaxY)
+			{
 				m_state = End;
+			}
 			break;
 		}
 		case End:
