@@ -198,6 +198,8 @@ void ANpc::setCurrentText(int index)
 {
 	if (index < static_cast<int>(m_texts.size()))
 		m_currentText = index;
+	else
+		std::cout << "NPC : No text at this index." << std::endl;
 }
 
 void ANpc::setDisplayText(bool displayText)
