@@ -196,8 +196,10 @@ void ANpc::setTexts(std::vector<std::wstring> const & texts, ABubble::Priority p
 
 void ANpc::setCurrentText(int index)
 {
-	assert(index < static_cast<int>(m_texts.size()));
-	m_currentText = index;
+	if (index < static_cast<int>(m_texts.size()))
+		m_currentText = index;
+	else
+		std::cout << "NPC : No text at this index." << std::endl;
 }
 
 void ANpc::setDisplayText(bool displayText)
