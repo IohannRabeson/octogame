@@ -1134,7 +1134,7 @@ bool	CharacterOcto::isCenteredCamera(void) const
 		return true;
 	if (m_level == Level::DesertC || m_level == Level::JungleC)
 		return true;
-	if (isInWater() && m_waterLevel != -1.f)
+	if (isInWater() && m_waterLevel != -1.f && m_level != Level::Random)
 		return true;
 	return false;
 }
