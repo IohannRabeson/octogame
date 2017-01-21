@@ -31,11 +31,12 @@ class SteamAPI
 		ACH_SPACESHIP,
 		ACH_LONG_INTRO,
 		ACH_TRY_TO_ESCAPE,
+		ACH_DOORS,
 		COUNT_ACH
 	};
 
 	// Achievement array which will hold data about the achievements and their state
-	Achievement_t g_Achievements[11] =
+	Achievement_t g_Achievements[COUNT_ACH] =
 	{
 		_ACH_ID( ACH_RANDOM_PORTAL, "ACH_RANDOM_PORTAL" ),
 		_ACH_ID( ACH_NPC, "ACH_NPC" ),
@@ -47,7 +48,8 @@ class SteamAPI
 		_ACH_ID( ACH_RED_END, "ACH_RED_END" ),
 		_ACH_ID( ACH_SPACESHIP, "ACH_SPACESHIP" ),
 		_ACH_ID( ACH_LONG_INTRO, "ACH_LONG_INTRO" ),
-		_ACH_ID( ACH_TRY_TO_ESCAPE, "ACH_TRY_TO_ESCAPE" )
+		_ACH_ID( ACH_TRY_TO_ESCAPE, "ACH_TRY_TO_ESCAPE" ),
+		_ACH_ID( ACH_DOORS, "ACH_DOORS" )
 
 	};
 

@@ -1322,6 +1322,7 @@ void	CharacterOcto::collideDoor(void)
 	if (m_keyEntrance)
 	{
 		m_doorAction = true;
+		Progress::getInstance().setDoorFound(true);
 	}
 	else
 		m_doorAction = false;

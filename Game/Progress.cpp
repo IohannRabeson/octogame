@@ -129,6 +129,11 @@ void	Progress::setTryToEscape(bool tryToEscape)
 	m_data.tryToEscape = tryToEscape;
 }
 
+void	Progress::setDoorFound(bool doorFound)
+{
+	m_data.doorFound = doorFound;
+}
+
 void	Progress::setup()
 {
 	m_newSave = false;

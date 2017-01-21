@@ -58,6 +58,7 @@ public:
 	void											increaseLaunchCount(void);
 	void											setLongIntro(bool longIntro);
 	void											setTryToEscape(bool tryToEscape);
+	void											setDoorFound(bool doorFound);
 	void											setBlueEnd(bool finish);
 	void											setRedEnd(bool finish);
 	void											increaseJumpCount(void);
@@ -244,7 +245,8 @@ public:
 			levelOfDetails(0),
 			spaceShipRepair(false),
 			longIntro(false),
-			tryToEscape(false)
+			tryToEscape(false),
+			doorFound(false)
 		{}
 
 		float					timePlayed;
@@ -285,6 +287,7 @@ public:
 		bool					spaceShipRepair;
 		bool					longIntro;
 		bool					tryToEscape;
+		bool					doorFound;
 	};
 
 private:
