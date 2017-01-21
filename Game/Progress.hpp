@@ -53,6 +53,7 @@ public:
 	MenuType										getMenuType(void);
 	void											setMenuType(MenuType type);
 	bool											isGameFinished() const;
+	bool											isGameFinishedHard() const;
 	void											setGameFinished(bool finish);
 	void											increaseLaunchCount(void);
 	void											setLongIntro(bool longIntro);
@@ -214,6 +215,7 @@ public:
 			timePlayed(0.f),
 			launchCount(0u),
 			isGameFinished(false),
+			isGameFinishedHard(false),
 			isBlueEnd(false),
 			isRedEnd(false),
 			validateChallenge(0u),
@@ -251,6 +253,7 @@ public:
 		float					timePlayed;
 		std::size_t				launchCount;
 		bool					isGameFinished;
+		bool					isGameFinishedHard;
 		bool					isBlueEnd;
 		bool					isRedEnd;
 		sf::Vector2f			checkPointPosition;

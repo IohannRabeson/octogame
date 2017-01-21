@@ -94,9 +94,16 @@ bool	Progress::isGameFinished() const
 	return m_data.isGameFinished;
 }
 
+bool	Progress::isGameFinishedHard() const
+{
+	return m_data.isGameFinishedHard;
+}
+
 void	Progress::setGameFinished(bool finish)
 {
 	m_data.isGameFinished = finish;
+	if (m_data.difficulty == Difficulty::Hard)
+		m_data.isGameFinishedHard = finish;
 }
 
 void	Progress::increaseLaunchCount(void)
