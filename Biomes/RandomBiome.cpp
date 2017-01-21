@@ -150,13 +150,19 @@ RandomBiome::RandomBiome() :
 	// TODO define map position and number of map
 	std::size_t portalPos = 30.f;
 
-	if (progress.getActivatedMonolith() >= 15u)
+	if (progress.getActivatedMonolith() >= 14u)
 	{
 		m_mapSize.x = 400u;
 		m_instances[100] = MAP_RANDOM_OMP;
 	}
 	else
-		m_gameObjects[m_generator.randomInt(35u, m_mapSize.x)] = GameObjectType::Monolith;
+	{
+		std::size_t pos = randomInt(60u, m_mapSize.x);
+		m_gameObjects[pos] = GameObjectType::Monolith;
+		if (pos + 75u < m_mapSize.x)
+			m_gameObjects[pos + 75u] = GameObjectType::MysticanouilleNpc;
+		m_gameObjects[pos - 40u] = GameObjectType::MysticanouilleNpc;
+	}
 
 	m_interestPointPosX = portalPos;
 
@@ -291,7 +297,7 @@ std::vector<ParallaxScrolling::ALayer *> RandomBiome::getLayers()
 
 Map::MapSurfaceGenerator RandomBiome::getMapSurfaceGenerator()
 {
-	if (Progress::getInstance().getActivatedMonolith() >= 15u)
+	if (Progress::getInstance().getActivatedMonolith() >= 14u)
 	{
 		return [this](Noise & noise, float x, float y)
 		{
