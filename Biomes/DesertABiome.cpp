@@ -151,6 +151,10 @@ DesertABiome::DesertABiome() :
 	m_instances[23] = MAP_DESERT_A_WAVE_OMP;
 	m_gameObjects[48] = GameObjectType::TurbanNpc;
 	m_gameObjects[36] = GameObjectType::DesertEngine;
+	m_gameObjects[59] = GameObjectType::DesertEngine;
+	m_gameObjects[73] = GameObjectType::DesertEngine;
+	m_gameObjects[99] = GameObjectType::DesertEngine;
+	m_gameObjects[139] = GameObjectType::DesertEngine;
 	m_gameObjects[220] = GameObjectType::TheoNpc;
 	m_instances[250] = MAP_DESERT_A_JUMP_OMP;
 	m_gameObjects[250] = GameObjectType::PortalSnow;
