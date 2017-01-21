@@ -63,6 +63,7 @@ private:
 	sf::Time							m_timerJumpMax;
 	sf::Time							m_timerFall;
 	sf::Time							m_timerFallMax;
+	sf::Time							m_globalTime;
 	float								m_cloudMinY;
 	float								m_cloudMaxY;
 	float								m_speedFall;

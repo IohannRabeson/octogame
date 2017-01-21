@@ -1,5 +1,5 @@
 TARGET = octodyssey.app
-DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs
+DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs Steam
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS)
 BUILD_DIR = ./builds/game
@@ -23,6 +23,7 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_DECORS)										\
 	  $(SRC_BUBBLE)										\
 	  $(SRC_MENU)										\
+	  $(SRC_STEAM)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp										\
 
@@ -311,6 +312,8 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp						\
 
+SRC_STEAM =		Steam/SteamAPI.cpp						\
+
 
 # package files
 LOADING_PCK_FILE = loading.pck
@@ -366,7 +369,7 @@ all: print_summary $(COMPLETE_TARGET)
 
 $(COMPLETE_TARGET): $(BUILD_DIR) package core_library depend $(OBJS)
 	@echo " - $(COLOR_ACTION)building$(COLOR_OFF): $(COLOR_OBJECT)$@$(COLOR_OFF)"
-	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) 
+	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) -lsteam_api
 
 $(addprefix $(BUILD_DIR)/, %.o) : $(subst $(BUILD_DIR),, %.cpp)
 	@echo " - $(COLOR_ACTION)compiling$(COLOR_OFF): $(COLOR_OBJECT)$<$(COLOR_OFF)"

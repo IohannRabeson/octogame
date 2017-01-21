@@ -36,8 +36,10 @@ void	GameScreen::resume()
 
 void	GameScreen::stop()
 {
+	Progress &					progress = Progress::getInstance();
+
 	octo::Application::getAudioManager().stopMusic(sf::Time::Zero);
-	Progress::getInstance().save(m_timePlayed.getElapsedTime().asSeconds());
+	progress.save(m_timePlayed.getElapsedTime().asSeconds());
 	octo::Application::getPostEffectManager().removeEffects();
 	InputListener::removeInputListener();
 	m_game.reset(nullptr);

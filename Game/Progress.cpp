@@ -2,6 +2,7 @@
 #include "CharacterOcto.hpp"
 #include "Tile.hpp"
 #include "ABiome.hpp"
+#include "SteamAPI.hpp"
 #include <SFML/Audio/Listener.hpp>
 #include <Application.hpp>
 #include <Options.hpp>
@@ -12,6 +13,7 @@
 #include <fstream>
 
 std::unique_ptr<Progress> Progress::m_instance = nullptr;
+std::unique_ptr<SteamAPI> Progress::m_steam = nullptr;
 
 Progress::Progress() :
 	m_isMenu(true),
@@ -20,7 +22,6 @@ Progress::Progress() :
 	m_newSave(false),
 	m_changeLevel(false),
 	m_reverseSprite(false),
-	m_spaceShipRepair(false),
 	m_killOcto(false),
 	m_isDoubleJump(false),
 	m_isInCloud(false),
@@ -42,6 +43,7 @@ Progress & Progress::getInstance()
 	if (m_instance == nullptr)
 	{
 		m_instance.reset(new Progress());
+		m_steam.reset(new SteamAPI());
 	}
 	return *m_instance;
 }
@@ -97,6 +99,36 @@ void	Progress::setGameFinished(bool finish)
 	m_data.isGameFinished = finish;
 }
 
+void	Progress::increaseLaunchCount(void)
+{
+	m_data.launchCount++;
+}
+
+void	Progress::setBlueEnd(bool finish)
+{
+	m_data.isBlueEnd = finish;
+}
+
+void	Progress::setRedEnd(bool finish)
+{
+	m_data.isRedEnd = finish;
+}
+
+void	Progress::increaseJumpCount(void)
+{
+	m_data.jumpCount++;
+}
+
+void	Progress::setLongIntro(bool longIntro)
+{
+	m_data.longIntro = longIntro;
+}
+
+void	Progress::setTryToEscape(bool tryToEscape)
+{
+	m_data.tryToEscape = tryToEscape;
+}
+
 void	Progress::setup()
 {
 	m_newSave = false;
@@ -147,6 +179,7 @@ void	Progress::save(float timePlayed)
 	savePortals();
 	saveToFile();
 	saveDeaths();
+	m_steam->update(m_data);
 }
 
 void	Progress::saveToFile()
@@ -166,7 +199,7 @@ void	Progress::reset()
 
 	m_changeLevel = false;
 	m_reverseSprite = false;
-	m_spaceShipRepair = false;
+	m_data.spaceShipRepair = false;
 	m_npc.clear();
 	m_portals.clear();
 	m_deaths.clear();
@@ -584,6 +617,7 @@ void	Progress::saveNpc()
 	}
 	assert(saveNpc.size() < 10000);
 	std::strcpy(m_data.npc, saveNpc.c_str());
+	m_data.npcCount = getNpcMet().size();
 }
 
 void	Progress::loadNpc()

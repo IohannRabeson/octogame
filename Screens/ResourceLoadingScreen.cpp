@@ -181,5 +181,7 @@ void	ResourceLoadingScreen::onNoMoreLoading()
 
 	// Load musics in memory
 	MusicManager::getInstance();
+	Progress::getInstance().increaseLaunchCount();
+	Progress::getInstance().save();
 	states.change("logo");
 }

@@ -123,6 +123,7 @@ void	LaboratoryEndScreen::stop()
 {
 	InputListener::removeInputListener();
 	Progress::getInstance().setBubbleNpc(false);
+	PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, false);
 }
 
 void	LaboratoryEndScreen::update(sf::Time frameTime)
@@ -223,8 +224,9 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 				if (progress.getNextDestination() != Level::Portal)
 				{
 					progress.setNextDestination(Level::Portal);
+					progress.setRedEnd(true);
 					progress.save();
-					octo::Application::getStateManager().change("game");
+					octo::Application::getStateManager().change("anoctonautodyssey");
 				}
 			}
 			break;
@@ -304,11 +306,17 @@ bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)
 	switch (key)
 	{
 		case OctoKeys::Left:
+		{
+			Progress::getInstance().setTryToEscape(true);
 			m_keyLeft = true;
 			break;
+		}
 		case OctoKeys::Right:
+		{
+			Progress::getInstance().setTryToEscape(true);
 			m_keyRight = true;
 			break;
+		}
 		case OctoKeys::Menu:
 			if (m_textIndex > 4u)
 				m_textIndex = 78u;

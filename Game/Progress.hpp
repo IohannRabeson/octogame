@@ -10,6 +10,7 @@
 # include <memory>
 
 class ABiome;
+class SteamAPI;
 class Progress
 {
 public:
@@ -41,6 +42,7 @@ public:
 	static constexpr std::size_t					DeathMax = 15.f;
 
 	static Progress &								getInstance(void);
+	~Progress() = default;
 
 	float											getTimePlayed() const { return m_data.timePlayed; }
 	bool											isMenu(void) const;
@@ -53,6 +55,12 @@ public:
 	void											setMenuType(MenuType type);
 	bool											isGameFinished() const;
 	void											setGameFinished(bool finish);
+	void											increaseLaunchCount(void);
+	void											setLongIntro(bool longIntro);
+	void											setTryToEscape(bool tryToEscape);
+	void											setBlueEnd(bool finish);
+	void											setRedEnd(bool finish);
+	void											increaseJumpCount(void);
 
 	void											setLanguage(Language language);
 	Progress::Language								getLanguage(void) const;
@@ -96,8 +104,8 @@ public:
 	void											setCanOpenDoubleJump(bool canOpen) { m_data.canOpenDoubleJump = canOpen; }
 	bool											canOpenDoubleJump(void) const { return m_data.canOpenDoubleJump; }
 
-	void											spaceShipRepair(bool isRepair) { m_spaceShipRepair = isRepair; }
-	bool											spaceShipIsRepair() const { return m_spaceShipRepair; }
+	void											spaceShipRepair(bool isRepair) { m_data.spaceShipRepair = isRepair; }
+	bool											spaceShipIsRepair() const { return m_data.spaceShipRepair; }
 
 	float											getMusicVolume() const { return m_data.musicVol; }
 	void											setMusicVolume(float volume) { m_data.musicVol = volume; }
@@ -194,7 +202,6 @@ public:
 	void											save(float timePlayed = 0.f);
 	void											reset();
 
-private:
 	struct data
 	{
 		data() :
@@ -205,10 +212,15 @@ private:
 				std::size_t musicVol, std::size_t soundVol, std::size_t globalVol,
 				bool fullscreen, bool vsync, Language language, Difficulty difficulty) :
 			timePlayed(0.f),
+			launchCount(0u),
 			isGameFinished(false),
+			isBlueEnd(false),
+			isRedEnd(false),
 			validateChallenge(0u),
 			nanoRobotCount(nanoRobot),
 			spiritCount(spirit),
+			npcCount(0u),
+			jumpCount(0u),
 			nextDestination(biome),
 			currentDestination(biome),
 			lastDestination(biome),
@@ -229,15 +241,23 @@ private:
 			respawnType(Progress::RespawnType::Portal),
 			checkpoints(0u),
 			activatedMonolith(0u),
-			levelOfDetails(0)
+			levelOfDetails(0),
+			spaceShipRepair(false),
+			longIntro(false),
+			tryToEscape(false)
 		{}
 
 		float					timePlayed;
+		std::size_t				launchCount;
 		bool					isGameFinished;
+		bool					isBlueEnd;
+		bool					isRedEnd;
 		sf::Vector2f			checkPointPosition;
 		std::size_t				validateChallenge;
 		std::size_t				nanoRobotCount;
 		std::size_t				spiritCount;
+		std::size_t				npcCount;
+		std::size_t				jumpCount;
 		Level					nextDestination;
 		Level					currentDestination;
 		Level					lastDestination;
@@ -262,8 +282,12 @@ private:
 		std::size_t				checkpoints;
 		std::size_t				activatedMonolith;
 		int						levelOfDetails;
+		bool					spaceShipRepair;
+		bool					longIntro;
+		bool					tryToEscape;
 	};
 
+private:
 	Progress();
 	void											init();
 	void											saveToFile();
@@ -277,6 +301,8 @@ private:
 	void											split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 	static std::unique_ptr<Progress>				m_instance;
+	static std::unique_ptr<SteamAPI>				m_steam;
+
 	bool											m_isMenu;
 	bool											m_isIntro;
 	bool											m_isBubbleNpc;
@@ -285,7 +311,6 @@ private:
 	bool											m_newSave;
 	bool											m_changeLevel;
 	bool											m_reverseSprite;
-	bool											m_spaceShipRepair;
 	sf::Vector2f									m_octoPos;
 	sf::Vector2f									m_octoPosTransition;
 	bool											m_killOcto;
