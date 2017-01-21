@@ -36,7 +36,8 @@ void OptionMenu::createMenus(void)
 		addMenu(L"???", std::unique_ptr<BalleMultiplierMenu>(new BalleMultiplierMenu()));
 	addMenu(AMenu::getText("options_audio"), std::unique_ptr<AudioMenu>(new AudioMenu()));
 	addMenu(AMenu::getText("options_video"), std::unique_ptr<VideoMenu>(new VideoMenu()));
-	addMenu(AMenu::getText("options_difficulty"), std::unique_ptr<DifficultyMenu>(new DifficultyMenu()));
+	if (progress.getDifficulty() == Progress::Difficulty::Hard)
+		addMenu(AMenu::getText("options_difficulty"), std::unique_ptr<DifficultyMenu>(new DifficultyMenu()));
 	addMenu(AMenu::getText("options_language"), std::unique_ptr<LanguageMenu>(new LanguageMenu()));
 	addMenu(AMenu::getText("options_menutype"), std::unique_ptr<MenuTypeMenu>(new MenuTypeMenu()));
 	if (!progress.isMenu())

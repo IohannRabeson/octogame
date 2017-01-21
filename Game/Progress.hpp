@@ -28,7 +28,6 @@ public:
 
 	enum Difficulty
 	{
-		Easy,
 		Normal,
 		Hard
 	};
@@ -39,7 +38,7 @@ public:
 		Simple
 	};
 
-	static constexpr std::size_t					DeathMax = 15.f;
+	static constexpr std::size_t					DeathMax = 20.f;
 
 	static Progress &								getInstance(void);
 	~Progress() = default;

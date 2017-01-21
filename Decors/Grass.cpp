@@ -151,7 +151,7 @@ void Grass::computeMovement(sf::Time frameTime)
 	}
 
 	std::size_t deathCount = Progress::getInstance().getDeathLevelCount();
-	if (deathCount == 0u || Progress::getInstance().getDifficulty() != Progress::Difficulty::Easy)
+	if (deathCount == 0u || Progress::getInstance().getDifficulty() == Progress::Difficulty::Hard)
 		m_octDeathCoef = octo::cosinusInterpolation(m_octDeathCoef, 1.f, frameTime.asSeconds() * 4.f);
 	else
 		m_octDeathCoef = octo::linearInterpolation(1.f, 0.5f, static_cast<float>(deathCount) / static_cast<float>(Progress::DeathMax));

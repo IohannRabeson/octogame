@@ -207,6 +207,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/CreditMenu.cpp						\
 				Menu/YesNoMenu.cpp						\
 				Menu/ResolutionMenu.cpp					\
+				Menu/ResetMenu.cpp						\
 				Menu/CheatCodeMenu.cpp					\
 				Menu/LevelMenu.cpp						\
 				Menu/PlayEndMenu.cpp					\
