@@ -144,7 +144,7 @@ WaterDBiome::WaterDBiome() :
 	if (progress.getLastDestination() == Level::Final)
 		m_octoStartPosition = sf::Vector2f(773.f * 16.f, -110.f * 16.f);
 	if (progress.getLastDestination() == Level::Random)
-		m_octoStartPosition = sf::Vector2f(714.f * 16.f, -316.f * 16.f);
+		m_octoStartPosition = sf::Vector2f(901.f * 16.f, -4325.f);
 
 	m_instances[50] = MAP_WATER_D_TRAIL_OMP;
 
