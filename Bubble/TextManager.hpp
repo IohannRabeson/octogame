@@ -4,6 +4,7 @@
 # include <vector>
 # include <map>
 # include <memory>
+# include "RandomGenerator.hpp"
 # include "ResourceDefinitions.hpp"
 # include "ABubble.hpp"
 
@@ -23,6 +24,7 @@ private:
 	static std::unique_ptr<TextManager>					m_instance;
 	std::map<std::string, std::vector<std::wstring>>	m_texts;
 	std::map<std::string, ABubble::Priority>			m_priority;
+	RandomGenerator										m_generator;
 };
 
 #endif
