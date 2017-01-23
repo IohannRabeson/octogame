@@ -68,6 +68,8 @@ std::vector<std::wstring> const & TextManager::getTexts(std::string const & key)
 
 std::vector<std::wstring> const & TextManager::getTextsNpc(ResourceKey const & key)
 {
+	Progress const & progress = Progress::getInstance();
+
 	if (m_texts[key].size())
 		m_texts[key].push_back(L"Beurk!\n");
 
@@ -76,7 +78,7 @@ std::vector<std::wstring> const & TextManager::getTextsNpc(ResourceKey const & k
 		if (!(m_texts.find("joystick_" + static_cast<std::string>(key)) == m_texts.end()))
 			return (m_texts["joystick_" + static_cast<std::string>(key)]);
 	}
-	if (Progress::getInstance().getLastDestination() == Level::Portal && m_texts[key].size())
+	if (progress.getLastDestination() == Level::Portal && !progress.isMenu() && m_texts[key].size())
 	{
 		std::size_t random = m_generator.randomInt(0u, 3u);
 		std::wstring text;
