@@ -76,10 +76,13 @@ void Grass::setup(ABiome& biome)
 	m_rightTargets.resize(m_numberOfTargets);
 	setupTargets();
 
-	if (m_isDeadlyGrass && (biome.randomBool(0.1f) || m_onInstance))
+	if (m_isDeadlyGrass && m_onInstance)
 	{
 		m_isShining = true;
-		m_shine.setSize(biome.getShineEffectSize() / 4.f);
+		m_shineSize = biome.getShineEffectSize() / 4.f;
+		m_shineColor = biome.getShineEffectColor();
+		m_shine.setSize(m_shineSize);
+		m_shine.setColor(m_shineColor);
 		m_shine.setup(biome);
 		m_shine.setCanPlaySound(false);
 	}
@@ -108,7 +111,7 @@ void Grass::computeMovement(sf::Time frameTime)
 	sf::Vector2f const & octoPosition = progress.getOctoPos();
 	float dist = std::sqrt(std::pow(m_up.x - octoPosition.x, 2u) + std::pow(m_up.y - octoPosition.y, 2u));
 
-	if ((dist <= 60.f && m_lastOctoPosition.x != octoPosition.x) || (progress.getOctoDoubleJump() && dist <= 200.f && octoPosition.x > m_up.x))
+	if ((dist <= 60.f && m_lastOctoPosition.x != octoPosition.x) || (progress.getOctoDoubleJump() && dist <= 300.f && octoPosition.x > m_up.x))
 	{
 		if (dist <= 40.f && m_isDeadlyGrass && (m_up.x - octoPosition.x > -16.f && m_up.x - octoPosition.x < 16.f))
 			progress.setKillOcto(true);
@@ -116,7 +119,7 @@ void Grass::computeMovement(sf::Time frameTime)
 		if (dist <= 60.f)
 			m_animationSpeed = 1.f + (dist / 60.f);
 		else
-			m_animationSpeed = 1.f + (dist / 200.f);
+			m_animationSpeed = 1.f + (dist / 300.f);
 
 	}
 	else if (m_animationSpeed >= 0.2f)
@@ -139,22 +142,29 @@ void Grass::computeMovement(sf::Time frameTime)
 			else if (octoPosition.x > m_lastOctoPosition.x && m_sideTarget)
 				m_indexRightTarget = m_numberOfTargets - 1;
 		}
-		else if (progress.getOctoDoubleJump() && dist <= 200.f && octoPosition.x > m_up.x)
+		else if (progress.getOctoDoubleJump() && dist <= 300.f && octoPosition.x > m_up.x)
 		{
 			if (octoPosition.x > getPosition().x && !m_sideTarget)
 				m_indexLeftTarget = m_numberOfTargets - 1;
 			else if (octoPosition.x < getPosition().x && m_sideTarget)
 				m_indexRightTarget = m_numberOfTargets - 1;
 		}
+
 		m_sideTarget = !m_sideTarget;
 		m_movementTimer = sf::Time::Zero;
+	}
+
+	if (dist <= 1000.f)
+	{
+		m_shine.setSize(octo::cosinusInterpolation(sf::Vector2f(m_shineSize * 3.f), m_shineSize, dist / 1000.f));
+		m_shine.setColor(octo::cosinusInterpolation(sf::Color::White, m_shineColor, dist / 1000.f));
 	}
 
 	std::size_t deathCount = Progress::getInstance().getDeathLevelCount();
 	if (deathCount == 0u || Progress::getInstance().getDifficulty() == Progress::Difficulty::Hard)
 		m_octDeathCoef = octo::cosinusInterpolation(m_octDeathCoef, 1.f, frameTime.asSeconds() * 4.f);
 	else
-		m_octDeathCoef = octo::linearInterpolation(1.f, 0.5f, static_cast<float>(deathCount) / static_cast<float>(Progress::DeathMax));
+		m_octDeathCoef = octo::linearInterpolation(1.f, 0.8f, static_cast<float>(deathCount) / static_cast<float>(Progress::DeathMax));
 
 
 	m_lastOctoPosition = octoPosition;

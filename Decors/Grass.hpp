@@ -26,6 +26,8 @@ private:
 	bool						m_isDeadlyGrass;
 	sf::Vector2f				m_up;
 	ShineEffect					m_shine;
+	sf::Vector2f				m_shineSize;
+	sf::Color					m_shineColor;
 	DecorAnimator				m_animator;
 	float						m_animation;
 	float						m_animationSpeed;
