@@ -1896,7 +1896,8 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			tilePrev = &m_tilesPrev->get(x, y);
 
 			// Update tile transition
-			m_vertices[m_verticesCount].color = octo::linearInterpolation(tilePrev->getStartColor(), tile->getStartColor(), transition);
+			// TODO : Uncomment if we when colors changes in ground
+			m_vertices[m_verticesCount].color = tile->getStartColor();//(octo::linearInterpolation(tilePrev->getStartColor(), tile->getStartColor(), transition);
 			for (std::size_t i = 0u; i < 3u; i++)
 			{
 				m_vertices[m_verticesCount + i].position.y = octo::linearInterpolation(tilePrev->getStartTransition(i).y, tile->getStartTransition(i).y, transition) - Map::OffsetY;
