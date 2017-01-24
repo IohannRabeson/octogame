@@ -28,7 +28,11 @@ public:
 		ViewUp = 14,
 		ViewDown = 15,
 		None = 16,
-		Zoom = 17
+		Zoom = 17,
+		ShowOcto = 18,
+		HideOcto = 19,
+		IncreaseSpeed = 20,
+		DecreaseSpeed = 21
 	};
 
 	InputListener(void);

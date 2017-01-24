@@ -342,6 +342,8 @@ private:
 	std::vector<sf::Vector2f>					m_collidingTile;
 	sf::Shader &								m_cutsceneShader;
 
+	bool m_showOcto;
+	float m_speedOcto;
 };
 
 #endif

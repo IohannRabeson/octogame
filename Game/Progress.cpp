@@ -74,6 +74,11 @@ bool	Progress::isBubbleNpc() const
 	return m_isBubbleNpc;
 }
 
+bool	Progress::getBubbleNpc(void) const
+{
+	return m_isBubbleNpc;
+}
+
 void	Progress::setBubbleNpc(bool isBubbleNpc)
 {
 	m_isBubbleNpc = isBubbleNpc;

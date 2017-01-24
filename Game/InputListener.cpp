@@ -197,6 +197,18 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 			onInputReleased(OctoKeys::ViewDown);
 			m_isShiftPressed = false;
 			break;
+		case sf::Keyboard::J:
+			onInputReleased(OctoKeys::ShowOcto);
+			break;
+		case sf::Keyboard::H:
+			onInputReleased(OctoKeys::HideOcto);
+			break;
+		case sf::Keyboard::M:
+			onInputReleased(OctoKeys::IncreaseSpeed);
+			break;
+		case sf::Keyboard::N:
+			onInputReleased(OctoKeys::DecreaseSpeed);
+			break;
 		default:
 			break;
 	}

@@ -101,7 +101,9 @@ CharacterOcto::CharacterOcto() :
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutscenePauseTimerMax(sf::seconds(4.f)),
 	m_adaptBoxTimerMax(sf::seconds(0.5f)),
-	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
+	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG)),
+	m_showOcto(true),
+	m_speedOcto(1.f)
 {
 	m_sound.reset(new OctoSound());
 	m_cutsceneShader.setParameter("height", 0.15);
@@ -984,6 +986,8 @@ void	CharacterOcto::setupMachine()
 
 void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 {
+	frameTime *= m_speedOcto;
+
 	Progress & progress = Progress::getInstance();
 
 	if (m_level == Level::EndRocket)
@@ -1191,26 +1195,35 @@ void	CharacterOcto::resetTimeEvent()
 
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
-	m_inkParticle.draw(render);
-	m_sprite.draw(render, states);
-	m_helmetParticle.draw(render);
-	m_ploufParticle.draw(render);
-	m_waterParticle.draw(render);
-	m_bubbleParticle.draw(render);
+	if (m_showOcto)
+	{
+		m_inkParticle.draw(render);
+		m_sprite.draw(render, states);
+		m_helmetParticle.draw(render);
+		m_ploufParticle.draw(render);
+		m_waterParticle.draw(render);
+		m_bubbleParticle.draw(render);
+	}
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
 {
-	for (auto & spirit : m_spirits)
-		spirit->draw(render, states);
-	for (auto & robot : m_nanoRobots)
-		robot->draw(render, states);
+	if (m_showOcto)
+	{
+		for (auto & spirit : m_spirits)
+			spirit->draw(render, states);
+		for (auto & robot : m_nanoRobots)
+			robot->draw(render, states);
+	}
 }
 
 void	CharacterOcto::drawText(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
 {
-	for (auto & robot : m_nanoRobots)
-		robot->drawText(render, states);
+	if (m_showOcto)
+	{
+		for (auto & robot : m_nanoRobots)
+			robot->drawText(render, states);
+	}
 }
 
 void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::Vector2f const& collisionDirection)
@@ -2425,6 +2438,24 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 		case OctoKeys::Zoom:
 			m_keyZoomIn = false;
 			break;
+		case OctoKeys::HideOcto:
+			m_pixelSecondWalk = 200.f;
+			m_showOcto = false;
+			m_speedCamera = 2.f;
+			break;
+		case OctoKeys::ShowOcto:
+			m_showOcto = true;
+			m_pixelSecondWalk = 320.f;
+			m_speedCamera = 0.f;
+			break;
+		case OctoKeys::IncreaseSpeed:
+			m_pixelSecondWalk += 10.f;
+			break;
+		case OctoKeys::DecreaseSpeed:
+			m_pixelSecondWalk -= 10.f;
+			break;
+		case OctoKeys::SelectMenu:
+			Progress::getInstance().setBubbleNpc(!Progress::getInstance().getBubbleNpc());
 		default:
 			otherKeyReleased = true;
 			break;

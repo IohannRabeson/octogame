@@ -49,6 +49,7 @@ public:
 	bool											isIntro(void) const;
 	void											setMenu(bool isMenu);
 	bool											isBubbleNpc(void) const;
+	bool											getBubbleNpc(void) const;
 	void											setBubbleNpc(bool isBubbleNpc);
 	MenuType										getMenuType(void);
 	void											setMenuType(MenuType type);

@@ -8,11 +8,12 @@
 # include "ResourceDefinitions.hpp"
 # include "BubbleText.hpp"
 # include "IPlaceable.hpp"
+# include "InputListener.hpp"
 
 class RectangleShape;
 class CharacterOcto;
 
-class ANpc : public sf::Drawable, public IPlaceable
+class ANpc : public sf::Drawable, public IPlaceable, public InputListener
 {
 public:
 	enum Events
