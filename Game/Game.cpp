@@ -253,6 +253,7 @@ void	Game::loadLevel(void)
 	Level next = progress.getNextDestination();
 	if (!progress.isMenu() && !(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
 		audio.playSound(resources.getSound(OBJECT_PORTAL_END_OGG), 1.f);
+
 	m_fakeMenu.setup();
 }
 
@@ -265,7 +266,6 @@ void	Game::update(sf::Time frameTime)
 {
 	sf::Time realFrameTime = frameTime;
 	m_octo->resetCollidingTileCount();
-	//std::cout << "GAME UPDATE" << std::endl;
 	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
 	if (m_skipFrames < m_skipFramesMax)
 	{

@@ -323,11 +323,6 @@ void	MusicManager::updateEvent(sf::Time frameTime)
 			m_endEvent = false;
 		}
 	}
-	else
-	{
-		audio.setMusicVolume(refMusicVolume);
-		audio.setSoundVolume(refSoundVolume);
-	}
 }
 
 void	MusicManager::startEvent()
