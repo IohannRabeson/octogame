@@ -1739,7 +1739,7 @@ void	CharacterOcto::resetColisionBolean()
 
 void	CharacterOcto::kill()
 {
-	if (m_level != Level::Rewards)
+	if (m_level != Level::Rewards || m_showOcto)
 	{
 		if (m_sprite.getCurrentEvent() != Death)
 		{
@@ -2065,6 +2065,20 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 				break;
 		}
 		m_box->setVelocity(velocity);
+	}
+
+	if (!m_showOcto)
+	{
+		if (m_keyLeft)
+			velocity.x = -1.f * m_pixelSecondWalk;
+		if (m_keyRight)
+			velocity.x = 1.f * m_pixelSecondWalk;
+		if (m_keyDown)
+			velocity.y = 1.f * m_pixelSecondWalk;
+		if (m_keyCapacity)
+			velocity.y = -1.f * m_pixelSecondWalk;
+		m_box->setVelocity(velocity);
+		m_box->setApplyGravity(false);
 	}
 }
 
@@ -2439,9 +2453,10 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			m_keyZoomIn = false;
 			break;
 		case OctoKeys::HideOcto:
-			m_pixelSecondWalk = 200.f;
+			m_pixelSecondWalk = 270.f;
 			m_showOcto = false;
-			m_speedCamera = 2.f;
+			m_speedCamera = 1.03f;
+			m_box->setApplyGravity(false);
 			break;
 		case OctoKeys::ShowOcto:
 			m_showOcto = true;

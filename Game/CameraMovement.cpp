@@ -72,6 +72,9 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 	if (octo.isStopFollowCamera())
 		m_behavior = StopFollowOcto;
 
+	if (octo.getSpeedCamera() == 1.03f)
+		m_behavior = Behavior::FollowOcto;
+
 	float goalTop = octo.getPosition().y - camera.getRectangle().height / 4.f;
 	float goalBot = octo.getPosition().y + camera.getRectangle().height / 3.f;
 	float goalLeft = octo.getPosition().x - camera.getRectangle().width / 3.f;
@@ -177,17 +180,27 @@ void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 			break;
 	}
 
+	if (octo.getSpeedCamera() == 1.03f)
+		m_speed = 1.f;
+
 	switch (m_zoomState)
 	{
 		case ZoomState::ZoomIn:
-			m_zoomTimer += frametime;
-			m_speed *= 2.f;
-			if (m_zoomTimer > m_zoomTimerMax)
+		{
+			if (octo.getSpeedCamera() != 1.03f)
 			{
-				m_zoomTimer = m_zoomTimerMax;
-				m_zoomState = ZoomState::ZoomOut;
+				m_zoomTimer += frametime;
+				m_speed *= 2.f;
+				if (m_zoomTimer > m_zoomTimerMax)
+				{
+					m_zoomTimer = m_zoomTimerMax;
+					m_zoomState = ZoomState::ZoomOut;
+				}
 			}
+			else
+				m_zoomState = ZoomState::ZoomOut;
 			break;
+		}
 		case ZoomState::ZoomOut:
 			m_zoomTimer -= frametime;
 			m_speed *= 2.f;

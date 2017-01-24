@@ -208,9 +208,10 @@ void Monolith::collideOcto(CharacterOcto * octo)
 	}
 }
 
-void Monolith::collideOctoEvent(CharacterOcto *)
+void Monolith::collideOctoEvent(CharacterOcto * octo)
 {
 	Progress::getInstance().setCanOctoMoveMap(false);
+	octo->setStartPosition(m_center);
 }
 
 void Monolith::update(sf::Time frameTime)

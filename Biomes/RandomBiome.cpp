@@ -590,12 +590,7 @@ sf::Color		RandomBiome::getLeafColor()
 
 std::size_t		RandomBiome::getTreePositionX()
 {
-	std::size_t index1 = randomInt(1, 100);
-	std::size_t index2 = randomInt(300, m_mapSize.x);
-
-	if (randomBool(0.5f))
-		return index1;
-	return index2;
+	return randomInt(1, m_mapSize.x);
 }
 
 sf::Vector2f	RandomBiome::getCrystalSize()

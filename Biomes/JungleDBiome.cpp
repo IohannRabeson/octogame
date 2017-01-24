@@ -172,6 +172,8 @@ JungleDBiome::JungleDBiome() :
 	for (std::size_t i = 0; i < 7; i++)
 		m_gameObjects[randomInt(240, 560)] = GameObjectType::FishBlackNpc;
 	m_gameObjects[350] = GameObjectType::FishRedNpc;
+	for (std::size_t i = 0; i < 13; i += 2)
+		m_gameObjects[i] = GameObjectType::BirdRedNpc;
 
 	Progress & progress = Progress::getInstance();
 	if (progress.getLastDestination() == Level::JungleD)
