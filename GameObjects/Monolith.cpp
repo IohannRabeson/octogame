@@ -205,13 +205,15 @@ void Monolith::collideOcto(CharacterOcto * octo)
 		octo->enableCutscene(true, true);
 		m_state = StartEffect;
 		m_timer = sf::Time::Zero;
+		octo->setStartPosition(m_center + sf::Vector2f(0.f, 170.f));
 	}
+	else
+		octo->setStartPosition(sf::Vector2f(m_center + sf::Vector2f(0.f, 170.f)));
 }
 
-void Monolith::collideOctoEvent(CharacterOcto * octo)
+void Monolith::collideOctoEvent(CharacterOcto *)
 {
 	Progress::getInstance().setCanOctoMoveMap(false);
-	octo->setStartPosition(m_center);
 }
 
 void Monolith::update(sf::Time frameTime)
