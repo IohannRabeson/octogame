@@ -1739,7 +1739,7 @@ void	CharacterOcto::resetColisionBolean()
 
 void	CharacterOcto::kill()
 {
-	if (m_level != Level::Rewards || m_showOcto)
+	if (m_level != Level::Rewards && m_showOcto)
 	{
 		if (m_sprite.getCurrentEvent() != Death)
 		{
