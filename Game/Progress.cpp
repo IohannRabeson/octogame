@@ -295,6 +295,7 @@ void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 		m_data.nextDestination = destination;
 	}
 	m_changeLevel = hasTransition;
+	m_forceMapToMove = false;
 }
 
 Level	Progress::getNextDestination(void) const
