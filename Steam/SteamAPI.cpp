@@ -42,6 +42,7 @@ void SteamAPI::reset(void)
 	SteamUserStats()->SetStat("STAT_TRY_TO_ESCAPE", static_cast<int32>(0u));
 	SteamUserStats()->SetStat("STAT_DOORS", static_cast<int32>(0u));
 	SteamUserStats()->SetStat("STAT_FINISH_HARD", static_cast<int32>(0u));
+	SteamUserStats()->SetStat("STAT_FINISH_ZERO_DEATH", static_cast<int32>(0u));
 	SteamUserStats()->StoreStats();
 
 	for (std::size_t i = 0; i < EAchievements::COUNT_ACH; i++)
@@ -86,6 +87,7 @@ void SteamAPI::updateStats(Progress::data & data)
 	SteamUserStats()->SetStat("STAT_TRY_TO_ESCAPE", static_cast<int32>(data.tryToEscape));
 	SteamUserStats()->SetStat("STAT_DOORS", static_cast<int32>(data.doorFound));
 	SteamUserStats()->SetStat("STAT_FINISH_HARD", static_cast<int32>(data.isGameFinishedHard));
+	SteamUserStats()->SetStat("STAT_FINISH_ZERO_DEATH", static_cast<int32>(data.isGameFinishedZeroDeath));
 
 	SteamUserStats()->StoreStats();
 }
