@@ -213,6 +213,12 @@ void ANpc::setDisplayText(bool displayText)
 	m_displayText = displayText;
 }
 
+void ANpc::setBubbleColor(sf::Color const & color)
+{
+	for (auto & text : m_texts)
+		text->setColor(color);
+}
+
 void ANpc::setActiveText(bool active)
 {
 	for (auto & text : m_texts)

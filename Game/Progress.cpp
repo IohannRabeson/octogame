@@ -805,3 +805,13 @@ float Progress::getBalleMultiplier(void)
 		return m_balleMultiplier;
 	return 1.f;
 }
+
+
+float Progress::getProgression(void)
+{
+	float progression = 90.f * (static_cast<float>(m_data.currentDestination) / static_cast<float>(Level::Final));
+
+	if (progression <= 90.f)
+		return progression;
+	return progression + m_data.isGameFinished * 5.f + static_cast<std::size_t>(m_data.activatedMonolith / RandomPortalMax) * 5.f;
+}

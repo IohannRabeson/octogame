@@ -84,4 +84,5 @@ void MysticanouilleNpc::update(sf::Time frameTime)
 	else
 		coef = 1.f - (dist - distMin) / (distMax - distMin);
 	sprite.setColor(sf::Color(255, 255, 255, 255 * coef));
+	setBubbleColor(sf::Color(255, 255, 255, 255 * coef));
 }

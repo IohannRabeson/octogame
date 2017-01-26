@@ -17,7 +17,7 @@ public:
 	static TextManager & getInstance(void);
 	void loadTexts(void);
 	std::vector<std::wstring> const & getTexts(std::string const & key);
-	std::vector<std::wstring> const & getTextsNpc(ResourceKey const & key);
+	std::vector<std::wstring> getTextsNpc(ResourceKey const & key);
 	ABubble::Priority const & getPriority(ResourceKey const & key);
 
 private:

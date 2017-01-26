@@ -37,6 +37,7 @@ public:
 	void setCurrentText(int index);
 	void setScale(float scale);
 	void setDisplayText(bool displayText);
+	void setBubbleColor(sf::Color const & color);
 	void setNextEvent(Events event);
 	void addMapOffset(float x, float y);
 	sf::Vector2f const & getPosition(void) const;
