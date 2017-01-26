@@ -122,7 +122,7 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 //	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_7_OSS, position + sf::Vector2f(369.f, 62.f), scale));
 	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_8_OSS, position + sf::Vector2f(331.f, 106.f), scale));
 	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_9_OSS, position + sf::Vector2f(356.f, 162.f), scale));
-//	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_10_OSS, position + sf::Vector2f(419.f, 206.f), scale));
+	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_10_OSS, position + sf::Vector2f(419.f, 206.f), scale));
 	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_11_OSS, position + sf::Vector2f(363.f, 256.f), scale));
 //	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_12_OSS, position + sf::Vector2f(412.f, 275.f), scale));
 	m_steps.emplace_back(new MonolithStep(MONOLITH_STEP_13_OSS, position + sf::Vector2f(387.f, 375.f), scale));
@@ -354,7 +354,7 @@ void Monolith::update(sf::Time frameTime)
 		step->update(frameTime);
 		step->setStartEndTransition(m_transitionStartEndPosition);
 	}
-	for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
+	for (std::size_t i = 0u; i < m_spriteMonolith.size() - 1u; i++)
 	{
 		sf::Vector2f pos = octo::linearInterpolation(m_position[i], m_endPosition[i], m_transitionStartEndPosition) + sf::Vector2f(0.f, std::cos(m_offset) * 5.f);
 		m_spriteMonolith[i].setPosition(pos);
@@ -367,7 +367,6 @@ void Monolith::update(sf::Time frameTime)
 
 void Monolith::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	InstanceDecor::draw(render, states);
 	for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
 	{
 		if ((i != static_cast<std::size_t>(FissureRed) && i != static_cast<std::size_t>(FissureWhite)) || (i == static_cast<std::size_t>(FissureRed) && m_state == CircleExplosionAndRedEffect) || (i == static_cast<std::size_t>(FissureWhite) && m_state == WhiteFlash))
@@ -375,6 +374,7 @@ void Monolith::draw(sf::RenderTarget& render, sf::RenderStates states) const
 	}
 	for (auto & step : m_steps)
 		step->draw(render, states);
+	InstanceDecor::draw(render, states);
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 }
 

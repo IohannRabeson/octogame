@@ -181,6 +181,12 @@ void ANpc::setSize(sf::Vector2f const & size)
 	m_box->setSize(size);
 }
 
+void ANpc::resetTexts(std::vector<std::wstring> const & texts, ABubble::Priority priority)
+{
+	m_texts.clear();
+	setTexts(texts, priority);
+}
+
 void ANpc::setTexts(std::vector<std::wstring> const & texts, ABubble::Priority priority)
 {
 	for (std::size_t i = 0u; i < texts.size(); i++)

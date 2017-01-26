@@ -39,6 +39,7 @@ public:
 	};
 
 	static constexpr std::size_t					DeathMax = 20.f;
+	static constexpr std::size_t					RandomPortalMax = 16u;
 
 	static Progress &								getInstance(void);
 	~Progress() = default;

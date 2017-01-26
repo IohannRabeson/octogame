@@ -54,6 +54,9 @@ void TextManager::loadTexts(void)
 			m_priority[key] = ABubble::Priority::Bullshit;
 		m_texts[key].push_back(line);
 	}
+
+	for (auto & text : m_texts)
+		text.second.push_back(L"Beurk!\n");
 }
 
 std::vector<std::wstring> const & TextManager::getTexts(std::string const & key)
@@ -69,9 +72,6 @@ std::vector<std::wstring> const & TextManager::getTexts(std::string const & key)
 std::vector<std::wstring> const & TextManager::getTextsNpc(ResourceKey const & key)
 {
 	Progress const & progress = Progress::getInstance();
-
-	if (m_texts[key].size())
-		m_texts[key].push_back(L"Beurk!\n");
 
 	if (Progress::getInstance().isJoystick())
 	{

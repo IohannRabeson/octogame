@@ -32,6 +32,7 @@ public:
 	void setPosition(sf::Vector2f const & position);
 	void setOrigin(sf::Vector2f const & origin);
 	void setSize(sf::Vector2f const & size);
+	void resetTexts(std::vector<std::wstring> const & texts, ABubble::Priority priority);
 	void setTexts(std::vector<std::wstring> const & texts, ABubble::Priority priority);
 	void setCurrentText(int index);
 	void setScale(float scale);

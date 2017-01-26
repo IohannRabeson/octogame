@@ -1,6 +1,9 @@
 #include "MysticanouilleNpc.hpp"
 #include "Progress.hpp"
+#include "TextManager.hpp"
 #include <RectangleShape.hpp>
+#include <ResourceManager.hpp>
+#include <Application.hpp>
 
 MysticanouilleNpc::MysticanouilleNpc(void) :
 	ASpecialNpc(MYSTICANOUILLE_OSS)
@@ -11,6 +14,22 @@ MysticanouilleNpc::MysticanouilleNpc(void) :
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, -10.f));
 	setup();
+	createText();
+}
+
+void MysticanouilleNpc::createText(void)
+{
+	TextManager & textManager = TextManager::getInstance();
+	std::vector<std::wstring> const & texts = textManager.getTextsNpc(MYSTICANOUILLE_OSS);
+	std::size_t portalLeft = Progress::RandomPortalMax - Progress::getInstance().countRandomDiscover();
+
+	m_countDownText.resize(2u);
+	if (portalLeft > 0u)
+		m_countDownText[0] = texts[0] + L" " + std::to_wstring(portalLeft) + L" " + texts[1];
+	else
+		m_countDownText[0] = texts[2];
+	m_countDownText[1] = L"Beurk!\n";
+	ANpc::resetTexts(m_countDownText, textManager.getPriority(MYSTICANOUILLE_OSS));
 }
 
 void MysticanouilleNpc::setup(void)

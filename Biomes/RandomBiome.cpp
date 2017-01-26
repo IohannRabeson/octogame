@@ -150,14 +150,14 @@ RandomBiome::RandomBiome() :
 	// TODO define map position and number of map
 	std::size_t portalPos = 30.f;
 
-	if (progress.getActivatedMonolith() >= 14u)
+	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
 	{
 		m_mapSize.x = 400u;
 		m_instances[100] = MAP_RANDOM_OMP;
 	}
 	else
 	{
-		std::size_t pos = randomInt(60u, m_mapSize.x);
+		std::size_t pos = randomInt(60u, m_mapSize.x - 50u);
 		m_gameObjects[pos] = GameObjectType::Monolith;
 		if (pos + 75u < m_mapSize.x)
 			m_gameObjects[pos + 75u] = GameObjectType::MysticanouilleNpc;
@@ -297,7 +297,7 @@ std::vector<ParallaxScrolling::ALayer *> RandomBiome::getLayers()
 
 Map::MapSurfaceGenerator RandomBiome::getMapSurfaceGenerator()
 {
-	if (Progress::getInstance().getActivatedMonolith() >= 14u)
+	if (Progress::getInstance().countRandomDiscover() >= Progress::RandomPortalMax)
 	{
 		return [this](Noise & noise, float x, float y)
 		{
