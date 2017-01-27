@@ -387,6 +387,28 @@ void	Progress::levelChanged()
 	m_changeLevel = false;
 }
 
+void	Progress::setCheckpointCountMax(std::size_t count)
+{
+	m_checkpointCountMax = count;
+}
+
+std::size_t Progress::getCheckpointCountMax(void)
+{
+	return m_checkpointCountMax;
+}
+
+std::size_t	Progress::getCheckpointCount(void)
+{
+	std::size_t count = 0u;
+
+	for (std::size_t i = 0u; i < m_checkpointCountMax; i++)
+	{
+		if (isCheckpointValidated(i))
+			count++;
+	}
+	return count;
+}
+
 void	Progress::resetCheckpoint(std::size_t id)
 {
 	if (m_data.respawnType == Progress::RespawnType::Portal && id == 0u)

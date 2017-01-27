@@ -142,6 +142,9 @@ public:
 	std::vector<Level> const &						getRegisteredLevels(void) const;
 
 	void											resetCheckpoint(std::size_t id);
+	void											setCheckpointCountMax(std::size_t count);
+	std::size_t										getCheckpointCountMax(void);
+	std::size_t										getCheckpointCount(void);
 	bool											isCheckpointValidated(std::size_t id);
 	void											validateCheckpoint(std::size_t id);
 	void											registerDeath(sf::Vector2f const & position);
@@ -337,6 +340,7 @@ private:
 	std::size_t										m_countRandomDiscover;
 	std::map<std::string, octo::Array3D<Tile>>		m_mapsTile;
 	std::map<std::string, octo::Array3D<float>>		m_mapsHighlight;
+	std::size_t										m_checkpointCountMax;
 
 	bool											m_isOctoOnInstance;
 	bool											m_isHighLight;

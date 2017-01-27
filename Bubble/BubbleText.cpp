@@ -63,7 +63,7 @@ void BubbleText::setupBlocString(void)
 	m_phrase = phrase;
 }
 
-void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std::size_t characterSize, float bubbleWidth)
+void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std::size_t characterSize, float bubbleWidth, sf::Color const & colorText)
 {
 	m_bubbleWidth = bubbleWidth;
 	m_phrase = phrase;
@@ -73,7 +73,7 @@ void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std
 	octo::ResourceManager& resources = octo::Application::getResourceManager();
 	m_font = resources.getFont(VERAMONO_TTF);
 	m_text.setFont(m_font);
-	m_text.setColor(sf::Color(0, 0, 0));
+	m_text.setColor(colorText);
 	m_text.setCharacterSize(characterSize);
 	m_text.setString(m_phrase);
 

@@ -98,15 +98,7 @@ void MainMenu::setup(void)
 	AMenuSelection::setup();
 	m_filter.setSize(octo::Application::getCamera().getSize() * 1.2f);
 	m_filter.setFillColor(sf::Color(0, 0, 0, 50));
-	m_progressionBubble.resize(3);
-
-	for (std::size_t i = 0u; i < 3; i++)
-	{
-		BubbleText * bubble = new BubbleText();
-		m_progressionBubble[i] = std::unique_ptr<BubbleText>(bubble);
-		m_progressionBubble[i]->setType(ABubble::Type::Speak);
-		m_progressionBubble[i]->setActive(true);
-	}
+	m_spiritInfos.setup();
 }
 
 void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePosition)
@@ -114,86 +106,12 @@ void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePositio
 	AMenuSelection::update(frameTime, octoBubblePosition);
 	sf::FloatRect const & camera = octo::Application::getCamera().getRectangle();
 	m_filter.setPosition(sf::Vector2f(camera.left, camera.top));
-	updateNanoRobots(frameTime, octoBubblePosition);
-	updateProgression(frameTime);
-}
-
-void MainMenu::updateNanoRobots(sf::Time frameTime, sf::Vector2f const & octoBubblePosition)
-{
-	for (std::size_t i = 0; i < Progress::getInstance().getSpiritCount() + 1u; i++)
-	{
-		if (!Progress::getInstance().isMenu())
-		{
-			if (m_spirit.size() != Progress::getInstance().getSpiritCount() + 1u)
-			{
-				NanoRobot * spirit = new MenuNanoRobot(octoBubblePosition);
-				m_spirit.push_back(std::unique_ptr<NanoRobot>(spirit));
-			}
-			else if (i < m_spirit.size())
-			{
-				m_spirit[i]->setState(NanoRobot::State::FollowOcto);
-				m_spirit[i]->setPosition(octoBubblePosition);
-				m_spirit[i]->update(frameTime);
-			}
-		}
-	}
-}
-
-void MainMenu::updateProgression(sf::Time frameTime)
-{
-	Progress & progress = Progress::getInstance();
-	std::size_t current = 0u;
-	std::size_t max = 0u;
-	std::string key = "";
-
-	for (std::size_t i = 0u; i < m_progressionBubble.size(); i++)
-	{
-		switch (i)
-		{
-			case 0u:
-				current = progress.getProgression();
-				max = static_cast<std::size_t>(Level::Final) + 1u;
-				key = "progression_level";
-				break;
-			case 1u:
-				current = progress.countRandomDiscover();
-				max = Progress::RandomPortalMax;
-				key = "progression_portal";
-				break;
-			case 2u:
-				current = progress.getNanoRobotCount();
-				max = 7u;
-				key = "progression_octobot";
-				break;
-			default:
-				break;
-		}
-	
-		if (current > 1u)
-			key += "_plural";
-		else
-			key += "_singular";
-	
-		m_progressionString = std::to_wstring(current) + L" " + AMenu::getText("progression_of") + L" " + std::to_wstring(max) + L" " + AMenu::getText(key);
-		m_progressionBubble[i]->setup(m_progressionString, sf::Color(255, 255, 255, 50), 16u);
-		if (i < m_spirit.size())
-			m_progressionBubble[i]->setPosition(m_spirit[i]->getPosition() - sf::Vector2f(10.f, 16.f));
-		m_progressionBubble[i]->update(frameTime);
-	}
+	m_spiritInfos.update(frameTime, octoBubblePosition);
 }
 
 void MainMenu::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	render.draw(m_filter, states);
-	for (std::size_t i = 0u; i < m_spirit.size(); i++)
-	{
-		if (!Progress::getInstance().isMenu() && m_spirit[i])
-			m_spirit[i]->draw(render, states);
-	}
-	for (std::size_t i = 0u; i < m_progressionBubble.size(); i++)
-	{
-		if (!Progress::getInstance().isMenu())
-			m_progressionBubble[i]->draw(render, states);
-	}
+	m_spiritInfos.draw(render, states);
 	AMenuSelection::draw(render, states);
 }
