@@ -49,7 +49,7 @@ public:
 	bool onInputReleased(InputListener::OctoKeys const & key);
 
 	void addMapOffset(float x, float y);
-	void transfertToOcto(bool inInit = false);
+	virtual void transfertToOcto(bool inInit = false);
 	void updateOctoEvent(std::string const & event, float valueEvent);
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;

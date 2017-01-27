@@ -7,6 +7,7 @@
 #include "BalleMultiplierMenu.hpp"
 #include "LanguageMenu.hpp"
 #include "MenuTypeMenu.hpp"
+#include "CheatCodeMenu.hpp"
 #include <StateManager.hpp>
 #include <Application.hpp>
 
@@ -32,6 +33,9 @@ void OptionMenu::createMenus(void)
 {
 	Progress &				progress = Progress::getInstance();
 
+	#ifndef NDEBUG
+	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
+	#endif
 	if (progress.isGameFinished())
 		addMenu(L"???", std::unique_ptr<BalleMultiplierMenu>(new BalleMultiplierMenu()));
 	addMenu(AMenu::getText("options_audio"), std::unique_ptr<AudioMenu>(new AudioMenu()));

@@ -196,7 +196,7 @@ public:
 	void											setBalleMultiplier(float multiplier);
 	float											getBalleMultiplier(void);
 
-	float											getProgression(void);
+	std::size_t										getProgression(void);
 
 	void											setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool											getReverseSprite() const { return m_reverseSprite; }
