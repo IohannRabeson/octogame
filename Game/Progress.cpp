@@ -26,7 +26,6 @@ Progress::Progress() :
 	m_isDoubleJump(false),
 	m_isInCloud(false),
 	m_cloudId(0u),
-	m_npcCount(0u),
 	m_npcMax(0u),
 	m_countRandomDiscover(0u),
 	m_isOctoOnInstance(false),
@@ -676,13 +675,7 @@ void	Progress::loadNpc()
 
 std::size_t	Progress::getNpcCount()
 {
-	m_npcCount = 0u;
-	for (auto it = m_npc[m_data.lastDestination].begin(); it != m_npc[m_data.lastDestination].end(); it++)
-	{
-		if (it->second)
-			m_npcCount++;
-	}
-	return m_npcCount;
+	return getNpcMet().size();
 }
 
 std::size_t	Progress::getNpcMax()

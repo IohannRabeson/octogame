@@ -90,6 +90,12 @@ void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std
 	m_contentUpdated = false;
 }
 
+void BubbleText::setColors(sf::Color const & colorBubble, sf::Color const & colorText)
+{
+	ABubble::setColor(colorBubble);
+	m_text.setColor(colorText);
+}
+
 sf::Vector2f const & BubbleText::getContentSize() const
 {
 	return m_contentSize;

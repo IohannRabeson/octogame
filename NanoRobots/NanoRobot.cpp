@@ -284,6 +284,13 @@ void NanoRobot::setPosition(sf::Vector2f const & position)
 	m_swarm.setTarget(pos);
 }
 
+void NanoRobot::setHardPosition(sf::Vector2f const & position)
+{
+	m_swarm.killAll();
+	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
+	m_swarm.setTarget(position);
+}
+
 sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 {
 	Progress & progress = Progress::getInstance();

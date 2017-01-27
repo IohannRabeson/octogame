@@ -17,14 +17,19 @@ public:
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 private:
+	std::size_t									m_progressionCount;
 	std::wstring								m_progressionString;
-	std::vector<std::unique_ptr<BubbleText>>	m_progressionBubble;
-	std::vector<std::unique_ptr<NanoRobot>>		m_spirit;
+	std::vector<std::unique_ptr<BubbleText>>	m_progressionBubbles;
+	std::vector<std::unique_ptr<NanoRobot>>		m_spirits;
 	std::wstring								m_missingText;
 	RandomGenerator								m_generator;
 
 	std::wstring const & getText(std::string const & text);
-	void updateNanoRobots(sf::Time frameTime, sf::Vector2f const & position);
+	sf::Vector2f getRandomVector2f(void);
+
+	void setupProgression(void);
+	void setupSpirit(sf::Vector2f const & position);
+	void updateSpirit(sf::Time frameTime, sf::Vector2f const & position);
 	void updateProgression(sf::Time frameTime, sf::Vector2f const & position);
 };
 

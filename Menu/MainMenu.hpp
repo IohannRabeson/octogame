@@ -15,6 +15,7 @@ public:
 
 	void	setup(void);
 	void	update(sf::Time frameTime, sf::Vector2f const & position);
+	void	updateSpiritInfos(void);
 	void	draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 	void	createMenus(void);

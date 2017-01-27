@@ -98,6 +98,10 @@ void MainMenu::setup(void)
 	AMenuSelection::setup();
 	m_filter.setSize(octo::Application::getCamera().getSize() * 1.2f);
 	m_filter.setFillColor(sf::Color(0, 0, 0, 50));
+}
+
+void MainMenu::updateSpiritInfos(void)
+{
 	m_spiritInfos.setup();
 }
 

@@ -130,13 +130,16 @@ CharacterOcto::CharacterOcto() :
 		robot->setState(NanoRobot::State::FollowOcto);
 	}
 
-	for (std::size_t i = 0u; i < m_progress.getSpiritCount(); i++)
-		giveSpirit(new SpiritNanoRobot(sf::Vector2f(0.f, 0.f)));
-	for (auto & spirit : m_spirits)
+	if (m_progress.getCurrentDestination() == Level::Random)
 	{
-		spirit->setPosition(getPosition());
-		spirit->transfertToOcto(true);
-		spirit->setState(NanoRobot::State::FollowOcto);
+		for (std::size_t i = 0u; i < m_progress.getSpiritCount(); i++)
+			giveSpirit(new SpiritNanoRobot(sf::Vector2f(0.f, 0.f)));
+		for (auto & spirit : m_spirits)
+		{
+			spirit->setPosition(getPosition());
+			spirit->transfertToOcto(true);
+			spirit->setState(NanoRobot::State::FollowOcto);
+		}
 	}
 }
 

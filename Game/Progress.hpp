@@ -331,7 +331,6 @@ private:
 	std::size_t										m_cloudId;
 
 	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
-	std::size_t										m_npcCount;
 	std::size_t										m_npcMax;
 	std::map<Level, std::vector<sf::Vector2i>>		m_deaths;
 	std::map<Level, std::map<Level, bool>>			m_portals;
