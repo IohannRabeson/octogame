@@ -433,6 +433,7 @@ void	Progress::registerDeath(sf::Vector2f const & position)
 	if (m_deaths[m_data.currentDestination].size() > Progress::DeathMax)
 		m_deaths[m_data.currentDestination].pop_back();
 	m_data.deathCount += 1u;
+	m_deathsLevelCount = m_deaths[m_data.currentDestination].size();
 	save();
 }
 
@@ -448,11 +449,12 @@ std::size_t	Progress::getDeathCount()
 
 std::size_t Progress::getDeathLevelCount()
 {
-	return m_deaths[m_data.currentDestination].size();
+	return m_deathsLevelCount;
 }
 
 void Progress::resetDeathLevel(void)
 {
+	m_deathsLevelCount = 0u;
 	return m_deaths[m_data.currentDestination].clear();
 }
 
