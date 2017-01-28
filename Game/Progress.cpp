@@ -40,11 +40,15 @@ Progress::Progress() :
 Progress & Progress::getInstance()
 {
 	if (m_instance == nullptr)
-	{
 		m_instance.reset(new Progress());
-		m_steam.reset(new SteamAPI());
-	}
 	return *m_instance;
+}
+
+SteamAPI & Progress::getSteamInstance()
+{
+	if (m_steam == nullptr)
+		m_steam.reset(new SteamAPI());
+	return *m_steam;
 }
 
 bool	Progress::isMenu() const

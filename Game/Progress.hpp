@@ -42,6 +42,7 @@ public:
 	static constexpr std::size_t					RandomPortalMax = 16u;
 
 	static Progress &								getInstance(void);
+	static SteamAPI &								getSteamInstance(void);
 	~Progress() = default;
 
 	float											getTimePlayed() const { return m_data.timePlayed; }
