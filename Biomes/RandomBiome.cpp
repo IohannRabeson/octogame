@@ -151,18 +151,7 @@ RandomBiome::RandomBiome() :
 	std::size_t portalPos = 30.f;
 
 	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
-	{
 		m_mapSize.x = 400u;
-		m_instances[100] = MAP_RANDOM_OMP;
-	}
-	else
-	{
-		std::size_t pos = randomInt(60u, m_mapSize.x - 50u);
-		m_gameObjects[pos] = GameObjectType::Monolith;
-		if (pos + 75u < m_mapSize.x)
-			m_gameObjects[pos + 75u] = GameObjectType::MysticanouilleNpc;
-		m_gameObjects[pos - 40u] = GameObjectType::MysticanouilleNpc;
-	}
 
 	m_interestPointPosX = portalPos;
 
@@ -189,8 +178,37 @@ RandomBiome::RandomBiome() :
 		m_gameObjects[index] = GameObjectType::SpiritNanoRobot;
 		m_interestPointPosX = index;
 	}
+
+	std::size_t posMonolith = randomInt(60u, m_mapSize.x - 50u);
+
+	std::list<GameObjectType> const & npcList = progress.getNpcMet();
+
+	for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
+	{
+		std::size_t index = randomInt(10u, m_mapSize.x - 10u);
+		if (index > posMonolith - 75u && index < posMonolith + 100u)
+			index += 200u;
+		if (randomBool(0.08f) && *npc != GameObjectType::MysticanouilleNpc)
+		{
+			m_gameObjects[index] = *npc;
+		}
+	}
+
+	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
+	{
+		m_instances[100] = MAP_RANDOM_OMP;
+	}
+	else
+	{
+		m_gameObjects[posMonolith] = GameObjectType::Monolith;
+		if (posMonolith + 75u < m_mapSize.x)
+			m_gameObjects[posMonolith + 75u] = GameObjectType::MysticanouilleNpc;
+		m_gameObjects[posMonolith - 40u] = GameObjectType::MysticanouilleNpc;
+	}
+
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	progress.meetPortal(progress.getLastDestination(), Level::Random);
+
 }
 
 void			RandomBiome::setup(std::size_t seed)

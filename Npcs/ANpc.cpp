@@ -441,7 +441,8 @@ void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
 	Progress const & progress = Progress::getInstance();
 
 	if (m_displayText && progress.isBubbleNpc()
-		&& (progress.getCurrentDestination() != Level::WaterB || m_type == GameObjectType::CedricStartNpc || m_type == GameObjectType::CedricEndNpc || m_type == GameObjectType::MaryvonneNpc))
+		&& (progress.getCurrentDestination() != Level::WaterB || m_type == GameObjectType::CedricStartNpc || m_type == GameObjectType::CedricEndNpc || m_type == GameObjectType::MaryvonneNpc)
+		&& (progress.getCurrentDestination() != Level::Random || m_type == GameObjectType::MysticanouilleNpc))
 	{
 		if (!m_isDoubleJump)
 		{
