@@ -204,6 +204,7 @@ public:
 	void											setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool											getReverseSprite() const { return m_reverseSprite; }
 
+	void											updateSteam(sf::Time frameTime);
 	void											load(std::string const & filename);
 	void											save(float timePlayed = 0.f);
 	void											reset();
@@ -349,7 +350,7 @@ private:
 	bool											m_forceMapToMove;
 
 	float											m_balleMultiplier;
-
+	sf::Time										m_timerSteamUpdate;
 };
 
 #endif

@@ -224,7 +224,6 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 				if (progress.getNextDestination() != Level::Portal)
 				{
 					progress.setNextDestination(Level::Portal);
-					progress.setRedEnd(true);
 					progress.save();
 					octo::Application::getStateManager().change("anoctonautodyssey");
 				}
@@ -265,6 +264,23 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 	m_octo.update(frameTime);
 	m_bubbleParticle.setPosition(m_octo.getPosition() + sf::Vector2f(60.f, -70.f));
 	m_bubbleParticle.update(frameTime);
+
+	if (m_keyOther)
+	{
+		if (m_textIndex <= 4u)
+			m_timeBeforeNextText = sf::seconds(2.f);
+		else if (m_textIndex >= 78)
+			m_timeBeforeNextText = sf::seconds(2.f);
+		else
+			m_timeBeforeNextText = sf::seconds(0.1f);
+	}
+	else
+	{
+		if (m_textIndex <= 4u)
+			m_timeBeforeNextText = sf::seconds(3.f);
+		else
+			m_timeBeforeNextText = sf::seconds(2.f);
+	}
 }
 
 void	LaboratoryEndScreen::updateTv(sf::Time frameTime)
@@ -325,14 +341,7 @@ bool	LaboratoryEndScreen::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Elevator:
 		case OctoKeys::Jump:
 		case OctoKeys::Entrance:
-			if (m_textIndex <= 4u)
-				m_timeBeforeNextText = sf::seconds(2.f);
-			else if (m_textIndex <= 25u)
-				m_timeBeforeNextText = sf::seconds(1.f);
-			else if (m_textIndex >= 78)
-				m_timeBeforeNextText = sf::seconds(2.f);
-			else
-				m_timeBeforeNextText = sf::seconds(0.1f);
+			m_keyOther = true;
 			break;
 		default:
 			break;
@@ -352,10 +361,10 @@ bool	LaboratoryEndScreen::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Capacity:
 		case OctoKeys::Elevator:
-			if (m_textIndex <= 4u)
-				m_timeBeforeNextText = sf::seconds(3.f);
-			else
-				m_timeBeforeNextText = sf::seconds(2.f);
+		case OctoKeys::Jump:
+		case OctoKeys::Entrance:
+			m_keyOther = false;
+			break;
 		default:
 			break;
 	}

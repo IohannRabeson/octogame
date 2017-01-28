@@ -1621,9 +1621,11 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 		if (m_timeRepairSpaceShip > m_timeRepairSpaceShipMax)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			m_progress.spaceShipRepair(true);
 			if (m_level != Level::EndRocket)
+			{
+				m_progress.spaceShipRepair(true);
 				states.change("zero");
+			}
 		}
 	}
 

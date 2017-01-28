@@ -187,7 +187,16 @@ void	Progress::save(float timePlayed)
 	savePortals();
 	saveToFile();
 	saveDeaths();
-	m_steam->update(m_data);
+}
+
+void	Progress::updateSteam(sf::Time frameTime)
+{
+	m_timerSteamUpdate -= frameTime;
+	if (m_timerSteamUpdate < sf::Time::Zero)
+	{
+		m_timerSteamUpdate = sf::seconds(1.f);
+		m_steam->update(m_data);
+	}
 }
 
 void	Progress::saveToFile()
@@ -292,6 +301,11 @@ void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 	}
 	m_changeLevel = hasTransition;
 	m_forceMapToMove = false;
+
+	if (destination == Level::EndRocket)
+		m_data.isBlueEnd = true;
+	if (destination == Level::Red)
+		m_data.isRedEnd = true;
 }
 
 Level	Progress::getNextDestination(void) const

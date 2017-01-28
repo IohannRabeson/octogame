@@ -113,6 +113,7 @@ void	IntroScreen::update(sf::Time frameTime)
 		m_menu.setKeyboard(false);
 		updateScene(frameTime);
 	}
+	progress.updateSteam(frameTime);
 }
 
 void	IntroScreen::setupScene(void)
@@ -227,8 +228,6 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 				m_speedX -= 300.f;
 				if (m_cloudCollidedCount >= m_cloudCollidedCountMax)
 					m_state = Crash;
-				if (m_globalTime >= sf::seconds(25.f))
-					Progress::getInstance().setLongIntro(true);
 			}
 			if (m_cloudCollidedCount >= 1u)
 				m_speedYUp -= frameTime.asSeconds() * 10.f;
@@ -289,6 +288,9 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 	m_spaceShip.move(translation);
 	m_spaceShip.update(frameTime);
 
+	if (m_globalTime >= sf::seconds(25.f))
+		progress.setLongIntro(true);
+	progress.updateSteam(frameTime);
 	progress.setOctoPos(positionSpaceShip + sf::Vector2f(1045.f, 90.f));
 }
 

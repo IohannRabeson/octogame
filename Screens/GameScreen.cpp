@@ -73,6 +73,7 @@ void	GameScreen::update(sf::Time frameTime)
 		changeLevel(states, progress);
 	}
 	timeLevelBlueRed(frameTime, states, progress);
+	progress.updateSteam(frameTime);
 }
 
 void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)

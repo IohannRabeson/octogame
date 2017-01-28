@@ -77,6 +77,7 @@ private:
 	DecorManager								m_decorManager;
 	bool										m_keyLeft;
 	bool										m_keyRight;
+	bool										m_keyOther;
 	SmokeSystem									m_bubbleParticle;
 };
 
