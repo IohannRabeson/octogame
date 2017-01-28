@@ -996,7 +996,6 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 
 	startGameIceA();
 
-	updateBox(frameTime);
 	dieGrass();
 	updateGroundDelay(frameTime);
 	portalEvent();
@@ -1037,6 +1036,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	updateParticles(frameTime);
 	resetColisionBolean();
 	replaceOcto();
+	updateBox(frameTime);
 	updateCutscene(realFrameTime);
 
 	m_previousTop = m_box->getGlobalBounds().top;
@@ -1538,19 +1538,33 @@ void	CharacterOcto::updateBox(sf::Time frameTime)
 {
 	//TODO: Check on use if it's a good improvement
 	Events event = static_cast<Events>(m_sprite.getCurrentEvent());
+	bool isReset = false;
 
 	if (event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3)
-		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
-	else
 	{
-		if (!m_onGround)
-			m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 2.f, sf::Time::Zero);
-		else
-			m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 10.f, sf::Time::Zero);
+		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
+		m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
+	}
+	else if (event == StartJump || event == DoubleJump || event == Fall)
+	{
+		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
+		m_adaptBoxDelta = 20.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
+	}
+	else if (m_adaptBoxDelta != 0.f)
+	{
+		isReset = true;
+		m_adaptBoxTimer = sf::Time::Zero;
 	}
 
-	m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
-	m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
+	if (isReset)
+	{
+		m_box->setSize(m_boxSize);
+		m_box->setPosition(sf::Vector2f(m_box->getPosition().x, m_box->getPosition().y - (m_adaptBoxDelta)));
+		m_box->update();
+		m_adaptBoxDelta = 0.f;
+	}
+	else
+		m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
 }
 
 void	CharacterOcto::updateGroundDelay(sf::Time frameTime)
