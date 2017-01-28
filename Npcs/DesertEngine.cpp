@@ -11,6 +11,7 @@ DesertEngine::DesertEngine(void) :
 	setOrigin(sf::Vector2f(103.f, 137.f));
 	setSprite();
 	setup();
+	setIsZoomable(false);
 }
 
 void DesertEngine::setSprite()

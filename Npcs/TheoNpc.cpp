@@ -9,6 +9,7 @@ TheoNpc::TheoNpc(void) :
 	setScale(0.8f);
 	setTextOffset(sf::Vector2f(0.f, 0.f));
 	setup();
+	setIsZoomable(false);
 }
 
 void TheoNpc::setup(void)
