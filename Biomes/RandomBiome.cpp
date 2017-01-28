@@ -179,27 +179,28 @@ RandomBiome::RandomBiome() :
 		m_interestPointPosX = index;
 	}
 
-	std::size_t posMonolith = randomInt(60u, m_mapSize.x - 50u);
-
-	std::list<GameObjectType> const & npcList = progress.getNpcMet();
-
-	for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
-	{
-		std::size_t index = randomInt(10u, m_mapSize.x - 10u);
-		if (index > posMonolith - 75u && index < posMonolith + 100u)
-			index += 200u;
-		if (randomBool(0.08f) && *npc != GameObjectType::MysticanouilleNpc)
-		{
-			m_gameObjects[index] = *npc;
-		}
-	}
-
 	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
 	{
 		m_instances[100] = MAP_RANDOM_OMP;
 	}
 	else
 	{
+		std::size_t posMonolith = randomInt(60u, m_mapSize.x - 50u);
+		std::list<GameObjectType> const & npcList = progress.getNpcMet();
+	
+		for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
+		{
+			std::size_t index = randomInt(10u, m_mapSize.x - 10u);
+			if (index > posMonolith - 75u && index < posMonolith + 100u)
+				index += 200u;
+			if (randomBool(0.08f) && *npc != GameObjectType::MysticanouilleNpc)
+			{
+				m_gameObjects[index] = *npc;
+				if (randomBool(0.5f))
+					break;
+			}
+		}
+
 		m_gameObjects[posMonolith] = GameObjectType::Monolith;
 		if (posMonolith + 75u < m_mapSize.x)
 			m_gameObjects[posMonolith + 75u] = GameObjectType::MysticanouilleNpc;
