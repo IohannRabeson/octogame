@@ -12,7 +12,7 @@
 WaterBBiome::WaterBBiome() :
 	m_name("Water B"),
 	m_id(Level::WaterB),
-	m_seed("Vince"),
+	m_seed("salut"),
 	m_mapSize(sf::Vector2u(700u, 180u)),
 	m_mapSeed(42u),
 	m_octoStartPosition(604.f * 16.f, -180.f),
