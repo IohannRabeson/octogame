@@ -196,6 +196,8 @@ public:
 	bool											getOctoDoubleJump(void) { return m_isDoubleJump; }
 	void											setInCloud(bool inCloud, std::size_t cloudId);
 	bool											isInCloud(void) const { return m_isInCloud; }
+	void											setEasyUnlocked(bool unlock) { m_isEasyUnlocked = unlock; };
+	bool											isEasyUnlocked(void) const { return m_isEasyUnlocked; }
 
 	void											setBalleMultiplier(float multiplier);
 	float											getBalleMultiplier(void);
@@ -352,6 +354,7 @@ private:
 
 	float											m_balleMultiplier;
 	sf::Time										m_timerSteamUpdate;
+	bool											m_isEasyUnlocked;
 };
 
 #endif

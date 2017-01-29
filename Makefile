@@ -51,6 +51,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/MusicManager.cpp					\
 				Game/InputListener.cpp					\
 				Game/KonamiCode.cpp						\
+				Game/UnlockEasy.cpp						\
 				Game/ChallengeManager.cpp				\
 				Game/Challenges.cpp						\
 				Game/PostEffectLayer.cpp				\

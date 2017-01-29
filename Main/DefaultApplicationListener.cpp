@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "DefaultApplicationListener.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <Console.hpp>
 
@@ -40,9 +41,8 @@ bool	DefaultApplicationListener::onPressed(sf::Event::KeyEvent const& event)
 //			octo::Application::stop();
 //			break;
 		case sf::Keyboard::F5:
-			#ifndef NDEBUG
-			octo::Application::getConsole().setEnabled(true);
-			#endif
+			if (Progress::getInstance().isEasyUnlocked())
+				octo::Application::getConsole().setEnabled(true);
 			break;
 		default:
 			break;
