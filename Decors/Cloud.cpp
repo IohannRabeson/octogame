@@ -24,6 +24,8 @@ Cloud::Cloud(SkyCycle * cycle) :
 	m_cloudMaxX(0.f),
 	m_cloudMinY(0.f),
 	m_cloudMaxY(0.f),
+	m_cos(0.f),
+	m_sin(0.f),
 	m_animator(4.f, 5.f, 4.f, 0.2f),
 	m_animation(1.f),
 	m_isCollide(false),

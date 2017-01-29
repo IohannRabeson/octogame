@@ -629,6 +629,7 @@ bool PhysicsEngine::findAxisLeastPenetration(PolygonShape * polygonA, PolygonSha
 		if (d >= 0.f)
 			return false;
 
+		/*
 		float vel = octo::dotProduct(m_axis, polygonA->getEngineVelocity());
 		float vell = octo::dotProduct(m_axis, polygonB->getEngineVelocity());
 
@@ -637,6 +638,7 @@ bool PhysicsEngine::findAxisLeastPenetration(PolygonShape * polygonA, PolygonSha
 			dd += vel;
 		if (vell > 0.f)
 			dd += vell;
+		*/
 
 		if (d >= 0.f)
 			return false;

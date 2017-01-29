@@ -14,6 +14,7 @@ std::size_t RandomBiome::m_seedId = 110u;
 
 RandomBiome::RandomBiome() :
 	m_generator(std::to_string(std::time(0))),
+	m_randomSurfaceNumber(0u),
 	m_name("Random"),
 	m_id(Level::Random),
 	m_seed("Random"),

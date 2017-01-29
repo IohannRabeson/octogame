@@ -29,7 +29,10 @@ LaboratoryEndScreen::LaboratoryEndScreen(void) :
 	m_lastTextIndex(0u),
 	m_stopDialog(false),
 	m_biome(nullptr),
-	m_decorManager(10000)
+	m_decorManager(10000),
+	m_keyLeft(false),
+	m_keyRight(false),
+	m_keyOther(false)
 {
 }
 

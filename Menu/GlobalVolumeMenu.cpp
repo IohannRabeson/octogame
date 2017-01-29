@@ -7,7 +7,8 @@
 #include <Application.hpp>
 #include <AudioManager.hpp>
 
-GlobalVolumeMenu::GlobalVolumeMenu(void)
+GlobalVolumeMenu::GlobalVolumeMenu(void) :
+	m_volume(1.f)
 {
 }
 

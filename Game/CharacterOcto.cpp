@@ -2402,7 +2402,6 @@ void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
-	bool otherKeyReleased = false;
 
 	switch (key)
 	{
@@ -2446,7 +2445,6 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			m_keyZoomIn = false;
 			break;
 		default:
-			otherKeyReleased = true;
 			break;
 	}
 	return true;

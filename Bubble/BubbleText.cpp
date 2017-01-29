@@ -11,7 +11,8 @@ BubbleText::BubbleText(void) :
 	m_bubbleWidth(350.f),
 	m_characterPerLineMax(0u),
 	m_characterPerLine(0u),
-	m_lineCount(1u)
+	m_lineCount(1u),
+	m_contentUpdated(false)
 {
 }
 

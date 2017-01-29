@@ -56,8 +56,6 @@ private:
 	bool								m_keyEntrance;
 	sf::Time							m_slowTime;
 	sf::Time							m_slowTimeMax;
-	float								m_slowCoefMin;
-	float								m_slowCoefMax;
 	float								m_slowTimeCoef;
 	std::size_t							m_skipFrames;
 	std::size_t							m_skipFramesMax;

@@ -6,7 +6,8 @@
 #include <Application.hpp>
 #include <AudioManager.hpp>
 
-MusicVolumeMenu::MusicVolumeMenu(void)
+MusicVolumeMenu::MusicVolumeMenu(void) :
+	m_volume(1.f)
 {
 }
 

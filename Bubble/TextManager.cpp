@@ -80,7 +80,6 @@ std::vector<std::wstring> TextManager::getTextsNpc(ResourceKey const & key)
 	if (progress.getLastDestination() == Level::Portal && progress.getLastDestination() == Level::Random && !progress.isMenu() && m_texts[key].size())
 	{
 		std::size_t random = m_generator.randomInt(0u, 3u);
-		std::wstring text;
 
 		switch (random)
 		{
