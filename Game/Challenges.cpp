@@ -153,6 +153,42 @@ void ChallengeManager::AChallenge::startGlitch(ABiome & biome)
 	}
 }
 
+// MANUAL
+void ChallengeManager::AChallenge::startGlitchManual(ABiome & biome)
+{
+	Progress & progress = Progress::getInstance();
+	float x = progress.getBalleMultiplier();
+
+	setGlitch(true);
+	setIntensity(biome.randomFloat(m_glitchIntensityRange.first * x, m_glitchIntensityRange.second * x));
+	setDuration(biome.randomFloat(m_glitchDurationRange.first * x, m_glitchDurationRange.second * x));
+	start();
+}
+
+void ChallengeManager::AChallenge::stopGlitchManual(void)
+{
+}
+
+void ChallengeManager::AChallenge::updateGlitchManual(sf::Time frametime, ABiome &)
+{
+	m_delay += frametime;
+	if (m_delay <= m_duration)
+		m_timer = std::min(m_timer + frametime, m_duration);
+	else
+		m_timer -= frametime * 2.f;
+
+	if (m_timer < sf::Time::Zero)
+	{
+		setGlitch(false);
+		m_timer = sf::Time::Zero;
+		m_delay = sf::Time::Zero;
+		stop();
+	}
+
+	updatePitch(0.005f);
+	updateShader(frametime);
+}
+
 sf::Time ChallengeManager::AChallenge::getDuration(void) const
 {
 	return (m_duration);
@@ -207,12 +243,12 @@ void ChallengePersistence::updateShader(sf::Time)
 	float octoY = Progress::getInstance().getOctoPos().y;
 	float coef = std::min((octoY + 2000.f) / 5000.f, 1.f);
 
-	m_shader.setParameter("intensity", octo::linearInterpolation(1.f, 1.02f - m_intensity * coef, std::min(m_timer, m_duration) / m_duration));
+	m_shader.setParameter("intensity", std::max(0.01f, octo::linearInterpolation(1.f, 1.02f - m_intensity * coef, std::min(m_timer, m_duration) / m_duration)));
 }
 
 // Pixelate
 ChallengePixelate::ChallengePixelate(void) :
-	AChallenge(PIXELATE_FRAG, 3.f, 4.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)), ABiome::Type::Water, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
+	AChallenge(PIXELATE_FRAG, 3.f, 4.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -210.f * 16.f), sf::Vector2f(120.f * 16.f, 155.f * 16.f)), ABiome::Type::Random, std::pair<float, float>(0.033f, 0.16f), std::pair<float, float>(0.25f, 0.75f))
 {}
 
 void ChallengePixelate::updateShader(sf::Time)

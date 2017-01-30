@@ -7,13 +7,14 @@
 # include "ResourceDefinitions.hpp"
 # include "RandomGenerator.hpp"
 # include "ABiome.hpp"
+# include "InputListener.hpp"
 
 namespace sf
 {
 	class Shader;
 }
 
-class ChallengeManager
+class ChallengeManager : public InputListener
 {
 public:
 	class AChallenge
@@ -24,6 +25,7 @@ public:
 
 		void update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position);
 		void updateGlitch(sf::Time frametime, ABiome & biome);
+		void updateGlitchManual(sf::Time frametime, ABiome & biome);
 		void updateChallenge(sf::Time frametime);
 		void updatePitch(float maxVariation);
 		virtual void updateShader(sf::Time frametime) = 0;
@@ -35,6 +37,8 @@ public:
 		bool isFinished(void) const;
 		bool isGlitch(void) const;
 		void startGlitch(ABiome & biome);
+		void startGlitchManual(ABiome & biome);
+		void stopGlitchManual();
 		sf::Time getDuration(void) const;
 		ABiome::Type getBiomeType(void) const;
 		void setDuration(float duration);
@@ -68,7 +72,7 @@ public:
 		Blur = 16u
 	};
 
-	~ChallengeManager(void) = default;
+	~ChallengeManager(void);
 	static ChallengeManager & getInstance(void);
 
 	AChallenge & getEffect(Effect effect);
@@ -79,10 +83,20 @@ public:
 private:
 	static std::unique_ptr<ChallengeManager>		m_instance;
 	std::map<Effect, std::unique_ptr<AChallenge>>	m_challenges;
+	bool											m_keyEntrance;
+	bool											m_keyCapacity;
+	bool											m_keyElevator;
+	bool											m_keyJump;
+
+	bool											m_keyPressed;
+	bool											m_keyLock;
 
 	ChallengeManager(void);
 	void addEffect(ResourceKey key, Effect effect);
 
+	void udapteKey(ABiome & biome, sf::Time frametime);
+	bool onInputPressed(InputListener::OctoKeys const & key);
+	bool onInputReleased(InputListener::OctoKeys const & key);
 };
 
 #endif

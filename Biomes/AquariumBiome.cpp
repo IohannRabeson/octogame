@@ -15,10 +15,10 @@ std::size_t AquariumBiome::m_seedId = 110u;
 AquariumBiome::AquariumBiome() :
 	m_generator(std::to_string(std::time(0))),
 	m_randomSurfaceNumber(0u),
-	m_name("Random"),
+	m_name("Aquarium"),
 	m_id(Level::Random),
 	m_seed("Random"),
-	m_mapSize(sf::Vector2u(m_generator.randomInt(350u, 1050u), m_generator.randomPiecewise(500))), //reset in constructor body
+	m_mapSize(400.f, 50.f), //reset in constructor body
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_octoStartPosition(23.f * 16.f, -300.f),
 	m_transitionDuration(0.3f),
@@ -138,7 +138,6 @@ AquariumBiome::AquariumBiome() :
 	m_mapSeed = m_generator.randomInt(0, std::numeric_limits<int>::max());
 #endif
 	Progress & progress = Progress::getInstance();
-	m_mapSize = sf::Vector2u(m_generator.randomInt(350u, 1050u), m_generator.randomPiecewise(progress.getNanoRobotCount() * 60u + 30u)),
 	m_randomSurfaceNumber = m_generator.randomInt(1u, 4u);
 	// Create a set a 20 colors for particles
 	std::size_t colorCount = 20;
@@ -151,11 +150,9 @@ AquariumBiome::AquariumBiome() :
 	// TODO define map position and number of map
 	std::size_t portalPos = 30.f;
 
-	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
-		m_mapSize.x = 400u;
-
 	m_interestPointPosX = portalPos;
 
+	/*
 	for (std::size_t i = 2u; i < m_mapSize.x - 1u; i += m_generator.randomInt(15u, 200u))
 	{
 		if (m_generator.randomBool(0.5))
@@ -163,14 +160,7 @@ AquariumBiome::AquariumBiome() :
 		else
 			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
 	}
-
-	for (std::size_t i = 2u; i < m_mapSize.x - 1u; i += m_generator.randomInt(15u, 300u))
-	{
-		if (m_generator.randomBool(0.5))
-			m_gameObjects[i] = GameObjectType::BirdBlueNpc;
-		else
-			m_gameObjects[i] = GameObjectType::BirdRedNpc;
-	}
+	*/
 
 	m_destinations.push_back(progress.getLastDestination());
 	if (!progress.isMetRandom(progress.getLastDestination()))
@@ -180,36 +170,7 @@ AquariumBiome::AquariumBiome() :
 		m_interestPointPosX = index;
 	}
 
-	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
-	{
-		m_instances[100] = MAP_RANDOM_OMP;
-	}
-	else
-	{
-		std::size_t posMonolith = randomInt(60u, m_mapSize.x - 50u);
-		std::list<GameObjectType> const & npcList = progress.getNpcMet();
-	
-		for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
-		{
-			std::size_t index = randomInt(10u, m_mapSize.x - 10u);
-			if (index > posMonolith - 75u && index < posMonolith + 100u)
-				index += 200u;
-			if (randomBool(0.08f) && *npc != GameObjectType::MysticanouilleNpc)
-			{
-				m_gameObjects[index] = *npc;
-				if (randomBool(0.5f))
-					break;
-			}
-		}
-
-		m_gameObjects[posMonolith] = GameObjectType::Monolith;
-		if (posMonolith + 75u < m_mapSize.x)
-			m_gameObjects[posMonolith + 75u] = GameObjectType::MysticanouilleNpc;
-		m_gameObjects[posMonolith - 40u] = GameObjectType::MysticanouilleNpc;
-	}
-
 	m_gameObjects[portalPos] = GameObjectType::Portal;
-	progress.meetPortal(progress.getLastDestination(), Level::Random);
 
 }
 
