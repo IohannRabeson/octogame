@@ -26,10 +26,12 @@ void	DefaultApplicationListener::onResized(sf::Event::SizeEvent const&)
 
 void	DefaultApplicationListener::onFocusGained()
 {
+	octo::Application::resume();
 }
 
 void	DefaultApplicationListener::onFocusLost()
 {
+	octo::Application::pause();
 }
 
 bool	DefaultApplicationListener::onPressed(sf::Event::KeyEvent const& event)

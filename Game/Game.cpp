@@ -96,7 +96,6 @@ Game::Game(void) :
 	m_groundManager(nullptr),
 	m_parallaxScrolling(nullptr),
 	m_octo(nullptr),
-	//m_konami(nullptr),
 	m_unlockEasy(nullptr),
 	m_keyEntrance(false),
 	m_slowTimeMax(sf::seconds(0.2f)),
@@ -241,7 +240,6 @@ void	Game::loadLevel(void)
 	m_groundManager.reset(new GroundManager());
 	m_parallaxScrolling.reset(new ParallaxScrolling());
 	m_octo.reset(new CharacterOcto());
-	//m_konami.reset(new KonamiCode());
 	m_unlockEasy.reset(new UnlockEasy());
 	m_cameraMovement.reset(new CameraMovement());
 
@@ -292,7 +290,6 @@ void	Game::update(sf::Time frameTime)
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
-	//m_konami->update(realFrameTime, m_octo->getPosition());
 	m_unlockEasy->update(realFrameTime);
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
 	updateFakeMenu(frameTime);
@@ -625,7 +622,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
-	//render.draw(*m_konami);
 	//m_cameraMovement->debugDraw(render);
 	render.draw(m_fakeMenu);
 }
