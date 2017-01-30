@@ -108,6 +108,7 @@ void	ResourceLoadingScreen::start()
 
 	pushLoading(octo::Application::getOptions().getPath() + "default.pck");
 	progress.load("save.osv");
+	progress.setIsResourceLoading(true);
 	AbstractResourceLoadingState::start();
 }
 
@@ -178,10 +179,12 @@ void	ResourceLoadingScreen::draw(sf::RenderTarget& render)const
 void	ResourceLoadingScreen::onNoMoreLoading()
 {
 	octo::StateManager & states = octo::Application::getStateManager();
+	Progress & progress = Progress::getInstance();
 
 	// Load musics in memory
 	MusicManager::getInstance();
-	Progress::getInstance().increaseLaunchCount();
-	Progress::getInstance().save();
+	progress.increaseLaunchCount();
+	progress.getInstance().save();
+	progress.setIsResourceLoading(false);
 	states.change("logo");
 }

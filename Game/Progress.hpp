@@ -120,6 +120,8 @@ public:
 
 	void											setMapMoving(bool isMoving) { m_isMapMoving = isMoving; }
 	bool											isMapMoving(void) const { return m_isMapMoving; }
+	void											setIsResourceLoading(bool isLoading) { m_isResourceLoading = isLoading; }
+	bool											isResourceLoading(void) const { return m_isResourceLoading; }
 
 	void											setForceMapToMove(bool value) { m_forceMapToMove = value; }
 	bool											forceMapToMove(void) const { return m_forceMapToMove; }
@@ -355,6 +357,7 @@ private:
 	float											m_balleMultiplier;
 	sf::Time										m_timerSteamUpdate;
 	bool											m_isEasyUnlocked;
+	bool											m_isResourceLoading;
 };
 
 #endif

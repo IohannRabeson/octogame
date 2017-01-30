@@ -31,7 +31,8 @@ void	DefaultApplicationListener::onFocusGained()
 
 void	DefaultApplicationListener::onFocusLost()
 {
-	octo::Application::pause();
+	if (!Progress::getInstance().isResourceLoading())
+		octo::Application::pause();
 }
 
 bool	DefaultApplicationListener::onPressed(sf::Event::KeyEvent const& event)
