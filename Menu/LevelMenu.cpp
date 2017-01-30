@@ -31,6 +31,7 @@ LevelMenu::LevelMenu(void) :
 	m_names.push_back(L"Rocket End");
 	m_names.push_back(L"Time Lapse End");
 	m_names.push_back(L"Rewards");
+	m_names.push_back(L"Aquarium");
 	m_names.push_back(L"Segfault");
 	m_names.push_back(L"Uknown");
 	m_names.push_back(L"Uknown");

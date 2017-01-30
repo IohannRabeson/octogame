@@ -43,6 +43,7 @@ enum class Level : std::size_t
 	EndTimeLapse,
 	Rewards,
 	RandomGame,
+	Aquarium,
 	Labo,
 };
 

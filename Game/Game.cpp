@@ -34,6 +34,7 @@
 #include "EndTimeLapseBiome.hpp"
 #include "RandomBiome.hpp"
 #include "RewardsBiome.hpp"
+#include "AquariumBiome.hpp"
 #include "RandomGameBiome.hpp"
 
 //Objects
@@ -136,6 +137,7 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<EndRocketBiome>(Level::EndRocket);
 	m_biomeManager.registerBiome<EndTimeLapseBiome>(Level::EndTimeLapse);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
+	m_biomeManager.registerBiome<AquariumBiome>(Level::Aquarium);
 	m_biomeManager.registerBiome<RandomGameBiome>(Level::RandomGame);
 }
 
