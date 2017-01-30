@@ -14,7 +14,8 @@ AMenuSelection::AMenuSelection(void) :
 	m_indexCursor(0u),
 	m_indexSave(0u),
 	m_isKeyboard(false),
-	m_timerMoveCursorMax(sf::seconds(0.1f))
+	m_timerMoveCursorMax(sf::seconds(0.1f)),
+	m_input(false)
 {
 }
 

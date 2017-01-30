@@ -36,6 +36,7 @@ public:
 	std::string const & getId(void);
 	void setTarget(sf::Vector2f const & target);
 	void setPosition(sf::Vector2f const & position);
+	void setHardPosition(sf::Vector2f const & position);
 	void setState(NanoRobot::State state);
 	void setEffectState(NanoEffect::State state);
 	void setTextIndex(std::size_t index);
@@ -49,7 +50,7 @@ public:
 	bool onInputReleased(InputListener::OctoKeys const & key);
 
 	void addMapOffset(float x, float y);
-	void transfertToOcto(bool inInit = false);
+	virtual void transfertToOcto(bool inInit = false);
 	void updateOctoEvent(std::string const & event, float valueEvent);
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;

@@ -14,6 +14,7 @@ std::size_t RewardsBiome::m_seedId = 110u;
 
 RewardsBiome::RewardsBiome() :
 	m_generator(std::to_string(std::time(0))),
+	m_randomSurfaceNumber(0u),
 	m_name("Rewards"),
 	m_id(Level::Rewards),
 	m_seed("Rewards"),

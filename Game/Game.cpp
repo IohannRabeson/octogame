@@ -96,7 +96,7 @@ Game::Game(void) :
 	m_groundManager(nullptr),
 	m_parallaxScrolling(nullptr),
 	m_octo(nullptr),
-	m_konami(nullptr),
+	m_unlockEasy(nullptr),
 	m_keyEntrance(false),
 	m_slowTimeMax(sf::seconds(0.2f)),
 	m_slowTimeCoef(1.f),
@@ -127,13 +127,14 @@ Game::Game(void) :
 	m_biomeManager.registerBiome<WaterCBiome>(Level::WaterC);
 	m_biomeManager.registerBiome<WaterDBiome>(Level::WaterD);
 	m_biomeManager.registerBiome<FinalBiome>(Level::Final);
+	m_biomeManager.registerBiome<PortalBiome>(Level::Portal);
+	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
+
 	m_biomeManager.registerBiome<RedBiome>(Level::Red);
 	m_biomeManager.registerBiome<BlueBiome>(Level::Blue);
-	m_biomeManager.registerBiome<PortalBiome>(Level::Portal);
 
 	m_biomeManager.registerBiome<EndRocketBiome>(Level::EndRocket);
 	m_biomeManager.registerBiome<EndTimeLapseBiome>(Level::EndTimeLapse);
-	m_biomeManager.registerBiome<RandomBiome>(Level::Random);
 	m_biomeManager.registerBiome<RewardsBiome>(Level::Rewards);
 	m_biomeManager.registerBiome<RandomGameBiome>(Level::RandomGame);
 }
@@ -239,7 +240,7 @@ void	Game::loadLevel(void)
 	m_groundManager.reset(new GroundManager());
 	m_parallaxScrolling.reset(new ParallaxScrolling());
 	m_octo.reset(new CharacterOcto());
-	m_konami.reset(new KonamiCode());
+	m_unlockEasy.reset(new UnlockEasy());
 	m_cameraMovement.reset(new CameraMovement());
 
 	m_skyCycle->setup(m_biomeManager.getCurrentBiome());
@@ -253,6 +254,7 @@ void	Game::loadLevel(void)
 	Level next = progress.getNextDestination();
 	if (!progress.isMenu() && !(current == Level::Blue || next == Level::Blue) && !(current == Level::Red || next == Level::Red))
 		audio.playSound(resources.getSound(OBJECT_PORTAL_END_OGG), 1.f);
+
 	m_fakeMenu.setup();
 }
 
@@ -265,7 +267,6 @@ void	Game::update(sf::Time frameTime)
 {
 	sf::Time realFrameTime = frameTime;
 	m_octo->resetCollidingTileCount();
-	//std::cout << "GAME UPDATE" << std::endl;
 	PostEffectLayer::getInstance().enableShader(VORTEX_FRAG, false);
 	if (m_skipFrames < m_skipFramesMax)
 	{
@@ -289,7 +290,7 @@ void	Game::update(sf::Time frameTime)
 	m_groundManager->update(frameTime.asSeconds());
 	m_parallaxScrolling->update(frameTime.asSeconds());
 	m_skyManager->update(frameTime);
-	m_konami->update(realFrameTime, m_octo->getPosition());
+	m_unlockEasy->update(realFrameTime);
 	ChallengeManager::getInstance().update(m_biomeManager.getCurrentBiome(), m_octo->getPosition(), frameTime);
 	updateFakeMenu(frameTime);
 }
@@ -621,7 +622,6 @@ void	Game::draw(sf::RenderTarget& render, sf::RenderStates states)const
 	render.draw(m_skyManager->getFilter(), states);
 	m_groundManager->drawText(render, states);
 	m_octo->drawText(render, states);
-	render.draw(*m_konami);
 	//m_cameraMovement->debugDraw(render);
 	render.draw(m_fakeMenu);
 }

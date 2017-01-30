@@ -65,6 +65,10 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 	m_sprite.setScale(0.6f, 0.6f);
 	m_nanoEffect.setNanoScale(sf::Vector2f(0.6f, 0.6f));
 
+	//TODO : Change with the new nanorobot
+	if (m_id == FOREST_SPIRIT_2_OSS)
+		m_nanoEffect.setState(NanoEffect::Wait);
+
 	octo::SpriteAnimation::FrameList	frames;
 	for (std::size_t i = 0u; i < nbFrames; i++)
 		frames.emplace_back(sf::seconds(0.2f), i);
@@ -280,6 +284,13 @@ void NanoRobot::setPosition(sf::Vector2f const & position)
 	m_swarm.setTarget(pos);
 }
 
+void NanoRobot::setHardPosition(sf::Vector2f const & position)
+{
+	m_swarm.killAll();
+	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
+	m_swarm.setTarget(position);
+}
+
 sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 {
 	Progress & progress = Progress::getInstance();
@@ -341,6 +352,13 @@ sf::Vector2f NanoRobot::computeInterestPosition(sf::Vector2f const & position)
 		m_positionBehavior->setRadius(1000.f);
 	}
 
+	//TODO : Change with new nanorobot
+	if (m_id == FOREST_SPIRIT_2_OSS)
+	{
+		pos = position;
+		m_swarm.getFirefly(0u).speed = 0.2f;
+		m_positionBehavior->setRadius(700.f);
+	}
 	m_lastPos = position;
 	return pos;
 }

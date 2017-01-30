@@ -253,7 +253,8 @@ std::vector<ParallaxScrolling::ALayer *> JungleBBiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getRockColor(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, 10, 0.1f, 1.f, 10.f);
+/*
+	layer = new GenerativeLayer(getRockColor(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, 10, 0.1f, 1.f, 10.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 1.f, y, 2, 2.f);
@@ -271,7 +272,8 @@ std::vector<ParallaxScrolling::ALayer *> JungleBBiome::getLayers()
 		return noise.perlin(x, y + 100.f, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.5f, 0.3f), mapSize, 12.f, 0, 0.1f, 0.3f, 6.f);
+*/
+	GenerativeLayer * layer = new GenerativeLayer(m_tileStartColor, sf::Vector2f(0.5f, 0.3f), mapSize, 12.f, 0, 0.1f, 0.3f, 6.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.noise(x * 1.1f, y);

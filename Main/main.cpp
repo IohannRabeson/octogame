@@ -34,6 +34,7 @@
 #include "MusicManager.hpp"
 #include "LaboratoryEndScreen.hpp"
 #include "LevelRocketEndScreen.hpp"
+#include "Progress.hpp"
 
 static void	setupStateManager(octo::StateManager& manager)
 {
@@ -70,6 +71,7 @@ int main(int argc, char **argv)
 {
 	try
 	{
+		Progress::getSteamInstance();
 		octo::Application::initialize("An Octonaut Odyssey", "default.conf", argc, argv);
 		octo::StateManager&							states = octo::Application::getStateManager();
 		octo::Console&								console = octo::Application::getConsole();

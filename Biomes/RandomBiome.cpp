@@ -14,6 +14,7 @@ std::size_t RandomBiome::m_seedId = 110u;
 
 RandomBiome::RandomBiome() :
 	m_generator(std::to_string(std::time(0))),
+	m_randomSurfaceNumber(0u),
 	m_name("Random"),
 	m_id(Level::Random),
 	m_seed("Random"),
@@ -150,13 +151,8 @@ RandomBiome::RandomBiome() :
 	// TODO define map position and number of map
 	std::size_t portalPos = 30.f;
 
-	if (progress.getActivatedMonolith() >= 15u)
-	{
+	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
 		m_mapSize.x = 400u;
-		m_instances[100] = MAP_RANDOM_OMP;
-	}
-	else
-		m_gameObjects[m_generator.randomInt(35u, m_mapSize.x)] = GameObjectType::Monolith;
 
 	m_interestPointPosX = portalPos;
 
@@ -183,8 +179,38 @@ RandomBiome::RandomBiome() :
 		m_gameObjects[index] = GameObjectType::SpiritNanoRobot;
 		m_interestPointPosX = index;
 	}
+
+	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
+	{
+		m_instances[100] = MAP_RANDOM_OMP;
+	}
+	else
+	{
+		std::size_t posMonolith = randomInt(60u, m_mapSize.x - 50u);
+		std::list<GameObjectType> const & npcList = progress.getNpcMet();
+	
+		for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
+		{
+			std::size_t index = randomInt(10u, m_mapSize.x - 10u);
+			if (index > posMonolith - 75u && index < posMonolith + 100u)
+				index += 200u;
+			if (randomBool(0.08f) && *npc != GameObjectType::MysticanouilleNpc)
+			{
+				m_gameObjects[index] = *npc;
+				if (randomBool(0.5f))
+					break;
+			}
+		}
+
+		m_gameObjects[posMonolith] = GameObjectType::Monolith;
+		if (posMonolith + 75u < m_mapSize.x)
+			m_gameObjects[posMonolith + 75u] = GameObjectType::MysticanouilleNpc;
+		m_gameObjects[posMonolith - 40u] = GameObjectType::MysticanouilleNpc;
+	}
+
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	progress.meetPortal(progress.getLastDestination(), Level::Random);
+
 }
 
 void			RandomBiome::setup(std::size_t seed)
@@ -291,7 +317,7 @@ std::vector<ParallaxScrolling::ALayer *> RandomBiome::getLayers()
 
 Map::MapSurfaceGenerator RandomBiome::getMapSurfaceGenerator()
 {
-	if (Progress::getInstance().getActivatedMonolith() >= 15u)
+	if (Progress::getInstance().countRandomDiscover() >= Progress::RandomPortalMax)
 	{
 		return [this](Noise & noise, float x, float y)
 		{

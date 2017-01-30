@@ -52,11 +52,13 @@ void	GameScreen::update(sf::Time frameTime)
 	octo::StateManager &		states = octo::Application::getStateManager();
 	Progress &					progress = Progress::getInstance();
 
-	m_menu.update(frameTime, m_game->getOctoBubblePosition());
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 	{
 		progress.setBubbleNpc(false);
+		if (!m_doSave)
+			m_menu.updateSpiritInfos();
 		m_doSave = true;
+		m_menu.update(frameTime, m_game->getOctoBubblePosition());
 	}
 	else if (m_doSave)
 	{
@@ -71,6 +73,7 @@ void	GameScreen::update(sf::Time frameTime)
 		changeLevel(states, progress);
 	}
 	timeLevelBlueRed(frameTime, states, progress);
+	progress.updateSteam(frameTime);
 }
 
 void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)

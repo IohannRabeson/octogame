@@ -19,13 +19,11 @@ void PolygonShape::computeShape(void)
 	// Compute rotation
 	float cos = std::cos(getRotation());
 	float sin = std::sin(getRotation());
-	float x;
-	float y;
 	sf::Vector2f const & origin = getOrigin();
 	for (std::size_t i = 0u; i < m_initialVertices.size(); i++)
 	{
-		x = m_initialVertices[i].x - origin.x;
-		y = m_initialVertices[i].y - origin.y;
+		float x = m_initialVertices[i].x - origin.x;
+		float y = m_initialVertices[i].y - origin.y;
 		m_vertices[i].x = origin.x + (x * cos - y * sin) + getPosition().x;
 		m_vertices[i].y = origin.y + (x * sin + y * cos) + getPosition().y;
 	}

@@ -143,7 +143,7 @@ IceBBiome::IceBBiome() :
 	m_secondEndColor = getRockColor();
 
 	m_gameObjects[1] = GameObjectType::JuGlitchNpc;
-	m_gameObjects[46] = GameObjectType::AntoineNpc;
+	m_gameObjects[40] = GameObjectType::AntoineNpc;
 	m_instances[50] = MAP_ICE_B_TRAIL_A_OMP;
 	m_instances[108] = MAP_ICE_B_TRAIL_B_OMP;
 	m_instances[178] = MAP_ICE_B_TRAIL_C_OMP;
@@ -273,7 +273,7 @@ Map::MapSurfaceGenerator IceBBiome::getMapSurfaceGenerator()
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float m = noise.fBm(x, y, 3, 3.f, 0.3f) / 7.f;
 		std::vector<float> pointX = {25.f, 50.f, 51.f, 317.f, 325.f, 335.f, 380.f    , 420.f    , 459.f, 460.f, 499.f, 500.f, 550.f};
-		std::vector<float> pointY = {n   , 0.f , 0.2f, 0.13f, 0.17f, 0.17f, m + 0.04f, m + 0.04f, 0.13f, 0.4f , 0.4f , 0.15f, n};
+		std::vector<float> pointY = {m   , 0.f , 0.2f, 0.13f, 0.17f, 0.17f, m + 0.04f, m + 0.04f, 0.13f, 0.4f , 0.4f , 0.15f, n};
 		for (std::size_t i = 0u; i < pointX.size(); i++)
 			pointX[i] /= floatMapSize;
 

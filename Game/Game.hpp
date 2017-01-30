@@ -10,7 +10,7 @@
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
 # include "MusicManager.hpp"
-# include "KonamiCode.hpp"
+# include "UnlockEasy.hpp"
 # include "FakeMenu.hpp"
 
 # include "InputListener.hpp"
@@ -51,13 +51,11 @@ private:
 	std::unique_ptr<GroundManager>		m_groundManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
 	std::unique_ptr<CharacterOcto>		m_octo;
-	std::unique_ptr<KonamiCode>			m_konami;
+	std::unique_ptr<UnlockEasy>			m_unlockEasy;
 	std::unique_ptr<CameraMovement>		m_cameraMovement;
 	bool								m_keyEntrance;
 	sf::Time							m_slowTime;
 	sf::Time							m_slowTimeMax;
-	float								m_slowCoefMin;
-	float								m_slowCoefMax;
 	float								m_slowTimeCoef;
 	std::size_t							m_skipFrames;
 	std::size_t							m_skipFramesMax;

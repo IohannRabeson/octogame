@@ -101,6 +101,7 @@ CharacterOcto::CharacterOcto() :
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutscenePauseTimerMax(sf::seconds(4.f)),
 	m_adaptBoxTimerMax(sf::seconds(0.5f)),
+	m_adaptBoxDelta(0.f),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
@@ -130,13 +131,16 @@ CharacterOcto::CharacterOcto() :
 		robot->setState(NanoRobot::State::FollowOcto);
 	}
 
-	for (std::size_t i = 0u; i < m_progress.getSpiritCount(); i++)
-		giveSpirit(new SpiritNanoRobot(sf::Vector2f(0.f, 0.f)));
-	for (auto & spirit : m_spirits)
+	if (m_progress.getCurrentDestination() == Level::Random)
 	{
-		spirit->setPosition(getPosition());
-		spirit->transfertToOcto(true);
-		spirit->setState(NanoRobot::State::FollowOcto);
+		for (std::size_t i = 0u; i < m_progress.getSpiritCount(); i++)
+			giveSpirit(new SpiritNanoRobot(sf::Vector2f(0.f, 0.f)));
+		for (auto & spirit : m_spirits)
+		{
+			spirit->setPosition(getPosition());
+			spirit->transfertToOcto(true);
+			spirit->setState(NanoRobot::State::FollowOcto);
+		}
 	}
 }
 
@@ -993,7 +997,6 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 
 	startGameIceA();
 
-	updateBox(frameTime);
 	dieGrass();
 	updateGroundDelay(frameTime);
 	portalEvent();
@@ -1034,6 +1037,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	updateParticles(frameTime);
 	resetColisionBolean();
 	replaceOcto();
+	updateBox(frameTime);
 	updateCutscene(realFrameTime);
 
 	m_previousTop = m_box->getGlobalBounds().top;
@@ -1134,7 +1138,7 @@ bool	CharacterOcto::isCenteredCamera(void) const
 		return true;
 	if (m_level == Level::DesertC || m_level == Level::JungleC)
 		return true;
-	if (isInWater() && m_waterLevel != -1.f)
+	if (isInWater() && m_waterLevel != -1.f && m_level != Level::Random)
 		return true;
 	return false;
 }
@@ -1322,6 +1326,7 @@ void	CharacterOcto::collideDoor(void)
 	if (m_keyEntrance)
 	{
 		m_doorAction = true;
+		Progress::getInstance().setDoorFound(true);
 	}
 	else
 		m_doorAction = false;
@@ -1534,19 +1539,33 @@ void	CharacterOcto::updateBox(sf::Time frameTime)
 {
 	//TODO: Check on use if it's a good improvement
 	Events event = static_cast<Events>(m_sprite.getCurrentEvent());
+	bool isReset = false;
 
 	if (event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3)
-		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
-	else
 	{
-		if (!m_onGround)
-			m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 2.f, sf::Time::Zero);
-		else
-			m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 10.f, sf::Time::Zero);
+		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
+		m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
+	}
+	else if (event == StartJump || event == DoubleJump || event == Fall)
+	{
+		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
+		m_adaptBoxDelta = 20.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
+	}
+	else if (m_adaptBoxDelta != 0.f)
+	{
+		isReset = true;
+		m_adaptBoxTimer = sf::Time::Zero;
 	}
 
-	m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
-	m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
+	if (isReset)
+	{
+		m_box->setSize(m_boxSize);
+		m_box->setPosition(sf::Vector2f(m_box->getPosition().x, m_box->getPosition().y - (m_adaptBoxDelta)));
+		m_box->update();
+		m_adaptBoxDelta = 0.f;
+	}
+	else
+		m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
 }
 
 void	CharacterOcto::updateGroundDelay(sf::Time frameTime)
@@ -1617,9 +1636,11 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 		if (m_timeRepairSpaceShip > m_timeRepairSpaceShipMax)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			m_progress.spaceShipRepair(true);
 			if (m_level != Level::EndRocket)
+			{
+				m_progress.spaceShipRepair(true);
 				states.change("zero");
+			}
 		}
 	}
 
@@ -2381,7 +2402,6 @@ void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
-	bool otherKeyReleased = false;
 
 	switch (key)
 	{
@@ -2425,7 +2445,6 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			m_keyZoomIn = false;
 			break;
 		default:
-			otherKeyReleased = true;
 			break;
 	}
 	return true;

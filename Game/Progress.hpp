@@ -28,7 +28,6 @@ public:
 
 	enum Difficulty
 	{
-		Easy,
 		Normal,
 		Hard
 	};
@@ -39,9 +38,11 @@ public:
 		Simple
 	};
 
-	static constexpr std::size_t					DeathMax = 15.f;
+	static constexpr std::size_t					DeathMax = 20.f;
+	static constexpr std::size_t					RandomPortalMax = 16u;
 
 	static Progress &								getInstance(void);
+	static SteamAPI &								getSteamInstance(void);
 	~Progress() = default;
 
 	float											getTimePlayed() const { return m_data.timePlayed; }
@@ -58,6 +59,7 @@ public:
 	void											increaseLaunchCount(void);
 	void											setLongIntro(bool longIntro);
 	void											setTryToEscape(bool tryToEscape);
+	void											setDoorFound(bool doorFound);
 	void											setBlueEnd(bool finish);
 	void											setRedEnd(bool finish);
 	void											increaseJumpCount(void);
@@ -118,6 +120,8 @@ public:
 
 	void											setMapMoving(bool isMoving) { m_isMapMoving = isMoving; }
 	bool											isMapMoving(void) const { return m_isMapMoving; }
+	void											setIsResourceLoading(bool isLoading) { m_isResourceLoading = isLoading; }
+	bool											isResourceLoading(void) const { return m_isResourceLoading; }
 
 	void											setForceMapToMove(bool value) { m_forceMapToMove = value; }
 	bool											forceMapToMove(void) const { return m_forceMapToMove; }
@@ -141,6 +145,9 @@ public:
 	std::vector<Level> const &						getRegisteredLevels(void) const;
 
 	void											resetCheckpoint(std::size_t id);
+	void											setCheckpointCountMax(std::size_t count);
+	std::size_t										getCheckpointCountMax(void);
+	std::size_t										getCheckpointCount(void);
 	bool											isCheckpointValidated(std::size_t id);
 	void											validateCheckpoint(std::size_t id);
 	void											registerDeath(sf::Vector2f const & position);
@@ -191,13 +198,18 @@ public:
 	bool											getOctoDoubleJump(void) { return m_isDoubleJump; }
 	void											setInCloud(bool inCloud, std::size_t cloudId);
 	bool											isInCloud(void) const { return m_isInCloud; }
+	void											setEasyUnlocked(bool unlock) { m_isEasyUnlocked = unlock; };
+	bool											isEasyUnlocked(void) const { return m_isEasyUnlocked; }
 
 	void											setBalleMultiplier(float multiplier);
 	float											getBalleMultiplier(void);
 
+	std::size_t										getProgression(void);
+
 	void											setReverseSprite(bool reverse) { m_reverseSprite = reverse; }
 	bool											getReverseSprite() const { return m_reverseSprite; }
 
+	void											updateSteam(sf::Time frameTime);
 	void											load(std::string const & filename);
 	void											save(float timePlayed = 0.f);
 	void											reset();
@@ -214,6 +226,8 @@ public:
 			timePlayed(0.f),
 			launchCount(0u),
 			isGameFinished(false),
+			isGameFinishedHard(false),
+			isGameFinishedZeroDeath(false),
 			isBlueEnd(false),
 			isRedEnd(false),
 			validateChallenge(0u),
@@ -244,12 +258,15 @@ public:
 			levelOfDetails(0),
 			spaceShipRepair(false),
 			longIntro(false),
-			tryToEscape(false)
+			tryToEscape(false),
+			doorFound(false)
 		{}
 
 		float					timePlayed;
 		std::size_t				launchCount;
 		bool					isGameFinished;
+		bool					isGameFinishedHard;
+		bool					isGameFinishedZeroDeath;
 		bool					isBlueEnd;
 		bool					isRedEnd;
 		sf::Vector2f			checkPointPosition;
@@ -285,6 +302,7 @@ public:
 		bool					spaceShipRepair;
 		bool					longIntro;
 		bool					tryToEscape;
+		bool					doorFound;
 	};
 
 private:
@@ -319,15 +337,16 @@ private:
 	std::size_t										m_cloudId;
 
 	std::map<Level, std::map<GameObjectType, bool>>	m_npc;
-	std::size_t										m_npcCount;
 	std::size_t										m_npcMax;
 	std::map<Level, std::vector<sf::Vector2i>>		m_deaths;
+	std::size_t										m_deathsLevelCount;
 	std::map<Level, std::map<Level, bool>>			m_portals;
 	std::map<Level, sf::Vector2f>					m_portalsToDiscover;
 	std::vector<Level>								m_levels;
 	std::size_t										m_countRandomDiscover;
 	std::map<std::string, octo::Array3D<Tile>>		m_mapsTile;
 	std::map<std::string, octo::Array3D<float>>		m_mapsHighlight;
+	std::size_t										m_checkpointCountMax;
 
 	bool											m_isOctoOnInstance;
 	bool											m_isHighLight;
@@ -336,7 +355,9 @@ private:
 	bool											m_forceMapToMove;
 
 	float											m_balleMultiplier;
-
+	sf::Time										m_timerSteamUpdate;
+	bool											m_isEasyUnlocked;
+	bool											m_isResourceLoading;
 };
 
 #endif

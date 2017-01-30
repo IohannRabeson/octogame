@@ -17,6 +17,7 @@ CharacterOcto::OctoSound::OctoSound() :
 	m_timeSoundTransitionMax(sf::seconds(1.f)),
 	m_timeDrinkSound(sf::seconds(1.f)),
 	m_inWater(false),
+	m_waterLevel(0.f),
 	m_onGround(false),
 	m_landing(false),
 	m_transitionInWater(false),
@@ -47,10 +48,11 @@ CharacterOcto::OctoSound::~OctoSound()
 void	CharacterOcto::OctoSound::update(sf::Time frameTime, Events event, bool inWater, bool onGround)
 {
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
-	float						volume = 0.f;
 
 	if (m_soundTransition != nullptr)
 	{
+		float volume = 0.f;
+
 		m_timeSoundTransition += frameTime;
 		volume = audio.getSoundVolume() * (1.f - (m_timeSoundTransition / m_timeSoundTransitionMax));
 		if (volume >= 0.f)

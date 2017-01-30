@@ -6,6 +6,7 @@
 Star::Star() :
 	m_animator(10.f, 10.f, 3.f, 0.3f),
 	m_animation(1.f),
+	m_detailPriority(0),
 	m_cycle(nullptr)
 {
 }

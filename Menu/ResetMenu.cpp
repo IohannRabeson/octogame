@@ -1,4 +1,4 @@
-#include "DifficultyMenu.hpp"
+#include "ResetMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "EmptyMenu.hpp"
 #include "Progress.hpp"
@@ -7,30 +7,27 @@
 #include <Application.hpp>
 #include <AudioManager.hpp>
 
-DifficultyMenu::DifficultyMenu(void)
+ResetMenu::ResetMenu(void)
 {
 }
 
-void DifficultyMenu::createMenus(void)
+void ResetMenu::createMenus(void)
 {
 	addMenu(AMenu::getText("options_difficulty_normal"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	if (Progress::getInstance().isFirstTime())
-		addMenu(AMenu::getText("options_difficulty_hard"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(AMenu::getText("options_difficulty_hard"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
 	setIndexCursor(static_cast<std::size_t>(Progress::getInstance().getDifficulty()));
 }
 
-void DifficultyMenu::onSelection(void)
+void ResetMenu::onSelection(void)
 {
 	Progress &				progress = Progress::getInstance();
 	octo::StateManager &	states = octo::Application::getStateManager();
 
+	progress.reset();
+	progress.setFirstTime(true);
 	progress.setDifficulty(static_cast<Progress::Difficulty>(getIndexCursor()));
-
-	if (progress.isFirstTime())
-		states.change("intro");
-	else
-		states.change("game");
+	states.change("intro");
 
 	setState(AMenu::State::Hide);
 	AMenu * backMenu = getBackMenu();

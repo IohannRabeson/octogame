@@ -51,6 +51,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/MusicManager.cpp					\
 				Game/InputListener.cpp					\
 				Game/KonamiCode.cpp						\
+				Game/UnlockEasy.cpp						\
 				Game/ChallengeManager.cpp				\
 				Game/Challenges.cpp						\
 				Game/PostEffectLayer.cpp				\
@@ -207,6 +208,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/CreditMenu.cpp						\
 				Menu/YesNoMenu.cpp						\
 				Menu/ResolutionMenu.cpp					\
+				Menu/ResetMenu.cpp						\
 				Menu/CheatCodeMenu.cpp					\
 				Menu/LevelMenu.cpp						\
 				Menu/PlayEndMenu.cpp					\
@@ -216,6 +218,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/BalleMultiplierMenu.cpp			\
 				Menu/DifficultyMenu.cpp					\
 				Menu/EmptyMenu.cpp						\
+				Menu/SpiritInfos.cpp					\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/FireflyPopulation.cpp		\
@@ -229,6 +232,7 @@ SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/SlowFallNanoRobot.cpp		\
 				NanoRobots/WaterNanoRobot.cpp			\
 				NanoRobots/SpiritNanoRobot.cpp			\
+				NanoRobots/MenuNanoRobot.cpp			\
 				NanoRobots/NanoEffect.cpp				\
 
 SRC_MAP =		Map/Map.cpp								\

@@ -66,40 +66,44 @@ std::vector<std::wstring> const & TextManager::getTexts(std::string const & key)
 	return m_texts[key];
 }
 
-std::vector<std::wstring> const & TextManager::getTextsNpc(ResourceKey const & key)
+std::vector<std::wstring> TextManager::getTextsNpc(ResourceKey const & key)
 {
-	if (m_texts[key].size())
-		m_texts[key].push_back(L"Beurk!\n");
+	Progress const & progress = Progress::getInstance();
+	std::vector<std::wstring> texts;
 
+	texts = m_texts[key];
 	if (Progress::getInstance().isJoystick())
 	{
 		if (!(m_texts.find("joystick_" + static_cast<std::string>(key)) == m_texts.end()))
-			return (m_texts["joystick_" + static_cast<std::string>(key)]);
+			texts = m_texts["joystick_" + static_cast<std::string>(key)];
 	}
-	if (Progress::getInstance().getLastDestination() == Level::Portal && m_texts[key].size())
+	if (progress.getLastDestination() == Level::Portal && progress.getLastDestination() == Level::Random && !progress.isMenu() && m_texts[key].size())
 	{
 		std::size_t random = m_generator.randomInt(0u, 3u);
-		std::wstring text;
 
 		switch (random)
 		{
 			case 0:
-				return m_texts["finished_game_0"];
+				texts = m_texts["finished_game_0"];
 				break;
 			case 1:
-				return m_texts["finished_game_1"];
+				texts = m_texts["finished_game_1"];
 				break;
 			case 2:
-				return m_texts["finished_game_2"];
+				texts = m_texts["finished_game_2"];
 				break;
 			case 3:
-				return m_texts["finished_game_3"];
+				texts = m_texts["finished_game_3"];
 				break;
 			default:
 				break;
 		}
 	}
-	return m_texts[key];
+
+	if (texts.size())
+		texts.push_back(L"Beurk!\n");
+
+	return texts;
 }
 
 ABubble::Priority const & TextManager::getPriority(ResourceKey const & key)

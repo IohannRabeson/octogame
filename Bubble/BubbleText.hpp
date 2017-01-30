@@ -15,7 +15,10 @@ public:
 	virtual void					setup(std::wstring const & phrase,
 											sf::Color const & color,
 											std::size_t characterSize = 20u,
-											float bubbleWidth = 350.f);
+											float bubbleWidth = 350.f,
+											sf::Color const & colorText = sf::Color::Black);
+
+	void							setColors(sf::Color const & colorBubble, sf::Color const & colorText);
 
 	virtual sf::Vector2f const &	getContentSize(void) const;
 	virtual void					updateContent(sf::Time frameTime, sf::Vector2f const & position);

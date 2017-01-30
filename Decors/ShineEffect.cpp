@@ -22,6 +22,11 @@ void ShineEffect::setSize(sf::Vector2f const & size)
 	m_size = size;
 }
 
+void ShineEffect::setColor(sf::Color const & color)
+{
+	m_color = color;
+}
+
 void ShineEffect::setCanPlaySound(bool playSound)
 {
 	m_canPlaySound = playSound;

@@ -22,6 +22,7 @@ MusicManager::MusicManager() :
 	m_audio(octo::Application::getAudioManager()),
 	m_played(false),
 	m_timer(sf::Time::Zero),
+	m_maxVolume(1.f),
 	m_generator("random"),
 	m_startEvent(false),
 	m_endEvent(false),
@@ -322,11 +323,6 @@ void	MusicManager::updateEvent(sf::Time frameTime)
 			m_startEvent = false;
 			m_endEvent = false;
 		}
-	}
-	else
-	{
-		audio.setMusicVolume(refMusicVolume);
-		audio.setSoundVolume(refSoundVolume);
 	}
 }
 

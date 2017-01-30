@@ -142,7 +142,7 @@ FinalBiome::FinalBiome() :
 	m_secondEndColor = getLeafColor();
 
 	// Define game objects
-	m_gameObjects[1265] = GameObjectType::CheckPoint;
+	m_gameObjects[1262] = GameObjectType::CheckPoint;
 	m_instances[800] = MAP_FINAL_PYRAMID_OMP;
 	m_instances[295] = MAP_FINAL_EMPTY_OMP;
 	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
@@ -166,7 +166,6 @@ FinalBiome::FinalBiome() :
 	m_destinations.push_back(Level::Final);
 	m_destinations.push_back(Level::Final);
 	m_destinations.push_back(Level::WaterD);
-	m_destinations.push_back(Level::Random);
 	m_destinations.push_back(Level::EndRocket);
 	m_destinations.push_back(Level::Red);
 }
