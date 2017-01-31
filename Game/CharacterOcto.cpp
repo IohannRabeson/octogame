@@ -1549,7 +1549,7 @@ void	CharacterOcto::updateBox(sf::Time frameTime)
 	else if (event == StartJump || event == DoubleJump || event == Fall)
 	{
 		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
-		m_adaptBoxDelta = 20.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
+		m_adaptBoxDelta = 12.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
 	}
 	else if (m_adaptBoxDelta != 0.f)
 	{
@@ -1565,7 +1565,9 @@ void	CharacterOcto::updateBox(sf::Time frameTime)
 		m_adaptBoxDelta = 0.f;
 	}
 	else
+	{
 		m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
+	}
 }
 
 void	CharacterOcto::updateGroundDelay(sf::Time frameTime)
@@ -1765,7 +1767,7 @@ void	CharacterOcto::kill()
 
 void	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > m_timeEventDieFallMax && m_sprite.getCurrentEvent() != DieFall)
+	if (m_timeEventFall > m_timeEventDieFallMax && m_sprite.getCurrentEvent() != DieFall && !m_inWater)
 		m_sprite.setNextEvent(DieFall);
 	else if (m_timeEventDieVoidMax != sf::Time::Zero)
 	{
