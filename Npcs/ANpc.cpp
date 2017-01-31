@@ -29,12 +29,16 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	TextManager & textManager = TextManager::getInstance();
+	Progress & progress = Progress::getInstance();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
 	setTexts(textManager.getTextsNpc(npcId), textManager.getPriority(npcId));
 	if (m_texts.size())
 		m_displayText = true;
+
+	if (progress.getCurrentDestination() == Level::WaterB || progress.getCurrentDestination() == Level::Random)
+		m_isZoomable = false;
 }
 
 ANpc::~ANpc(void)
