@@ -148,6 +148,7 @@ FinalBiome::FinalBiome() :
 	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
 	m_instances[50] = MAP_FINAL_LEFT_OMP;
 	m_instances[1300] = MAP_FINAL_RIGHT_OMP;
+	m_gameObjects[740] = GameObjectType::PortalRandom;
 
 	std::vector<GameObjectType> object = {GameObjectType::ForestSpirit1Npc, GameObjectType::ForestSpirit2Npc, GameObjectType::FranGlitchNpc, GameObjectType::JuGlitchNpc, GameObjectType::LuGlitchNpc, GameObjectType::WindowGlitchNpc};
 
@@ -168,6 +169,7 @@ FinalBiome::FinalBiome() :
 	m_destinations.push_back(Level::WaterD);
 	m_destinations.push_back(Level::EndRocket);
 	m_destinations.push_back(Level::Red);
+	m_destinations.push_back(Level::Random);
 }
 
 void			FinalBiome::setup(std::size_t seed)

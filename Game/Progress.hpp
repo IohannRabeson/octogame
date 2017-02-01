@@ -39,7 +39,7 @@ public:
 	};
 
 	static constexpr std::size_t					DeathMax = 20.f;
-	static constexpr std::size_t					RandomPortalMax = 16u;
+	static constexpr std::size_t					RandomPortalMax = 17u;
 
 	static Progress &								getInstance(void);
 	static SteamAPI &								getSteamInstance(void);

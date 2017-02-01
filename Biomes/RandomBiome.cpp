@@ -210,8 +210,6 @@ RandomBiome::RandomBiome() :
 
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	progress.meetPortal(progress.getLastDestination(), Level::Random);
-
-	m_gameObjects[50] = GameObjectType::BalleNanoRobot;
 }
 
 void			RandomBiome::setup(std::size_t seed)
