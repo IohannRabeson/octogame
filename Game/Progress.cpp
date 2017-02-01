@@ -269,14 +269,14 @@ bool	Progress::isJoystick(void) const
 void	Progress::addNanoRobot()
 {
 	m_data.nanoRobotCount++;
-	assert(m_data.nanoRobotCount <= 7);
+	assert(m_data.nanoRobotCount <= 8);
 	save();
 }
 
 void	Progress::setNanoRobotCount(std::size_t count)
 {
 	m_data.nanoRobotCount = count;
-	assert(m_data.nanoRobotCount <= 7);
+	assert(m_data.nanoRobotCount <= 8);
 	save();
 }
 
@@ -394,6 +394,11 @@ bool	Progress::canUseElevator()
 bool	Progress::canUseWaterJump()
 {
 	return (m_data.nanoRobotCount > 4);
+}
+
+bool	Progress::canUseBalle()
+{
+	return (m_data.nanoRobotCount > 7);
 }
 
 bool	Progress::changeLevel() const

@@ -39,9 +39,9 @@ void ChallengeManager::reset(void)
 
 void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
 {
-	if (1)
+/*	if (1)
 		updateAquarium(biome, frametime);
-	else if (biome.getType() == ABiome::Type::Random && Progress::getInstance().isGameFinished())
+	else*/ if (biome.getType() == ABiome::Type::Random && Progress::getInstance().isGameFinished())
 		updateRandom(biome, position, frametime);
 	else
 		updateNormal(biome, position, frametime);

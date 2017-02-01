@@ -52,6 +52,7 @@
 #include "JumpNanoRobot.hpp"
 #include "SlowFallNanoRobot.hpp"
 #include "DoubleJumpNanoRobot.hpp"
+#include "BalleNanoRobot.hpp"
 #include "WaterNanoRobot.hpp"
 #include "SpiritNanoRobot.hpp"
 
@@ -407,6 +408,15 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			if (!gameObjectCast<DoubleJumpNanoRobot>(gameObject)->isTravelling())
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<DoubleJumpNanoRobot>(gameObject));
+				ptr->transfertToOcto();
+				m_octo->giveNanoRobot(ptr, true);
+				setSlowMotion();
+			}
+			break;
+		case GameObjectType::BalleNanoRobot:
+			if (!gameObjectCast<BalleNanoRobot>(gameObject)->isTravelling())
+			{
+				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<BalleNanoRobot>(gameObject));
 				ptr->transfertToOcto();
 				m_octo->giveNanoRobot(ptr, true);
 				setSlowMotion();

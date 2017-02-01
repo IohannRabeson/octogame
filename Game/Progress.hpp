@@ -138,6 +138,7 @@ public:
 	bool											canSlowFall();
 	bool											canUseElevator();
 	bool											canUseWaterJump();
+	bool											canUseBalle();
 	bool											changeLevel() const;
 	void											levelChanged();
 

@@ -17,6 +17,7 @@
 #include "Progress.hpp"
 #include "NanoRobot.hpp"
 #include "GroundTransformNanoRobot.hpp"
+#include "BalleNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "RepairShipNanoRobot.hpp"
 #include "SpiritNanoRobot.hpp"
@@ -123,6 +124,8 @@ CharacterOcto::CharacterOcto() :
 		giveNanoRobot(new WaterNanoRobot());
 	if (m_progress.canRepairShip())
 		giveNanoRobot(new RepairShipNanoRobot(sf::Vector2f(0.f, 0.f)));
+	if (m_progress.canUseBalle())
+		giveNanoRobot(new BalleNanoRobot(sf::Vector2f(0.f, 0.f)));
 
 	for (auto & robot : m_nanoRobots)
 	{
@@ -181,6 +184,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Player));
 	std::size_t mask = static_cast<std::size_t>(GameObjectType::Portal)
 		| static_cast<std::size_t>(GameObjectType::GroundTransformNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::BalleNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::RepairNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::JumpNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::DoubleJumpNanoRobot)

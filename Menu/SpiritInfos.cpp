@@ -83,7 +83,7 @@ void SpiritInfos::setupProgression(void)
 					break;
 				case 2u:
 					current = progress.getNanoRobotCount();
-					max = 7u;
+					max = 8u;
 					key = "progression_octobot";
 					break;
 				case 3u:
