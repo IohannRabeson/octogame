@@ -158,7 +158,9 @@ FinalBiome::FinalBiome() :
 	m_interestPointPosX = 500;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.canRepairShip())
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(743.f * 16.f, 9.f * 16.f);
+	else if (progress.canRepairShip())
 		m_octoStartPosition = sf::Vector2f(866.f * 16.f, -130.f * 16.f);
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination

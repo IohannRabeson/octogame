@@ -1730,6 +1730,8 @@ void	CharacterOcto::updateOctoEvent(void)
 		case WaterJump:
 			nanoRobot = NANO_JUMP_WATER_OSS;
 			break;
+		case Drink:
+			nanoRobot = NANO_BALLE_OSS;
 		default:
 			break;
 	}
