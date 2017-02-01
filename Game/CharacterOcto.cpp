@@ -32,6 +32,7 @@ CharacterOcto::CharacterOcto() :
 	m_boxSize(sf::Vector2f(30.f, 85.f)),
 	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_repairNanoRobot(nullptr),
+	m_balleNanoRobot(nullptr),
 	m_progress(Progress::getInstance()),
 	m_timeEventDieFallMax(sf::seconds(2.3f)),
 	m_timeEventIdleMax(sf::seconds(4.f)),
@@ -1321,21 +1322,24 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 
 void	CharacterOcto::getBalle()
 {
-	if (m_progress.canUseBalle() && m_keyBalle && m_sprite.getCurrentEvent() != Events::Drink)
+	if (m_balleNanoRobot)
 	{
-		if (m_balleNanoRobot->throwPotion(true))
+		if (m_progress.canUseBalle() && m_keyBalle && m_sprite.getCurrentEvent() != Events::Drink)
 		{
-			if (!ChallengeManager::getInstance().launchManualGlitch(true))
+			if (m_balleNanoRobot->throwPotion(true))
 			{
-				m_sprite.setNextEvent(Events::Drink);
-				m_box->setApplyGravity(false);
+				if (!ChallengeManager::getInstance().launchManualGlitch(true))
+				{
+					m_sprite.setNextEvent(Events::Drink);
+					m_box->setApplyGravity(false);
+				}
 			}
 		}
-	}
-	else
-	{
-		ChallengeManager::getInstance().launchManualGlitch(false);
-		m_balleNanoRobot->throwPotion(false);
+		else
+		{
+			ChallengeManager::getInstance().launchManualGlitch(false);
+			m_balleNanoRobot->throwPotion(false);
+		}
 	}
 }
 
@@ -2318,10 +2322,12 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Down:
 			m_keyDown = true;
-			m_keyBalle = true;
 			break;
 		case OctoKeys::Zoom:
 			m_keyZoomIn = true;
+			break;
+		case OctoKeys::Balle:
+			m_keyBalle = true;
 			break;
 		case OctoKeys::Elevator:
 			m_keyElevator = true;
@@ -2483,6 +2489,9 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Zoom:
 			m_keyZoomIn = false;
+			break;
+		case OctoKeys::Balle:
+			m_keyBalle = false;
 			break;
 		default:
 			break;

@@ -16,16 +16,16 @@ InputListener::InputListener(void) :
 {
 #ifdef __linux__
 	m_inputs = { OctoKeys::Jump, OctoKeys::Entrance, OctoKeys::Capacity, OctoKeys::Elevator, OctoKeys::GroundRight,
-		OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::Zoom };
+		OctoKeys::GroundLeft, OctoKeys::Balle, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::Zoom };
 	m_triggerLimit = 0.f;
 #elif _WIN32
 	m_inputs = { OctoKeys::Jump, OctoKeys::Entrance, OctoKeys::Capacity, OctoKeys::Elevator, OctoKeys::GroundRight,
-		OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::Zoom };
+		OctoKeys::GroundLeft, OctoKeys::Balle, OctoKeys::Menu, OctoKeys::None, OctoKeys::None, OctoKeys::Zoom };
 	m_triggerLimit = 50.f;
 #else // __APPLE__
 	if (sf::Joystick::getIdentification(0).name.toAnsiString() == "PLAYSTATION(R)3 Controller")
 	{
-		m_inputs = {OctoKeys::None,
+		m_inputs = {OctoKeys::Balle,
 					OctoKeys::None,
 					OctoKeys::Zoom,
 					OctoKeys::Menu,
@@ -45,7 +45,7 @@ InputListener::InputListener(void) :
 	else
 	{
 		m_inputs = { OctoKeys::Jump, OctoKeys::Entrance, OctoKeys::Capacity, OctoKeys::Elevator, OctoKeys::GroundRight,
-			OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Zoom, OctoKeys::Menu, OctoKeys::None,
+			OctoKeys::GroundLeft, OctoKeys::None, OctoKeys::Zoom, OctoKeys::Menu, OctoKeys::Balle,
 			OctoKeys::None, OctoKeys::Up, OctoKeys::Down, OctoKeys::Left, OctoKeys::Right, OctoKeys::None,
 			OctoKeys::None, OctoKeys::None, OctoKeys::None, OctoKeys::None };
 	}
@@ -140,6 +140,9 @@ bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 		case sf::Keyboard::R:
 			onInputPressed(OctoKeys::Zoom);
 			break;
+		case sf::Keyboard::E:
+			onInputPressed(OctoKeys::Balle);
+			break;
 		case sf::Keyboard::LShift:
 			m_isShiftPressed = true;
 			break;
@@ -189,6 +192,9 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 			break;
 		case sf::Keyboard::R:
 			onInputReleased(OctoKeys::Zoom);
+			break;
+		case sf::Keyboard::E:
+			onInputReleased(OctoKeys::Balle);
 			break;
 		case sf::Keyboard::LShift:
 			onInputReleased(OctoKeys::ViewLeft);
