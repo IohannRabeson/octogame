@@ -418,7 +418,7 @@ void Game::onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::V
 			{
 				NanoRobot * ptr = m_groundManager->getNanoRobot(gameObjectCast<BalleNanoRobot>(gameObject));
 				ptr->transfertToOcto();
-				m_octo->giveNanoRobot(ptr, true);
+				m_octo->giveBalleNanoRobot(static_cast<BalleNanoRobot *>(ptr), true);
 				setSlowMotion();
 			}
 			break;
