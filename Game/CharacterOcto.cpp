@@ -75,6 +75,7 @@ CharacterOcto::CharacterOcto() :
 	m_keyPortal(false),
 	m_keyElevator(false),
 	m_keyZoomIn(false),
+	m_keyBalle(false),
 	m_leftTic(false),
 	m_rightTic(false),
 	m_jumpTic(false),
@@ -125,7 +126,7 @@ CharacterOcto::CharacterOcto() :
 	if (m_progress.canRepairShip())
 		giveNanoRobot(new RepairShipNanoRobot(sf::Vector2f(0.f, 0.f)));
 	if (m_progress.canUseBalle())
-		giveNanoRobot(new BalleNanoRobot(sf::Vector2f(0.f, 0.f)));
+		giveBalleNanoRobot(new BalleNanoRobot(sf::Vector2f(0.f, 0.f)));
 
 	for (auto & robot : m_nanoRobots)
 	{
@@ -1286,6 +1287,16 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 		enableCutscene(true, true);
 }
 
+void	CharacterOcto::giveBalleNanoRobot(BalleNanoRobot * robot, bool firstTime)
+{
+	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
+	m_balleNanoRobot = robot;
+	if (firstTime)
+		enableCutscene(true, true);
+}
+
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
 	if (m_progress.canRepair() && m_keyElevator)
@@ -1306,6 +1317,26 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 	if (!elevator.isActivated())
 		m_collisionElevatorEvent = true;
+}
+
+void	CharacterOcto::getBalle()
+{
+	if (m_progress.canUseBalle() && m_keyBalle && m_sprite.getCurrentEvent() != Events::Drink)
+	{
+		if (m_balleNanoRobot->throwPotion(true))
+		{
+			if (!ChallengeManager::getInstance().launchManualGlitch(true))
+			{
+				m_sprite.setNextEvent(Events::Drink);
+				m_box->setApplyGravity(false);
+			}
+		}
+	}
+	else
+	{
+		ChallengeManager::getInstance().launchManualGlitch(false);
+		m_balleNanoRobot->throwPotion(false);
+	}
 }
 
 void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
@@ -1663,6 +1694,7 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 	}
 
 	updateOctoEvent();
+	getBalle();
 }
 
 void	CharacterOcto::updateOctoEvent(void)
@@ -2286,6 +2318,7 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Down:
 			m_keyDown = true;
+			m_keyBalle = true;
 			break;
 		case OctoKeys::Zoom:
 			m_keyZoomIn = true;
@@ -2439,6 +2472,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Down:
 			m_keyDown = false;
+			m_keyBalle = false;
 			break;
 		case OctoKeys::Elevator:
 			m_keyElevator = false;

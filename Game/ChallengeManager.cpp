@@ -5,19 +5,13 @@
 std::unique_ptr<ChallengeManager> ChallengeManager::m_instance = nullptr;
 
 ChallengeManager::ChallengeManager(void) :
-	m_keyEntrance(false),
-	m_keyCapacity(false),
-	m_keyElevator(false),
-	m_keyJump(false),
-	m_keyPressed(false),
-	m_keyLock(false)
+	m_launchManualGlitch(false),
+	m_lockManualGlitch(false)
 {
-	InputListener::addInputListener();
 }
 
 ChallengeManager::~ChallengeManager(void)
 {
-	//InputListener::removeInputListener();
 }
 
 ChallengeManager & ChallengeManager::getInstance(void)
@@ -39,9 +33,9 @@ void ChallengeManager::reset(void)
 
 void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
 {
-/*	if (1)
-		updateAquarium(biome, frametime);
-	else*/ if (biome.getType() == ABiome::Type::Random && Progress::getInstance().isGameFinished())
+	if (Progress::getInstance().canUseBalle())
+		updateManualGlitch(biome, frametime);
+	else if (biome.getType() == ABiome::Type::Random && Progress::getInstance().isGameFinished())
 		updateRandom(biome, position, frametime);
 	else
 		updateNormal(biome, position, frametime);
@@ -75,15 +69,15 @@ void ChallengeManager::updateRandom(ABiome & biome, sf::Vector2f const & positio
 	}
 }
 
-void ChallengeManager::updateAquarium(ABiome & biome, sf::Time frametime)
+void ChallengeManager::updateManualGlitch(ABiome & biome, sf::Time frametime)
 {
-	if (m_keyPressed && !m_keyLock)
+	if (m_launchManualGlitch && !m_lockManualGlitch)
 	{
 		for (auto & it : m_challenges)
 		{
-			if (!it.second->enable() && biome.randomBool(0.1f))
+			if (!it.second->enable())
 			{
-				m_keyLock = true;
+				m_lockManualGlitch = true;
 				it.second->startGlitchManual(biome);
 				break;
 			}
@@ -94,39 +88,10 @@ void ChallengeManager::updateAquarium(ABiome & biome, sf::Time frametime)
 		it.second->updateGlitchManual(frametime, biome);
 }
 
-bool ChallengeManager::onInputPressed(InputListener::OctoKeys const & key)
+bool ChallengeManager::launchManualGlitch(bool isLaunch)
 {
-	switch (key)
-	{
-		case OctoKeys::Entrance:
-		case OctoKeys::Capacity:
-		case OctoKeys::Elevator:
-		case OctoKeys::Jump:
-		case OctoKeys::GroundLeft:
-		case OctoKeys::GroundRight:
-			m_keyPressed = true;
-			break;
-		default:
-			break;
-	}
-	return true;
-}
-
-bool ChallengeManager::onInputReleased(InputListener::OctoKeys const & key)
-{
-	switch (key)
-	{
-		case OctoKeys::Entrance:
-		case OctoKeys::Capacity:
-		case OctoKeys::Elevator:
-		case OctoKeys::Jump:
-		case OctoKeys::GroundLeft:
-		case OctoKeys::GroundRight:
-			m_keyLock = false;
-			m_keyPressed = false;
-			break;
-		default:
-			break;
-	}
-	return true;
+	m_launchManualGlitch = isLaunch;
+	if (isLaunch == false)
+		m_lockManualGlitch = false;
+	return m_lockManualGlitch;
 }

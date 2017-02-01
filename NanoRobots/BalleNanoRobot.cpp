@@ -1,12 +1,14 @@
 #include "BalleNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <ResourceManager.hpp>
 #include <Application.hpp>
 
 BalleNanoRobot::BalleNanoRobot(sf::Vector2f const & position) :
 	NanoRobot(position, NANO_JUMP_OSS, 4, 654, sf::Vector2f(0.f, -24.f), InputListener::OctoKeys::Jump, 1.f),
-	m_throwPotionTimerMax(sf::seconds(0.6f))
+	m_isThrowPotion(false),
+	m_throwPotionTimerMax(sf::seconds(1.2f))
 {
 	setup(this);
 
@@ -31,20 +33,24 @@ BalleNanoRobot::BalleNanoRobot(sf::Vector2f const & position) :
 void BalleNanoRobot::update(sf::Time frametime)
 {
 	NanoRobot::update(frametime);
+	m_octoPosition = Progress::getInstance().getOctoPos();
 	updatePotion(frametime);
 }
 
 void BalleNanoRobot::updatePotion(sf::Time frametime)
 {
-	if (m_throwPotionTimer <= m_throwPotionTimerMax)
-		m_throwPotionTimer += frametime;
-	else if (m_throwPotionTimer > sf::Time::Zero)
-		m_throwPotionTimer -= frametime;
 	
-	if (m_throwPotionTimer > m_throwPotionTimerMax)
-		m_throwPotionTimer = m_throwPotionTimerMax;
-	else if (m_throwPotionTimer < sf::Time::Zero)
+	if (m_throwPotionTimer == m_throwPotionTimerMax)
+	{
 		m_throwPotionTimer = sf::Time::Zero;
+	}
+	else
+	{
+		if (m_throwPotionTimer <= m_throwPotionTimerMax && m_isThrowPotion)
+			m_throwPotionTimer = std::min(m_throwPotionTimer + frametime, m_throwPotionTimerMax);
+		else if (m_throwPotionTimer > sf::Time::Zero)
+			m_throwPotionTimer = std::max(m_throwPotionTimer - frametime, sf::Time::Zero);
+	}
 
 	float coef = m_throwPotionTimer / m_throwPotionTimerMax;
 
@@ -56,3 +62,19 @@ void BalleNanoRobot::updatePotion(sf::Time frametime)
 
 	m_potion.setPosition(octo::cosinusInterpolation(getPosition() + sf::Vector2f(-4.f, 50.f), m_octoPosition, coef));
 }
+
+bool BalleNanoRobot::throwPotion(bool isPotion)
+{
+	m_isThrowPotion = isPotion;
+	if (m_throwPotionTimer == m_throwPotionTimerMax)
+		return true;
+	return false;
+}
+
+void BalleNanoRobot::draw(sf::RenderTarget & render, sf::RenderStates states) const
+{
+	NanoRobot::draw(render, states);
+	if (m_throwPotionTimer != sf::Time::Zero)
+		m_potion.draw(render, states);
+}
+

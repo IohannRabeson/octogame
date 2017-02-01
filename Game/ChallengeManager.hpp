@@ -7,14 +7,13 @@
 # include "ResourceDefinitions.hpp"
 # include "RandomGenerator.hpp"
 # include "ABiome.hpp"
-# include "InputListener.hpp"
 
 namespace sf
 {
 	class Shader;
 }
 
-class ChallengeManager : public InputListener
+class ChallengeManager
 {
 public:
 	class AChallenge
@@ -78,26 +77,20 @@ public:
 
 	void reset(void);
 	void update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime);
+	bool launchManualGlitch(bool isLaunch);
 
 private:
 	static std::unique_ptr<ChallengeManager>		m_instance;
 	std::map<Effect, std::unique_ptr<AChallenge>>	m_challenges;
-	bool											m_keyEntrance;
-	bool											m_keyCapacity;
-	bool											m_keyElevator;
-	bool											m_keyJump;
-
-	bool											m_keyPressed;
-	bool											m_keyLock;
+	bool											m_launchManualGlitch;
+	bool											m_lockManualGlitch;
 
 	ChallengeManager(void);
 	void addEffect(ResourceKey key, Effect effect);
 
 	void updateNormal(ABiome & biome, sf::Vector2f const & position, sf::Time frametime);
 	void updateRandom(ABiome & biome, sf::Vector2f const & position, sf::Time frametime);
-	void updateAquarium(ABiome & biome, sf::Time frametime);
-	bool onInputPressed(InputListener::OctoKeys const & key);
-	bool onInputReleased(InputListener::OctoKeys const & key);
+	void updateManualGlitch(ABiome & biome, sf::Time frametime);
 };
 
 #endif
