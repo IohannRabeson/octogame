@@ -14,7 +14,6 @@ SteamAPI::SteamAPI(void) :
 	{
 		m_iAppID = SteamUtils()->GetAppID();
 		requestStats();
-		reset();
 	}
 }
 
