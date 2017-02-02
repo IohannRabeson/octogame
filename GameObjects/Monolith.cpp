@@ -433,7 +433,7 @@ void Monolith::update(sf::Time frameTime)
 		step->update(frameTime);
 		step->setStartEndTransition(m_transitionStartEndPosition);
 	}
-	for (std::size_t i = 0u; i < m_spriteMonolith.size() - 1u; i++)
+	for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
 	{
 		sf::Vector2f pos = octo::linearInterpolation(m_position[i], m_endPosition[i], m_transitionStartEndPosition) + sf::Vector2f(0.f, std::cos(m_offset) * 5.f);
 		m_spriteMonolith[i].setPosition(pos);

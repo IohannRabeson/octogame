@@ -194,7 +194,7 @@ RandomBiome::RandomBiome() :
 			std::size_t index = randomInt(10u, m_mapSize.x - 10u);
 			if (index > posMonolith - 75u && index < posMonolith + 100u)
 				index += 200u;
-			if (randomBool(0.08f) && *npc != GameObjectType::MysticanouilleNpc)
+			if (index > 5u && index < m_mapSize.x - 5u && randomBool(0.08f) && *npc != GameObjectType::MysticanouilleNpc)
 			{
 				m_gameObjects[index] = *npc;
 				if (randomBool(0.5f))
