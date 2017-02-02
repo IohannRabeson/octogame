@@ -1377,6 +1377,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 	sf::Vector2f const&			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 
 	m_collisionPortal = true;
+	m_portalCenterPos = portal.getPosition();
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
 		if (portal.getDestination() == m_level && m_level != Level::Rewards)
@@ -1392,7 +1393,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 			m_numberOfJump = 0u;
 			m_timeSlowFall = sf::Time::Zero;
 		}
-		else
+		else if (portal.getDestination() != Level::Rewards)
 		{
 			m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 			m_progress.setReverseSprite(m_originMove);
@@ -1400,7 +1401,6 @@ void	CharacterOcto::usePortal(Portal & portal)
 			if (!m_progress.isMenu())
 				m_progress.setRespawnType(Progress::RespawnType::Portal);
 		}
-		m_portalCenterPos = portal.getPosition();
 	}
 }
 

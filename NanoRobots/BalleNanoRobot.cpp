@@ -32,9 +32,16 @@ BalleNanoRobot::BalleNanoRobot(sf::Vector2f const & position) :
 
 void BalleNanoRobot::update(sf::Time frametime)
 {
-	NanoRobot::update(frametime);
-	m_octoPosition = Progress::getInstance().getOctoPos();
-	updatePotion(frametime);
+	Progress & progress = Progress::getInstance();
+
+	if (progress.isMonolithImploded())
+	{
+		NanoRobot::update(frametime);
+		m_octoPosition = Progress::getInstance().getOctoPos();
+		updatePotion(frametime);
+	}
+	else
+		setHardPosition(progress.getMonolithCenter());
 }
 
 void BalleNanoRobot::updatePotion(sf::Time frametime)
@@ -73,8 +80,13 @@ bool BalleNanoRobot::throwPotion(bool isPotion)
 
 void BalleNanoRobot::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	NanoRobot::draw(render, states);
-	if (m_throwPotionTimer != sf::Time::Zero)
-		m_potion.draw(render, states);
+	Progress & progress = Progress::getInstance();
+
+	if (progress.isMonolithImploded())
+	{
+		NanoRobot::draw(render, states);
+		if (m_throwPotionTimer != sf::Time::Zero)
+			m_potion.draw(render, states);
+	}
 }
 

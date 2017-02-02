@@ -288,6 +288,7 @@ void NanoRobot::setHardPosition(sf::Vector2f const & position)
 {
 	m_swarm.killAll();
 	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
+	m_swarm.getFirefly(0u).position = position;
 	m_swarm.setTarget(position);
 }
 

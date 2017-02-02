@@ -21,9 +21,14 @@ bool FinalPortal::zoom(void) const
 	return false;
 }
 
-void FinalPortal::forceActivate(void)
+void FinalPortal::forceActivate(bool active)
 {
-	m_forceActivate = true;
+	m_forceActivate = active;
+}
+
+float FinalPortal::getCoef(void)
+{
+	return m_timerActivate / m_timerActivateMax;
 }
 
 void FinalPortal::update(sf::Time frametime)
@@ -39,6 +44,16 @@ void FinalPortal::update(sf::Time frametime)
 			m_isActive = true;
 			m_timerActivate = m_timerActivateMax;
 			m_particles.setMaxParticle(m_maxParticle);
+		}
+	}
+	else
+	{
+		m_timerActivate -= frametime.asSeconds();
+		m_particles.setMaxParticle(m_timerActivate / m_timerActivateMax * static_cast<float>(m_maxParticle));
+		if (m_timerActivate <= 0.f)
+		{
+			m_isActive = false;
+			m_timerActivate = 0.f;
 		}
 	}
 

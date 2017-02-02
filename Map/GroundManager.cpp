@@ -625,6 +625,15 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					m_nanoRobotOnInstance.push_back(std::move(ptr));
 				}
 			}
+			else if (!spriteTrigger.name.compare(NANO_BALLE_OSS))
+			{
+				if (!Progress::getInstance().canUseBalle())
+				{
+					std::unique_ptr<NanoRobot> ptr;
+					ptr.reset(new BalleNanoRobot(position));
+					m_nanoRobotOnInstance.push_back(std::move(ptr));
+				}
+			}
 			else if (!spriteTrigger.name.compare(NANO_REPAIR_SHIP_OSS))
 			{
 				if (!Progress::getInstance().canRepairShip())

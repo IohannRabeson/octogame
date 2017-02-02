@@ -26,6 +26,7 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 	m_whiteFlashDuration(sf::seconds(1.5f)),
 	m_moveAtFinalPositionDuration(sf::seconds(4.0f)),
 	m_forceMapMoveDuration(sf::seconds(1.8f)),
+	m_implodeDuration(sf::seconds(3.f)),
 	m_used(0u),
 	m_state(Wait),
 	m_offset(0.f),
@@ -163,6 +164,24 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 	m_whiteForeground.setFillColor(sf::Color::White);
 	m_whiteForeground.setSize(sf::Vector2f(screen.width, screen.height));
 	m_whiteForeground.setOrigin(sf::Vector2f(screen.width, screen.height) / 2.f);
+
+	m_spriteBalleNanoRobot.setSpriteSheet(resources.getSpriteSheet(NANO_BALLE_OSS));
+
+	octo::SpriteAnimation::FrameList	framesBalleNano;
+	frames.emplace_back(sf::seconds(0.3f), 0u);
+	frames.emplace_back(sf::seconds(0.3f), 1u);
+	frames.emplace_back(sf::seconds(0.3f), 2u);
+	frames.emplace_back(sf::seconds(0.3f), 3u);
+
+	m_animationBalleNanoRobot.setFrames(frames);
+	m_animationBalleNanoRobot.setLoop(octo::LoopMode::Loop);
+
+	m_spriteBalleNanoRobot.setScale(scale);
+	m_spriteBalleNanoRobot.setAnimation(m_animationBalleNanoRobot);
+	m_spriteBalleNanoRobot.play();
+
+	m_spriteBalleNanoRobot.setPosition(m_center - m_spriteBalleNanoRobot.getLocalSize() / 2.f);
+	m_spriteBalleNanoRobot.setScale(sf::Vector2f(0.f, 0.f));
 }
 
 Monolith::~Monolith(void)
@@ -216,6 +235,7 @@ void Monolith::collideOctoEvent(CharacterOcto *)
 void Monolith::update(sf::Time frameTime)
 {
 	InstanceDecor::update(frameTime);
+	Progress & progress = Progress::getInstance();
 
 	m_offset += frameTime.asSeconds();
 	switch (m_state)
@@ -332,18 +352,77 @@ void Monolith::update(sf::Time frameTime)
 		case FinalExplosion:
 		{
 			m_timer += frameTime;
+			if (m_timer >= m_forceMapMoveDuration / 3.f)
+				m_portal->forceActivate(true);
 			m_transitionStartEndPosition = std::min(std::pow(m_timer / m_forceMapMoveDuration, 0.22f), 1.f);
 			if (m_timer > m_forceMapMoveDuration)
 			{
-				m_timer = sf::Time::Zero;
-				m_state = PortalAppear;
+				m_timer = m_implodeDuration;
+				m_state = Implode;
 				Progress::getInstance().setForceMapToMove(false);
 			}
 			break;
 		}
-		case PortalAppear:
+		case Implode:
 		{
-			m_portal->forceActivate();
+			m_timer -= frameTime;
+			if (m_timer <= m_implodeDuration / 3.f)
+			{
+				m_portal->forceActivate(false);
+				m_spriteBalleNanoRobot.setScale(sf::Vector2f(4.f, 4.f) * m_portal->getCoef());
+			}
+			else
+			{
+				m_spriteBalleNanoRobot.setScale(sf::Vector2f(4.f, 4.f) * ((m_implodeDuration - m_timer) / (m_implodeDuration / 3.f * 2.f)));
+			}
+			sf::Vector2f const offset = sf::Vector2f(0.f, 30.f) * frameTime.asSeconds();
+			m_transitionStartEndPosition = std::min(std::pow(m_timer / m_implodeDuration, 0.22f), 1.f);
+			for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)
+			{
+				m_position[i] += offset;
+				m_endPosition[i] += offset;
+			}
+			for (auto & step : m_steps)
+				step->addPosition(offset);
+			m_center += offset;
+
+			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
+			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
+			PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, true);
+			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("center", (m_center.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_center.y + screen.top) * zoomFactor);
+			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("radius", std::min(m_timer / m_implodeDuration, 1.f) * 2000.0f);
+
+			if (m_timer <= sf::Time::Zero)
+			{
+				progress.setMonolithImploded(true);
+				m_timer = sf::Time::Zero;
+				PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, false);
+				PostEffectLayer::getInstance().enableShader(COLOR_SATURATION_FRAG, false);
+				PostEffectLayer::getInstance().getShader(COLOR_SATURATION_FRAG).setParameter("value", 1.f);
+				m_state = WhiteFlash2;
+			}
+			break;
+		}
+		case WhiteFlash2:
+		{
+			sf::Vector2f scale = sf::Vector2f(4.f, 4.f) * m_portal->getCoef();
+			if (scale.x < 0.6f || scale.y < 0.6f)
+				scale = sf::Vector2f(0.6f, 0.6f);
+
+			if (m_portal->getCoef() == 0.f)
+			{
+				scale = sf::Vector2f(0.f, 0.f);
+				m_timer += frameTime;
+				m_whiteForeground.setPosition(octo::Application::getCamera().getCenter());
+				m_whiteForeground.setFillColor(sf::Color(255, 255, 255, 255 - (m_timer / m_whiteFlashDuration * 255)));
+				m_octo->enableCutscene(false, false);
+				if (m_timer >= m_whiteFlashDuration)
+				{
+					m_timer = sf::Time::Zero;
+					m_state = State::None;
+				}
+			}
+			m_spriteBalleNanoRobot.setScale(scale);
 			break;
 		}
 		default:
@@ -363,6 +442,9 @@ void Monolith::update(sf::Time frameTime)
 	m_portal->update(frameTime);
 	m_portal->setPosition(m_center + sf::Vector2f(-200.f, 245.f) + sf::Vector2f(std::sin(m_offset + 0.5f) * std::cos(m_offset) * 15.f, std::cos(m_offset) * 15.f));
 	Progress::getInstance().setCanOctoMoveMap(true);
+
+	m_spriteBalleNanoRobot.setPosition(m_center - (m_spriteBalleNanoRobot.getGlobalSize() / 2.f));
+	progress.setMonolithCenter(m_center);
 }
 
 void Monolith::draw(sf::RenderTarget& render, sf::RenderStates states) const
@@ -375,12 +457,13 @@ void Monolith::draw(sf::RenderTarget& render, sf::RenderStates states) const
 	for (auto & step : m_steps)
 		step->draw(render, states);
 	InstanceDecor::draw(render, states);
+	m_spriteBalleNanoRobot.draw(render, states);
 	render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 }
 
 void Monolith::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
-	if (m_state == WhiteFlash)
+	if (m_state == WhiteFlash || m_state == WhiteFlash2)
 		render.draw(m_whiteForeground, states);
 	m_portal->draw(render, states);
 }

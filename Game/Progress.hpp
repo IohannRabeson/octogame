@@ -175,6 +175,11 @@ public:
 	sf::Vector2f									getInterestPoint();
 	void											setActivatedMonolith(std::size_t count);
 	std::size_t										getActivatedMonolith(void) const;
+	bool											isMonolithImploded(void) { return m_data.monolithImploded; };
+	void											setMonolithImploded(bool imploded) { m_data.monolithImploded = imploded; };
+	sf::Vector2f const &							getMonolithCenter(void) { return m_centerMonolith; };
+	void											setMonolithCenter(sf::Vector2f const & center) { m_centerMonolith = center; };
+
 
 	void											setMapHighlight(bool isHighlight);
 	bool											isMapHighlight(void) const;
@@ -256,6 +261,7 @@ public:
 			respawnType(Progress::RespawnType::Portal),
 			checkpoints(0u),
 			activatedMonolith(0u),
+			monolithImploded(false),
 			levelOfDetails(0),
 			spaceShipRepair(false),
 			longIntro(false),
@@ -299,6 +305,7 @@ public:
 		Progress::RespawnType	respawnType;
 		std::size_t				checkpoints;
 		std::size_t				activatedMonolith;
+		bool					monolithImploded;
 		int						levelOfDetails;
 		bool					spaceShipRepair;
 		bool					longIntro;
@@ -359,6 +366,7 @@ private:
 	sf::Time										m_timerSteamUpdate;
 	bool											m_isEasyUnlocked;
 	bool											m_isResourceLoading;
+	sf::Vector2f									m_centerMonolith;
 };
 
 #endif
