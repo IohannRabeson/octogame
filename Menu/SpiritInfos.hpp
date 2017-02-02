@@ -23,6 +23,7 @@ private:
 	std::vector<std::unique_ptr<NanoRobot>>		m_spirits;
 	std::wstring								m_missingText;
 	RandomGenerator								m_generator;
+	sf::Vector2f								m_position;
 
 	std::wstring const & getText(std::string const & text);
 	sf::Vector2f getRandomVector2f(void);
