@@ -31,9 +31,10 @@ void SpiritInfos::setupSpirit(sf::Vector2f const & position)
 	m_position = sf::Vector2f(0.f, 400.f);
 	for (std::size_t i = 0; i < Progress::getInstance().getSpiritCount() + 1u; i++)
 	{
+		sf::Vector2f positionRandom = getRandomVector2f();
+
 		if (m_spirits.size() != Progress::getInstance().getSpiritCount() + 1u)
 		{
-			sf::Vector2f positionRandom = getRandomVector2f();
 			NanoRobot * spirit = new MenuNanoRobot(position + positionRandom);
 
 			spirit->setState(NanoRobot::State::FollowOcto);
@@ -43,7 +44,6 @@ void SpiritInfos::setupSpirit(sf::Vector2f const & position)
 		}
 		else
 		{
-			sf::Vector2f positionRandom = getRandomVector2f();
 			m_spirits[i]->setHardPosition(position + positionRandom);
 			m_spirits[i]->setPosition(position + positionRandom);
 		}
@@ -52,7 +52,7 @@ void SpiritInfos::setupSpirit(sf::Vector2f const & position)
 
 sf::Vector2f SpiritInfos::getRandomVector2f(void)
 {
-	float angle = 160.f / (Progress::getInstance().getSpiritCount() + 1u);
+	float angle = 359.f / (Progress::getInstance().getSpiritCount() + 1u);
 	octo::rotateVector(m_position, std::cos(angle), std::sin(angle));
 	return m_position;
 }

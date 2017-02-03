@@ -2287,7 +2287,7 @@ void GroundManager::updateGameObjects(sf::Time frametime)
 void GroundManager::update(float deltatime)
 {
 	static float accumulator = 0.f;
-	float dt = 1.f / (50.f + 10.f * Progress::getInstance().getLevelOfDetails());
+	float dt = 1.f / (60.f + 10.f * Progress::getInstance().getLevelOfDetails());
 
 	if (deltatime > 0.2f)
 		deltatime = 0.2f;

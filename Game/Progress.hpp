@@ -262,7 +262,7 @@ public:
 			checkpoints(0u),
 			activatedMonolith(0u),
 			monolithImploded(false),
-			levelOfDetails(0),
+			levelOfDetails(-1),
 			spaceShipRepair(false),
 			longIntro(false),
 			tryToEscape(false),
