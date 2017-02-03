@@ -204,8 +204,8 @@ public:
 	bool											getOctoDoubleJump(void) { return m_isDoubleJump; }
 	void											setInCloud(bool inCloud, std::size_t cloudId);
 	bool											isInCloud(void) const { return m_isInCloud; }
-	void											setEasyUnlocked(bool unlock) { m_isEasyUnlocked = unlock; };
-	bool											isEasyUnlocked(void) const { return m_isEasyUnlocked; }
+	void											setEasyUnlocked(bool unlock) { m_data.isEasyUnlocked = unlock; };
+	bool											isEasyUnlocked(void) const { return m_data.isEasyUnlocked; }
 
 	void											setBalleMultiplier(float multiplier);
 	float											getBalleMultiplier(void);
@@ -266,7 +266,8 @@ public:
 			spaceShipRepair(false),
 			longIntro(false),
 			tryToEscape(false),
-			doorFound(false)
+			doorFound(false),
+			isEasyUnlocked(false)
 		{}
 
 		float					timePlayed;
@@ -311,6 +312,7 @@ public:
 		bool					longIntro;
 		bool					tryToEscape;
 		bool					doorFound;
+		bool					isEasyUnlocked;
 	};
 
 private:
@@ -364,7 +366,6 @@ private:
 
 	float											m_balleMultiplier;
 	sf::Time										m_timerSteamUpdate;
-	bool											m_isEasyUnlocked;
 	bool											m_isResourceLoading;
 	sf::Vector2f									m_centerMonolith;
 };

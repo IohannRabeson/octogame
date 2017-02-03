@@ -34,7 +34,6 @@ Progress::Progress() :
 	m_canOctoMoveMap(true),
 	m_forceMapToMove(false),
 	m_balleMultiplier(5.f),
-	m_isEasyUnlocked(false),
 	m_isResourceLoading(false)
 {
 }
