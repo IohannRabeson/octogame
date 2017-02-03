@@ -1237,7 +1237,7 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 			}
 			//if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
 			//TODO  : Keep an eye on octo behavior when touching the ground
-			if (collisionDirection.y < 0.f && collisionDirection.x == 0.f)
+			if (collisionDirection.y < 0.f && collisionDirection.x == 0.f && (m_sprite.getCurrentEvent() != Events::StartJump || m_sprite.getCurrentEvent() != Events::DoubleJump))
 				m_collisionTile = true;
 			if (collisionDirection.y > 0.f)
 				m_collisionTileHead = true;
@@ -1584,11 +1584,6 @@ void	CharacterOcto::updateBox(sf::Time frameTime)
 	{
 		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
 		m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
-	}
-	else if (event == StartJump || event == DoubleJump || event == Fall)
-	{
-		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
-		m_adaptBoxDelta = 12.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
 	}
 	else if (m_adaptBoxDelta != 0.f)
 	{
