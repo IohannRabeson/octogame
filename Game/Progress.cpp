@@ -842,9 +842,7 @@ void Progress::setBalleMultiplier(float multiplier)
 
 float Progress::getBalleMultiplier(void)
 {
-	if (isGameFinished())
-		return m_balleMultiplier;
-	return 1.f;
+	return m_balleMultiplier;
 }
 
 std::size_t Progress::getProgression(void)

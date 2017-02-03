@@ -1585,7 +1585,7 @@ void	CharacterOcto::updateBox(sf::Time frameTime)
 		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
 		m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
 	}
-	else if (m_adaptBoxDelta != 0.f)
+	else if (m_adaptBoxDelta != 0.f && m_onGround)
 	{
 		isReset = true;
 		m_adaptBoxTimer = sf::Time::Zero;
