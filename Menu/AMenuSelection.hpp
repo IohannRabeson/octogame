@@ -35,6 +35,8 @@ public:
 	void				setIsFontSelect(bool isFontSelect);
 	void				setCursorAtEnd(void);
 
+	static sf::Vector2f							m_currentMenuPosition;
+
 private:
 	sf::Vector2f								m_deltaMenu;
 

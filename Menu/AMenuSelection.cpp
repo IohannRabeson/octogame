@@ -6,6 +6,8 @@
 #include <Application.hpp>
 #include <assert.h>
 
+sf::Vector2f AMenuSelection::m_currentMenuPosition = sf::Vector2f(0.f, 0.f);
+
 AMenuSelection::AMenuSelection(void) :
 	m_generator("random"),
 	m_type(ABubble::Type::Right),
@@ -90,6 +92,7 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 	if (getState() == AMenu::State::Active)
 	{
 		sf::Vector2f cursorPosition = octo::linearInterpolation(m_cursorPosition[m_indexLastCursor], m_cursorPosition[m_indexCursor], m_timerMoveCursor / m_timerMoveCursorMax);
+		m_currentMenuPosition = position - (m_deltaMenu / 2.f);
 
 		setKeyboard(true);
 		m_bubble.setActive(true);

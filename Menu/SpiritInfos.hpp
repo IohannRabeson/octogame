@@ -12,7 +12,7 @@ public:
 	SpiritInfos(void);
 	~SpiritInfos(void) = default;
 
-	void setup(void);
+	void setup();
 	void update(sf::Time frameTime, sf::Vector2f const & position);
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 

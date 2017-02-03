@@ -1393,7 +1393,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 			m_numberOfJump = 0u;
 			m_timeSlowFall = sf::Time::Zero;
 		}
-		else if (portal.getDestination() != Level::Rewards)
+		else if (portal.getDestination() != Level::None)
 		{
 			m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 			m_progress.setReverseSprite(m_originMove);

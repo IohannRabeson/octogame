@@ -217,6 +217,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/FakeMenu.cpp						\
 				Menu/BalleMultiplierMenu.cpp			\
 				Menu/DifficultyMenu.cpp					\
+				Menu/SpiritCheatMenu.cpp				\
 				Menu/EmptyMenu.cpp						\
 				Menu/SpiritInfos.cpp					\
 

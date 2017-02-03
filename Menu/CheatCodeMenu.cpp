@@ -5,6 +5,7 @@
 #include "Progress.hpp"
 #include "YesNoMenu.hpp"
 #include "SteamAPI.hpp"
+#include "SpiritCheatMenu.hpp"
 
 class YesNoResetSteam : public YesNoMenu
 {
@@ -31,6 +32,7 @@ void CheatCodeMenu::createMenus(void)
 	addMenu(L"Biomes", std::unique_ptr<LevelMenu>(new LevelMenu()));
 	addMenu(L"Octobots", std::unique_ptr<NanoMenu>(new NanoMenu()));
 	addMenu(L"Random", std::unique_ptr<RandomDiscoverMenu>(new RandomDiscoverMenu()));
+	addMenu(L"Spirit", std::unique_ptr<SpiritCheatMenu>(new SpiritCheatMenu()));
 	addMenu(L"Reset Steam", std::unique_ptr<YesNoResetSteam>(new YesNoResetSteam()));
 }
 
