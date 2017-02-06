@@ -293,10 +293,10 @@ void Portal::update(sf::Time frametime)
 			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
 			m_shader.setParameter("center", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
 		}
-		else if (progress.isGameFinished() && Progress::getInstance().getCurrentDestination() == Level::Portal)
+		else if (Progress::getInstance().getCurrentDestination() == Level::Portal)
 			PostEffectLayer::getInstance().enableShader(m_shaderName, false);
 	}
-	else if (progress.isGameFinished() && Progress::getInstance().getCurrentDestination() == Level::Portal)
+	else if (Progress::getInstance().getCurrentDestination() == Level::Portal)
 		PostEffectLayer::getInstance().enableShader(m_shaderName, false);
 
 	updateSound();

@@ -42,10 +42,10 @@ PortalBiome::PortalBiome() :
 	m_treeCount(40u, 40u),
 	m_mushroomCount(50u, 50u),
 	m_crystalCount(70u, 80u),
-	m_starCount(500u, 800u),
+	m_starCount(300u, 500u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
-	m_rainbowCount(30u, 30u),
+	m_rainbowCount(20u, 20u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
