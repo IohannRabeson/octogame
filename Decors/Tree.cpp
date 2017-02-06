@@ -207,7 +207,8 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	octo::rotateVector(upTriangle, cosRight, sinRight);
 	builder.createTriangle(root.rightUp + center, root.leftUp + center, upTriangle + center + root.rightUp, color);
 
-	if (currentDepth == 0u && !m_onInstance)
+	(void)m_onInstance;
+	if (currentDepth == 0u)
 		createTrunk(size, center, m_color, builder);
 }
 

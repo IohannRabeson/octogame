@@ -52,7 +52,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 
 	m_texture = &resources.getTexture(GRADIENT_PNG);
 
-	m_box->setRadius(150.f);
+	m_box->setRadius(250.f);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
 	m_box->setApplyGravity(false);
