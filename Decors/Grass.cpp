@@ -9,7 +9,7 @@
 Grass::Grass(bool onInstance, bool reverse) :
 	m_reverse(reverse),
 	m_isDeadlyGrass(false),
-	m_animator(0.2f, 0.f, 1.f, 0.3f, 1.f),
+	m_animator(0.2f, 0.1f, 1.f, 0.3f, 1.f),
 	m_animation(0.f),
 	m_animationSpeed(1.f),
 	m_movementTimerMax(sf::seconds(0.5f)),
@@ -22,6 +22,19 @@ Grass::Grass(bool onInstance, bool reverse) :
 	m_firstFrame(true),
 	m_octDeathCoef(1.f)
 {
+}
+
+bool Grass::dieOutOfScreen(void)
+{
+	DecorAnimator::State const & state = m_animator.getState();
+	if (state != DecorAnimator::State::Dead)
+		m_animator.die();
+	else
+	{
+		m_animator.setup(sf::seconds(1000000.f));
+		return true;
+	}
+	return false;
 }
 
 void Grass::createGrass(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)
@@ -66,11 +79,7 @@ void Grass::setup(ABiome& biome)
 	if (m_onInstance)
 		m_isDeadlyGrass = biome.isDeadlyGrass();
 
-	if (!m_isDeadlyGrass)
-		m_animator.setup(biome.getMushroomLifeTime());
-	else
-		//TODO: Find a better way to do that
-		m_animator.setup();
+	m_animator.setup(sf::seconds(1000000.f));
 
 	m_leftTargets.resize(m_numberOfTargets);
 	m_rightTargets.resize(m_numberOfTargets);

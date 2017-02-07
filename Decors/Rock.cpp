@@ -8,10 +8,22 @@
 
 Rock::Rock() :
 	m_partCount(1u),
-	m_animator(1.f, 0.f, 3.f, 0.1f, 6.f),
+	m_animator(1.f, 1.f, 3.f, 0.1f, 6.f),
 	m_animation(1.f),
 	m_sound(true)
 {
+}
+
+bool Rock::dieOutOfScreen(void)
+{
+	if (m_animator.getState() != DecorAnimator::State::Dead)
+		m_animator.die();
+	else
+	{
+		m_animator.setup(sf::seconds(100000.f));
+		return true;
+	}
+	return false;
 }
 
 void Rock::createOctogon(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float const & sizeLeft, float const & sizeRight, float const & sizeRec, sf::Vector2f const & rockOrigin, octo::VertexBuilder& builder)
@@ -136,7 +148,7 @@ void Rock::setup(ABiome& biome)
 		}
 		i++;
 	}
-	m_animator.setup();
+	m_animator.setup(sf::seconds(100000.f));
 	m_sound = true;
 }
 

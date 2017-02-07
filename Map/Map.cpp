@@ -162,7 +162,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 
 void Map::computeDecor(void)
 {
-	static std::size_t borderLimit = 50u;
+	static std::size_t borderLimit = 20u;
 	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
 	int height;
 	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);

@@ -18,6 +18,8 @@ public:
 							octo::VertexBuilder& builder,
 							ABiome& biome);
 
+	virtual bool dieOutOfScreen(void);
+
 private:
 	struct CrystalValue
 	{

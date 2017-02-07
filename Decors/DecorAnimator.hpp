@@ -28,16 +28,16 @@ enum class State
 	DecorAnimator(float growTime = 2.f, float dieTime = 4.f, float beatTime = 3.f, float delta = 0.15f, float start = 4.f);
 	virtual ~DecorAnimator(void) = default;
 
-	void					pause(void);
-	void					play(void);
-	void					sleep(void);
-	void					die(void);
-	void					setup(sf::Time lifeTime = sf::seconds(1.f));
-	void					setBeatMouvement(float delta);
-	void					update(sf::Time frameTime);
-	float					getAnimation(void) const;
-	float					getAnimationTime(void) const;
-	DecorAnimator::State	getState(void) const;
+	void							pause(void);
+	void							play(void);
+	void							sleep(void);
+	void							die(void);
+	void							setup(sf::Time lifeTime = sf::seconds(1.f));
+	void							setBeatMouvement(float delta);
+	void							update(sf::Time frameTime);
+	float							getAnimation(void) const;
+	float							getAnimationTime(void) const;
+	DecorAnimator::State const &	getState(void) const;
 
 private:
 	static RandomGenerator	m_generator;

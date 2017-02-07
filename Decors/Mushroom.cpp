@@ -17,6 +17,15 @@ Mushroom::Mushroom(void) :
 {
 }
 
+bool Mushroom::dieOutOfScreen(void)
+{
+	if (m_animator.getState() != DecorAnimator::State::Dead)
+		m_animator.die();
+	else
+		return true;
+	return false;
+}
+
 void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float bouncingValue, octo::VertexBuilder& builder)
 {
 	float unit = size.x / 6.f;

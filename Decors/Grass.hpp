@@ -17,6 +17,8 @@ public:
 						octo::VertexBuilder& builder,
 						ABiome& biome);
 
+	virtual bool dieOutOfScreen(void);
+
 private:
 	bool						m_reverse;
 	sf::Vector2f				m_size;

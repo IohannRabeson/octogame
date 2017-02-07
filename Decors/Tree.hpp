@@ -2,6 +2,7 @@
 # define TREE_HPP
 
 # include "ADecor.hpp"
+# include "ABiome.hpp"
 # include "DecorAnimator.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
@@ -16,6 +17,8 @@ public:
 	virtual void update(sf::Time frameTime,
 						octo::VertexBuilder& builder,
 						ABiome& biome);
+
+	virtual bool dieOutOfScreen(void);
 
 private:
 	struct QuadValue
@@ -60,6 +63,7 @@ private:
 
 	bool						m_sound;
 	bool						m_onInstance;
+	Level						m_biomeId;
 
 	void computeQuad(sf::Vector2f const & size,
 					sf::Vector2f const & center,

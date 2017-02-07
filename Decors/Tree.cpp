@@ -1,5 +1,4 @@
 #include "Tree.hpp"
-#include "ABiome.hpp"
 #include "Progress.hpp"
 #include <Math.hpp>
 #include <Application.hpp>
@@ -25,6 +24,15 @@ Tree::Tree(bool onInstance) :
 	m_sound(true),
 	m_onInstance(onInstance)
 {
+}
+
+bool Tree::dieOutOfScreen(void)
+{
+	if (m_animator.getState() != DecorAnimator::State::Dead)
+		m_animator.die();
+	else
+		return true;
+	return false;
 }
 
 void Tree::computeQuad(sf::Vector2f const & size, sf::Vector2f const & center, float cosAngle, float sinAngle, QuadValue & quad)
@@ -208,7 +216,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	builder.createTriangle(root.rightUp + center, root.leftUp + center, upTriangle + center + root.rightUp, color);
 
 	(void)m_onInstance;
-	if (currentDepth == 0u)
+	if (currentDepth == 0u && m_biomeId != Level::Labo)
 		createTrunk(size, center, m_color, builder);
 }
 
@@ -225,6 +233,7 @@ void Tree::setup(ABiome& biome)
 	m_leafSize.resize(m_leafMaxCount);
 	m_mapSizeY = biome.getMapSizeFloat().y;
 	m_animator.setBeatMouvement(biome.getTreeBeatMouvement());
+	m_biomeId = biome.getId();
 
 	newTree(biome);
 }
