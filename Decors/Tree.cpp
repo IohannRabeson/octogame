@@ -114,16 +114,6 @@ void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, fl
 
 void Tree::createTrunk(sf::Vector2f const & size, sf::Vector2f const & center, sf::Color const & color, octo::VertexBuilder & builder)
 {
-	/*
-	sf::Vector2f upLeft(center.x - size.x / 2.f, center.y - size.y / 2.f);
-	sf::Vector2f upRight(center.x + size.x / 2.f, center.y - size.y / 2.f);
-	sf::Vector2f downLeft(upLeft.x, upLeft.y + size.x * 4.f);
-	sf::Vector2f downRight(upRight.x, upRight.y + size.x * 4.f);
-	sf::Vector2f downMid(center.x, downRight.y + size.x);
-
-	builder.createQuad(upLeft, upRight, downRight, downLeft, color);
-	builder.createTriangle(downLeft, downRight, downMid, color);
-	*/
 	sf::Vector2f upLeft(center.x - size.x / 2.f, center.y + size.y / 2.f);
 	sf::Vector2f upRight(center.x + size.x / 2.f, center.y + size.y / 2.f);
 	sf::Vector2f downMid(center.x, upRight.y + size.x / 2.f);
