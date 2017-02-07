@@ -25,6 +25,7 @@
 #include "Sky.hpp"
 #include "SunLight.hpp"
 #include "Grass.hpp"
+#include "Progress.hpp"
 
 #include <cassert>
 
@@ -103,17 +104,22 @@ void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 	{
 		position = element->getPosition();
 
-		if ((position.x >= leftLimitXbis && position.x <= rightLimitXbis) &&
+		if (!element->isDisabledIfOutOfScreen())
+		{
+			element->update(frameTime, m_builder, *m_biome);
+		}
+		else if ((position.x >= leftLimitXbis && position.x <= rightLimitXbis) &&
 			(position.y >= upLimitYbis && position.y <= downLimitYbis))
 		{
-			if (!element->isDisabledIfOutOfScreen() ||
-				((position.x >= leftLimitX && position.x <= rightLimitX) &&
-				(position.y >= upLimitY && position.y <= downLimitY)))
+			if ((position.x >= leftLimitX && position.x <= rightLimitX) &&
+				(position.y >= upLimitY && position.y <= downLimitY))
 			{
 				element->update(frameTime, m_builder, *m_biome);
 			}
 			else if (!element->dieOutOfScreen())
+			{
 				element->update(frameTime, m_builder, *m_biome);
+			}
 		}
 	}
 	m_used = m_builder.getUsed();

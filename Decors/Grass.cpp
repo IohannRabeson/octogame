@@ -9,7 +9,7 @@
 Grass::Grass(bool onInstance, bool reverse) :
 	m_reverse(reverse),
 	m_isDeadlyGrass(false),
-	m_animator(0.2f, 0.1f, 1.f, 0.3f, 1.f),
+	m_animator(0.2f, 0.1f, 1.f, 0.3f, 0.2f),
 	m_animation(0.f),
 	m_animationSpeed(1.f),
 	m_movementTimerMax(sf::seconds(0.5f)),

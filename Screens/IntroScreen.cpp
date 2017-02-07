@@ -211,6 +211,11 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 				}
 				*/
 			}
+			else
+			{
+				m_speed.y = 200.f + (250.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
+				m_speed.x = 2100.f - (1000.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
+			}
 
 			if (Progress::getInstance().isInCloud())
 			{
