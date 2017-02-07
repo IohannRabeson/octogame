@@ -169,6 +169,9 @@ IceABiome::IceABiome() :
 	m_gameObjects[490] = GameObjectType::BirdBlueNpc;
 
 	m_treePos = {156, 300, 306, 309, 320, 329, 340, 354, 359, 375, 450, 459, 463, 469, 485, 501, 510, 523, 550};
+
+	if (!progress.isIntro())
+		m_canCreateSnow = false;
 }
 
 void			IceABiome::setup(std::size_t seed)

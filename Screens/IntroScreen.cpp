@@ -191,9 +191,9 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 			if (positionSpaceShip.y >= m_cloudMinY + 1000.f && positionSpaceShip.y < m_cloudMaxY)
 			{
 				if (m_keyUp)
-					m_speed.y = -300.f + (250.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
+					m_speed.y = -400.f + (350.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
 				if (m_keyDown)
-					m_speed.y = 350.f;
+					m_speed.y = 550.f;
 				if (!m_keyUp && !m_keyDown)
 					m_speed.y = 200.f + (250.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
 				if (m_keyRight)
