@@ -32,6 +32,12 @@ public:
 		Hard
 	};
 
+	enum class Keyboard : std::size_t
+	{
+		Qwerty,
+		Azerty
+	};
+
 	enum class MenuType : std::size_t
 	{
 		Classic,
@@ -71,6 +77,9 @@ public:
 
 	void											setDifficulty(Difficulty difficulty);
 	Progress::Difficulty							getDifficulty(void) const;
+
+	void											setKeyboard(Keyboard keyboard);
+	Progress::Keyboard								getKeyboard(void) const;
 
 	void											addNanoRobot();
 	void											removeNanoRobot() { m_data.nanoRobotCount--; }
@@ -223,12 +232,12 @@ public:
 	struct data
 	{
 		data() :
-			data(0u, 0u, Level::IceA, 30u, 100u, 100u, true, true, Language::fr, Difficulty::Normal)
+			data(0u, 0u, Level::IceA, 30u, 100u, 100u, true, true, Language::en, Difficulty::Normal, Keyboard::Qwerty)
 		{}
 
 		data(std::size_t nanoRobot, std::size_t spirit, Level biome,
 				std::size_t musicVol, std::size_t soundVol, std::size_t globalVol,
-				bool fullscreen, bool vsync, Language language, Difficulty difficulty) :
+				bool fullscreen, bool vsync, Language language, Difficulty difficulty, Keyboard keyboard) :
 			timePlayed(0.f),
 			launchCount(0u),
 			isGameFinished(false),
@@ -251,6 +260,7 @@ public:
 			vsync(vsync),
 			language(language),
 			difficulty(difficulty),
+			keyboard(keyboard),
 			menuType(MenuType::Classic),
 			firstTime(true),
 			firstTimeInIceA(true),
@@ -293,6 +303,7 @@ public:
 		bool					vsync;
 		Language				language;
 		Difficulty				difficulty;
+		Keyboard				keyboard;
 		MenuType				menuType;
 		bool					firstTime;
 		bool					firstTimeInIceA;

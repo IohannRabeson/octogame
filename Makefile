@@ -200,6 +200,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
 				Menu/LanguageMenu.cpp					\
+				Menu/KeyboardMenu.cpp					\
 				Menu/MenuTypeMenu.cpp					\
 				Menu/SoundVolumeMenu.cpp				\
 				Menu/MusicVolumeMenu.cpp				\

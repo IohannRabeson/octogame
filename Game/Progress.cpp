@@ -218,6 +218,8 @@ void	Progress::reset()
 	float globalVolume = m_data.globalVol;
 	float musicVolume = m_data.musicVol;
 	float soundVolume = m_data.soundVol;
+	Keyboard keyboard = m_data.keyboard;
+	Language language = m_data.language;
 
 	m_changeLevel = false;
 	m_reverseSprite = false;
@@ -229,6 +231,8 @@ void	Progress::reset()
 	m_data.globalVol = globalVolume;
 	m_data.musicVol = musicVolume;
 	m_data.soundVol = soundVolume;
+	m_data.keyboard = keyboard;
+	m_data.language = language;
 	save();
 }
 
@@ -250,6 +254,16 @@ void	Progress::setDifficulty(Difficulty difficulty)
 Progress::Difficulty Progress::getDifficulty(void) const
 {
 	return m_data.difficulty;
+}
+
+void	Progress::setKeyboard(Keyboard keyboard)
+{
+	m_data.keyboard = keyboard;
+}
+
+Progress::Keyboard Progress::getKeyboard(void) const
+{
+	return m_data.keyboard;
 }
 
 ResourceKey Progress::getTextFile(void) const

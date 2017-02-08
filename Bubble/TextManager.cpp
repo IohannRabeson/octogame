@@ -63,6 +63,11 @@ std::vector<std::wstring> const & TextManager::getTexts(std::string const & key)
 		if (!(m_texts.find("joystick_" + key) == m_texts.end()))
 			return (m_texts["joystick_" + key]);
 	}
+	else if (Progress::getInstance().getKeyboard() == Progress::Keyboard::Azerty)
+	{
+		if (!(m_texts.find("azerty_" + key) == m_texts.end()))
+			return (m_texts["azerty_" + key]);
+	}
 	return m_texts[key];
 }
 
@@ -72,10 +77,15 @@ std::vector<std::wstring> TextManager::getTextsNpc(ResourceKey const & key)
 	std::vector<std::wstring> texts;
 
 	texts = m_texts[key];
-	if (Progress::getInstance().isJoystick())
+	if (progress.isJoystick())
 	{
 		if (!(m_texts.find("joystick_" + static_cast<std::string>(key)) == m_texts.end()))
 			texts = m_texts["joystick_" + static_cast<std::string>(key)];
+	}
+	else if (progress.getKeyboard() == Progress::Keyboard::Azerty)
+	{
+		if (!(m_texts.find("azerty_" + static_cast<std::string>(key)) == m_texts.end()))
+			texts = m_texts["azerty_" + static_cast<std::string>(key)];
 	}
 	if (progress.getLastDestination() == Level::Portal && progress.getLastDestination() == Level::Random && !progress.isMenu() && m_texts[key].size())
 	{

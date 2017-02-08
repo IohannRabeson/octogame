@@ -1,4 +1,4 @@
-#include "LanguageMenu.hpp"
+#include "KeyboardMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "EmptyMenu.hpp"
 #include "Progress.hpp"
@@ -7,22 +7,22 @@
 #include <Application.hpp>
 #include <AudioManager.hpp>
 
-LanguageMenu::LanguageMenu(void)
+KeyboardMenu::KeyboardMenu(void)
 {
 }
 
-void LanguageMenu::createMenus(void)
+void KeyboardMenu::createMenus(void)
 {
-	addMenu(AMenu::getText("options_language_french"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-	addMenu(AMenu::getText("options_language_english"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"qwerty", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+	addMenu(L"azerty", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
-	setIndexCursor(static_cast<std::size_t>(Progress::getInstance().getLanguage()));
+	setIndexCursor(static_cast<std::size_t>(Progress::getInstance().getKeyboard()));
 }
 
-void LanguageMenu::onSelection(void)
+void KeyboardMenu::onSelection(void)
 {
 	Progress & progress = Progress::getInstance();
-	progress.setLanguage(static_cast<Progress::Language>(getIndexCursor()));
+	progress.setKeyboard(static_cast<Progress::Keyboard>(getIndexCursor()));
 	progress.save();
 	TextManager::getInstance().loadTexts();
 

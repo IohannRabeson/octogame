@@ -2,6 +2,7 @@
 #include <GraphicsManager.hpp>
 #include <cassert>
 #include "InputListener.hpp"
+#include "Progress.hpp"
 
 InputListener::InputListener(void) :
 	m_isListeners(false),
@@ -87,124 +88,253 @@ void	InputListener::removeInputListener(void)
 
 bool	InputListener::onPressed(sf::Event::KeyEvent const& event)
 {
-	switch (event.code)
+	if (Progress::getInstance().getKeyboard() == Progress::Keyboard::Qwerty)
 	{
-		case sf::Keyboard::Left:
-			if (m_isShiftPressed)
-				onInputPressed(OctoKeys::ViewLeft);
-			else
-				onInputPressed(OctoKeys::Left);
-			break;
-		case sf::Keyboard::Right:
-			if (m_isShiftPressed)
-				onInputPressed(OctoKeys::ViewRight);
-			else
-				onInputPressed(OctoKeys::Right);
-			break;
-		case sf::Keyboard::Space:
-			onInputPressed(OctoKeys::Jump);
-			break;
-		case sf::Keyboard::Up:
-			if (m_isShiftPressed)
-				onInputPressed(OctoKeys::ViewUp);
-			else
-			{
-				onInputPressed(OctoKeys::Up);
-				onInputPressed(OctoKeys::Capacity);
-			}
-			break;
-		case sf::Keyboard::Down:
-			if (m_isShiftPressed)
-				onInputPressed(OctoKeys::ViewDown);
-			else
-				onInputPressed(OctoKeys::Down);
-			break;
-		case sf::Keyboard::W:
-			onInputPressed(OctoKeys::Elevator);
-			break;
-		case sf::Keyboard::A:
-			onInputPressed(OctoKeys::GroundRight);
-			break;
-		case sf::Keyboard::D:
-			onInputPressed(OctoKeys::GroundLeft);
-			break;
-		case sf::Keyboard::Return:
-			onInputPressed(OctoKeys::SelectMenu);
-			break;
-		case sf::Keyboard::Escape:
-			onInputPressed(OctoKeys::Menu);
-			break;
-		case sf::Keyboard::S:
-			onInputPressed(OctoKeys::Entrance);
-			break;
-		case sf::Keyboard::R:
-			onInputPressed(OctoKeys::Zoom);
-			break;
-		case sf::Keyboard::E:
-			onInputPressed(OctoKeys::Balle);
-			break;
-		case sf::Keyboard::LShift:
-			m_isShiftPressed = true;
-			break;
-		default:
-			break;
+		switch (event.code)
+		{
+			case sf::Keyboard::Left:
+				if (m_isShiftPressed)
+					onInputPressed(OctoKeys::ViewLeft);
+				else
+					onInputPressed(OctoKeys::Left);
+				break;
+			case sf::Keyboard::Right:
+				if (m_isShiftPressed)
+					onInputPressed(OctoKeys::ViewRight);
+				else
+					onInputPressed(OctoKeys::Right);
+				break;
+			case sf::Keyboard::Space:
+				onInputPressed(OctoKeys::Jump);
+				break;
+			case sf::Keyboard::Up:
+				if (m_isShiftPressed)
+					onInputPressed(OctoKeys::ViewUp);
+				else
+				{
+					onInputPressed(OctoKeys::Up);
+					onInputPressed(OctoKeys::Capacity);
+				}
+				break;
+			case sf::Keyboard::Down:
+				if (m_isShiftPressed)
+					onInputPressed(OctoKeys::ViewDown);
+				else
+					onInputPressed(OctoKeys::Down);
+				break;
+			case sf::Keyboard::W:
+				onInputPressed(OctoKeys::Elevator);
+				break;
+			case sf::Keyboard::A:
+				onInputPressed(OctoKeys::GroundRight);
+				break;
+			case sf::Keyboard::D:
+				onInputPressed(OctoKeys::GroundLeft);
+				break;
+			case sf::Keyboard::Return:
+				onInputPressed(OctoKeys::SelectMenu);
+				break;
+			case sf::Keyboard::Escape:
+				onInputPressed(OctoKeys::Menu);
+				break;
+			case sf::Keyboard::S:
+				onInputPressed(OctoKeys::Entrance);
+				break;
+			case sf::Keyboard::R:
+				onInputPressed(OctoKeys::Zoom);
+				break;
+			case sf::Keyboard::E:
+				onInputPressed(OctoKeys::Balle);
+				break;
+			case sf::Keyboard::LShift:
+				m_isShiftPressed = true;
+				break;
+			default:
+				break;
+		}
+	}
+	else
+	{
+		switch (event.code)
+		{
+			case sf::Keyboard::Left:
+				if (m_isShiftPressed)
+					onInputPressed(OctoKeys::ViewLeft);
+				else
+					onInputPressed(OctoKeys::Left);
+				break;
+			case sf::Keyboard::Right:
+				if (m_isShiftPressed)
+					onInputPressed(OctoKeys::ViewRight);
+				else
+					onInputPressed(OctoKeys::Right);
+				break;
+			case sf::Keyboard::Space:
+				onInputPressed(OctoKeys::Jump);
+				break;
+			case sf::Keyboard::Up:
+				if (m_isShiftPressed)
+					onInputPressed(OctoKeys::ViewUp);
+				else
+				{
+					onInputPressed(OctoKeys::Up);
+					onInputPressed(OctoKeys::Capacity);
+				}
+				break;
+			case sf::Keyboard::Down:
+				if (m_isShiftPressed)
+					onInputPressed(OctoKeys::ViewDown);
+				else
+					onInputPressed(OctoKeys::Down);
+				break;
+			case sf::Keyboard::Z:
+				onInputPressed(OctoKeys::Elevator);
+				break;
+			case sf::Keyboard::Q:
+				onInputPressed(OctoKeys::GroundRight);
+				break;
+			case sf::Keyboard::D:
+				onInputPressed(OctoKeys::GroundLeft);
+				break;
+			case sf::Keyboard::Return:
+				onInputPressed(OctoKeys::SelectMenu);
+				break;
+			case sf::Keyboard::Escape:
+				onInputPressed(OctoKeys::Menu);
+				break;
+			case sf::Keyboard::S:
+				onInputPressed(OctoKeys::Entrance);
+				break;
+			case sf::Keyboard::R:
+				onInputPressed(OctoKeys::Zoom);
+				break;
+			case sf::Keyboard::E:
+				onInputPressed(OctoKeys::Balle);
+				break;
+			case sf::Keyboard::LShift:
+				m_isShiftPressed = true;
+				break;
+			default:
+				break;
+		}
+
 	}
 	return true;
 }
 
 bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 {
-	switch (event.code)
+
+	if (Progress::getInstance().getKeyboard() == Progress::Keyboard::Qwerty)
 	{
-		case sf::Keyboard::Left:
-			onInputReleased(OctoKeys::Left);
-			break;
-		case sf::Keyboard::Right:
-			onInputReleased(OctoKeys::Right);
-			break;
-		case sf::Keyboard::Space:
-			onInputReleased(OctoKeys::Jump);
-			break;
-		case sf::Keyboard::Up:
-			onInputReleased(OctoKeys::Up);
-			onInputReleased(OctoKeys::Capacity);
-			break;
-		case sf::Keyboard::Down:
-			onInputReleased(OctoKeys::Down);
-			break;
-		case sf::Keyboard::W:
-			onInputReleased(OctoKeys::Elevator);
-			break;
-		case sf::Keyboard::A:
-			onInputReleased(OctoKeys::GroundRight);
-			break;
-		case sf::Keyboard::D:
-			onInputReleased(OctoKeys::GroundLeft);
-			break;
-		case sf::Keyboard::Return:
-			onInputReleased(OctoKeys::SelectMenu);
-			break;
-		case sf::Keyboard::Escape:
-			onInputReleased(OctoKeys::Menu);
-			break;
-		case sf::Keyboard::S:
-			onInputReleased(OctoKeys::Entrance);
-			break;
-		case sf::Keyboard::R:
-			onInputReleased(OctoKeys::Zoom);
-			break;
-		case sf::Keyboard::E:
-			onInputReleased(OctoKeys::Balle);
-			break;
-		case sf::Keyboard::LShift:
-			onInputReleased(OctoKeys::ViewLeft);
-			onInputReleased(OctoKeys::ViewRight);
-			onInputReleased(OctoKeys::ViewUp);
-			onInputReleased(OctoKeys::ViewDown);
-			m_isShiftPressed = false;
-			break;
-		default:
-			break;
+		switch (event.code)
+		{
+			case sf::Keyboard::Left:
+				onInputReleased(OctoKeys::Left);
+				break;
+			case sf::Keyboard::Right:
+				onInputReleased(OctoKeys::Right);
+				break;
+			case sf::Keyboard::Space:
+				onInputReleased(OctoKeys::Jump);
+				break;
+			case sf::Keyboard::Up:
+				onInputReleased(OctoKeys::Up);
+				onInputReleased(OctoKeys::Capacity);
+				break;
+			case sf::Keyboard::Down:
+				onInputReleased(OctoKeys::Down);
+				break;
+			case sf::Keyboard::W:
+				onInputReleased(OctoKeys::Elevator);
+				break;
+			case sf::Keyboard::A:
+				onInputReleased(OctoKeys::GroundRight);
+				break;
+			case sf::Keyboard::D:
+				onInputReleased(OctoKeys::GroundLeft);
+				break;
+			case sf::Keyboard::Return:
+				onInputReleased(OctoKeys::SelectMenu);
+				break;
+			case sf::Keyboard::Escape:
+				onInputReleased(OctoKeys::Menu);
+				break;
+			case sf::Keyboard::S:
+				onInputReleased(OctoKeys::Entrance);
+				break;
+			case sf::Keyboard::R:
+				onInputReleased(OctoKeys::Zoom);
+				break;
+			case sf::Keyboard::E:
+				onInputReleased(OctoKeys::Balle);
+				break;
+			case sf::Keyboard::LShift:
+				onInputReleased(OctoKeys::ViewLeft);
+				onInputReleased(OctoKeys::ViewRight);
+				onInputReleased(OctoKeys::ViewUp);
+				onInputReleased(OctoKeys::ViewDown);
+				m_isShiftPressed = false;
+				break;
+			default:
+				break;
+		}
+	}
+	else
+	{
+		switch (event.code)
+		{
+			case sf::Keyboard::Left:
+				onInputReleased(OctoKeys::Left);
+				break;
+			case sf::Keyboard::Right:
+				onInputReleased(OctoKeys::Right);
+				break;
+			case sf::Keyboard::Space:
+				onInputReleased(OctoKeys::Jump);
+				break;
+			case sf::Keyboard::Up:
+				onInputReleased(OctoKeys::Up);
+				onInputReleased(OctoKeys::Capacity);
+				break;
+			case sf::Keyboard::Down:
+				onInputReleased(OctoKeys::Down);
+				break;
+			case sf::Keyboard::Z:
+				onInputReleased(OctoKeys::Elevator);
+				break;
+			case sf::Keyboard::Q:
+				onInputReleased(OctoKeys::GroundRight);
+				break;
+			case sf::Keyboard::D:
+				onInputReleased(OctoKeys::GroundLeft);
+				break;
+			case sf::Keyboard::Return:
+				onInputReleased(OctoKeys::SelectMenu);
+				break;
+			case sf::Keyboard::Escape:
+				onInputReleased(OctoKeys::Menu);
+				break;
+			case sf::Keyboard::S:
+				onInputReleased(OctoKeys::Entrance);
+				break;
+			case sf::Keyboard::R:
+				onInputReleased(OctoKeys::Zoom);
+				break;
+			case sf::Keyboard::E:
+				onInputReleased(OctoKeys::Balle);
+				break;
+			case sf::Keyboard::LShift:
+				onInputReleased(OctoKeys::ViewLeft);
+				onInputReleased(OctoKeys::ViewRight);
+				onInputReleased(OctoKeys::ViewUp);
+				onInputReleased(OctoKeys::ViewDown);
+				m_isShiftPressed = false;
+				break;
+			default:
+				break;
+		}
+
 	}
 	return true;
 }
