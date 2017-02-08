@@ -265,17 +265,17 @@ Map::MapSurfaceGenerator DesertDBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = { 0.f, 20.f, 25.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f, 210.f, 215.f, 400.f, 600.f  , 750.f};
-		std::vector<float> pointY = { n  , n   , n - 0.8f, n - 0.8f, n   , n    , n - 1.0f, n - 1.0f, n    , n    , n - 1.2f, n - 1.2f, n    , n    , -1.3f, -1.3f, n    , n    , n + 4.f, n};
-		for (std::size_t i = 0u; i < pointX.size(); i++)
-			pointX[i] /= floatMapSize;
+		m_pointX = { 0.f, 20.f, 25.f    , 90.f    , 95.f, 115.f, 120.f   , 135.f   , 140.f, 160.f, 165.f   , 175.f   , 185.f, 200.f, 205.f, 210.f, 215.f, 400.f, 600.f  , 750.f};
+		m_pointY = { n  , n   , n - 0.8f, n - 0.8f, n   , n    , n - 1.0f, n - 1.0f, n    , n    , n - 1.2f, n - 1.2f, n    , n    , -1.3f, -1.3f, n    , n    , n + 4.f, n};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			if (x >= pointX[i] && x < pointX[i + 1])
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
 			{
-				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 			}
 		}
 		return n;

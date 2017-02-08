@@ -160,6 +160,8 @@ public:
 private:
 	static std::size_t									m_seedId;
 	RandomGenerator										m_generator;
+    std::vector<float>                                  m_pointX;
+    std::vector<float>                                  m_pointY;
 	std::size_t											m_randomSurfaceNumber;
 	std::string											m_name;
 	Level												m_id;

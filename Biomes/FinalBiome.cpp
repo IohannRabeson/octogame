@@ -257,12 +257,6 @@ std::vector<ParallaxScrolling::ALayer *> FinalBiome::getLayers()
 	return vector;
 }
 
-void	FinalBiome::initMapSurfacePoint(void)
-{
-	m_pointX = {0.f  , 299.f, 300.f, 350.f, 750.f, 805.f, 945.f, 1000.f, 1250.f, 1299.f, 1300.f, 1400.f};
-	m_pointY = {900.f, 900.f, 1.1f , 0    , 0    , -3.4f, -3.5f, 0     , 0     , 1.1f  , 900.f , 900.f };
-}
-
 Map::MapSurfaceGenerator FinalBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
@@ -270,17 +264,17 @@ Map::MapSurfaceGenerator FinalBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float m = n * 5.f;
-		std::vector<float> pointX = {0.f  , 299.f, 300.f, 350.f, 750.f, 805.f, 945.f, 1000.f, 1250.f, 1299.f, 1300.f, 1400.f};
-		std::vector<float> pointY = {900.f, 900.f, 1.1f , n    , m    , -3.4f, -3.5f, m     , n     , 1.1f  , 900.f , 900.f };
-		for (std::size_t i = 0u; i < pointX.size(); i++)
-			pointX[i] /= floatMapSize;
+		m_pointX = {0.f  , 299.f, 300.f, 350.f, 750.f, 805.f, 945.f, 1000.f, 1250.f, 1299.f, 1300.f, 1400.f};
+		m_pointY = {900.f, 900.f, 1.1f , n    , m    , -3.4f, -3.5f, m     , n     , 1.1f  , 900.f , 900.f };
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			if (x >= pointX[i] && x < pointX[i + 1])
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
 			{
-				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 			}
 		}
 		return n;

@@ -47,7 +47,6 @@ public:
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
-	void												initMapSurfacePoint();
 	virtual Map::MapSurfaceGenerator					getMapSurfaceGenerator();
 	virtual Map::TileColorGenerator						getTileColorGenerator();
 	virtual sf::Color									getParticleColorGround();
