@@ -342,19 +342,19 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<std::v
 				continue;
 			for (int y = 0; y < static_cast<int>(m_tileShapes.rows()); y++)
 			{
-				if (shape->getSleep() || m_tileShapes(x, y)->getSleep())
+				if (shape->getSleep() || m_tileShapes.get(x, y)->getSleep())
 					continue;
 				shapeAABB = shape->getGlobalBounds();
 				shapeAABB.left += shape->getEngineVelocity().x;
 				shapeAABB.top += shape->getEngineVelocity().y;
-				if (shapeAABB.intersects(m_tileShapes(x, y)->getGlobalBounds(), shapeAABB))
+				if (shapeAABB.intersects(m_tileShapes.get(x, y)->getGlobalBounds(), shapeAABB))
 				{
 					std::size_t i;
 					for (i = 0u; i < pairs.size(); i++)
 					{
-						if (pairs[i].size() == 0u || m_tileShapes(x, y)->getGlobalBounds().top == pairs[i][0u].m_shapeA->getGlobalBounds().top)
+						if (pairs[i].size() == 0u || m_tileShapes.get(x, y)->getGlobalBounds().top == pairs[i][0u].m_shapeA->getGlobalBounds().top)
 						{
-							pairs[i].emplace_back(m_tileShapes(x, y), shape, shapeAABB.width * shapeAABB.height);
+							pairs[i].emplace_back(m_tileShapes.get(x, y), shape, shapeAABB.width * shapeAABB.height);
 							break;
 						}
 					}
@@ -787,8 +787,8 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 	{
 		for (std::size_t j = 0u; j < m_tileShapes.rows(); j++)
 		{
-			if (!m_tileShapes(i, j)->getSleep())
-				m_tileShapes(i, j)->debugDraw(render);
+			if (!m_tileShapes.get(i, j)->getSleep())
+				m_tileShapes.get(i, j)->debugDraw(render);
 		}
 	}
 }

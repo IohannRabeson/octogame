@@ -191,10 +191,10 @@ void GroundManager::setup(ABiome & biome, SkyCycle & cycle)
 	{
 		for (std::size_t y = 0u; y < 2u; y++)
 		{
-			m_tileShapes(x, y) = builder.createTile(x, y);
-			m_tileShapes(x, y)->setVertex(&m_vertices[0u]);
-			m_tileShapes(x, y)->setEndVertex(&m_vertices[0u]);
-			m_tileShapes(x, y)->setGameObject(nullptr);
+			m_tileShapes.get(x, y) = builder.createTile(x, y);
+			m_tileShapes.get(x, y)->setVertex(&m_vertices[0u]);
+			m_tileShapes.get(x, y)->setEndVertex(&m_vertices[0u]);
+			m_tileShapes.get(x, y)->setGameObject(nullptr);
 		}
 	}
 
@@ -1934,10 +1934,10 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 			// Update physics information
 			if (!first)
 			{
-				first = m_tileShapes(x, physicsLineCount);
+				first = m_tileShapes.get(x, physicsLineCount);
 				first->setSleep(false);
-				m_tileShapes(x, physicsLineCount)->setVertex(&m_vertices[m_verticesCount]);
-				m_tileShapes(x, physicsLineCount)->setGameObject(tilePrev);
+				m_tileShapes.get(x, physicsLineCount)->setVertex(&m_vertices[m_verticesCount]);
+				m_tileShapes.get(x, physicsLineCount)->setGameObject(tilePrev);
 			}
 			if (updateLast)
 				last = &m_vertices[m_verticesCount];
@@ -1946,9 +1946,9 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 		if (first)
 			first->setEndVertex(last);
 		else
-			m_tileShapes(x, physicsLineCount)->setSleep(true);
+			m_tileShapes.get(x, physicsLineCount)->setSleep(true);
 		if (physicsLineCount == 0u)
-			m_tileShapes(x, 1u)->setSleep(true);
+			m_tileShapes.get(x, 1u)->setSleep(true);
 	}
 
 	// Update decors

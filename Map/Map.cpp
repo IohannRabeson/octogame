@@ -338,27 +338,27 @@ void Map::addOffsetX(int offsetX)
 	if (offsetX > 0)
 	{
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			m_tmp[y] = m_tiles(0, y);
+			m_tmp[y] = m_tiles.get(0, y);
 		for (std::size_t x = 0; x < m_tiles.columns() - 1; x++)
 		{
 			for (std::size_t y = 0; y < m_tiles.rows(); y++)
-				m_tiles(x, y) = m_tiles(x + 1, y);
+				m_tiles.get(x, y) = m_tiles.get(x + 1, y);
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			m_tiles(m_tiles.columns() - 1, y) = m_tmp[y];
+			m_tiles.get(m_tiles.columns() - 1, y) = m_tmp[y];
 		addOffsetX(offsetX - 1);
 	}
 	else if (offsetX < 0)
 	{
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			m_tmp[y] = m_tiles(m_tiles.columns() - 1, y);
+			m_tmp[y] = m_tiles.get(m_tiles.columns() - 1, y);
 		for (std::size_t x = m_tiles.columns() - 1; x > 0; x--)
 		{
 			for (std::size_t y = 0; y < m_tiles.rows(); y++)
-				m_tiles(x, y) = m_tiles(x - 1, y);
+				m_tiles.get(x, y) = m_tiles.get(x - 1, y);
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			m_tiles(0, y) = m_tmp[y];
+			m_tiles.get(0, y) = m_tmp[y];
 		addOffsetX(offsetX + 1);
 	}
 }
@@ -370,27 +370,27 @@ void Map::addOffsetY(int offsetY)
 	if (offsetY > 0)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
-			m_tmp[x] = m_tiles(x, 0);
+			m_tmp[x] = m_tiles.get(x, 0);
 		for (std::size_t y = 0; y < m_tiles.rows() - 1; y++)
 		{
 			for (std::size_t x = 0; x < m_tiles.columns(); x++)
-				m_tiles(x, y) = m_tiles(x, y + 1);
+				m_tiles.get(x, y) = m_tiles.get(x, y + 1);
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
-			m_tiles(x, m_tiles.rows() - 1) = m_tmp[x];
+			m_tiles.get(x, m_tiles.rows() - 1) = m_tmp[x];
 		addOffsetY(offsetY - 1);
 	}
 	else if (offsetY < 0)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
-			m_tmp[x] = m_tiles(x, m_tiles.rows() - 1);
+			m_tmp[x] = m_tiles.get(x, m_tiles.rows() - 1);
 		for (std::size_t y = m_tiles.rows() - 1; y > 0; y--)
 		{
 			for (std::size_t x = 0; x < m_tiles.columns(); x++)
-				m_tiles(x, y) = m_tiles(x, y - 1);
+				m_tiles.get(x, y) = m_tiles.get(x, y - 1);
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
-			m_tiles(x, 0) = m_tmp[x];
+			m_tiles.get(x, 0) = m_tmp[x];
 		addOffsetY(offsetY + 1);
 	}
 }

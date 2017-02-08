@@ -30,8 +30,8 @@ public:
 
 	inline std::size_t	getColumns(void) const { return m_tiles.columns(); }
 	inline std::size_t	getRows(void) const { return m_tiles.rows(); }
-	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles(column, row); }
-	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles(column, row); }
+	inline Tile & get(std::size_t column, std::size_t row) { return *m_tiles.get(column, row); }
+	inline Tile const & get(std::size_t column, std::size_t row) const { return *m_tiles.get(column, row); }
 	void setMapSurfaceGenerator(MapSurfaceGenerator mapSurface);
 	void setTileColorGenerator(TileColorGenerator tileColor);
 
