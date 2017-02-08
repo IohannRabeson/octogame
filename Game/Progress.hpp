@@ -32,6 +32,12 @@ public:
 		Hard
 	};
 
+	enum class Keyboard : std::size_t
+	{
+		Qwerty,
+		Azerty
+	};
+
 	enum class MenuType : std::size_t
 	{
 		Classic,
@@ -39,7 +45,7 @@ public:
 	};
 
 	static constexpr std::size_t					DeathMax = 20.f;
-	static constexpr std::size_t					RandomPortalMax = 16u;
+	static constexpr std::size_t					RandomPortalMax = 17u;
 
 	static Progress &								getInstance(void);
 	static SteamAPI &								getSteamInstance(void);
@@ -71,6 +77,9 @@ public:
 
 	void											setDifficulty(Difficulty difficulty);
 	Progress::Difficulty							getDifficulty(void) const;
+
+	void											setKeyboard(Keyboard keyboard);
+	Progress::Keyboard								getKeyboard(void) const;
 
 	void											addNanoRobot();
 	void											removeNanoRobot() { m_data.nanoRobotCount--; }
@@ -138,6 +147,7 @@ public:
 	bool											canSlowFall();
 	bool											canUseElevator();
 	bool											canUseWaterJump();
+	bool											canUseBalle();
 	bool											changeLevel() const;
 	void											levelChanged();
 
@@ -174,6 +184,11 @@ public:
 	sf::Vector2f									getInterestPoint();
 	void											setActivatedMonolith(std::size_t count);
 	std::size_t										getActivatedMonolith(void) const;
+	bool											isMonolithImploded(void) { return m_data.monolithImploded; };
+	void											setMonolithImploded(bool imploded) { m_data.monolithImploded = imploded; };
+	sf::Vector2f const &							getMonolithCenter(void) { return m_centerMonolith; };
+	void											setMonolithCenter(sf::Vector2f const & center) { m_centerMonolith = center; };
+
 
 	void											setMapHighlight(bool isHighlight);
 	bool											isMapHighlight(void) const;
@@ -198,8 +213,8 @@ public:
 	bool											getOctoDoubleJump(void) { return m_isDoubleJump; }
 	void											setInCloud(bool inCloud, std::size_t cloudId);
 	bool											isInCloud(void) const { return m_isInCloud; }
-	void											setEasyUnlocked(bool unlock) { m_isEasyUnlocked = unlock; };
-	bool											isEasyUnlocked(void) const { return m_isEasyUnlocked; }
+	void											setEasyUnlocked(bool unlock) { m_data.isEasyUnlocked = unlock; };
+	bool											isEasyUnlocked(void) const { return m_data.isEasyUnlocked; }
 
 	void											setBalleMultiplier(float multiplier);
 	float											getBalleMultiplier(void);
@@ -217,12 +232,12 @@ public:
 	struct data
 	{
 		data() :
-			data(0u, 0u, Level::IceA, 30u, 100u, 100u, true, true, Language::fr, Difficulty::Normal)
+			data(0u, 0u, Level::IceA, 30u, 100u, 100u, true, true, Language::en, Difficulty::Normal, Keyboard::Qwerty)
 		{}
 
 		data(std::size_t nanoRobot, std::size_t spirit, Level biome,
 				std::size_t musicVol, std::size_t soundVol, std::size_t globalVol,
-				bool fullscreen, bool vsync, Language language, Difficulty difficulty) :
+				bool fullscreen, bool vsync, Language language, Difficulty difficulty, Keyboard keyboard) :
 			timePlayed(0.f),
 			launchCount(0u),
 			isGameFinished(false),
@@ -245,6 +260,7 @@ public:
 			vsync(vsync),
 			language(language),
 			difficulty(difficulty),
+			keyboard(keyboard),
 			menuType(MenuType::Classic),
 			firstTime(true),
 			firstTimeInIceA(true),
@@ -255,11 +271,13 @@ public:
 			respawnType(Progress::RespawnType::Portal),
 			checkpoints(0u),
 			activatedMonolith(0u),
-			levelOfDetails(0),
+			monolithImploded(false),
+			levelOfDetails(-1),
 			spaceShipRepair(false),
 			longIntro(false),
 			tryToEscape(false),
-			doorFound(false)
+			doorFound(false),
+			isEasyUnlocked(false)
 		{}
 
 		float					timePlayed;
@@ -285,6 +303,7 @@ public:
 		bool					vsync;
 		Language				language;
 		Difficulty				difficulty;
+		Keyboard				keyboard;
 		MenuType				menuType;
 		bool					firstTime;
 		bool					firstTimeInIceA;
@@ -298,11 +317,13 @@ public:
 		Progress::RespawnType	respawnType;
 		std::size_t				checkpoints;
 		std::size_t				activatedMonolith;
+		bool					monolithImploded;
 		int						levelOfDetails;
 		bool					spaceShipRepair;
 		bool					longIntro;
 		bool					tryToEscape;
 		bool					doorFound;
+		bool					isEasyUnlocked;
 	};
 
 private:
@@ -356,8 +377,8 @@ private:
 
 	float											m_balleMultiplier;
 	sf::Time										m_timerSteamUpdate;
-	bool											m_isEasyUnlocked;
 	bool											m_isResourceLoading;
+	sf::Vector2f									m_centerMonolith;
 };
 
 #endif

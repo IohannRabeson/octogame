@@ -286,17 +286,17 @@ Map::MapSurfaceGenerator WaterCBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f      , 303.f    , 307.f    , 308.f, 442.f, 443.f   , 470.f   , 570.f   , 589.f  , 592.f, 612.f, 613.f  , 640.f, 710.f,  790.f, 850.f};
-		std::vector<float> pointY = {n - 5.25f, n - 5.25f, n - 5.f, 4.6f , 4.6f , n - 6.2f, n - 6.2f, n - 6.5f, -4.618f, 4.6f , 4.6f , -4.415f, -5.1f, -5.2f, - 5.1f, n - 5.25f};
-		for (std::size_t i = 0u; i < pointX.size(); i++)
-			pointX[i] /= floatMapSize;
+		m_pointX = {0.f      , 303.f    , 307.f    , 308.f, 442.f, 443.f   , 470.f   , 570.f   , 589.f  , 592.f, 612.f, 613.f  , 640.f, 710.f,  790.f, 850.f};
+		m_pointY = {n - 5.25f, n - 5.25f, n - 5.f, 4.6f , 4.6f , n - 6.2f, n - 6.2f, n - 6.5f, -4.618f, 4.6f , 4.6f , -4.415f, -5.1f, -5.2f, - 5.1f, n - 5.25f};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			if (x >= pointX[i] && x < pointX[i + 1])
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
 			{
-				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 			}
 		}
 		return n;

@@ -342,6 +342,21 @@ void Cloud::updatePosition(sf::Time frameTime)
 	}
 }
 
+bool Cloud::isDisplay(void)
+{
+	octo::Camera const & camera = octo::Application::getCamera();
+
+	float const			leftLimitXbis = camera.getCenter().x - camera.getSize().x;
+	float const			rightLimitXbis = camera.getCenter().x + camera.getSize().x;
+	float const			upLimitYbis = camera.getCenter().y - camera.getSize().x;
+	float const			downLimitYbis = camera.getCenter().y + camera.getSize().x;
+
+	if ((m_position.x >= leftLimitXbis && m_position.x <= rightLimitXbis) &&
+		(m_position.y >= upLimitYbis && m_position.y <= downLimitYbis))
+		return true;
+	return false;
+}
+
 void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
 	updatePosition(frameTime);
@@ -369,7 +384,8 @@ void Cloud::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& bio
 		newCloud(biome);
 	m_animation = m_animator.getAnimation();
 
-	createCloud(m_values, m_position, m_partCount, m_color, builder);
+	if (isDisplay())
+		createCloud(m_values, m_position, m_partCount, m_color, builder);
 
 	if (m_isCollide && m_animator.getState() != DecorAnimator::State::Die)
 	{

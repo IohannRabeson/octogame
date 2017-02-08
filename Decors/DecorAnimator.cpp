@@ -195,7 +195,7 @@ float DecorAnimator::getAnimationTime(void) const
 	return m_lifeTimerMax + m_growTimerMax + m_dieTimerMax;
 }
 
-DecorAnimator::State DecorAnimator::getState(void) const
+DecorAnimator::State const & DecorAnimator::getState(void) const
 {
 	return m_currentState;
 }

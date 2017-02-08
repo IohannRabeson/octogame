@@ -148,6 +148,7 @@ FinalBiome::FinalBiome() :
 	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
 	m_instances[50] = MAP_FINAL_LEFT_OMP;
 	m_instances[1300] = MAP_FINAL_RIGHT_OMP;
+	m_gameObjects[740] = GameObjectType::PortalRandom;
 
 	std::vector<GameObjectType> object = {GameObjectType::ForestSpirit1Npc, GameObjectType::ForestSpirit2Npc, GameObjectType::FranGlitchNpc, GameObjectType::JuGlitchNpc, GameObjectType::LuGlitchNpc, GameObjectType::WindowGlitchNpc};
 
@@ -157,7 +158,9 @@ FinalBiome::FinalBiome() :
 	m_interestPointPosX = 500;
 
 	Progress & progress = Progress::getInstance();
-	if (progress.canRepairShip())
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(743.f * 16.f, 9.f * 16.f);
+	else if (progress.canRepairShip())
 		m_octoStartPosition = sf::Vector2f(866.f * 16.f, -130.f * 16.f);
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
@@ -168,6 +171,7 @@ FinalBiome::FinalBiome() :
 	m_destinations.push_back(Level::WaterD);
 	m_destinations.push_back(Level::EndRocket);
 	m_destinations.push_back(Level::Red);
+	m_destinations.push_back(Level::Random);
 }
 
 void			FinalBiome::setup(std::size_t seed)
@@ -260,17 +264,17 @@ Map::MapSurfaceGenerator FinalBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float m = n * 5.f;
-		std::vector<float> pointX = {0.f  , 299.f, 300.f, 350.f, 750.f, 805.f, 945.f, 1000.f, 1250.f, 1299.f, 1300.f, 1400.f};
-		std::vector<float> pointY = {900.f, 900.f, 1.1f , n    , m    , -3.4f, -3.5f, m     , n     , 1.1f  , 900.f , 900.f };
-		for (std::size_t i = 0u; i < pointX.size(); i++)
-			pointX[i] /= floatMapSize;
+		m_pointX = {0.f  , 299.f, 300.f, 350.f, 750.f, 805.f, 945.f, 1000.f, 1250.f, 1299.f, 1300.f, 1400.f};
+		m_pointY = {900.f, 900.f, 1.1f , n    , m    , -3.4f, -3.5f, m     , n     , 1.1f  , 900.f , 900.f };
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			if (x >= pointX[i] && x < pointX[i + 1])
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
 			{
-				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 			}
 		}
 		return n;

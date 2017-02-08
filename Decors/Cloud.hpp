@@ -71,6 +71,8 @@ private:
 
 	void updatePosition(sf::Time frameTime);
 
+	bool isDisplay(void);
+
 	static std::size_t				m_count;
 
 	std::size_t						m_id;

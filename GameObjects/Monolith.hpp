@@ -3,6 +3,7 @@
 
 # include "InstanceDecor.hpp"
 # include "AGameObject.hpp"
+# include <CharacterSprite.hpp>
 # include <SFML/Graphics/RectangleShape.hpp>
 # include <VertexBuilder.hpp>
 # include <memory>
@@ -40,7 +41,8 @@ private:
 		CircleExplosionAndRedEffect,
 		WhiteFlash,
 		FinalExplosion,
-		PortalAppear,
+		Implode,
+		WhiteFlash2,
 		None
 	};
 
@@ -58,6 +60,8 @@ private:
 
 	std::vector<octo::AnimatedSprite>			m_spriteMonolith;
 	std::vector<octo::SpriteAnimation>			m_animationMonolith;
+	octo::AnimatedSprite						m_spriteBalleNanoRobot;
+	octo::SpriteAnimation						m_animationBalleNanoRobot;
 	std::vector<sf::Vector2f>					m_position;
 	std::vector<sf::Vector2f>					m_endPosition;
 	std::unique_ptr<FinalPortal>				m_portal;
@@ -77,6 +81,8 @@ private:
 	sf::Time									m_whiteFlashDuration;
 	sf::Time									m_moveAtFinalPositionDuration;
 	sf::Time									m_forceMapMoveDuration;
+	sf::Time									m_implodeDuration;
+	sf::Time									m_nanoScaleDuration;
 	sf::Vector2f								m_center;
 	std::size_t									m_used;
 	State										m_state;

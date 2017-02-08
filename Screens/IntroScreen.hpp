@@ -30,6 +30,9 @@ private:
 	enum State
 	{
 		Fly,
+		Jump,
+		Collide,
+		Fall,
 		Crash,
 		End,
 		None
@@ -54,20 +57,19 @@ private:
 	bool								m_keyDown;
 	bool								m_keyRight;
 	bool								m_keyLeft;
-	bool								m_ticJump;
 	std::size_t							m_cloudCollidedCount;
 	std::size_t							m_cloudCollidedCountMax;
-	sf::Time							m_timerBeforeCrash;
 	sf::Time							m_timerBeforeCrashMax;
 	sf::Time							m_timerJump;
 	sf::Time							m_timerJumpMax;
 	sf::Time							m_timerFall;
 	sf::Time							m_timerFallMax;
+	sf::Time							m_timerCrash;
+	sf::Time							m_timerCrashMax;
 	sf::Time							m_globalTime;
 	float								m_cloudMinY;
 	float								m_cloudMaxY;
-	float								m_speedFall;
-	float								m_speedYUp;
+	sf::Vector2f						m_speed;
 
 	MainMenu							m_menu;
 	bool								m_doSave;
@@ -80,7 +82,6 @@ private:
 	std::size_t							m_starsCount;
 	std::unique_ptr<StarSystem[]>		m_stars;
 	SpaceShip							m_spaceShip;
-	float								m_speedX;
 	sf::Time							m_timerCamera;
 	sf::Time							m_timerCameraMax;
 

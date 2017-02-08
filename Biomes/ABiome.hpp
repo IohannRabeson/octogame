@@ -44,6 +44,7 @@ enum class Level : std::size_t
 	Rewards,
 	RandomGame,
 	Labo,
+	None,
 };
 
 class ABiome : public octo::NonCopyable

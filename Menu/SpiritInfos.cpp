@@ -1,6 +1,7 @@
 #include "SpiritInfos.hpp"
 #include "TextManager.hpp"
 #include "Progress.hpp"
+#include <Math.hpp>
 
 SpiritInfos::SpiritInfos(void) :
 	m_progressionCount(7u),
@@ -9,7 +10,7 @@ SpiritInfos::SpiritInfos(void) :
 {
 }
 
-void SpiritInfos::setup(void)
+void SpiritInfos::setup()
 {
 	m_progressionBubbles.resize(m_progressionCount);
 
@@ -21,39 +22,39 @@ void SpiritInfos::setup(void)
 		m_progressionBubbles[i]->setActive(true);
 	}
 
-	setupSpirit(Progress::getInstance().getOctoPos());
+	setupSpirit(Progress::getInstance().getOctoPos() + sf::Vector2f(-90.f, -150.f));
 	setupProgression();
 }
 
 void SpiritInfos::setupSpirit(sf::Vector2f const & position)
 {
+	m_position = sf::Vector2f(0.f, 400.f);
 	for (std::size_t i = 0; i < Progress::getInstance().getSpiritCount() + 1u; i++)
 	{
+		sf::Vector2f positionRandom = getRandomVector2f();
+
 		if (m_spirits.size() != Progress::getInstance().getSpiritCount() + 1u)
 		{
-			NanoRobot * spirit = new MenuNanoRobot(position + getRandomVector2f());
+			NanoRobot * spirit = new MenuNanoRobot(position + positionRandom);
+
 			spirit->setState(NanoRobot::State::FollowOcto);
 			m_spirits.push_back(std::unique_ptr<NanoRobot>(spirit));
+			m_spirits[i]->setHardPosition(position + positionRandom);
+			m_spirits[i]->setPosition(position + positionRandom);
 		}
-		m_spirits[i]->setHardPosition(position + getRandomVector2f());
-		m_spirits[i]->setPosition(position + getRandomVector2f());
+		else
+		{
+			m_spirits[i]->setHardPosition(position + positionRandom);
+			m_spirits[i]->setPosition(position + positionRandom);
+		}
 	}
 }
 
 sf::Vector2f SpiritInfos::getRandomVector2f(void)
 {
-	sf::Vector2f position;
-
-	if (m_generator.randomBool(0.5f))
-		position.x = m_generator.randomFloat(-400.f, -200.f);
-	else
-		position.x = m_generator.randomFloat(400.f, 200.f);
-	if (m_generator.randomBool(0.5f))
-		position.y = m_generator.randomFloat(-400.f, -200.f);
-	else
-		position.y = m_generator.randomFloat(400.f, 200.f);
-
-	return position;
+	float angle = 359.f / (Progress::getInstance().getSpiritCount() + 1u);
+	octo::rotateVector(m_position, std::cos(angle), std::sin(angle));
+	return m_position;
 }
 
 void SpiritInfos::setupProgression(void)
@@ -83,7 +84,7 @@ void SpiritInfos::setupProgression(void)
 					break;
 				case 2u:
 					current = progress.getNanoRobotCount();
-					max = 7u;
+					max = 8u;
 					key = "progression_octobot";
 					break;
 				case 3u:
@@ -131,7 +132,7 @@ void SpiritInfos::update(sf::Time frameTime, sf::Vector2f const & position)
 
 void SpiritInfos::updateSpirit(sf::Time frameTime, sf::Vector2f const & position)
 {
-	for (std::size_t i = 0; i < Progress::getInstance().getSpiritCount() + 1u; i++)
+	for (std::size_t i = 0; i < m_spirits.size(); i++)
 	{
 		if (!Progress::getInstance().isMenu() && i < m_spirits.size())
 		{
@@ -151,10 +152,10 @@ void SpiritInfos::updateProgression(sf::Time frameTime, sf::Vector2f const & pos
 		if (i * 2u < m_spirits.size())
 		{
 			dist = std::sqrt(std::pow(m_spirits[i * 2u]->getPosition().x - position.x, 2u) + std::pow(m_spirits[i * 2u]->getPosition().y - position.y, 2u));
-			float alphaCoef = std::max((1.f - std::max(500.f - dist + 100.f, 0.f) / 500.f), 0.f);
+			float alphaCoef = std::max((1.f - std::max(400.f - dist + 200.f, 0.f) / 400.f), 0.f);
 
 			m_progressionBubbles[i]->setPosition(m_spirits[i * 2u]->getPosition() - sf::Vector2f(10.f, 16.f));
-			m_progressionBubbles[i]->setColors(sf::Color(255, 255, 255, 70.f * alphaCoef), sf::Color(0, 0, 0, 255 * alphaCoef));
+			m_progressionBubbles[i]->setColors(sf::Color(255, 255, 255, 100.f * alphaCoef), sf::Color(0, 0, 0, 255 * alphaCoef));
 			m_progressionBubbles[i]->update(frameTime);
 		}
 	}

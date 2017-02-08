@@ -18,16 +18,15 @@ IntroScreen::IntroScreen(void) :
 	m_keyDown(false),
 	m_keyRight(false),
 	m_keyLeft(false),
-	m_ticJump(false),
 	m_cloudCollidedCount(0u),
 	m_cloudCollidedCountMax(4u),
 	m_timerBeforeCrashMax(sf::seconds(20.f)),
-	m_timerJumpMax(sf::seconds(1.f)),
+	m_timerJumpMax(sf::seconds(0.5f)),
 	m_timerFallMax(sf::seconds(0.5f)),
+	m_timerCrashMax(sf::seconds(1.5f)),
 	m_cloudMinY(0.f),
 	m_cloudMaxY(0.f),
-	m_speedFall(600.f),
-	m_speedYUp(500.f),
+	m_speed(2100.f, 300.f),
 	m_doSave(false),
 	m_musicPlayer(MusicManager::getInstance()),
 	m_skyCycle(nullptr),
@@ -36,7 +35,6 @@ IntroScreen::IntroScreen(void) :
 	m_starsCount(15u),
 	m_stars(new StarSystem[m_starsCount]),
 	m_spaceShip(SpaceShip::Flying),
-	m_speedX(2100.f),
 	m_timerCameraMax(sf::seconds(4.f)),
 	m_timerMax(sf::seconds(4.f)),
 	m_timerStartRedAlarmMax(sf::seconds(0.1f)),
@@ -184,76 +182,115 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 	Progress &					progress = Progress::getInstance();
 	octo::AudioManager &		audio = octo::Application::getAudioManager();
 	octo::ResourceManager &		resource = octo::Application::getResourceManager();
-	sf::Vector2f				translation(m_speedX * frameTime.asSeconds(), 0.f);
 	sf::Vector2f const &		positionSpaceShip = m_spaceShip.getPosition();
 
 	switch (m_state)
 	{
 		case Fly:
 		{
-			m_timerBeforeCrash = std::min(m_timerBeforeCrash + frameTime, m_timerBeforeCrashMax);
-		
-			if (m_keyJump)
+			if (positionSpaceShip.y >= m_cloudMinY + 1000.f && positionSpaceShip.y < m_cloudMaxY)
 			{
-				if (!m_ticJump && positionSpaceShip.y >= m_cloudMinY + 1000.f && positionSpaceShip.y < m_cloudMaxY)
+				if (m_keyUp)
+					m_speed.y = -400.f + (350.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
+				if (m_keyDown)
+					m_speed.y = 550.f;
+				if (!m_keyUp && !m_keyDown)
+					m_speed.y = 200.f + (250.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
+				if (m_keyRight)
+					m_speed.x = 2400.f - (1000.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
+				if (m_keyLeft)
+					m_speed.x = 1800.f - (1000.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
+				if (!m_keyLeft && !m_keyRight)
+					m_speed.x = 2100.f - (1000.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
+	
+				/*
+				if (m_keyJump)
 				{
-					m_timerJump = m_timerJumpMax;
+					m_state = Jump;
 					m_ticJump = true;
 				}
+				*/
 			}
-			else if (m_timerJump <= sf::Time::Zero)
-				m_ticJump = false;
-			m_timerJump = std::max(m_timerJump - frameTime, sf::Time::Zero);
-			translation.y = octo::cosinusInterpolation(300.f * frameTime.asSeconds(), -m_speedYUp * frameTime.asSeconds(), m_timerJump / m_timerJumpMax);
-		
-			if (m_timerFall <= m_timerFallMax)
+			else
 			{
-				m_timerFall += frameTime;
-				translation.y += octo::cosinusInterpolation(0.f, 1500.f * frameTime.asSeconds(), m_timerFall / m_timerFallMax);
+				m_speed.y = 200.f + (250.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
+				m_speed.x = 2100.f - (1000.f * m_cloudCollidedCount / m_cloudCollidedCountMax);
 			}
-			else if (Progress::getInstance().isInCloud())
+
+			if (Progress::getInstance().isInCloud())
 			{
-				m_cloudCollidedCount = std::min(m_cloudCollidedCount + 1u, m_cloudCollidedCountMax);
-				m_speedYUp = 500.f;
-				m_shaderRocketState = true;
-				shake(2.f + m_cloudCollidedCount, m_cloudCollidedCount, 0.1f);
-				for (std::size_t i = 0; i < m_starsCount; i++)
-					m_stars[i].canEmit(false);
-				if (m_cloudCollidedCount >= 3u)
-					audio.stopMusic(sf::seconds(0.4f));
+				if (m_cloudCollidedCount < m_cloudCollidedCountMax)
+					m_state = Collide;
 				else
-					audio.setMusicVolume((3u - m_cloudCollidedCount) * 0.2f);
-				audio.playSound(resource.getSound(OCTO_SOUND_SLOW_FALL_OGG), 1.f, 3.f);
-				m_timerFall = sf::Time::Zero;
-				m_speedX -= 300.f;
-				if (m_cloudCollidedCount >= m_cloudCollidedCountMax)
 					m_state = Crash;
 			}
-			if (m_cloudCollidedCount >= 1u)
-				m_speedYUp -= frameTime.asSeconds() * 10.f;
+
 			if (positionSpaceShip.y > m_cloudMaxY)
 				m_state = Crash;
 			break;
 		}
+		/*
+		case Jump:
+		{
+			if (m_ticJump)
+			{
+				m_timerJump = std::min(m_timerJump + frameTime, m_timerJumpMax);
+				m_speed.y = octo::cosinusInterpolation(0.f, -1500.f, m_timerJump / m_timerJumpMax);
+				if (m_timerJump == m_timerJumpMax)
+					m_ticJump = false;
+			}
+			else
+			{
+				m_timerJump = std::max(m_timerJump - frameTime * 0.7f, sf::Time::Zero);
+				m_speed.y = octo::cosinusInterpolation(1700.f, -1500.f, m_timerJump / m_timerJumpMax);
+				if (m_timerJump == sf::Time::Zero)
+					m_state = Fly;
+			}
+			break;
+		}
+		*/
+		case Collide:
+		{
+			m_cloudCollidedCount = std::min(m_cloudCollidedCount + 1u, m_cloudCollidedCountMax);
+			m_shaderRocketState = true;
+			shake(2.f + m_cloudCollidedCount, m_cloudCollidedCount, 0.1f);
+			for (std::size_t i = 0; i < m_starsCount; i++)
+				m_stars[i].canEmit(false);
+			if (m_cloudCollidedCount >= 3u)
+				audio.stopMusic(sf::seconds(0.4f));
+			else
+				audio.setMusicVolume((3u - m_cloudCollidedCount) * 0.2f);
+			audio.playSound(resource.getSound(OCTO_SOUND_SLOW_FALL_OGG), 1.f, 3.f);
+			m_timerFall = sf::Time::Zero;
+			m_state = Fall;
+			break;
+		}
+		case Fall:
+		{
+			if (m_timerFall < m_timerFallMax)
+			{
+				m_timerFall = std::min(m_timerFall + frameTime, m_timerFallMax);
+				m_speed.y = octo::cosinusInterpolation(0.f, 2500.f, m_timerFall / m_timerFallMax);
+			}
+			else
+				m_state = Fly;
+			break;
+		}
 		case Crash:
 		{
-			m_timerFall += frameTime;
-			m_speedFall += frameTime.asSeconds() * 600.f;
-			if (m_timerFall <= m_timerFallMax)
-				translation.y += m_speedFall * (m_timerFall / m_timerFallMax) * frameTime.asSeconds();
+			m_timerCrash = std::min(m_timerCrash + frameTime, m_timerCrashMax);
+			if (m_timerCrash < m_timerCrashMax)
+				m_speed.y = octo::cosinusInterpolation(0.f , 2500.f, m_timerCrash / m_timerCrashMax);
 			else
-				translation.y += m_speedFall * frameTime.asSeconds();
+				m_speed.y = 2500.f;
 
 			if (positionSpaceShip.y > m_cloudMaxY)
-			{
 				m_state = End;
-			}
 			break;
 		}
 		case End:
 		{
-			m_speedFall += frameTime.asSeconds() * 600.f;
-			translation.y += m_speedFall * frameTime.asSeconds();
+			m_speed.y = 2500.f;
 			if (positionSpaceShip.y > m_cloudMaxY + octo::Application::getCamera().getSize().y)
 			{
 				octo::StateManager &		states = octo::Application::getStateManager();
@@ -269,23 +306,10 @@ void	IntroScreen::updateSpaceShip(sf::Time frameTime)
 			break;
 	}
 
-	if (m_state != End && m_state != Crash && positionSpaceShip.y >= m_cloudMinY + 1000.f && positionSpaceShip.y < m_cloudMaxY)
-	{
-		if (m_keyUp)
-			translation.y -= m_speedYUp * frameTime.asSeconds();
-		if (m_keyDown)
-			translation.y += 350.f * frameTime.asSeconds();
-		if (m_keyRight)
-			translation.x += 200.f * frameTime.asSeconds();
-		if (m_keyLeft)
-			translation.x -= 200.f * frameTime.asSeconds();
-	}
-
 	if (m_cloudCollidedCount >= 3u)
 		updateAlarm(frameTime);
 
-
-	m_spaceShip.move(translation);
+	m_spaceShip.move(m_speed * frameTime.asSeconds());
 	m_spaceShip.update(frameTime);
 
 	if (m_globalTime >= sf::seconds(25.f))
@@ -313,10 +337,10 @@ void	IntroScreen::updateShaders(sf::Time frameTime)
 	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setParameter("intensity", octo::linearInterpolation(0.f, 0.05f * m_cloudCollidedCount, std::min(1.f, m_timerShaderRocketAppear / m_timerShaderRocketAppearMax)));
 	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setParameter("time", m_timerShaderRocket.asSeconds());
 
-	if (m_cloudCollidedCount == 1u)
+	if (m_cloudCollidedCount == 1u && m_state == Fall)
 		PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setParameter("time", 1.f - m_timerFall / m_timerFallMax);
-	else if (m_cloudCollidedCount == m_cloudCollidedCountMax)
-		PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setParameter("time", std::min(1.f, m_timerFall / (m_timerFallMax * 3.f)));
+	else if (m_cloudCollidedCount == m_cloudCollidedCountMax && (m_state == Crash || m_state == End))
+		PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setParameter("time", m_timerCrash / m_timerCrashMax);
 
 }
 
@@ -359,14 +383,14 @@ void	IntroScreen::updateCamera(sf::Time frameTime)
 	float			ratio = m_timerCamera / m_timerCameraMax;
 	sf::Vector2f	movement(std::cos(ratio * octo::Pi2) * 25.f, std::sin(ratio * octo::Pi2) * 55.f);
 	float			offsetXSpeed =  100.f + m_cloudCollidedCount * 60.f;
-	if (m_cloudCollidedCount < m_cloudCollidedCountMax)
-		offsetXSpeed = octo::linearInterpolation(100.f + (m_cloudCollidedCount - 1.f) * 60.f, 100.f + m_cloudCollidedCount * 60.f, std::max(1.f, m_timerFall / (m_timerFallMax / 2.f)));
+	if (m_state == Fall)
+		offsetXSpeed = octo::linearInterpolation(100.f + (m_cloudCollidedCount - 1.f) * 60.f, 100.f + m_cloudCollidedCount * 60.f, std::min(1.f, m_timerFall / (m_timerFallMax / 2.f)));
 	sf::Vector2f	cameraOffset = sf::Vector2f(camera.getRectangle().width / 2.f + offsetXSpeed, m_spaceShip.getSize().y / 2.f);
 	sf::Vector2f	shakeOffset = computeShake(frameTime);
 	sf::Vector2f	cameraCenter = shakeOffset + movement;
 
 	m_timerCamera += frameTime;
-	if (m_state == Fly || m_state == Crash)
+	if (m_state != End && m_state != None)
 		cameraCenter += m_spaceShip.getPosition() + cameraOffset;
 	else
 	{

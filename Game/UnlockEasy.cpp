@@ -36,9 +36,11 @@ void UnlockEasy::update(sf::Time frameTime)
 	(void)frameTime;
 	if (m_index == 10u)
 	{
+		Progress & progress = Progress::getInstance();
+
 		m_index = 0u;
 		octo::Application::getStateManager().change("game");
-		Progress::getInstance().setEasyUnlocked(true);
+		progress.setEasyUnlocked(!progress.isEasyUnlocked());
 	}
 }
 

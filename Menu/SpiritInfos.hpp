@@ -12,7 +12,7 @@ public:
 	SpiritInfos(void);
 	~SpiritInfos(void) = default;
 
-	void setup(void);
+	void setup();
 	void update(sf::Time frameTime, sf::Vector2f const & position);
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
@@ -23,6 +23,7 @@ private:
 	std::vector<std::unique_ptr<NanoRobot>>		m_spirits;
 	std::wstring								m_missingText;
 	RandomGenerator								m_generator;
+	sf::Vector2f								m_position;
 
 	std::wstring const & getText(std::string const & text);
 	sf::Vector2f getRandomVector2f(void);

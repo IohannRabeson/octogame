@@ -33,8 +33,7 @@ Progress::Progress() :
 	m_isMapMoving(false),
 	m_canOctoMoveMap(true),
 	m_forceMapToMove(false),
-	m_balleMultiplier(2.f),
-	m_isEasyUnlocked(false),
+	m_balleMultiplier(5.f),
 	m_isResourceLoading(false)
 {
 }
@@ -219,6 +218,8 @@ void	Progress::reset()
 	float globalVolume = m_data.globalVol;
 	float musicVolume = m_data.musicVol;
 	float soundVolume = m_data.soundVol;
+	Keyboard keyboard = m_data.keyboard;
+	Language language = m_data.language;
 
 	m_changeLevel = false;
 	m_reverseSprite = false;
@@ -230,6 +231,8 @@ void	Progress::reset()
 	m_data.globalVol = globalVolume;
 	m_data.musicVol = musicVolume;
 	m_data.soundVol = soundVolume;
+	m_data.keyboard = keyboard;
+	m_data.language = language;
 	save();
 }
 
@@ -253,6 +256,16 @@ Progress::Difficulty Progress::getDifficulty(void) const
 	return m_data.difficulty;
 }
 
+void	Progress::setKeyboard(Keyboard keyboard)
+{
+	m_data.keyboard = keyboard;
+}
+
+Progress::Keyboard Progress::getKeyboard(void) const
+{
+	return m_data.keyboard;
+}
+
 ResourceKey Progress::getTextFile(void) const
 {
 	if (m_data.language == Language::en)
@@ -269,14 +282,14 @@ bool	Progress::isJoystick(void) const
 void	Progress::addNanoRobot()
 {
 	m_data.nanoRobotCount++;
-	assert(m_data.nanoRobotCount <= 7);
+	assert(m_data.nanoRobotCount <= 8);
 	save();
 }
 
 void	Progress::setNanoRobotCount(std::size_t count)
 {
 	m_data.nanoRobotCount = count;
-	assert(m_data.nanoRobotCount <= 7);
+	assert(m_data.nanoRobotCount <= 8);
 	save();
 }
 
@@ -394,6 +407,11 @@ bool	Progress::canUseElevator()
 bool	Progress::canUseWaterJump()
 {
 	return (m_data.nanoRobotCount > 4);
+}
+
+bool	Progress::canUseBalle()
+{
+	return (m_data.nanoRobotCount > 7);
 }
 
 bool	Progress::changeLevel() const
@@ -838,9 +856,7 @@ void Progress::setBalleMultiplier(float multiplier)
 
 float Progress::getBalleMultiplier(void)
 {
-	if (isGameFinished())
-		return m_balleMultiplier;
-	return 1.f;
+	return m_balleMultiplier;
 }
 
 std::size_t Progress::getProgression(void)

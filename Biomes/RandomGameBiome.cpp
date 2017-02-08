@@ -65,8 +65,8 @@ RandomGameBiome::RandomGameBiome() :
 	m_mushroomCount(m_generator.randomInt(1, 100), m_generator.randomInt(100, 250)),
 	m_crystalCount(m_generator.randomInt(1, 30), m_generator.randomInt(30, 100)),
 	m_starCount(300u, 800u),
-	m_sunCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 15)),
-	m_moonCount(m_generator.randomInt(1, 10), m_generator.randomInt(10, 20)),
+	m_sunCount(m_generator.randomInt(1, 3), m_generator.randomInt(3, 5)),
+	m_moonCount(m_generator.randomInt(1, 2), m_generator.randomInt(2, 5)),
 	m_rainbowCount(m_generator.randomInt(1, 3), m_generator.randomInt(3, 10)),
 	m_cloudCount(m_generator.randomInt(1, 50), m_generator.randomInt(50, 100)),
 	m_groundRockCount(m_generator.randomInt(100, 200), m_generator.randomInt(200, 700)),
@@ -132,11 +132,11 @@ RandomGameBiome::RandomGameBiome() :
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
-	m_sunSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 600.f), m_generator.randomFloat(100.f, 600.f))),
+	m_sunSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 350.f), m_generator.randomFloat(100.f, 350.f))),
 	m_sunPartCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 7)),
 	m_sunColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
-	m_moonSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 600.f), m_generator.randomFloat(100.f, 600.f))),
+	m_moonSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 350.f), m_generator.randomFloat(100.f, 350.f))),
 	m_moonColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
 

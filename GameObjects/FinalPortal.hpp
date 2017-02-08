@@ -10,7 +10,8 @@ public:
 	virtual ~FinalPortal(void);
 
 	virtual bool zoom(void) const;
-	void forceActivate(void);
+	void forceActivate(bool active);
+	float getCoef(void);
 
 	virtual void update(sf::Time frameTime);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;

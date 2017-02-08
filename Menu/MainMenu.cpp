@@ -110,7 +110,7 @@ void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePositio
 	AMenuSelection::update(frameTime, octoBubblePosition);
 	sf::FloatRect const & camera = octo::Application::getCamera().getRectangle();
 	m_filter.setPosition(sf::Vector2f(camera.left, camera.top));
-	m_spiritInfos.update(frameTime, octoBubblePosition);
+	m_spiritInfos.update(frameTime, m_currentMenuPosition);
 }
 
 void MainMenu::draw(sf::RenderTarget & render, sf::RenderStates states) const

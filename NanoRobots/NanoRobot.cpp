@@ -52,7 +52,7 @@ NanoRobot::NanoRobot(sf::Vector2f const & position, std::string const & id, std:
 
 	m_texture = &resources.getTexture(GRADIENT_PNG);
 
-	m_box->setRadius(150.f);
+	m_box->setRadius(250.f);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player));
 	m_box->setApplyGravity(false);
@@ -288,6 +288,7 @@ void NanoRobot::setHardPosition(sf::Vector2f const & position)
 {
 	m_swarm.killAll();
 	m_swarm.create(m_spawnMode, position, sf::Color::Magenta, 8.f, 32.f, 2.f);
+	m_swarm.getFirefly(0u).position = position;
 	m_swarm.setTarget(position);
 }
 

@@ -200,6 +200,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
 				Menu/LanguageMenu.cpp					\
+				Menu/KeyboardMenu.cpp					\
 				Menu/MenuTypeMenu.cpp					\
 				Menu/SoundVolumeMenu.cpp				\
 				Menu/MusicVolumeMenu.cpp				\
@@ -217,6 +218,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/FakeMenu.cpp						\
 				Menu/BalleMultiplierMenu.cpp			\
 				Menu/DifficultyMenu.cpp					\
+				Menu/SpiritCheatMenu.cpp				\
 				Menu/EmptyMenu.cpp						\
 				Menu/SpiritInfos.cpp					\
 
@@ -231,6 +233,7 @@ SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/DoubleJumpNanoRobot.cpp		\
 				NanoRobots/SlowFallNanoRobot.cpp		\
 				NanoRobots/WaterNanoRobot.cpp			\
+				NanoRobots/BalleNanoRobot.cpp			\
 				NanoRobots/SpiritNanoRobot.cpp			\
 				NanoRobots/MenuNanoRobot.cpp			\
 				NanoRobots/NanoEffect.cpp				\

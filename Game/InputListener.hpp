@@ -28,7 +28,8 @@ public:
 		ViewUp = 14,
 		ViewDown = 15,
 		None = 16,
-		Zoom = 17
+		Zoom = 17,
+		Balle = 18
 	};
 
 	InputListener(void);

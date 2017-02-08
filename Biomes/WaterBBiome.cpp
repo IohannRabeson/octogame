@@ -292,17 +292,17 @@ Map::MapSurfaceGenerator WaterBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		//float m = n / 10.f;
-		std::vector<float> pointX = {0.f  , 100.f, 101.f, 150.f, 180.f, 520.f, 550.f, 599.f, 600.f, 700.f};
-		std::vector<float> pointY = {-10.f, -10.f, -1.0f, -1.0f, n    , n    , -1.0f, -1.0f, -10.f, -10.f};
-		for (std::size_t i = 0u; i < pointX.size(); i++)
-			pointX[i] /= floatMapSize;
+		m_pointX = {0.f  , 100.f, 101.f, 150.f, 180.f, 520.f, 550.f, 599.f, 600.f, 700.f};
+		m_pointY = {-10.f, -10.f, -1.0f, -1.0f, n    , n    , -1.0f, -1.0f, -10.f, -10.f};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			if (x >= pointX[i] && x < pointX[i + 1])
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
 			{
-				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::linearInterpolation(pointY[i], pointY[i + 1], coef);
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::linearInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 			}
 		}
 		return n;

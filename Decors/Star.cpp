@@ -17,6 +17,15 @@ Star::Star(SkyCycle * cycle) :
 	m_cycle = cycle;
 }
 
+bool Star::dieOutOfScreen(void)
+{
+	if (m_animator.getState() != DecorAnimator::State::Dead)
+		m_animator.die();
+	else
+		return true;
+	return false;
+}
+
 void Star::setup(ABiome& biome)
 {
 	m_size = biome.getStarSize();

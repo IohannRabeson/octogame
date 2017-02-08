@@ -25,6 +25,7 @@
 #include "Sky.hpp"
 #include "SunLight.hpp"
 #include "Grass.hpp"
+#include "Progress.hpp"
 
 #include <cassert>
 
@@ -85,22 +86,40 @@ void	DecorManager::clear()
 
 void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 {
-	float const			leftLimitX = camera.getCenter().x - camera.getSize().x;
-	float const			rightLimitX = camera.getCenter().x + camera.getSize().x;
-	float const			upLimitY = camera.getCenter().y - camera.getSize().x;
-	float const			downLimitY = camera.getCenter().y + camera.getSize().x * 2.f;
+	float const			leftLimitX = camera.getCenter().x - camera.getSize().x / 1.8f;
+	float const			rightLimitX = camera.getCenter().x + camera.getSize().x / 1.8f;
+	float const			upLimitY = camera.getCenter().y - camera.getSize().x / 2.0f;
+	float const			downLimitY = camera.getCenter().y + camera.getSize().x / 2.0f;
+
+	float const			leftLimitXbis = camera.getCenter().x - camera.getSize().x;
+	float const			rightLimitXbis = camera.getCenter().x + camera.getSize().x;
+	float const			upLimitYbis = camera.getCenter().y - camera.getSize().x;
+	float const			downLimitYbis = camera.getCenter().y + camera.getSize().x * 2.f;
+
 	sf::Vector2f		position;
 
 	m_builder.clear();
+
 	for (auto element : m_elements)
 	{
 		position = element->getPosition();
-		if (element->isDisabledIfOutOfScreen() == false ||
-			(element->isDisabledIfOutOfScreen() == true &&
-			(position.x >= leftLimitX && position.x <= rightLimitX) &&
-			(position.y >= upLimitY && position.y <= downLimitY)))
+
+		if (!element->isDisabledIfOutOfScreen())
 		{
 			element->update(frameTime, m_builder, *m_biome);
+		}
+		else if ((position.x >= leftLimitXbis && position.x <= rightLimitXbis) &&
+			(position.y >= upLimitYbis && position.y <= downLimitYbis))
+		{
+			if ((position.x >= leftLimitX && position.x <= rightLimitX) &&
+				(position.y >= upLimitY && position.y <= downLimitY))
+			{
+				element->update(frameTime, m_builder, *m_biome);
+			}
+			else if (!element->dieOutOfScreen())
+			{
+				element->update(frameTime, m_builder, *m_biome);
+			}
 		}
 	}
 	m_used = m_builder.getUsed();

@@ -25,6 +25,7 @@ void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
 	{
 		addMenu(AMenu::getText("control_ground"), nullptr);
 		addMenu(AMenu::getText("control_camera"), nullptr);
+		addMenu(AMenu::getText("control_camera_zoom"), nullptr);
 		addMenu(AMenu::getText("control_portal"), nullptr);
 		m_isCreatedMoveMap = true;
 		setupBubble();
@@ -57,6 +58,12 @@ void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
 	{
 		addMenu(AMenu::getText("control_slow_fall"), nullptr);
 		m_isCreatedSlowFall = true;
+		setupBubble();
+	}
+	if (progress.canUseBalle() && m_isCreatedBalle == false)
+	{
+		addMenu(AMenu::getText("control_balle"), nullptr);
+		m_isCreatedBalle = true;
 		setupBubble();
 	}
 	AMenuSelection::update(frameTime, position);
