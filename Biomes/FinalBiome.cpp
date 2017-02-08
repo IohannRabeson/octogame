@@ -257,6 +257,12 @@ std::vector<ParallaxScrolling::ALayer *> FinalBiome::getLayers()
 	return vector;
 }
 
+void	FinalBiome::initMapSurfacePoint(void)
+{
+	m_pointX = {0.f  , 299.f, 300.f, 350.f, 750.f, 805.f, 945.f, 1000.f, 1250.f, 1299.f, 1300.f, 1400.f};
+	m_pointY = {900.f, 900.f, 1.1f , 0    , 0    , -3.4f, -3.5f, 0     , 0     , 1.1f  , 900.f , 900.f };
+}
+
 Map::MapSurfaceGenerator FinalBiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)

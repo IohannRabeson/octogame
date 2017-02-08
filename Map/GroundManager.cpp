@@ -1757,7 +1757,7 @@ void	GroundManager::setNextGenerationState(GenerationState state, sf::Vector2f c
 void GroundManager::setTransitionAppear(int x, int y)
 {
 	int i = 0;
-	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).isTransitionType(Tile::e_transition_appear))
+	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).isTransitionType(ETransitionType::e_transition_appear))
 		i++;
 	for (std::size_t j = 0u; j < 4u; j++)
 		m_tilesPrev->get(x, y).setStartTransitionY(j, m_tilesPrev->get(x, y + i).getStartTransition(j).y);
@@ -1768,7 +1768,7 @@ void GroundManager::setTransitionAppear(int x, int y)
 void GroundManager::setTransitionDisappear(int x, int y)
 {
 	int i = 0;
-	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).isTransitionType(Tile::e_transition_disappear))
+	while (y + i < static_cast<int>(m_tiles->getRows() - 1) && m_tiles->get(x, y + i).isTransitionType(ETransitionType::e_transition_disappear))
 		i++;
 	for (std::size_t j = 0u; j < 4u; j++)
 		m_tiles->get(x, y).setStartTransitionY(j, m_tiles->get(x, y + i).getStartTransition(j).y);
@@ -1798,13 +1798,13 @@ void GroundManager::defineTransition(int x, int y)
 	int current = m_tiles->get(x, y).isEmpty();
 
 	if (prev && !current) // appear
-		m_tiles->get(x, y).setTransitionType(Tile::e_transition_appear);
+		m_tiles->get(x, y).setTransitionType(ETransitionType::e_transition_appear);
 	else if (!prev && current) // disappear
-		m_tiles->get(x, y).setTransitionType(Tile::e_transition_disappear);
+		m_tiles->get(x, y).setTransitionType(ETransitionType::e_transition_disappear);
 	else if (!current && !prev) // already a tile
-		m_tiles->get(x, y).setTransitionType(Tile::e_transition_already);
+		m_tiles->get(x, y).setTransitionType(ETransitionType::e_transition_already);
 	else // no tile
-		m_tiles->get(x, y).setTransitionType(Tile::e_transition_none);
+		m_tiles->get(x, y).setTransitionType(ETransitionType::e_transition_none);
 }
 
 void GroundManager::defineTransitionRange(int startX, int endX, int startY, int endY)
@@ -1819,7 +1819,7 @@ void GroundManager::defineTransitionRange(int startX, int endX, int startY, int 
 	{
 		for (int y = startY; y < endY; y++)
 		{
-			if (m_tiles->get(x, y).isTransitionType(Tile::e_transition_appear))
+			if (m_tiles->get(x, y).isTransitionType(ETransitionType::e_transition_appear))
 				setTransitionAppear(x, y);
 		}
 	}
@@ -1827,7 +1827,7 @@ void GroundManager::defineTransitionRange(int startX, int endX, int startY, int 
 	{
 		for (int y = startY; y < endY; y++)
 		{
-			if (m_tiles->get(x, y).isTransitionType(Tile::e_transition_already))
+			if (m_tiles->get(x, y).isTransitionType(ETransitionType::e_transition_already))
 				setTransitionModify(x, y);
 		}
 	}
@@ -1835,7 +1835,7 @@ void GroundManager::defineTransitionRange(int startX, int endX, int startY, int 
 	{
 		for (int y = startY; y < endY; y++)
 		{
-			if (m_tiles->get(x, y).isTransitionType(Tile::e_transition_disappear))
+			if (m_tiles->get(x, y).isTransitionType(ETransitionType::e_transition_disappear))
 				setTransitionDisappear(x, y);
 		}
 	}
@@ -1871,19 +1871,21 @@ void GroundManager::updateTransition(sf::FloatRect const & cameraRect)
 	sf::Vertex * last;
 	bool updateLast;
 	std::size_t physicsLineCount = 0u;
+	std::size_t columns = m_tiles->getColumns();
+	std::size_t rows = m_tiles->getRows();
 
 	// Update tiles
 	m_verticesCount = 0u;
-	for (std::size_t x = 0u; x < m_tiles->getColumns(); x++)
+	for (std::size_t x = 0u; x < columns; x++)
 	{
 		first = nullptr;
 		last = nullptr;
 		physicsLineCount = 0u;
 		updateLast = true;
-		for (std::size_t y = 0u; y < m_tiles->getRows(); y++)
+		for (std::size_t y = 0u; y < rows; y++)
 		{
 			tile = &m_tiles->get(x, y);
-			if (tile->isTransitionType(Tile::e_transition_none))
+			if (tile->isTransitionType(ETransitionType::e_transition_none))
 			{
 				if (first && tile->isEmpty())
 				{
