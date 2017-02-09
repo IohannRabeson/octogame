@@ -1041,9 +1041,9 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	updateDoorAction(frameTime);
 	updatePortalVacuum(frameTime);
 	updateParticles(frameTime);
+	updateBox(frameTime);
 	resetColisionBolean();
 	replaceOcto();
-	updateBox(frameTime);
 	updateCutscene(realFrameTime);
 
 	m_previousTop = m_box->getGlobalBounds().top;
@@ -1237,7 +1237,7 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 			}
 			//if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
 			//TODO  : Keep an eye on octo behavior when touching the ground
-			if (collisionDirection.y < 0.f && collisionDirection.x == 0.f && (m_sprite.getCurrentEvent() != Events::StartJump || m_sprite.getCurrentEvent() != Events::DoubleJump))
+			if (collisionDirection.y < 0.f && collisionDirection.x == 0.f)
 				m_collisionTile = true;
 			if (collisionDirection.y > 0.f)
 				m_collisionTileHead = true;
@@ -1576,6 +1576,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 void	CharacterOcto::updateBox(sf::Time frameTime)
 {
+	/*
 	//TODO: Check on use if it's a good improvement
 	Events event = static_cast<Events>(m_sprite.getCurrentEvent());
 	bool isReset = false;
@@ -1591,7 +1592,7 @@ void	CharacterOcto::updateBox(sf::Time frameTime)
 		m_adaptBoxTimer = sf::Time::Zero;
 	}
 
-	if (isReset)
+	if (isReset && !m_collisionTileHead)
 	{
 		m_box->setSize(m_boxSize);
 		m_box->setPosition(sf::Vector2f(m_box->getPosition().x, m_box->getPosition().y - (m_adaptBoxDelta)));
@@ -1602,6 +1603,17 @@ void	CharacterOcto::updateBox(sf::Time frameTime)
 	{
 		m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
 	}
+	*/
+
+	Events event = static_cast<Events>(m_sprite.getCurrentEvent());
+
+	if (event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3)
+		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
+	else
+		m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 3.f, sf::Time::Zero);
+
+	m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
+	m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
 }
 
 void	CharacterOcto::updateGroundDelay(sf::Time frameTime)

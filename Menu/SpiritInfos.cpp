@@ -155,7 +155,7 @@ void SpiritInfos::updateProgression(sf::Time frameTime, sf::Vector2f const & pos
 			float alphaCoef = std::max((1.f - std::max(400.f - dist + 200.f, 0.f) / 400.f), 0.f);
 
 			m_progressionBubbles[i]->setPosition(m_spirits[i * 2u]->getPosition() - sf::Vector2f(10.f, 16.f));
-			m_progressionBubbles[i]->setColors(sf::Color(255, 255, 255, 100.f * alphaCoef), sf::Color(0, 0, 0, 255 * alphaCoef));
+			m_progressionBubbles[i]->setColors(sf::Color(255, 255, 255, 180.f * alphaCoef), sf::Color(0, 0, 0, 255 * alphaCoef));
 			m_progressionBubbles[i]->update(frameTime);
 		}
 	}
