@@ -284,6 +284,7 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 		else
 			m_timeBeforeNextText = sf::seconds(2.f);
 	}
+	Progress::getInstance().updateSteam(frameTime);
 }
 
 void	LaboratoryEndScreen::updateTv(sf::Time frameTime)
