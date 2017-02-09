@@ -11,6 +11,8 @@ public:
 	virtual ~BalleNanoRobot(void) = default;
 	virtual void update(sf::Time frametime);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
+	virtual void transfertToOcto(bool inInit = false);
+	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
 
 	bool throwPotion(bool isPotion);
 
@@ -22,6 +24,7 @@ private:
 	sf::Time					m_throwPotionTimer;
 	sf::Time					m_throwPotionTimerMax;
 	sf::Vector2f				m_octoPosition;
+	bool						m_inInit;
 };
 
 #endif

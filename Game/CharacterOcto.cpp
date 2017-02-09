@@ -1237,7 +1237,7 @@ void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::
 			}
 			//if (collisionDirection.x == 0.f && collisionDirection.y <= 0.f)
 			//TODO  : Keep an eye on octo behavior when touching the ground
-			if (collisionDirection.y < 0.f && collisionDirection.x == 0.f && (m_sprite.getCurrentEvent() != Events::StartJump || m_sprite.getCurrentEvent() != Events::DoubleJump))
+			if (collisionDirection.y < 0.f && collisionDirection.x == 0.f)
 				m_collisionTile = true;
 			if (collisionDirection.y > 0.f)
 				m_collisionTileHead = true;
