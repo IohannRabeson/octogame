@@ -56,7 +56,8 @@ private:
 	sf::Time									m_timerMoveCursorMax;
 
 	sf::CircleShape								m_cursor;
-	bool										m_input;
+	sf::Time									m_inputDelay;
+	sf::Time									m_inputTimer;
 };
 
 #endif
