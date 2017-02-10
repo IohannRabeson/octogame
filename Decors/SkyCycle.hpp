@@ -7,6 +7,8 @@
 # include <cstddef>
 # include <random>
 
+# include "RandomGenerator.hpp"
+
 class ABiome;
 
 class SkyCycle
@@ -46,6 +48,7 @@ private:
 
 	sf::Time							m_timer;
 	sf::Time							m_timerMax;
+	sf::Time							m_timerStart;
 	bool								m_isDay;
 	bool								m_isMidDay;
 	sf::Time							m_timerDay;
@@ -69,8 +72,7 @@ private:
 	sf::Time							m_dropTimerMax;
 	bool								m_dropAppear;
 
-	std::mt19937						m_engine;
-	std::uniform_int_distribution<int>	m_distriThunder;
+	RandomGenerator						m_generator;
 	float								m_thunder;
 	sf::Time							m_thunderTimerStart;
 	sf::Time							m_thunderTimer;
@@ -79,6 +81,7 @@ private:
 
 	bool								m_boolThunder;
 	octo::AudioManager::SoundPtr		m_rainSound;
+
 };
 
 #endif

@@ -18,12 +18,15 @@ public:
 						octo::VertexBuilder& builder,
 						ABiome& biome);
 
+	virtual bool dieOutOfScreen(void);
+
 private:
 	sf::Vector2f	m_size;
 	sf::Color		m_color;
 	sf::Vector2f	m_sizeHeart;
 	DecorAnimator	m_animator;
 	float			m_animation;
+	int				m_detailPriority;
 
 	sf::Vector2f	m_glowSize;
 	sf::Vector2f	m_glowSizeCorner;

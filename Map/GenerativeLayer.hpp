@@ -17,7 +17,7 @@ public:
 	typedef std::function<float(Noise & noise, float x, float y)>	BackgroundSurfaceGenerator;
 
 	GenerativeLayer(void);
-	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration);
+	GenerativeLayer(sf::Color const & color, sf::Vector2f const & speed, sf::Vector2u const & mapSize, float tileSize, int heightOffset, float topOpacity, float botOpacity, float transitionDuration, float deltaOffset = 0.f);
 	virtual ~GenerativeLayer(void) = default;
 
 	void setup(void);
@@ -27,6 +27,7 @@ public:
 	void setBackgroundSurfaceGenerator(BackgroundSurfaceGenerator mapSurface);
 	inline void setMapSize(sf::Vector2u const & mapSize) { m_mapSize = mapSize; }
 	inline sf::Vector2u const & getMapSize(void) const { return m_mapSize; }
+	inline void setAccelerateFactor(float factor) { m_accelerateFactor = factor; }
 
 	void update(float frametime, ABiome & biome);
 	void draw(sf::RenderTarget & render, sf::RenderStates states) const;
@@ -49,6 +50,8 @@ private:
 	float								m_botOpacity;
 	float								m_highestY;
 	int									m_heightOffset;
+	float								m_deltaOffset;
+	float								m_accelerateFactor;
 	std::size_t							m_widthScreen;
 	std::size_t							m_verticesCount;
 	BackgroundSurfaceGeneratorBind		m_backgroundSurface;

@@ -3,6 +3,7 @@
 
 # include <AudioManager.hpp>
 # include <GenericFactory.hpp>
+# include <Array2D.hpp>
 # include "Map.hpp"
 # include "DecorManager.hpp"
 # include "Portal.hpp"
@@ -33,13 +34,14 @@ public:
 	virtual ~GroundManager(void) = default;
 
 	void setup(ABiome & biome, SkyCycle & cycle);
+	void setupGroundRock(ABiome & biome);
 	void update(float deltatime);
 	void drawBack(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawWater(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawText(sf::RenderTarget& render, sf::RenderStates states) const;
 	NanoRobot * getNanoRobot(NanoRobot * robot);
-	void setNextGenerationState(GenerationState state);
+	void setNextGenerationState(GenerationState state, sf::Vector2f const & octoPos);
 
 private:
 	template<class T>
@@ -68,24 +70,27 @@ private:
 
 	typedef octo::GenericFactory<std::string, ANpc>				NpcFactory;
 
-	NpcFactory							m_npcFactory;
-	std::unique_ptr<Map>				m_tiles;
-	std::unique_ptr<Map>				m_tilesPrev;
-	float								m_transitionTimer;
-	float								m_transitionTimerMax;
-	sf::Vector2f						m_offset;
-	std::unique_ptr<sf::Vertex[]>		m_vertices;
-	std::size_t							m_verticesCount;
-	sf::Vector2i						m_oldOffset;
-	sf::Vector2u						m_mapSize;
-	std::vector<TileShape *>			m_tileShapes;
-	std::vector<sf::Vector2f>			m_decorPositions;
-	DecorManager						m_decorManagerBack;
-	DecorManager						m_decorManagerFront;
-	DecorManager						m_decorManagerGround;
-	GenerationState						m_nextState;
-	SkyCycle *							m_cycle;
-	std::unique_ptr<Water>				m_water;
+	NpcFactory								m_npcFactory;
+	std::unique_ptr<Map>					m_tiles;
+	std::unique_ptr<Map>					m_tilesPrev;
+	float									m_transitionTimer;
+	float									m_transitionTimerMax;
+	sf::Vector2f							m_offset;
+	std::unique_ptr<sf::Vertex[]>			m_vertices;
+	std::size_t								m_verticesCount;
+	sf::Vector2i							m_oldOffset;
+	sf::Vector2u							m_mapSize;
+	octo::Array2D<TileShape *>				m_tileShapes;
+	std::vector<sf::Vector2f>				m_decorPositions;
+	DecorManager							m_decorManagerBack;
+	DecorManager							m_decorManagerFront;
+	DecorManager							m_decorManagerGround;
+	DecorManager							m_decorManagerInstanceBack;
+	DecorManager							m_decorManagerInstanceFront;
+	DecorManager							m_decorManagerInstanceGround;
+	GenerationState							m_nextState;
+	std::unique_ptr<Water>					m_water;
+	sf::Vector2f							m_octoPosState;
 
 	// Game objects
 	std::vector<GameObjectPosition<ElevatorStream>>		m_elevators;
@@ -116,8 +121,8 @@ private:
 
 	template<class T>
 	void setupGameObjectPosition(std::vector<GameObjectPosition<T>> const & gameObjectPosition);
-	void setupDecors(ABiome & biome);
-	void setupGameObjects(ABiome & biome, SkyCycle & skyCycle);
+	void setupDecors(ABiome & biome, SkyCycle & cycle);
+	void setupGameObjects(ABiome & biome);
 	void updateOffset(float deltatime);
 	void updateTransition(sf::FloatRect const & cameraRect);
 	void updateDecors(sf::Time deltatime);

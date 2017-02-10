@@ -1,8 +1,9 @@
 #include "RepairNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 
 RepairNanoRobot::RepairNanoRobot(void) :
-	NanoRobot(sf::Vector2f(600.f * 16.f, 00.f), NANO_REPAIR_OSS, 8, 12542, sf::Vector2f(0.f, -19.f), 0.f)
+	NanoRobot(sf::Vector2f(600.f * 16.f, 00.f), NANO_REPAIR_OSS, 8, 12542, sf::Vector2f(0.f, -19.f), InputListener::OctoKeys::Elevator, 0.f)
 {
 	setup(this);
 
@@ -30,4 +31,10 @@ RepairNanoRobot::RepairNanoRobot(void) :
 void RepairNanoRobot::update(sf::Time frameTime)
 {
 	NanoRobot::update(frameTime);
+	updateInfo();
 }
+
+void RepairNanoRobot::updateInfo(void)
+{
+}
+

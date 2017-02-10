@@ -10,27 +10,31 @@ public:
 	ShineEffect(void);
 	virtual ~ShineEffect(void) = default;
 
-	virtual void setup(ABiome& biome);
-	virtual void update(sf::Time frameTime,
-						octo::VertexBuilder& builder,
-						ABiome& biome);
-	DecorAnimator const & getAnimator(void);
+	void					setSize(sf::Vector2f const & size);
+	void					setColor(sf::Color const & color);
+	void					setCanPlaySound(bool playSound);
+	virtual void			setup(ABiome& biome);
+	virtual void			update(sf::Time frameTime,
+									octo::VertexBuilder& builder,
+									ABiome& biome);
+	DecorAnimator const &	getAnimator(void);
 
 private:
-	sf::Vector2f	m_position;
-	sf::Vector2f	m_size;
-	sf::Color		m_color;
-	sf::Vector2f	m_sizeHeart;
-	float			m_angle;
-	DecorAnimator	m_animator;
-	float			m_animation;
-	bool			m_isShineEffect;
-	bool			m_isSound;
+	sf::Vector2f			m_position;
+	sf::Vector2f			m_size;
+	sf::Color				m_color;
+	sf::Vector2f			m_sizeHeart;
+	float					m_angle;
+	DecorAnimator			m_animator;
+	float					m_animation;
+	bool					m_isShineEffect;
+	bool					m_isSound;
+	bool					m_canPlaySound;
 
-	sf::Vector2f	m_glowSize;
-	sf::Vector2f	m_glowSizeCorner;
+	sf::Vector2f			m_glowSize;
+	sf::Vector2f			m_glowSizeCorner;
 
-	void playSound(ABiome & biome, sf::Vector2f const & position);
+	void					playSound(ABiome & biome, sf::Vector2f const & position);
 };
 
 #endif

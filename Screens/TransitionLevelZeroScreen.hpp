@@ -1,15 +1,15 @@
 #ifndef TRANSITIONLEVELZEROSCREEN_HPP
 # define TRANSITIONLEVELZEROSCREEN_HPP
 # include <AbstractState.hpp>
-# include <GraphicsListeners.hpp>
 
 # include "Game.hpp"
 # include "MainMenu.hpp"
+# include "InputListener.hpp"
 # include <AnimatedSprite.hpp>
 
 # include <memory>
 
-class TransitionLevelZeroScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
+class TransitionLevelZeroScreen : public octo::AbstractState, public InputListener
 {
 public:
 	TransitionLevelZeroScreen();
@@ -22,20 +22,26 @@ public:
 	virtual void		draw(sf::RenderTarget& render)const;
 
 private:
+	void				setupText(void);
+	void				setupSprite(void);
+
 	std::size_t						m_bubbleCount;
 	std::unique_ptr<BubbleText[]>	m_bubble;
 	sf::Time						m_time;
+	sf::Time						m_timeCircleRainbow;
 	std::vector<sf::Time>			m_timerMax;
 	std::size_t						m_index;
 	sf::Time						m_startTimer;
 	sf::Time						m_startTimerMax;
+	sf::Time						m_timerShaderRocket;
+	sf::Time						m_timerShaderRocketMax;
 	bool							m_soundPlayed1;
 	bool							m_soundPlayed2;
 
 	octo::AnimatedSprite			m_sprite;
 	octo::SpriteAnimation			m_animation;
 
-	virtual bool onPressed(sf::Event::KeyEvent const & event);
+	virtual bool onInputPressed(InputListener::OctoKeys const & key);
 };
 
 #endif

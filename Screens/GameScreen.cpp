@@ -9,83 +9,136 @@
 #include <PostEffectManager.hpp>
 
 GameScreen::GameScreen(void) :
-	m_doSave(false)
+	m_doSave(false),
+	m_timerRedBlueMax(sf::seconds(30.f))
 {}
 
 void	GameScreen::start()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
 	Progress &				progress = Progress::getInstance();
-	graphics.addKeyboardListener(this);
 
+	InputListener::addInputListener();
 	progress.load("save.osv");
+	progress.setMenu(false);
 	m_game.reset(new Game());
 	m_game->loadLevel();
 	m_menu.setup();
+	m_timePlayed.restart();
 }
 
 void	GameScreen::pause()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-	graphics.removeKeyboardListener(this);
 }
 
 void	GameScreen::resume()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
-	octo::Application::getPostEffectManager().removeEffects();
-	graphics.addKeyboardListener(this);
-	Progress::getInstance().levelChanged();
-	m_game.reset(new Game());
-	m_game->loadLevel();
 }
 
 void	GameScreen::stop()
 {
-	octo::GraphicsManager &	graphics = octo::Application::getGraphicsManager();
+	Progress &					progress = Progress::getInstance();
+
 	octo::Application::getAudioManager().stopMusic(sf::Time::Zero);
-	Progress::getInstance().save();
+	progress.save(m_timePlayed.getElapsedTime().asSeconds());
 	octo::Application::getPostEffectManager().removeEffects();
-	graphics.removeKeyboardListener(this);
+	InputListener::removeInputListener();
+	m_game.reset(nullptr);
+	m_menu.setKeyboard(false);
 }
 
 void	GameScreen::update(sf::Time frameTime)
 {
 	AMenu::State				state = m_menu.getState();
 	octo::StateManager &		states = octo::Application::getStateManager();
-	octo::PostEffectManager &	postEffect = octo::Application::getPostEffectManager();
 	Progress &					progress = Progress::getInstance();
 
 	if (state == AMenu::State::Active || state == AMenu::State::Draw)
 	{
-		m_menu.update(frameTime, m_game->getOctoBubblePosition());
-		postEffect.setAllShaderEnabled(false);
+		progress.setBubbleNpc(false);
+		if (!m_doSave)
+			m_menu.updateSpiritInfos();
 		m_doSave = true;
+		m_menu.update(frameTime, m_game->getOctoBubblePosition());
 	}
 	else if (m_doSave)
 	{
+		progress.setBubbleNpc(true);
 		progress.save();
 		m_doSave = false;
 	}
 	else
 	{
-		postEffect.setAllShaderEnabled(true);
 		m_menu.setKeyboard(false);
 		m_game->update(frameTime);
-		if (progress.changeLevel())
+		changeLevel(states, progress);
+	}
+	timeLevelBlueRed(frameTime, states, progress);
+	progress.updateSteam(frameTime);
+}
+
+void GameScreen::changeLevel(octo::StateManager & states, Progress & progress)
+{
+	if (progress.changeLevel())
+	{
+		Level current = progress.getCurrentDestination();
+		Level next = progress.getNextDestination();
+
+		progress.levelChanged();
+		if (current == Level::EndRocket || next == Level::EndRocket)
 		{
-			progress.save();
-			progress.levelChanged();
+			if (next == Level::EndRocket)
+				states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(0.0f));
+			states.change("transitionLevel", "blue");
+		}
+		else if (current == Level::Blue || next == Level::Blue)
+		{
+			if (next == Level::Blue)
+				states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(0.0f));
+			states.change("transitionLevel", "blue");
+		}
+		else if (current == Level::Red || next == Level::Red)
+		{
+			if (next == Level::Red)
+				states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(0.f));
+			states.change("transitionLevel", "red");
+		}
+		else
+		{
+			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
 			states.change("transitionLevel");
 		}
 	}
 }
 
-bool GameScreen::onPressed(sf::Event::KeyEvent const &event)
+void GameScreen::timeLevelBlueRed(sf::Time frameTime, octo::StateManager & states, Progress & progress)
 {
-	switch (event.code)
+	Level next = progress.getNextDestination();
+
+	if (next == Level::Blue)
 	{
-		case sf::Keyboard::Escape:
+		m_timerBlue += frameTime;
+		if (m_timerBlue >= m_timerRedBlueMax)
+		{
+			progress.setNextDestination(Level::EndRocket);
+			states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(2.0f));
+		}
+	}
+	else if (next == Level::Red)
+	{
+		m_timerRed += frameTime;
+		if (m_timerRed >= m_timerRedBlueMax)
+		{
+			states.setTransitionDuration(sf::seconds(2.5f), sf::seconds(2.0f));
+			states.change("laboratory_end", "red");
+		}
+	}
+}
+
+bool GameScreen::onInputPressed(InputListener::OctoKeys const & key)
+{
+	switch (key)
+	{
+		case OctoKeys::Menu:
 			{
 				AMenu::State state = m_menu.getState();
 				if (state == AMenu::State::Hide)

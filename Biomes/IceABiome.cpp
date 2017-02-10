@@ -15,21 +15,23 @@ IceABiome::IceABiome() :
 	m_seed("Level_One"),
 	m_mapSize(sf::Vector2u(610u, 16u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(250.f, 700.f),
+	m_octoStartPosition(136.f * 16.f, 22.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(227, 227, 227),
 	m_tileEndColor(137, 189, 211),
 	m_waterLevel(-1.f),
 	m_waterColor(255, 255, 255, 200),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
-	m_dayDuration(sf::seconds(45.f)),
-	m_startDayDuration(sf::seconds(9.f)),
+	m_dayDuration(sf::seconds(120.f)),
+	m_startDayDuration(sf::seconds(90.f)),
 	m_skyDayColor(8, 20, 26),
-	m_skyNightColor(8, 20, 26),
-	m_nightLightColor(sf::Color::Transparent),
-	m_sunsetLightColor(sf::Color::Transparent),
+	m_skyNightColor(78, 47, 4, 130),
+	m_nightLightColor(8, 20, 26, 50),
+	m_dayLightColor(sf::Color::Transparent),
+	m_sunsetLightColor(61, 0, 13, 20),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -41,14 +43,14 @@ IceABiome::IceABiome() :
 	m_mushroomCount(3u, 40u),
 	m_crystalCount(4u, 8u),
 	m_starCount(500u, 800u),
-	m_sunCount(1u, 3u),
+	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
 	m_rainbowCount(1u, 2u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
 	m_canCreateRain(false),
-	m_canCreateThunder(false),
+	m_canCreateThunder(true),
 	m_canCreateSnow(true),
 	m_canCreateRock(true),
 	m_canCreateTree(true),
@@ -59,13 +61,22 @@ IceABiome::IceABiome() :
 	m_canCreateShineEffect(false),
 	m_canCreateCloud(true),
 	m_canCreateStar(true),
-	m_canCreateSun(false),
+	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(false),
+	m_waterPersistence(0.f),
+	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(5.f, 50.f), sf::Vector2f(20.f, 70.f)),
 	m_rockPartCount(2.f, 10.f),
 	m_rockColor(0, 31, 63),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassSizeX(14.f, 16.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
+	m_grassIndex(0u),
 
 	m_treeDepth(5u, 5u),
 	m_treeSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 150.f)),
@@ -89,6 +100,9 @@ IceABiome::IceABiome() :
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(-500.f),
+	m_cloudMinY(-6000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
 
@@ -96,9 +110,9 @@ IceABiome::IceABiome() :
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
-	m_sunSize(sf::Vector2f(60.f, 60.f), sf::Vector2f(150.f, 150.f)),
+	m_sunSize(sf::Vector2f(5.f, 5.f), sf::Vector2f(7.f, 7.f)),
 	m_sunPartCount(2u, 4u),
-	m_sunColor(255, 255, 200),
+	m_sunColor(208, 220, 226),
 
 	m_moonSize(sf::Vector2f(50.f, 30.f), sf::Vector2f(100.f, 100.f)),
 	m_moonColor(200, 200, 200),
@@ -112,13 +126,10 @@ IceABiome::IceABiome() :
 	m_indexTreePos(0u)
 {
 	m_generator.setSeed(m_seed);
-#ifndef NDEBUG
 	m_mapSeed = 42u;
-#else
-	m_mapSeed = 42;//m_generator.randomInt(0, std::numeric_limits<int>::max());
-#endif
 
 	// Create a set a 20 colors for particles
+	Progress & progress = Progress::getInstance();
 	std::size_t colorCount = 20;
 	float interpolateDelta = 1.f / 20.f;
 	m_particleColor.resize(colorCount);
@@ -126,19 +137,41 @@ IceABiome::IceABiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
-	m_gameObjects[30] = GameObjectType::GroundTransformNanoRobot;
-	m_interestPointPosX = 320;
-	m_gameObjects[8] = GameObjectType::SpaceShip;
+	if (progress.isIntro())
+	{
+		m_startDayDuration = sf::seconds(90.f);
+		m_dayDuration = sf::seconds(120.f);
+	}
 
-	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::DesertA || progress.getLastDestination() == Level::Default)
-		m_octoStartPosition = sf::Vector2f(323 * 16.f, 600.f);
+	m_secondStartColor = getRockColor();
+	m_secondEndColor = getRockColor();
 
-	m_gameObjects[320] = GameObjectType::Portal;
-	m_gameObjects[300] = GameObjectType::FranfranNpc;
-	m_destinations.push_back(Level::DesertA);
+	m_instances[20] = MAP_ICE_A_TRAIL_LEFT_OMP;
+	m_gameObjects[120] = GameObjectType::CedricIceANpc;
+	m_gameObjects[128] = GameObjectType::SpaceShip;
+	m_instances[120] = MAP_ICE_A_CRATER_OMP;
+	m_instances[220] = MAP_ICE_A_TRAIL_RIGHT_OMP;
 
-	m_treePos = {36, 200, 206, 209, 220, 229, 240, 254, 259, 275, 350, 359, 363, 369, 385, 401, 410, 423, 450};
+	if (progress.getLastDestination() == Level::IceB)
+		m_octoStartPosition = sf::Vector2f(423.f * 16.f, 0.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(404.f * 16.f, -1250.f);
+
+	m_gameObjects[420] = GameObjectType::PortalSnow;
+	m_instances[470] = MAP_ICE_A_SECRET_OMP;
+	m_destinations.push_back(Level::Random);
+	m_destinations.push_back(Level::IceB);
+
+	m_interestPointPosX = 420;
+
+	m_gameObjects[344] = GameObjectType::BirdBlueNpc;
+	m_gameObjects[400] = GameObjectType::FranfranNpc;
+	m_gameObjects[490] = GameObjectType::BirdBlueNpc;
+
+	m_treePos = {156, 300, 306, 309, 320, 329, 340, 354, 359, 375, 450, 459, 463, 469, 485, 501, 510, 523, 550};
+
+	if (!progress.isIntro())
+		m_canCreateSnow = false;
 }
 
 void			IceABiome::setup(std::size_t seed)
@@ -207,6 +240,11 @@ sf::Color	IceABiome::getWaterColor()
 	return m_waterColor;
 }
 
+sf::Color	IceABiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
+}
+
 std::map<std::size_t, std::string> const & IceABiome::getInstances()
 {
 	return m_instances;
@@ -214,29 +252,21 @@ std::map<std::size_t, std::string> const & IceABiome::getInstances()
 
 std::vector<ParallaxScrolling::ALayer *> IceABiome::getLayers()
 {
-	//sf::Vector2u const & mapSize = getMapSize();
+	sf::Vector2u const & mapSize = sf::Vector2u(getMapSize().x, getMapSize().y * 4u);
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	/*
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
-	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-		{
-			return noise.perlin(x * 10.f, y, 2, 2.f);
-		});
-	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, 10, 0.1f, 0.9f, 11.f, 400.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
+	layer = new GenerativeLayer(getParticleColorGround() - sf::Color(130, 130, 130, 0), sf::Vector2f(0.5f, 0.3f), mapSize, 15.f, 15, 0.2f, 0.8f, 6.f, 400.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.noise(x * 1.1f, y);
+			return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	*/
 	return vector;
 }
 
@@ -244,31 +274,45 @@ Map::MapSurfaceGenerator IceABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		static float saveY = y;
-		static bool isBlock = false;
-		if (saveY != y)
+		float floatMapSize = static_cast<float>(m_mapSize.x);
+		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
+		m_pointX = {0.f    , 20.f, 70.f, 95.f, 120.f, 125.f, 165.f, 166.f, 195.f, 220.f, 270.f, 290.f, 350.f, 369.f, 377.f, 396.f, 450.f, 469.f, 477.f, 496.f, 590.f, 610.f  };
+		m_pointY = {n / 5.f, 0.f , 0.f , 0.f , 0.f  , 2.4f , 2.4f , 0.f  , n    , 0.f  , 0.f  , n    , n    , 0.1f , 0.1f , n    , n    , 0.1f , 0.1f , n    , n    , n / 5.f};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
+
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			saveY = y;
-			isBlock = !isBlock;
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
+			{
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
+			}
 		}
-		if (isBlock && x > 5.f / static_cast<float>(m_mapSize.x) && x < 47.f / static_cast<float>(m_mapSize.x))
-		{
-			if (x == 6.f / static_cast<float>(m_mapSize.x))
-				return 0.25f + 112.f / 16.f;
-			else if (x == 46.f / static_cast<float>(m_mapSize.x))
-				return 0.25f + 112.f / 16.f;
-			return 0.5f + 112.f / 16.f;
-		}
-		return noise.fBm(x, y, 3, 3.f, 0.3f) + 112.f / 16.f;
-		//return 0.f + 112.f / 16.f;
+		return n;
 	};
 }
 
 Map::TileColorGenerator IceABiome::getTileColorGenerator()
 {
-	return [this](Noise & noise, float x, float y, float z)
+	float startTransition = 300.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 600.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 900.f / static_cast<float>(m_mapSize.y);
+	return [this, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > startTransition && y <= middleTransition)
+		{
+			float ratio = (y - (startTransition)) / (middleTransition - startTransition);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, m_secondStartColor, ratio), m_tileEndColor, transition);
+		}
+		else if (y > middleTransition && y <= endTransition)
+		{
+			float ratio = (y - (middleTransition)) / (endTransition - middleTransition);
+			return octo::linearInterpolation(m_secondStartColor, octo::linearInterpolation(m_tileEndColor, m_secondEndColor, ratio), transition);
+		}
+		if (y > endTransition)
+			return octo::linearInterpolation(m_secondStartColor, m_secondEndColor, transition);
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
@@ -312,6 +356,11 @@ sf::Color		IceABiome::getSkyNightColor()
 sf::Color		IceABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	IceABiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		IceABiome::getSunsetLightColor()
@@ -545,6 +594,34 @@ sf::Color		IceABiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	IceABiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+float	IceABiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
+sf::Color	IceABiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	IceABiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	IceABiome::getGrassPosX()
+{
+	m_grassIndex++;
+	if (m_grassIndex >= m_mapSize.x)
+		m_grassIndex = 0u;
+	return m_grassIndex;
+}
+
 bool			IceABiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -578,6 +655,21 @@ sf::Vector2f	IceABiome::getCloudSize()
 std::size_t		IceABiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	IceABiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	IceABiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	IceABiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		IceABiome::getCloudLifeTime()
@@ -685,6 +777,21 @@ sf::Time		IceABiome::getRainbowIntervalTime()
 bool			IceABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	IceABiome::canCreateGrass()
+{
+	return m_canCreateGrass;
+}
+
+float	IceABiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
+}
+
+ABiome::Type	IceABiome::getType() const
+{
+	return m_type;
 }
 
 

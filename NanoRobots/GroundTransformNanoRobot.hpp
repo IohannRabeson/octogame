@@ -11,6 +11,7 @@ public:
 
 	virtual void update(sf::Time frameTime);
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
+	void		 updateInfo(void);
 
 private:
 	enum State
@@ -27,7 +28,6 @@ private:
 	bool		m_canSpeak;
 	bool		m_talkaboutshit;
 	State		m_state;
-
 };
 
 #endif

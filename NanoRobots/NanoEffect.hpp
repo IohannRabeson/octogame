@@ -3,6 +3,7 @@
 
 # include "DecorAnimator.hpp"
 # include "RandomGenerator.hpp"
+# include "MusicSystem.hpp"
 # include <AnimatedSprite.hpp>
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Text.hpp>
@@ -11,6 +12,11 @@
 # include <SFML/Graphics/Transformable.hpp>
 
 # include <memory>
+
+namespace sf
+{
+	class Shader;
+}
 
 class NanoEffect : public sf::Drawable,
 				public sf::Transformable
@@ -22,7 +28,9 @@ public:
 		Active,
 		Transfer,
 		Random,
-		Wait
+		FadeOut,
+		Wait,
+		None
 	};
 
 	NanoEffect(void);
@@ -34,9 +42,17 @@ public:
 	sf::Vector2f const &			getPosition(void) const;
 	sf::Color const &				getColor(void) const;
 	float							getSizeCorner(void) const;
+	sf::Vector2f const &			getNanoScale(void) const;
 	void							setPosition(sf::Vector2f const & position);
 	void							setColor(sf::Color const & color);
+	void							setNanoScale(sf::Vector2f const & scale);
 	void							onTransfer(void);
+	void							setState(State state);
+	State							getState(void) const;
+	void							setTravelling(bool travelling);
+	void							setEffectEnable(bool enable);
+	bool							getEffectEnable(void) const;
+	float							getTransferProgress(void);
 
 private:
 	void							createLosange(sf::Vector2f const & size,
@@ -70,6 +86,16 @@ private:
 	sf::Time						m_randomTimer;
 	sf::Time						m_randomTimerMax;
 	bool							m_soundPlayed;
+	std::size_t						m_lastNanoCount;
+	sf::Vector2f					m_nanoScaleOrigin;
+	sf::Vector2f					m_nanoScaleZoom;
+	sf::Vector2f					m_nanoScale;
+	sf::Shader &					m_shader;
+	std::size_t						m_shaderIndex;
+	std::unique_ptr<MusicSystem>	m_particle;
+	sf::Time						m_particleTimer;
+	bool							m_isTravelling;
+	bool							m_effectEnable;
 };
 
 #endif

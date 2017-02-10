@@ -1,5 +1,5 @@
-#ifndef JUGNLEABIOME_HPP
-# define JUGNLEABIOME_HPP
+#ifndef JUNGLEABIOME_HPP
+# define JUNGLEABIOME_HPP
 
 # include "ABiome.hpp"
 # include "RandomGenerator.hpp"
@@ -41,6 +41,9 @@ public:
 	virtual Level										getDestination();
 	virtual float										getWaterLevel();
 	virtual sf::Color									getWaterColor();
+	virtual sf::Color									getSecondWaterColor();
+	virtual bool										isDeadlyWater();
+	virtual sf::Color									getColorMoveInstance();
 
 	virtual std::map<std::size_t, std::string> const &	getInstances();
 	virtual std::vector<ParallaxScrolling::ALayer *>	getLayers();
@@ -55,6 +58,7 @@ public:
 	virtual sf::Color									getSkyDayColor();
 	virtual sf::Color									getSkyNightColor();
 	virtual sf::Color									getNightLightColor();
+	virtual sf::Color									getDayLightColor();
 	virtual sf::Color									getSunsetLightColor();
 
 	virtual float										getWind();
@@ -81,6 +85,12 @@ public:
 	virtual sf::Vector2f								getRockSize();
 	virtual std::size_t									getRockPartCount();
 	virtual sf::Color									getRockColor();
+
+	virtual float										getGrassSizeY();
+	virtual float										getGrassSizeX();
+	virtual sf::Color									getGrassColor();
+	virtual std::size_t									getGrassCount();
+	virtual std::size_t									getGrassPosX();
 	virtual bool										canCreateRock();
 
 	virtual std::size_t									getTreeDepth();
@@ -113,6 +123,9 @@ public:
 
 	virtual sf::Vector2f								getCloudSize();
 	virtual std::size_t									getCloudPartCount();
+	virtual float										getCloudMaxY();
+	virtual float										getCloudMinY();
+	virtual sf::Vector2f								getCloudSpeed();
 	virtual sf::Time									getCloudLifeTime();
 	virtual sf::Color									getCloudColor();
 	virtual bool										canCreateCloud();
@@ -138,6 +151,9 @@ public:
 	virtual sf::Time									getRainbowLifeTime();
 	virtual sf::Time									getRainbowIntervalTime();
 	virtual bool										canCreateRainbow();
+	virtual bool										canCreateGrass();
+	virtual float										getWaterPersistence() const;
+	virtual ABiome::Type								getType() const;
 
 	virtual float										randomFloat(float min, float max);
 	virtual int											randomInt(int min, int max);
@@ -145,6 +161,8 @@ public:
 
 private:
 	RandomGenerator										m_generator;
+    std::vector<float>                                  m_pointX;
+    std::vector<float>                                  m_pointY;
 	std::string											m_name;
 	Level												m_id;
 	std::string											m_seed;
@@ -159,6 +177,7 @@ private:
 	sf::Color											m_tileEndColor;
 	float												m_waterLevel;
 	sf::Color											m_waterColor;
+	sf::Color											m_secondWaterColor;
 
 	std::map<std::size_t, std::string>					m_instances;
 	std::map<std::size_t, GameObjectType>				m_gameObjects;
@@ -170,6 +189,7 @@ private:
 	sf::Color											m_skyDayColor;
 	sf::Color											m_skyNightColor;
 	sf::Color											m_nightLightColor;
+	sf::Color											m_dayLightColor;
 	sf::Color											m_SunsetLightColor;
 	float												m_wind;
 	Range<std::size_t>									m_rainDropPerSecond;
@@ -204,10 +224,18 @@ private:
 	bool												m_canCreateSun;
 	bool												m_canCreateMoon;
 	bool												m_canCreateRainbow;
+	bool												m_canCreateGrass;
+	float												m_waterPersistence;
+	ABiome::Type										m_type;
 
 	Range<sf::Vector2f>									m_rockSize;
 	Range<std::size_t>									m_rockPartCount;
 	sf::Color											m_rockColor;
+
+	Range<float>										m_grassSizeY;
+	Range<float>										m_grassSizeX;
+	sf::Color											m_grassColor;
+	std::size_t											m_grassCount;
 
 	Range<std::size_t>									m_treeDepth;
 	Range<sf::Vector2f>									m_treeSize;
@@ -231,6 +259,9 @@ private:
 
 	Range<sf::Vector2f>									m_cloudSize;
 	Range<std::size_t>									m_cloudPartCount;
+	float												m_cloudMaxY;
+	float												m_cloudMinY;
+	Range<sf::Vector2f>									m_cloudSpeed;
 	Range<sf::Time>										m_cloudLifeTime;
 	sf::Color											m_cloudColor;
 

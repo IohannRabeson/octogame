@@ -1,9 +1,10 @@
 #include "GroundTransformNanoRobot.hpp"
 #include "ResourceDefinitions.hpp"
 #include "Progress.hpp"
+#include "TextManager.hpp"
 
 GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
-	NanoRobot(sf::Vector2f(30 * 16.f, 700.f), NANO_GROUND_TRANSFORM_OSS, 4, 9854, sf::Vector2f(0.f, -26.f), 3.f),
+	NanoRobot(sf::Vector2f(30 * 16.f, 700.f), NANO_GROUND_TRANSFORM_OSS, 4, 9854, sf::Vector2f(0.f, -26.f), InputListener::OctoKeys::GroundRight, 3.f),
 	m_textTimer(sf::Time::Zero),
 	m_textTimerMax(sf::seconds(5.f)),
 	m_canSpeak(false),
@@ -27,8 +28,8 @@ GroundTransformNanoRobot::GroundTransformNanoRobot(void) :
 	targets.push_back(sf::Vector2f(167.f, 330.f));
 	targets.push_back(sf::Vector2f(172.f, 355.f));
 	targets.push_back(sf::Vector2f(147.f, 358.f));
-	setTargets(targets, 1.f);
-	setLaserColor(sf::Color::Blue);
+	setTargets(targets, 0.6f);
+	setLaserColor(sf::Color::Red);
 }
 
 void GroundTransformNanoRobot::update(sf::Time frameTime)
@@ -61,7 +62,7 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			{
 				m_textTimer += frameTime;
 				m_canSpeak = false;
-				if (m_textTimer > m_textTimerMax)
+				if (m_textTimer > m_textTimerMax / 3.f)
 				{
 					m_canSpeak = true;
 					setTextIndex(1u);
@@ -81,7 +82,7 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			{
 				m_textTimer += frameTime;
 				m_canSpeak = false;
-				if (m_textTimer > m_textTimerMax)
+				if (m_textTimer > m_textTimerMax / 3.f)
 				{
 					m_canSpeak = true;
 					setTextIndex(2u);
@@ -94,6 +95,7 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 			setTextIndex(3u);
 			if (m_textTimer > m_textTimerMax)
 			{
+				Progress::getInstance().setFirstTimeInIceA(false);
 				m_talkaboutshit = false;
 				m_state = None;
 			}
@@ -113,6 +115,23 @@ void GroundTransformNanoRobot::update(sf::Time frameTime)
 		default:
 			m_canSpeak = false;
 			break;
+	}
+	updateInfo();
+}
+
+void GroundTransformNanoRobot::updateInfo(void)
+{
+	Progress & progress = Progress::getInstance();
+
+	if (!progress.isMenu())
+	{
+		if (progress.getCurrentDestination() == Level::Portal)
+		{
+			TextManager & textManager = TextManager::getInstance();
+			std::wstring infoText = textManager.getTexts("nano_end_game")[0];
+			setInfoText(infoText);
+			popUpInfo(true);
+		}
 	}
 }
 

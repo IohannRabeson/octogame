@@ -2,8 +2,8 @@
 # define MENU_HPP
 
 # include "AMenuSelection.hpp"
-# include "BubbleText.hpp"
 # include "OptionMenu.hpp"
+# include "SpiritInfos.hpp"
 
 # include <SFML/Graphics/RectangleShape.hpp>
 
@@ -15,15 +15,16 @@ public:
 
 	void	setup(void);
 	void	update(sf::Time frameTime, sf::Vector2f const & position);
+	void	updateSpiritInfos(void);
 	void	draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 	void	createMenus(void);
+	void	onSelection(void);
 
 private:
-	sf::RectangleShape			m_filter;
-	BubbleText					m_infoBubble;
-	std::wstring				m_infoText;
-	std::size_t					m_nanoCount;
+	sf::RectangleShape							m_filter;
+	bool										m_soundPlayed;
+	SpiritInfos									m_spiritInfos;
 };
 
 #endif

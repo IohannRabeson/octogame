@@ -20,6 +20,7 @@ PhysicsEngine::PhysicsEngine(void) :
 	m_magnitude(0.f),
 	m_iterationCount(0u),
 	m_tileCollision(false),
+	m_isUpdated(false),
 	m_contactListener(nullptr)
 {}
 
@@ -198,23 +199,34 @@ void PhysicsEngine::unregisterAllTiles(void)
 	m_tileCollision = false;
 }
 
+bool PhysicsEngine::isUpdated(void) const
+{
+	return (m_isUpdated);
+}
+
 void PhysicsEngine::update(float deltatime)
 {
 	static float accumulator = 0.f;
-	static const float dt = 1.f / 60.f;
+	static const float dt = 1.f / 50.f;
 
 	if (deltatime > 0.2f)
 		deltatime = 0.2f;
 	accumulator += deltatime;
+	//m_isUpdated = false;
 
-	sf::FloatRect const & camRect = octo::Application::getCamera().getRectangle();
+	sf::FloatRect camRect = octo::Application::getCamera().getRectangle();
 	while (accumulator > dt)
 	{
+		m_isUpdated = true;
 		accumulator -= dt;
 		// Check if shape is out of screen
 		for (auto & shape : m_shapes)
 		{
-			shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));
+			//TODO: Find a proper way to do that
+			if (shape->getType() != AShape::Type::e_trigger && shape->getCollisionType() != static_cast<std::size_t>(GameObjectType::Player))
+				shape->setOutOfScreen(!camRect.contains(sf::Vector2f(shape->getBaryCenter().x, shape->getBaryCenter().y + shape->getGlobalBounds().height / 2.f)));
+			else
+				shape->setOutOfScreen(!camRect.intersects(shape->getGlobalBounds()));
 			// Add gravity
 			if (!shape->getSleep())
 			{
@@ -228,8 +240,11 @@ void PhysicsEngine::update(float deltatime)
 		// Tile don't move so we update them now
 		for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
 		{
-			if (!m_tileShapes.get(i, 0u)->getSleep())
-				m_tileShapes.get(i, 0u)->update();
+			for (std::size_t j = 0u; j < m_tileShapes.rows(); j++)
+			{
+				if (!m_tileShapes.get(i, j)->getSleep())
+					m_tileShapes.get(i, j)->update();
+			}
 		}
 		// Determine which pairs of objects might be colliding
 		broadPhase();
@@ -301,7 +316,8 @@ void PhysicsEngine::broadPhase(void)
 	if (m_tileCollision)
 	{
 		broadPhase(m_polygonShapes, m_tilePolyPairs);
-		broadPhase(m_circleShapes, m_tileCirclePairs);
+		//No need for circle to colide with tile in Octo
+		//broadPhase(m_circleShapes, m_tileCirclePairs);
 	}
 }
 
@@ -324,24 +340,27 @@ void PhysicsEngine::broadPhase(std::vector<T> const & vector, std::vector<std::v
 		{
 			if (x < 0 || x >= static_cast<int>(m_tileShapes.columns()))
 				continue;
-			if (shape->getSleep() || m_tileShapes(x, 0)->getSleep())
-				continue;
-			shapeAABB = shape->getGlobalBounds();
-			shapeAABB.left += shape->getEngineVelocity().x;
-			shapeAABB.top += shape->getEngineVelocity().y;
-			if (shapeAABB.intersects(m_tileShapes(x, 0)->getGlobalBounds(), shapeAABB))
+			for (int y = 0; y < static_cast<int>(m_tileShapes.rows()); y++)
 			{
-				std::size_t i;
-				for (i = 0u; i < pairs.size(); i++)
+				if (shape->getSleep() || m_tileShapes.get(x, y)->getSleep())
+					continue;
+				shapeAABB = shape->getGlobalBounds();
+				shapeAABB.left += shape->getEngineVelocity().x;
+				shapeAABB.top += shape->getEngineVelocity().y;
+				if (shapeAABB.intersects(m_tileShapes.get(x, y)->getGlobalBounds(), shapeAABB))
 				{
-					if (pairs[i].size() == 0u || m_tileShapes(x, 0)->getGlobalBounds().top == pairs[i][0u].m_shapeA->getGlobalBounds().top)
+					std::size_t i;
+					for (i = 0u; i < pairs.size(); i++)
 					{
-						pairs[i].emplace_back(m_tileShapes(x, 0), shape, shapeAABB.width * shapeAABB.height);
-						break;
+						if (pairs[i].size() == 0u || m_tileShapes.get(x, y)->getGlobalBounds().top == pairs[i][0u].m_shapeA->getGlobalBounds().top)
+						{
+							pairs[i].emplace_back(m_tileShapes.get(x, y), shape, shapeAABB.width * shapeAABB.height);
+							break;
+						}
 					}
+					if (i > count)
+						count = i;
 				}
-				if (i > count)
-					count = i;
 			}
 		}
 	}
@@ -456,29 +475,47 @@ void PhysicsEngine::narrowPhase(void)
 	if (m_tileCollision)
 	{
 		narrowPhaseTile(m_tilePolyPairs);
-		narrowPhaseTile(m_tileCirclePairs);
+		//No need for circle to colide with tile in Octo
+		//narrowPhaseTile(m_tileCirclePairs);
 	}
 }
 
+#include <iostream>
 template<class T, class U>
 void PhysicsEngine::narrowPhase(std::vector<Pair<T, U>> & pairs)
 {
-	for (std::size_t i = 0u; i < pairs.size(); i++)
+	for (auto & pair : pairs)
 	{
-		if (computeCollision(pairs[i].m_shapeA, pairs[i].m_shapeB))
+		// The shape A is the tile, the shapeB is the other one
+		sf::Vector2f vel = pair.m_shapeB->getEngineVelocity() / static_cast<float>(m_iterationCount);
+		pair.m_shapeB->setEngineVelocity(0.f, 0.f);
+		for (std::size_t j = 0u; j < m_iterationCount; j++)
 		{
-			if ((pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_static)
-				&& (pairs[i].m_shapeB->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeB->getType() == AShape::Type::e_static))
+			pair.m_shapeB->addEngineVelocity(vel);
+			if (computeCollision(pair.m_shapeA, pair.m_shapeB))
 			{
-				if (pairs[i].m_shapeA->getType() == AShape::Type::e_dynamic || pairs[i].m_shapeA->getType() == AShape::Type::e_kinematic)
+				if (!pair.m_shapeB->isType(AShape::Type::e_trigger))
 				{
-					m_mtv /= 2.f;
-					pairs[i].m_collisionDirection = m_mtv;
-					pairs[i].m_shapeA->addEngineVelocity(m_mtv.x, m_mtv.y);
-					pairs[i].m_shapeB->addEngineVelocity(-m_mtv.x, -m_mtv.y);
+					if (std::fabs(m_mtv.y) < std::numeric_limits<float>::epsilon())
+					{
+						pair.m_collisionDirection.x -= m_mtv.x;
+						pair.m_shapeB->addEngineVelocity(-m_mtv.x, 0.f);
+					}
+					else if (std::fabs(m_mtv.x) > std::numeric_limits<float>::epsilon())
+					{
+						float y = -(m_mtv.y + ((m_mtv.x * m_mtv.x) / m_mtv.y));
+						pair.m_collisionDirection.y += y;
+						pair.m_shapeB->addEngineVelocity(0.f, y);
+					}
+					else
+					{
+						pair.m_collisionDirection.y -= m_mtv.y;
+						pair.m_shapeB->addEngineVelocity(0.f, -m_mtv.y);
+					}
+					pair.m_shapeB->update();
 				}
+				pair.m_isColliding = true;
 			}
-			pairs[i].m_isColliding = true;
 		}
 	}
 }
@@ -592,6 +629,7 @@ bool PhysicsEngine::findAxisLeastPenetration(PolygonShape * polygonA, PolygonSha
 		if (d >= 0.f)
 			return false;
 
+		/*
 		float vel = octo::dotProduct(m_axis, polygonA->getEngineVelocity());
 		float vell = octo::dotProduct(m_axis, polygonB->getEngineVelocity());
 
@@ -600,6 +638,7 @@ bool PhysicsEngine::findAxisLeastPenetration(PolygonShape * polygonA, PolygonSha
 			dd += vel;
 		if (vell > 0.f)
 			dd += vell;
+		*/
 
 		if (d >= 0.f)
 			return false;
@@ -744,8 +783,14 @@ void PhysicsEngine::debugDraw(sf::RenderTarget & render) const
 	}
 	for (auto const & shape : m_shapes)
 		shape->debugDraw(render);
-	//for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
-	//	m_tileShapes(i, 0u)->debugDraw(render);
+	for (std::size_t i = 0u; i < m_tileShapes.columns(); i++)
+	{
+		for (std::size_t j = 0u; j < m_tileShapes.rows(); j++)
+		{
+			if (!m_tileShapes.get(i, j)->getSleep())
+				m_tileShapes.get(i, j)->debugDraw(render);
+		}
+	}
 }
 
 // Nested Class Projection

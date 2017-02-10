@@ -10,14 +10,18 @@
 # include "PhysicsEngine.hpp"
 # include "IContactListener.hpp"
 # include "MusicManager.hpp"
-# include "KonamiCode.hpp"
+# include "UnlockEasy.hpp"
+# include "FakeMenu.hpp"
+
+# include "InputListener.hpp"
 
 # include <memory>
 
 class PhysicsEngine;
 class AShape;
+class CameraMovement;
 
-class Game : public octo::DefaultKeyboardListener, public IContactListener
+class Game : public InputListener, public IContactListener
 {
 public:
 	Game(void);
@@ -30,30 +34,46 @@ public:
 	void			draw(sf::RenderTarget& render, sf::RenderStates states)const;
 
 private:
+	enum SpeedState
+	{
+		None,
+		Slow,
+		SlowEnd,
+		Fast,
+		FastEnd
+	};
+
 	PhysicsEngine &						m_physicsEngine;
+	MusicManager &						m_musicPlayer;
 	BiomeManager						m_biomeManager;
 	std::unique_ptr<SkyCycle>			m_skyCycle;
 	std::unique_ptr<SkyManager>			m_skyManager;
 	std::unique_ptr<GroundManager>		m_groundManager;
 	std::unique_ptr<ParallaxScrolling>	m_parallaxScrolling;
-	std::unique_ptr<MusicManager>		m_musicPlayer;
 	std::unique_ptr<CharacterOcto>		m_octo;
-	std::unique_ptr<KonamiCode>			m_konami;
-	bool								m_keyS;
-	bool								m_keyF;
-	std::shared_ptr<sf::Sound>			m_soundGeneration;
-	float								m_groundVolume;
-	sf::Time							m_groundSoundTime;
-	sf::Time							m_groundSoundTimeMax;
+	std::unique_ptr<UnlockEasy>			m_unlockEasy;
+	std::unique_ptr<CameraMovement>		m_cameraMovement;
+	bool								m_keyEntrance;
+	sf::Time							m_slowTime;
+	sf::Time							m_slowTimeMax;
+	float								m_slowTimeCoef;
+	std::size_t							m_skipFrames;
+	std::size_t							m_skipFramesMax;
+	FakeMenu							m_fakeMenu;
+	SpeedState							m_speedState;
+	bool								m_collideDoor;
 
-	void			moveMap(sf::Time frameTime);
-	bool			onPressed(sf::Event::KeyEvent const & event);
-	bool			onReleased(sf::Event::KeyEvent const & event);
+	void			updateSlowTime(sf::Time frameTime);
+	void			updateFakeMenu(sf::Time frameTime);
+	bool			onInputPressed(InputListener::OctoKeys const & key);
+	bool			onInputReleased(InputListener::OctoKeys const & key);
 	void			onShapeCollision(AShape * shapeA, AShape * shapeB, sf::Vector2f const & collisionDirection);
 	void			onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vector2f const & collisionDirection);
 	void			followPlayer(sf::Time frameTime);
 	void			onCollision(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection);
 	void			onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection);
+	void			setSlowMotion(void);
+	void			setFastMotion(void);
 };
 
 #endif

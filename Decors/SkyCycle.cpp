@@ -1,5 +1,6 @@
 #include "SkyCycle.hpp"
 #include "ABiome.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -12,8 +13,7 @@ SkyCycle::SkyCycle(void) :
 	m_weather(0.f),
 	m_dropPerSecond(0u),
 	m_dropAppear(true),
-	m_engine(std::time(0)),
-	m_distriThunder(0u, 2u),
+	m_generator("random"),
 	m_thunder(0.f),
 	m_thunderState(0u),
 	m_boolThunder(false)
@@ -78,6 +78,23 @@ void SkyCycle::setup(ABiome & biome)
 	m_timerMax = biome.getDayDuration();
 	m_timerDayMax = m_timerMax / 4.f;
 	m_timerNightMax = m_timerMax / 4.f;
+
+	if (biome.getStartDayDuration() == sf::Time::Zero)
+		m_timerStart = sf::seconds(m_generator.randomFloat(0.f, m_timerMax.asSeconds()));
+	else if (biome.getId() == Level::Red || biome.getId() == Level::Blue)
+	{
+		//TODO : Strange way to achieve transition blue
+		sf::Time x = sf::Time::Zero;
+		m_timerStart = biome.getStartDayDuration();
+		while (x < m_timerStart)
+		{
+			computeDayNight(sf::seconds(0.1f));
+			x += sf::seconds(0.1f);
+		}
+	}
+	else
+		m_timerStart = biome.getStartDayDuration();
+
 	newDropCycle(biome);
 	newThunderCycle(biome);
 
@@ -89,52 +106,56 @@ void SkyCycle::setup(ABiome & biome)
 	octo::ResourceManager const & resource = octo::Application::getResourceManager();
 	if (biome.canCreateRain())
 	{
-		m_rainSound = octo::Application::getAudioManager().playSound(resource.getSound(RAIN_STEREO_OGG), 0.f, 1.f);
+		m_rainSound = octo::Application::getAudioManager().playSound(resource.getSound(DECOR_RAIN_STEREO_OGG), 0.f, 1.f);
 		m_rainSound->setLoop(true);
 	}
 }
 
 void SkyCycle::computeDayNight(sf::Time frameTime)
 {
+	sf::Time const quarterTimerCycle = m_timerMax / 4.f;
+	float speedCoef = m_timerMax.asSeconds() / 100.f * m_timerStart.asSeconds();
+
+	if (speedCoef >= 1.f)
+		frameTime *= speedCoef;
+	m_timerStart -= frameTime;
 	m_timer += frameTime;
 	if (m_timer >= m_timerMax)
 		m_timer = sf::Time::Zero;
-	if (m_isDay)
+	if (m_timer < quarterTimerCycle * 2.f)
 	{
-		if (m_isMidDay == false)
+		m_isDay = true;
+		if (m_timer < quarterTimerCycle)
 		{
+			m_isMidDay = false;
 			m_timerDay += frameTime;
 			if (m_timerDay >= m_timerDayMax)
-				m_isMidDay = true;
+				m_timerDay = m_timerDayMax;
 		}
 		else
 		{
+			m_isMidDay = true;
 			m_timerDay -= frameTime;
 			if (m_timerDay <= sf::Time::Zero)
-			{
 				m_timerDay = sf::Time::Zero;
-				m_isMidDay = false;
-				m_isDay = false;
-			}
 		}
 	}
 	else
 	{
-		if (m_isMidNight == false)
+		m_isDay = false;
+		if (m_timer < quarterTimerCycle * 3.f)
 		{
+			m_isMidNight = false;
 			m_timerNight += frameTime;
 			if (m_timerNight >= m_timerNightMax)
-				m_isMidNight = true;
+				m_timerNight = m_timerNightMax;
 		}
 		else
 		{
+			m_isMidNight = true;
 			m_timerNight -= frameTime;
 			if (m_timerNight <= sf::Time::Zero)
-			{
 				m_timerNight = sf::Time::Zero;
-				m_isMidNight = false;
-				m_isDay = true;
-			}
 		}
 	}
 }
@@ -145,7 +166,15 @@ void SkyCycle::newThunderCycle(ABiome & biome)
 	m_thunderState = 0u;
 	m_thunderTimer = sf::Time::Zero;
 	m_thunderTimerMax = sf::seconds(0.5f);
-	m_thunderTimerStart = sf::seconds(biome.randomFloat(0.f, m_dropTimerMax.asSeconds()));
+	if (Progress::getInstance().isIntro())
+	{
+		if (Progress::getInstance().isInCloud())
+			m_thunderTimerStart = sf::Time::Zero;
+		else
+			m_thunderTimerStart = sf::seconds(100000.f);
+	}
+	else
+		m_thunderTimerStart = sf::seconds(biome.randomFloat(0.f, m_dropTimerMax.asSeconds()));
 	m_boolThunder = true;
 }
 
@@ -246,13 +275,13 @@ void SkyCycle::playSound(ABiome & biome)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		std::size_t thunderType = m_distriThunder(m_engine);
+		std::size_t thunderType = m_generator.randomInt(0u, 2u);
 		if (thunderType == 0u)
-			audio.playSound(resources.getSound(THUNDER1_STEREO_OGG), 0.4f, biome.randomFloat(0.5f, 1.5f));
+			audio.playSound(resources.getSound(DECOR_THUNDER1_STEREO_OGG), 1.f, biome.randomFloat(0.5f, 1.5f));
 		else if (thunderType == 1u)
-			audio.playSound(resources.getSound(THUNDER2_STEREO_OGG), 0.4f, biome.randomFloat(0.5f, 1.5f));
+			audio.playSound(resources.getSound(DECOR_THUNDER2_STEREO_OGG), 1.f, biome.randomFloat(0.5f, 1.5f));
 		else
-			audio.playSound(resources.getSound(THUNDER3_STEREO_OGG), 0.4f, biome.randomFloat(0.5f, 1.5f));
+			audio.playSound(resources.getSound(DECOR_THUNDER3_STEREO_OGG), 1.f, biome.randomFloat(0.5f, 1.5f));
 		m_boolThunder = false;
 	}
 }
@@ -262,9 +291,15 @@ void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 	computeDayNight(frameTime);
 	if (biome.canCreateRain() || biome.canCreateSnow())
 		computeDrop(frameTime, biome);
-	if (m_rainSound && biome.canCreateRain() && !biome.canCreateSnow() && biome.getId() != Level::WaterA)
-		m_rainSound->setVolume(m_weather / m_dropTimerMax.asSeconds() * 10);
-	if ((m_weather || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
+	if (m_rainSound && biome.canCreateRain() && !biome.canCreateSnow())
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		float volume = m_weather / m_dropTimerMax.asSeconds();
+		if (volume > 1.f)
+			volume = 1.f;
+		m_rainSound->setVolume(volume * audio.getSoundVolume() * 0.1f);
+	}
+	if ((m_weather || Progress::getInstance().isInCloud() || m_thunderTimer != sf::Time::Zero) && biome.canCreateThunder())
 	{
 		computeThunder(frameTime, biome);
 		playSound(biome);
@@ -272,6 +307,6 @@ void SkyCycle::update(sf::Time frameTime, ABiome & biome)
 	float interpolateValue = getNightValue() * 2.f;
 	if (interpolateValue > 1.f)
 		interpolateValue = 1.f;
-	m_colorSkyDown = octo::linearInterpolation(m_colorDownDay, m_colorDownNight, interpolateValue);
-	m_colorSkyUp = octo::linearInterpolation(m_colorUpDay, m_colorUpNight, interpolateValue);
+	m_colorSkyDown = octo::linearInterpolation(m_colorDownDay, m_colorUpNight, interpolateValue);
+	m_colorSkyUp = octo::linearInterpolation(m_colorUpDay, m_colorDownNight, interpolateValue);
 }

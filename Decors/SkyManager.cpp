@@ -9,22 +9,18 @@
 
 #include <Math.hpp>
 #include <Application.hpp>
-#include <ResourceManager.hpp>
 #include <Camera.hpp>
-#include "ResourceDefinitions.hpp"
 
 SkyManager::SkyManager(void) :
-	//TODO:Estimate how much vertex we need
-	m_decorManagerBack(200000),
-	m_decorManagerFront(200000),
-	m_decorManagerFilter(40),
-	m_wind(0.f),
+	m_decorManagerBack(50000),
+	m_decorManagerFront(100000),
+	m_decorManagerFilter(24),
 	m_cycle(nullptr),
 	m_sunCount(0u),
 	m_moonCount(0u),
 	m_starCount(0u),
 	m_cloudCount(0u),
-	m_parallaxSpeedY(0.7f)
+	m_parallaxSpeedY(0.9f)
 {
 }
 
@@ -94,56 +90,13 @@ void SkyManager::setupSunAndMoon(ABiome & biome, sf::Vector2f const & cameraSize
 	}
 }
 
-void SkyManager::setupBirds(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & cameraCenter, sf::Vector2f const & mapSize)
-{
-
-	if (biome.canCreateThunder())
-	{
-		std::size_t birdCount = 5;
-		float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
-		float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
-		octo::SpriteAnimation::FrameList	frames;
-		octo::ResourceManager const & resources = octo::Application::getResourceManager();
-
-		m_originBirds.resize(birdCount);
-		m_birdsSprite.resize(birdCount);
-
-		frames.emplace_back(sf::seconds(0.2), 0);
-		frames.emplace_back(sf::seconds(0.2), 1);
-		frames.emplace_back(sf::seconds(0.2), 2);
-		frames.emplace_back(sf::seconds(1.0), 3);
-		frames.emplace_back(sf::seconds(0.2), 4);
-		frames.emplace_back(sf::seconds(0.2), 5);
-		m_birdsAnimation.setFrames(frames);
-		m_birdsAnimation.setLoop(octo::LoopMode::Loop);
-		for (size_t i = 0; i < birdCount; i++)
-		{
-			m_originBirds[i].x = biome.randomFloat(leftLimit, rightLimit);
-			m_originBirds[i].y = biome.randomFloat(-mapSize.y * 1.5f, cameraSize.x);
-			if (i < birdCount / 2.f)
-				m_birdsSprite[i].setSpriteSheet(resources.getSpriteSheet(BIRD_RED_OSS));
-			else
-				m_birdsSprite[i].setSpriteSheet(resources.getSpriteSheet(BIRD_BLUE_OSS));
-			m_birdsSprite[i].setAnimation(m_birdsAnimation);
-			m_birdsSprite[i].play();
-		}
-	}
-}
-
-void SkyManager::setupClouds(ABiome & biome, sf::Vector2f const & cameraSize, sf::Vector2f const & cameraCenter, sf::Vector2f const & mapSize)
+void SkyManager::setupClouds(ABiome & biome)
 {
 	if (biome.canCreateCloud())
 	{
 		m_cloudCount = biome.getCloudCount();
-		m_originCloudsFront.resize(m_cloudCount);
-		float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
-		float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
 		for (size_t i = 0; i < m_cloudCount; i++)
-		{
 			m_decorManagerFront.add(new Cloud(m_cycle));
-			m_originCloudsFront[i].x = biome.randomFloat(leftLimit, rightLimit);
-			m_originCloudsFront[i].y = biome.randomFloat(-mapSize.y * 1.5f, -cameraSize.y);
-		}
 	}
 }
 
@@ -156,17 +109,12 @@ void SkyManager::setup(ABiome & biome, SkyCycle & cycle)
 
 	octo::Camera const & camera = octo::Application::getCamera();
 	sf::Vector2f const & cameraSize = camera.getSize();
-	//sf::Vector2f const & cameraCenter = cameraSize / 2.f;
 	sf::Vector2f const & cameraCenter = camera.getCenter();
-
-	m_mapSizeFloat = biome.getMapSizeFloat();
-	m_wind = biome.getWind();
 
 	m_decorManagerBack.add(new Sky(m_cycle));
 	setupStars(biome, cameraSize);
 	setupSunAndMoon(biome, cameraSize, cameraCenter);
-	setupClouds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
-	setupBirds(biome, cameraSize, cameraCenter, m_mapSizeFloat);
+	setupClouds(biome);
 	m_decorManagerFilter.add(new SunLight(m_cycle));
 }
 
@@ -175,7 +123,6 @@ void SkyManager::update(sf::Time frameTime)
 	octo::Camera const & camera = octo::Application::getCamera();
 	sf::FloatRect const & rec = camera.getRectangle();
 	sf::Vector2f cameraCenter = camera.getCenter();
-	sf::Vector2f cameraSize = camera.getSize();
 	sf::Vector2f offsetCamera(rec.left, rec.top * m_parallaxSpeedY);
 	float angle = m_cycle->getCycleValue() * 360.f * octo::Deg2Rad;
 	float cos = std::cos(angle);
@@ -191,38 +138,10 @@ void SkyManager::update(sf::Time frameTime)
 	for (auto it = m_originMoons.begin(); it != m_originMoons.end(); it++)
 		m_originRotateStar = setRotatePosition(decorBack++, *it, m_originRotate, offsetCamera, cos, sin);
 
-	float windMove = m_wind * frameTime.asSeconds();
-	float leftLimit = cameraCenter.x - cameraSize.x * 2.f;
-	float rightLimit = cameraCenter.x + cameraSize.x * 2.f;
-	DecorManager::Iterator decorFront = m_decorManagerFront.begin();
-	for (auto it = m_originCloudsFront.begin(); it != m_originCloudsFront.end(); it++)
-	{
-		it->x += windMove;
-		if (it->x >= rightLimit)
-			it->x = leftLimit;
-		else if (it->x <= leftLimit)
-			it->x = rightLimit;
-		(*decorFront)->setPosition(*it);
-		decorFront++;
-	}
 	(*m_decorManagerFilter.begin())->setPosition(cameraCenter);
 	m_decorManagerBack.update(frameTime, camera);
 	m_decorManagerFront.update(frameTime, camera);
 	m_decorManagerFilter.update(frameTime, camera);
-
-	auto birdSprite = m_birdsSprite.begin();
-	float frameTimeSec = frameTime.asSeconds();
-	for (auto it = m_originBirds.begin(); it != m_originBirds.end(); it++)
-	{
-		it->x += 300.f * frameTimeSec;
-		if (it->x >= rightLimit)
-			it->x = leftLimit;
-		else if (it->x <= leftLimit)
-			it->x = rightLimit;
-		birdSprite->setPosition(*it);
-		birdSprite->update(frameTime);
-		birdSprite++;
-	}
 }
 
 DecorManager const & SkyManager::getDecorsBack(void) const
@@ -238,10 +157,4 @@ DecorManager const & SkyManager::getDecorsFront(void) const
 DecorManager const & SkyManager::getFilter(void) const
 {
 	return m_decorManagerFilter;
-}
-
-void SkyManager::drawBirds(sf::RenderTarget & render, sf::RenderStates & states) const
-{
-	for (auto it = m_birdsSprite.begin(); it != m_birdsSprite.end(); it++)
-		render.draw(*it, states);
 }

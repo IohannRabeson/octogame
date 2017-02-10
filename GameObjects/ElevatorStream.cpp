@@ -1,6 +1,7 @@
 #include "ElevatorStream.hpp"
 #include "ABiome.hpp"
 #include "ResourceDefinitions.hpp"
+#include "Progress.hpp"
 
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -13,140 +14,10 @@
 #include <random>
 #include <ctime>
 
-class ElevatorStream::BeamParticle : public octo::ParticleSystem<sf::Time, float, float>
-{
-	enum MyComponent
-	{
-		ElapsedTime = Component::User,
-		UpSpeed,
-		AngularVelocity
-	};
-public:
-	BeamParticle() :
-		m_cycleTime(sf::seconds(4)),
-		m_speedUp(512.f),
-		m_width(200.f),
-		m_height(300.f),
-		m_rotationFactor(0.f),
-		m_emitInterval(sf::seconds(0.07f)),
-		m_random(std::time(0)),
-		m_distri(0.f, 1.f),
-		m_biome(nullptr)
-	{
-		float const	size = 16.f;
-
-		reset({sf::Vertex({0.f, 0.f}),
-			   sf::Vertex({size, 0.f}),
-			   sf::Vertex({size, size})},
-			   sf::Triangles, 1000u);
-
-	}
-
-	void	setWidth(float width)
-	{
-		m_width = width;
-	}
-
-	void	setHeight(float height)
-	{
-		m_height = height;
-	}
-
-	void	setRotationFactor(float factor)
-	{
-		m_rotationFactor = factor;
-	}
-
-	void	setBiome(ABiome & biome)
-	{
-		m_biome = &biome;
-	}
-
-	float	getHeight(void) const
-	{
-		return m_height;
-	}
-
-	float	getWidth(void) const
-	{
-		return m_width;
-	}
-
-	void	updateParticle(sf::Time frameTime, Particle& particle)
-	{
-		sf::Vector2f	position = std::get<Component::Position>(particle);
-		sf::Time		currentTime = std::get<MyComponent::ElapsedTime>(particle) + frameTime;
-		sf::Color&		color = std::get<Component::Color>(particle);
-		float			cycle = currentTime / m_cycleTime;
-		float			heightPos = 0.f;
-
-		position.y -= frameTime.asSeconds() * std::get<MyComponent::UpSpeed>(particle);
-		heightPos = (position.y / m_height);
-		position.x = std::cos(cycle * octo::Pi2) * m_width * 0.5f;
-		color.a = heightPos * 255;
-		if (currentTime >= m_cycleTime)
-		{
-			currentTime -= m_cycleTime;
-		}
-		std::get<MyComponent::ElapsedTime>(particle) = currentTime;
-		std::get<Component::Position>(particle) = position;
-		std::get<Component::Rotation>(particle) += m_rotationFactor * std::get<MyComponent::AngularVelocity>(particle);
-		std::get<MyComponent::UpSpeed>(particle) *= 1.0001f;
-	}
-
-	void	update(sf::Time frameTime)
-	{
-		bool	emitParticle = false;
-
-		m_emitTimer += frameTime;
-		while (m_emitTimer > m_emitInterval)
-		{
-			emitParticle = true;
-			m_emitTimer -= m_emitInterval;
-		}
-		if (emitParticle)
-			createParticle();
-		ParticleSystem::update(frameTime);
-	}
-
-	void	createParticle()
-	{
-		sf::Color color;
-		if (m_biome)
-			color = m_biome->getParticleColorGround();
-		else
-			color = sf::Color::White;
-		emplace(color,
-				sf::Vector2f(0, 0),
-				sf::Vector2f(1.f, 1.f),
-				m_distri(m_random) * 360.f,
-				sf::seconds(m_distri(m_random) * m_cycleTime.asSeconds()),
-				std::max(0.2f, m_distri(m_random)) * m_speedUp,
-				m_distri(m_random) * 720 - 360
-				);
-	}
-private:
-	bool	isDeadParticle(Particle const& particle)
-	{
-		return (std::get<Component::Position>(particle).y < -m_height);
-	}
-private:
-	typedef std::uniform_real_distribution<float>	Distri;
-
-	sf::Time				m_cycleTime;
-	float					m_speedUp;
-	float					m_width;
-	float					m_height;
-	float					m_rotationFactor;
-	sf::Time				m_emitTimer;
-	sf::Time				m_emitInterval;
-	std::mt19937			m_random;
-	Distri					m_distri;
-	ABiome *				m_biome;
-};
-
-ElevatorStream::ElevatorStream() :
-	m_particles(new BeamParticle()),
+ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome, bool isBotOnInstance) :
+	InstanceDecor(OBJECT_ELEVATOR_BOTTOM_FRONT_OSS, scale, position, 1, 1.f),
+	m_isBotOnInstance(isBotOnInstance),
+	m_particles(new BeamSystem()),
 	m_waveCycleDuration(sf::seconds(0.5)),
 	m_box(PhysicsEngine::getShapeBuilder().createRectangle(false)),
 	m_topY(0.f),
@@ -158,17 +29,25 @@ ElevatorStream::ElevatorStream() :
 	m_state(Disappear),
 	m_timer(sf::Time::Zero),
 	m_timerMax(sf::seconds(2.5f))
-
 {
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
+
+	m_particles->setBiome(biome);
+
+	if (Progress::getInstance().getCurrentDestination() == Level::Final)
+	{
+		m_borderColor = sf::Color(0, 0, 0, 150);
+		m_centerColor = sf::Color(0, 0, 0, 50);
+		m_upColor = sf::Color(0, 0, 0, 0);
+	}
 
 	m_box->setGameObject(this);
 	m_box->setType(AShape::Type::e_trigger);
 	m_box->setApplyGravity(false);
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Elevator));
 	m_box->setCollisionMask(static_cast<std::size_t>(GameObjectType::Player) | static_cast<std::size_t>(GameObjectType::PlayerEvent));
-	m_box->setSize(100.f, 0.f);
-	m_particles->setWidth(150.f);
+	m_box->setSize(128.f, 0.f);
+	m_particles->setWidth(192.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
 	m_shader.setParameter("wave_amplitude", 5.f);
 
@@ -192,14 +71,34 @@ ElevatorStream::ElevatorStream() :
 
 	setupSprite();
 
-	m_smoke.setup(sf::Vector2f(4.f, 4.f));
-	m_smoke.setVelocity(sf::Vector2f(0.f, -80.f));
-	m_smoke.setEmitTimeRange(0.2f, 0.3f);
+	m_smoke.setup(sf::Vector2f(5.f, 5.f));
+	m_smoke.setVelocity(sf::Vector2f(0.f, -120.f));
+	m_smoke.setEmitTimeRange(0.15f, 0.3f);
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
-	m_smoke.setLifeTimeRange(0.6f, 0.8f);
-	m_smoke.setScaleFactor(10.f);
-	m_smoke.setDispersion(80.f);
-	m_smoke.setColor(sf::Color(205, 205, 205, 200));
+	m_smoke.setLifeTimeRange(0.6f, 1.5f);
+	m_smoke.setScaleFactor(35.f);
+	m_smoke.setDispersion(sf::Vector2f(200.f, 0.f));
+	m_smoke.setColor(sf::Color(230, 230, 230, 200));
+
+	if (m_isBotOnInstance)
+	{
+		m_position = position + sf::Vector2f(32.f, 100.f);
+		setTopY(m_position.y - 2000.f);
+		m_position.x += getWidth() / 2.f + Tile::TileSize;
+		m_position.y -= Tile::TileSize - Map::OffsetY;
+	
+		sf::Vector2f const &	posBox = m_box->getPosition();
+	
+		m_box->setPosition(m_position.x - (getWidth() / 3.f), posBox.y);
+		m_spriteBottomFront.setPosition(m_position + sf::Vector2f(-m_spriteBottomFront.getGlobalBounds().width / 2.f, -m_spriteBottomFront.getGlobalBounds().height / 2.f - 30.f));
+		m_spriteBottomBack.setPosition(m_position + sf::Vector2f(-m_spriteBottomBack.getGlobalBounds().width / 2.f, -m_spriteBottomBack.getGlobalBounds().height / 2.f - 30.f));
+		m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+		m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
+	
+		m_smoke.setPosition(m_position + sf::Vector2f(0.f, -50.f));
+		m_particles->setPosition(m_position + sf::Vector2f(0.f, -100.f));
+		setHeight(m_position.y - getTopY() - 100.f);
+	}
 }
 
 void	ElevatorStream::setupSprite(void)
@@ -240,8 +139,9 @@ void	ElevatorStream::setupSprite(void)
 void	ElevatorStream::setHeight(float height)
 {
 	sf::Vector2f const &	sizeBox = m_box->getSize();
+	float const marginBot = 100.f;
 
-	m_box->setSize(sizeBox.x, height);
+	m_box->setSize(sizeBox.x, height + marginBot);
 	m_particles->setHeight(height);
 }
 
@@ -276,6 +176,8 @@ void	ElevatorStream::setPosition(sf::Vector2f const & position)
 {
 	m_position = position;
 	m_position.x += getWidth() / 2.f + Tile::TileSize;
+	if (!m_isBotOnInstance)
+		m_position.x += 32.f;
 	m_position.y -= Tile::TileSize - Map::OffsetY;
 
 	sf::Vector2f const &	posBox = m_box->getPosition();
@@ -286,9 +188,14 @@ void	ElevatorStream::setPosition(sf::Vector2f const & position)
 	m_spriteTopFront.setPosition(sf::Vector2f(-m_spriteTopFront.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopFront.getGlobalBounds().height / 2.f - 30.f + getTopY()));
 	m_spriteTopBack.setPosition(sf::Vector2f(-m_spriteTopBack.getGlobalBounds().width / 2.f + m_position.x, -m_spriteTopBack.getGlobalBounds().height / 2.f - 30.f + getTopY()));
 
-	m_smoke.setPosition(m_position + sf::Vector2f(-getWidth() / 2.f, -50.f));
+	m_smoke.setPosition(m_position + sf::Vector2f(0.f, -50.f));
 	m_particles->setPosition(m_position + sf::Vector2f(0.f, -100.f));
 	setHeight(m_position.y - getTopY() - 100.f);
+}
+
+void	ElevatorStream::setSmokeVelocity(sf::Vector2f velocity)
+{
+	m_smoke.setVelocity(velocity);
 }
 
 float	ElevatorStream::getHeight(void) const
@@ -319,6 +226,14 @@ sf::Vector2f const & ElevatorStream::getPosition(void) const
 float ElevatorStream::getRepairAdvancement(void) const
 {
 	return m_timer.asSeconds() / m_timerMax.asSeconds();
+}
+
+sf::Vector2f ElevatorStream::getRepairPosition(void) const
+{
+	sf::Vector2f target = getPosition();
+	target.x -= (0.8f * getWidth() / 2.f) - octo::linearInterpolation(0.f, getWidth() * 0.8f, getRepairAdvancement());
+	target.y -= 50.f;
+	return target;
 }
 
 bool ElevatorStream::isActivated(void) const
@@ -398,6 +313,7 @@ void	ElevatorStream::update(sf::Time frameTime)
 	m_spriteTopFront.update(frameTime);
 	m_spriteTopBack.update(frameTime);
 
+	m_smoke.setVelocity(octo::linearInterpolation(m_smoke.getVelocity(), sf::Vector2f(0.f, -120.f), frameTime.asSeconds() * 10.f));
 	m_smoke.update(frameTime);
 
 	if (m_state != Activated)
@@ -406,19 +322,22 @@ void	ElevatorStream::update(sf::Time frameTime)
 
 void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
-	sf::RenderStates	states;
-
 	render.draw(m_spriteBottomBack);
-	render.draw(m_spriteTopBack);
-	states.shader = &m_shader;
-	if (m_state == Activated)
-		m_particles->draw(render, states);
-	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
+	if (!m_isBotOnInstance)
+		render.draw(m_spriteTopBack);
+	else
+		render.draw(m_spriteBottomFront);
 }
 
 void	ElevatorStream::drawFront(sf::RenderTarget& render, sf::RenderStates) const
 {
+	sf::RenderStates	states;
+	if (m_state == Activated)
+		m_particles->draw(render, states);
+	render.draw(m_ray.get(), m_rayCountVertex, sf::Quads);
+	if (!m_isBotOnInstance)
+		render.draw(m_spriteTopFront);
 	render.draw(m_spriteBottomFront);
-	render.draw(m_spriteTopFront);
 	m_smoke.draw(render);
+	states.shader = &m_shader;
 }

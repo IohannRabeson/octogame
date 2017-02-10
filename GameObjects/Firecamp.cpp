@@ -32,7 +32,7 @@ void Firecamp::setupSmoke(sf::Vector2f const & position)
 	m_smoke.setGrowTimeRange(0.4f, 0.6f);
 	m_smoke.setLifeTimeRange(0.6f, 0.8f);
 	m_smoke.setScaleFactor(10.f);
-	m_smoke.setDispersion(80.f);
+	m_smoke.setDispersion(sf::Vector2f(80.f, 0.f));
 	m_smoke.setColor(sf::Color(55, 55, 55, 150));
 	m_smoke.setPosition(position + sf::Vector2f(70.f, 0.f));
 }
@@ -41,14 +41,14 @@ void Firecamp::addMapOffset(float x, float y)
 {
 	InstanceDecor::addMapOffset(x, y);
 	m_spriteFire.setPosition(m_spriteFire.getPosition().x + x, m_spriteFire.getPosition().y + y);
-	m_smoke.setPosition(m_smoke.getPosition() + sf::Vector2f(x, y));
+	m_smoke.setPosition(m_smoke.getPositionEmitter() + sf::Vector2f(x, y));
 }
 
 void Firecamp::setPosition(sf::Vector2f const & position)
 {
 	Firecamp::setPosition(position);
 	m_spriteFire.setPosition(position);
-	m_smoke.setPosition(position);
+	m_smoke.setPosition(position + sf::Vector2f(70.f, 0.f));
 }
 
 void Firecamp::update(sf::Time frameTime)

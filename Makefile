@@ -1,5 +1,5 @@
 TARGET = octodyssey
-DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs
+DIRS = Main Screens Map Decors Physics Game Biomes Bubble Menu GameObjects NanoRobots Npcs Steam
 CORE_DIR = ./octolib
 INCLUDE_DIR = $(CORE_DIR)/includes $(DIRS) ./Lib/
 BUILD_DIR = ./builds/game
@@ -27,37 +27,38 @@ SRC = $(SRC_PHYSICS)									\
 	  $(SRC_DECORS)										\
 	  $(SRC_BUBBLE)										\
 	  $(SRC_MENU)										\
+	  $(SRC_STEAM)										\
 	  Main/DefaultApplicationListener.cpp				\
 	  Main/main.cpp										\
 
 SRC_STATES =	Screens/StateTest.cpp					\
-				Screens/FireflyTestScreen.cpp			\
-				Screens/PaletteDemoScreen.cpp			\
-				Screens/SpriteSheetDemoScreen.cpp		\
-				Screens/AnimatedSpriteDemoScreen.cpp	\
-				Screens/AudioDemoScreen.cpp				\
-				Screens/EngineScreen.cpp				\
-				Screens/PhysicsMapScreen.cpp			\
-				Screens/LightningDemoScreen.cpp			\
+				Screens/IntroScreen.cpp					\
 				Screens/GameScreen.cpp					\
-				Screens/DecorManagerDemoScreen.cpp		\
-				Screens/ParticleDemoScreen.cpp			\
+				Screens/MenuScreen.cpp					\
 				Screens/ResourceLoadingScreen.cpp		\
 				Screens/QuitScreen.cpp					\
-				Screens/FsmDemoScreen.cpp				\
-				Screens/ElevatorStreamDemo.cpp			\
 				Screens/TransitionLevelScreen.cpp		\
 				Screens/TransitionScreen.cpp			\
 				Screens/DeathScreen.cpp					\
 				Screens/TransitionLevelZeroScreen.cpp	\
 				Screens/LevelZeroScreen.cpp				\
+				Screens/LogoScreen.cpp					\
+				Screens/AnOctonautOdysseyScreen.cpp		\
+				Screens/LaboratoryEndScreen.cpp			\
+				Screens/LevelRocketEndScreen.cpp		\
 
 SRC_GAME =		Game/Game.cpp							\
 				Game/CharacterOcto.cpp					\
 				Game/OctoSound.cpp						\
+				Game/CameraMovement.cpp					\
 				Game/Progress.cpp						\
 				Game/MusicManager.cpp					\
+				Game/InputListener.cpp					\
 				Game/KonamiCode.cpp						\
+				Game/UnlockEasy.cpp						\
+				Game/ChallengeManager.cpp				\
+				Game/Challenges.cpp						\
+				Game/PostEffectLayer.cpp				\
 
 SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Portal.cpp					\
@@ -72,12 +73,26 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Cage.cpp					\
 				GameObjects/Concert.cpp					\
 				GameObjects/Well.cpp					\
-				GameObjects/Seb.cpp						\
 				GameObjects/Pyramid.cpp					\
+				GameObjects/WeirdHouseSnow.cpp			\
+				GameObjects/CheckPoint.cpp				\
+				GameObjects/Monolith.cpp				\
+				GameObjects/MonolithStep.cpp			\
+				GameObjects/Door.cpp					\
+				GameObjects/SmokeInstance.cpp			\
+				GameObjects/FinalPortal.cpp				\
+				GameObjects/RocketEnd.cpp				\
+				GameObjects/Credit.cpp					\
 
 SRC_NPCS =		Npcs/ANpc.cpp							\
-				Npcs/ClassicNpc.cpp						\
-				Npcs/CedricNpc.cpp						\
+				Npcs/ASpecialNpc.cpp					\
+				Npcs/AIdleNpc.cpp						\
+				Npcs/AWalkNpc.cpp						\
+				Npcs/ASinkNpc.cpp						\
+				Npcs/ASwimNpc.cpp						\
+				Npcs/AFishNpc.cpp						\
+				Npcs/AUniqueNpc.cpp						\
+				Npcs/CedricStartNpc.cpp					\
 				Npcs/FranfranNpc.cpp					\
 				Npcs/JuNpc.cpp							\
 				Npcs/FannyNpc.cpp						\
@@ -102,10 +117,85 @@ SRC_NPCS =		Npcs/ANpc.cpp							\
 				Npcs/WolfNpc.cpp						\
 				Npcs/WellKeeperNpc.cpp					\
 				Npcs/JellyfishNpc.cpp					\
+				Npcs/AFlyNpc.cpp						\
+				Npcs/BirdRedNpc.cpp						\
+				Npcs/Snowman2Npc.cpp					\
+				Npcs/Snowman1Npc.cpp					\
+				Npcs/Snowman3Npc.cpp					\
+				Npcs/SnowGirl1Npc.cpp					\
+				Npcs/SnowGirl2Npc.cpp					\
+				Npcs/StrangerGirlSnowNpc.cpp			\
+				Npcs/StrangerSnowNpc.cpp				\
+				Npcs/BirdBlueNpc.cpp					\
+				Npcs/ADisappearNpc.cpp					\
+				Npcs/ForestSpirit1Npc.cpp				\
+				Npcs/ForestSpirit2Npc.cpp				\
+				Npcs/TVScreen.cpp						\
+				Npcs/Pedestal.cpp						\
+				Npcs/OverCoolNpc.cpp					\
+				Npcs/FabienNpc.cpp						\
+				Npcs/ScientistJu.cpp					\
+				Npcs/ScientistFran.cpp					\
+				Npcs/ScientistLu.cpp					\
+				Npcs/ScientistCedric.cpp				\
+				Npcs/ScientistNpc.cpp					\
+				Npcs/ScientistOcto.cpp					\
+				Npcs/CedricEndNpc.cpp					\
+				Npcs/OctoDeathNpc.cpp					\
+				Npcs/Rocket.cpp							\
+				Npcs/LongChairNpc.cpp					\
+				Npcs/LuGlitchNpc.cpp					\
+				Npcs/JuGlitchNpc.cpp					\
+				Npcs/FranGlitchNpc.cpp					\
+				Npcs/WindowGlitchNpc.cpp				\
+				Npcs/CavemanNpc.cpp						\
+				Npcs/CavemanClimbingNpc.cpp				\
+				Npcs/CavemanSinkNpc.cpp					\
+				Npcs/ElliotNpc.cpp						\
+				Npcs/ChamanMonsterNpc.cpp				\
+				Npcs/BeachGuyNpc.cpp					\
+				Npcs/LucieNpc.cpp						\
+				Npcs/SylvieNpc.cpp						\
+				Npcs/AymericNpc.cpp						\
+				Npcs/MysticanouilleNpc.cpp				\
+				Npcs/AnthemJungle.cpp					\
+				Npcs/FlorentNpc.cpp						\
+				Npcs/EngineSnow.cpp						\
+				Npcs/UlaNpc.cpp							\
+				Npcs/AntoineNpc.cpp						\
+				Npcs/BeachBoySubNpc.cpp					\
+				Npcs/BeachBoyFlyNpc.cpp					\
+				Npcs/SebNpc.cpp							\
+				Npcs/TiboNpc.cpp						\
+				Npcs/ColumnNpc.cpp						\
+				Npcs/WaterHouseBroken.cpp				\
+				Npcs/JihemNpc.cpp						\
+				Npcs/MariaNpc.cpp						\
+				Npcs/FishRedNpc.cpp						\
+				Npcs/FishBlueNpc.cpp					\
+				Npcs/FishBlackNpc.cpp					\
+				Npcs/FishPinkNpc.cpp					\
+				Npcs/MaryvonneNpc.cpp					\
+				Npcs/ClaireNpc.cpp						\
+				Npcs/DesertEngine.cpp					\
+				Npcs/DeepoNpc.cpp						\
+				Npcs/PepetteNpc.cpp						\
+				Npcs/TVFanNpc.cpp						\
+				Npcs/MecanouilleNpc.cpp					\
+				Npcs/TheoNpc.cpp						\
+				Npcs/CedricWalkNpc.cpp					\
+				Npcs/ChristianNpc.cpp					\
+				Npcs/SkeletonNpc.cpp					\
+				Npcs/CedricIceANpc.cpp				\
+				Npcs/TvLaboNpc.cpp				\
+#Script AddNpc
+
+
 
 SRC_BUBBLE =	Bubble/ABubble.cpp						\
 				Bubble/BubbleText.cpp					\
 				Bubble/BubbleMenu.cpp					\
+				Bubble/TextManager.cpp					\
 
 SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/AMenuSelection.cpp					\
@@ -113,16 +203,28 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/OptionMenu.cpp						\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
+				Menu/LanguageMenu.cpp					\
+				Menu/KeyboardMenu.cpp					\
+				Menu/MenuTypeMenu.cpp					\
 				Menu/SoundVolumeMenu.cpp				\
 				Menu/MusicVolumeMenu.cpp				\
+				Menu/GlobalVolumeMenu.cpp				\
 				Menu/ControlMenu.cpp					\
 				Menu/CreditMenu.cpp						\
 				Menu/YesNoMenu.cpp						\
 				Menu/ResolutionMenu.cpp					\
+				Menu/ResetMenu.cpp						\
 				Menu/CheatCodeMenu.cpp					\
 				Menu/LevelMenu.cpp						\
+				Menu/PlayEndMenu.cpp					\
 				Menu/NanoMenu.cpp						\
+				Menu/RandomDiscoverMenu.cpp				\
+				Menu/FakeMenu.cpp						\
+				Menu/BalleMultiplierMenu.cpp			\
+				Menu/DifficultyMenu.cpp					\
+				Menu/SpiritCheatMenu.cpp				\
 				Menu/EmptyMenu.cpp						\
+				Menu/SpiritInfos.cpp					\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/FireflyPopulation.cpp		\
@@ -135,6 +237,9 @@ SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/DoubleJumpNanoRobot.cpp		\
 				NanoRobots/SlowFallNanoRobot.cpp		\
 				NanoRobots/WaterNanoRobot.cpp			\
+				NanoRobots/BalleNanoRobot.cpp			\
+				NanoRobots/SpiritNanoRobot.cpp			\
+				NanoRobots/MenuNanoRobot.cpp			\
 				NanoRobots/NanoEffect.cpp				\
 
 SRC_MAP =		Map/Map.cpp								\
@@ -148,11 +253,32 @@ SRC_MAP =		Map/Map.cpp								\
 SRC_BIOMES =	Biomes/ABiome.cpp						\
 				Biomes/BiomeManager.cpp					\
 				Biomes/HSL.cpp							\
-				Biomes/DefaultBiome.cpp					\
+				Biomes/RandomBiome.cpp					\
+				Biomes/RewardsBiome.cpp					\
+				Biomes/RandomGameBiome.cpp				\
 				Biomes/IceABiome.cpp					\
+				Biomes/IceBBiome.cpp					\
+				Biomes/IceCBiome.cpp					\
+				Biomes/IceDBiome.cpp					\
 				Biomes/DesertABiome.cpp					\
+				Biomes/DesertBBiome.cpp					\
+				Biomes/DesertCBiome.cpp					\
+				Biomes/DesertDBiome.cpp					\
 				Biomes/JungleABiome.cpp					\
+				Biomes/JungleBBiome.cpp					\
+				Biomes/JungleCBiome.cpp					\
+				Biomes/JungleDBiome.cpp					\
 				Biomes/WaterABiome.cpp					\
+				Biomes/WaterBBiome.cpp					\
+				Biomes/WaterCBiome.cpp					\
+				Biomes/WaterDBiome.cpp					\
+				Biomes/FinalBiome.cpp					\
+				Biomes/RedBiome.cpp						\
+				Biomes/BlueBiome.cpp					\
+				Biomes/PortalBiome.cpp					\
+				Biomes/EndRocketBiome.cpp				\
+				Biomes/EndTimeLapseBiome.cpp			\
+				Biomes/LaboBiome.cpp					\
 
 SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/SkyManager.cpp					\
@@ -174,6 +300,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/GroundRock.cpp					\
 				Decors/Sky.cpp							\
 				Decors/SunLight.cpp						\
+				Decors/Grass.cpp						\
 				Decors/Lightning.cpp					\
 				Decors/DropSystem.cpp					\
 				Decors/SmokeSystem.cpp					\
@@ -184,6 +311,7 @@ SRC_DECORS =	Decors/DecorManager.cpp					\
 				Decors/WaterDropSystem.cpp				\
 				Decors/StarSystem.cpp					\
 				Decors/WaterCascadeSystem.cpp			\
+				Decors/BeamSystem.cpp					\
 
 SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/RectangleShape.cpp				\
@@ -194,6 +322,8 @@ SRC_PHYSICS =	Physics/PolygonShape.cpp				\
 				Physics/ShapeBuilder.cpp				\
 				Physics/GroupShape.cpp					\
 				Physics/AShape.cpp						\
+
+SRC_STEAM =		Steam/SteamAPI.cpp						\
 
 
 # package files
@@ -235,7 +365,7 @@ CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 FRAMEWORKS_FLAGS = $(addprefix -F , $(FRAMEWORKS_DIR)) $(addprefix -framework , $(FRAMEWORK))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = debug
+MODE = release
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)
@@ -253,7 +383,7 @@ all: print_summary $(COMPLETE_TARGET)
 
 $(COMPLETE_TARGET): $(BUILD_DIR) package core_library depend $(OBJS)
 	@echo " - $(COLOR_ACTION)building$(COLOR_OFF): $(COLOR_OBJECT)$@$(COLOR_OFF)"
-	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) $(FRAMEWORKS_FLAGS) -rpath @executable_path/../Frameworks
+	@$(COMPILER) $(CFLAGS) $(OBJS) -o $@ $(CLIBS_FLAGS) $(FRAMEWORKS_FLAGS) -rpath @executable_path/../Frameworks -lsteam_api
 
 $(addprefix $(BUILD_DIR)/, %.o) : $(subst $(BUILD_DIR),, %.cpp)
 	@echo " - $(COLOR_ACTION)compiling$(COLOR_OFF): $(COLOR_OBJECT)$<$(COLOR_OFF)"

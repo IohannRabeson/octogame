@@ -1,12 +1,12 @@
 #ifndef GAMESCREEN_HPP
 # define GAMESCREEN_HPP
 # include <AbstractState.hpp>
-# include <GraphicsListeners.hpp>
 
 # include "Game.hpp"
 # include "MainMenu.hpp"
+# include "InputListener.hpp"
 
-class GameScreen : public octo::AbstractState, public octo::DefaultKeyboardListener
+class GameScreen : public octo::AbstractState, public InputListener
 {
 public:
 	GameScreen(void);
@@ -18,11 +18,18 @@ public:
 	virtual void		update(sf::Time frameTime);
 	virtual void		draw(sf::RenderTarget& render)const;
 private:
+	void changeLevel(octo::StateManager & states, Progress & progress);
+	void timeLevelBlueRed(sf::Time frameTime, octo::StateManager & states, Progress & progress);
+
 	MainMenu				m_menu;
 	std::unique_ptr<Game>	m_game;
 	bool					m_doSave;
+	sf::Clock				m_timePlayed;
+	sf::Time				m_timerRed;
+	sf::Time				m_timerBlue;
+	sf::Time				m_timerRedBlueMax;
 
-	virtual bool onPressed(sf::Event::KeyEvent const & event);
+	virtual bool onInputPressed(InputListener::OctoKeys const & key);
 };
 
 #endif

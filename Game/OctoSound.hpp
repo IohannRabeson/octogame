@@ -1,5 +1,6 @@
 #ifndef OCTOSOUND_HPP
 # define OCTOSOUND_HPP
+
 # include "CharacterOcto.hpp"
 # include <AudioManager.hpp>
 
@@ -9,6 +10,8 @@ public:
 	OctoSound();
 	~OctoSound();
 	void	update(sf::Time frameTime, Events event, bool inWater, bool onGround);
+	void	setWaterLevel(float waterLevel) {m_waterLevel = waterLevel; };
+
 private:
 	struct soundFade
 	{
@@ -35,6 +38,7 @@ private:
 	std::shared_ptr<sf::Sound>				m_sound;
 	std::shared_ptr<sf::Sound>				m_soundEnvironment;
 	std::shared_ptr<sf::Sound>				m_soundTransition;
+	std::shared_ptr<sf::Sound>				m_soundElevator;
 	std::vector<soundFade>					m_soundFadeOut;
 	Events									m_prevEvent;
 
@@ -44,13 +48,13 @@ private:
 	sf::Time										m_timeSoundIn;
 	sf::Time										m_timeSoundTransition;
 	sf::Time										m_timeSoundTransitionMax;
+	sf::Time										m_timeDrinkSound;
 	bool											m_inWater;
+	float											m_waterLevel;
 	bool											m_onGround;
 	bool											m_landing;
 	bool											m_transitionInWater;
 	bool											m_transitionOutWater;
-	float											m_volumeEffect;
-	float											m_volumeVoice;
 	std::mt19937									m_engine;
 	std::uniform_real_distribution<float>			m_pitchDistribution;
 };

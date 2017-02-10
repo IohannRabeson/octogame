@@ -17,6 +17,15 @@ Mushroom::Mushroom(void) :
 {
 }
 
+bool Mushroom::dieOutOfScreen(void)
+{
+	if (m_animator.getState() != DecorAnimator::State::Dead)
+		m_animator.die();
+	else
+		return true;
+	return false;
+}
+
 void Mushroom::createMushroom(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, float bouncingValue, octo::VertexBuilder& builder)
 {
 	float unit = size.x / 6.f;
@@ -88,17 +97,19 @@ void Mushroom::playSound(ABiome & biome, sf::Vector2f const & position)
 		{
 			octo::AudioManager& audio = octo::Application::getAudioManager();
 			octo::ResourceManager& resources = octo::Application::getResourceManager();
-			audio.playSound(resources.getSound(MUSHROOM_OGG), 1.f, biome.randomFloat(3.f, 4.f), sf::Vector3f(position.x, position.y, 0.f), 100.f, 0.8f);
+			audio.playSound(resources.getSound(DECOR_MUSHROOM_OGG), 1.f, biome.randomFloat(3.f, 4.f), sf::Vector3f(position.x, position.y, -150.f), 500.f, 30.f);
 			m_sound = false;
 		}
 }
 
 void Mushroom::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biome)
 {
-	if (m_animator.update(frameTime))
+	m_animator.update(frameTime);
+	if (m_animator.getState() == DecorAnimator::State::Dead)
 		newMushroom(biome);
 	m_animation = m_animator.getAnimation();
-	sf::Vector2f const & position = getPosition();
+	sf::Vector2f position = getPosition();
+	position.x += 8.f;
 
 	playSound(biome, position);
 

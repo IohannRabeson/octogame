@@ -10,11 +10,7 @@ public:
 	virtual ~RepairNanoRobot(void) = default;
 
 	virtual void update(sf::Time frameTime);
-
-private:
-	sf::Time	m_timer;
-	sf::Time	m_timerMax;
-
+	void		 updateInfo(void);
 };
 
 #endif

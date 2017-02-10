@@ -8,6 +8,8 @@ uniform float limit;
 uniform float offset_limit;
 uniform float height;
 uniform float max_factor;
+uniform vec2 camera_offset;
+uniform vec2 resolution;
 
 void main()
 {
@@ -21,7 +23,8 @@ void main()
 		// the integer part and keeping the fractional part
 		// Basically performing a "floating point modulo 1"
 		// 1.1 = 0.1, 2.4 = 0.4, 10.3 = 0.3 etc.
-		distortionMapCoordinate.t -= time * riseFactor;
+		distortionMapCoordinate.y -= camera_offset.y / resolution.y + time * riseFactor;
+		distortionMapCoordinate.x += camera_offset.x / resolution.x;
 
 		vec4 distortionMapValue = texture2D(distortionMapTexture, distortionMapCoordinate);
 
@@ -50,8 +53,8 @@ void main()
 
 		vec2 distortedTextureCoordinate = gl_TexCoord[0].st + distortionPositionOffset;
 
-		gl_FragColor = gl_Color * texture2D(texture, distortedTextureCoordinate);
+		gl_FragColor = texture2D(texture, distortedTextureCoordinate);
 	}
 	else
-		gl_FragColor = gl_Color * texture2D(texture, gl_TexCoord[0].st);
+		gl_FragColor = texture2D(texture, gl_TexCoord[0].xy);
 }

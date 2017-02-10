@@ -1,5 +1,5 @@
 #include "Tree.hpp"
-#include "ABiome.hpp"
+#include "Progress.hpp"
 #include <Math.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
@@ -7,7 +7,8 @@
 #include <Math.hpp>
 #include "ResourceDefinitions.hpp"
 
-Tree::Tree(void) :
+Tree::Tree(bool onInstance) :
+	m_levelOfDetails(0),
 	m_depth(0u),
 	m_count(0u),
 	m_angleMaxCount(0u),
@@ -20,8 +21,18 @@ Tree::Tree(void) :
 	m_countLeaf(0u),
 	m_setLeaf(true),
 	m_leafMaxCount(0u),
-	m_sound(true)
+	m_sound(true),
+	m_onInstance(onInstance)
 {
+}
+
+bool Tree::dieOutOfScreen(void)
+{
+	if (m_animator.getState() != DecorAnimator::State::Dead)
+		m_animator.die();
+	else
+		return true;
+	return false;
 }
 
 void Tree::computeQuad(sf::Vector2f const & size, sf::Vector2f const & center, float cosAngle, float sinAngle, QuadValue & quad)
@@ -80,7 +91,7 @@ void Tree::createOctogon(sf::Vector2f const & size, sf::Vector2f const & sizeCor
 	downMidLeft += origin;
 	downMidRight += origin;
 
-	sf::Color deltaColor = color + sf::Color(7, 7, 7);
+	sf::Color deltaColor = color + sf::Color(7, 7, 7, 0);
 	builder.createTriangle(origin, upLeft, upRight, deltaColor);
 	builder.createTriangle(origin, upRight, upMidRight, deltaColor);
 	builder.createTriangle(origin, upMidRight, downMidRight, deltaColor);
@@ -97,18 +108,17 @@ void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, fl
 	sf::Vector2f tmpRightUp = quad.rightUp + quad.center;
 
 	builder.createTriangle(tmpRightUp, quad.rightDown + quad.center, tmpLeftDown, color);
-	sf::Color tmpColor(deltaColor + color.r, deltaColor + color.g, deltaColor + color.b);
+	sf::Color tmpColor(deltaColor + color.r, deltaColor + color.g, deltaColor + color.b, color.a);
 	builder.createTriangle(tmpLeftDown, quad.leftUp + quad.center, tmpRightUp, tmpColor);
 }
 
 void Tree::createTrunk(sf::Vector2f const & size, sf::Vector2f const & center, sf::Color const & color, octo::VertexBuilder & builder)
 {
-	sf::Vector2f upLeft(center.x - size.x / 2.f, center.y - size.y / 2.f);
-	sf::Vector2f upRight(center.x + size.x / 2.f, center.y - size.y / 2.f);
-	sf::Vector2f downLeft(upLeft.x, upLeft.y + m_mapSizeY);
-	sf::Vector2f downRight(upRight.x, upRight.y + m_mapSizeY);
+	sf::Vector2f upLeft(center.x - size.x / 2.f, center.y + size.y / 2.f);
+	sf::Vector2f upRight(center.x + size.x / 2.f, center.y + size.y / 2.f);
+	sf::Vector2f downMid(center.x, upRight.y + size.x / 2.f);
 
-	builder.createQuad(upLeft, upRight, downRight, downLeft, color);
+	builder.createTriangle(upLeft, upRight, downMid, color);
 }
 
 void Tree::createLeaf(std::vector<OctogonValue> const & leafs, sf::Color const & color, octo::VertexBuilder & builder)
@@ -127,7 +137,6 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	{
 		m_count = m_countLeaf = 0u;
 		m_setLeaf = m_isLeaf;
-		createTrunk(size, center, m_color, builder);
 	}
 
 	// Get current angle
@@ -141,7 +150,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	// Init color
 	//TODO: find a smart way to compute deltaColor
 	float colorChange = currentDepth * 5.f + 1;
-	sf::Color color = sf::Color(m_color.r + colorChange, m_color.g + colorChange, m_color.b + colorChange);
+	sf::Color color = sf::Color(m_color.r + colorChange, m_color.g + colorChange, m_color.b + colorChange, m_color.a);
 
 	// Compute root rectangle
 	QuadValue root;
@@ -191,7 +200,6 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	if (m_setLeaf == true && m_isLeaf == true)
 	{
 		m_setLeaf = false;
-		//createLeaf(m_leaf, m_leafColor, 5, builder);
 		createLeaf(m_octogonLeaf, m_leafColor, builder);
 	}
 
@@ -199,16 +207,20 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	createBiColorQuad(root, color, 5, builder);
 
 	// Fill empty space with triangle
-	color += sf::Color(5, 5, 5);
+	color += sf::Color(5, 5, 5, 0);
 	sf::Vector2f upTriangle(-rightSize.x, 0.f);
 	octo::rotateVector(upTriangle, cosRight, sinRight);
 	builder.createTriangle(root.rightUp + center, root.leftUp + center, upTriangle + center + root.rightUp, color);
 
+	(void)m_onInstance;
+	if (currentDepth == 0u && m_biomeId != Level::Labo)
+		createTrunk(size, center, m_color, builder);
 }
 
 void Tree::setup(ABiome& biome)
 {
-	m_depth = biome.getTreeDepth();
+	m_levelOfDetails = Progress::getInstance().getLevelOfDetails();
+	m_depth = biome.getTreeDepth() + m_levelOfDetails;
 
 	m_angleMaxCount = std::pow(2, m_depth) + 1;
 	m_refAngle.resize(m_angleMaxCount);
@@ -218,6 +230,7 @@ void Tree::setup(ABiome& biome)
 	m_leafSize.resize(m_leafMaxCount);
 	m_mapSizeY = biome.getMapSizeFloat().y;
 	m_animator.setBeatMouvement(biome.getTreeBeatMouvement());
+	m_biomeId = biome.getId();
 
 	newTree(biome);
 }
@@ -247,7 +260,11 @@ void Tree::playSound(ABiome & biome, sf::Vector2f const & position)
 	{
 		octo::AudioManager& audio = octo::Application::getAudioManager();
 		octo::ResourceManager& resources = octo::Application::getResourceManager();
-		audio.playSound(resources.getSound(TREE_OGG), 1.f, biome.randomFloat(0.8, 1.f), sf::Vector3f(position.x, position.y, 0.f), 100.f, 0.5f);
+
+		float volume = 1.f;
+		if (m_size.y < 100.f)
+			volume *= m_size.y / 100.f;
+		audio.playSound(resources.getSound(DECOR_TREE_OGG), volume, biome.randomFloat(0.8f, 1.f), sf::Vector3f(position.x, position.y, -150.f), 700.f, 30.f);
 		m_sound = false;
 	}
 }
@@ -256,7 +273,15 @@ void Tree::update(sf::Time frameTime, octo::VertexBuilder& builder, ABiome& biom
 {
 	if (biome.getTreeIsMoving() == false)
 		m_animator.sleep();
-	if (m_animator.update(frameTime))
+	
+	if (m_levelOfDetails != Progress::getInstance().getLevelOfDetails())
+	{
+		m_animator = DecorAnimator(4.f, 4.f, 3.f, 0.01f);
+		setup(biome);
+	}
+
+	m_animator.update(frameTime);
+	if (m_animator.getState() == DecorAnimator::State::Dead)
 		newTree(biome);
 	m_animation = m_animator.getAnimation();
 	sf::Vector2f const & position = getPosition();

@@ -6,28 +6,29 @@
 # include <LevelMap.hpp>
 # include "AGameObject.hpp"
 
+enum class ETransitionType : char
+{
+	e_transition_appear,
+	e_transition_disappear,
+	e_transition_already,
+	e_transition_none
+};
+
 class Tile : public AGameObject<GameObjectType::Tile>
 {
 public:
 	Tile(void);
 	~Tile(void) = default;
 
-	enum ETransitionType
-	{
-		e_transition_appear,
-		e_transition_disappear,
-		e_transition_already,
-		e_transition_none
-	};
-
+	//TEST ENUM CHAR
 	static constexpr float	TileSize = 16.f;
 	static constexpr float	DoubleTileSize = Tile::TileSize * 2.f;
 	static constexpr float	TripleTileSize = Tile::TileSize * 3.f;
 	static constexpr float	HalfTileSize = Tile::TileSize / 2.f;
 
-	inline void setTransitionType(ETransitionType transitionType) { m_transitionType = transitionType; }
-	inline ETransitionType getTransitionType(void) const { return m_transitionType; }
-	inline bool isTransitionType(ETransitionType transitionType) { return (m_transitionType == transitionType); }
+	inline void setTransitionType(ETransitionType const & transitionType) { m_transitionType = transitionType; }
+	inline ETransitionType const & getTransitionType(void) const { return m_transitionType; }
+	inline bool isTransitionType(ETransitionType const & transitionType) { return (m_transitionType == transitionType); }
 
 	inline void setStartColor(sf::Color && startColor) { m_startColor = std::forward<sf::Color>(startColor); }
 	inline void setStartColor(sf::Color const & startColor) { m_startColor = startColor; }

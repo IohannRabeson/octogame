@@ -12,26 +12,28 @@
 JungleABiome::JungleABiome() :
 	m_name("Jungle A"),
 	m_id(Level::JungleA),
-	m_seed("Vince"),
-	m_mapSize(sf::Vector2u(1100u, 128u)),
+	m_seed("stunfest"),
+	m_mapSize(sf::Vector2u(1000u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(43.f * 16.f, 650.f),
+	m_octoStartPosition(746.f * 16.f, -1440.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
 	m_tileStartColor(0, 76, 54),
 	m_tileEndColor(0, 124, 104),
-	m_waterLevel(1500.f),
-	m_waterColor(0, 189, 168, 150),
+	m_waterLevel(10.f),
+	m_waterColor(196, 235, 1, 150),
+	m_secondWaterColor(0, 189, 168, 150),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(80.f)),
-	m_startDayDuration(sf::seconds(15.f)),
+	m_startDayDuration(sf::Time::Zero),
 	m_skyDayColor(252, 252, 190),
-	m_skyNightColor(0, 0, 0),
+	m_skyNightColor(175, 177, 18),
 	m_nightLightColor(0, 0, 0, 130),
-	m_SunsetLightColor(252, 252, 190, 130),
+	m_dayLightColor(sf::Color::Transparent),
+	m_SunsetLightColor(255, 182, 0, 100),
 	m_wind(100.f),
-	m_rainDropPerSecond(10u, 30u),
+	m_rainDropPerSecond(10u, 15u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
 	m_rainingTime(sf::seconds(15.f), sf::seconds(20.f)),
 	m_lightningSize(700.f, 2500.f),
@@ -62,10 +64,18 @@ JungleABiome::JungleABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(true),
+	m_waterPersistence(0.f),
+	m_type(ABiome::Type::Jungle),
 
 	m_rockSize(sf::Vector2f(15.f, 60.f), sf::Vector2f(30.f, 100.f)),
 	m_rockPartCount(6.f, 15.f),
 	m_rockColor(56, 50, 72),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassSizeX(14.f, 16.f),
+	m_grassColor(m_tileStartColor),
+	m_grassCount(m_mapSize.x),
 
 	m_treeDepth(4u, 5u),
 	m_treeSize(sf::Vector2f(30.f, 300.f), sf::Vector2f(200.f, 300.f)),
@@ -89,6 +99,9 @@ JungleABiome::JungleABiome() :
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-4000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 100),
 
@@ -125,31 +138,36 @@ JungleABiome::JungleABiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	for (std::size_t i = 830; i < 970; i += m_generator.randomInt(10u, 30u))
+	{
+		if (m_generator.randomBool(0.5))
+			m_gameObjects[i] = GameObjectType::ForestSpirit1Npc;
+		else
+			m_gameObjects[i] = GameObjectType::ForestSpirit2Npc;
+	}
+
 	// Define game objects
-	m_instances[1070] = MAP_ELEVATOR_JUNGLE_OMP;
-	m_instances[1019] = MAP_LUCIEN_JUNGLE_OMP;
-	m_instances[765] = MAP_VILLAGE_JUNGLE_OMP;
-	m_instances[670] = MAP_SECRET_LEFT_VILLAGE_JUNGLE_OMP;
-	m_instances[2] = MAP_CEDRIC_JUNGLE_OMP; //2 to 102
-	m_instances[120] = MAP_TRAIL_JUNGLE_OMP; //150 to 450
-	m_instances[500] = MAP_DOUBLE_JUMP_JUNGLE_OMP; //500 to 600
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_gameObjects[500] = GameObjectType::Portal;
-	m_gameObjects[300] = GameObjectType::VinceNpc;
-	m_gameObjects[745] = GameObjectType::AmandineNpc;
-	m_gameObjects[769] = GameObjectType::FaustNpc;
-	m_gameObjects[780] = GameObjectType::ConstanceNpc;
-	m_gameObjects[80] = GameObjectType::PierreNpc;
-	m_gameObjects[470] = GameObjectType::CanouilleNpc;
+	m_instances[2] = MAP_JUNGLE_A_CEDRIC_OMP;
+	m_instances[120] = MAP_JUNGLE_A_TRAIL_OMP;
+	m_instances[500] = MAP_JUNGLE_A_DOUBLE_JUMP_OMP;
+	m_instances[600] = MAP_JUNGLE_A_VILLAGE_OMP;
+	m_gameObjects[955] = GameObjectType::VinceNpc;
+
+	for (std::size_t i = 0u; i < 10u; i++)
+		m_gameObjects[randomInt(10, 550)] = GameObjectType::FishBlackNpc;
+
 	m_interestPointPosX = 500;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::DesertA);
-	m_destinations.push_back(Level::WaterA);
+	m_destinations.push_back(Level::Random);
+	m_destinations.push_back(Level::JungleB);
+	m_destinations.push_back(Level::DesertD);
 
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::WaterA)
-		m_octoStartPosition = sf::Vector2f(490.f * 16.f, 2400.f);
+	if (progress.getLastDestination() == Level::JungleB)
+		m_octoStartPosition = sf::Vector2f(580.f * 16.f, -2400.f);
+	else if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(447.f * 16.f, -3000.f);
 }
 
 void			JungleABiome::setup(std::size_t seed)
@@ -218,6 +236,21 @@ sf::Color	JungleABiome::getWaterColor()
 	return m_waterColor;
 }
 
+sf::Color	JungleABiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
+}
+
+bool		JungleABiome::isDeadlyWater()
+{
+	return true;
+}
+
+sf::Color	JungleABiome::getColorMoveInstance()
+{
+	return sf::Color(150, 150, 150);
+}
+
 std::map<std::size_t, std::string> const & JungleABiome::getInstances()
 {
 	return m_instances;
@@ -228,24 +261,18 @@ std::vector<ParallaxScrolling::ALayer *> JungleABiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 1.f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, 40, 0.1f, 1.f, 10.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 			return noise.perlin(x * 1.f, y, 2, 2.f);
 		});
 	vector.push_back(layer);
-	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
+	layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, 45, 0.1f, 0.9f, 11.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
 		return noise.perlin(x, y, 3, 2.f);
 		});
 	vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.noise(x * 1.1f, y);
-	//	});
-	//vector.push_back(layer);
 	return vector;
 }
 
@@ -253,26 +280,22 @@ Map::MapSurfaceGenerator JungleABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 400.f / static_cast<float>(m_mapSize.x);
-		float middle1 = 700.f / static_cast<float>(m_mapSize.x);
-		float end = 800.f / static_cast<float>(m_mapSize.x);
-		float offset = 130.f / static_cast<float>(m_mapSize.x);
+		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float bot = n / 1.5f + 1.6f;
-		float top = n / 1.5f - 1.6f;
+		m_pointX = {0.f, 603.f, 605.f , 650.f , 697.f , 696.f , 737.f , 738.f , 770.f , 790.f , 820.f , 850.f           , 980.f           , 984.f   };
+		m_pointY = {n  , n    , -1.97f, -1.95f, -1.95f, -0.43f, -0.43f, -1.97f, -1.95f, -1.95f, -1.97f, n / 1.5f - 1.43f, n / 1.5f - 1.43f, n - 0.3f};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, bot, (x - start + offset) / offset);
-		else if (x > start && x <= middle1 - offset)
-			return bot;
-		else if (x > middle1 - offset && x <= middle1)
-			return octo::cosinusInterpolation(bot, top, (x - middle1 + offset) / offset);
-		else if (x > middle1 && x <= end)
-			return top;
-		else if (x > end && x <= end + offset)
-			return octo::cosinusInterpolation(n, top, (x - end + offset) / offset);
-		else
-			return n;
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
+		{
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
+			{
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
 }
 
@@ -280,9 +303,9 @@ Map::TileColorGenerator JungleABiome::getTileColorGenerator()
 {
 	sf::Color secondColorStart(76, 70, 102);
 	sf::Color secondColorEnd(56, 50, 72);
-	float startTransition = 9500.f / static_cast<float>(m_mapSize.y);
-	float middleTransition = 12000.f / static_cast<float>(m_mapSize.y);
-	float endTransition = 14000.f / static_cast<float>(m_mapSize.y);
+	float startTransition = -1500.f / static_cast<float>(m_mapSize.y);
+	float middleTransition = 1000.f / static_cast<float>(m_mapSize.y);
+	float endTransition = 3000.f / static_cast<float>(m_mapSize.y);
 	return [this, secondColorStart, secondColorEnd, startTransition, endTransition, middleTransition](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
@@ -325,7 +348,7 @@ sf::Time		JungleABiome::getDayDuration()
 
 sf::Time		JungleABiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		JungleABiome::getSkyDayColor()
@@ -341,6 +364,11 @@ sf::Color		JungleABiome::getSkyNightColor()
 sf::Color		JungleABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	JungleABiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		JungleABiome::getSunsetLightColor()
@@ -505,7 +533,7 @@ sf::Color		JungleABiome::getLeafColor()
 
 std::size_t		JungleABiome::getTreePositionX()
 {
-	return randomInt(1u, m_mapSize.x - 1u);
+	return randomInt(10u, m_mapSize.x - 1u);
 }
 
 sf::Vector2f	JungleABiome::getCrystalSize()
@@ -574,6 +602,31 @@ sf::Color		JungleABiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	JungleABiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+float	JungleABiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
+sf::Color	JungleABiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	JungleABiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	JungleABiome::getGrassPosX()
+{
+	return randomInt(0u, m_mapSize.x);
+}
+
 bool			JungleABiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -607,6 +660,21 @@ sf::Vector2f	JungleABiome::getCloudSize()
 std::size_t		JungleABiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	JungleABiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	JungleABiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	JungleABiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		JungleABiome::getCloudLifeTime()
@@ -716,6 +784,21 @@ sf::Time		JungleABiome::getRainbowIntervalTime()
 bool			JungleABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	JungleABiome::canCreateGrass()
+{
+	return m_canCreateGrass;
+}
+
+float	JungleABiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
+}
+
+ABiome::Type	JungleABiome::getType() const
+{
+	return m_type;
 }
 
 

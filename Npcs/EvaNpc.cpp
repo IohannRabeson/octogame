@@ -1,18 +1,17 @@
 #include "EvaNpc.hpp"
-#include "RectangleShape.hpp"
 
 EvaNpc::EvaNpc(sf::Color const & color) :
-	ANpc(EVA_OSS)
+	AUniqueNpc(EVA_OSS)
 {
-	setSize(sf::Vector2f(75.f, 325.f));
-	setOrigin(sf::Vector2f(60.f, -150.f));
+	setType(GameObjectType::EvaNpc);
+	setSize(sf::Vector2f(60.f, 300.f));
+	setOrigin(sf::Vector2f(62.f, 25.f));
 	setScale(0.8f);
-	setTextOffset(sf::Vector2f(10.f, 150.f));
+	setTextOffset(sf::Vector2f(0.f, 0.f));
 	setTimerMax(sf::seconds(8.0f));
 	setup();
 
 	m_particles.setColor(color);
-	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void EvaNpc::setup(void)
@@ -91,7 +90,7 @@ void EvaNpc::update(sf::Time frameTime)
 {
 	octo::CharacterSprite & sprite = getSprite();
 	m_particles.update(frameTime);
-	m_particles.setEmitter(sprite.getPosition() + sf::Vector2f(45.f, 228.f));
+	m_particles.setEmitter(sprite.getPosition() + sf::Vector2f(45.f, 73.f));
 	m_particles.canEmit(false);
 	ANpc::update(frameTime);
 }
@@ -116,14 +115,8 @@ void EvaNpc::updateState(void)
 	}
 	else if (sprite.getCurrentEvent() == Idle)
 	{
-		if (getCollideEventOcto())
-		{
-			setDisplayText(true);
-		}
-		else
-		{
+		if (!getCollideEventOcto())
 			sprite.setNextEvent(StartSpecial1);
-		}
 	}
 	else
 		m_particles.canEmit(true);

@@ -1,9 +1,13 @@
 #include "MainMenu.hpp"
-#include "CheatCodeMenu.hpp"
 #include "ControlMenu.hpp"
 #include "CreditMenu.hpp"
+#include "ResetMenu.hpp"
 #include "YesNoMenu.hpp"
+#include "DifficultyMenu.hpp"
 #include "Progress.hpp"
+#include "ResourceDefinitions.hpp"
+#include <AudioManager.hpp>
+#include <ResourceManager.hpp>
 #include <Camera.hpp>
 #include <Application.hpp>
 
@@ -11,84 +15,107 @@
 class YesNoQuit : public YesNoMenu
 {
 	inline void setIndex(void) { setIndexCursor(0); }
-	inline void actionYes(void) { octo::Application::stop(); }//octo::Application::getStateManager().change("quit"); }
-	inline void actionNo(void) { }
-};
-
-class YesNoReset : public YesNoMenu
-{
-	inline void setIndex(void) { setIndexCursor(0); }
 	inline void actionYes(void)
 	{
 		Progress &				progress = Progress::getInstance();
 		octo::StateManager &	states = octo::Application::getStateManager();
-		progress.reset();
-		progress.setFirstTime(false);
-		states.change("zero");
-	}
-	
-	inline void onSelection(void)
-	{
-		if (getIndexCursor() == 0u)
-			actionNo();
-		else if (getIndexCursor() == 1u)
-			actionYes();
-	
-		setState(AMenu::State::Hide);
-	}
 
+		if (!progress.isMenu())
+		{
+			states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
+			states.change("menu");
+		}
+		else
+			octo::Application::stop();
+	}
 	inline void actionNo(void) { }
 };
 
 //MainMenu
 MainMenu::MainMenu(void) :
-	m_nanoCount(0u)
+	m_soundPlayed(false)
 {
 }
 
 void MainMenu::createMenus(void)
 {
-	addMenu(L"Contrôles", std::unique_ptr<ControlMenu>(new ControlMenu()));
-#ifndef NDEBUG
-	addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
-#endif
-	addMenu(L"Options", std::unique_ptr<OptionMenu>(new OptionMenu()));
-	addMenu(L"Crédits", std::unique_ptr<CreditMenu>(new CreditMenu()));
-	addMenu(L"Recommencer", std::unique_ptr<YesNoReset>(new YesNoReset()));
-	addMenu(L"Quitter", std::unique_ptr<YesNoQuit>(new YesNoQuit()));
-	setCharacterSize(30);
-	setBubbleType(ABubble::Type::Up);
+	Progress &				progress = Progress::getInstance();
+
+	if (progress.isMenu())
+	{
+		addMenu(AMenu::getText("menu_quit"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+		addMenu(AMenu::getText("menu_restart"), std::unique_ptr<ResetMenu>(new ResetMenu()));
+		addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
+		addMenu(AMenu::getText("menu_new"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+		if (progress.isFirstTime())
+			addMenu(AMenu::getText("menu_play"), std::unique_ptr<DifficultyMenu>(new DifficultyMenu()));
+		else
+			addMenu(AMenu::getText("menu_play"), std::unique_ptr<EmptyMenu>(new EmptyMenu()));
+		setCharacterSize(50);
+		setBubbleType(ABubble::Type::MainMenu);
+		setCursorAtEnd();
+	}
+	else
+	{
+		addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
+		addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
+		addMenu(AMenu::getText("menu_return"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
+		setCharacterSize(30);
+		setBubbleType(ABubble::Type::Think);
+	}
+}
+
+void MainMenu::onSelection(void)
+{
+	Progress & progress = Progress::getInstance();
+
+	if (progress.isMenu() && getIndexCursor() == 4u && !progress.isFirstTime())
+	{
+		octo::StateManager &	states = octo::Application::getStateManager();
+		octo::AudioManager &		audio = octo::Application::getAudioManager();
+		octo::ResourceManager &		resources = octo::Application::getResourceManager();
+
+		if (!m_soundPlayed)
+		{
+			m_soundPlayed = true;
+			audio.playSound(resources.getSound(OCTO_VOICE_PLAY_OGG), 1.f);
+		}
+		states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
+		states.change("transitionLevel");
+	}
+	else if (progress.isMenu() && getIndexCursor() == 3u && progress.isMenu())
+	{
+		octo::StateManager &	states = octo::Application::getStateManager();
+		states.change("menu");
+		states.setTransitionDuration(sf::seconds(0.5f), sf::seconds(0.5f));
+	}
+	else
+		AMenuSelection::onSelection();
 }
 
 void MainMenu::setup(void)
 {
 	AMenuSelection::setup();
-	m_filter.setSize(octo::Application::getCamera().getSize());
+	m_filter.setSize(octo::Application::getCamera().getSize() * 1.2f);
 	m_filter.setFillColor(sf::Color(0, 0, 0, 50));
-	m_infoText = L"0 / 8 Octobots";
-	m_infoBubble.setup(m_infoText, sf::Color::White);
-	m_infoBubble.setType(ABubble::Type::Left);
-	m_infoBubble.setActive(true);
+}
+
+void MainMenu::updateSpiritInfos(void)
+{
+	m_spiritInfos.setup();
 }
 
 void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePosition)
 {
 	AMenuSelection::update(frameTime, octoBubblePosition);
 	sf::FloatRect const & camera = octo::Application::getCamera().getRectangle();
-	Progress & progress = Progress::getInstance();
 	m_filter.setPosition(sf::Vector2f(camera.left, camera.top));
-
-	m_nanoCount = progress.getNanoRobotCount();
-	m_infoText = std::to_wstring(m_nanoCount) + L" / 8 Octobots";
-	m_infoBubble.setPosition(octoBubblePosition - sf::Vector2f(240.f, 90.f));
-	m_infoBubble.setPhrase(m_infoText);
-	m_infoBubble.update(frameTime);
+	m_spiritInfos.update(frameTime, m_currentMenuPosition);
 }
 
 void MainMenu::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	render.draw(m_filter, states);
+	m_spiritInfos.draw(render, states);
 	AMenuSelection::draw(render, states);
-	if (m_nanoCount)
-		m_infoBubble.draw(render, states);
 }

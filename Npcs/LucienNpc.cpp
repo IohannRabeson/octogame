@@ -2,20 +2,26 @@
 #include "RectangleShape.hpp"
 #include "SkyCycle.hpp"
 #include "CircleShape.hpp"
+#include "Progress.hpp"
+#include <Application.hpp>
+#include <ResourceManager.hpp>
+#include <AudioManager.hpp>
+#include "ResourceDefinitions.hpp"
 
 LucienNpc::LucienNpc(void) :
-	ANpc(LUCIEN_OSS),
-	m_side(true)
+	AUniqueNpc(LUCIEN_OSS),
+	m_side(true),
+	m_sound(true)
 {
-	setSize(sf::Vector2f(25.f, 75.f));
-	setOrigin(sf::Vector2f(90.f, 100.f));
+	setType(GameObjectType::LucienNpc);
+	setSize(sf::Vector2f(160.f, 168.f));
+	setOrigin(sf::Vector2f(69.f, 25.f));
 	setScale(0.8f);
-	setVelocity(50.f);
 	setTextOffset(sf::Vector2f(-20.f, -80.f));
 	setTimerMax(sf::seconds(10.0f));
 	setup();
 
-	setupBox(this, static_cast<std::size_t>(GameObjectType::LucienNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
+	setupBox(this, static_cast<std::size_t>(GameObjectType::Npc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void LucienNpc::setup(void)
@@ -121,33 +127,44 @@ void LucienNpc::setupMachine(void)
 	setNextEvent(Idle);
 }
 
+void LucienNpc::playSound(void)
+{
+	if (m_sound)
+	{
+		octo::AudioManager& audio = octo::Application::getAudioManager();
+		octo::ResourceManager& resources = octo::Application::getResourceManager();
+
+		audio.playSound(resources.getSound(OBJECT_LU_OGG), 1.f, 1.f, sf::Vector3f(getBox()->getBaryCenter().x, getBox()->getBaryCenter().y, 0.f), 500.f, 40.f);
+		m_sound = false;
+	}
+}
+
 void LucienNpc::updateState(void)
 {
 	octo::CharacterSprite & sprite = getSprite();
 
 	if (sprite.getCurrentEvent() == Special1)
 	{
+		playSound();
 		if (sprite.isTerminated())
 		{
 			sprite.setNextEvent(Idle);
-			octo::CharacterSprite & sprite = getSprite();
-			sf::Vector2f const & size = sprite.getLocalSize();
-			sprite.setOrigin(size.x - getOrigin().x, getOrigin().y);
-			sprite.setScale(-getScale(), getScale());
+			reverseSprite(true);
 			addTimer(-getTimer());
 			m_side = false;
+			m_sound = true;
 		}
 	}
 	else if (sprite.getCurrentEvent() == Special2)
 	{
+		playSound();
 		if (sprite.isTerminated())
 		{
 			sprite.setNextEvent(Idle);
-			octo::CharacterSprite & sprite = getSprite();
-			sprite.setOrigin(getOrigin().x, getOrigin().y);
-			sprite.setScale(getScale(), getScale());
+			reverseSprite(false);
 			addTimer(-getTimer());
 			m_side = true;
+			m_sound = true;
 		}
 	}
 	else if (sprite.getCurrentEvent() == Idle)

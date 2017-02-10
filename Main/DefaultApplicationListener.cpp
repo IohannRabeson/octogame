@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "DefaultApplicationListener.hpp"
+#include "Progress.hpp"
 #include <Application.hpp>
 #include <Console.hpp>
 
@@ -25,10 +26,13 @@ void	DefaultApplicationListener::onResized(sf::Event::SizeEvent const&)
 
 void	DefaultApplicationListener::onFocusGained()
 {
+	octo::Application::resume();
 }
 
 void	DefaultApplicationListener::onFocusLost()
 {
+	if (!Progress::getInstance().isResourceLoading())
+		octo::Application::pause();
 }
 
 bool	DefaultApplicationListener::onPressed(sf::Event::KeyEvent const& event)
@@ -40,9 +44,8 @@ bool	DefaultApplicationListener::onPressed(sf::Event::KeyEvent const& event)
 //			octo::Application::stop();
 //			break;
 		case sf::Keyboard::F5:
-			#ifndef NDEBUG
-			octo::Application::getConsole().setEnabled(true);
-			#endif
+			if (Progress::getInstance().isEasyUnlocked())
+				octo::Application::getConsole().setEnabled(true);
 			break;
 		default:
 			break;

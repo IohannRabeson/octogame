@@ -1,9 +1,9 @@
 #ifndef GUINPC_HPP
 # define GUINPC_HPP
 
-# include "ANpc.hpp"
+# include "AWalkNpc.hpp"
 
-class GuiNpc : public ANpc, public AGameObject<GameObjectType::GuiNpc>
+class GuiNpc : public AWalkNpc
 {
 public:
 	GuiNpc(void);

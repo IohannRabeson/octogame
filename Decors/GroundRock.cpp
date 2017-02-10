@@ -1,11 +1,13 @@
 #include "GroundRock.hpp"
 #include "ABiome.hpp"
 #include "Tile.hpp"
+#include "Progress.hpp"
 #include <Camera.hpp>
 
-GroundRock::GroundRock(void) :
+GroundRock::GroundRock(bool onInstance) :
 	m_type(0u),
-	m_deep(0.f)
+	m_deep(0.f),
+	m_onInstance(onInstance)
 {
 }
 
@@ -35,12 +37,24 @@ void GroundRock::createGroundRock(std::size_t type, sf::Vector2f const & origin,
 void GroundRock::setup(ABiome& biome)
 {
 	m_type = biome.randomInt(0u, 4u);
-	m_deep = biome.randomFloat(0.f, octo::Camera().getSize().y / 2.f);
+	if (m_onInstance == false)
+	{
+		//TODO: Add to biome
+		if (biome.getId() != Level::Final)
+			m_deep = biome.randomFloat(16.f, octo::Camera().getSize().y);
+		else
+			m_deep = biome.randomFloat(16.f, 16 * 15.f);
+	}
+	else
+		m_deep = 0.f;
 	m_color = biome.getRockColor();
 }
 
-void GroundRock::update(sf::Time, octo::VertexBuilder& builder, ABiome&)
+void GroundRock::update(sf::Time, octo::VertexBuilder& builder, ABiome& biome)
 {
-	sf::Vector2f const & position = getPosition();
-	createGroundRock(m_type, position + sf::Vector2f(0.f, m_deep), m_color, builder);
+	sf::Vector2f position = getPosition();
+	position.y -= Tile::TileSize;
+	//TODO:: Add to biome
+	if (biome.getId() != Level::IceC)
+		createGroundRock(m_type, position + sf::Vector2f(0.f, m_deep), m_color, builder);
 }

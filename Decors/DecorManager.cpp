@@ -24,6 +24,8 @@
 #include "GroundRock.hpp"
 #include "Sky.hpp"
 #include "SunLight.hpp"
+#include "Grass.hpp"
+#include "Progress.hpp"
 
 #include <cassert>
 
@@ -84,18 +86,40 @@ void	DecorManager::clear()
 
 void	DecorManager::update(sf::Time frameTime, octo::Camera const& camera)
 {
+	float const			leftLimitX = camera.getCenter().x - camera.getSize().x / 1.8f;
+	float const			rightLimitX = camera.getCenter().x + camera.getSize().x / 1.8f;
+	float const			upLimitY = camera.getCenter().y - camera.getSize().x / 2.0f;
+	float const			downLimitY = camera.getCenter().y + camera.getSize().x / 2.0f;
+
+	float const			leftLimitXbis = camera.getCenter().x - camera.getSize().x;
+	float const			rightLimitXbis = camera.getCenter().x + camera.getSize().x;
+	float const			upLimitYbis = camera.getCenter().y - camera.getSize().x;
+	float const			downLimitYbis = camera.getCenter().y + camera.getSize().x * 2.f;
+
+	sf::Vector2f		position;
+
 	m_builder.clear();
-	float const			minVisibleX = camera.getCenter().x - camera.getSize().x;
-	float const			maxVisibleX = camera.getCenter().x + camera.getSize().x;
-	float				elementX = 0.f;
 
 	for (auto element : m_elements)
 	{
-		elementX = element->getPosition().x;
-		if (element->isDisabledIfOutOfScreen() == false ||
-			(elementX >= minVisibleX && elementX <= maxVisibleX))
+		position = element->getPosition();
+
+		if (!element->isDisabledIfOutOfScreen())
 		{
 			element->update(frameTime, m_builder, *m_biome);
+		}
+		else if ((position.x >= leftLimitXbis && position.x <= rightLimitXbis) &&
+			(position.y >= upLimitYbis && position.y <= downLimitYbis))
+		{
+			if ((position.x >= leftLimitX && position.x <= rightLimitX) &&
+				(position.y >= upLimitY && position.y <= downLimitY))
+			{
+				element->update(frameTime, m_builder, *m_biome);
+			}
+			else if (!element->dieOutOfScreen())
+			{
+				element->update(frameTime, m_builder, *m_biome);
+			}
 		}
 	}
 	m_used = m_builder.getUsed();
@@ -121,4 +145,5 @@ void	DecorManager::registerDecors()
 	m_factory.registerCreator<GroundRock>(DecorTypes::GroundRock);
 	m_factory.registerCreator<Sky>(DecorTypes::Sky);
 	m_factory.registerCreator<SunLight>(DecorTypes::SunLight);
+	m_factory.registerCreator<Grass>(DecorTypes::Grass);
 }

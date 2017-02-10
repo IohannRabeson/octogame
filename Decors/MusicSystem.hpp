@@ -2,7 +2,7 @@
 # define MUSICSYSTEM_HPP
 
 # include <ParticleSystem.hpp>
-# include <random>
+# include "RandomGenerator.hpp"
 
 class MusicSystem : public octo::ParticleSystem<sf::Time, sf::Time, bool>
 {
@@ -22,14 +22,8 @@ public:
 	void			update(sf::Time frameTime);
 
 private:
-	typedef std::uniform_real_distribution<float>	Dist;
-	typedef std::bernoulli_distribution				DistBool;
-
+	RandomGenerator	m_generator;
 	sf::Vector2f	m_emitter;
-	std::mt19937	m_engine;
-	Dist			m_creationTimeDistri;
-	Dist			m_lifeTimeDistri;
-	DistBool		m_boolDistri;
 	sf::Time		m_timer;
 	sf::Time		m_nextCreation;
 	sf::Color		m_color;

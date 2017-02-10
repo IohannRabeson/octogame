@@ -38,6 +38,10 @@ private:
 						sf::Color color,
 						octo::VertexBuilder& builder);
 
+	bool isOctogonContain(sf::Vector2f const & size,
+							sf::Vector2f const & position,
+							sf::Vector2f const & point) const;
+
 	void createCloud(std::vector<OctogonValue> const & values,
 					sf::Vector2f const & origin,
 					std::size_t partCount,
@@ -56,21 +60,45 @@ private:
 	void updateRain(sf::Time frameTime,
 					ABiome & biome,
 					octo::VertexBuilder & builder,
-					sf::Vector2f const & position);
+					sf::Vector2f const & position,
+					float weather);
 
 	void updateSnow(sf::Time frameTime,
 					ABiome & biome,
 					octo::VertexBuilder & builder,
-					sf::Vector2f const & position);
+					sf::Vector2f const & position,
+					float weather);
 
+	void updatePosition(sf::Time frameTime);
+
+	bool isDisplay(void);
+
+	static std::size_t				m_count;
+
+	std::size_t						m_id;
+	sf::Vector2f					m_position;
 	sf::Vector2f					m_size;
 	std::size_t						m_partCount;
+	sf::Vector2f					m_speed;
+	bool							m_isSpecialCloud;
+	float							m_cloudMinX;
+	float							m_cloudMaxX;
+	float							m_cloudMinY;
+	float							m_cloudMaxY;
+	float							m_cos;
+	float							m_sin;
 	sf::Color						m_color;
 	std::vector<OctogonValue>		m_values;
 
 	DecorAnimator					m_animator;
 	float							m_animation;
+	bool							m_isCollide;
+	bool							m_hasCollided;
+	sf::Time						m_timerInCloud;
+	sf::Time						m_timerInCloudMax;
+	sf::Vector2f					m_deathPosition;
 
+	bool							m_canWeather;
 	std::vector<DropSystem *>		m_rain;
 	std::vector<DropSystem *>		m_snow;
 	std::vector<sf::Vector2f>		m_dropUpLeft;

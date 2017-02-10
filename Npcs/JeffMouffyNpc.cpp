@@ -1,23 +1,22 @@
 #include "JeffMouffyNpc.hpp"
 #include "RectangleShape.hpp"
-#include "SkyCycle.hpp"
-#include "CircleShape.hpp"
+#include "Progress.hpp"
 #include <Interpolations.hpp>
+#include <list>
 
 JeffMouffyNpc::JeffMouffyNpc(void) :
-	ANpc(JEFF_MOUFFY_OSS),
+	ASpecialNpc(JEFF_MOUFFY_OSS, false),
 	m_startTimer(false),
-	m_animationEnd(false)
+	m_animationEnd(false),
+	m_isMet(false)
 {
-	setSize(sf::Vector2f(1.f, 75.f));
-	setOrigin(sf::Vector2f(90.f, 193.f));
+	setType(GameObjectType::JeffMouffyNpc);
+	setSize(sf::Vector2f(174.f, 186.f));
+	setOrigin(sf::Vector2f(82.f, 100.f));
 	setScale(0.8f);
-	setVelocity(50.f);
-	setTextOffset(sf::Vector2f(100.f, -80.f));
+	setTextOffset(sf::Vector2f(100.f, 0.f));
 	setTimerMax(sf::seconds(5.f));
 	setup();
-
-	setupBox(this, static_cast<std::size_t>(GameObjectType::JeffMouffyNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));
 }
 
 void JeffMouffyNpc::setup(void)
@@ -53,29 +52,13 @@ void JeffMouffyNpc::setup(void)
 	getSpecial1Animation().setLoop(octo::LoopMode::NoLoop);
 
 	setupMachine();
-}
+	getBox()->setApplyGravity(false);
 
-void JeffMouffyNpc::setupMachine(void)
-{
-	typedef octo::CharacterSprite::ACharacterState	State;
-	typedef octo::FiniteStateMachine::StatePtr		StatePtr;
+	std::list<GameObjectType> const & npcMet = Progress::getInstance().getNpcMet();
+	auto it = std::find(npcMet.begin(), npcMet.end(), GameObjectType::JeffMouffyNpc);
 
-	octo::FiniteStateMachine	machine;
-	StatePtr					idle;
-	StatePtr					special1;
-
-	idle = std::make_shared<State>("0", getIdleAnimation(), getSprite());
-	special1 = std::make_shared<State>("3", getSpecial1Animation(), getSprite());
-
-	machine.setStart(idle);
-	machine.addTransition(Idle, idle, idle);
-	machine.addTransition(Idle, special1, idle);
-
-	machine.addTransition(Special1, special1, special1);
-	machine.addTransition(Special1, idle, special1);
-
-	setMachine(machine);
-	setNextEvent(Idle);
+	if (it != npcMet.end())
+		m_isMet = true;
 }
 
 void JeffMouffyNpc::setPosition(sf::Vector2f const & position)
@@ -83,7 +66,7 @@ void JeffMouffyNpc::setPosition(sf::Vector2f const & position)
 	octo::CharacterSprite & sprite = getSprite();
 	if (sprite.getCurrentEvent() == Special1)
 		return;
-	ANpc::setPosition(position);
+	ASpecialNpc::setPosition(position);
 }
 
 void JeffMouffyNpc::updateState(void)
@@ -97,7 +80,7 @@ void JeffMouffyNpc::updateState(void)
 			m_startTimer = true;
 			setTimer(sf::Time::Zero);
 		}
-		if (m_startTimer)
+		if (m_startTimer || m_isMet)
 		{
 			if (getTimer() > getTimerMax())
 			{
@@ -128,21 +111,10 @@ void JeffMouffyNpc::updatePhysics(void)
 			if (getTimer() > getTimerMax())
 			{
 				setCurrentText(1u);
-				setTextOffset(sf::Vector2f(0.f, -120.f));
+				setTextOffset(sf::Vector2f(0.f, -25.f));
 				setDisplayText(true);
 				m_animationEnd = true;
 			}
 		}
 	}
-}
-
-void JeffMouffyNpc::collideOctoEvent(CharacterOcto * octo)
-{
-	ANpc::collideOctoEvent(octo);
-}
-
-void JeffMouffyNpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
-{
-//	if (!m_animationEnd)
-		ANpc::draw(render, states);
 }

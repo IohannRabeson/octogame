@@ -7,6 +7,7 @@
 # include "SmokeSystem.hpp"
 # include "MusicSystem.hpp"
 # include "IPlaceable.hpp"
+# include "RandomGenerator.hpp"
 
 class CircleShape;
 
@@ -27,19 +28,23 @@ public:
 	sf::Vector2f const & getPosition(void) const;
 	sf::Vector2f getSize(void) const;
 	void setSmokeVelocity(sf::Vector2f const & velocity);
+	void setRepairProgression(float progression);
 
 	void move(sf::Vector2f const & translation);
 	void update(sf::Time frameTime);
+	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 
 private:
-	octo::AnimatedSprite		m_sprite;
-	octo::SpriteAnimation		m_animation;
-	SmokeSystem					m_smoke;
-	MusicSystem					m_music;
-	SpaceShipEvents				m_event;
-	CircleShape *				m_box;
-
+	RandomGenerator					m_generator;
+	octo::AnimatedSprite			m_sprite;
+	octo::SpriteAnimation			m_animation;
+	SmokeSystem						m_smoke;
+	std::size_t						m_musicCount;
+	std::unique_ptr<MusicSystem[]>	m_music;
+	SpaceShipEvents					m_event;
+	CircleShape *					m_box;
+	bool							m_isFinal;
 };
 
 #endif

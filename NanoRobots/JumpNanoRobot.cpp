@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 JumpNanoRobot::JumpNanoRobot(sf::Vector2f const & position) :
-	NanoRobot(position, NANO_JUMP_OSS, 4, 654, sf::Vector2f(0.f, -24.f), 1.f)
+	NanoRobot(position, NANO_JUMP_OSS, 4, 654, sf::Vector2f(0.f, -24.f), InputListener::OctoKeys::Jump, 1.f)
 {
 	setup(this);
 
@@ -16,7 +16,7 @@ JumpNanoRobot::JumpNanoRobot(sf::Vector2f const & position) :
 	targets.push_back(sf::Vector2f(263.f, 362.f));
 	targets.push_back(sf::Vector2f(278.f, 340.f));
 	setTargets(targets, 0.6f);
-	setLaserColor(sf::Color(255, 127, 0));
+	setLaserColor(sf::Color::Red);
 
 	setSwarmTarget(position);
 }

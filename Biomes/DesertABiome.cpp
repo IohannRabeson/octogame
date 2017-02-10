@@ -12,24 +12,26 @@
 DesertABiome::DesertABiome() :
 	m_name("Desert A"),
 	m_id(Level::DesertA),
-	m_seed("Cailloux"),
-	m_mapSize(sf::Vector2u(900u, 128u)),
+	m_seed("CaillouX"),
+	m_mapSize(sf::Vector2u(540u, 128u)),
 	m_mapSeed(42u),
-	m_octoStartPosition(43.f * 16.f, 600.f),
+	m_octoStartPosition(253.f * 16.f, 53.f * 16.f),
 	m_transitionDuration(0.5f),
 	m_interestPointPosX(m_mapSize.x / 2.f),
-	m_tileStartColor(255, 245, 217),
-	m_tileEndColor(255, 252, 181),
+	m_tileStartColor(245, 222, 130),
+	m_tileEndColor(245, 243, 219),
 	m_waterLevel(-1.f),
 	m_waterColor(96, 204, 233, 180),
+	m_secondWaterColor(m_waterColor),
 	m_destinationIndex(0u),
 
 	m_dayDuration(sf::seconds(100.f)),
-	m_startDayDuration(sf::seconds(15.f)),
-	m_skyDayColor(255,156,103),
-	m_skyNightColor(8, 20, 26),
-	m_nightLightColor(0, 197, 255, 130),
-	m_SunsetLightColor(238, 173, 181, 130),
+	m_startDayDuration(sf::Time::Zero),
+	m_skyDayColor(255, 150, 242),
+	m_skyNightColor(166, 10, 92),
+	m_nightLightColor(134, 63, 215, 130),
+	m_dayLightColor(sf::Color::Transparent),
+	m_SunsetLightColor(255, 59, 59, 130),
 	m_wind(100.f),
 	m_rainDropPerSecond(10u, 30u),
 	m_sunnyTime(sf::seconds(10.f), sf::seconds(15.f)),
@@ -39,7 +41,7 @@ DesertABiome::DesertABiome() :
 	m_rockCount(10u, 20u),
 	m_treeCount(13u, 13u),
 	m_mushroomCount(3u, 40u),
-	m_crystalCount(10u, 15u),
+	m_crystalCount(18u, 19u),
 	m_starCount(500u, 800u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 3u),
@@ -62,17 +64,25 @@ DesertABiome::DesertABiome() :
 	m_canCreateSun(true),
 	m_canCreateMoon(true),
 	m_canCreateRainbow(false),
+	m_canCreateGrass(true),
+	m_waterPersistence(0.f),
+	m_type(ABiome::Type::Ice),
 
 	m_rockSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 400.f)),
 	m_rockPartCount(50.f, 80.f),
-	m_rockColor(240, 110, 110),
+	m_rockColor(255, 232, 170),
+
+	m_grassSizeY(30.f, 60.f),
+	m_grassSizeX(14.f, 16.f),
+	m_grassColor(46, 133, 84),
+	m_grassCount(120u),
 
 	m_treeDepth(6u, 8u),
 	m_treeSize(sf::Vector2f(15.f, 100.f), sf::Vector2f(30.f, 150.f)),
 	m_treeLifeTime(sf::seconds(30), sf::seconds(90)),
 	m_treeColor(53, 44, 45),
 	m_treeAngle(15.f, 75.f),
-	m_treeBeatMouvement(0.1f),
+	m_treeBeatMouvement(0.06f),
 	m_leafSize(sf::Vector2f(40.f, 40.f), sf::Vector2f(100.f, 100.f)),
 	m_leafColor(46, 133, 84),
 
@@ -89,6 +99,9 @@ DesertABiome::DesertABiome() :
 
 	m_cloudSize(sf::Vector2f(200.f, 100.f), sf::Vector2f(400.f, 200.f)),
 	m_cloudPartCount(6u, 10u),
+	m_cloudMaxY(-1000.f),
+	m_cloudMinY(-4000.f),
+	m_cloudSpeed(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f)),
 	m_cloudLifeTime(sf::seconds(60), sf::seconds(90)),
 	m_cloudColor(255, 255, 255, 200),
 
@@ -108,9 +121,7 @@ DesertABiome::DesertABiome() :
 	m_rainbowPartSize(50.f, 200.f),
 	m_rainbowLoopCount(1u, 5u),
 	m_rainbowLifeTime(sf::seconds(6.f), sf::seconds(10.f)),
-	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f)),
-
-	m_indexTreePos(0u)
+	m_rainbowIntervalTime(sf::seconds(1.f), sf::seconds(2.f))
 {
 	m_generator.setSeed(m_seed);
 #ifndef NDEBUG
@@ -127,35 +138,39 @@ DesertABiome::DesertABiome() :
 	for (std::size_t i = 1; i < colorCount; i++)
 		m_particleColor[i] = octo::linearInterpolation(m_tileStartColor, m_tileEndColor, i * interpolateDelta);
 
+	m_secondStartColor = getLeafColor();
+	m_secondEndColor = m_particleColor[0];
 	Progress & progress = Progress::getInstance();
-	if (progress.getLastDestination() == Level::JungleA)
-		m_octoStartPosition = sf::Vector2f(703 * 16.f, -1200.f);
+	if (progress.getLastDestination() == Level::DesertB)
+		m_octoStartPosition = sf::Vector2f(373 * 16.f, -1130.f);
+	if (progress.getLastDestination() == Level::Random)
+		m_octoStartPosition = sf::Vector2f(510 * 16.f, -2700.f);
 
 	// Define game objects
-	m_gameObjects[20] = GameObjectType::JuNpc;
-	m_gameObjects[40] = GameObjectType::Portal;
-	m_instances[353] = MAP_WAVE_DESERT_OMP;
-	m_instances[580] = MAP_NANO_JUMP_DESERT_OMP;
-	m_instances[11] = MAP_PYRAMID_OMP;
-	m_gameObjects[300] = GameObjectType::TurbanNpc;
-	m_gameObjects[556] = GameObjectType::FannyNpc;
-	m_gameObjects[630] = GameObjectType::RepairNanoRobot;
-	m_gameObjects[645] = GameObjectType::Bouibouik;
-	m_gameObjects[740] = GameObjectType::OldDesertStaticNpc;
-	m_gameObjects[750] = GameObjectType::Tent;
-	m_gameObjects[700] = GameObjectType::Portal;
-	m_gameObjects[845] = GameObjectType::Well;
-	if (!progress.canUseWaterJump())
-		m_gameObjects[880] = GameObjectType::WellKeeperNpc;
-	else
-		m_gameObjects[88] = GameObjectType::WellKeeperNpc;
-	m_interestPointPosX = 500;
-
-	m_treePos = {677, 682, 689, 697, 710, 711, 723, 760, 763, 785, 790, 794, 803};
+	m_gameObjects[6] = GameObjectType::DesertEngine;
+	m_instances[23] = MAP_DESERT_A_WAVE_OMP;
+	m_gameObjects[48] = GameObjectType::TurbanNpc;
+	m_gameObjects[36] = GameObjectType::DesertEngine;
+	m_gameObjects[59] = GameObjectType::DesertEngine;
+	m_gameObjects[73] = GameObjectType::DesertEngine;
+	m_gameObjects[99] = GameObjectType::DesertEngine;
+	m_gameObjects[139] = GameObjectType::DesertEngine;
+	m_gameObjects[220] = GameObjectType::TheoNpc;
+	m_instances[250] = MAP_DESERT_A_JUMP_OMP;
+	m_gameObjects[250] = GameObjectType::PortalSnow;
+	m_gameObjects[320] = GameObjectType::WindowGlitchNpc;
+	m_gameObjects[315] = GameObjectType::Bouibouik;
+	m_gameObjects[370] = GameObjectType::PortalDesert;
+	m_gameObjects[410] = GameObjectType::OldDesertStaticNpc;
+	m_gameObjects[420] = GameObjectType::Tent;
+	m_instances[440] = MAP_DESERT_A_SECRET_OMP;
+	m_gameObjects[520] = GameObjectType::JuGlitchNpc;
+	m_interestPointPosX = 50;
 
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
-	m_destinations.push_back(Level::IceA);
-	m_destinations.push_back(Level::JungleA);
+	m_destinations.push_back(Level::Random);
+	m_destinations.push_back(Level::IceD);
+	m_destinations.push_back(Level::DesertB);
 }
 
 void			DesertABiome::setup(std::size_t seed)
@@ -216,14 +231,17 @@ Level	DesertABiome::getDestination()
 
 float	DesertABiome::getWaterLevel()
 {
-	if (Progress::getInstance().canUseWaterJump())
-		return 1400.f;
 	return m_waterLevel;
 }
 
 sf::Color	DesertABiome::getWaterColor()
 {
 	return m_waterColor;
+}
+
+sf::Color	DesertABiome::getSecondWaterColor()
+{
+	return m_secondWaterColor;
 }
 
 std::map<std::size_t, std::string> const & DesertABiome::getInstances()
@@ -236,24 +254,18 @@ std::vector<ParallaxScrolling::ALayer *> DesertABiome::getLayers()
 	sf::Vector2u const & mapSize = getMapSize();
 	std::vector<ParallaxScrolling::ALayer *> vector;
 
-	GenerativeLayer * layer = new GenerativeLayer(octo::linearInterpolation(m_particleColor[0u], m_particleColor[1u], 0.5f), sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -20, 0.1f, 0.7f, -1.f);
+	GenerativeLayer * layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.2f, 0.6f), mapSize, 8.f, -40, 0.1f, 0.8f, 10.f);
 	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
 		{
-			return noise.perlin(x * 1.f, y, 2, 2.f);
+			return noise.noise(x * 2.f, y * 10.f);
 		});
 	vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -10, 0.1f, 0.9f, 11.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.perlin(x, y, 3, 2.f);
-	//	});
-	//vector.push_back(layer);
-	//layer = new GenerativeLayer(getParticleColorGround(), sf::Vector2f(0.6f, 0.2f), mapSize, 12.f, -10, 0.2f, 0.8f, 6.f);
-	//layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
-	//	{
-	//		return noise.noise(x * 1.1f, y);
-	//	});
-	//vector.push_back(layer);
+	layer = new GenerativeLayer(m_skyDayColor, sf::Vector2f(0.4f, 0.4f), mapSize, 10.f, -20, 0.3f, 0.9f, 6.f);
+	layer->setBackgroundSurfaceGenerator([](Noise & noise, float x, float y)
+		{
+			return noise.noise(x, y);
+		});
+	vector.push_back(layer);
 	return vector;
 }
 
@@ -261,32 +273,61 @@ Map::MapSurfaceGenerator DesertABiome::getMapSurfaceGenerator()
 {
 	return [this](Noise & noise, float x, float y)
 	{
-		float start = 680.f / static_cast<float>(m_mapSize.x);
-		float end = 800.f / static_cast<float>(m_mapSize.x);
-		float offset = 10.f / static_cast<float>(m_mapSize.x);
-		float startHole = 850.f / static_cast<float>(m_mapSize.x);
-		float endHole = 869.f / static_cast<float>(m_mapSize.x);
+		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		float mapHigh = n / 3.f - 1.9f;
+		float m = n / 5.f;
+		m_pointX = {0.f, 250.f, 300.f, 335.f, 340.f    , 350.f    , 470.f    , 480.f    , 485.f, 515.f, 565.f};
+		m_pointY = {n  , n    , m    , m    , -0.2f + m, -1.9f + m, -1.9f + m, -0.2f + m, m    , m    , n};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		if (x > start - offset && x <= start)
-			return octo::cosinusInterpolation(n, mapHigh, (x - start + offset) / offset);
-		else if (x > start && x <= end)
-			return mapHigh;
-		else if (x > end && x <= end + offset)
-			return octo::cosinusInterpolation(n, mapHigh, (offset - x - end) / offset);
-		else if (x > startHole && x < endHole)
-			return 4.0f;
-		else
-			return n;
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
+		{
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
+			{
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
+			}
+		}
+		return n;
 	};
 }
 
 Map::TileColorGenerator DesertABiome::getTileColorGenerator()
 {
-	return [this](Noise & noise, float x, float y, float z)
+	float start1 = -14700.f / static_cast<float>(m_mapSize.y);
+	float start2 = -14000.f / static_cast<float>(m_mapSize.y);
+	float middle1 = -13000.f / static_cast<float>(m_mapSize.y);
+	float middle2 = -6300.f / static_cast<float>(m_mapSize.y);
+	float end1 = 0.f / static_cast<float>(m_mapSize.y);
+	float end2 = 9000.f / static_cast<float>(m_mapSize.y);
+	return [this, start1, start2, middle1, middle2, end1, end2](Noise & noise, float x, float y, float z)
 	{
 		float transition = (noise.noise(x / 10.f, y / 10.f, z / 10.f) + 1.f) / 2.f;
+		if (y > start1 && y <= start2)
+		{
+			float ratio = (y - (start1)) / (start2 - start1);
+			return octo::linearInterpolation(octo::linearInterpolation(m_tileStartColor, m_secondStartColor, ratio), m_tileEndColor, transition);
+		}
+		else if (y > start2 && y <= middle1)
+		{
+			float ratio = (y - (start2)) / (middle1 - start2);
+			return octo::linearInterpolation(m_secondStartColor, octo::linearInterpolation(m_tileEndColor, m_secondEndColor, ratio), transition);
+		}
+		else if (y > middle1 && y <= middle2)
+		{
+			return octo::linearInterpolation(m_secondStartColor, m_secondEndColor, transition);
+		}
+		else if (y >= middle2 && y < end1)
+		{
+			float ratio = (y - (middle2)) / (end1 - middle2);
+			return octo::linearInterpolation(octo::linearInterpolation(m_secondStartColor, m_tileStartColor, ratio), m_secondEndColor, transition);
+		}
+		else if (y >= end1 && y < end2)
+		{
+			float ratio = (y - (end1)) / (end2 - end1);
+			return octo::linearInterpolation(m_tileStartColor, octo::linearInterpolation(m_secondEndColor, m_tileEndColor, ratio), transition);
+		}
 		return octo::linearInterpolation(m_tileStartColor, m_tileEndColor, transition);
 	};
 }
@@ -314,7 +355,7 @@ sf::Time		DesertABiome::getDayDuration()
 
 sf::Time		DesertABiome::getStartDayDuration()
 {
-	return (m_dayDuration);
+	return (m_startDayDuration);
 }
 
 sf::Color		DesertABiome::getSkyDayColor()
@@ -330,6 +371,11 @@ sf::Color		DesertABiome::getSkyNightColor()
 sf::Color		DesertABiome::getNightLightColor()
 {
 	return (m_nightLightColor);
+}
+
+sf::Color	DesertABiome::getDayLightColor()
+{
+	return (m_dayLightColor);
 }
 
 sf::Color		DesertABiome::getSunsetLightColor()
@@ -494,7 +540,7 @@ sf::Color		DesertABiome::getLeafColor()
 
 std::size_t		DesertABiome::getTreePositionX()
 {
-	return m_treePos[m_indexTreePos++];
+	return randomInt(350u, 470u);
 }
 
 sf::Vector2f	DesertABiome::getCrystalSize()
@@ -563,6 +609,31 @@ sf::Color		DesertABiome::getRockColor()
 	return (randomColor(m_rockColor));
 }
 
+float	DesertABiome::getGrassSizeY()
+{
+	return randomRangeFloat(m_grassSizeY);
+}
+
+float	DesertABiome::getGrassSizeX()
+{
+	return randomRangeFloat(m_grassSizeX);
+}
+
+sf::Color	DesertABiome::getGrassColor()
+{
+	return randomColor(m_grassColor);
+}
+
+std::size_t	DesertABiome::getGrassCount()
+{
+	return m_grassCount;
+}
+
+std::size_t	DesertABiome::getGrassPosX()
+{
+	return randomInt(350u, 470u);
+}
+
 bool			DesertABiome::canCreateRock()
 {
 	return (m_canCreateRock);
@@ -596,6 +667,21 @@ sf::Vector2f	DesertABiome::getCloudSize()
 std::size_t		DesertABiome::getCloudPartCount()
 {
 	return (randomRangeSizeT(m_cloudPartCount));
+}
+
+float	DesertABiome::getCloudMaxY()
+{
+	return (m_cloudMaxY);
+}
+
+float	DesertABiome::getCloudMinY()
+{
+	return (m_cloudMinY);
+}
+
+sf::Vector2f	DesertABiome::getCloudSpeed()
+{
+	return randomRangeVector2f(m_cloudSpeed);
 }
 
 sf::Time		DesertABiome::getCloudLifeTime()
@@ -705,6 +791,21 @@ sf::Time		DesertABiome::getRainbowIntervalTime()
 bool			DesertABiome::canCreateRainbow()
 {
 	return (m_canCreateRainbow);
+}
+
+bool	DesertABiome::canCreateGrass()
+{
+	return m_canCreateGrass;
+}
+
+float	DesertABiome::getWaterPersistence() const
+{
+	return m_waterPersistence;
+}
+
+ABiome::Type	DesertABiome::getType() const
+{
+	return m_type;
 }
 
 

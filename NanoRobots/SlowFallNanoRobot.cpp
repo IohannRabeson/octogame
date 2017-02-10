@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 SlowFallNanoRobot::SlowFallNanoRobot(sf::Vector2f const & position) :
-	NanoRobot(position, NANO_SLOW_FALL_OSS, 2, 5544, sf::Vector2f(0.f, -19.f), 4.f)
+	NanoRobot(position, NANO_SLOW_FALL_OSS, 2, 5544, sf::Vector2f(0.f, -19.f), InputListener::OctoKeys::Capacity, 4.f)
 {
 	setup(this);
 
@@ -14,7 +14,7 @@ SlowFallNanoRobot::SlowFallNanoRobot(sf::Vector2f const & position) :
 	targets.push_back(sf::Vector2f(91.f, 275.f));
 	targets.push_back(sf::Vector2f(86.f, 274.f));
 	setTargets(targets, 0.6f);
-	setLaserColor(sf::Color(75, 0, 130));
+	setLaserColor(sf::Color::Red);
 
 	setSwarmTarget(position);
 }

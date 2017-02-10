@@ -18,21 +18,54 @@ class AGameObjectBase;
 
 enum class Level : std::size_t
 {
-	Default,
 	IceA,
+	IceB,
+	IceC,
+	IceD,
 	DesertA,
+	DesertB,
+	DesertC,
+	DesertD,
 	JungleA,
+	JungleB,
+	JungleC,
+	JungleD,
 	WaterA,
+	WaterB,
+	WaterC,
+	WaterD,
+	Final,
+	Portal,
+	Random,
+	Red,
+	Blue,
+	EndRocket,
+	EndTimeLapse,
+	Rewards,
+	RandomGame,
+	Labo,
+	None,
 };
 
 class ABiome : public octo::NonCopyable
 {
 public:
+	enum class Type : std::size_t
+	{
+		Ice,
+		Jungle,
+		Desert,
+		Water,
+		Random,
+		None
+	};
+
 	virtual ~ABiome();
 
 	virtual void										setup(std::size_t seed) = 0;
 	virtual std::string									getName()const = 0;
 	virtual Level										getId()const = 0;
+	virtual ABiome::Type								getType() const = 0;
 
 	virtual sf::Vector2u								getMapSize() = 0;
 	virtual sf::Vector2f								getMapSizeFloat() = 0;
@@ -44,6 +77,12 @@ public:
 	virtual Level										getDestination() = 0;
 	virtual float										getWaterLevel() = 0;
 	virtual sf::Color									getWaterColor() = 0;
+	virtual sf::Color									getSecondWaterColor() = 0;
+	virtual bool										isDeadlyWater() { return false; };
+	virtual bool										isDeadlyGrass() { return false; };
+	virtual bool										isSpecialCloud() { return false; };
+	virtual sf::Time									getTimeDieVoid() { return sf::Time::Zero; };
+	virtual sf::Color									getColorMoveInstance() { return sf::Color::White; };
 	virtual float										getTransitionStep() { return 3.f; };
 
 	virtual std::map<std::size_t, std::string>			const & getInstances() = 0;
@@ -59,10 +98,12 @@ public:
 	virtual sf::Color									getSkyDayColor() = 0;
 	virtual sf::Color									getSkyNightColor() = 0;
 	virtual sf::Color									getNightLightColor() = 0;
+	virtual sf::Color									getDayLightColor() = 0;
 	virtual sf::Color									getSunsetLightColor() = 0;
 
 	virtual float										getWind() = 0;
 	virtual bool										canCreateRain() = 0;
+	virtual float										getWaterPersistence() const = 0;
 	virtual std::size_t									getRainDropPerSecond() = 0;
 	virtual sf::Time									getSunnyTime() = 0;
 	virtual sf::Time									getRainingTime() = 0;
@@ -85,6 +126,13 @@ public:
 	virtual std::size_t									getRockPartCount() = 0;
 	virtual sf::Color									getRockColor() = 0;
 	virtual bool										canCreateRock() = 0;
+
+	virtual float										getGrassSizeY() = 0;
+	virtual float										getGrassSizeX() = 0;
+	virtual sf::Color									getGrassColor() = 0;
+	virtual std::size_t									getGrassCount() = 0;
+	virtual std::size_t									getGrassPosX() = 0;
+	virtual bool										canCreateGrass() = 0;
 
 	virtual std::size_t									getTreeDepth() = 0;
 	virtual sf::Vector2f								getTreeSize() = 0;
@@ -116,6 +164,9 @@ public:
 
 	virtual sf::Vector2f								getCloudSize() = 0;
 	virtual std::size_t									getCloudPartCount() = 0;
+	virtual float										getCloudMinY() = 0;
+	virtual float										getCloudMaxY() = 0;
+	virtual sf::Vector2f								getCloudSpeed() = 0;
 	virtual sf::Time									getCloudLifeTime() = 0;
 	virtual sf::Color									getCloudColor() = 0;
 	virtual bool										canCreateCloud() = 0;

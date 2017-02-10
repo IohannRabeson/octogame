@@ -3,18 +3,16 @@
 
 # include "AMenu.hpp"
 # include "BubbleMenu.hpp"
+# include "InputListener.hpp"
+# include "RandomGenerator.hpp"
 # include <GraphicsManager.hpp>
-# include <DefaultGraphicsListeners.hpp>
 # include <SFML/Graphics/CircleShape.hpp>
 
-# include <memory>
-
-class AMenuSelection : public AMenu,
-					   public octo::DefaultKeyboardListener
+class AMenuSelection : public AMenu, public InputListener
 {
 public:
 	AMenuSelection(void);
-	~AMenuSelection(void) = default;
+	virtual ~AMenuSelection(void);
 
 	void				setup(void);
 	void				setupBubble(void);
@@ -23,7 +21,8 @@ public:
 	void				draw(sf::RenderTarget & render, sf::RenderStates states) const;
 
 	void				addMenu(std::wstring const & name, std::unique_ptr<AMenu>&& menu);
-	virtual bool		onPressed(sf::Event::KeyEvent const & event);
+	virtual bool		onInputPressed(InputListener::OctoKeys const & key);
+	virtual bool		onInputReleased(InputListener::OctoKeys const & key);
 
 	virtual void		createMenus(void) = 0;
 	virtual void		onSelection(void);
@@ -32,9 +31,16 @@ public:
 	void				setBubbleType(ABubble::Type type);
 	void				setIndexCursor(std::size_t index);
 
-	std::size_t			getIndexCursor(void);
+	std::size_t			getIndexCursor(void) const;
+	void				setIsFontSelect(bool isFontSelect);
+	void				setCursorAtEnd(void);
+
+	static sf::Vector2f							m_currentMenuPosition;
 
 private:
+	sf::Vector2f								m_deltaMenu;
+
+	RandomGenerator								m_generator;
 	BubbleMenu									m_bubble;
 	ABubble::Type								m_type;
 	std::size_t									m_characterSize;
@@ -42,11 +48,16 @@ private:
 	std::vector<std::unique_ptr<AMenu>>			m_menus;
 
 	std::vector<sf::Vector2f>					m_cursorPosition;
+	std::size_t									m_indexLastCursor;
 	std::size_t									m_indexCursor;
 	std::size_t									m_indexSave;
 	bool										m_isKeyboard;
+	sf::Time									m_timerMoveCursor;
+	sf::Time									m_timerMoveCursorMax;
 
 	sf::CircleShape								m_cursor;
+	sf::Time									m_inputDelay;
+	sf::Time									m_inputTimer;
 };
 
 #endif

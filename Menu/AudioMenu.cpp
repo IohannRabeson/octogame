@@ -1,6 +1,7 @@
 #include "AudioMenu.hpp"
 #include "SoundVolumeMenu.hpp"
 #include "MusicVolumeMenu.hpp"
+#include "GlobalVolumeMenu.hpp"
 #include "YesNoMenu.hpp"
 #include "EmptyMenu.hpp"
 #include "Progress.hpp"
@@ -22,12 +23,14 @@ class MusicYesNo: public YesNoMenu
 		octo::AudioManager & audio = octo::Application::getAudioManager();
 		m_volumeMusic = audio.getMusicVolume();
 		audio.setMusicVolume(40);
+		Progress::getInstance().setMusicVolume(40);
 	}
 
 	void actionNo(void)
 	{
 		octo::AudioManager & audio = octo::Application::getAudioManager();
 		audio.setMusicVolume(m_volumeMusic);
+		Progress::getInstance().setMusicVolume(m_volumeMusic);
 	}
 
 private:
@@ -41,8 +44,9 @@ AudioMenu::AudioMenu(void)
 
 void AudioMenu::createMenus(void)
 {
-	addMenu(L"Musique", std::unique_ptr<MusicVolumeMenu>(new MusicVolumeMenu()));
-	addMenu(L"Son", std::unique_ptr<SoundVolumeMenu>(new SoundVolumeMenu()));
-	addMenu(L"I <3", std::unique_ptr<MusicYesNo>(new MusicYesNo()));
+	addMenu(AMenu::getText("options_audio_global"), std::unique_ptr<GlobalVolumeMenu>(new GlobalVolumeMenu()));
+	addMenu(AMenu::getText("options_audio_music"), std::unique_ptr<MusicVolumeMenu>(new MusicVolumeMenu()));
+	addMenu(AMenu::getText("options_audio_sound"), std::unique_ptr<SoundVolumeMenu>(new SoundVolumeMenu()));
+	//addMenu(L"I <3", std::unique_ptr<MusicYesNo>(new MusicYesNo()));
 }
 

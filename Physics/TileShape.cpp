@@ -6,9 +6,9 @@
 TileShape::TileShape(void) :
 	AShape(),
 	m_vertex(nullptr),
+	m_endVertex(nullptr),
 	m_baryCenter(),
-	m_globalBounds(),
-	m_height(0.f)
+	m_globalBounds()
 {
 	m_edges.resize(4u);
 	m_normals.resize(4u);
@@ -21,14 +21,15 @@ TileShape::TileShape(void) :
 void TileShape::computeShape(void)
 {
 	assert(m_vertex);
+	assert(m_endVertex);
 
 	// Compute edges and normals
 	m_edges[0u] = m_vertex[0u].position - m_vertex[1u].position;
 
 	m_vertices[0u] = m_vertex[1u].position;
 	m_vertices[1u] = m_vertex[0u].position;
-	m_vertices[0u].y += m_height;
-	m_vertices[1u].y += m_height;
+	m_vertices[0u].y = m_endVertex[0u].position.y;
+	m_vertices[1u].y = m_endVertex[1u].position.y;
 
 	m_normals[0u] = sf::Vector2f(-m_edges[0u].y, m_edges[0u].x);
 
@@ -36,7 +37,7 @@ void TileShape::computeShape(void)
 	m_globalBounds.left = m_vertex[0u].position.x;
 	m_globalBounds.top = m_vertex[0u].position.y < m_vertex[1u].position.y ? m_vertex[0u].position.y : m_vertex[1u].position.y;
 	m_globalBounds.width = 16.f;
-	m_globalBounds.height = m_height;
+	m_globalBounds.height = std::max(m_endVertex[1u].position.y, m_endVertex[0u].position.y) - std::min(m_vertex[0u].position.y, m_vertex[1u].position.y);
 
 	// Compute bary center
 	m_baryCenter = m_vertex[0u].position;

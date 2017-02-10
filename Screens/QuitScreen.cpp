@@ -27,7 +27,7 @@ QuitScreen::QuitScreen() :
 
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	octo::Application::getGraphicsManager().setIcon(resources.getTexture(ICON_PNG).copyToImage());
-	m_startTexture = resources.getTexture(START_SCREEN_PNG);
+	//m_startTexture = resources.getTexture(START_SCREEN_PNG);
 	m_startSprite.setTexture(m_startTexture);
 	m_startSprite.setOrigin(m_startSprite.getLocalBounds().width / 2.f, m_startSprite.getLocalBounds().height / 2.f);
 	m_startSprite.setPosition(octo::Application::getCamera().getCenter());

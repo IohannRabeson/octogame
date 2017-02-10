@@ -5,6 +5,8 @@ ABubble::ABubble(void) :
 	m_count(100),
 	m_used(0u),
 	m_currentType(Type::None),
+	m_lastType(Type::None),
+	m_priority(Priority::Bullshit),
 	m_color(255, 255, 255, 200),
 	m_isActive(false)
 {
@@ -35,7 +37,7 @@ void ABubble::createExtension(sf::Vector2f const & position, sf::Color const & c
 {
 	if (type == Type::Speak)
 		createExtensionSpeak(position, color, builder);
-	else if (type != Type::None)
+	else if (type != Type::None && type != Type::Menu && type != Type::MainMenu)
 		createExtensionThink(position, color, builder);
 }
 
@@ -89,6 +91,64 @@ void ABubble::createQuotePart(sf::Vector2f const & size, sf::Vector2f const & or
 	builder.createTriangle(rightDown, leftUpTriangle, downTriangle, color);
 }
 
+void ABubble::createSquare(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder & builder)
+{
+	sf::Vector2f leftUp(-size.x, -size.y);
+	sf::Vector2f rightUp(size.x, -size.y);
+	sf::Vector2f leftDown(-size.x, size.y);
+	sf::Vector2f rightDown(size.x, size.y);
+
+	leftUp += origin;
+	rightUp += origin;
+	leftDown += origin;
+	rightDown += origin;
+
+	builder.createQuad(leftUp, rightUp, rightDown, leftDown, color);
+}
+
+void ABubble::createRectangle(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder & builder)
+{
+	sf::Vector2f leftUp(-size.x, -size.y * 4.f);
+	sf::Vector2f rightUp(size.x, -size.y * 4.f);
+	sf::Vector2f leftDown(-size.x, size.y);
+	sf::Vector2f rightDown(size.x, size.y);
+
+	leftUp += origin;
+	rightUp += origin;
+	leftDown += origin;
+	rightDown += origin;
+
+	builder.createQuad(leftUp, rightUp, rightDown, leftDown, color);
+}
+
+void ABubble::createInactiveLogo(sf::Vector2f const & size)
+{
+	switch (m_priority)
+	{
+		case Priority::Tips:
+		{
+			createQuotePart(size / 2.f, m_positionBubble - sf::Vector2f(size.x, 0.f), sf::Color(75, 75, 75), m_builder);
+			createQuotePart(size / 2.f, m_positionBubble + sf::Vector2f(size.x, 0.f), sf::Color(75, 75, 75), m_builder);
+			break;
+		}
+		case Priority::Bullshit:
+		{
+			createSquare(size / 3.f, m_positionBubble, sf::Color(150, 150, 150), m_builder);
+			createSquare(size / 3.f, m_positionBubble - sf::Vector2f(size.x, 0.f), sf::Color(150, 150, 150), m_builder);
+			createSquare(size / 3.f, m_positionBubble + sf::Vector2f(size.x, 0.f), sf::Color(150, 150, 150), m_builder);
+			break;
+		}
+		case Priority::Important:
+		{
+			createRectangle(size / 3.f, m_positionBubble, sf::Color(0, 0, 0), m_builder);
+			createSquare(size / 3.f, m_positionBubble + sf::Vector2f(0.f, size.y), sf::Color(0, 0, 0), m_builder);
+			break;
+		}
+		default:
+			break;
+	}
+}
+
 void ABubble::computePositionBubble(Type type, sf::Vector2f const & position)
 {
 	if (type == Type::Speak || type == Type::Think)
@@ -108,8 +168,10 @@ void ABubble::computePositionBubble(Type type, sf::Vector2f const & position)
 		m_positionBubble = position + sf::Vector2f(m_sizeCorner * 2.f + m_size.x / 2.f, 0.f);
 	else if (type == Type::Left)
 		m_positionBubble = position - sf::Vector2f(m_sizeCorner * 2.f + m_size.x / 2.f, 0.f);
-	else if (type == Type::Up)
+	else if (type == Type::Up || type == Type::Menu)
 		m_positionBubble = position - sf::Vector2f(m_size.x / 2.f, m_sizeCorner * 2.f + m_size.y / 2.f);
+	else if (type == Type::MainMenu)
+		m_positionBubble = position + sf::Vector2f(m_size.x / 2.f, m_size.y / 2.f);
 }
 
 void ABubble::update(sf::Time frameTime)
@@ -130,16 +192,17 @@ void ABubble::update(sf::Time frameTime)
 		{
 			sf::Vector2f sizeInactive(m_sizeCorner / 2.f, m_sizeCorner / 2.f);
 			createOctogon(sizeInactive, m_sizeCorner, m_positionBubble, m_color, m_builder);
-			createQuotePart(sizeInactive / 2.f, m_positionBubble - sf::Vector2f(sizeInactive.x, 0.f), sf::Color(0, 0, 0), m_builder);
-			createQuotePart(sizeInactive / 2.f, m_positionBubble + sf::Vector2f(sizeInactive.x, 0.f), sf::Color(0, 0, 0), m_builder);
+			createInactiveLogo(sizeInactive);
 		}
 	}
 	m_used = m_builder.getUsed();
+	m_lastType = m_currentType;
 }
 
 void ABubble::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
-	if (m_currentType != Type::None)
+	//TODO: Find the problem insteas of avoiding it
+	if (m_currentType != Type::None && m_lastType == m_currentType)
 	{
 		render.draw(m_vertices.get(), m_used, sf::Triangles, states);
 		if (m_isActive)
@@ -190,6 +253,11 @@ void ABubble::setColor(sf::Color const & color)
 void ABubble::setType(Type type)
 {
 	m_currentType = type;
+}
+
+void ABubble::setPriority(Priority priority)
+{
+	m_priority = priority;
 }
 
 void ABubble::setActive(bool isActive)

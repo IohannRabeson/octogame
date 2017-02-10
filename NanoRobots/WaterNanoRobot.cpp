@@ -2,7 +2,7 @@
 #include "ResourceDefinitions.hpp"
 
 WaterNanoRobot::WaterNanoRobot(void) :
-	NanoRobot(sf::Vector2f(11450, 1885.f), NANO_JUMP_WATER_OSS, 3, 963021512, sf::Vector2f(0.f, -19.f), 5.f)
+	NanoRobot(sf::Vector2f(11450, 1885.f), NANO_JUMP_WATER_OSS, 3, 963021512, sf::Vector2f(0.f, -19.f), InputListener::OctoKeys::Capacity, 5.f)
 {
 	setup(this);
 
@@ -17,6 +17,6 @@ WaterNanoRobot::WaterNanoRobot(void) :
 	targets.push_back(sf::Vector2f(295.f, 145.f));
 	targets.push_back(sf::Vector2f(301.f, 145.f));
 	targets.push_back(sf::Vector2f(295.f, 139.f));
-	setLaserColor(sf::Color::Cyan);
+	setLaserColor(sf::Color::Red);
 	setTargets(targets, 0.6f);
 }

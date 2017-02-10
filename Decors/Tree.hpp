@@ -2,6 +2,7 @@
 # define TREE_HPP
 
 # include "ADecor.hpp"
+# include "ABiome.hpp"
 # include "DecorAnimator.hpp"
 # include <VertexBuilder.hpp>
 # include <SFML/Graphics/Color.hpp>
@@ -9,13 +10,15 @@
 class Tree : public ADecor
 {
 public:
-	Tree(void);
+	Tree(bool onInstance = false);
 	virtual ~Tree(void) = default;
 
 	virtual void setup(ABiome& biome);
 	virtual void update(sf::Time frameTime,
 						octo::VertexBuilder& builder,
 						ABiome& biome);
+
+	virtual bool dieOutOfScreen(void);
 
 private:
 	struct QuadValue
@@ -36,6 +39,7 @@ private:
 		float					sin;
 	};
 
+	int							m_levelOfDetails;
 	std::size_t					m_depth;
 	sf::Vector2f				m_size;
 	sf::Color					m_color;
@@ -58,6 +62,8 @@ private:
 	std::size_t					m_leafMaxCount;
 
 	bool						m_sound;
+	bool						m_onInstance;
+	Level						m_biomeId;
 
 	void computeQuad(sf::Vector2f const & size,
 					sf::Vector2f const & center,

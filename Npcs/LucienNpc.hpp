@@ -1,9 +1,9 @@
 #ifndef LUCIENNPC_HPP
 # define LUCIENNPC_HPP
 
-# include "ANpc.hpp"
+# include "AUniqueNpc.hpp"
 
-class LucienNpc : public ANpc, public AGameObject<GameObjectType::LucienNpc>
+class LucienNpc : public AUniqueNpc
 {
 public:
 	LucienNpc(void);
@@ -16,7 +16,9 @@ protected:
 	virtual void updateState(void);
 
 private:
+	void		playSound(void);
 	bool		m_side;
+	bool		m_sound;
 
 };
 
