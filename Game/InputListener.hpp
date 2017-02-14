@@ -43,8 +43,8 @@ public:
 private:
 	bool					m_isListeners;
 	std::vector<OctoKeys>	m_inputs;
-	//bool					m_joystickLT;
-	//bool					m_joystickRT;
+	bool					m_joystickLT;
+	bool					m_joystickRT;
 	bool					m_joystickAxisX;
 	bool					m_joystickAxisY;
 	bool					m_joystickAxisU;

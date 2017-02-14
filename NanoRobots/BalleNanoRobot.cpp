@@ -29,7 +29,8 @@ BalleNanoRobot::BalleNanoRobot(sf::Vector2f const & position) :
 
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	m_potion.setSpriteSheet(resources.getSpriteSheet(POTION_OSS));
-	NanoRobot::update(sf::Time::Zero);
+	if (!Progress::getInstance().canUseBalle())
+		NanoRobot::update(sf::Time::Zero);
 }
 
 void BalleNanoRobot::update(sf::Time frametime)

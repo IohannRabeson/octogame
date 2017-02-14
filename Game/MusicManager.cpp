@@ -205,11 +205,11 @@ void	MusicManager::transition(sf::Time frameTime)
 			index = inLevel;
 			//START
 			m_current = music.name;
-			if (music.music.getDuration() <= music.offset)
+			if (octo::Application::getResourceManager().getSound(music.name).getDuration() <= music.offset)
 				music.offset = sf::Time::Zero;
 			m_audio.setMusicVolume(0.f);
 			m_timer = sf::Time::Zero;
-			m_audio.startMusic(music.music, sf::Time::Zero, music.offset, true);
+			m_audio.startMusic(octo::Application::getResourceManager().getSound(music.name), sf::Time::Zero, music.offset, true);
 			m_played = true;
 			isStart = true;
 			break;
@@ -249,13 +249,13 @@ void	MusicManager::transition(sf::Time frameTime)
 			if (!m_played)
 			{
 				m_current = main.name;
-				if (main.music.getDuration() <= main.offset)
+				if (octo::Application::getResourceManager().getSound(main.name).getDuration() <= main.offset)
 					main.offset = sf::Time::Zero;
 				//TODO: Find a better way to do that
 				if (m_currentLevel == Level::Blue || m_currentLevel == Level::Red)
-					m_audio.startMusic(main.music, sf::Time::Zero, m_music[7].offset, true);
+					m_audio.startMusic(octo::Application::getResourceManager().getSound(main.name), sf::Time::Zero, m_music[7].offset, true);
 				else
-					m_audio.startMusic(main.music, sf::Time::Zero, main.offset, true);
+					m_audio.startMusic(octo::Application::getResourceManager().getSound(main.name), sf::Time::Zero, main.offset, true);
 				m_audio.setMusicVolume(0.f);
 				m_timer = sf::Time::Zero;
 				m_played = true;

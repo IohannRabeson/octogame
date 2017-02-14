@@ -32,13 +32,10 @@ private:
 			offset(sf::Time::Zero),
 			transitionTime(transitionTime)
 		{
-			if (std::string("noMusic").compare(key))
-				music = octo::Application::getResourceManager().getSound(key);
 		}
 		Level			level;
 		ResourceKey		name;
 		sf::FloatRect	area;
-		sf::SoundBuffer	music;
 		sf::Time		offset;
 		sf::Time		transitionTime;
 	};

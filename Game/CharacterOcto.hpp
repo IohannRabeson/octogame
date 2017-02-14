@@ -239,6 +239,7 @@ private:
 	float										m_maxJumpWaterVelocity;
 	float										m_pixelSecondJump;
 	float										m_pixelSecondSlowFall;
+	float										m_pixelSecondSlowElevator;
 	float										m_pixelSecondWalk;
 	float										m_pixelSecondAfterJump;
 	float										m_pixelSecondAfterFullJump;
