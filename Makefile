@@ -440,6 +440,8 @@ package_app:
 	cp ./$(LOADING_PCK_FILE) "./builds/$(TARGET).app/Contents/MacOS/$(LOADING_PCK_FILE)"
 	cp ./$(DEFAULT_PCK_FILE) "./builds/$(TARGET).app/Contents/MacOS/$(DEFAULT_PCK_FILE)"
 	cp ./default.conf "./builds/$(TARGET).app/Contents/MacOS/default.conf"
+	cp ./Lib/Steam/libsteam_api.dylib "./builds/$(TARGET).app/Contents/MacOS/libsteam_api.dylib"
+	cp ./steam_appid.txt "./builds/$(TARGET).app/Contents/MacOS/steam_appid.txt"
 
 	sed -e "s/ICON_FILE_NAME/$(ICON_FILE_NAME)/g" -i "" "./builds/$(TARGET).app/Contents/Info.plist"
 	cp $(RESOURCES_DIR)/$(ICON_FILE_NAME) "./builds/$(TARGET).app/Contents/Resources/$(ICON_FILE_NAME)"
