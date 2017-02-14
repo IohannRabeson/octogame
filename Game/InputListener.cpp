@@ -6,8 +6,8 @@
 
 InputListener::InputListener(void) :
 	m_isListeners(false),
-	//m_joystickLT(false),
-	//m_joystickRT(false),
+	m_joystickLT(false),
+	m_joystickRT(false),
 	m_joystickAxisX(false),
 	m_joystickAxisY(false),
 	m_joystickAxisU(false),
@@ -341,7 +341,7 @@ bool	InputListener::onReleased(sf::Event::KeyEvent const& event)
 
 void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 {
-	if (event.axis == sf::Joystick::U || event.axis == sf::Joystick::Z)
+	if (event.axis == sf::Joystick::U)
 	{
 		if (event.position > 50)
 		{
@@ -361,7 +361,7 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 		}
 	}
 
-	if (event.axis == sf::Joystick::V || event.axis == sf::Joystick::R)
+	if (event.axis == sf::Joystick::V)
 	{
 		if (event.position > 50)
 		{
@@ -441,8 +441,6 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 		}
 	}
 
-	// TODO: Uncomment if we wat to use trigger
-	/*
 	if (event.axis == sf::Joystick::Z)
 	{
 		if (event.position > 0.f) // LT
@@ -450,12 +448,12 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 			if (event.position > m_triggerLimit && !m_joystickLT)
 			{
 				m_joystickLT = true;
-				onInputPressed(OctoKeys::GroundRight);
+				onInputPressed(OctoKeys::ViewRight);
 			}
 			else if (event.position <= m_triggerLimit && m_joystickLT)
 			{
 				m_joystickLT = false;
-				onInputReleased(OctoKeys::GroundRight);
+				onInputReleased(OctoKeys::ViewRight);
 			}
 		}
 		else //RT
@@ -463,16 +461,15 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 			if (event.position < -m_triggerLimit && !m_joystickRT)
 			{
 				m_joystickRT = true;
-				onInputPressed(OctoKeys::GroundLeft);
+				onInputPressed(OctoKeys::ViewLeft);
 			}
 			else if (event.position >= -m_triggerLimit && m_joystickRT)
 			{
 				m_joystickRT = false;
-				onInputReleased(OctoKeys::GroundLeft);
+				onInputReleased(OctoKeys::ViewLeft);
 			}
 		}
 	}
-	*/
 #else
 	if (event.axis == sf::Joystick::Y || event.axis == sf::Joystick::PovY)
 	{
@@ -494,19 +491,17 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 		}
 	}
 
-	// TODO: Uncomment if we wat to use trigger
-	/*
 	if (event.axis == sf::Joystick::R) //LT
 	{
 		if (event.position > m_triggerLimit && !m_joystickLT)
 		{
 			m_joystickLT = true;
-			onInputPressed(OctoKeys::GroundLeft);
+			onInputPressed(OctoKeys::ViewRight);
 		}
 		else if (event.position <= m_triggerLimit && m_joystickLT)
 		{
 			m_joystickLT = false;
-			onInputReleased(OctoKeys::GroundLeft);
+			onInputReleased(OctoKeys::ViewRight);
 		}
 	}
 	if (event.axis == sf::Joystick::Z) //RT
@@ -514,15 +509,14 @@ void	InputListener::onMoved(sf::Event::JoystickMoveEvent const& event)
 		if (event.position > m_triggerLimit && !m_joystickRT)
 		{
 			m_joystickRT = true;
-			onInputPressed(OctoKeys::GroundRight);
+			onInputPressed(OctoKeys::ViewLeft);
 		}
 		else if (event.position <= m_triggerLimit && m_joystickRT)
 		{
 			m_joystickRT = false;
-			onInputReleased(OctoKeys::GroundRight);
+			onInputReleased(OctoKeys::ViewLeft);
 		}
 	}
-	*/
 #endif
 }
 
