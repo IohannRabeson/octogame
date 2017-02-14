@@ -3,12 +3,15 @@
 #include <Camera.hpp>
 #include <Math.hpp>
 #include <Interpolations.hpp>
-#include <ctime>
 
 StarSystem::StarSystem() :
-	m_creationTimeDistri(0.01f, 0.02f),
-	m_heightDistri(-1000.f, octo::Application::getCamera().getRectangle().height + 1000.f),
-	m_widthDistri(0.f, octo::Application::getCamera().getRectangle().width + 2000.f),
+	m_generator("random"),
+	m_creationTimeMin(0.01f),
+	m_creationTimeMax(0.02f),
+	m_heightMin(-1000.f),
+	m_heightMax(octo::Application::getCamera().getRectangle().height + 1000.f),
+	m_widthMin(0.f),
+	m_widthMax(octo::Application::getCamera().getRectangle().width + 2000.f),
 	m_speed(-2000.f, 0.f),
 	m_origin(sf::Vector2f(20.f + octo::Application::getCamera().getRectangle().left + octo::Application::getCamera().getRectangle().width, octo::Application::getCamera().getRectangle().top)),
 	m_timer(sf::Time::Zero),
@@ -17,8 +20,6 @@ StarSystem::StarSystem() :
 	m_canEmit(false),
 	m_isFromTop(false)
 {
-	std::random_device rd;
-	m_engine.seed(rd());
 }
 
 void StarSystem::setup(sf::Vector2f const & sizeParticle)
@@ -69,7 +70,8 @@ void	StarSystem::canEmit(bool canEmit)
 
 void	StarSystem::setEmitTimeRange(float min, float max)
 {
-	m_creationTimeDistri.param(std::uniform_real_distribution<float>::param_type(min, max));
+	m_creationTimeMin = min;
+	m_creationTimeMax = max;
 }
 
 void	StarSystem::isFromTop(bool value)
@@ -104,13 +106,13 @@ void	StarSystem::update(sf::Time frameTime)
 			sf::Vector2f positionCamera = octo::Application::getCamera().getCenter() - octo::Application::getCamera().getSize() / 2.f;
 			sf::Vector2f position = m_origin + positionCamera;
 			if (m_isFromTop)
-				position += sf::Vector2f(m_widthDistri(m_engine), 0.f);
+				position += sf::Vector2f(m_generator.randomFloat(m_widthMin, m_widthMax), 0.f);
 			else
-				position += sf::Vector2f(1000.f, m_heightDistri(m_engine));
+				position += sf::Vector2f(1000.f, m_generator.randomFloat(m_heightMin, m_heightMax));
 			emplace(m_color, position, sf::Vector2f(1.f, 1.f), 0, sf::Time::Zero);
 		}
 		m_timer -= m_nextCreation;
-		m_nextCreation = sf::seconds(m_creationTimeDistri(m_engine));
+		m_nextCreation = sf::seconds(m_generator.randomFloat(m_creationTimeMin, m_creationTimeMax));
 	}
 }
 
