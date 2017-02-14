@@ -49,6 +49,7 @@ CharacterOcto::CharacterOcto() :
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondSlowFall(-400.f),
+	m_pixelSecondSlowElevator(-700.f),
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-400.f),
 	m_pixelSecondAfterFullJump(-500.f),
@@ -1014,9 +1015,9 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode && m_sprite.getCurrentEvent() != Drink && endDeath())
 	{
 		wait();
-		collisionElevatorUpdate();
 		collisionTileUpdate();
 		caseCapacity();
+		collisionElevatorUpdate();
 		caseJump();
 		caseLeft();
 		caseRight();
@@ -1531,7 +1532,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 		if (!m_onGround && m_sprite.getCurrentEvent() != DoubleJump && m_sprite.getCurrentEvent() != StartJump)
 			m_numberOfJump = 1;
 
-		if (m_keyElevator)
+		if (m_keyCapacity)
 		{
 			if (!m_useElevator && m_progress.canUseElevator())
 				m_sprite.setNextEvent(StartElevator);
@@ -2053,6 +2054,14 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 
 	if (m_keyCapacity)
 	{
+		if (!m_onTopElevator && !m_collisionTileHead)
+		{
+			if (event == StartElevator)
+				velocity.y = (1.2f * m_pixelSecondSlowFall);
+			else if (event == Elevator)
+				velocity.y = (2.5f * m_pixelSecondSlowFall);
+		}
+
 		if (event == StartSlowFall)
 		{
 			velocity.x *= 1.3f;
@@ -2076,16 +2085,13 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 		}
 	}
 
-	if (!m_onTopElevator && m_keyElevator && !m_collisionTileHead)
+	if (m_collisionElevator && (event == Fall || event == DieFall || event == Idle || event == Right || event == Left))
 	{
-		if (event == StartElevator)
-			velocity.y = (1.2f * m_pixelSecondSlowFall);
-		else if (event == Elevator)
-			velocity.y = (2.5f * m_pixelSecondSlowFall);
+		if (!m_keyDown)
+			velocity.y = m_pixelSecondSlowElevator;
+		else
+			velocity.y = -300.f;
 	}
-
-	if (m_collisionElevator && (event == Fall || event == DieFall))
-		velocity.y = m_pixelSecondSlowFall;
 	m_box->setVelocity(velocity);
 }
 
@@ -2246,6 +2252,8 @@ void	CharacterOcto::caseJump()
 
 void CharacterOcto::caseCapacity()
 {
+	Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
+
 	if (m_keyCapacity)
 	{
 		if (!m_capacityTic)
@@ -2256,10 +2264,12 @@ void CharacterOcto::caseCapacity()
 				m_jumpVelocity = m_pixelSecondJump * 0.9f;
 				m_sprite.setNextEvent(StartWaterJump);
 			}
-			else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
+			else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax &&
+					 event != StartJump && event != DoubleJump)
 			{
 				m_capacityTic = true;
-				m_sprite.setNextEvent(StartSlowFall);
+				if (event != StartElevator && event != Elevator)
+					m_sprite.setNextEvent(StartSlowFall);
 			}
 		}
 	}
@@ -2269,7 +2279,6 @@ void CharacterOcto::caseCapacity()
 		{
 			if (!m_onGround)
 			{
-				Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
 				if (!m_jumpTic || event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3 || event == WaterJump)
 				{
 					m_afterJump = true;
@@ -2375,6 +2384,8 @@ bool	CharacterOcto::isRaising(void)
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	if (state == WaterJump || state == Elevator || state == PortalEvent)
+		return true;
+	if (state == Fall && m_collisionElevator && !m_keyDown)
 		return true;
 	return false;
 }
