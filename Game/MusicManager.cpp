@@ -28,18 +28,6 @@ MusicManager::MusicManager() :
 	m_endEvent(false),
 	m_eventTimerMax(sf::seconds(2.f))
 {
-	ResourceKey			musicKey[9];
-
-	musicKey[0] = MUSIC_SPACE_SHIP_OGG;
-	musicKey[1] = MUSIC_MENU_OPUS_II_OGG;
-	musicKey[2] = MUSIC_COLONISATION_OGG;
-	musicKey[3] = MUSIC_BALLADE_MENTALE_OGG;
-	musicKey[4] = MUSIC_MENU_OPUS_III_OGG;
-	musicKey[5] = MUSIC_ACTION_SLOW_OGG;
-	musicKey[6] = MUSIC_ACTION_FAST_OGG;
-	musicKey[7] = MUSIC_SOUTERRAIN_LUGUBRE_OGG;
-	musicKey[8] = MUSIC_MENU_OPUS_I_OGG;
-
 	m_musicLevel.resize(23);
 	m_musicLevel[0] = AreaMusic(Level::IceA, MUSIC_SPACE_SHIP_OGG, sf::FloatRect());
 	m_musicLevel[1] = AreaMusic(Level::IceB, MUSIC_ICE_A_B_OGG, sf::FloatRect());
