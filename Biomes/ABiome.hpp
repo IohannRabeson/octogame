@@ -60,6 +60,7 @@ public:
 		None
 	};
 
+	ABiome();
 	virtual ~ABiome();
 
 	virtual void										setup(std::size_t seed) = 0;
