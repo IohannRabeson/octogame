@@ -1202,26 +1202,32 @@ void	CharacterOcto::resetTimeEvent()
 
 void	CharacterOcto::draw(sf::RenderTarget& render, sf::RenderStates states)const
 {
-	m_inkParticle.draw(render);
-	m_sprite.draw(render, states);
-	m_helmetParticle.draw(render);
-	m_ploufParticle.draw(render);
-	m_waterParticle.draw(render);
-	m_bubbleParticle.draw(render);
+	(void)render;
+	(void)states;
+//	m_inkParticle.draw(render);
+//	m_sprite.draw(render, states);
+//	m_helmetParticle.draw(render);
+//	m_ploufParticle.draw(render);
+//	m_waterParticle.draw(render);
+//	m_bubbleParticle.draw(render);
 }
 
 void	CharacterOcto::drawNanoRobot(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
 {
-	for (auto & spirit : m_spirits)
-		spirit->draw(render, states);
-	for (auto & robot : m_nanoRobots)
-		robot->draw(render, states);
+	(void)render;
+	(void)states;
+//	for (auto & spirit : m_spirits)
+//		spirit->draw(render, states);
+//	for (auto & robot : m_nanoRobots)
+//		robot->draw(render, states);
 }
 
 void	CharacterOcto::drawText(sf::RenderTarget& render, sf::RenderStates states = sf::RenderStates())const
 {
-	for (auto & robot : m_nanoRobots)
-		robot->drawText(render, states);
+	(void)render;
+	(void)states;
+//	for (auto & robot : m_nanoRobots)
+//		robot->drawText(render, states);
 }
 
 void	CharacterOcto::onCollision(TileShape * tileshape, GameObjectType type, sf::Vector2f const& collisionDirection)
@@ -1798,45 +1804,45 @@ void	CharacterOcto::resetColisionBolean()
 
 void	CharacterOcto::kill()
 {
-	if (m_level != Level::Rewards)
-	{
-		if (m_sprite.getCurrentEvent() != Death)
-		{
-			Progress & progress = Progress::getInstance();
-
-			m_sprite.setNextEvent(Death);
-			m_helmetParticle.canEmit(true);
-			m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
-			progress.registerDeath(getPosition());
-			progress.setKillOcto(false);
-		}
-	}
-	else
-		m_sprite.setNextEvent(Idle);
+//	if (m_level != Level::Rewards)
+//	{
+//		if (m_sprite.getCurrentEvent() != Death)
+//		{
+//			Progress & progress = Progress::getInstance();
+//
+//			m_sprite.setNextEvent(Death);
+//			m_helmetParticle.canEmit(true);
+//			m_helmetParticle.setPosition(getPosition() + sf::Vector2f(0.f, -25.f));
+//			progress.registerDeath(getPosition());
+//			progress.setKillOcto(false);
+//		}
+//	}
+//	else
+//		m_sprite.setNextEvent(Idle);
 }
 
 void	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > m_timeEventDieFallMax && m_sprite.getCurrentEvent() != DieFall && !m_inWater)
-		m_sprite.setNextEvent(DieFall);
-	else if (m_timeEventDieVoidMax != sf::Time::Zero)
-	{
-		if (m_timeEventFall > m_timeEventDieVoidMax)
-		{
-			float const speedOutOfScreen = m_timeEventFall.asSeconds() - m_timeEventDieVoidMax.asSeconds();
-
-			stopFollowCamera(true);
-			m_box->setPosition(m_box->getPosition() + sf::Vector2f(0.f, speedOutOfScreen * 40.f));
-			m_sprite.setOrigin(m_sprite.getOrigin() - sf::Vector2f(0.f, speedOutOfScreen * 10.f));
-			if (m_timeEventFall > m_timeEventDieVoidMax + sf::seconds(0.6f))
-				kill();
-		}
-		else
-			stopFollowCamera(false);
-	}
-
-	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater)
-		kill();
+//	if (m_timeEventFall > m_timeEventDieFallMax && m_sprite.getCurrentEvent() != DieFall && !m_inWater)
+//		m_sprite.setNextEvent(DieFall);
+//	else if (m_timeEventDieVoidMax != sf::Time::Zero)
+//	{
+//		if (m_timeEventFall > m_timeEventDieVoidMax)
+//		{
+//			float const speedOutOfScreen = m_timeEventFall.asSeconds() - m_timeEventDieVoidMax.asSeconds();
+//
+//			stopFollowCamera(true);
+//			m_box->setPosition(m_box->getPosition() + sf::Vector2f(0.f, speedOutOfScreen * 40.f));
+//			m_sprite.setOrigin(m_sprite.getOrigin() - sf::Vector2f(0.f, speedOutOfScreen * 10.f));
+//			if (m_timeEventFall > m_timeEventDieVoidMax + sf::seconds(0.6f))
+//				kill();
+//		}
+//		else
+//			stopFollowCamera(false);
+//	}
+//
+//	if (m_sprite.getCurrentEvent() == DieFall && m_onGround && !m_inWater)
+//		kill();
 }
 
 bool	CharacterOcto::dieGrass()
@@ -2130,6 +2136,18 @@ void	CharacterOcto::commitEnvironmentToPhysics()
 		}
 		m_box->setVelocity(velocity);
 	}
+	if (m_keyLeft)
+		velocity.x = -1.f * m_pixelSecondWalk;
+	if (m_keyRight)
+		velocity.x = 1.f * m_pixelSecondWalk;
+	if (m_keyDown)
+		velocity.y = 1.f * m_pixelSecondWalk;
+	if (m_keyCapacity)
+		velocity.y = -1.f * m_pixelSecondWalk;
+	m_box->setVelocity(velocity);
+	m_box->setApplyGravity(false);
+	m_pixelSecondWalk = 270.f;
+	m_speedCamera = 1.03f;
 }
 
 void	CharacterOcto::caseLeft()
