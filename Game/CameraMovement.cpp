@@ -21,7 +21,8 @@ CameraMovement::CameraMovement(void) :
 	m_horizontalTransition(0.f),
 	m_horizontalAxis(0.f),
 	m_verticalAxis(0.f),
-	m_blockAxisY(false)
+	m_blockAxisY(false),
+	m_frameCount(0u)
 {
 	m_circle.setRadius(10.f);
 	InputListener::addInputListener();
@@ -36,6 +37,14 @@ CameraMovement::~CameraMovement(void)
 void CameraMovement::update(sf::Time frametime, CharacterOcto & octo)
 {
 	octo::Camera & camera = octo::Application::getCamera();
+
+	if (m_frameCount < 10u)
+	{
+		m_frameCount++;
+		camera.setSize(octo::cosinusInterpolation(m_baseSize, m_baseSize * 0.85f, m_zoomTimer.asSeconds() / m_zoomTimerMax.asSeconds()));
+		camera.setCenter(sf::Vector2f(octo.getPosition().x, octo.getPosition().y - camera.getRectangle().height / 4.f));
+		return;
+	}
 
 	std::pair<float, float> const & look = octo.look();
 	if (look.first != 0.f || look.second != 0.f)

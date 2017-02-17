@@ -279,17 +279,17 @@ Map::MapSurfaceGenerator DesertBBiome::getMapSurfaceGenerator()
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
 		float m = n / 10.f;
-		std::vector<float> pointX = {0.f     , 100.f    , 102.f   , 105.f    , 109.f    , 114.f    , 118.f     , 155.f    , 210.f   , 240.f, 244.f, 245.f, 255.f, 256.f, 270.f     , 274.f    , 279.f    , 283.f    , 286.f    , 289.f   , 600.f   };
-		std::vector<float> pointY = {-6.f + n, -6.f + n, -4.1f - m, -2.6f - m, -2.4f - m, -2.3f - m, -2.24f - m, -2.2f - m, -2.f - n, -2.f , -2.f , 6.73f, 6.73f, -2.f , -2.04f - m, -2.1f - m, -2.2f - m, -2.4f - m, -3.9f - m, -6.f + n, -6.f + n};
-		for (std::size_t i = 0u; i < pointX.size(); i++)
-			pointX[i] /= floatMapSize;
+		m_pointX = {0.f     , 100.f    , 102.f   , 105.f    , 109.f    , 114.f    , 118.f     , 155.f    , 210.f   , 240.f, 244.f, 245.f, 255.f, 256.f, 270.f     , 274.f    , 279.f    , 283.f    , 286.f    , 289.f   , 600.f   };
+		m_pointY = {-6.f + n, -6.f + n, -4.1f - m, -2.6f - m, -2.4f - m, -2.3f - m, -2.24f - m, -2.2f - m, -2.f - n, -2.f , -2.f , 6.73f, 6.73f, -2.f , -2.04f - m, -2.1f - m, -2.2f - m, -2.4f - m, -3.9f - m, -6.f + n, -6.f + n};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			if (x >= pointX[i] && x < pointX[i + 1])
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
 			{
-				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::linearInterpolation(pointY[i], pointY[i + 1], coef);
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::linearInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 			}
 		}
 		return n;

@@ -35,15 +35,16 @@ enum class Level : std::size_t
 	WaterC,
 	WaterD,
 	Final,
+	Portal,
+	Random,
 	Red,
 	Blue,
-	Portal,
 	EndRocket,
 	EndTimeLapse,
-	Random,
 	Rewards,
 	RandomGame,
 	Labo,
+	None,
 };
 
 class ABiome : public octo::NonCopyable

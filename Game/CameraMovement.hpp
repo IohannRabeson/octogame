@@ -61,7 +61,7 @@ private:
 	float			m_verticalAxis;
 	bool			m_blockAxisY;
 	sf::CircleShape	m_circle;
-
+	std::size_t		m_frameCount;
 };
 
 #endif

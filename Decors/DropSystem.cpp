@@ -22,7 +22,8 @@ DropSystem::DropSystem() :
 	m_speed(0.f),
 	m_color(255, 255, 255, 200),
 	m_dropPerSeconds(0),
-	m_canCreateDrop(true)
+	m_canCreateDrop(true),
+	m_waterLevel(0.f)
 {
 	m_particles.resize(m_maxDropCount);
 }

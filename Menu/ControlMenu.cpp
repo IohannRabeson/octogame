@@ -6,7 +6,6 @@ ControlMenu::ControlMenu(void) :
 	m_isCreatedRepair(false),
 	m_isCreatedJump(false),
 	m_isCreatedDoubleJump(false),
-	m_isCreatedWaterJump(false),
 	m_isCreatedSlowFall(false)
 {
 }
@@ -25,13 +24,15 @@ void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
 	{
 		addMenu(AMenu::getText("control_ground"), nullptr);
 		addMenu(AMenu::getText("control_camera"), nullptr);
+		addMenu(AMenu::getText("control_camera_zoom"), nullptr);
 		addMenu(AMenu::getText("control_portal"), nullptr);
 		m_isCreatedMoveMap = true;
 		setupBubble();
 	}
 	if (progress.canRepair() && m_isCreatedRepair == false)
 	{
-		addMenu(AMenu::getText("control_elevator"), nullptr);
+		addMenu(AMenu::getText("control_repair"), nullptr);
+		addMenu(AMenu::getText("control_propulsion"), nullptr);
 		m_isCreatedRepair = true;
 		setupBubble();
 	}
@@ -47,16 +48,16 @@ void ControlMenu::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_isCreatedDoubleJump = true;
 		setupBubble();
 	}
-	if (progress.canUseWaterJump() && m_isCreatedWaterJump == false)
-	{
-		addMenu(AMenu::getText("control_water_jump"), nullptr);
-		m_isCreatedWaterJump = true;
-		setupBubble();
-	}
 	if (progress.canSlowFall() && m_isCreatedSlowFall == false)
 	{
 		addMenu(AMenu::getText("control_slow_fall"), nullptr);
 		m_isCreatedSlowFall = true;
+		setupBubble();
+	}
+	if (progress.canUseBalle() && m_isCreatedBalle == false)
+	{
+		addMenu(AMenu::getText("control_balle"), nullptr);
+		m_isCreatedBalle = true;
 		setupBubble();
 	}
 	AMenuSelection::update(frameTime, position);

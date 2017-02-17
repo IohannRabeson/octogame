@@ -24,6 +24,7 @@ public:
 
 		void update(sf::Time frametime, ABiome & biome, sf::Vector2f const & position);
 		void updateGlitch(sf::Time frametime, ABiome & biome);
+		void updateGlitchManual(sf::Time frametime, ABiome & biome);
 		void updateChallenge(sf::Time frametime);
 		void updatePitch(float maxVariation);
 		virtual void updateShader(sf::Time frametime) = 0;
@@ -35,6 +36,7 @@ public:
 		bool isFinished(void) const;
 		bool isGlitch(void) const;
 		void startGlitch(ABiome & biome);
+		void startGlitchManual(ABiome & biome);
 		sf::Time getDuration(void) const;
 		ABiome::Type getBiomeType(void) const;
 		void setDuration(float duration);
@@ -68,21 +70,27 @@ public:
 		Blur = 16u
 	};
 
-	~ChallengeManager(void) = default;
+	~ChallengeManager(void);
 	static ChallengeManager & getInstance(void);
 
 	AChallenge & getEffect(Effect effect);
 
 	void reset(void);
 	void update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime);
+	bool launchManualGlitch(bool isLaunch);
 
 private:
 	static std::unique_ptr<ChallengeManager>		m_instance;
 	std::map<Effect, std::unique_ptr<AChallenge>>	m_challenges;
+	bool											m_launchManualGlitch;
+	bool											m_lockManualGlitch;
 
 	ChallengeManager(void);
 	void addEffect(ResourceKey key, Effect effect);
 
+	void updateNormal(ABiome & biome, sf::Vector2f const & position, sf::Time frametime);
+	void updateRandom(ABiome & biome, sf::Vector2f const & position, sf::Time frametime);
+	void updateManualGlitch(ABiome & biome, sf::Time frametime);
 };
 
 #endif

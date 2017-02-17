@@ -6,6 +6,8 @@
 #include <Application.hpp>
 #include <assert.h>
 
+sf::Vector2f AMenuSelection::m_currentMenuPosition = sf::Vector2f(0.f, 0.f);
+
 AMenuSelection::AMenuSelection(void) :
 	m_generator("random"),
 	m_type(ABubble::Type::Right),
@@ -14,7 +16,9 @@ AMenuSelection::AMenuSelection(void) :
 	m_indexCursor(0u),
 	m_indexSave(0u),
 	m_isKeyboard(false),
-	m_timerMoveCursorMax(sf::seconds(0.1f))
+	m_timerMoveCursorMax(sf::seconds(0.1f)),
+	m_inputDelay(sf::seconds(0.5f)),
+	m_inputTimer(m_inputDelay)
 {
 }
 
@@ -88,7 +92,9 @@ void AMenuSelection::update(sf::Time frameTime, sf::Vector2f const & position)
 
 	if (getState() == AMenu::State::Active)
 	{
+		m_inputTimer -= frameTime;
 		sf::Vector2f cursorPosition = octo::linearInterpolation(m_cursorPosition[m_indexLastCursor], m_cursorPosition[m_indexCursor], m_timerMoveCursor / m_timerMoveCursorMax);
+		m_currentMenuPosition = position - (m_deltaMenu / 2.f);
 
 		setKeyboard(true);
 		m_bubble.setActive(true);
@@ -123,13 +129,13 @@ void AMenuSelection::draw(sf::RenderTarget & render, sf::RenderStates states) co
 
 bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 {
-	if (!m_input)
+	if (m_inputTimer <= sf::Time::Zero)
 	{
 		octo::AudioManager &		audio = octo::Application::getAudioManager();
 		octo::ResourceManager &		resources = octo::Application::getResourceManager();
 		audio.playSound(resources.getSound(MENU_SOUND_OGG), 1.f, m_generator.randomFloat(0.98f, 1.02f));
 
-		m_input = true;
+		m_inputTimer = m_inputDelay;
 		switch (key)
 		{
 			case OctoKeys::Left:
@@ -191,7 +197,7 @@ bool AMenuSelection::onInputPressed(InputListener::OctoKeys const & key)
 
 bool AMenuSelection::onInputReleased(InputListener::OctoKeys const &)
 {
-	m_input = false;
+	m_inputTimer = sf::Time::Zero;
 	return true;
 }
 

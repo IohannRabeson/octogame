@@ -42,10 +42,10 @@ PortalBiome::PortalBiome() :
 	m_treeCount(40u, 40u),
 	m_mushroomCount(50u, 50u),
 	m_crystalCount(70u, 80u),
-	m_starCount(500u, 800u),
+	m_starCount(300u, 500u),
 	m_sunCount(1u, 1u),
 	m_moonCount(2u, 2u),
-	m_rainbowCount(30u, 30u),
+	m_rainbowCount(20u, 20u),
 	m_cloudCount(20u, 40u),
 	m_groundRockCount(100u, 200u),
 
@@ -348,17 +348,17 @@ Map::MapSurfaceGenerator PortalBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f, 1000.f};
-		std::vector<float> pointY = {n  , n};
-		for (std::size_t i = 0u; i < pointX.size(); i++)
-			pointX[i] /= floatMapSize;
+		m_pointX = {0.f, 1000.f};
+		m_pointY = {n  , n};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			if (x >= pointX[i] && x < pointX[i + 1])
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
 			{
-				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 			}
 		}
 		return n;

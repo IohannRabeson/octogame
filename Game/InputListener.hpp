@@ -32,7 +32,8 @@ public:
 		ShowOcto = 18,
 		HideOcto = 19,
 		IncreaseSpeed = 20,
-		DecreaseSpeed = 21
+		DecreaseSpeed = 21,
+		Balle = 22
 	};
 
 	InputListener(void);
@@ -46,8 +47,8 @@ public:
 private:
 	bool					m_isListeners;
 	std::vector<OctoKeys>	m_inputs;
-	//bool					m_joystickLT;
-	//bool					m_joystickRT;
+	bool					m_joystickLT;
+	bool					m_joystickRT;
 	bool					m_joystickAxisX;
 	bool					m_joystickAxisY;
 	bool					m_joystickAxisU;

@@ -29,12 +29,16 @@ ANpc::ANpc(ResourceKey const & npcId, bool isMeetable) :
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	TextManager & textManager = TextManager::getInstance();
+	Progress & progress = Progress::getInstance();
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(npcId));
 
 	setTexts(textManager.getTextsNpc(npcId), textManager.getPriority(npcId));
 	if (m_texts.size())
 		m_displayText = true;
+
+	if (progress.getCurrentDestination() == Level::WaterB || progress.getCurrentDestination() == Level::Random)
+		m_isZoomable = false;
 }
 
 ANpc::~ANpc(void)
@@ -181,6 +185,12 @@ void ANpc::setSize(sf::Vector2f const & size)
 	m_box->setSize(size);
 }
 
+void ANpc::resetTexts(std::vector<std::wstring> const & texts, ABubble::Priority priority)
+{
+	m_texts.clear();
+	setTexts(texts, priority);
+}
+
 void ANpc::setTexts(std::vector<std::wstring> const & texts, ABubble::Priority priority)
 {
 	for (std::size_t i = 0u; i < texts.size(); i++)
@@ -205,6 +215,12 @@ void ANpc::setCurrentText(int index)
 void ANpc::setDisplayText(bool displayText)
 {
 	m_displayText = displayText;
+}
+
+void ANpc::setBubbleColor(sf::Color const & color)
+{
+	for (auto & text : m_texts)
+		text->setColor(color);
 }
 
 void ANpc::setActiveText(bool active)
@@ -429,7 +445,8 @@ void ANpc::drawText(sf::RenderTarget & render, sf::RenderStates) const
 	Progress const & progress = Progress::getInstance();
 
 	if (m_displayText && progress.isBubbleNpc()
-		&& (progress.getCurrentDestination() != Level::WaterB || m_type == GameObjectType::CedricStartNpc || m_type == GameObjectType::CedricEndNpc || m_type == GameObjectType::MaryvonneNpc))
+		&& (progress.getCurrentDestination() != Level::WaterB || m_type == GameObjectType::CedricStartNpc || m_type == GameObjectType::CedricEndNpc || m_type == GameObjectType::MaryvonneNpc)
+		&& (progress.getCurrentDestination() != Level::Random || m_type == GameObjectType::MysticanouilleNpc))
 	{
 		if (!m_isDoubleJump)
 		{

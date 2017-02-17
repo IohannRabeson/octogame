@@ -37,6 +37,11 @@ public:
 		return (true);
 	}
 
+	virtual bool			dieOutOfScreen()
+	{
+		return true;
+	}
+
 	void					setPosition(sf::Vector2f const& pos);
 	sf::Vector2f const&		getPosition()const;
 private:

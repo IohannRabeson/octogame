@@ -1,5 +1,4 @@
 #include "MainMenu.hpp"
-#include "CheatCodeMenu.hpp"
 #include "ControlMenu.hpp"
 #include "CreditMenu.hpp"
 #include "ResetMenu.hpp"
@@ -59,9 +58,6 @@ void MainMenu::createMenus(void)
 	else
 	{
 		addMenu(AMenu::getText("menu_controls"), std::unique_ptr<ControlMenu>(new ControlMenu()));
-		#ifndef NDEBUG
-		addMenu(L"Easy", std::unique_ptr<CheatCodeMenu>(new CheatCodeMenu()));
-		#endif
 		addMenu(AMenu::getText("menu_options"), std::unique_ptr<OptionMenu>(new OptionMenu()));
 		addMenu(AMenu::getText("menu_return"), std::unique_ptr<YesNoQuit>(new YesNoQuit()));
 		setCharacterSize(30);
@@ -104,15 +100,22 @@ void MainMenu::setup(void)
 	m_filter.setFillColor(sf::Color(0, 0, 0, 50));
 }
 
+void MainMenu::updateSpiritInfos(void)
+{
+	m_spiritInfos.setup();
+}
+
 void MainMenu::update(sf::Time frameTime, sf::Vector2f const & octoBubblePosition)
 {
 	AMenuSelection::update(frameTime, octoBubblePosition);
 	sf::FloatRect const & camera = octo::Application::getCamera().getRectangle();
 	m_filter.setPosition(sf::Vector2f(camera.left, camera.top));
+	m_spiritInfos.update(frameTime, m_currentMenuPosition);
 }
 
 void MainMenu::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	render.draw(m_filter, states);
+	m_spiritInfos.draw(render, states);
 	AMenuSelection::draw(render, states);
 }

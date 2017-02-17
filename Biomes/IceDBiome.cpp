@@ -293,17 +293,17 @@ Map::MapSurfaceGenerator IceDBiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f  , /*house*/50.f    , 90.f , 96.f, 100.f, 127.f, 132.f, 138.f, 160.f, 166.f, 171.f, 206.f, 280.f  ,/*lake*/420.f  , 500.f, 501.f, 780.f, 781.f, 820.f   , 850.f};
-		std::vector<float> pointY = {-0.2f, /*house*/n - 0.3f, -0.8f, 7.3f, -1.f , -1.f , 7.3f , -1.f , -1.f , 7.3f , -1.f , -1.f , n - 1.f,/*lake*/n - 1.f, -1.2f, 1.8f , 1.8f , 0.f  , n - 0.2f, -0.2f};
-		for (std::size_t i = 0u; i < pointX.size(); i++)
-			pointX[i] /= floatMapSize;
+		m_pointX = {0.f  , /*house*/50.f    , 90.f , 96.f, 100.f, 127.f, 132.f, 138.f, 160.f, 166.f, 171.f, 206.f, 280.f  ,/*lake*/420.f  , 500.f, 501.f, 780.f, 781.f, 820.f   , 850.f};
+		m_pointY = {-0.2f, /*house*/n - 0.3f, -0.8f, 7.3f, -1.f , -1.f , 7.3f , -1.f , -1.f , 7.3f , -1.f , -1.f , n - 1.f,/*lake*/n - 1.f, -1.2f, 1.8f , 1.8f , 0.f  , n - 0.2f, -0.2f};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			if (x >= pointX[i] && x < pointX[i + 1])
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
 			{
-				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 			}
 		}
 		return n;

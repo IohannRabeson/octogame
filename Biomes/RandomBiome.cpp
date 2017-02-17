@@ -14,6 +14,7 @@ std::size_t RandomBiome::m_seedId = 110u;
 
 RandomBiome::RandomBiome() :
 	m_generator(std::to_string(std::time(0))),
+	m_randomSurfaceNumber(0u),
 	m_name("Random"),
 	m_id(Level::Random),
 	m_seed("Random"),
@@ -48,7 +49,7 @@ RandomBiome::RandomBiome() :
 	m_crystalCount(m_generator.randomInt(1, 30), m_generator.randomInt(30, 50)),
 	m_starCount(300u, 800u),
 	m_sunCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 8)),
-	m_moonCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 8)),
+	m_moonCount(m_generator.randomInt(1, 2), m_generator.randomInt(2, 6)),
 	m_rainbowCount(m_generator.randomInt(1, 3), m_generator.randomInt(3, 10)),
 	m_cloudCount(m_generator.randomInt(1, 50), m_generator.randomInt(50, 100)),
 	m_groundRockCount(m_generator.randomInt(100, 200), m_generator.randomInt(200, 700)),
@@ -116,11 +117,11 @@ RandomBiome::RandomBiome() :
 	m_starColor(255, 255, 255),
 	m_starLifeTime(sf::seconds(15), sf::seconds(90)),
 
-	m_sunSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 600.f), m_generator.randomFloat(100.f, 600.f))),
+	m_sunSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 350.f), m_generator.randomFloat(100.f, 350.f))),
 	m_sunPartCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 7)),
 	m_sunColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 
-	m_moonSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 600.f), m_generator.randomFloat(100.f, 600.f))),
+	m_moonSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 350.f), m_generator.randomFloat(100.f, 350.f))),
 	m_moonColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
 
@@ -150,19 +151,8 @@ RandomBiome::RandomBiome() :
 	// TODO define map position and number of map
 	std::size_t portalPos = 30.f;
 
-	if (progress.getActivatedMonolith() >= 14u)
-	{
+	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
 		m_mapSize.x = 400u;
-		m_instances[100] = MAP_RANDOM_OMP;
-	}
-	else
-	{
-		std::size_t pos = randomInt(60u, m_mapSize.x);
-		m_gameObjects[pos] = GameObjectType::Monolith;
-		if (pos + 75u < m_mapSize.x)
-			m_gameObjects[pos + 75u] = GameObjectType::MysticanouilleNpc;
-		m_gameObjects[pos - 40u] = GameObjectType::MysticanouilleNpc;
-	}
 
 	m_interestPointPosX = portalPos;
 
@@ -189,6 +179,35 @@ RandomBiome::RandomBiome() :
 		m_gameObjects[index] = GameObjectType::SpiritNanoRobot;
 		m_interestPointPosX = index;
 	}
+
+	if (progress.countRandomDiscover() >= Progress::RandomPortalMax)
+	{
+		m_instances[100] = MAP_RANDOM_OMP;
+	}
+	else
+	{
+		std::size_t posMonolith = randomInt(60u, m_mapSize.x - 50u);
+		std::list<GameObjectType> const & npcList = progress.getNpcMet();
+	
+		for (auto npc = npcList.begin(); npc != npcList.end(); npc++)
+		{
+			std::size_t index = randomInt(10u, m_mapSize.x - 10u);
+			if (index > posMonolith - 75u && index < posMonolith + 100u)
+				index += 200u;
+			if (index > 5u && index < m_mapSize.x - 5u && randomBool(0.08f) && *npc != GameObjectType::MysticanouilleNpc)
+			{
+				m_gameObjects[index] = *npc;
+				if (randomBool(0.5f))
+					break;
+			}
+		}
+
+		m_gameObjects[posMonolith] = GameObjectType::Monolith;
+		if (posMonolith + 75u < m_mapSize.x)
+			m_gameObjects[posMonolith + 75u] = GameObjectType::MysticanouilleNpc;
+		m_gameObjects[posMonolith - 40u] = GameObjectType::MysticanouilleNpc;
+	}
+
 	m_gameObjects[portalPos] = GameObjectType::Portal;
 	progress.meetPortal(progress.getLastDestination(), Level::Random);
 }
@@ -297,23 +316,23 @@ std::vector<ParallaxScrolling::ALayer *> RandomBiome::getLayers()
 
 Map::MapSurfaceGenerator RandomBiome::getMapSurfaceGenerator()
 {
-	if (Progress::getInstance().getActivatedMonolith() >= 14u)
+	if (Progress::getInstance().countRandomDiscover() >= Progress::RandomPortalMax)
 	{
 		return [this](Noise & noise, float x, float y)
 		{
 			float floatMapSize = static_cast<float>(m_mapSize.x);
 			float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-			std::vector<float> pointX = {0.f, 50.f, 100.f, 300.f, 350.f};
-			std::vector<float> pointY = {n  , n   , -1.f  , -1.f  , n};
-			for (std::size_t i = 0u; i < pointX.size(); i++)
-				pointX[i] /= floatMapSize;
+			m_pointX = {0.f, 50.f, 100.f, 300.f, 350.f};
+			m_pointY = {n  , n   , -1.f  , -1.f  , n};
+			for (std::size_t i = 0u; i < m_pointX.size(); i++)
+				m_pointX[i] /= floatMapSize;
 	
-			for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+			for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 			{
-				if (x >= pointX[i] && x < pointX[i + 1])
+				if (x >= m_pointX[i] && x < m_pointX[i + 1])
 				{
-					float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-					return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+					float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+					return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 				}
 			}
 			return n;

@@ -3,6 +3,7 @@
 #include "MapInstance.hpp"
 #include "FunctionsOffset.hpp"
 #include "Progress.hpp"
+#include <Camera.hpp>
 #include <Application.hpp>
 #include <GraphicsManager.hpp>
 #include <Interpolations.hpp>
@@ -161,6 +162,7 @@ void Map::computeMapRange(int startX, int endX, int startY, int endY)
 
 void Map::computeDecor(void)
 {
+	static std::size_t borderLimit = 20u;
 	float noiseDepth = m_depth / static_cast<float>(m_mapSize.y);
 	int height;
 	int curOffsetX = static_cast<int>(m_curOffset.x / Tile::TileSize);
@@ -172,20 +174,28 @@ void Map::computeDecor(void)
 
 	for (auto it = m_decorPositions.begin(); it != m_decorPositions.end(); it++)
 	{
-		// Check if we are at the transition between 0 and m_mapSize.x
-		if (it->first < static_cast<int>(m_mapJoinHalfWidth) || it->first >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
+		int posX = static_cast<float>(getCircleOffset(curOffsetX, it->first, static_cast<int>(m_mapSize.x)));
+
+		//TODO : See with Julien if it's a good optimisation ?
+		if (posX > static_cast<int>(curOffsetX - borderLimit) && posX < static_cast<int>(curOffsetX + m_width + borderLimit))
 		{
-			float transition = it->first < static_cast<int>(m_mapJoinHalfWidth) ? static_cast<float>(it->first) + m_mapJoinHalfWidth : m_mapJoinHalfWidth - static_cast<float>(m_mapSize.x) + static_cast<float>(it->first);
-			height =  octo::cosinusInterpolation(startTransitionX, endTransitionX, transition / m_mapJoinWidth);
+			// Check if we are at the transition between 0 and m_mapSize.x
+			if (it->first < static_cast<int>(m_mapJoinHalfWidth) || it->first >= (static_cast<int>(m_mapSize.x) - static_cast<int>(m_mapJoinHalfWidth)))
+			{
+				float transition = it->first < static_cast<int>(m_mapJoinHalfWidth) ? static_cast<float>(it->first) + m_mapJoinHalfWidth : m_mapJoinHalfWidth - static_cast<float>(m_mapSize.x) + static_cast<float>(it->first);
+				height =  octo::cosinusInterpolation(startTransitionX, endTransitionX, transition / m_mapJoinWidth);
+			}
+			else
+			{
+				// mapSurface return a value between -1 & 1
+				// we normalize it betwen 0 & max_height
+				height = static_cast<int>((m_mapSurface(static_cast<float>(it->first) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
+			}
+			it->second.x = Tile::TileSize * posX;
+			it->second.y = Tile::TileSize * static_cast<float>(height);
 		}
 		else
-		{
-			// mapSurface return a value between -1 & 1
-			// we normalize it betwen 0 & max_height
-			height = static_cast<int>((m_mapSurface(static_cast<float>(it->first) / static_cast<float>(m_mapSize.x), noiseDepth) + 1.f) * static_cast<float>(m_mapSize.y) / 2.f);
-		}
-		it->second.x = Tile::TileSize * static_cast<float>(getCircleOffset(curOffsetX, it->first, static_cast<int>(m_mapSize.x)));
-		it->second.y = Tile::TileSize * static_cast<float>(height);
+			it->second.x = 80000 * Tile::TileSize;
 	}
 }
 
@@ -328,27 +338,27 @@ void Map::addOffsetX(int offsetX)
 	if (offsetX > 0)
 	{
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			m_tmp[y] = m_tiles(0, y);
+			m_tmp[y] = m_tiles.get(0, y);
 		for (std::size_t x = 0; x < m_tiles.columns() - 1; x++)
 		{
 			for (std::size_t y = 0; y < m_tiles.rows(); y++)
-				m_tiles(x, y) = m_tiles(x + 1, y);
+				m_tiles.get(x, y) = m_tiles.get(x + 1, y);
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			m_tiles(m_tiles.columns() - 1, y) = m_tmp[y];
+			m_tiles.get(m_tiles.columns() - 1, y) = m_tmp[y];
 		addOffsetX(offsetX - 1);
 	}
 	else if (offsetX < 0)
 	{
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			m_tmp[y] = m_tiles(m_tiles.columns() - 1, y);
+			m_tmp[y] = m_tiles.get(m_tiles.columns() - 1, y);
 		for (std::size_t x = m_tiles.columns() - 1; x > 0; x--)
 		{
 			for (std::size_t y = 0; y < m_tiles.rows(); y++)
-				m_tiles(x, y) = m_tiles(x - 1, y);
+				m_tiles.get(x, y) = m_tiles.get(x - 1, y);
 		}
 		for (std::size_t y = 0; y < m_tiles.rows(); y++)
-			m_tiles(0, y) = m_tmp[y];
+			m_tiles.get(0, y) = m_tmp[y];
 		addOffsetX(offsetX + 1);
 	}
 }
@@ -360,27 +370,27 @@ void Map::addOffsetY(int offsetY)
 	if (offsetY > 0)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
-			m_tmp[x] = m_tiles(x, 0);
+			m_tmp[x] = m_tiles.get(x, 0);
 		for (std::size_t y = 0; y < m_tiles.rows() - 1; y++)
 		{
 			for (std::size_t x = 0; x < m_tiles.columns(); x++)
-				m_tiles(x, y) = m_tiles(x, y + 1);
+				m_tiles.get(x, y) = m_tiles.get(x, y + 1);
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
-			m_tiles(x, m_tiles.rows() - 1) = m_tmp[x];
+			m_tiles.get(x, m_tiles.rows() - 1) = m_tmp[x];
 		addOffsetY(offsetY - 1);
 	}
 	else if (offsetY < 0)
 	{
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
-			m_tmp[x] = m_tiles(x, m_tiles.rows() - 1);
+			m_tmp[x] = m_tiles.get(x, m_tiles.rows() - 1);
 		for (std::size_t y = m_tiles.rows() - 1; y > 0; y--)
 		{
 			for (std::size_t x = 0; x < m_tiles.columns(); x++)
-				m_tiles(x, y) = m_tiles(x, y - 1);
+				m_tiles.get(x, y) = m_tiles.get(x, y - 1);
 		}
 		for (std::size_t x = 0; x < m_tiles.columns(); x++)
-			m_tiles(x, 0) = m_tmp[x];
+			m_tiles.get(x, 0) = m_tmp[x];
 		addOffsetY(offsetY + 1);
 	}
 }

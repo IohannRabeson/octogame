@@ -16,6 +16,8 @@ public:
 						octo::VertexBuilder& builder,
 						ABiome& biome);
 
+	virtual bool dieOutOfScreen(void);
+
 private:
 	sf::Vector2f				m_size;
 	sf::Color					m_color;

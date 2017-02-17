@@ -6,6 +6,7 @@
 Star::Star() :
 	m_animator(10.f, 10.f, 3.f, 0.3f),
 	m_animation(1.f),
+	m_detailPriority(0),
 	m_cycle(nullptr)
 {
 }
@@ -14,6 +15,15 @@ Star::Star(SkyCycle * cycle) :
 	Star()
 {
 	m_cycle = cycle;
+}
+
+bool Star::dieOutOfScreen(void)
+{
+	if (m_animator.getState() != DecorAnimator::State::Dead)
+		m_animator.die();
+	else
+		return true;
+	return false;
 }
 
 void Star::setup(ABiome& biome)

@@ -19,6 +19,7 @@ public:
 						ABiome& biome);
 
 	virtual bool isDisabledIfOutOfScreen()const;
+
 private:
 	typedef std::vector<sf::Vector2f>	Line;
 

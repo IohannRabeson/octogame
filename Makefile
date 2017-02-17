@@ -55,6 +55,7 @@ SRC_GAME =		Game/Game.cpp							\
 				Game/MusicManager.cpp					\
 				Game/InputListener.cpp					\
 				Game/KonamiCode.cpp						\
+				Game/UnlockEasy.cpp						\
 				Game/ChallengeManager.cpp				\
 				Game/Challenges.cpp						\
 				Game/PostEffectLayer.cpp				\
@@ -203,6 +204,7 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/VideoMenu.cpp						\
 				Menu/AudioMenu.cpp						\
 				Menu/LanguageMenu.cpp					\
+				Menu/KeyboardMenu.cpp					\
 				Menu/MenuTypeMenu.cpp					\
 				Menu/SoundVolumeMenu.cpp				\
 				Menu/MusicVolumeMenu.cpp				\
@@ -220,7 +222,9 @@ SRC_MENU =		Menu/AMenu.cpp							\
 				Menu/FakeMenu.cpp						\
 				Menu/BalleMultiplierMenu.cpp			\
 				Menu/DifficultyMenu.cpp					\
+				Menu/SpiritCheatMenu.cpp				\
 				Menu/EmptyMenu.cpp						\
+				Menu/SpiritInfos.cpp					\
 
 SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/FireflyPopulation.cpp		\
@@ -233,7 +237,9 @@ SRC_NAROBOT =	NanoRobots/FireflySwarm.cpp				\
 				NanoRobots/DoubleJumpNanoRobot.cpp		\
 				NanoRobots/SlowFallNanoRobot.cpp		\
 				NanoRobots/WaterNanoRobot.cpp			\
+				NanoRobots/BalleNanoRobot.cpp			\
 				NanoRobots/SpiritNanoRobot.cpp			\
+				NanoRobots/MenuNanoRobot.cpp			\
 				NanoRobots/NanoEffect.cpp				\
 
 SRC_MAP =		Map/Map.cpp								\
@@ -359,7 +365,7 @@ CFLAGS = $(COMMON_FLAGS)
 CLIBS_FLAGS =  $(addprefix -L, $(LIB_DIRS)) $(addprefix -l, $(LIBS))
 FRAMEWORKS_FLAGS = $(addprefix -F , $(FRAMEWORKS_DIR)) $(addprefix -framework , $(FRAMEWORK))
 COMPLETE_TARGET = $(OUTPUT_DIR)/$(TARGET)
-MODE = debug
+MODE = release
 RUN_DEPEND = "1"
 
 ifeq ($(MODE), debug)

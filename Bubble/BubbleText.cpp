@@ -11,7 +11,8 @@ BubbleText::BubbleText(void) :
 	m_bubbleWidth(350.f),
 	m_characterPerLineMax(0u),
 	m_characterPerLine(0u),
-	m_lineCount(1u)
+	m_lineCount(1u),
+	m_contentUpdated(false)
 {
 }
 
@@ -63,7 +64,7 @@ void BubbleText::setupBlocString(void)
 	m_phrase = phrase;
 }
 
-void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std::size_t characterSize, float bubbleWidth)
+void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std::size_t characterSize, float bubbleWidth, sf::Color const & colorText)
 {
 	m_bubbleWidth = bubbleWidth;
 	m_phrase = phrase;
@@ -73,7 +74,7 @@ void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std
 	octo::ResourceManager& resources = octo::Application::getResourceManager();
 	m_font = resources.getFont(VERAMONO_TTF);
 	m_text.setFont(m_font);
-	m_text.setColor(sf::Color(0, 0, 0));
+	m_text.setColor(colorText);
 	m_text.setCharacterSize(characterSize);
 	m_text.setString(m_phrase);
 
@@ -88,6 +89,12 @@ void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std
 		m_contentSize.x = m_characterPerLine * (widthTotalText / (m_phrase.size() - 1u));
 	m_text.setString(m_phrase);
 	m_contentUpdated = false;
+}
+
+void BubbleText::setColors(sf::Color const & colorBubble, sf::Color const & colorText)
+{
+	ABubble::setColor(colorBubble);
+	m_text.setColor(colorText);
 }
 
 sf::Vector2f const & BubbleText::getContentSize() const

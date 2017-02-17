@@ -17,6 +17,7 @@
 #include "Progress.hpp"
 #include "NanoRobot.hpp"
 #include "GroundTransformNanoRobot.hpp"
+#include "BalleNanoRobot.hpp"
 #include "RepairNanoRobot.hpp"
 #include "RepairShipNanoRobot.hpp"
 #include "SpiritNanoRobot.hpp"
@@ -31,6 +32,7 @@ CharacterOcto::CharacterOcto() :
 	m_boxSize(sf::Vector2f(30.f, 85.f)),
 	m_eventBox(PhysicsEngine::getShapeBuilder().createCircle(false)),
 	m_repairNanoRobot(nullptr),
+	m_balleNanoRobot(nullptr),
 	m_progress(Progress::getInstance()),
 	m_timeEventDieFallMax(sf::seconds(2.3f)),
 	m_timeEventIdleMax(sf::seconds(4.f)),
@@ -47,6 +49,7 @@ CharacterOcto::CharacterOcto() :
 	m_maxJumpWaterVelocity(-3000.f),
 	m_pixelSecondJump(-1300.f),
 	m_pixelSecondSlowFall(-400.f),
+	m_pixelSecondSlowElevator(-700.f),
 	m_pixelSecondWalk(320.f),
 	m_pixelSecondAfterJump(-400.f),
 	m_pixelSecondAfterFullJump(-500.f),
@@ -74,6 +77,7 @@ CharacterOcto::CharacterOcto() :
 	m_keyPortal(false),
 	m_keyElevator(false),
 	m_keyZoomIn(false),
+	m_keyBalle(false),
 	m_leftTic(false),
 	m_rightTic(false),
 	m_jumpTic(false),
@@ -101,6 +105,7 @@ CharacterOcto::CharacterOcto() :
 	m_cutsceneTimerMax(sf::seconds(2.f)),
 	m_cutscenePauseTimerMax(sf::seconds(4.f)),
 	m_adaptBoxTimerMax(sf::seconds(0.5f)),
+	m_adaptBoxDelta(0.f),
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG)),
 	m_showOcto(true),
 	m_speedOcto(1.f)
@@ -124,6 +129,8 @@ CharacterOcto::CharacterOcto() :
 		giveNanoRobot(new WaterNanoRobot());
 	if (m_progress.canRepairShip())
 		giveNanoRobot(new RepairShipNanoRobot(sf::Vector2f(0.f, 0.f)));
+	if (m_progress.canUseBalle())
+		giveBalleNanoRobot(new BalleNanoRobot(sf::Vector2f(0.f, 0.f)));
 
 	for (auto & robot : m_nanoRobots)
 	{
@@ -132,13 +139,16 @@ CharacterOcto::CharacterOcto() :
 		robot->setState(NanoRobot::State::FollowOcto);
 	}
 
-	for (std::size_t i = 0u; i < m_progress.getSpiritCount(); i++)
-		giveSpirit(new SpiritNanoRobot(sf::Vector2f(0.f, 0.f)));
-	for (auto & spirit : m_spirits)
+	if (m_progress.getCurrentDestination() == Level::Random)
 	{
-		spirit->setPosition(getPosition());
-		spirit->transfertToOcto(true);
-		spirit->setState(NanoRobot::State::FollowOcto);
+		for (std::size_t i = 0u; i < m_progress.getSpiritCount(); i++)
+			giveSpirit(new SpiritNanoRobot(sf::Vector2f(0.f, 0.f)));
+		for (auto & spirit : m_spirits)
+		{
+			spirit->setPosition(getPosition());
+			spirit->transfertToOcto(true);
+			spirit->setState(NanoRobot::State::FollowOcto);
+		}
 	}
 }
 
@@ -179,6 +189,7 @@ void	CharacterOcto::setup(ABiome & biome)
 	m_box->setCollisionType(static_cast<std::size_t>(GameObjectType::Player));
 	std::size_t mask = static_cast<std::size_t>(GameObjectType::Portal)
 		| static_cast<std::size_t>(GameObjectType::GroundTransformNanoRobot)
+		| static_cast<std::size_t>(GameObjectType::BalleNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::RepairNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::JumpNanoRobot)
 		| static_cast<std::size_t>(GameObjectType::DoubleJumpNanoRobot)
@@ -997,7 +1008,6 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 
 	startGameIceA();
 
-	updateBox(frameTime);
 	dieGrass();
 	updateGroundDelay(frameTime);
 	portalEvent();
@@ -1009,9 +1019,9 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	if (m_sprite.getCurrentEvent() != PortalEvent && m_sprite.getCurrentEvent() != KonamiCode && m_sprite.getCurrentEvent() != Drink && endDeath())
 	{
 		wait();
-		collisionElevatorUpdate();
 		collisionTileUpdate();
 		caseCapacity();
+		collisionElevatorUpdate();
 		caseJump();
 		caseLeft();
 		caseRight();
@@ -1036,6 +1046,7 @@ void	CharacterOcto::update(sf::Time frameTime, sf::Time realFrameTime)
 	updateDoorAction(frameTime);
 	updatePortalVacuum(frameTime);
 	updateParticles(frameTime);
+	updateBox(frameTime);
 	resetColisionBolean();
 	replaceOcto();
 	updateCutscene(realFrameTime);
@@ -1291,6 +1302,16 @@ void	CharacterOcto::giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime)
 		enableCutscene(true, true);
 }
 
+void	CharacterOcto::giveBalleNanoRobot(BalleNanoRobot * robot, bool firstTime)
+{
+	m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+	if (robot->getEffectEnable())
+		startKonamiCode(firstTime);
+	m_balleNanoRobot = robot;
+	if (firstTime)
+		enableCutscene(true, true);
+}
+
 void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 {
 	if (m_progress.canRepair() && m_keyElevator)
@@ -1311,6 +1332,29 @@ void	CharacterOcto::repairElevator(ElevatorStream & elevator)
 		m_repairNanoRobot->setState(NanoRobot::State::FollowOcto);
 	if (!elevator.isActivated())
 		m_collisionElevatorEvent = true;
+}
+
+void	CharacterOcto::getBalle()
+{
+	if (m_balleNanoRobot)
+	{
+		if (m_progress.canUseBalle() && m_keyBalle && m_sprite.getCurrentEvent() != Events::Drink)
+		{
+			if (m_balleNanoRobot->throwPotion(true))
+			{
+				if (!ChallengeManager::getInstance().launchManualGlitch(true))
+				{
+					m_sprite.setNextEvent(Events::Drink);
+					m_box->setApplyGravity(false);
+				}
+			}
+		}
+		else
+		{
+			ChallengeManager::getInstance().launchManualGlitch(false);
+			m_balleNanoRobot->throwPotion(false);
+		}
+	}
 }
 
 void	CharacterOcto::collideSpaceShip(SpaceShip * spaceShip)
@@ -1347,6 +1391,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 	sf::Vector2f const&			cameraPos = sf::Vector2f(camera.getRectangle().left, camera.getRectangle().top);
 
 	m_collisionPortal = true;
+	m_portalCenterPos = portal.getPosition();
 	if (m_sprite.getCurrentEvent() == PortalEvent && m_sprite.isTerminated())
 	{
 		if (portal.getDestination() == m_level && m_level != Level::Rewards)
@@ -1362,7 +1407,7 @@ void	CharacterOcto::usePortal(Portal & portal)
 			m_numberOfJump = 0u;
 			m_timeSlowFall = sf::Time::Zero;
 		}
-		else
+		else if (portal.getDestination() != Level::None)
 		{
 			m_progress.setOctoPosTransition(m_sprite.getPosition() + m_sprite.getGlobalSize() - cameraPos);
 			m_progress.setReverseSprite(m_originMove);
@@ -1370,7 +1415,6 @@ void	CharacterOcto::usePortal(Portal & portal)
 			if (!m_progress.isMenu())
 				m_progress.setRespawnType(Progress::RespawnType::Portal);
 		}
-		m_portalCenterPos = portal.getPosition();
 	}
 }
 
@@ -1501,7 +1545,7 @@ void	CharacterOcto::collisionElevatorUpdate()
 		if (!m_onGround && m_sprite.getCurrentEvent() != DoubleJump && m_sprite.getCurrentEvent() != StartJump)
 			m_numberOfJump = 1;
 
-		if (m_keyElevator)
+		if (m_keyCapacity)
 		{
 			if (!m_useElevator && m_progress.canUseElevator())
 				m_sprite.setNextEvent(StartElevator);
@@ -1546,18 +1590,41 @@ void	CharacterOcto::collisionElevatorUpdate()
 
 void	CharacterOcto::updateBox(sf::Time frameTime)
 {
+	/*
 	//TODO: Check on use if it's a good improvement
+	Events event = static_cast<Events>(m_sprite.getCurrentEvent());
+	bool isReset = false;
+
+	if (event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3)
+	{
+		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
+		m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
+	}
+	else if (m_adaptBoxDelta != 0.f && m_onGround)
+	{
+		isReset = true;
+		m_adaptBoxTimer = sf::Time::Zero;
+	}
+
+	if (isReset && !m_collisionTileHead)
+	{
+		m_box->setSize(m_boxSize);
+		m_box->setPosition(sf::Vector2f(m_box->getPosition().x, m_box->getPosition().y - (m_adaptBoxDelta)));
+		m_box->update();
+		m_adaptBoxDelta = 0.f;
+	}
+	else
+	{
+		m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
+	}
+	*/
+
 	Events event = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	if (event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3)
 		m_adaptBoxTimer = std::min(m_adaptBoxTimer + frameTime, m_adaptBoxTimerMax);
 	else
-	{
-		if (!m_onGround)
-			m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 2.f, sf::Time::Zero);
-		else
-			m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 10.f, sf::Time::Zero);
-	}
+		m_adaptBoxTimer = std::max(m_adaptBoxTimer - frameTime * 3.f, sf::Time::Zero);
 
 	m_adaptBoxDelta = 35.f * (m_adaptBoxTimer / m_adaptBoxTimerMax);
 	m_box->setSize(sf::Vector2f(m_boxSize.x, m_boxSize.y - m_adaptBoxDelta));
@@ -1631,9 +1698,11 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 		if (m_timeRepairSpaceShip > m_timeRepairSpaceShipMax)
 		{
 			octo::StateManager & states = octo::Application::getStateManager();
-			m_progress.spaceShipRepair(true);
 			if (m_level != Level::EndRocket)
+			{
+				m_progress.spaceShipRepair(true);
 				states.change("zero");
+			}
 		}
 	}
 
@@ -1650,6 +1719,7 @@ void	CharacterOcto::updateNanoRobots(sf::Time frameTime)
 	}
 
 	updateOctoEvent();
+	getBalle();
 }
 
 void	CharacterOcto::updateOctoEvent(void)
@@ -1681,6 +1751,8 @@ void	CharacterOcto::updateOctoEvent(void)
 		case WaterJump:
 			nanoRobot = NANO_JUMP_WATER_OSS;
 			break;
+		case Drink:
+			nanoRobot = NANO_BALLE_OSS;
 		default:
 			break;
 	}
@@ -1758,7 +1830,7 @@ void	CharacterOcto::kill()
 
 void	CharacterOcto::dieFall()
 {
-	if (m_timeEventFall > m_timeEventDieFallMax && m_sprite.getCurrentEvent() != DieFall)
+	if (m_timeEventFall > m_timeEventDieFallMax && m_sprite.getCurrentEvent() != DieFall && !m_inWater)
 		m_sprite.setNextEvent(DieFall);
 	else if (m_timeEventDieVoidMax != sf::Time::Zero)
 	{
@@ -1995,6 +2067,14 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 
 	if (m_keyCapacity)
 	{
+		if (!m_onTopElevator && !m_collisionTileHead)
+		{
+			if (event == StartElevator)
+				velocity.y = (1.2f * m_pixelSecondSlowFall);
+			else if (event == Elevator)
+				velocity.y = (2.5f * m_pixelSecondSlowFall);
+		}
+
 		if (event == StartSlowFall)
 		{
 			velocity.x *= 1.3f;
@@ -2018,16 +2098,13 @@ void	CharacterOcto::commitControlsToPhysics(float frametime)
 		}
 	}
 
-	if (!m_onTopElevator && m_keyElevator && !m_collisionTileHead)
+	if (m_collisionElevator && (event == Fall || event == DieFall || event == Idle || event == Right || event == Left))
 	{
-		if (event == StartElevator)
-			velocity.y = (1.2f * m_pixelSecondSlowFall);
-		else if (event == Elevator)
-			velocity.y = (2.5f * m_pixelSecondSlowFall);
+		if (!m_keyDown)
+			velocity.y = m_pixelSecondSlowElevator;
+		else
+			velocity.y = -300.f;
 	}
-
-	if (m_collisionElevator && (event == Fall || event == DieFall))
-		velocity.y = m_pixelSecondSlowFall;
 	m_box->setVelocity(velocity);
 }
 
@@ -2202,6 +2279,8 @@ void	CharacterOcto::caseJump()
 
 void CharacterOcto::caseCapacity()
 {
+	Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
+
 	if (m_keyCapacity)
 	{
 		if (!m_capacityTic)
@@ -2212,10 +2291,12 @@ void CharacterOcto::caseCapacity()
 				m_jumpVelocity = m_pixelSecondJump * 0.9f;
 				m_sprite.setNextEvent(StartWaterJump);
 			}
-			else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax)
+			else if (!m_onGround && !m_inWater && m_progress.canSlowFall() && m_timeSlowFall < m_timeSlowFallMax &&
+					 event != StartJump && event != DoubleJump)
 			{
 				m_capacityTic = true;
-				m_sprite.setNextEvent(StartSlowFall);
+				if (event != StartElevator && event != Elevator)
+					m_sprite.setNextEvent(StartSlowFall);
 			}
 		}
 	}
@@ -2225,7 +2306,6 @@ void CharacterOcto::caseCapacity()
 		{
 			if (!m_onGround)
 			{
-				Events	event = static_cast<Events>(m_sprite.getCurrentEvent());
 				if (!m_jumpTic || event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3 || event == WaterJump)
 				{
 					m_afterJump = true;
@@ -2291,6 +2371,9 @@ bool	CharacterOcto::onInputPressed(InputListener::OctoKeys const & key)
 		case OctoKeys::Zoom:
 			m_keyZoomIn = true;
 			break;
+		case OctoKeys::Balle:
+			m_keyBalle = true;
+			break;
 		case OctoKeys::Elevator:
 			m_keyElevator = true;
 			break;
@@ -2328,6 +2411,8 @@ bool	CharacterOcto::isRaising(void)
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
 
 	if (state == WaterJump || state == Elevator || state == PortalEvent)
+		return true;
+	if (state == Fall && m_collisionElevator && !m_keyDown)
 		return true;
 	return false;
 }
@@ -2409,7 +2494,6 @@ void	CharacterOcto::enableCutscene(bool enable, bool autoDisable)
 bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 {
 	Events	state = static_cast<Events>(m_sprite.getCurrentEvent());
-	bool otherKeyReleased = false;
 
 	switch (key)
 	{
@@ -2441,6 +2525,7 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::Down:
 			m_keyDown = false;
+			m_keyBalle = false;
 			break;
 		case OctoKeys::Elevator:
 			m_keyElevator = false;
@@ -2471,8 +2556,10 @@ bool	CharacterOcto::onInputReleased(InputListener::OctoKeys const & key)
 			break;
 		case OctoKeys::SelectMenu:
 			Progress::getInstance().setBubbleNpc(!Progress::getInstance().getBubbleNpc());
+		case OctoKeys::Balle:
+			m_keyBalle = false;
+			break;
 		default:
-			otherKeyReleased = true;
 			break;
 	}
 	return true;

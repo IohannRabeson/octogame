@@ -25,6 +25,7 @@ CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position
 	Progress & progress = Progress::getInstance();
 
 	progress.resetCheckpoint(m_id);
+	progress.setCheckpointCountMax(m_id);
 	m_isValidated = progress.isCheckpointValidated(m_id);
 
 	m_box->setSize(sf::Vector2f(50.f, 390.f));
@@ -66,6 +67,7 @@ CheckPoint::CheckPoint(sf::Vector2f const & scale, sf::Vector2f const & position
 CheckPoint::~CheckPoint(void)
 {
 	m_countId--;
+	Progress::getInstance().setCheckpointCountMax(0u);
 }
 
 void CheckPoint::createLosange(sf::Vector2f const & size, sf::Vector2f const & origin, sf::Color const & color, octo::VertexBuilder& builder)

@@ -5,12 +5,24 @@
 
 Crystal::Crystal() :
 	m_partCount(0u),
-	m_animator(1.f, 0.f, 3.f, 0.1f),
+	m_animator(1.f, 1.f, 3.f, 0.1f, 1.f),
 	m_animation(0u),
 	m_shineCrystalNumber(0u),
 	m_shineTimer(sf::seconds(0.f)),
 	m_shineTimerMax(sf::seconds(0.f))
 {
+}
+
+bool Crystal::dieOutOfScreen(void)
+{
+	if (m_animator.getState() != DecorAnimator::State::Dead)
+		m_animator.die();
+	else
+	{
+		m_animator.setup(sf::seconds(10000000.f));
+		return true;
+	}
+	return false;
 }
 
 void Crystal::createPolygon(sf::Vector2f const & size, sf::Vector2f const & origin, float const angle, sf::Color color, sf::Vector2f & up, sf::Vector2f & upLeft, octo::VertexBuilder & builder)
@@ -89,7 +101,7 @@ void Crystal::setup(ABiome& biome)
 		int deltaColor = biome.randomFloat(0.f, 80.f);
 		m_values[i].color = m_color + sf::Color(deltaColor, deltaColor, deltaColor, deltaColor);
 	}
-	m_animator.setup();
+	m_animator.setup(sf::seconds(10000000.f));
 	m_shine.setSize(biome.getShineEffectSize());
 	m_shine.setup(biome);
 	m_shineTimerMax = sf::seconds(m_shine.getAnimator().getAnimationTime());

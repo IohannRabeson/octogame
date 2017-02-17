@@ -35,6 +35,8 @@ public:
 	void				setIsFontSelect(bool isFontSelect);
 	void				setCursorAtEnd(void);
 
+	static sf::Vector2f							m_currentMenuPosition;
+
 private:
 	sf::Vector2f								m_deltaMenu;
 
@@ -54,7 +56,8 @@ private:
 	sf::Time									m_timerMoveCursorMax;
 
 	sf::CircleShape								m_cursor;
-	bool										m_input;
+	sf::Time									m_inputDelay;
+	sf::Time									m_inputTimer;
 };
 
 #endif

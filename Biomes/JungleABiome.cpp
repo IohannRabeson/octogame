@@ -282,17 +282,17 @@ Map::MapSurfaceGenerator JungleABiome::getMapSurfaceGenerator()
 	{
 		float floatMapSize = static_cast<float>(m_mapSize.x);
 		float n = noise.fBm(x, y, 3, 3.f, 0.3f);
-		std::vector<float> pointX = {0.f, 603.f, 605.f , 650.f , 697.f , 696.f , 737.f , 738.f , 770.f , 790.f , 820.f , 850.f           , 980.f           , 984.f   };
-		std::vector<float> pointY = {n  , n    , -1.97f, -1.95f, -1.95f, -0.43f, -0.43f, -1.97f, -1.95f, -1.95f, -1.97f, n / 1.5f - 1.43f, n / 1.5f - 1.43f, n - 0.3f};
-		for (std::size_t i = 0u; i < pointX.size(); i++)
-			pointX[i] /= floatMapSize;
+		m_pointX = {0.f, 603.f, 605.f , 650.f , 697.f , 696.f , 737.f , 738.f , 770.f , 790.f , 820.f , 850.f           , 980.f           , 984.f   };
+		m_pointY = {n  , n    , -1.97f, -1.95f, -1.95f, -0.43f, -0.43f, -1.97f, -1.95f, -1.95f, -1.97f, n / 1.5f - 1.43f, n / 1.5f - 1.43f, n - 0.3f};
+		for (std::size_t i = 0u; i < m_pointX.size(); i++)
+			m_pointX[i] /= floatMapSize;
 
-		for (std::size_t i = 0u; i < pointX.size() - 1u; i++)
+		for (std::size_t i = 0u; i < m_pointX.size() - 1u; i++)
 		{
-			if (x >= pointX[i] && x < pointX[i + 1])
+			if (x >= m_pointX[i] && x < m_pointX[i + 1])
 			{
-				float coef = (x - pointX[i]) / (pointX[i + 1] - pointX[i]);
-				return octo::cosinusInterpolation(pointY[i], pointY[i + 1], coef);
+				float coef = (x - m_pointX[i]) / (m_pointX[i + 1] - m_pointX[i]);
+				return octo::cosinusInterpolation(m_pointY[i], m_pointY[i + 1], coef);
 			}
 		}
 		return n;

@@ -26,7 +26,6 @@ Progress::Progress() :
 	m_isDoubleJump(false),
 	m_isInCloud(false),
 	m_cloudId(0u),
-	m_npcCount(0u),
 	m_npcMax(0u),
 	m_countRandomDiscover(0u),
 	m_isOctoOnInstance(false),
@@ -34,18 +33,23 @@ Progress::Progress() :
 	m_isMapMoving(false),
 	m_canOctoMoveMap(true),
 	m_forceMapToMove(false),
-	m_balleMultiplier(2.f)
+	m_balleMultiplier(5.f),
+	m_isResourceLoading(false)
 {
 }
 
 Progress & Progress::getInstance()
 {
 	if (m_instance == nullptr)
-	{
 		m_instance.reset(new Progress());
-		m_steam.reset(new SteamAPI());
-	}
 	return *m_instance;
+}
+
+SteamAPI & Progress::getSteamInstance()
+{
+	if (m_steam == nullptr)
+		m_steam.reset(new SteamAPI());
+	return *m_steam;
 }
 
 bool	Progress::isMenu() const
@@ -99,16 +103,13 @@ bool	Progress::isGameFinished() const
 	return m_data.isGameFinished;
 }
 
-bool	Progress::isGameFinishedHard() const
-{
-	return m_data.isGameFinishedHard;
-}
-
 void	Progress::setGameFinished(bool finish)
 {
 	m_data.isGameFinished = finish;
 	if (m_data.difficulty == Difficulty::Hard)
 		m_data.isGameFinishedHard = finish;
+	if (m_data.deathCount == 0u)
+		m_data.isGameFinishedZeroDeath = finish;
 }
 
 void	Progress::increaseLaunchCount(void)
@@ -196,7 +197,16 @@ void	Progress::save(float timePlayed)
 	savePortals();
 	saveToFile();
 	saveDeaths();
-	m_steam->update(m_data);
+}
+
+void	Progress::updateSteam(sf::Time frameTime)
+{
+	m_timerSteamUpdate -= frameTime;
+	if (m_timerSteamUpdate < sf::Time::Zero)
+	{
+		m_timerSteamUpdate = sf::seconds(1.f);
+		m_steam->update(m_data);
+	}
 }
 
 void	Progress::saveToFile()
@@ -213,6 +223,8 @@ void	Progress::reset()
 	float globalVolume = m_data.globalVol;
 	float musicVolume = m_data.musicVol;
 	float soundVolume = m_data.soundVol;
+	Keyboard keyboard = m_data.keyboard;
+	Language language = m_data.language;
 
 	m_changeLevel = false;
 	m_reverseSprite = false;
@@ -224,6 +236,8 @@ void	Progress::reset()
 	m_data.globalVol = globalVolume;
 	m_data.musicVol = musicVolume;
 	m_data.soundVol = soundVolume;
+	m_data.keyboard = keyboard;
+	m_data.language = language;
 	save();
 }
 
@@ -247,6 +261,16 @@ Progress::Difficulty Progress::getDifficulty(void) const
 	return m_data.difficulty;
 }
 
+void	Progress::setKeyboard(Keyboard keyboard)
+{
+	m_data.keyboard = keyboard;
+}
+
+Progress::Keyboard Progress::getKeyboard(void) const
+{
+	return m_data.keyboard;
+}
+
 ResourceKey Progress::getTextFile(void) const
 {
 	if (m_data.language == Language::en)
@@ -263,14 +287,14 @@ bool	Progress::isJoystick(void) const
 void	Progress::addNanoRobot()
 {
 	m_data.nanoRobotCount++;
-	assert(m_data.nanoRobotCount <= 7);
+	assert(m_data.nanoRobotCount <= 8);
 	save();
 }
 
 void	Progress::setNanoRobotCount(std::size_t count)
 {
 	m_data.nanoRobotCount = count;
-	assert(m_data.nanoRobotCount <= 7);
+	assert(m_data.nanoRobotCount <= 8);
 	save();
 }
 
@@ -300,6 +324,12 @@ void	Progress::setNextDestination(Level const & destination, bool hasTransition)
 		m_data.nextDestination = destination;
 	}
 	m_changeLevel = hasTransition;
+	m_forceMapToMove = false;
+
+	if (destination == Level::EndRocket)
+		m_data.isBlueEnd = true;
+	if (destination == Level::Red)
+		m_data.isRedEnd = true;
 }
 
 Level	Progress::getNextDestination(void) const
@@ -384,6 +414,11 @@ bool	Progress::canUseWaterJump()
 	return (m_data.nanoRobotCount > 4);
 }
 
+bool	Progress::canUseBalle()
+{
+	return (m_data.nanoRobotCount > 7);
+}
+
 bool	Progress::changeLevel() const
 {
 	return m_changeLevel;
@@ -392,6 +427,28 @@ bool	Progress::changeLevel() const
 void	Progress::levelChanged()
 {
 	m_changeLevel = false;
+}
+
+void	Progress::setCheckpointCountMax(std::size_t count)
+{
+	m_checkpointCountMax = count;
+}
+
+std::size_t Progress::getCheckpointCountMax(void)
+{
+	return m_checkpointCountMax;
+}
+
+std::size_t	Progress::getCheckpointCount(void)
+{
+	std::size_t count = 0u;
+
+	for (std::size_t i = 0u; i < m_checkpointCountMax; i++)
+	{
+		if (isCheckpointValidated(i))
+			count++;
+	}
+	return count;
 }
 
 void	Progress::resetCheckpoint(std::size_t id)
@@ -419,6 +476,7 @@ void	Progress::registerDeath(sf::Vector2f const & position)
 	if (m_deaths[m_data.currentDestination].size() > Progress::DeathMax)
 		m_deaths[m_data.currentDestination].pop_back();
 	m_data.deathCount += 1u;
+	m_deathsLevelCount = m_deaths[m_data.currentDestination].size();
 	save();
 }
 
@@ -434,11 +492,12 @@ std::size_t	Progress::getDeathCount()
 
 std::size_t Progress::getDeathLevelCount()
 {
-	return m_deaths[m_data.currentDestination].size();
+	return m_deathsLevelCount;
 }
 
 void Progress::resetDeathLevel(void)
 {
+	m_deathsLevelCount = 0u;
 	return m_deaths[m_data.currentDestination].clear();
 }
 
@@ -505,8 +564,8 @@ bool	Progress::meetPortal(Level source, Level destination)
 
 std::size_t Progress::countRandomDiscover(void)
 {
-	if (m_countRandomDiscover > 15u)
-		m_countRandomDiscover = 15u;
+	if (m_countRandomDiscover > RandomPortalMax)
+		m_countRandomDiscover = RandomPortalMax;
 	if (m_countRandomDiscover != 0u)
 		return m_countRandomDiscover;
 	std::size_t count = 0u;
@@ -518,8 +577,8 @@ std::size_t Progress::countRandomDiscover(void)
 				count++;
 		}
 	}
-	if (count > 15u)
-		count = 15u;
+	if (count > RandomPortalMax)
+		count = RandomPortalMax;
 	return count;
 }
 
@@ -661,13 +720,7 @@ void	Progress::loadNpc()
 
 std::size_t	Progress::getNpcCount()
 {
-	m_npcCount = 0u;
-	for (auto it = m_npc[m_data.lastDestination].begin(); it != m_npc[m_data.lastDestination].end(); it++)
-	{
-		if (it->second)
-			m_npcCount++;
-	}
-	return m_npcCount;
+	return getNpcMet().size();
 }
 
 std::size_t	Progress::getNpcMax()
@@ -808,7 +861,19 @@ void Progress::setBalleMultiplier(float multiplier)
 
 float Progress::getBalleMultiplier(void)
 {
-	if (isGameFinished())
-		return m_balleMultiplier;
-	return 1.f;
+	return m_balleMultiplier;
+}
+
+std::size_t Progress::getProgression(void)
+{
+	std::size_t progression = 0u;
+	if (m_data.currentDestination == Level::Random)
+		progression = static_cast<std::size_t>(m_data.lastDestination);
+	else
+		progression = static_cast<std::size_t>(m_data.currentDestination);
+
+	if (progression >= static_cast<std::size_t>(Level::Portal))
+		progression = static_cast<std::size_t>(Level::Portal);
+
+	return progression;
 }

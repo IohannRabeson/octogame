@@ -4,7 +4,13 @@
 
 std::unique_ptr<ChallengeManager> ChallengeManager::m_instance = nullptr;
 
-ChallengeManager::ChallengeManager(void)
+ChallengeManager::ChallengeManager(void) :
+	m_launchManualGlitch(false),
+	m_lockManualGlitch(false)
+{
+}
+
+ChallengeManager::~ChallengeManager(void)
 {
 }
 
@@ -27,6 +33,21 @@ void ChallengeManager::reset(void)
 
 void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
 {
+	if (Progress::getInstance().canUseBalle())
+		updateManualGlitch(biome, frametime);
+	else if (biome.getType() == ABiome::Type::Random && Progress::getInstance().isGameFinished())
+		updateRandom(biome, position, frametime);
+	else
+		updateNormal(biome, position, frametime);
+}
+
+ChallengeManager::AChallenge & ChallengeManager::getEffect(Effect effect)
+{
+	return (*m_challenges[effect]);
+}
+
+void ChallengeManager::updateNormal(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
+{
 	for (auto & it : m_challenges)
 	{
 		if (biome.getType() == it.second->getBiomeType())
@@ -35,16 +56,42 @@ void ChallengeManager::update(ABiome & biome, sf::Vector2f const & position, sf:
 				it.second->startGlitch(biome);
 			it.second->update(frametime, biome, position);
 		}
-		else if (biome.getType() == ABiome::Type::Random && Progress::getInstance().isGameFinished())
-		{
-			if (!it.second->enable())
-				it.second->startGlitch(biome);
-			it.second->update(frametime, biome, position);
-		}
 	}
 }
 
-ChallengeManager::AChallenge & ChallengeManager::getEffect(Effect effect)
+void ChallengeManager::updateRandom(ABiome & biome, sf::Vector2f const & position, sf::Time frametime)
 {
-	return (*m_challenges[effect]);
+	for (auto & it : m_challenges)
+	{
+		if (!it.second->enable())
+			it.second->startGlitch(biome);
+		it.second->update(frametime, biome, position);
+	}
+}
+
+void ChallengeManager::updateManualGlitch(ABiome & biome, sf::Time frametime)
+{
+	if (m_launchManualGlitch && !m_lockManualGlitch)
+	{
+		for (auto & it : m_challenges)
+		{
+			if (!it.second->enable())
+			{
+				m_lockManualGlitch = true;
+				it.second->startGlitchManual(biome);
+				break;
+			}
+		}
+	}
+
+	for (auto & it : m_challenges)
+		it.second->updateGlitchManual(frametime, biome);
+}
+
+bool ChallengeManager::launchManualGlitch(bool isLaunch)
+{
+	m_launchManualGlitch = isLaunch;
+	if (isLaunch == false)
+		m_lockManualGlitch = false;
+	return m_lockManualGlitch;
 }

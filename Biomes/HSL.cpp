@@ -86,8 +86,6 @@ sf::Color HSL::TurnToRGB()
 	float S = Saturation / 100.f;
 	float L = Luminance / 100.f;
 
-	float arg1, arg2;
-
 	if (S <= Epsilon)
 	{
 		sf::Color C(L * 255, L * 255, L * 255);
@@ -95,6 +93,8 @@ sf::Color HSL::TurnToRGB()
 	}
 	else
 	{
+		float arg1, arg2;
+
 		if (L < 0.5)
 			arg2 = L * (1 + S);
 		else

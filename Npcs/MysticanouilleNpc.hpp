@@ -11,6 +11,10 @@ public:
 
 	virtual void setup(void);
 	virtual void update(sf::Time frameTime);
+
+private:
+	void createText(void);
+	std::vector<std::wstring> m_countDownText;
 };
 
 #endif

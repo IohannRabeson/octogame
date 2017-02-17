@@ -20,6 +20,7 @@
 
 class ElevatorStream;
 class RepairNanoRobot;
+class BalleNanoRobot;
 class SpaceShip;
 class RectangleShape;
 class CircleShape;
@@ -98,7 +99,9 @@ public:
 	void					giveNanoRobot(NanoRobot * robot, bool firstTime = false);
 	void					giveSpirit(NanoRobot * robot, bool firstTime = false);
 	void					giveRepairNanoRobot(RepairNanoRobot * robot, bool firstTime = false);
+	void					giveBalleNanoRobot(BalleNanoRobot * robot, bool firstTime = false);
 	void					repairElevator(ElevatorStream & elevator);
+	void					getBalle();
 	void					collideSpaceShip(SpaceShip * spaceShip);
 	void					collideDoor(void);
 	void					usePortal(Portal & portal);
@@ -201,6 +204,7 @@ private:
 	std::vector<std::unique_ptr<NanoRobot>>		m_nanoRobots;
 	std::vector<std::unique_ptr<NanoRobot>>		m_spirits;
 	RepairNanoRobot *							m_repairNanoRobot;
+	BalleNanoRobot *							m_balleNanoRobot;
 	Progress &									m_progress;
 
 	SmokeSystem									m_inkParticle;
@@ -235,6 +239,7 @@ private:
 	float										m_maxJumpWaterVelocity;
 	float										m_pixelSecondJump;
 	float										m_pixelSecondSlowFall;
+	float										m_pixelSecondSlowElevator;
 	float										m_pixelSecondWalk;
 	float										m_pixelSecondAfterJump;
 	float										m_pixelSecondAfterFullJump;
@@ -270,6 +275,7 @@ private:
 	bool										m_keyPortal;
 	bool										m_keyElevator;
 	bool										m_keyZoomIn;
+	bool										m_keyBalle;
 	bool										m_isRightFirst;
 	bool										m_leftTic;
 	bool										m_rightTic;
