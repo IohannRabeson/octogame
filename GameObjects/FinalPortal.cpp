@@ -64,10 +64,10 @@ void FinalPortal::update(sf::Time frametime)
 		{
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
 			PostEffectLayer::getInstance().enableShader(m_shaderName, true);
-			m_shader.setParameter("time", m_timerActivate);
-			m_shader.setParameter("radius", m_radius * zoomFactor);
-			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
-			m_shader.setParameter("center", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
+			m_shader.setUniform("time", m_timerActivate);
+			m_shader.setUniform("radius", m_radius * zoomFactor);
+			m_shader.setUniform("resolution", sf::Vector2f(octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height));
+			m_shader.setUniform("center", sf::Vector2f((m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor));
 		}
 	}
 

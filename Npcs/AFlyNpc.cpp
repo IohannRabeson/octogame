@@ -24,8 +24,8 @@ AFlyNpc::AFlyNpc(ResourceKey const & npcId, bool isMeetable) :
 
 	octo::ResourceManager&	resources = octo::Application::getResourceManager();
 	m_shader.loadFromMemory(resources.getText(HUE_FRAG), sf::Shader::Fragment);
-	m_shader.setParameter("texture", sf::Shader::CurrentTexture);
-	m_shader.setParameter("hue", 0.0);
+	m_shader.setUniform("texture", sf::Shader::CurrentTexture);
+	m_shader.setUniform("hue", 0.0f);
 	setTimerMax(sf::seconds(m_generator.randomFloat(5.f, 10.f)));
 
 	setupBox(this, static_cast<std::size_t>(GameObjectType::FlyNpc), static_cast<std::size_t>(GameObjectType::PlayerEvent));

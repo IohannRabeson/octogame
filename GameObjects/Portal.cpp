@@ -28,18 +28,18 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 	Progress & progress = Progress::getInstance();
 	progress.registerPortal(destination);
 
-	m_shader.setParameter("time_max", m_timerActivateMax);
+	m_shader.setUniform("time_max", m_timerActivateMax);
 	if (progress.getCurrentDestination() == Level::Portal)
-		m_shader.setParameter("center_color", sf::Color::White);
+		m_shader.setUniform("center_color", sf::Glsl::Vec4(sf::Color::White));
 	else
 	{
 		if (progress.isGameFinished() && (destination != Level::Red && destination != Level::Blue && destination != Level::Random && destination != Level::Rewards && destination != Level::EndTimeLapse && destination != Level::EndRocket))
 		{
 			m_destination = Level::Portal;
-			m_shader.setParameter("center_color", centerColor);
+			m_shader.setUniform("center_color", sf::Glsl::Vec4(centerColor));
 		}
 		else
-			m_shader.setParameter("center_color", centerColor);
+			m_shader.setUniform("center_color", sf::Glsl::Vec4(centerColor));
 	}
 
 	m_box->setGameObject(this);
@@ -288,10 +288,10 @@ void Portal::update(sf::Time frametime)
 		{
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
 			PostEffectLayer::getInstance().enableShader(m_shaderName, true);
-			m_shader.setParameter("time", m_timerActivate);
-			m_shader.setParameter("radius", m_radius * zoomFactor);
-			m_shader.setParameter("resolution", octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height);
-			m_shader.setParameter("center", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
+			m_shader.setUniform("time", m_timerActivate);
+			m_shader.setUniform("radius", m_radius * zoomFactor);
+			m_shader.setUniform("resolution", sf::Vector2f(octo::Application::getGraphicsManager().getVideoMode().width, octo::Application::getGraphicsManager().getVideoMode().height));
+			m_shader.setUniform("center", sf::Vector2f((m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor));
 		}
 		else if (Progress::getInstance().getCurrentDestination() == Level::Portal)
 			PostEffectLayer::getInstance().enableShader(m_shaderName, false);
@@ -320,7 +320,7 @@ void Portal::setPosition(sf::Vector2f const & position)
 void Portal::setRadius(float radius)
 {
 	m_radius = radius;
-	m_shader.setParameter("radius", m_radius);
+	m_shader.setUniform("radius", m_radius);
 	m_particles.setRadius(m_radius);
 	m_box->setRadius(m_radius);
 }

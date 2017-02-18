@@ -227,14 +227,14 @@ void ChallengeDuplicate::updateShader(sf::Time frametime)
 	float x = std::cos(m_rotation * octo::Pi2 * 1.5f) * length / rect.width;
 	float y = std::sin(m_rotation * octo::Pi2 * 2.f) * length / rect.height;
 	float z = std::sin(m_rotation * octo::Pi2) * length / rect.height;
-	m_shader.setParameter("offset", x, y, z);
+	m_shader.setUniform("offset", sf::Vector3f(x, y, z));
 }
 
 // Persistence
 ChallengePersistence::ChallengePersistence(void) :
 	AChallenge(PERSISTENCE_FRAG, 3.f, 1.5f, sf::FloatRect(sf::Vector2f(90.f * 16.f, -110.f * 16.f), sf::Vector2f(250.f * 16.f, 760.f * 16.f)), ABiome::Type::Desert, std::pair<float, float>(0.7f, 0.9f), std::pair<float, float>(1.f, 2.f))
 {
-	m_shader.setParameter("intensity", 1.f);
+	m_shader.setUniform("intensity", 1.f);
 }
 
 void ChallengePersistence::updateShader(sf::Time)
@@ -242,7 +242,7 @@ void ChallengePersistence::updateShader(sf::Time)
 	float octoY = Progress::getInstance().getOctoPos().y;
 	float coef = std::min((octoY + 2000.f) / 5000.f, 1.f);
 
-	m_shader.setParameter("intensity", std::max(0.05f, octo::linearInterpolation(1.f, 1.02f - m_intensity * coef, std::min(m_timer, m_duration) / m_duration)));
+	m_shader.setUniform("intensity", std::max(0.05f, octo::linearInterpolation(1.f, 1.02f - m_intensity * coef, std::min(m_timer, m_duration) / m_duration)));
 }
 
 // Pixelate
@@ -252,7 +252,7 @@ ChallengePixelate::ChallengePixelate(void) :
 
 void ChallengePixelate::updateShader(sf::Time)
 {
-	m_shader.setParameter("pixel_threshold", m_intensity * octo::linearInterpolation(0.f, 0.02f, std::min(m_timer, m_duration) / m_duration));
+	m_shader.setUniform("pixel_threshold", m_intensity * octo::linearInterpolation(0.f, 0.02f, std::min(m_timer, m_duration) / m_duration));
 }
 
 // Displacement
@@ -260,7 +260,7 @@ ChallengeDisplacement::ChallengeDisplacement(void) :
 	AChallenge(DISPLACEMENT_FRAG, 8.f, 3.f, sf::FloatRect(sf::Vector2f(0.f * 16.f, -12850.f), sf::Vector2f(700.f * 16.f, 10000.f * 16.f)), ABiome::Type::Water, std::pair<float, float>(0.05f, 0.15f), std::pair<float, float>(0.75f, 1.75f))
 {
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
-	m_shader.setParameter("resolution", rect.width, rect.height);
+	m_shader.setUniform("resolution", sf::Vector2f(rect.width, rect.height));
 }
 
 void ChallengeDisplacement::updateShader(sf::Time)
@@ -279,24 +279,24 @@ void ChallengeDisplacement::updateShader(sf::Time)
 	else
 		max = 0.3f;
 
-	m_shader.setParameter("intensity", m_intensity * octo::linearInterpolation(0.f, max, std::min(m_timer, m_duration) / m_duration));
+	m_shader.setUniform("intensity", m_intensity * octo::linearInterpolation(0.f, max, std::min(m_timer, m_duration) / m_duration));
 }
 
 // Blur
 ChallengeBlur::ChallengeBlur(void) :
 	AChallenge(KERNEL_POST_EFFECT_FRAG, 4.f, 1.f, sf::FloatRect(sf::Vector2f(50.f * 16.f, -340.f * 16.f), sf::Vector2f(120.f * 16.f, 275.f * 16.f)), ABiome::Type::Ice, std::pair<float, float>(0.5f, 0.75f), std::pair<float, float>(0.75f, 1.75f))
 {
-	m_shader.setParameter("offset", 1.f / 150.f);
-	m_shader.setParameter("intensity", 0.f);
+	m_shader.setUniform("offset", 1.f / 150.f);
+	m_shader.setUniform("intensity", 0.f);
 	sf::Transform kernel(
 		1.f / 16.f, 2.f / 16.f, 1.f / 16.f,
 		2.f / 16.f, 4.f / 16.f, 2.f / 16.f,
 		1.f / 16.f, 2.f / 16.f, 1.f / 16.f
 		);
-	m_shader.setParameter("kernel", kernel);
+	m_shader.setUniform("kernel", sf::Glsl::Mat3(kernel));
 }
 
 void ChallengeBlur::updateShader(sf::Time)
 {
-	m_shader.setParameter("intensity", octo::linearInterpolation(0.f, m_intensity, std::min(m_timer, m_duration) / m_duration));
+	m_shader.setUniform("intensity", octo::linearInterpolation(0.f, m_intensity, std::min(m_timer, m_duration) / m_duration));
 }

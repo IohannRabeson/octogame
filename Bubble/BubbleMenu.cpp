@@ -31,7 +31,7 @@ void BubbleMenu::setup(std::vector<std::wstring> const & subMenuTitle, sf::Color
 	for (std::size_t i = 0; i < m_subMenus.size(); i++)
 	{
 		m_subMenus[i].text.setFont(m_fontSelect);
-		m_subMenus[i].text.setColor(sf::Color(0, 0, 0));
+		m_subMenus[i].text.setFillColor(sf::Color(0, 0, 0));
 		m_subMenus[i].text.setCharacterSize(m_characterSize);
 		m_subMenus[i].text.setString(subMenuTitle[i]);
 		m_subMenus[i].size.x = m_subMenus[i].text.findCharacterPos(subMenuTitle[i].size() - 1).x - m_subMenus[i].text.findCharacterPos(0).x + m_font.getGlyph(subMenuTitle[i][subMenuTitle[i].size() - 1], m_characterSize, 0).advance;

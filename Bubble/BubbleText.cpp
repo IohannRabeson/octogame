@@ -74,7 +74,7 @@ void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std
 	octo::ResourceManager& resources = octo::Application::getResourceManager();
 	m_font = resources.getFont(VERAMONO_TTF);
 	m_text.setFont(m_font);
-	m_text.setColor(colorText);
+	m_text.setFillColor(colorText);
 	m_text.setCharacterSize(characterSize);
 	m_text.setString(m_phrase);
 
@@ -94,7 +94,7 @@ void BubbleText::setup(std::wstring const & phrase, sf::Color const & color, std
 void BubbleText::setColors(sf::Color const & colorBubble, sf::Color const & colorText)
 {
 	ABubble::setColor(colorBubble);
-	m_text.setColor(colorText);
+	m_text.setFillColor(colorText);
 }
 
 sf::Vector2f const & BubbleText::getContentSize() const

@@ -94,7 +94,7 @@ ResourceLoadingScreen::ResourceLoadingScreen() :
 
 	m_font = resources.getFont(CHINESETROOPS_TTF);
 	m_message.setFont(m_font);
-	m_message.setColor(sf::Color(254, 253, 56));
+	m_message.setFillColor(sf::Color(254, 253, 56));
 	m_message.setCharacterSize(20);
 	m_borders.setOutlineColor(sf::Color(254, 253, 56));
 	m_borders.setFillColor(sf::Color::Transparent);

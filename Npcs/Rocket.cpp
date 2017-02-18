@@ -206,8 +206,8 @@ void Rocket::update(sf::Time frametime)
 			m_octo->setStartPosition(getBox()->getPosition() + sf::Vector2f(10.f, 0.f));
 
 			m_timerOctoEntering += frametime;
-			m_shader.setParameter("time", m_timerOctoEntering.asSeconds());
-			m_shader.setParameter("intensity", octo::linearInterpolation(0.f, 0.3f, std::min(1.f, m_timerOctoEntering / m_timerOctoEnteringMax)));
+			m_shader.setUniform("time", m_timerOctoEntering.asSeconds());
+			m_shader.setUniform("intensity", octo::linearInterpolation(0.f, 0.3f, std::min(1.f, m_timerOctoEntering / m_timerOctoEnteringMax)));
 			if (m_timerBefore < m_timerBeforeMax)
 				m_timerBefore += frametime;
 			else
