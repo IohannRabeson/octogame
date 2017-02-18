@@ -18,6 +18,7 @@ public:
 	std::size_t randomPiecewise(std::size_t max);
 
 private:
+	static std::random_device rd;
 	boost::random::mt19937							m_engine;
 	boost::random::uniform_real_distribution<float>	m_distributionFloat;
 	boost::random::uniform_int_distribution<int>	m_distributionInt;
