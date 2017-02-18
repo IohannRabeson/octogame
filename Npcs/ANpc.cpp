@@ -435,6 +435,14 @@ void ANpc::updateText(sf::Time frametime)
 	}
 }
 
+bool ANpc::isInScreen(void)
+{
+	octo::Camera const & camera = octo::Application::getCamera();
+	if (camera.getRectangle().intersects(m_sprite.getGlobalBounds()))
+		return true;
+	return false;
+}
+
 void ANpc::draw(sf::RenderTarget & render, sf::RenderStates states) const
 {
 	m_sprite.draw(render, states);

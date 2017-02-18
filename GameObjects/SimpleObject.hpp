@@ -18,6 +18,7 @@ public:
 	virtual void setPosition(sf::Vector2f const & position);
 
 	virtual void update(sf::Time frameTime);
+	virtual bool isInScreen(void);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	virtual void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 

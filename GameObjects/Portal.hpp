@@ -104,6 +104,7 @@ public:
 	virtual bool zoom(void) const;
 
 	virtual void update(sf::Time frameTime);
+	virtual bool isInScreen(void);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 
 protected:

@@ -22,7 +22,6 @@
 #include "SpaceShip.hpp"
 #include "Bouibouik.hpp"
 #include "WeirdHouseSnow.hpp"
-#include "Well.hpp"
 #include "Tent.hpp"
 #include "Pyramid.hpp"
 #include "Concert.hpp"
@@ -877,12 +876,6 @@ void GroundManager::setupGameObjects(ABiome & biome)
 			case GameObjectType::Tent:
 				{
 					Tent * simple = new Tent();
-					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
-				}
-				break;
-			case GameObjectType::Well:
-				{
-					Well * simple = new Well();
 					m_otherObjectsHigh.emplace_back(gameObject.first, 15, simple);
 				}
 				break;
@@ -2341,37 +2334,77 @@ void GroundManager::drawBack(sf::RenderTarget& render, sf::RenderStates states) 
 	render.draw(m_decorManagerBack, states);
 	render.draw(m_decorManagerInstanceBack, states);
 	for (auto & decor : m_instanceDecors)
-		decor->draw(render, states);
+	{
+		if (decor->isInScreen())
+			decor->draw(render, states);
+	}
 	for (auto & decor : m_instanceDecorsFront)
-		decor->draw(render, states);
+	{
+		if (decor->isInScreen())
+			decor->draw(render, states);
+	}
 	for (auto & objectHigh : m_otherObjectsHigh)
-		objectHigh.m_gameObject->draw(render, states);
+	{
+		if (objectHigh.m_gameObject->isInScreen())
+			objectHigh.m_gameObject->draw(render, states);
+	}
 	for (auto & objectLow : m_otherObjectsLow)
-		objectLow.m_gameObject->draw(render, states);
+	{
+		if (objectLow.m_gameObject->isInScreen())
+			objectLow.m_gameObject->draw(render, states);
+	}
 	for (auto & elevator : m_elevators)
+	{
 		elevator.m_gameObject->draw(render, states);
+	}
 	for (auto & portal : m_portals)
-		portal.m_gameObject->draw(render, states);
+	{
+		if (portal.m_gameObject->isInScreen())
+			portal.m_gameObject->draw(render, states);
+	}
 	for (auto & object : m_otherOnInstance)
-		object->draw(render, states);
+	{
+		if (object->isInScreen())
+			object->draw(render, states);
+	}
 	for (auto & npc : m_npcsOnFloor)
-		npc.m_gameObject->draw(render, states);
+	{
+		if (npc.m_gameObject->isInScreen())
+			npc.m_gameObject->draw(render, states);
+	}
 	for (auto & npc : m_npcs)
-		npc->draw(render, states);
+	{
+		if (npc->isInScreen())
+			npc->draw(render, states);
+	}
 }
 
 void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	for (auto & npc : m_npcsOnFloor)
-		npc.m_gameObject->drawFront(render, states);
+	{
+		if (npc.m_gameObject->isInScreen())
+			npc.m_gameObject->drawFront(render, states);
+	}
 	for (auto & elevator : m_elevators)
+	{
 		elevator.m_gameObject->drawFront(render, states);
+	}
 	for (auto & objectHigh : m_otherObjectsHigh)
-		objectHigh.m_gameObject->drawFront(render, states);
+	{
+		if (objectHigh.m_gameObject->isInScreen())
+			objectHigh.m_gameObject->drawFront(render, states);
+	}
 	for (auto & objectLow : m_otherObjectsLow)
-		objectLow.m_gameObject->drawFront(render, states);
+	{
+		if (objectLow.m_gameObject->isInScreen())
+			objectLow.m_gameObject->drawFront(render, states);
+	}
 	for (auto & npc : m_npcs)
-		npc->drawFront(render, states);
+	{
+		if (npc->isInScreen())
+			npc->drawFront(render, states);
+	}
 	for (auto & decor : m_instanceDecors)
 		decor->drawFront(render, states);
 	render.draw(m_decorManagerFront, states);
@@ -2380,11 +2413,20 @@ void GroundManager::drawFront(sf::RenderTarget& render, sf::RenderStates states)
 	render.draw(m_decorManagerGround, states);
 	render.draw(m_decorManagerInstanceGround, states);
 	for (auto & nano : m_nanoRobotOnInstance)
-		nano->draw(render, states);
+	{
+		if (nano->isInScreen())
+			nano->draw(render, states);
+	}
 	for (auto & decor : m_instanceDecorsFront)
-		decor->drawFront(render, states);
+	{
+		if (decor->isInScreen())
+			decor->drawFront(render, states);
+	}
 	for (auto & nano : m_nanoRobots)
-		nano.m_gameObject->draw(render, states);
+	{
+		if (nano.m_gameObject->isInScreen())
+			nano.m_gameObject->draw(render, states);
+	}
 }
 
 void GroundManager::drawWater(sf::RenderTarget& render, sf::RenderStates states) const

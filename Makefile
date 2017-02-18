@@ -68,7 +68,6 @@ SRC_GAMEOBJ =	GameObjects/AGameObject.cpp				\
 				GameObjects/Firecamp.cpp				\
 				GameObjects/Cage.cpp					\
 				GameObjects/Concert.cpp					\
-				GameObjects/Well.cpp					\
 				GameObjects/Pyramid.cpp					\
 				GameObjects/WeirdHouseSnow.cpp			\
 				GameObjects/CheckPoint.cpp				\

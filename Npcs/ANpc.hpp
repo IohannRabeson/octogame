@@ -47,6 +47,7 @@ public:
 	virtual void onTheFloor(void);
 	virtual void collideOctoEvent(CharacterOcto * octo);
 	virtual void update(sf::Time frametime);
+	virtual bool isInScreen(void);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual float getHeight(void) const;
