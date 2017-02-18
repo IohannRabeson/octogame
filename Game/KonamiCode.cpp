@@ -15,8 +15,8 @@ KonamiCode::KonamiCode(void) :
 	octo::GraphicsManager & graphics = octo::Application::getGraphicsManager();
 	graphics.addKeyboardListener(this);
 
-	m_shader.setParameter("color_size", 0.0005f);
-	m_shader.setParameter("fade_out_size", 100.f);
+	m_shader.setUniform("color_size", 0.0005f);
+	m_shader.setUniform("fade_out_size", 100.f);
 
 	//Up;
 	//Up;
@@ -44,9 +44,9 @@ void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 	{
 		m_timer += frameTime;
 		sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-		m_shader.setParameter("position", position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - position.y + screen.top);
-		m_shader.setParameter("time", 2.f * m_timer / m_timerMax);
-		m_shader.setParameter("radius", (m_timer / m_timerMax) * 2000.f);
+		m_shader.setUniform("position", sf::Vector2f(position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - position.y + screen.top));
+		m_shader.setUniform("time", 2.f * m_timer / m_timerMax);
+		m_shader.setUniform("radius", (m_timer / m_timerMax) * 2000.f);
 		if (m_timer > m_timerMax)
 		{
 			m_state = End;
@@ -58,9 +58,9 @@ void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_timer += frameTime;
 		m_timerEnd += frameTime;
 		sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
-		m_shader.setParameter("position", position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - position.y + screen.top);
-		m_shader.setParameter("time", 2.f * m_timer / m_timerMax);
-		m_shader.setParameter("end_alpha", 1.f - (m_timerEnd / m_timerMax));
+		m_shader.setUniform("position", sf::Vector2f(position.x - screen.left, octo::Application::getGraphicsManager().getVideoMode().height - position.y + screen.top));
+		m_shader.setUniform("time", 2.f * m_timer / m_timerMax);
+		m_shader.setUniform("end_alpha", 1.f - (m_timerEnd / m_timerMax));
 		if (m_timerEnd > m_timerMax)
 		{
 			PostEffectLayer::getInstance().enableShader(CIRCLE_RAINBOW_FRAG, false);
@@ -74,7 +74,7 @@ void KonamiCode::update(sf::Time frameTime, sf::Vector2f const & position)
 		m_index = 0u;
 		m_timer = sf::Time::Zero;
 		m_timerEnd = sf::Time::Zero;
-		m_shader.setParameter("end_alpha", 1.f);
+		m_shader.setUniform("end_alpha", 1.f);
 	}
 }
 

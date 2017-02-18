@@ -109,7 +109,7 @@ CharacterOcto::CharacterOcto() :
 	m_cutsceneShader(PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG))
 {
 	m_sound.reset(new OctoSound());
-	m_cutsceneShader.setParameter("height", 0.15);
+	m_cutsceneShader.setUniform("height", 0.15f);
 
 	InputListener::addInputListener();
 
@@ -1109,7 +1109,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 			if (m_autoDisableCutscene && m_cutscenePauseTimer > m_cutscenePauseTimerMax)
 				m_enableCutscene = false;
 		}
-		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
+		m_cutsceneShader.setUniform("time", m_cutsceneTimer / m_cutsceneTimerMax);
 		MusicManager::getInstance().startEvent();
 	}
 	else
@@ -1117,7 +1117,7 @@ void	CharacterOcto::updateCutscene(sf::Time frameTime)
 		m_cutsceneTimer -= frameTime;
 		if (m_cutsceneTimer <= sf::Time::Zero)
 			m_cutsceneTimer = sf::Time::Zero;
-		m_cutsceneShader.setParameter("time", m_cutsceneTimer / m_cutsceneTimerMax);
+		m_cutsceneShader.setUniform("time", m_cutsceneTimer / m_cutsceneTimerMax);
 		if (m_cutsceneTimer <= sf::Time::Zero)
 			PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, false);
 		MusicManager::getInstance().endEvent();

@@ -26,15 +26,15 @@ TransitionLevelZeroScreen::TransitionLevelZeroScreen() :
 	setupText();
 	setupSprite();
 	PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, true);
-	PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setParameter("height", 0.15f);
-	PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setParameter("time", 1.f);
+	PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setUniform("height", 0.15f);
+	PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setUniform("time", 1.f);
 
 	PostEffectLayer::getInstance().enableShader(CIRCLE_RAINBOW_FRAG, true);
-	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setParameter("alpha", 1.f);
-	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setParameter("fade_out_size", 100.f);
-	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setParameter("position", octo::Application::getCamera().getSize() / 2.f);
-	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setParameter("radius", 1500.f);
-	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setParameter("color_size", 0.001f);
+	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setUniform("alpha", 1.f);
+	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setUniform("fade_out_size", 100.f);
+	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setUniform("position", octo::Application::getCamera().getSize() / 2.f);
+	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setUniform("radius", 1500.f);
+	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setUniform("color_size", 0.001f);
 }
 
 void	TransitionLevelZeroScreen::setupText()
@@ -152,9 +152,9 @@ void	TransitionLevelZeroScreen::update(sf::Time frameTime)
 	}
 	m_timeCircleRainbow += frameTime;
 	m_timerShaderRocket += frameTime;
-	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setParameter("time", 0.5f * m_timeCircleRainbow.asSeconds());
-	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setParameter("intensity", octo::linearInterpolation(0.2f, 0.f, std::min(m_timerShaderRocket / m_timerShaderRocketMax, 1.f)));
-	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setParameter("time", m_timeCircleRainbow.asSeconds());
+	PostEffectLayer::getInstance().getShader(CIRCLE_RAINBOW_FRAG).setUniform("time", 0.5f * m_timeCircleRainbow.asSeconds());
+	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setUniform("intensity", octo::linearInterpolation(0.2f, 0.f, std::min(m_timerShaderRocket / m_timerShaderRocketMax, 1.f)));
+	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setUniform("time", m_timeCircleRainbow.asSeconds());
 
 	m_sprite.update(frameTime);
 }

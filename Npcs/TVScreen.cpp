@@ -27,7 +27,7 @@ TVScreen::TVScreen(std::string const & kernelName) :
 
 	m_tvScreen.width = 480.f;
 	m_tvScreen.height = 270.f;
-	m_shader.setParameter("offset", 1.f / 400.f);
+	m_shader.setUniform("offset", 1.f / 400.f);
 	if (!kernelName.compare("render_black_kernel"))
 	{
 		sf::Transform kernel(
@@ -35,8 +35,8 @@ TVScreen::TVScreen(std::string const & kernelName) :
 				-1.f, 8.f, -1.f,
 				-1.f, -1.f, -1.f
 			);
-		m_shader.setParameter("kernel", kernel);
-		m_shaderReverse.setParameter("kernel", kernel);
+		m_shader.setUniform("kernel", sf::Glsl::Mat3(kernel));
+		m_shaderReverse.setUniform("kernel", sf::Glsl::Mat3(kernel));
 	}
 	else
 	{
@@ -45,13 +45,13 @@ TVScreen::TVScreen(std::string const & kernelName) :
 				-1.f, 9.f, -1.f,
 				-1.f, -1.f, -1.f
 			);
-		m_shader.setParameter("kernel", kernel);
-		m_shaderReverse.setParameter("kernel", kernel);
+		m_shader.setUniform("kernel", sf::Glsl::Mat3(kernel));
+		m_shaderReverse.setUniform("kernel", sf::Glsl::Mat3(kernel));
 	}
-	m_shader.setParameter("reverse", m_reverse);
-	m_shader.setParameter("line_progress", 0.f);
-	m_shaderReverse.setParameter("offset", 1.f / 300.f);
-	m_shaderReverse.setParameter("intensity", 1.f);
+	m_shader.setUniform("reverse", m_reverse);
+	m_shader.setUniform("line_progress", 0.f);
+	m_shaderReverse.setUniform("offset", 1.f / 300.f);
+	m_shaderReverse.setUniform("intensity", 1.f);
 	PostEffectLayer::getInstance().enableShader(kernelName, m_reverse);
 }
 
@@ -115,12 +115,12 @@ void TVScreen::update(sf::Time frametime)
 				break;
 			case Zoom:
 				m_timer += frametime;
-				m_shader.setParameter("line_progress", std::min(1.f, (m_timer * 4.f) / m_duration));
+				m_shader.setUniform("line_progress", std::min(1.f, (m_timer * 4.f) / m_duration));
 				if (m_timer >= m_duration)
 				{
 					m_reverse = !m_reverse;
-					m_shader.setParameter("line_progress", 0.f);
-					m_shader.setParameter("reverse", m_reverse);
+					m_shader.setUniform("line_progress", 0.f);
+					m_shader.setUniform("reverse", m_reverse);
 					m_timer = sf::Time::Zero;
 					m_state = Reversed;
 				}
@@ -133,9 +133,9 @@ void TVScreen::update(sf::Time frametime)
 	
 		pos = octo::linearInterpolation(pos, sf::Vector2f(0.f, 0.f), std::min(1.f, m_timer / m_duration));
 		size = octo::linearInterpolation(size, sf::Vector2f(1.f, 1.f), std::min(1.f, m_timer / m_duration));
-		m_shader.setParameter("bot_left", pos);
-		m_shader.setParameter("top_right", pos.x + size.x, pos.y + size.y);
-		m_shader.setParameter("size", size);
+		m_shader.setUniform("bot_left", pos);
+		m_shader.setUniform("top_right", sf::Vector2f(pos.x + size.x, pos.y + size.y));
+		m_shader.setUniform("size", size);
 	}
 	else
 	{

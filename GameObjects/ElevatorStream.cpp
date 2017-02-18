@@ -49,7 +49,7 @@ ElevatorStream::ElevatorStream(sf::Vector2f const & scale, sf::Vector2f const & 
 	m_box->setSize(128.f, 0.f);
 	m_particles->setWidth(192.f);
 	m_shader.loadFromMemory(resources.getText(ELEVATOR_VERT), sf::Shader::Vertex);
-	m_shader.setParameter("wave_amplitude", 5.f);
+	m_shader.setUniform("wave_amplitude", 5.f);
 
 	float height = getHeight();
 	float unit = getWidth() / 6.f;
@@ -294,7 +294,7 @@ void	ElevatorStream::update(sf::Time frameTime)
 			m_smoke.setCanEmit(false);
 			m_particles->update(frameTime);
 			m_waveCycle += frameTime;
-			m_shader.setParameter("wave_phase", m_waveCycle.asSeconds());
+			m_shader.setUniform("wave_phase", m_waveCycle.asSeconds());
 			break;
 		case Disappear:
 			m_smoke.setCanEmit(true);
