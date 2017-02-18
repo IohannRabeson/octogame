@@ -1,6 +1,7 @@
 #include "SimpleObject.hpp"
 #include "PhysicsEngine.hpp"
 #include "CircleShape.hpp"
+#include <Camera.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 #include <PostEffectManager.hpp>
@@ -66,6 +67,14 @@ void SimpleObject::update(sf::Time frameTime)
 {
 	m_sprite.update(frameTime);
 	m_collideWithOcto = false;
+}
+
+bool SimpleObject::isInScreen(void)
+{
+	octo::Camera const & camera = octo::Application::getCamera();
+	if (camera.getRectangle().intersects(m_sprite.getGlobalBounds()))
+		return true;
+	return false;
 }
 
 void SimpleObject::draw(sf::RenderTarget& render, sf::RenderStates) const

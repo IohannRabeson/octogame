@@ -54,6 +54,7 @@ public:
 	void					activate(void);
 
 	void					update(sf::Time frameTime);
+	virtual bool			isInScreen(void);
 	void					draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	void					drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 

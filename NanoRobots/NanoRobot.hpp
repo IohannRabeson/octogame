@@ -53,6 +53,7 @@ public:
 	virtual void transfertToOcto(bool inInit = false);
 	void updateOctoEvent(std::string const & event, float valueEvent);
 	virtual void update(sf::Time frameTime);
+	virtual bool isInScreen(void);
 	virtual void draw(sf::RenderTarget & render, sf::RenderStates states) const;
 	virtual void drawText(sf::RenderTarget & render, sf::RenderStates states) const;
 	void popUpInfo(bool popUp);

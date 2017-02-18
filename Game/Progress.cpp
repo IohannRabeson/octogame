@@ -17,6 +17,7 @@ std::unique_ptr<SteamAPI> Progress::m_steam = nullptr;
 
 Progress::Progress() :
 	m_isMenu(true),
+	m_isIntro(false),
 	m_isBubbleNpc(true),
 	m_filename(octo::Application::getOptions().getPath() + "save.osv"),
 	m_newSave(false),

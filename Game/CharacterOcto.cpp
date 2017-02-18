@@ -37,7 +37,7 @@ CharacterOcto::CharacterOcto() :
 	m_timeEventDieFallMax(sf::seconds(2.3f)),
 	m_timeEventIdleMax(sf::seconds(4.f)),
 	m_timeRepairSpaceShipMax(sf::seconds(10.f)),
-	m_timeSlowFallMax(sf::seconds(1.7f)),
+	m_timeSlowFallMax(sf::seconds(1.8f)),
 	m_timeStopVelocity(sf::seconds(0.06f)),
 	m_timeStopVelocityMax(sf::seconds(0.06f)),
 	m_timerPortalVacuumMax(sf::seconds(0.4f)),
@@ -2279,13 +2279,18 @@ void CharacterOcto::caseCapacity()
 		{
 			if (!m_onGround)
 			{
-				if (!m_jumpTic || event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3 || event == WaterJump)
+				if (!m_jumpTic)
 				{
-					m_afterJump = true;
-					if (m_timeSlowFall == sf::Time::Zero)
-						m_afterJumpVelocity = m_pixelSecondAfterJump;
-					else if (m_timeSlowFall < m_timeSlowFallMax)
+					if (event == StartSlowFall || event == SlowFall1 || event == SlowFall2 || event == SlowFall3)
+					{
+						m_afterJump = true;
 						m_afterJumpVelocity = m_pixelSecondAfterJump / 2.f;
+					}
+					if (event == WaterJump || event == StartWaterJump)
+					{
+						m_afterJump = true;
+						m_afterJumpVelocity = m_pixelSecondAfterJump;
+					}
 					if (m_sprite.getCurrentEvent() != Fall && m_sprite.getCurrentEvent() != DieFall)
 						m_sprite.setNextEvent(Fall);
 				}

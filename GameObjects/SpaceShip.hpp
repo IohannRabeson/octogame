@@ -32,6 +32,7 @@ public:
 
 	void move(sf::Vector2f const & translation);
 	void update(sf::Time frameTime);
+	bool isInScreen(void);
 	void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 

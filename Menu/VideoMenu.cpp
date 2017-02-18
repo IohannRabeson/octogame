@@ -57,7 +57,6 @@ class DetailsMenu : public AMenuSelection
 		addMenu(L"Low", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 		addMenu(L"Normal", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 		addMenu(L"High", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
-		addMenu(L"Ultra", std::unique_ptr<EmptyMenu>(new EmptyMenu()));
 
 		setIndexCursor(progress.getLevelOfDetails() + 2);
 	}
@@ -72,8 +71,6 @@ class DetailsMenu : public AMenuSelection
 			progress.setLevelOfDetails(-1);
 		if (getIndexCursor() == 2u)
 			progress.setLevelOfDetails(0);
-		if (getIndexCursor() == 3u)
-			progress.setLevelOfDetails(1);
 
 		setState(AMenu::State::Hide);
 		AMenu * backMenu = getBackMenu();

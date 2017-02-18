@@ -207,7 +207,7 @@ bool PhysicsEngine::isUpdated(void) const
 void PhysicsEngine::update(float deltatime)
 {
 	static float accumulator = 0.f;
-	static const float dt = 1.f / 50.f;
+	static const float dt = 1.f / 59.f;
 
 	if (deltatime > 0.2f)
 		deltatime = 0.2f;

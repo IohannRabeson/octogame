@@ -644,6 +644,14 @@ NanoEffect & NanoRobot::getNanoEffect(void)
 	return m_nanoEffect;
 }
 
+bool NanoRobot::isInScreen(void)
+{
+	octo::Camera const & camera = octo::Application::getCamera();
+	if (camera.getRectangle().intersects(m_sprite.getGlobalBounds()))
+		return true;
+	return false;
+}
+
 void NanoRobot::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	if (!m_isTravelling || m_state == FollowOcto || m_state == Speak || m_state == Repair || m_state == RepairShip || m_state == GoingToRepairShip)

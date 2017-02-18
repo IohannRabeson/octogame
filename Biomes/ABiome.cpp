@@ -12,6 +12,10 @@
 
 #include "ABiome.hpp"
 
+ABiome::ABiome()
+{
+}
+
 ABiome::~ABiome()
 {
 }
