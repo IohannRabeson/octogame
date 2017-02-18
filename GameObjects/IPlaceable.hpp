@@ -10,6 +10,7 @@ public:
 
 	virtual void setPosition(sf::Vector2f const & position) = 0;
 	virtual void update(sf::Time frametime) = 0;
+	virtual bool isInScreen(void) = 0;
 	virtual void draw(sf::RenderTarget &, sf::RenderStates) const {}
 	virtual void drawFront(sf::RenderTarget &, sf::RenderStates) const {}
 

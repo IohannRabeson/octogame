@@ -1,8 +1,8 @@
 #ifndef STARSYSTEM_HPP
 # define STARSYSTEM_HPP
 
+# include "RandomGenerator.hpp"
 # include <ParticleSystem.hpp>
-# include <random>
 
 class StarSystem : public octo::ParticleSystem<sf::Time>
 {
@@ -26,11 +26,13 @@ public:
 private:
 	typedef std::uniform_real_distribution<float>	Dist;
 
-	std::mt19937	m_engine;
-	Dist			m_creationTimeDistri;
-	Dist			m_heightDistri;
-	Dist			m_widthDistri;
-	Dist			m_sizePlanetDistri;
+	RandomGenerator	m_generator;
+	float			m_creationTimeMin;
+	float			m_creationTimeMax;
+	float			m_heightMin;
+	float			m_heightMax;
+	float			m_widthMin;
+	float			m_widthMax;
 	sf::Vector2f	m_sizeParticle;
 	sf::Vector2f	m_speed;
 	sf::Vector2f	m_origin;

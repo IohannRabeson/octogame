@@ -447,6 +447,10 @@ void Monolith::update(sf::Time frameTime)
 	progress.setMonolithCenter(m_center);
 }
 
+bool Monolith::isInScreen(void)
+{
+	return true;
+}
 void Monolith::draw(sf::RenderTarget& render, sf::RenderStates states) const
 {
 	for (std::size_t i = 0u; i < m_spriteMonolith.size(); i++)

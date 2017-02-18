@@ -1,5 +1,7 @@
 #include "RandomGenerator.hpp"
 
+std::random_device RandomGenerator::rd;
+
 RandomGenerator::RandomGenerator(void)
 {
 	std::vector<double> i{0, 400, 450, 500, 550, 600, 1000};
@@ -11,7 +13,6 @@ void RandomGenerator::setSeed(std::string const & string)
 {
 	if (string == "random")
 	{
-		std::random_device rd;
 		m_engine.seed(rd());
 	}
 	else

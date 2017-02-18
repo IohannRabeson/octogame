@@ -26,6 +26,7 @@ public:
 	void collideOcto(CharacterOcto * octo);
 	void collideOctoEvent(CharacterOcto * octo);
 	virtual void update(sf::Time frameTime);
+	virtual bool isInScreen(void);
 	virtual void draw(sf::RenderTarget& render, sf::RenderStates states) const;
 	virtual void drawFront(sf::RenderTarget& render, sf::RenderStates states) const;
 

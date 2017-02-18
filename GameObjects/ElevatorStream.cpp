@@ -320,6 +320,14 @@ void	ElevatorStream::update(sf::Time frameTime)
 		m_state = Disappear;
 }
 
+bool ElevatorStream::isInScreen(void)
+{
+	octo::Camera const & camera = octo::Application::getCamera();
+	if (camera.getRectangle().intersects(m_box->getGlobalBounds()))
+		return true;
+	return false;
+}
+
 void	ElevatorStream::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	render.draw(m_spriteBottomBack);

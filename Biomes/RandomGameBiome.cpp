@@ -40,7 +40,7 @@ std::size_t RandomGameBiome::m_seedId = 110u;
 
 RandomGameBiome::RandomGameBiome() :
 	m_specialClouds(false),
-	m_generator(std::to_string(std::time(0))),
+	m_generator("random"),
 	m_mapSeed(m_generator.randomInt(2u, 100000u)),
 	m_tileStartColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
 	m_tileEndColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),

@@ -6,7 +6,8 @@ ControlMenu::ControlMenu(void) :
 	m_isCreatedRepair(false),
 	m_isCreatedJump(false),
 	m_isCreatedDoubleJump(false),
-	m_isCreatedSlowFall(false)
+	m_isCreatedSlowFall(false),
+	m_isCreatedBalle(false)
 {
 }
 

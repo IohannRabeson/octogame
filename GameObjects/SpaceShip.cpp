@@ -150,6 +150,14 @@ void SpaceShip::update(sf::Time frameTime)
 		m_music[i].update(frameTime);
 }
 
+bool SpaceShip::isInScreen(void)
+{
+	octo::Camera const & camera = octo::Application::getCamera();
+	if (camera.getRectangle().intersects(m_sprite.getGlobalBounds()))
+		return true;
+	return false;
+}
+
 void SpaceShip::draw(sf::RenderTarget& render, sf::RenderStates) const
 {
 	if (m_isFinal)

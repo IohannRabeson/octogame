@@ -63,7 +63,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(key));
 
-	if (key == OBJECT_PORTAL_RANDOM_OSS)
+	if (m_key == OBJECT_PORTAL_RANDOM_OSS)
 	{
 		m_state = Disappear;
 		m_animationClosed.setFrames({
@@ -100,7 +100,7 @@ Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color
 		});
 		m_animationOpened.setLoop(octo::LoopMode::Loop);
 	}
-	else if (key == OBJECT_PORTAL_BLUE_OSS || key == OBJECT_PORTAL_RED_OSS)
+	else if (m_key == OBJECT_PORTAL_BLUE_OSS || m_key == OBJECT_PORTAL_RED_OSS)
 	{
 		m_state = AlwaysOpen;
 		m_animationClosed.setFrames({
@@ -370,6 +370,14 @@ bool Portal::isLock(void)
 void Portal::setBiome(ABiome & biome)
 {
 	m_particles.setBiome(biome);
+}
+
+bool Portal::isInScreen(void)
+{
+	octo::Camera const & camera = octo::Application::getCamera();
+	if (camera.getRectangle().intersects(m_sprite.getGlobalBounds()))
+		return true;
+	return false;
 }
 
 void Portal::draw(sf::RenderTarget & render, sf::RenderStates states) const

@@ -1,4 +1,5 @@
 #include "InstanceDecor.hpp"
+#include <Camera.hpp>
 #include <Application.hpp>
 #include <ResourceManager.hpp>
 
@@ -66,6 +67,14 @@ octo::SpriteAnimation & InstanceDecor::getAnimation(void)
 void InstanceDecor::update(sf::Time frameTime)
 {
 	m_sprite.update(frameTime);
+}
+
+bool InstanceDecor::isInScreen(void)
+{
+	octo::Camera const & camera = octo::Application::getCamera();
+	if (camera.getRectangle().intersects(m_sprite.getGlobalBounds()))
+		return true;
+	return false;
 }
 
 void InstanceDecor::draw(sf::RenderTarget& render, sf::RenderStates) const
