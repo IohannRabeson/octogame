@@ -82,14 +82,14 @@ void	LaboratoryEndScreen::start()
 		m_lastTextIndex = std::max(m_lastTextIndex, it->getLastIndex());
 
 	m_shader.loadFromMemory(resources.getText(HUE_FRAG), sf::Shader::Fragment);
-	m_shader.setParameter("texture", sf::Shader::CurrentTexture);
-	m_shader.setParameter("hue", 0.f);
+	m_shader.setUniform("texture", sf::Shader::CurrentTexture);
+	m_shader.setUniform("hue", 0.f);
 
 	postEffect.removeEffects();
 	PostEffectLayer::getInstance().clear();
 	PostEffectLayer::getInstance().registerShader(LABORATORY_EFFECT_FRAG, LABORATORY_EFFECT_FRAG);
 
-	PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("resolution", camera.getRectangle().width, camera.getRectangle().height);
+	PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setUniform("resolution", sf::Vector2f(camera.getRectangle().width, camera.getRectangle().height));
 	PostEffectLayer::getInstance().enableShader(LABORATORY_EFFECT_FRAG, false);
 
 	m_biome.reset(new LaboBiome());
@@ -199,7 +199,7 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 			break;
 		case ChangeAquaColor:
 			m_changeColorAqua += frameTime;
-			m_shader.setParameter("hue", octo::linearInterpolation(0.f, 0.4f, std::min(1.f, m_changeColorAqua / m_changeColorAquaMax)));
+			m_shader.setUniform("hue", octo::linearInterpolation(0.f, 0.4f, std::min(1.f, m_changeColorAqua / m_changeColorAquaMax)));
 			if (m_changeColorAqua >= m_changeColorAquaMax)
 			{
 				m_state = StartShaderEffect;
@@ -209,13 +209,13 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 		case StartShaderEffect:
 			m_appearTimerPostEffect += frameTime;
 			m_startPostEffectDuration += frameTime;
-			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("appear", std::min(1.f, m_appearTimerPostEffect / m_appearTimerPostEffectMax));
+			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setUniform("appear", std::min(1.f, m_appearTimerPostEffect / m_appearTimerPostEffectMax));
 			if (m_startPostEffectDuration >= m_startPostEffectDurationMax)
 				m_state = DisappearShaderEffect;
 			break;
 		case DisappearShaderEffect:
 			m_disappearTimerPostEffect += frameTime;
-			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("disappear", std::min(1.f, m_disappearTimerPostEffect / m_disappearTimerPostEffectMax));
+			PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setUniform("disappear", std::min(1.f, m_disappearTimerPostEffect / m_disappearTimerPostEffectMax));
 			if (m_disappearTimerPostEffect >= m_disappearTimerPostEffectMax)
 				m_state = StopShaderEffect;
 		case StopShaderEffect:
@@ -239,7 +239,7 @@ void	LaboratoryEndScreen::update(sf::Time frameTime)
 	if (m_state == StartShaderEffect || m_state == DisappearShaderEffect || m_state == StopShaderEffect)
 	{
 		m_globalTimer += frameTime;
-		PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setParameter("time", m_globalTimer.asSeconds());
+		PostEffectLayer::getInstance().getShader(LABORATORY_EFFECT_FRAG).setUniform("time", m_globalTimer.asSeconds());
 	}
 
 	if (m_state == CedricPutPotion || m_state == VisualEffect || m_state == ChangeAquaColor || m_state == StartShaderEffect)

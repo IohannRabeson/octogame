@@ -32,8 +32,8 @@ NanoEffect::NanoEffect(void) :
 	m_lastNanoCount = Progress::getInstance().getNanoRobotCount();
 
 	octo::Application::getPostEffectManager().enableEffect(m_shaderIndex, false);
-	m_shader.setParameter("fade_out_size", 100.f);
-	m_shader.setParameter("alpha", 0.f);
+	m_shader.setUniform("fade_out_size", 100.f);
+	m_shader.setUniform("alpha", 0.f);
 }
 
 void NanoEffect::playSound(void)
@@ -105,11 +105,11 @@ void NanoEffect::update(sf::Time frameTime)
 				postEffect.enableEffect(m_shaderIndex, false);
 			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-			m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
-			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
-			m_shader.setParameter("radius", 120.f);
-			m_shader.setParameter("alpha", 1.f);
-			m_shader.setParameter("color_size", 0.005f);
+			m_shader.setUniform("position", sf::Vector2f((m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor));
+			m_shader.setUniform("time", 0.5f * m_glowingTimer.asSeconds());
+			m_shader.setUniform("radius", 120.f);
+			m_shader.setUniform("alpha", 1.f);
+			m_shader.setUniform("color_size", 0.005f);
 			break;
 		}
 		case State::Transfer:
@@ -126,10 +126,10 @@ void NanoEffect::update(sf::Time frameTime)
 				float transition = std::min(m_transferTimer / m_transferTimerMax, 1.f);
 				sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 				float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-				m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
-				m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
-				m_shader.setParameter("radius", octo::linearInterpolation(120.f, 1500.f, transition));
-				m_shader.setParameter("color_size", octo::linearInterpolation(0.005f, 0.001f, transition));
+				m_shader.setUniform("position", sf::Vector2f((m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor));
+				m_shader.setUniform("time", 0.5f * m_glowingTimer.asSeconds());
+				m_shader.setUniform("radius", octo::linearInterpolation(120.f, 1500.f, transition));
+				m_shader.setUniform("color_size", octo::linearInterpolation(0.005f, 0.001f, transition));
 			}
 			if (m_transferTimer >= m_transferTimerMax)
 			{
@@ -145,9 +145,9 @@ void NanoEffect::update(sf::Time frameTime)
 			m_transferTimer += frameTime;
 			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-			m_shader.setParameter("position", (m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor);
-			m_shader.setParameter("time", 0.5f * m_glowingTimer.asSeconds());
-			m_shader.setParameter("alpha", 1.f - std::min(1.f, m_transferTimer / m_transferTimerMax));
+			m_shader.setUniform("position", sf::Vector2f((m_position.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_position.y + screen.top) * zoomFactor));
+			m_shader.setUniform("time", 0.5f * m_glowingTimer.asSeconds());
+			m_shader.setUniform("alpha", 1.f - std::min(1.f, m_transferTimer / m_transferTimerMax));
 			if (m_transferTimer >= m_transferTimerMax)
 			{
 				m_transferTimer = sf::Time::Zero;

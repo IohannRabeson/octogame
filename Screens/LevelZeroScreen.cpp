@@ -62,7 +62,7 @@ void	LevelZeroScreen::start()
 	postEffect.removeEffects();
 	PostEffectLayer::getInstance().clear();
 	PostEffectLayer::getInstance().registerShader(RED_ALARM_FRAG, RED_ALARM_FRAG);
-	PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setParameter("transition", 0.f);
+	PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setUniform("transition", 0.f);
 	PostEffectLayer::getInstance().enableShader(RED_ALARM_FRAG, true);
 }
 
@@ -112,7 +112,7 @@ void	LevelZeroScreen::update(sf::Time frameTime)
 				m_blinkShaderState = true;
 			}
 		}
-		PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setParameter("transition", (m_timerBlinkShader.asSeconds() / 1.0f) * 0.45f);
+		PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setUniform("transition", (m_timerBlinkShader.asSeconds() / 1.0f) * 0.45f);
 	}
 
 	if (m_timer >= m_timerMax)

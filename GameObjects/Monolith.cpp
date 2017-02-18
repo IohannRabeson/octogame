@@ -32,11 +32,11 @@ Monolith::Monolith(sf::Vector2f const & scale, sf::Vector2f const & position, AB
 	m_offset(0.f),
 	m_transitionStartEndPosition(0.f)
 {
-	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("center", 0.5f, 0.5f);
-	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("radius", 0.f);
-	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("fade_out_size", 400.f);
-	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("fade_in_size", 100.f);
-	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("deformation_factor", 0.03f);
+	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setUniform("center", sf::Vector2f(0.5f, 0.5f));
+	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setUniform("radius", 0.f);
+	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setUniform("fade_out_size", 400.f);
+	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setUniform("fade_in_size", 100.f);
+	PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setUniform("deformation_factor", 0.03f);
 	PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, false);
 
 	m_portal.reset(new FinalPortal(Level::None, "object_portal.oss", VORTEX_FRAG));
@@ -322,8 +322,8 @@ void Monolith::update(sf::Time frameTime)
 			m_timer += frameTime;
 			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
-			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("center", (m_center.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_center.y + screen.top) * zoomFactor);
-			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("radius", std::min(m_timer / m_explosionShaderDuration, 1.f) * 2000.0f);
+			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setUniform("center", sf::Vector2f((m_center.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_center.y + screen.top) * zoomFactor));
+			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setUniform("radius", std::min(m_timer / m_explosionShaderDuration, 1.f) * 2000.0f);
 			if (m_timer.asSeconds() > 0.5f && m_spriteMonolith[FissureRed].getStatus() != octo::PlayStatus::Play)
 				m_spriteMonolith[FissureRed].play();
 			if (m_timer > m_explosionShaderDuration)
@@ -332,7 +332,7 @@ void Monolith::update(sf::Time frameTime)
 				m_state = WhiteFlash;
 				PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, false);
 				PostEffectLayer::getInstance().enableShader(COLOR_SATURATION_FRAG, true);
-				PostEffectLayer::getInstance().getShader(COLOR_SATURATION_FRAG).setParameter("value", 1.f);
+				PostEffectLayer::getInstance().getShader(COLOR_SATURATION_FRAG).setUniform("value", 1.f);
 			}
 			break;
 		}
@@ -389,8 +389,8 @@ void Monolith::update(sf::Time frameTime)
 			sf::FloatRect const & screen = octo::Application::getCamera().getRectangle();
 			float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / screen.height;
 			PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, true);
-			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("center", (m_center.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_center.y + screen.top) * zoomFactor);
-			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setParameter("radius", std::min(m_timer / m_implodeDuration, 1.f) * 2000.0f);
+			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setUniform("center", sf::Vector2f((m_center.x - screen.left) * zoomFactor, octo::Application::getGraphicsManager().getVideoMode().height + (-m_center.y + screen.top) * zoomFactor));
+			PostEffectLayer::getInstance().getShader(CIRCLE_WAVE_FRAG).setUniform("radius", std::min(m_timer / m_implodeDuration, 1.f) * 2000.0f);
 
 			if (m_timer <= sf::Time::Zero)
 			{
@@ -398,7 +398,7 @@ void Monolith::update(sf::Time frameTime)
 				m_timer = sf::Time::Zero;
 				PostEffectLayer::getInstance().enableShader(CIRCLE_WAVE_FRAG, false);
 				PostEffectLayer::getInstance().enableShader(COLOR_SATURATION_FRAG, false);
-				PostEffectLayer::getInstance().getShader(COLOR_SATURATION_FRAG).setParameter("value", 1.f);
+				PostEffectLayer::getInstance().getShader(COLOR_SATURATION_FRAG).setUniform("value", 1.f);
 				m_state = WhiteFlash2;
 			}
 			break;

@@ -147,9 +147,9 @@ void	IntroScreen::setupScene(void)
 	PostEffectLayer::getInstance().registerShader(COLOR_SATURATION_FRAG, COLOR_SATURATION_FRAG);
 
 	PostEffectLayer::getInstance().enableShader(CUTSCENE_FRAG, true);
-	PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setParameter("height", 0.15f);
-	PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setParameter("time", 1.f);
-	PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setParameter("transition", 0.f);
+	PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setUniform("height", 0.15f);
+	PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setUniform("time", 1.f);
+	PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setUniform("transition", 0.f);
 	PostEffectLayer::getInstance().enableShader(RED_ALARM_FRAG, true);
 	PostEffectLayer::getInstance().enableShader(ROCKET_TAKEOFF_FRAG, true);
 
@@ -334,13 +334,13 @@ void	IntroScreen::updateShaders(sf::Time frameTime)
 	else if (m_timerShaderRocketAppear <= m_timerShaderRocketAppearMax)
 		m_timerShaderRocketAppear += frameTime * 5.f;
 
-	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setParameter("intensity", octo::linearInterpolation(0.f, 0.05f * m_cloudCollidedCount, std::min(1.f, m_timerShaderRocketAppear / m_timerShaderRocketAppearMax)));
-	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setParameter("time", m_timerShaderRocket.asSeconds());
+	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setUniform("intensity", octo::linearInterpolation(0.f, 0.05f * m_cloudCollidedCount, std::min(1.f, m_timerShaderRocketAppear / m_timerShaderRocketAppearMax)));
+	PostEffectLayer::getInstance().getShader(ROCKET_TAKEOFF_FRAG).setUniform("time", m_timerShaderRocket.asSeconds());
 
 	if (m_cloudCollidedCount == 1u && m_state == Fall)
-		PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setParameter("time", 1.f - m_timerFall / m_timerFallMax);
+		PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setUniform("time", 1.f - m_timerFall / m_timerFallMax);
 	else if (m_cloudCollidedCount == m_cloudCollidedCountMax && (m_state == Crash || m_state == End))
-		PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setParameter("time", m_timerCrash / m_timerCrashMax);
+		PostEffectLayer::getInstance().getShader(CUTSCENE_FRAG).setUniform("time", m_timerCrash / m_timerCrashMax);
 
 }
 
@@ -373,7 +373,7 @@ void	IntroScreen::updateAlarm(sf::Time frameTime)
 				m_blinkShaderState = true;
 			}
 		}
-		PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setParameter("transition", (m_timerBlinkShader.asSeconds() / 1.0f) * 0.75f);
+		PostEffectLayer::getInstance().getShader(RED_ALARM_FRAG).setUniform("transition", (m_timerBlinkShader.asSeconds() / 1.0f) * 0.75f);
 	}
 }
 

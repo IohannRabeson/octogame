@@ -38,9 +38,9 @@ Water::Water(ABiome & biome) :
 	m_distorsionTexture.setSmooth(true);
 
 	sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
-	m_shader.setParameter("resolution", rect.width, rect.height);
-	m_shader.setParameter("distortionMapTexture", m_distorsionTexture);
-	m_shader.setParameter("max_factor", 0.15f);
+	m_shader.setUniform("resolution", sf::Vector2f(rect.width, rect.height));
+	m_shader.setUniform("distortionMapTexture", m_distorsionTexture);
+	m_shader.setUniform("max_factor", 0.15f);
 
 	if (Progress::getInstance().getLevelOfDetails() >= -1)
 		PostEffectLayer::getInstance().enableShader(WATER_FRAG, true);
@@ -85,18 +85,18 @@ void Water::update(sf::Time frameTime)
 	{
 		sf::FloatRect const & rect = octo::Application::getCamera().getRectangle();
 		float zoomFactor = octo::Application::getGraphicsManager().getVideoMode().height / rect.height;
-		m_shader.setParameter("camera_offset", rect.left, rect.top);
+		m_shader.setUniform("camera_offset", sf::Vector2f(rect.left, rect.top));
 		m_waveCycle += frameTime;
-		m_shader.setParameter("time", m_waveCycle.asSeconds());
-		m_shader.setParameter("distortionFactor", 0.15f);
-		m_shader.setParameter("riseFactor", -0.1f);
+		m_shader.setUniform("time", m_waveCycle.asSeconds());
+		m_shader.setUniform("distortionFactor", 0.15f);
+		m_shader.setUniform("riseFactor", -0.1f);
 		float limit = rect.height - (m_limit - rect.top);
-		m_shader.setParameter("limit", limit * zoomFactor);
+		m_shader.setUniform("limit", limit * zoomFactor);
 		float ratio = limit / rect.height;
 		if (ratio > 1.f)
 			ratio = 1.f;
-		m_shader.setParameter("offset_limit", ratio);
-		m_shader.setParameter("height", 1.f - ratio);
+		m_shader.setUniform("offset_limit", ratio);
+		m_shader.setUniform("height", 1.f - ratio);
 	}
 	changeColor(frameTime);
 }
