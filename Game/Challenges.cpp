@@ -293,7 +293,7 @@ ChallengeBlur::ChallengeBlur(void) :
 		2.f / 16.f, 4.f / 16.f, 2.f / 16.f,
 		1.f / 16.f, 2.f / 16.f, 1.f / 16.f
 		);
-	m_shader.setUniform("kernel", sf::Glsl::Mat3(kernel));
+	m_shader.setUniform("kernel", sf::Glsl::Mat4(kernel));
 }
 
 void ChallengeBlur::updateShader(sf::Time)

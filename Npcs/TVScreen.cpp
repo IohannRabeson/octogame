@@ -35,8 +35,8 @@ TVScreen::TVScreen(std::string const & kernelName) :
 				-1.f, 8.f, -1.f,
 				-1.f, -1.f, -1.f
 			);
-		m_shader.setUniform("kernel", sf::Glsl::Mat3(kernel));
-		m_shaderReverse.setUniform("kernel", sf::Glsl::Mat3(kernel));
+		m_shader.setUniform("kernel", sf::Glsl::Mat4(kernel));
+		m_shaderReverse.setUniform("kernel", sf::Glsl::Mat4(kernel));
 	}
 	else
 	{
@@ -45,8 +45,8 @@ TVScreen::TVScreen(std::string const & kernelName) :
 				-1.f, 9.f, -1.f,
 				-1.f, -1.f, -1.f
 			);
-		m_shader.setUniform("kernel", sf::Glsl::Mat3(kernel));
-		m_shaderReverse.setUniform("kernel", sf::Glsl::Mat3(kernel));
+		m_shader.setUniform("kernel", sf::Glsl::Mat4(kernel));
+		m_shaderReverse.setUniform("kernel", sf::Glsl::Mat4(kernel));
 	}
 	m_shader.setUniform("reverse", m_reverse);
 	m_shader.setUniform("line_progress", 0.f);
