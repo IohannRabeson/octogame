@@ -21,7 +21,7 @@ PostEffectLayer & PostEffectLayer::getInstance(void)
 	return *m_instance;
 }
 
-void PostEffectLayer::registerShader(std::string const & name, ResourceKey const & key)
+void PostEffectLayer::registerShader(std::string const & name, ResourceKey key)
 {
 	octo::ResourceManager & resources = octo::Application::getResourceManager();
 	octo::PostEffectManager & postEffect = octo::Application::getPostEffectManager();
