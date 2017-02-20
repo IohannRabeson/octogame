@@ -16,7 +16,7 @@ public:
 
 	sf::Shader & getShader(std::string const & name);
 	std::size_t getShaderIndex(std::string const & name);
-	void registerShader(std::string const & name, ResourceKey key);
+	void registerShader(std::string const & name, ResourceKey const & key);
 	void enableShader(std::string const & name, bool enable);
 
 	void clear(void);
