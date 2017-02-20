@@ -84,7 +84,7 @@ private:
 	};
 
 public:
-	Portal(Level destination, ResourceKey const & key, ResourceKey shader, sf::Color centerColor = sf::Color::Black);
+	Portal(Level destination, ResourceKey const & key, ResourceKey const & shader, sf::Color centerColor = sf::Color::Black);
 	virtual ~Portal(void);
 
 	void addMapOffset(float x, float y);
@@ -112,7 +112,7 @@ protected:
 
 	RandomGenerator				m_generator;
 	PortalParticle				m_particles;
-	std::string					m_shaderName;
+	ResourceKey const &			m_shaderName;
 	Level						m_destination;
 	sf::Vector2f				m_position;
 	sf::Shader &				m_shader;
