@@ -52,7 +52,7 @@ TVScreen::TVScreen(std::string const & kernelName) :
 	m_shader.setUniform("line_progress", 0.f);
 	m_shaderReverse.setUniform("offset", 1.f / 300.f);
 	m_shaderReverse.setUniform("intensity", 1.f);
-	PostEffectLayer::getInstance().enableShader(kernelName, m_reverse);
+	PostEffectLayer::getInstance().enableShader(kernelName, static_cast<float>(m_reverse));
 }
 
 void TVScreen::setup(void)
@@ -120,7 +120,7 @@ void TVScreen::update(sf::Time frametime)
 				{
 					m_reverse = !m_reverse;
 					m_shader.setUniform("line_progress", 0.f);
-					m_shader.setUniform("reverse", m_reverse);
+					m_shader.setUniform("reverse", static_cast<float>(m_reverse));
 					m_timer = sf::Time::Zero;
 					m_state = Reversed;
 				}
