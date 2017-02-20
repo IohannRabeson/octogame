@@ -6,7 +6,7 @@
 #include <Application.hpp>
 
 BalleNanoRobot::BalleNanoRobot(sf::Vector2f const & position) :
-	NanoRobot(position, NANO_BALLE_OSS, 4, 654, sf::Vector2f(0.f, -24.f), InputListener::OctoKeys::Jump, 1.f),
+	NanoRobot(position, NANO_BALLE_OSS, 4, 238947, sf::Vector2f(0.f, -24.f), InputListener::OctoKeys::Jump, 1.f),
 	m_isThrowPotion(false),
 	m_throwPotionTimerMax(sf::seconds(1.0f)),
 	m_inInit(false)
