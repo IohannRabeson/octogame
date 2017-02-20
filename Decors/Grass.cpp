@@ -175,6 +175,8 @@ void Grass::computeMovement(sf::Time frameTime)
 	else if (deathCount > Progress::DeathMax / 2.f)
 		m_octDeathCoef = octo::linearInterpolation(1.f, 0.8f, static_cast<float>(deathCount - Progress::DeathMax / 2.f) / static_cast<float>(Progress::DeathMax / 2.f));
 
+	m_octDeathCoef = std::max(0.8f, m_octDeathCoef);
+	m_octDeathCoef = std::min(1.f, m_octDeathCoef);
 
 	m_lastOctoPosition = octoPosition;
 }
