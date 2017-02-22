@@ -119,10 +119,10 @@ RandomBiome::RandomBiome() :
 
 	m_sunSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 350.f), m_generator.randomFloat(100.f, 350.f))),
 	m_sunPartCount(m_generator.randomInt(1, 4), m_generator.randomInt(4, 7)),
-	m_sunColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
+	m_sunColor(m_generator.randomInt(250, 255), m_generator.randomInt(250, 255), m_generator.randomInt(250, 255)),
 
 	m_moonSize(sf::Vector2f(m_generator.randomFloat(10.f, 100.f), m_generator.randomFloat(10.f, 100.f)), sf::Vector2f(m_generator.randomFloat(100.f, 350.f), m_generator.randomFloat(100.f, 350.f))),
-	m_moonColor(m_generator.randomInt(0, 255), m_generator.randomInt(0, 255), m_generator.randomInt(0, 255)),
+	m_moonColor(m_generator.randomInt(250, 255), m_generator.randomInt(250, 255), m_generator.randomInt(250, 255)),
 	m_moonLifeTime(sf::seconds(15.f), sf::seconds(30.f)),
 
 	m_rainbowThickness(70.f, 120.f),

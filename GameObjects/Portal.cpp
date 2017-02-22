@@ -8,7 +8,7 @@
 #include <Camera.hpp>
 #include <cassert>
 
-Portal::Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color centerColor) :
+Portal::Portal(Level destination, ResourceKey const & key, ResourceKey shader, sf::Color centerColor) :
 	m_generator("random"),
 	m_shaderName(shader),
 	m_destination(destination),

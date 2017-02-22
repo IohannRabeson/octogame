@@ -679,8 +679,16 @@ void GroundManager::setupGameObjects(ABiome & biome)
 					portal.reset(new Portal(biome.getDestination(), OBJECT_PORTAL_BLUE_OSS, "vortex_blue", sf::Color(0, 0, 155)));
 				else if (!decor.name.compare("object_portal_random.oss"))
 					portal.reset(new Portal(biome.getDestination(), OBJECT_PORTAL_RANDOM_OSS, "vortex_white", sf::Color(255, 255, 255)));
-				else
-					portal.reset(new Portal(biome.getDestination(), decor.name.c_str(), VORTEX_FRAG));
+				else if (!decor.name.compare("object_portal_snow.oss"))
+					portal.reset(new Portal(biome.getDestination(), OBJECT_PORTAL_SNOW_OSS, VORTEX_FRAG));
+				else if (!decor.name.compare("object_portal_desert.oss"))
+					portal.reset(new Portal(biome.getDestination(), OBJECT_PORTAL_DESERT_OSS, VORTEX_FRAG));
+				else if (!decor.name.compare("object_portal_jungle.oss"))
+					portal.reset(new Portal(biome.getDestination(), OBJECT_PORTAL_JUNGLE_OSS, VORTEX_FRAG));
+				else if (!decor.name.compare("object_portal_beach.oss"))
+					portal.reset(new Portal(biome.getDestination(), OBJECT_PORTAL_BEACH_OSS, VORTEX_FRAG));
+				else if (!decor.name.compare("object_portal.oss"))
+					portal.reset(new Portal(biome.getDestination(), OBJECT_PORTAL_OSS, VORTEX_FRAG));
 				portal->setBiome(biome);
 				portal->setPosition(position + sf::Vector2f(50.f, 350.f));
 				m_otherOnInstance.push_back(std::move(portal));

@@ -108,7 +108,7 @@ void Tree::createBiColorQuad(QuadValue const & quad, sf::Color const & color, fl
 	sf::Vector2f tmpRightUp = quad.rightUp + quad.center;
 
 	builder.createTriangle(tmpRightUp, quad.rightDown + quad.center, tmpLeftDown, color);
-	sf::Color tmpColor(deltaColor + color.r, deltaColor + color.g, deltaColor + color.b, color.a);
+	sf::Color tmpColor(std::min(254.f, deltaColor + color.r), std::min(254.f, deltaColor + color.g), std::min(254.f, deltaColor + color.b), color.a);
 	builder.createTriangle(tmpLeftDown, quad.leftUp + quad.center, tmpRightUp, tmpColor);
 }
 
@@ -150,7 +150,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	// Init color
 	//TODO: find a smart way to compute deltaColor
 	float colorChange = currentDepth * 5.f + 1;
-	sf::Color color = sf::Color(m_color.r + colorChange, m_color.g + colorChange, m_color.b + colorChange, m_color.a);
+	sf::Color color = sf::Color(std::min(254.f, m_color.r + colorChange), std::min(254.f, m_color.g + colorChange), std::min(254.f, m_color.b + colorChange), m_color.a);
 
 	// Compute root rectangle
 	QuadValue root;
@@ -207,7 +207,7 @@ void Tree::pythagorasTree(sf::Vector2f const & center, sf::Vector2f const & size
 	createBiColorQuad(root, color, 5, builder);
 
 	// Fill empty space with triangle
-	color += sf::Color(5, 5, 5, 0);
+	color = sf::Color(std::min(254.f, color.r + 5.f), std::min(254.f, color.g + 5.f), std::min(254.f, color.b + 5.f), m_color.a);
 	sf::Vector2f upTriangle(-rightSize.x, 0.f);
 	octo::rotateVector(upTriangle, cosRight, sinRight);
 	builder.createTriangle(root.rightUp + center, root.leftUp + center, upTriangle + center + root.rightUp, color);

@@ -84,7 +84,7 @@ private:
 	};
 
 public:
-	Portal(Level destination, ResourceKey key, ResourceKey shader, sf::Color centerColor = sf::Color::Black);
+	Portal(Level destination, ResourceKey const & key, ResourceKey shader, sf::Color centerColor = sf::Color::Black);
 	virtual ~Portal(void);
 
 	void addMapOffset(float x, float y);
@@ -100,7 +100,7 @@ public:
 	inline bool isOpening(void) { return m_sprite.getCurrentEvent() == Opening; }
 	inline bool isFirstAppear(void) { return m_sprite.getCurrentEvent() == FirstAppear; }
 	inline Level getDestination(void) const { return m_destination; }
-	inline ResourceKey getKey(void) { return m_key; }
+	inline ResourceKey const & getKey(void) { return m_key; }
 	virtual bool zoom(void) const;
 
 	virtual void update(sf::Time frameTime);
@@ -117,7 +117,7 @@ protected:
 	sf::Vector2f				m_position;
 	sf::Shader &				m_shader;
 	std::size_t					m_maxParticle;
-	ResourceKey					m_key;
+	ResourceKey const &			m_key;
 	State						m_state;
 	float						m_radius;
 	float						m_timerActivate;

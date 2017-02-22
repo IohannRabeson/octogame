@@ -1,4 +1,5 @@
 #include "RandomGenerator.hpp"
+#include <ctime>
 
 std::random_device RandomGenerator::rd;
 
@@ -13,7 +14,7 @@ void RandomGenerator::setSeed(std::string const & string)
 {
 	if (string == "random")
 	{
-		m_engine.seed(rd());
+		m_engine.seed(rd() * time(0));
 	}
 	else
 	{
