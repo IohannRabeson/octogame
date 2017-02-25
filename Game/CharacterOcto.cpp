@@ -301,6 +301,24 @@ void	CharacterOcto::setup(ABiome & biome)
 		caseLeft();
 }
 
+void	CharacterOcto::initStartGameIceA(void)
+{
+	if (m_level == Level::IceA)
+	{
+		if (Progress::getInstance().getNanoRobotCount() == 0u)
+		{
+			NanoRobot * robot = new GroundTransformNanoRobot();
+			robot->update(sf::Time::Zero);
+			robot->transfertToOcto(false);
+			m_nanoRobots.push_back(std::unique_ptr<NanoRobot>(robot));
+			enableCutscene(true, true);
+			m_cutsceneTimerMax = sf::seconds(0.01f);
+			if (robot->getEffectEnable())
+				startKonamiCode(true);
+		}
+	}
+}
+
 void	CharacterOcto::startGameIceA(void)
 {
 	if (m_level == Level::IceA)
