@@ -29,6 +29,7 @@ Progress::Progress() :
 	m_cloudId(0u),
 	m_npcMax(0u),
 	m_countRandomDiscover(0u),
+	m_checkpointCountMax(0u),
 	m_isOctoOnInstance(false),
 	m_isHighLight(false),
 	m_isMapMoving(false),
@@ -179,6 +180,7 @@ void	Progress::init()
 	loadNpc();
 	loadPortals();
 	loadDeaths();
+
 }
 
 void	Progress::save(float timePlayed)
@@ -234,6 +236,12 @@ void	Progress::reset()
 	m_data.soundVol = soundVolume;
 	m_data.keyboard = keyboard;
 	m_data.language = language;
+	m_data.npc[0] = '0';
+	m_data.npc[1] = '\0';
+	m_data.deaths[0] = '0';
+	m_data.deaths[1] = '\0';
+	m_data.portals[0] = '0';
+	m_data.portals[1] = '\0';
 	save();
 }
 
@@ -523,13 +531,15 @@ void	Progress::loadDeaths()
 		std::vector<std::string> splitLine;
 		split(line, ' ', splitLine);
 
-		Level level = static_cast<Level>(stoi(splitLine[0]));
-		m_deaths[level].clear();
-
-		for (std::size_t i = 1; i < splitLine.size(); i += 2)
-		{
-			m_deaths[level].push_back(sf::Vector2i(stoi(splitLine[i]), stoi(splitLine[i + 1])));
-		}
+        if (splitLine.size() && std::all_of(splitLine[0].begin(), splitLine[0].end(), ::isdigit))
+        {
+            Level level = static_cast<Level>(std::stoi(splitLine[0]));
+            m_deaths[level].clear();
+            for (std::size_t i = 1; i < splitLine.size(); i += 2)
+            {
+                m_deaths[level].push_back(sf::Vector2i(std::stoi(splitLine[i]), std::stoi(splitLine[i + 1])));
+            }
+        }
 	}
 }
 
@@ -643,16 +653,19 @@ void	Progress::loadPortals()
 		std::vector<std::string> splitLine;
 		split(line, ' ', splitLine);
 
-		Level level = static_cast<Level>(stoi(splitLine[0]));
-		m_portals[level].clear();
+        if (splitLine.size() && std::all_of(splitLine[0].begin(), splitLine[0].end(), ::isdigit))
+        {
+            Level level = static_cast<Level>(std::stoi(splitLine[0]));
+            m_portals[level].clear();
 
-		for (std::size_t i = 1; i < splitLine.size(); i += 2)
-		{
-			if (splitLine[i + 1] == "1")
-				m_portals[level].insert(std::make_pair(static_cast<Level>(stoi(splitLine[i])), true));
-			else
-				m_portals[level].insert(std::make_pair(static_cast<Level>(stoi(splitLine[i])), false));
-		}
+            for (std::size_t i = 1; i < splitLine.size(); i += 2)
+            {
+                if (splitLine[i + 1] == "1")
+                    m_portals[level].insert(std::make_pair(static_cast<Level>(std::stoi(splitLine[i])), true));
+                else
+                    m_portals[level].insert(std::make_pair(static_cast<Level>(std::stoi(splitLine[i])), false));
+            }
+        }
 	}
 	m_portalsToDiscover.clear();
 }
@@ -701,16 +714,19 @@ void	Progress::loadNpc()
 		std::vector<std::string> splitLine;
 		split(line, ' ', splitLine);
 
-		Level level = static_cast<Level>(stoi(splitLine[0]));
-		m_npc[level].clear();
+        if (splitLine.size() && std::all_of(splitLine[0].begin(), splitLine[0].end(), ::isdigit))
+        {
+            Level level = static_cast<Level>(std::stoi(splitLine[0]));
+            m_npc[level].clear();
 
-		for (std::size_t i = 1; i < splitLine.size(); i += 2)
-		{
-			if (splitLine[i + 1] == "1")
-				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoul(splitLine[i])), true));
-			else
-				m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(stoul(splitLine[i])), false));
-		}
+            for (std::size_t i = 1; i < splitLine.size(); i += 2)
+            {
+                if (splitLine[i + 1] == "1")
+                    m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(std::stoul(splitLine[i])), true));
+                else
+                    m_npc[level].insert(std::make_pair(static_cast<GameObjectType>(std::stoul(splitLine[i])), false));
+            }
+        }
 	}
 }
 
