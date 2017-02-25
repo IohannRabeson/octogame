@@ -63,7 +63,7 @@ Portal::Portal(Level destination, ResourceKey const & key, ResourceKey shader, s
 
 	m_sprite.setSpriteSheet(resources.getSpriteSheet(key));
 
-	if (m_key == OBJECT_PORTAL_RANDOM_OSS)
+	if (strcmp(m_key, OBJECT_PORTAL_RANDOM_OSS) == 0)
 	{
 		m_state = Disappear;
 		m_animationClosed.setFrames({
@@ -74,7 +74,7 @@ Portal::Portal(Level destination, ResourceKey const & key, ResourceKey shader, s
 			Frame(sf::seconds(0.4f), {16u, sf::FloatRect(), sf::Vector2f()}),
 		});
 		m_animationClosed.setLoop(octo::LoopMode::NoLoop);
-	
+
 		m_animationOpening.setFrames({
 			Frame(sf::seconds(0.4f), {16u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {15u, sf::FloatRect(), sf::Vector2f()}),
@@ -100,7 +100,7 @@ Portal::Portal(Level destination, ResourceKey const & key, ResourceKey shader, s
 		});
 		m_animationOpened.setLoop(octo::LoopMode::Loop);
 	}
-	else if (m_key == OBJECT_PORTAL_BLUE_OSS || m_key == OBJECT_PORTAL_RED_OSS)
+	else if (strcmp(m_key, OBJECT_PORTAL_BLUE_OSS) == 0 || strcmp(m_key, OBJECT_PORTAL_RED_OSS) == 0)
 	{
 		m_state = AlwaysOpen;
 		m_animationClosed.setFrames({
@@ -112,7 +112,7 @@ Portal::Portal(Level destination, ResourceKey const & key, ResourceKey shader, s
 			Frame(sf::seconds(0.4f), {5u, sf::FloatRect(), sf::Vector2f()}),
 		});
 		m_animationClosed.setLoop(octo::LoopMode::Loop);
-	
+
 		m_animationOpening.setFrames({
 			Frame(sf::seconds(0.4f), {0u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {1u, sf::FloatRect(), sf::Vector2f()}),
@@ -141,7 +141,7 @@ Portal::Portal(Level destination, ResourceKey const & key, ResourceKey shader, s
 			Frame(sf::seconds(0.4f), {9u, sf::FloatRect(), sf::Vector2f()}),
 		});
 		m_animationClosed.setLoop(octo::LoopMode::Loop);
-	
+
 		m_animationOpening.setFrames({
 			Frame(sf::seconds(0.4f), {8u, sf::FloatRect(), sf::Vector2f()}),
 			Frame(sf::seconds(0.4f), {7u, sf::FloatRect(), sf::Vector2f()}),
