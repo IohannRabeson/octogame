@@ -299,6 +299,8 @@ void	CharacterOcto::setup(ABiome & biome)
 		caseRight();
 	if (sf::Joystick::getAxisPosition(0, sf::Joystick::X) < -50 || sf::Joystick::getAxisPosition(0, sf::Joystick::PovX) < -50)
 		caseLeft();
+
+	initStartGameIceA();
 }
 
 void	CharacterOcto::initStartGameIceA(void)
