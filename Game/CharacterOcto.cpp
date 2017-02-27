@@ -1392,13 +1392,13 @@ void	CharacterOcto::usePortal(Portal & portal)
 	{
 		if (portal.getDestination() == m_level && m_level != Level::Rewards)
 		{
-			if (portal.getKey() == OBJECT_PORTAL_SNOW_OSS)
+			if (std::strcmp(portal.getKey(), OBJECT_PORTAL_SNOW_OSS) == 0)
 				m_box->setPosition(sf::Vector2f(20430.f, 3255.f));
-			else if (portal.getKey() == OBJECT_PORTAL_DESERT_OSS)
+			else if (std::strcmp(portal.getKey(), OBJECT_PORTAL_DESERT_OSS) == 0)
 				m_box->setPosition(sf::Vector2f(20480.f, 2570.f));
-			else if (portal.getKey() == OBJECT_PORTAL_JUNGLE_OSS)
+			else if (std::strcmp(portal.getKey(), OBJECT_PORTAL_JUNGLE_OSS) == 0)
 				m_box->setPosition(sf::Vector2f(20245.f, 1190.f));
-			else if (portal.getKey() == OBJECT_PORTAL_BEACH_OSS)
+			else if (std::strcmp(portal.getKey(), OBJECT_PORTAL_BEACH_OSS) == 0)
 				m_box->setPosition(sf::Vector2f(19930.f, 35.f));
 			m_numberOfJump = 0u;
 			m_timeSlowFall = sf::Time::Zero;
