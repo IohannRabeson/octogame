@@ -3,6 +3,7 @@
 #include "CircleShape.hpp"
 #include "CharacterOcto.hpp"
 #include <Application.hpp>
+#include <Camera.hpp>
 #include <ResourceManager.hpp>
 
 Pyramid::Pyramid(sf::Vector2f const & scale, sf::Vector2f const & position, ABiome & biome) :
@@ -178,6 +179,18 @@ void Pyramid::update(sf::Time frameTime)
 	if (m_octo)
 		m_octo->enableCutscene(m_octoCollide, false);
 	m_octoCollide = false;
+}
+
+bool Pyramid::isInScreen(void)
+{
+	octo::Camera const & camera = octo::Application::getCamera();
+	sf::FloatRect rect = m_sprite.getGlobalBounds();
+	rect.top -= 2000.f;
+	rect.height += 2000.f;
+
+	if (camera.getRectangle().intersects(rect))
+		return true;
+	return false;
 }
 
 void Pyramid::draw(sf::RenderTarget& render, sf::RenderStates states) const

@@ -18,6 +18,7 @@ public:
 
 	virtual void addMapOffset(float x, float y);
 	virtual void setPosition(sf::Vector2f const & position);
+	virtual bool isInScreen(void);
 
 	void collideOcto(CharacterOcto * octo);
 	virtual void update(sf::Time frameTime);

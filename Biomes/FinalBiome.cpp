@@ -148,7 +148,6 @@ FinalBiome::FinalBiome() :
 	m_instances[300] = MAP_FINAL_BOTTOM_OMP;
 	m_instances[50] = MAP_FINAL_LEFT_OMP;
 	m_instances[1300] = MAP_FINAL_RIGHT_OMP;
-	m_gameObjects[740] = GameObjectType::PortalRandom;
 
 	std::vector<GameObjectType> object = {GameObjectType::ForestSpirit1Npc, GameObjectType::ForestSpirit2Npc, GameObjectType::FranGlitchNpc, GameObjectType::JuGlitchNpc, GameObjectType::LuGlitchNpc, GameObjectType::WindowGlitchNpc};
 
@@ -163,6 +162,7 @@ FinalBiome::FinalBiome() :
 	else if (progress.canRepairShip())
 		m_octoStartPosition = sf::Vector2f(866.f * 16.f, -130.f * 16.f);
 
+	m_gameObjects[740] = GameObjectType::PortalRandom;
 	// Pour chaque Portal, ajouter une entré dans ce vecteur qui correspond à la destination
 	m_destinations.push_back(Level::Final);
 	m_destinations.push_back(Level::Final);

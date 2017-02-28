@@ -74,6 +74,7 @@ private:
 	void			onCollisionEvent(CharacterOcto * octo, AGameObjectBase * gameObject, sf::Vector2f const & collisionDirection);
 	void			setSlowMotion(void);
 	void			setFastMotion(void);
+	void			useDoor(void);
 };
 
 #endif
