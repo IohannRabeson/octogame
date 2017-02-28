@@ -153,7 +153,11 @@ void SpaceShip::update(sf::Time frameTime)
 bool SpaceShip::isInScreen(void)
 {
 	octo::Camera const & camera = octo::Application::getCamera();
-	if (camera.getRectangle().intersects(m_sprite.getGlobalBounds()))
+	sf::FloatRect rect = m_sprite.getGlobalBounds();
+	rect.left -= 500.f;
+	rect.width += 1000.f;
+
+	if (camera.getRectangle().intersects(rect))
 		return true;
 	return false;
 }
