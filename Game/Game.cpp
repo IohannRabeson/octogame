@@ -274,6 +274,7 @@ void	Game::update(sf::Time frameTime)
 		m_skipFrames++;
 		frameTime = sf::seconds(0.016f);
 	}
+	useDoor();
 	updateSlowTime(frameTime);
 	frameTime *= m_slowTimeCoef;
 	// update the PhysicsEngine as first
@@ -583,14 +584,18 @@ void Game::onTileShapeCollision(TileShape * tileShape, AShape * shape, sf::Vecto
 	}
 }
 
+void	Game::useDoor(void)
+{
+	if (m_keyEntrance && m_collideDoor)
+		setFastMotion();
+}
+
 bool	Game::onInputPressed(InputListener::OctoKeys const & key)
 {
 	switch (key)
 	{
 		case OctoKeys::Entrance:
 			m_keyEntrance = true;
-			if (m_collideDoor)
-				setFastMotion();
 			//std::cout << "OctoPos(" << m_octo->getPosition().x / 16.f << "u, " << m_octo->getPosition().y / 16.f << "u)" << std::endl;
 			//m_cameraMovement->shake(5.f, 1.f, 0.01f);
 			//setSlowMotion();
