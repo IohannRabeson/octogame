@@ -1,4 +1,4 @@
-# octogame [![Build Status](https://magnum.travis-ci.com/IohannRabeson/octogame.svg?token=oSgYDG8ZHmxB1gxGNZxP&branch=master)](https://magnum.travis-ci.com/IohannRabeson/octogame)
+# An Octonaut Odyssey
 
 ## Clone
 
